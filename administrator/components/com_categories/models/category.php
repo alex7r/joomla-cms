@@ -361,6 +361,42 @@ class CategoriesModelCategory extends JModelAdmin
 	}
 
 	/**
+	 * Method to determine if a category association is available.
+	 *
+	 * @return  boolean True if a category association is available; false otherwise.
+	 */
+	public function getAssoc()
+	{
+		static $assoc = null;
+
+		if (!is_null($assoc))
+		{
+			return $assoc;
+		}
+
+		$extension = $this->getState('category.extension');
+
+		$assoc     = JLanguageAssociations::isEnabled();
+		$extension = explode('.', $extension);
+		$component = array_shift($extension);
+		$cname     = str_replace('com_', '', $component);
+
+		if (!$assoc || !$component || !$cname)
+		{
+			$assoc = false;
+		}
+		else
+		{
+			$hname = $cname . 'HelperAssociation';
+			JLoader::register($hname, JPATH_SITE . '/components/' . $component . '/helpers/association.php');
+
+			$assoc = class_exists($hname) && !empty($hname::$category_association);
+		}
+
+		return $assoc;
+	}
+
+	/**
 	 * Custom clean the cache of com_content and content modules
 	 *
 	 * @param   string  $group     Cache group name.
@@ -687,42 +723,6 @@ class CategoriesModelCategory extends JModelAdmin
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Method to determine if a category association is available.
-	 *
-	 * @return  boolean True if a category association is available; false otherwise.
-	 */
-	public function getAssoc()
-	{
-		static $assoc = null;
-
-		if (!is_null($assoc))
-		{
-			return $assoc;
-		}
-
-		$extension = $this->getState('category.extension');
-
-		$assoc     = JLanguageAssociations::isEnabled();
-		$extension = explode('.', $extension);
-		$component = array_shift($extension);
-		$cname     = str_replace('com_', '', $component);
-
-		if (!$assoc || !$component || !$cname)
-		{
-			$assoc = false;
-		}
-		else
-		{
-			$hname = $cname . 'HelperAssociation';
-			JLoader::register($hname, JPATH_SITE . '/components/' . $component . '/helpers/association.php');
-
-			$assoc = class_exists($hname) && !empty($hname::$category_association);
-		}
-
-		return $assoc;
 	}
 
 	/**

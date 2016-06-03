@@ -156,6 +156,49 @@ class ModulesModelModule extends JModelAdmin
 	}
 
 	/**
+	 * Returns a reference to the a Table object, always creating it.
+	 *
+	 * @param   string $type   The table type to instantiate
+	 * @param   string $prefix A prefix for the table class name. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A database object
+	 *
+	 * @since   1.6
+	 */
+	public function getTable($type = 'Module', $prefix = 'JTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
+	 * Custom clean cache method for different clients
+	 *
+	 * @param   string  $group     The name of the plugin group to import (defaults to null).
+	 * @param   integer $client_id The client ID. [optional]
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		parent::cleanCache('com_modules', $this->getClient());
+	}
+
+	/**
+	 * Method to get the client object
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	public function &getClient()
+	{
+		return $this->_client;
+	}
+
+	/**
 	 * Method to duplicate modules.
 	 *
 	 * @param   array &$pks An array of primary key IDs.
@@ -247,6 +290,30 @@ class ModulesModelModule extends JModelAdmin
 		$this->cleanCache();
 
 		return true;
+	}
+
+	/**
+	 * Method to change the title.
+	 *
+	 * @param   integer $category_id The id of the category. Not used here.
+	 * @param   string  $title       The title.
+	 * @param   string  $position    The position.
+	 *
+	 * @return  array  Contains the modified title.
+	 *
+	 * @since   2.5
+	 */
+	protected function generateNewTitle($category_id, $title, $position)
+	{
+		// Alter the title & alias
+		$table = $this->getTable();
+
+		while ($table->load(array('position' => $position, 'title' => $title)))
+		{
+			$title = JString::increment($title);
+		}
+
+		return array($title);
 	}
 
 	/**
@@ -827,73 +894,6 @@ class ModulesModelModule extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
-	}
-
-	/**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param   string $type   The table type to instantiate
-	 * @param   string $prefix A prefix for the table class name. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A database object
-	 *
-	 * @since   1.6
-	 */
-	public function getTable($type = 'Module', $prefix = 'JTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
-
-	/**
-	 * Method to change the title.
-	 *
-	 * @param   integer $category_id The id of the category. Not used here.
-	 * @param   string  $title       The title.
-	 * @param   string  $position    The position.
-	 *
-	 * @return  array  Contains the modified title.
-	 *
-	 * @since   2.5
-	 */
-	protected function generateNewTitle($category_id, $title, $position)
-	{
-		// Alter the title & alias
-		$table = $this->getTable();
-
-		while ($table->load(array('position' => $position, 'title' => $title)))
-		{
-			$title = JString::increment($title);
-		}
-
-		return array($title);
-	}
-
-	/**
-	 * Custom clean cache method for different clients
-	 *
-	 * @param   string  $group     The name of the plugin group to import (defaults to null).
-	 * @param   integer $client_id The client ID. [optional]
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
-	{
-		parent::cleanCache('com_modules', $this->getClient());
-	}
-
-	/**
-	 * Method to get the client object
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	public function &getClient()
-	{
-		return $this->_client;
 	}
 
 	/**

@@ -18,14 +18,6 @@ use Joomla\Utilities\ArrayHelper;
 class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \Countable
 {
 	/**
-	 * Registry Object
-	 *
-	 * @var    object
-	 * @since  1.0
-	 */
-	protected $data;
-
-	/**
 	 * Registry instances container.
 	 *
 	 * @var    array
@@ -41,6 +33,14 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @since  1.4.0
 	 */
 	public $separator = '.';
+
+	/**
+	 * Registry Object
+	 *
+	 * @var    object
+	 * @since  1.0
+	 */
+	protected $data;
 
 	/**
 	 * Constructor
@@ -66,6 +66,110 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
+	 * Method to recursively bind data to a parent object.
+	 *
+	 * @param   object  $parent    The parent object on which to attach the data values.
+	 * @param   mixed   $data      An array or object of data to bind to the parent object.
+	 * @param   boolean $recursive True to support recursive bindData.
+	 * @param   boolean $allowNull True to allow null values.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0
+	 */
+	protected function bindData($parent, $data, $recursive = true, $allowNull = true)
+	{
+		// Ensure the input data is an array.
+		$data = is_object($data)
+			? get_object_vars($data)
+			: (array) $data;
+
+		foreach ($data as $k => $v)
+		{
+			if (!$allowNull && !(($v !== null) && ($v !== '')))
+			{
+				continue;
+			}
+
+			if ($recursive && ((is_array($v) && ArrayHelper::isAssociative($v)) || is_object($v)))
+			{
+				if (!isset($parent->$k))
+				{
+					$parent->$k = new \stdClass;
+				}
+
+				$this->bindData($parent->$k, $v);
+
+				continue;
+			}
+
+			$parent->$k = $v;
+		}
+	}
+
+	/**
+	 * Load a string into the registry
+	 *
+	 * @param   string $data    String to load into the registry
+	 * @param   string $format  Format of the string
+	 * @param   array  $options Options used by the formatter
+	 *
+	 * @return  Registry  Return this object to support chaining.
+	 *
+	 * @since   1.0
+	 */
+	public function loadString($data, $format = 'JSON', $options = array())
+	{
+		// Load a string into the given namespace [or default namespace if not given]
+		$handler = AbstractRegistryFormat::getInstance($format, $options);
+
+		$obj = $handler->stringToObject($data, $options);
+		$this->loadObject($obj);
+
+		return $this;
+	}
+
+	/**
+	 * Load the public variables of the object into the default namespace.
+	 *
+	 * @param   object $object The object holding the publics to load
+	 *
+	 * @return  Registry  Return this object to support chaining.
+	 *
+	 * @since   1.0
+	 */
+	public function loadObject($object)
+	{
+		$this->bindData($this->data, $object);
+
+		return $this;
+	}
+
+	/**
+	 * Returns a reference to a global Registry object, only creating it
+	 * if it doesn't already exist.
+	 *
+	 * This method must be invoked as:
+	 * <pre>$registry = Registry::getInstance($id);</pre>
+	 *
+	 * @param   string $id An ID for the registry instance
+	 *
+	 * @return  Registry  The Registry object.
+	 *
+	 * @since       1.0
+	 * @deprecated  2.0  Instantiate a new Registry instance instead
+	 */
+	public static function getInstance($id)
+	{
+		if (empty(self::$instances[$id]))
+		{
+			self::$instances[$id] = new self;
+		}
+
+		return self::$instances[$id];
+	}
+
+	/**
 	 * Magic function to clone the registry object.
 	 *
 	 * @return  Registry
@@ -87,6 +191,24 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	public function __toString()
 	{
 		return $this->toString();
+	}
+
+	/**
+	 * Get a namespace in a given string format
+	 *
+	 * @param   string $format  Format to return the string in
+	 * @param   mixed  $options Parameters used by the formatter, see formatters for more info
+	 *
+	 * @return  string   Namespace in string format
+	 *
+	 * @since   1.0
+	 */
+	public function toString($format = 'JSON', $options = array())
+	{
+		// Return a namespace in a given format
+		$handler = AbstractRegistryFormat::getInstance($format, $options);
+
+		return $handler->objectToString($this->data, $options);
 	}
 
 	/**
@@ -132,52 +254,6 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 		$this->set($key, $value);
 
 		return $value;
-	}
-
-	/**
-	 * Check if a registry path exists.
-	 *
-	 * @param   string $path Registry path (e.g. joomla.content.showauthor)
-	 *
-	 * @return  boolean
-	 *
-	 * @since   1.0
-	 */
-	public function exists($path)
-	{
-		// Return default value if path is empty
-		if (empty($path))
-		{
-			return false;
-		}
-
-		// Explode the registry path into an array
-		$nodes = explode($this->separator, $path);
-
-		// Initialize the current node to be the registry root.
-		$node  = $this->data;
-		$found = false;
-
-		// Traverse the registry to find the correct node for the result.
-		foreach ($nodes as $n)
-		{
-			if (is_array($node) && isset($node[$n]))
-			{
-				$node  = $node[$n];
-				$found = true;
-				continue;
-			}
-
-			if (!isset($node->$n))
-			{
-				return false;
-			}
-
-			$node  = $node->$n;
-			$found = true;
-		}
-
-		return $found;
 	}
 
 	/**
@@ -236,229 +312,6 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 		}
 
 		return $node;
-	}
-
-	/**
-	 * Returns a reference to a global Registry object, only creating it
-	 * if it doesn't already exist.
-	 *
-	 * This method must be invoked as:
-	 * <pre>$registry = Registry::getInstance($id);</pre>
-	 *
-	 * @param   string $id An ID for the registry instance
-	 *
-	 * @return  Registry  The Registry object.
-	 *
-	 * @since       1.0
-	 * @deprecated  2.0  Instantiate a new Registry instance instead
-	 */
-	public static function getInstance($id)
-	{
-		if (empty(self::$instances[$id]))
-		{
-			self::$instances[$id] = new self;
-		}
-
-		return self::$instances[$id];
-	}
-
-	/**
-	 * Gets this object represented as an ArrayIterator.
-	 *
-	 * This allows the data properties to be accessed via a foreach statement.
-	 *
-	 * @return  \ArrayIterator  This object represented as an ArrayIterator.
-	 *
-	 * @see     IteratorAggregate::getIterator()
-	 * @since   1.3.0
-	 */
-	public function getIterator()
-	{
-		return new \ArrayIterator($this->data);
-	}
-
-	/**
-	 * Load an associative array of values into the default namespace
-	 *
-	 * @param   array   $array     Associative array of value to load
-	 * @param   boolean $flattened Load from a one-dimensional array
-	 * @param   string  $separator The key separator
-	 *
-	 * @return  Registry  Return this object to support chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function loadArray($array, $flattened = false, $separator = null)
-	{
-		if (!$flattened)
-		{
-			$this->bindData($this->data, $array);
-
-			return $this;
-		}
-
-		foreach ($array as $k => $v)
-		{
-			$this->set($k, $v, $separator);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Load the public variables of the object into the default namespace.
-	 *
-	 * @param   object $object The object holding the publics to load
-	 *
-	 * @return  Registry  Return this object to support chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function loadObject($object)
-	{
-		$this->bindData($this->data, $object);
-
-		return $this;
-	}
-
-	/**
-	 * Load the contents of a file into the registry
-	 *
-	 * @param   string $file    Path to file to load
-	 * @param   string $format  Format of the file [optional: defaults to JSON]
-	 * @param   array  $options Options used by the formatter
-	 *
-	 * @return  Registry  Return this object to support chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function loadFile($file, $format = 'JSON', $options = array())
-	{
-		$data = file_get_contents($file);
-
-		return $this->loadString($data, $format, $options);
-	}
-
-	/**
-	 * Load a string into the registry
-	 *
-	 * @param   string $data    String to load into the registry
-	 * @param   string $format  Format of the string
-	 * @param   array  $options Options used by the formatter
-	 *
-	 * @return  Registry  Return this object to support chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function loadString($data, $format = 'JSON', $options = array())
-	{
-		// Load a string into the given namespace [or default namespace if not given]
-		$handler = AbstractRegistryFormat::getInstance($format, $options);
-
-		$obj = $handler->stringToObject($data, $options);
-		$this->loadObject($obj);
-
-		return $this;
-	}
-
-	/**
-	 * Merge a Registry object into this one
-	 *
-	 * @param   Registry $source    Source Registry object to merge.
-	 * @param   boolean  $recursive True to support recursive merge the children values.
-	 *
-	 * @return  Registry  Return this object to support chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function merge($source, $recursive = false)
-	{
-		if (!$source instanceof Registry)
-		{
-			return false;
-		}
-
-		$this->bindData($this->data, $source->toArray(), $recursive, false);
-
-		return $this;
-	}
-
-	/**
-	 * Method to extract a sub-registry from path
-	 *
-	 * @param   string $path Registry path (e.g. joomla.content.showauthor)
-	 *
-	 * @return  Registry|null  Registry object if data is present
-	 *
-	 * @since   1.2.0
-	 */
-	public function extract($path)
-	{
-		$data = $this->get($path);
-
-		if (is_null($data))
-		{
-			return null;
-		}
-
-		return new Registry($data);
-	}
-
-	/**
-	 * Checks whether an offset exists in the iterator.
-	 *
-	 * @param   mixed $offset The array offset.
-	 *
-	 * @return  boolean  True if the offset exists, false otherwise.
-	 *
-	 * @since   1.0
-	 */
-	public function offsetExists($offset)
-	{
-		return (boolean) ($this->get($offset) !== null);
-	}
-
-	/**
-	 * Gets an offset in the iterator.
-	 *
-	 * @param   mixed $offset The array offset.
-	 *
-	 * @return  mixed  The array value if it exists, null otherwise.
-	 *
-	 * @since   1.0
-	 */
-	public function offsetGet($offset)
-	{
-		return $this->get($offset);
-	}
-
-	/**
-	 * Sets an offset in the iterator.
-	 *
-	 * @param   mixed $offset The array offset.
-	 * @param   mixed $value  The array value.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function offsetSet($offset, $value)
-	{
-		$this->set($offset, $value);
-	}
-
-	/**
-	 * Unsets an offset in the iterator.
-	 *
-	 * @param   mixed $offset The array offset.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function offsetUnset($offset)
-	{
-		$this->set($offset, null);
 	}
 
 	/**
@@ -542,6 +395,258 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
+	 * Check if a registry path exists.
+	 *
+	 * @param   string $path Registry path (e.g. joomla.content.showauthor)
+	 *
+	 * @return  boolean
+	 *
+	 * @since   1.0
+	 */
+	public function exists($path)
+	{
+		// Return default value if path is empty
+		if (empty($path))
+		{
+			return false;
+		}
+
+		// Explode the registry path into an array
+		$nodes = explode($this->separator, $path);
+
+		// Initialize the current node to be the registry root.
+		$node  = $this->data;
+		$found = false;
+
+		// Traverse the registry to find the correct node for the result.
+		foreach ($nodes as $n)
+		{
+			if (is_array($node) && isset($node[$n]))
+			{
+				$node  = $node[$n];
+				$found = true;
+				continue;
+			}
+
+			if (!isset($node->$n))
+			{
+				return false;
+			}
+
+			$node  = $node->$n;
+			$found = true;
+		}
+
+		return $found;
+	}
+
+	/**
+	 * Gets this object represented as an ArrayIterator.
+	 *
+	 * This allows the data properties to be accessed via a foreach statement.
+	 *
+	 * @return  \ArrayIterator  This object represented as an ArrayIterator.
+	 *
+	 * @see     IteratorAggregate::getIterator()
+	 * @since   1.3.0
+	 */
+	public function getIterator()
+	{
+		return new \ArrayIterator($this->data);
+	}
+
+	/**
+	 * Load an associative array of values into the default namespace
+	 *
+	 * @param   array   $array     Associative array of value to load
+	 * @param   boolean $flattened Load from a one-dimensional array
+	 * @param   string  $separator The key separator
+	 *
+	 * @return  Registry  Return this object to support chaining.
+	 *
+	 * @since   1.0
+	 */
+	public function loadArray($array, $flattened = false, $separator = null)
+	{
+		if (!$flattened)
+		{
+			$this->bindData($this->data, $array);
+
+			return $this;
+		}
+
+		foreach ($array as $k => $v)
+		{
+			$this->set($k, $v, $separator);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Load the contents of a file into the registry
+	 *
+	 * @param   string $file    Path to file to load
+	 * @param   string $format  Format of the file [optional: defaults to JSON]
+	 * @param   array  $options Options used by the formatter
+	 *
+	 * @return  Registry  Return this object to support chaining.
+	 *
+	 * @since   1.0
+	 */
+	public function loadFile($file, $format = 'JSON', $options = array())
+	{
+		$data = file_get_contents($file);
+
+		return $this->loadString($data, $format, $options);
+	}
+
+	/**
+	 * Merge a Registry object into this one
+	 *
+	 * @param   Registry $source    Source Registry object to merge.
+	 * @param   boolean  $recursive True to support recursive merge the children values.
+	 *
+	 * @return  Registry  Return this object to support chaining.
+	 *
+	 * @since   1.0
+	 */
+	public function merge($source, $recursive = false)
+	{
+		if (!$source instanceof Registry)
+		{
+			return false;
+		}
+
+		$this->bindData($this->data, $source->toArray(), $recursive, false);
+
+		return $this;
+	}
+
+	/**
+	 * Transforms a namespace to an array
+	 *
+	 * @return  array  An associative array holding the namespace data
+	 *
+	 * @since   1.0
+	 */
+	public function toArray()
+	{
+		return (array) $this->asArray($this->data);
+	}
+
+	/**
+	 * Method to recursively convert an object of data to an array.
+	 *
+	 * @param   object $data An object of data to return as an array.
+	 *
+	 * @return  array  Array representation of the input object.
+	 *
+	 * @since   1.0
+	 */
+	protected function asArray($data)
+	{
+		$array = array();
+
+		if (is_object($data))
+		{
+			$data = get_object_vars($data);
+		}
+
+		foreach ($data as $k => $v)
+		{
+			if (is_object($v) || is_array($v))
+			{
+				$array[$k] = $this->asArray($v);
+
+				continue;
+			}
+
+			$array[$k] = $v;
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Method to extract a sub-registry from path
+	 *
+	 * @param   string $path Registry path (e.g. joomla.content.showauthor)
+	 *
+	 * @return  Registry|null  Registry object if data is present
+	 *
+	 * @since   1.2.0
+	 */
+	public function extract($path)
+	{
+		$data = $this->get($path);
+
+		if (is_null($data))
+		{
+			return null;
+		}
+
+		return new Registry($data);
+	}
+
+	/**
+	 * Checks whether an offset exists in the iterator.
+	 *
+	 * @param   mixed $offset The array offset.
+	 *
+	 * @return  boolean  True if the offset exists, false otherwise.
+	 *
+	 * @since   1.0
+	 */
+	public function offsetExists($offset)
+	{
+		return (boolean) ($this->get($offset) !== null);
+	}
+
+	/**
+	 * Gets an offset in the iterator.
+	 *
+	 * @param   mixed $offset The array offset.
+	 *
+	 * @return  mixed  The array value if it exists, null otherwise.
+	 *
+	 * @since   1.0
+	 */
+	public function offsetGet($offset)
+	{
+		return $this->get($offset);
+	}
+
+	/**
+	 * Sets an offset in the iterator.
+	 *
+	 * @param   mixed $offset The array offset.
+	 * @param   mixed $value  The array value.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0
+	 */
+	public function offsetSet($offset, $value)
+	{
+		$this->set($offset, $value);
+	}
+
+	/**
+	 * Unsets an offset in the iterator.
+	 *
+	 * @param   mixed $offset The array offset.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0
+	 */
+	public function offsetUnset($offset)
+	{
+		$this->set($offset, null);
+	}
+
+	/**
 	 * Append value to a path in registry
 	 *
 	 * @param   string $path  Parent registry Path (e.g. joomla.content.showauthor)
@@ -607,18 +712,6 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Transforms a namespace to an array
-	 *
-	 * @return  array  An associative array holding the namespace data
-	 *
-	 * @since   1.0
-	 */
-	public function toArray()
-	{
-		return (array) $this->asArray($this->data);
-	}
-
-	/**
 	 * Transforms a namespace to an object
 	 *
 	 * @return  object   An an object holding the namespace data
@@ -628,99 +721,6 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	public function toObject()
 	{
 		return $this->data;
-	}
-
-	/**
-	 * Get a namespace in a given string format
-	 *
-	 * @param   string $format  Format to return the string in
-	 * @param   mixed  $options Parameters used by the formatter, see formatters for more info
-	 *
-	 * @return  string   Namespace in string format
-	 *
-	 * @since   1.0
-	 */
-	public function toString($format = 'JSON', $options = array())
-	{
-		// Return a namespace in a given format
-		$handler = AbstractRegistryFormat::getInstance($format, $options);
-
-		return $handler->objectToString($this->data, $options);
-	}
-
-	/**
-	 * Method to recursively bind data to a parent object.
-	 *
-	 * @param   object  $parent    The parent object on which to attach the data values.
-	 * @param   mixed   $data      An array or object of data to bind to the parent object.
-	 * @param   boolean $recursive True to support recursive bindData.
-	 * @param   boolean $allowNull True to allow null values.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	protected function bindData($parent, $data, $recursive = true, $allowNull = true)
-	{
-		// Ensure the input data is an array.
-		$data = is_object($data)
-			? get_object_vars($data)
-			: (array) $data;
-
-		foreach ($data as $k => $v)
-		{
-			if (!$allowNull && !(($v !== null) && ($v !== '')))
-			{
-				continue;
-			}
-
-			if ($recursive && ((is_array($v) && ArrayHelper::isAssociative($v)) || is_object($v)))
-			{
-				if (!isset($parent->$k))
-				{
-					$parent->$k = new \stdClass;
-				}
-
-				$this->bindData($parent->$k, $v);
-
-				continue;
-			}
-
-			$parent->$k = $v;
-		}
-	}
-
-	/**
-	 * Method to recursively convert an object of data to an array.
-	 *
-	 * @param   object $data An object of data to return as an array.
-	 *
-	 * @return  array  Array representation of the input object.
-	 *
-	 * @since   1.0
-	 */
-	protected function asArray($data)
-	{
-		$array = array();
-
-		if (is_object($data))
-		{
-			$data = get_object_vars($data);
-		}
-
-		foreach ($data as $k => $v)
-		{
-			if (is_object($v) || is_array($v))
-			{
-				$array[$k] = $this->asArray($v);
-
-				continue;
-			}
-
-			$array[$k] = $v;
-		}
-
-		return $array;
 	}
 
 	/**

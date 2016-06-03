@@ -191,6 +191,51 @@ class ContactModelContact extends JModelAdmin
 	}
 
 	/**
+	 * Returns a Table object, always creating it
+	 *
+	 * @param   string $type   The table type to instantiate
+	 * @param   string $prefix A prefix for the table class name. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A database object
+	 *
+	 * @since   1.6
+	 */
+	public function getTable($type = 'Contact', $prefix = 'ContactTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
+	 * Method to change the title & alias.
+	 *
+	 * @param   integer $category_id The id of the parent.
+	 * @param   string  $alias       The alias.
+	 * @param   string  $name        The title.
+	 *
+	 * @return  array  Contains the modified title and alias.
+	 *
+	 * @since   3.1
+	 */
+	protected function generateNewTitle($category_id, $alias, $name)
+	{
+		// Alter the title & alias
+		$table = $this->getTable();
+
+		while ($table->load(array('alias' => $alias, 'catid' => $category_id)))
+		{
+			if ($name == $table->name)
+			{
+				$name = JString::increment($name);
+			}
+
+			$alias = JString::increment($alias, 'dash');
+		}
+
+		return array($name, $alias);
+	}
+
+	/**
 	 * Method to toggle the featured setting of contacts.
 	 *
 	 * @param   array   $pks   The ids of the items to toggle.
@@ -334,51 +379,6 @@ class ContactModelContact extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
-	}
-
-	/**
-	 * Method to change the title & alias.
-	 *
-	 * @param   integer $category_id The id of the parent.
-	 * @param   string  $alias       The alias.
-	 * @param   string  $name        The title.
-	 *
-	 * @return  array  Contains the modified title and alias.
-	 *
-	 * @since   3.1
-	 */
-	protected function generateNewTitle($category_id, $alias, $name)
-	{
-		// Alter the title & alias
-		$table = $this->getTable();
-
-		while ($table->load(array('alias' => $alias, 'catid' => $category_id)))
-		{
-			if ($name == $table->name)
-			{
-				$name = JString::increment($name);
-			}
-
-			$alias = JString::increment($alias, 'dash');
-		}
-
-		return array($name, $alias);
-	}
-
-	/**
-	 * Returns a Table object, always creating it
-	 *
-	 * @param   string $type   The table type to instantiate
-	 * @param   string $prefix A prefix for the table class name. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A database object
-	 *
-	 * @since   1.6
-	 */
-	public function getTable($type = 'Contact', $prefix = 'ContactTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
 	}
 
 	/**
