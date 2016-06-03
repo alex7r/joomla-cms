@@ -17,13 +17,13 @@ defined('_JEXEC') or die;
  */
 class PlgCaptchaRecaptcha extends JPlugin
 {
-    /**
+            /**
      * Load the language file on instantiation.
      *
      * @var    boolean
      * @since  3.1
      */
-    protected $autoloadLanguage = true;
+          protected $autoloadLanguage = true;
 
     /**
      * Initialise the captcha
