@@ -19,20 +19,20 @@ JFormHelper::loadFieldClass('list');
 class JFormFieldLimitbox extends JFormFieldList
 {
 	/**
-	 * The form field type.
-	 *
-	 * @var    string
-	 * @since  3.2
-	 */
-	public $type = 'Limitbox';
-
-	/**
 	 * Cached array of the category items.
 	 *
 	 * @var    array
 	 * @since  3.2
 	 */
 	protected static $options = array();
+
+	/**
+	 * The form field type.
+	 *
+	 * @var    string
+	 * @since  3.2
+	 */
+	public $type = 'Limitbox';
 
 	/**
 	 * Default options

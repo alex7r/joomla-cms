@@ -19,6 +19,14 @@ use Joomla\Application\Cli\Output\Stdout;
 class ColorProcessor implements ProcessorInterface
 {
 	/**
+	 * Regex used for removing color codes
+	 *
+	 * @var    string
+	 * @since  1.0
+	 */
+	protected static $stripFilter = '/<[\/]?[a-z=;]+>/';
+
+	/**
 	 * Flag to remove color codes from the output
 	 *
 	 * @var    boolean
@@ -35,14 +43,6 @@ class ColorProcessor implements ProcessorInterface
 	protected $tagFilter = '/<([a-z=;]+)>(.*?)<\/\\1>/s';
 
 	/**
-	 * Regex used for removing color codes
-	 *
-	 * @var    string
-	 * @since  1.0
-	 */
-	protected static $stripFilter = '/<[\/]?[a-z=;]+>/';
-
-	/**
 	 * Array of ColorStyle objects
 	 *
 	 * @var    array
@@ -53,7 +53,7 @@ class ColorProcessor implements ProcessorInterface
 	/**
 	 * Class constructor
 	 *
-	 * @param   boolean  $noColors  Defines non-colored mode on construct
+	 * @param   boolean $noColors Defines non-colored mode on construct
 	 *
 	 * @since  1.1.0
 	 */
@@ -74,10 +74,42 @@ class ColorProcessor implements ProcessorInterface
 	}
 
 	/**
+	 * Adds predefined color styles to the ColorProcessor object
+	 *
+	 * @return  Stdout  Instance of $this to allow chaining.
+	 *
+	 * @since   1.0
+	 */
+	private function addPredefinedStyles()
+	{
+		$this->addStyle(
+			'info',
+			new ColorStyle('green', '', array('bold'))
+		);
+
+		$this->addStyle(
+			'comment',
+			new ColorStyle('yellow', '', array('bold'))
+		);
+
+		$this->addStyle(
+			'question',
+			new ColorStyle('black', 'cyan')
+		);
+
+		$this->addStyle(
+			'error',
+			new ColorStyle('white', 'red')
+		);
+
+		return $this;
+	}
+
+	/**
 	 * Add a style.
 	 *
-	 * @param   string      $name   The style name.
-	 * @param   ColorStyle  $style  The color style.
+	 * @param   string     $name  The style name.
+	 * @param   ColorStyle $style The color style.
 	 *
 	 * @return  ColorProcessor  Instance of $this to allow chaining.
 	 *
@@ -93,7 +125,7 @@ class ColorProcessor implements ProcessorInterface
 	/**
 	 * Strip color tags from a string.
 	 *
-	 * @param   string  $string  The string.
+	 * @param   string $string The string.
 	 *
 	 * @return  string
 	 *
@@ -107,7 +139,7 @@ class ColorProcessor implements ProcessorInterface
 	/**
 	 * Process a string.
 	 *
-	 * @param   string  $string  The string to process.
+	 * @param   string $string The string to process.
 	 *
 	 * @return  string
 	 *
@@ -141,10 +173,10 @@ class ColorProcessor implements ProcessorInterface
 	/**
 	 * Replace color tags in a string.
 	 *
-	 * @param   string      $text   The original text.
-	 * @param   string      $tag    The matched tag.
-	 * @param   string      $match  The match.
-	 * @param   ColorStyle  $style  The color style to apply.
+	 * @param   string     $text  The original text.
+	 * @param   string     $tag   The matched tag.
+	 * @param   string     $match The match.
+	 * @param   ColorStyle $style The color style to apply.
 	 *
 	 * @return  mixed
 	 *
@@ -157,37 +189,5 @@ class ColorProcessor implements ProcessorInterface
 			: "\033[" . $style . "m" . $match . "\033[0m";
 
 		return str_replace('<' . $tag . '>' . $match . '</' . $tag . '>', $replace, $text);
-	}
-
-	/**
-	 * Adds predefined color styles to the ColorProcessor object
-	 *
-	 * @return  Stdout  Instance of $this to allow chaining.
-	 *
-	 * @since   1.0
-	 */
-	private function addPredefinedStyles()
-	{
-		$this->addStyle(
-			'info',
-			new ColorStyle('green', '', array('bold'))
-		);
-
-		$this->addStyle(
-			'comment',
-			new ColorStyle('yellow', '', array('bold'))
-		);
-
-		$this->addStyle(
-			'question',
-			new ColorStyle('black', 'cyan')
-		);
-
-		$this->addStyle(
-			'error',
-			new ColorStyle('white', 'red')
-		);
-
-		return $this;
 	}
 }

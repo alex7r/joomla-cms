@@ -47,24 +47,6 @@ class JAdminCssMenu extends JObject
 	}
 
 	/**
-	 * Method to add a child
-	 *
-	 * @param   JMenuNode  $node        The node to process
-	 * @param   boolean    $setCurrent  True to set as current working node
-	 *
-	 * @return  void
-	 */
-	public function addChild(JMenuNode $node, $setCurrent = false)
-	{
-		$this->_current->addChild($node);
-
-		if ($setCurrent)
-		{
-			$this->_current = &$node;
-		}
-	}
-
-	/**
 	 * Method to get the parent
 	 *
 	 * @return  void
@@ -92,6 +74,24 @@ class JAdminCssMenu extends JObject
 	public function addSeparator()
 	{
 		$this->addChild(new JMenuNode(null, null, 'separator', false));
+	}
+
+	/**
+	 * Method to add a child
+	 *
+	 * @param   JMenuNode  $node        The node to process
+	 * @param   boolean    $setCurrent  True to set as current working node
+	 *
+	 * @return  void
+	 */
+	public function addChild(JMenuNode $node, $setCurrent = false)
+	{
+		$this->_current->addChild($node);
+
+		if ($setCurrent)
+		{
+			$this->_current = &$node;
+		}
 	}
 
 	/**
@@ -431,6 +431,46 @@ class JMenuNode extends JObject
 	}
 
 	/**
+	 * Get the children of this node
+	 *
+	 * @return  array  The children
+	 */
+	public function &getChildren()
+	{
+		return $this->_children;
+	}
+
+	/**
+	 * Test if this node has children
+	 *
+	 * @return  boolean  True if there are children
+	 */
+	public function hasChildren()
+	{
+		return (bool) count($this->_children);
+	}
+
+	/**
+	 * Test if this node has a parent
+	 *
+	 * @return  boolean  True if there is a parent
+	 */
+	public function hasParent()
+	{
+		return $this->getParent() != null;
+	}
+
+	/**
+	 * Get the parent of this node
+	 *
+	 * @return  mixed  JMenuNode object with the parent or null for no parent
+	 */
+	public function &getParent()
+	{
+		return $this->_parent;
+	}
+
+	/**
 	 * Set the parent of a this node
 	 *
 	 * If the node already has a parent, the link is unset
@@ -454,45 +494,5 @@ class JMenuNode extends JObject
 		}
 
 		$this->_parent = & $parent;
-	}
-
-	/**
-	 * Get the children of this node
-	 *
-	 * @return  array  The children
-	 */
-	public function &getChildren()
-	{
-		return $this->_children;
-	}
-
-	/**
-	 * Get the parent of this node
-	 *
-	 * @return  mixed  JMenuNode object with the parent or null for no parent
-	 */
-	public function &getParent()
-	{
-		return $this->_parent;
-	}
-
-	/**
-	 * Test if this node has children
-	 *
-	 * @return  boolean  True if there are children
-	 */
-	public function hasChildren()
-	{
-		return (bool) count($this->_children);
-	}
-
-	/**
-	 * Test if this node has a parent
-	 *
-	 * @return  boolean  True if there is a parent
-	 */
-	public function hasParent()
-	{
-		return $this->getParent() != null;
 	}
 }

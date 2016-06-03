@@ -77,6 +77,55 @@ class TemplatesModelTemplate extends JModelForm
 	}
 
 	/**
+	 * Method to get the template information.
+	 *
+	 * @return  mixed  Object if successful, false if not and internal error is set.
+	 *
+	 * @since   1.6
+	 */
+	public function &getTemplate()
+	{
+		if (empty($this->template))
+		{
+			$pk  = $this->getState('extension.id');
+			$db  = $this->getDbo();
+			$app = JFactory::getApplication();
+
+			// Get the template information.
+			$query = $db->getQuery(true)
+				->select('extension_id, client_id, element, name, manifest_cache')
+				->from('#__extensions')
+				->where($db->quoteName('extension_id') . ' = ' . (int) $pk)
+				->where($db->quoteName('type') . ' = ' . $db->quote('template'));
+			$db->setQuery($query);
+
+			try
+			{
+				$result = $db->loadObject();
+			}
+			catch (RuntimeException $e)
+			{
+				$app->enqueueMessage($e->getMessage(), 'warning');
+				$this->template = false;
+
+				return false;
+			}
+
+			if (empty($result))
+			{
+				$app->enqueueMessage(JText::_('COM_TEMPLATES_ERROR_EXTENSION_RECORD_NOT_FOUND'), 'error');
+				$this->template = false;
+			}
+			else
+			{
+				$this->template = $result;
+			}
+		}
+
+		return $this->template;
+	}
+
+	/**
 	 * Get the directory tree.
 	 *
 	 * @param   string  $dir  The path of the directory to scan
@@ -164,55 +213,6 @@ class TemplatesModelTemplate extends JModelForm
 
 			return $temp;
 		}
-	}
-
-	/**
-	 * Method to get the template information.
-	 *
-	 * @return  mixed  Object if successful, false if not and internal error is set.
-	 *
-	 * @since   1.6
-	 */
-	public function &getTemplate()
-	{
-		if (empty($this->template))
-		{
-			$pk  = $this->getState('extension.id');
-			$db  = $this->getDbo();
-			$app = JFactory::getApplication();
-
-			// Get the template information.
-			$query = $db->getQuery(true)
-				->select('extension_id, client_id, element, name, manifest_cache')
-				->from('#__extensions')
-				->where($db->quoteName('extension_id') . ' = ' . (int) $pk)
-				->where($db->quoteName('type') . ' = ' . $db->quote('template'));
-			$db->setQuery($query);
-
-			try
-			{
-				$result = $db->loadObject();
-			}
-			catch (RuntimeException $e)
-			{
-				$app->enqueueMessage($e->getMessage(), 'warning');
-				$this->template = false;
-
-				return false;
-			}
-
-			if (empty($result))
-			{
-				$app->enqueueMessage(JText::_('COM_TEMPLATES_ERROR_EXTENSION_RECORD_NOT_FOUND'), 'error');
-				$this->template = false;
-			}
-			else
-			{
-				$this->template = $result;
-			}
-		}
-
-		return $this->template;
 	}
 
 	/**

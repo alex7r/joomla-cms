@@ -447,6 +447,22 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 	}
 
 	/**
+	 * Method to switch the token tables from Memory tables to MyISAM tables
+	 * when they are close to running out of memory.
+	 *
+	 * @param   boolean  $memory  Flag to control how they should be toggled.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   3.1
+	 * @throws  Exception on database error.
+	 */
+	protected function toggleTables($memory)
+	{
+		return true;
+	}
+
+	/**
 	 * Method to remove a link from the index.
 	 *
 	 * @param   integer  $linkId  The id of the link.
@@ -608,21 +624,5 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 		while ($loop == true);
 
 		return $values;
-	}
-
-	/**
-	 * Method to switch the token tables from Memory tables to MyISAM tables
-	 * when they are close to running out of memory.
-	 *
-	 * @param   boolean  $memory  Flag to control how they should be toggled.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   3.1
-	 * @throws  Exception on database error.
-	 */
-	protected function toggleTables($memory)
-	{
-		return true;
 	}
 }

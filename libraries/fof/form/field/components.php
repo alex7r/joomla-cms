@@ -19,10 +19,6 @@ JFormHelper::loadFieldClass('list');
  */
 class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 {
-	protected $static;
-
-	protected $repeatable;
-
 	public $client_ids = null;
 
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
@@ -30,6 +26,10 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
+
+	protected $static;
+
+	protected $repeatable;
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
@@ -80,23 +80,6 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 		$class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
 
 		return '<span id="' . $this->id . '" ' . $class . '>' .
-			htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(), $this->value), ENT_COMPAT, 'UTF-8') .
-			'</span>';
-	}
-
-	/**
-	 * Get the rendering of this field type for a repeatable (grid) display,
-	 * e.g. in a view listing many item (typically a "browse" task)
-	 *
-	 * @since 2.1
-	 *
-	 * @return  string  The field HTML
-	 */
-	public function getRepeatable()
-	{
-		$class = $this->element['class'] ? (string) $this->element['class'] : '';
-
-		return '<span class="' . $this->id . ' ' . $class . '">' .
 			htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(), $this->value), ENT_COMPAT, 'UTF-8') .
 			'</span>';
 	}
@@ -233,5 +216,22 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 		$text = JText::_($item->name);
 
 		return $text;
+	}
+
+	/**
+	 * Get the rendering of this field type for a repeatable (grid) display,
+	 * e.g. in a view listing many item (typically a "browse" task)
+	 *
+	 * @since 2.1
+	 *
+	 * @return  string  The field HTML
+	 */
+	public function getRepeatable()
+	{
+		$class = $this->element['class'] ? (string) $this->element['class'] : '';
+
+		return '<span class="' . $this->id . ' ' . $class . '">' .
+			htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(), $this->value), ENT_COMPAT, 'UTF-8') .
+			'</span>';
 	}
 }

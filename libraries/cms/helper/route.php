@@ -44,6 +44,91 @@ class JHelperRoute
 	protected $view;
 
 	/**
+	 * Fetches the category route
+	 *
+	 * @param   mixed   $catid      Category ID or JCategoryNode instance
+	 * @param   mixed   $language   Language code
+	 * @param   string  $extension  Extension to lookup
+	 *
+	 * @return  string
+	 *
+	 * @since   3.2
+	 *
+	 * @throws  InvalidArgumentException
+	 */
+	public static function getCategoryRoute($catid, $language = 0, $extension = '')
+	{
+		// Note: $extension is required but has to be an optional argument in the function call due to argument order
+		if (empty($extension))
+		{
+			throw new InvalidArgumentException('$extension is a required argument in JHelperRoute::getCategoryRoute');
+		}
+
+		if ($catid instanceof JCategoryNode)
+		{
+			$id       = $catid->id;
+			$category = $catid;
+		}
+		else
+		{
+			$extensionName = ucfirst(substr($extension, 4));
+			$id            = (int) $catid;
+			$category      = JCategories::getInstance($extensionName)->get($id);
+		}
+
+		if ($id < 1)
+		{
+			$link = '';
+		}
+		else
+		{
+			$link = 'index.php?option=' . $extension . '&view=category&id=' . $id;
+
+			$needles = array(
+				'category' => array($id)
+			);
+
+			if ($language && $language != '*' && JLanguageMultilang::isEnabled())
+			{
+				$link .= '&lang=' . $language;
+				$needles['language'] = $language;
+			}
+
+			// Create the link
+			if ($category)
+			{
+				$catids                = array_reverse($category->getPath());
+				$needles['category']   = $catids;
+				$needles['categories'] = $catids;
+
+			}
+
+			if ($item = static::lookupItem($needles))
+			{
+				$link .= '&Itemid=' . $item;
+			}
+		}
+
+		return $link;
+	}
+
+	/**
+	 * Static alias to findItem() used to find the item in the menu structure
+	 *
+	 * @param   array  $needles  Array of lookup values
+	 *
+	 * @return  mixed
+	 *
+	 * @since   3.2
+	 */
+	protected static function lookupItem($needles = array())
+	{
+		$instance = new static;
+
+		return $instance->findItem($needles);
+	}
+
+	/**
 	 * A method to get the route for a specific item
 	 *
 	 * @param   integer  $id         Value of the primary key for the item in its content table
@@ -217,90 +302,5 @@ class JHelperRoute
 		$default = $menus->getDefault($language);
 
 		return !empty($default->id) ? $default->id : null;
-	}
-
-	/**
-	 * Fetches the category route
-	 *
-	 * @param   mixed   $catid      Category ID or JCategoryNode instance
-	 * @param   mixed   $language   Language code
-	 * @param   string  $extension  Extension to lookup
-	 *
-	 * @return  string
-	 *
-	 * @since   3.2
-	 *
-	 * @throws  InvalidArgumentException
-	 */
-	public static function getCategoryRoute($catid, $language = 0, $extension = '')
-	{
-		// Note: $extension is required but has to be an optional argument in the function call due to argument order
-		if (empty($extension))
-		{
-			throw new InvalidArgumentException('$extension is a required argument in JHelperRoute::getCategoryRoute');
-		}
-
-		if ($catid instanceof JCategoryNode)
-		{
-			$id       = $catid->id;
-			$category = $catid;
-		}
-		else
-		{
-			$extensionName = ucfirst(substr($extension, 4));
-			$id            = (int) $catid;
-			$category      = JCategories::getInstance($extensionName)->get($id);
-		}
-
-		if ($id < 1)
-		{
-			$link = '';
-		}
-		else
-		{
-			$link = 'index.php?option=' . $extension . '&view=category&id=' . $id;
-
-			$needles = array(
-				'category' => array($id)
-			);
-
-			if ($language && $language != '*' && JLanguageMultilang::isEnabled())
-			{
-				$link .= '&lang=' . $language;
-				$needles['language'] = $language;
-			}
-
-			// Create the link
-			if ($category)
-			{
-				$catids                = array_reverse($category->getPath());
-				$needles['category']   = $catids;
-				$needles['categories'] = $catids;
-
-			}
-
-			if ($item = static::lookupItem($needles))
-			{
-				$link .= '&Itemid=' . $item;
-			}
-		}
-
-		return $link;
-	}
-
-	/**
-	 * Static alias to findItem() used to find the item in the menu structure
-	 *
-	 * @param   array  $needles  Array of lookup values
-	 *
-	 * @return  mixed
-	 *
-	 * @since   3.2
-	 */
-	protected static function lookupItem($needles = array())
-	{
-		$instance = new static;
-
-		return $instance->findItem($needles);
 	}
 }

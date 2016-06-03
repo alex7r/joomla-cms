@@ -24,23 +24,6 @@ class BannersModelDownload extends JModelForm
 	protected $_context = 'com_banners.tracks';
 
 	/**
-	 * Auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState()
-	{
-		$input = JFactory::getApplication()->input;
-
-		$this->setState('basename', $input->cookie->getString(JApplicationHelper::getHash($this->_context . '.basename'), '__SITE__'));
-		$this->setState('compressed', $input->cookie->getInt(JApplicationHelper::getHash($this->_context . '.compressed'), 1));
-	}
-
-	/**
 	 * Method to get the record form.
 	 *
 	 * @param   array    $data      Data for the form.
@@ -61,6 +44,23 @@ class BannersModelDownload extends JModelForm
 		}
 
 		return $form;
+	}
+
+	/**
+	 * Auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		$input = JFactory::getApplication()->input;
+
+		$this->setState('basename', $input->cookie->getString(JApplicationHelper::getHash($this->_context . '.basename'), '__SITE__'));
+		$this->setState('compressed', $input->cookie->getInt(JApplicationHelper::getHash($this->_context . '.compressed'), 1));
 	}
 
 	/**

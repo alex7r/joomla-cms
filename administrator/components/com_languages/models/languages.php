@@ -46,6 +46,71 @@ class LanguagesModelLanguages extends JModelList
 	}
 
 	/**
+	 * Set the published language(s).
+	 *
+	 * @param   array    $cid    An array of language IDs.
+	 * @param   integer  $value  The value of the published state.
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   1.6
+	 */
+	public function setPublished($cid, $value = 0)
+	{
+		return JTable::getInstance('Language')->publish($cid, $value);
+	}
+
+	/**
+	 * Method to delete records.
+	 *
+	 * @param   array  $pks  An array of item primary keys.
+	 *
+	 * @return  boolean  Returns true on success, false on failure.
+	 *
+	 * @since   1.6
+	 */
+	public function delete($pks)
+	{
+		// Sanitize the array.
+		$pks = (array) $pks;
+
+		// Get a row instance.
+		$table = JTable::getInstance('Language');
+
+		// Iterate the items to delete each one.
+		foreach ($pks as $itemId)
+		{
+			if (!$table->delete((int) $itemId))
+			{
+				$this->setError($table->getError());
+
+				return false;
+			}
+		}
+
+		// Clean the cache.
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Custom clean cache method, 2 places for 2 clients.
+	 *
+	 * @param   string   $group      Optional cache group name.
+	 * @param   integer  $client_id  Application client id.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		parent::cleanCache('_system');
+		parent::cleanCache('com_languages');
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
@@ -151,70 +216,5 @@ class LanguagesModelLanguages extends JModelList
 		$query->order($db->escape($this->getState('list.ordering', 'a.ordering')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 
 		return $query;
-	}
-
-	/**
-	 * Set the published language(s).
-	 *
-	 * @param   array    $cid    An array of language IDs.
-	 * @param   integer  $value  The value of the published state.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since   1.6
-	 */
-	public function setPublished($cid, $value = 0)
-	{
-		return JTable::getInstance('Language')->publish($cid, $value);
-	}
-
-	/**
-	 * Method to delete records.
-	 *
-	 * @param   array  $pks  An array of item primary keys.
-	 *
-	 * @return  boolean  Returns true on success, false on failure.
-	 *
-	 * @since   1.6
-	 */
-	public function delete($pks)
-	{
-		// Sanitize the array.
-		$pks = (array) $pks;
-
-		// Get a row instance.
-		$table = JTable::getInstance('Language');
-
-		// Iterate the items to delete each one.
-		foreach ($pks as $itemId)
-		{
-			if (!$table->delete((int) $itemId))
-			{
-				$this->setError($table->getError());
-
-				return false;
-			}
-		}
-
-		// Clean the cache.
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Custom clean cache method, 2 places for 2 clients.
-	 *
-	 * @param   string   $group      Optional cache group name.
-	 * @param   integer  $client_id  Application client id.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
-	{
-		parent::cleanCache('_system');
-		parent::cleanCache('com_languages');
 	}
 }

@@ -17,20 +17,20 @@ defined('JPATH_PLATFORM') or die;
 class JUcmContent extends JUcmBase
 {
 	/**
-	 * The related table object
-	 *
-	 * @var    JTable
-	 * @since  3.1
-	 */
-	protected $table;
-
-	/**
 	 * The UCM data array
 	 *
 	 * @var    array
 	 * @since  3.1
 	 */
 	public $ucmData;
+
+	/**
+	 * The related table object
+	 *
+	 * @var    JTable
+	 * @since  3.1
+	 */
+	protected $table;
 
 	/**
 	 * Instantiate JUcmContent.
@@ -80,37 +80,6 @@ class JUcmContent extends JUcmBase
 			$table = $this->table;
 			$this->store($ucmData['special'], $table, '');
 		}
-
-		return true;
-	}
-
-	/**
-	 * Delete content from the Core Content table
-	 *
-	 * @param   mixed     $pk    The string/array of id's to delete
-	 * @param   JUcmType  $type  The content type object
-	 *
-	 * @return  boolean  True if success
-	 *
-	 * @since   3.1
-	 */
-	public function delete($pk, JUcmType $type = null)
-	{
-		$db   = JFactory::getDbo();
-		$type = $type ? $type : $this->type;
-
-		if (is_array($pk))
-		{
-			$pk = implode(',', $pk);
-		}
-
-		$query = $db->getQuery(true)
-			->delete('#__ucm_content')
-			->where($db->quoteName('core_type_id') . ' = ' . (int) $type->type_id)
-			->where($db->quoteName('core_content_item_id') . ' IN (' . $pk . ')');
-
-		$db->setQuery($query);
-		$db->execute();
 
 		return true;
 	}
@@ -230,5 +199,36 @@ class JUcmContent extends JUcmBase
 		$primaryKey = $db->loadResult();
 
 		return $primaryKey;
+	}
+
+	/**
+	 * Delete content from the Core Content table
+	 *
+	 * @param   mixed     $pk    The string/array of id's to delete
+	 * @param   JUcmType  $type  The content type object
+	 *
+	 * @return  boolean  True if success
+	 *
+	 * @since   3.1
+	 */
+	public function delete($pk, JUcmType $type = null)
+	{
+		$db   = JFactory::getDbo();
+		$type = $type ? $type : $this->type;
+
+		if (is_array($pk))
+		{
+			$pk = implode(',', $pk);
+		}
+
+		$query = $db->getQuery(true)
+			->delete('#__ucm_content')
+			->where($db->quoteName('core_type_id') . ' = ' . (int) $type->type_id)
+			->where($db->quoteName('core_content_item_id') . ' IN (' . $pk . ')');
+
+		$db->setQuery($query);
+		$db->execute();
+
+		return true;
 	}
 }

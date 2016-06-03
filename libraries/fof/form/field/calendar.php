@@ -19,15 +19,15 @@ JFormHelper::loadFieldClass('calendar');
  */
 class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 {
-	protected $static;
-
-	protected $repeatable;
-
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
 	public $item;
 
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
+
+	protected $static;
+
+	protected $repeatable;
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
@@ -78,19 +78,6 @@ class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 	public function getStatic()
 	{
 		return $this->getCalendar('static');
-	}
-
-	/**
-	 * Get the rendering of this field type for a repeatable (grid) display,
-	 * e.g. in a view listing many item (typically a "browse" task)
-	 *
-	 * @since 2.0
-	 *
-	 * @return  string  The field HTML
-	 */
-	public function getRepeatable()
-	{
-		return $this->getCalendar('repeatable');
 	}
 
 	/**
@@ -207,5 +194,18 @@ class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 			htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') .
 			'</span>';
 		}
+	}
+
+	/**
+	 * Get the rendering of this field type for a repeatable (grid) display,
+	 * e.g. in a view listing many item (typically a "browse" task)
+	 *
+	 * @since 2.0
+	 *
+	 * @return  string  The field HTML
+	 */
+	public function getRepeatable()
+	{
+		return $this->getCalendar('repeatable');
 	}
 }

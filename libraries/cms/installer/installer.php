@@ -22,20 +22,21 @@ jimport('joomla.base.adapter');
 class JInstaller extends JAdapter
 {
 	/**
-	 * Array of paths needed by the installer
+	 * JInstaller instance container.
 	 *
-	 * @var    array
+	 * @var    JInstaller
 	 * @since  3.1
+	 * @deprecated  4.0
 	 */
-	protected $paths = array();
+	protected static $instance;
 
 	/**
-	 * True if package is an upgrade
+	 * JInstaller instances container.
 	 *
-	 * @var    boolean
-	 * @since  3.1
+	 * @var    JInstaller[]
+	 * @since  3.4
 	 */
-	protected $upgrade = null;
+	protected static $instances;
 
 	/**
 	 * The manifest trigger class
@@ -44,23 +45,6 @@ class JInstaller extends JAdapter
 	 * @since  3.1
 	 */
 	public $manifestClass = null;
-
-	/**
-	 * True if existing files can be overwritten
-	 *
-	 * @var    boolean
-	 * @since  12.1
-	 */
-	protected $overwrite = false;
-
-	/**
-	 * Stack of installation steps
-	 * - Used for installation rollback
-	 *
-	 * @var    array
-	 * @since  3.1
-	 */
-	protected $stepStack = array();
 
 	/**
 	 * Extension Table Entry
@@ -87,6 +71,39 @@ class JInstaller extends JAdapter
 	public $manifest = null;
 
 	/**
+	 * Array of paths needed by the installer
+	 *
+	 * @var    array
+	 * @since  3.1
+	 */
+	protected $paths = array();
+
+	/**
+	 * True if package is an upgrade
+	 *
+	 * @var    boolean
+	 * @since  3.1
+	 */
+	protected $upgrade = null;
+
+	/**
+	 * True if existing files can be overwritten
+	 *
+	 * @var    boolean
+	 * @since  12.1
+	 */
+	protected $overwrite = false;
+
+	/**
+	 * Stack of installation steps
+	 * - Used for installation rollback
+	 *
+	 * @var    array
+	 * @since  3.1
+	 */
+	protected $stepStack = array();
+
+	/**
 	 * The extension message that appears
 	 *
 	 * @var    string
@@ -101,23 +118,6 @@ class JInstaller extends JAdapter
 	 * @since  3.1
 	 */
 	protected $redirect_url = null;
-
-	/**
-	 * JInstaller instance container.
-	 *
-	 * @var    JInstaller
-	 * @since  3.1
-	 * @deprecated  4.0
-	 */
-	protected static $instance;
-
-	/**
-	 * JInstaller instances container.
-	 *
-	 * @var    JInstaller[]
-	 * @since  3.4
-	 */
-	protected static $instances;
 
 	/**
 	 * Constructor
@@ -263,53 +263,6 @@ class JInstaller extends JAdapter
 	}
 
 	/**
-	 * Get the installation manifest object
-	 *
-	 * @return  SimpleXMLElement  Manifest object
-	 *
-	 * @since   3.1
-	 */
-	public function getManifest()
-	{
-		if (!is_object($this->manifest))
-		{
-			$this->findManifest();
-		}
-
-		return $this->manifest;
-	}
-
-	/**
-	 * Get an installer path by name
-	 *
-	 * @param   string  $name     Path name
-	 * @param   string  $default  Default value
-	 *
-	 * @return  string  Path
-	 *
-	 * @since   3.1
-	 */
-	public function getPath($name, $default = null)
-	{
-		return (!empty($this->paths[$name])) ? $this->paths[$name] : $default;
-	}
-
-	/**
-	 * Sets an installer path by name
-	 *
-	 * @param   string  $name   Path name
-	 * @param   string  $value  Path
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function setPath($name, $value)
-	{
-		$this->paths[$name] = $value;
-	}
-
-	/**
 	 * Pushes a step onto the installer stack for rolling back steps
 	 *
 	 * @param   array  $step  Installer step
@@ -321,6 +274,79 @@ class JInstaller extends JAdapter
 	public function pushStep($step)
 	{
 		$this->stepStack[] = $step;
+	}
+
+	/**
+	 * Package installation method
+	 *
+	 * @param   string  $path  Path to package source folder
+	 *
+	 * @return  boolean  True if successful
+	 *
+	 * @since   3.1
+	 */
+	public function install($path = null)
+	{
+		if ($path && JFolder::exists($path))
+		{
+			$this->setPath('source', $path);
+		}
+		else
+		{
+			$this->abort(JText::_('JLIB_INSTALLER_ABORT_NOINSTALLPATH'));
+
+			return false;
+		}
+
+		if (!$adapter = $this->setupInstall('install', true))
+		{
+			$this->abort(JText::_('JLIB_INSTALLER_ABORT_DETECTMANIFEST'));
+
+			return false;
+		}
+
+		if (!is_object($adapter))
+		{
+			return false;
+		}
+
+		// Add the languages from the package itself
+		if (method_exists($adapter, 'loadLanguage'))
+		{
+			$adapter->loadLanguage($path);
+		}
+
+		// Fire the onExtensionBeforeInstall event.
+		JPluginHelper::importPlugin('extension');
+		$dispatcher = JEventDispatcher::getInstance();
+		$dispatcher->trigger(
+			'onExtensionBeforeInstall',
+			array(
+				'method' => 'install',
+				'type' => $this->manifest->attributes()->type,
+				'manifest' => $this->manifest,
+				'extension' => 0
+			)
+		);
+
+		// Run the install
+		$result = $adapter->install();
+
+		// Fire the onExtensionAfterInstall
+		$dispatcher->trigger(
+			'onExtensionAfterInstall',
+			array('installer' => clone $this, 'eid' => $result)
+		);
+
+		if ($result !== false)
+		{
+			// Refresh versionable assets cache
+			JFactory::getApplication()->flushAssets();
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -410,79 +436,325 @@ class JInstaller extends JAdapter
 		return $retval;
 	}
 
-	// Adapter functions
-
 	/**
-	 * Package installation method
+	 * Prepare for installation: this method sets the installation directory, finds
+	 * and checks the installation file and verifies the installation type.
 	 *
-	 * @param   string  $path  Path to package source folder
+	 * @param   string   $route          The install route being followed
+	 * @param   boolean  $returnAdapter  Flag to return the instantiated adapter
 	 *
-	 * @return  boolean  True if successful
+	 * @return  boolean|JInstallerAdapter  JInstallerAdapter object if explicitly requested otherwise boolean
 	 *
 	 * @since   3.1
 	 */
-	public function install($path = null)
+	public function setupInstall($route = 'install', $returnAdapter = false)
 	{
-		if ($path && JFolder::exists($path))
+		// We need to find the installation manifest file
+		if (!$this->findManifest())
 		{
-			$this->setPath('source', $path);
+			return false;
+		}
+
+		// Load the adapter(s) for the install manifest
+		$type   = (string) $this->manifest->attributes()->type;
+		$params = array('route' => $route, 'manifest' => $this->getManifest());
+
+		// Load the adapter
+		$adapter = $this->getAdapter($type, $params);
+
+		if ($returnAdapter)
+		{
+			return $adapter;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get the installation manifest object
+	 *
+	 * @return  SimpleXMLElement  Manifest object
+	 *
+	 * @since   3.1
+	 */
+	public function getManifest()
+	{
+		if (!is_object($this->manifest))
+		{
+			$this->findManifest();
+		}
+
+		return $this->manifest;
+	}
+
+	// Adapter functions
+
+	/**
+	 * Tries to find the package manifest file
+	 *
+	 * @return  boolean  True on success, False on error
+	 *
+	 * @since   3.1
+	 */
+	public function findManifest()
+	{
+		// Do nothing if folder does not exist for some reason
+		if (!JFolder::exists($this->getPath('source')))
+		{
+			return false;
+		}
+
+		// Main folder manifests (higher priority)
+		$parentXmlfiles = JFolder::files($this->getPath('source'), '.xml$', false, true);
+
+		// Search for children manifests (lower priority)
+		$allXmlFiles    = JFolder::files($this->getPath('source'), '.xml$', 1, true);
+
+		// Create an unique array of files ordered by priority
+		$xmlfiles = array_unique(array_merge($parentXmlfiles, $allXmlFiles));
+
+		// If at least one XML file exists
+		if (!empty($xmlfiles))
+		{
+			foreach ($xmlfiles as $file)
+			{
+				// Is it a valid Joomla installation manifest file?
+				$manifest = $this->isManifest($file);
+
+				if (!is_null($manifest))
+				{
+					// If the root method attribute is set to upgrade, allow file overwrite
+					if ((string) $manifest->attributes()->method == 'upgrade')
+					{
+						$this->upgrade = true;
+						$this->overwrite = true;
+					}
+
+					// If the overwrite option is set, allow file overwriting
+					if ((string) $manifest->attributes()->overwrite == 'true')
+					{
+						$this->overwrite = true;
+					}
+
+					// Set the manifest object and path
+					$this->manifest = $manifest;
+					$this->setPath('manifest', $file);
+
+					// Set the installation source path to that of the manifest file
+					$this->setPath('source', dirname($file));
+
+					return true;
+				}
+			}
+
+			// None of the XML files found were valid install files
+			JLog::add(JText::_('JLIB_INSTALLER_ERROR_NOTFINDJOOMLAXMLSETUPFILE'), JLog::WARNING, 'jerror');
+
+			return false;
 		}
 		else
 		{
-			$this->abort(JText::_('JLIB_INSTALLER_ABORT_NOINSTALLPATH'));
+			// No XML files were found in the install folder
+			JLog::add(JText::_('JLIB_INSTALLER_ERROR_NOTFINDXMLSETUPFILE'), JLog::WARNING, 'jerror');
 
 			return false;
 		}
+	}
 
-		if (!$adapter = $this->setupInstall('install', true))
+	/**
+	 * Get an installer path by name
+	 *
+	 * @param   string  $name     Path name
+	 * @param   string  $default  Default value
+	 *
+	 * @return  string  Path
+	 *
+	 * @since   3.1
+	 */
+	public function getPath($name, $default = null)
+	{
+		return (!empty($this->paths[$name])) ? $this->paths[$name] : $default;
+	}
+
+	/**
+	 * Is the XML file a valid Joomla installation manifest file.
+	 *
+	 * @param   string  $file  An xmlfile path to check
+	 *
+	 * @return  SimpleXMLElement|null  A SimpleXMLElement, or null if the file failed to parse
+	 *
+	 * @since   3.1
+	 */
+	public function isManifest($file)
+	{
+		$xml = simplexml_load_file($file);
+
+		// If we cannot load the XML file return null
+		if (!$xml)
 		{
-			$this->abort(JText::_('JLIB_INSTALLER_ABORT_DETECTMANIFEST'));
+			return null;
+		}
 
+		// Check for a valid XML root tag.
+		if ($xml->getName() != 'extension')
+		{
+			return null;
+		}
+
+		// Valid manifest file return the object
+		return $xml;
+	}
+
+	/**
+	 * Sets an installer path by name
+	 *
+	 * @param   string  $name   Path name
+	 * @param   string  $value  Path
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	public function setPath($name, $value)
+	{
+		$this->paths[$name] = $value;
+	}
+
+	/**
+	 * Fetches an adapter and adds it to the internal storage if an instance is not set
+	 * while also ensuring its a valid adapter name
+	 *
+	 * @param   string  $name     Name of adapter to return
+	 * @param   array   $options  Adapter options
+	 *
+	 * @return  JInstallerAdapter
+	 *
+	 * @since       3.4
+	 * @deprecated  4.0  The internal adapter cache will no longer be supported,
+	 *                   use loadAdapter() to fetch an adapter instance
+	 */
+	public function getAdapter($name, $options = array())
+	{
+		$this->getAdapters($options);
+
+		if (!$this->setAdapter($name, $this->_adapters[$name]))
+		{
 			return false;
 		}
 
-		if (!is_object($adapter))
+		return $this->_adapters[$name];
+	}
+
+	/**
+	 * Gets a list of available install adapters.
+	 *
+	 * @param   array  $options  An array of options to inject into the adapter
+	 * @param   array  $custom   Array of custom install adapters
+	 *
+	 * @return  array  An array of available install adapters.
+	 *
+	 * @since   3.4
+	 * @note    As of 4.0, this method will only return the names of available adapters and will not
+	 *          instantiate them and store to the $_adapters class var.
+	 */
+	public function getAdapters($options = array(), array $custom = array())
+	{
+		$files = new DirectoryIterator($this->_basepath . '/' . $this->_adapterfolder);
+
+		// Process the core adapters
+		foreach ($files as $file)
 		{
-			return false;
+			$fileName = $file->getFilename();
+
+			// Only load for php files.
+			if (!$file->isFile() || $file->getExtension() != 'php')
+			{
+				continue;
+			}
+
+			// Derive the class name from the filename.
+			$name  = str_ireplace('.php', '', trim($fileName));
+			$class = $this->_classprefix . ucfirst($name);
+
+			// Core adapters should autoload based on classname, keep this fallback just in case
+			if (!class_exists($class))
+			{
+				// Try to load the adapter object
+				require_once $this->_basepath . '/' . $this->_adapterfolder . '/' . $fileName;
+
+				if (!class_exists($class))
+				{
+					// Skip to next one
+					continue;
+				}
+			}
+
+			$this->_adapters[$name] = $this->loadAdapter($name, $options);
 		}
 
-		// Add the languages from the package itself
-		if (method_exists($adapter, 'loadLanguage'))
+		// Add any custom adapters if specified
+		if (count($custom) >= 1)
 		{
-			$adapter->loadLanguage($path);
+			foreach ($custom as $adapter)
+			{
+				// Setup the class name
+				// TODO - Can we abstract this to not depend on the Joomla class namespace without PHP namespaces?
+				$class = $this->_classprefix . ucfirst(trim($adapter));
+
+				// If the class doesn't exist we have nothing left to do but look at the next type. We did our best.
+				if (!class_exists($class))
+				{
+					continue;
+				}
+
+				$this->_adapters[$name] = $this->loadAdapter($name, $options);
+			}
 		}
 
-		// Fire the onExtensionBeforeInstall event.
-		JPluginHelper::importPlugin('extension');
-		$dispatcher = JEventDispatcher::getInstance();
-		$dispatcher->trigger(
-			'onExtensionBeforeInstall',
-			array(
-				'method' => 'install',
-				'type' => $this->manifest->attributes()->type,
-				'manifest' => $this->manifest,
-				'extension' => 0
-			)
-		);
+		return $this->_adapters;
+	}
 
-		// Run the install
-		$result = $adapter->install();
+	// Utility functions
 
-		// Fire the onExtensionAfterInstall
-		$dispatcher->trigger(
-			'onExtensionAfterInstall',
-			array('installer' => clone $this, 'eid' => $result)
-		);
+	/**
+	 * Method to load an adapter instance
+	 *
+	 * @param   string  $adapter  Adapter name
+	 * @param   array   $options  Adapter options
+	 *
+	 * @return  JInstallerAdapter
+	 *
+	 * @since   3.4
+	 * @throws  InvalidArgumentException
+	 */
+	public function loadAdapter($adapter, $options = array())
+	{
+		$class = $this->_classprefix . ucfirst($adapter);
 
-		if ($result !== false)
+		if (!class_exists($class))
 		{
-			// Refresh versionable assets cache
-			JFactory::getApplication()->flushAssets();
+			// @deprecated 4.0 - The adapter should be autoloaded or manually included by the caller
+			$path = $this->_basepath . '/' . $this->_adapterfolder . '/' . $adapter . '.php';
 
-			return true;
+			// Try to load the adapter object
+			if (!file_exists($path))
+			{
+				throw new InvalidArgumentException(sprintf('The %s install adapter does not exist.', $adapter));
+			}
+
+			// Try once more to find the class
+			require_once $path;
+
+			if (!class_exists($class))
+			{
+				throw new InvalidArgumentException(sprintf('The %s install adapter does not exist.', $adapter));
+			}
 		}
 
-		return false;
+		// Ensure the adapter type is part of the options array
+		$options['type'] = $adapter;
+
+		return new $class($this, $this->getDbo(), $options);
 	}
 
 	/**
@@ -622,6 +894,22 @@ class JInstaller extends JAdapter
 		}
 
 		return $results;
+	}
+
+	/**
+	 * Loads all adapters.
+	 *
+	 * @param   array  $options  Adapter options
+	 *
+	 * @return  void
+	 *
+	 * @since       3.4
+	 * @deprecated  4.0  Individual adapters should be instantiated as needed
+	 * @note        This method is serving as a proxy of the legacy JAdapter API into the preferred API
+	 */
+	public function loadAllAdapters($options = array())
+	{
+		$this->getAdapters($options);
 	}
 
 	/**
@@ -786,42 +1074,6 @@ class JInstaller extends JAdapter
 		$this->abort(JText::_('JLIB_INSTALLER_ABORT_REFRESH_MANIFEST_CACHE_VALID'));
 
 		return false;
-	}
-
-	// Utility functions
-
-	/**
-	 * Prepare for installation: this method sets the installation directory, finds
-	 * and checks the installation file and verifies the installation type.
-	 *
-	 * @param   string   $route          The install route being followed
-	 * @param   boolean  $returnAdapter  Flag to return the instantiated adapter
-	 *
-	 * @return  boolean|JInstallerAdapter  JInstallerAdapter object if explicitly requested otherwise boolean
-	 *
-	 * @since   3.1
-	 */
-	public function setupInstall($route = 'install', $returnAdapter = false)
-	{
-		// We need to find the installation manifest file
-		if (!$this->findManifest())
-		{
-			return false;
-		}
-
-		// Load the adapter(s) for the install manifest
-		$type   = (string) $this->manifest->attributes()->type;
-		$params = array('route' => $route, 'manifest' => $this->getManifest());
-
-		// Load the adapter
-		$adapter = $this->getAdapter($type, $params);
-
-		if ($returnAdapter)
-		{
-			return $adapter;
-		}
-
-		return true;
 	}
 
 	/**
@@ -1303,6 +1555,226 @@ class JInstaller extends JAdapter
 	}
 
 	/**
+	 * Compares two "files" entries to find deleted files/folders
+	 *
+	 * @param   array  $old_files  An array of SimpleXMLElement objects that are the old files
+	 * @param   array  $new_files  An array of SimpleXMLElement objects that are the new files
+	 *
+	 * @return  array  An array with the delete files and folders in findDeletedFiles[files] and findDeletedFiles[folders] respectively
+	 *
+	 * @since   3.1
+	 */
+	public function findDeletedFiles($old_files, $new_files)
+	{
+		// The magic find deleted files function!
+		// The files that are new
+		$files = array();
+
+		// The folders that are new
+		$folders = array();
+
+		// The folders of the files that are new
+		$containers = array();
+
+		// A list of files to delete
+		$files_deleted = array();
+
+		// A list of folders to delete
+		$folders_deleted = array();
+
+		foreach ($new_files as $file)
+		{
+			switch ($file->getName())
+			{
+				case 'folder':
+					// Add any folders to the list
+					$folders[] = (string) $file; // add any folders to the list
+					break;
+
+				case 'file':
+				default:
+					// Add any files to the list
+					$files[] = (string) $file;
+
+					// Now handle the folder part of the file to ensure we get any containers
+					// Break up the parts of the directory
+					$container_parts = explode('/', dirname((string) $file));
+
+					// Make sure this is clean and empty
+					$container = '';
+
+					foreach ($container_parts as $part)
+					{
+						// Iterate through each part
+						// Add a slash if its not empty
+						if (!empty($container))
+						{
+							$container .= '/';
+						}
+
+						// Aappend the folder part
+						$container .= $part;
+
+						if (!in_array($container, $containers))
+						{
+							// Add the container if it doesn't already exist
+							$containers[] = $container;
+						}
+					}
+					break;
+			}
+		}
+
+		foreach ($old_files as $file)
+		{
+			switch ($file->getName())
+			{
+				case 'folder':
+					if (!in_array((string) $file, $folders))
+					{
+						// See whether the folder exists in the new list
+						if (!in_array((string) $file, $containers))
+						{
+							// Check if the folder exists as a container in the new list
+							// If it's not in the new list or a container then delete it
+							$folders_deleted[] = (string) $file;
+						}
+					}
+					break;
+
+				case 'file':
+				default:
+					if (!in_array((string) $file, $files))
+					{
+						// Look if the file exists in the new list
+						if (!in_array(dirname((string) $file), $folders))
+						{
+							// Look if the file is now potentially in a folder
+							$files_deleted[] = (string) $file; // not in a folder, doesn't exist, wipe it out!
+						}
+					}
+					break;
+			}
+		}
+
+		return array('files' => $files_deleted, 'folders' => $folders_deleted);
+	}
+
+	/**
+	 * Copyfiles
+	 *
+	 * Copy files from source directory to the target directory
+	 *
+	 * @param   array    $files      Array with filenames
+	 * @param   boolean  $overwrite  True if existing files can be replaced
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   3.1
+	 */
+	public function copyFiles($files, $overwrite = null)
+	{
+		/*
+		 * To allow for manual override on the overwriting flag, we check to see if
+		 * the $overwrite flag was set and is a boolean value.  If not, use the object
+		 * allowOverwrite flag.
+		 */
+
+		if (is_null($overwrite) || !is_bool($overwrite))
+		{
+			$overwrite = $this->overwrite;
+		}
+
+		/*
+		 * $files must be an array of filenames.  Verify that it is an array with
+		 * at least one file to copy.
+		 */
+		if (is_array($files) && count($files) > 0)
+		{
+			foreach ($files as $file)
+			{
+				// Get the source and destination paths
+				$filesource = JPath::clean($file['src']);
+				$filedest = JPath::clean($file['dest']);
+				$filetype = array_key_exists('type', $file) ? $file['type'] : 'file';
+
+				if (!file_exists($filesource))
+				{
+					/*
+					 * The source file does not exist.  Nothing to copy so set an error
+					 * and return false.
+					 */
+					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_NO_FILE', $filesource), JLog::WARNING, 'jerror');
+
+					return false;
+				}
+				elseif (($exists = file_exists($filedest)) && !$overwrite)
+				{
+					// It's okay if the manifest already exists
+					if ($this->getPath('manifest') == $filesource)
+					{
+						continue;
+					}
+
+					// The destination file already exists and the overwrite flag is false.
+					// Set an error and return false.
+					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_FILE_EXISTS', $filedest), JLog::WARNING, 'jerror');
+
+					return false;
+				}
+				else
+				{
+					// Copy the folder or file to the new location.
+					if ($filetype == 'folder')
+					{
+						if (!(JFolder::copy($filesource, $filedest, null, $overwrite)))
+						{
+							JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_FAIL_COPY_FOLDER', $filesource, $filedest), JLog::WARNING, 'jerror');
+
+							return false;
+						}
+
+						$step = array('type' => 'folder', 'path' => $filedest);
+					}
+					else
+					{
+						if (!(JFile::copy($filesource, $filedest, null)))
+						{
+							JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_FAIL_COPY_FILE', $filesource, $filedest), JLog::WARNING, 'jerror');
+
+							// In 3.2, TinyMCE language handling changed.  Display a special notice in case an older language pack is installed.
+							if (strpos($filedest, 'media/editors/tinymce/jscripts/tiny_mce/langs'))
+							{
+								JLog::add(JText::_('JLIB_INSTALLER_NOT_ERROR'), JLog::WARNING, 'jerror');
+							}
+
+							return false;
+						}
+
+						$step = array('type' => 'file', 'path' => $filedest);
+					}
+
+					/*
+					 * Since we copied a file/folder, we want to add it to the installation step stack so that
+					 * in case we have to roll back the installation we can remove the files copied.
+					 */
+					if (!$exists)
+					{
+						$this->stepStack[] = $step;
+					}
+				}
+			}
+		}
+		else
+		{
+			// The $files variable was either not an array or an empty array
+			return false;
+		}
+
+		return count($files);
+	}
+
+	/**
 	 * Method to parse through a languages element of the installation manifest and take appropriate
 	 * action.
 	 *
@@ -1553,120 +2025,6 @@ class JInstaller extends JAdapter
 	}
 
 	/**
-	 * Copyfiles
-	 *
-	 * Copy files from source directory to the target directory
-	 *
-	 * @param   array    $files      Array with filenames
-	 * @param   boolean  $overwrite  True if existing files can be replaced
-	 *
-	 * @return  boolean  True on success
-	 *
-	 * @since   3.1
-	 */
-	public function copyFiles($files, $overwrite = null)
-	{
-		/*
-		 * To allow for manual override on the overwriting flag, we check to see if
-		 * the $overwrite flag was set and is a boolean value.  If not, use the object
-		 * allowOverwrite flag.
-		 */
-
-		if (is_null($overwrite) || !is_bool($overwrite))
-		{
-			$overwrite = $this->overwrite;
-		}
-
-		/*
-		 * $files must be an array of filenames.  Verify that it is an array with
-		 * at least one file to copy.
-		 */
-		if (is_array($files) && count($files) > 0)
-		{
-			foreach ($files as $file)
-			{
-				// Get the source and destination paths
-				$filesource = JPath::clean($file['src']);
-				$filedest = JPath::clean($file['dest']);
-				$filetype = array_key_exists('type', $file) ? $file['type'] : 'file';
-
-				if (!file_exists($filesource))
-				{
-					/*
-					 * The source file does not exist.  Nothing to copy so set an error
-					 * and return false.
-					 */
-					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_NO_FILE', $filesource), JLog::WARNING, 'jerror');
-
-					return false;
-				}
-				elseif (($exists = file_exists($filedest)) && !$overwrite)
-				{
-					// It's okay if the manifest already exists
-					if ($this->getPath('manifest') == $filesource)
-					{
-						continue;
-					}
-
-					// The destination file already exists and the overwrite flag is false.
-					// Set an error and return false.
-					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_FILE_EXISTS', $filedest), JLog::WARNING, 'jerror');
-
-					return false;
-				}
-				else
-				{
-					// Copy the folder or file to the new location.
-					if ($filetype == 'folder')
-					{
-						if (!(JFolder::copy($filesource, $filedest, null, $overwrite)))
-						{
-							JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_FAIL_COPY_FOLDER', $filesource, $filedest), JLog::WARNING, 'jerror');
-
-							return false;
-						}
-
-						$step = array('type' => 'folder', 'path' => $filedest);
-					}
-					else
-					{
-						if (!(JFile::copy($filesource, $filedest, null)))
-						{
-							JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_FAIL_COPY_FILE', $filesource, $filedest), JLog::WARNING, 'jerror');
-
-							// In 3.2, TinyMCE language handling changed.  Display a special notice in case an older language pack is installed.
-							if (strpos($filedest, 'media/editors/tinymce/jscripts/tiny_mce/langs'))
-							{
-								JLog::add(JText::_('JLIB_INSTALLER_NOT_ERROR'), JLog::WARNING, 'jerror');
-							}
-
-							return false;
-						}
-
-						$step = array('type' => 'file', 'path' => $filedest);
-					}
-
-					/*
-					 * Since we copied a file/folder, we want to add it to the installation step stack so that
-					 * in case we have to roll back the installation we can remove the files copied.
-					 */
-					if (!$exists)
-					{
-						$this->stepStack[] = $step;
-					}
-				}
-			}
-		}
-		else
-		{
-			// The $files variable was either not an array or an empty array
-			return false;
-		}
-
-		return count($files);
-	}
-
-	/**
 	 * Method to parse through a files element of the installation manifest and remove
 	 * the files that were installed
 	 *
@@ -1855,107 +2213,6 @@ class JInstaller extends JAdapter
 	}
 
 	/**
-	 * Tries to find the package manifest file
-	 *
-	 * @return  boolean  True on success, False on error
-	 *
-	 * @since   3.1
-	 */
-	public function findManifest()
-	{
-		// Do nothing if folder does not exist for some reason
-		if (!JFolder::exists($this->getPath('source')))
-		{
-			return false;
-		}
-
-		// Main folder manifests (higher priority)
-		$parentXmlfiles = JFolder::files($this->getPath('source'), '.xml$', false, true);
-
-		// Search for children manifests (lower priority)
-		$allXmlFiles    = JFolder::files($this->getPath('source'), '.xml$', 1, true);
-
-		// Create an unique array of files ordered by priority
-		$xmlfiles = array_unique(array_merge($parentXmlfiles, $allXmlFiles));
-
-		// If at least one XML file exists
-		if (!empty($xmlfiles))
-		{
-			foreach ($xmlfiles as $file)
-			{
-				// Is it a valid Joomla installation manifest file?
-				$manifest = $this->isManifest($file);
-
-				if (!is_null($manifest))
-				{
-					// If the root method attribute is set to upgrade, allow file overwrite
-					if ((string) $manifest->attributes()->method == 'upgrade')
-					{
-						$this->upgrade = true;
-						$this->overwrite = true;
-					}
-
-					// If the overwrite option is set, allow file overwriting
-					if ((string) $manifest->attributes()->overwrite == 'true')
-					{
-						$this->overwrite = true;
-					}
-
-					// Set the manifest object and path
-					$this->manifest = $manifest;
-					$this->setPath('manifest', $file);
-
-					// Set the installation source path to that of the manifest file
-					$this->setPath('source', dirname($file));
-
-					return true;
-				}
-			}
-
-			// None of the XML files found were valid install files
-			JLog::add(JText::_('JLIB_INSTALLER_ERROR_NOTFINDJOOMLAXMLSETUPFILE'), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-		else
-		{
-			// No XML files were found in the install folder
-			JLog::add(JText::_('JLIB_INSTALLER_ERROR_NOTFINDXMLSETUPFILE'), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-	}
-
-	/**
-	 * Is the XML file a valid Joomla installation manifest file.
-	 *
-	 * @param   string  $file  An xmlfile path to check
-	 *
-	 * @return  SimpleXMLElement|null  A SimpleXMLElement, or null if the file failed to parse
-	 *
-	 * @since   3.1
-	 */
-	public function isManifest($file)
-	{
-		$xml = simplexml_load_file($file);
-
-		// If we cannot load the XML file return null
-		if (!$xml)
-		{
-			return null;
-		}
-
-		// Check for a valid XML root tag.
-		if ($xml->getName() != 'extension')
-		{
-			return null;
-		}
-
-		// Valid manifest file return the object
-		return $xml;
-	}
-
-	/**
 	 * Generates a manifest cache
 	 *
 	 * @return string serialised manifest data
@@ -1965,174 +2222,6 @@ class JInstaller extends JAdapter
 	public function generateManifestCache()
 	{
 		return json_encode(self::parseXMLInstallFile($this->getPath('manifest')));
-	}
-
-	/**
-	 * Cleans up discovered extensions if they're being installed some other way
-	 *
-	 * @param   string   $type     The type of extension (component, etc)
-	 * @param   string   $element  Unique element identifier (e.g. com_content)
-	 * @param   string   $folder   The folder of the extension (plugins; e.g. system)
-	 * @param   integer  $client   The client application (administrator or site)
-	 *
-	 * @return  object    Result of query
-	 *
-	 * @since   3.1
-	 */
-	public function cleanDiscoveredExtension($type, $element, $folder = '', $client = 0)
-	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true)
-			->delete($db->quoteName('#__extensions'))
-			->where('type = ' . $db->quote($type))
-			->where('element = ' . $db->quote($element))
-			->where('folder = ' . $db->quote($folder))
-			->where('client_id = ' . (int) $client)
-			->where('state = -1');
-		$db->setQuery($query);
-
-		return $db->execute();
-	}
-
-	/**
-	 * Compares two "files" entries to find deleted files/folders
-	 *
-	 * @param   array  $old_files  An array of SimpleXMLElement objects that are the old files
-	 * @param   array  $new_files  An array of SimpleXMLElement objects that are the new files
-	 *
-	 * @return  array  An array with the delete files and folders in findDeletedFiles[files] and findDeletedFiles[folders] respectively
-	 *
-	 * @since   3.1
-	 */
-	public function findDeletedFiles($old_files, $new_files)
-	{
-		// The magic find deleted files function!
-		// The files that are new
-		$files = array();
-
-		// The folders that are new
-		$folders = array();
-
-		// The folders of the files that are new
-		$containers = array();
-
-		// A list of files to delete
-		$files_deleted = array();
-
-		// A list of folders to delete
-		$folders_deleted = array();
-
-		foreach ($new_files as $file)
-		{
-			switch ($file->getName())
-			{
-				case 'folder':
-					// Add any folders to the list
-					$folders[] = (string) $file; // add any folders to the list
-					break;
-
-				case 'file':
-				default:
-					// Add any files to the list
-					$files[] = (string) $file;
-
-					// Now handle the folder part of the file to ensure we get any containers
-					// Break up the parts of the directory
-					$container_parts = explode('/', dirname((string) $file));
-
-					// Make sure this is clean and empty
-					$container = '';
-
-					foreach ($container_parts as $part)
-					{
-						// Iterate through each part
-						// Add a slash if its not empty
-						if (!empty($container))
-						{
-							$container .= '/';
-						}
-
-						// Aappend the folder part
-						$container .= $part;
-
-						if (!in_array($container, $containers))
-						{
-							// Add the container if it doesn't already exist
-							$containers[] = $container;
-						}
-					}
-					break;
-			}
-		}
-
-		foreach ($old_files as $file)
-		{
-			switch ($file->getName())
-			{
-				case 'folder':
-					if (!in_array((string) $file, $folders))
-					{
-						// See whether the folder exists in the new list
-						if (!in_array((string) $file, $containers))
-						{
-							// Check if the folder exists as a container in the new list
-							// If it's not in the new list or a container then delete it
-							$folders_deleted[] = (string) $file;
-						}
-					}
-					break;
-
-				case 'file':
-				default:
-					if (!in_array((string) $file, $files))
-					{
-						// Look if the file exists in the new list
-						if (!in_array(dirname((string) $file), $folders))
-						{
-							// Look if the file is now potentially in a folder
-							$files_deleted[] = (string) $file; // not in a folder, doesn't exist, wipe it out!
-						}
-					}
-					break;
-			}
-		}
-
-		return array('files' => $files_deleted, 'folders' => $folders_deleted);
-	}
-
-	/**
-	 * Loads an MD5SUMS file into an associative array
-	 *
-	 * @param   string  $filename  Filename to load
-	 *
-	 * @return  array  Associative array with filenames as the index and the MD5 as the value
-	 *
-	 * @since   3.1
-	 */
-	public function loadMD5Sum($filename)
-	{
-		if (!file_exists($filename))
-		{
-			// Bail if the file doesn't exist
-			return false;
-		}
-
-		$data = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-		$retval = array();
-
-		foreach ($data as $row)
-		{
-			// Split up the data
-			$results = explode('  ', $row);
-
-			// Cull any potential prefix
-			$results[1] = str_replace('./', '', $results[1]);
-
-			// Throw into the array
-			$retval[$results[1]] = $results[0];
-		}
-
-		return $retval;
 	}
 
 	/**
@@ -2209,153 +2298,64 @@ class JInstaller extends JAdapter
 	}
 
 	/**
-	 * Fetches an adapter and adds it to the internal storage if an instance is not set
-	 * while also ensuring its a valid adapter name
+	 * Cleans up discovered extensions if they're being installed some other way
 	 *
-	 * @param   string  $name     Name of adapter to return
-	 * @param   array   $options  Adapter options
+	 * @param   string   $type     The type of extension (component, etc)
+	 * @param   string   $element  Unique element identifier (e.g. com_content)
+	 * @param   string   $folder   The folder of the extension (plugins; e.g. system)
+	 * @param   integer  $client   The client application (administrator or site)
 	 *
-	 * @return  JInstallerAdapter
+	 * @return  object    Result of query
 	 *
-	 * @since       3.4
-	 * @deprecated  4.0  The internal adapter cache will no longer be supported,
-	 *                   use loadAdapter() to fetch an adapter instance
+	 * @since   3.1
 	 */
-	public function getAdapter($name, $options = array())
+	public function cleanDiscoveredExtension($type, $element, $folder = '', $client = 0)
 	{
-		$this->getAdapters($options);
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->delete($db->quoteName('#__extensions'))
+			->where('type = ' . $db->quote($type))
+			->where('element = ' . $db->quote($element))
+			->where('folder = ' . $db->quote($folder))
+			->where('client_id = ' . (int) $client)
+			->where('state = -1');
+		$db->setQuery($query);
 
-		if (!$this->setAdapter($name, $this->_adapters[$name]))
+		return $db->execute();
+	}
+
+	/**
+	 * Loads an MD5SUMS file into an associative array
+	 *
+	 * @param   string  $filename  Filename to load
+	 *
+	 * @return  array  Associative array with filenames as the index and the MD5 as the value
+	 *
+	 * @since   3.1
+	 */
+	public function loadMD5Sum($filename)
+	{
+		if (!file_exists($filename))
 		{
+			// Bail if the file doesn't exist
 			return false;
 		}
 
-		return $this->_adapters[$name];
-	}
+		$data = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+		$retval = array();
 
-	/**
-	 * Gets a list of available install adapters.
-	 *
-	 * @param   array  $options  An array of options to inject into the adapter
-	 * @param   array  $custom   Array of custom install adapters
-	 *
-	 * @return  array  An array of available install adapters.
-	 *
-	 * @since   3.4
-	 * @note    As of 4.0, this method will only return the names of available adapters and will not
-	 *          instantiate them and store to the $_adapters class var.
-	 */
-	public function getAdapters($options = array(), array $custom = array())
-	{
-		$files = new DirectoryIterator($this->_basepath . '/' . $this->_adapterfolder);
-
-		// Process the core adapters
-		foreach ($files as $file)
+		foreach ($data as $row)
 		{
-			$fileName = $file->getFilename();
+			// Split up the data
+			$results = explode('  ', $row);
 
-			// Only load for php files.
-			if (!$file->isFile() || $file->getExtension() != 'php')
-			{
-				continue;
-			}
+			// Cull any potential prefix
+			$results[1] = str_replace('./', '', $results[1]);
 
-			// Derive the class name from the filename.
-			$name  = str_ireplace('.php', '', trim($fileName));
-			$class = $this->_classprefix . ucfirst($name);
-
-			// Core adapters should autoload based on classname, keep this fallback just in case
-			if (!class_exists($class))
-			{
-				// Try to load the adapter object
-				require_once $this->_basepath . '/' . $this->_adapterfolder . '/' . $fileName;
-
-				if (!class_exists($class))
-				{
-					// Skip to next one
-					continue;
-				}
-			}
-
-			$this->_adapters[$name] = $this->loadAdapter($name, $options);
+			// Throw into the array
+			$retval[$results[1]] = $results[0];
 		}
 
-		// Add any custom adapters if specified
-		if (count($custom) >= 1)
-		{
-			foreach ($custom as $adapter)
-			{
-				// Setup the class name
-				// TODO - Can we abstract this to not depend on the Joomla class namespace without PHP namespaces?
-				$class = $this->_classprefix . ucfirst(trim($adapter));
-
-				// If the class doesn't exist we have nothing left to do but look at the next type. We did our best.
-				if (!class_exists($class))
-				{
-					continue;
-				}
-
-				$this->_adapters[$name] = $this->loadAdapter($name, $options);
-			}
-		}
-
-		return $this->_adapters;
-	}
-
-	/**
-	 * Method to load an adapter instance
-	 *
-	 * @param   string  $adapter  Adapter name
-	 * @param   array   $options  Adapter options
-	 *
-	 * @return  JInstallerAdapter
-	 *
-	 * @since   3.4
-	 * @throws  InvalidArgumentException
-	 */
-	public function loadAdapter($adapter, $options = array())
-	{
-		$class = $this->_classprefix . ucfirst($adapter);
-
-		if (!class_exists($class))
-		{
-			// @deprecated 4.0 - The adapter should be autoloaded or manually included by the caller
-			$path = $this->_basepath . '/' . $this->_adapterfolder . '/' . $adapter . '.php';
-
-			// Try to load the adapter object
-			if (!file_exists($path))
-			{
-				throw new InvalidArgumentException(sprintf('The %s install adapter does not exist.', $adapter));
-			}
-
-			// Try once more to find the class
-			require_once $path;
-
-			if (!class_exists($class))
-			{
-				throw new InvalidArgumentException(sprintf('The %s install adapter does not exist.', $adapter));
-			}
-		}
-
-		// Ensure the adapter type is part of the options array
-		$options['type'] = $adapter;
-
-		return new $class($this, $this->getDbo(), $options);
-	}
-
-	/**
-	 * Loads all adapters.
-	 *
-	 * @param   array  $options  Adapter options
-	 *
-	 * @return  void
-	 *
-	 * @since       3.4
-	 * @deprecated  4.0  Individual adapters should be instantiated as needed
-	 * @note        This method is serving as a proxy of the legacy JAdapter API into the preferred API
-	 */
-	public function loadAllAdapters($options = array())
-	{
-		$this->getAdapters($options);
+		return $retval;
 	}
 }

@@ -57,6 +57,33 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
 	}
 
 	/**
+	 * Applies FTP credentials to Joomla! itself, when required
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5.4
+	 */
+	protected function _applyCredentials()
+	{
+		JFactory::getApplication()->getUserStateFromRequest('com_joomlaupdate.method', 'method', 'direct', 'cmd');
+
+		if (!JClientHelper::hasCredentials('ftp'))
+		{
+			$user = JFactory::getApplication()->getUserStateFromRequest('com_joomlaupdate.ftp_user', 'ftp_user', null, 'raw');
+			$pass = JFactory::getApplication()->getUserStateFromRequest('com_joomlaupdate.ftp_pass', 'ftp_pass', null, 'raw');
+
+			if ($user != '' && $pass != '')
+			{
+				// Add credentials to the session
+				if (!JClientHelper::setCredentials('ftp', $user, $pass))
+				{
+					JError::raiseWarning('SOME_ERROR_CODE', JText::_('JLIB_CLIENT_ERROR_HELPER_SETCREDENTIALSFROMREQUEST_FAILED'));
+				}
+			}
+		}
+	}
+
+	/**
 	 * Start the installation of the new Joomla! version
 	 *
 	 * @return  void
@@ -79,6 +106,45 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
 		$model->createRestorationFile($file);
 
 		$this->display();
+	}
+
+	/**
+	 * Method to display a view.
+	 *
+	 * @param   boolean  $cachable   If true, the view output will be cached
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 *
+	 * @return  JoomlaupdateControllerUpdate  This object to support chaining.
+	 *
+	 * @since   2.5.4
+	 */
+	public function display($cachable = false, $urlparams = array())
+	{
+		// Get the document object.
+		$document = JFactory::getDocument();
+
+		// Set the default view name and format from the Request.
+		$vName   = $this->input->get('view', 'update');
+		$vFormat = $document->getType();
+		$lName   = $this->input->get('layout', 'default', 'string');
+
+		// Get and render the view.
+		if ($view = $this->getView($vName, $vFormat))
+		{
+			// Get the model for the view.
+			/** @var JoomlaupdateModelDefault $model */
+			$model = $this->getModel('Default');
+
+			// Push the model into the view (as default).
+			$view->setModel($model, true);
+			$view->setLayout($lName);
+
+			// Push document object into the view.
+			$view->document = $document;
+			$view->display();
+		}
+
+		return $this;
 	}
 
 	/**
@@ -275,71 +341,5 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
 		// Redirect to the actual update page
 		$url = 'index.php?option=com_joomlaupdate&task=update.install';
 		$this->setRedirect($url);
-	}
-
-	/**
-	 * Method to display a view.
-	 *
-	 * @param   boolean  $cachable   If true, the view output will be cached
-	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
-	 *
-	 * @return  JoomlaupdateControllerUpdate  This object to support chaining.
-	 *
-	 * @since   2.5.4
-	 */
-	public function display($cachable = false, $urlparams = array())
-	{
-		// Get the document object.
-		$document = JFactory::getDocument();
-
-		// Set the default view name and format from the Request.
-		$vName   = $this->input->get('view', 'update');
-		$vFormat = $document->getType();
-		$lName   = $this->input->get('layout', 'default', 'string');
-
-		// Get and render the view.
-		if ($view = $this->getView($vName, $vFormat))
-		{
-			// Get the model for the view.
-			/** @var JoomlaupdateModelDefault $model */
-			$model = $this->getModel('Default');
-
-			// Push the model into the view (as default).
-			$view->setModel($model, true);
-			$view->setLayout($lName);
-
-			// Push document object into the view.
-			$view->document = $document;
-			$view->display();
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Applies FTP credentials to Joomla! itself, when required
-	 *
-	 * @return  void
-	 *
-	 * @since   2.5.4
-	 */
-	protected function _applyCredentials()
-	{
-		JFactory::getApplication()->getUserStateFromRequest('com_joomlaupdate.method', 'method', 'direct', 'cmd');
-
-		if (!JClientHelper::hasCredentials('ftp'))
-		{
-			$user = JFactory::getApplication()->getUserStateFromRequest('com_joomlaupdate.ftp_user', 'ftp_user', null, 'raw');
-			$pass = JFactory::getApplication()->getUserStateFromRequest('com_joomlaupdate.ftp_pass', 'ftp_pass', null, 'raw');
-
-			if ($user != '' && $pass != '')
-			{
-				// Add credentials to the session
-				if (!JClientHelper::setCredentials('ftp', $user, $pass))
-				{
-					JError::raiseWarning('SOME_ERROR_CODE', JText::_('JLIB_CLIENT_ERROR_HELPER_SETCREDENTIALSFROMREQUEST_FAILED'));
-				}
-			}
-		}
 	}
 }

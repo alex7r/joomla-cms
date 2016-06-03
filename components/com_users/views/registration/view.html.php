@@ -16,6 +16,8 @@ defined('_JEXEC') or die;
  */
 class UsersViewRegistration extends JViewLegacy
 {
+	public $document;
+
 	protected $data;
 
 	protected $form;
@@ -23,8 +25,6 @@ class UsersViewRegistration extends JViewLegacy
 	protected $params;
 
 	protected $state;
-
-	public $document;
 
 	/**
 	 * Method to display the view.

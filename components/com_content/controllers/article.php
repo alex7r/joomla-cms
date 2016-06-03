@@ -57,6 +57,124 @@ class ContentControllerArticle extends JControllerForm
 	}
 
 	/**
+	 * Get the return URL.
+	 *
+	 * If a "return" variable has been passed in the request
+	 *
+	 * @return  string	The return URL.
+	 *
+	 * @since   1.6
+	 */
+	protected function getReturnPage()
+	{
+		$return = $this->input->get('return', null, 'base64');
+
+		if (empty($return) || !JUri::isInternal(base64_decode($return)))
+		{
+			return JUri::base();
+		}
+		else
+		{
+			return base64_decode($return);
+		}
+	}
+
+	/**
+	 * Method to cancel an edit.
+	 *
+	 * @param   string  $key  The name of the primary key of the URL variable.
+	 *
+	 * @return  boolean  True if access level checks pass, false otherwise.
+	 *
+	 * @since   1.6
+	 */
+	public function cancel($key = 'a_id')
+	{
+		parent::cancel($key);
+
+		// Redirect to the return page.
+		$this->setRedirect($this->getReturnPage());
+	}
+
+	/**
+	 * Method to edit an existing record.
+	 *
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key
+	 * (sometimes required to avoid router collisions).
+	 *
+	 * @return  boolean  True if access level check and checkout passes, false otherwise.
+	 *
+	 * @since   1.6
+	 */
+	public function edit($key = null, $urlVar = 'a_id')
+	{
+		$result = parent::edit($key, $urlVar);
+
+		if (!$result)
+		{
+			$this->setRedirect($this->getReturnPage());
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Method to save a record.
+	 *
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 *
+	 * @return  boolean  True if successful, false otherwise.
+	 *
+	 * @since   1.6
+	 */
+	public function save($key = null, $urlVar = 'a_id')
+	{
+		$result = parent::save($key, $urlVar);
+
+		// If ok, redirect to the return page.
+		if ($result)
+		{
+			$this->setRedirect($this->getReturnPage());
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Method to save a vote.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	public function vote()
+	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		$user_rating = $this->input->getInt('user_rating', -1);
+
+		if ($user_rating > -1)
+		{
+			$url = $this->input->getString('url', '');
+			$id = $this->input->getInt('id', 0);
+			$viewName = $this->input->getString('view', $this->default_view);
+			$model = $this->getModel($viewName);
+
+			if ($model->storeVote($id, $user_rating))
+			{
+				$this->setRedirect($url, JText::_('COM_CONTENT_ARTICLE_VOTE_SUCCESS'));
+			}
+			else
+			{
+				$this->setRedirect($url, JText::_('COM_CONTENT_ARTICLE_VOTE_FAILURE'));
+			}
+		}
+	}
+
+	/**
 	 * Method override to check if you can add a new record.
 	 *
 	 * @param   array  $data  An array of input data.
@@ -143,46 +261,6 @@ class ContentControllerArticle extends JControllerForm
 	}
 
 	/**
-	 * Method to cancel an edit.
-	 *
-	 * @param   string  $key  The name of the primary key of the URL variable.
-	 *
-	 * @return  boolean  True if access level checks pass, false otherwise.
-	 *
-	 * @since   1.6
-	 */
-	public function cancel($key = 'a_id')
-	{
-		parent::cancel($key);
-
-		// Redirect to the return page.
-		$this->setRedirect($this->getReturnPage());
-	}
-
-	/**
-	 * Method to edit an existing record.
-	 *
-	 * @param   string  $key     The name of the primary key of the URL variable.
-	 * @param   string  $urlVar  The name of the URL variable if different from the primary key
-	 * (sometimes required to avoid router collisions).
-	 *
-	 * @return  boolean  True if access level check and checkout passes, false otherwise.
-	 *
-	 * @since   1.6
-	 */
-	public function edit($key = null, $urlVar = 'a_id')
-	{
-		$result = parent::edit($key, $urlVar);
-
-		if (!$result)
-		{
-			$this->setRedirect($this->getReturnPage());
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Method to get a model object, loading it if required.
 	 *
 	 * @param   string  $name    The model name. Optional.
@@ -261,29 +339,6 @@ class ContentControllerArticle extends JControllerForm
 	}
 
 	/**
-	 * Get the return URL.
-	 *
-	 * If a "return" variable has been passed in the request
-	 *
-	 * @return  string	The return URL.
-	 *
-	 * @since   1.6
-	 */
-	protected function getReturnPage()
-	{
-		$return = $this->input->get('return', null, 'base64');
-
-		if (empty($return) || !JUri::isInternal(base64_decode($return)))
-		{
-			return JUri::base();
-		}
-		else
-		{
-			return base64_decode($return);
-		}
-	}
-
-	/**
 	 * Function that allows child controller access to model data after the data has been saved.
 	 *
 	 * @param   JModelLegacy  $model      The data model object.
@@ -296,60 +351,5 @@ class ContentControllerArticle extends JControllerForm
 	protected function postSaveHook(JModelLegacy $model, $validData = array())
 	{
 		return;
-	}
-
-	/**
-	 * Method to save a record.
-	 *
-	 * @param   string  $key     The name of the primary key of the URL variable.
-	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
-	 *
-	 * @return  boolean  True if successful, false otherwise.
-	 *
-	 * @since   1.6
-	 */
-	public function save($key = null, $urlVar = 'a_id')
-	{
-		$result = parent::save($key, $urlVar);
-
-		// If ok, redirect to the return page.
-		if ($result)
-		{
-			$this->setRedirect($this->getReturnPage());
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Method to save a vote.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	public function vote()
-	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-		$user_rating = $this->input->getInt('user_rating', -1);
-
-		if ($user_rating > -1)
-		{
-			$url = $this->input->getString('url', '');
-			$id = $this->input->getInt('id', 0);
-			$viewName = $this->input->getString('view', $this->default_view);
-			$model = $this->getModel($viewName);
-
-			if ($model->storeVote($id, $user_rating))
-			{
-				$this->setRedirect($url, JText::_('COM_CONTENT_ARTICLE_VOTE_SUCCESS'));
-			}
-			else
-			{
-				$this->setRedirect($url, JText::_('COM_CONTENT_ARTICLE_VOTE_FAILURE'));
-			}
-		}
 	}
 }

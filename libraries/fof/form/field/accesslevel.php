@@ -20,15 +20,15 @@ JFormHelper::loadFieldClass('accesslevel');
  */
 class FOFFormFieldAccesslevel extends JFormFieldAccessLevel implements FOFFormField
 {
-	protected $static;
-
-	protected $repeatable;
-
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
 
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
 	public $item;
+
+	protected $static;
+
+	protected $repeatable;
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.

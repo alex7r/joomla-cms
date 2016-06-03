@@ -17,6 +17,14 @@ defined('JPATH_PLATFORM') or die;
 class JDatabaseDriverPostgresql extends JDatabaseDriver
 {
 	/**
+	 * The minimum supported database version.
+	 *
+	 * @var    string
+	 * @since  12.1
+	 */
+	protected static $dbMinimum = '8.3.18';
+
+	/**
 	 * The database driver name
 	 *
 	 * @var    string
@@ -47,14 +55,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	 * @since  12.1
 	 */
 	protected $nullDate = '1970-01-01 00:00:00';
-
-	/**
-	 * The minimum supported database version.
-	 *
-	 * @var    string
-	 * @since  12.1
-	 */
-	protected static $dbMinimum = '8.3.18';
 
 	/**
 	 * Operator used for concatenation
@@ -91,6 +91,18 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	}
 
 	/**
+	 * Test to see if the PostgreSQL connector is available
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   12.1
+	 */
+	public static function test()
+	{
+		return (function_exists('pg_connect'));
+	}
+
+	/**
 	 * Database object destructor
 	 *
 	 * @since   12.1
@@ -98,6 +110,335 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	public function __destruct()
 	{
 		$this->disconnect();
+	}
+
+	/**
+	 * Disconnects the database.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	public function disconnect()
+	{
+		// Close the connection.
+		if (is_resource($this->connection))
+		{
+			foreach ($this->disconnectHandlers as $h)
+			{
+				call_user_func_array($h, array( &$this));
+			}
+
+			pg_close($this->connection);
+		}
+
+		$this->connection = null;
+	}
+
+	/**
+	 * Drops a table from the database.
+	 *
+	 * @param   string   $tableName  The name of the database table to drop.
+	 * @param   boolean  $ifExists   Optionally specify that the table must exist before it is dropped.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   12.1
+	 * @throws  RuntimeException
+	 */
+	public function dropTable($tableName, $ifExists = true)
+	{
+		$this->connect();
+
+		$this->setQuery('DROP TABLE ' . ($ifExists ? 'IF EXISTS ' : '') . $this->quoteName($tableName));
+		$this->execute();
+
+		return true;
+	}
+
+	/**
+	 * Execute the SQL statement.
+	 *
+	 * @return  mixed  A database cursor resource on success, boolean false on failure.
+	 *
+	 * @since   12.1
+	 * @throws  RuntimeException
+	 */
+	public function execute()
+	{
+		$this->connect();
+
+		if (!is_resource($this->connection))
+		{
+			JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR, 'database');
+			throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum);
+		}
+
+		// Take a local copy so that we don't modify the original query and cause issues later
+		$query = $this->replacePrefix((string) $this->sql);
+
+		if (!($this->sql instanceof JDatabaseQuery) && ($this->limit > 0 || $this->offset > 0))
+		{
+			$query .= ' LIMIT ' . $this->limit . ' OFFSET ' . $this->offset;
+		}
+
+		// Increment the query counter.
+		$this->count++;
+
+		// Reset the error values.
+		$this->errorNum = 0;
+		$this->errorMsg = '';
+
+		// If debugging is enabled then let's log the query.
+		if ($this->debug)
+		{
+			// Add the query to the object queue.
+			$this->log[] = $query;
+
+			JLog::add($query, JLog::DEBUG, 'databasequery');
+
+			$this->timings[] = microtime(true);
+
+			if (is_object($this->cursor))
+			{
+				// Avoid warning if result already freed by third-party library
+				@$this->freeResult();
+			}
+
+			$memoryBefore = memory_get_usage();
+		}
+
+		// Execute the query. Error suppression is used here to prevent warnings/notices that the connection has been lost.
+		$this->cursor = @pg_query($this->connection, $query);
+
+		if ($this->debug)
+		{
+			$this->timings[] = microtime(true);
+
+			if (defined('DEBUG_BACKTRACE_IGNORE_ARGS'))
+			{
+				$this->callStacks[] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+			}
+			else
+			{
+				$this->callStacks[] = debug_backtrace();
+			}
+
+			$this->callStacks[count($this->callStacks) - 1][0]['memory'] = array(
+				$memoryBefore,
+				memory_get_usage(),
+				is_resource($this->cursor) ? $this->getNumRows($this->cursor) : null
+			);
+		}
+
+		// If an error occurred handle it.
+		if (!$this->cursor)
+		{
+			// Get the error number and message before we execute any more queries.
+			$errorNum = $this->getErrorNumber();
+			$errorMsg = $this->getErrorMessage($query);
+
+			// Check if the server was disconnected.
+			if (!$this->connected())
+			{
+				try
+				{
+					// Attempt to reconnect.
+					$this->connection = null;
+					$this->connect();
+				}
+				// If connect fails, ignore that exception and throw the normal exception.
+				catch (RuntimeException $e)
+				{
+					$this->errorNum = $this->getErrorNumber();
+					$this->errorMsg = $this->getErrorMessage($query);
+
+					// Throw the normal query exception.
+					JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR, 'database-error');
+
+					throw new JDatabaseExceptionExecuting($this->errorMsg, null, $e);
+				}
+
+				// Since we were able to reconnect, run the query again.
+				return $this->execute();
+			}
+			// The server was not disconnected.
+			else
+			{
+				// Get the error number and message from before we tried to reconnect.
+				$this->errorNum = $errorNum;
+				$this->errorMsg = $errorMsg;
+
+				// Throw the normal query exception.
+				JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR, 'database-error');
+
+				throw new JDatabaseExceptionExecuting($this->errorMsg);
+			}
+		}
+
+		return $this->cursor;
+	}
+
+	/**
+	 * This function replaces a string identifier <var>$prefix</var> with the string held is the
+	 * <var>tablePrefix</var> class variable.
+	 *
+	 * @param   string  $query   The SQL statement to prepare.
+	 * @param   string  $prefix  The common table prefix.
+	 *
+	 * @return  string  The processed SQL statement.
+	 *
+	 * @since   12.1
+	 */
+	public function replacePrefix($query, $prefix = '#__')
+	{
+		$query = trim($query);
+
+		if (strpos($query, '\''))
+		{
+			// Sequence name quoted with ' ' but need to be replaced
+			if (strpos($query, 'currval'))
+			{
+				$query = explode('currval', $query);
+
+				for ($nIndex = 1; $nIndex < count($query); $nIndex = $nIndex + 2)
+				{
+					$query[$nIndex] = str_replace($prefix, $this->tablePrefix, $query[$nIndex]);
+				}
+
+				$query = implode('currval', $query);
+			}
+
+			// Sequence name quoted with ' ' but need to be replaced
+			if (strpos($query, 'nextval'))
+			{
+				$query = explode('nextval', $query);
+
+				for ($nIndex = 1; $nIndex < count($query); $nIndex = $nIndex + 2)
+				{
+					$query[$nIndex] = str_replace($prefix, $this->tablePrefix, $query[$nIndex]);
+				}
+
+				$query = implode('nextval', $query);
+			}
+
+			// Sequence name quoted with ' ' but need to be replaced
+			if (strpos($query, 'setval'))
+			{
+				$query = explode('setval', $query);
+
+				for ($nIndex = 1; $nIndex < count($query); $nIndex = $nIndex + 2)
+				{
+					$query[$nIndex] = str_replace($prefix, $this->tablePrefix, $query[$nIndex]);
+				}
+
+				$query = implode('setval', $query);
+			}
+
+			$explodedQuery = explode('\'', $query);
+
+			for ($nIndex = 0; $nIndex < count($explodedQuery); $nIndex = $nIndex + 2)
+			{
+				if (strpos($explodedQuery[$nIndex], $prefix))
+				{
+					$explodedQuery[$nIndex] = str_replace($prefix, $this->tablePrefix, $explodedQuery[$nIndex]);
+				}
+			}
+
+			$replacedQuery = implode('\'', $explodedQuery);
+		}
+		else
+		{
+			$replacedQuery = str_replace($prefix, $this->tablePrefix, $query);
+		}
+
+		return $replacedQuery;
+	}
+
+	/**
+	 * Method to free up the memory used for the result set.
+	 *
+	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	protected function freeResult($cursor = null)
+	{
+		pg_free_result($cursor ? $cursor : $this->cursor);
+	}
+
+	/**
+	 * Get the number of returned rows for the previous executed SQL statement.
+	 * This command is only valid for statements like SELECT or SHOW that return an actual result set.
+	 * To retrieve the number of rows affected by an INSERT, UPDATE, REPLACE or DELETE query, use getAffectedRows().
+	 *
+	 * @param   resource  $cur  An optional database cursor resource to extract the row count from.
+	 *
+	 * @return  integer   The number of returned rows.
+	 *
+	 * @since   12.1
+	 */
+	public function getNumRows($cur = null)
+	{
+		$this->connect();
+
+		return pg_num_rows((int) $cur ? $cur : $this->cursor);
+	}
+
+	/**
+	 * Return the actual SQL Error number
+	 *
+	 * @return  integer  The SQL Error number
+	 *
+	 * @since   3.4.6
+	 */
+	protected function getErrorNumber()
+	{
+		return (int) pg_result_error_field($this->cursor, PGSQL_DIAG_SQLSTATE) . ' ';
+	}
+
+	/**
+	 * Return the actual SQL Error message
+	 *
+	 * @param   string  $query  The SQL Query that fails
+	 *
+	 * @return  string  The SQL Error message
+	 *
+	 * @since   3.4.6
+	 */
+	protected function getErrorMessage($query)
+	{
+		$errorMessage = (string) pg_last_error($this->connection);
+
+		// Replace the Databaseprefix with `#__` if we are not in Debug
+		if (!$this->debug)
+		{
+			$errorMessage = str_replace($this->tablePrefix, '#__', $errorMessage);
+			$query        = str_replace($this->tablePrefix, '#__', $query);
+		}
+
+		return $errorMessage . "SQL=" . $query;
+	}
+
+	/**
+	 * Determines if the connection to the server is active.
+	 *
+	 * @return	boolean
+	 *
+	 * @since	12.1
+	 */
+	public function connected()
+	{
+		$this->connect();
+
+		if (is_resource($this->connection))
+		{
+			return pg_ping($this->connection);
+		}
+
+		return false;
 	}
 
 	/**
@@ -143,102 +484,15 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	}
 
 	/**
-	 * Disconnects the database.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	public function disconnect()
-	{
-		// Close the connection.
-		if (is_resource($this->connection))
-		{
-			foreach ($this->disconnectHandlers as $h)
-			{
-				call_user_func_array($h, array( &$this));
-			}
-
-			pg_close($this->connection);
-		}
-
-		$this->connection = null;
-	}
-
-	/**
-	 * Method to escape a string for usage in an SQL statement.
-	 *
-	 * @param   string   $text   The string to be escaped.
-	 * @param   boolean  $extra  Optional parameter to provide extra escaping.
-	 *
-	 * @return  string  The escaped string.
-	 *
-	 * @since   12.1
-	 */
-	public function escape($text, $extra = false)
-	{
-		$this->connect();
-
-		$result = pg_escape_string($this->connection, $text);
-
-		if ($extra)
-		{
-			$result = addcslashes($result, '%_');
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Test to see if the PostgreSQL connector is available
+	 * Test to see if the PostgreSQL connector is available.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
 	 * @since   12.1
 	 */
-	public static function test()
+	public static function isSupported()
 	{
 		return (function_exists('pg_connect'));
-	}
-
-	/**
-	 * Determines if the connection to the server is active.
-	 *
-	 * @return	boolean
-	 *
-	 * @since	12.1
-	 */
-	public function connected()
-	{
-		$this->connect();
-
-		if (is_resource($this->connection))
-		{
-			return pg_ping($this->connection);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Drops a table from the database.
-	 *
-	 * @param   string   $tableName  The name of the database table to drop.
-	 * @param   boolean  $ifExists   Optionally specify that the table must exist before it is dropped.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.1
-	 * @throws  RuntimeException
-	 */
-	public function dropTable($tableName, $ifExists = true)
-	{
-		$this->connect();
-
-		$this->setQuery('DROP TABLE ' . ($ifExists ? 'IF EXISTS ' : '') . $this->quoteName($tableName));
-		$this->execute();
-
-		return true;
 	}
 
 	/**
@@ -285,62 +539,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	}
 
 	/**
-	 * Get the number of returned rows for the previous executed SQL statement.
-	 * This command is only valid for statements like SELECT or SHOW that return an actual result set.
-	 * To retrieve the number of rows affected by an INSERT, UPDATE, REPLACE or DELETE query, use getAffectedRows().
-	 *
-	 * @param   resource  $cur  An optional database cursor resource to extract the row count from.
-	 *
-	 * @return  integer   The number of returned rows.
-	 *
-	 * @since   12.1
-	 */
-	public function getNumRows($cur = null)
-	{
-		$this->connect();
-
-		return pg_num_rows((int) $cur ? $cur : $this->cursor);
-	}
-
-	/**
-	 * Get the current or query, or new JDatabaseQuery object.
-	 *
-	 * @param   boolean  $new    False to return the last query set, True to return a new JDatabaseQuery object.
-	 * @param   boolean  $asObj  False to return last query as string, true to get JDatabaseQueryPostgresql object.
-	 *
-	 * @return  JDatabaseQuery  The current query object or a new object extending the JDatabaseQuery class.
-	 *
-	 * @since   12.1
-	 * @throws  RuntimeException
-	 */
-	public function getQuery($new = false, $asObj = false)
-	{
-		if ($new)
-		{
-			// Make sure we have a query class for this driver.
-			if (!class_exists('JDatabaseQueryPostgresql'))
-			{
-				throw new JDatabaseExceptionUnsupported('JDatabaseQueryPostgresql Class not found.');
-			}
-
-			$this->queryObject = new JDatabaseQueryPostgresql($this);
-
-			return $this->queryObject;
-		}
-		else
-		{
-			if ($asObj)
-			{
-				return $this->queryObject;
-			}
-			else
-			{
-				return $this->sql;
-			}
-		}
-	}
-
-	/**
 	 * Shows the table CREATE statement that creates the given tables.
 	 *
 	 * This is unsuported by PostgreSQL.
@@ -354,102 +552,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	public function getTableCreate($tables)
 	{
 		return '';
-	}
-
-	/**
-	 * Retrieves field information about a given table.
-	 *
-	 * @param   string   $table     The name of the database table.
-	 * @param   boolean  $typeOnly  True to only return field types.
-	 *
-	 * @return  array  An array of fields for the database table.
-	 *
-	 * @since   12.1
-	 * @throws  RuntimeException
-	 */
-	public function getTableColumns($table, $typeOnly = true)
-	{
-		$this->connect();
-
-		$result = array();
-
-		$tableSub = $this->replacePrefix($table);
-
-		$this->setQuery('
-			SELECT a.attname AS "column_name",
-				pg_catalog.format_type(a.atttypid, a.atttypmod) as "type",
-				CASE WHEN a.attnotnull IS TRUE
-					THEN \'NO\'
-					ELSE \'YES\'
-				END AS "null",
-				CASE WHEN pg_catalog.pg_get_expr(adef.adbin, adef.adrelid, true) IS NOT NULL
-					THEN pg_catalog.pg_get_expr(adef.adbin, adef.adrelid, true)
-				END as "Default",
-				CASE WHEN pg_catalog.col_description(a.attrelid, a.attnum) IS NULL
-				THEN \'\'
-				ELSE pg_catalog.col_description(a.attrelid, a.attnum)
-				END  AS "comments"
-			FROM pg_catalog.pg_attribute a
-			LEFT JOIN pg_catalog.pg_attrdef adef ON a.attrelid=adef.adrelid AND a.attnum=adef.adnum
-			LEFT JOIN pg_catalog.pg_type t ON a.atttypid=t.oid
-			WHERE a.attrelid =
-				(SELECT oid FROM pg_catalog.pg_class WHERE relname=' . $this->quote($tableSub) . '
-					AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
-					nspname = \'public\')
-				)
-			AND a.attnum > 0 AND NOT a.attisdropped
-			ORDER BY a.attnum'
-		);
-
-		$fields = $this->loadObjectList();
-
-		if ($typeOnly)
-		{
-			foreach ($fields as $field)
-			{
-				$result[$field->column_name] = preg_replace("/[(0-9)]/", '', $field->type);
-			}
-		}
-		else
-		{
-			foreach ($fields as $field)
-			{
-				if (stristr(strtolower($field->type), "character varying"))
-				{
-					$field->Default = "";
-				}
-
-				if (stristr(strtolower($field->type), "text"))
-				{
-					$field->Default = "";
-				}
-				// Do some dirty translation to MySQL output.
-				// TODO: Come up with and implement a standard across databases.
-				$result[$field->column_name] = (object) array(
-					'column_name' => $field->column_name,
-					'type' => $field->type,
-					'null' => $field->null,
-					'Default' => $field->Default,
-					'comments' => '',
-					'Field' => $field->column_name,
-					'Type' => $field->type,
-					'Null' => $field->null,
-					// TODO: Improve query above to return primary key info as well
-					// 'Key' => ($field->PK == '1' ? 'PRI' : '')
-				);
-			}
-		}
-
-		/* Change Postgresql's NULL::* type with PHP's null one */
-		foreach ($fields as $field)
-		{
-			if (preg_match("/^NULL::*/", $field->Default))
-			{
-				$field->Default = null;
-			}
-		}
-
-		return $result;
 	}
 
 	/**
@@ -516,6 +618,44 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 		$tables = $this->loadColumn();
 
 		return $tables;
+	}
+
+	/**
+	 * Get the current or query, or new JDatabaseQuery object.
+	 *
+	 * @param   boolean  $new    False to return the last query set, True to return a new JDatabaseQuery object.
+	 * @param   boolean  $asObj  False to return last query as string, true to get JDatabaseQueryPostgresql object.
+	 *
+	 * @return  JDatabaseQuery  The current query object or a new object extending the JDatabaseQuery class.
+	 *
+	 * @since   12.1
+	 * @throws  RuntimeException
+	 */
+	public function getQuery($new = false, $asObj = false)
+	{
+		if ($new)
+		{
+			// Make sure we have a query class for this driver.
+			if (!class_exists('JDatabaseQueryPostgresql'))
+			{
+				throw new JDatabaseExceptionUnsupported('JDatabaseQueryPostgresql Class not found.');
+			}
+
+			$this->queryObject = new JDatabaseQueryPostgresql($this);
+
+			return $this->queryObject;
+		}
+		else
+		{
+			if ($asObj)
+			{
+				return $this->queryObject;
+			}
+			else
+			{
+				return $this->sql;
+			}
+		}
 	}
 
 	/**
@@ -657,126 +797,36 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	}
 
 	/**
-	 * Execute the SQL statement.
+	 * Method to initialize a transaction.
 	 *
-	 * @return  mixed  A database cursor resource on success, boolean false on failure.
+	 * @param   boolean  $asSavepoint  If true and a transaction is already active, a savepoint will be created.
+	 *
+	 * @return  void
 	 *
 	 * @since   12.1
 	 * @throws  RuntimeException
 	 */
-	public function execute()
+	public function transactionStart($asSavepoint = false)
 	{
 		$this->connect();
 
-		if (!is_resource($this->connection))
+		if (!$asSavepoint || !$this->transactionDepth)
 		{
-			JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR, 'database');
-			throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum);
-		}
-
-		// Take a local copy so that we don't modify the original query and cause issues later
-		$query = $this->replacePrefix((string) $this->sql);
-
-		if (!($this->sql instanceof JDatabaseQuery) && ($this->limit > 0 || $this->offset > 0))
-		{
-			$query .= ' LIMIT ' . $this->limit . ' OFFSET ' . $this->offset;
-		}
-
-		// Increment the query counter.
-		$this->count++;
-
-		// Reset the error values.
-		$this->errorNum = 0;
-		$this->errorMsg = '';
-
-		// If debugging is enabled then let's log the query.
-		if ($this->debug)
-		{
-			// Add the query to the object queue.
-			$this->log[] = $query;
-
-			JLog::add($query, JLog::DEBUG, 'databasequery');
-
-			$this->timings[] = microtime(true);
-
-			if (is_object($this->cursor))
+			if ($this->setQuery('START TRANSACTION')->execute())
 			{
-				// Avoid warning if result already freed by third-party library
-				@$this->freeResult();
+				$this->transactionDepth = 1;
 			}
 
-			$memoryBefore = memory_get_usage();
+			return;
 		}
 
-		// Execute the query. Error suppression is used here to prevent warnings/notices that the connection has been lost.
-		$this->cursor = @pg_query($this->connection, $query);
+		$savepoint = 'SP_' . $this->transactionDepth;
+		$this->setQuery('SAVEPOINT ' . $this->quoteName($savepoint));
 
-		if ($this->debug)
+		if ($this->execute())
 		{
-			$this->timings[] = microtime(true);
-
-			if (defined('DEBUG_BACKTRACE_IGNORE_ARGS'))
-			{
-				$this->callStacks[] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-			}
-			else
-			{
-				$this->callStacks[] = debug_backtrace();
-			}
-
-			$this->callStacks[count($this->callStacks) - 1][0]['memory'] = array(
-				$memoryBefore,
-				memory_get_usage(),
-				is_resource($this->cursor) ? $this->getNumRows($this->cursor) : null
-			);
+			$this->transactionDepth++;
 		}
-
-		// If an error occurred handle it.
-		if (!$this->cursor)
-		{
-			// Get the error number and message before we execute any more queries.
-			$errorNum = $this->getErrorNumber();
-			$errorMsg = $this->getErrorMessage($query);
-
-			// Check if the server was disconnected.
-			if (!$this->connected())
-			{
-				try
-				{
-					// Attempt to reconnect.
-					$this->connection = null;
-					$this->connect();
-				}
-				// If connect fails, ignore that exception and throw the normal exception.
-				catch (RuntimeException $e)
-				{
-					$this->errorNum = $this->getErrorNumber();
-					$this->errorMsg = $this->getErrorMessage($query);
-
-					// Throw the normal query exception.
-					JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR, 'database-error');
-
-					throw new JDatabaseExceptionExecuting($this->errorMsg, null, $e);
-				}
-
-				// Since we were able to reconnect, run the query again.
-				return $this->execute();
-			}
-			// The server was not disconnected.
-			else
-			{
-				// Get the error number and message from before we tried to reconnect.
-				$this->errorNum = $errorNum;
-				$this->errorMsg = $errorMsg;
-
-				// Throw the normal query exception.
-				JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR, 'database-error');
-
-				throw new JDatabaseExceptionExecuting($this->errorMsg);
-			}
-		}
-
-		return $this->cursor;
 	}
 
 	/**
@@ -859,6 +909,30 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	}
 
 	/**
+	 * Method to escape a string for usage in an SQL statement.
+	 *
+	 * @param   string   $text   The string to be escaped.
+	 * @param   boolean  $extra  Optional parameter to provide extra escaping.
+	 *
+	 * @return  string  The escaped string.
+	 *
+	 * @since   12.1
+	 */
+	public function escape($text, $extra = false)
+	{
+		$this->connect();
+
+		$result = pg_escape_string($this->connection, $text);
+
+		if ($extra)
+		{
+			$result = addcslashes($result, '%_');
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Selects the database, but redundant for PostgreSQL
 	 *
 	 * @param   string  $database  Database name to select.
@@ -884,92 +958,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 		$this->connect();
 
 		return pg_set_client_encoding($this->connection, 'UTF8');
-	}
-
-	/**
-	 * This function return a field value as a prepared string to be used in a SQL statement.
-	 *
-	 * @param   array   $columns      Array of table's column returned by ::getTableColumns.
-	 * @param   string  $field_name   The table field's name.
-	 * @param   string  $field_value  The variable value to quote and return.
-	 *
-	 * @return  string  The quoted string.
-	 *
-	 * @since   12.1
-	 */
-	public function sqlValue($columns, $field_name, $field_value)
-	{
-		switch ($columns[$field_name])
-		{
-			case 'boolean':
-				$val = 'NULL';
-
-				if ($field_value == 't')
-				{
-					$val = 'TRUE';
-				}
-				elseif ($field_value == 'f')
-				{
-					$val = 'FALSE';
-				}
-
-				break;
-
-			case 'bigint':
-			case 'bigserial':
-			case 'integer':
-			case 'money':
-			case 'numeric':
-			case 'real':
-			case 'smallint':
-			case 'serial':
-			case 'numeric,':
-				$val = strlen($field_value) == 0 ? 'NULL' : $field_value;
-				break;
-
-			case 'date':
-			case 'timestamp without time zone':
-				if (empty($field_value))
-				{
-					$field_value = $this->getNullDate();
-				}
-
-				$val = $this->quote($field_value);
-				break;
-
-			default:
-				$val = $this->quote($field_value);
-				break;
-		}
-
-		return $val;
-	}
-
-	/**
-	 * Method to commit a transaction.
-	 *
-	 * @param   boolean  $toSavepoint  If true, commit to the last savepoint.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 * @throws  RuntimeException
-	 */
-	public function transactionCommit($toSavepoint = false)
-	{
-		$this->connect();
-
-		if (!$toSavepoint || $this->transactionDepth <= 1)
-		{
-			if ($this->setQuery('COMMIT')->execute())
-			{
-				$this->transactionDepth = 0;
-			}
-
-			return;
-		}
-
-		$this->transactionDepth--;
 	}
 
 	/**
@@ -1004,96 +992,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 			$this->transactionDepth--;
 			$this->setQuery('RELEASE SAVEPOINT ' . $this->quoteName($savepoint))->execute();
 		}
-	}
-
-	/**
-	 * Method to initialize a transaction.
-	 *
-	 * @param   boolean  $asSavepoint  If true and a transaction is already active, a savepoint will be created.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 * @throws  RuntimeException
-	 */
-	public function transactionStart($asSavepoint = false)
-	{
-		$this->connect();
-
-		if (!$asSavepoint || !$this->transactionDepth)
-		{
-			if ($this->setQuery('START TRANSACTION')->execute())
-			{
-				$this->transactionDepth = 1;
-			}
-
-			return;
-		}
-
-		$savepoint = 'SP_' . $this->transactionDepth;
-		$this->setQuery('SAVEPOINT ' . $this->quoteName($savepoint));
-
-		if ($this->execute())
-		{
-			$this->transactionDepth++;
-		}
-	}
-
-	/**
-	 * Method to fetch a row from the result set cursor as an array.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
-	 *
-	 * @since   12.1
-	 */
-	protected function fetchArray($cursor = null)
-	{
-		return pg_fetch_row($cursor ? $cursor : $this->cursor);
-	}
-
-	/**
-	 * Method to fetch a row from the result set cursor as an associative array.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
-	 *
-	 * @since   12.1
-	 */
-	protected function fetchAssoc($cursor = null)
-	{
-		return pg_fetch_assoc($cursor ? $cursor : $this->cursor);
-	}
-
-	/**
-	 * Method to fetch a row from the result set cursor as an object.
-	 *
-	 * @param   mixed   $cursor  The optional result set cursor from which to fetch the row.
-	 * @param   string  $class   The class name to use for the returned row object.
-	 *
-	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
-	 *
-	 * @since   12.1
-	 */
-	protected function fetchObject($cursor = null, $class = 'stdClass')
-	{
-		return pg_fetch_object(is_null($cursor) ? $this->cursor : $cursor, null, $class);
-	}
-
-	/**
-	 * Method to free up the memory used for the result set.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	protected function freeResult($cursor = null)
-	{
-		pg_free_result($cursor ? $cursor : $this->cursor);
 	}
 
 	/**
@@ -1173,15 +1071,158 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	}
 
 	/**
-	 * Test to see if the PostgreSQL connector is available.
+	 * Retrieves field information about a given table.
 	 *
-	 * @return  boolean  True on success, false otherwise.
+	 * @param   string   $table     The name of the database table.
+	 * @param   boolean  $typeOnly  True to only return field types.
+	 *
+	 * @return  array  An array of fields for the database table.
+	 *
+	 * @since   12.1
+	 * @throws  RuntimeException
+	 */
+	public function getTableColumns($table, $typeOnly = true)
+	{
+		$this->connect();
+
+		$result = array();
+
+		$tableSub = $this->replacePrefix($table);
+
+		$this->setQuery('
+			SELECT a.attname AS "column_name",
+				pg_catalog.format_type(a.atttypid, a.atttypmod) as "type",
+				CASE WHEN a.attnotnull IS TRUE
+					THEN \'NO\'
+					ELSE \'YES\'
+				END AS "null",
+				CASE WHEN pg_catalog.pg_get_expr(adef.adbin, adef.adrelid, true) IS NOT NULL
+					THEN pg_catalog.pg_get_expr(adef.adbin, adef.adrelid, true)
+				END as "Default",
+				CASE WHEN pg_catalog.col_description(a.attrelid, a.attnum) IS NULL
+				THEN \'\'
+				ELSE pg_catalog.col_description(a.attrelid, a.attnum)
+				END  AS "comments"
+			FROM pg_catalog.pg_attribute a
+			LEFT JOIN pg_catalog.pg_attrdef adef ON a.attrelid=adef.adrelid AND a.attnum=adef.adnum
+			LEFT JOIN pg_catalog.pg_type t ON a.atttypid=t.oid
+			WHERE a.attrelid =
+				(SELECT oid FROM pg_catalog.pg_class WHERE relname=' . $this->quote($tableSub) . '
+					AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
+					nspname = \'public\')
+				)
+			AND a.attnum > 0 AND NOT a.attisdropped
+			ORDER BY a.attnum'
+		);
+
+		$fields = $this->loadObjectList();
+
+		if ($typeOnly)
+		{
+			foreach ($fields as $field)
+			{
+				$result[$field->column_name] = preg_replace("/[(0-9)]/", '', $field->type);
+			}
+		}
+		else
+		{
+			foreach ($fields as $field)
+			{
+				if (stristr(strtolower($field->type), "character varying"))
+				{
+					$field->Default = "";
+				}
+
+				if (stristr(strtolower($field->type), "text"))
+				{
+					$field->Default = "";
+				}
+				// Do some dirty translation to MySQL output.
+				// TODO: Come up with and implement a standard across databases.
+				$result[$field->column_name] = (object) array(
+					'column_name' => $field->column_name,
+					'type' => $field->type,
+					'null' => $field->null,
+					'Default' => $field->Default,
+					'comments' => '',
+					'Field' => $field->column_name,
+					'Type' => $field->type,
+					'Null' => $field->null,
+					// TODO: Improve query above to return primary key info as well
+					// 'Key' => ($field->PK == '1' ? 'PRI' : '')
+				);
+			}
+		}
+
+		/* Change Postgresql's NULL::* type with PHP's null one */
+		foreach ($fields as $field)
+		{
+			if (preg_match("/^NULL::*/", $field->Default))
+			{
+				$field->Default = null;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * This function return a field value as a prepared string to be used in a SQL statement.
+	 *
+	 * @param   array   $columns      Array of table's column returned by ::getTableColumns.
+	 * @param   string  $field_name   The table field's name.
+	 * @param   string  $field_value  The variable value to quote and return.
+	 *
+	 * @return  string  The quoted string.
 	 *
 	 * @since   12.1
 	 */
-	public static function isSupported()
+	public function sqlValue($columns, $field_name, $field_value)
 	{
-		return (function_exists('pg_connect'));
+		switch ($columns[$field_name])
+		{
+			case 'boolean':
+				$val = 'NULL';
+
+				if ($field_value == 't')
+				{
+					$val = 'TRUE';
+				}
+				elseif ($field_value == 'f')
+				{
+					$val = 'FALSE';
+				}
+
+				break;
+
+			case 'bigint':
+			case 'bigserial':
+			case 'integer':
+			case 'money':
+			case 'numeric':
+			case 'real':
+			case 'smallint':
+			case 'serial':
+			case 'numeric,':
+				$val = strlen($field_value) == 0 ? 'NULL' : $field_value;
+				break;
+
+			case 'date':
+			case 'timestamp without time zone':
+				if (empty($field_value))
+				{
+					$field_value = $this->getNullDate();
+				}
+
+				$val = $this->quote($field_value);
+				break;
+
+			default:
+				$val = $this->quote($field_value);
+				break;
+		}
+
+		return $val;
 	}
 
 	/**
@@ -1284,82 +1325,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	}
 
 	/**
-	 * This function replaces a string identifier <var>$prefix</var> with the string held is the
-	 * <var>tablePrefix</var> class variable.
-	 *
-	 * @param   string  $query   The SQL statement to prepare.
-	 * @param   string  $prefix  The common table prefix.
-	 *
-	 * @return  string  The processed SQL statement.
-	 *
-	 * @since   12.1
-	 */
-	public function replacePrefix($query, $prefix = '#__')
-	{
-		$query = trim($query);
-
-		if (strpos($query, '\''))
-		{
-			// Sequence name quoted with ' ' but need to be replaced
-			if (strpos($query, 'currval'))
-			{
-				$query = explode('currval', $query);
-
-				for ($nIndex = 1; $nIndex < count($query); $nIndex = $nIndex + 2)
-				{
-					$query[$nIndex] = str_replace($prefix, $this->tablePrefix, $query[$nIndex]);
-				}
-
-				$query = implode('currval', $query);
-			}
-
-			// Sequence name quoted with ' ' but need to be replaced
-			if (strpos($query, 'nextval'))
-			{
-				$query = explode('nextval', $query);
-
-				for ($nIndex = 1; $nIndex < count($query); $nIndex = $nIndex + 2)
-				{
-					$query[$nIndex] = str_replace($prefix, $this->tablePrefix, $query[$nIndex]);
-				}
-
-				$query = implode('nextval', $query);
-			}
-
-			// Sequence name quoted with ' ' but need to be replaced
-			if (strpos($query, 'setval'))
-			{
-				$query = explode('setval', $query);
-
-				for ($nIndex = 1; $nIndex < count($query); $nIndex = $nIndex + 2)
-				{
-					$query[$nIndex] = str_replace($prefix, $this->tablePrefix, $query[$nIndex]);
-				}
-
-				$query = implode('setval', $query);
-			}
-
-			$explodedQuery = explode('\'', $query);
-
-			for ($nIndex = 0; $nIndex < count($explodedQuery); $nIndex = $nIndex + 2)
-			{
-				if (strpos($explodedQuery[$nIndex], $prefix))
-				{
-					$explodedQuery[$nIndex] = str_replace($prefix, $this->tablePrefix, $explodedQuery[$nIndex]);
-				}
-			}
-
-			$replacedQuery = implode('\'', $explodedQuery);
-		}
-		else
-		{
-			$replacedQuery = str_replace($prefix, $this->tablePrefix, $query);
-		}
-
-		return $replacedQuery;
-	}
-
-	/**
 	 * Method to release a savepoint.
 	 *
 	 * @param   string  $savepointName  Savepoint's name to release
@@ -1405,6 +1370,33 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 		$this->transactionCommit();
 
 		return $this;
+	}
+
+	/**
+	 * Method to commit a transaction.
+	 *
+	 * @param   boolean  $toSavepoint  If true, commit to the last savepoint.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 * @throws  RuntimeException
+	 */
+	public function transactionCommit($toSavepoint = false)
+	{
+		$this->connect();
+
+		if (!$toSavepoint || $this->transactionDepth <= 1)
+		{
+			if ($this->setQuery('COMMIT')->execute())
+			{
+				$this->transactionDepth = 0;
+			}
+
+			return;
+		}
+
+		$this->transactionDepth--;
 	}
 
 	/**
@@ -1493,41 +1485,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	}
 
 	/**
-	 * Return the actual SQL Error number
-	 *
-	 * @return  integer  The SQL Error number
-	 *
-	 * @since   3.4.6
-	 */
-	protected function getErrorNumber()
-	{
-		return (int) pg_result_error_field($this->cursor, PGSQL_DIAG_SQLSTATE) . ' ';
-	}
-
-	/**
-	 * Return the actual SQL Error message
-	 *
-	 * @param   string  $query  The SQL Query that fails
-	 *
-	 * @return  string  The SQL Error message
-	 *
-	 * @since   3.4.6
-	 */
-	protected function getErrorMessage($query)
-	{
-		$errorMessage = (string) pg_last_error($this->connection);
-
-		// Replace the Databaseprefix with `#__` if we are not in Debug
-		if (!$this->debug)
-		{
-			$errorMessage = str_replace($this->tablePrefix, '#__', $errorMessage);
-			$query        = str_replace($this->tablePrefix, '#__', $query);
-		}
-
-		return $errorMessage . "SQL=" . $query;
-	}
-
-	/**
 	 * Get the query strings to alter the character set and collation of a table.
 	 *
 	 * @param   string  $tableName  The name of the table
@@ -1539,6 +1496,49 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	public function getAlterTableCharacterSet($tableName)
 	{
 		return array();
+	}
+
+	/**
+	 * Method to fetch a row from the result set cursor as an array.
+	 *
+	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
+	 *
+	 * @since   12.1
+	 */
+	protected function fetchArray($cursor = null)
+	{
+		return pg_fetch_row($cursor ? $cursor : $this->cursor);
+	}
+
+	/**
+	 * Method to fetch a row from the result set cursor as an associative array.
+	 *
+	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
+	 *
+	 * @since   12.1
+	 */
+	protected function fetchAssoc($cursor = null)
+	{
+		return pg_fetch_assoc($cursor ? $cursor : $this->cursor);
+	}
+
+	/**
+	 * Method to fetch a row from the result set cursor as an object.
+	 *
+	 * @param   mixed   $cursor  The optional result set cursor from which to fetch the row.
+	 * @param   string  $class   The class name to use for the returned row object.
+	 *
+	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
+	 *
+	 * @since   12.1
+	 */
+	protected function fetchObject($cursor = null, $class = 'stdClass')
+	{
+		return pg_fetch_object(is_null($cursor) ? $this->cursor : $cursor, null, $class);
 	}
 
 	/**

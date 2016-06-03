@@ -86,6 +86,18 @@ class JArchiveZip implements JArchiveExtractable
 	private $_metadata = null;
 
 	/**
+	 * Tests whether this adapter can unpack files on this computer.
+	 *
+	 * @return  boolean  True if supported
+	 *
+	 * @since   11.3
+	 */
+	public static function isSupported()
+	{
+		return (self::hasNativeSupport() || extension_loaded('zlib'));
+	}
+
+	/**
 	 * Create a ZIP compressed file from an array of file data.
 	 *
 	 * @param   string  $archive  Path to save archive.
@@ -108,6 +120,179 @@ class JArchiveZip implements JArchiveExtractable
 		}
 
 		return $this->_createZIPFile($contents, $ctrldir, $archive);
+	}
+
+	/**
+	 * Adds a "file" to the ZIP archive.
+	 *
+	 * @param   array  &$file      File data array to add
+	 * @param   array  &$contents  An array of existing zipped files.
+	 * @param   array  &$ctrldir   An array of central directory information.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 *
+	 * @todo    Review and finish implementation
+	 */
+	private function _addToZIPFile(array &$file, array &$contents, array &$ctrldir)
+	{
+		$data = &$file['data'];
+		$name = str_replace('\\', '/', $file['name']);
+
+		/* See if time/date information has been provided. */
+		$ftime = null;
+
+		if (isset($file['time']))
+		{
+			$ftime = $file['time'];
+		}
+
+		// Get the hex time.
+		$dtime = dechex($this->_unix2DosTime($ftime));
+		$hexdtime = chr(hexdec($dtime[6] . $dtime[7])) . chr(hexdec($dtime[4] . $dtime[5])) . chr(hexdec($dtime[2] . $dtime[3]))
+			. chr(hexdec($dtime[0] . $dtime[1]));
+
+		/* Begin creating the ZIP data. */
+		$fr = $this->_fileHeader;
+		/* Version needed to extract. */
+		$fr .= "\x14\x00";
+		/* General purpose bit flag. */
+		$fr .= "\x00\x00";
+		/* Compression method. */
+		$fr .= "\x08\x00";
+		/* Last modification time/date. */
+		$fr .= $hexdtime;
+
+		/* "Local file header" segment. */
+		$unc_len = strlen($data);
+		$crc = crc32($data);
+		$zdata = gzcompress($data);
+		$zdata = substr(substr($zdata, 0, strlen($zdata) - 4), 2);
+		$c_len = strlen($zdata);
+
+		/* CRC 32 information. */
+		$fr .= pack('V', $crc);
+		/* Compressed filesize. */
+		$fr .= pack('V', $c_len);
+		/* Uncompressed filesize. */
+		$fr .= pack('V', $unc_len);
+		/* Length of filename. */
+		$fr .= pack('v', strlen($name));
+		/* Extra field length. */
+		$fr .= pack('v', 0);
+		/* File name. */
+		$fr .= $name;
+
+		/* "File data" segment. */
+		$fr .= $zdata;
+
+		/* Add this entry to array. */
+		$old_offset = strlen(implode('', $contents));
+		$contents[] = &$fr;
+
+		/* Add to central directory record. */
+		$cdrec = $this->_ctrlDirHeader;
+		/* Version made by. */
+		$cdrec .= "\x00\x00";
+		/* Version needed to extract */
+		$cdrec .= "\x14\x00";
+		/* General purpose bit flag */
+		$cdrec .= "\x00\x00";
+		/* Compression method */
+		$cdrec .= "\x08\x00";
+		/* Last mod time/date. */
+		$cdrec .= $hexdtime;
+		/* CRC 32 information. */
+		$cdrec .= pack('V', $crc);
+		/* Compressed filesize. */
+		$cdrec .= pack('V', $c_len);
+		/* Uncompressed filesize. */
+		$cdrec .= pack('V', $unc_len);
+		/* Length of filename. */
+		$cdrec .= pack('v', strlen($name));
+		/* Extra field length. */
+		$cdrec .= pack('v', 0);
+		/* File comment length. */
+		$cdrec .= pack('v', 0);
+		/* Disk number start. */
+		$cdrec .= pack('v', 0);
+		/* Internal file attributes. */
+		$cdrec .= pack('v', 0);
+		/* External file attributes -'archive' bit set. */
+		$cdrec .= pack('V', 32);
+		/* Relative offset of local header. */
+		$cdrec .= pack('V', $old_offset);
+		/* File name. */
+		$cdrec .= $name;
+		/* Optional extra field, file comment goes here. */
+
+		/* Save to central directory array. */
+		$ctrldir[] = &$cdrec;
+	}
+
+	/**
+	 * Converts a UNIX timestamp to a 4-byte DOS date and time format
+	 * (date in high 2-bytes, time in low 2-bytes allowing magnitude
+	 * comparison).
+	 *
+	 * @param   int  $unixtime  The current UNIX timestamp.
+	 *
+	 * @return  int  The current date in a 4-byte DOS format.
+	 *
+	 * @since   11.1
+	 */
+	protected function _unix2DOSTime($unixtime = null)
+	{
+		$timearray = (is_null($unixtime)) ? getdate() : getdate($unixtime);
+
+		if ($timearray['year'] < 1980)
+		{
+			$timearray['year'] = 1980;
+			$timearray['mon'] = 1;
+			$timearray['mday'] = 1;
+			$timearray['hours'] = 0;
+			$timearray['minutes'] = 0;
+			$timearray['seconds'] = 0;
+		}
+
+		return (($timearray['year'] - 1980) << 25) | ($timearray['mon'] << 21) | ($timearray['mday'] << 16) | ($timearray['hours'] << 11) |
+			($timearray['minutes'] << 5) | ($timearray['seconds'] >> 1);
+	}
+
+	/**
+	 * Creates the ZIP file.
+	 *
+	 * Official ZIP file format: http://www.pkware.com/appnote.txt
+	 *
+	 * @param   array   &$contents  An array of existing zipped files.
+	 * @param   array   &$ctrlDir   An array of central directory information.
+	 * @param   string  $path       The path to store the archive.
+	 *
+	 * @return  boolean  True if successful
+	 *
+	 * @since   11.1
+	 *
+	 * @todo	Review and finish implementation
+	 */
+	private function _createZIPFile(array &$contents, array &$ctrlDir, $path)
+	{
+		$data = implode('', $contents);
+		$dir = implode('', $ctrlDir);
+
+		$buffer = $data . $dir . $this->_ctrlDirEnd . /* Total # of entries "on this disk". */
+		pack('v', count($ctrlDir)) . /* Total # of entries overall. */
+		pack('v', count($ctrlDir)) . /* Size of central directory. */
+		pack('V', strlen($dir)) . /* Offset to start of central dir. */
+		pack('V', strlen($data)) . /* ZIP file comment length. */
+		"\x00\x00";
+
+		if (JFile::write($path, $buffer) === false)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -157,18 +342,6 @@ class JArchiveZip implements JArchiveExtractable
 	}
 
 	/**
-	 * Tests whether this adapter can unpack files on this computer.
-	 *
-	 * @return  boolean  True if supported
-	 *
-	 * @since   11.3
-	 */
-	public static function isSupported()
-	{
-		return (self::hasNativeSupport() || extension_loaded('zlib'));
-	}
-
-	/**
 	 * Method to determine if the server has native zip support for faster handling
 	 *
 	 * @return  boolean  True if php has native ZIP support
@@ -181,20 +354,53 @@ class JArchiveZip implements JArchiveExtractable
 	}
 
 	/**
-	 * Checks to see if the data is a valid ZIP file.
+	 * Extract a ZIP compressed file to a given path using native php api calls for speed
 	 *
-	 * @param   string  &$data  ZIP archive data buffer.
+	 * @param   string  $archive      Path to ZIP archive to extract
+	 * @param   string  $destination  Path to extract archive into
 	 *
-	 * @return  boolean  True if valid, false if invalid.
+	 * @return  boolean  True on success
 	 *
 	 * @since   11.1
+	 * @throws  RuntimeException
 	 */
-	public function checkZipData(&$data)
+	protected function extractNative($archive, $destination)
 	{
-		if (strpos($data, $this->_fileHeader) === false)
+		$zip = zip_open($archive);
+
+		if (!is_resource($zip))
 		{
-			return false;
+			return $this->raiseWarning(100, 'Unable to open archive');
 		}
+
+		// Make sure the destination folder exists
+		if (!JFolder::create($destination))
+		{
+			return $this->raiseWarning(100, 'Unable to create destination');
+		}
+
+		// Read files in the archive
+		while ($file = @zip_read($zip))
+		{
+			if (!zip_entry_open($zip, $file, "r"))
+			{
+				return $this->raiseWarning(100, 'Unable to read entry');
+			}
+
+			if (substr(zip_entry_name($file), strlen(zip_entry_name($file)) - 1) != "/")
+			{
+				$buffer = zip_entry_read($file, zip_entry_filesize($file));
+
+				if (JFile::write($destination . '/' . zip_entry_name($file), $buffer) === false)
+				{
+					return $this->raiseWarning(100, 'Unable to write entry');
+				}
+
+				zip_entry_close($file);
+			}
+		}
+
+		@zip_close($zip);
 
 		return true;
 	}
@@ -253,58 +459,6 @@ class JArchiveZip implements JArchiveExtractable
 				}
 			}
 		}
-
-		return true;
-	}
-
-	/**
-	 * Extract a ZIP compressed file to a given path using native php api calls for speed
-	 *
-	 * @param   string  $archive      Path to ZIP archive to extract
-	 * @param   string  $destination  Path to extract archive into
-	 *
-	 * @return  boolean  True on success
-	 *
-	 * @since   11.1
-	 * @throws  RuntimeException
-	 */
-	protected function extractNative($archive, $destination)
-	{
-		$zip = zip_open($archive);
-
-		if (!is_resource($zip))
-		{
-			return $this->raiseWarning(100, 'Unable to open archive');
-		}
-
-		// Make sure the destination folder exists
-		if (!JFolder::create($destination))
-		{
-			return $this->raiseWarning(100, 'Unable to create destination');
-		}
-
-		// Read files in the archive
-		while ($file = @zip_read($zip))
-		{
-			if (!zip_entry_open($zip, $file, "r"))
-			{
-				return $this->raiseWarning(100, 'Unable to read entry');
-			}
-
-			if (substr(zip_entry_name($file), strlen(zip_entry_name($file)) - 1) != "/")
-			{
-				$buffer = zip_entry_read($file, zip_entry_filesize($file));
-
-				if (JFile::write($destination . '/' . zip_entry_name($file), $buffer) === false)
-				{
-					return $this->raiseWarning(100, 'Unable to write entry');
-				}
-
-				zip_entry_close($file);
-			}
-		}
-
-		@zip_close($zip);
 
 		return true;
 	}
@@ -465,171 +619,17 @@ class JArchiveZip implements JArchiveExtractable
 	}
 
 	/**
-	 * Converts a UNIX timestamp to a 4-byte DOS date and time format
-	 * (date in high 2-bytes, time in low 2-bytes allowing magnitude
-	 * comparison).
+	 * Checks to see if the data is a valid ZIP file.
 	 *
-	 * @param   int  $unixtime  The current UNIX timestamp.
+	 * @param   string  &$data  ZIP archive data buffer.
 	 *
-	 * @return  int  The current date in a 4-byte DOS format.
+	 * @return  boolean  True if valid, false if invalid.
 	 *
 	 * @since   11.1
 	 */
-	protected function _unix2DOSTime($unixtime = null)
+	public function checkZipData(&$data)
 	{
-		$timearray = (is_null($unixtime)) ? getdate() : getdate($unixtime);
-
-		if ($timearray['year'] < 1980)
-		{
-			$timearray['year'] = 1980;
-			$timearray['mon'] = 1;
-			$timearray['mday'] = 1;
-			$timearray['hours'] = 0;
-			$timearray['minutes'] = 0;
-			$timearray['seconds'] = 0;
-		}
-
-		return (($timearray['year'] - 1980) << 25) | ($timearray['mon'] << 21) | ($timearray['mday'] << 16) | ($timearray['hours'] << 11) |
-			($timearray['minutes'] << 5) | ($timearray['seconds'] >> 1);
-	}
-
-	/**
-	 * Adds a "file" to the ZIP archive.
-	 *
-	 * @param   array  &$file      File data array to add
-	 * @param   array  &$contents  An array of existing zipped files.
-	 * @param   array  &$ctrldir   An array of central directory information.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 *
-	 * @todo    Review and finish implementation
-	 */
-	private function _addToZIPFile(array &$file, array &$contents, array &$ctrldir)
-	{
-		$data = &$file['data'];
-		$name = str_replace('\\', '/', $file['name']);
-
-		/* See if time/date information has been provided. */
-		$ftime = null;
-
-		if (isset($file['time']))
-		{
-			$ftime = $file['time'];
-		}
-
-		// Get the hex time.
-		$dtime = dechex($this->_unix2DosTime($ftime));
-		$hexdtime = chr(hexdec($dtime[6] . $dtime[7])) . chr(hexdec($dtime[4] . $dtime[5])) . chr(hexdec($dtime[2] . $dtime[3]))
-			. chr(hexdec($dtime[0] . $dtime[1]));
-
-		/* Begin creating the ZIP data. */
-		$fr = $this->_fileHeader;
-		/* Version needed to extract. */
-		$fr .= "\x14\x00";
-		/* General purpose bit flag. */
-		$fr .= "\x00\x00";
-		/* Compression method. */
-		$fr .= "\x08\x00";
-		/* Last modification time/date. */
-		$fr .= $hexdtime;
-
-		/* "Local file header" segment. */
-		$unc_len = strlen($data);
-		$crc = crc32($data);
-		$zdata = gzcompress($data);
-		$zdata = substr(substr($zdata, 0, strlen($zdata) - 4), 2);
-		$c_len = strlen($zdata);
-
-		/* CRC 32 information. */
-		$fr .= pack('V', $crc);
-		/* Compressed filesize. */
-		$fr .= pack('V', $c_len);
-		/* Uncompressed filesize. */
-		$fr .= pack('V', $unc_len);
-		/* Length of filename. */
-		$fr .= pack('v', strlen($name));
-		/* Extra field length. */
-		$fr .= pack('v', 0);
-		/* File name. */
-		$fr .= $name;
-
-		/* "File data" segment. */
-		$fr .= $zdata;
-
-		/* Add this entry to array. */
-		$old_offset = strlen(implode('', $contents));
-		$contents[] = &$fr;
-
-		/* Add to central directory record. */
-		$cdrec = $this->_ctrlDirHeader;
-		/* Version made by. */
-		$cdrec .= "\x00\x00";
-		/* Version needed to extract */
-		$cdrec .= "\x14\x00";
-		/* General purpose bit flag */
-		$cdrec .= "\x00\x00";
-		/* Compression method */
-		$cdrec .= "\x08\x00";
-		/* Last mod time/date. */
-		$cdrec .= $hexdtime;
-		/* CRC 32 information. */
-		$cdrec .= pack('V', $crc);
-		/* Compressed filesize. */
-		$cdrec .= pack('V', $c_len);
-		/* Uncompressed filesize. */
-		$cdrec .= pack('V', $unc_len);
-		/* Length of filename. */
-		$cdrec .= pack('v', strlen($name));
-		/* Extra field length. */
-		$cdrec .= pack('v', 0);
-		/* File comment length. */
-		$cdrec .= pack('v', 0);
-		/* Disk number start. */
-		$cdrec .= pack('v', 0);
-		/* Internal file attributes. */
-		$cdrec .= pack('v', 0);
-		/* External file attributes -'archive' bit set. */
-		$cdrec .= pack('V', 32);
-		/* Relative offset of local header. */
-		$cdrec .= pack('V', $old_offset);
-		/* File name. */
-		$cdrec .= $name;
-		/* Optional extra field, file comment goes here. */
-
-		/* Save to central directory array. */
-		$ctrldir[] = &$cdrec;
-	}
-
-	/**
-	 * Creates the ZIP file.
-	 *
-	 * Official ZIP file format: http://www.pkware.com/appnote.txt
-	 *
-	 * @param   array   &$contents  An array of existing zipped files.
-	 * @param   array   &$ctrlDir   An array of central directory information.
-	 * @param   string  $path       The path to store the archive.
-	 *
-	 * @return  boolean  True if successful
-	 *
-	 * @since   11.1
-	 *
-	 * @todo	Review and finish implementation
-	 */
-	private function _createZIPFile(array &$contents, array &$ctrlDir, $path)
-	{
-		$data = implode('', $contents);
-		$dir = implode('', $ctrlDir);
-
-		$buffer = $data . $dir . $this->_ctrlDirEnd . /* Total # of entries "on this disk". */
-		pack('v', count($ctrlDir)) . /* Total # of entries overall. */
-		pack('v', count($ctrlDir)) . /* Size of central directory. */
-		pack('V', strlen($dir)) . /* Offset to start of central dir. */
-		pack('V', strlen($data)) . /* ZIP file comment length. */
-		"\x00\x00";
-
-		if (JFile::write($path, $buffer) === false)
+		if (strpos($data, $this->_fileHeader) === false)
 		{
 			return false;
 		}

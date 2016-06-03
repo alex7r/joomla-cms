@@ -17,6 +17,14 @@ defined('JPATH_PLATFORM') or die;
 class JToolbar
 {
 	/**
+	 * Stores the singleton instances of various toolbar.
+	 *
+	 * @var    JToolbar
+	 * @since  2.5
+	 */
+	protected static $instances = array();
+
+	/**
 	 * Toolbar name
 	 *
 	 * @var    string
@@ -43,14 +51,6 @@ class JToolbar
 	 * @var    array
 	 */
 	protected $_buttonPath = array();
-
-	/**
-	 * Stores the singleton instances of various toolbar.
-	 *
-	 * @var    JToolbar
-	 * @since  2.5
-	 */
-	protected static $instances = array();
 
 	/**
 	 * Constructor

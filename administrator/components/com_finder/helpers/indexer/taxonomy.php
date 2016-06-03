@@ -33,82 +33,6 @@ class FinderIndexerTaxonomy
 	public static $nodes = array();
 
 	/**
-	 * Method to add a branch to the taxonomy tree.
-	 *
-	 * @param   string   $title   The title of the branch.
-	 * @param   integer  $state   The published state of the branch. [optional]
-	 * @param   integer  $access  The access state of the branch. [optional]
-	 *
-	 * @return  integer  The id of the branch.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	public static function addBranch($title, $state = 1, $access = 1)
-	{
-		// Check to see if the branch is in the cache.
-		if (isset(self::$branches[$title]))
-		{
-			return self::$branches[$title]->id;
-		}
-
-		// Check to see if the branch is in the table.
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true)
-			->select('*')
-			->from($db->quoteName('#__finder_taxonomy'))
-			->where($db->quoteName('parent_id') . ' = 1')
-			->where($db->quoteName('title') . ' = ' . $db->quote($title));
-		$db->setQuery($query);
-
-		// Get the result.
-		$result = $db->loadObject();
-
-		// Check if the database matches the input data.
-		if (!empty($result) && $result->state == $state && $result->access == $access)
-		{
-			// The data matches, add the item to the cache.
-			self::$branches[$title] = $result;
-
-			return self::$branches[$title]->id;
-		}
-
-		/*
-		 * The database did not match the input. This could be because the
-		 * state has changed or because the branch does not exist. Let's figure
-		 * out which case is true and deal with it.
-		 */
-		$branch = new JObject;
-
-		if (empty($result))
-		{
-			// Prepare the branch object.
-			$branch->parent_id = 1;
-			$branch->title = $title;
-			$branch->state = (int) $state;
-			$branch->access = (int) $access;
-		}
-		else
-		{
-			// Prepare the branch object.
-			$branch->id = (int) $result->id;
-			$branch->parent_id = (int) $result->parent_id;
-			$branch->title = $result->title;
-			$branch->state = (int) $result->title;
-			$branch->access = (int) $result->access;
-			$branch->ordering = (int) $result->ordering;
-		}
-
-		// Store the branch.
-		self::storeNode($branch);
-
-		// Add the branch to the cache.
-		self::$branches[$title] = $branch;
-
-		return self::$branches[$title]->id;
-	}
-
-	/**
 	 * Method to add a node to the taxonomy tree.
 	 *
 	 * @param   string   $branch  The title of the branch to store the node in.
@@ -186,6 +110,111 @@ class FinderIndexerTaxonomy
 		self::$nodes[$branch][$title] = $node;
 
 		return self::$nodes[$branch][$title]->id;
+	}
+
+	/**
+	 * Method to add a branch to the taxonomy tree.
+	 *
+	 * @param   string   $title   The title of the branch.
+	 * @param   integer  $state   The published state of the branch. [optional]
+	 * @param   integer  $access  The access state of the branch. [optional]
+	 *
+	 * @return  integer  The id of the branch.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
+	 */
+	public static function addBranch($title, $state = 1, $access = 1)
+	{
+		// Check to see if the branch is in the cache.
+		if (isset(self::$branches[$title]))
+		{
+			return self::$branches[$title]->id;
+		}
+
+		// Check to see if the branch is in the table.
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName('#__finder_taxonomy'))
+			->where($db->quoteName('parent_id') . ' = 1')
+			->where($db->quoteName('title') . ' = ' . $db->quote($title));
+		$db->setQuery($query);
+
+		// Get the result.
+		$result = $db->loadObject();
+
+		// Check if the database matches the input data.
+		if (!empty($result) && $result->state == $state && $result->access == $access)
+		{
+			// The data matches, add the item to the cache.
+			self::$branches[$title] = $result;
+
+			return self::$branches[$title]->id;
+		}
+
+		/*
+		 * The database did not match the input. This could be because the
+		 * state has changed or because the branch does not exist. Let's figure
+		 * out which case is true and deal with it.
+		 */
+		$branch = new JObject;
+
+		if (empty($result))
+		{
+			// Prepare the branch object.
+			$branch->parent_id = 1;
+			$branch->title = $title;
+			$branch->state = (int) $state;
+			$branch->access = (int) $access;
+		}
+		else
+		{
+			// Prepare the branch object.
+			$branch->id = (int) $result->id;
+			$branch->parent_id = (int) $result->parent_id;
+			$branch->title = $result->title;
+			$branch->state = (int) $result->title;
+			$branch->access = (int) $result->access;
+			$branch->ordering = (int) $result->ordering;
+		}
+
+		// Store the branch.
+		self::storeNode($branch);
+
+		// Add the branch to the cache.
+		self::$branches[$title] = $branch;
+
+		return self::$branches[$title]->id;
+	}
+
+	/**
+	 * Method to store a node to the database.  This method will accept either a branch or a node.
+	 *
+	 * @param   object  $item  The item to store.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
+	 */
+	protected static function storeNode($item)
+	{
+		$db = JFactory::getDbo();
+
+		// Check if we are updating or inserting the item.
+		if (empty($item->id))
+		{
+			// Insert the item.
+			$db->insertObject('#__finder_taxonomy', $item, 'id');
+		}
+		else
+		{
+			// Update the item.
+			$db->updateObject('#__finder_taxonomy', $item, 'id');
+		}
+
+		return true;
 	}
 
 	/**
@@ -342,34 +371,5 @@ class FinderIndexerTaxonomy
 		$db->execute();
 
 		return $db->getAffectedRows();
-	}
-
-	/**
-	 * Method to store a node to the database.  This method will accept either a branch or a node.
-	 *
-	 * @param   object  $item  The item to store.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	protected static function storeNode($item)
-	{
-		$db = JFactory::getDbo();
-
-		// Check if we are updating or inserting the item.
-		if (empty($item->id))
-		{
-			// Insert the item.
-			$db->insertObject('#__finder_taxonomy', $item, 'id');
-		}
-		else
-		{
-			// Update the item.
-			$db->updateObject('#__finder_taxonomy', $item, 'id');
-		}
-
-		return true;
 	}
 }

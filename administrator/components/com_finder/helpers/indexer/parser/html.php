@@ -69,23 +69,6 @@ class FinderIndexerParserHtml extends FinderIndexerParser
 	}
 
 	/**
-	 * Method to process HTML input and extract the plain text.
-	 *
-	 * @param   string  $input  The input to process.
-	 *
-	 * @return  string  The plain text input.
-	 *
-	 * @since   2.5
-	 */
-	protected function process($input)
-	{
-		// Replace any amount of white space with a single space.
-		$input = preg_replace('#\s+#u', ' ', $input);
-
-		return $input;
-	}
-
-	/**
 	 * Method to remove blocks of text between a start and an end tag.
 	 * Each block removed is effectively replaced by a single space.
 	 *
@@ -144,5 +127,22 @@ class FinderIndexerParserHtml extends FinderIndexerParser
 		$return .= substr($input, $offset);
 
 		return $return;
+	}
+
+	/**
+	 * Method to process HTML input and extract the plain text.
+	 *
+	 * @param   string  $input  The input to process.
+	 *
+	 * @return  string  The plain text input.
+	 *
+	 * @since   2.5
+	 */
+	protected function process($input)
+	{
+		// Replace any amount of white space with a single space.
+		$input = preg_replace('#\s+#u', ' ', $input);
+
+		return $input;
 	}
 }

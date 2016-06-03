@@ -452,6 +452,22 @@ class FinderIndexerDriverPostgresql extends FinderIndexer
 	}
 
 	/**
+	 * Method to switch the token tables from Memory tables to MyISAM tables
+	 * when they are close to running out of memory.
+	 *
+	 * @param   boolean  $memory  Flag to control how they should be toggled.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
+	 */
+	protected function toggleTables($memory)
+	{
+		return true;
+	}
+
+	/**
 	 * Method to remove a link from the index.
 	 *
 	 * @param   integer  $linkId  The id of the link.
@@ -614,21 +630,5 @@ class FinderIndexerDriverPostgresql extends FinderIndexer
 		$db->execute();
 
 		return $values;
-	}
-
-	/**
-	 * Method to switch the token tables from Memory tables to MyISAM tables
-	 * when they are close to running out of memory.
-	 *
-	 * @param   boolean  $memory  Flag to control how they should be toggled.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	protected function toggleTables($memory)
-	{
-		return true;
 	}
 }

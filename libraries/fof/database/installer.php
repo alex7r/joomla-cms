@@ -7,19 +7,19 @@
 
 class FOFDatabaseInstaller
 {
-	/** @var  JDatabase  The database connector object */
-	private $db = null;
+	/** @var  array  A list of the base names of the XML schema files */
+	public $xmlFiles = array('mysql', 'mysqli', 'pdomysql', 'postgresql', 'sqlsrv', 'mssql');
 
 	/**
 	 * @var   FOFInput  Input variables
 	 */
 	protected $input = array();
 
+	/** @var  JDatabase  The database connector object */
+	private $db = null;
+
 	/** @var  string  The directory where the XML schema files are stored */
 	private $xmlDirectory = null;
-
-	/** @var  array  A list of the base names of the XML schema files */
-	public $xmlFiles = array('mysql', 'mysqli', 'pdomysql', 'postgresql', 'sqlsrv', 'mssql');
 
 	/**
 	 * Public constructor
@@ -101,16 +101,6 @@ class FOFDatabaseInstaller
 	}
 
 	/**
-	 * Sets the directory where XML schema files are stored
-	 *
-	 * @param   string  $xmlDirectory
-	 */
-	public function setXmlDirectory($xmlDirectory)
-	{
-		$this->xmlDirectory = $xmlDirectory;
-	}
-
-	/**
 	 * Returns the directory where XML schema files are stored
 	 *
 	 * @return  string
@@ -118,6 +108,16 @@ class FOFDatabaseInstaller
 	public function getXmlDirectory()
 	{
 		return $this->xmlDirectory;
+	}
+
+	/**
+	 * Sets the directory where XML schema files are stored
+	 *
+	 * @param   string  $xmlDirectory
+	 */
+	public function setXmlDirectory($xmlDirectory)
+	{
+		$this->xmlDirectory = $xmlDirectory;
 	}
 
 	/**
@@ -272,56 +272,6 @@ class FOFDatabaseInstaller
 						}
 					}
 				}
-			}
-		}
-	}
-
-	/**
-	 * Uninstalls the database schema
-	 *
-	 * @return  void
-	 */
-	public function removeSchema()
-	{
-		// Get the schema XML file
-		$xml = $this->findSchemaXml();
-
-		if (empty($xml))
-		{
-			return;
-		}
-
-		// Make sure there are SQL commands in this file
-		if (!$xml->sql)
-		{
-			return;
-		}
-
-		// Walk the sql > action tags to find all tables
-		$tables = array();
-		/** @var SimpleXMLElement $actions */
-		$actions = $xml->sql->children();
-
-		/** @var SimpleXMLElement $action */
-		foreach ($actions as $action)
-		{
-			$attributes = $action->attributes();
-			$tables[] = (string)$attributes->table;
-		}
-
-		// Simplify the tables list
-		$tables = array_unique($tables);
-
-		// Start dropping tables
-		foreach ($tables as $table)
-		{
-			try
-			{
-				$this->db->dropTable($table);
-			}
-			catch (Exception $e)
-			{
-				// Do not fail if I can't drop the table
 			}
 		}
 	}
@@ -512,5 +462,55 @@ class FOFDatabaseInstaller
 		}
 
 		return $condition;
+	}
+
+	/**
+	 * Uninstalls the database schema
+	 *
+	 * @return  void
+	 */
+	public function removeSchema()
+	{
+		// Get the schema XML file
+		$xml = $this->findSchemaXml();
+
+		if (empty($xml))
+		{
+			return;
+		}
+
+		// Make sure there are SQL commands in this file
+		if (!$xml->sql)
+		{
+			return;
+		}
+
+		// Walk the sql > action tags to find all tables
+		$tables = array();
+		/** @var SimpleXMLElement $actions */
+		$actions = $xml->sql->children();
+
+		/** @var SimpleXMLElement $action */
+		foreach ($actions as $action)
+		{
+			$attributes = $action->attributes();
+			$tables[] = (string)$attributes->table;
+		}
+
+		// Simplify the tables list
+		$tables = array_unique($tables);
+
+		// Start dropping tables
+		foreach ($tables as $table)
+		{
+			try
+			{
+				$this->db->dropTable($table);
+			}
+			catch (Exception $e)
+			{
+				// Do not fail if I can't drop the table
+			}
+		}
 	}
 }

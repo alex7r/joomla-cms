@@ -137,52 +137,6 @@ class JoomlaupdateModelDefault extends JModelLegacy
 	}
 
 	/**
-	 * Returns an array with the Joomla! update information.
-	 *
-	 * @return  array
-	 *
-	 * @since   2.5.4
-	 */
-	public function getUpdateInformation()
-	{
-		// Initialise the return array.
-		$ret = array(
-			'installed' => JVERSION,
-			'latest'    => null,
-			'object'    => null,
-			'hasUpdate' => false
-		);
-
-		// Fetch the update information from the database.
-		$db = $this->getDbo();
-		$query = $db->getQuery(true)
-			->select('*')
-			->from($db->quoteName('#__updates'))
-			->where($db->quoteName('extension_id') . ' = ' . $db->quote(700));
-		$db->setQuery($query);
-		$updateObject = $db->loadObject();
-
-		if (is_null($updateObject))
-		{
-			$ret['latest'] = JVERSION;
-
-			return $ret;
-		}
-
-		$ret['latest']    = $updateObject->version;
-		$ret['hasUpdate'] = $updateObject->version != JVERSION;
-
-		// Fetch the full update details from the update details URL.
-		jimport('joomla.updater.update');
-		$update = new JUpdate;
-		$update->loadFromXML($updateObject->detailsurl);
-
-		$ret['object'] = $update;
-
-		return $ret;
-	}
-
-	/**
 	 * Returns an array with the configured FTP options.
 	 *
 	 * @return  array
@@ -279,6 +233,52 @@ class JoomlaupdateModelDefault extends JModelLegacy
 			// Yes, it's there, skip downloading.
 			return $basename;
 		}
+	}
+
+	/**
+	 * Returns an array with the Joomla! update information.
+	 *
+	 * @return  array
+	 *
+	 * @since   2.5.4
+	 */
+	public function getUpdateInformation()
+	{
+		// Initialise the return array.
+		$ret = array(
+			'installed' => JVERSION,
+			'latest'    => null,
+			'object'    => null,
+			'hasUpdate' => false
+		);
+
+		// Fetch the update information from the database.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName('#__updates'))
+			->where($db->quoteName('extension_id') . ' = ' . $db->quote(700));
+		$db->setQuery($query);
+		$updateObject = $db->loadObject();
+
+		if (is_null($updateObject))
+		{
+			$ret['latest'] = JVERSION;
+
+			return $ret;
+		}
+
+		$ret['latest']    = $updateObject->version;
+		$ret['hasUpdate'] = $updateObject->version != JVERSION;
+
+		// Fetch the full update details from the update details URL.
+		jimport('joomla.updater.update');
+		$update = new JUpdate;
+		$update->loadFromXML($updateObject->detailsurl);
+
+		$ret['object'] = $update;
+
+		return $ret;
 	}
 
 	/**

@@ -19,6 +19,14 @@ defined('JPATH_PLATFORM') or die;
 class JPathway
 {
 	/**
+	 * JPathway instances container.
+	 *
+	 * @var    JPathway[]
+	 * @since  1.7
+	 */
+	protected static $instances = array();
+
+	/**
 	 * @var    array  Array to hold the pathway item objects
 	 * @since  1.5
 	 * @deprecated  4.0  Will convert to $pathway
@@ -31,14 +39,6 @@ class JPathway
 	 * @deprecated  4.0  Will convert to $count
 	 */
 	protected $_count = 0;
-
-	/**
-	 * JPathway instances container.
-	 *
-	 * @var    JPathway[]
-	 * @since  1.7
-	 */
-	protected static $instances = array();
 
 	/**
 	 * Class constructor
@@ -179,6 +179,25 @@ class JPathway
 	}
 
 	/**
+	 * Create and return a new pathway object.
+	 *
+	 * @param   string  $name  Name of the item
+	 * @param   string  $link  Link to the item
+	 *
+	 * @return  JPathway  Pathway item object
+	 *
+	 * @since   3.1
+	 */
+	protected function makeItem($name, $link)
+	{
+		$item = new stdClass;
+		$item->name = html_entity_decode($name, ENT_COMPAT, 'UTF-8');
+		$item->link = $link;
+
+		return $item;
+	}
+
+	/**
 	 * Set item name.
 	 *
 	 * @param   integer  $id    The id of the item on which to set the name.
@@ -216,24 +235,5 @@ class JPathway
 	protected function _makeItem($name, $link)
 	{
 		return $this->makeItem($name, $link);
-	}
-
-	/**
-	 * Create and return a new pathway object.
-	 *
-	 * @param   string  $name  Name of the item
-	 * @param   string  $link  Link to the item
-	 *
-	 * @return  JPathway  Pathway item object
-	 *
-	 * @since   3.1
-	 */
-	protected function makeItem($name, $link)
-	{
-		$item = new stdClass;
-		$item->name = html_entity_decode($name, ENT_COMPAT, 'UTF-8');
-		$item->link = $link;
-
-		return $item;
 	}
 }

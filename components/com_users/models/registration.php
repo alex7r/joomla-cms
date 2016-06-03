@@ -202,62 +202,6 @@ class UsersModelRegistration extends JModelForm
 	}
 
 	/**
-	 * Method to get the registration form data.
-	 *
-	 * The base form data is loaded and then an event is fired
-	 * for users plugins to extend the data.
-	 *
-	 * @return  mixed  Data object on success, false on failure.
-	 *
-	 * @since   1.6
-	 */
-	public function getData()
-	{
-		if ($this->data === null)
-		{
-			$this->data = new stdClass;
-			$app = JFactory::getApplication();
-			$params = JComponentHelper::getParams('com_users');
-
-			// Override the base user data with any data in the session.
-			$temp = (array) $app->getUserState('com_users.registration.data', array());
-
-			foreach ($temp as $k => $v)
-			{
-				$this->data->$k = $v;
-			}
-
-			// Get the groups the user should be added to after registration.
-			$this->data->groups = array();
-
-			// Get the default new user group, Registered if not specified.
-			$system = $params->get('new_usertype', 2);
-
-			$this->data->groups[] = $system;
-
-			// Unset the passwords.
-			unset($this->data->password1);
-			unset($this->data->password2);
-
-			// Get the dispatcher and load the users plugins.
-			$dispatcher = JEventDispatcher::getInstance();
-			JPluginHelper::importPlugin('user');
-
-			// Trigger the data preparation event.
-			$results = $dispatcher->trigger('onContentPrepareData', array('com_users.registration', $this->data));
-
-			// Check for errors encountered while preparing the data.
-			if (count($results) && in_array(false, $results, true))
-			{
-				$this->setError($dispatcher->getError());
-				$this->data = false;
-			}
-		}
-
-		return $this->data;
-	}
-
-	/**
 	 * Method to get the registration form.
 	 *
 	 * The base form is loaded from XML and then an event is fired
@@ -287,66 +231,6 @@ class UsersModelRegistration extends JModelForm
 		}
 
 		return $form;
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		$data = $this->getData();
-
-		$this->preprocessData('com_users.registration', $data);
-
-		return $data;
-	}
-
-	/**
-	 * Override preprocessForm to load the user plugin group instead of content.
-	 *
-	 * @param   JForm   $form   A JForm object.
-	 * @param   mixed   $data   The data expected for the form.
-	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 * @throws  Exception if there is an error in the form event.
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'user')
-	{
-		$userParams = JComponentHelper::getParams('com_users');
-
-		// Add the choice for site language at registration time
-		if ($userParams->get('site_language') == 1 && $userParams->get('frontend_userparams') == 1)
-		{
-			$form->loadFile('sitelang', false);
-		}
-
-		parent::preprocessForm($form, $data, $group);
-	}
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState()
-	{
-		// Get the application object.
-		$app = JFactory::getApplication();
-		$params = $app->getParams('com_users');
-
-		// Load the parameters.
-		$this->setState('params', $params);
 	}
 
 	/**
@@ -660,5 +544,121 @@ class UsersModelRegistration extends JModelForm
 		{
 			return $user->id;
 		}
+	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		$data = $this->getData();
+
+		$this->preprocessData('com_users.registration', $data);
+
+		return $data;
+	}
+
+	/**
+	 * Method to get the registration form data.
+	 *
+	 * The base form data is loaded and then an event is fired
+	 * for users plugins to extend the data.
+	 *
+	 * @return  mixed  Data object on success, false on failure.
+	 *
+	 * @since   1.6
+	 */
+	public function getData()
+	{
+		if ($this->data === null)
+		{
+			$this->data = new stdClass;
+			$app = JFactory::getApplication();
+			$params = JComponentHelper::getParams('com_users');
+
+			// Override the base user data with any data in the session.
+			$temp = (array) $app->getUserState('com_users.registration.data', array());
+
+			foreach ($temp as $k => $v)
+			{
+				$this->data->$k = $v;
+			}
+
+			// Get the groups the user should be added to after registration.
+			$this->data->groups = array();
+
+			// Get the default new user group, Registered if not specified.
+			$system = $params->get('new_usertype', 2);
+
+			$this->data->groups[] = $system;
+
+			// Unset the passwords.
+			unset($this->data->password1);
+			unset($this->data->password2);
+
+			// Get the dispatcher and load the users plugins.
+			$dispatcher = JEventDispatcher::getInstance();
+			JPluginHelper::importPlugin('user');
+
+			// Trigger the data preparation event.
+			$results = $dispatcher->trigger('onContentPrepareData', array('com_users.registration', $this->data));
+
+			// Check for errors encountered while preparing the data.
+			if (count($results) && in_array(false, $results, true))
+			{
+				$this->setError($dispatcher->getError());
+				$this->data = false;
+			}
+		}
+
+		return $this->data;
+	}
+
+	/**
+	 * Override preprocessForm to load the user plugin group instead of content.
+	 *
+	 * @param   JForm   $form   A JForm object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 * @throws  Exception if there is an error in the form event.
+	 */
+	protected function preprocessForm(JForm $form, $data, $group = 'user')
+	{
+		$userParams = JComponentHelper::getParams('com_users');
+
+		// Add the choice for site language at registration time
+		if ($userParams->get('site_language') == 1 && $userParams->get('frontend_userparams') == 1)
+		{
+			$form->loadFile('sitelang', false);
+		}
+
+		parent::preprocessForm($form, $data, $group);
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		// Get the application object.
+		$app = JFactory::getApplication();
+		$params = $app->getParams('com_users');
+
+		// Load the parameters.
+		$this->setState('params', $params);
 	}
 }

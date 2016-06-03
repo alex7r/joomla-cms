@@ -20,14 +20,14 @@ defined('FOF_INCLUDED') or die;
  */
 class FOFDispatcher extends FOFUtilsObject
 {
+	/** @var string The name of the default view, in case none is specified */
+	public $defaultView = 'cpanel';
+
 	/** @var array Configuration variables */
 	protected $config = array();
 
 	/** @var FOFInput Input variables */
 	protected $input = array();
-
-	/** @var string The name of the default view, in case none is specified */
-	public $defaultView = 'cpanel';
 
 	// Variables for FOF's transparent user authentication. You can override them
 	// in your Dispatcher's __construct() method.
@@ -72,6 +72,81 @@ class FOFDispatcher extends FOFUtilsObject
 
 	/** @var string The calculated encryption key for the _TOTP methods, used if we have to encrypt the reply */
 	private $_fofAuth_CryptoKey = '';
+
+	/**
+	 * Public constructor
+	 *
+	 * @param   array  $config  The configuration variables
+	 */
+	public function __construct($config = array())
+	{
+		// Cache the config
+		$this->config = $config;
+
+		// Get the input for this MVC triad
+		if (array_key_exists('input', $config))
+		{
+			$this->input = $config['input'];
+		}
+		else
+		{
+			$this->input = new FOFInput;
+		}
+
+		// Get the default values for the component name
+		$this->component = $this->input->getCmd('option', 'com_foobar');
+
+		// Load the component's fof.xml configuration file
+		$configProvider = new FOFConfigProvider;
+		$this->defaultView = $configProvider->get($this->component . '.dispatcher.default_view', $this->defaultView);
+
+		// Get the default values for the view name
+		$this->view = $this->input->getCmd('view', null);
+
+		if (empty($this->view))
+		{
+			// Do we have a task formatted as controller.task?
+			$task = $this->input->getCmd('task', '');
+
+			if (!empty($task) && (strstr($task, '.') !== false))
+			{
+				list($this->view, $task) = explode('.', $task, 2);
+				$this->input->set('task', $task);
+			}
+		}
+
+		if (empty($this->view))
+		{
+			$this->view = $this->defaultView;
+		}
+
+		$this->layout = $this->input->getCmd('layout', null);
+
+		// Overrides from the config
+		if (array_key_exists('option', $config))
+		{
+			$this->component = $config['option'];
+		}
+
+		if (array_key_exists('view', $config))
+		{
+			$this->view = empty($config['view']) ? $this->view : $config['view'];
+		}
+
+		if (array_key_exists('layout', $config))
+		{
+			$this->layout = $config['layout'];
+		}
+
+		$this->input->set('option', $this->component);
+		$this->input->set('view', $this->view);
+		$this->input->set('layout', $this->layout);
+
+		if (array_key_exists('authTimeStep', $config))
+		{
+			$this->fofAuth_timeStep = empty($config['authTimeStep']) ? 6 : $config['authTimeStep'];
+		}
+	}
 
 	/**
 	 * Get a static (Singleton) instance of a particular Dispatcher
@@ -180,78 +255,22 @@ class FOFDispatcher extends FOFUtilsObject
 	}
 
 	/**
-	 * Public constructor
+	 * Main function to detect if we're running in a CLI environment and we're admin
 	 *
-	 * @param   array  $config  The configuration variables
+	 * @return  array  isCLI and isAdmin. It's not an associtive array, so we can use list.
 	 */
-	public function __construct($config = array())
+	public static function isCliAdmin()
 	{
-		// Cache the config
-		$this->config = $config;
+		static $isCLI   = null;
+		static $isAdmin = null;
 
-		// Get the input for this MVC triad
-		if (array_key_exists('input', $config))
+		if (is_null($isCLI) && is_null($isAdmin))
 		{
-			$this->input = $config['input'];
-		}
-		else
-		{
-			$this->input = new FOFInput;
+			$isCLI   = FOFPlatform::getInstance()->isCli();
+			$isAdmin = FOFPlatform::getInstance()->isBackend();
 		}
 
-		// Get the default values for the component name
-		$this->component = $this->input->getCmd('option', 'com_foobar');
-
-		// Load the component's fof.xml configuration file
-		$configProvider = new FOFConfigProvider;
-		$this->defaultView = $configProvider->get($this->component . '.dispatcher.default_view', $this->defaultView);
-
-		// Get the default values for the view name
-		$this->view = $this->input->getCmd('view', null);
-
-		if (empty($this->view))
-		{
-			// Do we have a task formatted as controller.task?
-			$task = $this->input->getCmd('task', '');
-
-			if (!empty($task) && (strstr($task, '.') !== false))
-			{
-				list($this->view, $task) = explode('.', $task, 2);
-				$this->input->set('task', $task);
-			}
-		}
-
-		if (empty($this->view))
-		{
-			$this->view = $this->defaultView;
-		}
-
-		$this->layout = $this->input->getCmd('layout', null);
-
-		// Overrides from the config
-		if (array_key_exists('option', $config))
-		{
-			$this->component = $config['option'];
-		}
-
-		if (array_key_exists('view', $config))
-		{
-			$this->view = empty($config['view']) ? $this->view : $config['view'];
-		}
-
-		if (array_key_exists('layout', $config))
-		{
-			$this->layout = $config['layout'];
-		}
-
-		$this->input->set('option', $this->component);
-		$this->input->set('view', $this->view);
-		$this->input->set('layout', $this->layout);
-
-		if (array_key_exists('authTimeStep', $config))
-		{
-			$this->fofAuth_timeStep = empty($config['authTimeStep']) ? 6 : $config['authTimeStep'];
-		}
+		return array($isCLI, $isAdmin);
 	}
 
     /**
@@ -343,144 +362,6 @@ class FOFDispatcher extends FOFUtilsObject
 		{
 			$controller->redirect();
 		}
-	}
-
-	/**
-	 * Tries to guess the controller task to execute based on the view name and
-	 * the HTTP request method.
-	 *
-	 * @param   string  $view  The name of the view
-	 *
-	 * @return  string  The best guess of the task to execute
-	 */
-	protected function getTask($view)
-	{
-		// Get a default task based on plural/singular view
-		$request_task = $this->input->getCmd('task', null);
-		$task = FOFInflector::isPlural($view) ? 'browse' : 'edit';
-
-		// Get a potential ID, we might need it later
-		$id = $this->input->get('id', null, 'int');
-
-		if ($id == 0)
-		{
-			$ids = $this->input->get('ids', array(), 'array');
-
-			if (!empty($ids))
-			{
-				$id = array_shift($ids);
-			}
-		}
-
-		// Check the request method
-
-		if (!isset($_SERVER['REQUEST_METHOD']))
-		{
-			$_SERVER['REQUEST_METHOD'] = 'GET';
-		}
-
-		$requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
-
-		switch ($requestMethod)
-		{
-			case 'POST':
-			case 'PUT':
-				if (!is_null($id))
-				{
-					$task = 'save';
-				}
-				break;
-
-			case 'DELETE':
-				if ($id != 0)
-				{
-					$task = 'delete';
-				}
-				break;
-
-			case 'GET':
-			default:
-				// If it's an edit without an ID or ID=0, it's really an add
-				if (($task == 'edit') && ($id == 0))
-				{
-					$task = 'add';
-				}
-
-				// If it's an edit in the frontend, it's really a read
-				elseif (($task == 'edit') && FOFPlatform::getInstance()->isFrontend())
-				{
-					$task = 'read';
-				}
-				break;
-		}
-
-		return $task;
-	}
-
-	/**
-	 * Executes right before the dispatcher tries to instantiate and run the
-	 * controller.
-	 *
-	 * @return  boolean  Return false to abort
-	 */
-	public function onBeforeDispatch()
-	{
-		return true;
-	}
-
-	/**
-	 * Sets up some environment variables, so we can work as usually on CLI, too.
-	 *
-	 * @return  boolean  Return false to abort
-	 */
-	public function onBeforeDispatchCLI()
-	{
-		JLoader::import('joomla.environment.uri');
-		JLoader::import('joomla.application.component.helper');
-
-		// Trick to create a valid url used by JURI
-		$this->_originalPhpScript = '';
-
-		// We have no Application Helper (there is no Application!), so I have to define these constants manually
-		$option = $this->input->get('option', '', 'cmd');
-
-		if ($option)
-		{
-			$componentPaths = FOFPlatform::getInstance()->getComponentBaseDirs($option);
-
-			if (!defined('JPATH_COMPONENT'))
-			{
-				define('JPATH_COMPONENT', $componentPaths['main']);
-			}
-
-			if (!defined('JPATH_COMPONENT_SITE'))
-			{
-				define('JPATH_COMPONENT_SITE', $componentPaths['site']);
-			}
-
-			if (!defined('JPATH_COMPONENT_ADMINISTRATOR'))
-			{
-				define('JPATH_COMPONENT_ADMINISTRATOR', $componentPaths['admin']);
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Executes right after the dispatcher runs the controller.
-	 *
-	 * @return  boolean  Return false to abort
-	 */
-	public function onAfterDispatch()
-	{
-		// If we have to log out the user, please do so now
-		if ($this->fofAuth_LogoutOnReturn && $this->_fofAuth_isLoggedIn)
-		{
-			FOFPlatform::getInstance()->logoutUser();
-		}
-
-		return true;
 	}
 
 	/**
@@ -680,6 +561,144 @@ class FOFDispatcher extends FOFUtilsObject
 	}
 
 	/**
+	 * Sets up some environment variables, so we can work as usually on CLI, too.
+	 *
+	 * @return  boolean  Return false to abort
+	 */
+	public function onBeforeDispatchCLI()
+	{
+		JLoader::import('joomla.environment.uri');
+		JLoader::import('joomla.application.component.helper');
+
+		// Trick to create a valid url used by JURI
+		$this->_originalPhpScript = '';
+
+		// We have no Application Helper (there is no Application!), so I have to define these constants manually
+		$option = $this->input->get('option', '', 'cmd');
+
+		if ($option)
+		{
+			$componentPaths = FOFPlatform::getInstance()->getComponentBaseDirs($option);
+
+			if (!defined('JPATH_COMPONENT'))
+			{
+				define('JPATH_COMPONENT', $componentPaths['main']);
+			}
+
+			if (!defined('JPATH_COMPONENT_SITE'))
+			{
+				define('JPATH_COMPONENT_SITE', $componentPaths['site']);
+			}
+
+			if (!defined('JPATH_COMPONENT_ADMINISTRATOR'))
+			{
+				define('JPATH_COMPONENT_ADMINISTRATOR', $componentPaths['admin']);
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Executes right before the dispatcher tries to instantiate and run the
+	 * controller.
+	 *
+	 * @return  boolean  Return false to abort
+	 */
+	public function onBeforeDispatch()
+	{
+		return true;
+	}
+
+	/**
+	 * Tries to guess the controller task to execute based on the view name and
+	 * the HTTP request method.
+	 *
+	 * @param   string  $view  The name of the view
+	 *
+	 * @return  string  The best guess of the task to execute
+	 */
+	protected function getTask($view)
+	{
+		// Get a default task based on plural/singular view
+		$request_task = $this->input->getCmd('task', null);
+		$task = FOFInflector::isPlural($view) ? 'browse' : 'edit';
+
+		// Get a potential ID, we might need it later
+		$id = $this->input->get('id', null, 'int');
+
+		if ($id == 0)
+		{
+			$ids = $this->input->get('ids', array(), 'array');
+
+			if (!empty($ids))
+			{
+				$id = array_shift($ids);
+			}
+		}
+
+		// Check the request method
+
+		if (!isset($_SERVER['REQUEST_METHOD']))
+		{
+			$_SERVER['REQUEST_METHOD'] = 'GET';
+		}
+
+		$requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
+
+		switch ($requestMethod)
+		{
+			case 'POST':
+			case 'PUT':
+				if (!is_null($id))
+				{
+					$task = 'save';
+				}
+				break;
+
+			case 'DELETE':
+				if ($id != 0)
+				{
+					$task = 'delete';
+				}
+				break;
+
+			case 'GET':
+			default:
+				// If it's an edit without an ID or ID=0, it's really an add
+				if (($task == 'edit') && ($id == 0))
+				{
+					$task = 'add';
+				}
+
+				// If it's an edit in the frontend, it's really a read
+				elseif (($task == 'edit') && FOFPlatform::getInstance()->isFrontend())
+				{
+					$task = 'read';
+				}
+				break;
+		}
+
+		return $task;
+	}
+
+	/**
+	 * Executes right after the dispatcher runs the controller.
+	 *
+	 * @return  boolean  Return false to abort
+	 */
+	public function onAfterDispatch()
+	{
+		// If we have to log out the user, please do so now
+		if ($this->fofAuth_LogoutOnReturn && $this->_fofAuth_isLoggedIn)
+		{
+			FOFPlatform::getInstance()->logoutUser();
+		}
+
+		return true;
+	}
+
+	/**
 	 * Creates a decryption key for use with the TOTP decryption method
 	 *
 	 * @param   integer  $time  The timestamp used for TOTP calculation, leave empty to use current timestamp
@@ -695,24 +714,5 @@ class FOFDispatcher extends FOFUtilsObject
 		$key = hash('sha256', $this->fofAuth_Key . $otp);
 
 		return $key;
-	}
-
-	/**
-	 * Main function to detect if we're running in a CLI environment and we're admin
-	 *
-	 * @return  array  isCLI and isAdmin. It's not an associtive array, so we can use list.
-	 */
-	public static function isCliAdmin()
-	{
-		static $isCLI   = null;
-		static $isAdmin = null;
-
-		if (is_null($isCLI) && is_null($isAdmin))
-		{
-			$isCLI   = FOFPlatform::getInstance()->isCli();
-			$isAdmin = FOFPlatform::getInstance()->isBackend();
-		}
-
-		return array($isCLI, $isAdmin);
 	}
 }

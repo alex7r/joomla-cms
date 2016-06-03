@@ -232,6 +232,18 @@ class JFormFieldEditor extends JFormFieldTextarea
 	}
 
 	/**
+	 * Method to get the JEditor output for an onSave event.
+	 *
+	 * @return  string  The JEditor object output.
+	 *
+	 * @since   1.6
+	 */
+	public function save()
+	{
+		return $this->getEditor()->save($this->id);
+	}
+
+	/**
 	 * Method to get the field input markup for the editor area
 	 *
 	 * @return  string  The field input markup.
@@ -306,17 +318,5 @@ class JFormFieldEditor extends JFormFieldTextarea
 		}
 
 		return $this->editor;
-	}
-
-	/**
-	 * Method to get the JEditor output for an onSave event.
-	 *
-	 * @return  string  The JEditor object output.
-	 *
-	 * @since   1.6
-	 */
-	public function save()
-	{
-		return $this->getEditor()->save($this->id);
 	}
 }

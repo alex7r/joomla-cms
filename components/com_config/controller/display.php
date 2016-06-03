@@ -17,20 +17,20 @@ defined('_JEXEC') or die;
 class ConfigControllerDisplay extends JControllerBase
 {
 	/**
-	 * Application object - Redeclared for proper typehinting
-	 *
-	 * @var    JApplicationCms
-	 * @since  3.2
-	 */
-	protected $app;
-
-	/**
 	 * Prefix for the view and model classes
 	 *
 	 * @var    string
 	 * @since  3.2
 	 */
 	public $prefix = 'Config';
+
+	/**
+	 * Application object - Redeclared for proper typehinting
+	 *
+	 * @var    JApplicationCms
+	 * @since  3.2
+	 */
+	protected $app;
 
 	/**
 	 * Execute the controller.

@@ -129,6 +129,46 @@ abstract class FinderIndexer
 	}
 
 	/**
+	 * Method to reset the indexer state.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	public static function resetState()
+	{
+		// Reset the internal state to null.
+		self::$state = null;
+
+		// Reset the session state to null.
+		$session = JFactory::getSession();
+		$session->set('_finder.state', null);
+	}
+
+	/**
+	 * Method to get a content item's signature.
+	 *
+	 * @param   object  $item  The content item to index.
+	 *
+	 * @return  string  The content item's signature.
+	 *
+	 * @since   2.5
+	 */
+	protected static function getSignature($item)
+	{
+		// Get the indexer state.
+		$state = self::getState();
+
+		// Get the relevant configuration variables.
+		$config = array();
+		$config[] = $state->weights;
+		$config[] = $state->options->get('stem', 1);
+		$config[] = $state->options->get('stemmer', 'porter_en');
+
+		return md5(serialize(array($item, $config)));
+	}
+
+	/**
 	 * Method to get the indexer state.
 	 *
 	 * @return  object  The indexer state object.
@@ -220,23 +260,6 @@ abstract class FinderIndexer
 	}
 
 	/**
-	 * Method to reset the indexer state.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.5
-	 */
-	public static function resetState()
-	{
-		// Reset the internal state to null.
-		self::$state = null;
-
-		// Reset the session state to null.
-		$session = JFactory::getSession();
-		$session->set('_finder.state', null);
-	}
-
-	/**
 	 * Method to index a content item.
 	 *
 	 * @param   FinderIndexerResult  $item    The content item to index.
@@ -271,29 +294,6 @@ abstract class FinderIndexer
 	 * @throws  Exception on database error.
 	 */
 	abstract public function optimize();
-
-	/**
-	 * Method to get a content item's signature.
-	 *
-	 * @param   object  $item  The content item to index.
-	 *
-	 * @return  string  The content item's signature.
-	 *
-	 * @since   2.5
-	 */
-	protected static function getSignature($item)
-	{
-		// Get the indexer state.
-		$state = self::getState();
-
-		// Get the relevant configuration variables.
-		$config = array();
-		$config[] = $state->weights;
-		$config[] = $state->options->get('stem', 1);
-		$config[] = $state->options->get('stemmer', 'porter_en');
-
-		return md5(serialize(array($item, $config)));
-	}
 
 	/**
 	 * Method to parse input, tokenize it, and then add it to the database.

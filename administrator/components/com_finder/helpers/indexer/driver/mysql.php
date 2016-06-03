@@ -450,6 +450,56 @@ class FinderIndexerDriverMysql extends FinderIndexer
 	}
 
 	/**
+	 * Method to switch the token tables from Memory tables to MyISAM tables
+	 * when they are close to running out of memory.
+	 *
+	 * @param   boolean  $memory  Flag to control how they should be toggled.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   3.0
+	 * @throws  Exception on database error.
+	 */
+	protected function toggleTables($memory)
+	{
+		static $state;
+
+		// Get the database adapter.
+		$db = JFactory::getDbo();
+
+		// Check if we are setting the tables to the Memory engine.
+		if ($memory === true && $state !== true)
+		{
+			// Set the tokens table to Memory.
+			$db->setQuery('ALTER TABLE ' . $db->quoteName('#__finder_tokens') . ' ENGINE = MEMORY');
+			$db->execute();
+
+			// Set the tokens aggregate table to Memory.
+			$db->setQuery('ALTER TABLE ' . $db->quoteName('#__finder_tokens_aggregate') . ' ENGINE = MEMORY');
+			$db->execute();
+
+			// Set the internal state.
+			$state = $memory;
+		}
+		// We must be setting the tables to the MyISAM engine.
+		elseif ($memory === false && $state !== false)
+		{
+			// Set the tokens table to MyISAM.
+			$db->setQuery('ALTER TABLE ' . $db->quoteName('#__finder_tokens') . ' ENGINE = MYISAM');
+			$db->execute();
+
+			// Set the tokens aggregate table to MyISAM.
+			$db->setQuery('ALTER TABLE ' . $db->quoteName('#__finder_tokens_aggregate') . ' ENGINE = MYISAM');
+			$db->execute();
+
+			// Set the internal state.
+			$state = $memory;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Method to remove a link from the index.
 	 *
 	 * @param   integer  $linkId  The id of the link.
@@ -608,55 +658,5 @@ class FinderIndexerDriverMysql extends FinderIndexer
 		$db->execute();
 
 		return $values;
-	}
-
-	/**
-	 * Method to switch the token tables from Memory tables to MyISAM tables
-	 * when they are close to running out of memory.
-	 *
-	 * @param   boolean  $memory  Flag to control how they should be toggled.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   3.0
-	 * @throws  Exception on database error.
-	 */
-	protected function toggleTables($memory)
-	{
-		static $state;
-
-		// Get the database adapter.
-		$db = JFactory::getDbo();
-
-		// Check if we are setting the tables to the Memory engine.
-		if ($memory === true && $state !== true)
-		{
-			// Set the tokens table to Memory.
-			$db->setQuery('ALTER TABLE ' . $db->quoteName('#__finder_tokens') . ' ENGINE = MEMORY');
-			$db->execute();
-
-			// Set the tokens aggregate table to Memory.
-			$db->setQuery('ALTER TABLE ' . $db->quoteName('#__finder_tokens_aggregate') . ' ENGINE = MEMORY');
-			$db->execute();
-
-			// Set the internal state.
-			$state = $memory;
-		}
-		// We must be setting the tables to the MyISAM engine.
-		elseif ($memory === false && $state !== false)
-		{
-			// Set the tokens table to MyISAM.
-			$db->setQuery('ALTER TABLE ' . $db->quoteName('#__finder_tokens') . ' ENGINE = MYISAM');
-			$db->execute();
-
-			// Set the tokens aggregate table to MyISAM.
-			$db->setQuery('ALTER TABLE ' . $db->quoteName('#__finder_tokens_aggregate') . ' ENGINE = MYISAM');
-			$db->execute();
-
-			// Set the internal state.
-			$state = $memory;
-		}
-
-		return true;
 	}
 }
