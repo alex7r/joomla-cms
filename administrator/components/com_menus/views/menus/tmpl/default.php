@@ -226,17 +226,17 @@ JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
                                     <a class="btn btn-small btn-primary" data-toggle="modal" role="button"
                                        href="#moduleAddModal"><?php echo JText::_('COM_MENUS_ADD_MENU_MODULE'); ?></a>
                                     <?php echo JHtml::_('bootstrap.renderModal', 'moduleAddModal', array(
-                                            'title'       => JText::_('COM_MENUS_ADD_MENU_MODULE'),
-                                            'backdrop'    => 'static',
-                                            'keyboard'    => false,
-                                            'closeButton' => false,
-                                            'url'         => $link,
-                                            'height'      => '400px',
-                                            'width'       => '800px',
-                                            'bodyHeight'  => '70',
-                                            'modalWidth'  => '80',
-                                            'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"' . ' onclick="jQuery(\'#moduleAddModal iframe\').contents().find(\'#closeBtn\').click();">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>' . '<button type="button" class="btn btn-primary" aria-hidden="true"' . ' onclick="jQuery(\'#moduleAddModal iframe\').contents().find(\'#saveBtn\').click();">' . JText::_("JSAVE") . '</button>' . '<button type="button" class="btn btn-success" aria-hidden="true"' . ' onclick="jQuery(\'#moduleAddModal iframe\').contents().find(\'#applyBtn\').click();">' . JText::_("JAPPLY") . '</button>',
-                                        )); ?>
+                                        'title'       => JText::_('COM_MENUS_ADD_MENU_MODULE'),
+                                        'backdrop'    => 'static',
+                                        'keyboard'    => false,
+                                        'closeButton' => false,
+                                        'url'         => $link,
+                                        'height'      => '400px',
+                                        'width'       => '800px',
+                                        'bodyHeight'  => '70',
+                                        'modalWidth'  => '80',
+                                        'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"' . ' onclick="jQuery(\'#moduleAddModal iframe\').contents().find(\'#closeBtn\').click();">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>' . '<button type="button" class="btn btn-primary" aria-hidden="true"' . ' onclick="jQuery(\'#moduleAddModal iframe\').contents().find(\'#saveBtn\').click();">' . JText::_("JSAVE") . '</button>' . '<button type="button" class="btn btn-success" aria-hidden="true"' . ' onclick="jQuery(\'#moduleAddModal iframe\').contents().find(\'#applyBtn\').click();">' . JText::_("JAPPLY") . '</button>',
+                                    )); ?>
                                 <?php endif; ?>
                             </td>
                             <td class="hidden-phone">

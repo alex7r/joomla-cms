@@ -238,9 +238,9 @@ $assoc = JLanguageAssociations::isEnabled();
                         'com_content') && $user->authorise('core.edit.state', 'com_content')
                 ) : ?>
                     <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                            'title'  => JText::_('COM_CONTENT_BATCH_OPTIONS'),
-                            'footer' => $this->loadTemplate('batch_footer')
-                        ), $this->loadTemplate('batch_body')); ?>
+                        'title'  => JText::_('COM_CONTENT_BATCH_OPTIONS'),
+                        'footer' => $this->loadTemplate('batch_footer')
+                    ), $this->loadTemplate('batch_body')); ?>
                 <?php endif; ?>
             <?php endif; ?>
 

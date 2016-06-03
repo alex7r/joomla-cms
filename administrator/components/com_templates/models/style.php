@@ -345,10 +345,11 @@ class TemplatesModelStyle extends JModelAdmin
         // Detect disabled extension
         $extension = JTable::getInstance('Extension');
 
-        if ($extension->load(array('enabled'   => 0,
-                                   'type'      => 'template',
-                                   'element'   => $data['template'],
-                                   'client_id' => $data['client_id']
+        if ($extension->load(array(
+            'enabled'   => 0,
+            'type'      => 'template',
+            'element'   => $data['template'],
+            'client_id' => $data['client_id']
         ))
         ) {
             $this->setError(JText::_('COM_TEMPLATES_ERROR_SAVE_DISABLED_TEMPLATE'));
@@ -484,10 +485,11 @@ class TemplatesModelStyle extends JModelAdmin
         // Detect disabled extension
         $extension = JTable::getInstance('Extension');
 
-        if ($extension->load(array('enabled'   => 0,
-                                   'type'      => 'template',
-                                   'element'   => $style->template,
-                                   'client_id' => $style->client_id
+        if ($extension->load(array(
+            'enabled'   => 0,
+            'type'      => 'template',
+            'element'   => $style->template,
+            'client_id' => $style->client_id
         ))
         ) {
             throw new Exception(JText::_('COM_TEMPLATES_ERROR_SAVE_DISABLED_TEMPLATE'));

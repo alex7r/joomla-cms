@@ -762,9 +762,9 @@ class UsersModelUser extends JModelAdmin
             }
 
             $query->insert($db->quoteName('#__user_usergroup_map'))->columns(array(
-                    $db->quoteName('user_id'),
-                    $db->quoteName('group_id')
-                ));
+                $db->quoteName('user_id'),
+                $db->quoteName('group_id')
+            ));
             $db->setQuery($query);
 
             try {

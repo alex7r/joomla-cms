@@ -154,28 +154,28 @@ class JFormFieldModal_Newsfeed extends JFormField
 
         // Select newsfeed modal
         $html[] = JHtml::_('bootstrap.renderModal', 'newsfeedSelect' . $this->id . 'Modal', array(
-                'title'      => JText::_('COM_NEWSFEEDS_SELECT_A_FEED'),
-                'url'        => $urlSelect,
-                'height'     => '400px',
-                'width'      => '800px',
-                'bodyHeight' => '70',
-                'modalWidth' => '80',
-                'footer'     => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>',
-            ));
+            'title'      => JText::_('COM_NEWSFEEDS_SELECT_A_FEED'),
+            'url'        => $urlSelect,
+            'height'     => '400px',
+            'width'      => '800px',
+            'bodyHeight' => '70',
+            'modalWidth' => '80',
+            'footer'     => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>',
+        ));
 
         // Edit newsfeed modal
         $html[] = JHtml::_('bootstrap.renderModal', 'newsfeedEdit' . $value . 'Modal', array(
-                'title'       => JText::_('COM_NEWSFEEDS_EDIT_NEWSFEED'),
-                'backdrop'    => 'static',
-                'keyboard'    => false,
-                'closeButton' => false,
-                'url'         => $urlEdit,
-                'height'      => '400px',
-                'width'       => '800px',
-                'bodyHeight'  => '70',
-                'modalWidth'  => '80',
-                'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"' . ' onclick="jQuery(\'#newsfeedEdit' . $value . 'Modal iframe\').contents().find(\'#closeBtn\').click();">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>' . '<button type="button" class="btn btn-primary" aria-hidden="true"' . ' onclick="jQuery(\'#newsfeedEdit' . $value . 'Modal iframe\').contents().find(\'#saveBtn\').click();">' . JText::_("JSAVE") . '</button>' . '<button type="button" class="btn btn-success" aria-hidden="true"' . ' onclick="jQuery(\'#newsfeedEdit' . $value . 'Modal iframe\').contents().find(\'#applyBtn\').click();">' . JText::_("JAPPLY") . '</button>',
-            ));
+            'title'       => JText::_('COM_NEWSFEEDS_EDIT_NEWSFEED'),
+            'backdrop'    => 'static',
+            'keyboard'    => false,
+            'closeButton' => false,
+            'url'         => $urlEdit,
+            'height'      => '400px',
+            'width'       => '800px',
+            'bodyHeight'  => '70',
+            'modalWidth'  => '80',
+            'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"' . ' onclick="jQuery(\'#newsfeedEdit' . $value . 'Modal iframe\').contents().find(\'#closeBtn\').click();">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>' . '<button type="button" class="btn btn-primary" aria-hidden="true"' . ' onclick="jQuery(\'#newsfeedEdit' . $value . 'Modal iframe\').contents().find(\'#saveBtn\').click();">' . JText::_("JSAVE") . '</button>' . '<button type="button" class="btn btn-success" aria-hidden="true"' . ' onclick="jQuery(\'#newsfeedEdit' . $value . 'Modal iframe\').contents().find(\'#applyBtn\').click();">' . JText::_("JAPPLY") . '</button>',
+        ));
 
         // Add class='required' for client side validation
         $class = $this->required ? ' class="required modal-value"' : '';

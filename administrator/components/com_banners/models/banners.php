@@ -145,7 +145,7 @@ class BannersModelBanners extends JModelList
 
         // Join over the clients.
         $query->select($db->quoteName('cl.name', 'client_name'))->select($db->quoteName('cl.purchase_type',
-                'client_purchase_type'))->join('LEFT', $db->quoteName('#__banner_clients', 'cl') . ' ON cl.id = a.cid');
+            'client_purchase_type'))->join('LEFT', $db->quoteName('#__banner_clients', 'cl') . ' ON cl.id = a.cid');
 
         // Filter by published state
         $published = $this->getState('filter.published');

@@ -63,12 +63,12 @@ class InstallerModelDiscover extends InstallerModel
         // Get all templates, including discovered ones
         $db    = $this->getDbo();
         $query = $db->getQuery(true)->select($db->quoteName(array(
-                'extension_id',
-                'element',
-                'folder',
-                'client_id',
-                'type'
-            )))->from($db->quoteName('#__extensions'));
+            'extension_id',
+            'element',
+            'folder',
+            'client_id',
+            'type'
+        )))->from($db->quoteName('#__extensions'));
         $db->setQuery($query);
         $installedtmp = $db->loadObjectList();
 

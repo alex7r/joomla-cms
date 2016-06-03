@@ -280,9 +280,9 @@ class FinderIndexerHelper
 
         // Add the type.
         $query->clear()->insert($db->quoteName('#__finder_types'))->columns(array(
-                $db->quoteName('title'),
-                $db->quoteName('mime')
-            ))->values($db->quote($title) . ', ' . $db->quote($mime));
+            $db->quoteName('title'),
+            $db->quoteName('mime')
+        ))->values($db->quote($title) . ', ' . $db->quote($mime));
         $db->setQuery($query);
         $db->execute();
 

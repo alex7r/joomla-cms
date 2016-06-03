@@ -29,16 +29,16 @@ abstract class JHtmlBanner
 
         // Create the batch selector to change the client on a selection list.
         return implode("\n", array(
-                '<label id="batch-client-lbl" for="batch-client" class="hasTooltip" title="' . JHtml::_('tooltipText',
-                    'COM_BANNERS_BATCH_CLIENT_LABEL', 'COM_BANNERS_BATCH_CLIENT_LABEL_DESC') . '">',
-                JText::_('COM_BANNERS_BATCH_CLIENT_LABEL'),
-                '</label>',
-                '<select name="batch[client_id]" id="batch-client-id">',
-                '<option value="">' . JText::_('COM_BANNERS_BATCH_CLIENT_NOCHANGE') . '</option>',
-                '<option value="0">' . JText::_('COM_BANNERS_NO_CLIENT') . '</option>',
-                JHtml::_('select.options', static::clientlist(), 'value', 'text'),
-                '</select>'
-            ));
+            '<label id="batch-client-lbl" for="batch-client" class="hasTooltip" title="' . JHtml::_('tooltipText',
+                'COM_BANNERS_BATCH_CLIENT_LABEL', 'COM_BANNERS_BATCH_CLIENT_LABEL_DESC') . '">',
+            JText::_('COM_BANNERS_BATCH_CLIENT_LABEL'),
+            '</label>',
+            '<select name="batch[client_id]" id="batch-client-id">',
+            '<option value="">' . JText::_('COM_BANNERS_BATCH_CLIENT_NOCHANGE') . '</option>',
+            '<option value="0">' . JText::_('COM_BANNERS_NO_CLIENT') . '</option>',
+            JHtml::_('select.options', static::clientlist(), 'value', 'text'),
+            '</select>'
+        ));
     }
 
     /**

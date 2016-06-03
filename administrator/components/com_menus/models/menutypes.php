@@ -176,8 +176,9 @@ class MenusModelMenutypes extends JModelLegacy
                     $o              = new JObject;
                     $o->title       = (string)$child['name'];
                     $o->description = (string)$child['msg'];
-                    $o->request     = array('option'                    => $component,
-                                            (string)$optionsNode['var'] => (string)$child['value']
+                    $o->request     = array(
+                        'option'                    => $component,
+                        (string)$optionsNode['var'] => (string)$child['value']
                     );
 
                     $options[] = $o;
@@ -259,9 +260,10 @@ class MenusModelMenutypes extends JModelLegacy
                                             $o              = new JObject;
                                             $o->title       = (string)$child['name'];
                                             $o->description = (string)$child['msg'];
-                                            $o->request     = array('option'                    => $component,
-                                                                    'view'                      => $view,
-                                                                    (string)$optionsNode['var'] => (string)$child['value']
+                                            $o->request     = array(
+                                                'option'                    => $component,
+                                                'view'                      => $view,
+                                                (string)$optionsNode['var'] => (string)$child['value']
                                             );
 
                                             $options[] = $o;

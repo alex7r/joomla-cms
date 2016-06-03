@@ -25,7 +25,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <div id="j-main-container">
             <?php endif; ?>
             <?php echo JLayoutHelper::render('joomla.searchtools.default', array(
-                'view' => $this,
+                'view'    => $this,
                 'options' => array('filterButton' => false, 'totalResults' => count($this->data))
             )); ?>
             <?php if (count($this->data) > 0) : ?>

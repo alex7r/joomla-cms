@@ -141,9 +141,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                 'com_redirect') && $user->authorise('core.edit.state', 'com_redirect')
         ) : ?>
             <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                    'title'  => JText::_('COM_REDIRECT_BATCH_OPTIONS'),
-                    'footer' => $this->loadTemplate('batch_footer')
-                ), $this->loadTemplate('batch_body')); ?>
+                'title'  => JText::_('COM_REDIRECT_BATCH_OPTIONS'),
+                'footer' => $this->loadTemplate('batch_footer')
+            ), $this->loadTemplate('batch_body')); ?>
         <?php endif; ?>
 
         <input type="hidden" name="task" value=""/>

@@ -78,7 +78,7 @@ class NewsfeedsTableNewsfeed extends JTable
             $after_clean = JString::str_ireplace($bad_characters, "", $this->metakey);
 
             // Create array using commas as delimiter
-            $keys = explode(',', $after_clean);
+            $keys       = explode(',', $after_clean);
             $clean_keys = array();
 
             foreach ($keys as $key) {

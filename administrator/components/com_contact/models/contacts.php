@@ -178,14 +178,14 @@ class ContactModelContacts extends JModelList
 
         // Select the required fields from the table.
         $query->select($db->quoteName(explode(', ', $this->getState('list.select',
-                'a.id, a.name, a.alias, a.checked_out, a.checked_out_time, a.catid, a.user_id' . ', a.published, a.access, a.created, a.created_by, a.ordering, a.featured, a.language' . ', a.publish_up, a.publish_down'))));
+            'a.id, a.name, a.alias, a.checked_out, a.checked_out_time, a.catid, a.user_id' . ', a.published, a.access, a.created, a.created_by, a.ordering, a.featured, a.language' . ', a.publish_up, a.publish_down'))));
         $query->from($db->quoteName('#__contact_details', 'a'));
 
         // Join over the users for the linked user.
         $query->select(array(
-                $db->quoteName('ul.name', 'linked_user'),
-                $db->quoteName('ul.email')
-            ))
+            $db->quoteName('ul.name', 'linked_user'),
+            $db->quoteName('ul.email')
+        ))
               ->join('LEFT', $db->quoteName('#__users',
                       'ul') . ' ON ' . $db->quoteName('ul.id') . ' = ' . $db->quoteName('a.user_id'));
 
@@ -220,31 +220,31 @@ class ContactModelContacts extends JModelList
                   ->join('LEFT', $db->quoteName('#__associations',
                           'asso2') . ' ON ' . $db->quoteName('asso2.key') . ' = ' . $db->quoteName('asso.key'))
                   ->group($db->quoteName(array(
-                          'a.id',
-                          'a.name',
-                          'a.alias',
-                          'a.checked_out',
-                          'a.checked_out_time',
-                          'a.catid',
-                          'a.user_id',
-                          'a.published',
-                          'a.access',
-                          'a.created',
-                          'a.created_by',
-                          'a.ordering',
-                          'a.featured',
-                          'a.language',
-                          'a.publish_up',
-                          'a.publish_down',
-                          'ul.name',
-                          'ul.email',
-                          'l.title',
-                          'l.image',
-                          'uc.name',
-                          'ag.title',
-                          'c.title',
-                          'c.level'
-                      )));
+                      'a.id',
+                      'a.name',
+                      'a.alias',
+                      'a.checked_out',
+                      'a.checked_out_time',
+                      'a.catid',
+                      'a.user_id',
+                      'a.published',
+                      'a.access',
+                      'a.created',
+                      'a.created_by',
+                      'a.ordering',
+                      'a.featured',
+                      'a.language',
+                      'a.publish_up',
+                      'a.publish_down',
+                      'ul.name',
+                      'ul.email',
+                      'l.title',
+                      'l.image',
+                      'uc.name',
+                      'ag.title',
+                      'c.title',
+                      'c.level'
+                  )));
         }
 
         // Filter by access level.

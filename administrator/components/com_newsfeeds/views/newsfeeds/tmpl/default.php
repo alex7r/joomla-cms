@@ -203,9 +203,9 @@ if ($saveOrder) {
                         'com_newsfeeds') && $user->authorise('core.edit.state', 'com_newsfeeds')
                 ) : ?>
                     <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                            'title'  => JText::_('COM_NEWSFEEDS_BATCH_OPTIONS'),
-                            'footer' => $this->loadTemplate('batch_footer')
-                        ), $this->loadTemplate('batch_body')); ?>
+                        'title'  => JText::_('COM_NEWSFEEDS_BATCH_OPTIONS'),
+                        'footer' => $this->loadTemplate('batch_footer')
+                    ), $this->loadTemplate('batch_body')); ?>
                 <?php endif; ?>
             <?php endif; ?>
             <input type="hidden" name="task" value=""/>

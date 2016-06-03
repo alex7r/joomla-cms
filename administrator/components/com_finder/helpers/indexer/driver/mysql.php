@@ -547,14 +547,14 @@ class FinderIndexerDriverMysql extends FinderIndexer
 
         // Insert the tokens into the database.
         $query->insert($db->quoteName('#__finder_tokens'))->columns(array(
-                    $db->quoteName('term'),
-                    $db->quoteName('stem'),
-                    $db->quoteName('common'),
-                    $db->quoteName('phrase'),
-                    $db->quoteName('weight'),
-                    $db->quoteName('context'),
-                    $db->quoteName('language')
-                ));
+            $db->quoteName('term'),
+            $db->quoteName('stem'),
+            $db->quoteName('common'),
+            $db->quoteName('phrase'),
+            $db->quoteName('weight'),
+            $db->quoteName('context'),
+            $db->quoteName('language')
+        ));
 
         // Iterate through the tokens to create SQL value sets.
         foreach ($tokens as $token) {

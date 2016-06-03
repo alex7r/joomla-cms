@@ -282,9 +282,9 @@ $component = $jinput->get('extension');
                     $extension) && $user->authorise('core.edit.state', $extension)
             ) : ?>
                 <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                        'title'  => JText::_('COM_CATEGORIES_BATCH_OPTIONS'),
-                        'footer' => $this->loadTemplate('batch_footer')
-                    ), $this->loadTemplate('batch_body')); ?>
+                    'title'  => JText::_('COM_CATEGORIES_BATCH_OPTIONS'),
+                    'footer' => $this->loadTemplate('batch_footer')
+                ), $this->loadTemplate('batch_body')); ?>
             <?php endif; ?>
 
             <input type="hidden" name="extension" value="<?php echo $extension; ?>"/>

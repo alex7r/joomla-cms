@@ -272,9 +272,9 @@ $assoc      = JLanguageAssociations::isEnabled();
             <?php //Load the batch processing form.is user is allowed ?>
             <?php if ($user->authorise('core.create', 'com_menus') || $user->authorise('core.edit', 'com_menus')) : ?>
                 <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                        'title'  => JText::_('COM_MENUS_BATCH_OPTIONS'),
-                        'footer' => $this->loadTemplate('batch_footer')
-                    ), $this->loadTemplate('batch_body')); ?>
+                    'title'  => JText::_('COM_MENUS_BATCH_OPTIONS'),
+                    'footer' => $this->loadTemplate('batch_footer')
+                ), $this->loadTemplate('batch_body')); ?>
             <?php endif; ?>
 
             <input type="hidden" name="task" value=""/>

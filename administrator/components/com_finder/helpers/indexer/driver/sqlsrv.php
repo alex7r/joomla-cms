@@ -511,14 +511,14 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
             if ($iterations == 1000 || $remaining == 0) {
                 // Insert the tokens into the database.
                 $query->insert($db->quoteName('#__finder_tokens'))->columns(array(
-                            $db->quoteName('term'),
-                            $db->quoteName('stem'),
-                            $db->quoteName('common'),
-                            $db->quoteName('phrase'),
-                            $db->quoteName('weight'),
-                            $db->quoteName('context'),
-                            $db->quoteName('language')
-                        ));
+                    $db->quoteName('term'),
+                    $db->quoteName('stem'),
+                    $db->quoteName('common'),
+                    $db->quoteName('phrase'),
+                    $db->quoteName('weight'),
+                    $db->quoteName('context'),
+                    $db->quoteName('language')
+                ));
                 $db->setQuery($query);
                 $db->execute();
 

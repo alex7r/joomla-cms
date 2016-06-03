@@ -604,9 +604,9 @@ class ModulesModelModule extends JModelAdmin
             if ($assignment === 0) {
                 // Assign new module to `all` menu item associations.
                 $query->clear()->insert('#__modules_menu')->columns(array(
-                        $db->quoteName('moduleid'),
-                        $db->quoteName('menuid')
-                    ))->values((int)$table->id . ', 0');
+                    $db->quoteName('moduleid'),
+                    $db->quoteName('menuid')
+                ))->values((int)$table->id . ', 0');
                 $db->setQuery($query);
 
                 try {

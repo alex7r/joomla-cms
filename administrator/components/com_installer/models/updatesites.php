@@ -366,20 +366,20 @@ class InstallerModelUpdatesites extends InstallerModel
         $query = JFactory::getDbo()
                          ->getQuery(true)
                          ->select(array(
-                                 's.update_site_id',
-                                 's.name AS update_site_name',
-                                 's.type AS update_site_type',
-                                 's.location',
-                                 's.enabled',
-                                 'e.extension_id',
-                                 'e.name',
-                                 'e.type',
-                                 'e.element',
-                                 'e.folder',
-                                 'e.client_id',
-                                 'e.state',
-                                 'e.manifest_cache',
-                             ))
+                             's.update_site_id',
+                             's.name AS update_site_name',
+                             's.type AS update_site_type',
+                             's.location',
+                             's.enabled',
+                             'e.extension_id',
+                             'e.name',
+                             'e.type',
+                             'e.element',
+                             'e.folder',
+                             'e.client_id',
+                             'e.state',
+                             'e.manifest_cache',
+                         ))
                          ->from('#__update_sites AS s')
                          ->innerJoin('#__update_sites_extensions AS se ON (se.update_site_id = s.update_site_id)')
                          ->innerJoin('#__extensions AS e ON (e.extension_id = se.extension_id)')

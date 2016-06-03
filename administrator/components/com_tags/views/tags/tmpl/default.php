@@ -204,9 +204,9 @@ if ($saveOrder) {
                         'com_tags') && $user->authorise('core.edit.state', 'com_tags')
                 ) : ?>
                     <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                            'title'  => JText::_('COM_TAGS_BATCH_OPTIONS'),
-                            'footer' => $this->loadTemplate('batch_footer')
-                        ), $this->loadTemplate('batch_body')); ?>
+                        'title'  => JText::_('COM_TAGS_BATCH_OPTIONS'),
+                        'footer' => $this->loadTemplate('batch_footer')
+                    ), $this->loadTemplate('batch_body')); ?>
                 <?php endif; ?>
             <?php endif; ?>
 

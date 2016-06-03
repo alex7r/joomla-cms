@@ -154,28 +154,28 @@ class JFormFieldModal_Contact extends JFormField
 
         // Select contact modal
         $html[] = JHtml::_('bootstrap.renderModal', 'contactSelect' . $this->id . 'Modal', array(
-                'title'      => JText::_('COM_CONTACT_CHANGE_CONTACT'),
-                'url'        => $urlSelect,
-                'height'     => '400px',
-                'width'      => '800px',
-                'bodyHeight' => '70',
-                'modalWidth' => '80',
-                'footer'     => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>',
-            ));
+            'title'      => JText::_('COM_CONTACT_CHANGE_CONTACT'),
+            'url'        => $urlSelect,
+            'height'     => '400px',
+            'width'      => '800px',
+            'bodyHeight' => '70',
+            'modalWidth' => '80',
+            'footer'     => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>',
+        ));
 
         // Edit contact modal
         $html[] = JHtml::_('bootstrap.renderModal', 'contactEdit' . $value . 'Modal', array(
-                'title'       => JText::_('COM_CONTACT_EDIT_CONTACT'),
-                'backdrop'    => 'static',
-                'keyboard'    => false,
-                'closeButton' => false,
-                'url'         => $urlEdit,
-                'height'      => '400px',
-                'width'       => '800px',
-                'bodyHeight'  => '70',
-                'modalWidth'  => '80',
-                'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"' . ' onclick="jQuery(\'#contactEdit' . $value . 'Modal iframe\').contents().find(\'#closeBtn\').click();">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>' . '<button type="button" class="btn btn-primary" aria-hidden="true"' . ' onclick="jQuery(\'#contactEdit' . $value . 'Modal iframe\').contents().find(\'#saveBtn\').click();">' . JText::_("JSAVE") . '</button>' . '<button type="button" class="btn btn-success" aria-hidden="true"' . ' onclick="jQuery(\'#contactEdit' . $value . 'Modal iframe\').contents().find(\'#applyBtn\').click();">' . JText::_("JAPPLY") . '</button>',
-            ));
+            'title'       => JText::_('COM_CONTACT_EDIT_CONTACT'),
+            'backdrop'    => 'static',
+            'keyboard'    => false,
+            'closeButton' => false,
+            'url'         => $urlEdit,
+            'height'      => '400px',
+            'width'       => '800px',
+            'bodyHeight'  => '70',
+            'modalWidth'  => '80',
+            'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"' . ' onclick="jQuery(\'#contactEdit' . $value . 'Modal iframe\').contents().find(\'#closeBtn\').click();">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>' . '<button type="button" class="btn btn-primary" aria-hidden="true"' . ' onclick="jQuery(\'#contactEdit' . $value . 'Modal iframe\').contents().find(\'#saveBtn\').click();">' . JText::_("JSAVE") . '</button>' . '<button type="button" class="btn btn-success" aria-hidden="true"' . ' onclick="jQuery(\'#contactEdit' . $value . 'Modal iframe\').contents().find(\'#applyBtn\').click();">' . JText::_("JAPPLY") . '</button>',
+        ));
 
         // Note: class='required' for client side validation.
         $class = $this->required ? ' class="required modal-value"' : '';

@@ -186,9 +186,9 @@ $loggeduser = JFactory::getUser();
                         'com_users') && $loggeduser->authorise('core.edit.state', 'com_users')
                 ) : ?>
                     <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                            'title'  => JText::_('COM_USERS_BATCH_OPTIONS'),
-                            'footer' => $this->loadTemplate('batch_footer')
-                        ), $this->loadTemplate('batch_body')); ?>
+                        'title'  => JText::_('COM_USERS_BATCH_OPTIONS'),
+                        'footer' => $this->loadTemplate('batch_footer')
+                    ), $this->loadTemplate('batch_body')); ?>
                 <?php endif; ?>
             <?php endif; ?>
 
