@@ -24,6 +24,7 @@ class JRouterTest extends TestCase
 	 * @since  3.1
 	 */
 	protected $object;
+
 	/**
 	 * Backup of the $_SERVER variable
 	 *

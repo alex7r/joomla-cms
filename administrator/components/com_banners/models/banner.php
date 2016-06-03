@@ -23,6 +23,7 @@ class BannersModelBanner extends JModelAdmin
 	 * @since  3.2
 	 */
 	public $typeAlias = 'com_banners.banner';
+
 	/**
 	 * The prefix to use with controller messages.
 	 *
@@ -30,6 +31,7 @@ class BannersModelBanner extends JModelAdmin
 	 * @since  1.6
 	 */
 	protected $text_prefix = 'COM_BANNERS_BANNER';
+
 	/**
 	 * Batch copy/move command. If set to false, the batch copy/move command is not supported
 	 *

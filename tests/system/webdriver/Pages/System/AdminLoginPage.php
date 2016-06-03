@@ -15,6 +15,7 @@ use SeleniumClient\By;
 class AdminLoginPage extends AdminPage
 {
 	protected $waitForXpath = "//input[@id='mod-login-username']";
+
 	protected $url = 'administrator/index.php';
 
 	public function loginValidUser($userName, $password)

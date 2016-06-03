@@ -31,6 +31,7 @@ class JTableObserverTags extends JTableObserver
 	 * @private
 	 */
 	public static $_myTableForPregreplaceOnly;
+
 	/**
 	 * Helper object for managing tags
 	 *
@@ -38,6 +39,7 @@ class JTableObserverTags extends JTableObserver
 	 * @since  3.1.2
 	 */
 	protected $tagsHelper;
+
 	/**
 	 * The pattern for this table's TypeAlias
 	 *
@@ -45,6 +47,7 @@ class JTableObserverTags extends JTableObserver
 	 * @since  3.1.2
 	 */
 	protected $typeAliasPattern = null;
+
 	/**
 	 * Override for postStoreProcess param newTags, Set by setNewTags, used by onAfterStore and onBeforeStore
 	 *
@@ -52,6 +55,7 @@ class JTableObserverTags extends JTableObserver
 	 * @since  3.1.2
 	 */
 	protected $newTags = false;
+
 	/**
 	 * Override for postStoreProcess param replaceTags. Set by setNewTags, used by onAfterStore
 	 *

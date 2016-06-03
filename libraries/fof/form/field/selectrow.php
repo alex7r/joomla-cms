@@ -19,9 +19,12 @@ class FOFFormFieldSelectrow extends JFormField implements FOFFormField
 {
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
 	public $item;
+
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
+
 	protected $static;
+
 	protected $repeatable;
 
 	/**

@@ -56,13 +56,21 @@
 class SimplePie_File
 {
 	var $url;
+
 	var $useragent;
+
 	var $success = true;
+
 	var $headers = array();
+
 	var $body;
+
 	var $status_code;
+
 	var $redirects = 0;
+
 	var $error;
+
 	var $method = SIMPLEPIE_FILE_SOURCE_NONE;
 
 	public function __construct($url, $timeout = 10, $redirects = 5, $headers = null, $useragent = null, $force_fsockopen = false)

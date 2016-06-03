@@ -16,10 +16,12 @@ class JCacheStorageTest extends TestCase
 	 * @var  array
 	 */
 	protected static $actualError;
+
 	/**
 	 * @var  JCacheStorage
 	 */
 	protected $object;
+
 	/**
 	 * Array of known cache stores and whether they are available for this test
 	 *

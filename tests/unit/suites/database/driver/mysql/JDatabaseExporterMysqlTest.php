@@ -19,6 +19,7 @@ class JDatabaseExporterMysqlTest extends TestCase
 	 * @var    JDatabaseDriverMysql  The mocked database object for use by test methods.
 	 */
 	protected $dbo = null;
+
 	private $xmlDump = '<?xml version="1.0"?>
 <mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
  <database name="">

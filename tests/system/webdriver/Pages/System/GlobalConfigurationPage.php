@@ -15,13 +15,16 @@ use SeleniumClient\By;
 class GlobalConfigurationPage extends AdminEditPage
 {
 	public $tabs = array('page-site', 'page-system', 'page-server', 'page-permissions', 'page-filters');
+
 	public $tabLabels = array('Site', 'System', 'Server', 'Permissions', 'Text Filters');
+
 	public $toolbar = array(
 		'Save'         => 'toolbar-apply',
 		'Save & Close' => 'toolbar-save',
 		'Cancel'       => 'toolbar-cancel',
 		'Help'         => 'toolbar-help',
 	);
+
 	/**
 	 * Array of all input fields on the page (except for Permissions and Text Filters tabs). Each value is an associated array as follows:
 	 *   label: text of the label -- must be unique!
@@ -86,8 +89,11 @@ class GlobalConfigurationPage extends AdminEditPage
 		array('label' => 'From Name', 'id' => 'jform_fromname', 'type' => 'input', 'tab' => 'page-server'),
 		array('label' => 'Disable Mass Mail', 'id' => 'jform_massmailoff', 'type' => 'fieldset', 'tab' => 'page-server')
 	);
+
 	public $permissions = array('core.login.site', 'core.login.admin', 'core.login.offline', 'core.admin', 'core.manage', 'core.create', 'core.delete', 'core.edit', 'core.edit.state', 'core.edit.own');
+
 	protected $waitForXpath = "//a[@href='#page-site']";
+
 	protected $url = 'administrator/index.php?option=com_config';
 
 	/**

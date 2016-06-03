@@ -53,16 +53,27 @@
 class SimplePie_Locator
 {
 	var $useragent;
+
 	var $timeout;
+
 	var $file;
+
 	var $local = array();
+
 	var $elsewhere = array();
+
 	var $cached_entities = array();
+
 	var $http_base;
+
 	var $base;
+
 	var $base_location = 0;
+
 	var $checked_feeds = 0;
+
 	var $max_checked_feeds = 10;
+
 	protected $registry;
 
 	public function __construct(SimplePie_File $file, $timeout = 10, $useragent = null, $max_checked_feeds = 10)

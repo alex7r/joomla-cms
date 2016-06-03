@@ -15,6 +15,7 @@ use SeleniumClient\By;
 class InstallationPage extends AdminPage
 {
 	protected $waitForXpath = "//div[@id='container-installation']";
+
 	protected $url = 'installation/';
 
 	public function clickNextButton($step)

@@ -23,6 +23,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public static $_buffer = null;
+
 	/**
 	 * JDocument instances container.
 	 *
@@ -30,6 +31,7 @@ class JDocument
 	 * @since  11.3
 	 */
 	protected static $instances = array();
+
 	/**
 	 * Document title
 	 *
@@ -37,6 +39,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $title = '';
+
 	/**
 	 * Document description
 	 *
@@ -44,6 +47,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $description = '';
+
 	/**
 	 * Document full URL
 	 *
@@ -51,6 +55,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $link = '';
+
 	/**
 	 * Document base URL
 	 *
@@ -58,6 +63,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $base = '';
+
 	/**
 	 * Contains the document language setting
 	 *
@@ -65,6 +71,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $language = 'en-gb';
+
 	/**
 	 * Contains the document direction setting
 	 *
@@ -72,12 +79,14 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $direction = 'ltr';
+
 	/**
 	 * Document generator
 	 *
 	 * @var    string
 	 */
 	public $_generator = 'Joomla! - Open Source Content Management';
+
 	/**
 	 * Document modified date
 	 *
@@ -85,6 +94,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_mdate = '';
+
 	/**
 	 * Tab string
 	 *
@@ -92,6 +102,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_tab = "\11";
+
 	/**
 	 * Contains the line end string
 	 *
@@ -99,6 +110,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_lineEnd = "\12";
+
 	/**
 	 * Contains the character encoding string
 	 *
@@ -106,6 +118,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_charset = 'utf-8';
+
 	/**
 	 * Document mime type
 	 *
@@ -113,6 +126,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_mime = '';
+
 	/**
 	 * Document namespace
 	 *
@@ -120,6 +134,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_namespace = '';
+
 	/**
 	 * Document profile
 	 *
@@ -127,6 +142,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_profile = '';
+
 	/**
 	 * Array of linked scripts
 	 *
@@ -134,6 +150,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_scripts = array();
+
 	/**
 	 * Array of scripts placed in the header
 	 *
@@ -141,6 +158,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_script = array();
+
 	/**
 	 * Array of linked style sheets
 	 *
@@ -148,6 +166,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_styleSheets = array();
+
 	/**
 	 * Array of included style declarations
 	 *
@@ -155,6 +174,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_style = array();
+
 	/**
 	 * Array of meta tags
 	 *
@@ -162,6 +182,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_metaTags = array();
+
 	/**
 	 * The rendering engine
 	 *
@@ -169,6 +190,7 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_engine = null;
+
 	/**
 	 * The document type
 	 *
@@ -176,12 +198,14 @@ class JDocument
 	 * @since  11.1
 	 */
 	public $_type = null;
+
 	/**
 	 * Array of scripts options
 	 *
 	 * @var    array
 	 */
 	protected $scriptOptions = array();
+
 	/**
 	 * Media version added to assets
 	 *

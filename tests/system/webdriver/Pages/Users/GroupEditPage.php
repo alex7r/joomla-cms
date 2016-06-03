@@ -24,6 +24,8 @@ class GroupEditPage extends AdminEditPage
 		array('label' => 'Group Title', 'id' => 'jform_title', 'type' => 'input', 'tab' => 'header'),
 		array('label' => 'Group Parent', 'id' => 'jform_parent_id', 'type' => 'select', 'tab' => 'header'),
 	);
+
 	protected $waitForXpath = "//form[@id='group-form']";
+
 	protected $url = 'administrator/index.php?option=com_users&view=group&layout=edit';
 }

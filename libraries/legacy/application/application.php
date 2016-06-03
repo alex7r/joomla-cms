@@ -31,6 +31,7 @@ class JApplication extends JApplicationBase
 	 * @deprecated  4.0
 	 */
 	protected static $instances = array();
+
 	/**
 	 * The scope of the application.
 	 *
@@ -39,6 +40,7 @@ class JApplication extends JApplicationBase
 	 * @deprecated  4.0
 	 */
 	public $scope = null;
+
 	/**
 	 * The time the request was made.
 	 *
@@ -47,6 +49,7 @@ class JApplication extends JApplicationBase
 	 * @deprecated  4.0
 	 */
 	public $requestTime = null;
+
 	/**
 	 * The time the request was made as Unix timestamp.
 	 *
@@ -55,12 +58,14 @@ class JApplication extends JApplicationBase
 	 * @deprecated  4.0
 	 */
 	public $startTime = null;
+
 	/**
 	 * @var    JApplicationWebClient  The application client object.
 	 * @since       12.2
 	 * @deprecated  4.0
 	 */
 	public $client;
+
 	/**
 	 * The client identifier.
 	 *
@@ -69,6 +74,7 @@ class JApplication extends JApplicationBase
 	 * @deprecated  4.0
 	 */
 	protected $_clientId = null;
+
 	/**
 	 * The application message queue.
 	 *
@@ -77,6 +83,7 @@ class JApplication extends JApplicationBase
 	 * @deprecated  4.0
 	 */
 	protected $_messageQueue = array();
+
 	/**
 	 * The name of the application.
 	 *

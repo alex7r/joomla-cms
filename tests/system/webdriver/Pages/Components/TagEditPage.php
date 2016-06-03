@@ -24,6 +24,7 @@ class TagEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabs = array('details', 'publishing', 'attrib-basic', 'images');
+
 	/**
 	 * Array of all the field Details of the Edit page, along with the ID and tab value they are present on
 	 *
@@ -62,6 +63,7 @@ class TagEditPage extends AdminEditPage
 		array('label' => 'Alt', 'id' => 'jform_images_image_fulltext_alt', 'type' => 'input', 'tab' => 'images'),
 		array('label' => 'Caption', 'id' => 'jform_images_image_fulltext_caption', 'type' => 'input', 'tab' => 'images'),
 	);
+
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -69,6 +71,7 @@ class TagEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	protected $waitForXpath = "//form[@id='item-form']";
+
 	/**
 	 * URL used to uniquely identify this page
 	 *

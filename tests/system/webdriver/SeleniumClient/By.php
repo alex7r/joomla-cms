@@ -18,6 +18,7 @@ namespace SeleniumClient;
 class By
 {
 	private $_strategy = "";
+
 	private $_selectorValue = "";
 
 	function __construct($strategy, $selectorValue)

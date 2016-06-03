@@ -19,6 +19,7 @@ class GroupManagerPage extends AdminManagerPage
 	 * @var GroupManagerPage
 	 */
 	public $groupManagerPage = null;
+
 	public $toolbar = array(
 		'toolbar-new',
 		'toolbar-edit',
@@ -26,6 +27,7 @@ class GroupManagerPage extends AdminManagerPage
 		'toolbar-options',
 		'toolbar-help'
 	);
+
 	public $submenu = array(
 		'option=com_users&view=users',
 		'option=com_users&view=groups',
@@ -33,7 +35,9 @@ class GroupManagerPage extends AdminManagerPage
 		'option=com_users&view=notes',
 		'option=com_categories&extension=com_users'
 	);
+
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_users&view=groups']";
+
 	protected $url = 'administrator/index.php?option=com_users&view=groups';
 
 	/**

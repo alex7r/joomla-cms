@@ -21,6 +21,7 @@ class ModuleEditPage extends AdminEditPage
 	 * @var array expected id values for tab div elements
 	 */
 	public $tabs = array('general', 'assignment', 'permissions', 'attrib-advanced');
+
 	/**
 	 * Array of groups for this page. A group is a collapsable slider inside a tab.
 	 * The format of this array is <tab id> => <group label>. Note that each menu item type has its own options and its own groups.
@@ -32,6 +33,7 @@ class ModuleEditPage extends AdminEditPage
 	public $groups = array(
 		'options' => array('Basic Options', 'Advanced Options'),
 	);
+
 	/**
 	 * Associative array of expected input fields for the Account Details and Basic Settings tabs
 	 * Assigned User Groups tab is omitted because that depends on the groups set up in the sample data
@@ -75,7 +77,9 @@ class ModuleEditPage extends AdminEditPage
 		array('label' => 'Menu Class Suffix', 'id' => 'jform_params_class_sfx', 'type' => 'input', 'tab' => 'attrib-advanced'),
 		array('label' => 'Target Position', 'id' => 'jform_params_window_open', 'type' => 'input', 'tab' => 'attrib-advanced'),
 	);
+
 	protected $waitForXpath = "//form[@id='module-form']";
+
 	protected $url = 'administrator/index.php?option=com_users&view=module&layout=edit';
 
 	/**

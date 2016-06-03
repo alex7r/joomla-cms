@@ -21,26 +21,32 @@ class JGoogleAuthOauth2Test extends TestCase
 	 * @var  int
 	 */
 	private static $closed = null;
+
 	/**
 	 * @var    JRegistry  Options for the JOAuth2Client object.
 	 */
 	protected $options;
+
 	/**
 	 * @var    JHttp  Mock client object.
 	 */
 	protected $http;
+
 	/**
 	 * @var    JInput  The input object to use in retrieving GET/POST data.
 	 */
 	protected $input;
+
 	/**
 	 * @var    JOAuth2Client  The OAuth client for sending requests to Google.
 	 */
 	protected $oauth;
+
 	/**
 	 * @var    JApplicationWeb  The application object to send HTTP headers for redirects.
 	 */
 	protected $application;
+
 	/**
 	 * @var    JGoogleAuthOauth2  Object under test.
 	 */

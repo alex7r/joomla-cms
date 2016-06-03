@@ -29,6 +29,7 @@ class JInstaller extends JAdapter
 	 * @deprecated  4.0
 	 */
 	protected static $instance;
+
 	/**
 	 * JInstaller instances container.
 	 *
@@ -36,6 +37,7 @@ class JInstaller extends JAdapter
 	 * @since  3.4
 	 */
 	protected static $instances;
+
 	/**
 	 * The manifest trigger class
 	 *
@@ -43,6 +45,7 @@ class JInstaller extends JAdapter
 	 * @since  3.1
 	 */
 	public $manifestClass = null;
+
 	/**
 	 * Extension Table Entry
 	 *
@@ -50,6 +53,7 @@ class JInstaller extends JAdapter
 	 * @since  3.1
 	 */
 	public $extension = null;
+
 	/**
 	 * The output from the install/uninstall scripts
 	 *
@@ -57,6 +61,7 @@ class JInstaller extends JAdapter
 	 * @since  3.1
 	 * */
 	public $message = null;
+
 	/**
 	 * The installation manifest XML object
 	 *
@@ -64,6 +69,7 @@ class JInstaller extends JAdapter
 	 * @since  3.1
 	 */
 	public $manifest = null;
+
 	/**
 	 * Array of paths needed by the installer
 	 *
@@ -71,6 +77,7 @@ class JInstaller extends JAdapter
 	 * @since  3.1
 	 */
 	protected $paths = array();
+
 	/**
 	 * True if package is an upgrade
 	 *
@@ -78,6 +85,7 @@ class JInstaller extends JAdapter
 	 * @since  3.1
 	 */
 	protected $upgrade = null;
+
 	/**
 	 * True if existing files can be overwritten
 	 *
@@ -85,6 +93,7 @@ class JInstaller extends JAdapter
 	 * @since  12.1
 	 */
 	protected $overwrite = false;
+
 	/**
 	 * Stack of installation steps
 	 * - Used for installation rollback
@@ -93,6 +102,7 @@ class JInstaller extends JAdapter
 	 * @since  3.1
 	 */
 	protected $stepStack = array();
+
 	/**
 	 * The extension message that appears
 	 *
@@ -100,6 +110,7 @@ class JInstaller extends JAdapter
 	 * @since  3.1
 	 */
 	protected $extension_message = null;
+
 	/**
 	 * The redirect URL if this extension (can be null if no redirect)
 	 *

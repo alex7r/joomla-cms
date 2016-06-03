@@ -1052,10 +1052,13 @@ abstract class AKAbstractObject
 {
 	/** @var    array    The queue size of the $_errors array. Set to 0 for infinite size. */
 	protected $_errors_queue_size = 0;
+
 	/** @var    array    The queue size of the $_warnings array. Set to 0 for infinite size. */
 	protected $_warnings_queue_size = 0;
+
 	/** @var    array    An array of errors */
 	private $_errors = array();
+
 	/** @var    array    An array of warnings */
 	private $_warnings = array();
 
@@ -1391,8 +1394,10 @@ abstract class AKAbstractPart extends AKAbstractObject
 
 	/** @var string The database root key */
 	protected $databaseRoot = array();
+
 	/** @var array An array of observers */
 	protected $observers = array();
+
 	/** @var int Last reported warnings's position in array */
 	private $warnings_pointer = -1;
 
@@ -1700,26 +1705,37 @@ abstract class AKAbstractUnarchiver extends AKAbstractPart
 {
 	/** @var array List of the names of all archive parts */
 	public $archiveList = array();
+
 	/** @var int The total size of all archive parts */
 	public $totalSize = array();
+
 	/** @var array Which files to rename */
 	public $renameFiles = array();
+
 	/** @var array Which directories to rename */
 	public $renameDirs = array();
+
 	/** @var array Which files to skip */
 	public $skipFiles = array();
+
 	/** @var string Archive filename */
 	protected $filename = null;
+
 	/** @var integer Current archive part number */
 	protected $currentPartNumber = -1;
+
 	/** @var integer The offset inside the current part */
 	protected $currentPartOffset = 0;
+
 	/** @var bool Should I restore permissions? */
 	protected $flagRestorePermissions = false;
+
 	/** @var AKAbstractPostproc Post processing class */
 	protected $postProcEngine = null;
+
 	/** @var string Absolute path to prepend to extracted files */
 	protected $addPath = '';
+
 	/** @var integer Chunk size for processing */
 	protected $chunkSize = 524288;
 
@@ -2272,10 +2288,13 @@ abstract class AKAbstractPostproc extends AKAbstractObject
 {
 	/** @var int The UNIX timestamp of the file's desired modification date */
 	public $timestamp = 0;
+
 	/** @var string The current (real) file path we'll have to process */
 	protected $filename = null;
+
 	/** @var int The requested permissions */
 	protected $perms = 0755;
+
 	/** @var string The temporary file path we gave to the unarchiver engine */
 	protected $tempFilename = null;
 
@@ -2478,20 +2497,28 @@ class AKPostprocFTP extends AKAbstractPostproc
 {
 	/** @var bool Should I use FTP over implicit SSL? */
 	public $useSSL = false;
+
 	/** @var bool use Passive mode? */
 	public $passive = true;
+
 	/** @var string FTP host name */
 	public $host = '';
+
 	/** @var int FTP port */
 	public $port = 21;
+
 	/** @var string FTP user name */
 	public $user = '';
+
 	/** @var string FTP password */
 	public $pass = '';
+
 	/** @var string FTP initial directory */
 	public $dir = '';
+
 	/** @var resource The FTP handle */
 	private $handle = null;
+
 	/** @var string The temporary directory where the data will be stored */
 	private $tempDir = '';
 
@@ -3030,16 +3057,22 @@ class AKPostprocSFTP extends AKAbstractPostproc
 {
 	/** @var bool Should I use FTP over implicit SSL? */
 	public $useSSL = false;
+
 	/** @var bool use Passive mode? */
 	public $passive = true;
+
 	/** @var string FTP host name */
 	public $host = '';
+
 	/** @var int FTP port */
 	public $port = 21;
+
 	/** @var string FTP user name */
 	public $user = '';
+
 	/** @var string FTP password */
 	public $pass = '';
+
 	/** @var string FTP initial directory */
 	public $dir = '';
 
@@ -7869,7 +7902,9 @@ if (!defined('KICKSTART'))
 	class RestorationObserver extends AKAbstractPartObserver
 	{
 		public $compressedTotal = 0;
+
 		public $uncompressedTotal = 0;
+
 		public $filesProcessed = 0;
 
 		public function update($object, $message)

@@ -46,6 +46,7 @@ class Input implements \Serializable, \Countable
 	 * @since  1.1.4
 	 */
 	protected static $loaded = false;
+
 	/**
 	 * Options array for the Input instance.
 	 *
@@ -53,6 +54,7 @@ class Input implements \Serializable, \Countable
 	 * @since  1.0
 	 */
 	protected $options = array();
+
 	/**
 	 * Filter object to use.
 	 *
@@ -60,6 +62,7 @@ class Input implements \Serializable, \Countable
 	 * @since  1.0
 	 */
 	protected $filter = null;
+
 	/**
 	 * Input data.
 	 *
@@ -67,6 +70,7 @@ class Input implements \Serializable, \Countable
 	 * @since  1.0
 	 */
 	protected $data = array();
+
 	/**
 	 * Input objects
 	 *

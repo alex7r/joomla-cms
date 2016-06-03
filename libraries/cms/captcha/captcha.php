@@ -28,6 +28,7 @@ class JCaptcha extends JObject
 	 * @since  2.5
 	 */
 	private static $_instances = array();
+
 	/**
 	 * An array of Observer objects to notify
 	 *
@@ -35,6 +36,7 @@ class JCaptcha extends JObject
 	 * @since  2.5
 	 */
 	protected $_observers = array();
+
 	/**
 	 * The state of the observable object
 	 *
@@ -42,6 +44,7 @@ class JCaptcha extends JObject
 	 * @since  2.5
 	 */
 	protected $_state = null;
+
 	/**
 	 * A multi dimensional array of [function][] = key for observers
 	 *
@@ -49,6 +52,7 @@ class JCaptcha extends JObject
 	 * @since  2.5
 	 */
 	protected $_methods = array();
+
 	/**
 	 * Captcha Plugin object
 	 *
@@ -56,6 +60,7 @@ class JCaptcha extends JObject
 	 * @since  2.5
 	 */
 	private $_captcha;
+
 	/**
 	 * Editor Plugin name
 	 *

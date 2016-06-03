@@ -21,7 +21,9 @@ class UserEditPage extends AdminEditPage
 	 * @var array expected id values for tab div elements
 	 */
 	public $tabs = array('details', 'groups', 'settings');
+
 	public $tabLabels = array('Account Details', 'Assigned User Groups', 'Basic Settings');
+
 	/**
 	 * Associative array of expected input fields for the Account Details and Basic Settings tabs
 	 * Assigned User Groups tab is omitted because that depends on the groups set up in the sample data
@@ -49,7 +51,9 @@ class UserEditPage extends AdminEditPage
 		array('label' => 'Help Site', 'id' => 'jform_params_helpsite', 'type' => 'select', 'tab' => 'settings'),
 		array('label' => 'Time Zone', 'id' => 'jform_params_timezone', 'type' => 'select', 'tab' => 'settings'),
 	);
+
 	protected $waitForXpath = "//form[@id='user-form']";
+
 	protected $url = 'administrator/index.php?option=com_users&view=user&layout=edit';
 
 	/**

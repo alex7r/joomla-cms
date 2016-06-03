@@ -23,6 +23,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected static $count = 0;
+
 	/**
 	 * The string used for generated fields names
 	 *
@@ -30,6 +31,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected static $generated_fieldname = '__field';
+
 	/**
 	 * Allows extensions to create repeat elements
 	 *
@@ -37,6 +39,7 @@ abstract class JFormField
 	 * @since  3.2
 	 */
 	public $repeat = false;
+
 	/**
 	 * The description text for the form field. Usually used in tooltips.
 	 *
@@ -44,6 +47,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $description;
+
 	/**
 	 * The hint text for the form field used to display hint inside the field.
 	 *
@@ -51,6 +55,7 @@ abstract class JFormField
 	 * @since  3.2
 	 */
 	protected $hint;
+
 	/**
 	 * The autocomplete state for the form field.  If 'off' element will not be automatically
 	 * completed by browser.
@@ -59,6 +64,7 @@ abstract class JFormField
 	 * @since  3.2
 	 */
 	protected $autocomplete = 'on';
+
 	/**
 	 * The spellcheck state for the form field.
 	 *
@@ -66,6 +72,7 @@ abstract class JFormField
 	 * @since  3.2
 	 */
 	protected $spellcheck = true;
+
 	/**
 	 * The autofocus request for the form field.  If true element will be automatically
 	 * focused on document load.
@@ -74,6 +81,7 @@ abstract class JFormField
 	 * @since  3.2
 	 */
 	protected $autofocus = false;
+
 	/**
 	 * The SimpleXMLElement object of the `<field>` XML element that describes the form field.
 	 *
@@ -81,6 +89,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $element;
+
 	/**
 	 * The JForm object of the form attached to the form field.
 	 *
@@ -88,6 +97,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $form;
+
 	/**
 	 * The form control prefix for field names from the JForm object attached to the form field.
 	 *
@@ -95,6 +105,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $formControl;
+
 	/**
 	 * The hidden state for the form field.
 	 *
@@ -102,6 +113,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $hidden = false;
+
 	/**
 	 * True to translate the field label string.
 	 *
@@ -109,6 +121,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $translateLabel = true;
+
 	/**
 	 * True to translate the field description string.
 	 *
@@ -116,6 +129,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $translateDescription = true;
+
 	/**
 	 * True to translate the field hint string.
 	 *
@@ -123,6 +137,7 @@ abstract class JFormField
 	 * @since  3.2
 	 */
 	protected $translateHint = true;
+
 	/**
 	 * The document id for the form field.
 	 *
@@ -130,6 +145,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $id;
+
 	/**
 	 * The input for the form field.
 	 *
@@ -137,6 +153,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $input;
+
 	/**
 	 * The label for the form field.
 	 *
@@ -144,6 +161,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $label;
+
 	/**
 	 * The multiple state for the form field.  If true then multiple values are allowed for the
 	 * field.  Most often used for list field types.
@@ -152,6 +170,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $multiple = false;
+
 	/**
 	 * The pattern (Reg Ex) of value of the form field.
 	 *
@@ -159,6 +178,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $pattern;
+
 	/**
 	 * The name of the form field.
 	 *
@@ -166,6 +186,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $name;
+
 	/**
 	 * The name of the field.
 	 *
@@ -173,6 +194,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $fieldname;
+
 	/**
 	 * The group of the field.
 	 *
@@ -180,6 +202,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $group;
+
 	/**
 	 * The required state for the form field.  If true then there must be a value for the field to
 	 * be considered valid.
@@ -188,6 +211,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $required = false;
+
 	/**
 	 * The disabled state for the form field.  If true then the field will be disabled and user can't
 	 * interact with the field.
@@ -196,6 +220,7 @@ abstract class JFormField
 	 * @since  3.2
 	 */
 	protected $disabled = false;
+
 	/**
 	 * The readonly state for the form field.  If true then the field will be readonly.
 	 *
@@ -203,6 +228,7 @@ abstract class JFormField
 	 * @since  3.2
 	 */
 	protected $readonly = false;
+
 	/**
 	 * The form field type.
 	 *
@@ -210,6 +236,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $type;
+
 	/**
 	 * The validation method for the form field.  This value will determine which method is used
 	 * to validate the value for a field.
@@ -218,6 +245,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $validate;
+
 	/**
 	 * The value of the form field.
 	 *
@@ -225,6 +253,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $value;
+
 	/**
 	 * The default value of the form field.
 	 *
@@ -232,6 +261,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $default;
+
 	/**
 	 * The size of the form field.
 	 *
@@ -239,6 +269,7 @@ abstract class JFormField
 	 * @since  3.2
 	 */
 	protected $size;
+
 	/**
 	 * The class of the form field
 	 *
@@ -246,6 +277,7 @@ abstract class JFormField
 	 * @since  3.2
 	 */
 	protected $class;
+
 	/**
 	 * The label's CSS class of the form field
 	 *
@@ -253,6 +285,7 @@ abstract class JFormField
 	 * @since  11.1
 	 */
 	protected $labelclass;
+
 	/**
 	 * The javascript onchange of the form field.
 	 *
@@ -260,6 +293,7 @@ abstract class JFormField
 	 * @since  3.2
 	 */
 	protected $onchange;
+
 	/**
 	 * The javascript onclick of the form field.
 	 *
@@ -267,6 +301,7 @@ abstract class JFormField
 	 * @since  3.2
 	 */
 	protected $onclick;
+
 	/**
 	 * Name of the layout being used to render the field
 	 *

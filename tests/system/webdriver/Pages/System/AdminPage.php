@@ -22,11 +22,13 @@ abstract class AdminPage
 	 * @var array $toolbar Associative array as label => id for the toolbar buttons.
 	 */
 	public $toolbar = array();
+
 	/**
 	 *
 	 * @var  array of top menu text that is initially visible in all admin menus
 	 */
 	public $visibleMenuText = array('System', 'Users', 'Menus', 'Content', 'Components', 'Extensions', 'Help');
+
 	/**
 	 *
 	 * @var  array  All top menu links in admin screens. These are common in all admin screens.
@@ -110,6 +112,7 @@ abstract class AdminPage
 		'Joomla Shop'                       => 'http://shop.joomla.org/',
 		'Tags'                              => 'administrator/index.php?option=com_tags',
 	);
+
 	/**
 	 * This variable creates a JavaScript function called moveToElementByAttribute.
 	 * This function is used to hover the mouse on an element so the tooltip for that element becomes visible.
@@ -131,26 +134,31 @@ abstract class AdminPage
 			}
 		}
 		matchingElements[0].fireEvent('mouseenter');";
+
 	/**
 	 *
 	 * @var Webdriver  The driver object for invoking driver methods.
 	 */
 	protected $driver = null;
+
 	/**
 	 *
 	 * @var SeleniumConfig  The configuration object.
 	 */
 	protected $cfg = null;
+
 	/**
 	 *
 	 * @var string This is the element that we wait for when we load a new page. It should specify something unique about this page.
 	 */
 	protected $waitForXpath;
+
 	/**
 	 *
 	 * @var JoomlaWebdriverTestCase  The test object for invoking test methods.
 	 */
 	protected $test = null;
+
 	/**
 	 * @var string  This is the URL for this page. We check this when a new page class is loaded.
 	 */

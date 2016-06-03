@@ -17,9 +17,13 @@
 class JInputInspector extends JInput
 {
 	public static $registered;
+
 	public $options;
+
 	public $filter;
+
 	public $data;
+
 	public $inputs;
 
 	/**

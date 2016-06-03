@@ -23,6 +23,7 @@ class BannerEditPage extends AdminEditPage
 	 * @since  3.2
 	 */
 	public $tabs = array('details', 'otherparams', 'publishing');
+
 	/**
 	 * Array of all the field Details of the Edit page, along with the ID and tab value they are present on
 	 *
@@ -64,6 +65,7 @@ class BannerEditPage extends AdminEditPage
 		array('label' => 'Use Own Prefix', 'id' => 'jform_own_prefix', 'type' => 'fieldset', 'tab' => 'publishing'),
 		array('label' => 'Meta Keyword Prefix', 'id' => 'jform_metakey_prefix', 'type' => 'input', 'tab' => 'publishing'),
 	);
+
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -71,6 +73,7 @@ class BannerEditPage extends AdminEditPage
 	 * @since  3.2
 	 */
 	protected $waitForXpath = "//form[@id='banner-form']";
+
 	/**
 	 * URL used to uniquely identify this page
 	 *

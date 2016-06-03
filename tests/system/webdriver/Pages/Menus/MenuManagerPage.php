@@ -16,6 +16,7 @@ use SeleniumClient\By;
 class MenuManagerPage extends AdminManagerPage
 {
 	public $filters = array();
+
 	public $toolbar = array(
 		'New'     => 'toolbar-new',
 		'Edit'    => 'toolbar-edit',
@@ -24,10 +25,13 @@ class MenuManagerPage extends AdminManagerPage
 		'Options' => 'toolbar-options',
 		'Help'    => 'toolbar-help',
 	);
+
 	public $submenu = array(
 		'option=com_menus&view=items',
 	);
+
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_menus&view=menus']";
+
 	protected $url = 'administrator/index.php?option=com_menus&view=menus';
 
 	/**

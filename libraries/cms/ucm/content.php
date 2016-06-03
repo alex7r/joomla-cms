@@ -23,6 +23,7 @@ class JUcmContent extends JUcmBase
 	 * @since  3.1
 	 */
 	public $ucmData;
+
 	/**
 	 * The related table object
 	 *

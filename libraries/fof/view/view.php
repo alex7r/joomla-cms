@@ -25,66 +25,77 @@ abstract class FOFView extends FOFUtilsObject
 	 * @var    array  Contains objects of the FOFRenderAbstract class
 	 */
 	public static $renderers = array();
+
 	/**
 	 * The name of the view
 	 *
 	 * @var    array
 	 */
 	protected $_name = null;
+
 	/**
 	 * Registered models
 	 *
 	 * @var    array
 	 */
 	protected $_models = array();
+
 	/**
 	 * The base path of the view
 	 *
 	 * @var    string
 	 */
 	protected $_basePath = null;
+
 	/**
 	 * The default model
 	 *
 	 * @var    string
 	 */
 	protected $_defaultModel = null;
+
 	/**
 	 * Layout name
 	 *
 	 * @var    string
 	 */
 	protected $_layout = 'default';
+
 	/**
 	 * Layout extension
 	 *
 	 * @var    string
 	 */
 	protected $_layoutExt = 'php';
+
 	/**
 	 * Layout template
 	 *
 	 * @var    string
 	 */
 	protected $_layoutTemplate = '_';
+
 	/**
 	 * The set of search directories for resources (templates)
 	 *
 	 * @var array
 	 */
 	protected $_path = array('template' => array(), 'helper' => array());
+
 	/**
 	 * The name of the default template source file.
 	 *
 	 * @var string
 	 */
 	protected $_template = null;
+
 	/**
 	 * The output of the template script.
 	 *
 	 * @var string
 	 */
 	protected $_output = null;
+
 	/**
 	 * Callback for escaping.
 	 *
@@ -92,12 +103,14 @@ abstract class FOFView extends FOFUtilsObject
 	 * @deprecated 13.3
 	 */
 	protected $_escape = 'htmlspecialchars';
+
 	/**
 	 * Charset to use in escaping mechanisms; defaults to urf8 (UTF-8)
 	 *
 	 * @var string
 	 */
 	protected $_charset = 'UTF-8';
+
 	/**
 	 * Cache of the configuration array
 	 *

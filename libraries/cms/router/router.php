@@ -53,6 +53,7 @@ class JRouter
 	 * @since  3.4
 	 */
 	const PROCESS_AFTER = 'postprocess';
+
 	/**
 	 * JRouter instances container.
 	 *
@@ -60,6 +61,7 @@ class JRouter
 	 * @since  1.7
 	 */
 	protected static $instances = array();
+
 	/**
 	 * The rewrite mode
 	 *
@@ -67,6 +69,7 @@ class JRouter
 	 * @since  1.5
 	 */
 	protected $mode = null;
+
 	/**
 	 * The rewrite mode
 	 *
@@ -75,6 +78,7 @@ class JRouter
 	 * @deprecated  4.0 Will convert to $mode
 	 */
 	protected $_mode = null;
+
 	/**
 	 * An array of variables
 	 *
@@ -82,6 +86,7 @@ class JRouter
 	 * @since   1.5
 	 */
 	protected $vars = array();
+
 	/**
 	 * An array of variables
 	 *
@@ -90,6 +95,7 @@ class JRouter
 	 * @deprecated  4.0 Will convert to $vars
 	 */
 	protected $_vars = array();
+
 	/**
 	 * An array of rules
 	 *
@@ -104,6 +110,7 @@ class JRouter
 		'parse'            => array(),
 		'parsepostprocess' => array()
 	);
+
 	/**
 	 * An array of rules
 	 *
@@ -119,6 +126,7 @@ class JRouter
 		'parse'            => array(),
 		'parsepostprocess' => array()
 	);
+
 	/**
 	 * Caching of processed URIs
 	 *

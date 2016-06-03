@@ -25,6 +25,7 @@ class PlgSystemDebug extends JPlugin
 	 * @since  1.7
 	 */
 	protected $linkFormat = '';
+
 	/**
 	 * Application object.
 	 *
@@ -32,6 +33,7 @@ class PlgSystemDebug extends JPlugin
 	 * @since  3.3
 	 */
 	protected $app;
+
 	/**
 	 * True if debug lang is on.
 	 *
@@ -39,6 +41,7 @@ class PlgSystemDebug extends JPlugin
 	 * @since  3.0
 	 */
 	private $debugLang = false;
+
 	/**
 	 * Holds log entries handled by the plugin.
 	 *
@@ -46,6 +49,7 @@ class PlgSystemDebug extends JPlugin
 	 * @since  3.1
 	 */
 	private $logEntries = array();
+
 	/**
 	 * Holds SHOW PROFILES of queries.
 	 *
@@ -53,6 +57,7 @@ class PlgSystemDebug extends JPlugin
 	 * @since  3.1.2
 	 */
 	private $sqlShowProfiles = array();
+
 	/**
 	 * Holds all SHOW PROFILE FOR QUERY n, indexed by n-1.
 	 *
@@ -60,6 +65,7 @@ class PlgSystemDebug extends JPlugin
 	 * @since  3.1.2
 	 */
 	private $sqlShowProfileEach = array();
+
 	/**
 	 * Holds all EXPLAIN EXTENDED for all queries.
 	 *
@@ -67,6 +73,7 @@ class PlgSystemDebug extends JPlugin
 	 * @since  3.1.2
 	 */
 	private $explains = array();
+
 	/**
 	 * Holds total amount of executed queries.
 	 *

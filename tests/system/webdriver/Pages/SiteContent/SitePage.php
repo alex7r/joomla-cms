@@ -23,31 +23,37 @@ abstract class SitePage
 	 * @var array $toolbar Associative array as label => id for the toolbar buttons
 	 */
 	public $toolbar = array();
+
 	/**
 	 *
 	 * @var  array of top menu text that is visible in all frontend pages
 	 */
 	public $visibleMenuText = array('Home', 'Sample Sites', 'Joomla.org');
+
 	/**
 	 *
 	 * @var Webdriver  The driver object for invoking driver methods.
 	 */
 	protected $driver = null;
+
 	/**
 	 *
 	 * @var SeleniumConfig  The configuration object.
 	 */
 	protected $cfg = null;
+
 	/**
 	 *
 	 * @var string This is the element that we wait for when we load a new page. It should specify something unique about this page.
 	 */
 	protected $waitForXpath;
+
 	/**
 	 *
 	 * @var JoomlaWebdriverTestCase  The test object for invoking test methods.
 	 */
 	protected $test = null;
+
 	/**
 	 * @var string  This is the URL for this page. We check this when a new page class is loaded.
 	 */

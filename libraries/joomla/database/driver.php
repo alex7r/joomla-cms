@@ -24,11 +24,13 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
 	 * @since  11.1
 	 */
 	protected static $instances = array();
+
 	/**
 	 * @var    string  The minimum supported database version.
 	 * @since  12.1
 	 */
 	protected static $dbMinimum;
+
 	/**
 	 * The name of the database driver.
 	 *
@@ -36,6 +38,7 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
 	 * @since  11.1
 	 */
 	public $name;
+
 	/**
 	 * The type of the database server family supported by this driver. Examples: mysql, oracle, postgresql, mssql,
 	 * sqlite.
@@ -44,46 +47,55 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
 	 * @since  CMS 3.5.0
 	 */
 	public $serverType;
+
 	/**
 	 * @var    resource  The database connection resource.
 	 * @since  11.1
 	 */
 	protected $connection;
+
 	/**
 	 * @var    integer  The number of SQL statements executed by the database driver.
 	 * @since  11.1
 	 */
 	protected $count = 0;
+
 	/**
 	 * @var    resource  The database connection cursor from the last query.
 	 * @since  11.1
 	 */
 	protected $cursor;
+
 	/**
 	 * @var    boolean  The database driver debugging state.
 	 * @since  11.1
 	 */
 	protected $debug = false;
+
 	/**
 	 * @var    integer  The affected row limit for the current SQL statement.
 	 * @since  11.1
 	 */
 	protected $limit = 0;
+
 	/**
 	 * @var    array  The log of executed SQL statements by the database driver.
 	 * @since  11.1
 	 */
 	protected $log = array();
+
 	/**
 	 * @var    array  The log of executed SQL statements timings (start and stop microtimes) by the database driver.
 	 * @since  CMS 3.1.2
 	 */
 	protected $timings = array();
+
 	/**
 	 * @var    array  The log of executed SQL statements timings (start and stop microtimes) by the database driver.
 	 * @since  CMS 3.1.2
 	 */
 	protected $callStacks = array();
+
 	/**
 	 * @var    string  The character(s) used to quote SQL statement names such as table names or field names,
 	 *                 etc.  The child classes should define this as necessary.  If a single character string the
@@ -92,64 +104,76 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
 	 * @since  11.1
 	 */
 	protected $nameQuote;
+
 	/**
 	 * @var    string  The null or zero representation of a timestamp for the database driver.  This should be
 	 *                 defined in child classes to hold the appropriate value for the engine.
 	 * @since  11.1
 	 */
 	protected $nullDate;
+
 	/**
 	 * @var    integer  The affected row offset to apply for the current SQL statement.
 	 * @since  11.1
 	 */
 	protected $offset = 0;
+
 	/**
 	 * @var    array  Passed in upon instantiation and saved.
 	 * @since  11.1
 	 */
 	protected $options;
+
 	/**
 	 * @var    mixed  The current SQL statement to execute.
 	 * @since  11.1
 	 */
 	protected $sql;
+
 	/**
 	 * @var    string  The common database table prefix.
 	 * @since  11.1
 	 */
 	protected $tablePrefix;
+
 	/**
 	 * @var    boolean  True if the database engine supports UTF-8 character encoding.
 	 * @since  11.1
 	 */
 	protected $utf = true;
+
 	/**
 	 * @var    boolean  True if the database engine supports UTF-8 Multibyte (utf8mb4) character encoding.
 	 * @since  CMS 3.5.0
 	 */
 	protected $utf8mb4 = false;
+
 	/**
 	 * @var         integer  The database error number
 	 * @since       11.1
 	 * @deprecated  12.1
 	 */
 	protected $errorNum = 0;
+
 	/**
 	 * @var         string  The database error message
 	 * @since       11.1
 	 * @deprecated  12.1
 	 */
 	protected $errorMsg;
+
 	/**
 	 * @var    integer  The depth of the current transaction.
 	 * @since  12.3
 	 */
 	protected $transactionDepth = 0;
+
 	/**
 	 * @var    callable[]  List of callables to call just before disconnecting database
 	 * @since  CMS 3.1.2
 	 */
 	protected $disconnectHandlers = array();
+
 	/**
 	 * The name of the database.
 	 *

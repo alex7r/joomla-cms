@@ -19,10 +19,15 @@ class Cookie
 {
 
 	private $_name = "";
+
 	private $_value = "";
+
 	private $_path = "";
+
 	private $_domain = "";
+
 	private $_secure = false;
+
 	private $_expiry = 0;
 
 	public function __construct($name, $value, $path = null, $domain = null, $secure = null, $expiry = null)

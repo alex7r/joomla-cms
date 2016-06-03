@@ -28,9 +28,13 @@ require_once 'WebElement.php';
 class WebDriver
 {
 	private $_hubUrl = null;
+
 	private $_sessionId = null;
+
 	private $_screenshotsDirectory = null;
+
 	private $_environment = HttpFactory::PRODUCTIONMODE;
+
 	private $_capabilities = null;
 
 	/**

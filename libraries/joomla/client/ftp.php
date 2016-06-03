@@ -58,36 +58,43 @@ class JClientFtp
 	 * @since  12.1
 	 */
 	protected static $instances = array();
+
 	/**
 	 * @var    resource  Socket resource
 	 * @since  12.1
 	 */
 	protected $_conn = null;
+
 	/**
 	 * @var    resource  Data port connection resource
 	 * @since  12.1
 	 */
 	protected $_dataconn = null;
+
 	/**
 	 * @var    array  Passive connection information
 	 * @since  12.1
 	 */
 	protected $_pasv = null;
+
 	/**
 	 * @var    string  Response Message
 	 * @since  12.1
 	 */
 	protected $_response = null;
+
 	/**
 	 * @var    integer  Timeout limit
 	 * @since  12.1
 	 */
 	protected $_timeout = 15;
+
 	/**
 	 * @var    integer  Transfer Type
 	 * @since  12.1
 	 */
 	protected $_type = null;
+
 	/**
 	 * @var    array  Array to hold ascii format file extensions
 	 * @since   12.1
@@ -114,6 +121,7 @@ class JClientFtp
 		"txt",
 		"xhtml",
 		"xml");
+
 	/**
 	 * Array to hold native line ending characters
 	 *

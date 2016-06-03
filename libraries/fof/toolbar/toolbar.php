@@ -19,10 +19,13 @@ class FOFToolbar
 {
 	/** @var array Permissions map, see the __construct method for more information */
 	public $perms = array();
+
 	/** @var array Configuration parameters */
 	protected $config = array();
+
 	/** @var array Input (e.g. request) variables */
 	protected $input = array();
+
 	/** @var array The links to be rendered in the toolbar */
 	protected $linkbar = array();
 

@@ -23,6 +23,7 @@ class JUser extends JObject
 	 * @since  11.3
 	 */
 	protected static $instances = array();
+
 	/**
 	 * Unique id
 	 *
@@ -158,6 +159,7 @@ class JUser extends JObject
 	 * @since  3.2
 	 */
 	public $requireReset = null;
+
 	/**
 	 * A cached switch for if this user has root access rights.
 	 *
@@ -165,6 +167,7 @@ class JUser extends JObject
 	 * @since  11.1
 	 */
 	protected $isRoot = null;
+
 	/**
 	 * User parameters
 	 *
@@ -172,6 +175,7 @@ class JUser extends JObject
 	 * @since  11.1
 	 */
 	protected $_params = null;
+
 	/**
 	 * Authorised access groups
 	 *
@@ -179,6 +183,7 @@ class JUser extends JObject
 	 * @since  11.1
 	 */
 	protected $_authGroups = null;
+
 	/**
 	 * Authorised access levels
 	 *
@@ -186,6 +191,7 @@ class JUser extends JObject
 	 * @since  11.1
 	 */
 	protected $_authLevels = null;
+
 	/**
 	 * Authorised access actions
 	 *
@@ -193,6 +199,7 @@ class JUser extends JObject
 	 * @since  11.1
 	 */
 	protected $_authActions = null;
+
 	/**
 	 * Error message
 	 *
@@ -200,6 +207,7 @@ class JUser extends JObject
 	 * @since  11.1
 	 */
 	protected $_errorMsg = null;
+
 	/**
 	 * JUserWrapperHelper object
 	 *

@@ -9,12 +9,15 @@ class FOFDatabaseInstaller
 {
 	/** @var  array  A list of the base names of the XML schema files */
 	public $xmlFiles = array('mysql', 'mysqli', 'pdomysql', 'postgresql', 'sqlsrv', 'mssql');
+
 	/**
 	 * @var   FOFInput  Input variables
 	 */
 	protected $input = array();
+
 	/** @var  JDatabase  The database connector object */
 	private $db = null;
+
 	/** @var  string  The directory where the XML schema files are stored */
 	private $xmlDirectory = null;
 

@@ -42,8 +42,11 @@ class lessc
 	static public $VERSION = "v0.5.0";
 
 	static public $TRUE = array("keyword", "true");
+
 	static public $FALSE = array("keyword", "false");
+
 	static protected $nextImportId = 0;
+
 	static protected $cssColors = array(
 		'aliceblue'            => '240,248,255',
 		'antiquewhite'         => '250,235,215',
@@ -194,19 +197,29 @@ class lessc
 		'yellow'               => '255,255,0',
 		'yellowgreen'          => '154,205,50'
 	);
+
 	public $vPrefix = '@';
+
 	public $mPrefix = '$'; // prefix of abstract properties
+
 	public $parentSelector = '&'; // prefix of abstract blocks
+
 	public $importDisabled = false;
+
 	public $importDir = '';
+
 	protected $libFunctions = array();
+
 	protected $registeredVars = array();
+
 	protected $preserveComments = false;
 
 	// set to the parser that generated the current line when compiling
 	// so we know how to create error messages
 	protected $numberPrecision = null;
+
 	protected $allParsedFiles = array();
+
 	protected $sourceParser = null; // uniquely identify imports
 
 	// attempts to find the path of an import url, returns null for css files
@@ -2743,10 +2756,13 @@ class lessc_parser
 	);
 
 	static protected $whitePattern;
+
 	static protected $commentMulti;
 
 	static protected $commentSingle = "//";
+
 	static protected $commentMultiLeft = "/*";
+
 	static protected $commentMultiRight = "*/";
 
 	// regex string to match any of the operators
@@ -2757,9 +2773,11 @@ class lessc_parser
 		array('/border-radius$/i', '/^font$/i');
 
 ptatic
+
 	protected $literalCache = array();
 
 	protected $blockDirectives = array("font-face", "keyframes", "page", "-moz-document", "viewport", "-moz-viewport", "-o-viewport", "-ms-viewport");
+
 /rotected $lineDirectives = array("charset");
 
 	// caches preg escaped literals
@@ -2772,6 +2790,7 @@ s**
 *     property1: 10 -5; // is two numbers, 10 and -5
 *     property2: (10 -5); // should evaluate to 5
 */
+
 	protected $inParens = false;
 
 p
@@ -4492,15 +4511,21 @@ class lessc_formatter_classic
 	public $indentChar = "  ";
 
 	public $break = "\n";
+
 	public $open = " {";
+
 	public $close = "}";
+
 	public $selectorSeparator = ", ";
+
 	public $assignSeparator = ":";
 
 	public $openSingle = " { ";
+
 	public $closeSingle = " }";
 
 	public $disableSingle = false;
+
 	public $breakSelectors = false;
 
 	public $compressColors = false;
@@ -4612,10 +4637,15 @@ ublic function indentStr($n = 0)
 class lessc_formatter_compressed extends lessc_formatter_classic
 {
 	public $disableSingle = true;
+
 	public $open = "{";
+
 	public $selectorSeparator = ",";
+
 	public $assignSeparator = ":";
+
 	public $break = "";
+
 	public $compressColors = true;
 
 	public function indentStr($n = 0)
@@ -4627,8 +4657,11 @@ class lessc_formatter_compressed extends lessc_formatter_classic
 class lessc_formatter_lessjs extends lessc_formatter_classic
 {
 	public $disableSingle = true;
+
 	public $breakSelectors = true;
+
 	public $assignSeparator = ": ";
+
 	public $selectorSeparator = ",";
 }
 

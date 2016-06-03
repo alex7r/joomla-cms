@@ -29,12 +29,14 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 * @var  array
 	 */
 	protected static $paths = array();
+
 	/**
 	 * The platform class instance which will be returned by getInstance
 	 *
 	 * @var  FOFPlatformInterface
 	 */
 	protected static $instance = null;
+
 	/**
 	 * The ordering for this platform class. The lower this number is, the more
 	 * important this class becomes. Most important enabled class ends up being
@@ -43,6 +45,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 * @var  integer
 	 */
 	public $ordering = 100;
+
 	/**
 	 * The internal name of this platform implementation. It must match the
 	 * last part of the platform class name and be in all lowercase letters,
@@ -53,6 +56,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 * @since  2.1.2
 	 */
 	public $name = '';
+
 	/**
 	 * The human readable platform name
 	 *
@@ -61,6 +65,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 * @since  2.1.2
 	 */
 	public $humanReadableName = 'Unknown Platform';
+
 	/**
 	 * The platform version string
 	 *
@@ -69,12 +74,14 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 * @since  2.1.2
 	 */
 	public $version = '';
+
 	/**
 	 * Caches the enabled status of this platform class.
 	 *
 	 * @var  boolean
 	 */
 	protected $isEnabled = null;
+
 	/**
 	 * Filesystem integration objects cache
 	 *

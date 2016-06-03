@@ -25,6 +25,7 @@ class JFormFieldTimezone extends JFormFieldGroupedList
 	 * @since  11.1
 	 */
 	protected static $zones = array('Africa', 'America', 'Antarctica', 'Arctic', 'Asia', 'Atlantic', 'Australia', 'Europe', 'Indian', 'Pacific');
+
 	/**
 	 * The form field type.
 	 *
@@ -32,6 +33,7 @@ class JFormFieldTimezone extends JFormFieldGroupedList
 	 * @since  11.1
 	 */
 	protected $type = 'Timezone';
+
 	/**
 	 * The keyField of timezone field.
 	 *

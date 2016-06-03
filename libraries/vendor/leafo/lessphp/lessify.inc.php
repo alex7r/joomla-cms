@@ -23,6 +23,7 @@ require "lessc.inc.php";
 class easyparse
 {
 	var $buffer;
+
 	var $count;
 
 	function __construct($str)
@@ -82,6 +83,7 @@ class easyparse
 class tagparse extends easyparse
 {
 	static private $combinators = null;
+
 	static private $match_opts = null;
 
 	static function compilePaths($paths)
@@ -322,10 +324,13 @@ class tagparse extends easyparse
 class nodecounter
 {
 	var $count = 0;
+
 	var $children = array();
 
 	var $name;
+
 	var $child_blocks;
+
 	var $the_block;
 
 	function __construct($name)

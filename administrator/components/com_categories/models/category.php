@@ -26,6 +26,7 @@ class CategoriesModelCategory extends JModelAdmin
 	 * @since    3.2
 	 */
 	public $typeAlias = null;
+
 	/**
 	 * The prefix to use with controller messages.
 	 *
@@ -33,6 +34,7 @@ class CategoriesModelCategory extends JModelAdmin
 	 * @since  1.6
 	 */
 	protected $text_prefix = 'COM_CATEGORIES';
+
 	/**
 	 * The context used for the associations table
 	 *

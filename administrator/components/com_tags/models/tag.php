@@ -23,6 +23,7 @@ class TagsModelTag extends JModelAdmin
 	 * @since  3.2
 	 */
 	public $typeAlias = 'com_tags.tag';
+
 	/**
 	 * @var    string  The prefix to use with controller messages.
 	 * @since  3.1

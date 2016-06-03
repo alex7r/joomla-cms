@@ -23,19 +23,23 @@ abstract class FOFModelField
 	 * @var  mixed
 	 */
 	public $null_value = null;
+
 	protected $_db = null;
+
 	/**
 	 * The column name of the table field
 	 *
 	 * @var string
 	 */
 	protected $name = '';
+
 	/**
 	 * The column type of the table field
 	 *
 	 * @var string
 	 */
 	protected $type = '';
+
 	/**
 	 * The alias of the table used for filtering
 	 *

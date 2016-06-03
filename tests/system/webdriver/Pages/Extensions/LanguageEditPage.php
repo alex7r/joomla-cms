@@ -24,6 +24,7 @@ class LanguageEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabs = array('details', 'metadata', 'site_name');
+
 	/**
 	 * Array of tab labels for this page
 	 *
@@ -31,6 +32,7 @@ class LanguageEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabLabels = array('Details', 'Metadata Options', 'Site Name');
+
 	/**
 	 * Array of all the field Details of the Edit page, along with the ID and tab value they are present on
 	 *
@@ -51,6 +53,7 @@ class LanguageEditPage extends AdminEditPage
 		array('label' => 'Meta Description', 'id' => 'jform_metadesc', 'type' => 'textarea', 'tab' => 'metadata'),
 		array('label' => 'Custom Site Name', 'id' => 'jform_sitename', 'type' => 'input', 'tab' => 'site_name'),
 	);
+
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -58,6 +61,7 @@ class LanguageEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	protected $waitForXpath = "//form[@id='language-form']";
+
 	/**
 	 * URL used to uniquely identify this page
 	 *

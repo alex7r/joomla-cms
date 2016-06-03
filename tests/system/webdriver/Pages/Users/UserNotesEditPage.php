@@ -30,7 +30,9 @@ class UserNotesEditPage extends AdminEditPage
 		array('label' => 'Version Note', 'id' => 'jform_version_note', 'type' => 'input', 'tab' => 'header'),
 		array('label' => 'Note', 'id' => 'jform_body', 'type' => 'textarea', 'tab' => 'header'),
 	);
+
 	protected $waitForXpath = "//form[@id='note-form']";
+
 	protected $url = 'administrator/index.php?option=com_users&view=note&layout=edit';
 
 	/**

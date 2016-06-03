@@ -24,6 +24,7 @@ class NewsFeedEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabs = array('details', 'images', 'publishing', 'attrib-jbasic');
+
 	/**
 	 * Array of all the field Details of the Edit page, along with the ID and tab value they are present on
 	 *
@@ -73,6 +74,7 @@ class NewsFeedEditPage extends AdminEditPage
 		array('label' => 'Alternative Layout', 'id' => 'jform_params_newsfeed_layout', 'type' => 'select', 'tab' => 'attrib-jbasic'),
 		array('label' => 'Feed Display Order', 'id' => 'jform_params_feed_display_order', 'type' => 'select', 'tab' => 'attrib-jbasic'),
 	);
+
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -80,6 +82,7 @@ class NewsFeedEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	protected $waitForXpath = "//form[@id='newsfeed-form']";
+
 	/**
 	 * URL used to uniquely identify this page
 	 *

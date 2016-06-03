@@ -25,6 +25,7 @@ abstract class JFormFieldPredefinedList extends JFormFieldList
 	 * @since  3.2
 	 */
 	protected static $options = array();
+
 	/**
 	 * The form field type.
 	 *
@@ -32,6 +33,7 @@ abstract class JFormFieldPredefinedList extends JFormFieldList
 	 * @since  3.2
 	 */
 	protected $type = 'PredefinedList';
+
 	/**
 	 * Available predefined options
 	 *

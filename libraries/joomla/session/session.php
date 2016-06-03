@@ -28,6 +28,7 @@ class JSession implements IteratorAggregate
 	 * @since  11.3
 	 */
 	protected static $instance;
+
 	/**
 	 * Internal state.
 	 * One of 'inactive'|'active'|'expired'|'destroyed'|'error'
@@ -37,6 +38,7 @@ class JSession implements IteratorAggregate
 	 * @since  11.1
 	 */
 	protected $_state = 'inactive';
+
 	/**
 	 * Maximum age of unused session in seconds
 	 *
@@ -44,6 +46,7 @@ class JSession implements IteratorAggregate
 	 * @since  11.1
 	 */
 	protected $_expire = 900;
+
 	/**
 	 * The session store object.
 	 *
@@ -51,6 +54,7 @@ class JSession implements IteratorAggregate
 	 * @since  11.1
 	 */
 	protected $_store = null;
+
 	/**
 	 * Security policy.
 	 * List of checks that will be done.
@@ -63,6 +67,7 @@ class JSession implements IteratorAggregate
 	 * @since  11.1
 	 */
 	protected $_security = array('fix_browser');
+
 	/**
 	 * The type of storage for the session.
 	 *
@@ -70,6 +75,7 @@ class JSession implements IteratorAggregate
 	 * @since  12.2
 	 */
 	protected $storeName;
+
 	/**
 	 * Holds the event dispatcher object
 	 *
@@ -77,12 +83,14 @@ class JSession implements IteratorAggregate
 	 * @since  3.5
 	 */
 	protected $_handler = null;
+
 	/**
 	 * Internal data store for the session data
 	 *
 	 * @var  \Joomla\Registry\Registry
 	 */
 	protected $data;
+
 	/**
 	 * Holds the JInput object
 	 *
@@ -90,6 +98,7 @@ class JSession implements IteratorAggregate
 	 * @since  12.2
 	 */
 	private $_input = null;
+
 	/**
 	 * Holds the event dispatcher object
 	 *

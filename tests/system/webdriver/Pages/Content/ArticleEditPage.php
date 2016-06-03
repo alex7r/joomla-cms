@@ -24,6 +24,7 @@ class ArticleEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabs = array('general', 'publishing', 'images', 'permissions', 'attrib-basic', 'editor');
+
 	/**
 	 * Array of all the field Details of the Edit page, along with the ID and tab value they are present on
 	 *
@@ -104,6 +105,7 @@ class ArticleEditPage extends AdminEditPage
 		array('label' => 'Administrator Images and Links', 'id' => 'jform_attribs_show_urls_images_backend', 'type' => 'select', 'tab' => 'editor'),
 		array('label' => 'Frontend Images and Links', 'id' => 'jform_attribs_show_urls_images_frontend', 'type' => 'select', 'tab' => 'editor'),
 	);
+
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -111,6 +113,7 @@ class ArticleEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	protected $waitForXpath = "//form[@id='item-form']";
+
 	/**
 	 * URL used to uniquely identify this page
 	 *

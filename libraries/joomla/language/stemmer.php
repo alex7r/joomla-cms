@@ -21,6 +21,7 @@ abstract class JLanguageStemmer
 	 * @since  12.1
 	 */
 	protected static $instances = array();
+
 	/**
 	 * An internal cache of stemmed tokens.
 	 *

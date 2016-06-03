@@ -27,6 +27,7 @@ class JTableObserverContenthistory extends JTableObserver
 	 * @private
 	 */
 	public static $_myTableForPregreplaceOnly;
+
 	/**
 	 * Helper object for storing and deleting version history information associated with this table observer
 	 *
@@ -34,6 +35,7 @@ class JTableObserverContenthistory extends JTableObserver
 	 * @since  3.2
 	 */
 	protected $contenthistoryHelper;
+
 	/**
 	 * The pattern for this table's TypeAlias
 	 *

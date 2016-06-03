@@ -28,6 +28,7 @@ class JFormFieldCheckboxes extends JFormFieldList
 	 * @since  3.2
 	 */
 	public $checkedOptions;
+
 	/**
 	 * The form field type.
 	 *
@@ -35,6 +36,7 @@ class JFormFieldCheckboxes extends JFormFieldList
 	 * @since  11.1
 	 */
 	protected $type = 'Checkboxes';
+
 	/**
 	 * Name of the layout being used to render the field
 	 *
@@ -42,6 +44,7 @@ class JFormFieldCheckboxes extends JFormFieldList
 	 * @since  3.5
 	 */
 	protected $layout = 'joomla.form.field.checkboxes';
+
 	/**
 	 * Flag to tell the field to always be in multiple values mode.
 	 *

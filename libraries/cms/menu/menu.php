@@ -25,6 +25,7 @@ class JMenu
 	 * @since  1.7
 	 */
 	protected static $instances = array();
+
 	/**
 	 * Array to hold the menu items
 	 *
@@ -33,6 +34,7 @@ class JMenu
 	 * @deprecated  4.0  Will convert to $items
 	 */
 	protected $_items = array();
+
 	/**
 	 * Identifier of the default menu item
 	 *
@@ -41,6 +43,7 @@ class JMenu
 	 * @deprecated  4.0  Will convert to $default
 	 */
 	protected $_default = array();
+
 	/**
 	 * Identifier of the active menu item
 	 *
@@ -49,6 +52,7 @@ class JMenu
 	 * @deprecated  4.0  Will convert to $active
 	 */
 	protected $_active = 0;
+
 	/**
 	 * User object to check access levels for
 	 *

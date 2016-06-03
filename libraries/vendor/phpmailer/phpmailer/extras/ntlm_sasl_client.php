@@ -16,6 +16,7 @@ define("SASL_CONTINUE", 1);
 class ntlm_sasl_client_class
 {
 	public $credentials = array();
+
 	public $state = SASL_NTLM_STATE_START;
 
 	public function initialize(&$client)

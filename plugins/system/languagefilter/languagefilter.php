@@ -29,6 +29,7 @@ class PlgSystemLanguageFilter extends JPlugin
 	protected $current_lang;
 
 	protected $default_lang;
+
 	/**
 	 * Application object.
 	 *
@@ -36,6 +37,7 @@ class PlgSystemLanguageFilter extends JPlugin
 	 * @since  3.3
 	 */
 	protected $app;
+
 	private $user_lang_code;
 
 	/**

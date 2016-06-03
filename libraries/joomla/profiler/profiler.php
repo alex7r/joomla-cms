@@ -22,31 +22,37 @@ class JProfiler
 	 * @since  11.3
 	 */
 	protected static $instances = array();
+
 	/**
 	 * @var    integer  The start time.
 	 * @since  12.1
 	 */
 	protected $start = 0;
+
 	/**
 	 * @var    string  The prefix to use in the output
 	 * @since  12.1
 	 */
 	protected $prefix = '';
+
 	/**
 	 * @var    array  The buffer of profiling messages.
 	 * @since  12.1
 	 */
 	protected $buffer = null;
+
 	/**
 	 * @var    array  The profiling messages.
 	 * @since  12.1
 	 */
 	protected $marks = null;
+
 	/**
 	 * @var    float  The previous time marker
 	 * @since  12.1
 	 */
 	protected $previousTime = 0.0;
+
 	/**
 	 * @var    float  The previous memory marker
 	 * @since  12.1

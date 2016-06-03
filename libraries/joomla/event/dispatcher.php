@@ -28,6 +28,7 @@ class JEventDispatcher extends JObject
 	 * @since  11.3
 	 */
 	protected static $instance = null;
+
 	/**
 	 * An array of Observer objects to notify
 	 *
@@ -35,6 +36,7 @@ class JEventDispatcher extends JObject
 	 * @since  11.3
 	 */
 	protected $_observers = array();
+
 	/**
 	 * The state of the observable object
 	 *
@@ -42,6 +44,7 @@ class JEventDispatcher extends JObject
 	 * @since  11.3
 	 */
 	protected $_state = null;
+
 	/**
 	 * A multi dimensional array of [function][] = key for observers
 	 *

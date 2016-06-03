@@ -36,6 +36,7 @@ class ArticleManagerPage extends AdminManagerPage
 		'Select Language'   => 'filter_language',
 		'Select Tag'        => 'filter_tag'
 	);
+
 	/**
 	 * Array of toolbar id values for this page
 	 *
@@ -56,6 +57,7 @@ class ArticleManagerPage extends AdminManagerPage
 		'Options'     => 'toolbar-options',
 		'Help'        => 'toolbar-help',
 	);
+
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -63,6 +65,7 @@ class ArticleManagerPage extends AdminManagerPage
 	 * @since  3.0
 	 */
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_content']";
+
 	/**
 	 * URL used to uniquely identify this page
 	 *

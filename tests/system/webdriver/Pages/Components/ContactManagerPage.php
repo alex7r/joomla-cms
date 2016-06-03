@@ -32,6 +32,7 @@ class ContactManagerPage extends AdminManagerPage
 		'Select Language' => 'filter_language',
 		'Select Tags'     => 'filter_tag',
 	);
+
 	/**
 	 * Array of toolbar id values for this page
 	 *
@@ -51,6 +52,7 @@ class ContactManagerPage extends AdminManagerPage
 		'Options'     => 'toolbar-options',
 		'Help'        => 'toolbar-help',
 	);
+
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -58,6 +60,7 @@ class ContactManagerPage extends AdminManagerPage
 	 * @since  3.2
 	 */
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_contact']";
+
 	/**
 	 * URL used to uniquely identify this page
 	 *

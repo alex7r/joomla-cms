@@ -21,6 +21,7 @@ class FOFHalRenderJson implements FOFHalRenderInterface
 	 * @var   FOFHalDocument
 	 */
 	protected $_document;
+
 	/**
 	 * When data is an array we'll output the list of data under this key
 	 *

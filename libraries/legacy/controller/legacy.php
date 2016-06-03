@@ -26,6 +26,7 @@ class JControllerLegacy extends JObject
 	 * @since  12.2
 	 */
 	protected static $instance;
+
 	/**
 	 * Instance container containing the views.
 	 *
@@ -33,6 +34,7 @@ class JControllerLegacy extends JObject
 	 * @since  3.4
 	 */
 	protected static $views;
+
 	/**
 	 * The base path of the controller
 	 *
@@ -41,6 +43,7 @@ class JControllerLegacy extends JObject
 	 * @note   Replaces _basePath.
 	 */
 	protected $basePath;
+
 	/**
 	 * The default view for the display method.
 	 *
@@ -48,6 +51,7 @@ class JControllerLegacy extends JObject
 	 * @since  12.2
 	 */
 	protected $default_view;
+
 	/**
 	 * The mapped task that was performed.
 	 *
@@ -56,6 +60,7 @@ class JControllerLegacy extends JObject
 	 * @note   Replaces _doTask.
 	 */
 	protected $doTask;
+
 	/**
 	 * Redirect message.
 	 *
@@ -64,6 +69,7 @@ class JControllerLegacy extends JObject
 	 * @note   Replaces _message.
 	 */
 	protected $message;
+
 	/**
 	 * Redirect message type.
 	 *
@@ -72,6 +78,7 @@ class JControllerLegacy extends JObject
 	 * @note   Replaces _messageType.
 	 */
 	protected $messageType;
+
 	/**
 	 * Array of class methods
 	 *
@@ -80,6 +87,7 @@ class JControllerLegacy extends JObject
 	 * @note   Replaces _methods.
 	 */
 	protected $methods;
+
 	/**
 	 * The name of the controller
 	 *
@@ -88,6 +96,7 @@ class JControllerLegacy extends JObject
 	 * @note   Replaces _name.
 	 */
 	protected $name;
+
 	/**
 	 * The prefix of the models
 	 *
@@ -95,6 +104,7 @@ class JControllerLegacy extends JObject
 	 * @since  12.2
 	 */
 	protected $model_prefix;
+
 	/**
 	 * The set of search directories for resources (views).
 	 *
@@ -103,6 +113,7 @@ class JControllerLegacy extends JObject
 	 * @note   Replaces _path.
 	 */
 	protected $paths;
+
 	/**
 	 * URL for redirection.
 	 *
@@ -111,6 +122,7 @@ class JControllerLegacy extends JObject
 	 * @note   Replaces _redirect.
 	 */
 	protected $redirect;
+
 	/**
 	 * Current or most recently performed task.
 	 *
@@ -119,6 +131,7 @@ class JControllerLegacy extends JObject
 	 * @note   Replaces _task.
 	 */
 	protected $task;
+
 	/**
 	 * Array of class methods to call for a given task.
 	 *
@@ -127,6 +140,7 @@ class JControllerLegacy extends JObject
 	 * @note   Replaces _taskMap.
 	 */
 	protected $taskMap;
+
 	/**
 	 * Hold a JInput object for easier access to the input variables.
 	 *

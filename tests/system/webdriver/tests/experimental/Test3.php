@@ -12,6 +12,7 @@ use SeleniumClient\WebDriver;
 class AlertTest extends PHPUnit_Framework_TestCase
 {
 	private $_driver = null;
+
 	private $_testUrl = null;
 
 	public function setUp()

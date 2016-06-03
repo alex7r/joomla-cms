@@ -55,7 +55,9 @@
 class SimplePie_Source
 {
 	var $item;
+
 	var $data = array();
+
 	protected $registry;
 
 	public function __construct($item, $data)

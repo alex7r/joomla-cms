@@ -34,6 +34,7 @@ class JForm
 	 * @since  11.1
 	 */
 	protected static $forms = array();
+
 	/**
 	 * Alows extensions to implement repeating elements
 	 *
@@ -41,6 +42,7 @@ class JForm
 	 * @since  3.2
 	 */
 	public $repeat = false;
+
 	/**
 	 * The Registry data store for form fields during display.
 	 *
@@ -48,6 +50,7 @@ class JForm
 	 * @since  11.1
 	 */
 	protected $data;
+
 	/**
 	 * The form object errors array.
 	 *
@@ -55,6 +58,7 @@ class JForm
 	 * @since  11.1
 	 */
 	protected $errors = array();
+
 	/**
 	 * The name of the form instance.
 	 *
@@ -62,6 +66,7 @@ class JForm
 	 * @since  11.1
 	 */
 	protected $name;
+
 	/**
 	 * The form object options for use in rendering and validation.
 	 *
@@ -69,6 +74,7 @@ class JForm
 	 * @since  11.1
 	 */
 	protected $options = array();
+
 	/**
 	 * The form XML definition.
 	 *
