@@ -25,7 +25,6 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @deprecated  2.0  Object caching will no longer be supported
 	 */
 	protected static $instances = array();
-
 	/**
 	 * Path separator
 	 *
@@ -33,7 +32,6 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @since  1.4.0
 	 */
 	public $separator = '.';
-
 	/**
 	 * Registry Object
 	 *

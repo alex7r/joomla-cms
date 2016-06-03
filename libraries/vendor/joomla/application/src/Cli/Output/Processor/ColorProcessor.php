@@ -25,7 +25,6 @@ class ColorProcessor implements ProcessorInterface
 	 * @since  1.0
 	 */
 	protected static $stripFilter = '/<[\/]?[a-z=;]+>/';
-
 	/**
 	 * Flag to remove color codes from the output
 	 *
@@ -33,7 +32,6 @@ class ColorProcessor implements ProcessorInterface
 	 * @since  1.0
 	 */
 	public $noColors = false;
-
 	/**
 	 * Regex to match tags
 	 *
@@ -41,7 +39,6 @@ class ColorProcessor implements ProcessorInterface
 	 * @since  1.0
 	 */
 	protected $tagFilter = '/<([a-z=;]+)>(.*?)<\/\\1>/s';
-
 	/**
 	 * Array of ColorStyle objects
 	 *

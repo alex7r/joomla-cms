@@ -24,7 +24,6 @@ class PluginEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabs = array('general');
-
 	/**
 	 * Array of tab labels for this page
 	 *
@@ -32,7 +31,6 @@ class PluginEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabLabels = array('Details', 'Basic Options');
-
 	/**
 	 * Array of all the field Details of the Edit page, along with the ID and tab value they are present on
 	 *
@@ -46,7 +44,6 @@ class PluginEditPage extends AdminEditPage
 		array('label' => 'Check category deletion', 'id' => 'jform_params_check_categories', 'type' => 'fieldset', 'tab' => 'general'),
 		array('label' => 'Email on new site article', 'id' => 'jform_params_email_new_fe', 'type' => 'fieldset', 'tab' => 'general'),
 	);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *

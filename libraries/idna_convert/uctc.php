@@ -21,11 +21,8 @@ class uctc
 	private static $mechs = array('ucs4', /*'ucs4le', 'ucs4be', */
 		'ucs4array', /*'utf16', 'utf16le', 'utf16be', */
 		'utf8', 'utf7', 'utf7imap');
-
 	private static $allow_overlong = false;
-
 	private static $safe_mode;
-
 	private static $safe_char;
 
 	/**

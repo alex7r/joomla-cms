@@ -25,7 +25,6 @@ class JEditor extends JObject
 	 * @since  2.5
 	 */
 	protected static $instances = array();
-
 	/**
 	 * An array of Observer objects to notify
 	 *
@@ -33,7 +32,6 @@ class JEditor extends JObject
 	 * @since  1.5
 	 */
 	protected $_observers = array();
-
 	/**
 	 * The state of the observable object
 	 *
@@ -41,7 +39,6 @@ class JEditor extends JObject
 	 * @since  1.5
 	 */
 	protected $_state = null;
-
 	/**
 	 * A multi dimensional array of [function][] = key for observers
 	 *
@@ -49,7 +46,6 @@ class JEditor extends JObject
 	 * @since  1.5
 	 */
 	protected $_methods = array();
-
 	/**
 	 * Editor Plugin object
 	 *
@@ -57,7 +53,6 @@ class JEditor extends JObject
 	 * @since  1.5
 	 */
 	protected $_editor = null;
-
 	/**
 	 * Editor Plugin name
 	 *
@@ -65,7 +60,6 @@ class JEditor extends JObject
 	 * @since  1.5
 	 */
 	protected $_name = null;
-
 	/**
 	 * Object asset
 	 *
@@ -73,7 +67,6 @@ class JEditor extends JObject
 	 * @since  1.6
 	 */
 	protected $asset = null;
-
 	/**
 	 * Object author
 	 *

@@ -58,31 +58,18 @@ class SimplePie_Sanitize
 
 	// Options
 	var $remove_div = true;
-
 	var $image_handler = '';
-
 	var $strip_htmltags = array('base', 'blink', 'body', 'doctype', 'embed', 'font', 'form', 'frame', 'frameset', 'html', 'iframe', 'input', 'marquee', 'meta', 'noscript', 'object', 'param', 'script', 'style');
-
 	var $encode_instead_of_strip = false;
-
 	var $strip_attributes = array('bgsound', 'class', 'expr', 'id', 'style', 'onclick', 'onerror', 'onfinish', 'onmouseover', 'onmouseout', 'onfocus', 'onblur', 'lowsrc', 'dynsrc');
-
 	var $strip_comments = false;
-
 	var $output_encoding = 'UTF-8';
-
 	var $enable_cache = true;
-
 	var $cache_location = './cache';
-
 	var $cache_name_function = 'md5';
-
 	var $timeout = 10;
-
 	var $useragent = '';
-
 	var $force_fsockopen = false;
-
 	var $replace_url_attributes = null;
 
 	public function __construct()

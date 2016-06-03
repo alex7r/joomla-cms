@@ -31,7 +31,6 @@ class Session implements \IteratorAggregate
 	 * @deprecated  2.0
 	 */
 	protected static $instance;
-
 	/**
 	 * Internal state.
 	 * One of 'inactive'|'active'|'expired'|'destroyed'|'error'
@@ -41,7 +40,6 @@ class Session implements \IteratorAggregate
 	 * @since  1.0
 	 */
 	protected $state = 'inactive';
-
 	/**
 	 * Maximum age of unused session in minutes
 	 *
@@ -49,7 +47,6 @@ class Session implements \IteratorAggregate
 	 * @since  1.0
 	 */
 	protected $expire = 15;
-
 	/**
 	 * The session store object.
 	 *
@@ -57,7 +54,6 @@ class Session implements \IteratorAggregate
 	 * @since  1.0
 	 */
 	protected $store = null;
-
 	/**
 	 * Security policy.
 	 * List of checks that will be done.
@@ -70,7 +66,6 @@ class Session implements \IteratorAggregate
 	 * @since  1.0
 	 */
 	protected $security = array('fix_browser');
-
 	/**
 	 * Force cookies to be SSL only
 	 * Default  false
@@ -79,7 +74,6 @@ class Session implements \IteratorAggregate
 	 * @since  1.0
 	 */
 	protected $force_ssl = false;
-
 	/**
 	 * The domain to use when setting cookies.
 	 *
@@ -88,7 +82,6 @@ class Session implements \IteratorAggregate
 	 * @deprecated  2.0
 	 */
 	protected $cookie_domain;
-
 	/**
 	 * The path to use when setting cookies.
 	 *
@@ -97,7 +90,6 @@ class Session implements \IteratorAggregate
 	 * @deprecated  2.0
 	 */
 	protected $cookie_path;
-
 	/**
 	 * The type of storage for the session.
 	 *

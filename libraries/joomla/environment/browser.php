@@ -27,55 +27,46 @@ class JBrowser
 	 * @since  11.3
 	 */
 	protected static $instances = array();
-
 	/**
 	 * @var    integer  Major version number
 	 * @since  12.1
 	 */
 	protected $majorVersion = 0;
-
 	/**
 	 * @var    integer  Minor version number
 	 * @since  12.1
 	 */
 	protected $minorVersion = 0;
-
 	/**
 	 * @var    string  Browser name.
 	 * @since  12.1
 	 */
 	protected $browser = '';
-
 	/**
 	 * @var    string  Full user agent string.
 	 * @since  12.1
 	 */
 	protected $agent = '';
-
 	/**
 	 * @var    string  Lower-case user agent string
 	 * @since  12.1
 	 */
 	protected $lowerAgent = '';
-
 	/**
 	 * @var    string  HTTP_ACCEPT string.
 	 * @since  12.1
 	 */
 	protected $accept = '';
-
 	/**
 	 * @var    array  Parsed HTTP_ACCEPT string
 	 * @since  12.1
 	 */
 	protected $acceptParsed = array();
-
 	/**
 	 * @var    string  Platform the browser is running on
 	 * @since  12.1
 	 */
 	protected $platform = '';
-
 	/**
 	 * @var    array  Known robots.
 	 * @since  12.1
@@ -128,13 +119,11 @@ class JBrowser
 		'webbandit',
 		'www.almaden.ibm.com/cs/crawler',
 		'ZyBorg');
-
 	/**
 	 * @var    boolean  Is this a mobile browser?
 	 * @since  12.1
 	 */
 	protected $mobile = false;
-
 	/**
 	 * List of viewable image MIME subtypes.
 	 * This list of viewable images works for IE and Netscape/Mozilla.

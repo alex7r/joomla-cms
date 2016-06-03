@@ -24,7 +24,6 @@ class JHelperTags extends JHelper
 	 * @since  3.1
 	 */
 	public $typeAlias = null;
-
 	/**
 	 * Helper object for storing and deleting tag information.
 	 *
@@ -32,7 +31,6 @@ class JHelperTags extends JHelper
 	 * @since  3.1
 	 */
 	protected $tagsChanged = false;
-
 	/**
 	 * Whether up replace all tags or just add tags
 	 *

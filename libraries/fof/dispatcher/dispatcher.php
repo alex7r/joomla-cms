@@ -22,10 +22,8 @@ class FOFDispatcher extends FOFUtilsObject
 {
 	/** @var string The name of the default view, in case none is specified */
 	public $defaultView = 'cpanel';
-
 	/** @var array Configuration variables */
 	protected $config = array();
-
 	/** @var FOFInput Input variables */
 	protected $input = array();
 

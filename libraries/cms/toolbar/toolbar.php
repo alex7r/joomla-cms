@@ -23,28 +23,24 @@ class JToolbar
 	 * @since  2.5
 	 */
 	protected static $instances = array();
-
 	/**
 	 * Toolbar name
 	 *
 	 * @var    string
 	 */
 	protected $_name = array();
-
 	/**
 	 * Toolbar array
 	 *
 	 * @var    array
 	 */
 	protected $_bar = array();
-
 	/**
 	 * Loaded buttons
 	 *
 	 * @var    array
 	 */
 	protected $_buttons = array();
-
 	/**
 	 * Directories, where button types can be stored.
 	 *

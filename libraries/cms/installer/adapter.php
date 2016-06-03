@@ -31,7 +31,6 @@ abstract class JInstallerAdapter extends JAdapterInstance
 	 * @since  3.4
 	 */
 	public $manifest = null;
-
 	/**
 	 * ID for the currently installed extension if present
 	 *
@@ -39,7 +38,6 @@ abstract class JInstallerAdapter extends JAdapterInstance
 	 * @since  3.4
 	 */
 	protected $currentExtensionId = null;
-
 	/**
 	 * The unique identifier for the extension (e.g. mod_login)
 	 *
@@ -47,7 +45,6 @@ abstract class JInstallerAdapter extends JAdapterInstance
 	 * @since  3.4
 	 * */
 	protected $element = null;
-
 	/**
 	 * JTableExtension object.
 	 *
@@ -55,7 +52,6 @@ abstract class JInstallerAdapter extends JAdapterInstance
 	 * @since  3.4
 	 * */
 	protected $extension = null;
-
 	/**
 	 * Messages rendered by custom scripts
 	 *
@@ -63,7 +59,6 @@ abstract class JInstallerAdapter extends JAdapterInstance
 	 * @since  3.4
 	 */
 	protected $extensionMessage = '';
-
 	/**
 	 * A path to the PHP file that the scriptfile declaration in the manifest refers to.
 	 *

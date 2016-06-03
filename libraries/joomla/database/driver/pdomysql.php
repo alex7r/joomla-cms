@@ -26,7 +26,6 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	 * @since  3.4
 	 */
 	protected static $dbMinimum = '5.0.4';
-
 	/**
 	 * The name of the database driver.
 	 *
@@ -34,7 +33,6 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	 * @since  3.4
 	 */
 	public $name = 'pdomysql';
-
 	/**
 	 * The type of the database server family supported by this driver.
 	 *
@@ -42,7 +40,6 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	 * @since  CMS 3.5.0
 	 */
 	public $serverType = 'mysql';
-
 	/**
 	 * The character(s) used to quote SQL statement names such as table names or field names,
 	 * etc. The child classes should define this as necessary.  If a single character string the
@@ -53,7 +50,6 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	 * @since  3.4
 	 */
 	protected $nameQuote = '`';
-
 	/**
 	 * The null or zero representation of a timestamp for the database driver.  This should be
 	 * defined in child classes to hold the appropriate value for the engine.

@@ -23,13 +23,11 @@ class PlgExtensionJoomla extends JPlugin
 	 * @since  3.1
 	 */
 	protected $autoloadLanguage = true;
-
 	/**
 	 * @var    integer Extension Identifier
 	 * @since  1.6
 	 */
 	private $eid = 0;
-
 	/**
 	 * @var    JInstaller Installer object
 	 * @since  1.6

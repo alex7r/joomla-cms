@@ -66,13 +66,11 @@ class JAuthentication extends JObject
 	 * @since  11.2
 	 */
 	const STATUS_UNKNOWN = 32;
-
 	/**
 	 * @var    JAuthentication  JAuthentication instances container.
 	 * @since  11.3
 	 */
 	protected static $instance;
-
 	/**
 	 * An array of Observer objects to notify
 	 *
@@ -80,7 +78,6 @@ class JAuthentication extends JObject
 	 * @since  12.1
 	 */
 	protected $observers = array();
-
 	/**
 	 * The state of the observable object
 	 *
@@ -88,7 +85,6 @@ class JAuthentication extends JObject
 	 * @since  12.1
 	 */
 	protected $state = null;
-
 	/**
 	 * A multi dimensional array of [function][] = key for observers
 	 *

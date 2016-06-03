@@ -22,35 +22,30 @@ class ContactViewContacts extends JViewLegacy
 	 * @var  JForm
 	 */
 	public $filterForm;
-
 	/**
 	 * The active search filters
 	 *
 	 * @var  array
 	 */
 	public $activeFilters;
-
 	/**
 	 * An array of items
 	 *
 	 * @var  array
 	 */
 	protected $items;
-
 	/**
 	 * The pagination object
 	 *
 	 * @var  JPagination
 	 */
 	protected $pagination;
-
 	/**
 	 * The model state
 	 *
 	 * @var  object
 	 */
 	protected $state;
-
 	/**
 	 * The sidebar markup
 	 *

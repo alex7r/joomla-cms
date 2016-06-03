@@ -17,13 +17,9 @@ defined('_JEXEC') or die;
 class UsersViewRegistration extends JViewLegacy
 {
 	public $document;
-
 	protected $data;
-
 	protected $form;
-
 	protected $params;
-
 	protected $state;
 
 	/**

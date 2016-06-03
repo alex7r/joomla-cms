@@ -48,77 +48,66 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 	 * @var    array
 	 */
 	protected static $_includePaths = array();
-
 	/**
 	 * A list of table fields, keyed per table
 	 *
 	 * @var array
 	 */
 	protected static $tableFieldCache = array();
-
 	/**
 	 * A list of tables in the database
 	 *
 	 * @var array
 	 */
 	protected static $tableCache = array();
-
 	/**
 	 * The configuration parameters array
 	 *
 	 * @var  array
 	 */
 	protected $config = array();
-
 	/**
 	 * Name of the database table to model.
 	 *
 	 * @var    string
 	 */
 	protected $_tbl = '';
-
 	/**
 	 * Name of the primary key field in the table.
 	 *
 	 * @var    string
 	 */
 	protected $_tbl_key = '';
-
 	/**
 	 * JDatabaseDriver object.
 	 *
 	 * @var    JDatabaseDriver
 	 */
 	protected $_db;
-
 	/**
 	 * Should rows be tracked as ACL assets?
 	 *
 	 * @var    boolean
 	 */
 	protected $_trackAssets = false;
-
 	/**
 	 * Does the resource support joomla tags?
 	 *
 	 * @var    boolean
 	 */
 	protected $_has_tags = false;
-
 	/**
 	 * The rules associated with this record.
 	 *
 	 * @var    JAccessRules  A JAccessRules object.
 	 */
 	protected $_rules;
-
 	/**
 	 * Indicator that the tables have been locked.
 	 *
 	 * @var    boolean
 	 */
 	protected $_locked = false;
-
 	/**
 	 * If this is set to true, it triggers automatically plugin events for
 	 * table actions
@@ -126,35 +115,30 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 	 * @var    boolean
 	 */
 	protected $_trigger_events = false;
-
 	/**
 	 * Table alias used in queries
 	 *
 	 * @var    string
 	 */
 	protected $_tableAlias = false;
-
 	/**
 	 * Array with alias for "special" columns such as ordering, hits etc etc
 	 *
 	 * @var    array
 	 */
 	protected $_columnAlias = array();
-
 	/**
 	 * If set to true, it enabled automatic checks on fields based on columns properties
 	 *
 	 * @var    boolean
 	 */
 	protected $_autoChecks = false;
-
 	/**
 	 * Array with fields that should be skipped by automatic checks
 	 *
 	 * @var    array
 	 */
 	protected $_skipChecks = array();
-
 	/**
 	 * Does the table actually exist? We need that to avoid PHP notices on
 	 * table-less views.
@@ -162,7 +146,6 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 	 * @var    boolean
 	 */
 	protected $_tableExists = true;
-
 	/**
 	 * The asset key for items in this table. It's usually something in the
 	 * com_example.viewname format. They asset name will be this key appended
@@ -171,35 +154,30 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 	 * @var    string
 	 */
 	protected $_assetKey = '';
-
 	/**
 	 * The input data
 	 *
 	 * @var    FOFInput
 	 */
 	protected $input = null;
-
 	/**
 	 * Extended query including joins with other tables
 	 *
 	 * @var    JDatabaseQuery
 	 */
 	protected $_queryJoin = null;
-
 	/**
 	 * The prefix for the table class
 	 *
 	 * @var        string
 	 */
 	protected $_tablePrefix = '';
-
 	/**
 	 * The known fields for this table
 	 *
 	 * @var        array
 	 */
 	protected $knownFields = array();
-
 	/**
 	 * An instance of FOFConfigProvider to provision configuration overrides
 	 *

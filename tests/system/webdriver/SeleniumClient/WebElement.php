@@ -20,7 +20,6 @@ use SeleniumClient\Http\SeleniumStaleElementReferenceException;
 class WebElement
 {
 	private $_driver = null;
-
 	private $_elementId = null;
 
 	function __construct(WebDriver $driver, $elementId)

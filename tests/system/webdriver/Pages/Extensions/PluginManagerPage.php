@@ -30,7 +30,6 @@ class PluginManagerPage extends AdminManagerPage
 		'Select Type'   => 'filter_folder',
 		'Select Access' => 'filter_access',
 	);
-
 	/**
 	 * Array of toolbar id values for this page
 	 *
@@ -45,7 +44,6 @@ class PluginManagerPage extends AdminManagerPage
 		'Options'  => 'toolbar-options',
 		'Help'     => 'toolbar-help',
 	);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -53,7 +51,6 @@ class PluginManagerPage extends AdminManagerPage
 	 * @since  3.0
 	 */
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_plugins']";
-
 	/**
 	 * URL used to uniquely identify this page
 	 *

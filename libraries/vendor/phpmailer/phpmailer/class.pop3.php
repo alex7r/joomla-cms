@@ -35,7 +35,6 @@ class POP3
 	 * Line break constant
 	 */
 	const CRLF = "\r\n";
-
 	/**
 	 * The POP3 PHPMailer Version number.
 	 *
@@ -43,7 +42,6 @@ class POP3
 	 * @access public
 	 */
 	public $Version = '5.2.14';
-
 	/**
 	 * Default POP3 port number.
 	 *
@@ -51,7 +49,6 @@ class POP3
 	 * @access public
 	 */
 	public $POP3_PORT = 110;
-
 	/**
 	 * Default timeout in seconds.
 	 *
@@ -59,7 +56,6 @@ class POP3
 	 * @access public
 	 */
 	public $POP3_TIMEOUT = 30;
-
 	/**
 	 * POP3 Carriage Return + Line Feed.
 	 *
@@ -68,7 +64,6 @@ class POP3
 	 * @deprecated Use the constant instead
 	 */
 	public $CRLF = "\r\n";
-
 	/**
 	 * Debug display level.
 	 * Options: 0 = no, 1+ = yes
@@ -77,7 +72,6 @@ class POP3
 	 * @access public
 	 */
 	public $do_debug = 0;
-
 	/**
 	 * POP3 mail server hostname.
 	 *
@@ -85,7 +79,6 @@ class POP3
 	 * @access public
 	 */
 	public $host;
-
 	/**
 	 * POP3 port number.
 	 *
@@ -93,7 +86,6 @@ class POP3
 	 * @access public
 	 */
 	public $port;
-
 	/**
 	 * POP3 Timeout Value in seconds.
 	 *
@@ -101,7 +93,6 @@ class POP3
 	 * @access public
 	 */
 	public $tval;
-
 	/**
 	 * POP3 username
 	 *
@@ -109,7 +100,6 @@ class POP3
 	 * @access public
 	 */
 	public $username;
-
 	/**
 	 * POP3 password.
 	 *
@@ -117,7 +107,6 @@ class POP3
 	 * @access public
 	 */
 	public $password;
-
 	/**
 	 * Resource handle for the POP3 connection socket.
 	 *
@@ -125,7 +114,6 @@ class POP3
 	 * @access protected
 	 */
 	protected $pop_conn;
-
 	/**
 	 * Are we connected?
 	 *
@@ -133,7 +121,6 @@ class POP3
 	 * @access protected
 	 */
 	protected $connected = false;
-
 	/**
 	 * Error container.
 	 *

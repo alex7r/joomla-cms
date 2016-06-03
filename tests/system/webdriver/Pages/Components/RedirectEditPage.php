@@ -24,7 +24,6 @@ class RedirectEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabs = array('basic');
-
 	/**
 	 * Array of tab labels for this page
 	 *
@@ -32,7 +31,6 @@ class RedirectEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabLabels = array('New Link');
-
 	/**
 	 * Array of all the field Details of the Edit page, along with the ID and tab value they are present on
 	 *
@@ -49,7 +47,6 @@ class RedirectEditPage extends AdminEditPage
 		array('label' => 'Last Updated Date', 'id' => 'jform_modified_date', 'type' => 'input', 'tab' => 'basic'),
 
 	);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -57,7 +54,6 @@ class RedirectEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	protected $waitForXpath = "//form[@id='link-form']";
-
 	/**
 	 * URL used to uniquely identify this page
 	 *

@@ -24,7 +24,6 @@ class ContactEditPage extends AdminEditPage
 	 * @since  3.2
 	 */
 	public $tabs = array('details', 'misc', 'publishing', 'attrib-display', 'attrib-email');
-
 	/**
 	 * Array of all the field Details of the Edit page, along with the ID and tab value they are present on
 	 *
@@ -115,7 +114,6 @@ class ContactEditPage extends AdminEditPage
 		array('label' => 'Custom Reply', 'id' => 'jform_params_custom_reply', 'type' => 'select', 'tab' => 'attrib-email'),
 		array('label' => 'Contact Redirect', 'id' => 'jform_params_redirect', 'type' => 'input', 'tab' => 'attrib-email'),
 	);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -123,7 +121,6 @@ class ContactEditPage extends AdminEditPage
 	 * @since  3.2
 	 */
 	protected $waitForXpath = "//form[@id='contact-form']";
-
 	/**
 	 * URL used to uniquely identify this page
 	 *

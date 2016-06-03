@@ -27,11 +27,8 @@
 class PasswordHash
 {
 	var $itoa64;
-
 	var $iteration_count_log2;
-
 	var $portable_hashes;
-
 	var $random_state;
 
 	function PasswordHash($iteration_count_log2, $portable_hashes)

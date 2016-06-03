@@ -27,13 +27,11 @@ class ContentModelArticle extends JModelAdmin
 	 * @since    3.2
 	 */
 	public $typeAlias = 'com_content.article';
-
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since   1.6
 	 */
 	protected $text_prefix = 'COM_CONTENT';
-
 	/**
 	 * The context used for the associations table
 	 *

@@ -21,7 +21,6 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	 * @since  12.1
 	 */
 	protected static $dbMinimum = '12.1';
-
 	/**
 	 * The name of the database driver.
 	 *
@@ -29,7 +28,6 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	 * @since  11.4
 	 */
 	public $name = 'nosql';
-
 	/**
 	 * The character(s) used to quote SQL statement names such as table names or field names,
 	 * etc. The child classes should define this as necessary.  If a single character string the
@@ -40,7 +38,6 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	 * @since  11.4
 	 */
 	protected $nameQuote = '[]';
-
 	/**
 	 * The null or zero representation of a timestamp for the database driver.  This should be
 	 * defined in child classes to hold the appropriate value for the engine.

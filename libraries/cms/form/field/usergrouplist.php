@@ -25,7 +25,6 @@ class JFormFieldUserGroupList extends JFormFieldList
 	 * @since  3.2
 	 */
 	protected static $options = array();
-
 	/**
 	 * The form field type.
 	 *

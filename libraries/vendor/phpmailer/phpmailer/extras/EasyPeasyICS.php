@@ -27,7 +27,6 @@ class EasyPeasyICS
 	 * @var string
 	 */
 	protected $calendarName;
-
 	/**
 	 * The array of events to add to this calendar
 	 *

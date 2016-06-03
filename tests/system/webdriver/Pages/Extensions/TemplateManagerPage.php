@@ -29,7 +29,6 @@ class TemplateManagerPage extends AdminManagerPage
 		'Select Template' => 'filter_template',
 		'Select Location' => 'filter_client_id',
 	);
-
 	/**
 	 * Array of toolbar id values for this page
 	 *
@@ -45,7 +44,6 @@ class TemplateManagerPage extends AdminManagerPage
 		'Help'         => 'toolbar-help',
 		'Save as Copy' => 'toolbar-save-copy',
 	);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -53,7 +51,6 @@ class TemplateManagerPage extends AdminManagerPage
 	 * @since  3.0
 	 */
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_templates']";
-
 	/**
 	 * URL used to uniquely identify this page
 	 *

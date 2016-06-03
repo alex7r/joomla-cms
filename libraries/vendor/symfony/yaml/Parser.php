@@ -25,13 +25,9 @@ class Parser
 	const FOLDED_SCALAR_PATTERN = self::BLOCK_SCALAR_HEADER_PATTERN;
 
 	private $offset = 0;
-
 	private $lines = array();
-
 	private $currentLineNb = -1;
-
 	private $currentLine = '';
-
 	private $refs = array();
 
 	/**

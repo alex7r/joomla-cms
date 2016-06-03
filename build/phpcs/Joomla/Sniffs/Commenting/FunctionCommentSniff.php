@@ -55,28 +55,24 @@ class Joomla_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_S
 	 * @var PHP_CodeSniffer_Comment_Parser_FunctionCommentParser
 	 */
 	protected $commentParser = null;
-
 	/**
 	 * The current PHP_CodeSniffer_File object we are processing.
 	 *
 	 * @var PHP_CodeSniffer_File
 	 */
 	protected $currentFile = null;
-
 	/**
 	 * The name of the method that we are currently processing.
 	 *
 	 * @var string
 	 */
 	private $_methodName = '';
-
 	/**
 	 * The position in the stack where the fucntion token was found.
 	 *
 	 * @var int
 	 */
 	private $_functionToken = null;
-
 	/**
 	 * The position in the stack where the class token was found.
 	 *

@@ -29,7 +29,6 @@ class LanguageManagerPage extends AdminManagerPage
 		'Select Status' => 'filter_published',
 		'Select Access' => 'filter_access',
 	);
-
 	/**
 	 * Array of toolbar id values for this page
 	 *
@@ -47,7 +46,6 @@ class LanguageManagerPage extends AdminManagerPage
 		'Options'          => 'toolbar-options',
 		'Help'             => 'toolbar-help',
 	);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -55,7 +53,6 @@ class LanguageManagerPage extends AdminManagerPage
 	 * @since  3.0
 	 */
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_languages&view=languages']";
-
 	/**
 	 * URL used to uniquely identify this page
 	 *

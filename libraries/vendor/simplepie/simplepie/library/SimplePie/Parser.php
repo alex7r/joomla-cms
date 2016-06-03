@@ -54,35 +54,20 @@
 class SimplePie_Parser
 {
 	var $error_code;
-
 	var $error_string;
-
 	var $current_line;
-
 	var $current_column;
-
 	var $current_byte;
-
 	var $separator = ' ';
-
 	var $namespace = array('');
-
 	var $element = array('');
-
 	var $xml_base = array('');
-
 	var $xml_base_explicit = array(false);
-
 	var $xml_lang = array('');
-
 	var $data = array();
-
 	var $datas = array(array());
-
 	var $current_xhtml_construct = -1;
-
 	var $encoding;
-
 	protected $registry;
 
 	public function set_registry(SimplePie_Registry $registry)

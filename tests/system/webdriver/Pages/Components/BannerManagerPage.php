@@ -33,7 +33,6 @@ class BannerManagerPage extends AdminManagerPage
 		'Select Category' => 'filter_category_id',
 		'Select Language' => 'filter_language'
 	);
-
 	/**
 	 * Array of toolbar id values for this page
 	 *
@@ -53,7 +52,6 @@ class BannerManagerPage extends AdminManagerPage
 		'Options'     => 'toolbar-options',
 		'Help'        => 'toolbar-help',
 	);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -61,7 +59,6 @@ class BannerManagerPage extends AdminManagerPage
 	 * @since  3.2
 	 */
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_banners']";
-
 	/**
 	 * URL used to uniquely identify this page
 	 *

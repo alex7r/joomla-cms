@@ -38,7 +38,6 @@ class MenuItemsManagerPage extends AdminManagerPage
 		'Access'     => 'filter_access',
 		'Language'   => 'filter_language',
 	);
-
 	/**
 	 * Array of toolbar id values for this page
 	 *
@@ -58,7 +57,6 @@ class MenuItemsManagerPage extends AdminManagerPage
 		'Batch'       => 'toolbar-batch',
 		'Help'        => 'toolbar-help',
 	);
-
 	/**
 	 * Array of submenu links used for this page
 	 *
@@ -68,7 +66,6 @@ class MenuItemsManagerPage extends AdminManagerPage
 	public $submenu = array(
 		'option=com_menus&view=menus',
 	);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -76,7 +73,6 @@ class MenuItemsManagerPage extends AdminManagerPage
 	 * @since  3.0
 	 */
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_menus&view=items']";
-
 	/**
 	 * URL used to uniquely identify this page
 	 *

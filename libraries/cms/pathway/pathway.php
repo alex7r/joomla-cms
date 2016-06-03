@@ -25,14 +25,12 @@ class JPathway
 	 * @since  1.7
 	 */
 	protected static $instances = array();
-
 	/**
 	 * @var    array  Array to hold the pathway item objects
 	 * @since       1.5
 	 * @deprecated  4.0  Will convert to $pathway
 	 */
 	protected $_pathway = array();
-
 	/**
 	 * @var    integer  Integer number of items in the pathway
 	 * @since       1.5

@@ -24,27 +24,22 @@ class JOAuth2ClientTest extends TestCase
 	 * @var  int
 	 */
 	private static $closed = null;
-
 	/**
 	 * @var    Registry  Options for the JOAuth2Client object.
 	 */
 	protected $options;
-
 	/**
 	 * @var    JHttp  Mock client object.
 	 */
 	protected $client;
-
 	/**
 	 * @var    JInput  The input object to use in retrieving GET/POST data.
 	 */
 	protected $input;
-
 	/**
 	 * @var    JApplicationWeb  The application object to send HTTP headers for redirects.
 	 */
 	protected $application;
-
 	/**
 	 * @var    JOAuth2Client  Object under test.
 	 */

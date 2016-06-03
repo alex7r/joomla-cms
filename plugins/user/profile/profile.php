@@ -25,7 +25,6 @@ class PlgUserProfile extends JPlugin
 	 * @since  3.1
 	 */
 	protected $autoloadLanguage = true;
-
 	/**
 	 * Date of birth.
 	 *

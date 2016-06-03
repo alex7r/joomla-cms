@@ -30,7 +30,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $url;
-
 	/**
 	 * The content route.
 	 *
@@ -38,7 +37,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $route;
-
 	/**
 	 * The content title.
 	 *
@@ -46,7 +44,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $title;
-
 	/**
 	 * The content description.
 	 *
@@ -54,7 +51,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $description;
-
 	/**
 	 * The published state of the result.
 	 *
@@ -62,7 +58,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $published;
-
 	/**
 	 * The content published state.
 	 *
@@ -70,7 +65,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $state;
-
 	/**
 	 * The content access level.
 	 *
@@ -78,7 +72,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $access;
-
 	/**
 	 * The content language.
 	 *
@@ -86,7 +79,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $language = '*';
-
 	/**
 	 * The publishing start date.
 	 *
@@ -94,7 +86,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $publish_start_date;
-
 	/**
 	 * The publishing end date.
 	 *
@@ -102,7 +93,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $publish_end_date;
-
 	/**
 	 * The generic start date.
 	 *
@@ -110,7 +100,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $start_date;
-
 	/**
 	 * The generic end date.
 	 *
@@ -118,7 +107,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $end_date;
-
 	/**
 	 * The item list price.
 	 *
@@ -126,7 +114,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $list_price;
-
 	/**
 	 * The item sale price.
 	 *
@@ -134,7 +121,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $sale_price;
-
 	/**
 	 * The content type id. This is set by the adapter.
 	 *
@@ -142,7 +128,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	public $type_id;
-
 	/**
 	 * The default language for content.
 	 *
@@ -150,7 +135,6 @@ class FinderIndexerResult
 	 * @since  3.0.2
 	 */
 	public $defaultLanguage;
-
 	/**
 	 * An array of extra result properties.
 	 *
@@ -158,7 +142,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	protected $elements = array();
-
 	/**
 	 * This array tells the indexer which properties should be indexed and what
 	 * weights to use for those properties.
@@ -173,7 +156,6 @@ class FinderIndexerResult
 		FinderIndexer::PATH_CONTEXT  => array('path', 'alias'),
 		FinderIndexer::MISC_CONTEXT  => array('comments')
 	);
-
 	/**
 	 * The indexer will use this data to create taxonomy mapping entries for
 	 * the item so that it can be filtered by type, label, category,

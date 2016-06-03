@@ -56,7 +56,6 @@ class idna_convert
 
 	// Internal settings, do not mess with them
 	protected static $_mb_string_overload = null;
-
 	/**
 	 * Holds all relevant mapping tables
 	 * See RFC3454 for details
@@ -649,55 +648,32 @@ class idna_convert
 		, 0x361                           => 234, 0x345 => 240
 		)
 	);
-
 	protected $_punycode_prefix = 'xn--';
-
 	protected $_invalid_ucs = 0x80000000;
-
 	protected $_max_ucs = 0x10FFFF;
-
 	protected $_base = 36;
-
 	protected $_tmin = 1;
-
 	protected $_tmax = 26;
-
 	protected $_skew = 38;
-
 	protected $_damp = 700;
-
 	protected $_initial_bias = 72;
-
 	protected $_initial_n = 0x80;
-
 	protected $_sbase = 0xAC00;
-
 	protected $_lbase = 0x1100;
-
 	protected $_vbase = 0x1161;
-
 	protected $_tbase = 0x11A7;
-
 	protected $_lcount = 19;
-
 	protected $_vcount = 21;   // _vcount * _tcount
-
 	protected $_tcount = 28; // _lcount * _tcount * _vcount
-
 	protected $_ncount = 588;
-
 	protected $_scount = 11172;
 
 	// See {@link set_paramter()} for details of how to change the following
 	// settings from within your script / application
 	protected $_error = false;   // Default input charset is UTF-8
-
 	protected $_api_encoding = 'utf8';  // Overlong UTF-8 encodings are forbidden
-
 	protected $_allow_overlong = false;     // Behave strict or not
-
 	protected $_strict_mode = false;      // Can be either 2003 (old, default) or 2008
-
 	protected $_idn_version = 2003;
 
 	/**

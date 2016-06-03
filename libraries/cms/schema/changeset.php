@@ -28,7 +28,6 @@ class JSchemaChangeset
 	 * @since  3.5.1
 	 */
 	protected static $instance;
-
 	/**
 	 * Array of JSchemaChangeitem objects
 	 *
@@ -36,7 +35,6 @@ class JSchemaChangeset
 	 * @since  2.5
 	 */
 	protected $changeItems = array();
-
 	/**
 	 * JDatabaseDriver object
 	 *
@@ -44,7 +42,6 @@ class JSchemaChangeset
 	 * @since  2.5
 	 */
 	protected $db = null;
-
 	/**
 	 * Folder where SQL update files will be found
 	 *

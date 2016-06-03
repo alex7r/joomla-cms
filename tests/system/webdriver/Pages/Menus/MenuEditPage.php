@@ -24,8 +24,6 @@ class MenuEditPage extends AdminEditPage
 		array('label' => 'Menu Type', 'id' => 'jform_menutype', 'type' => 'input', 'tab' => 'header'),
 		array('label' => 'Description', 'id' => 'jform_menudescription', 'type' => 'input', 'tab' => 'header'),
 	);
-
 	protected $waitForXpath = "//form[@id='item-form']";
-
 	protected $url = 'administrator/index.php?option=com_menus&view=menu&layout=edit';
 }

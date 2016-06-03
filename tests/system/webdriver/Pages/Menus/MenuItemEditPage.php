@@ -22,7 +22,6 @@ class MenuItemEditPage extends AdminEditPage
 	 * @since  3.2
 	 */
 	public $tabs = array('details', 'attrib-menu-options', 'attrib-page-options', 'attrib-metadata', 'modules', 'attrib-basic');
-
 	/**
 	 * Array of tab labels for this page
 	 *
@@ -30,7 +29,6 @@ class MenuItemEditPage extends AdminEditPage
 	 * @since  3.2
 	 */
 	public $tabLabels = array('Details', 'Advanced Options', 'Module Assignment');
-
 	/**
 	 * Array of groups for this page. A group is a collapsable slider inside a tab.
 	 * The format of this array is <tab id> => <group label>. Note that each menu item type has its own options and its own groups.
@@ -42,7 +40,6 @@ class MenuItemEditPage extends AdminEditPage
 	public $groups = array(
 		'options' => array('Link Type', 'Page Display', 'Metadata'),
 	);
-
 	/**
 	 * Associative array of expected input fields for the Menu Manager: Add / Edit Menu
 	 *
@@ -98,7 +95,6 @@ class MenuItemEditPage extends AdminEditPage
 		array('label' => 'Show Unauthorised Links', 'id' => 'jform_params_show_noauth', 'type' => 'fieldset', 'tab' => 'attrib-basic'),
 		array('label' => 'Positioning of the Links', 'id' => 'jform_params_urls_position', 'type' => 'fieldset', 'tab' => 'attrib-basic'),
 	);
-
 	public $menuItemTypes = array(
 		array('group' => 'Articles', 'type' => 'Archived Articles '),
 		array('group' => 'Articles', 'type' => 'Category Blog '),
@@ -133,9 +129,7 @@ class MenuItemEditPage extends AdminEditPage
 		array('group' => 'Users Manager', 'type' => 'Username Reminder Request '),
 		array('group' => 'Wrapper', 'type' => 'Iframe Wrapper '),
 	);
-
 	protected $waitForXpath = "//form[@id='item-form']";
-
 	protected $url = 'administrator/index.php?option=com_menus&view=item&layout=edit';
 
 	/**

@@ -24,9 +24,7 @@ class LevelEditPage extends AdminEditPage
 	public $inputFields = array(
 		array('label' => 'Level Title', 'id' => 'jform_title', 'type' => 'input', 'tab' => 'header')
 	);
-
 	protected $waitForXpath = "//form[@id='level-form']";
-
 	protected $url = 'administrator/index.php?option=com_users&view=level&layout=edit';
 
 	/**

@@ -22,7 +22,6 @@ class JDatabaseDriverSqlsrv extends JDatabaseDriver
 	 * @since  12.1
 	 */
 	protected static $dbMinimum = '10.50.1600.1';
-
 	/**
 	 * The name of the database driver.
 	 *
@@ -30,7 +29,6 @@ class JDatabaseDriverSqlsrv extends JDatabaseDriver
 	 * @since  12.1
 	 */
 	public $name = 'sqlsrv';
-
 	/**
 	 * The type of the database server family supported by this driver.
 	 *
@@ -38,7 +36,6 @@ class JDatabaseDriverSqlsrv extends JDatabaseDriver
 	 * @since  CMS 3.5.0
 	 */
 	public $serverType = 'mssql';
-
 	/**
 	 * The character(s) used to quote SQL statement names such as table names or field names,
 	 * etc.  The child classes should define this as necessary.  If a single character string the
@@ -49,7 +46,6 @@ class JDatabaseDriverSqlsrv extends JDatabaseDriver
 	 * @since  12.1
 	 */
 	protected $nameQuote = '[]';
-
 	/**
 	 * The null or zero representation of a timestamp for the database driver.  This should be
 	 * defined in child classes to hold the appropriate value for the engine.

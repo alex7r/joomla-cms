@@ -32,9 +32,7 @@ class ControlPanelPage extends AdminPage
 		'Language Manager'     => 'administrator/index.php?option=com_languages',
 		'Install Extensions'   => 'administrator/index.php?option=com_installer',
 	);
-
 	protected $waitForXpath = "//h1[contains(., 'Control Panel')]";
-
 	protected $url = 'administrator/index.php';
 
 	/**

@@ -23,7 +23,6 @@ class ConfigControllerDisplay extends JControllerBase
 	 * @since  3.2
 	 */
 	public $prefix = 'Config';
-
 	/**
 	 * Application object - Redeclared for proper typehinting
 	 *

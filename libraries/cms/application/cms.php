@@ -25,7 +25,6 @@ class JApplicationCms extends JApplicationWeb
 	 * @since  3.2
 	 */
 	protected static $instances = array();
-
 	/**
 	 * The scope of the application.
 	 *
@@ -33,7 +32,6 @@ class JApplicationCms extends JApplicationWeb
 	 * @since  3.2
 	 */
 	public $scope = null;
-
 	/**
 	 * Array of options for the JDocument object
 	 *
@@ -41,7 +39,6 @@ class JApplicationCms extends JApplicationWeb
 	 * @since  3.2
 	 */
 	protected $docOptions = array();
-
 	/**
 	 * The client identifier.
 	 *

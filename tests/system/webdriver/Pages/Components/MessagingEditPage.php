@@ -23,7 +23,6 @@ class MessagingEditPage extends AdminEditPage
 	 * @since  3.2
 	 */
 	public $tabs = array('');
-
 	/**
 	 * Array of all the field Details of the Edit page, along with the ID and tab value they are present on
 	 *
@@ -35,7 +34,6 @@ class MessagingEditPage extends AdminEditPage
 		array('label' => 'Subject', 'id' => 'jform_subject', 'type' => 'input', 'tab' => ''),
 		array('label' => 'Description', 'id' => 'jform_message_ifr', 'type' => 'textarea', 'tab' => ''),
 	);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -43,7 +41,6 @@ class MessagingEditPage extends AdminEditPage
 	 * @since  3.2
 	 */
 	protected $waitForXpath = "//form[@id='message-form']";
-
 	/**
 	 * URL used to uniquely identify this page
 	 *

@@ -25,7 +25,6 @@ class TemplateEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabs = array('details');
-
 	/**
 	 * Array of tab labels for this page
 	 *
@@ -33,7 +32,6 @@ class TemplateEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabLabels = array('Details', 'Options');
-
 	/**
 	 * Array of all the field Details of the Edit page, along with the ID and tab value they are present on
 	 *
@@ -47,7 +45,6 @@ class TemplateEditPage extends AdminEditPage
 		array('lable' => 'Select Colour', 'id' => 'jform_params_colourChoice', 'type' => 'select', 'tab' => 'options'),
 		array('lable' => 'Bold Text', 'id' => 'jform_params_boldText', 'type' => 'fieldset', 'tab' => 'options'),
 	);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *

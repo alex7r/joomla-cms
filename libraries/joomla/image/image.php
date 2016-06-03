@@ -69,19 +69,16 @@ class JImage
 	 * @since  3.4.2
 	 */
 	const ORIENTATION_SQUARE = 'square';
-
 	/**
 	 * @var    array  Whether or not different image formats are supported.
 	 * @since  11.3
 	 */
 	protected static $formats = array();
-
 	/**
 	 * @var    resource  The image resource handle.
 	 * @since  11.3
 	 */
 	protected $handle;
-
 	/**
 	 * @var    string  The source image path.
 	 * @since  11.3

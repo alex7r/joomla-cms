@@ -28,20 +28,15 @@ defined('FOF_INCLUDED') or die;
 class FOFLess
 {
 	public static $VERSION = "v0.3.9";
-
 	public static $defaultValue = array("keyword", "");
-
 	protected static $TRUE = array("keyword", "true");
-
 	protected static $FALSE = array("keyword", "false");
-
 	/**
 	 * Uniquely identify imports
 	 *
 	 * @var  integer
 	 */
 	protected static $nextImportId = 0;
-
 	protected static $cssColors = array(
 		'aliceblue'            => '240,248,255',
 		'antiquewhite'         => '250,235,215',
@@ -192,7 +187,6 @@ class FOFLess
 		'yellow'               => '255,255,0',
 		'yellowgreen'          => '154,205,50'
 	);
-
 	/**
 	 * Prefix of abstract properties
 	 *
@@ -212,15 +206,10 @@ class FOFLess
 	public $importDisabled = false;
 
 	public $importDir = '';
-
 	protected $libFunctions = array();
-
 	protected $registeredVars = array();
-
 	protected $preserveComments = false;
-
 	protected $numberPrecision = null;
-
 	/**
 	 * Set to the parser that generated the current line when compiling
 	 * so we know how to create error messages
@@ -228,7 +217,6 @@ class FOFLess
 	 * @var  FOFLessParser
 	 */
 	protected $sourceParser = null;
-
 	protected $sourceLoc = null;
 
 	/**

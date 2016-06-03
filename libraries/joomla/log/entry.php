@@ -51,7 +51,6 @@ class JLogEntry
 	 * @see    JLogEntry::$priorities
 	 */
 	public $priority = JLog::INFO;
-
 	/**
 	 * Call stack and back trace of the logged call.
 	 *
@@ -59,7 +58,6 @@ class JLogEntry
 	 * @since  12.3
 	 */
 	public $callStack = array();
-
 	/**
 	 * List of available log priority levels [Based on the Syslog default levels].
 	 *

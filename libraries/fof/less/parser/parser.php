@@ -56,11 +56,8 @@ class FOFLessParser
 
 	// These properties will supress division unless it's inside parenthases
 	protected static $supressDivisionProps = array('/border-radius$/i', '/^font$/i');
-
 	protected static $literalCache = array();
-
 	protected $blockDirectives = array("font-face", "keyframes", "page", "-moz-document");
-
 	protected $lineDirectives = array("charset");
 
 	// Caches preg escaped literals

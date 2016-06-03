@@ -24,9 +24,7 @@ class Inline
 	const REGEX_QUOTED_STRING = '(?:"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\']*(?:\'\'[^\']*)*)\')';
 
 	private static $exceptionOnInvalidType = false;
-
 	private static $objectSupport = false;
-
 	private static $objectForMap = false;
 
 	/**

@@ -23,7 +23,6 @@ class ModuleManagerPage extends AdminManagerPage
 		'Access'   => 'filter_access',
 		'Language' => 'filter_language',
 	);
-
 	public $toolbar = array(
 		'New'         => 'toolbar-new',
 		'Edit'        => 'toolbar-edit',
@@ -37,12 +36,10 @@ class ModuleManagerPage extends AdminManagerPage
 		'Options'     => 'toolbar-options',
 		'Help'        => 'toolbar-help',
 	);
-
 	public $submenu = array(
 		'option=com_modules&filter_client_id=0',
 		'option=com_modules&filter_client_id=1',
 	);
-
 	public $moduleTypes = array(
 		array('client' => 'site', 'name' => 'Articles - Archived'),
 		array('client' => 'site', 'name' => 'Articles - Categories'),
@@ -85,9 +82,7 @@ class ModuleManagerPage extends AdminManagerPage
 		array('client' => 'administrator', 'name' => 'Toolbar'),
 		array('client' => 'administrator', 'name' => 'User Status'),
 	);
-
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_modules']";
-
 	protected $url = 'administrator/index.php?option=com_modules';
 
 	/**

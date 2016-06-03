@@ -28,7 +28,6 @@ class RedirectManagerPage extends AdminManagerPage
 	public $filters = array(
 		'Select Status' => 'filter_state',
 	);
-
 	/**
 	 * Array of toolbar id values for this page
 	 *
@@ -46,7 +45,6 @@ class RedirectManagerPage extends AdminManagerPage
 		'Help'        => 'toolbar-help',
 		'Empty Trash' => 'toolbar-delete',
 	);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -54,7 +52,6 @@ class RedirectManagerPage extends AdminManagerPage
 	 * @since  3.0
 	 */
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_redirect']";
-
 	/**
 	 * URL used to uniquely identify this page
 	 *

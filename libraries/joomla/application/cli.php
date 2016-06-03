@@ -24,7 +24,6 @@ class JApplicationCli extends JApplicationBase
 	 * @since  11.1
 	 */
 	protected static $instance;
-
 	/**
 	 * @var    CliOutput  The output type.
 	 * @since  3.3

@@ -64,51 +64,30 @@ class idna_convert
 
 	// Internal settings, do not mess with them
 	var $_punycode_prefix = 'xn--';
-
 	var $_invalid_ucs = 0x80000000;
-
 	var $_max_ucs = 0x10FFFF;
-
 	var $_base = 36;
-
 	var $_tmin = 1;
-
 	var $_tmax = 26;
-
 	var $_skew = 38;
-
 	var $_damp = 700;
-
 	var $_initial_bias = 72;
-
 	var $_initial_n = 0x80;
-
 	var $_sbase = 0xAC00;
-
 	var $_lbase = 0x1100;
-
 	var $_vbase = 0x1161;
-
 	var $_tbase = 0x11A7;
-
 	var $_lcount = 19;
-
 	var $_vcount = 21;
-
 	var $_tcount = 28;
-
 	var $_ncount = 588;   // _vcount * _tcount
-
 	var $_scount = 11172; // _lcount * _tcount * _vcount
-
 	var $_error = false;
 
 	// See {@link set_paramter()} for details of how to change the following
 	// settings from within your script / application
 	var $_api_encoding = 'utf8'; // Default input charset is UTF-8
-
 	var $_allow_overlong = false;  // Overlong UTF-8 encodings are forbidden
-
 	var $_strict_mode = false;  // Behave strict or not
 
 	// The constructor

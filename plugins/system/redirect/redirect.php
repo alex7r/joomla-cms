@@ -25,7 +25,6 @@ class PlgSystemRedirect extends JPlugin
 	 * @since  3.6
 	 */
 	private static $previousExceptionHandler;
-
 	/**
 	 * Affects constructor behavior. If true, language files will be loaded automatically.
 	 *

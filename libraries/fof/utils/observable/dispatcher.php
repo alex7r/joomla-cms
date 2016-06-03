@@ -24,21 +24,18 @@ class FOFUtilsObservableDispatcher extends FOFUtilsObject
 	 * @var    FOFUtilsObservableDispatcher
 	 */
 	protected static $instance = null;
-
 	/**
 	 * An array of Observer objects to notify
 	 *
 	 * @var    array
 	 */
 	protected $_observers = array();
-
 	/**
 	 * The state of the observable object
 	 *
 	 * @var    mixed
 	 */
 	protected $_state = null;
-
 	/**
 	 * A multi dimensional array of [function][] = key for observers
 	 *

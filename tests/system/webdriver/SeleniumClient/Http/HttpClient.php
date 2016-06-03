@@ -22,17 +22,13 @@ class HttpClient
 	const DELETE = "DELETE";
 
 	protected $_url = null;
-
 	protected $_polling = null;
-
 	protected $_jsonParams = null;
-
 	protected $_httpMethod = null;
 
 	protected $_trace = false;
 
 	protected $_responseHeaders = null;
-
 	protected $_responseBody = null;
 
 	public function getTrace()

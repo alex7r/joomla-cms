@@ -25,7 +25,6 @@ class JFormFieldLimitbox extends JFormFieldList
 	 * @since  3.2
 	 */
 	protected static $options = array();
-
 	/**
 	 * The form field type.
 	 *
@@ -33,7 +32,6 @@ class JFormFieldLimitbox extends JFormFieldList
 	 * @since  3.2
 	 */
 	public $type = 'Limitbox';
-
 	/**
 	 * Default options
 	 *

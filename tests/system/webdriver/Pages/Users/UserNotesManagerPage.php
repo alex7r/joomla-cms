@@ -20,7 +20,6 @@ class UserNotesManagerPage extends AdminManagerPage
 	 * @var UserNotesManagerPage
 	 */
 	public $userNotesManagerPage = null;
-
 	public $toolbar = array(
 
 		'New'         => 'toolbar-new',
@@ -34,7 +33,6 @@ class UserNotesManagerPage extends AdminManagerPage
 		'Options'     => 'toolbar-options',
 		'Help'        => 'toolbar-help',
 	);
-
 	public $submenu = array(
 		'option=com_users&view=users',
 		'option=com_users&view=groups',
@@ -42,14 +40,11 @@ class UserNotesManagerPage extends AdminManagerPage
 		'option=com_users&view=notes',
 		'option=com_categories&extension=com_users'
 	);
-
 	public $filters = array(
 		'Select Status'   => 'filter_published',
 		'Select Category' => 'filter_category_id',
 	);
-
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_users&view=notes']";
-
 	protected $url = 'administrator/index.php?option=com_users&view=notes';
 
 	/**

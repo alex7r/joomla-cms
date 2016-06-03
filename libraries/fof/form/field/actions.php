@@ -21,12 +21,9 @@ class FOFFormFieldActions extends JFormFieldList implements FOFFormField
 {
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
-
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
 	public $item;
-
 	protected $static;
-
 	protected $repeatable;
 
 	/**

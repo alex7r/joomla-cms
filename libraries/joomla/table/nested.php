@@ -24,7 +24,6 @@ class JTableNested extends JTable
 	 * @since  3.3
 	 */
 	protected static $root_id = 0;
-
 	/**
 	 * Object property holding the primary key of the parent node.  Provides
 	 * adjacency list data for nodes.
@@ -33,7 +32,6 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	public $parent_id;
-
 	/**
 	 * Object property holding the depth level of the node in the tree.
 	 *
@@ -41,7 +39,6 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	public $level;
-
 	/**
 	 * Object property holding the left value of the node for managing its
 	 * placement in the nested sets tree.
@@ -50,7 +47,6 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	public $lft;
-
 	/**
 	 * Object property holding the right value of the node for managing its
 	 * placement in the nested sets tree.
@@ -59,7 +55,6 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	public $rgt;
-
 	/**
 	 * Object property holding the alias of this node used to constuct the
 	 * full text path, forward-slash delimited.
@@ -68,7 +63,6 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	public $alias;
-
 	/**
 	 * Object property to hold the location type to use when storing the row.
 	 * Possible values are: ['before', 'after', 'first-child', 'last-child'].
@@ -77,7 +71,6 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	protected $_location;
-
 	/**
 	 * Object property to hold the primary key of the location reference node to
 	 * use when storing the row.  A combination of location type and reference
@@ -87,7 +80,6 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	protected $_location_id;
-
 	/**
 	 * An array to cache values in recursive processes.
 	 *
@@ -95,7 +87,6 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	protected $_cache = array();
-
 	/**
 	 * Debug level
 	 *

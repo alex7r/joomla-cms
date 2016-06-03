@@ -24,7 +24,6 @@ class JCacheStorage
 	 * @since  11.1
 	 */
 	public $_now;
-
 	/**
 	 * Cache lifetime
 	 *
@@ -32,7 +31,6 @@ class JCacheStorage
 	 * @since  11.1
 	 */
 	public $_lifetime;
-
 	/**
 	 * Flag if locking is enabled
 	 *
@@ -40,7 +38,6 @@ class JCacheStorage
 	 * @since  11.1
 	 */
 	public $_locking;
-
 	/**
 	 * Language code
 	 *
@@ -48,7 +45,6 @@ class JCacheStorage
 	 * @since  11.1
 	 */
 	public $_language;
-
 	/**
 	 * Application name
 	 *
@@ -56,7 +52,6 @@ class JCacheStorage
 	 * @since  11.1
 	 */
 	public $_application;
-
 	/**
 	 * Object hash
 	 *
@@ -64,7 +59,6 @@ class JCacheStorage
 	 * @since  11.1
 	 */
 	public $_hash;
-
 	/**
 	 * The raw object name
 	 *

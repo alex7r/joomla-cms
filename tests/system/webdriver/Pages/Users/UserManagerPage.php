@@ -23,7 +23,6 @@ class UserManagerPage extends AdminManagerPage
 		'Group'             => 'filter_group_id',
 		'Registration Date' => 'filter_range',
 	);
-
 	public $toolbar = array(
 		'New'      => 'toolbar-new',
 		'Edit'     => 'toolbar-edit',
@@ -34,7 +33,6 @@ class UserManagerPage extends AdminManagerPage
 		'Options'  => 'toolbar-options',
 		'Help'     => 'toolbar-help',
 	);
-
 	public $submenu = array(
 		'option=com_users&view=users',
 		'option=com_users&view=groups',
@@ -42,9 +40,7 @@ class UserManagerPage extends AdminManagerPage
 		'option=com_users&view=notes',
 		'option=com_categories&extension=com_users'
 	);
-
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_users&view=users']";
-
 	protected $url = 'administrator/index.php?option=com_users&view=users';
 
 	/**

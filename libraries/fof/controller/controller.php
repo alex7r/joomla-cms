@@ -193,28 +193,24 @@ class FOFController extends FOFUtilsObject
 	 * @var    string
 	 */
 	protected $viewName = null;
-
 	/**
 	 * A cache for the view item objects created in this controller
 	 *
 	 * @var   array
 	 */
 	protected $viewsCache = array();
-
 	/**
 	 * Does this tried have a FOFForm which will be used to render it?
 	 *
 	 * @var    boolean
 	 */
 	protected $hasForm = false;
-
 	/**
 	 * A copy of the FOFView object used in this triad
 	 *
 	 * @var    FOFView
 	 */
 	private $_viewObject = null;
-
 	/**
 	 * A copy of the FOFModel object used in this triad
 	 *

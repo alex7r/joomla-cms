@@ -27,7 +27,6 @@ class JFormFieldCategoryEdit extends JFormFieldList
 	 * @since  1.6
 	 */
 	public $type = 'CategoryEdit';
-
 	/**
 	 * To allow creation of new categories.
 	 *

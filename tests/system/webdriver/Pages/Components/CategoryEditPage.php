@@ -24,7 +24,6 @@ class CategoryEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabs = array('general', 'publishing', 'rules', 'attrib-basic');
-
 	/**
 	 * Array of tab labels for this page
 	 *
@@ -32,7 +31,6 @@ class CategoryEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	public $tabLabels = array('Category Details', 'Publishing Options', 'Options', 'Metadata Options', 'Category Permissions');
-
 	/**
 	 * Array of all the field Details of the Edit page, along with the ID and tab value they are present on
 	 *
@@ -64,7 +62,6 @@ class CategoryEditPage extends AdminEditPage
 		array('label' => 'Image', 'id' => 'jform_params_image', 'type' => 'input', 'tab' => 'attrib-basic'),
 		array('label' => 'Alt Text', 'id' => 'jform_params_image_alt', 'type' => 'input', 'tab' => 'attrib-basic'),
 	);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -72,7 +69,6 @@ class CategoryEditPage extends AdminEditPage
 	 * @since  3.0
 	 */
 	protected $waitForXpath = "//form[@id='item-form']";
-
 	/**
 	 * URL used to uniquely identify this page
 	 *

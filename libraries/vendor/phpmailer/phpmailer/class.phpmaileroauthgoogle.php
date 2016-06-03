@@ -29,11 +29,8 @@
 class PHPMailerOAuthGoogle
 {
 	private $oauthUserEmail = '';
-
 	private $oauthRefreshToken = '';
-
 	private $oauthClientId = '';
-
 	private $oauthClientSecret = '';
 
 	/**

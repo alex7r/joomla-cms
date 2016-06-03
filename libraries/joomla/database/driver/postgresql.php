@@ -23,7 +23,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	 * @since  12.1
 	 */
 	protected static $dbMinimum = '8.3.18';
-
 	/**
 	 * The database driver name
 	 *
@@ -31,7 +30,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	 * @since  12.1
 	 */
 	public $name = 'postgresql';
-
 	/**
 	 * The type of the database server family supported by this driver.
 	 *
@@ -39,7 +37,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	 * @since  CMS 3.5.0
 	 */
 	public $serverType = 'postgresql';
-
 	/**
 	 * Quote for named objects
 	 *
@@ -47,7 +44,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	 * @since  12.1
 	 */
 	protected $nameQuote = '"';
-
 	/**
 	 * The null/zero date string
 	 *
@@ -55,7 +51,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	 * @since  12.1
 	 */
 	protected $nullDate = '1970-01-01 00:00:00';
-
 	/**
 	 * Operator used for concatenation
 	 *

@@ -39,31 +39,26 @@ class JFilesystemPatcher
 	 * Regular expression for splitting lines
 	 */
 	const SPLIT = '/(\r\n)|(\r)|(\n)/';
-
 	/**
 	 * @var    array  instance of this class
 	 * @since  12.1
 	 */
 	protected static $instance;
-
 	/**
 	 * @var    array  sources files
 	 * @since  12.1
 	 */
 	protected $sources = array();
-
 	/**
 	 * @var    array  destination files
 	 * @since  12.1
 	 */
 	protected $destinations = array();
-
 	/**
 	 * @var    array  removal files
 	 * @since  12.1
 	 */
 	protected $removals = array();
-
 	/**
 	 * @var    array  patches
 	 * @since  12.1

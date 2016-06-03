@@ -22,7 +22,6 @@ class JDatabaseDriverMysqli extends JDatabaseDriver
 	 * @since  12.2
 	 */
 	protected static $dbMinimum = '5.0.4';
-
 	/**
 	 * The name of the database driver.
 	 *
@@ -30,7 +29,6 @@ class JDatabaseDriverMysqli extends JDatabaseDriver
 	 * @since  12.1
 	 */
 	public $name = 'mysqli';
-
 	/**
 	 * The type of the database server family supported by this driver.
 	 *
@@ -38,13 +36,11 @@ class JDatabaseDriverMysqli extends JDatabaseDriver
 	 * @since  CMS 3.5.0
 	 */
 	public $serverType = 'mysql';
-
 	/**
 	 * @var    mysqli  The database connection resource.
 	 * @since  11.1
 	 */
 	protected $connection;
-
 	/**
 	 * The character(s) used to quote SQL statement names such as table names or field names,
 	 * etc. The child classes should define this as necessary.  If a single character string the
@@ -55,7 +51,6 @@ class JDatabaseDriverMysqli extends JDatabaseDriver
 	 * @since  12.2
 	 */
 	protected $nameQuote = '`';
-
 	/**
 	 * The null or zero representation of a timestamp for the database driver.  This should be
 	 * defined in child classes to hold the appropriate value for the engine.

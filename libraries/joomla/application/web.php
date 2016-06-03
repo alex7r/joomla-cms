@@ -24,55 +24,46 @@ class JApplicationWeb extends JApplicationBase
 	 * @since  11.3
 	 */
 	protected static $instance;
-
 	/**
 	 * @var    string  Character encoding string.
 	 * @since  11.3
 	 */
 	public $charSet = 'utf-8';
-
 	/**
 	 * @var    string  Response mime type.
 	 * @since  11.3
 	 */
 	public $mimeType = 'text/html';
-
 	/**
 	 * @var    JDate  The body modified date for response headers.
 	 * @since  11.3
 	 */
 	public $modifiedDate;
-
 	/**
 	 * @var    JApplicationWebClient  The application client object.
 	 * @since  11.3
 	 */
 	public $client;
-
 	/**
 	 * @var    JDocument  The application document object.
 	 * @since  11.3
 	 */
 	protected $document;
-
 	/**
 	 * @var    JLanguage  The application language object.
 	 * @since  11.3
 	 */
 	protected $language;
-
 	/**
 	 * @var    JSession  The application session object.
 	 * @since  11.3
 	 */
 	protected $session;
-
 	/**
 	 * @var    object  The application response object.
 	 * @since  11.3
 	 */
 	protected $response;
-
 	/**
 	 * A map of integer HTTP 1.1 response codes to the full HTTP Status for the headers.
 	 *

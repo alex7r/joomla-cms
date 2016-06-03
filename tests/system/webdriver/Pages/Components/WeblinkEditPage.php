@@ -24,7 +24,6 @@ class WeblinkEditPage extends AdminEditPage
 	 * @since  3.2
 	 */
 	public $tabs = array('details', 'images', 'publishing', 'attrib-jbasic');
-
 	/**
 	 * Array of all the field Details of the Edit page, along with the ID and tab value they are present on
 	 *
@@ -69,7 +68,6 @@ class WeblinkEditPage extends AdminEditPage
 		array('label' => 'Width', 'id' => 'jform_params_width', 'type' => 'input', 'tab' => 'attrib-jbasic'),
 		array('label' => 'Height', 'id' => 'jform_params_height', 'type' => 'input', 'tab' => 'attrib-jbasic'),
 		array('label' => 'Count Clicks', 'id' => 'jform_params_count_clicks', 'type' => 'select', 'tab' => 'attrib-jbasic'),);
-
 	/**
 	 * XPath string used to uniquely identify this page
 	 *
@@ -77,7 +75,6 @@ class WeblinkEditPage extends AdminEditPage
 	 * @since  3.2
 	 */
 	protected $waitForXpath = "//form[@id='weblink-form']";
-
 	/**
 	 * URL used to uniquely identify this page
 	 *
