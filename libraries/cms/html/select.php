@@ -419,12 +419,12 @@ abstract class JHtmlSelect
     {
         // Set default options and overwrite with anything passed in
         $options = array_merge(JHtml::$formatOptions, array(
-                'format.depth'       => 0,
-                'group.items'        => 'items',
-                'group.label'        => 'text',
-                'group.label.toHtml' => true,
-                'id'                 => false
-            ), $options);
+            'format.depth'       => 0,
+            'group.items'        => 'items',
+            'group.label'        => 'text',
+            'group.label.toHtml' => true,
+            'id'                 => false
+        ), $options);
 
         // Apply option rules
         if ($options['group.items'] === null) {

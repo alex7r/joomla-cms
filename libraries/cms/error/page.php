@@ -59,10 +59,10 @@ class JErrorPage
                 $document->setTitle(JText::_('Error') . ': ' . $error->getCode());
 
                 $data = $document->render(false, array(
-                        'template'  => $template,
-                        'directory' => JPATH_THEMES,
-                        'debug'     => JDEBUG
-                    ));
+                    'template'  => $template,
+                    'directory' => JPATH_THEMES,
+                    'debug'     => JDEBUG
+                ));
 
                 // Do not allow cache
                 $app->allowCache(false);

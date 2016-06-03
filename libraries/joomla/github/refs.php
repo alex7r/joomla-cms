@@ -37,9 +37,9 @@ class JGithubRefs extends JGithubObject
 
         // Build the request data.
         $data = json_encode(array(
-                'ref' => $ref,
-                'sha' => $sha
-            ));
+            'ref' => $ref,
+            'sha' => $sha
+        ));
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);

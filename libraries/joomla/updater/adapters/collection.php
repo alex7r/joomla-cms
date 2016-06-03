@@ -78,9 +78,10 @@ class JUpdaterCollection extends JUpdateAdapter
         switch ($name) {
             case 'CATEGORY':
                 if (isset($attrs['REF'])) {
-                    $this->update_sites[] = array('type'           => 'collection',
-                                                  'location'       => $attrs['REF'],
-                                                  'update_site_id' => $this->updateSiteId
+                    $this->update_sites[] = array(
+                        'type'           => 'collection',
+                        'location'       => $attrs['REF'],
+                        'update_site_id' => $this->updateSiteId
                     );
                 } else {
                     // This item will have children, so prepare to attach them

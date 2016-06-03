@@ -202,7 +202,7 @@ class PlgSystemRedirect extends JPlugin
         // If this isn't a Throwable then bail out
         if (!($exception instanceof Throwable) && !($exception instanceof Exception)) {
             throw new InvalidArgumentException(sprintf('The error handler requires an Exception or Throwable object, a "%s" object was given instead.',
-                    get_class($exception)));
+                get_class($exception)));
         }
 
         self::doErrorHandling($exception);

@@ -348,7 +348,7 @@ class JTableNested extends JTable
         // Cannot move the node to be a child of itself.
         if (in_array($referenceId, $children)) {
             $e = new UnexpectedValueException(sprintf('%s::moveByReference(%d, %s, %d) parenting to child.',
-                    get_class($this), $referenceId, $position, $pk));
+                get_class($this), $referenceId, $position, $pk));
             $this->setError($e);
 
             return false;
@@ -1080,7 +1080,7 @@ class JTableNested extends JTable
 
                 if (!empty($rows)) {
                     $e = new UnexpectedValueException(sprintf('%s::publish(%s, %d, %d) ancestors have lower state.',
-                            get_class($this), $pks, $state, $userId));
+                        get_class($this), $pks, $state, $userId));
                     $this->setError($e);
 
                     return false;

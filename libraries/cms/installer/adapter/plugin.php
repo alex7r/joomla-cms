@@ -400,10 +400,11 @@ class JInstallerAdapterPlugin extends JInstallerAdapter
     protected function checkExistingExtension()
     {
         try {
-            $this->currentExtensionId = $this->extension->find(array('type'    => $this->type,
-                                                                     'element' => $this->element,
-                                                                     'folder'  => $this->group
-                ));
+            $this->currentExtensionId = $this->extension->find(array(
+                'type'    => $this->type,
+                'element' => $this->element,
+                'folder'  => $this->group
+            ));
         } catch (RuntimeException $e) {
             // Install failed, roll back changes
             throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_ROLLBACK',
@@ -484,10 +485,10 @@ class JInstallerAdapterPlugin extends JInstallerAdapter
         /** @var JTableUpdate $update */
         $update = JTable::getInstance('update');
         $uid    = $update->find(array(
-                'element' => $this->element,
-                'type'    => $this->type,
-                'folder'  => $this->group
-            ));
+            'element' => $this->element,
+            'type'    => $this->type,
+            'folder'  => $this->group
+        ));
 
         if ($uid) {
             $update->delete($uid);

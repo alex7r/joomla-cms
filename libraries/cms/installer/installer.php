@@ -309,11 +309,11 @@ class JInstaller extends JAdapter
         JPluginHelper::importPlugin('extension');
         $dispatcher = JEventDispatcher::getInstance();
         $dispatcher->trigger('onExtensionBeforeInstall', array(
-                'method'    => 'install',
-                'type'      => $this->manifest->attributes()->type,
-                'manifest'  => $this->manifest,
-                'extension' => 0
-            ));
+            'method'    => 'install',
+            'type'      => $this->manifest->attributes()->type,
+            'manifest'  => $this->manifest,
+            'extension' => 0
+        ));
 
         // Run the install
         $result = $adapter->install();
@@ -775,11 +775,11 @@ class JInstaller extends JAdapter
         JPluginHelper::importPlugin('extension');
         $dispatcher = JEventDispatcher::getInstance();
         $dispatcher->trigger('onExtensionBeforeInstall', array(
-                'method'    => 'discover_install',
-                'type'      => $this->extension->get('type'),
-                'manifest'  => null,
-                'extension' => $this->extension->get('extension_id')
-            ));
+            'method'    => 'discover_install',
+            'type'      => $this->extension->get('type'),
+            'manifest'  => null,
+            'extension' => $this->extension->get('extension_id')
+        ));
 
         // Run the install
         $result = $adapter->discover_install();

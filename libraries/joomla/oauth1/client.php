@@ -118,8 +118,9 @@ abstract class JOAuth1Client
             $session = JFactory::getSession();
 
             // Get token form session.
-            $this->token = array('key'    => $session->get('key', null, 'oauth_token'),
-                                 'secret' => $session->get('secret', null, 'oauth_token')
+            $this->token = array(
+                'key'    => $session->get('key', null, 'oauth_token'),
+                'secret' => $session->get('secret', null, 'oauth_token')
             );
 
             // Verify the returned request token.
@@ -305,7 +306,7 @@ abstract class JOAuth1Client
         $base = $this->_baseString($url, $method, $parameters);
 
         $parameters['oauth_signature'] = $this->safeEncode(base64_encode(hash_hmac('sha1', $base,
-                    $this->_prepareSigningKey(), true)));
+            $this->_prepareSigningKey(), true)));
 
         return $parameters;
     }

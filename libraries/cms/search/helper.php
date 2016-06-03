@@ -54,9 +54,9 @@ class JSearchHelper
                       ->where($db->quoteName('search_term') . ' = ' . $db->quote($search_term));
             } else {
                 $query->insert($db->quoteName('#__core_log_searches'))->columns(array(
-                        $db->quoteName('search_term'),
-                        $db->quoteName('hits')
-                    ))->values($db->quote($search_term) . ', 1');
+                    $db->quoteName('search_term'),
+                    $db->quoteName('hits')
+                ))->values($db->quote($search_term) . ', 1');
             }
 
             // Execute the update query

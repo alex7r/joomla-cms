@@ -318,10 +318,10 @@ abstract class JHtmlGrid
         }
 
         return JHtml::_('select.genericlist', $state, 'filter_state', array(
-                'list.attr'   => 'class="inputbox" size="1" onchange="Joomla.submitform();"',
-                'list.select' => $filter_state,
-                'option.key'  => null
-            ));
+            'list.attr'   => 'class="inputbox" size="1" onchange="Joomla.submitform();"',
+            'list.select' => $filter_state,
+            'option.key'  => null
+        ));
     }
 
     /**

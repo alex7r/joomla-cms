@@ -60,9 +60,9 @@ abstract class JHtmlList
         }
 
         $images = JHtml::_('select.genericlist', $images, $name, array(
-                'list.attr'   => 'class="inputbox" size="1" ' . $javascript,
-                'list.select' => $active
-            ));
+            'list.attr'   => 'class="inputbox" size="1" ' . $javascript,
+            'list.select' => $active
+        ));
 
         return $images;
     }
@@ -180,9 +180,9 @@ abstract class JHtmlList
         }
 
         $users = JHtml::_('select.genericlist', $users, $name, array(
-                'list.attr'   => 'class="inputbox" size="1" ' . $javascript,
-                'list.select' => $active
-            ));
+            'list.attr'   => 'class="inputbox" size="1" ' . $javascript,
+            'list.select' => $active
+        ));
 
         return $users;
     }
@@ -232,11 +232,11 @@ abstract class JHtmlList
         }
 
         $positions = JHtml::_('select.genericlist', $pos, $name, array(
-                'id'          => $id,
-                'list.attr'   => 'class="inputbox" size="1"' . $javascript,
-                'list.select' => $active,
-                'option.key'  => null,
-            ));
+            'id'          => $id,
+            'list.attr'   => 'class="inputbox" size="1"' . $javascript,
+            'list.select' => $active,
+            'option.key'  => null,
+        ));
 
         return $positions;
     }

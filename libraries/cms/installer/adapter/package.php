@@ -396,9 +396,9 @@ class JInstallerAdapterPackage extends JInstallerAdapter
         /** @var JTableUpdate $update */
         $update = JTable::getInstance('update');
         $uid    = $update->find(array(
-                'element' => $this->element,
-                'type'    => $this->type,
-            ));
+            'element' => $this->element,
+            'type'    => $this->type,
+        ));
 
         if ($uid) {
             $update->delete($uid);
@@ -431,9 +431,9 @@ class JInstallerAdapterPackage extends JInstallerAdapter
                  */
 
                 $this->parent->pushStep(array(
-                        'type' => 'folder',
-                        'path' => $this->parent->getPath('extension_root')
-                    ));
+                    'type' => 'folder',
+                    'path' => $this->parent->getPath('extension_root')
+                ));
             }
 
             $path['src']  = $this->parent->getPath('source') . '/' . $this->manifest_script;

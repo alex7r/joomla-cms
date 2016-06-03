@@ -131,11 +131,11 @@ class SearchModelSearch extends JModelLegacy
             JPluginHelper::importPlugin('search');
             $dispatcher = JEventDispatcher::getInstance();
             $results    = $dispatcher->trigger('onContentSearch', array(
-                    $this->getState('keyword'),
-                    $this->getState('match'),
-                    $this->getState('ordering'),
-                    $areas['active']
-                ));
+                $this->getState('keyword'),
+                $this->getState('match'),
+                $this->getState('ordering'),
+                $areas['active']
+            ));
 
             $rows = array();
 

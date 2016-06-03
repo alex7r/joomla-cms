@@ -222,7 +222,7 @@ class PlgContentJoomla extends JPlugin
         if (count($childCategoryIds)) {
             // Count the items in this category
             $query = $db->getQuery(true)->select('COUNT(id)')->from($table)->where('catid IN (' . implode(',',
-                        $childCategoryIds) . ')');
+                    $childCategoryIds) . ')');
             $db->setQuery($query);
 
             try {

@@ -345,10 +345,10 @@ class PlgSystemUpdatenotification extends JPlugin
         try {
             $query = $db->getQuery(true)
                         ->select(array(
-                                $db->qn('id'),
-                                $db->qn('username'),
-                                $db->qn('email'),
-                            ))
+                            $db->qn('id'),
+                            $db->qn('username'),
+                            $db->qn('email'),
+                        ))
                         ->from($db->qn('#__users'))
                         ->where($db->qn('id') . ' IN(' . implode(',', $userIDs) . ')')
                         ->where($db->qn('sendEmail') . ' = ' . $db->q('1'));

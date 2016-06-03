@@ -308,18 +308,18 @@ class JUpdater extends JAdapter
                     $extension = JTable::getInstance('extension');
 
                     $uid = $update->find(array(
-                                'element'   => $current_update->get('element'),
-                                'type'      => $current_update->get('type'),
-                                'client_id' => $current_update->get('client_id'),
-                                'folder'    => $current_update->get('folder')
-                            ));
+                        'element'   => $current_update->get('element'),
+                        'type'      => $current_update->get('type'),
+                        'client_id' => $current_update->get('client_id'),
+                        'folder'    => $current_update->get('folder')
+                    ));
 
                     $eid = $extension->find(array(
-                                'element'   => $current_update->get('element'),
-                                'type'      => $current_update->get('type'),
-                                'client_id' => $current_update->get('client_id'),
-                                'folder'    => $current_update->get('folder')
-                            ));
+                        'element'   => $current_update->get('element'),
+                        'type'      => $current_update->get('type'),
+                        'client_id' => $current_update->get('client_id'),
+                        'folder'    => $current_update->get('folder')
+                    ));
 
                     if (!$uid) {
                         // Set the extension id

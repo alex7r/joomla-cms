@@ -79,9 +79,9 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 
         // Build the request data.
         $data = json_encode(array(
-                'name'  => $name,
-                'color' => $color
-            ));
+            'name'  => $name,
+            'color' => $color
+        ));
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);
@@ -117,9 +117,9 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 
         // Build the request data.
         $data = json_encode(array(
-                'name'  => $name,
-                'color' => $color
-            ));
+            'name'  => $name,
+            'color' => $color
+        ));
 
         // Send the request.
         return $this->processResponse($this->client->patch($this->fetchUrl($path), $data));

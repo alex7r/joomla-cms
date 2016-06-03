@@ -597,9 +597,9 @@ class InstallationModelDatabase extends JModelBase
         }
 
         $query->clear()->insert($db->quoteName('#__schemas'))->columns(array(
-                    $db->quoteName('extension_id'),
-                    $db->quoteName('version_id')
-                ))->values('700, ' . $db->quote($version));
+            $db->quoteName('extension_id'),
+            $db->quoteName('version_id')
+        ))->values('700, ' . $db->quote($version));
         $db->setQuery($query);
 
         try {

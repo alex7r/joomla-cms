@@ -121,8 +121,8 @@ class JGithubPackageIssuesComments extends JGithubPackage
 
         // Build the request data.
         $data = json_encode(array(
-                'body' => $body
-            ));
+            'body' => $body
+        ));
 
         // Send the request.
         return $this->processResponse($this->client->patch($this->fetchUrl($path), $data));
@@ -148,8 +148,8 @@ class JGithubPackageIssuesComments extends JGithubPackage
 
         // Build the request data.
         $data = json_encode(array(
-                'body' => $body,
-            ));
+            'body' => $body,
+        ));
 
         // Send the request.
         return $this->processResponse($this->client->post($this->fetchUrl($path), $data), 201);

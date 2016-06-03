@@ -25,13 +25,13 @@ extract($displayData);
 
 // Tags field ajax
 $chosenAjaxSettings = new Registry(array(
-        'selector'      => $selector,
-        'type'          => 'GET',
-        'url'           => JUri::root() . 'index.php?option=com_tags&task=tags.searchAjax',
-        'dataType'      => 'json',
-        'jsonTermKey'   => 'like',
-        'minTermLength' => $minTermLength
-    ));
+    'selector'      => $selector,
+    'type'          => 'GET',
+    'url'           => JUri::root() . 'index.php?option=com_tags&task=tags.searchAjax',
+    'dataType'      => 'json',
+    'jsonTermKey'   => 'like',
+    'minTermLength' => $minTermLength
+));
 
 JHtml::_('formbehavior.ajaxchosen', $chosenAjaxSettings);
 

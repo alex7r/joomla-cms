@@ -523,9 +523,9 @@ class JLayoutFile extends JLayoutBase
         }
 
         $hash = md5(json_encode(array(
-                    'paths'    => $includePaths,
-                    'suffixes' => $suffixes
-                )));
+            'paths'    => $includePaths,
+            'suffixes' => $suffixes
+        )));
 
         if (!empty(static::$cache[$layoutId][$hash])) {
             $this->addDebugMessage('<strong>Cached path:</strong> ' . static::$cache[$layoutId][$hash]);

@@ -46,10 +46,10 @@ class ContentModelArticle extends JModelItem
             try {
                 $db    = $this->getDbo();
                 $query = $db->getQuery(true)->select($this->getState('item.select',
-                        'a.id, a.asset_id, a.title, a.alias, a.introtext, a.fulltext, ' . // If badcats is not null, this means that the article is inside an unpublished category
-                        // In this case, the state is set to 0 to indicate Unpublished (even if the article state is Published)
-                        'CASE WHEN badcats.id is null THEN a.state ELSE 0 END AS state, ' . 'a.catid, a.created, a.created_by, a.created_by_alias, ' . // Use created if modified is 0
-                        'CASE WHEN a.modified = ' . $db->quote($db->getNullDate()) . ' THEN a.created ELSE a.modified END as modified, ' . 'a.modified_by, a.checked_out, a.checked_out_time, a.publish_up, a.publish_down, ' . 'a.images, a.urls, a.attribs, a.version, a.ordering, ' . 'a.metakey, a.metadesc, a.access, a.hits, a.metadata, a.featured, a.language, a.xreference'));
+                    'a.id, a.asset_id, a.title, a.alias, a.introtext, a.fulltext, ' . // If badcats is not null, this means that the article is inside an unpublished category
+                    // In this case, the state is set to 0 to indicate Unpublished (even if the article state is Published)
+                    'CASE WHEN badcats.id is null THEN a.state ELSE 0 END AS state, ' . 'a.catid, a.created, a.created_by, a.created_by_alias, ' . // Use created if modified is 0
+                    'CASE WHEN a.modified = ' . $db->quote($db->getNullDate()) . ' THEN a.created ELSE a.modified END as modified, ' . 'a.modified_by, a.checked_out, a.checked_out_time, a.publish_up, a.publish_down, ' . 'a.images, a.urls, a.attribs, a.version, a.ordering, ' . 'a.metakey, a.metadesc, a.access, a.hits, a.metadata, a.featured, a.language, a.xreference'));
                 $query->from('#__content AS a');
 
                 // Join on category table.
@@ -239,11 +239,11 @@ class ContentModelArticle extends JModelItem
 
                 // Create the base insert statement.
                 $query->insert($db->quoteName('#__content_rating'))->columns(array(
-                        $db->quoteName('content_id'),
-                        $db->quoteName('lastip'),
-                        $db->quoteName('rating_sum'),
-                        $db->quoteName('rating_count')
-                    ))->values((int)$pk . ', ' . $db->quote($userIP) . ',' . (int)$rate . ', 1');
+                    $db->quoteName('content_id'),
+                    $db->quoteName('lastip'),
+                    $db->quoteName('rating_sum'),
+                    $db->quoteName('rating_count')
+                ))->values((int)$pk . ', ' . $db->quote($userIP) . ',' . (int)$rate . ', 1');
 
                 // Set the query and execute the insert.
                 $db->setQuery($query);

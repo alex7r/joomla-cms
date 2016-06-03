@@ -194,12 +194,12 @@ class JFilterInput extends InputFilter
 
         if (isset($file['name']) && isset($file['tmp_name'])) {
             $descriptors = self::decodeFileData(array(
-                    $file['name'],
-                    $file['type'],
-                    $file['tmp_name'],
-                    $file['error'],
-                    $file['size']
-                ));
+                $file['name'],
+                $file['type'],
+                $file['tmp_name'],
+                $file['error'],
+                $file['size']
+            ));
         }
 
         // Handle non-nested descriptors (single files)

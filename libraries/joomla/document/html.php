@@ -344,14 +344,16 @@ class JDocumentHtml extends JDocument
 
                 // Separate buffers to be executed first and last
                 if ($type == 'module' || $type == 'modules') {
-                    $template_tags_first[$matches[0][$i]] = array('type'    => $type,
-                                                                  'name'    => $name,
-                                                                  'attribs' => $attribs
+                    $template_tags_first[$matches[0][$i]] = array(
+                        'type'    => $type,
+                        'name'    => $name,
+                        'attribs' => $attribs
                     );
                 } else {
-                    $template_tags_last[$matches[0][$i]] = array('type'    => $type,
-                                                                 'name'    => $name,
-                                                                 'attribs' => $attribs
+                    $template_tags_last[$matches[0][$i]] = array(
+                        'type'    => $type,
+                        'name'    => $name,
+                        'attribs' => $attribs
                     );
                 }
             }

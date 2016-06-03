@@ -65,12 +65,12 @@ class Files extends Input
     {
         if (isset($this->data[$name])) {
             $results = $this->decodeData(array(
-                    $this->data[$name]['name'],
-                    $this->data[$name]['type'],
-                    $this->data[$name]['tmp_name'],
-                    $this->data[$name]['error'],
-                    $this->data[$name]['size']
-                ));
+                $this->data[$name]['name'],
+                $this->data[$name]['type'],
+                $this->data[$name]['tmp_name'],
+                $this->data[$name]['error'],
+                $this->data[$name]['size']
+            ));
 
             return $results;
         }

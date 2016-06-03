@@ -136,10 +136,10 @@ class JGithubAccount extends JGithubObject
         $path = '/authorizations/' . $id;
 
         $data = json_encode(array(
-                $scope     => $scopeData,
-                'note'     => $note,
-                'note_url' => $url
-            ));
+            $scope     => $scopeData,
+            'note'     => $note,
+            'note_url' => $url
+        ));
 
         // Send the request.
         $response = $this->client->patch($this->fetchUrl($path), $data);

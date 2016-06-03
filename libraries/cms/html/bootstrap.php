@@ -730,11 +730,11 @@ abstract class JHtmlBootstrap
 
         // Inject tab into UL
         JFactory::getDocument()->addScriptDeclaration($tabScriptLayout->render(array(
-                'selector' => $selector,
-                'id'       => $id,
-                'active'   => $active,
-                'title'    => $title
-            )));
+            'selector' => $selector,
+            'id'       => $id,
+            'active'   => $active,
+            'title'    => $title
+        )));
 
         return $tabLayout->render(array('id' => $id, 'active' => $active));
     }

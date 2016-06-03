@@ -1147,8 +1147,8 @@ class PlgSystemDebug extends JPlugin
                 $htmlProfile = ($info[$id]->profile ? $info[$id]->profile : JText::_('PLG_DEBUG_NO_PROFILE'));
 
                 $htmlAccordions = JHtml::_('bootstrap.startAccordion', 'dbg_query_' . $id, array(
-                        'active' => ($info[$id]->hasWarnings ? ('dbg_query_explain_' . $id) : '')
-                    ));
+                    'active' => ($info[$id]->hasWarnings ? ('dbg_query_explain_' . $id) : '')
+                ));
 
                 $htmlAccordions .= JHtml::_('bootstrap.addSlide', 'dbg_query_' . $id, JText::_('PLG_DEBUG_EXPLAIN'),
                         'dbg_query_explain_' . $id) . $info[$id]->explain . JHtml::_('bootstrap.endSlide');
@@ -1664,15 +1664,15 @@ class PlgSystemDebug extends JPlugin
 
         if (!$showExecutedSQL) {
             $logEntriesDatabasequery = count(array_filter($this->logEntries, function ($logEntry) {
-                    return $logEntry->category == 'databasequery';
-                }));
+                return $logEntry->category == 'databasequery';
+            }));
             $logEntriesTotal         = $logEntriesTotal - $logEntriesDatabasequery;
         }
 
         // Deprecated log entries
         $logEntriesDeprecated = count(array_filter($this->logEntries, function ($logEntry) {
-                return $logEntry->category == 'deprecated';
-            }));
+            return $logEntry->category == 'deprecated';
+        }));
         $showDeprecated       = $this->params->get('log-deprecated', 0);
 
         if (!$showDeprecated) {

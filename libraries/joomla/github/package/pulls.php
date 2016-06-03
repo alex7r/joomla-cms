@@ -51,11 +51,11 @@ class JGithubPackagePulls extends JGithubPackage
 
         // Build the request data.
         $data = json_encode(array(
-                'title' => $title,
-                'base'  => $base,
-                'head'  => $head,
-                'body'  => $body
-            ));
+            'title' => $title,
+            'base'  => $base,
+            'head'  => $head,
+            'body'  => $body
+        ));
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);
@@ -94,10 +94,10 @@ class JGithubPackagePulls extends JGithubPackage
 
         // Build the request data.
         $data = json_encode(array(
-                'issue' => (int)$issueId,
-                'base'  => $base,
-                'head'  => $head
-            ));
+            'issue' => (int)$issueId,
+            'base'  => $base,
+            'head'  => $head
+        ));
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);
@@ -349,8 +349,8 @@ class JGithubPackagePulls extends JGithubPackage
 
         // Build the request data.
         $data = json_encode(array(
-                'commit_message' => $message
-            ));
+            'commit_message' => $message
+        ));
 
         // Send the request.
         $response = $this->client->put($this->fetchUrl($path), $data);

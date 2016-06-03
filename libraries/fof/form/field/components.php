@@ -112,11 +112,11 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 
         $query = $db->getQuery(true)
                     ->select(array(
-                            $db->qn('name'),
-                            $db->qn('element'),
-                            $db->qn('client_id'),
-                            $db->qn('manifest_cache'),
-                        ))
+                        $db->qn('name'),
+                        $db->qn('element'),
+                        $db->qn('client_id'),
+                        $db->qn('manifest_cache'),
+                    ))
                     ->from($db->qn('#__extensions'))
                     ->where($db->qn('type') . ' = ' . $db->q('component'))
                     ->where($db->qn('client_id') . ' IN (' . implode(',', $client_ids) . ')');

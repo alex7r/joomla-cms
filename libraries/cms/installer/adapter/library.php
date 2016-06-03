@@ -338,9 +338,9 @@ class JInstallerAdapterLibrary extends JInstallerAdapter
         /** @var JTableUpdate $update */
         $update = JTable::getInstance('update');
         $uid    = $update->find(array(
-                'element' => $this->element,
-                'type'    => $this->type,
-            ));
+            'element' => $this->element,
+            'type'    => $this->type,
+        ));
 
         if ($uid) {
             $update->delete($uid);

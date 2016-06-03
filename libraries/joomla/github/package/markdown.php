@@ -47,10 +47,10 @@ class JGithubPackageMarkdown extends JGithubPackage
 
         // Build the request data.
         $data = str_replace('\\/', '/', json_encode(array(
-                    'text'    => $text,
-                    'mode'    => $mode,
-                    'context' => $context
-                )));
+            'text'    => $text,
+            'mode'    => $mode,
+            'context' => $context
+        )));
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);

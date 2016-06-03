@@ -21,6 +21,6 @@ defined('JPATH_BASE') or die;
            'JLIB_HTML_BATCH_ACCESS_LABEL_DESC'); ?>">
     <?php echo JText::_('JLIB_HTML_BATCH_ACCESS_LABEL'); ?></label>
 <?php echo JHtml::_('access.assetgrouplist', 'batch[assetgroup_id]', '', 'class="inputbox"', array(
-        'title' => JText::_('JLIB_HTML_BATCH_NOCHANGE'),
-        'id'    => 'batch-access'
-    )); ?>
+    'title' => JText::_('JLIB_HTML_BATCH_NOCHANGE'),
+    'id'    => 'batch-access'
+)); ?>

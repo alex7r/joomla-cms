@@ -45,7 +45,7 @@ class Database extends Storage
             $this->db = $options['db'];
         } else {
             throw new \RuntimeException(sprintf('The %s storage engine requires a `db` option that is an instance of Joomla\\Database\\DatabaseDriver.',
-                    __CLASS__));
+                __CLASS__));
         }
     }
 

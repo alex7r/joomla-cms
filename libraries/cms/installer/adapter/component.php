@@ -315,11 +315,11 @@ class JInstallerAdapterComponent extends JInstallerAdapter
         // Clobber any possible pending updates
         $update = JTable::getInstance('update');
         $uid    = $update->find(array(
-                'element'   => $this->extension->element,
-                'type'      => 'component',
-                'client_id' => 1,
-                'folder'    => ''
-            ));
+            'element'   => $this->extension->element,
+            'type'      => 'component',
+            'client_id' => 1,
+            'folder'    => ''
+        ));
 
         if ($uid) {
             $update->delete($uid);
@@ -618,9 +618,9 @@ class JInstallerAdapterComponent extends JInstallerAdapter
          */
         if ($created) {
             $this->parent->pushStep(array(
-                    'type' => 'folder',
-                    'path' => $this->parent->getPath('extension_site')
-                ));
+                'type' => 'folder',
+                'path' => $this->parent->getPath('extension_site')
+            ));
         }
 
         // If the component admin directory does not exist, let's create it
@@ -639,9 +639,9 @@ class JInstallerAdapterComponent extends JInstallerAdapter
          */
         if ($created) {
             $this->parent->pushStep(array(
-                    'type' => 'folder',
-                    'path' => $this->parent->getPath('extension_administrator')
-                ));
+                'type' => 'folder',
+                'path' => $this->parent->getPath('extension_administrator')
+            ));
         }
     }
 
@@ -660,10 +660,10 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 
         // Clobber any possible pending updates
         $uid = $update->find(array(
-                'element'   => $this->element,
-                'type'      => $this->extension->type,
-                'client_id' => 1
-            ));
+            'element'   => $this->element,
+            'type'      => $this->extension->type,
+            'client_id' => 1
+        ));
 
         if ($uid) {
             $update->delete($uid);

@@ -1308,8 +1308,8 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
             foreach ($joins as $table) {
                 $tableNo++;
                 $query->select(array(
-                        'COUNT(DISTINCT ' . $db->qn('t' . $tableNo) . '.' . $db->qn($table['idfield']) . ') AS ' . $db->qn($table['idalias'])
-                    ));
+                    'COUNT(DISTINCT ' . $db->qn('t' . $tableNo) . '.' . $db->qn($table['idfield']) . ') AS ' . $db->qn($table['idalias'])
+                ));
                 $query->join('LEFT',
                     $db->qn($table['name']) . ' AS ' . $db->qn('t' . $tableNo) . ' ON ' . $db->qn('t' . $tableNo) . '.' . $db->qn($table['joinfield']) . ' = ' . $db->qn('master') . '.' . $db->qn($k));
             }
@@ -1562,9 +1562,9 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
         $time = $date->toSql();
 
         $query = $this->_db->getQuery(true)->update($this->_db->qn($this->_tbl))->set(array(
-                    $this->_db->qn($fldLockedBy) . ' = ' . $this->_db->q((int)$userId),
-                    $this->_db->qn($fldLockedOn) . ' = ' . $this->_db->q($time)
-                ))->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($this->$k));
+            $this->_db->qn($fldLockedBy) . ' = ' . $this->_db->q((int)$userId),
+            $this->_db->qn($fldLockedOn) . ' = ' . $this->_db->q($time)
+        ))->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($this->$k));
         $this->_db->setQuery((string)$query);
 
         $this->$fldLockedBy = $userId;
@@ -2409,9 +2409,9 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
         }
 
         $query = $this->_db->getQuery(true)->update($this->_db->qn($this->_tbl))->set(array(
-                    $this->_db->qn($fldLockedBy) . ' = 0',
-                    $this->_db->qn($fldLockedOn) . ' = ' . $this->_db->q($this->_db->getNullDate())
-                ))->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($this->$k));
+            $this->_db->qn($fldLockedBy) . ' = 0',
+            $this->_db->qn($fldLockedOn) . ' = ' . $this->_db->q($this->_db->getNullDate())
+        ))->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($this->$k));
         $this->_db->setQuery((string)$query);
 
         $this->$fldLockedBy = 0;
@@ -3272,56 +3272,56 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
             $contentType->type_title = $name;
             $contentType->type_alias = $alias;
             $contentType->table      = json_encode(array(
-                    'special' => array(
-                        'dbtable' => $this->getTableName(),
-                        'key'     => $this->getKeyName(),
-                        'type'    => $name,
-                        'prefix'  => $this->_tablePrefix,
-                        'class'   => 'FOFTable',
-                        'config'  => 'array()'
-                    ),
-                    'common'  => array(
-                        'dbtable' => '#__ucm_content',
-                        'key'     => 'ucm_id',
-                        'type'    => 'CoreContent',
-                        'prefix'  => 'JTable',
-                        'config'  => 'array()'
-                    )
-                ));
+                'special' => array(
+                    'dbtable' => $this->getTableName(),
+                    'key'     => $this->getKeyName(),
+                    'type'    => $name,
+                    'prefix'  => $this->_tablePrefix,
+                    'class'   => 'FOFTable',
+                    'config'  => 'array()'
+                ),
+                'common'  => array(
+                    'dbtable' => '#__ucm_content',
+                    'key'     => 'ucm_id',
+                    'type'    => 'CoreContent',
+                    'prefix'  => 'JTable',
+                    'config'  => 'array()'
+                )
+            ));
 
             $contentType->field_mappings = json_encode(array(
-                    'common'  => array(
-                        0 => array(
-                            "core_content_item_id" => $this->getKeyName(),
-                            "core_title"           => $this->getUcmCoreAlias('title'),
-                            "core_state"           => $this->getUcmCoreAlias('enabled'),
-                            "core_alias"           => $this->getUcmCoreAlias('alias'),
-                            "core_created_time"    => $this->getUcmCoreAlias('created_on'),
-                            "core_modified_time"   => $this->getUcmCoreAlias('created_by'),
-                            "core_body"            => $this->getUcmCoreAlias('body'),
-                            "core_hits"            => $this->getUcmCoreAlias('hits'),
-                            "core_publish_up"      => $this->getUcmCoreAlias('publish_up'),
-                            "core_publish_down"    => $this->getUcmCoreAlias('publish_down'),
-                            "core_access"          => $this->getUcmCoreAlias('access'),
-                            "core_params"          => $this->getUcmCoreAlias('params'),
-                            "core_featured"        => $this->getUcmCoreAlias('featured'),
-                            "core_metadata"        => $this->getUcmCoreAlias('metadata'),
-                            "core_language"        => $this->getUcmCoreAlias('language'),
-                            "core_images"          => $this->getUcmCoreAlias('images'),
-                            "core_urls"            => $this->getUcmCoreAlias('urls'),
-                            "core_version"         => $this->getUcmCoreAlias('version'),
-                            "core_ordering"        => $this->getUcmCoreAlias('ordering'),
-                            "core_metakey"         => $this->getUcmCoreAlias('metakey'),
-                            "core_metadesc"        => $this->getUcmCoreAlias('metadesc'),
-                            "core_catid"           => $this->getUcmCoreAlias('cat_id'),
-                            "core_xreference"      => $this->getUcmCoreAlias('xreference'),
-                            "asset_id"             => $this->getUcmCoreAlias('asset_id')
-                        )
-                    ),
-                    'special' => array(
-                        0 => array()
+                'common'  => array(
+                    0 => array(
+                        "core_content_item_id" => $this->getKeyName(),
+                        "core_title"           => $this->getUcmCoreAlias('title'),
+                        "core_state"           => $this->getUcmCoreAlias('enabled'),
+                        "core_alias"           => $this->getUcmCoreAlias('alias'),
+                        "core_created_time"    => $this->getUcmCoreAlias('created_on'),
+                        "core_modified_time"   => $this->getUcmCoreAlias('created_by'),
+                        "core_body"            => $this->getUcmCoreAlias('body'),
+                        "core_hits"            => $this->getUcmCoreAlias('hits'),
+                        "core_publish_up"      => $this->getUcmCoreAlias('publish_up'),
+                        "core_publish_down"    => $this->getUcmCoreAlias('publish_down'),
+                        "core_access"          => $this->getUcmCoreAlias('access'),
+                        "core_params"          => $this->getUcmCoreAlias('params'),
+                        "core_featured"        => $this->getUcmCoreAlias('featured'),
+                        "core_metadata"        => $this->getUcmCoreAlias('metadata'),
+                        "core_language"        => $this->getUcmCoreAlias('language'),
+                        "core_images"          => $this->getUcmCoreAlias('images'),
+                        "core_urls"            => $this->getUcmCoreAlias('urls'),
+                        "core_version"         => $this->getUcmCoreAlias('version'),
+                        "core_ordering"        => $this->getUcmCoreAlias('ordering'),
+                        "core_metakey"         => $this->getUcmCoreAlias('metakey'),
+                        "core_metadesc"        => $this->getUcmCoreAlias('metadesc'),
+                        "core_catid"           => $this->getUcmCoreAlias('cat_id'),
+                        "core_xreference"      => $this->getUcmCoreAlias('xreference'),
+                        "asset_id"             => $this->getUcmCoreAlias('asset_id')
                     )
-                ));
+                ),
+                'special' => array(
+                    0 => array()
+                )
+            ));
 
             $ignoreFields = array(
                 $this->getUcmCoreAlias('modified_on', null),
@@ -3333,8 +3333,8 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
             );
 
             $contentType->content_history_options = json_encode(array(
-                    "ignoreChanges" => array_filter($ignoreFields, 'strlen')
-                ));
+                "ignoreChanges" => array_filter($ignoreFields, 'strlen')
+            ));
 
             $contentType->router = '';
 

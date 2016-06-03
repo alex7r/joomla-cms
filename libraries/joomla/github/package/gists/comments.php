@@ -36,8 +36,8 @@ class JGithubPackageGistsComments extends JGithubPackage
 
         // Build the request data.
         $data = json_encode(array(
-                'body' => $body,
-            ));
+            'body' => $body,
+        ));
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);
@@ -96,8 +96,8 @@ class JGithubPackageGistsComments extends JGithubPackage
 
         // Build the request data.
         $data = json_encode(array(
-                'body' => $body
-            ));
+            'body' => $body
+        ));
 
         // Send the request.
         $response = $this->client->patch($this->fetchUrl($path), $data);

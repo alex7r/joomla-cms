@@ -80,10 +80,10 @@ JHtml::script('jui/fielduser.min.js', false, true, false, false, true);
             <a class="btn btn-primary button-select" title="<?php echo JText::_('JLIB_FORM_CHANGE_USER') ?>"><span
                     class="icon-user"></span></a>
             <?php echo JHtml::_('bootstrap.renderModal', 'userModal_' . $id, array(
-                    'title'       => JText::_('JLIB_FORM_CHANGE_USER'),
-                    'closeButton' => true,
-                    'footer'      => '<button type="button" class="btn" data-dismiss="modal">' . JText::_('JCANCEL') . '</button>'
-                )); ?>
+                'title'       => JText::_('JLIB_FORM_CHANGE_USER'),
+                'closeButton' => true,
+                'footer'      => '<button type="button" class="btn" data-dismiss="modal">' . JText::_('JCANCEL') . '</button>'
+            )); ?>
         <?php endif; ?>
     </div>
     <?php // Create the real field, hidden, that stored the user id. ?>

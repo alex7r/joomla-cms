@@ -150,13 +150,13 @@ class JGithubHooks extends JGithubObject
         $path = '/repos/' . $user . '/' . $repo . '/hooks/' . $id;
 
         $data = json_encode(array(
-                'name'          => $name,
-                'config'        => $config,
-                'events'        => $events,
-                'add_events'    => $addEvents,
-                'remove_events' => $removeEvents,
-                'active'        => $active
-            ));
+            'name'          => $name,
+            'config'        => $config,
+            'events'        => $events,
+            'add_events'    => $addEvents,
+            'remove_events' => $removeEvents,
+            'active'        => $active
+        ));
 
         return $this->processResponse($this->client->patch($this->fetchUrl($path), $data));
     }

@@ -60,17 +60,17 @@ abstract class ModTagssimilarHelper
         $tagCount = substr_count($tagsToMatch, ',') + 1;
 
         $query = $db->getQuery(true)->select(array(
-                    $db->quoteName('m.core_content_id'),
-                    $db->quoteName('m.content_item_id'),
-                    $db->quoteName('m.type_alias'),
-                    'COUNT( ' . $db->quoteName('tag_id') . ') AS ' . $db->quoteName('count'),
-                    $db->quoteName('ct.router'),
-                    $db->quoteName('cc.core_title'),
-                    $db->quoteName('cc.core_alias'),
-                    $db->quoteName('cc.core_catid'),
-                    $db->quoteName('cc.core_language'),
-                    $db->quoteName('cc.core_params')
-                ));
+            $db->quoteName('m.core_content_id'),
+            $db->quoteName('m.content_item_id'),
+            $db->quoteName('m.type_alias'),
+            'COUNT( ' . $db->quoteName('tag_id') . ') AS ' . $db->quoteName('count'),
+            $db->quoteName('ct.router'),
+            $db->quoteName('cc.core_title'),
+            $db->quoteName('cc.core_alias'),
+            $db->quoteName('cc.core_catid'),
+            $db->quoteName('cc.core_language'),
+            $db->quoteName('cc.core_params')
+        ));
 
         $query->from($db->quoteName('#__contentitem_tag_map', 'm'));
 
@@ -102,16 +102,16 @@ abstract class ModTagssimilarHelper
         }
 
         $query->group($db->quoteName(array(
-                'm.core_content_id',
-                'm.content_item_id',
-                'm.type_alias',
-                'ct.router',
-                'cc.core_title',
-                'cc.core_alias',
-                'cc.core_catid',
-                'cc.core_language',
-                'cc.core_params'
-            )));
+            'm.core_content_id',
+            'm.content_item_id',
+            'm.type_alias',
+            'ct.router',
+            'cc.core_title',
+            'cc.core_alias',
+            'cc.core_catid',
+            'cc.core_language',
+            'cc.core_params'
+        )));
 
         if ($matchtype == 'all' && $tagCount > 0) {
             $query->having('COUNT( ' . $db->quoteName('tag_id') . ')  = ' . $tagCount);

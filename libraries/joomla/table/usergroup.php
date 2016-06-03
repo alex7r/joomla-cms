@@ -178,7 +178,7 @@ class JTableUsergroup extends JTable
 
         // Delete the usergroup and its children
         $query->clear()->delete($db->quoteName($this->_tbl))->where($db->quoteName('id') . ' IN (' . implode(',',
-                    $ids) . ')');
+                $ids) . ')');
         $db->setQuery($query);
         $db->execute();
 

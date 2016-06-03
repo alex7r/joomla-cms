@@ -41,11 +41,11 @@ class JGithubPackagePullsComments extends JGithubPackage
 
         // Build the request data.
         $data = json_encode(array(
-                'body'      => $body,
-                'commit_id' => $commitId,
-                'path'      => $filePath,
-                'position'  => $position
-            ));
+            'body'      => $body,
+            'commit_id' => $commitId,
+            'path'      => $filePath,
+            'position'  => $position
+        ));
 
         // Send the request.
         return $this->processResponse($this->client->post($this->fetchUrl($path), $data), 201);
@@ -72,9 +72,9 @@ class JGithubPackagePullsComments extends JGithubPackage
 
         // Build the request data.
         $data = json_encode(array(
-                'body'        => $body,
-                'in_reply_to' => (int)$inReplyTo
-            ));
+            'body'        => $body,
+            'in_reply_to' => (int)$inReplyTo
+        ));
 
         // Send the request.
         return $this->processResponse($this->client->post($this->fetchUrl($path), $data), 201);
@@ -121,8 +121,8 @@ class JGithubPackagePullsComments extends JGithubPackage
 
         // Build the request data.
         $data = json_encode(array(
-                'body' => $body
-            ));
+            'body' => $body
+        ));
 
         // Send the request.
         return $this->processResponse($this->client->patch($this->fetchUrl($path), $data));

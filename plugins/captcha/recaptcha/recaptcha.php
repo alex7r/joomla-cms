@@ -17,13 +17,13 @@ defined('_JEXEC') or die;
  */
 class PlgCaptchaRecaptcha extends JPlugin
 {
-            /**
+    /**
      * Load the language file on instantiation.
      *
      * @var    boolean
      * @since  3.1
      */
-          protected $autoloadLanguage = true;
+    protected $autoloadLanguage = true;
 
     /**
      * Initialise the captcha
@@ -203,11 +203,11 @@ class PlgCaptchaRecaptcha extends JPlugin
         switch ($version) {
             case '1.0':
                 $response = $this->_recaptcha_http_post('www.google.com', '/recaptcha/api/verify', array(
-                        'privatekey' => $privatekey,
-                        'remoteip'   => $remoteip,
-                        'challenge'  => $challenge,
-                        'response'   => $response
-                    ));
+                    'privatekey' => $privatekey,
+                    'remoteip'   => $remoteip,
+                    'challenge'  => $challenge,
+                    'response'   => $response
+                ));
 
                 $answers = explode("\n", $response[1]);
 

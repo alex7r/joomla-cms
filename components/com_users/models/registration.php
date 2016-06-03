@@ -398,12 +398,12 @@ class UsersModelRegistration extends JModelForm
                         $db->quote(JText::sprintf('COM_USERS_MAIL_SEND_FAILURE_BODY', $return, $data['username']))
                     );
                     $query->clear()->insert($db->quoteName('#__messages'))->columns($db->quoteName(array(
-                            'user_id_from',
-                            'user_id_to',
-                            'date_time',
-                            'subject',
-                            'message'
-                        )))->values(implode(',', $values));
+                        'user_id_from',
+                        'user_id_to',
+                        'date_time',
+                        'subject',
+                        'message'
+                    )))->values(implode(',', $values));
                     $db->setQuery($query);
 
                     try {

@@ -385,10 +385,10 @@ class JInstallerAdapterModule extends JInstallerAdapter
     {
         try {
             $this->currentExtensionId = $this->extension->find(array(
-                    'element'   => $this->element,
-                    'type'      => $this->type,
-                    'client_id' => $this->clientId
-                ));
+                'element'   => $this->element,
+                'type'      => $this->type,
+                'client_id' => $this->clientId
+            ));
         } catch (RuntimeException $e) {
             // Install failed, roll back changes
             throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_ROLLBACK',
@@ -438,10 +438,10 @@ class JInstallerAdapterModule extends JInstallerAdapter
         // Clobber any possible pending updates
         $update = JTable::getInstance('update');
         $uid    = $update->find(array(
-                'element'   => $this->element,
-                'type'      => 'module',
-                'client_id' => $this->clientId
-            ));
+            'element'   => $this->element,
+            'type'      => 'module',
+            'client_id' => $this->clientId
+        ));
 
         if ($uid) {
             $update->delete($uid);
@@ -586,9 +586,9 @@ class JInstallerAdapterModule extends JInstallerAdapter
             // Since we have created a module item, we add it to the installation step stack
             // so that if we have to rollback the changes we can undo it.
             $this->parent->pushStep(array(
-                    'type'         => 'extension',
-                    'extension_id' => $this->extension->extension_id
-                ));
+                'type'         => 'extension',
+                'extension_id' => $this->extension->extension_id
+            ));
 
             // Create unpublished module
             $name = preg_replace('#[\*?]#', '', JText::_($this->name));

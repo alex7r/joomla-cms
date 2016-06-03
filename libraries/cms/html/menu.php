@@ -51,11 +51,11 @@ abstract class JHtmlMenu
         $options = static::menuitems($config);
 
         return JHtml::_('select.genericlist', $options, $name, array(
-                'id'             => isset($config['id']) ? $config['id'] : 'assetgroups_' . (++$count),
-                'list.attr'      => (is_null($attribs) ? 'class="inputbox" size="1"' : $attribs),
-                'list.select'    => (int)$selected,
-                'list.translate' => false
-            ));
+            'id'             => isset($config['id']) ? $config['id'] : 'assetgroups_' . (++$count),
+            'list.attr'      => (is_null($attribs) ? 'class="inputbox" size="1"' : $attribs),
+            'list.select'    => (int)$selected,
+            'list.translate' => false
+        ));
     }
 
     /**
@@ -156,7 +156,7 @@ abstract class JHtmlMenu
             $db = JFactory::getDbo();
 
             $query = $db->getQuery(true)->select($db->qn(array('id', 'menutype', 'title'),
-                    array('id', 'value', 'text')))->from($db->quoteName('#__menu_types'))->order('title');
+                array('id', 'value', 'text')))->from($db->quoteName('#__menu_types'))->order('title');
 
             static::$menus = $db->setQuery($query)->loadObjectList();
         }

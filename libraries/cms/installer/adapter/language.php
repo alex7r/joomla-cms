@@ -45,7 +45,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
         if (!$source) {
             $this->parent->setPath('source',
-                    ($this->parent->extension->client_id ? JPATH_ADMINISTRATOR : JPATH_SITE) . '/language/' . $this->parent->extension->element);
+                ($this->parent->extension->client_id ? JPATH_ADMINISTRATOR : JPATH_SITE) . '/language/' . $this->parent->extension->element);
         }
 
         $this->setManifest($this->parent->getManifest());
@@ -133,8 +133,8 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
         if (!file_exists($this->parent->getPath('extension_site'))) {
             if (!$created = JFolder::create($this->parent->getPath('extension_site'))) {
                 $this->parent->abort(JText::sprintf('JLIB_INSTALLER_ABORT',
-                        JText::sprintf('JLIB_INSTALLER_ERROR_CREATE_FOLDER_FAILED',
-                            $this->parent->getPath('extension_site'))));
+                    JText::sprintf('JLIB_INSTALLER_ERROR_CREATE_FOLDER_FAILED',
+                        $this->parent->getPath('extension_site'))));
 
                 return false;
             }
@@ -343,9 +343,10 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
         // Update an entry to the extension table
         $row = JTable::getInstance('extension');
-        $eid = $row->find(array('element'   => strtolower($this->get('tag')),
-                                'type'      => 'language',
-                                'client_id' => $clientId
+        $eid = $row->find(array(
+            'element'   => strtolower($this->get('tag')),
+            'type'      => 'language',
+            'client_id' => $clientId
         ));
 
         if ($eid) {

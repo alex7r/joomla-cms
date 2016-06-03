@@ -561,10 +561,11 @@ class JApplication extends JApplicationBase
     {
         $template = $this->getTemplate(true);
 
-        $params = array('template'  => $template->template,
-                        'file'      => 'index.php',
-                        'directory' => JPATH_THEMES,
-                        'params'    => $template->params
+        $params = array(
+            'template'  => $template->template,
+            'file'      => 'index.php',
+            'directory' => JPATH_THEMES,
+            'params'    => $template->params
         );
 
         // Parse the document.

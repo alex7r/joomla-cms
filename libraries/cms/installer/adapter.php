@@ -775,9 +775,9 @@ abstract class JInstallerAdapter extends JAdapterInstance
     {
         try {
             $this->currentExtensionId = $this->extension->find(array(
-                    'element' => $this->element,
-                    'type'    => $this->type
-                ));
+                'element' => $this->element,
+                'type'    => $this->type
+            ));
 
             // If it does exist, load it
             if ($this->currentExtensionId) {
@@ -864,9 +864,9 @@ abstract class JInstallerAdapter extends JAdapterInstance
 
         if ($created) {
             $this->parent->pushStep(array(
-                    'type' => 'folder',
-                    'path' => $this->parent->getPath('extension_root')
-                ));
+                'type' => 'folder',
+                'path' => $this->parent->getPath('extension_root')
+            ));
         }
     }
 

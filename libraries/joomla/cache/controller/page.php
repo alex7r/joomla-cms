@@ -181,11 +181,11 @@ class JCacheControllerPage extends JCacheController
         if ($data) {
             if ($wrkarounds) {
                 $data = JCache::setWorkarounds($data, array(
-                        'nopathway' => 1,
-                        'nohead'    => 1,
-                        'nomodules' => 1,
-                        'headers'   => true
-                    ));
+                    'nopathway' => 1,
+                    'nohead'    => 1,
+                    'nomodules' => 1,
+                    'headers'   => true
+                ));
             }
 
             if ($this->_locktest->locked == false) {

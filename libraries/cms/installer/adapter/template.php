@@ -285,10 +285,10 @@ class JInstallerAdapterTemplate extends JInstallerAdapter
     {
         try {
             $this->currentExtensionId = $this->extension->find(array(
-                    'element'   => $this->element,
-                    'type'      => $this->type,
-                    'client_id' => $this->clientId
-                ));
+                'element'   => $this->element,
+                'type'      => $this->type,
+                'client_id' => $this->clientId
+            ));
         } catch (RuntimeException $e) {
             // Install failed, roll back changes
             throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_ROLLBACK',
@@ -348,10 +348,10 @@ class JInstallerAdapterTemplate extends JInstallerAdapter
         $update = JTable::getInstance('update');
 
         $uid = $update->find(array(
-                'element'   => $this->element,
-                'type'      => $this->type,
-                'client_id' => $this->clientId
-            ));
+            'element'   => $this->element,
+            'type'      => $this->type,
+            'client_id' => $this->clientId
+        ));
 
         if ($uid) {
             $update->delete($uid);

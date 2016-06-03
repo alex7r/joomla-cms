@@ -66,9 +66,9 @@ class CallbackFilterIterator extends \FilterIterator
         $inner = $this->getInnerIterator();
 
         return call_user_func_array($this->callback, array(
-                $inner->current(),
-                $inner->key(),
-                $inner
-            ));
+            $inner->current(),
+            $inner->key(),
+            $inner
+        ));
     }
 }

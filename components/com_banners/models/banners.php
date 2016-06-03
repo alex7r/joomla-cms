@@ -89,11 +89,11 @@ class BannersModelBanners extends JModelList
                 } else {
                     // Insert new count
                     $query->insert('#__banner_tracks')->columns(array(
-                                $db->quoteName('count'),
-                                $db->quoteName('track_type'),
-                                $db->quoteName('banner_id'),
-                                $db->quoteName('track_date')
-                            ))->values('1, 1, ' . (int)$id . ', ' . $db->quote($trackDate));
+                        $db->quoteName('count'),
+                        $db->quoteName('track_type'),
+                        $db->quoteName('banner_id'),
+                        $db->quoteName('track_date')
+                    ))->values('1, 1, ' . (int)$id . ', ' . $db->quote($trackDate));
                 }
 
                 $db->setQuery($query);

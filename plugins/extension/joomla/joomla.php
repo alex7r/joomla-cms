@@ -147,9 +147,9 @@ class PlgExtensionJoomla extends JPlugin
             if (!$tmpid) {
                 // Link this extension to the relevant update site
                 $query->clear()->insert('#__update_sites_extensions')->columns(array(
-                        $db->quoteName('update_site_id'),
-                        $db->quoteName('extension_id')
-                    ))->values($update_site_id . ', ' . $this->eid);
+                    $db->quoteName('update_site_id'),
+                    $db->quoteName('extension_id')
+                ))->values($update_site_id . ', ' . $this->eid);
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -202,7 +202,7 @@ class PlgExtensionJoomla extends JPlugin
                     // Nuke any pending updates with this site before we delete it
                     // TODO: investigate alternative of using a query after the delete below with a query and not in like above
                     $query->clear()->delete('#__updates')->where('update_site_id IN (' . implode(',',
-                                $update_sites_pending_delete) . ')');
+                            $update_sites_pending_delete) . ')');
                     $db->setQuery($query);
                     $db->execute();
                 }

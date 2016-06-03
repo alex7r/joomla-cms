@@ -171,11 +171,11 @@ class JTableMenu extends JTableNested
         $table = JTable::getInstance('Menu', 'JTable', array('dbo' => $this->getDbo()));
 
         if ($table->load(array(
-                    'alias'     => $this->alias,
-                    'parent_id' => $this->parent_id,
-                    'client_id' => (int)$this->client_id,
-                    'language'  => $this->language
-                )) && ($table->id != $this->id || $this->id == 0)
+                'alias'     => $this->alias,
+                'parent_id' => $this->parent_id,
+                'client_id' => (int)$this->client_id,
+                'language'  => $this->language
+            )) && ($table->id != $this->id || $this->id == 0)
         ) {
             if ($this->menutype == $table->menutype) {
                 $this->setError(JText::_('JLIB_DATABASE_ERROR_MENU_UNIQUE_ALIAS'));
@@ -189,10 +189,10 @@ class JTableMenu extends JTableNested
         if ($this->home == '1') {
             // Verify that the home page for this menu is unique.
             if ($table->load(array(
-                        'menutype'  => $this->menutype,
-                        'client_id' => (int)$this->client_id,
-                        'home'      => '1'
-                    )) && ($table->language != $this->language)
+                    'menutype'  => $this->menutype,
+                    'client_id' => (int)$this->client_id,
+                    'home'      => '1'
+                )) && ($table->language != $this->language)
             ) {
                 $this->setError(JText::_('JLIB_DATABASE_ERROR_MENU_HOME_NOT_UNIQUE_IN_MENU'));
 

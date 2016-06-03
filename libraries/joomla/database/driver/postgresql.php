@@ -992,7 +992,7 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 
         // Create the base insert statement.
         $query = $this->getQuery(true)->insert($this->quoteName($table))->columns($fields)->values(implode(',',
-                $values));
+            $values));
 
         $retVal = false;
 

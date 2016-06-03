@@ -99,8 +99,8 @@ class JGithubPackageRepositoriesComments extends JGithubPackage
         $path = '/repos/' . $user . '/' . $repo . '/comments/' . $id;
 
         $data = json_encode(array(
-                'body' => $comment
-            ));
+            'body' => $comment
+        ));
 
         // Send the request.
         return $this->processResponse($this->client->patch($this->fetchUrl($path), $data));
@@ -147,11 +147,11 @@ class JGithubPackageRepositoriesComments extends JGithubPackage
         $path = '/repos/' . $user . '/' . $repo . '/commits/' . $sha . '/comments';
 
         $data = json_encode(array(
-                'body'     => $comment,
-                'path'     => $filepath,
-                'position' => (int)$position,
-                'line'     => (int)$line
-            ));
+            'body'     => $comment,
+            'path'     => $filepath,
+            'position' => (int)$position,
+            'line'     => (int)$line
+        ));
 
         // Send the request.
         return $this->processResponse($this->client->post($this->fetchUrl($path), $data), 201);

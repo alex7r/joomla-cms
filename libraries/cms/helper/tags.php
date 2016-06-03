@@ -144,7 +144,7 @@ class JHelperTags extends JHelper
                 $db = JFactory::getDbo();
 
                 $query = $db->getQuery(true)->select('alias, title')->from('#__tags')->where('alias IN (' . implode(',',
-                            array_map(array($db, 'quote'), $aliases)) . ')');
+                        array_map(array($db, 'quote'), $aliases)) . ')');
                 $db->setQuery($query);
 
                 try {
@@ -273,10 +273,10 @@ class JHelperTags extends JHelper
                     ->select($db->quoteName('m.tag_id'))
                     ->from($db->quoteName('#__contentitem_tag_map') . ' AS m ')
                     ->where(array(
-                            $db->quoteName('m.type_alias') . ' = ' . $db->quote($contentType),
-                            $db->quoteName('m.content_item_id') . ' = ' . (int)$id,
-                            $db->quoteName('t.published') . ' = 1'
-                        ));
+                        $db->quoteName('m.type_alias') . ' = ' . $db->quote($contentType),
+                        $db->quoteName('m.content_item_id') . ' = ' . (int)$id,
+                        $db->quoteName('t.published') . ' = 1'
+                    ));
 
         $user   = JFactory::getUser();
         $groups = implode(',', $user->getAuthorisedViewLevels());
@@ -780,13 +780,13 @@ class JHelperTags extends JHelper
         $query = $db->getQuery(true);
         $query->insert('#__contentitem_tag_map');
         $query->columns(array(
-                $db->quoteName('type_alias'),
-                $db->quoteName('core_content_id'),
-                $db->quoteName('content_item_id'),
-                $db->quoteName('tag_id'),
-                $db->quoteName('tag_date'),
-                $db->quoteName('type_id')
-            ));
+            $db->quoteName('type_alias'),
+            $db->quoteName('core_content_id'),
+            $db->quoteName('content_item_id'),
+            $db->quoteName('tag_id'),
+            $db->quoteName('tag_date'),
+            $db->quoteName('type_id')
+        ));
 
         foreach ($tags as $tag) {
             $query->values($db->quote($this->typeAlias) . ', ' . (int)$ucmId . ', ' . (int)$item . ', ' . $db->quote($tag) . ', ' . $query->currentTimestamp() . ', ' . (int)$typeId);

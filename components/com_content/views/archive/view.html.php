@@ -99,10 +99,10 @@ class ContentViewArchive extends JViewLegacy
             '12' => JText::_('DECEMBER_SHORT')
         );
         $form->monthField = JHtml::_('select.genericlist', $months, 'month', array(
-                'list.attr'   => 'size="1" class="inputbox"',
-                'list.select' => $state->get('filter.month'),
-                'option.key'  => null
-            ));
+            'list.attr'   => 'size="1" class="inputbox"',
+            'list.select' => $state->get('filter.month'),
+            'option.key'  => null
+        ));
 
         // Year Field
         $this->years = $this->getModel()->getYears();

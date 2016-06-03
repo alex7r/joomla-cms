@@ -204,7 +204,7 @@ class FOFHalDocument
         $renderer = new $class_name($this);
 
         return $renderer->render(array(
-                'data_key' => $this->_dataKey
-            ));
+            'data_key' => $this->_dataKey
+        ));
     }
 }

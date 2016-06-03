@@ -59,13 +59,13 @@ class JFormFieldGroupedList extends JFormField
         // Create a read-only list (no name) with a hidden input to store the value.
         if ($this->readonly) {
             $html[] = JHtml::_('select.groupedlist', $groups, null, array(
-                    'list.attr'          => $attr,
-                    'id'                 => $this->id,
-                    'list.select'        => $this->value,
-                    'group.items'        => null,
-                    'option.key.toHtml'  => false,
-                    'option.text.toHtml' => false
-                ));
+                'list.attr'          => $attr,
+                'id'                 => $this->id,
+                'list.select'        => $this->value,
+                'group.items'        => null,
+                'option.key.toHtml'  => false,
+                'option.text.toHtml' => false
+            ));
 
             // E.g. form field type tag sends $this->value as array
             if ($this->multiple && is_array($this->value)) {
@@ -84,13 +84,13 @@ class JFormFieldGroupedList extends JFormField
         } // Create a regular list.
         else {
             $html[] = JHtml::_('select.groupedlist', $groups, $this->name, array(
-                    'list.attr'          => $attr,
-                    'id'                 => $this->id,
-                    'list.select'        => $this->value,
-                    'group.items'        => null,
-                    'option.key.toHtml'  => false,
-                    'option.text.toHtml' => false
-                ));
+                'list.attr'          => $attr,
+                'id'                 => $this->id,
+                'list.select'        => $this->value,
+                'group.items'        => null,
+                'option.key.toHtml'  => false,
+                'option.text.toHtml' => false
+            ));
         }
 
         return implode($html);
