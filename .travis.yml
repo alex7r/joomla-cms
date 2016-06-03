@@ -69,9 +69,9 @@ before_script:
   - if [[ $INSTALL_REDIS == "yes" && $TRAVIS_PHP_VERSION = hhvm ]]; then cat build/travis/phpenv/redis.ini >> /etc/hhvm/php.ini; fi
 
 script:
-  - libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml
+  # - libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml
   - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs -i .; fi
-  - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs --report=full --extensions=php -p --standard=PSR2 .; fi
+  - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs --report=full --extensions=php -ignore=tests -p --standard=PSR2 .; fi
 
 branches:
   except:
