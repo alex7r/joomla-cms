@@ -56,33 +56,33 @@ $format = '<input type="radio" id="%1$s" name="%2$s" value="%3$s" %4$s />';
 $alt    = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $name);
 ?>
 <fieldset id="<?php echo $id; ?>" class="<?php echo trim($class . ' radio'); ?>"
-	<?php echo $disabled ? 'disabled' : ''; ?>
-	<?php echo $required ? 'required aria-required="true"' : ''; ?>
-	<?php echo $autofocus ? 'autofocus' : ''; ?>>
+    <?php echo $disabled ? 'disabled' : ''; ?>
+    <?php echo $required ? 'required aria-required="true"' : ''; ?>
+    <?php echo $autofocus ? 'autofocus' : ''; ?>>
 
-	<?php if (!empty($options)) : ?>
-		<?php foreach ($options as $i => $option) : ?>
-			<?php
-			// Initialize some option attributes.
-			$checked     = ((string) $option->value == $value) ? 'checked="checked"' : '';
-			$optionClass = !empty($option->class) ? 'class="' . $option->class . '"' : '';
-			$disabled    = !empty($option->disable) || ($disabled && !$checked) ? 'disabled' : '';
+    <?php if (!empty($options)) : ?>
+        <?php foreach ($options as $i => $option) : ?>
+            <?php
+            // Initialize some option attributes.
+            $checked     = ((string)$option->value == $value) ? 'checked="checked"' : '';
+            $optionClass = !empty($option->class) ? 'class="' . $option->class . '"' : '';
+            $disabled    = !empty($option->disable) || ($disabled && !$checked) ? 'disabled' : '';
 
-			// Initialize some JavaScript option attributes.
-			$onclick    = !empty($option->onclick) ? 'onclick="' . $option->onclick . '"' : '';
-			$onchange   = !empty($option->onchange) ? 'onchange="' . $option->onchange . '"' : '';
-			$oid        = $id . $i;
-			$ovalue     = htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8');
-			$attributes = array_filter(array($checked, $optionClass, $disabled, $onchange, $onclick));
-			?>
+            // Initialize some JavaScript option attributes.
+            $onclick    = !empty($option->onclick) ? 'onclick="' . $option->onclick . '"' : '';
+            $onchange   = !empty($option->onchange) ? 'onchange="' . $option->onchange . '"' : '';
+            $oid        = $id . $i;
+            $ovalue     = htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8');
+            $attributes = array_filter(array($checked, $optionClass, $disabled, $onchange, $onclick));
+            ?>
 
-			<?php if ($required) : ?>
-				<?php $attributes[] = 'required aria-required="true"'; ?>
-			<?php endif; ?>
-			<?php echo sprintf($format, $oid, $name, $ovalue, implode(' ', $attributes)); ?>
-			<label for="<?php echo $oid; ?>" <?php echo $optionClass; ?>>
-				<?php echo $option->text; ?>
-			</label>
-		<?php endforeach; ?>
-	<?php endif; ?>
+            <?php if ($required) : ?>
+                <?php $attributes[] = 'required aria-required="true"'; ?>
+            <?php endif; ?>
+            <?php echo sprintf($format, $oid, $name, $ovalue, implode(' ', $attributes)); ?>
+            <label for="<?php echo $oid; ?>" <?php echo $optionClass; ?>>
+                <?php echo $option->text; ?>
+            </label>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </fieldset>

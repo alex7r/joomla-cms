@@ -17,40 +17,56 @@ namespace Joomla\Uri;
  */
 class UriHelper
 {
-	/**
-	 * Does a UTF-8 safe version of PHP parse_url function
-	 *
-	 * @param   string $url URL to parse
-	 *
-	 * @return  mixed  Associative array or false if badly formed URL.
-	 *
-	 * @see     http://us3.php.net/manual/en/function.parse-url.php
-	 * @since   1.0
-	 */
-	public static function parse_url($url)
-	{
-		$result = false;
+    /**
+     * Does a UTF-8 safe version of PHP parse_url function
+     *
+     * @param   string $url URL to parse
+     *
+     * @return  mixed  Associative array or false if badly formed URL.
+     *
+     * @see     http://us3.php.net/manual/en/function.parse-url.php
+     * @since   1.0
+     */
+    public static function parse_url($url)
+    {
+        $result = false;
 
-		// Build arrays of values we need to decode before parsing
-		$entities     = array('%21', '%2A', '%27', '%28', '%29', '%3B', '%3A', '%40', '%26', '%3D', '%24', '%2C', '%2F', '%3F', '%23', '%5B', '%5D');
-		$replacements = array('!', '*', "'", "(", ")", ";", ":", "@", "&", "=", "$", ",", "/", "?", "#", "[", "]");
+        // Build arrays of values we need to decode before parsing
+        $entities     = array(
+            '%21',
+            '%2A',
+            '%27',
+            '%28',
+            '%29',
+            '%3B',
+            '%3A',
+            '%40',
+            '%26',
+            '%3D',
+            '%24',
+            '%2C',
+            '%2F',
+            '%3F',
+            '%23',
+            '%5B',
+            '%5D'
+        );
+        $replacements = array('!', '*', "'", "(", ")", ";", ":", "@", "&", "=", "$", ",", "/", "?", "#", "[", "]");
 
-		// Create encoded URL with special URL characters decoded so it can be parsed
-		// All other characters will be encoded
-		$encodedURL = str_replace($entities, $replacements, urlencode($url));
+        // Create encoded URL with special URL characters decoded so it can be parsed
+        // All other characters will be encoded
+        $encodedURL = str_replace($entities, $replacements, urlencode($url));
 
-		// Parse the encoded URL
-		$encodedParts = parse_url($encodedURL);
+        // Parse the encoded URL
+        $encodedParts = parse_url($encodedURL);
 
-		// Now, decode each value of the resulting array
-		if ($encodedParts)
-		{
-			foreach ($encodedParts as $key => $value)
-			{
-				$result[$key] = urldecode(str_replace($replacements, $entities, $value));
-			}
-		}
+        // Now, decode each value of the resulting array
+        if ($encodedParts) {
+            foreach ($encodedParts as $key => $value) {
+                $result[$key] = urldecode(str_replace($replacements, $entities, $value));
+            }
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 }

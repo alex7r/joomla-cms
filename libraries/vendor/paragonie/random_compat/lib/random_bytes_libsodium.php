@@ -41,56 +41,38 @@
  */
 function random_bytes($bytes)
 {
-	try
-	{
-		$bytes = RandomCompat_intval($bytes);
-	}
-	catch (TypeError $ex)
-	{
-		throw new TypeError(
-			'random_bytes(): $bytes must be an integer'
-		);
-	}
+    try {
+        $bytes = RandomCompat_intval($bytes);
+    } catch (TypeError $ex) {
+        throw new TypeError('random_bytes(): $bytes must be an integer');
+    }
 
-	if ($bytes < 1)
-	{
-		throw new Error(
-			'Length must be greater than 0'
-		);
-	}
+    if ($bytes < 1) {
+        throw new Error('Length must be greater than 0');
+    }
 
-	/**
-	 * \Sodium\randombytes_buf() doesn't allow more than 2147483647 bytes to be
-	 * generated in one invocation.
-	 */
-	if ($bytes > 2147483647)
-	{
-		$buf = '';
-		for ($i = 0; $i < $bytes; $i += 1073741824)
-		{
-			$n = ($bytes - $i) > 1073741824
-				? 1073741824
-				: $bytes - $i;
-			$buf .= \Sodium\randombytes_buf($n);
-		}
-	}
-	else
-	{
-		$buf = \Sodium\randombytes_buf($bytes);
-	}
+    /**
+     * \Sodium\randombytes_buf() doesn't allow more than 2147483647 bytes to be
+     * generated in one invocation.
+     */
+    if ($bytes > 2147483647) {
+        $buf = '';
+        for ($i = 0; $i < $bytes; $i += 1073741824) {
+            $n = ($bytes - $i) > 1073741824 ? 1073741824 : $bytes - $i;
+            $buf .= \Sodium\randombytes_buf($n);
+        }
+    } else {
+        $buf = \Sodium\randombytes_buf($bytes);
+    }
 
-	if ($buf !== false)
-	{
-		if (RandomCompat_strlen($buf) === $bytes)
-		{
-			return $buf;
-		}
-	}
+    if ($buf !== false) {
+        if (RandomCompat_strlen($buf) === $bytes) {
+            return $buf;
+        }
+    }
 
-	/**
-	 * If we reach here, PHP has failed us.
-	 */
-	throw new Exception(
-		'Could not gather sufficient random data'
-	);
+    /**
+     * If we reach here, PHP has failed us.
+     */
+    throw new Exception('Could not gather sufficient random data');
 }

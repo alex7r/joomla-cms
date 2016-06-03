@@ -28,21 +28,21 @@ JFactory::getDocument()->addScriptDeclaration("
 
 <form action="<?php echo JRoute::_('index.php?option=com_messages'); ?>" method="post" name="adminForm"
       id="message-form" class="form-validate form-horizontal">
-	<fieldset class="adminform">
-		<ul class="adminformlist">
-			<li><?php echo $this->form->getLabel('user_id_to'); ?>
-				<?php echo $this->form->getInput('user_id_to'); ?></li>
+    <fieldset class="adminform">
+        <ul class="adminformlist">
+            <li><?php echo $this->form->getLabel('user_id_to'); ?>
+                <?php echo $this->form->getInput('user_id_to'); ?></li>
 
-			<li><?php echo $this->form->getLabel('subject'); ?>
-				<?php echo $this->form->getInput('subject'); ?></li>
-		</ul>
-	</fieldset>
-	<fieldset class="adminform">
-		<legend><?php echo $this->form->getLabel('message'); ?></legend>
-		<ul class="adminformlist">
-			<li><?php echo $this->form->getInput('message'); ?> </li>
-		</ul>
-	</fieldset>
-	<input type="hidden" name="task" value=""/>
-	<?php echo JHtml::_('form.token'); ?>
+            <li><?php echo $this->form->getLabel('subject'); ?>
+                <?php echo $this->form->getInput('subject'); ?></li>
+        </ul>
+    </fieldset>
+    <fieldset class="adminform">
+        <legend><?php echo $this->form->getLabel('message'); ?></legend>
+        <ul class="adminformlist">
+            <li><?php echo $this->form->getInput('message'); ?> </li>
+        </ul>
+    </fieldset>
+    <input type="hidden" name="task" value=""/>
+    <?php echo JHtml::_('form.token'); ?>
 </form>

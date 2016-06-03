@@ -17,52 +17,54 @@ defined('_JEXEC') or die;
  */
 class ConfigControllerComponent extends JControllerLegacy
 {
-	/**
-	 * Class Constructor
-	 *
-	 * @param   array $config An optional associative array of configuration settings.
-	 *
-	 * @since       1.5
-	 * @deprecated  4.0
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
+    /**
+     * Class Constructor
+     *
+     * @param   array $config An optional associative array of configuration settings.
+     *
+     * @since       1.5
+     * @deprecated  4.0
+     */
+    public function __construct($config = array())
+    {
+        parent::__construct($config);
 
-		// Map the apply task to the save method.
-		$this->registerTask('apply', 'save');
-	}
+        // Map the apply task to the save method.
+        $this->registerTask('apply', 'save');
+    }
 
-	/**
-	 * Cancel operation
-	 *
-	 * @return  void
-	 *
-	 * @since       3.0
-	 * @deprecated  4.0  Use ConfigControllerComponentCancel instead.
-	 */
-	public function cancel()
-	{
-		JLog::add('ConfigControllerComponent is deprecated. Use ConfigControllerComponentCancel instead.', JLog::WARNING, 'deprecated');
+    /**
+     * Cancel operation
+     *
+     * @return  void
+     *
+     * @since       3.0
+     * @deprecated  4.0  Use ConfigControllerComponentCancel instead.
+     */
+    public function cancel()
+    {
+        JLog::add('ConfigControllerComponent is deprecated. Use ConfigControllerComponentCancel instead.',
+            JLog::WARNING, 'deprecated');
 
-		$controller = new ConfigControllerComponentCancel;
+        $controller = new ConfigControllerComponentCancel;
 
-		$controller->execute();
-	}
+        $controller->execute();
+    }
 
-	/**
-	 * Save the configuration.
-	 *
-	 * @return  boolean  True if successful; false otherwise.
-	 *
-	 * @deprecated  4.0  Use ConfigControllerComponentSave instead.
-	 */
-	public function save()
-	{
-		JLog::add('ConfigControllerComponent is deprecated. Use ConfigControllerComponentSave instead.', JLog::WARNING, 'deprecated');
+    /**
+     * Save the configuration.
+     *
+     * @return  boolean  True if successful; false otherwise.
+     *
+     * @deprecated  4.0  Use ConfigControllerComponentSave instead.
+     */
+    public function save()
+    {
+        JLog::add('ConfigControllerComponent is deprecated. Use ConfigControllerComponentSave instead.', JLog::WARNING,
+            'deprecated');
 
-		$controller = new ConfigControllerComponentSave;
+        $controller = new ConfigControllerComponentSave;
 
-		return $controller->execute();
-	}
+        return $controller->execute();
+    }
 }

@@ -17,20 +17,20 @@ use Joomla\Application\Cli\CliOutput;
  */
 class Xml extends CliOutput
 {
-	/**
-	 * Write a string to standard output.
-	 *
-	 * @param   string  $text The text to display.
-	 * @param   boolean $nl   True (default) to append a new line at the end of the output string.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 * @throws  \RuntimeException
-	 * @codeCoverageIgnore
-	 */
-	public function out($text = '', $nl = true)
-	{
-		fwrite(STDOUT, $text . ($nl ? "\n" : null));
-	}
+    /**
+     * Write a string to standard output.
+     *
+     * @param   string  $text The text to display.
+     * @param   boolean $nl   True (default) to append a new line at the end of the output string.
+     *
+     * @return  void
+     *
+     * @since   1.0
+     * @throws  \RuntimeException
+     * @codeCoverageIgnore
+     */
+    public function out($text = '', $nl = true)
+    {
+        fwrite(STDOUT, $text . ($nl ? "\n" : null));
+    }
 }

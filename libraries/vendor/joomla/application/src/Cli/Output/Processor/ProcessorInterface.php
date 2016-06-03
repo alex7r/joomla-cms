@@ -15,14 +15,14 @@ namespace Joomla\Application\Cli\Output\Processor;
  */
 interface ProcessorInterface
 {
-	/**
-	 * Process the provided output into a string.
-	 *
-	 * @param   string $output The string to process.
-	 *
-	 * @return  string
-	 *
-	 * @since   1.1.0
-	 */
-	public function process($output);
+    /**
+     * Process the provided output into a string.
+     *
+     * @param   string $output The string to process.
+     *
+     * @return  string
+     *
+     * @since   1.1.0
+     */
+    public function process($output);
 }

@@ -13,6 +13,6 @@ $title = $displayData['title'];
 
 ?>
 <a data-toggle="modal" data-target="#collapseModal" class="btn btn-small">
-	<span class="icon-32-batch" title="<?php echo $title; ?>"></span>
-	<?php echo $title; ?>
+    <span class="icon-32-batch" title="<?php echo $title; ?>"></span>
+    <?php echo $title; ?>
 </a>

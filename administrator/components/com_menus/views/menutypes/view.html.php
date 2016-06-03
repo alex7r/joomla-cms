@@ -16,96 +16,94 @@ defined('_JEXEC') or die;
  */
 class MenusViewMenutypes extends JViewLegacy
 {
-	/**
-	 * Display the view
-	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	public function display($tpl = null)
-	{
-		$input          = JFactory::getApplication()->input;
-		$this->recordId = $input->getInt('recordId');
-		$types          = $this->get('TypeOptions');
+    /**
+     * Display the view
+     *
+     * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  void
+     *
+     * @since   1.6
+     */
+    public function display($tpl = null)
+    {
+        $input          = JFactory::getApplication()->input;
+        $this->recordId = $input->getInt('recordId');
+        $types          = $this->get('TypeOptions');
 
-		// Adding System Links
-		$list           = array();
-		$o              = new JObject;
-		$o->title       = 'COM_MENUS_TYPE_EXTERNAL_URL';
-		$o->type        = 'url';
-		$o->description = 'COM_MENUS_TYPE_EXTERNAL_URL_DESC';
-		$o->request     = null;
-		$list[]         = $o;
+        // Adding System Links
+        $list           = array();
+        $o              = new JObject;
+        $o->title       = 'COM_MENUS_TYPE_EXTERNAL_URL';
+        $o->type        = 'url';
+        $o->description = 'COM_MENUS_TYPE_EXTERNAL_URL_DESC';
+        $o->request     = null;
+        $list[]         = $o;
 
-		$o              = new JObject;
-		$o->title       = 'COM_MENUS_TYPE_ALIAS';
-		$o->type        = 'alias';
-		$o->description = 'COM_MENUS_TYPE_ALIAS_DESC';
-		$o->request     = null;
-		$list[]         = $o;
+        $o              = new JObject;
+        $o->title       = 'COM_MENUS_TYPE_ALIAS';
+        $o->type        = 'alias';
+        $o->description = 'COM_MENUS_TYPE_ALIAS_DESC';
+        $o->request     = null;
+        $list[]         = $o;
 
-		$o              = new JObject;
-		$o->title       = 'COM_MENUS_TYPE_SEPARATOR';
-		$o->type        = 'separator';
-		$o->description = 'COM_MENUS_TYPE_SEPARATOR_DESC';
-		$o->request     = null;
-		$list[]         = $o;
+        $o              = new JObject;
+        $o->title       = 'COM_MENUS_TYPE_SEPARATOR';
+        $o->type        = 'separator';
+        $o->description = 'COM_MENUS_TYPE_SEPARATOR_DESC';
+        $o->request     = null;
+        $list[]         = $o;
 
-		$o                              = new JObject;
-		$o->title                       = 'COM_MENUS_TYPE_HEADING';
-		$o->type                        = 'heading';
-		$o->description                 = 'COM_MENUS_TYPE_HEADING_DESC';
-		$o->request                     = null;
-		$list[]                         = $o;
-		$types['COM_MENUS_TYPE_SYSTEM'] = $list;
+        $o                              = new JObject;
+        $o->title                       = 'COM_MENUS_TYPE_HEADING';
+        $o->type                        = 'heading';
+        $o->description                 = 'COM_MENUS_TYPE_HEADING_DESC';
+        $o->request                     = null;
+        $list[]                         = $o;
+        $types['COM_MENUS_TYPE_SYSTEM'] = $list;
 
-		$sortedTypes = array();
+        $sortedTypes = array();
 
-		foreach ($types as $name => $list)
-		{
-			$tmp = array();
+        foreach ($types as $name => $list) {
+            $tmp = array();
 
-			foreach ($list as $item)
-			{
-				$tmp[JText::_($item->title)] = $item;
-			}
+            foreach ($list as $item) {
+                $tmp[JText::_($item->title)] = $item;
+            }
 
-			ksort($tmp);
-			$sortedTypes[JText::_($name)] = $tmp;
-		}
+            ksort($tmp);
+            $sortedTypes[JText::_($name)] = $tmp;
+        }
 
-		ksort($sortedTypes);
+        ksort($sortedTypes);
 
-		$this->types = $sortedTypes;
+        $this->types = $sortedTypes;
 
-		$this->addToolbar();
+        $this->addToolbar();
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 
-	/**
-	 * Add the page title and toolbar.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.0
-	 */
-	protected function addToolbar()
-	{
-		// Add page title
-		JToolbarHelper::title(JText::_('COM_MENUS'), 'list menumgr');
+    /**
+     * Add the page title and toolbar.
+     *
+     * @return  void
+     *
+     * @since   3.0
+     */
+    protected function addToolbar()
+    {
+        // Add page title
+        JToolbarHelper::title(JText::_('COM_MENUS'), 'list menumgr');
 
-		// Get the toolbar object instance
-		$bar = JToolbar::getInstance('toolbar');
+        // Get the toolbar object instance
+        $bar = JToolbar::getInstance('toolbar');
 
-		// Cancel
-		$title = JText::_('JTOOLBAR_CANCEL');
-		$dhtml = "<button onClick=\"location.href='index.php?option=com_menus&view=items'\" class=\"btn\">
+        // Cancel
+        $title = JText::_('JTOOLBAR_CANCEL');
+        $dhtml = "<button onClick=\"location.href='index.php?option=com_menus&view=items'\" class=\"btn\">
 					<span class=\"icon-remove\" title=\"$title\"></span>
 					$title</button>";
-		$bar->appendButton('Custom', $dhtml, 'new');
-	}
+        $bar->appendButton('Custom', $dhtml, 'new');
+    }
 }

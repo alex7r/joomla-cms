@@ -80,96 +80,92 @@ JFactory::getDocument()->addScriptDeclaration($script);
 
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_menus&view=item&layout=edit&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo JRoute::_('index.php?option=com_menus&view=item&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
 
-	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
+    <?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
-	<div class="form-horizontal">
+    <div class="form-horizontal">
 
-		<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
+        <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
 
-		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('COM_MENUS_ITEM_DETAILS')); ?>
-		<div class="row-fluid">
-			<div class="span9">
-				<?php
-				if ($this->item->type == 'alias')
-				{
-					echo $this->form->getControlGroup('aliastip');
-				}
+        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('COM_MENUS_ITEM_DETAILS')); ?>
+        <div class="row-fluid">
+            <div class="span9">
+                <?php
+                if ($this->item->type == 'alias') {
+                    echo $this->form->getControlGroup('aliastip');
+                }
 
-				echo $this->form->getControlGroup('type');
+                echo $this->form->getControlGroup('type');
 
-				if ($this->item->type == 'alias')
-				{
-					echo $this->form->getControlGroups('aliasoptions');
-				}
+                if ($this->item->type == 'alias') {
+                    echo $this->form->getControlGroups('aliasoptions');
+                }
 
-				echo $this->form->getControlGroups('request');
+                echo $this->form->getControlGroups('request');
 
-				if ($this->item->type == 'url')
-				{
-					$this->form->setFieldAttribute('link', 'readonly', 'false');
-				}
+                if ($this->item->type == 'url') {
+                    $this->form->setFieldAttribute('link', 'readonly', 'false');
+                }
 
-				echo $this->form->getControlGroup('link');
+                echo $this->form->getControlGroup('link');
 
-				echo $this->form->getControlGroup('browserNav');
-				echo $this->form->getControlGroup('template_style_id');
-				?>
-			</div>
-			<div class="span3">
-				<?php
-				// Set main fields.
-				$this->fields = array(
-					'menutype',
-					'parent_id',
-					'menuordering',
-					'published',
-					'home',
-					'access',
-					'language',
-					'note'
+                echo $this->form->getControlGroup('browserNav');
+                echo $this->form->getControlGroup('template_style_id');
+                ?>
+            </div>
+            <div class="span3">
+                <?php
+                // Set main fields.
+                $this->fields = array(
+                    'menutype',
+                    'parent_id',
+                    'menuordering',
+                    'published',
+                    'home',
+                    'access',
+                    'language',
+                    'note'
 
-				);
+                );
 
-				if ($this->item->type != 'component')
-				{
-					$this->fields = array_diff($this->fields, array('home'));
-				}
-				?>
-				<?php echo JLayoutHelper::render('joomla.edit.global', $this); ?>
-			</div>
-		</div>
-		<?php echo JHtml::_('bootstrap.endTab'); ?>
+                if ($this->item->type != 'component') {
+                    $this->fields = array_diff($this->fields, array('home'));
+                }
+                ?>
+                <?php echo JLayoutHelper::render('joomla.edit.global', $this); ?>
+            </div>
+        </div>
+        <?php echo JHtml::_('bootstrap.endTab'); ?>
 
-		<?php
-		$this->fieldsets        = array();
-		$this->ignore_fieldsets = array('aliasoptions', 'request', 'item_associations');
-		echo JLayoutHelper::render('joomla.edit.params', $this);
-		?>
+        <?php
+        $this->fieldsets        = array();
+        $this->ignore_fieldsets = array('aliasoptions', 'request', 'item_associations');
+        echo JLayoutHelper::render('joomla.edit.params', $this);
+        ?>
 
-		<?php if ($assoc) : ?>
-			<?php if ($this->item->type !== 'alias' && $this->item->type !== 'url'
-				&& $this->item->type !== 'separator' && $this->item->type !== 'heading'
-			) : ?>
-				<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations', JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')); ?>
-				<?php echo $this->loadTemplate('associations'); ?>
-				<?php echo JHtml::_('bootstrap.endTab'); ?>
-			<?php endif; ?>
-		<?php endif; ?>
+        <?php if ($assoc) : ?>
+            <?php if ($this->item->type !== 'alias' && $this->item->type !== 'url' && $this->item->type !== 'separator' && $this->item->type !== 'heading') : ?>
+                <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations',
+                    JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')); ?>
+                <?php echo $this->loadTemplate('associations'); ?>
+                <?php echo JHtml::_('bootstrap.endTab'); ?>
+            <?php endif; ?>
+        <?php endif; ?>
 
-		<?php if (!empty($this->modules)) : ?>
-			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'modules', JText::_('COM_MENUS_ITEM_MODULE_ASSIGNMENT')); ?>
-			<?php echo $this->loadTemplate('modules'); ?>
-			<?php echo JHtml::_('bootstrap.endTab'); ?>
-		<?php endif; ?>
+        <?php if (!empty($this->modules)) : ?>
+            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'modules',
+                JText::_('COM_MENUS_ITEM_MODULE_ASSIGNMENT')); ?>
+            <?php echo $this->loadTemplate('modules'); ?>
+            <?php echo JHtml::_('bootstrap.endTab'); ?>
+        <?php endif; ?>
 
-		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
-	</div>
+        <?php echo JHtml::_('bootstrap.endTabSet'); ?>
+    </div>
 
-	<input type="hidden" name="task" value=""/>
-	<?php echo $this->form->getInput('component_id'); ?>
-	<?php echo JHtml::_('form.token'); ?>
-	<input type="hidden" id="fieldtype" name="fieldtype" value=""/>
+    <input type="hidden" name="task" value=""/>
+    <?php echo $this->form->getInput('component_id'); ?>
+    <?php echo JHtml::_('form.token'); ?>
+    <input type="hidden" id="fieldtype" name="fieldtype" value=""/>
 </form>

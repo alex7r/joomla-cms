@@ -17,69 +17,72 @@ defined('_JEXEC') or die;
  */
 class ConfigControllerApplication extends JControllerLegacy
 {
-	/**
-	 * Class Constructor
-	 *
-	 * @param   array $config An optional associative array of configuration settings.
-	 *
-	 * @since       1.5
-	 * @deprecated  4.0
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
+    /**
+     * Class Constructor
+     *
+     * @param   array $config An optional associative array of configuration settings.
+     *
+     * @since       1.5
+     * @deprecated  4.0
+     */
+    public function __construct($config = array())
+    {
+        parent::__construct($config);
 
-		// Map the apply task to the save method.
-		$this->registerTask('apply', 'save');
-	}
+        // Map the apply task to the save method.
+        $this->registerTask('apply', 'save');
+    }
 
-	/**
-	 * Method to save the configuration.
-	 *
-	 * @return  bool  True on success, false on failure.
-	 *
-	 * @since       1.5
-	 * @deprecated  4.0  Use ConfigControllerApplicationSave instead.
-	 */
-	public function save()
-	{
-		JLog::add('ConfigControllerApplication is deprecated. Use ConfigControllerApplicationSave instead.', JLog::WARNING, 'deprecated');
+    /**
+     * Method to save the configuration.
+     *
+     * @return  bool  True on success, false on failure.
+     *
+     * @since       1.5
+     * @deprecated  4.0  Use ConfigControllerApplicationSave instead.
+     */
+    public function save()
+    {
+        JLog::add('ConfigControllerApplication is deprecated. Use ConfigControllerApplicationSave instead.',
+            JLog::WARNING, 'deprecated');
 
-		$controller = new ConfigControllerApplicationSave;
+        $controller = new ConfigControllerApplicationSave;
 
-		return $controller->execute();
-	}
+        return $controller->execute();
+    }
 
-	/**
-	 * Cancel operation.
-	 *
-	 * @return  boolean  True if successful; false otherwise.
-	 *
-	 * @deprecated  4.0  Use ConfigControllerApplicationCancel instead.
-	 */
-	public function cancel()
-	{
-		JLog::add('ConfigControllerApplication is deprecated. Use ConfigControllerApplicationCancel instead.', JLog::WARNING, 'deprecated');
+    /**
+     * Cancel operation.
+     *
+     * @return  boolean  True if successful; false otherwise.
+     *
+     * @deprecated  4.0  Use ConfigControllerApplicationCancel instead.
+     */
+    public function cancel()
+    {
+        JLog::add('ConfigControllerApplication is deprecated. Use ConfigControllerApplicationCancel instead.',
+            JLog::WARNING, 'deprecated');
 
-		$controller = new ConfigControllerApplicationCancel;
+        $controller = new ConfigControllerApplicationCancel;
 
-		return $controller->execute();
-	}
+        return $controller->execute();
+    }
 
-	/**
-	 * Method to remove the root property from the configuration.
-	 *
-	 * @return  bool  True on success, false on failure.
-	 *
-	 * @since       1.5
-	 * @deprecated  4.0  Use ConfigControllerApplicationRemoveroot instead.
-	 */
-	public function removeroot()
-	{
-		JLog::add('ConfigControllerApplication is deprecated. Use ConfigControllerApplicationRemoveroot instead.', JLog::WARNING, 'deprecated');
+    /**
+     * Method to remove the root property from the configuration.
+     *
+     * @return  bool  True on success, false on failure.
+     *
+     * @since       1.5
+     * @deprecated  4.0  Use ConfigControllerApplicationRemoveroot instead.
+     */
+    public function removeroot()
+    {
+        JLog::add('ConfigControllerApplication is deprecated. Use ConfigControllerApplicationRemoveroot instead.',
+            JLog::WARNING, 'deprecated');
 
-		$controller = new ConfigControllerApplicationRemoveroot;
+        $controller = new ConfigControllerApplicationRemoveroot;
 
-		return $controller->execute();
-	}
+        return $controller->execute();
+    }
 }

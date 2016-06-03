@@ -9,7 +9,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
-JLog::add('JDocumentRendererModules is deprecated, use JDocumentRendererHtmlModules instead.', JLog::WARNING, 'deprecated');
+JLog::add('JDocumentRendererModules is deprecated, use JDocumentRendererHtmlModules instead.', JLog::WARNING,
+    'deprecated');
 
 /**
  * JDocument Modules renderer

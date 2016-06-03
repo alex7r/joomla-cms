@@ -16,9 +16,8 @@ $params->def('format', 'rss');
 
 $link = ModSyndicateHelper::getLink($params);
 
-if (is_null($link))
-{
-	return;
+if (is_null($link)) {
+    return;
 }
 
 $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT, 'UTF-8');

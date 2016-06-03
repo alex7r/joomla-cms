@@ -90,24 +90,24 @@ window.addEvent('domready', function(){
 */
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_users&id=' . (int) $this->item->id); ?>" method="post"
+<form action="<?php echo JRoute::_('index.php?option=com_users&id=' . (int)$this->item->id); ?>" method="post"
       name="adminForm" id="level-form" class="form-validate form-horizontal">
-	<fieldset>
-		<legend><?php echo JText::_('COM_USERS_LEVEL_DETAILS'); ?></legend>
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo $this->form->getLabel('title'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('title'); ?>
-			</div>
-		</div>
-	</fieldset>
+    <fieldset>
+        <legend><?php echo JText::_('COM_USERS_LEVEL_DETAILS'); ?></legend>
+        <div class="control-group">
+            <div class="control-label">
+                <?php echo $this->form->getLabel('title'); ?>
+            </div>
+            <div class="controls">
+                <?php echo $this->form->getInput('title'); ?>
+            </div>
+        </div>
+    </fieldset>
 
-	<fieldset>
-		<legend><?php echo JText::_('COM_USERS_USER_GROUPS_HAVING_ACCESS'); ?></legend>
-		<?php echo JHtml::_('access.usergroups', 'jform[rules]', $this->item->rules); ?>
-	</fieldset>
-	<input type="hidden" name="task" value=""/>
-	<?php echo JHtml::_('form.token'); ?>
+    <fieldset>
+        <legend><?php echo JText::_('COM_USERS_USER_GROUPS_HAVING_ACCESS'); ?></legend>
+        <?php echo JHtml::_('access.usergroups', 'jform[rules]', $this->item->rules); ?>
+    </fieldset>
+    <input type="hidden" name="task" value=""/>
+    <?php echo JHtml::_('form.token'); ?>
 </form>

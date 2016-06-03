@@ -14,11 +14,10 @@ $data = $displayData;
 // Receive overridable options
 $data['options'] = !empty($data['options']) ? $data['options'] : array();
 
-if ($data['view'] instanceof MenusViewItems)
-{
-	$doc = JFactory::getDocument();
+if ($data['view'] instanceof MenusViewItems) {
+    $doc = JFactory::getDocument();
 
-	$doc->addStyleDeclaration("
+    $doc->addStyleDeclaration("
 		/* Fixed filter field in search bar */
 		.js-stools .js-stools-menutype {
 			float: left;
@@ -35,8 +34,8 @@ if ($data['view'] instanceof MenusViewItems)
 		}
 	");
 
-	// Menutype filter doesn't have to activate the filter bar
-	unset($data['view']->activeFilters['menutype']);
+    // Menutype filter doesn't have to activate the filter bar
+    unset($data['view']->activeFilters['menutype']);
 }
 
 // Display the main joomla layout

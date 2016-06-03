@@ -11,15 +11,16 @@ defined('JPATH_BASE') or die;
 
 $data = $displayData;
 
-if ($data['view'] instanceof ModulesViewModules && JFactory::getApplication()->input->get('layout', '', 'cmd') !== 'modal')
-{
-	// Add the client selector before the form filters.
-	$clientIdField = $data['view']->filterForm->getField('client_id');
-	?>
-	<div class="js-stools-field-filter js-stools-client_id">
-		<?php echo $clientIdField->input; ?>
-	</div>
-	<?php
+if ($data['view'] instanceof ModulesViewModules && JFactory::getApplication()->input->get('layout', '',
+        'cmd') !== 'modal'
+) {
+    // Add the client selector before the form filters.
+    $clientIdField = $data['view']->filterForm->getField('client_id');
+    ?>
+    <div class="js-stools-field-filter js-stools-client_id">
+        <?php echo $clientIdField->input; ?>
+    </div>
+    <?php
 }
 
 // Display the main joomla layout.

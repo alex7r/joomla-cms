@@ -16,57 +16,53 @@ defined('_JEXEC') or die;
  */
 class PlgButtonImage extends JPlugin
 {
-	/**
-	 * Load the language file on instantiation.
-	 *
-	 * @var    boolean
-	 * @since  3.1
-	 */
-	protected $autoloadLanguage = true;
+    /**
+     * Load the language file on instantiation.
+     *
+     * @var    boolean
+     * @since  3.1
+     */
+    protected $autoloadLanguage = true;
 
-	/**
-	 * Display the button.
-	 *
-	 * @param   string  $name   The name of the button to display.
-	 * @param   string  $asset  The name of the asset being edited.
-	 * @param   integer $author The id of the author owning the asset being edited.
-	 *
-	 * @return  array    A two element array of (imageName, textToInsert) or false if not authorised.
-	 */
-	public function onDisplay($name, $asset, $author)
-	{
-		$app       = JFactory::getApplication();
-		$user      = JFactory::getUser();
-		$extension = $app->input->get('option');
+    /**
+     * Display the button.
+     *
+     * @param   string  $name   The name of the button to display.
+     * @param   string  $asset  The name of the asset being edited.
+     * @param   integer $author The id of the author owning the asset being edited.
+     *
+     * @return  array    A two element array of (imageName, textToInsert) or false if not authorised.
+     */
+    public function onDisplay($name, $asset, $author)
+    {
+        $app       = JFactory::getApplication();
+        $user      = JFactory::getUser();
+        $extension = $app->input->get('option');
 
-		if ($asset == '')
-		{
-			$asset = $extension;
-		}
+        if ($asset == '') {
+            $asset = $extension;
+        }
 
-		if ($user->authorise('core.edit', $asset)
-			|| $user->authorise('core.create', $asset)
-			|| (count($user->getAuthorisedCategories($asset, 'core.create')) > 0)
-			|| ($user->authorise('core.edit.own', $asset) && $author == $user->id)
-			|| (count($user->getAuthorisedCategories($extension, 'core.edit')) > 0)
-			|| (count($user->getAuthorisedCategories($extension, 'core.edit.own')) > 0 && $author == $user->id)
-		)
-		{
-			$link = 'index.php?option=com_media&amp;view=images&amp;tmpl=component&amp;e_name=' . $name . '&amp;asset=' . $asset . '&amp;author=' . $author;
+        if ($user->authorise('core.edit', $asset) || $user->authorise('core.create',
+                $asset) || (count($user->getAuthorisedCategories($asset,
+                    'core.create')) > 0) || ($user->authorise('core.edit.own',
+                    $asset) && $author == $user->id) || (count($user->getAuthorisedCategories($extension,
+                    'core.edit')) > 0) || (count($user->getAuthorisedCategories($extension,
+                    'core.edit.own')) > 0 && $author == $user->id)
+        ) {
+            $link = 'index.php?option=com_media&amp;view=images&amp;tmpl=component&amp;e_name=' . $name . '&amp;asset=' . $asset . '&amp;author=' . $author;
 
-			$button          = new JObject;
-			$button->modal   = true;
-			$button->class   = 'btn';
-			$button->link    = $link;
-			$button->text    = JText::_('PLG_IMAGE_BUTTON_IMAGE');
-			$button->name    = 'pictures';
-			$button->options = "{handler: 'iframe', size: {x: 800, y: 500}}";
+            $button          = new JObject;
+            $button->modal   = true;
+            $button->class   = 'btn';
+            $button->link    = $link;
+            $button->text    = JText::_('PLG_IMAGE_BUTTON_IMAGE');
+            $button->name    = 'pictures';
+            $button->options = "{handler: 'iframe', size: {x: 800, y: 500}}";
 
-			return $button;
-		}
-		else
-		{
-			return false;
-		}
-	}
+            return $button;
+        } else {
+            return false;
+        }
+    }
 }

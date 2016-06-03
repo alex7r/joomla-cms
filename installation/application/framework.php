@@ -20,13 +20,9 @@ const JDEBUG = false;
  * Check if a configuration file already exists.
  */
 
-if (file_exists(JPATH_CONFIGURATION . '/configuration.php')
-	&& (filesize(JPATH_CONFIGURATION . '/configuration.php') > 10)
-	&& !file_exists(JPATH_INSTALLATION . '/index.php')
-)
-{
-	header('Location: ../index.php');
-	exit();
+if (file_exists(JPATH_CONFIGURATION . '/configuration.php') && (filesize(JPATH_CONFIGURATION . '/configuration.php') > 10) && !file_exists(JPATH_INSTALLATION . '/index.php')) {
+    header('Location: ../index.php');
+    exit();
 }
 
 /*

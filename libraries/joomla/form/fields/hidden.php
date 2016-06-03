@@ -18,31 +18,31 @@ defined('JPATH_PLATFORM') or die;
  */
 class JFormFieldHidden extends JFormField
 {
-	/**
-	 * The form field type.
-	 *
-	 * @var    string
-	 * @since  11.1
-	 */
-	protected $type = 'Hidden';
+    /**
+     * The form field type.
+     *
+     * @var    string
+     * @since  11.1
+     */
+    protected $type = 'Hidden';
 
-	/**
-	 * Method to get the field input markup.
-	 *
-	 * @return  string  The field input markup.
-	 *
-	 * @since   11.1
-	 */
-	protected function getInput()
-	{
-		// Initialize some field attributes.
-		$class    = !empty($this->class) ? ' class="' . $this->class . '"' : '';
-		$disabled = $this->disabled ? ' disabled' : '';
+    /**
+     * Method to get the field input markup.
+     *
+     * @return  string  The field input markup.
+     *
+     * @since   11.1
+     */
+    protected function getInput()
+    {
+        // Initialize some field attributes.
+        $class    = !empty($this->class) ? ' class="' . $this->class . '"' : '';
+        $disabled = $this->disabled ? ' disabled' : '';
 
-		// Initialize JavaScript field attributes.
-		$onchange = $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
+        // Initialize JavaScript field attributes.
+        $onchange = $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
 
-		return '<input type="hidden" name="' . $this->name . '" id="' . $this->id . '" value="'
-		. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $class . $disabled . $onchange . ' />';
-	}
+        return '<input type="hidden" name="' . $this->name . '" id="' . $this->id . '" value="' . htmlspecialchars($this->value,
+            ENT_COMPAT, 'UTF-8') . '"' . $class . $disabled . $onchange . ' />';
+    }
 }

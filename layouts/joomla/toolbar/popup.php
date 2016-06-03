@@ -18,6 +18,6 @@ $name   = $displayData['name'];
 ?>
 <button value="<?php echo $doTask; ?>" class="btn btn-small modal" data-toggle="modal"
         data-target="#modal-<?php echo $name; ?>">
-	<span class="<?php echo $class; ?>"></span>
-	<?php echo $text; ?>
+    <span class="<?php echo $class; ?>"></span>
+    <?php echo $text; ?>
 </button>

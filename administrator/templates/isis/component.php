@@ -32,31 +32,28 @@ JHtml::_('bootstrap.loadCss', false, $this->direction);
 // Load specific language related CSS
 $file = 'language/' . $lang->getTag() . '/' . $lang->getTag() . '.css';
 
-if (is_file($file))
-{
-	$doc->addStyleSheet($file);
+if (is_file($file)) {
+    $doc->addStyleSheet($file);
 }
 
 // Load custom.css
 $file = 'templates/' . $this->template . '/css/custom.css';
 
-if (is_file($file))
-{
-	$doc->addStyleSheetVersion($file);
+if (is_file($file)) {
+    $doc->addStyleSheetVersion($file);
 }
 
 // Link color
-if ($this->params->get('linkColor'))
-{
-	$doc->addStyleDeclaration('a { color: ' . $this->params->get('linkColor') . '; }');
+if ($this->params->get('linkColor')) {
+    $doc->addStyleDeclaration('a { color: ' . $this->params->get('linkColor') . '; }');
 }
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">
 <head>
-	<jdoc:include type="head"/>
-	<!--[if lt IE 9]>
-	<script src="<?php echo JUri::root(true); ?>/media/jui/js/html5.js"></script><![endif]-->
+    <jdoc:include type="head"/>
+    <!--[if lt IE 9]>
+    <script src="<?php echo JUri::root(true); ?>/media/jui/js/html5.js"></script><![endif]-->
 </head>
 <body class="contentpane component">
 <jdoc:include type="message"/>

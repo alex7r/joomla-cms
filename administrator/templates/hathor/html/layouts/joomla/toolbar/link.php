@@ -16,6 +16,6 @@ $text   = $displayData['text'];
 ?>
 
 <a href="<?php echo $doTask; ?>;" class="toolbar">
-	<span class="<?php echo $class; ?>"></span>
-	<?php echo $text; ?>
+    <span class="<?php echo $class; ?>"></span>
+    <?php echo $text; ?>
 </a>

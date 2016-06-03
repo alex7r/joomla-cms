@@ -22,25 +22,23 @@ extract($displayData);
  *    $position     : (string)  The tooltip position. Bottom for alias
  */
 
-$classes = array_filter((array) $classes);
+$classes = array_filter((array)$classes);
 
 $id    = $for . '-lbl';
 $title = '';
 
-if (!empty($description))
-{
-	JHtml::_('bootstrap.tooltip');
-	$classes[] = 'hasTooltip';
-	$title     = ' title="' . JHtml::tooltipText(trim($text, ':'), $description, 0) . '"';
+if (!empty($description)) {
+    JHtml::_('bootstrap.tooltip');
+    $classes[] = 'hasTooltip';
+    $title     = ' title="' . JHtml::tooltipText(trim($text, ':'), $description, 0) . '"';
 }
 
-if ($required)
-{
-	$classes[] = 'required';
+if ($required) {
+    $classes[] = 'required';
 }
 
 ?>
 <label id="<?php echo $id; ?>" for="<?php echo $for; ?>"
        class="<?php echo implode(' ', $classes); ?>"<?php echo $title; ?><?php echo $position; ?>>
-	<?php echo $text; ?><?php if ($required) : ?><span class="star">&#160;*</span><?php endif; ?>
+    <?php echo $text; ?><?php if ($required) : ?><span class="star">&#160;*</span><?php endif; ?>
 </label>

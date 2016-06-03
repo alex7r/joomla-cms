@@ -17,6 +17,6 @@ $text   = $displayData['text'];
 
 ?>
 <button onclick="<?php echo $doTask; ?>" class="btn btn-small">
-	<span class="<?php echo $class; ?>"></span>
-	<?php echo $text; ?>
+    <span class="<?php echo $class; ?>"></span>
+    <?php echo $text; ?>
 </button>

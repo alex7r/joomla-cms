@@ -46,53 +46,54 @@ JFactory::getDocument()->addScriptDeclaration('
 ');
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_banners&layout=edit&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo JRoute::_('index.php?option=com_banners&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="banner-form" class="form-validate">
 
-	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
+    <?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
-	<div class="form-horizontal">
-		<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
+    <div class="form-horizontal">
+        <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
 
-		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('COM_BANNERS_BANNER_DETAILS')); ?>
-		<div class="row-fluid">
-			<div class="span9">
-				<?php echo $this->form->getControlGroup('type'); ?>
-				<div id="image">
-					<?php echo $this->form->getControlGroups('image'); ?>
-				</div>
-				<div id="custom">
-					<?php echo $this->form->getControlGroup('custombannercode'); ?>
-				</div>
-				<?php
-				echo $this->form->getControlGroup('clickurl');
-				echo $this->form->getControlGroup('description');
-				?>
-			</div>
-			<div class="span3">
-				<?php echo JLayoutHelper::render('joomla.edit.global', $this); ?>
-			</div>
-		</div>
-		<?php echo JHtml::_('bootstrap.endTab'); ?>
+        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('COM_BANNERS_BANNER_DETAILS')); ?>
+        <div class="row-fluid">
+            <div class="span9">
+                <?php echo $this->form->getControlGroup('type'); ?>
+                <div id="image">
+                    <?php echo $this->form->getControlGroups('image'); ?>
+                </div>
+                <div id="custom">
+                    <?php echo $this->form->getControlGroup('custombannercode'); ?>
+                </div>
+                <?php
+                echo $this->form->getControlGroup('clickurl');
+                echo $this->form->getControlGroup('description');
+                ?>
+            </div>
+            <div class="span3">
+                <?php echo JLayoutHelper::render('joomla.edit.global', $this); ?>
+            </div>
+        </div>
+        <?php echo JHtml::_('bootstrap.endTab'); ?>
 
-		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'otherparams', JText::_('COM_BANNERS_GROUP_LABEL_BANNER_DETAILS')); ?>
-		<?php echo $this->form->getControlGroups('otherparams'); ?>
-		<?php echo JHtml::_('bootstrap.endTab'); ?>
+        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'otherparams',
+            JText::_('COM_BANNERS_GROUP_LABEL_BANNER_DETAILS')); ?>
+        <?php echo $this->form->getControlGroups('otherparams'); ?>
+        <?php echo JHtml::_('bootstrap.endTab'); ?>
 
-		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('JGLOBAL_FIELDSET_PUBLISHING')); ?>
-		<div class="row-fluid form-horizontal-desktop">
-			<div class="span6">
-				<?php echo JLayoutHelper::render('joomla.edit.publishingdata', $this); ?>
-			</div>
-			<div class="span6">
-				<?php echo $this->form->getControlGroups('metadata'); ?>
-			</div>
-		</div>
-		<?php echo JHtml::_('bootstrap.endTab'); ?>
+        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('JGLOBAL_FIELDSET_PUBLISHING')); ?>
+        <div class="row-fluid form-horizontal-desktop">
+            <div class="span6">
+                <?php echo JLayoutHelper::render('joomla.edit.publishingdata', $this); ?>
+            </div>
+            <div class="span6">
+                <?php echo $this->form->getControlGroups('metadata'); ?>
+            </div>
+        </div>
+        <?php echo JHtml::_('bootstrap.endTab'); ?>
 
-		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
-	</div>
+        <?php echo JHtml::_('bootstrap.endTabSet'); ?>
+    </div>
 
-	<input type="hidden" name="task" value=""/>
-	<?php echo JHtml::_('form.token'); ?>
+    <input type="hidden" name="task" value=""/>
+    <?php echo JHtml::_('form.token'); ?>
 </form>

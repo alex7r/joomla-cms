@@ -15,8 +15,7 @@ defined('JPATH_BASE') or die;
  * None
  */
 
-JFactory::getDocument()->addScriptDeclaration(
-	'
+JFactory::getDocument()->addScriptDeclaration('
 		jQuery(document).ready(function($){
 			if ($("#batch-category-id").length){var batchSelector = $("#batch-category-id");}
 			if ($("#batch-menu-id").length){var batchSelector = $("#batch-menu-id");}
@@ -32,14 +31,14 @@ JFactory::getDocument()->addScriptDeclaration(
 				});
 			}
 		});
-			'
-);
+			');
 ?>
 <label id="batch-language-lbl" for="batch-language-id" class="modalTooltip"
-       title="<?php echo JHtml::_('tooltipText', 'JLIB_HTML_BATCH_LANGUAGE_LABEL', 'JLIB_HTML_BATCH_LANGUAGE_LABEL_DESC'); ?>">
-	<?php echo JText::_('JLIB_HTML_BATCH_LANGUAGE_LABEL'); ?>
+       title="<?php echo JHtml::_('tooltipText', 'JLIB_HTML_BATCH_LANGUAGE_LABEL',
+           'JLIB_HTML_BATCH_LANGUAGE_LABEL_DESC'); ?>">
+    <?php echo JText::_('JLIB_HTML_BATCH_LANGUAGE_LABEL'); ?>
 </label>
 <select name="batch[language_id]" class="inputbox" id="batch-language-id">
-	<option value=""><?php echo JText::_('JLIB_HTML_BATCH_LANGUAGE_NOCHANGE'); ?></option>
-	<?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text'); ?>
+    <option value=""><?php echo JText::_('JLIB_HTML_BATCH_LANGUAGE_NOCHANGE'); ?></option>
+    <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text'); ?>
 </select>

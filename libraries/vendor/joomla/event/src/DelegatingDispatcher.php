@@ -15,38 +15,38 @@ namespace Joomla\Event;
  */
 final class DelegatingDispatcher implements DispatcherInterface
 {
-	/**
-	 * The delegated dispatcher.
-	 *
-	 * @var    DispatcherInterface
-	 *
-	 * @since  1.0
-	 */
-	private $dispatcher;
+    /**
+     * The delegated dispatcher.
+     *
+     * @var    DispatcherInterface
+     *
+     * @since  1.0
+     */
+    private $dispatcher;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param   DispatcherInterface $dispatcher The delegated dispatcher.
-	 *
-	 * @since   1.0
-	 */
-	public function __construct(DispatcherInterface $dispatcher)
-	{
-		$this->dispatcher = $dispatcher;
-	}
+    /**
+     * Constructor.
+     *
+     * @param   DispatcherInterface $dispatcher The delegated dispatcher.
+     *
+     * @since   1.0
+     */
+    public function __construct(DispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
 
-	/**
-	 * Trigger an event.
-	 *
-	 * @param   EventInterface|string $event The event object or name.
-	 *
-	 * @return  EventInterface  The event after being passed through all listeners.
-	 *
-	 * @since   1.0
-	 */
-	public function triggerEvent($event)
-	{
-		return $this->dispatcher->triggerEvent($event);
-	}
+    /**
+     * Trigger an event.
+     *
+     * @param   EventInterface|string $event The event object or name.
+     *
+     * @return  EventInterface  The event after being passed through all listeners.
+     *
+     * @since   1.0
+     */
+    public function triggerEvent($event)
+    {
+        return $this->dispatcher->triggerEvent($event);
+    }
 }

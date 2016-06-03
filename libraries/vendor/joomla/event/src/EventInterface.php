@@ -16,21 +16,21 @@ namespace Joomla\Event;
  */
 interface EventInterface
 {
-	/**
-	 * Get the event name.
-	 *
-	 * @return  string  The event name.
-	 *
-	 * @since   1.0
-	 */
-	public function getName();
+    /**
+     * Get the event name.
+     *
+     * @return  string  The event name.
+     *
+     * @since   1.0
+     */
+    public function getName();
 
-	/**
-	 * Tell if the event propagation is stopped.
-	 *
-	 * @return  boolean  True if stopped, false otherwise.
-	 *
-	 * @since   1.0
-	 */
-	public function isStopped();
+    /**
+     * Tell if the event propagation is stopped.
+     *
+     * @return  boolean  True if stopped, false otherwise.
+     *
+     * @since   1.0
+     */
+    public function isStopped();
 }

@@ -18,24 +18,24 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldComponents extends JFormFieldList
 {
-	/**
-	 * The form field type.
-	 *
-	 * @var     string
-	 * @since   3.6.0
-	 */
-	protected $type = 'Components';
+    /**
+     * The form field type.
+     *
+     * @var     string
+     * @since   3.6.0
+     */
+    protected $type = 'Components';
 
-	/**
-	 * Method to get the field options.
-	 *
-	 * @return  array  The field option objects
-	 *
-	 * @since   3.6.0
-	 */
-	protected function getOptions()
-	{
-		// Merge any additional options in the XML definition.
-		return array_merge(parent::getOptions(), UsersHelperDebug::getComponents());
-	}
+    /**
+     * Method to get the field options.
+     *
+     * @return  array  The field option objects
+     *
+     * @since   3.6.0
+     */
+    protected function getOptions()
+    {
+        // Merge any additional options in the XML definition.
+        return array_merge(parent::getOptions(), UsersHelperDebug::getComponents());
+    }
 }

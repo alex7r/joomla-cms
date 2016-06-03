@@ -15,6 +15,6 @@ $text   = $displayData['text'];
 ?>
 
 <a href="javascript:void(0)" onclick="<?php echo $doTask; ?>" rel="help" class="toolbar">
-	<span class="icon-32-help"></span>
-	<?php echo $text; ?>
+    <span class="icon-32-help"></span>
+    <?php echo $text; ?>
 </a>

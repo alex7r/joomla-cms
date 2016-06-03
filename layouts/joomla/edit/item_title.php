@@ -16,9 +16,9 @@ $name  = $displayData->getForm()->getValue('name');
 ?>
 
 <?php if ($title) : ?>
-	<h4><?php echo $title; ?></h4>
+    <h4><?php echo $title; ?></h4>
 <?php endif; ?>
 
 <?php if ($name) : ?>
-	<h4><?php echo $name; ?></h4>
+    <h4><?php echo $name; ?></h4>
 <?php endif;

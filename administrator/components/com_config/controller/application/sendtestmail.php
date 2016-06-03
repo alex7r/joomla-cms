@@ -15,33 +15,31 @@ defined('_JEXEC') or die;
  */
 class ConfigControllerApplicationSendtestmail extends JControllerBase
 {
-	/**
-	 * Method to send the test mail.
-	 *
-	 * @return  string
-	 *
-	 * @since   3.5
-	 */
-	public function execute()
-	{
-		if (!JSession::checkToken('get'))
-		{
-			$this->app->enqueueMessage(JText::_('JINVALID_TOKEN'));
-			$this->app->redirect('index.php');
-		}
+    /**
+     * Method to send the test mail.
+     *
+     * @return  string
+     *
+     * @since   3.5
+     */
+    public function execute()
+    {
+        if (!JSession::checkToken('get')) {
+            $this->app->enqueueMessage(JText::_('JINVALID_TOKEN'));
+            $this->app->redirect('index.php');
+        }
 
-		if (!JFactory::getUser()->authorise('core.admin'))
-		{
-			$this->app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'));
-			$this->app->redirect('index.php');
-		}
+        if (!JFactory::getUser()->authorise('core.admin')) {
+            $this->app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'));
+            $this->app->redirect('index.php');
+        }
 
-		$this->app->mimeType = 'application/json';
-		$this->app->setHeader('Content-Type', $this->app->mimeType . '; charset=' . $this->app->charSet);
-		$this->app->sendHeaders();
+        $this->app->mimeType = 'application/json';
+        $this->app->setHeader('Content-Type', $this->app->mimeType . '; charset=' . $this->app->charSet);
+        $this->app->sendHeaders();
 
-		$model = new ConfigModelApplication;
-		echo new JResponseJson($model->sendTestMail());
-		$this->app->close();
-	}
+        $model = new ConfigModelApplication;
+        echo new JResponseJson($model->sendTestMail());
+        $this->app->close();
+    }
 }

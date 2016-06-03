@@ -13,12 +13,12 @@ $data = $displayData;
 
 ?>
 <textarea
-	name="<?php echo $data->name; ?>"
-	id="<?php echo $data->id; ?>"
-	cols="<?php echo $data->cols; ?>"
-	rows="<?php echo $data->rows; ?>"
-	style="width: <?php echo $data->width; ?>; height: <?php echo $data->height; ?>;"
-	class="mce_editable"
+    name="<?php echo $data->name; ?>"
+    id="<?php echo $data->id; ?>"
+    cols="<?php echo $data->cols; ?>"
+    rows="<?php echo $data->rows; ?>"
+    style="width: <?php echo $data->width; ?>; height: <?php echo $data->height; ?>;"
+    class="mce_editable"
 >
 	<?php echo $data->content; ?>
 </textarea>

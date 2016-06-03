@@ -19,58 +19,56 @@ defined('_JEXEC') or die;
  */
 class ModLoginHelper
 {
-	/**
-	 * Retrieve the url where the user should be returned after logging in
-	 *
-	 * @param   \Joomla\Registry\Registry $params module parameters
-	 * @param   string                    $type   return type
-	 *
-	 * @return string
-	 */
-	public static function getReturnUrl($params, $type)
-	{
-		$app  = JFactory::getApplication();
-		$item = $app->getMenu()->getItem($params->get($type));
+    /**
+     * Retrieve the url where the user should be returned after logging in
+     *
+     * @param   \Joomla\Registry\Registry $params module parameters
+     * @param   string                    $type   return type
+     *
+     * @return string
+     */
+    public static function getReturnUrl($params, $type)
+    {
+        $app  = JFactory::getApplication();
+        $item = $app->getMenu()->getItem($params->get($type));
 
-		// Stay on the same page
-		$url = JUri::getInstance()->toString();
+        // Stay on the same page
+        $url = JUri::getInstance()->toString();
 
-		if ($item)
-		{
-			$lang = '';
+        if ($item) {
+            $lang = '';
 
-			if (JLanguageMultilang::isEnabled() && $item->language !== '*')
-			{
-				$lang = '&lang=' . $item->language;
-			}
+            if (JLanguageMultilang::isEnabled() && $item->language !== '*') {
+                $lang = '&lang=' . $item->language;
+            }
 
-			$url = 'index.php?Itemid=' . $item->id . $lang;
-		}
+            $url = 'index.php?Itemid=' . $item->id . $lang;
+        }
 
-		return base64_encode($url);
-	}
+        return base64_encode($url);
+    }
 
-	/**
-	 * Returns the current users type
-	 *
-	 * @return string
-	 */
-	public static function getType()
-	{
-		$user = JFactory::getUser();
+    /**
+     * Returns the current users type
+     *
+     * @return string
+     */
+    public static function getType()
+    {
+        $user = JFactory::getUser();
 
-		return (!$user->get('guest')) ? 'logout' : 'login';
-	}
+        return (!$user->get('guest')) ? 'logout' : 'login';
+    }
 
-	/**
-	 * Get list of available two factor methods
-	 *
-	 * @return array
-	 */
-	public static function getTwoFactorMethods()
-	{
-		require_once JPATH_ADMINISTRATOR . '/components/com_users/helpers/users.php';
+    /**
+     * Get list of available two factor methods
+     *
+     * @return array
+     */
+    public static function getTwoFactorMethods()
+    {
+        require_once JPATH_ADMINISTRATOR . '/components/com_users/helpers/users.php';
 
-		return UsersHelper::getTwoFactorMethods();
-	}
+        return UsersHelper::getTwoFactorMethods();
+    }
 }

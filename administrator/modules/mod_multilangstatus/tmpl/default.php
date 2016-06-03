@@ -22,27 +22,22 @@ JFactory::getDocument()->addScriptDeclaration("
 ");
 ?>
 
-	<div class="btn-group multilanguage">
-		<a class="btn btn-link"
-		   data-toggle="modal"
-		   href="#multiLangModal"
-		   title="<?php echo JText::_('MOD_MULTILANGSTATUS'); ?>"
-		   role="button">
-			<span class="icon-comment"></span><?php echo JText::_('MOD_MULTILANGSTATUS'); ?>
-		</a>
-	</div>
+    <div class="btn-group multilanguage">
+        <a class="btn btn-link"
+           data-toggle="modal"
+           href="#multiLangModal"
+           title="<?php echo JText::_('MOD_MULTILANGSTATUS'); ?>"
+           role="button">
+            <span class="icon-comment"></span><?php echo JText::_('MOD_MULTILANGSTATUS'); ?>
+        </a>
+    </div>
 
-<?php echo JHtml::_(
-	'bootstrap.renderModal',
-	'multiLangModal',
-	array(
-		'title'      => JText::_('MOD_MULTILANGSTATUS'),
-		'url'        => JRoute::_('index.php?option=com_languages&view=multilangstatus&tmpl=component'),
-		'height'     => '400px',
-		'width'      => '800px',
-		'bodyHeight' => '70',
-		'modalWidth' => '80',
-		'footer'     => '<button class="btn" data-dismiss="modal" type="button" aria-hidden="true">'
-			. JText::_('JTOOLBAR_CLOSE') . '</button>',
-	)
-);
+<?php echo JHtml::_('bootstrap.renderModal', 'multiLangModal', array(
+        'title'      => JText::_('MOD_MULTILANGSTATUS'),
+        'url'        => JRoute::_('index.php?option=com_languages&view=multilangstatus&tmpl=component'),
+        'height'     => '400px',
+        'width'      => '800px',
+        'bodyHeight' => '70',
+        'modalWidth' => '80',
+        'footer'     => '<button class="btn" data-dismiss="modal" type="button" aria-hidden="true">' . JText::_('JTOOLBAR_CLOSE') . '</button>',
+    ));

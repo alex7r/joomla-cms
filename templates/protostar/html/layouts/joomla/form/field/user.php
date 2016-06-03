@@ -48,15 +48,11 @@ extract($displayData);
  */
 
 // Set the link for the user selection page
-$link = 'index.php?option=com_users&amp;view=users&amp;layout=modal&amp;tmpl=component&amp;required='
-	. ($required ? 1 : 0) . '&amp;field={field-user-id}'
-	. (isset($groups) ? ('&amp;groups=' . base64_encode(json_encode($groups))) : '')
-	. (isset($excluded) ? ('&amp;excluded=' . base64_encode(json_encode($excluded))) : '');
+$link = 'index.php?option=com_users&amp;view=users&amp;layout=modal&amp;tmpl=component&amp;required=' . ($required ? 1 : 0) . '&amp;field={field-user-id}' . (isset($groups) ? ('&amp;groups=' . base64_encode(json_encode($groups))) : '') . (isset($excluded) ? ('&amp;excluded=' . base64_encode(json_encode($excluded))) : '');
 
 // Invalidate the input value if no user selected
-if (JText::_('JLIB_FORM_SELECT_USER') == htmlspecialchars($userName, ENT_COMPAT, 'UTF-8'))
-{
-	$userName = "";
+if (JText::_('JLIB_FORM_SELECT_USER') == htmlspecialchars($userName, ENT_COMPAT, 'UTF-8')) {
+    $userName = "";
 }
 
 JHtml::script('jui/fielduser.min.js', false, true, false, false, true);
@@ -71,31 +67,27 @@ JHtml::script('jui/fielduser.min.js', false, true, false, false, true);
      data-input-name=".field-user-input-name"
      data-button-select=".button-select"
 >
-	<div class="input-append">
-		<input
-			type="text" id="<?php echo $id; ?>"
-			value="<?php echo htmlspecialchars($userName, ENT_COMPAT, 'UTF-8'); ?>"
-			placeholder="<?php echo JText::_('JLIB_FORM_SELECT_USER'); ?>"
-			readonly
-			class="field-user-input-name <?php echo $class ? (string) $class : '' ?>"
-			<?php echo $size ? ' size="' . (int) $size . '"' : ''; ?>
-			<?php echo $required ? 'required' : ''; ?>/>
-		<?php if (!$readonly) : ?>
-			<a class="btn btn-primary button-select" title="<?php echo JText::_('JLIB_FORM_CHANGE_USER') ?>"><span
-					class="icon-user"></span></a>
-			<?php echo JHtml::_(
-				'bootstrap.renderModal',
-				'userModal_' . $id,
-				array(
-					'title'       => JText::_('JLIB_FORM_CHANGE_USER'),
-					'closeButton' => true,
-					'footer'      => '<button type="button" class="btn" data-dismiss="modal">' . JText::_('JCANCEL') . '</button>'
-				)
-			); ?>
-		<?php endif; ?>
-	</div>
-	<?php // Create the real field, hidden, that stored the user id. ?>
-	<input type="hidden" id="<?php echo $id; ?>_id" name="<?php echo $name; ?>" value="<?php echo (int) $value; ?>"
-	       class="field-user-input <?php echo $class ? (string) $class : '' ?>"
-	       data-onchange="<?php echo $this->escape($onchange); ?>"/>
+    <div class="input-append">
+        <input
+            type="text" id="<?php echo $id; ?>"
+            value="<?php echo htmlspecialchars($userName, ENT_COMPAT, 'UTF-8'); ?>"
+            placeholder="<?php echo JText::_('JLIB_FORM_SELECT_USER'); ?>"
+            readonly
+            class="field-user-input-name <?php echo $class ? (string)$class : '' ?>"
+            <?php echo $size ? ' size="' . (int)$size . '"' : ''; ?>
+            <?php echo $required ? 'required' : ''; ?>/>
+        <?php if (!$readonly) : ?>
+            <a class="btn btn-primary button-select" title="<?php echo JText::_('JLIB_FORM_CHANGE_USER') ?>"><span
+                    class="icon-user"></span></a>
+            <?php echo JHtml::_('bootstrap.renderModal', 'userModal_' . $id, array(
+                    'title'       => JText::_('JLIB_FORM_CHANGE_USER'),
+                    'closeButton' => true,
+                    'footer'      => '<button type="button" class="btn" data-dismiss="modal">' . JText::_('JCANCEL') . '</button>'
+                )); ?>
+        <?php endif; ?>
+    </div>
+    <?php // Create the real field, hidden, that stored the user id. ?>
+    <input type="hidden" id="<?php echo $id; ?>_id" name="<?php echo $name; ?>" value="<?php echo (int)$value; ?>"
+           class="field-user-input <?php echo $class ? (string)$class : '' ?>"
+           data-onchange="<?php echo $this->escape($onchange); ?>"/>
 </div>

@@ -20,25 +20,25 @@ require_once __DIR__ . '/../../helpers/installer.php';
  */
 class JFormFieldLocation extends JFormFieldList
 {
-	/**
-	 * The form field type.
-	 *
-	 * @var       string
-	 * @since  3.5
-	 */
-	protected $type = 'Location';
+    /**
+     * The form field type.
+     *
+     * @var       string
+     * @since  3.5
+     */
+    protected $type = 'Location';
 
-	/**
-	 * Method to get the field options.
-	 *
-	 * @return  array  The field option objects.
-	 *
-	 * @since   3.5
-	 */
-	public function getOptions()
-	{
-		$options = InstallerHelper::getClientOptions();
+    /**
+     * Method to get the field options.
+     *
+     * @return  array  The field option objects.
+     *
+     * @since   3.5
+     */
+    public function getOptions()
+    {
+        $options = InstallerHelper::getClientOptions();
 
-		return array_merge(parent::getOptions(), $options);
-	}
+        return array_merge(parent::getOptions(), $options);
+    }
 }

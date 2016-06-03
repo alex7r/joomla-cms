@@ -16,47 +16,47 @@ JHtml::_('behavior.switcher');
 ?>
 
 <form action="<?php echo JRoute::_('index.php'); ?>" method="post" name="adminForm" id="adminForm">
-	<div id="config-document">
-		<div id="page-site" class="tab">
-			<div class="noshow">
-				<div class="width-100">
-					<?php echo $this->loadTemplate('system'); ?>
-				</div>
-			</div>
-		</div>
+    <div id="config-document">
+        <div id="page-site" class="tab">
+            <div class="noshow">
+                <div class="width-100">
+                    <?php echo $this->loadTemplate('system'); ?>
+                </div>
+            </div>
+        </div>
 
-		<div id="page-phpsettings" class="tab">
-			<div class="noshow">
-				<div class="width-60">
-					<?php echo $this->loadTemplate('phpsettings'); ?>
-				</div>
-			</div>
-		</div>
+        <div id="page-phpsettings" class="tab">
+            <div class="noshow">
+                <div class="width-60">
+                    <?php echo $this->loadTemplate('phpsettings'); ?>
+                </div>
+            </div>
+        </div>
 
-		<div id="page-config" class="tab">
-			<div class="noshow">
-				<div class="width-60">
-					<?php echo $this->loadTemplate('config'); ?>
-				</div>
-			</div>
-		</div>
+        <div id="page-config" class="tab">
+            <div class="noshow">
+                <div class="width-60">
+                    <?php echo $this->loadTemplate('config'); ?>
+                </div>
+            </div>
+        </div>
 
-		<div id="page-directory" class="tab">
-			<div class="noshow">
-				<div class="width-60">
-					<?php echo $this->loadTemplate('directory'); ?>
-				</div>
-			</div>
-		</div>
+        <div id="page-directory" class="tab">
+            <div class="noshow">
+                <div class="width-60">
+                    <?php echo $this->loadTemplate('directory'); ?>
+                </div>
+            </div>
+        </div>
 
-		<div id="page-phpinfo" class="tab">
-			<div class="noshow">
-				<div class="width-100">
-					<?php echo $this->loadTemplate('phpinfo'); ?>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div id="page-phpinfo" class="tab">
+            <div class="noshow">
+                <div class="width-100">
+                    <?php echo $this->loadTemplate('phpinfo'); ?>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="clr"></div>
+    <div class="clr"></div>
 </form>

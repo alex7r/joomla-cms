@@ -13,6 +13,6 @@ $text = JText::_('JTOOLBAR_NEW');
 ?>
 <button onclick="location.href='index.php?option=com_modules&amp;view=select'" class="btn btn-small btn-success"
         title="<?php echo $text; ?>">
-	<span class="icon-plus icon-white"></span>
-	<?php echo $text; ?>
+    <span class="icon-plus icon-white"></span>
+    <?php echo $text; ?>
 </button>

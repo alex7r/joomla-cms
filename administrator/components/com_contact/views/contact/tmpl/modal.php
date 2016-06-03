@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 JHtml::_('bootstrap.tooltip', '.hasTooltip', array('placement' => 'bottom'));
 
-$function = JFactory::getApplication()->input->getCmd('function', 'jEditContact_' . (int) $this->item->id);
+$function = JFactory::getApplication()->input->getCmd('function', 'jEditContact_' . (int)$this->item->id);
 
 // Function to update input title when changed
 JFactory::getDocument()->addScriptDeclaration('
@@ -29,6 +29,6 @@ JFactory::getDocument()->addScriptDeclaration('
 <button id="closeBtn" type="button" class="hidden" onclick="Joomla.submitbutton('contact.cancel');"></button>
 
 <div class="container-popup">
-	<?php $this->setLayout('edit'); ?>
-	<?php echo $this->loadTemplate(); ?>
+    <?php $this->setLayout('edit'); ?>
+    <?php echo $this->loadTemplate(); ?>
 </div>

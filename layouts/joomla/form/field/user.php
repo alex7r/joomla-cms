@@ -47,15 +47,13 @@ extract($displayData);
  * @var   mixed   $exclude        The users to exclude from the list of users
  */
 
-$link = 'index.php?option=com_users&amp;view=users&amp;layout=modal&amp;tmpl=component&amp;required='
-	. ($required ? 1 : 0) . '&amp;field=' . htmlspecialchars($id, ENT_COMPAT, 'UTF-8')
-	. (isset($groups) ? ('&amp;groups=' . base64_encode(json_encode($groups))) : '')
-	. (isset($excluded) ? ('&amp;excluded=' . base64_encode(json_encode($excluded))) : '');
+$link = 'index.php?option=com_users&amp;view=users&amp;layout=modal&amp;tmpl=component&amp;required=' . ($required ? 1 : 0) . '&amp;field=' . htmlspecialchars($id,
+        ENT_COMPAT,
+        'UTF-8') . (isset($groups) ? ('&amp;groups=' . base64_encode(json_encode($groups))) : '') . (isset($excluded) ? ('&amp;excluded=' . base64_encode(json_encode($excluded))) : '');
 
 // Invalidate the input value if no user selected
-if (JText::_('JLIB_FORM_SELECT_USER') == htmlspecialchars($userName, ENT_COMPAT, 'UTF-8'))
-{
-	$userName = "";
+if (JText::_('JLIB_FORM_SELECT_USER') == htmlspecialchars($userName, ENT_COMPAT, 'UTF-8')) {
+    $userName = "";
 }
 
 // Load the modal behavior script.
@@ -65,21 +63,21 @@ JHtml::script('jui/fielduser.min.js', false, true, false, false, true);
 ?>
 <?php // Create a dummy text field with the user name. ?>
 <div class="input-append">
-	<input
-		type="text" id="<?php echo $id; ?>"
-		value="<?php echo htmlspecialchars($userName, ENT_COMPAT, 'UTF-8'); ?>"
-		placeholder="<?php echo JText::_('JLIB_FORM_SELECT_USER'); ?>"
-		readonly
-		<?php echo $size ? ' size="' . (int) $size . '"' : ''; ?>
-		<?php echo $required ? 'required' : ''; ?>/>
-	<?php if (!$readonly) : ?>
-		<a class="btn btn-primary modal_<?php echo $id; ?>" title="<?php echo JText::_('JLIB_FORM_CHANGE_USER'); ?>"
-		   href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 800, y: 500}}">
-			<span class="icon-user"></span>
-		</a>
-	<?php endif; ?>
+    <input
+        type="text" id="<?php echo $id; ?>"
+        value="<?php echo htmlspecialchars($userName, ENT_COMPAT, 'UTF-8'); ?>"
+        placeholder="<?php echo JText::_('JLIB_FORM_SELECT_USER'); ?>"
+        readonly
+        <?php echo $size ? ' size="' . (int)$size . '"' : ''; ?>
+        <?php echo $required ? 'required' : ''; ?>/>
+    <?php if (!$readonly) : ?>
+        <a class="btn btn-primary modal_<?php echo $id; ?>" title="<?php echo JText::_('JLIB_FORM_CHANGE_USER'); ?>"
+           href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 800, y: 500}}">
+            <span class="icon-user"></span>
+        </a>
+    <?php endif; ?>
 </div>
 
 <?php // Create the real field, hidden, that stored the user id. ?>
-<input type="hidden" id="<?php echo $id; ?>_id" name="<?php echo $name; ?>" value="<?php echo (int) $value; ?>"
+<input type="hidden" id="<?php echo $id; ?>_id" name="<?php echo $name; ?>" value="<?php echo (int)$value; ?>"
        data-onchange="<?php echo $this->escape($onchange); ?>"/>

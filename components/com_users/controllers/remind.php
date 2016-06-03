@@ -18,52 +18,49 @@ require_once JPATH_COMPONENT . '/controller.php';
  */
 class UsersControllerRemind extends UsersController
 {
-	/**
-	 * Method to request a username reminder.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   1.6
-	 */
-	public function remind()
-	{
-		// Check the request token.
-		JSession::checkToken('post') or jexit(JText::_('JINVALID_TOKEN'));
+    /**
+     * Method to request a username reminder.
+     *
+     * @return  boolean
+     *
+     * @since   1.6
+     */
+    public function remind()
+    {
+        // Check the request token.
+        JSession::checkToken('post') or jexit(JText::_('JINVALID_TOKEN'));
 
-		$model = $this->getModel('Remind', 'UsersModel');
-		$data  = $this->input->post->get('jform', array(), 'array');
+        $model = $this->getModel('Remind', 'UsersModel');
+        $data  = $this->input->post->get('jform', array(), 'array');
 
-		// Submit the password reset request.
-		$return = $model->processRemindRequest($data);
+        // Submit the password reset request.
+        $return = $model->processRemindRequest($data);
 
-		// Check for a hard error.
-		if ($return == false)
-		{
-			// The request failed.
-			// Get the route to the next page.
-			$itemid = UsersHelperRoute::getRemindRoute();
-			$itemid = $itemid !== null ? '&Itemid=' . $itemid : '';
-			$route  = 'index.php?option=com_users&view=remind' . $itemid;
+        // Check for a hard error.
+        if ($return == false) {
+            // The request failed.
+            // Get the route to the next page.
+            $itemid = UsersHelperRoute::getRemindRoute();
+            $itemid = $itemid !== null ? '&Itemid=' . $itemid : '';
+            $route  = 'index.php?option=com_users&view=remind' . $itemid;
 
-			// Go back to the request form.
-			$message = JText::sprintf('COM_USERS_REMIND_REQUEST_FAILED', $model->getError());
-			$this->setRedirect(JRoute::_($route, false), $message, 'notice');
+            // Go back to the request form.
+            $message = JText::sprintf('COM_USERS_REMIND_REQUEST_FAILED', $model->getError());
+            $this->setRedirect(JRoute::_($route, false), $message, 'notice');
 
-			return false;
-		}
-		else
-		{
-			// The request succeeded.
-			// Get the route to the next page.
-			$itemid = UsersHelperRoute::getRemindRoute();
-			$itemid = $itemid !== null ? '&Itemid=' . $itemid : '';
-			$route  = 'index.php?option=com_users&view=login' . $itemid;
+            return false;
+        } else {
+            // The request succeeded.
+            // Get the route to the next page.
+            $itemid = UsersHelperRoute::getRemindRoute();
+            $itemid = $itemid !== null ? '&Itemid=' . $itemid : '';
+            $route  = 'index.php?option=com_users&view=login' . $itemid;
 
-			// Proceed to step two.
-			$message = JText::_('COM_USERS_REMIND_REQUEST_SUCCESS');
-			$this->setRedirect(JRoute::_($route, false), $message);
+            // Proceed to step two.
+            $message = JText::_('COM_USERS_REMIND_REQUEST_SUCCESS');
+            $this->setRedirect(JRoute::_($route, false), $message);
 
-			return true;
-		}
-	}
+            return true;
+        }
+    }
 }

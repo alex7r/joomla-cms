@@ -14,18 +14,18 @@ JFactory::getDocument()->addScriptDeclaration('
  ');
 ?>
 <div class="width-100">
-	<fieldset class="adminform">
-		<legend><?php echo JText::_('COM_CONFIG_MAIL_SETTINGS'); ?></legend>
-		<ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset('mail') as $field): ?>
-				<li>
-					<?php echo $field->label; ?>
-					<?php echo $field->input; ?>
-				</li>
-			<?php endforeach; ?>
-		</ul>
-		<button type="button" class="btn btn-small" id="sendtestmail">
-			<span><?php echo JText::_('COM_CONFIG_SENDMAIL_ACTION_BUTTON'); ?></span>
-		</button>
-	</fieldset>
+    <fieldset class="adminform">
+        <legend><?php echo JText::_('COM_CONFIG_MAIL_SETTINGS'); ?></legend>
+        <ul class="adminformlist">
+            <?php foreach ($this->form->getFieldset('mail') as $field): ?>
+                <li>
+                    <?php echo $field->label; ?>
+                    <?php echo $field->input; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+        <button type="button" class="btn btn-small" id="sendtestmail">
+            <span><?php echo JText::_('COM_CONFIG_SENDMAIL_ACTION_BUTTON'); ?></span>
+        </button>
+    </fieldset>
 </div>

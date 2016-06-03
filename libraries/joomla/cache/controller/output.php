@@ -16,115 +16,109 @@ defined('JPATH_PLATFORM') or die;
  */
 class JCacheControllerOutput extends JCacheController
 {
-	/**
-	 * Cache data ID
-	 *
-	 * @var    string
-	 * @since  11.1
-	 */
-	protected $_id;
+    /**
+     * Cache data ID
+     *
+     * @var    string
+     * @since  11.1
+     */
+    protected $_id;
 
-	/**
-	 * Cache data group
-	 *
-	 * @var    string
-	 * @since  11.1
-	 */
-	protected $_group;
+    /**
+     * Cache data group
+     *
+     * @var    string
+     * @since  11.1
+     */
+    protected $_group;
 
-	/**
-	 * Object to test locked state
-	 *
-	 * @var    stdClass
-	 * @since  11.1
-	 */
-	protected $_locktest = null;
+    /**
+     * Object to test locked state
+     *
+     * @var    stdClass
+     * @since  11.1
+     */
+    protected $_locktest = null;
 
-	/**
-	 * Start the cache
-	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 */
-	public function start($id, $group = null)
-	{
-		// If we have data in cache use that.
-		$data = $this->cache->get($id, $group);
+    /**
+     * Start the cache
+     *
+     * @param   string $id    The cache data ID
+     * @param   string $group The cache data group
+     *
+     * @return  boolean
+     *
+     * @since   11.1
+     */
+    public function start($id, $group = null)
+    {
+        // If we have data in cache use that.
+        $data = $this->cache->get($id, $group);
 
-		$this->_locktest             = new stdClass;
-		$this->_locktest->locked     = null;
-		$this->_locktest->locklooped = null;
+        $this->_locktest             = new stdClass;
+        $this->_locktest->locked     = null;
+        $this->_locktest->locklooped = null;
 
-		if ($data === false)
-		{
-			$this->_locktest = $this->cache->lock($id, $group);
+        if ($data === false) {
+            $this->_locktest = $this->cache->lock($id, $group);
 
-			if ($this->_locktest->locked == true && $this->_locktest->locklooped == true)
-			{
-				$data = $this->cache->get($id, $group);
-			}
-		}
+            if ($this->_locktest->locked == true && $this->_locktest->locklooped == true) {
+                $data = $this->cache->get($id, $group);
+            }
+        }
 
-		if ($data !== false)
-		{
-			$data = unserialize(trim($data));
-			echo $data;
+        if ($data !== false) {
+            $data = unserialize(trim($data));
+            echo $data;
 
-			if ($this->_locktest->locked == true)
-			{
-				$this->cache->unlock($id, $group);
-			}
+            if ($this->_locktest->locked == true) {
+                $this->cache->unlock($id, $group);
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		// Nothing in cache... let's start the output buffer and start collecting data for next time.
-		if ($this->_locktest->locked == false)
-		{
-			$this->_locktest = $this->cache->lock($id, $group);
-		}
+        // Nothing in cache... let's start the output buffer and start collecting data for next time.
+        if ($this->_locktest->locked == false) {
+            $this->_locktest = $this->cache->lock($id, $group);
+        }
 
-		ob_start();
-		ob_implicit_flush(false);
+        ob_start();
+        ob_implicit_flush(false);
 
-		// Set id and group placeholders
-		$this->_id    = $id;
-		$this->_group = $group;
+        // Set id and group placeholders
+        $this->_id    = $id;
+        $this->_group = $group;
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Stop the cache buffer and store the cached data
-	 *
-	 * @return  boolean  True if the cache data was stored
-	 *
-	 * @since   11.1
-	 */
-	public function end()
-	{
-		// Get data from output buffer and echo it
-		$data = ob_get_clean();
-		echo $data;
+    /**
+     * Stop the cache buffer and store the cached data
+     *
+     * @return  boolean  True if the cache data was stored
+     *
+     * @since   11.1
+     */
+    public function end()
+    {
+        // Get data from output buffer and echo it
+        $data = ob_get_clean();
+        echo $data;
 
-		// Get the ID and group and reset the placeholders
-		$id           = $this->_id;
-		$group        = $this->_group;
-		$this->_id    = null;
-		$this->_group = null;
+        // Get the ID and group and reset the placeholders
+        $id           = $this->_id;
+        $group        = $this->_group;
+        $this->_id    = null;
+        $this->_group = null;
 
-		// Get the storage handler and store the cached data
-		$ret = $this->cache->store(serialize($data), $id, $group);
+        // Get the storage handler and store the cached data
+        $ret = $this->cache->store(serialize($data), $id, $group);
 
-		if ($this->_locktest->locked == true)
-		{
-			$this->cache->unlock($id, $group);
-		}
+        if ($this->_locktest->locked == true) {
+            $this->cache->unlock($id, $group);
+        }
 
-		return $ret;
-	}
+        return $ret;
+    }
 }

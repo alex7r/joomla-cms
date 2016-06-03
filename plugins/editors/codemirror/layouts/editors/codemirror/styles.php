@@ -29,8 +29,7 @@ $g                   = hexdec($color{3} . $color{4});
 $b                   = hexdec($color{5} . $color{6});
 $highlightMatchColor = 'rgba(' . $r . ', ' . $g . ', ' . $b . ', .5)';
 
-JFactory::getDocument()->addStyleDeclaration(
-	<<<CSS
+JFactory::getDocument()->addStyleDeclaration(<<<CSS
 			.CodeMirror
 		{
 			font-family: $fontFamily;

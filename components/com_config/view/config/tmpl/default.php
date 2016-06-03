@@ -27,36 +27,36 @@ JFactory::getDocument()->addScriptDeclaration("
 <form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" id="application-form" method="post"
       name="adminForm" class="form-validate">
 
-	<div class="row-fluid">
-		<!-- Begin Content -->
+    <div class="row-fluid">
+        <!-- Begin Content -->
 
-		<div class="btn-toolbar">
-			<div class="btn-group">
-				<button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('config.save.config.apply')">
-					<span class="icon-ok"></span> <?php echo JText::_('JSAVE') ?>
-				</button>
-			</div>
-			<div class="btn-group">
-				<button type="button" class="btn" onclick="Joomla.submitbutton('config.cancel')">
-					<span class="icon-cancel"></span> <?php echo JText::_('JCANCEL') ?>
-				</button>
-			</div>
-		</div>
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('config.save.config.apply')">
+                    <span class="icon-ok"></span> <?php echo JText::_('JSAVE') ?>
+                </button>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn" onclick="Joomla.submitbutton('config.cancel')">
+                    <span class="icon-cancel"></span> <?php echo JText::_('JCANCEL') ?>
+                </button>
+            </div>
+        </div>
 
-		<hr class="hr-condensed"/>
+        <hr class="hr-condensed"/>
 
-		<div id="page-site" class="tab-pane active">
-			<div class="row-fluid">
-				<?php echo $this->loadTemplate('site'); ?>
-				<?php echo $this->loadTemplate('metadata'); ?>
-				<?php echo $this->loadTemplate('seo'); ?>
-			</div>
-		</div>
+        <div id="page-site" class="tab-pane active">
+            <div class="row-fluid">
+                <?php echo $this->loadTemplate('site'); ?>
+                <?php echo $this->loadTemplate('metadata'); ?>
+                <?php echo $this->loadTemplate('seo'); ?>
+            </div>
+        </div>
 
-		<input type="hidden" name="task" value=""/>
-		<?php echo JHtml::_('form.token'); ?>
+        <input type="hidden" name="task" value=""/>
+        <?php echo JHtml::_('form.token'); ?>
 
-		<!-- End Content -->
-	</div>
+        <!-- End Content -->
+    </div>
 
 </form>

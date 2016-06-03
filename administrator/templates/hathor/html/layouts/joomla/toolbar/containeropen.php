@@ -11,4 +11,4 @@ defined('_JEXEC') or die;
 ?>
 
 <div class="toolbar-list" id="<?php echo $displayData['id']; ?>">
-	<ul>
+    <ul>

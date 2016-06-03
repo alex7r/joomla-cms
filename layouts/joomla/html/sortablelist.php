@@ -30,19 +30,14 @@ JHtml::_('script', 'jui/sortablelist.js', false, true);
 JHtml::_('stylesheet', 'jui/sortablelist.css', false, true, false);
 
 // Attach sortable to document
-JFactory::getDocument()->addScriptDeclaration(
-	"
+JFactory::getDocument()->addScriptDeclaration("
 		jQuery(document).ready(function ($){
-			var sortableList = new $.JSortableList('#"
-	. $tableId . " tbody','" . $formId . "','" . $sortDir . "' , '" . $saveOrderingUrl . "','','" . $nestedList . "');
+			var sortableList = new $.JSortableList('#" . $tableId . " tbody','" . $formId . "','" . $sortDir . "' , '" . $saveOrderingUrl . "','','" . $nestedList . "');
 		});
-	"
-);
+	");
 
-if ($proceedSaveOrderButton)
-{
-	JFactory::getDocument()->addScriptDeclaration(
-		"
+if ($proceedSaveOrderButton) {
+    JFactory::getDocument()->addScriptDeclaration("
 		jQuery(document).ready(function ($){
 			var saveOrderButton = $('.saveorder');
 			saveOrderButton.css({'opacity':'0.2', 'cursor':'default'}).attr('onclick','return false;');
@@ -59,6 +54,5 @@ if ($proceedSaveOrderButton)
 				}
 			});
 		});
-		"
-	);
+		");
 }

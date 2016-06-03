@@ -18,48 +18,48 @@ use Joomla\Session\Storage;
  */
 class Wincache extends Storage
 {
-	/**
-	 * Constructor
-	 *
-	 * @param   array $options Optional parameters.
-	 *
-	 * @since       1.0
-	 * @throws  \RuntimeException
-	 * @deprecated  2.0
-	 */
-	public function __construct($options = array())
-	{
-		if (!self::isSupported())
-		{
-			throw new \RuntimeException('Wincache Extension is not available', 404);
-		}
+    /**
+     * Constructor
+     *
+     * @param   array $options Optional parameters.
+     *
+     * @since       1.0
+     * @throws  \RuntimeException
+     * @deprecated  2.0
+     */
+    public function __construct($options = array())
+    {
+        if (!self::isSupported()) {
+            throw new \RuntimeException('Wincache Extension is not available', 404);
+        }
 
-		parent::__construct($options);
-	}
+        parent::__construct($options);
+    }
 
-	/**
-	 * Test to see if the SessionHandler is available.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since       1.0
-	 * @deprecated  2.0
-	 */
-	static public function isSupported()
-	{
-		return (extension_loaded('wincache') && function_exists('wincache_ucache_get') && !strcmp(ini_get('wincache.ucenabled'), "1"));
-	}
+    /**
+     * Test to see if the SessionHandler is available.
+     *
+     * @return  boolean  True on success, false otherwise.
+     *
+     * @since       1.0
+     * @deprecated  2.0
+     */
+    static public function isSupported()
+    {
+        return (extension_loaded('wincache') && function_exists('wincache_ucache_get') && !strcmp(ini_get('wincache.ucenabled'),
+                "1"));
+    }
 
-	/**
-	 * Register the functions of this class with PHP's session handler
-	 *
-	 * @return  void
-	 *
-	 * @since       1.0
-	 * @deprecated  2.0
-	 */
-	public function register()
-	{
-		ini_set('session.save_handler', 'wincache');
-	}
+    /**
+     * Register the functions of this class with PHP's session handler
+     *
+     * @return  void
+     *
+     * @since       1.0
+     * @deprecated  2.0
+     */
+    public function register()
+    {
+        ini_set('session.save_handler', 'wincache');
+    }
 }

@@ -18,8 +18,8 @@ $message = addslashes($message);
 <button data-toggle="modal"
         onclick="if (document.adminForm.boxchecked.value==0){alert('<?php echo $message; ?>');  }else{jQuery( '#collapseModal' ).modal('show'); return true;}"
         class="btn btn-small">
-	<span class="icon-checkbox-partial" title="<?php echo $title; ?>"></span>
-	<?php echo $title; ?>
+    <span class="icon-checkbox-partial" title="<?php echo $title; ?>"></span>
+    <?php echo $title; ?>
 </button>
 
 

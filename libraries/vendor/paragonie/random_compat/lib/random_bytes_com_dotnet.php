@@ -39,49 +39,37 @@
  */
 function random_bytes($bytes)
 {
-	try
-	{
-		$bytes = RandomCompat_intval($bytes);
-	}
-	catch (TypeError $ex)
-	{
-		throw new TypeError(
-			'random_bytes(): $bytes must be an integer'
-		);
-	}
+    try {
+        $bytes = RandomCompat_intval($bytes);
+    } catch (TypeError $ex) {
+        throw new TypeError('random_bytes(): $bytes must be an integer');
+    }
 
-	if ($bytes < 1)
-	{
-		throw new Error(
-			'Length must be greater than 0'
-		);
-	}
+    if ($bytes < 1) {
+        throw new Error('Length must be greater than 0');
+    }
 
-	$buf       = '';
-	$util      = new COM('CAPICOM.Utilities.1');
-	$execCount = 0;
+    $buf       = '';
+    $util      = new COM('CAPICOM.Utilities.1');
+    $execCount = 0;
 
-	/**
-	 * Let's not let it loop forever. If we run N times and fail to
-	 * get N bytes of random data, then CAPICOM has failed us.
-	 */
-	do
-	{
-		$buf .= base64_decode($util->GetRandom($bytes, 0));
-		if (RandomCompat_strlen($buf) >= $bytes)
-		{
-			/**
-			 * Return our random entropy buffer here:
-			 */
-			return RandomCompat_substr($buf, 0, $bytes);
-		}
-		++$execCount;
-	} while ($execCount < $bytes);
+    /**
+     * Let's not let it loop forever. If we run N times and fail to
+     * get N bytes of random data, then CAPICOM has failed us.
+     */
+    do {
+        $buf .= base64_decode($util->GetRandom($bytes, 0));
+        if (RandomCompat_strlen($buf) >= $bytes) {
+            /**
+             * Return our random entropy buffer here:
+             */
+            return RandomCompat_substr($buf, 0, $bytes);
+        }
+        ++$execCount;
+    } while ($execCount < $bytes);
 
-	/**
-	 * If we reach here, PHP has failed us.
-	 */
-	throw new Exception(
-		'Could not gather sufficient random data'
-	);
+    /**
+     * If we reach here, PHP has failed us.
+     */
+    throw new Exception('Could not gather sufficient random data');
 }

@@ -16,12 +16,12 @@ $input = JFactory::getApplication()->input;
 $parts     = explode('.', $input->get('extension'));
 $component = $parts[0];
 
-if (!JFactory::getUser()->authorise('core.manage', $component))
-{
-	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+if (!JFactory::getUser()->authorise('core.manage', $component)) {
+    return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-JLoader::register('JHtmlCategoriesAdministrator', JPATH_ADMINISTRATOR . '/components/com_categories/helpers/html/categoriesadministrator.php');
+JLoader::register('JHtmlCategoriesAdministrator',
+    JPATH_ADMINISTRATOR . '/components/com_categories/helpers/html/categoriesadministrator.php');
 
 $controller = JControllerLegacy::getInstance('Categories');
 $controller->execute($input->get('task'));

@@ -16,26 +16,26 @@ defined('_JEXEC') or die;
  */
 class LanguagesViewMultilangstatus extends JViewLegacy
 {
-	/**
-	 * Display the view.
-	 *
-	 * @param   string $tpl The name of the template file to parse.
-	 *
-	 * @return  void
-	 */
-	public function display($tpl = null)
-	{
-		require_once JPATH_COMPONENT . '/helpers/multilangstatus.php';
+    /**
+     * Display the view.
+     *
+     * @param   string $tpl The name of the template file to parse.
+     *
+     * @return  void
+     */
+    public function display($tpl = null)
+    {
+        require_once JPATH_COMPONENT . '/helpers/multilangstatus.php';
 
-		$this->homes           = MultilangstatusHelper::getHomes();
-		$this->language_filter = JLanguageMultilang::isEnabled();
-		$this->switchers       = MultilangstatusHelper::getLangswitchers();
-		$this->listUsersError  = MultilangstatusHelper::getContacts();
-		$this->contentlangs    = MultilangstatusHelper::getContentlangs();
-		$this->site_langs      = JLanguageMultilang::getSiteLangs();
-		$this->statuses        = MultilangstatusHelper::getStatus();
-		$this->homepages       = JLanguageMultilang::getSiteHomePages();
+        $this->homes           = MultilangstatusHelper::getHomes();
+        $this->language_filter = JLanguageMultilang::isEnabled();
+        $this->switchers       = MultilangstatusHelper::getLangswitchers();
+        $this->listUsersError  = MultilangstatusHelper::getContacts();
+        $this->contentlangs    = MultilangstatusHelper::getContentlangs();
+        $this->site_langs      = JLanguageMultilang::getSiteLangs();
+        $this->statuses        = MultilangstatusHelper::getStatus();
+        $this->homepages       = JLanguageMultilang::getSiteHomePages();
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 }

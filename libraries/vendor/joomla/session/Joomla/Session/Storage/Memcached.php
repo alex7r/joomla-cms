@@ -18,72 +18,71 @@ use Joomla\Session\Storage;
  */
 class Memcached extends Storage
 {
-	/**
-	 * Container for server data
-	 *
-	 * @var    array
-	 * @since       1.0
-	 * @deprecated  2.0
-	 */
-	protected $_servers = array();
+    /**
+     * Container for server data
+     *
+     * @var    array
+     * @since       1.0
+     * @deprecated  2.0
+     */
+    protected $_servers = array();
 
-	/**
-	 * Constructor
-	 *
-	 * @param   array $options Optional parameters.
-	 *
-	 * @since       1.0
-	 * @throws  \RuntimeException
-	 * @deprecated  2.0
-	 */
-	public function __construct($options = array())
-	{
-		if (!self::isSupported())
-		{
-			throw new \RuntimeException('Memcached Extension is not available', 404);
-		}
+    /**
+     * Constructor
+     *
+     * @param   array $options Optional parameters.
+     *
+     * @since       1.0
+     * @throws  \RuntimeException
+     * @deprecated  2.0
+     */
+    public function __construct($options = array())
+    {
+        if (!self::isSupported()) {
+            throw new \RuntimeException('Memcached Extension is not available', 404);
+        }
 
-		// This will be an array of loveliness
-		// @todo: multiple servers
-		$this->_servers = array(
-			array(
-				'host' => isset($options['memcache_server_host']) ? $options['memcache_server_host'] : 'localhost',
-				'port' => isset($options['memcache_server_port']) ? $options['memcache_server_port'] : 11211
-			)
-		);
+        // This will be an array of loveliness
+        // @todo: multiple servers
+        $this->_servers = array(
+            array(
+                'host' => isset($options['memcache_server_host']) ? $options['memcache_server_host'] : 'localhost',
+                'port' => isset($options['memcache_server_port']) ? $options['memcache_server_port'] : 11211
+            )
+        );
 
-		// Only construct parent AFTER host and port are sent, otherwise when register is called this will fail.
-		parent::__construct($options);
-	}
+        // Only construct parent AFTER host and port are sent, otherwise when register is called this will fail.
+        parent::__construct($options);
+    }
 
-	/**
-	 * Test to see if the SessionHandler is available.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since       1.0
-	 * @deprecated  2.0
-	 */
-	static public function isSupported()
-	{
-		/*
-		 * GAE and HHVM have both had instances where Memcached the class was defined but no extension was loaded.
-		 * If the class is there, we can assume it works.
-		 */
-		return (class_exists('Memcached'));
-	}
+    /**
+     * Test to see if the SessionHandler is available.
+     *
+     * @return  boolean  True on success, false otherwise.
+     *
+     * @since       1.0
+     * @deprecated  2.0
+     */
+    static public function isSupported()
+    {
+        /*
+         * GAE and HHVM have both had instances where Memcached the class was defined but no extension was loaded.
+         * If the class is there, we can assume it works.
+         */
+        return (class_exists('Memcached'));
+    }
 
-	/**
-	 * Register the functions of this class with PHP's session handler
-	 *
-	 * @return  void
-	 *
-	 * @since       1.0
-	 * @deprecated  2.0
-	 */
-	public function register()
-	{
-		ini_set('session.save_path', $this->_servers[0]['host'] . ':' . $this->_servers[0]['port']);
-		ini_set('session.save_handler', 'memcached');
-	}
+    /**
+     * Register the functions of this class with PHP's session handler
+     *
+     * @return  void
+     *
+     * @since       1.0
+     * @deprecated  2.0
+     */
+    public function register()
+    {
+        ini_set('session.save_path', $this->_servers[0]['host'] . ':' . $this->_servers[0]['port']);
+        ini_set('session.save_handler', 'memcached');
+    }
 }

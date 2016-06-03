@@ -13,8 +13,7 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.framework', true);
 JHtml::_('bootstrap.tooltip');
 
-JFactory::getDocument()->addScriptDeclaration(
-	'
+JFactory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton4 = function() {
 		var form = document.getElementById("adminForm");
 
@@ -51,11 +50,9 @@ JFactory::getDocument()->addScriptDeclaration(
 		.css("display", "none")
 		.css("margin-top", "-10px");
 	});
-	'
-);
+	');
 
-JFactory::getDocument()->addStyleDeclaration(
-	'
+JFactory::getDocument()->addStyleDeclaration('
 	#loading {
 		background: rgba(255, 255, 255, .8) url(\'' . JHtml::_('image', 'jui/ajax-loader.gif', '', null, true, true) . '\') 50% 15% no-repeat;
 		position: fixed;
@@ -70,80 +67,81 @@ JFactory::getDocument()->addStyleDeclaration(
 		line-height: 2em;
 		color:#333333;
 	}
-	'
-);
+	');
 
 ?>
 
 <script type="text/javascript">
-	// Set the first tab to active if there is no other active tab
-	jQuery(document).ready(function ($) {
-		var hasTab = function (href) {
-			return $('a[data-toggle="tab"]a[href*=' + href + ']').length;
-		};
-		if (!hasTab(localStorage.getItem('tab-href'))) {
-			var tabAnchor = $("#myTabTabs li:first a");
-			window.localStorage.setItem('tab-href', tabAnchor.attr('href'));
-			tabAnchor.click();
-		}
-	});
+    // Set the first tab to active if there is no other active tab
+    jQuery(document).ready(function ($) {
+        var hasTab = function (href) {
+            return $('a[data-toggle="tab"]a[href*=' + href + ']').length;
+        };
+        if (!hasTab(localStorage.getItem('tab-href'))) {
+            var tabAnchor = $("#myTabTabs li:first a");
+            window.localStorage.setItem('tab-href', tabAnchor.attr('href'));
+            tabAnchor.click();
+        }
+    });
 </script>
 
 <div id="installer-install" class="clearfix">
-	<form enctype="multipart/form-data" action="<?php echo JRoute::_('index.php?option=com_installer&view=install'); ?>"
-	      method="post" name="adminForm" id="adminForm" class="form-horizontal">
-		<?php if (!empty($this->sidebar)) : ?>
-		<div id="j-sidebar-container" class="span2">
-			<?php echo $this->sidebar; ?>
-		</div>
-		<div id="j-main-container" class="span10">
-			<?php else : ?>
-			<div id="j-main-container">
-				<?php endif; ?>
-				<!-- Render messages set by extension install scripts here -->
-				<?php if ($this->showMessage) : ?>
-					<?php echo $this->loadTemplate('message'); ?>
-				<?php elseif ($this->showJedAndWebInstaller) : ?>
-					<div class="alert alert-info j-jed-message"
-					     style="margin-bottom: 40px; line-height: 2em; color:#333333;">
-						<?php echo JHtml::_(
-							'link',
-							JRoute::_('index.php?option=com_config&view=component&component=com_installer&path=&return=' . urlencode(base64_encode(JUri::getInstance()))),
-							'&times;',
-							'class="close hasTooltip" data-dismiss="alert" title="' . str_replace('"', '&quot;', JText::_('COM_INSTALLER_SHOW_JED_INFORMATION_TOOLTIP')) . '"'
-						);
-						?>
-						<p><?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_INFO'); ?>
-							<?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_TOS'); ?></p>
-						<input class="btn" type="button"
-						       value="<?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_ADD_TAB'); ?>"
-						       onclick="Joomla.submitbuttonInstallWebInstaller()"/>
-					</div>
-				<?php endif; ?>
-				<?php echo JHtml::_('bootstrap.startTabSet', 'myTab'); ?>
-				<?php // Show installation tabs at the start ?>
-				<?php $firstTab = JEventDispatcher::getInstance()->trigger('onInstallerViewBeforeFirstTab', array()); ?>
-				<?php // Show installation tabs ?>
-				<?php $tabs = JEventDispatcher::getInstance()->trigger('onInstallerAddInstallationTab', array()); ?>
-				<?php // Show installation tabs at the end ?>
-				<?php $lastTab = JEventDispatcher::getInstance()->trigger('onInstallerViewAfterLastTab', array()); ?>
-				<?php $tabs = array_merge($firstTab, $tabs, $lastTab); ?>
-				<?php if (!$tabs) : ?>
-					<?php JFactory::getApplication()->enqueueMessage(JText::_('COM_INSTALLER_NO_INSTALLATION_PLUGINS_FOUND'), 'warning'); ?>
-				<?php endif; ?>
+    <form enctype="multipart/form-data" action="<?php echo JRoute::_('index.php?option=com_installer&view=install'); ?>"
+          method="post" name="adminForm" id="adminForm" class="form-horizontal">
+        <?php if (!empty($this->sidebar)) : ?>
+        <div id="j-sidebar-container" class="span2">
+            <?php echo $this->sidebar; ?>
+        </div>
+        <div id="j-main-container" class="span10">
+            <?php else : ?>
+            <div id="j-main-container">
+                <?php endif; ?>
+                <!-- Render messages set by extension install scripts here -->
+                <?php if ($this->showMessage) : ?>
+                    <?php echo $this->loadTemplate('message'); ?>
+                <?php elseif ($this->showJedAndWebInstaller) : ?>
+                    <div class="alert alert-info j-jed-message"
+                         style="margin-bottom: 40px; line-height: 2em; color:#333333;">
+                        <?php echo JHtml::_('link',
+                            JRoute::_('index.php?option=com_config&view=component&component=com_installer&path=&return=' . urlencode(base64_encode(JUri::getInstance()))),
+                            '&times;',
+                            'class="close hasTooltip" data-dismiss="alert" title="' . str_replace('"', '&quot;',
+                                JText::_('COM_INSTALLER_SHOW_JED_INFORMATION_TOOLTIP')) . '"');
+                        ?>
+                        <p><?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_INFO'); ?>
+                            <?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_TOS'); ?></p>
+                        <input class="btn" type="button"
+                               value="<?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_ADD_TAB'); ?>"
+                               onclick="Joomla.submitbuttonInstallWebInstaller()"/>
+                    </div>
+                <?php endif; ?>
+                <?php echo JHtml::_('bootstrap.startTabSet', 'myTab'); ?>
+                <?php // Show installation tabs at the start ?>
+                <?php $firstTab = JEventDispatcher::getInstance()->trigger('onInstallerViewBeforeFirstTab', array()); ?>
+                <?php // Show installation tabs ?>
+                <?php $tabs = JEventDispatcher::getInstance()->trigger('onInstallerAddInstallationTab', array()); ?>
+                <?php // Show installation tabs at the end ?>
+                <?php $lastTab = JEventDispatcher::getInstance()->trigger('onInstallerViewAfterLastTab', array()); ?>
+                <?php $tabs = array_merge($firstTab, $tabs, $lastTab); ?>
+                <?php if (!$tabs) : ?>
+                    <?php JFactory::getApplication()
+                                  ->enqueueMessage(JText::_('COM_INSTALLER_NO_INSTALLATION_PLUGINS_FOUND'),
+                                      'warning'); ?>
+                <?php endif; ?>
 
-				<?php if ($this->ftp) : ?>
-					<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'ftp', JText::_('COM_INSTALLER_MSG_DESCFTPTITLE')); ?>
-					<?php echo $this->loadTemplate('ftp'); ?>
-					<?php echo JHtml::_('bootstrap.endTab'); ?>
-				<?php endif; ?>
+                <?php if ($this->ftp) : ?>
+                    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'ftp',
+                        JText::_('COM_INSTALLER_MSG_DESCFTPTITLE')); ?>
+                    <?php echo $this->loadTemplate('ftp'); ?>
+                    <?php echo JHtml::_('bootstrap.endTab'); ?>
+                <?php endif; ?>
 
-				<input type="hidden" name="installtype" value=""/>
-				<input type="hidden" name="task" value="install.install"/>
-				<?php echo JHtml::_('form.token'); ?>
+                <input type="hidden" name="installtype" value=""/>
+                <input type="hidden" name="task" value="install.install"/>
+                <?php echo JHtml::_('form.token'); ?>
 
-				<?php echo JHtml::_('bootstrap.endTabSet'); ?>
-			</div>
-	</form>
+                <?php echo JHtml::_('bootstrap.endTabSet'); ?>
+            </div>
+    </form>
 </div>
 <div id="loading"></div>

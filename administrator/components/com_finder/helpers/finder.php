@@ -16,56 +16,48 @@ defined('_JEXEC') or die;
  */
 class FinderHelper
 {
-	/**
-	 * @var        string    The extension name.
-	 * @since    2.5
-	 */
-	public static $extension = 'com_finder';
+    /**
+     * @var        string    The extension name.
+     * @since    2.5
+     */
+    public static $extension = 'com_finder';
 
-	/**
-	 * Configure the Linkbar.
-	 *
-	 * @param   string $vName The name of the active view.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.5
-	 */
-	public static function addSubmenu($vName)
-	{
-		JHtmlSidebar::addEntry(
-			JText::_('COM_FINDER_SUBMENU_INDEX'),
-			'index.php?option=com_finder&view=index',
-			$vName == 'index'
-		);
-		JHtmlSidebar::addEntry(
-			JText::_('COM_FINDER_SUBMENU_MAPS'),
-			'index.php?option=com_finder&view=maps',
-			$vName == 'maps'
-		);
-		JHtmlSidebar::addEntry(
-			JText::_('COM_FINDER_SUBMENU_FILTERS'),
-			'index.php?option=com_finder&view=filters',
-			$vName == 'filters'
-		);
-	}
+    /**
+     * Configure the Linkbar.
+     *
+     * @param   string $vName The name of the active view.
+     *
+     * @return  void
+     *
+     * @since   2.5
+     */
+    public static function addSubmenu($vName)
+    {
+        JHtmlSidebar::addEntry(JText::_('COM_FINDER_SUBMENU_INDEX'), 'index.php?option=com_finder&view=index',
+            $vName == 'index');
+        JHtmlSidebar::addEntry(JText::_('COM_FINDER_SUBMENU_MAPS'), 'index.php?option=com_finder&view=maps',
+            $vName == 'maps');
+        JHtmlSidebar::addEntry(JText::_('COM_FINDER_SUBMENU_FILTERS'), 'index.php?option=com_finder&view=filters',
+            $vName == 'filters');
+    }
 
-	/**
-	 * Gets a list of the actions that can be performed.
-	 *
-	 * @return  JObject  A JObject containing the allowed actions.
-	 *
-	 * @since       2.5
-	 * @deprecated  3.2  Use JHelperContent::getActions() instead
-	 */
-	public static function getActions()
-	{
-		// Log usage of deprecated function
-		JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.', JLog::WARNING, 'deprecated');
+    /**
+     * Gets a list of the actions that can be performed.
+     *
+     * @return  JObject  A JObject containing the allowed actions.
+     *
+     * @since       2.5
+     * @deprecated  3.2  Use JHelperContent::getActions() instead
+     */
+    public static function getActions()
+    {
+        // Log usage of deprecated function
+        JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
+            JLog::WARNING, 'deprecated');
 
-		// Get list of actions
-		$result = JHelperContent::getActions('com_finder');
+        // Get list of actions
+        $result = JHelperContent::getActions('com_finder');
 
-		return $result;
-	}
+        return $result;
+    }
 }

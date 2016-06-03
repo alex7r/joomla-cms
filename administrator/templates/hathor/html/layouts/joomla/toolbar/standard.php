@@ -17,6 +17,6 @@ $btnClass = $displayData['btnClass'];
 ?>
 
 <a href="javascript:void(0)" onclick="<?php echo $doTask; ?>" class="toolbar">
-	<span class="<?php echo $class; ?>"></span>
-	<?php echo $text; ?>
+    <span class="<?php echo $class; ?>"></span>
+    <?php echo $text; ?>
 </a>

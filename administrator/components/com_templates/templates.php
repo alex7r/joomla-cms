@@ -13,11 +13,10 @@ JHtml::_('behavior.tabstate');
 $app  = JFactory::getApplication();
 $user = JFactory::getUser();
 
-if (!$user->authorise('core.manage', 'com_templates'))
-{
-	$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+if (!$user->authorise('core.manage', 'com_templates')) {
+    $app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 
-	return false;
+    return false;
 }
 
 JLoader::register('TemplatesHelper', __DIR__ . '/helpers/templates.php');

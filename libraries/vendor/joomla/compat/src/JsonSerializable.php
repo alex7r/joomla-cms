@@ -15,12 +15,12 @@
  */
 interface JsonSerializable
 {
-	/**
-	 * Return data which should be serialized by json_encode().
-	 *
-	 * @return  mixed
-	 *
-	 * @since   1.0
-	 */
-	public function jsonSerialize();
+    /**
+     * Return data which should be serialized by json_encode().
+     *
+     * @return  mixed
+     *
+     * @since   1.0
+     */
+    public function jsonSerialize();
 }

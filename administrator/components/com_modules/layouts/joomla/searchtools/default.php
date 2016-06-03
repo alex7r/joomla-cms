@@ -14,9 +14,10 @@ $data = $displayData;
 // Receive overridable options
 $data['options'] = !empty($data['options']) ? $data['options'] : array();
 
-if ($data['view'] instanceof ModulesViewModules && JFactory::getApplication()->input->get('layout', '', 'cmd') !== 'modal')
-{
-	JFactory::getDocument()->addStyleDeclaration("
+if ($data['view'] instanceof ModulesViewModules && JFactory::getApplication()->input->get('layout', '',
+        'cmd') !== 'modal'
+) {
+    JFactory::getDocument()->addStyleDeclaration("
 		/* Fixed filter field in search bar */
 		.js-stools .js-stools-client_id {
 			float: left;
@@ -33,8 +34,8 @@ if ($data['view'] instanceof ModulesViewModules && JFactory::getApplication()->i
 		}
 	");
 
-	// Client selector doesn't have to activate the filter bar.
-	unset($data['view']->activeFilters['client_id']);
+    // Client selector doesn't have to activate the filter bar.
+    unset($data['view']->activeFilters['client_id']);
 }
 
 // Display the main joomla layout.

@@ -16,6 +16,6 @@ $name   = $displayData['name'];
 ?>
 
 <a onclick="<?php echo $doTask; ?>" class="modal toolbar" data-toggle="modal" data-target="#modal-<?php echo $name; ?>">
-	<span class="<?php echo $class; ?>"></span>
-	<?php echo $text; ?>
+    <span class="<?php echo $class; ?>"></span>
+    <?php echo $text; ?>
 </a>

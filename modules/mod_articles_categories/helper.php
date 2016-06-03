@@ -21,33 +21,31 @@ require_once JPATH_SITE . '/components/com_content/helpers/route.php';
  */
 abstract class ModArticlesCategoriesHelper
 {
-	/**
-	 * Get list of articles
-	 *
-	 * @param   \Joomla\Registry\Registry &$params module parameters
-	 *
-	 * @return  array
-	 *
-	 * @since   1.5
-	 */
-	public static function getList(&$params)
-	{
-		$options               = array();
-		$options['countItems'] = $params->get('numitems', 0);
+    /**
+     * Get list of articles
+     *
+     * @param   \Joomla\Registry\Registry &$params module parameters
+     *
+     * @return  array
+     *
+     * @since   1.5
+     */
+    public static function getList(&$params)
+    {
+        $options               = array();
+        $options['countItems'] = $params->get('numitems', 0);
 
-		$categories = JCategories::getInstance('Content', $options);
-		$category   = $categories->get($params->get('parent', 'root'));
+        $categories = JCategories::getInstance('Content', $options);
+        $category   = $categories->get($params->get('parent', 'root'));
 
-		if ($category != null)
-		{
-			$items = $category->getChildren();
+        if ($category != null) {
+            $items = $category->getChildren();
 
-			if ($params->get('count', 0) > 0 && count($items) > $params->get('count', 0))
-			{
-				$items = array_slice($items, 0, $params->get('count', 0));
-			}
+            if ($params->get('count', 0) > 0 && count($items) > $params->get('count', 0)) {
+                $items = array_slice($items, 0, $params->get('count', 0));
+            }
 
-			return $items;
-		}
-	}
+            return $items;
+        }
+    }
 }

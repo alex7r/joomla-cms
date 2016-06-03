@@ -16,21 +16,21 @@ defined('_JEXEC') or die;
  */
 class FinderControllerMaps extends JControllerAdmin
 {
-	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param   string $name   The model name. Optional.
-	 * @param   string $prefix The class prefix. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  object  The model.
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'Maps', $prefix = 'FinderModel', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
+    /**
+     * Method to get a model object, loading it if required.
+     *
+     * @param   string $name   The model name. Optional.
+     * @param   string $prefix The class prefix. Optional.
+     * @param   array  $config Configuration array for model. Optional.
+     *
+     * @return  object  The model.
+     *
+     * @since   1.6
+     */
+    public function getModel($name = 'Maps', $prefix = 'FinderModel', $config = array('ignore_request' => true))
+    {
+        $model = parent::getModel($name, $prefix, $config);
 
-		return $model;
-	}
+        return $model;
+    }
 }

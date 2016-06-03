@@ -10,9 +10,8 @@
 defined('_JEXEC') or die;
 
 // Disallow unauthenticated users
-if (JFactory::getUser()->guest)
-{
-	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+if (JFactory::getUser()->guest) {
+    return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
 $controller = JControllerLegacy::getInstance('Contenthistory', array('base_path' => JPATH_COMPONENT_ADMINISTRATOR));

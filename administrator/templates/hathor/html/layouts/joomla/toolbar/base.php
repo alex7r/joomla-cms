@@ -11,5 +11,5 @@ defined('_JEXEC') or die;
 ?>
 
 <li class="button" <?php echo $displayData['id']; ?>>
-	<?php echo $displayData['action']; ?>
+    <?php echo $displayData['action']; ?>
 </li>
