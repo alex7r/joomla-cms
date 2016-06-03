@@ -159,6 +159,26 @@ class JCacheStorageTest extends TestCase
 	}
 
 	/**
+	 * Test...
+	 *
+	 * @return void
+	 */
+	protected function checkStores()
+	{
+		$this->available = array(
+			'apc'       => JCacheStorageApc::isSupported(),
+			'apcu'      => JCacheStorageApcu::isSupported(),
+			'cachelite' => JCacheStorageCachelite::isSupported(),
+			'file'      => true,
+			'memcache'  => JCacheStorageMemcache::isSupported(),
+			'memcached' => JCacheStorageMemcached::isSupported(),
+			'redis'     => JCacheStorageRedis::isSupported(),
+			'wincache'  => JCacheStorageWincache::isSupported(),
+			'xcache'    => JCacheStorageXcache::isSupported(),
+		);
+	}
+
+	/**
 	 * Testing getInstance
 	 *
 	 * @param   string $handler  cache storage
@@ -323,26 +343,6 @@ class JCacheStorageTest extends TestCase
 		$this->saveFactoryState();
 
 		JFactory::$application = $this->getMockCmsApp();
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @return void
-	 */
-	protected function checkStores()
-	{
-		$this->available = array(
-			'apc'       => JCacheStorageApc::isSupported(),
-			'apcu'      => JCacheStorageApcu::isSupported(),
-			'cachelite' => JCacheStorageCachelite::isSupported(),
-			'file'      => true,
-			'memcache'  => JCacheStorageMemcache::isSupported(),
-			'memcached' => JCacheStorageMemcached::isSupported(),
-			'redis'     => JCacheStorageRedis::isSupported(),
-			'wincache'  => JCacheStorageWincache::isSupported(),
-			'xcache'    => JCacheStorageXcache::isSupported(),
-		);
 	}
 
 	/**

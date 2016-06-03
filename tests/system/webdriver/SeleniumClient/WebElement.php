@@ -49,16 +49,6 @@ class WebElement
 	}
 
 	/**
-	 * Gets element's visible text
-	 *
-	 * @return String
-	 */
-	public function getText()
-	{
-		return $this->_driver->webElementGetText($this->_elementId);
-	}
-
-	/**
 	 * Gets element's tag name
 	 *
 	 * @return String
@@ -110,7 +100,6 @@ class WebElement
 	{
 		return $this->_driver->webElementIsEnabled($this->_elementId);
 	}
-
 
 	/**
 	 * Clear current element's text
@@ -283,6 +272,16 @@ class WebElement
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Gets element's visible text
+	 *
+	 * @return String
+	 */
+	public function getText()
+	{
+		return $this->_driver->webElementGetText($this->_elementId);
 	}
 
 	/**

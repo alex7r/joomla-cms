@@ -129,81 +129,6 @@ class JHelperRoute
 	}
 
 	/**
-	 * A method to get the route for a specific item
-	 *
-	 * @param   integer $id        Value of the primary key for the item in its content table
-	 * @param   string  $typealias The type_alias for the item being routed. Of the form extension.view.
-	 * @param   string  $link      The link to be routed
-	 * @param   string  $language  The language of the content for multilingual sites
-	 * @param   integer $catid     Optional category id
-	 *
-	 * @return  string  The route of the item
-	 *
-	 * @since   3.1
-	 */
-	public function getRoute($id, $typealias, $link = '', $language = null, $catid = null)
-	{
-		$typeExploded = explode('.', $typealias);
-
-		if (isset($typeExploded[1]))
-		{
-			$this->view      = $typeExploded[1];
-			$this->extension = $typeExploded[0];
-		}
-		else
-		{
-			$this->view      = JFactory::getApplication()->input->getString('view');
-			$this->extension = JFactory::getApplication()->input->getCmd('option');
-		}
-
-		$name = ucfirst(substr_replace($this->extension, '', 0, 4));
-
-		$needles = array();
-
-		if (isset($this->view))
-		{
-			$needles[$this->view] = array((int) $id);
-		}
-
-		if (empty($link))
-		{
-			// Create the link
-			$link = 'index.php?option=' . $this->extension . '&view=' . $this->view . '&id=' . $id;
-		}
-
-		if ($catid > 1)
-		{
-			$categories = JCategories::getInstance($name);
-
-			if ($categories)
-			{
-				$category = $categories->get((int) $catid);
-
-				if ($category)
-				{
-					$needles['category']   = array_reverse($category->getPath());
-					$needles['categories'] = $needles['category'];
-					$link .= '&catid=' . $catid;
-				}
-			}
-		}
-
-		// Deal with languages only if needed
-		if (!empty($language) && $language != '*' && JLanguageMultilang::isEnabled())
-		{
-			$link .= '&lang=' . $language;
-			$needles['language'] = $language;
-		}
-
-		if ($item = $this->findItem($needles))
-		{
-			$link .= '&Itemid=' . $item;
-		}
-
-		return $link;
-	}
-
-	/**
 	 * Method to find the item in the menu structure
 	 *
 	 * @param   array $needles Array of lookup values
@@ -302,5 +227,80 @@ class JHelperRoute
 		$default = $menus->getDefault($language);
 
 		return !empty($default->id) ? $default->id : null;
+	}
+
+	/**
+	 * A method to get the route for a specific item
+	 *
+	 * @param   integer $id        Value of the primary key for the item in its content table
+	 * @param   string  $typealias The type_alias for the item being routed. Of the form extension.view.
+	 * @param   string  $link      The link to be routed
+	 * @param   string  $language  The language of the content for multilingual sites
+	 * @param   integer $catid     Optional category id
+	 *
+	 * @return  string  The route of the item
+	 *
+	 * @since   3.1
+	 */
+	public function getRoute($id, $typealias, $link = '', $language = null, $catid = null)
+	{
+		$typeExploded = explode('.', $typealias);
+
+		if (isset($typeExploded[1]))
+		{
+			$this->view      = $typeExploded[1];
+			$this->extension = $typeExploded[0];
+		}
+		else
+		{
+			$this->view      = JFactory::getApplication()->input->getString('view');
+			$this->extension = JFactory::getApplication()->input->getCmd('option');
+		}
+
+		$name = ucfirst(substr_replace($this->extension, '', 0, 4));
+
+		$needles = array();
+
+		if (isset($this->view))
+		{
+			$needles[$this->view] = array((int) $id);
+		}
+
+		if (empty($link))
+		{
+			// Create the link
+			$link = 'index.php?option=' . $this->extension . '&view=' . $this->view . '&id=' . $id;
+		}
+
+		if ($catid > 1)
+		{
+			$categories = JCategories::getInstance($name);
+
+			if ($categories)
+			{
+				$category = $categories->get((int) $catid);
+
+				if ($category)
+				{
+					$needles['category']   = array_reverse($category->getPath());
+					$needles['categories'] = $needles['category'];
+					$link .= '&catid=' . $catid;
+				}
+			}
+		}
+
+		// Deal with languages only if needed
+		if (!empty($language) && $language != '*' && JLanguageMultilang::isEnabled())
+		{
+			$link .= '&lang=' . $language;
+			$needles['language'] = $language;
+		}
+
+		if ($item = $this->findItem($needles))
+		{
+			$link .= '&Itemid=' . $item;
+		}
+
+		return $link;
 	}
 }

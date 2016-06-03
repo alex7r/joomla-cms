@@ -307,6 +307,22 @@ class MenusModelItem extends JModelAdmin
 	}
 
 	/**
+	 * Returns a Table object, always creating it
+	 *
+	 * @param   type   $type   The table type to instantiate.
+	 * @param   string $prefix A prefix for the table class name. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return  JTable    A database object.
+	 *
+	 * @since   1.6
+	 */
+	public function getTable($type = 'Menu', $prefix = 'MenusTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return  mixed  The data for the form.
@@ -338,6 +354,24 @@ class MenusModelItem extends JModelAdmin
 		$this->preprocessData('com_menus.item', $data);
 
 		return $data;
+	}
+
+	/**
+	 * Loads the menutype ID by a given menutype string
+	 *
+	 * @param   string $menutype The given menutype
+	 *
+	 * @return integer
+	 *
+	 * @since  3.6
+	 */
+	protected function getMenuTypeId($menutype)
+	{
+		$table = $this->getTable('MenuType', 'JTable');
+
+		$table->load(array('menutype' => $menutype));
+
+		return (int) $table->id;
 	}
 
 	/**
@@ -528,6 +562,22 @@ class MenusModelItem extends JModelAdmin
 		$this->cleanCache();
 
 		return true;
+	}
+
+	/**
+	 * Custom clean the cache
+	 *
+	 * @param   string  $group     Cache group name.
+	 * @param   integer $client_id Application client id.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		parent::cleanCache('com_modules');
+		parent::cleanCache('mod_menu');
 	}
 
 	/**
@@ -738,6 +788,35 @@ class MenusModelItem extends JModelAdmin
 	}
 
 	/**
+	 * Method to change the title & alias.
+	 *
+	 * @param   integer $parent_id The id of the parent.
+	 * @param   string  $alias     The alias.
+	 * @param   string  $title     The title.
+	 *
+	 * @return  array  Contains the modified title and alias.
+	 *
+	 * @since   1.6
+	 */
+	protected function generateNewTitle($parent_id, $alias, $title)
+	{
+		// Alter the title & alias
+		$table = $this->getTable();
+
+		while ($table->load(array('alias' => $alias, 'parent_id' => $parent_id)))
+		{
+			if ($title == $table->title)
+			{
+				$title = JString::increment($title);
+			}
+
+			$alias = JString::increment($alias, 'dash');
+		}
+
+		return array($title, $alias);
+	}
+
+	/**
 	 * Method to save the reordered nested set tree.
 	 * First we save the new order values in the lft values of the changed ids.
 	 * Then we invoke the table rebuild to implement the new ordering.
@@ -934,40 +1013,6 @@ class MenusModelItem extends JModelAdmin
 
 			return $user->authorise('core.delete', 'com_menus.menu.' . (int) $menuTypeId);
 		}
-	}
-
-	/**
-	 * Loads the menutype ID by a given menutype string
-	 *
-	 * @param   string $menutype The given menutype
-	 *
-	 * @return integer
-	 *
-	 * @since  3.6
-	 */
-	protected function getMenuTypeId($menutype)
-	{
-		$table = $this->getTable('MenuType', 'JTable');
-
-		$table->load(array('menutype' => $menutype));
-
-		return (int) $table->id;
-	}
-
-	/**
-	 * Returns a Table object, always creating it
-	 *
-	 * @param   type   $type   The table type to instantiate.
-	 * @param   string $prefix A prefix for the table class name. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  JTable    A database object.
-	 *
-	 * @since   1.6
-	 */
-	public function getTable($type = 'Menu', $prefix = 'MenusTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
 	}
 
 	/**
@@ -1173,51 +1218,6 @@ class MenusModelItem extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
-	}
-
-	/**
-	 * Method to change the title & alias.
-	 *
-	 * @param   integer $parent_id The id of the parent.
-	 * @param   string  $alias     The alias.
-	 * @param   string  $title     The title.
-	 *
-	 * @return  array  Contains the modified title and alias.
-	 *
-	 * @since   1.6
-	 */
-	protected function generateNewTitle($parent_id, $alias, $title)
-	{
-		// Alter the title & alias
-		$table = $this->getTable();
-
-		while ($table->load(array('alias' => $alias, 'parent_id' => $parent_id)))
-		{
-			if ($title == $table->title)
-			{
-				$title = JString::increment($title);
-			}
-
-			$alias = JString::increment($alias, 'dash');
-		}
-
-		return array($title, $alias);
-	}
-
-	/**
-	 * Custom clean the cache
-	 *
-	 * @param   string  $group     Cache group name.
-	 * @param   integer $client_id Application client id.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
-	{
-		parent::cleanCache('com_modules');
-		parent::cleanCache('mod_menu');
 	}
 
 	/**

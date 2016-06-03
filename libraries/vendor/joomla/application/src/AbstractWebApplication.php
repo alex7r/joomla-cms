@@ -8,10 +8,10 @@
 
 namespace Joomla\Application;
 
-use Joomla\Uri\Uri;
 use Joomla\Input\Input;
-use Joomla\Session\Session;
 use Joomla\Registry\Registry;
+use Joomla\Session\Session;
+use Joomla\Uri\Uri;
 
 /**
  * Base class for a Joomla! Web application.

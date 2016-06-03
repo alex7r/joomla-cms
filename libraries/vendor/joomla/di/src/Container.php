@@ -80,27 +80,17 @@ class Container
 	}
 
 	/**
-	 * Search the aliases property for a matching alias key.
+	 * Convenience method for building a shared object.
 	 *
-	 * @param   string $key The key to search for.
+	 * @param   string $key The class name to build.
 	 *
-	 * @return  string
+	 * @return  object  Instance of class specified by $key with all dependencies injected.
 	 *
 	 * @since   1.0
 	 */
-	protected function resolveAlias($key)
+	public function buildSharedObject($key)
 	{
-		if (isset($this->aliases[$key]))
-		{
-			return $this->aliases[$key];
-		}
-
-		if ($this->parent instanceof Container)
-		{
-			return $this->parent->resolveAlias($key);
-		}
-
-		return $key;
+		return $this->buildObject($key, true);
 	}
 
 	/**
@@ -147,64 +137,6 @@ class Container
 		}
 
 		return $this->set($key, $callback, $shared)->get($key);
-	}
-
-	/**
-	 * Convenience method for building a shared object.
-	 *
-	 * @param   string $key The class name to build.
-	 *
-	 * @return  object  Instance of class specified by $key with all dependencies injected.
-	 *
-	 * @since   1.0
-	 */
-	public function buildSharedObject($key)
-	{
-		return $this->buildObject($key, true);
-	}
-
-	/**
-	 * Create a child Container with a new property scope that
-	 * that has the ability to access the parent scope when resolving.
-	 *
-	 * @return  Container  This object for chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function createChild()
-	{
-		return new static($this);
-	}
-
-	/**
-	 * Extend a defined service Closure by wrapping the existing one with a new Closure.  This
-	 * works very similar to a decorator pattern.  Note that this only works on service Closures
-	 * that have been defined in the current Provider, not parent providers.
-	 *
-	 * @param   string   $key      The unique identifier for the Closure or property.
-	 * @param   \Closure $callable A Closure to wrap the original service Closure.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 * @throws  \InvalidArgumentException
-	 */
-	public function extend($key, \Closure $callable)
-	{
-		$key = $this->resolveAlias($key);
-		$raw = $this->getRaw($key);
-
-		if (is_null($raw))
-		{
-			throw new \InvalidArgumentException(sprintf('The requested key %s does not exist to extend.', $key));
-		}
-
-		$closure = function ($c) use ($callable, $raw)
-		{
-			return $callable($raw['callback']($c), $c);
-		};
-
-		$this->set($key, $closure, $raw['shared']);
 	}
 
 	/**
@@ -263,6 +195,95 @@ class Container
 	}
 
 	/**
+	 * Get the raw data assigned to a key.
+	 *
+	 * @param   string $key The key for which to get the stored item.
+	 *
+	 * @return  mixed
+	 *
+	 * @since   1.0
+	 */
+	protected function getRaw($key)
+	{
+		if (isset($this->dataStore[$key]))
+		{
+			return $this->dataStore[$key];
+		}
+
+		$aliasKey = $this->resolveAlias($key);
+
+		if ($aliasKey != $key && isset($this->dataStore[$aliasKey]))
+		{
+			return $this->dataStore[$aliasKey];
+		}
+
+		if ($this->parent instanceof Container)
+		{
+			return $this->parent->getRaw($key);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Search the aliases property for a matching alias key.
+	 *
+	 * @param   string $key The key to search for.
+	 *
+	 * @return  string
+	 *
+	 * @since   1.0
+	 */
+	protected function resolveAlias($key)
+	{
+		if (isset($this->aliases[$key]))
+		{
+			return $this->aliases[$key];
+		}
+
+		if ($this->parent instanceof Container)
+		{
+			return $this->parent->resolveAlias($key);
+		}
+
+		return $key;
+	}
+
+	/**
+	 * Method to retrieve the results of running the $callback for the specified $key;
+	 *
+	 * @param   string  $key      Name of the dataStore key to get.
+	 * @param   boolean $forceNew True to force creation and return of a new instance.
+	 *
+	 * @return  mixed   Results of running the $callback for the specified $key.
+	 *
+	 * @since   1.0
+	 * @throws  \InvalidArgumentException
+	 */
+	public function get($key, $forceNew = false)
+	{
+		$key = $this->resolveAlias($key);
+		$raw = $this->getRaw($key);
+
+		if (is_null($raw))
+		{
+			throw new \InvalidArgumentException(sprintf('Key %s has not been registered with the container.', $key));
+		}
+
+		if ($raw['shared'])
+		{
+			if (!isset($this->instances[$key]) || $forceNew)
+			{
+				$this->instances[$key] = $raw['callback']($this);
+			}
+
+			return $this->instances[$key];
+		}
+
+		return call_user_func($raw['callback'], $this);
+	}
+
+	/**
 	 * Method to set the key and callback to the dataStore array.
 	 *
 	 * @param   string  $key       Name of dataStore key to set.
@@ -302,6 +323,50 @@ class Container
 	}
 
 	/**
+	 * Create a child Container with a new property scope that
+	 * that has the ability to access the parent scope when resolving.
+	 *
+	 * @return  Container  This object for chaining.
+	 *
+	 * @since   1.0
+	 */
+	public function createChild()
+	{
+		return new static($this);
+	}
+
+	/**
+	 * Extend a defined service Closure by wrapping the existing one with a new Closure.  This
+	 * works very similar to a decorator pattern.  Note that this only works on service Closures
+	 * that have been defined in the current Provider, not parent providers.
+	 *
+	 * @param   string   $key      The unique identifier for the Closure or property.
+	 * @param   \Closure $callable A Closure to wrap the original service Closure.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0
+	 * @throws  \InvalidArgumentException
+	 */
+	public function extend($key, \Closure $callable)
+	{
+		$key = $this->resolveAlias($key);
+		$raw = $this->getRaw($key);
+
+		if (is_null($raw))
+		{
+			throw new \InvalidArgumentException(sprintf('The requested key %s does not exist to extend.', $key));
+		}
+
+		$closure = function ($c) use ($callable, $raw)
+		{
+			return $callable($raw['callback']($c), $c);
+		};
+
+		$this->set($key, $closure, $raw['shared']);
+	}
+
+	/**
 	 * Convenience method for creating protected keys.
 	 *
 	 * @param   string   $key      Name of dataStore key to set.
@@ -334,40 +399,6 @@ class Container
 	}
 
 	/**
-	 * Method to retrieve the results of running the $callback for the specified $key;
-	 *
-	 * @param   string  $key      Name of the dataStore key to get.
-	 * @param   boolean $forceNew True to force creation and return of a new instance.
-	 *
-	 * @return  mixed   Results of running the $callback for the specified $key.
-	 *
-	 * @since   1.0
-	 * @throws  \InvalidArgumentException
-	 */
-	public function get($key, $forceNew = false)
-	{
-		$key = $this->resolveAlias($key);
-		$raw = $this->getRaw($key);
-
-		if (is_null($raw))
-		{
-			throw new \InvalidArgumentException(sprintf('Key %s has not been registered with the container.', $key));
-		}
-
-		if ($raw['shared'])
-		{
-			if (!isset($this->instances[$key]) || $forceNew)
-			{
-				$this->instances[$key] = $raw['callback']($this);
-			}
-
-			return $this->instances[$key];
-		}
-
-		return call_user_func($raw['callback'], $this);
-	}
-
-	/**
 	 * Method to check if specified dataStore key exists.
 	 *
 	 * @param   string $key Name of the dataStore key to check.
@@ -381,37 +412,6 @@ class Container
 		$key = $this->resolveAlias($key);
 
 		return (bool) $this->getRaw($key);
-	}
-
-	/**
-	 * Get the raw data assigned to a key.
-	 *
-	 * @param   string $key The key for which to get the stored item.
-	 *
-	 * @return  mixed
-	 *
-	 * @since   1.0
-	 */
-	protected function getRaw($key)
-	{
-		if (isset($this->dataStore[$key]))
-		{
-			return $this->dataStore[$key];
-		}
-
-		$aliasKey = $this->resolveAlias($key);
-
-		if ($aliasKey != $key && isset($this->dataStore[$aliasKey]))
-		{
-			return $this->dataStore[$aliasKey];
-		}
-
-		if ($this->parent instanceof Container)
-		{
-			return $this->parent->getRaw($key);
-		}
-
-		return null;
 	}
 
 	/**

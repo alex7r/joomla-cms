@@ -277,6 +277,33 @@ class JSession implements IteratorAggregate
 	}
 
 	/**
+	 * Get data from the session store
+	 *
+	 * @param   string $name      Name of a variable
+	 * @param   mixed  $default   Default value of a variable if not set
+	 * @param   string $namespace Namespace to use, default to 'default'
+	 *
+	 * @return  mixed  Value of a variable
+	 *
+	 * @since   11.1
+	 */
+	public function get($name, $default = null, $namespace = 'default')
+	{
+		// Add prefix to namespace to avoid collisions
+		$namespace = '__' . $namespace;
+
+		if ($this->_state === 'destroyed')
+		{
+			// @TODO :: generated error here
+			$error = null;
+
+			return $error;
+		}
+
+		return $this->data->get($namespace . '.' . $name, $default);
+	}
+
+	/**
 	 * Create a token-string
 	 *
 	 * @param   integer $length Length of string
@@ -453,33 +480,6 @@ class JSession implements IteratorAggregate
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get data from the session store
-	 *
-	 * @param   string $name      Name of a variable
-	 * @param   mixed  $default   Default value of a variable if not set
-	 * @param   string $namespace Namespace to use, default to 'default'
-	 *
-	 * @return  mixed  Value of a variable
-	 *
-	 * @since   11.1
-	 */
-	public function get($name, $default = null, $namespace = 'default')
-	{
-		// Add prefix to namespace to avoid collisions
-		$namespace = '__' . $namespace;
-
-		if ($this->_state === 'destroyed')
-		{
-			// @TODO :: generated error here
-			$error = null;
-
-			return $error;
-		}
-
-		return $this->data->get($namespace . '.' . $name, $default);
 	}
 
 	/**

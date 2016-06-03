@@ -98,6 +98,18 @@ class JArchiveZip implements JArchiveExtractable
 	}
 
 	/**
+	 * Method to determine if the server has native zip support for faster handling
+	 *
+	 * @return  boolean  True if php has native ZIP support
+	 *
+	 * @since   11.1
+	 */
+	public static function hasNativeSupport()
+	{
+		return (function_exists('zip_open') && function_exists('zip_read'));
+	}
+
+	/**
 	 * Create a ZIP compressed file from an array of file data.
 	 *
 	 * @param   string $archive Path to save archive.
@@ -339,18 +351,6 @@ class JArchiveZip implements JArchiveExtractable
 		}
 
 		throw new RuntimeException($msg);
-	}
-
-	/**
-	 * Method to determine if the server has native zip support for faster handling
-	 *
-	 * @return  boolean  True if php has native ZIP support
-	 *
-	 * @since   11.1
-	 */
-	public static function hasNativeSupport()
-	{
-		return (function_exists('zip_open') && function_exists('zip_read'));
 	}
 
 	/**

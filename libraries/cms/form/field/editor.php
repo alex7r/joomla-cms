@@ -244,25 +244,6 @@ class JFormFieldEditor extends JFormFieldTextarea
 	}
 
 	/**
-	 * Method to get the field input markup for the editor area
-	 *
-	 * @return  string  The field input markup.
-	 *
-	 * @since   1.6
-	 */
-	protected function getInput()
-	{
-		// Get an editor object.
-		$editor = $this->getEditor();
-
-		return $editor->display(
-			$this->name, htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8'), $this->width, $this->height, $this->columns, $this->rows,
-			$this->buttons ? (is_array($this->buttons) ? array_merge($this->buttons, $this->hide) : $this->hide) : false, $this->id, $this->asset,
-			$this->form->getValue($this->authorField), array('syntax' => (string) $this->element['syntax'])
-		);
-	}
-
-	/**
 	 * Method to get a JEditor object based on the form field.
 	 *
 	 * @return  JEditor  The JEditor object.
@@ -318,5 +299,24 @@ class JFormFieldEditor extends JFormFieldTextarea
 		}
 
 		return $this->editor;
+	}
+
+	/**
+	 * Method to get the field input markup for the editor area
+	 *
+	 * @return  string  The field input markup.
+	 *
+	 * @since   1.6
+	 */
+	protected function getInput()
+	{
+		// Get an editor object.
+		$editor = $this->getEditor();
+
+		return $editor->display(
+			$this->name, htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8'), $this->width, $this->height, $this->columns, $this->rows,
+			$this->buttons ? (is_array($this->buttons) ? array_merge($this->buttons, $this->hide) : $this->hide) : false, $this->id, $this->asset,
+			$this->form->getValue($this->authorField), array('syntax' => (string) $this->element['syntax'])
+		);
 	}
 }
