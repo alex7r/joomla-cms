@@ -25,6 +25,19 @@ class JArchiveBzip2Test extends JArchiveTestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->object = new JArchiveBzip2;
+	}
+
+	/**
 	 * Tests the extract Method.
 	 *
 	 * @return  void
@@ -67,18 +80,5 @@ class JArchiveBzip2Test extends JArchiveTestCase
 			extension_loaded('bz2'),
 			JArchiveBzip2::isSupported()
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object = new JArchiveBzip2;
 	}
 }

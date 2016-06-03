@@ -19,9 +19,9 @@ class ContenthistoryControllerHistory extends JControllerAdmin
 	/**
 	 * Deletes and returns correctly.
 	 *
-	 * @return    void
+	 * @return	void
 	 *
-	 * @since    3.2
+	 * @since	3.2
 	 */
 	public function delete()
 	{
@@ -66,9 +66,9 @@ class ContenthistoryControllerHistory extends JControllerAdmin
 	/**
 	 * Proxy for getModel.
 	 *
-	 * @param   string $name   The name of the model
-	 * @param   string $prefix The prefix for the model
-	 * @param   array  $config An additional array of parameters
+	 * @param   string  $name    The name of the model
+	 * @param   string  $prefix  The prefix for the model
+	 * @param   array   $config  An additional array of parameters
 	 *
 	 * @return  JModelLegacy  The model
 	 *
@@ -82,9 +82,9 @@ class ContenthistoryControllerHistory extends JControllerAdmin
 	/**
 	 * Toggles the keep forever value for one or more history rows. If it was Yes, changes to No. If No, changes to Yes.
 	 *
-	 * @return    void
+	 * @return	void
 	 *
-	 * @since    3.2
+	 * @since	3.2
 	 */
 	public function keep()
 	{

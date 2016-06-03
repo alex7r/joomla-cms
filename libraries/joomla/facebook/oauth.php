@@ -27,9 +27,9 @@ class JFacebookOAuth extends JOAuth2Client
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry $options JFacebookOauth options object.
-	 * @param   JHttp    $client  The HTTP client object.
-	 * @param   JInput   $input   The input object.
+	 * @param   Registry  $options  JFacebookOauth options object.
+	 * @param   JHttp     $client   The HTTP client object.
+	 * @param   JInput    $input    The input object.
 	 *
 	 * @since   13.1
 	 */
@@ -48,7 +48,7 @@ class JFacebookOAuth extends JOAuth2Client
 	/**
 	 * Method used to set permissions.
 	 *
-	 * @param   string $scope Comma separated list of permissions.
+	 * @param   string  $scope  Comma separated list of permissions.
 	 *
 	 * @return  JFacebookOauth  This object for method chaining
 	 *

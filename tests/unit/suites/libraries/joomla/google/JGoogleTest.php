@@ -46,9 +46,33 @@ class JGoogleTest extends TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$_SERVER['HTTP_HOST'] = 'mydomain.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$this->options = new JRegistry;
+		$this->http = $this->getMock('JHttp', array('head', 'get', 'delete', 'trace', 'post', 'put', 'patch'), array($this->options));
+		$this->input = new JInput;
+		$this->oauth = new JOAuth2Client($this->options, $this->http, $this->input);
+		$this->auth = new JGoogleAuthOauth2($this->options, $this->oauth);
+		$this->object = new JGoogle($this->options, $this->auth);
+	}
+
+	/**
 	 * Tests the magic __get method - data
 	 *
-	 * @group    JGoogle
+	 * @group	JGoogle
 	 * @return void
 	 */
 	public function test__GetData()
@@ -77,7 +101,7 @@ class JGoogleTest extends TestCase
 	/**
 	 * Tests the magic __get method - embed
 	 *
-	 * @group    JGoogle
+	 * @group	JGoogle
 	 * @return void
 	 */
 	public function test__GetEmbed()
@@ -96,7 +120,7 @@ class JGoogleTest extends TestCase
 	/**
 	 * Tests the setOption method
 	 *
-	 * @group    JGoogle
+	 * @group	JGoogle
 	 * @return void
 	 */
 	public function testSetOption()
@@ -112,7 +136,7 @@ class JGoogleTest extends TestCase
 	/**
 	 * Tests the getOption method
 	 *
-	 * @group    JGoogle
+	 * @group	JGoogle
 	 * @return void
 	 */
 	public function testGetOption()
@@ -123,29 +147,5 @@ class JGoogleTest extends TestCase
 			$this->object->getOption('key'),
 			$this->equalTo('value')
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$_SERVER['HTTP_HOST']       = 'mydomain.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$this->options = new JRegistry;
-		$this->http    = $this->getMock('JHttp', array('head', 'get', 'delete', 'trace', 'post', 'put', 'patch'), array($this->options));
-		$this->input   = new JInput;
-		$this->oauth   = new JOAuth2Client($this->options, $this->http, $this->input);
-		$this->auth    = new JGoogleAuthOauth2($this->options, $this->oauth);
-		$this->object  = new JGoogle($this->options, $this->auth);
 	}
 }

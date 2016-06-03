@@ -23,7 +23,7 @@ class ContenthistoryViewPreview extends JViewLegacy
 	/**
 	 * Method to display the view.
 	 *
-	 * @param   string $tpl A template file to load. [optional]
+	 * @param   string  $tpl  A template file to load. [optional]
 	 *
 	 * @return  mixed  Exception on failure, void on success.
 	 *
@@ -32,7 +32,7 @@ class ContenthistoryViewPreview extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$this->state = $this->get('State');
-		$this->item  = $this->get('Item');
+		$this->item = $this->get('Item');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

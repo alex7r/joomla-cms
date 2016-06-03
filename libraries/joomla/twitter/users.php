@@ -19,10 +19,10 @@ class JTwitterUsers extends JTwitterObject
 	/**
 	 * Method to get up to 100 users worth of extended information, specified by either ID, screen name, or combination of the two.
 	 *
-	 * @param   string  $screen_name     A comma separated list of screen names, up to 100 are allowed in a single request.
-	 * @param   string  $id              A comma separated list of user IDs, up to 100 are allowed in a single request.
-	 * @param   boolean $entities        When set to either true, t or 1, each tweet will include a node called "entities,". This node offers a variety of
-	 *                                   metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
+	 * @param   string   $screen_name  A comma separated list of screen names, up to 100 are allowed in a single request.
+	 * @param   string   $id           A comma separated list of user IDs, up to 100 are allowed in a single request.
+	 * @param   boolean  $entities     When set to either true, t or 1, each tweet will include a node called "entities,". This node offers a variety of
+	 * 								   metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -67,7 +67,7 @@ class JTwitterUsers extends JTwitterObject
 	/**
 	 * Method to access the profile banner in various sizes for the user with the indicated screen_name.
 	 *
-	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -103,11 +103,11 @@ class JTwitterUsers extends JTwitterObject
 	/**
 	 * Method used to search for users
 	 *
-	 * @param   string  $query        The search query to run against people search.
-	 * @param   integer $page         Specifies the page of results to retrieve.
-	 * @param   integer $count        The number of people to retrieve. Maximum of 20 allowed per page.
-	 * @param   boolean $entities     When set to either true, t or 1, each tweet will include a node called "entities,". This node offers a
-	 *                                variety of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
+	 * @param   string   $query     The search query to run against people search.
+	 * @param   integer  $page      Specifies the page of results to retrieve.
+	 * @param   integer  $count     The number of people to retrieve. Maximum of 20 allowed per page.
+	 * @param   boolean  $entities  When set to either true, t or 1, each tweet will include a node called "entities,". This node offers a
+	 * 								variety of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -122,7 +122,7 @@ class JTwitterUsers extends JTwitterObject
 		$data['q'] = rawurlencode($query);
 
 		// Check if page is specified.
-		if ($page > 0)
+		if ($page > 0 )
 		{
 			$data['page'] = $page;
 		}
@@ -149,8 +149,8 @@ class JTwitterUsers extends JTwitterObject
 	/**
 	 * Method to get extended information of a given user, specified by ID or screen name as per the required id parameter.
 	 *
-	 * @param   mixed   $user     Either an integer containing the user ID or a string containing the screen name.
-	 * @param   boolean $entities Set to true to return IDs as strings, false to return as integers.
+	 * @param   mixed    $user      Either an integer containing the user ID or a string containing the screen name.
+	 * @param   boolean  $entities  Set to true to return IDs as strings, false to return as integers.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -193,9 +193,9 @@ class JTwitterUsers extends JTwitterObject
 	/**
 	 * Method to get an array of users that the specified user can contribute to.
 	 *
-	 * @param   mixed   $user        Either an integer containing the user ID or a string containing the screen name.
-	 * @param   boolean $entities    Set to true to return IDs as strings, false to return as integers.
-	 * @param   boolean $skip_status When set to either true, t or 1 statuses will not be included in the returned user objects.
+	 * @param   mixed    $user         Either an integer containing the user ID or a string containing the screen name.
+	 * @param   boolean  $entities     Set to true to return IDs as strings, false to return as integers.
+	 * @param   boolean  $skip_status  When set to either true, t or 1 statuses will not be included in the returned user objects.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -244,9 +244,9 @@ class JTwitterUsers extends JTwitterObject
 	/**
 	 * Method to get an array of users who can contribute to the specified account.
 	 *
-	 * @param   mixed   $user        Either an integer containing the user ID or a string containing the screen name.
-	 * @param   boolean $entities    Set to true to return IDs as strings, false to return as integers.
-	 * @param   boolean $skip_status When set to either true, t or 1 statuses will not be included in the returned user objects.
+	 * @param   mixed    $user         Either an integer containing the user ID or a string containing the screen name.
+	 * @param   boolean  $entities     Set to true to return IDs as strings, false to return as integers.
+	 * @param   boolean  $skip_status  When set to either true, t or 1 statuses will not be included in the returned user objects.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -295,7 +295,7 @@ class JTwitterUsers extends JTwitterObject
 	/**
 	 * Method access to Twitter's suggested user list.
 	 *
-	 * @param   boolean $lang Restricts the suggested categories to the requested language.
+	 * @param   boolean  $lang  Restricts the suggested categories to the requested language.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -324,8 +324,8 @@ class JTwitterUsers extends JTwitterObject
 	/**
 	 * method to access the users in a given category of the Twitter suggested user list.
 	 *
-	 * @param   string  $slug The short name of list or a category.
-	 * @param   boolean $lang Restricts the suggested categories to the requested language.
+	 * @param   string   $slug  The short name of list or a category.
+	 * @param   boolean  $lang  Restricts the suggested categories to the requested language.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -355,7 +355,7 @@ class JTwitterUsers extends JTwitterObject
 	 * Method to access the users in a given category of the Twitter suggested user list and return
 	 * their most recent status if they are not a protected user.
 	 *
-	 * @param   string $slug The short name of list or a category.
+	 * @param   string  $slug  The short name of list or a category.
 	 *
 	 * @return  array  The decoded JSON response
 	 *

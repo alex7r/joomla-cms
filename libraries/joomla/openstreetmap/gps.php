@@ -19,15 +19,15 @@ class JOpenstreetmapGps extends JOpenstreetmapObject
 	/**
 	 * Method to retrieve GPS points
 	 *
-	 * @param   float   $left   Left boundary
-	 * @param   float   $bottom Bottom boundary
-	 * @param   float   $right  Right boundary
-	 * @param   float   $top    Top boundary
-	 * @param   integer $page   Page number
+	 * @param   float    $left    Left boundary
+	 * @param   float    $bottom  Bottom boundary
+	 * @param   float    $right   Right boundary
+	 * @param   float    $top     Top boundary
+	 * @param   integer  $page    Page number
 	 *
-	 * @return    array  The XML response containing GPS points
+	 * @return	array  The XML response containing GPS points
 	 *
-	 * @since    13.1
+	 * @since	13.1
 	 */
 	public function retrieveGps($left, $bottom, $right, $top, $page = 0)
 	{
@@ -48,13 +48,13 @@ class JOpenstreetmapGps extends JOpenstreetmapObject
 	/**
 	 * Method to upload GPS Traces
 	 *
-	 * @param   string  $file        File name that contains trace points
-	 * @param   string  $description Description on trace points
-	 * @param   string  $tags        Tags for trace
-	 * @param   integer $public      1 for public, 0 for private
-	 * @param   string  $visibility  One of the following: private, public, trackable, identifiable
-	 * @param   string  $username    Username
-	 * @param   string  $password    Password
+	 * @param   string   $file         File name that contains trace points
+	 * @param   string   $description  Description on trace points
+	 * @param   string   $tags         Tags for trace
+	 * @param   integer  $public       1 for public, 0 for private
+	 * @param   string   $visibility   One of the following: private, public, trackable, identifiable
+	 * @param   string   $username     Username
+	 * @param   string   $password     Password
 	 *
 	 * @return  JHttpResponse  The response
 	 *
@@ -64,11 +64,11 @@ class JOpenstreetmapGps extends JOpenstreetmapObject
 	{
 		// Set parameters.
 		$parameters = array(
-			'file'        => $file,
+			'file' => $file,
 			'description' => $description,
-			'tags'        => $tags,
-			'public'      => $public,
-			'visibility'  => $visibility
+			'tags' => $tags,
+			'public' => $public,
+			'visibility' => $visibility
 		);
 
 		// Set the API base
@@ -91,9 +91,9 @@ class JOpenstreetmapGps extends JOpenstreetmapObject
 	/**
 	 * Method to download Trace details
 	 *
-	 * @param   integer $id       Trace identifier
-	 * @param   string  $username Username
-	 * @param   string  $password Password
+	 * @param   integer  $id        Trace identifier
+	 * @param   string   $username  Username
+	 * @param   string   $password  Password
 	 *
 	 * @return  array  The XML response
 	 *
@@ -116,9 +116,9 @@ class JOpenstreetmapGps extends JOpenstreetmapObject
 	/**
 	 * Method to download Trace data
 	 *
-	 * @param   integer $id       Trace identifier
-	 * @param   string  $username Username
-	 * @param   string  $password Password
+	 * @param   integer  $id        Trace identifier
+	 * @param   string   $username  Username
+	 * @param   string   $password  Password
 	 *
 	 * @return  array  The XML response
 	 *

@@ -100,44 +100,6 @@ class JFormFieldTag extends JFormFieldList
 	}
 
 	/**
-	 * Determine if the field has to be tagnested
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.1
-	 */
-	public function isNested()
-	{
-		if (is_null($this->isNested))
-		{
-			// If mode="nested" || ( mode not set & config = nested )
-			if ((isset($this->element['mode']) && $this->element['mode'] == 'nested')
-				|| (!isset($this->element['mode']) && $this->comParams->get('tag_field_ajax_mode', 1) == 0)
-			)
-			{
-				$this->isNested = true;
-			}
-		}
-
-		return $this->isNested;
-	}
-
-	/**
-	 * Determines if the field allows or denies custom values
-	 *
-	 * @return  boolean
-	 */
-	public function allowCustom()
-	{
-		if (isset($this->element['custom']) && $this->element['custom'] == 'deny')
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Method to get a list of tags
 	 *
 	 * @return  array  The field option objects.
@@ -146,7 +108,7 @@ class JFormFieldTag extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$published = $this->element['published'] ? $this->element['published'] : array(0, 1);
+		$published = $this->element['published']? $this->element['published'] : array(0,1);
 
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
@@ -190,7 +152,7 @@ class JFormFieldTag extends JFormFieldList
 		// Block the possibility to set a tag as it own parent
 		if ($this->form->getName() == 'com_tags.tag')
 		{
-			$id = (int) $this->form->getValue('id', 0);
+			$id   = (int) $this->form->getValue('id', 0);
 
 			foreach ($options as $option)
 			{
@@ -220,7 +182,7 @@ class JFormFieldTag extends JFormFieldList
 	/**
 	 * Add "-" before nested tags, depending on level
 	 *
-	 * @param   array &$options Array of tags
+	 * @param   array  &$options  Array of tags
 	 *
 	 * @return  array  The field option objects.
 	 *
@@ -232,11 +194,48 @@ class JFormFieldTag extends JFormFieldList
 		{
 			foreach ($options as &$option)
 			{
-				$repeat       = (isset($option->level) && $option->level - 1 >= 0) ? $option->level - 1 : 0;
+				$repeat = (isset($option->level) && $option->level - 1 >= 0) ? $option->level - 1 : 0;
 				$option->text = str_repeat('- ', $repeat) . $option->text;
 			}
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Determine if the field has to be tagnested
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.1
+	 */
+	public function isNested()
+	{
+		if (is_null($this->isNested))
+		{
+			// If mode="nested" || ( mode not set & config = nested )
+			if ((isset($this->element['mode']) && $this->element['mode'] == 'nested')
+				|| (!isset($this->element['mode']) && $this->comParams->get('tag_field_ajax_mode', 1) == 0))
+			{
+				$this->isNested = true;
+			}
+		}
+
+		return $this->isNested;
+	}
+
+	/**
+	 * Determines if the field allows or denies custom values
+	 *
+	 * @return  boolean
+	 */
+	public function allowCustom()
+	{
+		if (isset($this->element['custom']) && $this->element['custom'] == 'deny')
+		{
+			return false;
+		}
+
+		return true;
 	}
 }

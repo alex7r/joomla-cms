@@ -21,9 +21,9 @@ class JDocumentRendererHtmlModule extends JDocumentRenderer
 	/**
 	 * Renders a module script and returns the results as a string
 	 *
-	 * @param   string $module  The name of the module to render
-	 * @param   array  $attribs Associative array of values
-	 * @param   string $content If present, module information from the buffer will be used
+	 * @param   string  $module   The name of the module to render
+	 * @param   array   $attribs  Associative array of values
+	 * @param   string  $content  If present, module information from the buffer will be used
 	 *
 	 * @return  string  The output of the script
 	 *
@@ -48,12 +48,12 @@ class JDocumentRendererHtmlModule extends JDocumentRenderer
 				 * If module isn't found in the database but data has been pushed in the buffer
 				 * we want to render it
 				 */
-				$tmp            = $module;
-				$module         = new stdClass;
+				$tmp = $module;
+				$module = new stdClass;
 				$module->params = null;
 				$module->module = $tmp;
-				$module->id     = 0;
-				$module->user   = 0;
+				$module->id = 0;
+				$module->user = 0;
 			}
 		}
 
@@ -71,7 +71,7 @@ class JDocumentRendererHtmlModule extends JDocumentRenderer
 		{
 			$template_params = new Registry(html_entity_decode($attribs['params'], ENT_COMPAT, 'UTF-8'));
 			$params->merge($template_params);
-			$module         = clone $module;
+			$module = clone $module;
 			$module->params = (string) $params;
 		}
 
@@ -81,10 +81,10 @@ class JDocumentRendererHtmlModule extends JDocumentRenderer
 		if ($params->get('cache', 0) == 1 && JFactory::getConfig()->get('caching') >= 1 && $cachemode != 'id' && $cachemode != 'safeuri')
 		{
 			// Default to itemid creating method and workarounds on
-			$cacheparams               = new stdClass;
-			$cacheparams->cachemode    = $cachemode;
-			$cacheparams->class        = 'JModuleHelper';
-			$cacheparams->method       = 'renderModule';
+			$cacheparams = new stdClass;
+			$cacheparams->cachemode = $cachemode;
+			$cacheparams->class = 'JModuleHelper';
+			$cacheparams->method = 'renderModule';
 			$cacheparams->methodparams = array($module, $attribs);
 
 			return JModuleHelper::ModuleCache($module, $params, $cacheparams);

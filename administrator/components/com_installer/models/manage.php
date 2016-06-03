@@ -21,7 +21,7 @@ class InstallerModelManage extends InstallerModel
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -45,10 +45,41 @@ class InstallerModelManage extends InstallerModel
 	}
 
 	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState($ordering = 'name', $direction = 'asc')
+	{
+		$app = JFactory::getApplication();
+
+		// Load the filter state.
+		$this->setState('filter.search', $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
+		$this->setState('filter.client_id', $this->getUserStateFromRequest($this->context . '.filter.client_id', 'filter_client_id', null, 'int'));
+		$this->setState('filter.status', $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status', '', 'string'));
+		$this->setState('filter.type', $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string'));
+		$this->setState('filter.folder', $this->getUserStateFromRequest($this->context . '.filter.folder', 'filter_folder', '', 'string'));
+
+		$this->setState('message', $app->getUserState('com_installer.message'));
+		$this->setState('extension_message', $app->getUserState('com_installer.extension_message'));
+		$app->setUserState('com_installer.message', '');
+		$app->setUserState('com_installer.extension_message', '');
+
+		parent::populateState($ordering, $direction);
+	}
+
+	/**
 	 * Enable/Disable an extension.
 	 *
-	 * @param   array &$eid  Extension ids to un/publish
-	 * @param   int   $value Publish value
+	 * @param   array  &$eid   Extension ids to un/publish
+	 * @param   int    $value  Publish value
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -120,7 +151,7 @@ class InstallerModelManage extends InstallerModel
 	/**
 	 * Refreshes the cached manifest information for an extension.
 	 *
-	 * @param   int $eid extension identifier (key in #__extensions)
+	 * @param   int  $eid  extension identifier (key in #__extensions)
 	 *
 	 * @return  boolean  result of refresh
 	 *
@@ -135,7 +166,7 @@ class InstallerModelManage extends InstallerModel
 
 		// Get an installer object for the extension type
 		$installer = JInstaller::getInstance();
-		$result    = 0;
+		$result = 0;
 
 		// Uninstall the chosen extensions
 		foreach ($eid as $id)
@@ -149,7 +180,7 @@ class InstallerModelManage extends InstallerModel
 	/**
 	 * Remove (uninstall) an extension
 	 *
-	 * @param   array $eid An array of identifiers
+	 * @param   array  $eid  An array of identifiers
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -179,10 +210,10 @@ class InstallerModelManage extends InstallerModel
 
 		// Get an installer object for the extension type
 		$installer = JInstaller::getInstance();
-		$row       = JTable::getInstance('extension');
+		$row = JTable::getInstance('extension');
 
 		// Uninstall the chosen extensions
-		$msgs   = array();
+		$msgs = array();
 		$result = false;
 
 		foreach ($eid as $id)
@@ -192,7 +223,7 @@ class InstallerModelManage extends InstallerModel
 			$result = false;
 
 			$langstring = 'COM_INSTALLER_TYPE_TYPE_' . strtoupper($row->type);
-			$rowtype    = JText::_($langstring);
+			$rowtype = JText::_($langstring);
 
 			if (strpos($rowtype, $langstring) !== false)
 			{
@@ -240,37 +271,6 @@ class InstallerModelManage extends InstallerModel
 		$app->setUserState('com_installer.extension_message', $installer->get('extension_message'));
 
 		return $result;
-	}
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState($ordering = 'name', $direction = 'asc')
-	{
-		$app = JFactory::getApplication();
-
-		// Load the filter state.
-		$this->setState('filter.search', $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-		$this->setState('filter.client_id', $this->getUserStateFromRequest($this->context . '.filter.client_id', 'filter_client_id', null, 'int'));
-		$this->setState('filter.status', $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status', '', 'string'));
-		$this->setState('filter.type', $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string'));
-		$this->setState('filter.folder', $this->getUserStateFromRequest($this->context . '.filter.folder', 'filter_folder', '', 'string'));
-
-		$this->setState('message', $app->getUserState('com_installer.message'));
-		$this->setState('extension_message', $app->getUserState('com_installer.extension_message'));
-		$app->setUserState('com_installer.message', '');
-		$app->setUserState('com_installer.extension_message', '');
-
-		parent::populateState($ordering, $direction);
 	}
 
 	/**

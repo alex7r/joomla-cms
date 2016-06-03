@@ -26,8 +26,8 @@ class JFeedParserAtom extends JFeedParser
 	/**
 	 * Method to handle the `<author>` element for the feed.
 	 *
-	 * @param   JFeed            $feed The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement $el   The current XML element object to handle.
+	 * @param   JFeed             $feed  The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement  $el    The current XML element object to handle.
 	 *
 	 * @return  void
 	 *
@@ -42,8 +42,8 @@ class JFeedParserAtom extends JFeedParser
 	/**
 	 * Method to handle the `<contributor>` element for the feed.
 	 *
-	 * @param   JFeed            $feed The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement $el   The current XML element object to handle.
+	 * @param   JFeed             $feed  The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement  $el    The current XML element object to handle.
 	 *
 	 * @return  void
 	 *
@@ -57,8 +57,8 @@ class JFeedParserAtom extends JFeedParser
 	/**
 	 * Method to handle the `<generator>` element for the feed.
 	 *
-	 * @param   JFeed            $feed The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement $el   The current XML element object to handle.
+	 * @param   JFeed             $feed  The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement  $el    The current XML element object to handle.
 	 *
 	 * @return  void
 	 *
@@ -72,8 +72,8 @@ class JFeedParserAtom extends JFeedParser
 	/**
 	 * Method to handle the `<id>` element for the feed.
 	 *
-	 * @param   JFeed            $feed The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement $el   The current XML element object to handle.
+	 * @param   JFeed             $feed  The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement  $el    The current XML element object to handle.
 	 *
 	 * @return  void
 	 *
@@ -87,8 +87,8 @@ class JFeedParserAtom extends JFeedParser
 	/**
 	 * Method to handle the `<link>` element for the feed.
 	 *
-	 * @param   JFeed            $feed The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement $el   The current XML element object to handle.
+	 * @param   JFeed             $feed  The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement  $el    The current XML element object to handle.
 	 *
 	 * @return  void
 	 *
@@ -96,7 +96,7 @@ class JFeedParserAtom extends JFeedParser
 	 */
 	protected function handleLink(JFeed $feed, SimpleXMLElement $el)
 	{
-		$link           = new JFeedLink;
+		$link = new JFeedLink;
 		$link->uri      = (string) $el['href'];
 		$link->language = (string) $el['hreflang'];
 		$link->length   = (int) $el['length'];
@@ -110,8 +110,8 @@ class JFeedParserAtom extends JFeedParser
 	/**
 	 * Method to handle the `<rights>` element for the feed.
 	 *
-	 * @param   JFeed            $feed The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement $el   The current XML element object to handle.
+	 * @param   JFeed             $feed  The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement  $el    The current XML element object to handle.
 	 *
 	 * @return  void
 	 *
@@ -125,8 +125,8 @@ class JFeedParserAtom extends JFeedParser
 	/**
 	 * Method to handle the `<subtitle>` element for the feed.
 	 *
-	 * @param   JFeed            $feed The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement $el   The current XML element object to handle.
+	 * @param   JFeed             $feed  The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement  $el    The current XML element object to handle.
 	 *
 	 * @return  void
 	 *
@@ -140,8 +140,8 @@ class JFeedParserAtom extends JFeedParser
 	/**
 	 * Method to handle the `<title>` element for the feed.
 	 *
-	 * @param   JFeed            $feed The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement $el   The current XML element object to handle.
+	 * @param   JFeed             $feed  The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement  $el    The current XML element object to handle.
 	 *
 	 * @return  void
 	 *
@@ -155,8 +155,8 @@ class JFeedParserAtom extends JFeedParser
 	/**
 	 * Method to handle the `<updated>` element for the feed.
 	 *
-	 * @param   JFeed            $feed The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement $el   The current XML element object to handle.
+	 * @param   JFeed             $feed  The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement  $el    The current XML element object to handle.
 	 *
 	 * @return  void
 	 *
@@ -187,8 +187,8 @@ class JFeedParserAtom extends JFeedParser
 	/**
 	 * Method to handle a `<entry>` element for the feed.
 	 *
-	 * @param   JFeedEntry       $entry The JFeedEntry object being built from the parsed feed entry.
-	 * @param   SimpleXMLElement $el    The current XML element object to handle.
+	 * @param   JFeedEntry        $entry  The JFeedEntry object being built from the parsed feed entry.
+	 * @param   SimpleXMLElement  $el     The current XML element object to handle.
 	 *
 	 * @return  void
 	 *

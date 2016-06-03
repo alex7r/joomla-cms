@@ -23,9 +23,22 @@ class JObjectTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->o = new JObject;
+	}
+
+	/**
 	 * Tests the object constructor.
 	 *
-	 * @group     JObject
+	 * @group    JObject
 	 * @covers    JObject::__construct
 	 * @return void
 	 */
@@ -41,7 +54,7 @@ class JObjectTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests setting the default for a property of the object.
 	 *
-	 * @group     JObject
+	 * @group    JObject
 	 * @covers    JObject::def
 	 * @return void
 	 */
@@ -58,7 +71,7 @@ class JObjectTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests getting a property of the object.
 	 *
-	 * @group     JObject
+	 * @group    JObject
 	 * @covers    JObject::get
 	 * @return void
 	 */
@@ -74,7 +87,7 @@ class JObjectTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests getting the properties of the object.
 	 *
-	 * @group     JObject
+	 * @group    JObject
 	 * @covers    JObject::getProperties
 	 * @return void
 	 */
@@ -83,16 +96,16 @@ class JObjectTest extends PHPUnit_Framework_TestCase
 		$this->object = new JObject(
 			array(
 				'_privateproperty1' => 'valuep1',
-				'property1'         => 'value1',
-				'property2'         => 5
+				'property1' => 'value1',
+				'property2' => 5
 			)
 		);
 		$this->assertEquals(
 			array(
-				'_errors'           => array(),
+				'_errors' => array(),
 				'_privateproperty1' => 'valuep1',
-				'property1'         => 'value1',
-				'property2'         => 5
+				'property1' => 'value1',
+				'property2' => 5
 			),
 			$this->object->getProperties(false),
 			'Should get all properties, including private ones'
@@ -110,7 +123,7 @@ class JObjectTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests getting a single error.
 	 *
-	 * @group     JObject
+	 * @group    JObject
 	 * @covers    JObject::getError
 	 * @return void
 	 */
@@ -150,7 +163,7 @@ class JObjectTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests getting the array of errors.
 	 *
-	 * @group     JObject
+	 * @group    JObject
 	 * @covers    JObject::getErrors
 	 * @return void
 	 */
@@ -177,7 +190,7 @@ class JObjectTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests setting a property.
 	 *
-	 * @group     JObject
+	 * @group    JObject
 	 * @covers    JObject::set
 	 * @return void
 	 */
@@ -191,7 +204,7 @@ class JObjectTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests setting multiple properties.
 	 *
-	 * @group     JObject
+	 * @group    JObject
 	 * @covers    JObject::setProperties
 	 * @return void
 	 */
@@ -208,7 +221,7 @@ class JObjectTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests setting an error.
 	 *
-	 * @group     JObject
+	 * @group    JObject
 	 * @covers    JObject::setError
 	 * @return void
 	 */
@@ -220,18 +233,5 @@ class JObjectTest extends PHPUnit_Framework_TestCase
 			'_errors',
 			$this->o
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->o = new JObject;
 	}
 }

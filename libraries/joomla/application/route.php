@@ -27,9 +27,9 @@ class JRoute
 	/**
 	 * Translates an internal Joomla URL to a humanly readable URL.
 	 *
-	 * @param   string  $url       Absolute or Relative URI to Joomla resource.
-	 * @param   boolean $xhtml     Replace & by &amp; for XML compliance.
-	 * @param   integer $ssl       Secure state for the resolved URI.
+	 * @param   string   $url    Absolute or Relative URI to Joomla resource.
+	 * @param   boolean  $xhtml  Replace & by &amp; for XML compliance.
+	 * @param   integer  $ssl    Secure state for the resolved URI.
 	 *                             0: (default) No change, use the protocol currently used in the request
 	 *                             1: Make URI secure using global secure site URI.
 	 *                             2: Make URI unsecure using the global unsecure site URI.
@@ -43,7 +43,7 @@ class JRoute
 		if (!self::$_router)
 		{
 			// Get the router.
-			$app           = JFactory::getApplication();
+			$app = JFactory::getApplication();
 			self::$_router = $app::getRouter();
 
 			// Make sure that we have our router
@@ -76,7 +76,7 @@ class JRoute
 
 			if (!is_array($host_port))
 			{
-				$uri2      = JUri::getInstance();
+				$uri2 = JUri::getInstance();
 				$host_port = array($uri2->getHost(), $uri2->getPort());
 			}
 

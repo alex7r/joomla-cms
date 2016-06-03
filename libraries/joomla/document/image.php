@@ -19,7 +19,7 @@ class JDocumentImage extends JDocument
 	/**
 	 * Class constructor
 	 *
-	 * @param   array $options Associative array of options
+	 * @param   array  $options  Associative array of options
 	 *
 	 * @since   12.1
 	 */
@@ -37,8 +37,8 @@ class JDocumentImage extends JDocument
 	/**
 	 * Render the document.
 	 *
-	 * @param   boolean $cache  If true, cache the output
-	 * @param   array   $params Associative array of attributes
+	 * @param   boolean  $cache   If true, cache the output
+	 * @param   array    $params  Associative array of attributes
 	 *
 	 * @return  The rendered data
 	 *

@@ -118,25 +118,25 @@ class JAccess
 	 */
 	public static function clearStatics()
 	{
-		self::$viewLevels                      = array();
-		self::$assetPermissionsById            = array();
-		self::$assetPermissionsByName          = array();
+		self::$viewLevels = array();
+		self::$assetPermissionsById = array();
+		self::$assetPermissionsByName = array();
 		self::$assetPermissionsParentIdMapping = array();
-		self::$preloadedAssetTypes             = array();
-		self::$identities                      = array();
-		self::$assetRules                      = array();
-		self::$userGroups                      = array();
-		self::$userGroupPaths                  = array();
-		self::$groupsByUser                    = array();
+		self::$preloadedAssetTypes = array();
+		self::$identities = array();
+		self::$assetRules = array();
+		self::$userGroups = array();
+		self::$userGroupPaths = array();
+		self::$groupsByUser = array();
 	}
 
 	/**
 	 * Method to check if a user is authorised to perform an action, optionally on an asset.
 	 *
-	 * @param   integer $userId  Id of the user for which to check authorisation.
-	 * @param   string  $action  The name of the action to authorise.
-	 * @param   mixed   $asset   Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
-	 * @param   boolean $preload Indicates whether preloading should be used
+	 * @param   integer  $userId   Id of the user for which to check authorisation.
+	 * @param   string   $action   The name of the action to authorise.
+	 * @param   mixed    $asset    Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
+	 * @param   boolean  $preload  Indicates whether preloading should be used
 	 *
 	 * @return  boolean  True if authorised.
 	 *
@@ -148,14 +148,14 @@ class JAccess
 		$userId = (int) $userId;
 
 		$action = strtolower(preg_replace('#[\s\-]+#', '.', trim($action)));
-		$asset  = strtolower(preg_replace('#[\s\-]+#', '.', trim($asset)));
+		$asset = strtolower(preg_replace('#[\s\-]+#', '.', trim($asset)));
 
 		// Default to the root asset node.
 		if (empty($asset))
 		{
-			$db     = JFactory::getDbo();
+			$db = JFactory::getDbo();
 			$assets = JTable::getInstance('Asset', 'JTable', array('dbo' => $db));
-			$asset  = $assets->getRootId();
+			$asset = $assets->getRootId();
 		}
 
 		// Auto preloads assets for the asset type:
@@ -187,42 +187,10 @@ class JAccess
 	}
 
 	/**
-	 * Method to get the asset type from the asset name.
-	 *
-	 * For top level components this returns "components":
-	 * 'com_content' returns 'components'
-	 *
-	 * For other types:
-	 * 'com_content.article.1' returns 'com_content.article'
-	 * 'com_content.category.1' returns 'com_content.category'
-	 *
-	 * @param   string $asset Asset Name
-	 *
-	 * @return  string  Asset Type.
-	 *
-	 * @since    1.6
-	 */
-	public static function getAssetType($asset)
-	{
-		$lastDot = strrpos($asset, '.');
-
-		if ($asset !== 'root.1' && $lastDot !== false)
-		{
-			$assetType = substr($asset, 0, $lastDot);
-		}
-		else
-		{
-			$assetType = 'components';
-		}
-
-		return $assetType;
-	}
-
-	/**
 	 * Method to preload the JAccessRules object for the given asset type.
 	 *
-	 * @param   string|array $assetTypes e.g. 'com_content.article'
-	 * @param   boolean      $reload     Set to true to reload from database.
+	 * @param   string|array  $assetTypes  e.g. 'com_content.article'
+	 * @param   boolean       $reload      Set to true to reload from database.
 	 *
 	 * @return   boolean True on success.
 	 *
@@ -242,7 +210,7 @@ class JAccess
 			// Mark in the profiler.
 			JDEBUG ? $_PROFILER->mark('Start JAccess::preload(components)') : null;
 
-			$components                = self::preloadComponents();
+			$components = self::preloadComponents();
 			self::$preloadedAssetTypes = array_merge(self::$preloadedAssetTypes, array_flip($components));
 
 			// Mark in the profiler.
@@ -285,6 +253,138 @@ class JAccess
 	}
 
 	/**
+	 * Method to recursively retrieve the list of parent Asset IDs
+	 * for a particular Asset.
+	 *
+	 * @param   string      $assetType  e.g. 'com_content.article'
+	 * @param   string|int  $assetId    numeric Asset ID
+	 *
+	 * @return   array  List of Ancestor IDs (includes original $assetId)
+	 *
+	 * @since    1.6
+	 */
+	protected static function getAssetAncestors($assetType, $assetId)
+	{
+		// Get the extension name from the $assetType provided
+		$extensionName = self::getExtensionNameFromAsset($assetType);
+
+		// Holds the list of ancestors for the Asset ID:
+		$ancestors = array();
+
+		// Add in our starting Asset ID:
+		$ancestors[] = (int) $assetId;
+
+		// Initialize the variable we'll use in the loop:
+		$id = (int) $assetId;
+		while ($id !== 0)
+		{
+			if (isset(self::$assetPermissionsParentIdMapping[$extensionName][$id]))
+			{
+				$id = (int) self::$assetPermissionsParentIdMapping[$extensionName][$id]->parent_id;
+
+				if ($id !== 0)
+				{
+					$ancestors[] = $id;
+				}
+			}
+			else
+			{
+				// Add additional case to break out of the while loop automatically in
+				// the case that the ID is non-existent in our mapping variable above.
+				break;
+			}
+		}
+
+		return $ancestors;
+	}
+
+	/**
+	 * Method to retrieve the list of Asset IDs and their Parent Asset IDs
+	 * and store them for later usage in getAssetRules().
+	 *
+	 * @param   string  $assetType  e.g. 'com_content.article'
+	 *
+	 * @return   array  List of Asset IDs (includes Parent Asset ID Info)
+	 *
+	 * @since    1.6
+	 */
+	protected static function &preloadPermissionsParentIdMapping($assetType)
+	{
+		// Get the extension name from the $assetType provided
+		$extensionName = self::getExtensionNameFromAsset($assetType);
+
+		if (!isset(self::$assetPermissionsParentIdMapping[$extensionName]))
+		{
+			// Get the database connection object.
+			$db = JFactory::getDbo();
+
+			// Get a fresh query object:
+			$query    = $db->getQuery(true);
+
+			// Build the database query:
+			$query->select('a.id, a.parent_id');
+			$query->from('#__assets AS a');
+			$query->where('(a.name LIKE ' . $db->quote($extensionName . '.%') . ' OR a.name = ' . $db->quote($extensionName) . ' OR a.id = 1)');
+
+			// Get the Name Permission Map List
+			$db->setQuery($query);
+			$parentIdMapping = $db->loadObjectList('id');
+
+			self::$assetPermissionsParentIdMapping[$extensionName] = &$parentIdMapping;
+		}
+
+		return self::$assetPermissionsParentIdMapping[$extensionName];
+	}
+
+	/**
+	 * Method to retrieve the Asset Rule strings for this particular
+	 * Asset Type and stores them for later usage in getAssetRules().
+	 * Stores 2 arrays: one where the list has the Asset ID as the key
+	 * and a second one where the Asset Name is the key.
+	 *
+	 * @param   string  $assetType  e.g. 'com_content.article'
+	 *
+	 * @return   bool  True
+	 *
+	 * @since    1.6
+	 */
+	protected static function preloadPermissions($assetType)
+	{
+		// Get the extension name from the $assetType provided
+		$extensionName = self::getExtensionNameFromAsset($assetType);
+
+		if (!isset(self::$assetPermissionsById[$extensionName]) && !isset(self::$assetPermissionsByName[$extensionName]))
+		{
+			// Get the database connection object.
+			$db = JFactory::getDbo();
+
+			// Get a fresh query object:
+			$query    = $db->getQuery(true);
+
+			// Build the database query:
+			$query->select('a.id, a.name, a.rules');
+			$query->from('#__assets AS a');
+			$query->where('(a.name LIKE ' . $db->quote($extensionName . '.%') . ' OR a.name = ' . $db->quote($extensionName) . ' OR a.id = 1 )');
+
+			// Get the Name Permission Map List
+			$db->setQuery($query);
+
+			$iterator = $db->getIterator();
+
+			self::$assetPermissionsById[$extensionName] = array();
+			self::$assetPermissionsByName[$extensionName] = array();
+			foreach ($iterator as $row)
+			{
+				self::$assetPermissionsById[$extensionName][$row->id] = $row;
+				self::$assetPermissionsByName[$extensionName][$row->name] = $row;
+			}
+
+		}
+
+		return true;
+	}
+
+	/**
 	 * Method to preload the JAccessRules objects for all components.
 	 *
 	 * Note: This will only get the base permissions for the component.
@@ -301,7 +401,7 @@ class JAccess
 		$db = JFactory::getDbo();
 
 		// Build the database query:
-		$query = $db->getQuery(true);
+		$query    = $db->getQuery(true);
 		$query->select('element');
 		$query->from('#__extensions');
 		$query->where('type = ' . $db->quote('component'));
@@ -312,11 +412,11 @@ class JAccess
 		$components = $db->loadColumn();
 
 		// Get a fresh query object:
-		$query = $db->getQuery(true);
+		$query    = $db->getQuery(true);
 
 		// Build the in clause for the queries:
 		$inClause = '';
-		$last     = end($components);
+		$last = end($components);
 		foreach ($components as $component)
 		{
 			if ($component === $last)
@@ -338,7 +438,7 @@ class JAccess
 		$db->setQuery($query);
 		$namePermissionMap = $db->loadAssocList('name');
 
-		$root          = array();
+		$root = array();
 		$root['rules'] = '';
 		if (isset($namePermissionMap['root.1']))
 		{
@@ -354,7 +454,7 @@ class JAccess
 		foreach ($namePermissionMap as $assetName => &$permissions)
 		{
 			// Instantiate and return the JAccessRules object for the asset rules.
-			$rules = new JAccessRules;
+			$rules    = new JAccessRules;
 			$rules->mergeCollection(array($root['rules'], $permissions['rules']));
 
 			$rulesList[$assetName] = $rules;
@@ -371,127 +471,88 @@ class JAccess
 	}
 
 	/**
-	 * Method to retrieve the list of Asset IDs and their Parent Asset IDs
-	 * and store them for later usage in getAssetRules().
+	 * Method to check if a group is authorised to perform an action, optionally on an asset.
 	 *
-	 * @param   string $assetType e.g. 'com_content.article'
+	 * @param   integer  $groupId  The path to the group for which to check authorisation.
+	 * @param   string   $action   The name of the action to authorise.
+	 * @param   mixed    $asset    Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
 	 *
-	 * @return   array  List of Asset IDs (includes Parent Asset ID Info)
+	 * @return  boolean  True if authorised.
 	 *
-	 * @since    1.6
+	 * @since   11.1
 	 */
-	protected static function &preloadPermissionsParentIdMapping($assetType)
+	public static function checkGroup($groupId, $action, $asset = null)
 	{
-		// Get the extension name from the $assetType provided
-		$extensionName = self::getExtensionNameFromAsset($assetType);
+		// Sanitize inputs.
+		$groupId = (int) $groupId;
+		$action = strtolower(preg_replace('#[\s\-]+#', '.', trim($action)));
+		$asset = strtolower(preg_replace('#[\s\-]+#', '.', trim($asset)));
 
-		if (!isset(self::$assetPermissionsParentIdMapping[$extensionName]))
+		// Get group path for group
+		$groupPath = self::getGroupPath($groupId);
+
+		// Default to the root asset node.
+		if (empty($asset))
 		{
-			// Get the database connection object.
 			$db = JFactory::getDbo();
-
-			// Get a fresh query object:
-			$query = $db->getQuery(true);
-
-			// Build the database query:
-			$query->select('a.id, a.parent_id');
-			$query->from('#__assets AS a');
-			$query->where('(a.name LIKE ' . $db->quote($extensionName . '.%') . ' OR a.name = ' . $db->quote($extensionName) . ' OR a.id = 1)');
-
-			// Get the Name Permission Map List
-			$db->setQuery($query);
-			$parentIdMapping = $db->loadObjectList('id');
-
-			self::$assetPermissionsParentIdMapping[$extensionName] = &$parentIdMapping;
+			$assets = JTable::getInstance('Asset', 'JTable', array('dbo' => $db));
+			$asset = $assets->getRootId();
 		}
 
-		return self::$assetPermissionsParentIdMapping[$extensionName];
+		// Get the rules for the asset recursively to root if not already retrieved.
+		if (empty(self::$assetRules[$asset]))
+		{
+			self::$assetRules[$asset] = self::getAssetRules($asset, true);
+		}
+
+		return self::$assetRules[$asset]->allow($action, $groupPath);
 	}
 
 	/**
-	 * Method to get the extension name from the asset name.
+	 * Gets the parent groups that a leaf group belongs to in its branch back to the root of the tree
+	 * (including the leaf group id).
 	 *
-	 * @param   string $asset Asset Name
+	 * @param   mixed  $groupId  An integer or array of integers representing the identities to check.
 	 *
-	 * @return  string  Extension Name.
+	 * @return  mixed  True if allowed, false for an explicit deny, null for an implicit deny.
 	 *
-	 * @since    1.6
+	 * @since   11.1
 	 */
-	public static function getExtensionNameFromAsset($asset)
+	protected static function getGroupPath($groupId)
 	{
-		static $loaded = array();
-
-		if (!isset($loaded[$asset]))
+		// Preload all groups
+		if (empty(self::$userGroups))
 		{
-			if (is_numeric($asset))
-			{
-				$table = JTable::getInstance('Asset');
-				$table->load($asset);
-				$assetName = $table->name;
-			}
-			else
-			{
-				$assetName = $asset;
-			}
-
-			$firstDot = strpos($assetName, '.');
-			if ($assetName !== 'root.1' && $firstDot !== false)
-			{
-				$assetName = substr($assetName, 0, $firstDot);
-			}
-
-			$loaded[$asset] = $assetName;
-		}
-
-		return $loaded[$asset];
-	}
-
-	/**
-	 * Method to retrieve the Asset Rule strings for this particular
-	 * Asset Type and stores them for later usage in getAssetRules().
-	 * Stores 2 arrays: one where the list has the Asset ID as the key
-	 * and a second one where the Asset Name is the key.
-	 *
-	 * @param   string $assetType e.g. 'com_content.article'
-	 *
-	 * @return   bool  True
-	 *
-	 * @since    1.6
-	 */
-	protected static function preloadPermissions($assetType)
-	{
-		// Get the extension name from the $assetType provided
-		$extensionName = self::getExtensionNameFromAsset($assetType);
-
-		if (!isset(self::$assetPermissionsById[$extensionName]) && !isset(self::$assetPermissionsByName[$extensionName]))
-		{
-			// Get the database connection object.
 			$db = JFactory::getDbo();
-
-			// Get a fresh query object:
-			$query = $db->getQuery(true);
-
-			// Build the database query:
-			$query->select('a.id, a.name, a.rules');
-			$query->from('#__assets AS a');
-			$query->where('(a.name LIKE ' . $db->quote($extensionName . '.%') . ' OR a.name = ' . $db->quote($extensionName) . ' OR a.id = 1 )');
-
-			// Get the Name Permission Map List
+			$query = $db->getQuery(true)
+				->select('parent.id, parent.lft, parent.rgt')
+				->from('#__usergroups AS parent')
+				->order('parent.lft');
 			$db->setQuery($query);
-
-			$iterator = $db->getIterator();
-
-			self::$assetPermissionsById[$extensionName]   = array();
-			self::$assetPermissionsByName[$extensionName] = array();
-			foreach ($iterator as $row)
-			{
-				self::$assetPermissionsById[$extensionName][$row->id]     = $row;
-				self::$assetPermissionsByName[$extensionName][$row->name] = $row;
-			}
-
+			self::$userGroups = $db->loadObjectList('id');
 		}
 
-		return true;
+		// Make sure groupId is valid
+		if (!array_key_exists($groupId, self::$userGroups))
+		{
+			return array();
+		}
+
+		// Get parent groups and leaf group
+		if (!isset(self::$userGroupPaths[$groupId]))
+		{
+			self::$userGroupPaths[$groupId] = array();
+
+			foreach (self::$userGroups as $group)
+			{
+				if ($group->lft <= self::$userGroups[$groupId]->lft && $group->rgt >= self::$userGroups[$groupId]->rgt)
+				{
+					self::$userGroupPaths[$groupId][] = $group->id;
+				}
+			}
+		}
+
+		return self::$userGroupPaths[$groupId];
 	}
 
 	/**
@@ -499,8 +560,8 @@ class JAccess
 	 * only the rules explicitly set for the asset or the summation of all inherited rules from
 	 * parent assets and explicit rules.
 	 *
-	 * @param   mixed   $asset     Integer asset id or the name of the asset as a string.
-	 * @param   boolean $recursive True to return the rules object with inherited rules.
+	 * @param   mixed    $asset      Integer asset id or the name of the asset as a string.
+	 * @param   boolean  $recursive  True to return the rules object with inherited rules.
 	 *
 	 * @return  JAccessRules   JAccessRules object for the asset.
 	 *
@@ -521,7 +582,7 @@ class JAccess
 			JDEBUG ? $_PROFILER->mark('Start JAccess::getAssetRules New (' . $asset . ')') : null;
 
 			$assetType = self::getAssetType($asset);
-			$assetId   = self::$assetPermissionsByName[$extensionName][$asset]->id;
+			$assetId = self::$assetPermissionsByName[$extensionName][$asset]->id;
 
 			$ancestors = array_reverse(self::getAssetAncestors($assetType, $assetId));
 
@@ -533,16 +594,16 @@ class JAccess
 			}
 
 			/**
-			 * Hashing the collected rules allows us to store
-			 * only one instance of the JAccessRules object for
-			 * Assets that have the same exact permissions...
-			 * it's a great way to save some memory.
-			 */
+			* Hashing the collected rules allows us to store
+			* only one instance of the JAccessRules object for
+			* Assets that have the same exact permissions...
+			* it's a great way to save some memory.
+			*/
 			$hash = md5(implode(',', $collected));
 
 			if (!isset(self::$assetRulesIdentities[$hash]))
 			{
-				$rules = new JAccessRules;
+				$rules    = new JAccessRules;
 				$rules->mergeCollection($collected);
 
 				self::$assetRulesIdentities[$hash] = $rules;
@@ -609,7 +670,7 @@ class JAccess
 			// Get the root even if the asset is not found and in recursive mode
 			if (empty($result))
 			{
-				$db     = JFactory::getDbo();
+				$db = JFactory::getDbo();
 				$assets = JTable::getInstance('Asset', 'JTable', array('dbo' => $db));
 				$rootId = $assets->getRootId();
 				$query->clear()
@@ -631,49 +692,95 @@ class JAccess
 	}
 
 	/**
-	 * Method to recursively retrieve the list of parent Asset IDs
-	 * for a particular Asset.
+	 * Method to get the extension name from the asset name.
 	 *
-	 * @param   string     $assetType e.g. 'com_content.article'
-	 * @param   string|int $assetId   numeric Asset ID
+	 * @param   string  $asset  Asset Name
 	 *
-	 * @return   array  List of Ancestor IDs (includes original $assetId)
+	 * @return  string  Extension Name.
 	 *
 	 * @since    1.6
 	 */
-	protected static function getAssetAncestors($assetType, $assetId)
+	public static function getExtensionNameFromAsset($asset)
 	{
-		// Get the extension name from the $assetType provided
-		$extensionName = self::getExtensionNameFromAsset($assetType);
+		static $loaded = array();
 
-		// Holds the list of ancestors for the Asset ID:
-		$ancestors = array();
-
-		// Add in our starting Asset ID:
-		$ancestors[] = (int) $assetId;
-
-		// Initialize the variable we'll use in the loop:
-		$id = (int) $assetId;
-		while ($id !== 0)
+		if (!isset($loaded[$asset]))
 		{
-			if (isset(self::$assetPermissionsParentIdMapping[$extensionName][$id]))
+			if (is_numeric($asset))
 			{
-				$id = (int) self::$assetPermissionsParentIdMapping[$extensionName][$id]->parent_id;
-
-				if ($id !== 0)
-				{
-					$ancestors[] = $id;
-				}
+				$table = JTable::getInstance('Asset');
+				$table->load($asset);
+				$assetName = $table->name;
 			}
 			else
 			{
-				// Add additional case to break out of the while loop automatically in
-				// the case that the ID is non-existent in our mapping variable above.
-				break;
+				$assetName = $asset;
 			}
+
+			$firstDot = strpos($assetName, '.');
+			if ($assetName !== 'root.1' && $firstDot !== false)
+			{
+				$assetName = substr($assetName, 0, $firstDot);
+			}
+
+			$loaded[$asset] = $assetName;
 		}
 
-		return $ancestors;
+		return $loaded[$asset];
+	}
+
+	/**
+	 * Method to get the asset type from the asset name.
+	 *
+	 * For top level components this returns "components":
+	 * 'com_content' returns 'components'
+	 *
+	 * For other types:
+	 * 'com_content.article.1' returns 'com_content.article'
+	 * 'com_content.category.1' returns 'com_content.category'
+	 *
+	 * @param   string  $asset  Asset Name
+	 *
+	 * @return  string  Asset Type.
+	 *
+	 * @since    1.6
+	 */
+	public static function getAssetType($asset)
+	{
+		$lastDot = strrpos($asset, '.');
+
+		if ($asset !== 'root.1' && $lastDot !== false)
+		{
+			$assetType = substr($asset, 0, $lastDot);
+		}
+		else
+		{
+			$assetType = 'components';
+		}
+
+		return $assetType;
+	}
+
+	/**
+	 * Method to return the title of a user group
+	 *
+	 * @param   integer  $groupId  Id of the group for which to get the title of.
+	 *
+	 * @return  string  Tthe title of the group
+	 *
+	 * @since   3.5
+	 */
+	public static function getGroupTitle($groupId)
+	{
+		// Fetch the group title from the database
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('title')
+			->from('#__usergroups')
+			->where('id = ' . $db->quote($groupId));
+		$db->setQuery($query);
+
+		return $db->loadResult();
 	}
 
 	/**
@@ -681,8 +788,8 @@ class JAccess
 	 * only the groups explicitly mapped to the user or all groups both explicitly mapped and inherited
 	 * by the user.
 	 *
-	 * @param   integer $userId    Id of the user for which to get the list of groups.
-	 * @param   boolean $recursive True to include inherited user groups.
+	 * @param   integer  $userId     Id of the user for which to get the list of groups.
+	 * @param   boolean  $recursive  True to include inherited user groups.
 	 *
 	 * @return  array    List of user group ids to which the user is mapped.
 	 *
@@ -761,117 +868,10 @@ class JAccess
 	}
 
 	/**
-	 * Method to check if a group is authorised to perform an action, optionally on an asset.
-	 *
-	 * @param   integer $groupId The path to the group for which to check authorisation.
-	 * @param   string  $action  The name of the action to authorise.
-	 * @param   mixed   $asset   Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
-	 *
-	 * @return  boolean  True if authorised.
-	 *
-	 * @since   11.1
-	 */
-	public static function checkGroup($groupId, $action, $asset = null)
-	{
-		// Sanitize inputs.
-		$groupId = (int) $groupId;
-		$action  = strtolower(preg_replace('#[\s\-]+#', '.', trim($action)));
-		$asset   = strtolower(preg_replace('#[\s\-]+#', '.', trim($asset)));
-
-		// Get group path for group
-		$groupPath = self::getGroupPath($groupId);
-
-		// Default to the root asset node.
-		if (empty($asset))
-		{
-			$db     = JFactory::getDbo();
-			$assets = JTable::getInstance('Asset', 'JTable', array('dbo' => $db));
-			$asset  = $assets->getRootId();
-		}
-
-		// Get the rules for the asset recursively to root if not already retrieved.
-		if (empty(self::$assetRules[$asset]))
-		{
-			self::$assetRules[$asset] = self::getAssetRules($asset, true);
-		}
-
-		return self::$assetRules[$asset]->allow($action, $groupPath);
-	}
-
-	/**
-	 * Gets the parent groups that a leaf group belongs to in its branch back to the root of the tree
-	 * (including the leaf group id).
-	 *
-	 * @param   mixed $groupId An integer or array of integers representing the identities to check.
-	 *
-	 * @return  mixed  True if allowed, false for an explicit deny, null for an implicit deny.
-	 *
-	 * @since   11.1
-	 */
-	protected static function getGroupPath($groupId)
-	{
-		// Preload all groups
-		if (empty(self::$userGroups))
-		{
-			$db    = JFactory::getDbo();
-			$query = $db->getQuery(true)
-				->select('parent.id, parent.lft, parent.rgt')
-				->from('#__usergroups AS parent')
-				->order('parent.lft');
-			$db->setQuery($query);
-			self::$userGroups = $db->loadObjectList('id');
-		}
-
-		// Make sure groupId is valid
-		if (!array_key_exists($groupId, self::$userGroups))
-		{
-			return array();
-		}
-
-		// Get parent groups and leaf group
-		if (!isset(self::$userGroupPaths[$groupId]))
-		{
-			self::$userGroupPaths[$groupId] = array();
-
-			foreach (self::$userGroups as $group)
-			{
-				if ($group->lft <= self::$userGroups[$groupId]->lft && $group->rgt >= self::$userGroups[$groupId]->rgt)
-				{
-					self::$userGroupPaths[$groupId][] = $group->id;
-				}
-			}
-		}
-
-		return self::$userGroupPaths[$groupId];
-	}
-
-	/**
-	 * Method to return the title of a user group
-	 *
-	 * @param   integer $groupId Id of the group for which to get the title of.
-	 *
-	 * @return  string  Tthe title of the group
-	 *
-	 * @since   3.5
-	 */
-	public static function getGroupTitle($groupId)
-	{
-		// Fetch the group title from the database
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('title')
-			->from('#__usergroups')
-			->where('id = ' . $db->quote($groupId));
-		$db->setQuery($query);
-
-		return $db->loadResult();
-	}
-
-	/**
 	 * Method to return a list of user Ids contained in a Group
 	 *
-	 * @param   integer $groupId   The group Id
-	 * @param   boolean $recursive Recursively include all child groups (optional)
+	 * @param   integer  $groupId    The group Id
+	 * @param   boolean  $recursive  Recursively include all child groups (optional)
 	 *
 	 * @return  array
 	 *
@@ -906,7 +906,7 @@ class JAccess
 	/**
 	 * Method to return a list of view levels for which the user is authorised.
 	 *
-	 * @param   integer $userId Id of the user for which to get the list of authorised view levels.
+	 * @param   integer  $userId  Id of the user for which to get the list of authorised view levels.
 	 *
 	 * @return  array    List of view levels for which the user is authorised.
 	 *
@@ -966,8 +966,8 @@ class JAccess
 	/**
 	 * Method to return a list of actions for which permissions can be set given a component and section.
 	 *
-	 * @param   string $component The component from which to retrieve the actions.
-	 * @param   string $section   The name of the section within the component from which to retrieve the actions.
+	 * @param   string  $component  The component from which to retrieve the actions.
+	 * @param   string  $section    The name of the section within the component from which to retrieve the actions.
 	 *
 	 * @return  array  List of actions available for the given component and section.
 	 *
@@ -997,8 +997,8 @@ class JAccess
 	/**
 	 * Method to return a list of actions from a file for which permissions can be set.
 	 *
-	 * @param   string $file  The path to the XML file.
-	 * @param   string $xpath An optional xpath to search for the fields.
+	 * @param   string  $file   The path to the XML file.
+	 * @param   string  $xpath  An optional xpath to search for the fields.
 	 *
 	 * @return  boolean|array   False if case of error or the list of actions available.
 	 *
@@ -1023,8 +1023,8 @@ class JAccess
 	/**
 	 * Method to return a list of actions from a string or from an xml for which permissions can be set.
 	 *
-	 * @param   string|SimpleXMLElement $data  The XML string or an XML element.
-	 * @param   string                  $xpath An optional xpath to search for the fields.
+	 * @param   string|SimpleXMLElement  $data   The XML string or an XML element.
+	 * @param   string                   $xpath  An optional xpath to search for the fields.
 	 *
 	 * @return  boolean|array   False if case of error or the list of actions available.
 	 *
@@ -1070,8 +1070,8 @@ class JAccess
 			{
 				// Add the action to the actions array
 				$actions[] = (object) array(
-					'name'        => (string) $action['name'],
-					'title'       => (string) $action['title'],
+					'name' => (string) $action['name'],
+					'title' => (string) $action['title'],
 					'description' => (string) $action['description']
 				);
 			}

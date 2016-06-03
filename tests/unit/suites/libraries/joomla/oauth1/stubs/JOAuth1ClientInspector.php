@@ -37,8 +37,8 @@ class JOAuth1ClientInspector extends JOAuth1Client
 	/**
 	 * Method to validate a response.
 	 *
-	 * @param   string        $url      The request URL.
-	 * @param   JHttpResponse $response The response to validate.
+	 * @param   string         $url       The request URL.
+	 * @param   JHttpResponse  $response  The response to validate.
 	 *
 	 * @return  void
 	 *
@@ -49,7 +49,7 @@ class JOAuth1ClientInspector extends JOAuth1Client
 	{
 		if ($response->code < 200 || $response->code > 399)
 		{
-			throw new DomainException($response->body);
+				throw new DomainException($response->body);
 		}
 	}
 }

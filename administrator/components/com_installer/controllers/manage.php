@@ -19,7 +19,7 @@ class InstallerControllerManage extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -29,7 +29,7 @@ class InstallerControllerManage extends JControllerLegacy
 		parent::__construct($config);
 
 		$this->registerTask('unpublish', 'publish');
-		$this->registerTask('publish', 'publish');
+		$this->registerTask('publish',   'publish');
 	}
 
 	/**

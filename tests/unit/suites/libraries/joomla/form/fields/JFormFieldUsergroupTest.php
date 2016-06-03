@@ -19,6 +19,22 @@ JFormHelper::loadFieldClass('usergroup');
 class JFormFieldUsergroupTest extends TestCaseDatabase
 {
 	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   12.1
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_usergroups', JPATH_TEST_DATABASE . '/jos_usergroups.csv');
+
+		return $dataSet;
+	}
+
+	/**
 	 * Test the getInput method.
 	 *
 	 * @return  void
@@ -53,21 +69,5 @@ class JFormFieldUsergroupTest extends TestCaseDatabase
 		);
 
 		// TODO: Should check all the attributes have come in properly.
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   12.1
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_usergroups', JPATH_TEST_DATABASE . '/jos_usergroups.csv');
-
-		return $dataSet;
 	}
 }

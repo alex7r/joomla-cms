@@ -21,6 +21,34 @@ class FinderIndexerResultTest extends TestCaseDatabase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		// Instantiate the object
+		$this->object = new FinderIndexerResult;
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   3.1
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
+
+		return $dataSet;
+	}
+
+	/**
 	 * Tests the magic get and set methods
 	 *
 	 * @return  void
@@ -122,7 +150,7 @@ class FinderIndexerResultTest extends TestCaseDatabase
 		$this->object->addInstruction(FinderIndexer::MISC_CONTEXT, 'testItem');
 
 		$instructions = $this->object->getInstructions();
-		$testItem     = $instructions[FinderIndexer::MISC_CONTEXT];
+		$testItem = $instructions[FinderIndexer::MISC_CONTEXT];
 
 		// Assert the test instruction is present
 		$this->assertContains(
@@ -134,7 +162,7 @@ class FinderIndexerResultTest extends TestCaseDatabase
 		$this->object->removeInstruction(FinderIndexer::MISC_CONTEXT, 'testItem');
 
 		$instructions = $this->object->getInstructions();
-		$testItem     = $instructions[FinderIndexer::MISC_CONTEXT];
+		$testItem = $instructions[FinderIndexer::MISC_CONTEXT];
 
 		// Assert the test instruction is gone
 		$this->assertNotContains(
@@ -215,33 +243,5 @@ class FinderIndexerResultTest extends TestCaseDatabase
 			$this->object->language,
 			'it-IT'
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		// Instantiate the object
-		$this->object = new FinderIndexerResult;
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   3.1
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
-
-		return $dataSet;
 	}
 }

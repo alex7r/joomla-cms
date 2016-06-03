@@ -80,26 +80,26 @@ echo "Create list of changed files from git repository.\n";
  */
 $filesArray = array(
 	"administrator/index.php\n" => true,
-	"bin/index.html\n"          => true,
-	"cache/index.html\n"        => true,
-	"cli/index.html\n"          => true,
-	"components/index.html\n"   => true,
-	"images/index.html\n"       => true,
-	"includes/index.html\n"     => true,
-	"language/index.html\n"     => true,
-	"layouts/index.html\n"      => true,
-	"libraries/index.html\n"    => true,
-	"media/index.html\n"        => true,
-	"modules/index.html\n"      => true,
-	"plugins/index.html\n"      => true,
-	"templates/index.html\n"    => true,
-	"tmp/index.html\n"          => true,
-	"htaccess.txt\n"            => true,
-	"index.php\n"               => true,
-	"LICENSE.txt\n"             => true,
-	"README.txt\n"              => true,
-	"robots.txt.dist\n"         => true,
-	"web.config.txt\n"          => true
+	"bin/index.html\n" => true,
+	"cache/index.html\n" => true,
+	"cli/index.html\n" => true,
+	"components/index.html\n" => true,
+	"images/index.html\n" => true,
+	"includes/index.html\n" => true,
+	"language/index.html\n" => true,
+	"layouts/index.html\n" => true,
+	"libraries/index.html\n" => true,
+	"media/index.html\n" => true,
+	"modules/index.html\n" => true,
+	"plugins/index.html\n" => true,
+	"templates/index.html\n" => true,
+	"tmp/index.html\n" => true,
+	"htaccess.txt\n" => true,
+	"index.php\n" => true,
+	"LICENSE.txt\n" => true,
+	"README.txt\n" => true,
+	"robots.txt.dist\n" => true,
+	"web.config.txt\n" => true
 );
 
 /*
@@ -151,14 +151,14 @@ for ($num = $release - 1; $num >= 0; $num--)
 	// Loop through and add all files except: tests, installation, build, .git, .travis, travis, phpunit, .md, or images
 	foreach ($files as $file)
 	{
-		$fileName       = substr($file, 2);
-		$folderPath     = explode('/', $fileName);
+		$fileName   = substr($file, 2);
+		$folderPath = explode('/', $fileName);
 		$baseFolderName = $folderPath[0];
 
-		$doNotPackageFile       = in_array(trim($fileName), $doNotPackage);
-		$doNotPatchFile         = in_array(trim($fileName), $doNotPatch);
+		$doNotPackageFile = in_array(trim($fileName), $doNotPackage);
+		$doNotPatchFile = in_array(trim($fileName), $doNotPatch);
 		$doNotPackageBaseFolder = in_array($baseFolderName, $doNotPackage);
-		$doNotPatchBaseFolder   = in_array($baseFolderName, $doNotPatch);
+		$doNotPatchBaseFolder = in_array($baseFolderName, $doNotPatch);
 
 		if ($doNotPackageFile || $doNotPatchFile || $doNotPackageBaseFolder || $doNotPatchBaseFolder)
 		{

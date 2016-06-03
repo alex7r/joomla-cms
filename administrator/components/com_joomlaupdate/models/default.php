@@ -69,7 +69,7 @@ class JoomlaupdateModelDefault extends JModelLegacy
 				$updateURL = 'https://update.joomla.org/core/list.xml';
 		}
 
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select($db->quoteName('us') . '.*')
 			->from($db->quoteName('#__update_sites_extensions') . ' AS ' . $db->quoteName('map'))
@@ -85,7 +85,7 @@ class JoomlaupdateModelDefault extends JModelLegacy
 		{
 			// Modify the database record.
 			$update_site->last_check_timestamp = 0;
-			$update_site->location             = $updateURL;
+			$update_site->location = $updateURL;
 			$db->updateObject('#__update_sites', $update_site, 'update_site_id');
 
 			// Remove cached updates.
@@ -100,7 +100,7 @@ class JoomlaupdateModelDefault extends JModelLegacy
 	/**
 	 * Makes sure that the Joomla! update cache is up-to-date.
 	 *
-	 * @param   boolean $force Force reload, ignoring the cache timeout.
+	 * @param   boolean  $force  Force reload, ignoring the cache timeout.
 	 *
 	 * @return  void
 	 *
@@ -121,7 +121,7 @@ class JoomlaupdateModelDefault extends JModelLegacy
 
 		$updater = JUpdater::getInstance();
 
-		$reflection       = new ReflectionObject($updater);
+		$reflection = new ReflectionObject($updater);
 		$reflectionMethod = $reflection->getMethod('findUpdates');
 		$methodParameters = $reflectionMethod->getParameters();
 
@@ -134,6 +134,52 @@ class JoomlaupdateModelDefault extends JModelLegacy
 		{
 			$updater->findUpdates(700, $cache_timeout, JUpdater::STABILITY_STABLE);
 		}
+	}
+
+	/**
+	 * Returns an array with the Joomla! update information.
+	 *
+	 * @return  array
+	 *
+	 * @since   2.5.4
+	 */
+	public function getUpdateInformation()
+	{
+		// Initialise the return array.
+		$ret = array(
+			'installed' => JVERSION,
+			'latest'    => null,
+			'object'    => null,
+			'hasUpdate' => false
+		);
+
+		// Fetch the update information from the database.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName('#__updates'))
+			->where($db->quoteName('extension_id') . ' = ' . $db->quote(700));
+		$db->setQuery($query);
+		$updateObject = $db->loadObject();
+
+		if (is_null($updateObject))
+		{
+			$ret['latest'] = JVERSION;
+
+			return $ret;
+		}
+
+		$ret['latest']    = $updateObject->version;
+		$ret['hasUpdate'] = $updateObject->version != JVERSION;
+
+		// Fetch the full update details from the update details URL.
+		jimport('joomla.updater.update');
+		$update = new JUpdate;
+		$update->loadFromXML($updateObject->detailsurl);
+
+		$ret['object'] = $update;
+
+		return $ret;
 	}
 
 	/**
@@ -169,10 +215,10 @@ class JoomlaupdateModelDefault extends JModelLegacy
 		$db = $this->getDbo();
 
 		// Modify the database record
-		$update_site                       = new stdClass;
+		$update_site = new stdClass;
 		$update_site->last_check_timestamp = 0;
-		$update_site->enabled              = 1;
-		$update_site->update_site_id       = 1;
+		$update_site->enabled = 1;
+		$update_site->update_site_id = 1;
 		$db->updateObject('#__update_sites', $update_site, 'update_site_id');
 
 		$query = $db->getQuery(true)
@@ -236,56 +282,10 @@ class JoomlaupdateModelDefault extends JModelLegacy
 	}
 
 	/**
-	 * Returns an array with the Joomla! update information.
-	 *
-	 * @return  array
-	 *
-	 * @since   2.5.4
-	 */
-	public function getUpdateInformation()
-	{
-		// Initialise the return array.
-		$ret = array(
-			'installed' => JVERSION,
-			'latest'    => null,
-			'object'    => null,
-			'hasUpdate' => false
-		);
-
-		// Fetch the update information from the database.
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true)
-			->select('*')
-			->from($db->quoteName('#__updates'))
-			->where($db->quoteName('extension_id') . ' = ' . $db->quote(700));
-		$db->setQuery($query);
-		$updateObject = $db->loadObject();
-
-		if (is_null($updateObject))
-		{
-			$ret['latest'] = JVERSION;
-
-			return $ret;
-		}
-
-		$ret['latest']    = $updateObject->version;
-		$ret['hasUpdate'] = $updateObject->version != JVERSION;
-
-		// Fetch the full update details from the update details URL.
-		jimport('joomla.updater.update');
-		$update = new JUpdate;
-		$update->loadFromXML($updateObject->detailsurl);
-
-		$ret['object'] = $update;
-
-		return $ret;
-	}
-
-	/**
 	 * Downloads a package file to a specific directory
 	 *
-	 * @param   string $url    The URL to download from
-	 * @param   string $target The directory to store the file
+	 * @param   string  $url     The URL to download from
+	 * @param   string  $target  The directory to store the file
 	 *
 	 * @return  boolean True on success
 	 *
@@ -328,7 +328,7 @@ class JoomlaupdateModelDefault extends JModelLegacy
 	/**
 	 * Create restoration file.
 	 *
-	 * @param   string $basename Optional base path to the file.
+	 * @param   string  $basename  Optional base path to the file.
 	 *
 	 * @return  boolean True if successful; false otherwise.
 	 *
@@ -338,7 +338,7 @@ class JoomlaupdateModelDefault extends JModelLegacy
 	{
 		// Get a password
 		$password = JUserHelper::genRandomPassword(32);
-		$app      = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$app->setUserState('com_joomlaupdate.password', $password);
 
 		// Do we have to use FTP?
@@ -352,7 +352,7 @@ class JoomlaupdateModelDefault extends JModelLegacy
 		{
 			$updateInfo = $this->getUpdateInformation();
 			$packageURL = $updateInfo['object']->downloadurl->_data;
-			$basename   = basename($packageURL);
+			$basename = basename($packageURL);
 		}
 
 		// Get the package name.
@@ -415,8 +415,8 @@ ENDDATA;
 			if (!$writable)
 			{
 				$FTPOptions = JClientHelper::getCredentials('ftp');
-				$ftp        = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], null, $FTPOptions['user'], $FTPOptions['pass']);
-				$dest       = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $tempdir . '/admintools'), '/');
+				$ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], null, $FTPOptions['user'], $FTPOptions['pass']);
+				$dest = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $tempdir . '/admintools'), '/');
 
 				if (!@mkdir($tempdir . '/admintools'))
 				{
@@ -450,8 +450,8 @@ ENDDATA;
 				if (!is_writable($tempdir))
 				{
 					$FTPOptions = JClientHelper::getCredentials('ftp');
-					$ftp        = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], null, $FTPOptions['user'], $FTPOptions['pass']);
-					$dest       = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $tempdir . '/admintools'), '/');
+					$ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], null, $FTPOptions['user'], $FTPOptions['pass']);
+					$dest = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $tempdir . '/admintools'), '/');
 
 					if (!@mkdir($tempdir . '/admintools'))
 					{
@@ -640,7 +640,7 @@ ENDDATA;
 			return false;
 		}
 
-		$id  = $db->loadResult();
+		$id = $db->loadResult();
 		$row = JTable::getInstance('extension');
 
 		if ($id)
@@ -728,7 +728,7 @@ ENDDATA;
 
 		// Clobber any possible pending updates.
 		$update = JTable::getInstance('update');
-		$uid    = $update->find(
+		$uid = $update->find(
 			array('element' => 'joomla', 'type' => 'file', 'client_id' => '0', 'folder' => '')
 		);
 
@@ -771,10 +771,10 @@ ENDDATA;
 	public function cleanUp()
 	{
 		// Remove the update package.
-		$config  = JFactory::getConfig();
+		$config = JFactory::getConfig();
 		$tempdir = $config->get('tmp_path');
 
-		$file   = JFactory::getApplication()->getUserState('com_joomlaupdate.file', null);
+		$file = JFactory::getApplication()->getUserState('com_joomlaupdate.file', null);
 		$target = $tempdir . '/' . $file;
 
 		if (!@unlink($target))
@@ -889,7 +889,7 @@ ENDDATA;
 	/**
 	 * Checks the super admin credentials are valid for the currently logged in users
 	 *
-	 * @param   array $credentials The credentials to authenticate the user with
+	 * @param   array  $credentials  The credentials to authenticate the user with
 	 *
 	 * @return  bool
 	 *

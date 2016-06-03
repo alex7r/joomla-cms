@@ -8,7 +8,7 @@
 
 namespace Joomla\Application\Cli;
 
-use Joomla\Application\Cli\Output\Processor\ColorProcessor as RealColorProcessor;
+use \Joomla\Application\Cli\Output\Processor\ColorProcessor as RealColorProcessor;
 
 /**
  * Class ColorProcessor.

@@ -26,8 +26,8 @@ class JFormRuleNotequalsTest extends TestCase
 	 */
 	public function testNotequals()
 	{
-		$rule  = new JFormRuleNotequals;
-		$xml   = simplexml_load_string('<form><field name="foo" field="notequalsfield" /></form>');
+		$rule = new JFormRuleNotequals;
+		$xml = simplexml_load_string('<form><field name="foo" field="notequalsfield" /></form>');
 		$input = new Joomla\Registry\Registry;
 		$input->set('notequalsfield', 'testvalue');
 
@@ -47,8 +47,8 @@ class JFormRuleNotequalsTest extends TestCase
 	 */
 	public function testNotequalsUnexpectedValueException()
 	{
-		$rule  = new JFormRuleNotequals;
-		$xml   = simplexml_load_string('<form><field name="foo" field="notequalsfield" /></form>');
+		$rule = new JFormRuleNotequals;
+		$xml = simplexml_load_string('<form><field name="foo" field="notequalsfield" /></form>');
 		$input = new Joomla\Registry\Registry;
 		$input->set('notequalsfield', 'testvalue');
 
@@ -66,8 +66,8 @@ class JFormRuleNotequalsTest extends TestCase
 	 */
 	public function testNotequalsInvalidArgumentException()
 	{
-		$rule  = new JFormRuleNotequals;
-		$xml   = simplexml_load_string('<form><field name="foo" field="notequalsfield" /></form>');
+		$rule = new JFormRuleNotequals;
+		$xml = simplexml_load_string('<form><field name="foo" field="notequalsfield" /></form>');
 		$input = new Joomla\Registry\Registry;
 		$input->set('notequalsfield', 'testvalue');
 

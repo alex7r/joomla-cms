@@ -20,6 +20,44 @@ require_once __DIR__ . '/TestHelpers/JHtmlFieldTel-helper-dataset.php';
 class JFormFieldTelTest extends TestCase
 {
 	/**
+	 * Sets up dependencies for the test.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Test...
 	 *
 	 * @return  array
@@ -34,12 +72,12 @@ class JFormFieldTelTest extends TestCase
 	/**
 	 * Test the getInput method where there is no value from the element.
 	 *
-	 * @param   array  $data     @todo
-	 * @param   string $expected @todo
+	 * @param   array   $data  	   @todo
+	 * @param   string  $expected  @todo
 	 *
 	 * @return  void
 	 *
-	 * @since         12.2
+	 * @since   12.2
 	 *
 	 * @dataProvider  getInputData
 	 */
@@ -59,43 +97,5 @@ class JFormFieldTelTest extends TestCase
 			TestReflection::invoke($formField, 'getInput'),
 			'Line:' . __LINE__ . ' The field did not produce the right html'
 		);
-	}
-
-	/**
-	 * Sets up dependencies for the test.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST']   = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 }

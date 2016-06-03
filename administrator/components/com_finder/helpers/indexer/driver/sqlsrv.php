@@ -29,8 +29,8 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 	/**
 	 * Method to index a content item.
 	 *
-	 * @param   FinderIndexerResult $item   The content item to index.
-	 * @param   string              $format The format of the content. [optional]
+	 * @param   FinderIndexerResult  $item    The content item to index.
+	 * @param   string               $format  The format of the content. [optional]
 	 *
 	 * @return  integer  The ID of the record in the links table.
 	 *
@@ -63,7 +63,7 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 
 		// Get the other item information.
 		$linkId = empty($link->link_id) ? null : $link->link_id;
-		$isNew  = empty($link->link_id) ? true : false;
+		$isNew = empty($link->link_id) ? true : false;
 
 		// Check the signatures. If they match, the item is up to date.
 		if (!$isNew && $curSig == $oldSig)
@@ -97,9 +97,9 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 
 		// Perform cleanup on the item data.
 		$item->publish_start_date = (int) $item->publish_start_date != 0 ? $item->publish_start_date : $nd;
-		$item->publish_end_date   = (int) $item->publish_end_date != 0 ? $item->publish_end_date : $nd;
-		$item->start_date         = (int) $item->start_date != 0 ? $item->start_date : $nd;
-		$item->end_date           = (int) $item->end_date != 0 ? $item->end_date : $nd;
+		$item->publish_end_date = (int) $item->publish_end_date != 0 ? $item->publish_end_date : $nd;
+		$item->start_date = (int) $item->start_date != 0 ? $item->start_date : $nd;
+		$item->end_date = (int) $item->end_date != 0 ? $item->end_date : $nd;
 
 		// Prepare the item description.
 		$item->description = FinderIndexerHelper::parse($item->summary);
@@ -125,24 +125,24 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 				->insert($db->quoteName('#__finder_links'))
 				->columns($columnsArray)
 				->values(
-					$db->quote($item->url) . ', '
-					. $db->quote($item->route) . ', '
-					. $db->quote($item->title) . ', '
-					. $db->quote($item->description) . ', '
-					. $query->currentTimestamp() . ', '
-					. '1, '
-					. (int) $item->state . ', '
-					. (int) $item->access . ', '
-					. $db->quote($item->language) . ', '
-					. (int) $item->type_id . ', '
-					. $db->quote(serialize($item)) . ', '
-					. $db->quote($item->publish_start_date) . ', '
-					. $db->quote($item->publish_end_date) . ', '
-					. $db->quote($item->start_date) . ', '
-					. $db->quote($item->end_date) . ', '
-					. (double) ($item->list_price ? $item->list_price : 0) . ', '
-					. (double) ($item->sale_price ? $item->sale_price : 0)
-				);
+				$db->quote($item->url) . ', '
+				. $db->quote($item->route) . ', '
+				. $db->quote($item->title) . ', '
+				. $db->quote($item->description) . ', '
+				. $query->currentTimestamp() . ', '
+				. '1, '
+				. (int) $item->state . ', '
+				. (int) $item->access . ', '
+				. $db->quote($item->language) . ', '
+				. (int) $item->type_id . ', '
+				. $db->quote(serialize($item)) . ', '
+				. $db->quote($item->publish_start_date) . ', '
+				. $db->quote($item->publish_end_date) . ', '
+				. $db->quote($item->start_date) . ', '
+				. $db->quote($item->end_date) . ', '
+				. (double) ($item->list_price ? $item->list_price : 0) . ', '
+				. (double) ($item->sale_price ? $item->sale_price : 0)
+			);
 			$db->setQuery($query);
 			$db->execute();
 
@@ -287,28 +287,28 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 		 * table.
 		 */
 		$query = 'INSERT INTO ' . $db->quoteName('#__finder_tokens_aggregate') .
-			' (' . $db->quoteName('term_id') .
-			', ' . $db->quoteName('term') .
-			', ' . $db->quoteName('stem') .
-			', ' . $db->quoteName('common') .
-			', ' . $db->quoteName('phrase') .
-			', ' . $db->quoteName('term_weight') .
-			', ' . $db->quoteName('context') .
-			', ' . $db->quoteName('context_weight') .
-			', ' . $db->quoteName('language') . ')' .
-			' SELECT' .
-			' t.term_id, t1.term, t1.stem, t1.common, t1.phrase, t1.weight, t1.context,' .
-			' ROUND( t1.weight * COUNT( t2.term ) * %F, 8 ) AS context_weight, t1.language' .
-			' FROM (' .
-			'   SELECT DISTINCT t1.term, t1.stem, t1.common, t1.phrase, t1.weight, t1.context, t1.language' .
-			'   FROM ' . $db->quoteName('#__finder_tokens') . ' AS t1' .
-			'   WHERE t1.context = %d' .
-			' ) AS t1' .
-			' JOIN ' . $db->quoteName('#__finder_tokens') . ' AS t2 ON t2.term = t1.term' .
-			' LEFT JOIN ' . $db->quoteName('#__finder_terms') . ' AS t ON t.term = t1.term' .
-			' WHERE t2.context = %d' .
-			' GROUP BY t1.term, t.term_id, t1.term, t1.stem, t1.common, t1.phrase, t1.weight, t1.context, t1.language' .
-			' ORDER BY t1.term DESC';
+				' (' . $db->quoteName('term_id') .
+				', ' . $db->quoteName('term') .
+				', ' . $db->quoteName('stem') .
+				', ' . $db->quoteName('common') .
+				', ' . $db->quoteName('phrase') .
+				', ' . $db->quoteName('term_weight') .
+				', ' . $db->quoteName('context') .
+				', ' . $db->quoteName('context_weight') .
+				', ' . $db->quoteName('language') . ')' .
+				' SELECT' .
+				' t.term_id, t1.term, t1.stem, t1.common, t1.phrase, t1.weight, t1.context,' .
+				' ROUND( t1.weight * COUNT( t2.term ) * %F, 8 ) AS context_weight, t1.language' .
+				' FROM (' .
+				'   SELECT DISTINCT t1.term, t1.stem, t1.common, t1.phrase, t1.weight, t1.context, t1.language' .
+				'   FROM ' . $db->quoteName('#__finder_tokens') . ' AS t1' .
+				'   WHERE t1.context = %d' .
+				' ) AS t1' .
+				' JOIN ' . $db->quoteName('#__finder_tokens') . ' AS t2 ON t2.term = t1.term' .
+				' LEFT JOIN ' . $db->quoteName('#__finder_terms') . ' AS t ON t.term = t1.term' .
+				' WHERE t2.context = %d' .
+				' GROUP BY t1.term, t.term_id, t1.term, t1.stem, t1.common, t1.phrase, t1.weight, t1.context, t1.language' .
+				' ORDER BY t1.term DESC';
 
 		// Iterate through the contexts and aggregate the tokens per context.
 		foreach ($state->weights as $context => $multiplier)
@@ -447,25 +447,9 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 	}
 
 	/**
-	 * Method to switch the token tables from Memory tables to MyISAM tables
-	 * when they are close to running out of memory.
-	 *
-	 * @param   boolean $memory Flag to control how they should be toggled.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   3.1
-	 * @throws  Exception on database error.
-	 */
-	protected function toggleTables($memory)
-	{
-		return true;
-	}
-
-	/**
 	 * Method to remove a link from the index.
 	 *
-	 * @param   integer $linkId The id of the link.
+	 * @param   integer  $linkId  The id of the link.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -474,7 +458,7 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 	 */
 	public function remove($linkId)
 	{
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
 		// Update the link counts and remove the mapping records.
@@ -530,7 +514,7 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 	public function optimize()
 	{
 		// Get the database object.
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
 		// Delete all orphaned terms.
@@ -548,8 +532,8 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 	/**
 	 * Method to add a set of tokens to the database.
 	 *
-	 * @param   mixed $tokens  An array or single FinderIndexerToken object.
-	 * @param   mixed $context The context of the tokens. See context constants. [optional]
+	 * @param   mixed  $tokens   An array or single FinderIndexerToken object.
+	 * @param   mixed  $context  The context of the tokens. See context constants. [optional]
 	 *
 	 * @return  integer  The number of tokens inserted into the database.
 	 *
@@ -559,7 +543,7 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 	protected function addTokensToDb($tokens, $context = '')
 	{
 		// Get the database object.
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
 		// Force tokens to an array.
@@ -598,16 +582,16 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 				// Insert the tokens into the database.
 				$query->insert($db->quoteName('#__finder_tokens'))
 					->columns(
-						array(
-							$db->quoteName('term'),
-							$db->quoteName('stem'),
-							$db->quoteName('common'),
-							$db->quoteName('phrase'),
-							$db->quoteName('weight'),
-							$db->quoteName('context'),
-							$db->quoteName('language')
-						)
-					);
+					array(
+						$db->quoteName('term'),
+						$db->quoteName('stem'),
+						$db->quoteName('common'),
+						$db->quoteName('phrase'),
+						$db->quoteName('weight'),
+						$db->quoteName('context'),
+						$db->quoteName('language')
+					)
+				);
 				$db->setQuery($query);
 				$db->execute();
 
@@ -620,8 +604,25 @@ class FinderIndexerDriverSqlsrv extends FinderIndexer
 			{
 				$loop = false;
 			}
-		} while ($loop == true);
+		}
+		while ($loop == true);
 
 		return $values;
+	}
+
+	/**
+	 * Method to switch the token tables from Memory tables to MyISAM tables
+	 * when they are close to running out of memory.
+	 *
+	 * @param   boolean  $memory  Flag to control how they should be toggled.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   3.1
+	 * @throws  Exception on database error.
+	 */
+	protected function toggleTables($memory)
+	{
+		return true;
 	}
 }

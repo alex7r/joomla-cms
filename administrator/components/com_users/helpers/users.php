@@ -25,7 +25,7 @@ class UsersHelper
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string $vName The name of the active view.
+	 * @param   string  $vName  The name of the active view.
 	 *
 	 * @return  void
 	 *
@@ -97,7 +97,7 @@ class UsersHelper
 	public static function getStateOptions()
 	{
 		// Build the filter options.
-		$options   = array();
+		$options = array();
 		$options[] = JHtml::_('select.option', '0', JText::_('JENABLED'));
 		$options[] = JHtml::_('select.option', '1', JText::_('JDISABLED'));
 
@@ -114,7 +114,7 @@ class UsersHelper
 	public static function getActiveOptions()
 	{
 		// Build the filter options.
-		$options   = array();
+		$options = array();
 		$options[] = JHtml::_('select.option', '0', JText::_('COM_USERS_ACTIVATED'));
 		$options[] = JHtml::_('select.option', '1', JText::_('COM_USERS_UNACTIVATED'));
 
@@ -130,7 +130,7 @@ class UsersHelper
 	 */
 	public static function getGroups()
 	{
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('a.id AS value')
 			->select('a.title AS text')
@@ -225,7 +225,7 @@ class UsersHelper
 	/**
 	 * Get a list of the User Groups for Viewing Access Levels
 	 *
-	 * @param   string $rules User Groups in JSON format
+	 * @param   string  $rules  User Groups in JSON format
 	 *
 	 * @return  string  $groups  Comma separated list of User Groups
 	 *
@@ -242,7 +242,7 @@ class UsersHelper
 
 		$rules = implode(',', $rules);
 
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('a.title AS text')
 			->from('#__usergroups as a')

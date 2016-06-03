@@ -32,12 +32,12 @@ class JGithubPackageRepositoriesHooks extends JGithubPackage
 	/**
 	 * Method to create a hook on a repository.
 	 *
-	 * @param   string  $user   The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
-	 * @param   string  $name   The name of the service being called.
-	 * @param   array   $config Array containing the config for the service.
-	 * @param   array   $events The events the hook will be triggered for.
-	 * @param   boolean $active Flag to determine if the hook is active
+	 * @param   string   $user    The name of the owner of the GitHub repository.
+	 * @param   string   $repo    The name of the GitHub repository.
+	 * @param   string   $name    The name of the service being called.
+	 * @param   array    $config  Array containing the config for the service.
+	 * @param   array    $events  The events the hook will be triggered for.
+	 * @param   boolean  $active  Flag to determine if the hook is active
 	 *
 	 * @return  object
 	 *
@@ -72,9 +72,9 @@ class JGithubPackageRepositoriesHooks extends JGithubPackage
 	/**
 	 * Method to delete a hook
 	 *
-	 * @param   string  $user The name of the owner of the GitHub repository.
-	 * @param   string  $repo The name of the GitHub repository.
-	 * @param   integer $id   ID of the hook to delete.
+	 * @param   string   $user  The name of the owner of the GitHub repository.
+	 * @param   string   $repo  The name of the GitHub repository.
+	 * @param   integer  $id    ID of the hook to delete.
 	 *
 	 * @return  object
 	 *
@@ -95,15 +95,15 @@ class JGithubPackageRepositoriesHooks extends JGithubPackage
 	/**
 	 * Method to edit a hook.
 	 *
-	 * @param   string  $user         The name of the owner of the GitHub repository.
-	 * @param   string  $repo         The name of the GitHub repository.
-	 * @param   integer $id           ID of the hook to edit.
-	 * @param   string  $name         The name of the service being called.
-	 * @param   array   $config       Array containing the config for the service.
-	 * @param   array   $events       The events the hook will be triggered for.  This resets the currently set list
-	 * @param   array   $addEvents    Events to add to the hook.
-	 * @param   array   $removeEvents Events to remove from the hook.
-	 * @param   boolean $active       Flag to determine if the hook is active
+	 * @param   string   $user          The name of the owner of the GitHub repository.
+	 * @param   string   $repo          The name of the GitHub repository.
+	 * @param   integer  $id            ID of the hook to edit.
+	 * @param   string   $name          The name of the service being called.
+	 * @param   array    $config        Array containing the config for the service.
+	 * @param   array    $events        The events the hook will be triggered for.  This resets the currently set list
+	 * @param   array    $addEvents     Events to add to the hook.
+	 * @param   array    $removeEvents  Events to remove from the hook.
+	 * @param   boolean  $active        Flag to determine if the hook is active
 	 *
 	 * @return  object
 	 *
@@ -112,7 +112,7 @@ class JGithubPackageRepositoriesHooks extends JGithubPackage
 	 * @throws  RuntimeException
 	 */
 	public function edit($user, $repo, $id, $name, $config, array $events = array('push'), array $addEvents = array(),
-	                     array $removeEvents = array(), $active = true)
+		array $removeEvents = array(), $active = true)
 	{
 		// Check to ensure all events are in the allowed list
 		foreach ($events as $event)
@@ -160,9 +160,9 @@ class JGithubPackageRepositoriesHooks extends JGithubPackage
 	/**
 	 * Method to get details about a single hook for the repository.
 	 *
-	 * @param   string  $user The name of the owner of the GitHub repository.
-	 * @param   string  $repo The name of the GitHub repository.
-	 * @param   integer $id   ID of the hook to retrieve
+	 * @param   string   $user  The name of the owner of the GitHub repository.
+	 * @param   string   $repo  The name of the GitHub repository.
+	 * @param   integer  $id    ID of the hook to retrieve
 	 *
 	 * @return  object
 	 *
@@ -182,8 +182,8 @@ class JGithubPackageRepositoriesHooks extends JGithubPackage
 	/**
 	 * Method to list hooks for a repository.
 	 *
-	 * @param   string $user The name of the owner of the GitHub repository.
-	 * @param   string $repo The name of the GitHub repository.
+	 * @param   string  $user  The name of the owner of the GitHub repository.
+	 * @param   string  $repo  The name of the GitHub repository.
 	 *
 	 * @return  object
 	 *
@@ -203,9 +203,9 @@ class JGithubPackageRepositoriesHooks extends JGithubPackage
 	/**
 	 * Method to test a hook against the latest repository commit
 	 *
-	 * @param   string  $user The name of the owner of the GitHub repository.
-	 * @param   string  $repo The name of the GitHub repository.
-	 * @param   integer $id   ID of the hook to delete
+	 * @param   string   $user  The name of the owner of the GitHub repository.
+	 * @param   string   $repo  The name of the GitHub repository.
+	 * @param   integer  $id    ID of the hook to delete
 	 *
 	 * @return  object
 	 *

@@ -19,7 +19,7 @@ class SearchModelSearches extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -38,79 +38,12 @@ class SearchModelSearches extends JModelList
 	}
 
 	/**
-	 * Override the parent getItems to inject optional data.
-	 *
-	 * @return  mixed  An array of objects on success, false on failure.
-	 *
-	 * @since   1.6
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-
-		// Determine if number of results for search item should be calculated
-		// by default it is `off` as it is highly query intensive
-		if ($this->getState('show_results'))
-		{
-			JPluginHelper::importPlugin('search');
-			$app = JFactory::getApplication();
-
-			if (!class_exists('JSite'))
-			{
-				// This fools the routers in the search plugins into thinking it's in the frontend
-				JLoader::register('JSite', JPATH_COMPONENT . '/helpers/site.php');
-			}
-
-			foreach ($items as &$item)
-			{
-				$results       = $app->triggerEvent('onContentSearch', array($item->search_term));
-				$item->returns = 0;
-
-				foreach ($results as $result)
-				{
-					$item->returns += count($result);
-				}
-			}
-		}
-
-		return $items;
-	}
-
-	/**
-	 * Method to reset the seach log table.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   1.6
-	 */
-	public function reset()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true)
-			->delete($db->quoteName('#__core_log_searches'));
-		$db->setQuery($query);
-
-		try
-		{
-			$db->execute();
-		}
-		catch (RuntimeException $e)
-		{
-			$this->setError($e->getMessage());
-
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -139,7 +72,7 @@ class SearchModelSearches extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id A prefix for the store id.
+	 * @param   string  $id  A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -164,7 +97,7 @@ class SearchModelSearches extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the required fields from the table.
@@ -187,5 +120,72 @@ class SearchModelSearches extends JModelList
 		$query->order($db->escape($this->getState('list.ordering', 'a.hits')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 
 		return $query;
+	}
+
+	/**
+	 * Override the parent getItems to inject optional data.
+	 *
+	 * @return  mixed  An array of objects on success, false on failure.
+	 *
+	 * @since   1.6
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+
+		// Determine if number of results for search item should be calculated
+		// by default it is `off` as it is highly query intensive
+		if ($this->getState('show_results'))
+		{
+			JPluginHelper::importPlugin('search');
+			$app = JFactory::getApplication();
+
+			if (!class_exists('JSite'))
+			{
+				// This fools the routers in the search plugins into thinking it's in the frontend
+				JLoader::register('JSite', JPATH_COMPONENT . '/helpers/site.php');
+			}
+
+			foreach ($items as &$item)
+			{
+				$results = $app->triggerEvent('onContentSearch', array($item->search_term));
+				$item->returns = 0;
+
+				foreach ($results as $result)
+				{
+					$item->returns += count($result);
+				}
+			}
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Method to reset the seach log table.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   1.6
+	 */
+	public function reset()
+	{
+		$db = $this->getDbo();
+		$query = $db->getQuery(true)
+			->delete($db->quoteName('#__core_log_searches'));
+		$db->setQuery($query);
+
+		try
+		{
+			$db->execute();
+		}
+		catch (RuntimeException $e)
+		{
+			$this->setError($e->getMessage());
+
+			return false;
+		}
+
+		return true;
 	}
 }

@@ -19,7 +19,7 @@ class SearchViewSearch extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl name of the template
+	 * @param   string  $tpl  name of the template
 	 *
 	 * @throws Exception
 	 * @return  mixed  A string if successful, otherwise an Error object.

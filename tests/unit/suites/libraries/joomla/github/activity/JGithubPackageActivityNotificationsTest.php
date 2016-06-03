@@ -41,6 +41,21 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackageActivityNotifications($this->options, $this->client);
+	}
+
+	/**
 	 * @covers JGithubPackageActivityNotifications::getList
 	 *
 	 * GET /notifications
@@ -67,14 +82,16 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/notifications?&all=1&participating=1', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/notifications?&all=1&participating=1', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->getList(),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -104,14 +121,16 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/repos/joomla/joomla-platform/notifications?&all=1&participating=1', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/repos/joomla/joomla-platform/notifications?&all=1&participating=1', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->getListRepository('joomla', 'joomla-platform'),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -142,14 +161,16 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = '';
 
 		$this->client->expects($this->once())
-			->method('put')
-			->with('/notifications', '{"unread":true,"read":true}', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('put')
+		             ->with('/notifications', '{"unread":true,"read":true}', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->markRead(),
 			$this->equalTo($this->response->body)
-		);
+		)
+		;
 	}
 
 	public function testMarkReadLastRead()
@@ -161,14 +182,16 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 		$data = '{"unread":true,"read":true,"last_read_at":"1966-09-14T00:00:00+00:00"}';
 
 		$this->client->expects($this->once())
-			->method('put')
-			->with('/notifications', $data, 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('put')
+		             ->with('/notifications', $data, 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->markRead(true, true, $date),
 			$this->equalTo($this->response->body)
-		);
+		)
+		;
 	}
 
 	/**
@@ -201,14 +224,16 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 		$data = '{"unread":true,"read":true}';
 
 		$this->client->expects($this->once())
-			->method('put')
-			->with('/repos/joomla/joomla-platform/notifications', $data, 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('put')
+		             ->with('/repos/joomla/joomla-platform/notifications', $data, 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->markReadRepository('joomla', 'joomla-platform', true, true),
 			$this->equalTo($this->response->body)
-		);
+		)
+		;
 	}
 
 	public function testMarkReadRepositoryLastRead()
@@ -220,14 +245,16 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 		$data = '{"unread":true,"read":true,"last_read_at":"1966-09-14T00:00:00+00:00"}';
 
 		$this->client->expects($this->once())
-			->method('put')
-			->with('/repos/joomla/joomla-platform/notifications', $data, 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('put')
+		             ->with('/repos/joomla/joomla-platform/notifications', $data, 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->markReadRepository('joomla', 'joomla-platform', true, true, $date),
 			$this->equalTo($this->response->body)
-		);
+		)
+		;
 	}
 
 	/**
@@ -240,6 +267,8 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 	 * Status: 200 OK
 	 * X-RateLimit-Limit: 5000
 	 * X-RateLimit-Remaining: 4999
+
+
 	 */
 	public function testViewThread()
 	{
@@ -247,14 +276,16 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/notifications/threads/1', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/notifications/threads/1', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->viewThread(1),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -274,6 +305,7 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 	 * Status: 205 Reset Content
 	 * X-RateLimit-Limit: 5000
 	 * X-RateLimit-Remaining: 4999
+
 	 */
 	public function testMarkReadThread()
 	{
@@ -281,14 +313,16 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('patch')
-			->with('/notifications/threads/1', '{"unread":true,"read":true}', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('patch')
+		             ->with('/notifications/threads/1', '{"unread":true,"read":true}', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->markReadThread(1),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -301,6 +335,8 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 	 * Status: 200 OK
 	 * X-RateLimit-Limit: 5000
 	 * X-RateLimit-Remaining: 4999
+
+
 	 */
 	public function testGetThreadSubscription()
 	{
@@ -308,14 +344,16 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/notifications/threads/1/subscription', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/notifications/threads/1/subscription', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->getThreadSubscription(1),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -335,6 +373,9 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 	 * Status: 200 OK
 	 * X-RateLimit-Limit: 5000
 	 * X-RateLimit-Remaining: 4999
+
+
+
 	 */
 	public function testSetThreadSubscription()
 	{
@@ -342,14 +383,16 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('put')
-			->with('/notifications/threads/1/subscription', '{"subscribed":true,"ignored":false}', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('put')
+		             ->with('/notifications/threads/1/subscription', '{"subscribed":true,"ignored":false}', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->setThreadSubscription(1, true, false),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -362,6 +405,7 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 	 * Status: 204 No Content
 	 * X-RateLimit-Limit: 5000
 	 * X-RateLimit-Remaining: 4999
+
 	 */
 	public function testDeleteThreadSubscription()
 	{
@@ -369,28 +413,15 @@ class JGithubPackageActivityNotificationsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = '';
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with('/notifications/threads/1/subscription', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('delete')
+		             ->with('/notifications/threads/1/subscription', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->deleteThreadSubscription(1),
 			$this->equalTo(json_decode($this->response->body))
-		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options  = new JRegistry;
-		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackageActivityNotifications($this->options, $this->client);
+		)
+		;
 	}
 }

@@ -18,19 +18,59 @@
 class JRouterTest extends TestCase
 {
 	/**
-	 * Object under test
-	 *
-	 * @var    JRouter
-	 * @since  3.1
-	 */
-	protected $object;
-	/**
 	 * Backup of the $_SERVER variable
 	 *
 	 * @var    array
 	 * @since  4.0
 	 */
 	private $server;
+
+	/**
+	 * Object under test
+	 *
+	 * @var    JRouter
+	 * @since  3.1
+	 */
+	protected $object;
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->server = $_SERVER;
+
+		/*
+		 * The following is needed to work around a bug in JApplicationWeb::detectRequestUri()
+		 * @see https://github.com/joomla-projects/joomla-pythagoras/issues/2
+		 */
+		if (!isset($_SERVER['HTTP_HOST']))
+		{
+			$_SERVER['HTTP_HOST'] = '';
+		}
+
+		$this->object = new JRouter;
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDown()
+	 * @since   4.0
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->server;
+
+		parent::tearDown();
+	}
 
 	/**
 	 * @return array
@@ -611,7 +651,7 @@ class JRouterTest extends TestCase
 			$this->object->attachBuildRule($function, $stage);
 		}
 
-		$this->assertEquals($expected, (string) $this->object->build($url));
+		$this->assertEquals($expected, (string)$this->object->build($url));
 	}
 
 	/**
@@ -686,7 +726,7 @@ class JRouterTest extends TestCase
 			JRouter::PROCESS_AFTER
 		);
 
-		$this->assertEquals($expected, (string) $this->object->build($url));
+		$this->assertEquals($expected, (string)$this->object->build($url));
 	}
 
 	/**
@@ -769,7 +809,7 @@ class JRouterTest extends TestCase
 
 		$createUriMethod = new ReflectionMethod('JRouter', 'createUri');
 		$createUriMethod->setAccessible(true);
-		$this->assertEquals($expected, (string) ($createUriMethod->invoke($this->object, $url)));
+		$this->assertEquals($expected, (string)($createUriMethod->invoke($this->object, $url)));
 	}
 
 	/**
@@ -828,44 +868,5 @@ class JRouterTest extends TestCase
 		$decodeSegmentsMethod = new ReflectionMethod('JRouter', 'decodeSegments');
 		$decodeSegmentsMethod->setAccessible(true);
 		$this->assertEquals($expected, $decodeSegmentsMethod->invoke($this->object, $encoded));
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->server = $_SERVER;
-
-		/*
-		 * The following is needed to work around a bug in JApplicationWeb::detectRequestUri()
-		 * @see https://github.com/joomla-projects/joomla-pythagoras/issues/2
-		 */
-		if (!isset($_SERVER['HTTP_HOST']))
-		{
-			$_SERVER['HTTP_HOST'] = '';
-		}
-
-		$this->object = new JRouter;
-	}
-
-	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDown()
-	 * @since   4.0
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->server;
-
-		parent::tearDown();
 	}
 }

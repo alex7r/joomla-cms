@@ -61,6 +61,45 @@ class JFacebookLinkTest extends TestCase
 	protected $sampleUrl = '"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/372662_10575676585_830678637_q.jpg"';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   13.1
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$app_id = "app_id";
+		$app_secret = "app_secret";
+		$my_url = "http://localhost/gsoc/joomla-platform/facebook_test.php";
+		$access_token = array(
+			'access_token' => 'token',
+			'expires' => '51837673', 'created' => '2443672521');
+
+		$this->options = new Registry;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->input = new JInput;
+		$this->oauth = new JFacebookOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JFacebookLink($this->options, $this->client, $this->oauth);
+
+		$this->options->set('clientid', $app_id);
+		$this->options->set('clientsecret', $app_secret);
+		$this->options->set('redirecturi', $my_url);
+		$this->options->set('sendheaders', true);
+		$this->options->set('authmethod', 'get');
+
+		parent::setUp();
+	}
+
+	/**
 	 * Tests the getLink method
 	 *
 	 * @return  void
@@ -70,16 +109,16 @@ class JFacebookLinkTest extends TestCase
 	public function testGetLink()
 	{
 		$token = $this->oauth->getToken();
-		$link  = '124346363456';
+		$link = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($link . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($link . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getLink($link),
@@ -98,16 +137,16 @@ class JFacebookLinkTest extends TestCase
 	public function testGetLinkFailure()
 	{
 		$token = $this->oauth->getToken();
-		$link  = '124346363456';
+		$link = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($link . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($link . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->getLink($link);
 	}
@@ -122,16 +161,16 @@ class JFacebookLinkTest extends TestCase
 	public function testGetComments()
 	{
 		$token = $this->oauth->getToken();
-		$link  = '124346363456';
+		$link = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($link . '/comments?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($link . '/comments?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getComments($link),
@@ -150,16 +189,16 @@ class JFacebookLinkTest extends TestCase
 	public function testGetCommentsFailure()
 	{
 		$token = $this->oauth->getToken();
-		$link  = '124346363456';
+		$link = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($link . '/comments?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($link . '/comments?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->getComments($link);
 	}
@@ -173,22 +212,22 @@ class JFacebookLinkTest extends TestCase
 	 */
 	public function testCreateComment()
 	{
-		$token   = $this->oauth->getToken();
-		$link    = '124346363456';
+		$token = $this->oauth->getToken();
+		$link = '124346363456';
 		$message = 'test message';
 
 		// Set POST request parameters.
-		$data            = array();
+		$data = array();
 		$data['message'] = $message;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($link . '/comments?access_token=' . $token['access_token'], $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($link . '/comments?access_token=' . $token['access_token'], $data)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createComment($link, $message),
@@ -206,22 +245,22 @@ class JFacebookLinkTest extends TestCase
 	 */
 	public function testCreateCommentFailure()
 	{
-		$token   = $this->oauth->getToken();
-		$link    = '124346363456';
+		$token = $this->oauth->getToken();
+		$link = '124346363456';
 		$message = 'test message';
 
 		// Set POST request parameters.
-		$data            = array();
+		$data = array();
 		$data['message'] = $message;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($link . '/comments?access_token=' . $token['access_token'], $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($link . '/comments?access_token=' . $token['access_token'], $data)
+		->will($this->returnValue($returnData));
 
 		$this->object->createComment($link, $message);
 	}
@@ -235,17 +274,17 @@ class JFacebookLinkTest extends TestCase
 	 */
 	public function testDeleteComment()
 	{
-		$token   = $this->oauth->getToken();
+		$token = $this->oauth->getToken();
 		$comment = '5148941614_12343468';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = true;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($comment . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($comment . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteComment($comment),
@@ -263,17 +302,17 @@ class JFacebookLinkTest extends TestCase
 	 */
 	public function testDeleteCommentFailure()
 	{
-		$token   = $this->oauth->getToken();
+		$token = $this->oauth->getToken();
 		$comment = '5148941614_12343468';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($comment . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($comment . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->deleteComment($comment);
 	}
@@ -288,16 +327,16 @@ class JFacebookLinkTest extends TestCase
 	public function testGetLikes()
 	{
 		$token = $this->oauth->getToken();
-		$link  = '124346363456';
+		$link = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($link . '/likes?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($link . '/likes?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getLikes($link),
@@ -316,16 +355,16 @@ class JFacebookLinkTest extends TestCase
 	public function testGetLikesFailure()
 	{
 		$token = $this->oauth->getToken();
-		$link  = '124346363456';
+		$link = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($link . '/likes?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($link . '/likes?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->getLikes($link);
 	}
@@ -340,16 +379,16 @@ class JFacebookLinkTest extends TestCase
 	public function testCreateLike()
 	{
 		$token = $this->oauth->getToken();
-		$link  = '124346363456';
+		$link = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($link . '/likes?access_token=' . $token['access_token'], '')
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($link . '/likes?access_token=' . $token['access_token'], '')
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createLike($link),
@@ -368,16 +407,16 @@ class JFacebookLinkTest extends TestCase
 	public function testCreateLikeFailure()
 	{
 		$token = $this->oauth->getToken();
-		$link  = '124346363456';
+		$link = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($link . '/likes?access_token=' . $token['access_token'], '')
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($link . '/likes?access_token=' . $token['access_token'], '')
+		->will($this->returnValue($returnData));
 
 		$this->object->createLike($link);
 	}
@@ -392,16 +431,16 @@ class JFacebookLinkTest extends TestCase
 	public function testDeleteLike()
 	{
 		$token = $this->oauth->getToken();
-		$link  = '124346363456';
+		$link = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = true;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($link . '/likes?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($link . '/likes?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteLike($link),
@@ -420,56 +459,17 @@ class JFacebookLinkTest extends TestCase
 	public function testDeleteLikeFailure()
 	{
 		$token = $this->oauth->getToken();
-		$link  = '124346363456';
+		$link = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($link . '/likes?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($link . '/likes?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->deleteLike($link);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   13.1
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$app_id       = "app_id";
-		$app_secret   = "app_secret";
-		$my_url       = "http://localhost/gsoc/joomla-platform/facebook_test.php";
-		$access_token = array(
-			'access_token' => 'token',
-			'expires'      => '51837673', 'created' => '2443672521');
-
-		$this->options = new Registry;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->input   = new JInput;
-		$this->oauth   = new JFacebookOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JFacebookLink($this->options, $this->client, $this->oauth);
-
-		$this->options->set('clientid', $app_id);
-		$this->options->set('clientsecret', $app_secret);
-		$this->options->set('redirecturi', $my_url);
-		$this->options->set('sendheaders', true);
-		$this->options->set('authmethod', 'get');
-
-		parent::setUp();
 	}
 }

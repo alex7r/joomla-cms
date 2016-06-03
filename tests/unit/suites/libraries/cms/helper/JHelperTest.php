@@ -1,10 +1,10 @@
 <?php
 /**
- * @package        Joomla.UnitTest
- * @subpackage     Helper
+ * @package	    Joomla.UnitTest
+ * @subpackage  Helper
  *
- * @copyright      Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
- * @license        GNU General Public License version 2 or later; see LICENSE
+ * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license	    GNU General Public License version 2 or later; see LICENSE
  */
 
 /**
@@ -21,76 +21,6 @@ class JHelperTest extends TestCaseDatabase
 	 * @since  3.2
 	 */
 	protected $object;
-
-	/**
-	 * getLanguageId data
-	 *
-	 * @return  array
-	 *
-	 * @since   3.2
-	 */
-	public function languageIdProvider()
-	{
-		return array(
-			array('Exists' => 'en-GB', 1),
-			array('Does not exit' => 'ab-CD', null),
-		);
-	}
-
-	/**
-	 * Tests the getLanguageId()
-	 *
-	 * @return  void
-	 *
-	 * @since         3.2
-	 * @dataProvider  languageIdProvider
-	 */
-	public function testGetLanguageId($languageName, $expected)
-	{
-		$languageId = $this->object->getLanguageId($languageName);
-		$this->assertEquals($languageId, $expected);
-	}
-
-	/**
-	 * Tests the getRowData() method
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	public function testGetRowData()
-	{
-		$db = JFactory::getDbo();
-		$db->setQuery('SELECT * FROM ' . $db->quoteName('#__users') . ' WHERE ' . $db->quoteName('id') . ' = ' . (int) 42);
-		$arrayFromQuery = $db->loadAssoc();
-
-		$testTable = new JTableUser(self::$driver);
-		$testTable->load(42);
-		$arrayFromMethod = $this->object->getRowData($testTable);
-
-		$this->assertEquals($arrayFromQuery, $arrayFromMethod);
-	}
-
-	/**
-	 * Tests the getDataObject() method
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	public function testDataObject()
-	{
-		$db = JFactory::getDbo();
-		$db->setQuery('SELECT * FROM ' . $db->quoteName('#__users') . ' WHERE ' . $db->quoteName('id') . ' = ' . (int) 42);
-		$objectFromQuery = $db->loadObject();
-
-		$testTable = new JTableUser(self::$driver);
-		$testTable->load(42);
-		$objectFromMethod = $this->object->getDataObject($testTable);
-
-		$this->assertEquals($objectFromQuery, $objectFromMethod);
-
-	}
 
 	/**
 	 * Gets the data set to be loaded into the database during setup
@@ -123,7 +53,7 @@ class JHelperTest extends TestCaseDatabase
 
 		$this->saveFactoryState();
 
-		$this->object          = new JHelper;
+		$this->object = new JHelper;
 		JFactory::$application = $this->getMockCmsApp();
 	}
 
@@ -134,5 +64,75 @@ class JHelperTest extends TestCaseDatabase
 	protected function tearDown()
 	{
 		$this->restoreFactoryState();
+	}
+
+	/**
+	 * getLanguageId data
+	 *
+	 * @return  array
+	 *
+	 * @since   3.2
+	 */
+	public function languageIdProvider()
+	{
+		return array(
+			array('Exists' => 'en-GB', 1),
+			array('Does not exit' => 'ab-CD', null),
+		);
+	}
+
+	/**
+	 * Tests the getLanguageId()
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 * @dataProvider  languageIdProvider
+	 */
+	public function testGetLanguageId($languageName, $expected)
+	{
+		$languageId = $this->object->getLanguageId($languageName);
+		$this->assertEquals($languageId, $expected);
+	}
+
+	/**
+	 * Tests the getRowData() method
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function testGetRowData()
+	{
+		$db = JFactory::getDbo();
+		$db->setQuery('SELECT * FROM ' . $db->quoteName('#__users') . ' WHERE ' . $db->quoteName('id') . ' = ' . (int) 42);
+		$arrayFromQuery =  $db->loadAssoc();
+
+		$testTable = new JTableUser(self::$driver);
+		$testTable->load(42);
+		$arrayFromMethod = $this->object->getRowData($testTable);
+
+		$this->assertEquals($arrayFromQuery, $arrayFromMethod);
+	}
+
+	/**
+	 * Tests the getDataObject() method
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function testDataObject()
+	{
+		$db = JFactory::getDbo();
+		$db->setQuery('SELECT * FROM ' . $db->quoteName('#__users') . ' WHERE ' . $db->quoteName('id') . ' = ' . (int) 42);
+		$objectFromQuery =  $db->loadObject();
+
+		$testTable = new JTableUser(self::$driver);
+		$testTable->load(42);
+		$objectFromMethod = $this->object->getDataObject($testTable);
+
+		$this->assertEquals($objectFromQuery, $objectFromMethod);
+
 	}
 }

@@ -93,13 +93,13 @@ class JApplicationDaemon extends JApplicationCli
 	/**
 	 * Class constructor.
 	 *
-	 * @param   JInputCli        $input        An optional argument to provide dependency injection for the application's
+	 * @param   JInputCli         $input       An optional argument to provide dependency injection for the application's
 	 *                                         input object.  If the argument is a JInputCli object that object will become
 	 *                                         the application's input object, otherwise a default input object is created.
-	 * @param   Registry         $config       An optional argument to provide dependency injection for the application's
+	 * @param   Registry          $config      An optional argument to provide dependency injection for the application's
 	 *                                         config object.  If the argument is a Registry object that object will become
 	 *                                         the application's config object, otherwise a default config object is created.
-	 * @param   JEventDispatcher $dispatcher   An optional argument to provide dependency injection for the application's
+	 * @param   JEventDispatcher  $dispatcher  An optional argument to provide dependency injection for the application's
 	 *                                         event dispatcher.  If the argument is a JEventDispatcher object that object will become
 	 *                                         the application's event dispatcher, if it is null then the default event dispatcher
 	 *                                         will be created based on the application's loadDispatcher() method.
@@ -143,7 +143,7 @@ class JApplicationDaemon extends JApplicationCli
 	/**
 	 * Method to handle POSIX signals.
 	 *
-	 * @param   integer $signal The received POSIX signal.
+	 * @param   integer  $signal  The received POSIX signal.
 	 *
 	 * @return  void
 	 *
@@ -210,9 +210,53 @@ class JApplicationDaemon extends JApplicationCli
 	}
 
 	/**
+	 * Check to see if the daemon is active.  This does not assume that $this daemon is active, but
+	 * only if an instance of the application is active as a daemon.
+	 *
+	 * @return  boolean  True if daemon is active.
+	 *
+	 * @since   11.1
+	 */
+	public function isActive()
+	{
+		// Get the process id file location for the application.
+		$pidFile = $this->config->get('application_pid_file');
+
+		// If the process id file doesn't exist then the daemon is obviously not running.
+		if (!is_file($pidFile))
+		{
+			return false;
+		}
+
+		// Read the contents of the process id file as an integer.
+		$fp = fopen($pidFile, 'r');
+		$pid = fread($fp, filesize($pidFile));
+		$pid = (int) $pid;
+		fclose($fp);
+
+		// Check to make sure that the process id exists as a positive integer.
+		if (!$pid)
+		{
+			return false;
+		}
+
+		// Check to make sure the process is active by pinging it and ensure it responds.
+		if (!posix_kill($pid, 0))
+		{
+			// No response so remove the process id file and log the situation.
+			@ unlink($pidFile);
+			JLog::add('The process found based on PID file was unresponsive.', JLog::WARNING);
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Load an object or array into the application configuration object.
 	 *
-	 * @param   mixed $data Either an array or object to be loaded into the configuration object.
+	 * @param   mixed  $data  Either an array or object to be loaded into the configuration object.
 	 *
 	 * @return  JCli  Instance of $this to allow chaining.
 	 *
@@ -260,7 +304,7 @@ class JApplicationDaemon extends JApplicationCli
 
 		// The pid file location.  This defaults to a path inside the /tmp directory.
 		$name = $this->config->get('application_name');
-		$tmp  = (string) $this->config->get('application_pid_file', strtolower('/tmp/' . $name . '/' . $name . '.pid'));
+		$tmp = (string) $this->config->get('application_pid_file', strtolower('/tmp/' . $name . '/' . $name . '.pid'));
 		$this->config->set('application_pid_file', $tmp);
 
 		/*
@@ -270,12 +314,12 @@ class JApplicationDaemon extends JApplicationCli
 		 */
 
 		// The user id under which to run the daemon.
-		$tmp     = (int) $this->config->get('application_uid', 0);
+		$tmp = (int) $this->config->get('application_uid', 0);
 		$options = array('options' => array('min_range' => 0, 'max_range' => 65000));
 		$this->config->set('application_uid', filter_var($tmp, FILTER_VALIDATE_INT, $options));
 
 		// The group id under which to run the daemon.
-		$tmp     = (int) $this->config->get('application_gid', 0);
+		$tmp = (int) $this->config->get('application_gid', 0);
 		$options = array('options' => array('min_range' => 0, 'max_range' => 65000));
 		$this->config->set('application_gid', filter_var($tmp, FILTER_VALIDATE_INT, $options));
 
@@ -357,6 +401,98 @@ class JApplicationDaemon extends JApplicationCli
 	}
 
 	/**
+	 * Restart daemon process.
+	 *
+	 * @return  void
+	 *
+	 * @codeCoverageIgnore
+	 * @since   11.1
+	 */
+	public function restart()
+	{
+		JLog::add('Stopping ' . $this->name, JLog::INFO);
+		$this->shutdown(true);
+	}
+
+	/**
+	 * Stop daemon process.
+	 *
+	 * @return  void
+	 *
+	 * @codeCoverageIgnore
+	 * @since   11.1
+	 */
+	public function stop()
+	{
+		JLog::add('Stopping ' . $this->name, JLog::INFO);
+		$this->shutdown();
+	}
+
+	/**
+	 * Method to change the identity of the daemon process and resources.
+	 *
+	 * @return  boolean  True if identity successfully changed
+	 *
+	 * @since   11.1
+	 * @see     posix_setuid()
+	 */
+	protected function changeIdentity()
+	{
+		// Get the group and user ids to set for the daemon.
+		$uid = (int) $this->config->get('application_uid', 0);
+		$gid = (int) $this->config->get('application_gid', 0);
+
+		// Get the application process id file path.
+		$file = $this->config->get('application_pid_file');
+
+		// Change the user id for the process id file if necessary.
+		if ($uid && (fileowner($file) != $uid) && (!@ chown($file, $uid)))
+		{
+			JLog::add('Unable to change user ownership of the process id file.', JLog::ERROR);
+
+			return false;
+		}
+
+		// Change the group id for the process id file if necessary.
+		if ($gid && (filegroup($file) != $gid) && (!@ chgrp($file, $gid)))
+		{
+			JLog::add('Unable to change group ownership of the process id file.', JLog::ERROR);
+
+			return false;
+		}
+
+		// Set the correct home directory for the process.
+		if ($uid && ($info = posix_getpwuid($uid)) && is_dir($info['dir']))
+		{
+			system('export HOME="' . $info['dir'] . '"');
+		}
+
+		// Change the user id for the process necessary.
+		if ($uid && (posix_getuid($file) != $uid) && (!@ posix_setuid($uid)))
+		{
+			JLog::add('Unable to change user ownership of the proccess.', JLog::ERROR);
+
+			return false;
+		}
+
+		// Change the group id for the process necessary.
+		if ($gid && (posix_getgid($file) != $gid) && (!@ posix_setgid($gid)))
+		{
+			JLog::add('Unable to change group ownership of the proccess.', JLog::ERROR);
+
+			return false;
+		}
+
+		// Get the user and group information based on uid and gid.
+		$user = posix_getpwuid($uid);
+		$group = posix_getgrgid($gid);
+
+		JLog::add('Changed daemon identity to ' . $user['name'] . ':' . $group['name'], JLog::INFO);
+
+		return true;
+	}
+
+	/**
 	 * Method to put the application into the background.
 	 *
 	 * @return  boolean
@@ -375,9 +511,9 @@ class JApplicationDaemon extends JApplicationCli
 		}
 
 		// Reset Process Information
-		$this->safeMode  = !!@ ini_get('safe_mode');
+		$this->safeMode = !!@ ini_get('safe_mode');
 		$this->processId = 0;
-		$this->running   = false;
+		$this->running = false;
 
 		// Detach process!
 		try
@@ -396,7 +532,7 @@ class JApplicationDaemon extends JApplicationCli
 
 				// Set the process id.
 				$this->processId = (int) posix_getpid();
-				$this->parentId  = $this->processId;
+				$this->parentId = $this->processId;
 			}
 		}
 		catch (RuntimeException $e)
@@ -449,50 +585,6 @@ class JApplicationDaemon extends JApplicationCli
 
 		// Change the current working directory to the application working directory.
 		@ chdir($this->config->get('application_directory'));
-
-		return true;
-	}
-
-	/**
-	 * Check to see if the daemon is active.  This does not assume that $this daemon is active, but
-	 * only if an instance of the application is active as a daemon.
-	 *
-	 * @return  boolean  True if daemon is active.
-	 *
-	 * @since   11.1
-	 */
-	public function isActive()
-	{
-		// Get the process id file location for the application.
-		$pidFile = $this->config->get('application_pid_file');
-
-		// If the process id file doesn't exist then the daemon is obviously not running.
-		if (!is_file($pidFile))
-		{
-			return false;
-		}
-
-		// Read the contents of the process id file as an integer.
-		$fp  = fopen($pidFile, 'r');
-		$pid = fread($fp, filesize($pidFile));
-		$pid = (int) $pid;
-		fclose($fp);
-
-		// Check to make sure that the process id exists as a positive integer.
-		if (!$pid)
-		{
-			return false;
-		}
-
-		// Check to make sure the process is active by pinging it and ensure it responds.
-		if (!posix_kill($pid, 0))
-		{
-			// No response so remove the process id file and log the situation.
-			@ unlink($pidFile);
-			JLog::add('The process found based on PID file was unresponsive.', JLog::WARNING);
-
-			return false;
-		}
 
 		return true;
 	}
@@ -569,33 +661,114 @@ class JApplicationDaemon extends JApplicationCli
 	}
 
 	/**
-	 * Method to return the exit code of a terminated child process.
-	 *
-	 * @return  integer  On success, the PID of the child process is returned in the parent's thread
-	 *                   of execution, and a 0 is returned in the child's thread of execution. On
-	 *                   failure, a -1 will be returned in the parent's context, no child process
-	 *                   will be created, and a PHP error is raised.
-	 *
-	 * @codeCoverageIgnore
-	 * @see     pcntl_fork()
-	 * @since   11.3
-	 */
-	protected function pcntlFork()
-	{
-		return pcntl_fork();
-	}
-
-	/**
-	 * Method to handle post-fork triggering of the onFork event.
+	 * Method to perform basic garbage collection and memory management in the sense of clearing the
+	 * stat cache.  We will probably call this method pretty regularly in our main loop.
 	 *
 	 * @return  void
 	 *
-	 * @since   12.1
+	 * @codeCoverageIgnore
+	 * @since   11.1
 	 */
-	protected function postFork()
+	protected function gc()
 	{
-		// Trigger the onFork event.
-		$this->triggerEvent('onFork');
+		// Perform generic garbage collection.
+		gc_collect_cycles();
+
+		// Clear the stat cache so it doesn't blow up memory.
+		clearstatcache();
+	}
+
+	/**
+	 * Method to attach the JApplicationDaemon signal handler to the known signals.  Applications
+	 * can override these handlers by using the pcntl_signal() function and attaching a different
+	 * callback method.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 * @see     pcntl_signal()
+	 */
+	protected function setupSignalHandlers()
+	{
+		// We add the error suppression for the loop because on some platforms some constants are not defined.
+		foreach (self::$signals as $signal)
+		{
+			// Ignore signals that are not defined.
+			if (!defined($signal) || !is_int(constant($signal)) || (constant($signal) === 0))
+			{
+				// Define the signal to avoid notices.
+				JLog::add('Signal "' . $signal . '" not defined. Defining it as null.', JLog::DEBUG);
+				define($signal, null);
+
+				// Don't listen for signal.
+				continue;
+			}
+
+			// Attach the signal handler for the signal.
+			if (!$this->pcntlSignal(constant($signal), array('JApplicationDaemon', 'signal')))
+			{
+				JLog::add(sprintf('Unable to reroute signal handler: %s', $signal), JLog::EMERGENCY);
+
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Method to shut down the daemon and optionally restart it.
+	 *
+	 * @param   boolean  $restart  True to restart the daemon on exit.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function shutdown($restart = false)
+	{
+		// If we are already exiting, chill.
+		if ($this->exiting)
+		{
+			return;
+		}
+		// If not, now we are.
+		else
+		{
+			$this->exiting = true;
+		}
+
+		// If we aren't already daemonized then just kill the application.
+		if (!$this->running && !$this->isActive())
+		{
+			JLog::add('Process was not daemonized yet, just halting current process', JLog::INFO);
+			$this->close();
+		}
+
+		// Only read the pid for the parent file.
+		if ($this->parentId == $this->processId)
+		{
+			// Read the contents of the process id file as an integer.
+			$fp = fopen($this->config->get('application_pid_file'), 'r');
+			$pid = fread($fp, filesize($this->config->get('application_pid_file')));
+			$pid = (int) $pid;
+			fclose($fp);
+
+			// Remove the process id file.
+			@ unlink($this->config->get('application_pid_file'));
+
+			// If we are supposed to restart the daemon we need to execute the same command.
+			if ($restart)
+			{
+				$this->close(exec(implode(' ', $GLOBALS['argv']) . ' > /dev/null &'));
+			}
+			// If we are not supposed to restart the daemon let's just kill -9.
+			else
+			{
+				passthru('kill -9 ' . $pid);
+				$this->close();
+			}
+		}
 	}
 
 	/**
@@ -655,232 +828,22 @@ class JApplicationDaemon extends JApplicationCli
 	}
 
 	/**
-	 * Method to change the identity of the daemon process and resources.
-	 *
-	 * @return  boolean  True if identity successfully changed
-	 *
-	 * @since   11.1
-	 * @see     posix_setuid()
-	 */
-	protected function changeIdentity()
-	{
-		// Get the group and user ids to set for the daemon.
-		$uid = (int) $this->config->get('application_uid', 0);
-		$gid = (int) $this->config->get('application_gid', 0);
-
-		// Get the application process id file path.
-		$file = $this->config->get('application_pid_file');
-
-		// Change the user id for the process id file if necessary.
-		if ($uid && (fileowner($file) != $uid) && (!@ chown($file, $uid)))
-		{
-			JLog::add('Unable to change user ownership of the process id file.', JLog::ERROR);
-
-			return false;
-		}
-
-		// Change the group id for the process id file if necessary.
-		if ($gid && (filegroup($file) != $gid) && (!@ chgrp($file, $gid)))
-		{
-			JLog::add('Unable to change group ownership of the process id file.', JLog::ERROR);
-
-			return false;
-		}
-
-		// Set the correct home directory for the process.
-		if ($uid && ($info = posix_getpwuid($uid)) && is_dir($info['dir']))
-		{
-			system('export HOME="' . $info['dir'] . '"');
-		}
-
-		// Change the user id for the process necessary.
-		if ($uid && (posix_getuid($file) != $uid) && (!@ posix_setuid($uid)))
-		{
-			JLog::add('Unable to change user ownership of the proccess.', JLog::ERROR);
-
-			return false;
-		}
-
-		// Change the group id for the process necessary.
-		if ($gid && (posix_getgid($file) != $gid) && (!@ posix_setgid($gid)))
-		{
-			JLog::add('Unable to change group ownership of the proccess.', JLog::ERROR);
-
-			return false;
-		}
-
-		// Get the user and group information based on uid and gid.
-		$user  = posix_getpwuid($uid);
-		$group = posix_getgrgid($gid);
-
-		JLog::add('Changed daemon identity to ' . $user['name'] . ':' . $group['name'], JLog::INFO);
-
-		return true;
-	}
-
-	/**
-	 * Method to attach the JApplicationDaemon signal handler to the known signals.  Applications
-	 * can override these handlers by using the pcntl_signal() function and attaching a different
-	 * callback method.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 * @see     pcntl_signal()
-	 */
-	protected function setupSignalHandlers()
-	{
-		// We add the error suppression for the loop because on some platforms some constants are not defined.
-		foreach (self::$signals as $signal)
-		{
-			// Ignore signals that are not defined.
-			if (!defined($signal) || !is_int(constant($signal)) || (constant($signal) === 0))
-			{
-				// Define the signal to avoid notices.
-				JLog::add('Signal "' . $signal . '" not defined. Defining it as null.', JLog::DEBUG);
-				define($signal, null);
-
-				// Don't listen for signal.
-				continue;
-			}
-
-			// Attach the signal handler for the signal.
-			if (!$this->pcntlSignal(constant($signal), array('JApplicationDaemon', 'signal')))
-			{
-				JLog::add(sprintf('Unable to reroute signal handler: %s', $signal), JLog::EMERGENCY);
-
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Method to install a signal handler.
-	 *
-	 * @param   integer  $signal    The signal number.
-	 * @param   callable $handler   The signal handler which may be the name of a user created function,
-	 *                              or method, or either of the two global constants SIG_IGN or SIG_DFL.
-	 * @param   boolean  $restart   Specifies whether system call restarting should be used when this
-	 *                              signal arrives.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @codeCoverageIgnore
-	 * @see     pcntl_signal()
-	 * @since   11.3
-	 */
-	protected function pcntlSignal($signal, $handler, $restart = true)
-	{
-		return pcntl_signal($signal, $handler, $restart);
-	}
-
-	/**
-	 * Method to perform basic garbage collection and memory management in the sense of clearing the
-	 * stat cache.  We will probably call this method pretty regularly in our main loop.
+	 * Method to handle post-fork triggering of the onFork event.
 	 *
 	 * @return  void
 	 *
-	 * @codeCoverageIgnore
-	 * @since   11.1
+	 * @since   12.1
 	 */
-	protected function gc()
+	protected function postFork()
 	{
-		// Perform generic garbage collection.
-		gc_collect_cycles();
-
-		// Clear the stat cache so it doesn't blow up memory.
-		clearstatcache();
-	}
-
-	/**
-	 * Restart daemon process.
-	 *
-	 * @return  void
-	 *
-	 * @codeCoverageIgnore
-	 * @since   11.1
-	 */
-	public function restart()
-	{
-		JLog::add('Stopping ' . $this->name, JLog::INFO);
-		$this->shutdown(true);
-	}
-
-	/**
-	 * Method to shut down the daemon and optionally restart it.
-	 *
-	 * @param   boolean $restart True to restart the daemon on exit.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function shutdown($restart = false)
-	{
-		// If we are already exiting, chill.
-		if ($this->exiting)
-		{
-			return;
-		}
-		// If not, now we are.
-		else
-		{
-			$this->exiting = true;
-		}
-
-		// If we aren't already daemonized then just kill the application.
-		if (!$this->running && !$this->isActive())
-		{
-			JLog::add('Process was not daemonized yet, just halting current process', JLog::INFO);
-			$this->close();
-		}
-
-		// Only read the pid for the parent file.
-		if ($this->parentId == $this->processId)
-		{
-			// Read the contents of the process id file as an integer.
-			$fp  = fopen($this->config->get('application_pid_file'), 'r');
-			$pid = fread($fp, filesize($this->config->get('application_pid_file')));
-			$pid = (int) $pid;
-			fclose($fp);
-
-			// Remove the process id file.
-			@ unlink($this->config->get('application_pid_file'));
-
-			// If we are supposed to restart the daemon we need to execute the same command.
-			if ($restart)
-			{
-				$this->close(exec(implode(' ', $GLOBALS['argv']) . ' > /dev/null &'));
-			}
-			// If we are not supposed to restart the daemon let's just kill -9.
-			else
-			{
-				passthru('kill -9 ' . $pid);
-				$this->close();
-			}
-		}
-	}
-
-	/**
-	 * Stop daemon process.
-	 *
-	 * @return  void
-	 *
-	 * @codeCoverageIgnore
-	 * @since   11.1
-	 */
-	public function stop()
-	{
-		JLog::add('Stopping ' . $this->name, JLog::INFO);
-		$this->shutdown();
+		// Trigger the onFork event.
+		$this->triggerEvent('onFork');
 	}
 
 	/**
 	 * Method to return the exit code of a terminated child process.
 	 *
-	 * @param   integer $status The status parameter is the status parameter supplied to a successful call to pcntl_waitpid().
+	 * @param   integer  $status  The status parameter is the status parameter supplied to a successful call to pcntl_waitpid().
 	 *
 	 * @return  integer  The child process exit code.
 	 *
@@ -894,10 +857,47 @@ class JApplicationDaemon extends JApplicationCli
 	}
 
 	/**
+	 * Method to return the exit code of a terminated child process.
+	 *
+	 * @return  integer  On success, the PID of the child process is returned in the parent's thread
+	 *                   of execution, and a 0 is returned in the child's thread of execution. On
+	 *                   failure, a -1 will be returned in the parent's context, no child process
+	 *                   will be created, and a PHP error is raised.
+	 *
+	 * @codeCoverageIgnore
+	 * @see     pcntl_fork()
+	 * @since   11.3
+	 */
+	protected function pcntlFork()
+	{
+		return pcntl_fork();
+	}
+
+	/**
+	 * Method to install a signal handler.
+	 *
+	 * @param   integer   $signal   The signal number.
+	 * @param   callable  $handler  The signal handler which may be the name of a user created function,
+	 *                              or method, or either of the two global constants SIG_IGN or SIG_DFL.
+	 * @param   boolean   $restart  Specifies whether system call restarting should be used when this
+	 *                              signal arrives.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @codeCoverageIgnore
+	 * @see     pcntl_signal()
+	 * @since   11.3
+	 */
+	protected function pcntlSignal($signal , $handler, $restart = true)
+	{
+		return pcntl_signal($signal, $handler, $restart);
+	}
+
+	/**
 	 * Method to wait on or return the status of a forked child.
 	 *
-	 * @param   integer &$status   Status information.
-	 * @param   integer $options   If wait3 is available on your system (mostly BSD-style systems),
+	 * @param   integer  &$status  Status information.
+	 * @param   integer  $options  If wait3 is available on your system (mostly BSD-style systems),
 	 *                             you can provide the optional options parameter.
 	 *
 	 * @return  integer  The process ID of the child which exited, -1 on error or zero if WNOHANG

@@ -29,7 +29,7 @@ abstract class JModelBase implements JModel
 	/**
 	 * Instantiate the model.
 	 *
-	 * @param   Registry $state The model state.
+	 * @param   Registry  $state  The model state.
 	 *
 	 * @since   12.1
 	 */
@@ -37,18 +37,6 @@ abstract class JModelBase implements JModel
 	{
 		// Setup the model.
 		$this->state = isset($state) ? $state : $this->loadState();
-	}
-
-	/**
-	 * Load the model state.
-	 *
-	 * @return  Registry  The state object.
-	 *
-	 * @since   12.1
-	 */
-	protected function loadState()
-	{
-		return new Registry;
 	}
 
 	/**
@@ -66,7 +54,7 @@ abstract class JModelBase implements JModel
 	/**
 	 * Set the model state.
 	 *
-	 * @param   Registry $state The state object.
+	 * @param   Registry  $state  The state object.
 	 *
 	 * @return  void
 	 *
@@ -75,5 +63,17 @@ abstract class JModelBase implements JModel
 	public function setState(Registry $state)
 	{
 		$this->state = $state;
+	}
+
+	/**
+	 * Load the model state.
+	 *
+	 * @return  Registry  The state object.
+	 *
+	 * @since   12.1
+	 */
+	protected function loadState()
+	{
+		return new Registry;
 	}
 }

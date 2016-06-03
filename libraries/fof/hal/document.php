@@ -49,22 +49,22 @@ class FOFHalDocument
 	/**
 	 * Public constructor
 	 *
-	 * @param   mixed $data The data of the document (usually, the resource state)
+	 * @param   mixed  $data  The data of the document (usually, the resource state)
 	 */
 	public function __construct($data = null)
 	{
-		$this->_data  = $data;
+		$this->_data = $data;
 		$this->_links = new FOFHalLinks;
 	}
 
 	/**
 	 * Add a link to the document
 	 *
-	 * @param   string     $rel         The relation of the link to the document.
+	 * @param   string      $rel        The relation of the link to the document.
 	 *                                  See RFC 5988 http://tools.ietf.org/html/rfc5988#section-6.2.2 A document MUST always have
 	 *                                  a "self" link.
-	 * @param   FOFHalLink $link        The actual link object
-	 * @param   boolean    $overwrite   When false and a link of $rel relation exists, an array of links is created. Otherwise the
+	 * @param   FOFHalLink  $link       The actual link object
+	 * @param   boolean     $overwrite  When false and a link of $rel relation exists, an array of links is created. Otherwise the
 	 *                                  existing link is overwriten with the new one
 	 *
 	 * @see FOFHalLinks::addLink
@@ -79,9 +79,9 @@ class FOFHalDocument
 	/**
 	 * Add links to the document
 	 *
-	 * @param   string  $rel         The relation of the link to the document. See RFC 5988
-	 * @param   array   $links       An array of FOFHalLink objects
-	 * @param   boolean $overwrite   When false and a link of $rel relation exists, an array of
+	 * @param   string   $rel        The relation of the link to the document. See RFC 5988
+	 * @param   array    $links      An array of FOFHalLink objects
+	 * @param   boolean  $overwrite  When false and a link of $rel relation exists, an array of
 	 *                               links is created. Otherwise the existing link is overwriten
 	 *                               with the new one
 	 *
@@ -97,8 +97,8 @@ class FOFHalDocument
 	/**
 	 * Add data to the document
 	 *
-	 * @param   stdClass $data      The data to add
-	 * @param   boolean  $overwrite Should I overwrite existing data?
+	 * @param   stdClass  $data       The data to add
+	 * @param   boolean   $overwrite  Should I overwrite existing data?
 	 *
 	 * @return  void
 	 */
@@ -127,9 +127,9 @@ class FOFHalDocument
 	/**
 	 * Add an embedded document
 	 *
-	 * @param   string         $rel       The relation of the embedded document to its container document
-	 * @param   FOFHalDocument $document  The document to add
-	 * @param   boolean        $overwrite Should I overwrite existing data with the same relation?
+	 * @param   string          $rel        The relation of the embedded document to its container document
+	 * @param   FOFHalDocument  $document   The document to add
+	 * @param   boolean         $overwrite  Should I overwrite existing data with the same relation?
 	 *
 	 * @return  boolean
 	 */
@@ -157,7 +157,7 @@ class FOFHalDocument
 	/**
 	 * Returns the collection of links of this document
 	 *
-	 * @param   string $rel The relation of the links to fetch. Skip to get all links.
+	 * @param   string  $rel  The relation of the links to fetch. Skip to get all links.
 	 *
 	 * @return  array
 	 */
@@ -169,7 +169,7 @@ class FOFHalDocument
 	/**
 	 * Returns the collection of embedded documents
 	 *
-	 * @param   string $rel Optional; the relation to return the embedded documents for
+	 * @param   string  $rel  Optional; the relation to return the embedded documents for
 	 *
 	 * @return  array|FOFHalDocument
 	 */
@@ -203,7 +203,7 @@ class FOFHalDocument
 	 * Instantiate and call a suitable renderer class to render this document
 	 * into the specified format.
 	 *
-	 * @param   string $format The format to render the document into, e.g. 'json'
+	 * @param   string  $format  The format to render the document into, e.g. 'json'
 	 *
 	 * @return  string  The rendered document
 	 *
@@ -222,7 +222,7 @@ class FOFHalDocument
 
 		return $renderer->render(
 			array(
-				'data_key' => $this->_dataKey
+				'data_key'		=> $this->_dataKey
 			)
 		);
 	}

@@ -9,8 +9,8 @@
 defined('_JEXEC') or die;
 
 JFactory::getDocument()->addScriptDeclaration(
-	<<<JS
-		jQuery(document).ready(function($) {
+<<<JS
+	jQuery(document).ready(function($) {
 		$(':input[name="jform[activateMultilanguage]"]').each(function(el){
 			$(this).click(function(){Install.toggle('installLocalisedContent', 'activateMultilanguage', 1);});
 			$(this).click(function(){Install.toggle('activatePluginLanguageCode', 'activateMultilanguage', 1);});
@@ -49,7 +49,7 @@ JS
 		</div>
 	</div>
 	<h3><?php echo JText::_('INSTL_DEFAULTLANGUAGE_MULTILANGUAGE_TITLE'); ?></h3>
-	<hr class="hr-condensed"/>
+	<hr class="hr-condensed" />
 	<p><?php echo JText::_('INSTL_DEFAULTLANGUAGE_MULTILANGUAGE_DESC'); ?></p>
 	<div class="control-group">
 		<div class="control-label">
@@ -87,7 +87,7 @@ JS
 		</div>
 	</div>
 	<h3><?php echo JText::_('INSTL_DEFAULTLANGUAGE_ADMINISTRATOR'); ?></h3>
-	<hr class="hr-condensed"/>
+	<hr class="hr-condensed" />
 	<p><?php echo JText::_('INSTL_DEFAULTLANGUAGE_DESC'); ?></p>
 	<table class="table table-striped table-condensed">
 		<thead>
@@ -128,7 +128,7 @@ JS
 		</tbody>
 	</table>
 	<h3><?php echo JText::_('INSTL_DEFAULTLANGUAGE_FRONTEND'); ?></h3>
-	<hr class="hr-condensed"/>
+	<hr class="hr-condensed" />
 	<p><?php echo JText::_('INSTL_DEFAULTLANGUAGE_DESC_FRONTEND'); ?></p>
 	<table class="table table-striped table-condensed">
 		<thead>
@@ -195,6 +195,6 @@ JS
 			</div>
 		</div>
 	</div>
-	<input type="hidden" name="task" value="setdefaultlanguage"/>
+	<input type="hidden" name="task" value="setdefaultlanguage" />
 	<?php echo JHtml::_('form.token'); ?>
 </form>

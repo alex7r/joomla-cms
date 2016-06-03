@@ -21,8 +21,8 @@ class MenusControllerMenus extends JControllerLegacy
 	/**
 	 * Display the view
 	 *
-	 * @param   boolean $cachable  If true, the view output will be cached.
-	 * @param   array   $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean  $cachable   If true, the view output will be cached.
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  JController        This object to support chaining.
 	 *
@@ -30,6 +30,24 @@ class MenusControllerMenus extends JControllerLegacy
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{
+	}
+
+	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  object  The model.
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'Menu', $prefix = 'MenusModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 
 	/**
@@ -89,24 +107,6 @@ class MenusControllerMenus extends JControllerLegacy
 	}
 
 	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param   string $name   The model name. Optional.
-	 * @param   string $prefix The class prefix. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  object  The model.
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'Menu', $prefix = 'MenusModel', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
-	}
-
-	/**
 	 * Rebuild the menu tree.
 	 *
 	 * @return  bool    False on failure or error, true on success.
@@ -146,7 +146,7 @@ class MenusControllerMenus extends JControllerLegacy
 	 */
 	public function resync()
 	{
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$parts = null;
 
@@ -170,7 +170,7 @@ class MenusControllerMenus extends JControllerLegacy
 			->select($db->quoteName('component_id'))
 			->from('#__menu')
 			->where($db->quoteName('type') . ' = ' . $db->quote('component.item'));
-		$db->setQuery($query);
+			$db->setQuery($query);
 
 		try
 		{

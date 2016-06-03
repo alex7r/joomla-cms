@@ -47,28 +47,28 @@ JFactory::getDocument()->addScriptDeclaration("
 			<div class="btn-toolbar">
 				<div class="btn-group">
 					<button type="button" class="btn btn-default btn-primary"
-					        onclick="Joomla.submitbutton('config.save.modules.apply')">
+						onclick="Joomla.submitbutton('config.save.modules.apply')">
 						<span class="icon-apply"></span>
 						<?php echo JText::_('JAPPLY') ?>
 					</button>
 				</div>
 				<div class="btn-group">
 					<button type="button" class="btn btn-default"
-					        onclick="Joomla.submitbutton('config.save.modules.save')">
+						onclick="Joomla.submitbutton('config.save.modules.save')">
 						<span class="icon-save"></span>
 						<?php echo JText::_('JSAVE') ?>
 					</button>
 				</div>
 				<div class="btn-group">
 					<button type="button" class="btn btn-default"
-					        onclick="Joomla.submitbutton('config.cancel.modules')">
+						onclick="Joomla.submitbutton('config.cancel.modules')">
 						<span class="icon-cancel"></span>
 						<?php echo JText::_('JCANCEL') ?>
 					</button>
 				</div>
 			</div>
 
-			<hr class="hr-condensed"/>
+			<hr class="hr-condensed" />
 
 			<legend><?php echo JText::_('COM_CONFIG_MODULES_SETTINGS_TITLE'); ?></legend>
 
@@ -79,7 +79,7 @@ JFactory::getDocument()->addScriptDeclaration("
 				<?php echo JText::_('COM_CONFIG_MODULES_MODULE_TYPE') ?>
 				<span class="label label-default"><?php echo $this->item['module'] ?></span>
 			</div>
-			<hr/>
+			<hr />
 
 			<div class="row-fluid">
 				<div class="span12">
@@ -109,18 +109,18 @@ JFactory::getDocument()->addScriptDeclaration("
 							</div>
 						</div>
 
-						<hr/>
+						<hr />
 
 						<?php
 						if (JFactory::getUser()->authorise('core.edit.state', 'com_modules.module.' . $this->item['id'])): ?>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('published'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('published'); ?>
-								</div>
+						<div class="control-group">
+							<div class="control-label">
+								<?php echo $this->form->getLabel('published'); ?>
 							</div>
+							<div class="controls">
+								<?php echo $this->form->getInput('published'); ?>
+							</div>
+						</div>
 						<?php endif ?>
 
 						<div class="control-group">
@@ -174,7 +174,7 @@ JFactory::getDocument()->addScriptDeclaration("
 							</div>
 						</div>
 
-						<hr/>
+						<hr />
 
 						<div id="options">
 							<?php echo $this->loadTemplate('options'); ?>
@@ -188,10 +188,9 @@ JFactory::getDocument()->addScriptDeclaration("
 					</fieldset>
 				</div>
 
-				<input type="hidden" name="id" value="<?php echo $this->item['id']; ?>"/>
-				<input type="hidden" name="return"
-				       value="<?php echo JFactory::getApplication()->input->get('return', null, 'base64'); ?>"/>
-				<input type="hidden" name="task" value=""/>
+				<input type="hidden" name="id" value="<?php echo $this->item['id'];?>" />
+				<input type="hidden" name="return" value="<?php echo JFactory::getApplication()->input->get('return', null, 'base64');?>" />
+				<input type="hidden" name="task" value="" />
 				<?php echo JHtml::_('form.token'); ?>
 
 			</div>

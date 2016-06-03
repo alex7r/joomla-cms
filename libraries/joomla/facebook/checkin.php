@@ -22,7 +22,7 @@ class JFacebookCheckin extends JFacebookObject
 	/**
 	 * Method to get a checkin. Requires authentication and user_checkins or friends_checkins permission.
 	 *
-	 * @param   string $checkin The checkin id.
+	 * @param   string  $checkin  The checkin id.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -36,17 +36,17 @@ class JFacebookCheckin extends JFacebookObject
 	/**
 	 * Method to get a checkin's comments. Requires authentication and user_checkins or friends_checkins permission.
 	 *
-	 * @param   string  $checkin The checkin id.
-	 * @param   integer $limit   The number of objects per page.
-	 * @param   integer $offset  The object's number on the page.
-	 * @param   string  $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string  $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string   $checkin  The checkin id.
+	 * @param   integer  $limit    The number of objects per page.
+	 * @param   integer  $offset   The object's number on the page.
+	 * @param   string   $until    A unix timestamp or any date accepted by strtotime.
+	 * @param   string   $since    A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
 	 * @since   13.1
 	 */
-	public function getComments($checkin, $limit = 0, $offset = 0, $until = null, $since = null)
+	public function getComments($checkin, $limit=0, $offset=0, $until=null, $since=null)
 	{
 		return $this->getConnection($checkin, 'comments', '', $limit, $offset, $until, $since);
 	}
@@ -54,8 +54,8 @@ class JFacebookCheckin extends JFacebookObject
 	/**
 	 * Method to post a comment to the checkin. Requires authentication and publish_stream and user_checkins or friends_checkins permission.
 	 *
-	 * @param   string $checkin The checkin id.
-	 * @param   string $message The checkin's text.
+	 * @param   string  $checkin  The checkin id.
+	 * @param   string  $message  The checkin's text.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -64,7 +64,7 @@ class JFacebookCheckin extends JFacebookObject
 	public function createComment($checkin, $message)
 	{
 		// Set POST request parameters.
-		$data            = array();
+		$data = array();
 		$data['message'] = $message;
 
 		return $this->createConnection($checkin, 'comments', $data);
@@ -73,7 +73,7 @@ class JFacebookCheckin extends JFacebookObject
 	/**
 	 * Method to delete a comment. Requires authentication and publish_stream permission.
 	 *
-	 * @param   string $comment The comment's id.
+	 * @param   string  $comment  The comment's id.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -87,17 +87,17 @@ class JFacebookCheckin extends JFacebookObject
 	/**
 	 * Method to get a checkin's likes. Requires authentication and user_checkins or friends_checkins permission.
 	 *
-	 * @param   string  $checkin The checkin id.
-	 * @param   integer $limit   The number of objects per page.
-	 * @param   integer $offset  The object's number on the page.
-	 * @param   string  $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string  $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string   $checkin  The checkin id.
+	 * @param   integer  $limit    The number of objects per page.
+	 * @param   integer  $offset   The object's number on the page.
+	 * @param   string   $until    A unix timestamp or any date accepted by strtotime.
+	 * @param   string   $since    A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
 	 * @since   13.1
 	 */
-	public function getLikes($checkin, $limit = 0, $offset = 0, $until = null, $since = null)
+	public function getLikes($checkin, $limit=0, $offset=0, $until=null, $since=null)
 	{
 		return $this->getConnection($checkin, 'likes', '', $limit, $offset, $until, $since);
 	}
@@ -105,7 +105,7 @@ class JFacebookCheckin extends JFacebookObject
 	/**
 	 * Method to like a checkin. Requires authentication and publish_stream and user_checkins or friends_checkins permission.
 	 *
-	 * @param   string $checkin The checkin id.
+	 * @param   string  $checkin  The checkin id.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -119,7 +119,7 @@ class JFacebookCheckin extends JFacebookObject
 	/**
 	 * Method to unlike a checkin. Requires authentication and publish_stream permission.
 	 *
-	 * @param   string $checkin The checkin id.
+	 * @param   string  $checkin  The checkin id.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *

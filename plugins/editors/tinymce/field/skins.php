@@ -25,6 +25,30 @@ class JFormFieldSkins extends JFormFieldList
 	protected $type = 'skins';
 
 	/**
+	 * Method to get the skins options.
+	 *
+	 * @return  array  The skins option objects.
+	 *
+	 * @since   3.4
+	 */
+	public function getOptions()
+	{
+		$options = array();
+
+		$directories = glob(JPATH_ROOT . '/media/editors/tinymce/skins' . '/*', GLOB_ONLYDIR);
+
+		for ($i = 0; $i < count($directories); ++$i)
+		{
+			$dir = basename($directories[$i]);
+			$options[] = JHtml::_('select.option', $i, $dir);
+		}
+
+		$options = array_merge(parent::getOptions(), $options);
+
+		return $options;
+	}
+
+	/**
 	 * Method to get the field input markup for the list of skins.
 	 *
 	 * @return  string  The field input markup.
@@ -42,29 +66,5 @@ class JFormFieldSkins extends JFormFieldList
 		$html[] = JHtml::_('select.genericlist', $options, $this->name, '', 'value', 'text', $this->value, $this->id);
 
 		return implode($html);
-	}
-
-	/**
-	 * Method to get the skins options.
-	 *
-	 * @return  array  The skins option objects.
-	 *
-	 * @since   3.4
-	 */
-	public function getOptions()
-	{
-		$options = array();
-
-		$directories = glob(JPATH_ROOT . '/media/editors/tinymce/skins' . '/*', GLOB_ONLYDIR);
-
-		for ($i = 0; $i < count($directories); ++$i)
-		{
-			$dir       = basename($directories[$i]);
-			$options[] = JHtml::_('select.option', $i, $dir);
-		}
-
-		$options = array_merge(parent::getOptions(), $options);
-
-		return $options;
 	}
 }

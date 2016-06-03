@@ -25,6 +25,25 @@ class JDatabaseDriverTest extends TestCaseDatabase
 	protected $db;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		$this->db = JDatabaseDriver::getInstance(
+			array(
+				'driver' => 'nosql',
+				'database' => 'europa',
+				'prefix' => '&',
+			)
+		);
+	}
+
+	/**
 	 * Test for the JDatabaseDriver::__call method.
 	 *
 	 * @return  void
@@ -383,7 +402,6 @@ class JDatabaseDriverTest extends TestCaseDatabase
 			'Tests handling of null with escaping (default).'
 		);
 	}
-
 	/**
 	 * Tests the JDatabaseDriver::quote method.
 	 *
@@ -488,25 +506,6 @@ class JDatabaseDriverTest extends TestCaseDatabase
 		$this->assertNull(
 			$this->db->truncateTable('#__dbtest'),
 			'truncateTable should not return anything if successful.'
-		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		$this->db = JDatabaseDriver::getInstance(
-			array(
-				'driver'   => 'nosql',
-				'database' => 'europa',
-				'prefix'   => '&',
-			)
 		);
 	}
 }

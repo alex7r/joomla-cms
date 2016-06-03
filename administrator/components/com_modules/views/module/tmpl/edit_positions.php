@@ -12,10 +12,10 @@ defined('_JEXEC') or die;
 require_once JPATH_ADMINISTRATOR . '/components/com_templates/helpers/templates.php';
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-$clientId         = $this->item->client_id;
-$state            = 1;
+$clientId       = $this->item->client_id;
+$state          = 1;
 $selectedPosition = $this->item->position;
-$positions        = JHtml::_('modules.positions', $clientId, $state, $selectedPosition);
+$positions = JHtml::_('modules.positions', $clientId, $state, $selectedPosition);
 
 
 // Add custom position to options
@@ -26,9 +26,9 @@ $attr = array(
 	'id'          => 'jform_position',
 	'list.select' => $this->item->position,
 	'list.attr'   => 'class="chzn-custom-value" '
-		. 'data-custom_group_text="' . $customGroupText . '" '
-		. 'data-no_results_text="' . JText::_('COM_MODULES_ADD_CUSTOM_POSITION') . '" '
-		. 'data-placeholder="' . JText::_('COM_MODULES_TYPE_OR_SELECT_POSITION') . '" '
+	. 'data-custom_group_text="' . $customGroupText . '" '
+	. 'data-no_results_text="' . JText::_('COM_MODULES_ADD_CUSTOM_POSITION') . '" '
+	. 'data-placeholder="' . JText::_('COM_MODULES_TYPE_OR_SELECT_POSITION') . '" '
 );
 
 echo JHtml::_('select.groupedlist', $positions, 'jform[position]', $attr);

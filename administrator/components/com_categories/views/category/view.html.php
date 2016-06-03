@@ -54,16 +54,16 @@ class CategoriesViewCategory extends JViewLegacy
 	/**
 	 * Display the view.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
 	public function display($tpl = null)
 	{
-		$this->form  = $this->get('Form');
-		$this->item  = $this->get('Item');
+		$this->form = $this->get('Form');
+		$this->item = $this->get('Item');
 		$this->state = $this->get('State');
-		$section     = $this->state->get('category.section') ? $this->state->get('category.section') . '.' : '';
+		$section = $this->state->get('category.section') ? $this->state->get('category.section') . '.' : '';
 		$this->canDo = JHelperContent::getActions($this->state->get('category.component'), $section . 'category', $this->item->id);
 		$this->assoc = $this->get('Assoc');
 
@@ -101,14 +101,14 @@ class CategoriesViewCategory extends JViewLegacy
 	protected function addToolbar()
 	{
 		$extension = JFactory::getApplication()->input->get('extension');
-		$user      = JFactory::getUser();
-		$userId    = $user->id;
+		$user = JFactory::getUser();
+		$userId = $user->id;
 
-		$isNew      = ($this->item->id == 0);
+		$isNew = ($this->item->id == 0);
 		$checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
 
 		// Check to see if the type exists
-		$ucmType      = new JUcmType;
+		$ucmType = new JUcmType;
 		$this->typeId = $ucmType->getTypeId($extension . '.category');
 
 		// Avoid nonsense situation.
@@ -118,9 +118,9 @@ class CategoriesViewCategory extends JViewLegacy
 		}
 
 		// The extension can be in the form com_foo.section
-		$parts           = explode('.', $extension);
-		$component       = $parts[0];
-		$section         = (count($parts) > 1) ? $parts[1] : null;
+		$parts = explode('.', $extension);
+		$component = $parts[0];
+		$section = (count($parts) > 1) ? $parts[1] : null;
 		$componentParams = JComponentHelper::getParams($component);
 
 		// Need to load the menu language file as mod_menu hasn't been loaded yet.
@@ -157,7 +157,7 @@ class CategoriesViewCategory extends JViewLegacy
 		JToolbarHelper::title(
 			$title,
 			'folder category-' . ($isNew ? 'add' : 'edit')
-			. ' ' . substr($component, 4) . ($section ? "-$section" : '') . '-category-' . ($isNew ? 'add' : 'edit')
+				. ' ' . substr($component, 4) . ($section ? "-$section" : '') . '-category-' . ($isNew ? 'add' : 'edit')
 		);
 
 		// For new records, check the create permission.
@@ -217,7 +217,7 @@ class CategoriesViewCategory extends JViewLegacy
 		if ($lang->hasKey($lang_help_url = strtoupper($component) . '_HELP_URL'))
 		{
 			$debug = $lang->setDebug(false);
-			$url   = JText::_($lang_help_url);
+			$url = JText::_($lang_help_url);
 			$lang->setDebug($debug);
 		}
 		else

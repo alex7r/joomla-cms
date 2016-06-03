@@ -47,7 +47,7 @@ class JLanguageMultilang
 		if (!$tested)
 		{
 			// Determine status of language filter plug-in.
-			$db    = JFactory::getDbo();
+			$db = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select('enabled')
 				->from($db->quoteName('#__extensions'))
@@ -57,7 +57,7 @@ class JLanguageMultilang
 			$db->setQuery($query);
 
 			$enabled = $db->loadResult();
-			$tested  = true;
+			$tested = true;
 		}
 
 		return (bool) $enabled;
@@ -78,7 +78,7 @@ class JLanguageMultilang
 		if (!isset($multilangSiteLangs))
 		{
 			// Check for published Site Languages.
-			$db    = JFactory::getDbo();
+			$db = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select('element')
 				->from('#__extensions')
@@ -108,7 +108,7 @@ class JLanguageMultilang
 		if (!isset($multilangSiteHomePages))
 		{
 			// Check for Home pages languages.
-			$db    = JFactory::getDbo();
+			$db = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select('language')
 				->select('id')

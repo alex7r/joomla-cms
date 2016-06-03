@@ -64,7 +64,7 @@ class JFormFieldMenuitem extends JFormFieldGroupedList
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string $name The property name for which to the the value.
+	 * @param   string  $name  The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -87,8 +87,8 @@ class JFormFieldMenuitem extends JFormFieldGroupedList
 	/**
 	 * Method to set certain otherwise inaccessible properties of the form field object.
 	 *
-	 * @param   string $name  The property name for which to the the value.
-	 * @param   mixed  $value The value of the property.
+	 * @param   string  $name   The property name for which to the the value.
+	 * @param   mixed   $value  The value of the property.
 	 *
 	 * @return  void
 	 *
@@ -105,7 +105,7 @@ class JFormFieldMenuitem extends JFormFieldGroupedList
 			case 'language':
 			case 'published':
 			case 'disable':
-				$value       = (string) $value;
+				$value = (string) $value;
 				$this->$name = $value ? explode(',', $value) : array();
 				break;
 
@@ -117,9 +117,9 @@ class JFormFieldMenuitem extends JFormFieldGroupedList
 	/**
 	 * Method to attach a JForm object to the field.
 	 *
-	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
-	 * @param   mixed            $value     The form field value to validate.
-	 * @param   string           $group     The field name group control value. This acts as as an array container for the field.
+	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed             $value    The form field value to validate.
+	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
 	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
 	 *
@@ -198,11 +198,11 @@ class JFormFieldMenuitem extends JFormFieldGroupedList
 				}
 
 				$groups[$menuTitle][] = JHtml::_('select.option',
-					$link->value, $levelPrefix . $link->text . $lang,
-					'value',
-					'text',
-					in_array($link->type, $this->disable)
-				);
+								$link->value, $levelPrefix . $link->text . $lang,
+								'value',
+								'text',
+								in_array($link->type, $this->disable)
+							);
 			}
 		}
 		// Build groups for all menu types.
@@ -230,11 +230,11 @@ class JFormFieldMenuitem extends JFormFieldGroupedList
 					}
 
 					$groups[$menu->title][] = JHtml::_('select.option',
-						$link->value, $levelPrefix . $link->text . $lang,
-						'value',
-						'text',
-						in_array($link->type, $this->disable)
-					);
+										$link->value, $levelPrefix . $link->text . $lang,
+										'value',
+										'text',
+										in_array($link->type, $this->disable)
+									);
 				}
 			}
 		}

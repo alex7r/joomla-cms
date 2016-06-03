@@ -19,17 +19,17 @@ use Joomla\Registry\Registry;
 class JMediawikiHttp extends JHttp
 {
 	/**
-	 * Constructor.
-	 *
-	 * @param   Registry       $options   Client options object.
-	 * @param   JHttpTransport $transport The HTTP transport object.
-	 *
-	 * @since   12.3
-	 */
+     * Constructor.
+     *
+     * @param   Registry        $options    Client options object.
+     * @param   JHttpTransport  $transport  The HTTP transport object.
+     *
+     * @since   12.3
+     */
 	public function __construct(Registry $options = null, JHttpTransport $transport = null)
 	{
 		// Override the JHttp contructor to use JHttpTransportStream.
-		$this->options   = isset($options) ? $options : new Registry;
+		$this->options = isset($options) ? $options : new Registry;
 		$this->transport = isset($transport) ? $transport : new JHttpTransportStream($this->options);
 
 		// Make sure the user agent string is defined.
@@ -42,9 +42,9 @@ class JMediawikiHttp extends JHttp
 	/**
 	 * Method to send the GET command to the server.
 	 *
-	 * @param   string  $url     Path to the resource.
-	 * @param   array   $headers An array of name-value pairs to include in the header of the request.
-	 * @param   integer $timeout Read timeout in seconds.
+	 * @param   string   $url      Path to the resource.
+	 * @param   array    $headers  An array of name-value pairs to include in the header of the request.
+	 * @param   integer  $timeout  Read timeout in seconds.
 	 *
 	 * @return  JHttpResponse
 	 *
@@ -75,10 +75,10 @@ class JMediawikiHttp extends JHttp
 	/**
 	 * Method to send the POST command to the server.
 	 *
-	 * @param   string  $url     Path to the resource.
-	 * @param   mixed   $data    Either an associative array or a string to be sent with the request.
-	 * @param   array   $headers An array of name-value pairs to include in the header of the request
-	 * @param   integer $timeout Read timeout in seconds.
+	 * @param   string   $url      Path to the resource.
+	 * @param   mixed    $data     Either an associative array or a string to be sent with the request.
+	 * @param   array    $headers  An array of name-value pairs to include in the header of the request
+	 * @param   integer  $timeout  Read timeout in seconds.
 	 *
 	 * @return  JHttpResponse
 	 *

@@ -8,8 +8,8 @@
 
 namespace Joomla\Application;
 
-use Joomla\Input\Cli;
 use Joomla\Registry\Registry;
+use Joomla\Input\Cli;
 use Psr\Log\LoggerAwareInterface;
 
 /**
@@ -92,10 +92,10 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	/**
 	 * Class constructor.
 	 *
-	 * @param   Cli      $input    An optional argument to provide dependency injection for the application's
+	 * @param   Cli       $input   An optional argument to provide dependency injection for the application's
 	 *                             input object.  If the argument is an InputCli object that object will become
 	 *                             the application's input object, otherwise a default input object is created.
-	 * @param   Registry $config   An optional argument to provide dependency injection for the application's
+	 * @param   Registry  $config  An optional argument to provide dependency injection for the application's
 	 *                             config object.  If the argument is a Registry object that object will become
 	 *                             the application's config object, otherwise a default config object is created.
 	 *
@@ -141,7 +141,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	/**
 	 * Method to handle POSIX signals.
 	 *
-	 * @param   integer $signal The received POSIX signal.
+	 * @param   integer  $signal  The received POSIX signal.
 	 *
 	 * @return  void
 	 *
@@ -235,7 +235,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 		}
 
 		// Read the contents of the process id file as an integer.
-		$fp  = fopen($pidFile, 'r');
+		$fp = fopen($pidFile, 'r');
 		$pid = fread($fp, filesize($pidFile));
 		$pid = (int) $pid;
 		fclose($fp);
@@ -263,7 +263,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	/**
 	 * Load an object or array into the application configuration object.
 	 *
-	 * @param   mixed $data Either an array or object to be loaded into the configuration object.
+	 * @param   mixed  $data  Either an array or object to be loaded into the configuration object.
 	 *
 	 * @return  AbstractDaemonApplication  Instance of $this to allow chaining.
 	 *
@@ -308,7 +308,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 
 		// The pid file location.  This defaults to a path inside the /tmp directory.
 		$name = $this->get('application_name');
-		$tmp  = (string) $this->get('application_pid_file', strtolower('/tmp/' . $name . '/' . $name . '.pid'));
+		$tmp = (string) $this->get('application_pid_file', strtolower('/tmp/' . $name . '/' . $name . '.pid'));
 		$this->set('application_pid_file', $tmp);
 
 		/*
@@ -318,12 +318,12 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 		 */
 
 		// The user id under which to run the daemon.
-		$tmp     = (int) $this->get('application_uid', 0);
+		$tmp = (int) $this->get('application_uid', 0);
 		$options = array('options' => array('min_range' => 0, 'max_range' => 65000));
 		$this->set('application_uid', filter_var($tmp, FILTER_VALIDATE_INT, $options));
 
 		// The group id under which to run the daemon.
-		$tmp     = (int) $this->get('application_gid', 0);
+		$tmp = (int) $this->get('application_gid', 0);
 		$options = array('options' => array('min_range' => 0, 'max_range' => 65000));
 		$this->set('application_gid', filter_var($tmp, FILTER_VALIDATE_INT, $options));
 
@@ -394,7 +394,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 			}
 		}
 		else
-			// We were not able to daemonize the application so log the failure and die gracefully.
+		// We were not able to daemonize the application so log the failure and die gracefully.
 		{
 			$this->getLogger()->info('Starting ' . $this->name . ' failed');
 		}
@@ -488,7 +488,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 		}
 
 		// Get the user and group information based on uid and gid.
-		$user  = posix_getpwuid($uid);
+		$user = posix_getpwuid($uid);
 		$group = posix_getgrgid($gid);
 
 		$this->getLogger()->info('Changed daemon identity to ' . $user['name'] . ':' . $group['name']);
@@ -515,9 +515,9 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 		}
 
 		// Reset Process Information
-		$this->safeMode  = !!@ ini_get('safe_mode');
+		$this->safeMode = !!@ ini_get('safe_mode');
 		$this->processId = 0;
-		$this->running   = false;
+		$this->running = false;
 
 		// Detach process!
 		try
@@ -536,7 +536,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 
 				// Set the process id.
 				$this->processId = (int) posix_getpid();
-				$this->parentId  = $this->processId;
+				$this->parentId = $this->processId;
 			}
 		}
 		catch (\RuntimeException $e)
@@ -618,7 +618,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 			$this->close();
 		}
 		else
-			// We are in the forked child process.
+		// We are in the forked child process.
 		{
 			// Setup some protected values.
 			$this->exiting = false;
@@ -648,12 +648,12 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 			throw new \RuntimeException('The process could not be forked.');
 		}
 		elseif ($pid === 0)
-			// Update the process id for the child.
+		// Update the process id for the child.
 		{
 			$this->processId = (int) posix_getpid();
 		}
 		else
-			// Log the fork in the parent.
+		// Log the fork in the parent.
 		{
 			// Log the fork.
 			$this->getLogger()->debug('Process forked ' . $pid);
@@ -725,7 +725,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	/**
 	 * Method to shut down the daemon and optionally restart it.
 	 *
-	 * @param   boolean $restart True to restart the daemon on exit.
+	 * @param   boolean  $restart  True to restart the daemon on exit.
 	 *
 	 * @return  void
 	 *
@@ -739,7 +739,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 			return;
 		}
 		else
-			// If not, now we are.
+		// If not, now we are.
 		{
 			$this->exiting = true;
 		}
@@ -756,7 +756,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 		if ($this->parentId == $this->processId)
 		{
 			// Read the contents of the process id file as an integer.
-			$fp  = fopen($this->get('application_pid_file'), 'r');
+			$fp = fopen($this->get('application_pid_file'), 'r');
 			$pid = fread($fp, filesize($this->get('application_pid_file')));
 			$pid = (int) $pid;
 			fclose($fp);
@@ -770,7 +770,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 				$this->close(exec(implode(' ', $GLOBALS['argv']) . ' > /dev/null &'));
 			}
 			else
-				// If we are not supposed to restart the daemon let's just kill -9.
+			// If we are not supposed to restart the daemon let's just kill -9.
 			{
 				passthru('kill -9 ' . $pid);
 				$this->close();
@@ -849,7 +849,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	/**
 	 * Method to return the exit code of a terminated child process.
 	 *
-	 * @param   integer $status The status parameter is the status parameter supplied to a successful call to pcntl_waitpid().
+	 * @param   integer  $status  The status parameter is the status parameter supplied to a successful call to pcntl_waitpid().
 	 *
 	 * @return  integer  The child process exit code.
 	 *
@@ -882,10 +882,10 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	/**
 	 * Method to install a signal handler.
 	 *
-	 * @param   integer  $signal    The signal number.
-	 * @param   callable $handler   The signal handler which may be the name of a user created function,
+	 * @param   integer   $signal   The signal number.
+	 * @param   callable  $handler  The signal handler which may be the name of a user created function,
 	 *                              or method, or either of the two global constants SIG_IGN or SIG_DFL.
-	 * @param   boolean  $restart   Specifies whether system call restarting should be used when this
+	 * @param   boolean   $restart  Specifies whether system call restarting should be used when this
 	 *                              signal arrives.
 	 *
 	 * @return  boolean  True on success.
@@ -894,7 +894,7 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	 * @see     pcntl_signal()
 	 * @since   1.0
 	 */
-	protected function pcntlSignal($signal, $handler, $restart = true)
+	protected function pcntlSignal($signal , $handler, $restart = true)
 	{
 		return pcntl_signal($signal, $handler, $restart);
 	}
@@ -902,8 +902,8 @@ abstract class AbstractDaemonApplication extends AbstractCliApplication implemen
 	/**
 	 * Method to wait on or return the status of a forked child.
 	 *
-	 * @param   integer &$status   Status information.
-	 * @param   integer $options   If wait3 is available on your system (mostly BSD-style systems),
+	 * @param   integer  &$status  Status information.
+	 * @param   integer  $options  If wait3 is available on your system (mostly BSD-style systems),
 	 *                             you can provide the optional options parameter.
 	 *
 	 * @return  integer  The process ID of the child which exited, -1 on error or zero if WNOHANG

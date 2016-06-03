@@ -21,7 +21,7 @@ class InstallationModelConfiguration extends JModelBase
 	/**
 	 * Method to setup the configuration file
 	 *
-	 * @param   array $options The session options
+	 * @param   array  $options  The session options
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -50,7 +50,7 @@ class InstallationModelConfiguration extends JModelBase
 	/**
 	 * Method to create the configuration file
 	 *
-	 * @param   array $options The session options
+	 * @param   array  $options  The session options
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -224,7 +224,7 @@ class InstallationModelConfiguration extends JModelBase
 	/**
 	 * Method to create the root user for the site.
 	 *
-	 * @param   object $options The session options.
+	 * @param   object  $options  The session options.
 	 *
 	 * @return  boolean  True on success.
 	 *

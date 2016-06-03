@@ -45,23 +45,23 @@ abstract class JOpenstreetmapObject
 	/**
 	 * Constructor
 	 *
-	 * @param   Registry            &$options Openstreetmap options object.
-	 * @param   JHttp               $client   The HTTP client object.
-	 * @param   JOpenstreetmapOauth $oauth    Openstreetmap oauth client
+	 * @param   Registry             &$options  Openstreetmap options object.
+	 * @param   JHttp                $client    The HTTP client object.
+	 * @param   JOpenstreetmapOauth  $oauth     Openstreetmap oauth client
 	 *
 	 * @since   13.1
 	 */
 	public function __construct(Registry &$options = null, JHttp $client = null, JOpenstreetmapOauth $oauth = null)
 	{
 		$this->options = isset($options) ? $options : new Registry;
-		$this->client  = isset($client) ? $client : new JHttp($this->options);
-		$this->oauth   = $oauth;
+		$this->client = isset($client) ? $client : new JHttp($this->options);
+		$this->oauth = $oauth;
 	}
 
 	/**
 	 * Get an option from the JOpenstreetmapObject instance.
 	 *
-	 * @param   string $key The name of the option to get.
+	 * @param   string  $key  The name of the option to get.
 	 *
 	 * @return  mixed  The option value.
 	 *
@@ -75,8 +75,8 @@ abstract class JOpenstreetmapObject
 	/**
 	 * Set an option for the JOpenstreetmapObject instance.
 	 *
-	 * @param   string $key   The name of the option to set.
-	 * @param   mixed  $value The option value to set.
+	 * @param   string  $key    The name of the option to set.
+	 * @param   mixed   $value  The option value to set.
 	 *
 	 * @return  JOpenstreetmapObject  This object for method chaining.
 	 *
@@ -92,10 +92,10 @@ abstract class JOpenstreetmapObject
 	/**
 	 * Method to send the request which does not require authentication.
 	 *
-	 * @param   string $path    The path of the request to make
-	 * @param   string $method  The request method.
-	 * @param   array  $headers The headers passed in the request.
-	 * @param   mixed  $data    Either an associative array or a string to be sent with the post request.
+	 * @param   string  $path     The path of the request to make
+	 * @param   string  $method   The request method.
+	 * @param   array   $headers  The headers passed in the request.
+	 * @param   mixed   $data     Either an associative array or a string to be sent with the post request.
 	 *
 	 * @return  SimpleXMLElement  The XML response
 	 *

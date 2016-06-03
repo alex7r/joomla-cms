@@ -148,91 +148,6 @@ class FinderCli extends JApplicationCli
 	}
 
 	/**
-	 * Save static filters.
-	 *
-	 * Since a purge/index cycle will cause all the taxonomy ids to change,
-	 * the static filters need to be updated with the new taxonomy ids.
-	 * The static filter information is saved prior to the purge/index
-	 * so that it can later be used to update the filters with new ids.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.3
-	 */
-	private function getFilters()
-	{
-		$this->out(JText::_('FINDER_CLI_SAVE_FILTERS'));
-
-		// Get the taxonomy ids used by the filters.
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query
-			->select('filter_id, title, data')
-			->from($db->qn('#__finder_filters'));
-		$filters = $db->setQuery($query)->loadObjectList();
-
-		// Get the name of each taxonomy and the name of its parent.
-		foreach ($filters as $filter)
-		{
-			// Skip empty filters.
-			if ($filter->data == '')
-			{
-				continue;
-			}
-
-			// Get taxonomy records.
-			$query = $db->getQuery(true);
-			$query
-				->select('t.title, p.title AS parent')
-				->from($db->qn('#__finder_taxonomy') . ' AS t')
-				->leftjoin($db->qn('#__finder_taxonomy') . ' AS p ON p.id = t.parent_id')
-				->where($db->qn('t.id') . ' IN (' . $filter->data . ')');
-			$taxonomies = $db->setQuery($query)->loadObjectList();
-
-			// Construct a temporary data structure to hold the filter information.
-			foreach ($taxonomies as $taxonomy)
-			{
-				$this->filters[$filter->filter_id][] = array(
-					'filter' => $filter->title,
-					'title'  => $taxonomy->title,
-					'parent' => $taxonomy->parent,
-				);
-			}
-		}
-
-		$this->out(JText::sprintf('FINDER_CLI_SAVE_FILTER_COMPLETED', count($filters)));
-	}
-
-	/**
-	 * Purge the index.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.3
-	 */
-	private function purge()
-	{
-		$this->out(JText::_('FINDER_CLI_INDEX_PURGE'));
-
-		// Load the model.
-		JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models', 'FinderModel');
-		$model = JModelLegacy::getInstance('Index', 'FinderModel');
-
-		// Attempt to purge the index.
-		$return = $model->purge();
-
-		// If unsuccessful then abort.
-		if (!$return)
-		{
-			$message = JText::_('FINDER_CLI_INDEX_PURGE_FAILED', $model->getError());
-			$this->out($message);
-			exit();
-		}
-
-		$this->out(JText::_('FINDER_CLI_INDEX_PURGE_SUCCESS'));
-	}
-
-	/**
 	 * Run the indexer.
 	 *
 	 * @return  void
@@ -315,6 +230,35 @@ class FinderCli extends JApplicationCli
 	}
 
 	/**
+	 * Purge the index.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.3
+	 */
+	private function purge()
+	{
+		$this->out(JText::_('FINDER_CLI_INDEX_PURGE'));
+
+		// Load the model.
+		JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models', 'FinderModel');
+		$model = JModelLegacy::getInstance('Index', 'FinderModel');
+
+		// Attempt to purge the index.
+		$return = $model->purge();
+
+		// If unsuccessful then abort.
+		if (!$return)
+		{
+			$message = JText::_('FINDER_CLI_INDEX_PURGE_FAILED', $model->getError());
+			$this->out($message);
+			exit();
+		}
+
+		$this->out(JText::_('FINDER_CLI_INDEX_PURGE_SUCCESS'));
+	}
+
+	/**
 	 * Restore static filters.
 	 *
 	 * Using the saved filter information, update the filter records
@@ -371,6 +315,62 @@ class FinderCli extends JApplicationCli
 		}
 
 		$this->out(JText::sprintf('FINDER_CLI_RESTORE_FILTER_COMPLETED', count($this->filters)));
+	}
+
+	/**
+	 * Save static filters.
+	 *
+	 * Since a purge/index cycle will cause all the taxonomy ids to change,
+	 * the static filters need to be updated with the new taxonomy ids.
+	 * The static filter information is saved prior to the purge/index
+	 * so that it can later be used to update the filters with new ids.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.3
+	 */
+	private function getFilters()
+	{
+		$this->out(JText::_('FINDER_CLI_SAVE_FILTERS'));
+
+		// Get the taxonomy ids used by the filters.
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query
+			->select('filter_id, title, data')
+			->from($db->qn('#__finder_filters'));
+		$filters = $db->setQuery($query)->loadObjectList();
+
+		// Get the name of each taxonomy and the name of its parent.
+		foreach ($filters as $filter)
+		{
+			// Skip empty filters.
+			if ($filter->data == '')
+			{
+				continue;
+			}
+
+			// Get taxonomy records.
+			$query = $db->getQuery(true);
+			$query
+				->select('t.title, p.title AS parent')
+				->from($db->qn('#__finder_taxonomy') . ' AS t')
+				->leftjoin($db->qn('#__finder_taxonomy') . ' AS p ON p.id = t.parent_id')
+				->where($db->qn('t.id') . ' IN (' . $filter->data . ')');
+			$taxonomies = $db->setQuery($query)->loadObjectList();
+
+			// Construct a temporary data structure to hold the filter information.
+			foreach ($taxonomies as $taxonomy)
+			{
+				$this->filters[$filter->filter_id][] = array(
+					'filter' => $filter->title,
+					'title'  => $taxonomy->title,
+					'parent' => $taxonomy->parent,
+				);
+			}
+		}
+
+		$this->out(JText::sprintf('FINDER_CLI_SAVE_FILTER_COMPLETED', count($filters)));
 	}
 }
 

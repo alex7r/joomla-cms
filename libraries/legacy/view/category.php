@@ -158,24 +158,24 @@ class JViewCategory extends JViewLegacy
 		{
 			foreach ($items as $itemElement)
 			{
-				$itemElement        = (object) $itemElement;
+				$itemElement = (object) $itemElement;
 				$itemElement->event = new stdClass;
 
 				// For some plugins.
-				!empty($itemElement->description) ? $itemElement->text = $itemElement->description : $itemElement->text = null;
+				!empty($itemElement->description)? $itemElement->text = $itemElement->description : $itemElement->text = null;
 
 				$dispatcher = JEventDispatcher::getInstance();
 				JPluginHelper::importPlugin('content');
 
-				$dispatcher->trigger('onContentPrepare', array($this->extension . '.category', &$itemElement, &$itemElement->params, 0));
+				$dispatcher->trigger('onContentPrepare', array ($this->extension . '.category', &$itemElement, &$itemElement->params, 0));
 
-				$results                               = $dispatcher->trigger('onContentAfterTitle', array($this->extension . '.category', &$itemElement, &$itemElement->core_params, 0));
+				$results = $dispatcher->trigger('onContentAfterTitle', array($this->extension . '.category', &$itemElement, &$itemElement->core_params, 0));
 				$itemElement->event->afterDisplayTitle = trim(implode("\n", $results));
 
-				$results                                  = $dispatcher->trigger('onContentBeforeDisplay', array($this->extension . '.category', &$itemElement, &$itemElement->core_params, 0));
+				$results = $dispatcher->trigger('onContentBeforeDisplay', array($this->extension . '.category', &$itemElement, &$itemElement->core_params, 0));
 				$itemElement->event->beforeDisplayContent = trim(implode("\n", $results));
 
-				$results                                 = $dispatcher->trigger('onContentAfterDisplay', array($this->extension . '.category', &$itemElement, &$itemElement->core_params, 0));
+				$results = $dispatcher->trigger('onContentAfterDisplay', array($this->extension . '.category', &$itemElement, &$itemElement->core_params, 0));
 				$itemElement->event->afterDisplayContent = trim(implode("\n", $results));
 
 				if ($itemElement->text)
@@ -220,7 +220,7 @@ class JViewCategory extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 *

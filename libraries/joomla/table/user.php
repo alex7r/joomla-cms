@@ -29,7 +29,7 @@ class JTableUser extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver $db Database driver object.
+	 * @param   JDatabaseDriver  $db  Database driver object.
 	 *
 	 * @since  11.1
 	 */
@@ -38,7 +38,7 @@ class JTableUser extends JTable
 		parent::__construct('#__users', 'id', $db);
 
 		// Initialise.
-		$this->id        = 0;
+		$this->id = 0;
 		$this->sendEmail = 0;
 	}
 
@@ -46,8 +46,8 @@ class JTableUser extends JTable
 	 * Method to load a user, user groups, and any other necessary data
 	 * from the database so that it can be bound to the user object.
 	 *
-	 * @param   integer $userId  An optional user id.
-	 * @param   boolean $reset   False if row not found or on error
+	 * @param   integer  $userId  An optional user id.
+	 * @param   boolean  $reset   False if row not found or on error
 	 *                           (internal error state set in that case).
 	 *
 	 * @return  boolean  True on success, false on failure.
@@ -115,8 +115,8 @@ class JTableUser extends JTable
 	/**
 	 * Method to bind the user, user groups, and any other necessary data.
 	 *
-	 * @param   array $array  The data to bind.
-	 * @param   mixed $ignore An array or space separated list of fields to ignore.
+	 * @param   array  $array   The data to bind.
+	 * @param   mixed  $ignore  An array or space separated list of fields to ignore.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *
@@ -188,8 +188,7 @@ class JTableUser extends JTable
 		}
 
 		if (preg_match('#[<>"\'%;()&\\\\]|\\.\\./#', $this->username) || strlen(utf8_decode($this->username)) < 2
-			|| $filterInput->clean($this->username, 'TRIM') !== $this->username
-		)
+			|| $filterInput->clean($this->username, 'TRIM') !== $this->username)
 		{
 			$this->setError(JText::sprintf('JLIB_DATABASE_ERROR_VALID_AZ09', 2));
 
@@ -258,7 +257,7 @@ class JTableUser extends JTable
 		}
 
 		// Check for root_user != username
-		$config   = JFactory::getConfig();
+		$config = JFactory::getConfig();
 		$rootUser = $config->get('root_user');
 
 		if (!is_numeric($rootUser))
@@ -271,8 +270,7 @@ class JTableUser extends JTable
 			$xid = (int) $this->_db->loadResult();
 
 			if ($rootUser == $this->username && (!$xid || $xid && $xid != (int) $this->id)
-				|| $xid && $xid == (int) $this->id && $rootUser != $this->username
-			)
+				|| $xid && $xid == (int) $this->id && $rootUser != $this->username)
 			{
 				$this->setError(JText::_('JLIB_DATABASE_ERROR_USERNAME_CANNOT_CHANGE'));
 
@@ -290,7 +288,7 @@ class JTableUser extends JTable
 	 * a new row will be inserted into the database with the properties from the
 	 * JTable instance.
 	 *
-	 * @param   boolean $updateNulls True to update fields even if they are null.
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -300,7 +298,7 @@ class JTableUser extends JTable
 	public function store($updateNulls = false)
 	{
 		// Get the table key and key value.
-		$k   = $this->_tbl_key;
+		$k = $this->_tbl_key;
 		$key = $this->$k;
 
 		// TODO: This is a dumb way to handle the groups.
@@ -329,10 +327,10 @@ class JTableUser extends JTable
 		if (is_array($this->groups) && count($this->groups))
 		{
 			// Grab all usergroup entries for the user
-			$query->clear()
-				->select($this->_db->quoteName('group_id'))
-				->from($this->_db->quoteName('#__user_usergroup_map'))
-				->where($this->_db->quoteName('user_id') . ' = ' . (int) $this->id);
+			$query -> clear()
+				-> select($this->_db->quoteName('group_id'))
+				-> from($this->_db->quoteName('#__user_usergroup_map'))
+				-> where($this->_db->quoteName('user_id') . ' = ' . (int) $this->id);
 
 			$this->_db->setQuery($query);
 			$result = $this->_db->loadObjectList();
@@ -350,10 +348,10 @@ class JTableUser extends JTable
 					else
 					{
 						// It should be removed
-						$query->clear()
-							->delete($this->_db->quoteName('#__user_usergroup_map'))
-							->where($this->_db->quoteName('user_id') . ' = ' . (int) $this->id)
-							->where($this->_db->quoteName('group_id') . ' = ' . (int) $map->group_id);
+						$query -> clear()
+							-> delete($this->_db->quoteName('#__user_usergroup_map'))
+							-> where($this->_db->quoteName('user_id') . ' = ' . (int) $this->id)
+							-> where($this->_db->quoteName('group_id') . ' = ' . (int) $map->group_id);
 
 						$this->_db->setQuery($query);
 						$this->_db->execute();
@@ -398,7 +396,7 @@ class JTableUser extends JTable
 	/**
 	 * Method to delete a user, user groups, and any other necessary data from the database.
 	 *
-	 * @param   integer $userId An optional user id.
+	 * @param   integer  $userId  An optional user id.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *
@@ -456,8 +454,8 @@ class JTableUser extends JTable
 	/**
 	 * Updates last visit time of user
 	 *
-	 * @param   integer $timeStamp The timestamp, defaults to 'now'.
-	 * @param   integer $userId    The user id (optional).
+	 * @param   integer  $timeStamp  The timestamp, defaults to 'now'.
+	 * @param   integer  $userId     The user id (optional).
 	 *
 	 * @return  boolean  False if an error occurs
 	 *
@@ -482,7 +480,7 @@ class JTableUser extends JTable
 		$date = JFactory::getDate($timeStamp);
 
 		// Update the database row for the user.
-		$db    = $this->_db;
+		$db = $this->_db;
 		$query = $db->getQuery(true)
 			->update($db->quoteName($this->_tbl))
 			->set($db->quoteName('lastvisitDate') . '=' . $db->quote($date->toSql()))

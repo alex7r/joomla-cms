@@ -36,8 +36,8 @@ class JInputCli extends JInput
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $source  Source data (Optional, default is $_REQUEST)
-	 * @param   array $options Array of configuration parameters (Optional)
+	 * @param   array  $source   Source data (Optional, default is $_REQUEST)
+	 * @param   array  $options  Array of configuration parameters (Optional)
 	 *
 	 * @since   11.1
 	 */
@@ -57,6 +57,52 @@ class JInputCli extends JInput
 
 		// Set the options for the class.
 		$this->options = $options;
+	}
+
+	/**
+	 * Method to serialize the input.
+	 *
+	 * @return  string  The serialized input.
+	 *
+	 * @since   12.1
+	 */
+	public function serialize()
+	{
+		// Load all of the inputs.
+		$this->loadAllInputs();
+
+		// Remove $_ENV and $_SERVER from the inputs.
+		$inputs = $this->inputs;
+		unset($inputs['env']);
+		unset($inputs['server']);
+
+		// Serialize the executable, args, options, data, and inputs.
+		return serialize(array($this->executable, $this->args, $this->options, $this->data, $inputs));
+	}
+
+	/**
+	 * Method to unserialize the input.
+	 *
+	 * @param   string  $input  The serialized input.
+	 *
+	 * @return  JInput  The input object.
+	 *
+	 * @since   12.1
+	 */
+	public function unserialize($input)
+	{
+		// Unserialize the executable, args, options, data, and inputs.
+		list($this->executable, $this->args, $this->options, $this->data, $this->inputs) = unserialize($input);
+
+		// Load the filter.
+		if (isset($this->options['filter']))
+		{
+			$this->filter = $this->options['filter'];
+		}
+		else
+		{
+			$this->filter = JFilterInput::getInstance();
+		}
 	}
 
 	/**
@@ -107,30 +153,30 @@ class JInputCli extends JInput
 				// --bar=baz
 				else
 				{
-					$key       = substr($arg, 2, $eqPos - 2);
-					$value     = substr($arg, $eqPos + 1);
+					$key = substr($arg, 2, $eqPos - 2);
+					$value = substr($arg, $eqPos + 1);
 					$out[$key] = $value;
 				}
 			}
 			elseif (substr($arg, 0, 1) === '-')
-				// -k=value -abc
+			// -k=value -abc
 			{
 				// -k=value
 				if (substr($arg, 2, 1) === '=')
 				{
-					$key       = substr($arg, 1, 1);
-					$value     = substr($arg, 3);
+					$key = substr($arg, 1, 1);
+					$value = substr($arg, 3);
 					$out[$key] = $value;
 				}
 				else
-					// -abc
+				// -abc
 				{
 					$chars = str_split(substr($arg, 1));
 
 					foreach ($chars as $char)
 					{
-						$key       = $char;
-						$value     = isset($out[$key]) ? $out[$key] : true;
+						$key = $char;
+						$value = isset($out[$key]) ? $out[$key] : true;
 						$out[$key] = $value;
 					}
 
@@ -150,51 +196,5 @@ class JInputCli extends JInput
 		}
 
 		$this->data = $out;
-	}
-
-	/**
-	 * Method to serialize the input.
-	 *
-	 * @return  string  The serialized input.
-	 *
-	 * @since   12.1
-	 */
-	public function serialize()
-	{
-		// Load all of the inputs.
-		$this->loadAllInputs();
-
-		// Remove $_ENV and $_SERVER from the inputs.
-		$inputs = $this->inputs;
-		unset($inputs['env']);
-		unset($inputs['server']);
-
-		// Serialize the executable, args, options, data, and inputs.
-		return serialize(array($this->executable, $this->args, $this->options, $this->data, $inputs));
-	}
-
-	/**
-	 * Method to unserialize the input.
-	 *
-	 * @param   string $input The serialized input.
-	 *
-	 * @return  JInput  The input object.
-	 *
-	 * @since   12.1
-	 */
-	public function unserialize($input)
-	{
-		// Unserialize the executable, args, options, data, and inputs.
-		list($this->executable, $this->args, $this->options, $this->data, $this->inputs) = unserialize($input);
-
-		// Load the filter.
-		if (isset($this->options['filter']))
-		{
-			$this->filter = $this->options['filter'];
-		}
-		else
-		{
-			$this->filter = JFilterInput::getInstance();
-		}
 	}
 }

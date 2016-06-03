@@ -21,7 +21,7 @@ class JHtmlNewsfeed
 	/**
 	 * Get the associated language flags
 	 *
-	 * @param   int $newsfeedid The item id to search associations
+	 * @param   int  $newsfeedid  The item id to search associations
 	 *
 	 * @return  string  The language HTML
 	 *
@@ -41,7 +41,7 @@ class JHtmlNewsfeed
 			}
 
 			// Get the associated newsfeed items
-			$db    = JFactory::getDbo();
+			$db = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select('c.id, c.name as title')
 				->select('l.sef as lang_sef')
@@ -67,8 +67,8 @@ class JHtmlNewsfeed
 			{
 				foreach ($items as &$item)
 				{
-					$text         = strtoupper($item->lang_sef);
-					$url          = JRoute::_('index.php?option=com_newsfeeds&task=newsfeed.edit&id=' . (int) $item->id);
+					$text = strtoupper($item->lang_sef);
+					$url = JRoute::_('index.php?option=com_newsfeeds&task=newsfeed.edit&id=' . (int) $item->id);
 					$tooltipParts = array(
 						JHtml::_('image', 'mod_languages/' . $item->image . '.gif',
 							$item->language_title,
@@ -78,7 +78,7 @@ class JHtmlNewsfeed
 						$item->title,
 						'(' . $item->category_title . ')'
 					);
-					$item->link   = JHtml::_(
+					$item->link = JHtml::_(
 						'tooltip',
 						implode(' ', $tooltipParts),
 						null,

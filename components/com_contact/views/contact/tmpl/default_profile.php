@@ -31,7 +31,7 @@ defined('_JEXEC') or die;
 
 						case "profile_dob":
 							echo '<dd>' . JHtml::_('date', $profile->text, JText::_('DATE_FORMAT_LC4'), false) . '</dd>';
-							break;
+						break;
 
 						default:
 							echo '<dd>' . $profile->text . '</dd>';

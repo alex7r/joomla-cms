@@ -21,7 +21,7 @@ class JImageFilterBackgroundfill extends JImageFilter
 	/**
 	 * Method to apply a background color to an image resource.
 	 *
-	 * @param   array $options   An array of options for the filter.
+	 * @param   array  $options  An array of options for the filter.
 	 *                           color  Background matte color
 	 *
 	 * @return  void
@@ -40,7 +40,7 @@ class JImageFilterBackgroundfill extends JImageFilter
 		$colorCode = (!empty($options['color'])) ? $options['color'] : null;
 
 		// Get resource dimensions
-		$width  = imagesX($this->handle);
+		$width = imagesX($this->handle);
 		$height = imagesY($this->handle);
 
 		// Sanitize color
@@ -80,11 +80,11 @@ class JImageFilterBackgroundfill extends JImageFilter
 	 * Method to sanitize color values
 	 * and/or convert to an array
 	 *
-	 * @param   mixed $input   Associative array of colors and alpha,
+	 * @param   mixed  $input  Associative array of colors and alpha,
 	 *                         or hex RGBA string when alpha FF is opaque.
 	 *                         Defaults to black and opaque alpha
 	 *
-	 * @return  array  Associative array of red, green, blue and alpha
+	 * @return  array  Associative array of red, green, blue and alpha		 
 	 *
 	 * @since   3.4
 	 *
@@ -106,9 +106,9 @@ class JImageFilterBackgroundfill extends JImageFilter
 			$hex = ltrim($input, '#');
 
 			$hexValues = array(
-				'red'   => substr($hex, 0, 2),
+				'red' => substr($hex, 0, 2),
 				'green' => substr($hex, 2, 2),
-				'blue'  => substr($hex, 4, 2),
+				'blue' => substr($hex, 4, 2),
 				'alpha' => substr($hex, 6, 2),
 			);
 

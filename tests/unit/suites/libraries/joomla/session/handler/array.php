@@ -54,7 +54,7 @@ class JSessionHandlerArray implements JSessionHandlerInterface
 	/**
 	 * Constructor.
 	 *
-	 * @param string $name Session name
+	 * @param string      $name    Session name
 	 */
 	public function __construct($name = 'MOCKSESSID')
 	{
@@ -72,6 +72,28 @@ class JSessionHandlerArray implements JSessionHandlerInterface
 	}
 
 	/**
+	 * Starts the session.
+	 *
+	 * @return  bool  True if started.
+	 *
+	 * @since   3.4
+	 *
+	 * @throws RuntimeException If something goes wrong starting the session.
+	 */
+	public function start()
+	{
+		if ($this->started && !$this->closed) {
+			return true;
+		}
+
+		if (empty($this->id)) {
+			$this->setId($this->generateId());
+		}
+
+		return true;
+	}
+
+	/**
 	 * Regenerates id that represents this storage.
 	 *
 	 * This method must invoke session_regenerate_id($destroy) unless
@@ -82,8 +104,8 @@ class JSessionHandlerArray implements JSessionHandlerInterface
 	 * Note regenerate+destroy should not clear the session data in memory
 	 * only delete the session data from persistent storage.
 	 *
-	 * @param   bool $destroy    Destroy session when regenerating?
-	 * @param   int  $lifetime   Sets the cookie lifetime for the session cookie. A null value
+	 * @param   bool  $destroy   Destroy session when regenerating?
+	 * @param   int   $lifetime  Sets the cookie lifetime for the session cookie. A null value
 	 *                           will leave the system settings unchanged, 0 sets the cookie
 	 *                           to expire with browser session. Time is in seconds, and is
 	 *                           not a Unix timestamp.
@@ -107,43 +129,6 @@ class JSessionHandlerArray implements JSessionHandlerInterface
 	}
 
 	/**
-	 * Starts the session.
-	 *
-	 * @return  bool  True if started.
-	 *
-	 * @since   3.4
-	 *
-	 * @throws RuntimeException If something goes wrong starting the session.
-	 */
-	public function start()
-	{
-		if ($this->started && !$this->closed)
-		{
-			return true;
-		}
-
-		if (empty($this->id))
-		{
-			$this->setId($this->generateId());
-		}
-
-		return true;
-	}
-
-	/**
-	 * Generates a session ID.
-	 *
-	 * This doesn't need to be particularly cryptographically secure since this is just
-	 * a mock.
-	 *
-	 * @return string
-	 */
-	protected function generateId()
-	{
-		return hash('sha256', uniqid(mt_rand()));
-	}
-
-	/**
 	 * Returns the session ID
 	 *
 	 * @return  string  The session ID or empty.
@@ -158,7 +143,7 @@ class JSessionHandlerArray implements JSessionHandlerInterface
 	/**
 	 * Sets the session ID
 	 *
-	 * @param   string $id Set the session id
+	 * @param   string  $id  Set the session id
 	 *
 	 * @return  void
 	 *
@@ -166,8 +151,7 @@ class JSessionHandlerArray implements JSessionHandlerInterface
 	 */
 	public function setId($id)
 	{
-		if ($this->started)
-		{
+		if ($this->started) {
 			throw new LogicException('Cannot set session ID after the session has started.');
 		}
 
@@ -192,7 +176,7 @@ class JSessionHandlerArray implements JSessionHandlerInterface
 	/**
 	 * Sets the session name
 	 *
-	 * @param   string $name Set the name of the session
+	 * @param   string  $name  Set the name of the session
 	 *
 	 * @return  void
 	 *
@@ -220,12 +204,11 @@ class JSessionHandlerArray implements JSessionHandlerInterface
 	 */
 	public function save()
 	{
-		if (!$this->started || $this->closed)
-		{
+		if (!$this->started || $this->closed) {
 			throw new \RuntimeException("Trying to save a session that was not started yet or was already closed");
 		}
 		// nothing to do since we don't persist the session data
-		$this->closed  = false;
+		$this->closed = false;
 		$this->started = false;
 	}
 
@@ -252,5 +235,18 @@ class JSessionHandlerArray implements JSessionHandlerInterface
 	public function isStarted()
 	{
 		return $this->started;
+	}
+
+	/**
+	 * Generates a session ID.
+	 *
+	 * This doesn't need to be particularly cryptographically secure since this is just
+	 * a mock.
+	 *
+	 * @return string
+	 */
+	protected function generateId()
+	{
+		return hash('sha256', uniqid(mt_rand()));
 	}
 }

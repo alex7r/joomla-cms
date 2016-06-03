@@ -17,6 +17,85 @@ defined('_JEXEC') or die;
 class MenusControllerItem extends JControllerForm
 {
 	/**
+	 * Method to check if you can add a new record.
+	 *
+	 * Extended classes can override this if necessary.
+	 *
+	 * @param   array  $data  An array of input data.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.6
+	 */
+	protected function allowAdd($data = array())
+	{
+		$user = JFactory::getUser();
+
+		$menuType = JFactory::getApplication()->input->getCmd('menutype', isset($data['menutype']) ? $data['menutype'] : '');
+
+		$menutypeID = 0;
+
+		// Load menutype ID
+		if ($menuType)
+		{
+			$menutypeID = (int) $this->getMenuTypeId($menuType);
+		}
+
+		return $user->authorise('core.create', 'com_menus.menu.' . $menutypeID);
+	}
+
+	/**
+	 * Method to check if you edit a record.
+	 *
+	 * Extended classes can override this if necessary.
+	 *
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key; default is id.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.6
+	 */
+	protected function allowEdit($data = array(), $key = 'id')
+	{
+		$user = JFactory::getUser();
+
+		$menutypeID = 0;
+
+		if (isset($data[$key]))
+		{
+			$model = $this->getModel();
+			$item = $model->getItem($data[$key]);
+
+			if (!empty($item->menutype))
+			{
+				$menutypeID = (int) $this->getMenuTypeId($item->menutype);
+			}
+		}
+
+		return $user->authorise('core.edit', 'com_menus.menu.' . (int) $menutypeID);
+	}
+
+	/**
+	 * Loads the menutype ID by a given menutype string
+	 *
+	 * @param   string  $menutype  The given menutype
+	 *
+	 * @return integer
+	 *
+	 * @since  3.6
+	 */
+	protected function getMenuTypeId($menutype)
+	{
+		$model = $this->getModel();
+		$table = $model->getTable('MenuType', 'JTable');
+
+		$table->load(array('menutype' => $menutype));
+
+		return (int) $table->id;
+	}
+
+	/**
 	 * Method to add a new menu item.
 	 *
 	 * @return  mixed  True if the record can be added, a JError object if not.
@@ -25,7 +104,7 @@ class MenusControllerItem extends JControllerForm
 	 */
 	public function add()
 	{
-		$app     = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$context = 'com_menus.edit.item';
 
 		$result = parent::add();
@@ -46,9 +125,9 @@ class MenusControllerItem extends JControllerForm
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   object $model The model.
+	 * @param   object  $model  The model.
 	 *
-	 * @return  boolean     True if successful, false otherwise and internal error is set.
+	 * @return  boolean	 True if successful, false otherwise and internal error is set.
 	 *
 	 * @since   1.6
 	 */
@@ -67,7 +146,7 @@ class MenusControllerItem extends JControllerForm
 	/**
 	 * Method to cancel an edit.
 	 *
-	 * @param   string $key The name of the primary key of the URL variable.
+	 * @param   string  $key  The name of the primary key of the URL variable.
 	 *
 	 * @return  boolean  True if access level checks pass, false otherwise.
 	 *
@@ -77,9 +156,9 @@ class MenusControllerItem extends JControllerForm
 	{
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$app     = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$context = 'com_menus.edit.item';
-		$result  = parent::cancel();
+		$result = parent::cancel();
 
 		if ($result)
 		{
@@ -91,7 +170,7 @@ class MenusControllerItem extends JControllerForm
 			$this->setRedirect(
 				JRoute::_(
 					'index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend()
-					. '&menutype=' . $app->getUserState('com_menus.items.menutype'), false
+				. '&menutype=' . $app->getUserState('com_menus.items.menutype'), false
 				)
 			);
 		}
@@ -102,9 +181,9 @@ class MenusControllerItem extends JControllerForm
 	/**
 	 * Method to edit an existing record.
 	 *
-	 * @param   string $key    The name of the primary key of the URL variable.
-	 * @param   string $urlVar The name of the URL variable if different from the primary key
-	 *                         (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key
+	 * (sometimes required to avoid router collisions).
 	 *
 	 * @return  boolean  True if access level check and checkout passes, false otherwise.
 	 *
@@ -112,7 +191,7 @@ class MenusControllerItem extends JControllerForm
 	 */
 	public function edit($key = null, $urlVar = null)
 	{
-		$app    = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$result = parent::edit();
 
 		if ($result)
@@ -128,8 +207,8 @@ class MenusControllerItem extends JControllerForm
 	/**
 	 * Method to save a record.
 	 *
-	 * @param   string $key    The name of the primary key of the URL variable.
-	 * @param   string $urlVar The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return  boolean  True if successful, false otherwise.
 	 *
@@ -140,12 +219,12 @@ class MenusControllerItem extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$app     = JFactory::getApplication();
-		$model   = $this->getModel('Item', '', array());
-		$table   = $model->getTable();
-		$data    = $this->input->post->get('jform', array(), 'array');
-		$task    = $this->getTask();
-		$context = 'com_menus.edit.item';
+		$app      = JFactory::getApplication();
+		$model    = $this->getModel('Item', '', array());
+		$table    = $model->getTable();
+		$data     = $this->input->post->get('jform', array(), 'array');
+		$task     = $this->getTask();
+		$context  = 'com_menus.edit.item';
 
 		// Determine the name of the primary key for the data.
 		if (empty($key))
@@ -177,9 +256,9 @@ class MenusControllerItem extends JControllerForm
 			}
 
 			// Reset the ID and then treat the request as for Apply.
-			$data['id']           = 0;
+			$data['id'] = 0;
 			$data['associations'] = array();
-			$task                 = 'apply';
+			$task = 'apply';
 		}
 
 		// Access check.
@@ -217,7 +296,7 @@ class MenusControllerItem extends JControllerForm
 			{
 				$segments = explode(':', $data['link']);
 				$protocol = strtolower($segments[0]);
-				$scheme   = array('http', 'https', 'ftp', 'ftps', 'gopher', 'mailto', 'news', 'prospero', 'telnet', 'rlogin', 'tn3270', 'wais', 'url',
+				$scheme = array('http', 'https', 'ftp', 'ftps', 'gopher', 'mailto', 'news', 'prospero', 'telnet', 'rlogin', 'tn3270', 'wais', 'url',
 					'mid', 'cid', 'nntp', 'tel', 'urn', 'ldap', 'file', 'fax', 'modem', 'git');
 
 				if (!in_array($protocol, $scheme))
@@ -366,8 +445,8 @@ class MenusControllerItem extends JControllerForm
 				// Redirect to the list screen.
 				$this->setRedirect(
 					JRoute::_(
-						'index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend()
-						. '&menutype=' . $app->getUserState('com_menus.items.menutype'), false
+					'index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend()
+					. '&menutype=' . $app->getUserState('com_menus.items.menutype'), false
 					)
 				);
 				break;
@@ -393,8 +472,8 @@ class MenusControllerItem extends JControllerForm
 		// Get the type.
 		$type = $data['type'];
 
-		$type     = json_decode(base64_decode($type));
-		$title    = isset($type->title) ? $type->title : null;
+		$type = json_decode(base64_decode($type));
+		$title = isset($type->title) ? $type->title : null;
 		$recordId = isset($type->id) ? $type->id : 0;
 
 		$specialTypes = array('alias', 'separator', 'url', 'heading');
@@ -410,7 +489,7 @@ class MenusControllerItem extends JControllerForm
 		{
 			if (isset($type->request))
 			{
-				$component            = JComponentHelper::getComponent($type->request->option);
+				$component = JComponentHelper::getComponent($type->request->option);
 				$data['component_id'] = $component->id;
 
 				$app->setUserState('com_menus.edit.item.link', 'index.php?' . JUri::buildQuery((array) $type->request));
@@ -466,84 +545,5 @@ class MenusControllerItem extends JControllerForm
 		echo json_encode($results);
 
 		$app->close();
-	}
-
-	/**
-	 * Method to check if you can add a new record.
-	 *
-	 * Extended classes can override this if necessary.
-	 *
-	 * @param   array $data An array of input data.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.6
-	 */
-	protected function allowAdd($data = array())
-	{
-		$user = JFactory::getUser();
-
-		$menuType = JFactory::getApplication()->input->getCmd('menutype', isset($data['menutype']) ? $data['menutype'] : '');
-
-		$menutypeID = 0;
-
-		// Load menutype ID
-		if ($menuType)
-		{
-			$menutypeID = (int) $this->getMenuTypeId($menuType);
-		}
-
-		return $user->authorise('core.create', 'com_menus.menu.' . $menutypeID);
-	}
-
-	/**
-	 * Loads the menutype ID by a given menutype string
-	 *
-	 * @param   string $menutype The given menutype
-	 *
-	 * @return integer
-	 *
-	 * @since  3.6
-	 */
-	protected function getMenuTypeId($menutype)
-	{
-		$model = $this->getModel();
-		$table = $model->getTable('MenuType', 'JTable');
-
-		$table->load(array('menutype' => $menutype));
-
-		return (int) $table->id;
-	}
-
-	/**
-	 * Method to check if you edit a record.
-	 *
-	 * Extended classes can override this if necessary.
-	 *
-	 * @param   array  $data An array of input data.
-	 * @param   string $key  The name of the key for the primary key; default is id.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.6
-	 */
-	protected function allowEdit($data = array(), $key = 'id')
-	{
-		$user = JFactory::getUser();
-
-		$menutypeID = 0;
-
-		if (isset($data[$key]))
-		{
-			$model = $this->getModel();
-			$item  = $model->getItem($data[$key]);
-
-			if (!empty($item->menutype))
-			{
-				$menutypeID = (int) $this->getMenuTypeId($item->menutype);
-			}
-		}
-
-		return $user->authorise('core.edit', 'com_menus.menu.' . (int) $menutypeID);
 	}
 }

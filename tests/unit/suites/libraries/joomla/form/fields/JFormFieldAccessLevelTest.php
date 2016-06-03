@@ -19,6 +19,22 @@ JFormHelper::loadFieldClass('accesslevel');
 class JFormFieldAccessLevelTest extends TestCaseDatabase
 {
 	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   12.1
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_viewlevels', JPATH_TEST_DATABASE . '/jos_viewlevels.csv');
+
+		return $dataSet;
+	}
+
+	/**
 	 * Test the getInput method.
 	 *
 	 * @return  void
@@ -48,21 +64,5 @@ class JFormFieldAccessLevelTest extends TestCaseDatabase
 			$this->greaterThan(0),
 			'Line:' . __LINE__ . ' The getInput method should return something without error.'
 		);
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   12.1
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_viewlevels', JPATH_TEST_DATABASE . '/jos_viewlevels.csv');
-
-		return $dataSet;
 	}
 }

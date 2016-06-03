@@ -22,13 +22,13 @@ defined('JPATH_PLATFORM') or die;
  * JObserverMapper::attachAllObservers($this);
  *
  * 3) add the function attachObserver below to your class to add observers using the JObserverUpdater class:
- *    public function attachObserver(JObserverInterface $observer)
- *    {
- *        $this->_observers->attachObserver($observer);
- *    }
+ * 	public function attachObserver(JObserverInterface $observer)
+ * 	{
+ * 		$this->_observers->attachObserver($observer);
+ * 	}
  *
  * 4) in the methods that need to be observed, add, e.g. (name of event, params of event):
- *        $this->_observers->update('onBeforeLoad', array($keys, $reset));
+ * 		$this->_observers->update('onBeforeLoad', array($keys, $reset));
  *
  * @link   https://docs.joomla.org/JObservableInterface
  * @since  3.1.2
@@ -41,7 +41,7 @@ interface JObservableInterface
 	 * which should be instanciated by JObserverMapper.
 	 * The implementation of this function can use JObserverUpdater
 	 *
-	 * @param   JObserverInterface $observer The observer to attach to $this observable subject
+	 * @param   JObserverInterface  $observer  The observer to attach to $this observable subject
 	 *
 	 * @return  void
 	 *

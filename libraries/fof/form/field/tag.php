@@ -1,9 +1,9 @@
 <?php
 /**
- * @package     FrameworkOnFramework
- * @subpackage  form
+ * @package    FrameworkOnFramework
+ * @subpackage form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -19,17 +19,20 @@ JFormHelper::loadFieldClass('tag');
  */
 class FOFFormFieldTag extends JFormFieldTag implements FOFFormField
 {
+	protected $static;
+
+	protected $repeatable;
+
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
 	public $item;
+
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
-	protected $static;
-	protected $repeatable;
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string $name The property name for which to the the value.
+	 * @param   string  $name  The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -63,45 +66,6 @@ class FOFFormFieldTag extends JFormFieldTag implements FOFFormField
 	}
 
 	/**
-	 * Get the rendering of this field type for static display, e.g. in a single
-	 * item view (typically a "read" task).
-	 *
-	 * @since 2.0
-	 *
-	 * @return  string  The field HTML
-	 */
-	public function getStatic()
-	{
-		$class     = $this->element['class'] ? (string) $this->element['class'] : '';
-		$translate = $this->element['translate'] ? (string) $this->element['translate'] : false;
-
-		$options = $this->getOptions();
-
-		$html = '';
-
-		foreach ($options as $option)
-		{
-
-			$html .= '<span>';
-
-			if ($translate == true)
-			{
-				$html .= JText::_($option->text);
-			}
-			else
-			{
-				$html .= $option->text;
-			}
-
-			$html .= '</span>';
-		}
-
-		return '<span id="' . $this->id . '" class="' . $class . '">' .
-		$html .
-		'</span>';
-	}
-
-	/**
 	 * Method to get a list of tags
 	 *
 	 * @return  array  The field option objects.
@@ -112,10 +76,10 @@ class FOFFormFieldTag extends JFormFieldTag implements FOFFormField
 	{
 		$options = array();
 
-		$published = $this->element['published'] ? $this->element['published'] : array(0, 1);
+		$published = $this->element['published']? $this->element['published'] : array(0,1);
 
-		$db    = FOFPlatform::getInstance()->getDbo();
-		$query = $db->getQuery(true)
+		$db		= FOFPlatform::getInstance()->getDbo();
+		$query	= $db->getQuery(true)
 			->select('a.id AS value, a.path, a.title AS text, a.level, a.published')
 			->from('#__tags AS a')
 			->join('LEFT', $db->quoteName('#__tags') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
@@ -132,9 +96,9 @@ class FOFFormFieldTag extends JFormFieldTag implements FOFFormField
 		if ($item instanceof FOFTable)
 		{
 			// Fake value for selected tags
-			$keyfield   = $item->getKeyName();
-			$content_id = $item->$keyfield;
-			$type       = $item->getContentType();
+			$keyfield = $item->getKeyName();
+			$content_id  = $item->$keyfield;
+			$type = $item->getContentType();
 
 			$selected_query = $db->getQuery(true);
 			$selected_query
@@ -153,7 +117,7 @@ class FOFFormFieldTag extends JFormFieldTag implements FOFFormField
 		{
 			// Only item assigned values
 			$values = (array) $this->value;
-			FOFUtilsArray::toInteger($values);
+            FOFUtilsArray::toInteger($values);
 			$query->where('a.id IN (' . implode(',', $values) . ')');
 		}
 
@@ -174,7 +138,7 @@ class FOFFormFieldTag extends JFormFieldTag implements FOFFormField
 		}
 		elseif (is_array($published))
 		{
-			FOFUtilsArray::toInteger($published);
+            FOFUtilsArray::toInteger($published);
 			$query->where('a.published IN (' . implode(',', $published) . ')');
 		}
 
@@ -207,6 +171,44 @@ class FOFFormFieldTag extends JFormFieldTag implements FOFFormField
 	}
 
 	/**
+	 * Get the rendering of this field type for static display, e.g. in a single
+	 * item view (typically a "read" task).
+	 *
+	 * @since 2.0
+	 *
+	 * @return  string  The field HTML
+	 */
+	public function getStatic()
+	{
+		$class     = $this->element['class'] ? (string) $this->element['class'] : '';
+		$translate = $this->element['translate'] ? (string) $this->element['translate'] : false;
+
+		$options = $this->getOptions();
+
+		$html = '';
+
+		foreach ($options as $option) {
+
+			$html .= '<span>';
+
+			if ($translate == true)
+			{
+				$html .= JText::_($option->text);
+			}
+			else
+			{
+				$html .= $option->text;
+			}
+
+			$html .= '</span>';
+		}
+
+		return '<span id="' . $this->id . '" class="' . $class . '">' .
+			$html .
+			'</span>';
+	}
+
+	/**
 	 * Get the rendering of this field type for a repeatable (grid) display,
 	 * e.g. in a view listing many item (typically a "browse" task)
 	 *
@@ -223,8 +225,7 @@ class FOFFormFieldTag extends JFormFieldTag implements FOFFormField
 
 		$html = '';
 
-		foreach ($options as $option)
-		{
+		foreach ($options as $option) {
 
 			$html .= '<span>';
 
@@ -241,7 +242,7 @@ class FOFFormFieldTag extends JFormFieldTag implements FOFFormField
 		}
 
 		return '<span class="' . $this->id . ' ' . $class . '">' .
-		$html .
-		'</span>';
+			$html .
+			'</span>';
 	}
 }

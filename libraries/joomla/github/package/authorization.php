@@ -21,9 +21,9 @@ class JGithubPackageAuthorization extends JGithubPackage
 	/**
 	 * Method to create an authorization.
 	 *
-	 * @param   array  $scopes A list of scopes that this authorization is in.
-	 * @param   string $note   A note to remind you what the OAuth token is for.
-	 * @param   string $url    A URL to remind you what app the OAuth token is for.
+	 * @param   array   $scopes  A list of scopes that this authorization is in.
+	 * @param   string  $note    A note to remind you what the OAuth token is for.
+	 * @param   string  $url     A URL to remind you what app the OAuth token is for.
 	 *
 	 * @throws DomainException
 	 * @since   12.3
@@ -56,7 +56,7 @@ class JGithubPackageAuthorization extends JGithubPackage
 	/**
 	 * Method to delete an authorization
 	 *
-	 * @param   integer $id ID of the authorization to delete
+	 * @param   integer  $id  ID of the authorization to delete
 	 *
 	 * @throws DomainException
 	 * @since   12.3
@@ -85,12 +85,12 @@ class JGithubPackageAuthorization extends JGithubPackage
 	/**
 	 * Method to edit an authorization.
 	 *
-	 * @param   integer $id           ID of the authorization to edit
-	 * @param   array   $scopes       Replaces the authorization scopes with these.
-	 * @param   array   $addScopes    A list of scopes to add to this authorization.
-	 * @param   array   $removeScopes A list of scopes to remove from this authorization.
-	 * @param   string  $note         A note to remind you what the OAuth token is for.
-	 * @param   string  $url          A URL to remind you what app the OAuth token is for.
+	 * @param   integer  $id            ID of the authorization to edit
+	 * @param   array    $scopes        Replaces the authorization scopes with these.
+	 * @param   array    $addScopes     A list of scopes to add to this authorization.
+	 * @param   array    $removeScopes  A list of scopes to remove from this authorization.
+	 * @param   string   $note          A note to remind you what the OAuth token is for.
+	 * @param   string   $url           A URL to remind you what app the OAuth token is for.
 	 *
 	 * @throws RuntimeException
 	 * @throws DomainException
@@ -158,7 +158,7 @@ class JGithubPackageAuthorization extends JGithubPackage
 	/**
 	 * Method to get details about an authorised application for the authenticated user.
 	 *
-	 * @param   integer $id ID of the authorization to retrieve
+	 * @param   integer  $id  ID of the authorization to retrieve
 	 *
 	 * @throws DomainException
 	 * @since   12.3
@@ -243,10 +243,10 @@ class JGithubPackageAuthorization extends JGithubPackage
 	/**
 	 * 1. Request authorization on GitHub.
 	 *
-	 * @param   string $client_id      The client ID you received from GitHub when you registered.
-	 * @param   string $redirect_uri   URL in your app where users will be sent after authorization.
-	 * @param   string $scope          Comma separated list of scopes.
-	 * @param   string $state          An unguessable random string. It is used to protect against
+	 * @param   string  $client_id     The client ID you received from GitHub when you registered.
+	 * @param   string  $redirect_uri  URL in your app where users will be sent after authorization.
+	 * @param   string  $scope         Comma separated list of scopes.
+	 * @param   string  $state         An unguessable random string. It is used to protect against
 	 *                                 cross-site request forgery attacks.
 	 *
 	 * @since 3.3 (CMS)
@@ -280,11 +280,11 @@ class JGithubPackageAuthorization extends JGithubPackage
 	/**
 	 * 2. Request the access token.
 	 *
-	 * @param   string $client_id     The client ID you received from GitHub when you registered.
-	 * @param   string $client_secret The client secret you received from GitHub when you registered.
-	 * @param   string $code          The code you received as a response to Step 1.
-	 * @param   string $redirect_uri  URL in your app where users will be sent after authorization.
-	 * @param   string $format        The response format (json, xml, ).
+	 * @param   string  $client_id      The client ID you received from GitHub when you registered.
+	 * @param   string  $client_secret  The client secret you received from GitHub when you registered.
+	 * @param   string  $code           The code you received as a response to Step 1.
+	 * @param   string  $redirect_uri   URL in your app where users will be sent after authorization.
+	 * @param   string  $format         The response format (json, xml, ).
 	 *
 	 * @throws UnexpectedValueException
 	 * @since 3.3 (CMS)

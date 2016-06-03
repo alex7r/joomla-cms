@@ -19,7 +19,7 @@ class Factory
 	 * Format instances container - for backward compatibility with AbstractRegistryFormat::getInstance().
 	 *
 	 * @var    FormatInterface[]
-	 * @since       1.5.0
+	 * @since  1.5.0
 	 * @deprecated  2.0  Object caching will no longer be supported
 	 */
 	protected static $formatInstances = array();
@@ -27,8 +27,8 @@ class Factory
 	/**
 	 * Returns an AbstractRegistryFormat object, only creating it if it doesn't already exist.
 	 *
-	 * @param   string $type    The format to load
-	 * @param   array  $options Additional options to configure the object
+	 * @param   string  $type     The format to load
+	 * @param   array   $options  Additional options to configure the object
 	 *
 	 * @return  FormatInterface  Registry format handler
 	 *

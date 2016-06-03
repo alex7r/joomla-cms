@@ -44,7 +44,7 @@ class JCacheStorageMemcache extends JCacheStorage
 	/**
 	 * Constructor
 	 *
-	 * @param   array $options Optional parameters.
+	 * @param   array  $options  Optional parameters.
 	 *
 	 * @since   11.1
 	 */
@@ -56,31 +56,6 @@ class JCacheStorageMemcache extends JCacheStorage
 		{
 			$this->getConnection();
 		}
-	}
-
-	/**
-	 * Test to see if the storage handler is available.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		// First check if the PHP requirements are met
-		$supported = extension_loaded('memcache') && class_exists('Memcache');
-
-		if (!$supported)
-		{
-			return false;
-		}
-
-		// Now check if we can connect to the specified Memcache server
-		$config = JFactory::getConfig();
-
-		$memcache = new Memcache;
-
-		return @$memcache->connect($config->get('memcache_server_host', 'localhost'), $config->get('memcache_server_port', 11211));
 	}
 
 	/**
@@ -120,9 +95,9 @@ class JCacheStorageMemcache extends JCacheStorage
 	/**
 	 * Get cached data by ID and group
 	 *
-	 * @param   string  $id        The cache data ID
-	 * @param   string  $group     The cache data group
-	 * @param   boolean $checkTime True to verify cache time expiration threshold
+	 * @param   string   $id         The cache data ID
+	 * @param   string   $group      The cache data group
+	 * @param   boolean  $checkTime  True to verify cache time expiration threshold
 	 *
 	 * @return  mixed  Boolean false on failure or a cached data object
 	 *
@@ -184,9 +159,9 @@ class JCacheStorageMemcache extends JCacheStorage
 	/**
 	 * Store the data to cache by ID and group
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
-	 * @param   string $data  The data to store in cache
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
+	 * @param   string  $data   The data to store in cache
 	 *
 	 * @return  boolean
 	 *
@@ -223,6 +198,225 @@ class JCacheStorageMemcache extends JCacheStorage
 		}
 
 		return true;
+	}
+
+	/**
+	 * Remove a cached data entry by ID and group
+	 *
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 */
+	public function remove($id, $group)
+	{
+		$cache_id = $this->_getCacheId($id, $group);
+
+		if (!$this->lockindex())
+		{
+			return false;
+		}
+
+		$index = static::$_db->get($this->_hash . '-index');
+
+		if ($index === false)
+		{
+			$index = array();
+		}
+
+		foreach ($index as $key => $value)
+		{
+			if ($value->name == $cache_id)
+			{
+				unset($index[$key]);
+			}
+
+			break;
+		}
+
+		static::$_db->replace($this->_hash . '-index', $index, 0, 0);
+		$this->unlockindex();
+
+		return static::$_db->delete($cache_id);
+	}
+
+	/**
+	 * Clean cache for a group given a mode.
+	 *
+	 * group mode    : cleans all cache in the group
+	 * notgroup mode : cleans all cache not in the group
+	 *
+	 * @param   string  $group  The cache data group
+	 * @param   string  $mode   The mode for cleaning cache [group|notgroup]
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 */
+	public function clean($group, $mode = null)
+	{
+		if (!$this->lockindex())
+		{
+			return false;
+		}
+
+		$index = static::$_db->get($this->_hash . '-index');
+
+		if ($index === false)
+		{
+			$index = array();
+		}
+
+		$secret = $this->_hash;
+
+		foreach ($index as $key => $value)
+		{
+			if (strpos($value->name, $secret . '-cache-' . $group . '-') === 0 xor $mode != 'group')
+			{
+				static::$_db->delete($value->name, 0);
+				unset($index[$key]);
+			}
+		}
+
+		static::$_db->replace($this->_hash . '-index', $index, 0, 0);
+		$this->unlockindex();
+
+		return true;
+	}
+
+	/**
+	 * Test to see if the storage handler is available.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		// First check if the PHP requirements are met
+		$supported = extension_loaded('memcache') && class_exists('Memcache');
+
+		if (!$supported)
+		{
+			return false;
+		}
+
+		// Now check if we can connect to the specified Memcache server
+		$config = JFactory::getConfig();
+
+		$memcache = new Memcache;
+		return @$memcache->connect($config->get('memcache_server_host', 'localhost'), $config->get('memcache_server_port', 11211));
+	}
+
+	/**
+	 * Lock cached item
+	 *
+	 * @param   string   $id        The cache data ID
+	 * @param   string   $group     The cache data group
+	 * @param   integer  $locktime  Cached item max lock time
+	 *
+	 * @return  mixed  Boolean false if locking failed or an object containing properties lock and locklooped
+	 *
+	 * @since   11.1
+	 */
+	public function lock($id, $group, $locktime)
+	{
+		$returning             = new stdClass;
+		$returning->locklooped = false;
+
+		$looptime = $locktime * 10;
+
+		$cache_id = $this->_getCacheId($id, $group);
+
+		if (!$this->lockindex())
+		{
+			return false;
+		}
+
+		$index = static::$_db->get($this->_hash . '-index');
+
+		if ($index === false)
+		{
+			$index = array();
+		}
+
+		$tmparr       = new stdClass;
+		$tmparr->name = $cache_id;
+		$tmparr->size = 1;
+
+		$index[] = $tmparr;
+		static::$_db->replace($this->_hash . '-index', $index, 0, 0);
+		$this->unlockindex();
+
+		$data_lock = static::$_db->add($cache_id . '_lock', 1, false, $locktime);
+
+		if ($data_lock === false)
+		{
+			$lock_counter = 0;
+
+			// Loop until you find that the lock has been released. That implies that data get from other thread has finished
+			while ($data_lock === false)
+			{
+				if ($lock_counter > $looptime)
+				{
+					$returning->locked = false;
+					$returning->locklooped = true;
+					break;
+				}
+
+				usleep(100);
+				$data_lock = static::$_db->add($cache_id . '_lock', 1, false, $locktime);
+				$lock_counter++;
+			}
+		}
+
+		$returning->locked = $data_lock;
+
+		return $returning;
+	}
+
+	/**
+	 * Unlock cached item
+	 *
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 */
+	public function unlock($id, $group = null)
+	{
+		$cache_id = $this->_getCacheId($id, $group) . '_lock';
+
+		if (!$this->lockindex())
+		{
+			return false;
+		}
+
+		$index = static::$_db->get($this->_hash . '-index');
+
+		if ($index === false)
+		{
+			$index = array();
+		}
+
+		foreach ($index as $key => $value)
+		{
+			if ($value->name == $cache_id)
+			{
+				unset($index[$key]);
+			}
+
+			break;
+		}
+
+		static::$_db->replace($this->_hash . '-index', $index, 0, 0);
+		$this->unlockindex();
+
+		return static::$_db->delete($cache_id);
 	}
 
 	/**
@@ -269,200 +463,5 @@ class JCacheStorageMemcache extends JCacheStorage
 	protected function unlockindex()
 	{
 		return static::$_db->delete($this->_hash . '-index_lock');
-	}
-
-	/**
-	 * Remove a cached data entry by ID and group
-	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 */
-	public function remove($id, $group)
-	{
-		$cache_id = $this->_getCacheId($id, $group);
-
-		if (!$this->lockindex())
-		{
-			return false;
-		}
-
-		$index = static::$_db->get($this->_hash . '-index');
-
-		if ($index === false)
-		{
-			$index = array();
-		}
-
-		foreach ($index as $key => $value)
-		{
-			if ($value->name == $cache_id)
-			{
-				unset($index[$key]);
-			}
-
-			break;
-		}
-
-		static::$_db->replace($this->_hash . '-index', $index, 0, 0);
-		$this->unlockindex();
-
-		return static::$_db->delete($cache_id);
-	}
-
-	/**
-	 * Clean cache for a group given a mode.
-	 *
-	 * group mode    : cleans all cache in the group
-	 * notgroup mode : cleans all cache not in the group
-	 *
-	 * @param   string $group The cache data group
-	 * @param   string $mode  The mode for cleaning cache [group|notgroup]
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 */
-	public function clean($group, $mode = null)
-	{
-		if (!$this->lockindex())
-		{
-			return false;
-		}
-
-		$index = static::$_db->get($this->_hash . '-index');
-
-		if ($index === false)
-		{
-			$index = array();
-		}
-
-		$secret = $this->_hash;
-
-		foreach ($index as $key => $value)
-		{
-			if (strpos($value->name, $secret . '-cache-' . $group . '-') === 0 xor $mode != 'group')
-			{
-				static::$_db->delete($value->name, 0);
-				unset($index[$key]);
-			}
-		}
-
-		static::$_db->replace($this->_hash . '-index', $index, 0, 0);
-		$this->unlockindex();
-
-		return true;
-	}
-
-	/**
-	 * Lock cached item
-	 *
-	 * @param   string  $id       The cache data ID
-	 * @param   string  $group    The cache data group
-	 * @param   integer $locktime Cached item max lock time
-	 *
-	 * @return  mixed  Boolean false if locking failed or an object containing properties lock and locklooped
-	 *
-	 * @since   11.1
-	 */
-	public function lock($id, $group, $locktime)
-	{
-		$returning             = new stdClass;
-		$returning->locklooped = false;
-
-		$looptime = $locktime * 10;
-
-		$cache_id = $this->_getCacheId($id, $group);
-
-		if (!$this->lockindex())
-		{
-			return false;
-		}
-
-		$index = static::$_db->get($this->_hash . '-index');
-
-		if ($index === false)
-		{
-			$index = array();
-		}
-
-		$tmparr       = new stdClass;
-		$tmparr->name = $cache_id;
-		$tmparr->size = 1;
-
-		$index[] = $tmparr;
-		static::$_db->replace($this->_hash . '-index', $index, 0, 0);
-		$this->unlockindex();
-
-		$data_lock = static::$_db->add($cache_id . '_lock', 1, false, $locktime);
-
-		if ($data_lock === false)
-		{
-			$lock_counter = 0;
-
-			// Loop until you find that the lock has been released. That implies that data get from other thread has finished
-			while ($data_lock === false)
-			{
-				if ($lock_counter > $looptime)
-				{
-					$returning->locked     = false;
-					$returning->locklooped = true;
-					break;
-				}
-
-				usleep(100);
-				$data_lock = static::$_db->add($cache_id . '_lock', 1, false, $locktime);
-				$lock_counter++;
-			}
-		}
-
-		$returning->locked = $data_lock;
-
-		return $returning;
-	}
-
-	/**
-	 * Unlock cached item
-	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 */
-	public function unlock($id, $group = null)
-	{
-		$cache_id = $this->_getCacheId($id, $group) . '_lock';
-
-		if (!$this->lockindex())
-		{
-			return false;
-		}
-
-		$index = static::$_db->get($this->_hash . '-index');
-
-		if ($index === false)
-		{
-			$index = array();
-		}
-
-		foreach ($index as $key => $value)
-		{
-			if ($value->name == $cache_id)
-			{
-				unset($index[$key]);
-			}
-
-			break;
-		}
-
-		static::$_db->replace($this->_hash . '-index', $index, 0, 0);
-		$this->unlockindex();
-
-		return static::$_db->delete($cache_id);
 	}
 }

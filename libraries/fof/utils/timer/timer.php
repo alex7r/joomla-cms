@@ -35,18 +35,6 @@ class FOFUtilsTimer
 	}
 
 	/**
-	 * Returns the current timestamp in decimal seconds
-	 *
-	 * @return  float
-	 */
-	private function microtime_float()
-	{
-		list($usec, $sec) = explode(" ", microtime());
-
-		return ((float) $usec + (float) $sec);
-	}
-
-	/**
 	 * Wake-up function to reset internal timer when we get unserialized
 	 */
 	public function __wakeup()
@@ -75,6 +63,17 @@ class FOFUtilsTimer
 	public function getRunningTime()
 	{
 		return $this->microtime_float() - $this->start_time;
+	}
+
+	/**
+	 * Returns the current timestamp in decimal seconds
+	 *
+	 * @return  float
+	 */
+	private function microtime_float()
+	{
+		list($usec, $sec) = explode(" ", microtime());
+		return ((float)$usec + (float)$sec);
 	}
 
 	/**

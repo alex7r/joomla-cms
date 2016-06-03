@@ -1,10 +1,10 @@
 <?php
 /**
- * @package        Joomla.UnitTest
- * @subpackage     Toolbar
+ * @package	    Joomla.UnitTest
+ * @subpackage  Toolbar
  *
- * @copyright      Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
- * @license        GNU General Public License version 2 or later; see LICENSE
+ * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license	    GNU General Public License version 2 or later; see LICENSE
  */
 
 /**
@@ -37,6 +37,48 @@ class JToolbarButtonTest extends TestCaseDatabase
 	 * @since  3.2
 	 */
 	protected $backupServer;
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.0
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->toolbar = JToolbar::getInstance();
+		$this->object  = $this->toolbar->loadButtonType('standard');
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
 
 	/**
 	 * Tests the constructor
@@ -104,47 +146,5 @@ class JToolbarButtonTest extends TestCaseDatabase
 			$this->object->fetchIconClass('standard'),
 			$this->equalTo('icon-standard')
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.0
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->toolbar = JToolbar::getInstance();
-		$this->object  = $this->toolbar->loadButtonType('standard');
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST']   = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 }

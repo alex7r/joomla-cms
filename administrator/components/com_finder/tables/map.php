@@ -21,7 +21,7 @@ class FinderTableMap extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver &$db JDatabaseDriver connector object.
+	 * @param   JDatabaseDriver  &$db  JDatabaseDriver connector object.
 	 *
 	 * @since   2.5
 	 */
@@ -35,10 +35,10 @@ class FinderTableMap extends JTable
 	 * table. The method respects checked out rows by other users and will attempt
 	 * to checkin rows that it can after adjustments are made.
 	 *
-	 * @param   mixed   $pks      An array of primary key values to update.  If not
+	 * @param   mixed    $pks     An array of primary key values to update.  If not
 	 *                            set the instance property value is used. [optional]
-	 * @param   integer $state    The publishing state. eg. [0 = unpublished, 1 = published] [optional]
-	 * @param   integer $userId   The user id of the user performing the operation. [optional]
+	 * @param   integer  $state   The publishing state. eg. [0 = unpublished, 1 = published] [optional]
+	 * @param   integer  $userId  The user id of the user performing the operation. [optional]
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -49,7 +49,7 @@ class FinderTableMap extends JTable
 		$k = $this->_tbl_key;
 
 		// Sanitize input.
-		$pks   = ArrayHelper::toInteger($pks);
+		$pks = ArrayHelper::toInteger($pks);
 		$state = (int) $state;
 
 		// If there are no primary keys set check to see if the instance key is set.

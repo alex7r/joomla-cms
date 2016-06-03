@@ -16,16 +16,20 @@ defined('_JEXEC') or die;
  */
 class UsersViewRegistration extends JViewLegacy
 {
-	public $document;
 	protected $data;
+
 	protected $form;
+
 	protected $params;
+
 	protected $state;
+
+	public $document;
 
 	/**
 	 * Method to display the view.
 	 *
-	 * @param   string $tpl The template file to include
+	 * @param   string  $tpl  The template file to include
 	 *
 	 * @return  mixed
 	 *

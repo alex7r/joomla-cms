@@ -21,7 +21,7 @@ class LanguagesModelStrings extends JModelLegacy
 	 *
 	 * @return  boolean  True on success, Exception object otherwise.
 	 *
-	 * @since        2.5
+	 * @since		2.5
 	 */
 	public function refresh()
 	{
@@ -44,8 +44,8 @@ class LanguagesModelStrings extends JModelLegacy
 
 		// Create the insert query.
 		$query = $this->_db->getQuery(true)
-			->insert($this->_db->quoteName('#__overrider'))
-			->columns('constant, string, file');
+					->insert($this->_db->quoteName('#__overrider'))
+					->columns('constant, string, file');
 
 		// Initialize some variables.
 		$client   = $app->getUserState('com_languages.overrides.filter.client', 'site') ? 'administrator' : 'site';
@@ -113,13 +113,13 @@ class LanguagesModelStrings extends JModelLegacy
 	 *
 	 * @return  array  Array of resuls on success, Exception object otherwise.
 	 *
-	 * @since        2.5
+	 * @since		2.5
 	 */
 	public function search()
 	{
-		$results    = array();
-		$input      = JFactory::getApplication()->input;
-		$filter     = JFilterInput::getInstance();
+		$results = array();
+		$input   = JFactory::getApplication()->input;
+		$filter  = JFilterInput::getInstance();
 		$searchTerm = $input->getString('searchstring');
 
 		$limitstart = $input->getInt('more');
@@ -148,7 +148,7 @@ class LanguagesModelStrings extends JModelLegacy
 
 			// Check whether there are more results than already loaded.
 			$query->clear('select')->clear('limit')
-				->select('COUNT(id)');
+						->select('COUNT(id)');
 			$this->_db->setQuery($query);
 
 			if ($this->_db->loadResult() > $limitstart + 10)

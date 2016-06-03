@@ -21,7 +21,7 @@ abstract class Storage
 {
 	/**
 	 * @var    Storage[]  Storage instances container.
-	 * @since       1.0
+	 * @since  1.0
 	 * @deprecated  2.0
 	 */
 	protected static $instances = array();
@@ -29,9 +29,9 @@ abstract class Storage
 	/**
 	 * Constructor
 	 *
-	 * @param   array $options Optional parameters.
+	 * @param   array  $options  Optional parameters.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	public function __construct($options = array())
@@ -40,37 +40,20 @@ abstract class Storage
 	}
 
 	/**
-	 * Register the functions of this class with PHP's session handler
-	 *
-	 * @return  void
-	 *
-	 * @since       1.0
-	 * @deprecated  2.0
-	 */
-	public function register()
-	{
-		// Use this object as the session handler
-		session_set_save_handler(
-			array($this, 'open'), array($this, 'close'), array($this, 'read'), array($this, 'write'),
-			array($this, 'destroy'), array($this, 'gc')
-		);
-	}
-
-	/**
 	 * Returns a session storage handler object, only creating it if it doesn't already exist.
 	 *
-	 * @param   string $name    The session store to instantiate
-	 * @param   array  $options Array of options
+	 * @param   string  $name     The session store to instantiate
+	 * @param   array   $options  Array of options
 	 *
 	 * @return  Storage
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	public static function getInstance($name = 'none', $options = array())
 	{
 		$filter = new InputFilter;
-		$name   = strtolower($filter->clean($name, 'word'));
+		$name = strtolower($filter->clean($name, 'word'));
 
 		if (empty(self::$instances[$name]))
 		{
@@ -98,27 +81,31 @@ abstract class Storage
 	}
 
 	/**
-	 * Test to see if the SessionHandler is available.
+	 * Register the functions of this class with PHP's session handler
 	 *
-	 * @return  boolean  True on success, false otherwise.
+	 * @return  void
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
-	public static function isSupported()
+	public function register()
 	{
-		return true;
+		// Use this object as the session handler
+		session_set_save_handler(
+			array($this, 'open'), array($this, 'close'), array($this, 'read'), array($this, 'write'),
+			array($this, 'destroy'), array($this, 'gc')
+		);
 	}
 
 	/**
 	 * Open the SessionHandler backend.
 	 *
-	 * @param   string $save_path    The path to the session object.
-	 * @param   string $session_name The name of the session.
+	 * @param   string  $save_path     The path to the session object.
+	 * @param   string  $session_name  The name of the session.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	public function open($save_path, $session_name)
@@ -131,7 +118,7 @@ abstract class Storage
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	public function close()
@@ -143,11 +130,11 @@ abstract class Storage
 	 * Read the data for a particular session identifier from the
 	 * SessionHandler backend.
 	 *
-	 * @param   string $id The session identifier.
+	 * @param   string  $id  The session identifier.
 	 *
 	 * @return  string  The session data.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	public function read($id)
@@ -158,12 +145,12 @@ abstract class Storage
 	/**
 	 * Write session data to the SessionHandler backend.
 	 *
-	 * @param   string $id           The session identifier.
-	 * @param   string $session_data The session data.
+	 * @param   string  $id            The session identifier.
+	 * @param   string  $session_data  The session data.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	public function write($id, $session_data)
@@ -175,11 +162,11 @@ abstract class Storage
 	 * Destroy the data for a particular session identifier in the
 	 * SessionHandler backend.
 	 *
-	 * @param   string $id The session identifier.
+	 * @param   string  $id  The session identifier.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	public function destroy($id)
@@ -190,14 +177,27 @@ abstract class Storage
 	/**
 	 * Garbage collect stale sessions from the SessionHandler backend.
 	 *
-	 * @param   integer $maxlifetime The maximum age of a session.
+	 * @param   integer  $maxlifetime  The maximum age of a session.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	public function gc($maxlifetime = null)
+	{
+		return true;
+	}
+
+	/**
+	 * Test to see if the SessionHandler is available.
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   1.0
+	 * @deprecated  2.0
+	 */
+	public static function isSupported()
 	{
 		return true;
 	}

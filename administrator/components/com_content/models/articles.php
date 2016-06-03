@@ -19,7 +19,7 @@ class ContentModelArticles extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @since   1.6
 	 * @see     JController
@@ -63,69 +63,12 @@ class ContentModelArticles extends JModelList
 	}
 
 	/**
-	 * Build a list of authors
-	 *
-	 * @return  JDatabaseQuery
-	 *
-	 * @since   1.6
-	 */
-	public function getAuthors()
-	{
-		// Create a new query object.
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		// Construct the query
-		$query->select('u.id AS value, u.name AS text')
-			->from('#__users AS u')
-			->join('INNER', '#__content AS c ON c.created_by = u.id')
-			->group('u.id, u.name')
-			->order('u.name');
-
-		// Setup the query
-		$db->setQuery($query);
-
-		// Return the result
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Method to get a list of articles.
-	 * Overridden to add a check for access levels.
-	 *
-	 * @return  mixed  An array of data items on success, false on failure.
-	 *
-	 * @since   1.6.1
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-
-		if (JFactory::getApplication()->isSite())
-		{
-			$user   = JFactory::getUser();
-			$groups = $user->getAuthorisedViewLevels();
-
-			for ($x = 0, $count = count($items); $x < $count; $x++)
-			{
-				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups))
-				{
-					unset($items[$x]);
-				}
-			}
-		}
-
-		return $items;
-	}
-
-	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -191,7 +134,7 @@ class ContentModelArticles extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id A prefix for the store id.
+	 * @param   string  $id  A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -220,18 +163,18 @@ class ContentModelArticles extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = JFactory::getUser();
-		$app   = JFactory::getApplication();
+		$user = JFactory::getUser();
+		$app = JFactory::getApplication();
 
 		// Select the required fields from the table.
 		$query->select(
 			$this->getState(
 				'list.select',
 				'a.id, a.title, a.alias, a.checked_out, a.checked_out_time, a.catid' .
-				', a.state, a.access, a.created, a.created_by, a.created_by_alias, a.ordering, a.featured, a.language, a.hits' .
-				', a.publish_up, a.publish_down'
+					', a.state, a.access, a.created, a.created_by, a.created_by_alias, a.ordering, a.featured, a.language, a.hits' .
+					', a.publish_up, a.publish_down'
 			)
 		);
 		$query->from('#__content AS a');
@@ -291,15 +234,15 @@ class ContentModelArticles extends JModelList
 		}
 
 		// Filter by a single or group of categories.
-		$baselevel  = 1;
+		$baselevel = 1;
 		$categoryId = $this->getState('filter.category_id');
 
 		if (is_numeric($categoryId))
 		{
 			$cat_tbl = JTable::getInstance('Category', 'JTable');
 			$cat_tbl->load($categoryId);
-			$rgt       = $cat_tbl->rgt;
-			$lft       = $cat_tbl->lft;
+			$rgt = $cat_tbl->rgt;
+			$lft = $cat_tbl->lft;
 			$baselevel = (int) $cat_tbl->level;
 			$query->where('c.lft >= ' . (int) $lft)
 				->where('c.rgt <= ' . (int) $rgt);
@@ -367,7 +310,7 @@ class ContentModelArticles extends JModelList
 		}
 
 		// Add the list ordering clause.
-		$orderCol  = $this->state->get('list.ordering', 'a.id');
+		$orderCol = $this->state->get('list.ordering', 'a.id');
 		$orderDirn = $this->state->get('list.direction', 'desc');
 
 		if ($orderCol == 'a.ordering' || $orderCol == 'category_title')
@@ -389,5 +332,62 @@ class ContentModelArticles extends JModelList
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
+	}
+
+	/**
+	 * Build a list of authors
+	 *
+	 * @return  JDatabaseQuery
+	 *
+	 * @since   1.6
+	 */
+	public function getAuthors()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Construct the query
+		$query->select('u.id AS value, u.name AS text')
+			->from('#__users AS u')
+			->join('INNER', '#__content AS c ON c.created_by = u.id')
+			->group('u.id, u.name')
+			->order('u.name');
+
+		// Setup the query
+		$db->setQuery($query);
+
+		// Return the result
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Method to get a list of articles.
+	 * Overridden to add a check for access levels.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 *
+	 * @since   1.6.1
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+
+		if (JFactory::getApplication()->isSite())
+		{
+			$user = JFactory::getUser();
+			$groups = $user->getAuthorisedViewLevels();
+
+			for ($x = 0, $count = count($items); $x < $count; $x++)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($items[$x]->access, $groups))
+				{
+					unset($items[$x]);
+				}
+			}
+		}
+
+		return $items;
 	}
 }

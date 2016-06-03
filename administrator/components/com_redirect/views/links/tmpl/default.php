@@ -20,58 +20,57 @@ $user      = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_redirect&view=links'); ?>" method="post" name="adminForm"
-      id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_redirect&view=links'); ?>" method="post" name="adminForm" id="adminForm">
 	<div id="j-main-container">
 		<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
-		<div class="clearfix"></div>
+		<div class="clearfix"> </div>
 		<?php if (empty($this->items)) : ?>
-			<div class="alert alert-no-items">
-				<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
-			</div>
+		<div class="alert alert-no-items">
+			<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+		</div>
 		<?php else : ?>
 			<table class="table table-striped">
 				<thead>
-				<tr>
-					<th width="1%" class="center nowrap">
-						<?php echo JHtml::_('grid.checkall'); ?>
-					</th>
-					<th width="1%" class="center nowrap">
-						<?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
-					</th>
-					<th class="nowrap title">
-						<?php echo JHtml::_('searchtools.sort', 'COM_REDIRECT_HEADING_OLD_URL', 'a.old_url', $listDirn, $listOrder); ?>
-					</th>
-					<th width="30%" class="nowrap">
-						<?php echo JHtml::_('searchtools.sort', 'COM_REDIRECT_HEADING_NEW_URL', 'a.new_url', $listDirn, $listOrder); ?>
-					</th>
-					<th width="30%" class="nowrap hidden-phone hidden-tablet">
-						<?php echo JHtml::_('searchtools.sort', 'COM_REDIRECT_HEADING_REFERRER', 'a.referer', $listDirn, $listOrder); ?>
-					</th>
-					<th width="1%" class="nowrap hidden-phone hidden-tablet">
-						<?php echo JHtml::_('searchtools.sort', 'COM_REDIRECT_HEADING_CREATED_DATE', 'a.created_date', $listDirn, $listOrder); ?>
-					</th>
-					<th width="1%" class="nowrap hidden-phone">
-						<?php echo JHtml::_('searchtools.sort', 'COM_REDIRECT_HEADING_HITS', 'a.hits', $listDirn, $listOrder); ?>
-					</th>
-					<th width="1%" class="nowrap hidden-phone">
-						<?php echo JHtml::_('searchtools.sort', 'COM_REDIRECT_HEADING_STATUS_CODE', 'a.header', $listDirn, $listOrder); ?>
-					</th>
-					<th width="1%" class="nowrap hidden-phone">
-						<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
-					</th>
-				</tr>
+					<tr>
+						<th width="1%" class="center nowrap">
+							<?php echo JHtml::_('grid.checkall'); ?>
+						</th>
+						<th width="1%" class="center nowrap">
+							<?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
+						</th>
+						<th class="nowrap title">
+							<?php echo JHtml::_('searchtools.sort', 'COM_REDIRECT_HEADING_OLD_URL', 'a.old_url', $listDirn, $listOrder); ?>
+						</th>
+						<th width="30%" class="nowrap">
+							<?php echo JHtml::_('searchtools.sort', 'COM_REDIRECT_HEADING_NEW_URL', 'a.new_url', $listDirn, $listOrder); ?>
+						</th>
+						<th width="30%" class="nowrap hidden-phone hidden-tablet">
+							<?php echo JHtml::_('searchtools.sort', 'COM_REDIRECT_HEADING_REFERRER', 'a.referer', $listDirn, $listOrder); ?>
+						</th>
+						<th width="1%" class="nowrap hidden-phone hidden-tablet">
+							<?php echo JHtml::_('searchtools.sort', 'COM_REDIRECT_HEADING_CREATED_DATE', 'a.created_date', $listDirn, $listOrder); ?>
+						</th>
+						<th width="1%" class="nowrap hidden-phone">
+							<?php echo JHtml::_('searchtools.sort', 'COM_REDIRECT_HEADING_HITS', 'a.hits', $listDirn, $listOrder); ?>
+						</th>
+						<th width="1%" class="nowrap hidden-phone">
+							<?php echo JHtml::_('searchtools.sort', 'COM_REDIRECT_HEADING_STATUS_CODE', 'a.header', $listDirn, $listOrder); ?>
+						</th>
+						<th width="1%" class="nowrap hidden-phone">
+							<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+						</th>
+					</tr>
 				</thead>
 				<tfoot>
-				<tr>
-					<td colspan="9">
-						<?php echo $this->pagination->getListFooter(); ?>
-					</td>
-				</tr>
+					<tr>
+						<td colspan="9">
+							<?php echo $this->pagination->getListFooter(); ?>
+						</td>
+					</tr>
 				</tfoot>
 				<tbody>
 				<?php foreach ($this->items as $i => $item) :
-					$canEdit = $user->authorise('core.edit', 'com_redirect');
+					$canEdit   = $user->authorise('core.edit',       'com_redirect');
 					$canChange = $user->authorise('core.edit.state', 'com_redirect');
 					?>
 					<tr class="row<?php echo $i % 2; ?>">
@@ -93,11 +92,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 						</td>
 						<td class="break-word">
 							<?php if ($canEdit) : ?>
-								<a href="<?php echo JRoute::_('index.php?option=com_redirect&task=link.edit&id=' . $item->id); ?>"
-								   title="<?php echo $this->escape($item->old_url); ?>">
+								<a href="<?php echo JRoute::_('index.php?option=com_redirect&task=link.edit&id=' . $item->id);?>" title="<?php echo $this->escape($item->old_url); ?>">
 									<?php echo $this->escape(str_replace(JUri::root(), '', rawurldecode($item->old_url))); ?></a>
 							<?php else : ?>
-								<?php echo $this->escape(str_replace(JUri::root(), '', rawurldecode($item->old_url))); ?>
+									<?php echo $this->escape(str_replace(JUri::root(), '', rawurldecode($item->old_url))); ?>
 							<?php endif; ?>
 						</td>
 						<td class="small break-word">
@@ -119,7 +117,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 							<?php echo (int) $item->id; ?>
 						</td>
 					</tr>
-				<?php endforeach; ?>
+					<?php endforeach; ?>
 				</tbody>
 			</table>
 		<?php endif; ?>
@@ -128,23 +126,22 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 			<?php echo $this->loadTemplate('addform'); ?>
 		<?php endif; ?>
 		<?php // Load the batch processing form if user is allowed ?>
-		<?php if ($user->authorise('core.create', 'com_redirect')
-			&& $user->authorise('core.edit', 'com_redirect')
-			&& $user->authorise('core.edit.state', 'com_redirect')
-		) : ?>
-			<?php echo JHtml::_(
-				'bootstrap.renderModal',
-				'collapseModal',
-				array(
-					'title'  => JText::_('COM_REDIRECT_BATCH_OPTIONS'),
-					'footer' => $this->loadTemplate('batch_footer')
-				),
-				$this->loadTemplate('batch_body')
-			); ?>
-		<?php endif; ?>
+			<?php if ($user->authorise('core.create', 'com_redirect')
+				&& $user->authorise('core.edit', 'com_redirect')
+				&& $user->authorise('core.edit.state', 'com_redirect')) : ?>
+				<?php echo JHtml::_(
+					'bootstrap.renderModal',
+					'collapseModal',
+					array(
+						'title' => JText::_('COM_REDIRECT_BATCH_OPTIONS'),
+						'footer' => $this->loadTemplate('batch_footer')
+					),
+					$this->loadTemplate('batch_body')
+				); ?>
+			<?php endif;?>
 
-		<input type="hidden" name="task" value=""/>
-		<input type="hidden" name="boxchecked" value="0"/>
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="boxchecked" value="0" />
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>

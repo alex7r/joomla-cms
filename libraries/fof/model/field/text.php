@@ -19,8 +19,8 @@ class FOFModelFieldText extends FOFModelField
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver $db    The database object
-	 * @param   object          $field The field informations as taken from the db
+	 * @param   JDatabaseDriver  $db     The database object
+	 * @param   object           $field  The field informations as taken from the db
 	 */
 	public function __construct($db, $field, $table_alias = false)
 	{
@@ -42,7 +42,7 @@ class FOFModelFieldText extends FOFModelField
 	/**
 	 * Perform a partial match (search in string)
 	 *
-	 * @param   mixed $value The value to compare to
+	 * @param   mixed  $value  The value to compare to
 	 *
 	 * @return  string  The SQL where clause for this search
 	 */
@@ -59,7 +59,7 @@ class FOFModelFieldText extends FOFModelField
 	/**
 	 * Perform an exact match (match string)
 	 *
-	 * @param   mixed $value The value to compare to
+	 * @param   mixed  $value  The value to compare to
 	 *
 	 * @return  string  The SQL where clause for this search
 	 */
@@ -76,9 +76,9 @@ class FOFModelFieldText extends FOFModelField
 	/**
 	 * Dummy method; this search makes no sense for text fields
 	 *
-	 * @param   mixed   $from    Ignored
-	 * @param   mixed   $to      Ignored
-	 * @param   boolean $include Ignored
+	 * @param   mixed    $from     Ignored
+	 * @param   mixed    $to       Ignored
+	 * @param   boolean  $include  Ignored
 	 *
 	 * @return  string  Empty string
 	 */
@@ -90,9 +90,9 @@ class FOFModelFieldText extends FOFModelField
 	/**
 	 * Dummy method; this search makes no sense for text fields
 	 *
-	 * @param   mixed   $from    Ignored
-	 * @param   mixed   $to      Ignored
-	 * @param   boolean $include Ignored
+	 * @param   mixed    $from     Ignored
+	 * @param   mixed    $to       Ignored
+	 * @param   boolean  $include  Ignored
 	 *
 	 * @return  string  Empty string
 	 */
@@ -104,9 +104,9 @@ class FOFModelFieldText extends FOFModelField
 	/**
 	 * Dummy method; this search makes no sense for text fields
 	 *
-	 * @param   mixed   $value    Ignored
-	 * @param   mixed   $interval Ignored
-	 * @param   boolean $include  Ignored
+	 * @param   mixed    $value     Ignored
+	 * @param   mixed    $interval  Ignored
+	 * @param   boolean  $include   Ignored
 	 *
 	 * @return  string  Empty string
 	 */
@@ -118,9 +118,9 @@ class FOFModelFieldText extends FOFModelField
 	/**
 	 * Dummy method; this search makes no sense for text fields
 	 *
-	 * @param   mixed   $from    Ignored
-	 * @param   mixed   $to      Ignored
-	 * @param   boolean $include Ignored
+	 * @param   mixed    $from     Ignored
+	 * @param   mixed    $to       Ignored
+	 * @param   boolean  $include  Ignored
 	 *
 	 * @return  string  Empty string
 	 */
@@ -132,9 +132,9 @@ class FOFModelFieldText extends FOFModelField
 	/**
 	 * Dummy method; this search makes no sense for text fields
 	 *
-	 * @param   mixed   $from    Ignored
-	 * @param   mixed   $to      Ignored
-	 * @param   boolean $include Ignored
+	 * @param   mixed    $from     Ignored
+	 * @param   mixed    $to       Ignored
+	 * @param   boolean  $include  Ignored
 	 *
 	 * @return  string  Empty string
 	 */

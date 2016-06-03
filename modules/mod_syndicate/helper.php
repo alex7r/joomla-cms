@@ -21,7 +21,7 @@ class ModSyndicateHelper
 	/**
 	 * Gets the link
 	 *
-	 * @param   \Joomla\Registry\Registry &$params module parameters
+	 * @param   \Joomla\Registry\Registry  &$params  module parameters
 	 *
 	 * @return  array  The link as a string
 	 *

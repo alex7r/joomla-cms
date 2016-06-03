@@ -39,7 +39,7 @@ class PluginsModelPlugin extends JModelAdmin
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -59,10 +59,10 @@ class PluginsModelPlugin extends JModelAdmin
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array   $data     Data for the form.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return  JForm    A JForm object on success, false on failure.
+	 * @return  JForm	A JForm object on success, false on failure.
 	 *
 	 * @since   1.6
 	 */
@@ -113,9 +113,31 @@ class PluginsModelPlugin extends JModelAdmin
 	}
 
 	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_plugins.edit.plugin.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+
+		$this->preprocessData('com_plugins.plugin', $data);
+
+		return $data;
+	}
+
+	/**
 	 * Method to get a single record.
 	 *
-	 * @param   integer $pk The id of the primary key.
+	 * @param   integer  $pk  The id of the primary key.
 	 *
 	 * @return  mixed  Object on success, false on failure.
 	 */
@@ -140,7 +162,7 @@ class PluginsModelPlugin extends JModelAdmin
 			}
 
 			// Convert to the JObject before adding other data.
-			$properties        = $table->getProperties(1);
+			$properties = $table->getProperties(1);
 			$this->_cache[$pk] = JArrayHelper::toObject($properties, 'JObject');
 
 			// Convert the params field to an array.
@@ -167,66 +189,15 @@ class PluginsModelPlugin extends JModelAdmin
 	/**
 	 * Returns a reference to the Table object, always creating it.
 	 *
-	 * @param   string $type   The table type to instantiate.
-	 * @param   string $prefix A prefix for the table class name. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
+	 * @param   string  $type    The table type to instantiate.
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return  JTable    A database object
+	 * @return  JTable	A database object
 	 */
 	public function getTable($type = 'Extension', $prefix = 'JTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
-	}
-
-	/**
-	 * Override method to save the form data.
-	 *
-	 * @param   array $data The form data.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   1.6
-	 */
-	public function save($data)
-	{
-		// Setup type.
-		$data['type'] = 'plugin';
-
-		return parent::save($data);
-	}
-
-	/**
-	 * Get the necessary data to load an item help screen.
-	 *
-	 * @return  object  An object with key, url, and local properties for loading the item help screen.
-	 *
-	 * @since   1.6
-	 */
-	public function getHelp()
-	{
-		return (object) array('key' => $this->helpKey, 'url' => $this->helpURL);
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_plugins.edit.plugin.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
-		}
-
-		$this->preprocessData('com_plugins.plugin', $data);
-
-		return $data;
 	}
 
 	/**
@@ -253,13 +224,13 @@ class PluginsModelPlugin extends JModelAdmin
 	/**
 	 * Preprocess the form.
 	 *
-	 * @param   JForm  $form  A form object.
-	 * @param   mixed  $data  The data expected for the form.
-	 * @param   string $group Cache group name.
+	 * @param   JForm   $form   A form object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  Cache group name.
 	 *
 	 * @return  mixed  True if successful.
 	 *
-	 * @throws    Exception if there is an error in the form event.
+	 * @throws	Exception if there is an error in the form event.
 	 * @since   1.6
 	 */
 	protected function preprocessForm(JForm $form, $data, $group = 'content')
@@ -300,8 +271,8 @@ class PluginsModelPlugin extends JModelAdmin
 		}
 
 		// Load the core and/or local language file(s).
-		$lang->load('plg_' . $folder . '_' . $element, JPATH_ADMINISTRATOR, null, false, true)
-		|| $lang->load('plg_' . $folder . '_' . $element, JPATH_PLUGINS . '/' . $folder . '/' . $element, null, false, true);
+			$lang->load('plg_' . $folder . '_' . $element, JPATH_ADMINISTRATOR, null, false, true)
+		||	$lang->load('plg_' . $folder . '_' . $element, JPATH_PLUGINS . '/' . $folder . '/' . $element, null, false, true);
 
 		if (file_exists($formFile))
 		{
@@ -337,7 +308,7 @@ class PluginsModelPlugin extends JModelAdmin
 	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
-	 * @param   object $table A record object.
+	 * @param   object  $table  A record object.
 	 *
 	 * @return  array  An array of conditions to add to add to ordering queries.
 	 *
@@ -345,7 +316,7 @@ class PluginsModelPlugin extends JModelAdmin
 	 */
 	protected function getReorderConditions($table)
 	{
-		$condition   = array();
+		$condition = array();
 		$condition[] = 'type = ' . $this->_db->quote($table->type);
 		$condition[] = 'folder = ' . $this->_db->quote($table->folder);
 
@@ -353,10 +324,39 @@ class PluginsModelPlugin extends JModelAdmin
 	}
 
 	/**
+	 * Override method to save the form data.
+	 *
+	 * @param   array  $data  The form data.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   1.6
+	 */
+	public function save($data)
+	{
+		// Setup type.
+		$data['type'] = 'plugin';
+
+		return parent::save($data);
+	}
+
+	/**
+	 * Get the necessary data to load an item help screen.
+	 *
+	 * @return  object  An object with key, url, and local properties for loading the item help screen.
+	 *
+	 * @since   1.6
+	 */
+	public function getHelp()
+	{
+		return (object) array('key' => $this->helpKey, 'url' => $this->helpURL);
+	}
+
+	/**
 	 * Custom clean cache method, plugins are cached in 2 places for different clients.
 	 *
-	 * @param   string  $group     Cache group name.
-	 * @param   integer $client_id Application client id.
+	 * @param   string   $group      Cache group name.
+	 * @param   integer  $client_id  Application client id.
 	 *
 	 * @return  void
 	 *

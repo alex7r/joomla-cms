@@ -14,8 +14,8 @@ use Joomla\Registry\Registry;
 /**
  * Joomla Platform class for interacting with the Google APIs.
  *
- * @property-read  JGoogleData  $data    Google API object for data.
- * @property-read  JGoogleEmbed $embed   Google API object for embed generation.
+ * @property-read  JGoogleData    $data    Google API object for data.
+ * @property-read  JGoogleEmbed   $embed   Google API object for embed generation.
  *
  * @since  12.3
  */
@@ -48,23 +48,23 @@ class JGoogle
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry    $options Google options object.
-	 * @param   JGoogleAuth $auth    The authentication client object.
+	 * @param   Registry     $options  Google options object.
+	 * @param   JGoogleAuth  $auth     The authentication client object.
 	 *
 	 * @since   12.3
 	 */
 	public function __construct(Registry $options = null, JGoogleAuth $auth = null)
 	{
 		$this->options = isset($options) ? $options : new Registry;
-		$this->auth    = isset($auth) ? $auth : new JGoogleAuthOauth2($this->options);
+		$this->auth  = isset($auth) ? $auth : new JGoogleAuthOauth2($this->options);
 	}
 
 	/**
 	 * Method to create JGoogleData objects
 	 *
-	 * @param   string      $name    Name of property to retrieve
-	 * @param   Registry    $options Google options object.
-	 * @param   JGoogleAuth $auth    The authentication client object.
+	 * @param   string       $name     Name of property to retrieve
+	 * @param   Registry     $options  Google options object.
+	 * @param   JGoogleAuth  $auth     The authentication client object.
 	 *
 	 * @return  JGoogleData  Google data API object.
 	 *
@@ -104,8 +104,8 @@ class JGoogle
 	/**
 	 * Method to create JGoogleEmbed objects
 	 *
-	 * @param   string   $name    Name of property to retrieve
-	 * @param   Registry $options Google options object.
+	 * @param   string    $name     Name of property to retrieve
+	 * @param   Registry  $options  Google options object.
 	 *
 	 * @return  JGoogleEmbed  Google embed API object.
 	 *
@@ -134,7 +134,7 @@ class JGoogle
 	/**
 	 * Get an option from the JGoogle instance.
 	 *
-	 * @param   string $key The name of the option to get.
+	 * @param   string  $key  The name of the option to get.
 	 *
 	 * @return  mixed  The option value.
 	 *
@@ -148,8 +148,8 @@ class JGoogle
 	/**
 	 * Set an option for the JGoogle instance.
 	 *
-	 * @param   string $key   The name of the option to set.
-	 * @param   mixed  $value The option value to set.
+	 * @param   string  $key    The name of the option to set.
+	 * @param   mixed   $value  The option value to set.
 	 *
 	 * @return  JGoogle  This object for method chaining.
 	 *

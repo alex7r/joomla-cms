@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 /**
  * User view class.
- *
+ * 
  * @since  1.5
  */
 class UsersViewUser extends JViewLegacy
@@ -29,7 +29,7 @@ class UsersViewUser extends JViewLegacy
 	/**
 	 * Display the view
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 *

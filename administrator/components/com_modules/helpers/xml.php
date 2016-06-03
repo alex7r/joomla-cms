@@ -22,7 +22,7 @@ class ModulesHelperXML
 	/**
 	 * Parse the module XML file
 	 *
-	 * @param   array &$rows XML rows
+	 * @param   array  &$rows  XML rows
 	 *
 	 * @return  void
 	 *

@@ -36,7 +36,7 @@ class JObserverUpdater implements JObserverUpdaterInterface
 	/**
 	 * Constructor
 	 *
-	 * @param   JObservableInterface $observable The observable subject object
+	 * @param   JObservableInterface  $observable  The observable subject object
 	 *
 	 * @since   3.1.2
 	 */
@@ -49,7 +49,7 @@ class JObserverUpdater implements JObserverUpdaterInterface
 	 * Adds an observer to the JObservableInterface instance updated by this
 	 * This method can be called fron JObservableInterface::attachObserver
 	 *
-	 * @param   JObserverInterface $observer The observer object
+	 * @param   JObserverInterface  $observer  The observer object
 	 *
 	 * @return  void
 	 *
@@ -63,7 +63,7 @@ class JObserverUpdater implements JObserverUpdaterInterface
 	/**
 	 * Gets the instance of the observer of class $observerClass
 	 *
-	 * @param   string $observerClass The class name of the observer
+	 * @param   string  $observerClass  The class name of the observer
 	 *
 	 * @return  JTableObserver|null  The observer object of this class if any
 	 *
@@ -82,8 +82,8 @@ class JObserverUpdater implements JObserverUpdaterInterface
 	/**
 	 * Call all observers for $event with $params
 	 *
-	 * @param   string $event  Name of the event
-	 * @param   array  $params Params of the event
+	 * @param   string  $event   Name of the event
+	 * @param   array   $params  Params of the event
 	 *
 	 * @return  void
 	 *
@@ -108,7 +108,7 @@ class JObserverUpdater implements JObserverUpdaterInterface
 	/**
 	 * Enable/Disable calling of observers (this is useful when calling parent:: function
 	 *
-	 * @param   boolean $enabled Enable (true) or Disable (false) the observer events
+	 * @param   boolean  $enabled  Enable (true) or Disable (false) the observer events
 	 *
 	 * @return  boolean  Returns old state
 	 *
@@ -116,7 +116,7 @@ class JObserverUpdater implements JObserverUpdaterInterface
 	 */
 	public function doCallObservers($enabled)
 	{
-		$oldState              = $this->doCallObservers;
+		$oldState = $this->doCallObservers;
 		$this->doCallObservers = $enabled;
 
 		return $oldState;

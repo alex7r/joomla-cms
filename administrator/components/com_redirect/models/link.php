@@ -23,11 +23,49 @@ class RedirectModelLink extends JModelAdmin
 	protected $text_prefix = 'COM_REDIRECT';
 
 	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
+	 *
+	 * @since   1.6
+	 */
+	protected function canDelete($record)
+	{
+		if ($record->published != -2)
+		{
+			return false;
+		}
+
+		$user = JFactory::getUser();
+
+		return $user->authorise('core.delete', 'com_redirect');
+	}
+
+	/**
+	 * Method to test whether a record can have its state edited.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
+	 *
+	 * @since   1.6
+	 */
+	protected function canEditState($record)
+	{
+		$user = JFactory::getUser();
+
+		// Check the component since there are no categories or other assets.
+		return $user->authorise('core.edit.state', 'com_redirect');
+	}
+
+	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
-	 * @param   string $type   The table type to instantiate
-	 * @param   string $prefix A prefix for the table class name. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
+	 * @param   string  $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return  JTable    A database object
 	 *
@@ -41,8 +79,8 @@ class RedirectModelLink extends JModelAdmin
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array   $data     Data for the form.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  JForm  A JForm object on success, false on failure
 	 *
@@ -81,28 +119,33 @@ class RedirectModelLink extends JModelAdmin
 	}
 
 	/**
-	 * Method to test whether a record can have its state edited.
+	 * Method to get the data that should be injected in the form.
 	 *
-	 * @param   object $record A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
+	 * @return  mixed  The data for the form.
 	 *
 	 * @since   1.6
 	 */
-	protected function canEditState($record)
+	protected function loadFormData()
 	{
-		$user = JFactory::getUser();
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_redirect.edit.link.data', array());
 
-		// Check the component since there are no categories or other assets.
-		return $user->authorise('core.edit.state', 'com_redirect');
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+
+		$this->preprocessData('com_redirect.link', $data);
+
+		return $data;
 	}
 
 	/**
 	 * Method to activate links.
 	 *
-	 * @param   array  &$pks    An array of link ids.
-	 * @param   string $url     The new URL to set for the redirect.
-	 * @param   string $comment A comment for the redirect links.
+	 * @param   array   &$pks     An array of link ids.
+	 * @param   string  $url      The new URL to set for the redirect.
+	 * @param   string  $comment  A comment for the redirect links.
 	 *
 	 * @return  boolean  Returns true on success, false on failure.
 	 *
@@ -111,7 +154,7 @@ class RedirectModelLink extends JModelAdmin
 	public function activate(&$pks, $url, $comment = null)
 	{
 		$user = JFactory::getUser();
-		$db   = $this->getDbo();
+		$db = $this->getDbo();
 
 		// Sanitize the ids.
 		$pks = (array) $pks;
@@ -158,9 +201,9 @@ class RedirectModelLink extends JModelAdmin
 	/**
 	 * Method to duplicate URL links.
 	 *
-	 * @param   array  &$pks    An array of link ids.
-	 * @param   string $url     The new URL to set for the redirect.
-	 * @param   string $comment A comment for the redirect links.
+	 * @param   array   &$pks     An array of link ids.
+	 * @param   string  $url      The new URL to set for the redirect.
+	 * @param   string  $comment  A comment for the redirect links.
 	 *
 	 * @return  boolean  Returns true on success, false on failure.
 	 *
@@ -169,7 +212,7 @@ class RedirectModelLink extends JModelAdmin
 	public function duplicateUrls(&$pks, $url, $comment = null)
 	{
 		$user = JFactory::getUser();
-		$db   = $this->getDbo();
+		$db = $this->getDbo();
 
 		// Sanitize the ids.
 		$pks = (array) $pks;
@@ -214,49 +257,6 @@ class RedirectModelLink extends JModelAdmin
 		}
 
 		return true;
-	}
-
-	/**
-	 * Method to test whether a record can be deleted.
-	 *
-	 * @param   object $record A record object.
-	 *
-	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
-	 */
-	protected function canDelete($record)
-	{
-		if ($record->published != -2)
-		{
-			return false;
-		}
-
-		$user = JFactory::getUser();
-
-		return $user->authorise('core.delete', 'com_redirect');
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_redirect.edit.link.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
-		}
-
-		$this->preprocessData('com_redirect.link', $data);
-
-		return $data;
 	}
 
 }

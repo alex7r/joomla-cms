@@ -19,7 +19,7 @@ class JHtmlFieldTextareaTest_DataSet
 	public static $getInputTest = array(
 		'NoValue' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 			),
 			'<textarea name="myTestName" id="myTestId" ></textarea>',
@@ -27,8 +27,8 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Value' => array(
 			array(
-				'id'    => 'myTestId',
-				'name'  => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'value' => 'This is textarea text.',
 			),
 			'<textarea name="myTestName" id="myTestId" >This is textarea text.</textarea>',
@@ -36,7 +36,7 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Rows' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 				'rows' => 55,
 			),
@@ -45,8 +45,8 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Columns' => array(
 			array(
-				'id'      => 'myTestId',
-				'name'    => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'columns' => 55,
 			),
 			'<textarea name="myTestName" id="myTestId" cols="55" ></textarea>',
@@ -54,8 +54,8 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Class' => array(
 			array(
-				'id'    => 'myTestId',
-				'name'  => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'class' => 'foo bar',
 			),
 			'<textarea name="myTestName" id="myTestId" class="foo bar" ></textarea>',
@@ -63,8 +63,8 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Disabled' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'disabled' => true,
 			),
 			'<textarea name="myTestName" id="myTestId" disabled ></textarea>',
@@ -72,8 +72,8 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Readonly' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'readonly' => true,
 			),
 			'<textarea name="myTestName" id="myTestId" readonly ></textarea>',
@@ -81,7 +81,7 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Hint' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 				'hint' => 'Placeholder for textarea.',
 			),
@@ -90,8 +90,8 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Autocomplete' => array(
 			array(
-				'id'           => 'myTestId',
-				'name'         => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'autocomplete' => false,
 			),
 			'<textarea name="myTestName" id="myTestId" autocomplete="off" ></textarea>',
@@ -99,8 +99,8 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Autofocus' => array(
 			array(
-				'id'        => 'myTestId',
-				'name'      => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'autofocus' => true,
 			),
 			'<textarea name="myTestName" id="myTestId" autofocus ></textarea>',
@@ -108,8 +108,8 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Spellcheck' => array(
 			array(
-				'id'         => 'myTestId',
-				'name'       => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'spellcheck' => false,
 			),
 			'<textarea name="myTestName" id="myTestId" spellcheck="false" ></textarea>',
@@ -117,8 +117,8 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Onchange' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'onchange' => 'foobar();',
 			),
 			'<textarea name="myTestName" id="myTestId" onchange="foobar();" ></textarea>',
@@ -126,8 +126,8 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Onclick' => array(
 			array(
-				'id'      => 'myTestId',
-				'name'    => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'onclick' => 'barfoo();',
 			),
 			'<textarea name="myTestName" id="myTestId" onclick="barfoo();" ></textarea>',
@@ -135,8 +135,8 @@ class JHtmlFieldTextareaTest_DataSet
 
 		'Required' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'required' => true,
 			),
 			'<textarea name="myTestName" id="myTestId" required aria-required="true" ></textarea>',

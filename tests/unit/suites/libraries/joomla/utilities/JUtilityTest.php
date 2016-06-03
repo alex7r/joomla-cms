@@ -36,7 +36,7 @@ class JUtilityTest extends TestCase
 				'<jdoc style="fred" />',
 				array('style' => 'fred')
 			),
-			'xml'  => array(
+			'xml' => array(
 				"<img hear=\"something\" there=\"somethingelse\" />",
 				array('hear' => 'something', 'there' => 'somethingelse')
 			),
@@ -46,13 +46,13 @@ class JUtilityTest extends TestCase
 	/**
 	 * Test parseAttributes
 	 *
-	 * @param   string $tag      tag to be parsed
-	 * @param   array  $expected resulting array of attribute values
+	 * @param   string  $tag       tag to be parsed
+	 * @param   array   $expected  resulting array of attribute values
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesParseAttributes
-	 * @covers       JUtility::parseAttributes
+	 * @covers  JUtility::parseAttributes
 	 */
 	public function testParseAttributes($tag, $expected)
 	{

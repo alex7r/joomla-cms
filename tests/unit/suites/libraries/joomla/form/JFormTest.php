@@ -28,6 +28,61 @@ class JFormTest extends TestCaseDatabase
 	protected $backupServer;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Test showXml
+	 *
+	 * @param   string  $form  The form.
+	 *
+	 * @return void
+	 */
+	private function _showXml($form)
+	{
+		$dom = new DOMDocument('1.0');
+		$dom->preserveWhiteSpace = false;
+		$dom->formatOutput = true;
+		$dom->loadXml($form->getXml()->asXml());
+		echo $dom->saveXml();
+	}
+
+	/**
 	 * Tests the JForm::addFieldPath method.
 	 *
 	 * This method is used to add additional lookup paths for field helpers.
@@ -175,17 +230,17 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		$data = array(
-			'title'  => 'Joomla Framework',
+			'title' => 'Joomla Framework',
 			'author' => 'Should not bind',
 			'params' => array(
-				'show_title'    => 1,
+				'show_title' => 1,
 				'show_abstract' => 0,
-				'show_author'   => 1,
-				'categories'    => array(
+				'show_author' => 1,
+				'categories' => array(
 					1,
 					2
 				),
-				'keywords'      => array('en-GB' => 'Joomla', 'fr-FR' => 'Joomla')
+				'keywords' => array('en-GB' => 'Joomla', 'fr-FR' => 'Joomla')
 			)
 		);
 
@@ -273,10 +328,10 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		$data = array(
-			'word'    => 'Joomla! Framework',
-			'author'  => 'Should not bind',
-			'params'  => array(
-				'show_title'  => 1,
+			'word' => 'Joomla! Framework',
+			'author' => 'Should not bind',
+			'params' => array(
+				'show_title' => 1,
 				'show_author' => false,
 			),
 			'default' => ''
@@ -414,9 +469,9 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		$this->assertThat(
-			$form->filterField($form->findField('url'), 'http://"onmouseover=alert(2);<>"'),
-			$this->equalTo('http://onmouseover=alert(2);'),
-			'Line:' . __LINE__ . ' <>" are always illegal in host names.'
+				$form->filterField($form->findField('url'), 'http://"onmouseover=alert(2);<>"'),
+				$this->equalTo('http://onmouseover=alert(2);'),
+				'Line:' . __LINE__ . ' <>" are always illegal in host names.'
 		);
 
 		$this->assertThat(
@@ -491,42 +546,42 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		/**
-		 * include_once JPATH_BASE . '/libraries/joomla/user/user.php';
-		 *
-		 * $user = new JUser;
-		 * $mockSession = $this->getMock('JSession', array('_start', 'get'));
-		 * $mockSession->expects($this->once())->method('get')->will(
-		 * $this->returnValue($user)
-		 * );
-		 * JFactory::$session = $mockSession;
-		 * // Adjust the timezone offset to a known value.
-		 * $config = JFactory::getConfig();
-		 * $config->setValue('config.offset', 10);
-		 *
-		 * // TODO: Mock JFactory and JUser
-		 * $user = JFactory::getUser();
-		 * $user->setParam('timezone', 5);
-		 *
-		 * $form = new JForm;
-		 * $form->load('example');
-		 *
-		 * $text = '<script>alert();</script> <p>Some text</p>';
-		 * $data = array(
-		 * 'f_svr_date' => '2009-01-01 00:00:00',
-		 * 'f_usr_date' => '2009-01-01 00:00:00',
-		 * );
-		 *
-		 * // Check the date filters.
-		 * $this->assertThat(
-		 * $result['f_svr_date'],
-		 * $this->equalTo('2008-12-31 14:00:00')
-		 * );
-		 *
-		 * $this->assertThat(
-		 * $result['f_usr_date'],
-		 * $this->equalTo('2009-01-01 05:00:00')
-		 * );
-		 */
+			include_once JPATH_BASE . '/libraries/joomla/user/user.php';
+
+			$user = new JUser;
+			$mockSession = $this->getMock('JSession', array('_start', 'get'));
+			$mockSession->expects($this->once())->method('get')->will(
+				$this->returnValue($user)
+			);
+			JFactory::$session = $mockSession;
+			// Adjust the timezone offset to a known value.
+			$config = JFactory::getConfig();
+			$config->setValue('config.offset', 10);
+
+			// TODO: Mock JFactory and JUser
+			$user = JFactory::getUser();
+			$user->setParam('timezone', 5);
+
+			$form = new JForm;
+			$form->load('example');
+
+			$text = '<script>alert();</script> <p>Some text</p>';
+			$data = array(
+				'f_svr_date' => '2009-01-01 00:00:00',
+				'f_usr_date' => '2009-01-01 00:00:00',
+			);
+
+			// Check the date filters.
+			$this->assertThat(
+				$result['f_svr_date'],
+				$this->equalTo('2008-12-31 14:00:00')
+			);
+
+			$this->assertThat(
+				$result['f_usr_date'],
+				$this->equalTo('2009-01-01 05:00:00')
+			);
+		*/
 	}
 
 	/**
@@ -753,7 +808,7 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		$fail = array(
-			'boolean'  => 'comply',
+			'boolean' => 'comply',
 			'required' => '',
 		);
 
@@ -830,9 +885,9 @@ class JFormTest extends TestCaseDatabase
 		// Check values after binding.
 
 		$data = array(
-			'title'      => 'The title',
+			'title' => 'The title',
 			'show_title' => 3,
-			'params'     => array(
+			'params' => array(
 				'show_title' => 2,
 			)
 		);
@@ -857,10 +912,10 @@ class JFormTest extends TestCaseDatabase
 
 		// Check binding with an object.
 
-		$data                     = new stdClass;
-		$data->title              = 'The new title';
-		$data->show_title         = 5;
-		$data->params             = new stdClass;
+		$data = new stdClass;
+		$data->title = 'The new title';
+		$data->show_title = 5;
+		$data->params = new stdClass;
 		$data->params->show_title = 4;
 
 		$this->assertThat(
@@ -1016,13 +1071,13 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		$matcher = array(
-			'id'         => 'title_id',
-			'tag'        => 'input',
+			'id' => 'title_id',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'          => 'text',
-				'name'          => 'title',
-				'value'         => 'The Title',
-				'class'         => 'inputbox',
+				'type' => 'text',
+				'name' => 'title',
+				'value' => 'The Title',
+				'class' => 'inputbox',
 				'aria-required' => 'true'
 			)
 		);
@@ -1034,11 +1089,11 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		$matcher = array(
-			'id'         => 'params_show_title',
-			'tag'        => 'fieldset',
+			'id' => 'params_show_title',
+			'tag' => 'fieldset',
 			'attributes' => array('class' => 'radio'),
 			'descendant' => array(
-				'tag'        => 'input',
+				'tag' => 'input',
 				'attributes' => array(
 					'type' => 'radio',
 					'name' => 'params[show_title]'
@@ -1061,22 +1116,22 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		$matcher = array(
-			'id'         => 'jform_params_colours',
-			'tag'        => 'select',
+			'id' => 'jform_params_colours',
+			'tag' => 'select',
 			'attributes' => array(
-				'name'     => 'jform[params][colours][]',
+				'name' => 'jform[params][colours][]',
 				'multiple' => true
 			),
-			'child'      => array(
-				'tag'        => 'option',
-				'content'    => 'Red',
+			'child' => array(
+				'tag' => 'option',
+				'content' => 'Red',
 				'attributes' => array(
 					'value' => 'red'
 				)
 			),
-			'children'   => array(
+			'children' => array(
 				'count' => 4,
-				'only'  => array('tag' => 'option')
+				'only' => array('tag' => 'option')
 			)
 		);
 
@@ -1087,10 +1142,10 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		$matcher = array(
-			'id'         => 'jform_translate_default',
-			'tag'        => 'input',
+			'id' => 'jform_translate_default',
+			'tag' => 'input',
 			'attributes' => array(
-				'name'  => 'jform[translate_default]',
+				'name' => 'jform[translate_default]',
 				'value' => 'DEFAULT_KEY'
 			)
 		);
@@ -1103,14 +1158,14 @@ class JFormTest extends TestCaseDatabase
 			' The method should return a simple input text field whose value is untranslated since the DEFAULT_KEY does not exist in the language.'
 		);
 
-		$lang  = JFactory::getLanguage();
+		$lang = JFactory::getLanguage();
 		$debug = $lang->setDebug(true);
 
 		$matcher = array(
-			'id'         => 'jform_translate_default',
-			'tag'        => 'input',
+			'id' => 'jform_translate_default',
+			'tag' => 'input',
 			'attributes' => array(
-				'name'  => 'jform[translate_default]',
+				'name' => 'jform[translate_default]',
 				'value' => '??DEFAULT_KEY??'
 			)
 		);
@@ -1124,10 +1179,10 @@ class JFormTest extends TestCaseDatabase
 		$lang->load('form_test', __DIR__);
 
 		$matcher = array(
-			'id'         => 'jform_translate_default',
-			'tag'        => 'input',
+			'id' => 'jform_translate_default',
+			'tag' => 'input',
 			'attributes' => array(
-				'name'  => 'jform[translate_default]',
+				'name' => 'jform[translate_default]',
 				'value' => 'My Default'
 			)
 		);
@@ -1156,20 +1211,20 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		$matcher = array(
-			'id'         => 'title_id-lbl',
-			'tag'        => 'label',
-			'attributes' => array(
-				'for'   => 'title_id',
-				'class' => 'hasTooltip required',
-				'title' => '<strong>Title</strong><br />The title.'
-			),
-			'content'    => 'regexp:/Title.*\*/',
-			'child'      => array(
-				'tag'        => 'span',
-				'attributes' => array('class' => 'star'),
-				'content'    => 'regexp:/\*/'
-			)
-		);
+				'id'         => 'title_id-lbl',
+				'tag'        => 'label',
+				'attributes' => array(
+						'for'   => 'title_id',
+						'class' => 'hasTooltip required',
+						'title' => '<strong>Title</strong><br />The title.'
+					),
+				'content'    => 'regexp:/Title.*\*/',
+				'child'      => array(
+						'tag'        => 'span',
+						'attributes' => array('class' => 'star'),
+						'content'    => 'regexp:/\*/'
+					)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -1400,7 +1455,7 @@ class JFormTest extends TestCaseDatabase
 		$originalform = new JFormInspector('form1');
 		$originalform->load(JFormDataHelper::$loadDocument);
 		$originalset = $originalform->getXml()->xpath('/form/fields/field');
-		$set         = $form->getXml()->xpath('/form/fields/field');
+		$set = $form->getXml()->xpath('/form/fields/field');
 
 		for ($i = 0; $i < count($originalset); $i++)
 		{
@@ -1414,7 +1469,16 @@ class JFormTest extends TestCaseDatabase
 		return $form;
 	}
 
-
+	/**
+	 * Test the JForm::load method for descendent field elements
+	 *
+	 * This method can load an XML data object, or parse an XML string.
+	 *
+	 * @depends testLoad
+	 *
+	 * @return void
+	 */
+	// @var $form JForm
 	public function testLoad_ReplaceDescendent(JForm $form)
 	{
 		// Check the replacement data loads ok.
@@ -1521,16 +1585,6 @@ class JFormTest extends TestCaseDatabase
 		);
 	}
 
-	/**
-	 * Test the JForm::load method for descendent field elements
-	 *
-	 * This method can load an XML data object, or parse an XML string.
-	 *
-	 * @depends testLoad
-	 *
-	 * @return void
-	 */
-	// @var $form JForm
 	/**
 	 * Test for JForm::loadField method.
 	 *
@@ -1895,7 +1949,7 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		$data = array(
-			'title'  => 'Joomla Framework',
+			'title' => 'Joomla Framework',
 			'params' => array(
 				'show_title' => 2
 			)
@@ -2169,8 +2223,8 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		$fieldPaths = JForm::addFieldPath();
-		$formPaths  = JForm::addFormPath();
-		$rulePaths  = JForm::addRulePath();
+		$formPaths = JForm::addFormPath();
+		$rulePaths = JForm::addRulePath();
 
 		$this->assertThat(
 			in_array(JPATH_ROOT . '/field1', $fieldPaths),
@@ -2243,16 +2297,16 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		$pass = array(
-			'boolean'  => 'false',
+			'boolean' => 'false',
 			'optional' => 'Optional',
 			'required' => 'Supplied',
-			'group'    => array(
+			'group' => array(
 				'level1' => 'open'
 			)
 		);
 
 		$fail = array(
-			'boolean'  => 'comply',
+			'boolean' => 'comply',
 			'required' => '',
 		);
 
@@ -2305,8 +2359,8 @@ class JFormTest extends TestCaseDatabase
 		$xml = $form->getXml();
 
 		// Test error handling.
-		$data   = $xml->xpath('fields/field[@name="boolean"]');
-		$field  = array_pop($data);
+		$data = $xml->xpath('fields/field[@name="boolean"]');
+		$field = array_pop($data);
 		$result = $form->validateField($field);
 		$this->assertThat(
 			$result instanceof UnexpectedValueException,
@@ -2314,8 +2368,8 @@ class JFormTest extends TestCaseDatabase
 			'Line:' . __LINE__ . ' A failed validation should return an exception.'
 		);
 
-		$data   = $xml->xpath('fields/field[@name="required"]');
-		$field  = array_pop($data);
+		$data = $xml->xpath('fields/field[@name="required"]');
+		$field = array_pop($data);
 		$result = $form->validateField($field);
 		$this->assertThat(
 			$result instanceof RuntimeException,
@@ -2324,7 +2378,7 @@ class JFormTest extends TestCaseDatabase
 		);
 
 		// Test general usage.
-		$data  = $xml->xpath('fields/field[@name="boolean"]');
+		$data = $xml->xpath('fields/field[@name="boolean"]');
 		$field = array_pop($data);
 		$this->assertThat(
 			$form->validateField($field, null, 'true'),
@@ -2332,7 +2386,7 @@ class JFormTest extends TestCaseDatabase
 			'Line:' . __LINE__ . ' A field with a passing validate attribute set should return true.'
 		);
 
-		$data  = $xml->xpath('fields/field[@name="optional"]');
+		$data = $xml->xpath('fields/field[@name="optional"]');
 		$field = array_pop($data);
 		$this->assertThat(
 			$form->validateField($field),
@@ -2340,7 +2394,7 @@ class JFormTest extends TestCaseDatabase
 			'Line:' . __LINE__ . ' A field without required set should return true.'
 		);
 
-		$data  = $xml->xpath('fields/field[@name="required"]');
+		$data = $xml->xpath('fields/field[@name="required"]');
 		$field = array_pop($data);
 		$this->assertThat(
 			$form->validateField($field, null, 'value'),
@@ -2362,64 +2416,9 @@ class JFormTest extends TestCaseDatabase
 	{
 		$form = new JFormInspector('form1');
 		$form->load(JFormDataHelper::$validateFieldDocument);
-		$xml   = $form->getXml();
-		$data  = $xml->xpath('fields/field[@name="missingrule"]');
+		$xml = $form->getXml();
+		$data = $xml->xpath('fields/field[@name="missingrule"]');
 		$field = array_pop($data);
 		$form->validateField($field, null, 'value');
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST']   = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
-	 * Test showXml
-	 *
-	 * @param   string $form The form.
-	 *
-	 * @return void
-	 */
-	private function _showXml($form)
-	{
-		$dom                     = new DOMDocument('1.0');
-		$dom->preserveWhiteSpace = false;
-		$dom->formatOutput       = true;
-		$dom->loadXml($form->getXml()->asXml());
-		echo $dom->saveXml();
 	}
 }

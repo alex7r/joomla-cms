@@ -21,8 +21,8 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * This event runs before binding data to the table
 	 *
-	 * @param   FOFTable &$table The table which calls this event
-	 * @param   array    &$data  The data to bind
+	 * @param   FOFTable  &$table  The table which calls this event
+	 * @param   array     &$data   The data to bind
 	 *
 	 * @return  boolean  True on success
 	 */
@@ -34,8 +34,8 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs after binding data to the table
 	 *
-	 * @param   FOFTable     &$table The table which calls this event
-	 * @param   object|array &$src   The data to bind
+	 * @param   FOFTable  &$table  The table which calls this event
+	 * @param   object|array  &$src  The data to bind
 	 *
 	 * @return  boolean  True on success
 	 */
@@ -47,8 +47,8 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs after loading a record from the database
 	 *
-	 * @param   FOFTable &$table  The table which calls this event
-	 * @param   boolean  &$result Did the load succeeded?
+	 * @param   FOFTable  &$table  The table which calls this event
+	 * @param   boolean  &$result  Did the load succeeded?
 	 *
 	 * @return  void
 	 */
@@ -60,8 +60,8 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs before storing (saving) data to the database
 	 *
-	 * @param   FOFTable &$table      The table which calls this event
-	 * @param   boolean  $updateNulls Should nulls be saved as nulls (true) or just skipped over (false)?
+	 * @param   FOFTable  &$table  The table which calls this event
+	 * @param   boolean  $updateNulls  Should nulls be saved as nulls (true) or just skipped over (false)?
 	 *
 	 * @return  boolean  True to allow saving
 	 */
@@ -73,7 +73,7 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs after storing (saving) data to the database
 	 *
-	 * @param   FOFTable &$table The table which calls this event
+	 * @param   FOFTable  &$table  The table which calls this event
 	 *
 	 * @return  boolean  True to allow saving without an error
 	 */
@@ -85,8 +85,8 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs before moving a record
 	 *
-	 * @param   FOFTable &$table      The table which calls this event
-	 * @param   boolean  $updateNulls Should nulls be saved as nulls (true) or just skipped over (false)?
+	 * @param   FOFTable  &$table  The table which calls this event
+	 * @param   boolean  $updateNulls  Should nulls be saved as nulls (true) or just skipped over (false)?
 	 *
 	 * @return  boolean  True to allow moving
 	 */
@@ -98,7 +98,7 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs after moving a record
 	 *
-	 * @param   FOFTable &$table The table which calls this event
+	 * @param   FOFTable  &$table  The table which calls this event
 	 *
 	 * @return  boolean  True to allow moving without an error
 	 */
@@ -110,8 +110,8 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs before reordering a table
 	 *
-	 * @param   FOFTable &$table The table which calls this event
-	 * @param   string   $where  The WHERE clause of the SQL query to run on reordering (record filter)
+	 * @param   FOFTable  &$table  The table which calls this event
+	 * @param   string  $where  The WHERE clause of the SQL query to run on reordering (record filter)
 	 *
 	 * @return  boolean  True to allow reordering
 	 */
@@ -123,7 +123,7 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs after reordering a table
 	 *
-	 * @param   FOFTable &$table The table which calls this event
+	 * @param   FOFTable  &$table  The table which calls this event
 	 *
 	 * @return  boolean  True to allow the reordering to complete without an error
 	 */
@@ -135,8 +135,8 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs before deleting a record
 	 *
-	 * @param   FOFTable &$table The table which calls this event
-	 * @param   integer  $oid    The PK value of the record to delete
+	 * @param   FOFTable &$table  The table which calls this event
+	 * @param   integer  $oid  The PK value of the record to delete
 	 *
 	 * @return  boolean  True to allow the deletion
 	 */
@@ -148,8 +148,8 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs after deleting a record
 	 *
-	 * @param   FOFTable &$table The table which calls this event
-	 * @param   integer  $oid    The PK value of the record which was deleted
+	 * @param   FOFTable &$table  The table which calls this event
+	 * @param   integer  $oid  The PK value of the record which was deleted
 	 *
 	 * @return  boolean  True to allow the deletion without errors
 	 */
@@ -161,9 +161,9 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs before hitting a record
 	 *
-	 * @param   FOFTable &$table The table which calls this event
-	 * @param   integer  $oid    The PK value of the record to hit
-	 * @param   boolean  $log    Should we log the hit?
+	 * @param   FOFTable &$table  The table which calls this event
+	 * @param   integer  $oid  The PK value of the record to hit
+	 * @param   boolean  $log  Should we log the hit?
 	 *
 	 * @return  boolean  True to allow the hit
 	 */
@@ -175,8 +175,8 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs after hitting a record
 	 *
-	 * @param   FOFTable &$table The table which calls this event
-	 * @param   integer  $oid    The PK value of the record which was hit
+	 * @param   FOFTable &$table  The table which calls this event
+	 * @param   integer  $oid  The PK value of the record which was hit
 	 *
 	 * @return  boolean  True to allow the hitting without errors
 	 */
@@ -188,8 +188,8 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The even which runs before copying a record
 	 *
-	 * @param   FOFTable &$table The table which calls this event
-	 * @param   integer  $oid    The PK value of the record being copied
+	 * @param   FOFTable &$table  The table which calls this event
+	 * @param   integer  $oid  The PK value of the record being copied
 	 *
 	 * @return  boolean  True to allow the copy to take place
 	 */
@@ -201,8 +201,8 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The even which runs after copying a record
 	 *
-	 * @param   FOFTable &$table The table which calls this event
-	 * @param   integer  $oid    The PK value of the record which was copied (not the new one)
+	 * @param   FOFTable &$table  The table which calls this event
+	 * @param   integer  $oid  The PK value of the record which was copied (not the new one)
 	 *
 	 * @return  boolean  True to allow the copy without errors
 	 */
@@ -214,9 +214,9 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs before a record is (un)published
 	 *
-	 * @param   FOFTable      &$table  The table which calls this event
-	 * @param   integer|array &$cid    The PK IDs of the records being (un)published
-	 * @param   integer       $publish 1 to publish, 0 to unpublish
+	 * @param   FOFTable &$table  The table which calls this event
+	 * @param   integer|array  &$cid     The PK IDs of the records being (un)published
+	 * @param   integer        $publish  1 to publish, 0 to unpublish
 	 *
 	 * @return  boolean  True to allow the (un)publish to proceed
 	 */
@@ -228,7 +228,7 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The event which runs after the object is reset to its default values.
 	 *
-	 * @param   FOFTable &$table The table which calls this event
+	 * @param   FOFTable &$table  The table which calls this event
 	 *
 	 * @return  boolean  True to allow the reset to complete without errors
 	 */
@@ -240,7 +240,7 @@ abstract class FOFTableBehavior extends FOFUtilsObservableEvent
 	/**
 	 * The even which runs before the object is reset to its default values.
 	 *
-	 * @param   FOFTable &$table The table which calls this event
+	 * @param   FOFTable &$table  The table which calls this event
 	 *
 	 * @return  boolean  True to allow the reset to complete
 	 */

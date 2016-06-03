@@ -15,13 +15,13 @@ JHtml::_('bootstrap.tooltip');
  *
  * @since  3.6.0
  */
-class PlgInstallerFolderInstaller extends JPlugin
+class PlgInstallerFolderInstaller  extends JPlugin
 {
 	/**
 	 * Constructor
 	 *
-	 * @param   object &$subject   The object to observe
-	 * @param   array  $config     An optional associative array of configuration settings.
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 *
@@ -50,8 +50,7 @@ class PlgInstallerFolderInstaller extends JPlugin
 		<fieldset class="uploadform">
 			<legend><?php echo JText::_('PLG_INSTALLER_FOLDERINSTALLER_TEXT'); ?></legend>
 			<div class="control-group">
-				<label for="install_directory"
-				       class="control-label"><?php echo JText::_('PLG_INSTALLER_FOLDERINSTALLER_TEXT'); ?></label>
+				<label for="install_directory" class="control-label"><?php echo JText::_('PLG_INSTALLER_FOLDERINSTALLER_TEXT'); ?></label>
 				<div class="controls">
 					<input
 						type="text"
@@ -59,13 +58,12 @@ class PlgInstallerFolderInstaller extends JPlugin
 						name="install_directory"
 						class="span5 input_box"
 						size="70"
-						value="<?php echo $app->input->get('install_directory', $app->get('tmp_path')); ?>"/>
+						value="<?php echo $app->input->get('install_directory', $app->get('tmp_path')); ?>" />
 				</div>
 			</div>
 			<div class="form-actions">
 				<input type="button" class="btn btn-primary" id="installbutton_directory"
-				       value="<?php echo JText::_('PLG_INSTALLER_FOLDERINSTALLER_BUTTON'); ?>"
-				       onclick="Joomla.submitbuttonfolder()"
+					value="<?php echo JText::_('PLG_INSTALLER_FOLDERINSTALLER_BUTTON'); ?>" onclick="Joomla.submitbuttonfolder()"
 				/>
 			</div>
 		</fieldset>

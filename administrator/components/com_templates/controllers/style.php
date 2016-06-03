@@ -19,7 +19,7 @@ class TemplatesControllerStyle extends JControllerForm
 	/**
 	 * The prefix to use with controller messages.
 	 *
-	 * @var        string
+	 * @var		string
 	 * @since   1.6
 	 */
 	protected $text_prefix = 'COM_TEMPLATES_STYLE';
@@ -27,8 +27,8 @@ class TemplatesControllerStyle extends JControllerForm
 	/**
 	 * Method to save a template style.
 	 *
-	 * @param   string $key    The name of the primary key of the URL variable.
-	 * @param   string $urlVar The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return  boolean  True if successful, false otherwise.
 	 *
@@ -46,14 +46,14 @@ class TemplatesControllerStyle extends JControllerForm
 		if ($document->getType() == 'json')
 		{
 
-			$app     = JFactory::getApplication();
-			$lang    = JFactory::getLanguage();
-			$model   = $this->getModel();
-			$table   = $model->getTable();
-			$data    = $this->input->post->get('params', array(), 'array');
+			$app   = JFactory::getApplication();
+			$lang  = JFactory::getLanguage();
+			$model = $this->getModel();
+			$table = $model->getTable();
+			$data  = $this->input->post->get('params', array(), 'array');
 			$checkin = property_exists($table, 'checked_out');
 			$context = $this->option . '.edit.' . $this->context;
-			$task    = $this->getTask();
+			$task = $this->getTask();
 
 			$item = $model->getItem($app->getTemplate('template')->id);
 
@@ -63,7 +63,7 @@ class TemplatesControllerStyle extends JControllerForm
 			$data = $item->getProperties();
 			unset($data['xml']);
 
-			$key    = $table->getKeyName();
+			$key = $table->getKeyName();
 			$urlVar = $key;
 
 			$recordId = $this->input->getInt($urlVar);

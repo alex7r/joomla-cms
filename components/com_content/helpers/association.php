@@ -22,8 +22,8 @@ abstract class ContentHelperAssociation extends CategoryHelperAssociation
 	/**
 	 * Method to get the associations for a given item
 	 *
-	 * @param   integer $id   Id of the item
-	 * @param   string  $view Name of the view
+	 * @param   integer  $id    Id of the item
+	 * @param   string   $view  Name of the view
 	 *
 	 * @return  array   Array of associations for the item
 	 *
@@ -34,10 +34,10 @@ abstract class ContentHelperAssociation extends CategoryHelperAssociation
 	{
 		jimport('helper.route', JPATH_COMPONENT_SITE);
 
-		$app    = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$jinput = $app->input;
-		$view   = is_null($view) ? $jinput->get('view') : $view;
-		$id     = empty($id) ? $jinput->getInt('id') : $id;
+		$view = is_null($view) ? $jinput->get('view') : $view;
+		$id = empty($id) ? $jinput->getInt('id') : $id;
 
 		if ($view == 'article')
 		{

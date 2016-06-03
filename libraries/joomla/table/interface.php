@@ -21,8 +21,8 @@ interface JTableInterface
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed $src    An associative array or object to bind to the JTable instance.
-	 * @param   mixed $ignore An optional array or space separated list of properties to ignore while binding.
+	 * @param   mixed  $src     An associative array or object to bind to the JTable instance.
+	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -40,7 +40,7 @@ interface JTableInterface
 	 *
 	 * @return boolean True if the instance is sane and able to be stored in the database.
 	 *
-	 * @link  https://docs.joomla.org/JTable/check
+	 * @link https://docs.joomla.org/JTable/check
 	 * @since 3.2
 	 */
 	public function check();
@@ -48,7 +48,7 @@ interface JTableInterface
 	/**
 	 * Override parent delete method to delete tags information.
 	 *
-	 * @param   mixed $pk An optional primary key value to delete.  If not set the instance property value is used.
+	 * @param   mixed  $pk  An optional primary key value to delete.  If not set the instance property value is used.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -82,9 +82,9 @@ interface JTableInterface
 	 * Method to load a row from the database by primary key and bind the fields
 	 * to the JTable instance properties.
 	 *
-	 * @param   mixed   $keys    An optional primary key value to load the row by, or an array of fields to match.  If not
+	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
 	 *                           set the instance property value is used.
-	 * @param   boolean $reset   True to reset the default values before loading the new row.
+	 * @param   boolean  $reset  True to reset the default values before loading the new row.
 	 *
 	 * @return  boolean  True if successful. False if row not found.
 	 *
@@ -115,7 +115,7 @@ interface JTableInterface
 	 * a new row will be inserted into the database with the properties from the
 	 * JTable instance.
 	 *
-	 * @param   boolean $updateNulls True to update fields even if they are null.
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
 	 * @return  boolean  True on success.
 	 *

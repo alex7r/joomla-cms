@@ -41,6 +41,21 @@ class JGithubPackageDataTagsTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackageDataTags($this->options, $this->client);
+	}
+
+	/**
 	 * @covers JGithubPackageDataTags::get
 	 *
 	 * GET /repos/:owner/:repo/git/tags/:sha
@@ -57,14 +72,16 @@ class JGithubPackageDataTagsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/repos/joomla/joomla-platform/git/tags/12345', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/repos/joomla/joomla-platform/git/tags/12345', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->get('joomla', 'joomla-platform', '12345'),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -103,28 +120,15 @@ class JGithubPackageDataTagsTest extends PHPUnit_Framework_TestCase
 
 		$data = '{"tag":"0.1","message":"Message","object":"12345","type":"commit","tagger_name":"elkuku","tagger_email":"email@example.com","tagger_date":"123456789"}';
 		$this->client->expects($this->once())
-			->method('post')
-			->with('/repos/joomla/joomla-platform/git/tags', $data, 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('post')
+		             ->with('/repos/joomla/joomla-platform/git/tags', $data, 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->create('joomla', 'joomla-platform', '0.1', 'Message', '12345', 'commit', 'elkuku', 'email@example.com', '123456789'),
 			$this->equalTo(json_decode($this->response->body))
-		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options  = new JRegistry;
-		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackageDataTags($this->options, $this->client);
+		)
+		;
 	}
 }

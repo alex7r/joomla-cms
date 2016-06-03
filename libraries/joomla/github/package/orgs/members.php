@@ -28,7 +28,7 @@ class JGithubPackageOrgsMembers extends JGithubPackage
 	 * If the requester is not a member of the organization the query will be
 	 * redirected to the public members list.
 	 *
-	 * @param   string $org The name of the organization.
+	 * @param   string  $org  The name of the organization.
 	 *
 	 * @throws UnexpectedValueException
 	 * @since    3.3 (CMS)
@@ -64,8 +64,8 @@ class JGithubPackageOrgsMembers extends JGithubPackage
 	 *
 	 * Check if a user is, publicly or privately, a member of the organization.
 	 *
-	 * @param   string $org  The name of the organization.
-	 * @param   string $user The name of the user.
+	 * @param   string  $org   The name of the organization.
+	 * @param   string  $user  The name of the user.
 	 *
 	 * @throws UnexpectedValueException
 	 * @since    3.3 (CMS)
@@ -115,8 +115,8 @@ class JGithubPackageOrgsMembers extends JGithubPackage
 	 * Removing a user from this list will remove them from all teams and they will no longer have
 	 * any access to the organization’s repositories.
 	 *
-	 * @param   string $org  The name of the organization.
-	 * @param   string $user The name of the user.
+	 * @param   string  $org   The name of the organization.
+	 * @param   string  $user  The name of the user.
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -138,7 +138,7 @@ class JGithubPackageOrgsMembers extends JGithubPackage
 	 *
 	 * Members of an organization can choose to have their membership publicized or not.
 	 *
-	 * @param   string $org The name of the organization.
+	 * @param   string  $org  The name of the organization.
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -157,8 +157,8 @@ class JGithubPackageOrgsMembers extends JGithubPackage
 	/**
 	 * Check public membership.
 	 *
-	 * @param   string $org  The name of the organization.
-	 * @param   string $user The name of the user.
+	 * @param   string  $org   The name of the organization.
+	 * @param   string  $user  The name of the user.
 	 *
 	 * @throws UnexpectedValueException
 	 * @since    3.3 (CMS)
@@ -193,8 +193,8 @@ class JGithubPackageOrgsMembers extends JGithubPackage
 	/**
 	 * Publicize a user’s membership.
 	 *
-	 * @param   string $org  The name of the organization.
-	 * @param   string $user The name of the user.
+	 * @param   string  $org   The name of the organization.
+	 * @param   string  $user  The name of the user.
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -214,8 +214,8 @@ class JGithubPackageOrgsMembers extends JGithubPackage
 	/**
 	 * Conceal a user’s membership.
 	 *
-	 * @param   string $org  The name of the organization.
-	 * @param   string $user The name of the user.
+	 * @param   string  $org   The name of the organization.
+	 * @param   string  $user  The name of the user.
 	 *
 	 * @since    3.3 (CMS)
 	 *

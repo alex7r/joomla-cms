@@ -40,7 +40,7 @@ class TemplatesViewStyle extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 *
@@ -82,7 +82,7 @@ class TemplatesViewStyle extends JViewLegacy
 
 		JToolbarHelper::title(
 			$isNew ? JText::_('COM_TEMPLATES_MANAGER_ADD_STYLE')
-				: JText::_('COM_TEMPLATES_MANAGER_EDIT_STYLE'), 'eye thememanager'
+			: JText::_('COM_TEMPLATES_MANAGER_EDIT_STYLE'), 'eye thememanager'
 		);
 
 		// If not checked out, can save the item.
@@ -116,7 +116,7 @@ class TemplatesViewStyle extends JViewLegacy
 		if ($lang->hasKey($help->url))
 		{
 			$debug = $lang->setDebug(false);
-			$url   = JText::_($help->url);
+			$url = JText::_($help->url);
 			$lang->setDebug($debug);
 		}
 		else

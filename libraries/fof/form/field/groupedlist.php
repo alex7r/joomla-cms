@@ -1,9 +1,9 @@
 <?php
 /**
- * @package     FrameworkOnFramework
- * @subpackage  form
+ * @package    FrameworkOnFramework
+ * @subpackage form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -19,17 +19,20 @@ JFormHelper::loadFieldClass('groupedlist');
  */
 class FOFFormFieldGroupedlist extends JFormFieldGroupedList implements FOFFormField
 {
+	protected $static;
+
+	protected $repeatable;
+
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
 	public $item;
+
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
-	protected $static;
-	protected $repeatable;
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string $name The property name for which to the the value.
+	 * @param   string  $name  The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -79,75 +82,17 @@ class FOFFormFieldGroupedlist extends JFormFieldGroupedList implements FOFFormFi
 		if (is_null($selected))
 		{
 			$selected = array(
-				'group' => '',
-				'item'  => ''
+				'group'	 => '',
+				'item'	 => ''
 			);
 		}
 
 		return '<span id="' . $this->id . '-group" class="fof-groupedlist-group ' . $class . '>' .
-		htmlspecialchars($selected['group'], ENT_COMPAT, 'UTF-8') .
-		'</span>' .
-		'<span id="' . $this->id . '-item" class="fof-groupedlist-item ' . $class . '>' .
-		htmlspecialchars($selected['item'], ENT_COMPAT, 'UTF-8') .
-		'</span>';
-	}
-
-	/**
-	 * Gets the active option's label given an array of JHtml options
-	 *
-	 * @param   array  $data     The JHtml options to parse
-	 * @param   mixed  $selected The currently selected value
-	 * @param   string $groupKey Group name
-	 * @param   string $optKey   Key name
-	 * @param   string $optText  Value name
-	 *
-	 * @return  mixed   The label of the currently selected option
-	 */
-	public static function getOptionName($data, $selected = null, $groupKey = 'items', $optKey = 'value', $optText = 'text')
-	{
-		$ret = null;
-
-		foreach ($data as $dataKey => $group)
-		{
-			$label   = $dataKey;
-			$noGroup = is_int($dataKey);
-
-			if (is_array($group))
-			{
-				$subList = $group[$groupKey];
-				$label   = $group[$optText];
-				$noGroup = false;
-			}
-			elseif (is_object($group))
-			{
-				// Sub-list is in a property of an object
-				$subList = $group->$groupKey;
-				$label   = $group->$optText;
-				$noGroup = false;
-			}
-			else
-			{
-				throw new RuntimeException('Invalid group contents.', 1);
-			}
-
-			if ($noGroup)
-			{
-				$label = '';
-			}
-
-			$match = FOFFormFieldList::getOptionName($data, $selected, $optKey, $optText);
-
-			if (!is_null($match))
-			{
-				$ret = array(
-					'group' => $label,
-					'item'  => $match
-				);
-				break;
-			}
-		}
-
-		return $ret;
+			htmlspecialchars($selected['group'], ENT_COMPAT, 'UTF-8') .
+			'</span>' .
+			'<span id="' . $this->id . '-item" class="fof-groupedlist-item ' . $class . '>' .
+			htmlspecialchars($selected['item'], ENT_COMPAT, 'UTF-8') .
+			'</span>';
 	}
 
 	/**
@@ -167,16 +112,74 @@ class FOFFormFieldGroupedlist extends JFormFieldGroupedList implements FOFFormFi
 		if (is_null($selected))
 		{
 			$selected = array(
-				'group' => '',
-				'item'  => ''
+				'group'	 => '',
+				'item'	 => ''
 			);
 		}
 
 		return '<span class="' . $this->id . '-group fof-groupedlist-group ' . $class . '">' .
-		htmlspecialchars($selected['group'], ENT_COMPAT, 'UTF-8') .
-		'</span>' .
-		'<span class="' . $this->id . '-item fof-groupedlist-item ' . $class . '">' .
-		htmlspecialchars($selected['item'], ENT_COMPAT, 'UTF-8') .
-		'</span>';
+			htmlspecialchars($selected['group'], ENT_COMPAT, 'UTF-8') .
+			'</span>' .
+			'<span class="' . $this->id . '-item fof-groupedlist-item ' . $class . '">' .
+			htmlspecialchars($selected['item'], ENT_COMPAT, 'UTF-8') .
+			'</span>';
+	}
+
+	/**
+	 * Gets the active option's label given an array of JHtml options
+	 *
+	 * @param   array   $data      The JHtml options to parse
+	 * @param   mixed   $selected  The currently selected value
+	 * @param   string  $groupKey  Group name
+	 * @param   string  $optKey    Key name
+	 * @param   string  $optText   Value name
+	 *
+	 * @return  mixed   The label of the currently selected option
+	 */
+	public static function getOptionName($data, $selected = null, $groupKey = 'items', $optKey = 'value', $optText = 'text')
+	{
+		$ret = null;
+
+		foreach ($data as $dataKey => $group)
+		{
+			$label = $dataKey;
+			$noGroup = is_int($dataKey);
+
+			if (is_array($group))
+			{
+				$subList = $group[$groupKey];
+				$label = $group[$optText];
+				$noGroup = false;
+			}
+			elseif (is_object($group))
+			{
+				// Sub-list is in a property of an object
+				$subList = $group->$groupKey;
+				$label = $group->$optText;
+				$noGroup = false;
+			}
+			else
+			{
+				throw new RuntimeException('Invalid group contents.', 1);
+			}
+
+			if ($noGroup)
+			{
+				$label = '';
+			}
+
+			$match = FOFFormFieldList::getOptionName($data, $selected, $optKey, $optText);
+
+			if (!is_null($match))
+			{
+				$ret = array(
+					'group'	 => $label,
+					'item'	 => $match
+				);
+				break;
+			}
+		}
+
+		return $ret;
 	}
 }

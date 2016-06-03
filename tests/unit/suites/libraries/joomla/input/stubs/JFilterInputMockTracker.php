@@ -21,8 +21,8 @@ class JFilterInputMockTracker
 	/**
 	 * Test __call
 	 *
-	 * @param   string $name      @todo
-	 * @param   mixed  $arguments @todo
+	 * @param   string  $name       @todo
+	 * @param   mixed   $arguments  @todo
 	 *
 	 * @return void
 	 */

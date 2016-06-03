@@ -23,7 +23,7 @@ abstract class JHtmlContact
 	/**
 	 * Get the associated language flags
 	 *
-	 * @param   integer $contactid The item id to search associations
+	 * @param   integer  $contactid  The item id to search associations
 	 *
 	 * @return  string  The language HTML
 	 *
@@ -43,7 +43,7 @@ abstract class JHtmlContact
 			}
 
 			// Get the associated contact items
-			$db    = JFactory::getDbo();
+			$db = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select('c.id, c.name as title')
 				->select('l.sef as lang_sef')
@@ -69,8 +69,8 @@ abstract class JHtmlContact
 			{
 				foreach ($items as &$item)
 				{
-					$text         = strtoupper($item->lang_sef);
-					$url          = JRoute::_('index.php?option=com_contact&task=contact.edit&id=' . (int) $item->id);
+					$text = strtoupper($item->lang_sef);
+					$url = JRoute::_('index.php?option=com_contact&task=contact.edit&id=' . (int) $item->id);
 					$tooltipParts = array(
 						JHtml::_(
 							'image',
@@ -105,11 +105,11 @@ abstract class JHtmlContact
 	/**
 	 * Show the featured/not-featured icon.
 	 *
-	 * @param   integer $value     The featured value.
-	 * @param   integer $i         Id of the item.
-	 * @param   boolean $canChange Whether the value can be changed or not.
+	 * @param   integer  $value      The featured value.
+	 * @param   integer  $i          Id of the item.
+	 * @param   boolean  $canChange  Whether the value can be changed or not.
 	 *
-	 * @return  string    The anchor tag to toggle featured/unfeatured contacts.
+	 * @return  string	The anchor tag to toggle featured/unfeatured contacts.
 	 *
 	 * @since   1.6
 	 */
@@ -121,8 +121,8 @@ abstract class JHtmlContact
 			0 => array('unfeatured', 'contacts.featured', 'COM_CONTACT_UNFEATURED', 'JGLOBAL_TOGGLE_FEATURED'),
 			1 => array('featured', 'contacts.unfeatured', 'JFEATURED', 'JGLOBAL_TOGGLE_FEATURED'),
 		);
-		$state  = ArrayHelper::getValue($states, (int) $value, $states[1]);
-		$icon   = $state[0];
+		$state = ArrayHelper::getValue($states, (int) $value, $states[1]);
+		$icon  = $state[0];
 
 		if ($canChange)
 		{

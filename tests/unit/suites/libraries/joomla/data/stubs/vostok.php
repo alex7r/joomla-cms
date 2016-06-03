@@ -21,7 +21,7 @@ class JDataVostok extends JData
 	/**
 	 * An array method.
 	 *
-	 * @param   string $status A method argument.
+	 * @param   string  $status  A method argument.
 	 *
 	 * @return  string  The return value for the method.
 	 *
@@ -35,8 +35,8 @@ class JDataVostok extends JData
 	/**
 	 * Set an object property.
 	 *
-	 * @param   string $property The property name.
-	 * @param   mixed  $value    The property value.
+	 * @param   string  $property  The property name.
+	 * @param   mixed   $value     The property value.
 	 *
 	 * @return  mixed  The property value.
 	 *

@@ -66,7 +66,7 @@ class JLogLoggerW3CTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Method to get the last line of a file.  This is fairly safe for very large files.
 	 *
-	 * @param   string $path The path to the file for which to get the last line.
+	 * @param   string  $path  The path to the file for which to get the last line.
 	 *
 	 * @return  string
 	 *
@@ -75,7 +75,7 @@ class JLogLoggerW3CTest extends PHPUnit_Framework_TestCase
 	protected function getLastLine($path)
 	{
 		$cursor = -1;
-		$line   = '';
+		$line = '';
 
 		// Open the file up to the last character.
 		$f = fopen($path, 'r');

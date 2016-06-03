@@ -13,7 +13,7 @@ defined('JPATH_PLATFORM') or die;
  * Joomla Platform Database Interface
  *
  * @since  11.2
- */
+*/
 interface JDatabaseInterface
 {
 	/**

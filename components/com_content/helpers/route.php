@@ -21,9 +21,9 @@ abstract class ContentHelperRoute
 	/**
 	 * Get the article route.
 	 *
-	 * @param   integer $id       The route of the content item.
-	 * @param   integer $catid    The category ID.
-	 * @param   integer $language The language code.
+	 * @param   integer  $id        The route of the content item.
+	 * @param   integer  $catid     The category ID.
+	 * @param   integer  $language  The language code.
 	 *
 	 * @return  string  The article route.
 	 *
@@ -32,7 +32,7 @@ abstract class ContentHelperRoute
 	public static function getArticleRoute($id, $catid = 0, $language = 0)
 	{
 		$needles = array(
-			'article' => array((int) $id)
+			'article'  => array((int) $id)
 		);
 
 		// Create the link
@@ -66,9 +66,83 @@ abstract class ContentHelperRoute
 	}
 
 	/**
+	 * Get the category route.
+	 *
+	 * @param   integer  $catid     The category ID.
+	 * @param   integer  $language  The language code.
+	 *
+	 * @return  string  The article route.
+	 *
+	 * @since   1.5
+	 */
+	public static function getCategoryRoute($catid, $language = 0)
+	{
+		if ($catid instanceof JCategoryNode)
+		{
+			$id       = $catid->id;
+			$category = $catid;
+		}
+		else
+		{
+			$id       = (int) $catid;
+			$category = JCategories::getInstance('Content')->get($id);
+		}
+
+		if ($id < 1 || !($category instanceof JCategoryNode))
+		{
+			$link = '';
+		}
+		else
+		{
+			$needles               = array();
+			$link                  = 'index.php?option=com_content&view=category&id=' . $id;
+			$catids                = array_reverse($category->getPath());
+			$needles['category']   = $catids;
+			$needles['categories'] = $catids;
+
+			if ($language && $language != "*" && JLanguageMultilang::isEnabled())
+			{
+				$link .= '&lang=' . $language;
+				$needles['language'] = $language;
+			}
+
+			if ($item = self::_findItem($needles))
+			{
+				$link .= '&Itemid=' . $item;
+			}
+		}
+
+		return $link;
+	}
+
+	/**
+	 * Get the form route.
+	 *
+	 * @param   integer  $id  The form ID.
+	 *
+	 * @return  string  The article route.
+	 *
+	 * @since   1.5
+	 */
+	public static function getFormRoute($id)
+	{
+		// Create the link
+		if ($id)
+		{
+			$link = 'index.php?option=com_content&task=article.edit&a_id=' . $id;
+		}
+		else
+		{
+			$link = 'index.php?option=com_content&task=article.edit&a_id=0';
+		}
+
+		return $link;
+	}
+
+	/**
 	 * Find an item ID.
 	 *
-	 * @param   array $needles An array of language codes.
+	 * @param   array  $needles  An array of language codes.
 	 *
 	 * @return  mixed  The ID found or null otherwise.
 	 *
@@ -85,7 +159,7 @@ abstract class ContentHelperRoute
 		{
 			self::$lookup[$language] = array();
 
-			$component = JComponentHelper::getComponent('com_content');
+			$component  = JComponentHelper::getComponent('com_content');
 
 			$attributes = array('component_id');
 			$values     = array($component->id);
@@ -147,8 +221,7 @@ abstract class ContentHelperRoute
 
 		if ($active
 			&& $active->component == 'com_content'
-			&& ($language == '*' || in_array($active->language, array('*', $language)) || !JLanguageMultilang::isEnabled())
-		)
+			&& ($language == '*' || in_array($active->language, array('*', $language)) || !JLanguageMultilang::isEnabled()))
 		{
 			return $active->id;
 		}
@@ -157,79 +230,5 @@ abstract class ContentHelperRoute
 		$default = $menus->getDefault($language);
 
 		return !empty($default->id) ? $default->id : null;
-	}
-
-	/**
-	 * Get the category route.
-	 *
-	 * @param   integer $catid    The category ID.
-	 * @param   integer $language The language code.
-	 *
-	 * @return  string  The article route.
-	 *
-	 * @since   1.5
-	 */
-	public static function getCategoryRoute($catid, $language = 0)
-	{
-		if ($catid instanceof JCategoryNode)
-		{
-			$id       = $catid->id;
-			$category = $catid;
-		}
-		else
-		{
-			$id       = (int) $catid;
-			$category = JCategories::getInstance('Content')->get($id);
-		}
-
-		if ($id < 1 || !($category instanceof JCategoryNode))
-		{
-			$link = '';
-		}
-		else
-		{
-			$needles               = array();
-			$link                  = 'index.php?option=com_content&view=category&id=' . $id;
-			$catids                = array_reverse($category->getPath());
-			$needles['category']   = $catids;
-			$needles['categories'] = $catids;
-
-			if ($language && $language != "*" && JLanguageMultilang::isEnabled())
-			{
-				$link .= '&lang=' . $language;
-				$needles['language'] = $language;
-			}
-
-			if ($item = self::_findItem($needles))
-			{
-				$link .= '&Itemid=' . $item;
-			}
-		}
-
-		return $link;
-	}
-
-	/**
-	 * Get the form route.
-	 *
-	 * @param   integer $id The form ID.
-	 *
-	 * @return  string  The article route.
-	 *
-	 * @since   1.5
-	 */
-	public static function getFormRoute($id)
-	{
-		// Create the link
-		if ($id)
-		{
-			$link = 'index.php?option=com_content&task=article.edit&a_id=' . $id;
-		}
-		else
-		{
-			$link = 'index.php?option=com_content&task=article.edit&a_id=0';
-		}
-
-		return $link;
 	}
 }

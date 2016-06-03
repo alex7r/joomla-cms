@@ -227,8 +227,8 @@ class UsersControllerProfile extends UsersController
 	/**
 	 * Function that allows child controller access to model data after the data has been saved.
 	 *
-	 * @param   JModelLegacy $model     The data model object.
-	 * @param   array        $validData The validated data.
+	 * @param   JModelLegacy  $model      The data model object.
+	 * @param   array         $validData  The validated data.
 	 *
 	 * @return  void
 	 *

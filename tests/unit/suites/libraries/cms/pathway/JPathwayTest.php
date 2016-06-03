@@ -25,6 +25,34 @@ class JPathwayTest extends TestCase
 	protected $fixture;
 
 	/**
+	 * Set up the tests
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		$this->fixture = new JPathway;
+
+		parent::setUp();
+	}
+
+	/**
+	 * Tear down the tests
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		unset($this->fixture);
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Test JPathway::__construct().
 	 *
 	 * @return  void
@@ -48,13 +76,13 @@ class JPathwayTest extends TestCase
 		$current = TestReflection::getValue('JApplicationHelper', '_clients');
 
 		// Test Client
-		$obj       = new stdClass;
-		$obj->id   = 0;
+		$obj = new stdClass;
+		$obj->id = 0;
 		$obj->name = 'inspector';
 		$obj->path = JPATH_TESTS;
 
-		$obj2       = new stdClass;
-		$obj2->id   = 1;
+		$obj2 = new stdClass;
+		$obj2->id = 1;
 		$obj2->name = 'inspector2';
 		$obj2->path = __DIR__ . '/stubs';
 
@@ -99,15 +127,15 @@ class JPathwayTest extends TestCase
 		$this->fixture->addItem('Item1', 'index.php?key=item1');
 		$this->fixture->addItem('Item2', 'index.php?key=item2');
 
-		$pathway       = array();
-		$object1       = new stdClass;
+		$pathway = array();
+		$object1 = new stdClass;
 		$object1->name = 'Item1';
 		$object1->link = 'index.php?key=item1';
-		$pathway[]     = $object1;
-		$object2       = new stdClass;
+		$pathway[] = $object1;
+		$object2 = new stdClass;
 		$object2->name = 'Item2';
 		$object2->link = 'index.php?key=item2';
-		$pathway[]     = $object2;
+		$pathway[] = $object2;
 
 		$this->assertEquals($pathway, $this->fixture->getPathway());
 	}
@@ -121,15 +149,15 @@ class JPathwayTest extends TestCase
 	 */
 	public function testSetPathway()
 	{
-		$pathway       = array();
-		$object1       = new stdClass;
+		$pathway = array();
+		$object1 = new stdClass;
 		$object1->name = 'Item1';
 		$object1->link = 'index.php?key=item1';
-		$pathway[2]    = $object1;
-		$object2       = new stdClass;
+		$pathway[2] = $object1;
+		$object2 = new stdClass;
 		$object2->name = 'Item2';
 		$object2->link = 'index.php?key=item2';
-		$pathway[4]    = $object2;
+		$pathway[4] = $object2;
 
 		$this->assertEquals(array(), $this->fixture->setPathway($pathway));
 		$this->assertAttributeEquals(array_values($pathway), '_pathway', $this->fixture);
@@ -147,15 +175,15 @@ class JPathwayTest extends TestCase
 	 */
 	public function testGetPathwayNames()
 	{
-		$pathway       = array();
-		$object1       = new stdClass;
+		$pathway = array();
+		$object1 = new stdClass;
 		$object1->name = 'Item1';
 		$object1->link = 'index.php?key=item1';
-		$pathway[]     = $object1;
-		$object2       = new stdClass;
+		$pathway[] = $object1;
+		$object2 = new stdClass;
 		$object2->name = 'Item2';
 		$object2->link = 'index.php?key=item2';
-		$pathway[]     = $object2;
+		$pathway[] = $object2;
 
 		TestReflection::setValue($this->fixture, '_pathway', $pathway);
 
@@ -173,15 +201,15 @@ class JPathwayTest extends TestCase
 	 */
 	public function testAddItem()
 	{
-		$pathway       = array();
-		$object1       = new stdClass;
+		$pathway = array();
+		$object1 = new stdClass;
 		$object1->name = 'Item1';
 		$object1->link = 'index.php?key=item1';
-		$pathway[]     = $object1;
-		$object2       = new stdClass;
+		$pathway[] = $object1;
+		$object2 = new stdClass;
 		$object2->name = 'Item2';
 		$object2->link = 'index.php?key=item2';
-		$pathway[]     = $object2;
+		$pathway[] = $object2;
 
 		$this->fixture->addItem('Item1', 'index.php?key=item1');
 		$this->fixture->addItem('Item2', 'index.php?key=item2');
@@ -198,15 +226,15 @@ class JPathwayTest extends TestCase
 	 */
 	public function testSetItemName()
 	{
-		$pathway       = array();
-		$object1       = new stdClass;
+		$pathway = array();
+		$object1 = new stdClass;
 		$object1->name = 'Item1';
 		$object1->link = 'index.php?key=item1';
-		$pathway[]     = $object1;
-		$object2       = new stdClass;
+		$pathway[] = $object1;
+		$object2 = new stdClass;
 		$object2->name = 'Item2';
 		$object2->link = 'index.php?key=item2';
-		$pathway[]     = $object2;
+		$pathway[] = $object2;
 
 		$this->fixture->setPathway($pathway);
 
@@ -230,38 +258,10 @@ class JPathwayTest extends TestCase
 	 */
 	public function testMakeItem()
 	{
-		$object       = new stdClass;
+		$object = new stdClass;
 		$object->link = 'index.php?key=value1';
 		$object->name = 'Value1';
 
 		$this->assertEquals($object, TestReflection::invoke($this->fixture, 'makeItem', 'Value1', 'index.php?key=value1'));
-	}
-
-	/**
-	 * Set up the tests
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		$this->fixture = new JPathway;
-
-		parent::setUp();
-	}
-
-	/**
-	 * Tear down the tests
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		unset($this->fixture);
-
-		parent::tearDown();
 	}
 }

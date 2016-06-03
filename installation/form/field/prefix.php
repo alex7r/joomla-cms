@@ -18,7 +18,7 @@ class InstallationFormFieldPrefix extends JFormField
 	/**
 	 * The form field type.
 	 *
-	 * @var        string
+	 * @var		string
 	 * @since   1.6
 	 */
 	protected $type = 'Prefix';
@@ -26,7 +26,7 @@ class InstallationFormFieldPrefix extends JFormField
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @return  string    The field input markup.
+	 * @return  string	The field input markup.
 	 *
 	 * @since   1.6
 	 */
@@ -80,7 +80,7 @@ class InstallationFormFieldPrefix extends JFormField
 		$onchange = $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';
 
 		return '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' .
-		' value="' . htmlspecialchars($prefix, ENT_COMPAT, 'UTF-8') . '"' .
-		$class . $disabled . $readonly . $onchange . $maxLength . '/>';
+				' value="' . htmlspecialchars($prefix, ENT_COMPAT, 'UTF-8') . '"' .
+				$class . $disabled . $readonly . $onchange . $maxLength . '/>';
 	}
 }

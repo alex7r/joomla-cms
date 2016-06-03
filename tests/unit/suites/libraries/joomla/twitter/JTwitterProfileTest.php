@@ -72,6 +72,41 @@ class JTwitterProfileTest extends TestCase
 			}}}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$key = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input = new JInput;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth = new JTwitterOAuth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JTwitterProfile($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+		$this->options->set('sendheaders', true);
+	}
+
+	/**
 	 * Tests the updateProfile method
 	 *
 	 * @return  void
@@ -80,41 +115,41 @@ class JTwitterProfileTest extends TestCase
 	 */
 	public function testUpdateProfile()
 	{
-		$name        = 'testUser';
-		$url         = 'www.example.com/url';
-		$location    = 'San Francisco, CA';
+		$name = 'testUser';
+		$url = 'www.example.com/url';
+		$location = 'San Francisco, CA';
 		$description = 'Flipped my wig at age 22 and it never grew back. Also: I work at Twitter.';
-		$entities    = true;
+		$entities = true;
 		$skip_status = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "account"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$data['name']             = $name;
-		$data['url']              = $url;
-		$data['location']         = $location;
-		$data['description']      = $description;
+		$data['name'] = $name;
+		$data['url'] = $url;
+		$data['location'] = $location;
+		$data['description'] = $description;
 		$data['include_entities'] = $entities;
-		$data['skip_status']      = $skip_status;
+		$data['skip_status'] = $skip_status;
 
 		$path = $this->object->fetchUrl('/account/update_profile.json');
 
 		$this->client->expects($this->at(1))
-			->method('post')
-			->with($path, $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($path, $data)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->updateProfile($name, $url, $location, $description, $entities, $skip_status),
@@ -132,41 +167,41 @@ class JTwitterProfileTest extends TestCase
 	 */
 	public function testUpdateProfileFailure()
 	{
-		$name        = 'testUser';
-		$url         = 'www.example.com/url';
-		$location    = 'San Francisco, CA';
+		$name = 'testUser';
+		$url = 'www.example.com/url';
+		$location = 'San Francisco, CA';
 		$description = 'Flipped my wig at age 22 and it never grew back. Also: I work at Twitter.';
-		$entities    = true;
+		$entities = true;
 		$skip_status = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "account"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$data['name']             = $name;
-		$data['url']              = $url;
-		$data['location']         = $location;
-		$data['description']      = $description;
+		$data['name'] = $name;
+		$data['url'] = $url;
+		$data['location'] = $location;
+		$data['description'] = $description;
 		$data['include_entities'] = $entities;
-		$data['skip_status']      = $skip_status;
+		$data['skip_status'] = $skip_status;
 
 		$path = $this->object->fetchUrl('/account/update_profile.json');
 
 		$this->client->expects($this->at(1))
-			->method('post')
-			->with($path, $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($path, $data)
+		->will($this->returnValue($returnData));
 
 		$this->object->updateProfile($name, $url, $location, $description, $entities, $skip_status);
 	}
@@ -180,33 +215,33 @@ class JTwitterProfileTest extends TestCase
 	 */
 	public function testUpdateProfileBackgroundImage()
 	{
-		$image       = 'path/to/source';
-		$tile        = true;
-		$entities    = true;
+		$image = 'path/to/source';
+		$tile = true;
+		$entities = true;
 		$skip_status = true;
-		$use         = true;
+		$use = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "account"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set POST request parameters.
-		$data['image']            = "@{$image}";
-		$data['tile']             = $tile;
+		$data['image'] = "@{$image}";
+		$data['tile'] = $tile;
 		$data['include_entities'] = $entities;
-		$data['skip_status']      = $skip_status;
-		$data['use']              = $use;
+		$data['skip_status'] = $skip_status;
+		$data['use'] = $use;
 
 		$this->client->expects($this->at(1))
 			->method('post')
@@ -229,33 +264,33 @@ class JTwitterProfileTest extends TestCase
 	 */
 	public function testUpdateProfileBackgroundImageFailure()
 	{
-		$image       = 'path/to/source';
-		$tile        = true;
-		$entities    = true;
+		$image = 'path/to/source';
+		$tile = true;
+		$entities = true;
 		$skip_status = true;
-		$use         = true;
+		$use = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "account"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set POST request parameters.
-		$data['image']            = "@{$image}";
-		$data['tile']             = $tile;
+		$data['image'] = "@{$image}";
+		$data['tile'] = $tile;
 		$data['include_entities'] = $entities;
-		$data['skip_status']      = $skip_status;
-		$data['use']              = $use;
+		$data['skip_status'] = $skip_status;
+		$data['use'] = $use;
 
 		$this->client->expects($this->at(1))
 			->method('post')
@@ -274,29 +309,29 @@ class JTwitterProfileTest extends TestCase
 	 */
 	public function testUpdateProfileImage()
 	{
-		$image       = 'path/to/source';
-		$entities    = true;
+		$image = 'path/to/source';
+		$entities = true;
 		$skip_status = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "account"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set POST request parameters.
-		$data['image']            = "@{$image}";
+		$data['image'] = "@{$image}";
 		$data['include_entities'] = $entities;
-		$data['skip_status']      = $skip_status;
+		$data['skip_status'] = $skip_status;
 
 		$this->client->expects($this->at(1))
 			->method('post')
@@ -319,29 +354,29 @@ class JTwitterProfileTest extends TestCase
 	 */
 	public function testUpdateProfileImageFailure()
 	{
-		$image       = 'path/to/source';
-		$entities    = true;
+		$image = 'path/to/source';
+		$entities = true;
 		$skip_status = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "account"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set POST request parameters.
-		$data['image']            = "@{$image}";
+		$data['image'] = "@{$image}";
 		$data['include_entities'] = $entities;
-		$data['skip_status']      = $skip_status;
+		$data['skip_status'] = $skip_status;
 
 		$this->client->expects($this->at(1))
 			->method('post')
@@ -360,37 +395,37 @@ class JTwitterProfileTest extends TestCase
 	 */
 	public function testUpdateProfileColors()
 	{
-		$background     = 'C0DEED ';
-		$link           = '0084B4';
+		$background = 'C0DEED ';
+		$link = '0084B4';
 		$sidebar_border = '0084B4';
-		$sidebar_fill   = 'DDEEF6';
-		$text           = '333333';
-		$entities       = true;
-		$skip_status    = true;
+		$sidebar_fill = 'DDEEF6';
+		$text = '333333';
+		$entities = true;
+		$skip_status = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "account"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set POST request parameters.
-		$data['profile_background_color']     = $background;
-		$data['profile_link_color']           = $link;
+		$data['profile_background_color'] = $background;
+		$data['profile_link_color'] = $link;
 		$data['profile_sidebar_border_color'] = $sidebar_border;
-		$data['profile_sidebar_fill_color']   = $sidebar_fill;
-		$data['profile_text_color']           = $text;
-		$data['include_entities']             = $entities;
-		$data['skip_status']                  = $skip_status;
+		$data['profile_sidebar_fill_color'] = $sidebar_fill;
+		$data['profile_text_color'] = $text;
+		$data['include_entities'] = $entities;
+		$data['skip_status'] = $skip_status;
 
 		$this->client->expects($this->at(1))
 			->method('post')
@@ -413,37 +448,37 @@ class JTwitterProfileTest extends TestCase
 	 */
 	public function testUpdateProfileColorsFailure()
 	{
-		$background     = 'C0DEED ';
-		$link           = '0084B4';
+		$background = 'C0DEED ';
+		$link = '0084B4';
 		$sidebar_border = '0084B4';
-		$sidebar_fill   = 'DDEEF6';
-		$text           = '333333';
-		$entities       = true;
-		$skip_status    = true;
+		$sidebar_fill = 'DDEEF6';
+		$text = '333333';
+		$entities = true;
+		$skip_status = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "account"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set POST request parameters.
-		$data['profile_background_color']     = $background;
-		$data['profile_link_color']           = $link;
+		$data['profile_background_color'] = $background;
+		$data['profile_link_color'] = $link;
 		$data['profile_sidebar_border_color'] = $sidebar_border;
-		$data['profile_sidebar_fill_color']   = $sidebar_fill;
-		$data['profile_text_color']           = $text;
-		$data['include_entities']             = $entities;
-		$data['skip_status']                  = $skip_status;
+		$data['profile_sidebar_fill_color'] = $sidebar_fill;
+		$data['profile_text_color'] = $text;
+		$data['include_entities'] = $entities;
+		$data['skip_status'] = $skip_status;
 
 		$this->client->expects($this->at(1))
 			->method('post')
@@ -462,18 +497,18 @@ class JTwitterProfileTest extends TestCase
 	 */
 	public function testGetSettings()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "account"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -498,18 +533,18 @@ class JTwitterProfileTest extends TestCase
 	 */
 	public function testGetSettingsFailure()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "account"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -530,24 +565,24 @@ class JTwitterProfileTest extends TestCase
 	 */
 	public function testUpdateSettings()
 	{
-		$location    = 1;
-		$sleep_time  = true;
+		$location = 1;
+		$sleep_time = true;
 		$start_sleep = 10;
-		$end_sleep   = 14;
-		$time_zone   = 'Europe/Copenhagen';
-		$lang        = 'en';
+		$end_sleep = 14;
+		$time_zone = 'Europe/Copenhagen';
+		$lang = 'en';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set POST request parameters.
 		$data['trend_location_woeid '] = $location;
-		$data['sleep_time_enabled']    = $sleep_time;
-		$data['start_sleep_time']      = $start_sleep;
-		$data['end_sleep_time']        = $end_sleep;
-		$data['time_zone']             = $time_zone;
-		$data['lang']                  = $lang;
+		$data['sleep_time_enabled'] = $sleep_time;
+		$data['start_sleep_time'] = $start_sleep;
+		$data['end_sleep_time'] = $end_sleep;
+		$data['time_zone'] = $time_zone;
+		$data['lang'] = $lang;
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -570,24 +605,24 @@ class JTwitterProfileTest extends TestCase
 	 */
 	public function testUpdateSettingsFailure()
 	{
-		$location    = 1;
-		$sleep_time  = true;
+		$location = 1;
+		$sleep_time = true;
 		$start_sleep = 10;
-		$end_sleep   = 14;
-		$time_zone   = 'Europe/Copenhagen';
-		$lang        = 'en';
+		$end_sleep = 14;
+		$time_zone = 'Europe/Copenhagen';
+		$lang = 'en';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set POST request parameters.
 		$data['trend_location_woeid '] = $location;
-		$data['sleep_time_enabled']    = $sleep_time;
-		$data['start_sleep_time']      = $start_sleep;
-		$data['end_sleep_time']        = $end_sleep;
-		$data['time_zone']             = $time_zone;
-		$data['lang']                  = $lang;
+		$data['sleep_time_enabled'] = $sleep_time;
+		$data['start_sleep_time'] = $start_sleep;
+		$data['end_sleep_time'] = $end_sleep;
+		$data['time_zone'] = $time_zone;
+		$data['lang'] = $lang;
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -595,40 +630,5 @@ class JTwitterProfileTest extends TestCase
 			->will($this->returnValue($returnData));
 
 		$this->object->updateSettings($location, $sleep_time, $start_sleep, $end_sleep, $time_zone, $lang);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$key    = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input   = new JInput;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth   = new JTwitterOAuth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JTwitterProfile($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-		$this->options->set('sendheaders', true);
 	}
 }

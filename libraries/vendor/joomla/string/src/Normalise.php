@@ -30,8 +30,8 @@ abstract class Normalise
 	 *
 	 * Non-grouped will split strings at each uppercase character.
 	 *
-	 * @param   string  $input   The string input (ASCII only).
-	 * @param   boolean $grouped Optionally allows splitting on groups of uppercase characters.
+	 * @param   string   $input    The string input (ASCII only).
+	 * @param   boolean  $grouped  Optionally allows splitting on groups of uppercase characters.
 	 *
 	 * @return  string  The space separated string.
 	 *
@@ -45,9 +45,28 @@ abstract class Normalise
 	}
 
 	/**
+	 * Method to convert a string into camel case.
+	 *
+	 * @param   string  $input  The string input (ASCII only).
+	 *
+	 * @return  string  The camel case string.
+	 *
+	 * @since   1.0
+	 */
+	public static function toCamelCase($input)
+	{
+		// Convert words to uppercase and then remove spaces.
+		$input = self::toSpaceSeparated($input);
+		$input = ucwords($input);
+		$input = str_ireplace(' ', '', $input);
+
+		return $input;
+	}
+
+	/**
 	 * Method to convert a string into dash separated form.
 	 *
-	 * @param   string $input The string input (ASCII only).
+	 * @param   string  $input  The string input (ASCII only).
 	 *
 	 * @return  string  The dash separated string.
 	 *
@@ -62,9 +81,43 @@ abstract class Normalise
 	}
 
 	/**
+	 * Method to convert a string into space separated form.
+	 *
+	 * @param   string  $input  The string input (ASCII only).
+	 *
+	 * @return  string  The space separated string.
+	 *
+	 * @since   1.0
+	 */
+	public static function toSpaceSeparated($input)
+	{
+		// Convert underscores and dashes to spaces.
+		$input = preg_replace('#[ \-_]+#', ' ', $input);
+
+		return $input;
+	}
+
+	/**
+	 * Method to convert a string into underscore separated form.
+	 *
+	 * @param   string  $input  The string input (ASCII only).
+	 *
+	 * @return  string  The underscore separated string.
+	 *
+	 * @since   1.0
+	 */
+	public static function toUnderscoreSeparated($input)
+	{
+		// Convert spaces and dashes to underscores.
+		$input = preg_replace('#[ \-_]+#', '_', $input);
+
+		return $input;
+	}
+
+	/**
 	 * Method to convert a string into variable form.
 	 *
-	 * @param   string $input The string input (ASCII only).
+	 * @param   string  $input  The string input (ASCII only).
 	 *
 	 * @return  string  The variable string.
 	 *
@@ -90,45 +143,9 @@ abstract class Normalise
 	}
 
 	/**
-	 * Method to convert a string into space separated form.
-	 *
-	 * @param   string $input The string input (ASCII only).
-	 *
-	 * @return  string  The space separated string.
-	 *
-	 * @since   1.0
-	 */
-	public static function toSpaceSeparated($input)
-	{
-		// Convert underscores and dashes to spaces.
-		$input = preg_replace('#[ \-_]+#', ' ', $input);
-
-		return $input;
-	}
-
-	/**
-	 * Method to convert a string into camel case.
-	 *
-	 * @param   string $input The string input (ASCII only).
-	 *
-	 * @return  string  The camel case string.
-	 *
-	 * @since   1.0
-	 */
-	public static function toCamelCase($input)
-	{
-		// Convert words to uppercase and then remove spaces.
-		$input = self::toSpaceSeparated($input);
-		$input = ucwords($input);
-		$input = str_ireplace(' ', '', $input);
-
-		return $input;
-	}
-
-	/**
 	 * Method to convert a string into key form.
 	 *
-	 * @param   string $input The string input (ASCII only).
+	 * @param   string  $input  The string input (ASCII only).
 	 *
 	 * @return  string  The key string.
 	 *
@@ -139,23 +156,6 @@ abstract class Normalise
 		// Remove spaces and dashes, then convert to lower case.
 		$input = self::toUnderscoreSeparated($input);
 		$input = strtolower($input);
-
-		return $input;
-	}
-
-	/**
-	 * Method to convert a string into underscore separated form.
-	 *
-	 * @param   string $input The string input (ASCII only).
-	 *
-	 * @return  string  The underscore separated string.
-	 *
-	 * @since   1.0
-	 */
-	public static function toUnderscoreSeparated($input)
-	{
-		// Convert spaces and dashes to underscores.
-		$input = preg_replace('#[ \-_]+#', '_', $input);
 
 		return $input;
 	}

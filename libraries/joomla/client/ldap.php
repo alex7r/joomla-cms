@@ -99,7 +99,7 @@ class JClientLdap
 	/**
 	 * Constructor
 	 *
-	 * @param   object $configObj An object of configuration variables
+	 * @param   object  $configObj  An object of configuration variables
 	 *
 	 * @since   12.1
 	 */
@@ -122,145 +122,6 @@ class JClientLdap
 				}
 			}
 		}
-	}
-
-	/**
-	 * Converts a dot notation IP address to net address (e.g. for Netware, etc)
-	 *
-	 * @param   string $ip IP Address (e.g. xxx.xxx.xxx.xxx)
-	 *
-	 * @return  string  Net address
-	 *
-	 * @since   12.1
-	 */
-	public static function ipToNetAddress($ip)
-	{
-		$parts   = explode('.', $ip);
-		$address = '1#';
-
-		foreach ($parts as $int)
-		{
-			$tmp = dechex($int);
-
-			if (strlen($tmp) != 2)
-			{
-				$tmp = '0' . $tmp;
-			}
-
-			$address .= '\\' . $tmp;
-		}
-
-		return $address;
-	}
-
-	/**
-	 * Extract readable network address from the LDAP encoded networkAddress attribute.
-	 *
-	 * Please keep this document block and author attribution in place.
-	 *
-	 * Novell Docs, see: http://developer.novell.com/ndk/doc/ndslib/schm_enu/data/sdk5624.html#sdk5624
-	 * for Address types: http://developer.novell.com/ndk/doc/ndslib/index.html?page=/ndk/doc/ndslib/schm_enu/data/sdk4170.html
-	 * LDAP Format, String:
-	 * taggedData = uint32String "#" octetstring
-	 * byte 0 = uint32String = Address Type: 0= IPX Address; 1 = IP Address
-	 * byte 1 = char = "#" - separator
-	 * byte 2+ = octetstring - the ordinal value of the address
-	 * Note: with eDirectory 8.6.2, the IP address (type 1) returns
-	 * correctly, however, an IPX address does not seem to.  eDir 8.7 may correct this.
-	 * Enhancement made by Merijn van de Schoot:
-	 * If addresstype is 8 (UDP) or 9 (TCP) do some additional parsing like still returning the IP address
-	 *
-	 * @param   string $networkaddress The network address
-	 *
-	 * @return  array
-	 *
-	 * @author  Jay Burrell, Systems & Networks, Mississippi State University
-	 * @since   12.1
-	 */
-	public static function LDAPNetAddr($networkaddress)
-	{
-		$addr     = "";
-		$addrtype = (int) substr($networkaddress, 0, 1);
-
-		// Throw away bytes 0 and 1 which should be the addrtype and the "#" separator
-		$networkaddress = substr($networkaddress, 2);
-
-		if (($addrtype == 8) || ($addrtype = 9))
-		{
-			// TODO 1.6: If UDP or TCP, (TODO fill addrport and) strip portnumber information from address
-			$networkaddress = substr($networkaddress, (strlen($networkaddress) - 4));
-		}
-
-		$addrtypes = array(
-			'IPX',
-			'IP',
-			'SDLC',
-			'Token Ring',
-			'OSI',
-			'AppleTalk',
-			'NetBEUI',
-			'Socket',
-			'UDP',
-			'TCP',
-			'UDP6',
-			'TCP6',
-			'Reserved (12)',
-			'URL',
-			'Count');
-		$len       = strlen($networkaddress);
-
-		if ($len > 0)
-		{
-			for ($i = 0; $i < $len; $i++)
-			{
-				$byte = substr($networkaddress, $i, 1);
-				$addr .= ord($byte);
-
-				if (($addrtype == 1) || ($addrtype == 8) || ($addrtype = 9))
-				{
-					// Dot separate IP addresses...
-					$addr .= ".";
-				}
-			}
-
-			if (($addrtype == 1) || ($addrtype == 8) || ($addrtype = 9))
-			{
-				// Strip last period from end of $addr
-				$addr = substr($addr, 0, strlen($addr) - 1);
-			}
-		}
-		else
-		{
-			$addr .= JText::_('JLIB_CLIENT_ERROR_LDAP_ADDRESS_NOT_AVAILABLE');
-		}
-
-		return array('protocol' => $addrtypes[$addrtype], 'address' => $addr);
-	}
-
-	/**
-	 * Generates a LDAP compatible password
-	 *
-	 * @param   string $password Clear text password to encrypt
-	 * @param   string $type     Type of password hash, either md5 or SHA
-	 *
-	 * @return  string   Encrypted password
-	 *
-	 * @since   12.1
-	 */
-	public static function generatePassword($password, $type = 'md5')
-	{
-		switch (strtolower($type))
-		{
-			case 'sha':
-				$userpassword = '{SHA}' . base64_encode(pack('H*', sha1($password)));
-				break;
-			case 'md5':
-			default:
-				$userpassword = '{MD5}' . base64_encode(pack('H*', md5($password)));
-				break;
-		}
-
-		return $userpassword;
 	}
 
 	/**
@@ -323,6 +184,44 @@ class JClientLdap
 	}
 
 	/**
+	 * Sets the DN with some template replacements
+	 *
+	 * @param   string  $username  The username
+	 * @param   string  $nosub     ...
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	public function setDn($username, $nosub = 0)
+	{
+		if ($this->users_dn == '' || $nosub)
+		{
+			$this->_dn = $username;
+		}
+		elseif (strlen($username))
+		{
+			$this->_dn = str_replace('[username]', $username, $this->users_dn);
+		}
+		else
+		{
+			$this->_dn = '';
+		}
+	}
+
+	/**
+	 * Get the DN
+	 *
+	 * @return  string  The current dn
+	 *
+	 * @since   12.1
+	 */
+	public function getDn()
+	{
+		return $this->_dn;
+	}
+
+	/**
 	 * Anonymously binds to LDAP directory
 	 *
 	 * @return  array
@@ -339,9 +238,9 @@ class JClientLdap
 	/**
 	 * Binds to the LDAP directory
 	 *
-	 * @param   string $username The username
-	 * @param   string $password The password
-	 * @param   string $nosub    ...
+	 * @param   string  $username  The username
+	 * @param   string  $password  The password
+	 * @param   string  $nosub     ...
 	 *
 	 * @return  boolean
 	 *
@@ -366,47 +265,9 @@ class JClientLdap
 	}
 
 	/**
-	 * Get the DN
-	 *
-	 * @return  string  The current dn
-	 *
-	 * @since   12.1
-	 */
-	public function getDn()
-	{
-		return $this->_dn;
-	}
-
-	/**
-	 * Sets the DN with some template replacements
-	 *
-	 * @param   string $username The username
-	 * @param   string $nosub    ...
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	public function setDn($username, $nosub = 0)
-	{
-		if ($this->users_dn == '' || $nosub)
-		{
-			$this->_dn = $username;
-		}
-		elseif (strlen($username))
-		{
-			$this->_dn = str_replace('[username]', $username, $this->users_dn);
-		}
-		else
-		{
-			$this->_dn = '';
-		}
-	}
-
-	/**
 	 * Perform an LDAP search using comma separated search strings
 	 *
-	 * @param   string $search search string of search values
+	 * @param   string  $search  search string of search values
 	 *
 	 * @return  array  Search results
 	 *
@@ -427,9 +288,9 @@ class JClientLdap
 	/**
 	 * Performs an LDAP search
 	 *
-	 * @param   array  $filters    Search Filters (array of strings)
-	 * @param   string $dnoverride DN Override
-	 * @param   array  $attributes An array of attributes to return (if empty, all fields are returned).
+	 * @param   array   $filters     Search Filters (array of strings)
+	 * @param   string  $dnoverride  DN Override
+	 * @param   array   $attributes  An array of attributes to return (if empty, all fields are returned).
 	 *
 	 * @return  array  Multidimensional array of results
 	 *
@@ -477,7 +338,7 @@ class JClientLdap
 					{
 						if (is_array($ai))
 						{
-							$subcount        = $ai['count'];
+							$subcount = $ai['count'];
 							$result[$i][$ki] = array();
 
 							for ($k = 0; $k < $subcount; $k++)
@@ -498,8 +359,8 @@ class JClientLdap
 	/**
 	 * Replace an entry and return a true or false result
 	 *
-	 * @param   string $dn        The DN which contains the attribute you want to replace
-	 * @param   string $attribute The attribute values you want to replace
+	 * @param   string  $dn         The DN which contains the attribute you want to replace
+	 * @param   string  $attribute  The attribute values you want to replace
 	 *
 	 * @return  mixed  result of comparison (true, false, -1 on error)
 	 *
@@ -513,8 +374,8 @@ class JClientLdap
 	/**
 	 * Modifies an entry and return a true or false result
 	 *
-	 * @param   string $dn        The DN which contains the attribute you want to modify
-	 * @param   string $attribute The attribute values you want to modify
+	 * @param   string  $dn         The DN which contains the attribute you want to modify
+	 * @param   string  $attribute  The attribute values you want to modify
 	 *
 	 * @return  mixed  result of comparison (true, false, -1 on error)
 	 *
@@ -528,8 +389,8 @@ class JClientLdap
 	/**
 	 * Removes attribute value from given dn and return a true or false result
 	 *
-	 * @param   string $dn        The DN which contains the attribute you want to remove
-	 * @param   string $attribute The attribute values you want to remove
+	 * @param   string  $dn         The DN which contains the attribute you want to remove
+	 * @param   string  $attribute  The attribute values you want to remove
 	 *
 	 * @return  mixed  result of comparison (true, false, -1 on error)
 	 *
@@ -545,9 +406,9 @@ class JClientLdap
 	/**
 	 * Compare an entry and return a true or false result
 	 *
-	 * @param   string $dn        The DN which contains the attribute you want to compare
-	 * @param   string $attribute The attribute whose value you want to compare
-	 * @param   string $value     The value you want to check against the LDAP attribute
+	 * @param   string  $dn         The DN which contains the attribute you want to compare
+	 * @param   string  $attribute  The attribute whose value you want to compare
+	 * @param   string  $value      The value you want to check against the LDAP attribute
 	 *
 	 * @return  mixed  result of comparison (true, false, -1 on error)
 	 *
@@ -561,7 +422,7 @@ class JClientLdap
 	/**
 	 * Read all or specified attributes of given dn
 	 *
-	 * @param   string $dn The DN of the object you want to read
+	 * @param   string  $dn  The DN of the object you want to read
 	 *
 	 * @return  mixed  array of attributes or -1 on error
 	 *
@@ -569,8 +430,8 @@ class JClientLdap
 	 */
 	public function read($dn)
 	{
-		$base   = substr($dn, strpos($dn, ',') + 1);
-		$cn     = substr($dn, 0, strpos($dn, ','));
+		$base = substr($dn, strpos($dn, ',') + 1);
+		$cn = substr($dn, 0, strpos($dn, ','));
 		$result = @ldap_read($this->_resource, $base, $cn);
 
 		if ($result)
@@ -586,7 +447,7 @@ class JClientLdap
 	/**
 	 * Deletes a given DN from the tree
 	 *
-	 * @param   string $dn The DN of the object you want to delete
+	 * @param   string  $dn  The DN of the object you want to delete
 	 *
 	 * @return  boolean  Result of operation
 	 *
@@ -600,8 +461,8 @@ class JClientLdap
 	/**
 	 * Create a new DN
 	 *
-	 * @param   string $dn      The DN where you want to put the object
-	 * @param   array  $entries An array of arrays describing the object to add
+	 * @param   string  $dn       The DN where you want to put the object
+	 * @param   array   $entries  An array of arrays describing the object to add
 	 *
 	 * @return  boolean  Result of operation
 	 *
@@ -616,8 +477,8 @@ class JClientLdap
 	 * Add an attribute to the given DN
 	 * Note: DN has to exist already
 	 *
-	 * @param   string $dn    The DN of the entry to add the attribute
-	 * @param   array  $entry An array of arrays with attributes to add
+	 * @param   string  $dn     The DN of the entry to add the attribute
+	 * @param   array   $entry  An array of arrays with attributes to add
 	 *
 	 * @return  boolean   Result of operation
 	 *
@@ -631,10 +492,10 @@ class JClientLdap
 	/**
 	 * Rename the entry
 	 *
-	 * @param   string  $dn          The DN of the entry at the moment
-	 * @param   string  $newdn       The DN of the entry should be (only cn=newvalue)
-	 * @param   string  $newparent   The full DN of the parent (null by default)
-	 * @param   boolean $deleteolddn Delete the old values (default)
+	 * @param   string   $dn           The DN of the entry at the moment
+	 * @param   string   $newdn        The DN of the entry should be (only cn=newvalue)
+	 * @param   string   $newparent    The full DN of the parent (null by default)
+	 * @param   boolean  $deleteolddn  Delete the old values (default)
 	 *
 	 * @return  boolean  Result of operation
 	 *
@@ -656,6 +517,145 @@ class JClientLdap
 	{
 		return @ldap_error($this->_resource);
 	}
+
+	/**
+	 * Converts a dot notation IP address to net address (e.g. for Netware, etc)
+	 *
+	 * @param   string  $ip  IP Address (e.g. xxx.xxx.xxx.xxx)
+	 *
+	 * @return  string  Net address
+	 *
+	 * @since   12.1
+	 */
+	public static function ipToNetAddress($ip)
+	{
+		$parts = explode('.', $ip);
+		$address = '1#';
+
+		foreach ($parts as $int)
+		{
+			$tmp = dechex($int);
+
+			if (strlen($tmp) != 2)
+			{
+				$tmp = '0' . $tmp;
+			}
+
+			$address .= '\\' . $tmp;
+		}
+
+		return $address;
+	}
+
+	/**
+	 * Extract readable network address from the LDAP encoded networkAddress attribute.
+	 *
+	 * Please keep this document block and author attribution in place.
+	 *
+	 * Novell Docs, see: http://developer.novell.com/ndk/doc/ndslib/schm_enu/data/sdk5624.html#sdk5624
+	 * for Address types: http://developer.novell.com/ndk/doc/ndslib/index.html?page=/ndk/doc/ndslib/schm_enu/data/sdk4170.html
+	 * LDAP Format, String:
+	 * taggedData = uint32String "#" octetstring
+	 * byte 0 = uint32String = Address Type: 0= IPX Address; 1 = IP Address
+	 * byte 1 = char = "#" - separator
+	 * byte 2+ = octetstring - the ordinal value of the address
+	 * Note: with eDirectory 8.6.2, the IP address (type 1) returns
+	 * correctly, however, an IPX address does not seem to.  eDir 8.7 may correct this.
+	 * Enhancement made by Merijn van de Schoot:
+	 * If addresstype is 8 (UDP) or 9 (TCP) do some additional parsing like still returning the IP address
+	 *
+	 * @param   string  $networkaddress  The network address
+	 *
+	 * @return  array
+	 *
+	 * @author  Jay Burrell, Systems & Networks, Mississippi State University
+	 * @since   12.1
+	 */
+	public static function LDAPNetAddr($networkaddress)
+	{
+		$addr = "";
+		$addrtype = (int) substr($networkaddress, 0, 1);
+
+		// Throw away bytes 0 and 1 which should be the addrtype and the "#" separator
+		$networkaddress = substr($networkaddress, 2);
+
+		if (($addrtype == 8) || ($addrtype = 9))
+		{
+			// TODO 1.6: If UDP or TCP, (TODO fill addrport and) strip portnumber information from address
+			$networkaddress = substr($networkaddress, (strlen($networkaddress) - 4));
+		}
+
+		$addrtypes = array(
+			'IPX',
+			'IP',
+			'SDLC',
+			'Token Ring',
+			'OSI',
+			'AppleTalk',
+			'NetBEUI',
+			'Socket',
+			'UDP',
+			'TCP',
+			'UDP6',
+			'TCP6',
+			'Reserved (12)',
+			'URL',
+			'Count');
+		$len = strlen($networkaddress);
+
+		if ($len > 0)
+		{
+			for ($i = 0; $i < $len; $i++)
+			{
+				$byte = substr($networkaddress, $i, 1);
+				$addr .= ord($byte);
+
+				if (($addrtype == 1) || ($addrtype == 8) || ($addrtype = 9))
+				{
+					// Dot separate IP addresses...
+					$addr .= ".";
+				}
+			}
+
+			if (($addrtype == 1) || ($addrtype == 8) || ($addrtype = 9))
+			{
+				// Strip last period from end of $addr
+				$addr = substr($addr, 0, strlen($addr) - 1);
+			}
+		}
+		else
+		{
+			$addr .= JText::_('JLIB_CLIENT_ERROR_LDAP_ADDRESS_NOT_AVAILABLE');
+		}
+
+		return array('protocol' => $addrtypes[$addrtype], 'address' => $addr);
+	}
+
+	/**
+	 * Generates a LDAP compatible password
+	 *
+	 * @param   string  $password  Clear text password to encrypt
+	 * @param   string  $type      Type of password hash, either md5 or SHA
+	 *
+	 * @return  string   Encrypted password
+	 *
+	 * @since   12.1
+	 */
+	public static function generatePassword($password, $type = 'md5')
+	{
+		switch (strtolower($type))
+		{
+			case 'sha':
+				$userpassword = '{SHA}' . base64_encode(pack('H*', sha1($password)));
+				break;
+			case 'md5':
+			default:
+				$userpassword = '{MD5}' . base64_encode(pack('H*', md5($password)));
+				break;
+		}
+
+		return $userpassword;
+	}
 }
 
 /**
@@ -669,7 +669,7 @@ class JLDAP extends JClientLdap
 	/**
 	 * Constructor
 	 *
-	 * @param   object $configObj An object of configuration variables
+	 * @param   object  $configObj  An object of configuration variables
 	 *
 	 * @since   11.1
 	 */

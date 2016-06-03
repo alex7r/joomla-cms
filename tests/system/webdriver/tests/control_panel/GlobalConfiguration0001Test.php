@@ -9,6 +9,12 @@
 
 require_once 'JoomlaWebdriverTestCase.php';
 
+use SeleniumClient\By;
+use SeleniumClient\SelectElement;
+use SeleniumClient\WebDriver;
+use SeleniumClient\WebDriverWait;
+use SeleniumClient\DesiredCapabilities;
+
 /**
  * This class tests the  Global Configuration page.
  *
@@ -37,7 +43,7 @@ class GlobalConfiguration0001Test extends JoomlaWebdriverTestCase
 	public function setUp()
 	{
 		parent::setUp();
-		$cpPage       = $this->doAdminLogin();
+		$cpPage = $this->doAdminLogin();
 		$this->gcPage = $cpPage->clickMenu('Global Configuration', 'GlobalConfigurationPage');
 	}
 

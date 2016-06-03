@@ -19,8 +19,8 @@ class LanguagesControllerOverrides extends JControllerAdmin
 	/**
 	 * The prefix to use with controller messages.
 	 *
-	 * @var        string
-	 * @since    2.5
+	 * @var		string
+	 * @since	2.5
 	 */
 	protected $text_prefix = 'COM_LANGUAGES_VIEW_OVERRIDES';
 
@@ -29,7 +29,7 @@ class LanguagesControllerOverrides extends JControllerAdmin
 	 *
 	 * @return  void
 	 *
-	 * @since        2.5
+	 * @since		2.5
 	 */
 	public function delete()
 	{

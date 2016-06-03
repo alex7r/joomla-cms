@@ -18,8 +18,8 @@ class JComponentRouterViewInspector extends JComponentRouterView
 {
 	/**
 	 * Gets an attribute of the object
-	 *
-	 * @param   string $key Attributename to return
+	 * 
+	 * @param   string   $key  Attributename to return
 	 *
 	 * @return  mixed  Attributes of the object
 	 *
@@ -32,9 +32,9 @@ class JComponentRouterViewInspector extends JComponentRouterView
 
 	/**
 	 * Sets an attribute of the object
-	 *
-	 * @param   string $key   Attributename to return
-	 * @param   mixed  $value Value to be set
+	 * 
+	 * @param   string   $key    Attributename to return
+	 * @param   mixed    $value  Value to be set
 	 *
 	 * @return  void
 	 *
@@ -46,30 +46,29 @@ class JComponentRouterViewInspector extends JComponentRouterView
 	}
 
 	/**
-	 * Get content items of the type category
-	 *
-	 * @param int $id ID of the category to load
-	 *
-	 * @return array  Categories path identified by $id
-	 *
-	 * @since 3.4
-	 */
+	* Get content items of the type category
+	*
+	* @param int $id ID of the category to load
+	*
+	* @return array  Categories path identified by $id
+	*
+	* @since 3.4
+	*/
 	public function getCategorySegment($id, $query)
 	{
 		$category = JCategories::getInstance($this->getName())->get($id);
-
 		return array_reverse($category->getPath());
 	}
 
 	/**
-	 * Get content items of the type article
-	 *
-	 * @param int $id ID of the article to load
-	 *
-	 * @return array article identified by $id
-	 *
-	 * @since 3.4
-	 */
+	* Get content items of the type article
+	*
+	* @param int $id ID of the article to load
+	*
+	* @return array article identified by $id
+	*
+	* @since 3.4
+	*/
 	public function getArticleSegment($id, $query)
 	{
 		return array($id);

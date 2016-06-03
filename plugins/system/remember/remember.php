@@ -14,6 +14,7 @@ defined('_JEXEC') or die;
  *
  * @since  1.5
  */
+
 class PlgSystemRemember extends JPlugin
 {
 	/**
@@ -69,8 +70,8 @@ class PlgSystemRemember extends JPlugin
 	/**
 	 * Imports the authentication plugin on user logout to make sure that the cookie is destroyed.
 	 *
-	 * @param   array $user    Holds the user data.
-	 * @param   array $options Array holding options (remember, autoregister, group).
+	 * @param   array  $user     Holds the user data.
+	 * @param   array  $options  Array holding options (remember, autoregister, group).
 	 *
 	 * @return  boolean
 	 */

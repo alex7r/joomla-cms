@@ -19,13 +19,13 @@ class JHtmlMessages
 	/**
 	 * Get the HTML code of the state switcher
 	 *
-	 * @param   int     $value     The state value
-	 * @param   int     $i         Row number
-	 * @param   boolean $canChange Can the user change the state?
+	 * @param   int      $value      The state value
+	 * @param   int      $i          Row number
+	 * @param   boolean  $canChange  Can the user change the state?
 	 *
 	 * @return  string
 	 *
-	 * @since       1.6
+	 * @since   1.6
 	 *
 	 * @deprecated  4.0  Use JHtmlMessages::status() instead
 	 */
@@ -56,9 +56,9 @@ class JHtmlMessages
 	/**
 	 * Get the HTML code of the state switcher
 	 *
-	 * @param   int     $i         Row number
-	 * @param   int     $value     The state value
-	 * @param   boolean $canChange Can the user change the state?
+	 * @param   int      $i          Row number
+	 * @param   int      $value      The state value
+	 * @param   boolean  $canChange  Can the user change the state?
 	 *
 	 * @return  string
 	 *
@@ -69,8 +69,8 @@ class JHtmlMessages
 		// Array of image, task, title, action.
 		$states = array(
 			-2 => array('trash', 'messages.unpublish', 'JTRASHED', 'COM_MESSAGES_MARK_AS_UNREAD'),
-			1  => array('publish', 'messages.unpublish', 'COM_MESSAGES_OPTION_READ', 'COM_MESSAGES_MARK_AS_UNREAD'),
-			0  => array('unpublish', 'messages.publish', 'COM_MESSAGES_OPTION_UNREAD', 'COM_MESSAGES_MARK_AS_READ'),
+			1 => array('publish', 'messages.unpublish', 'COM_MESSAGES_OPTION_READ', 'COM_MESSAGES_MARK_AS_UNREAD'),
+			0 => array('unpublish', 'messages.publish', 'COM_MESSAGES_OPTION_UNREAD', 'COM_MESSAGES_MARK_AS_READ'),
 		);
 
 		$state = JArrayHelper::getValue($states, (int) $value, $states[0]);
@@ -79,7 +79,7 @@ class JHtmlMessages
 		if ($canChange)
 		{
 			$html = '<a href="#" onclick="return listItemTask(\'cb' . $i . '\',\'' . $state[1] . '\')" class="btn btn-micro hasTooltip'
-				. ($value == 1 ? ' active' : '') . '" title="' . JHtml::tooltipText($state[3]) . '"><span class="icon-' . $icon . '"></span></a>';
+				. ($value == 1 ? ' active' : '') . '" title="' . JHtml::tooltipText($state[3]) . '"><span class="icon-'	. $icon . '"></span></a>';
 		}
 
 		return $html;

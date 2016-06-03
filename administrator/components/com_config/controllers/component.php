@@ -20,9 +20,9 @@ class ConfigControllerComponent extends JControllerLegacy
 	/**
 	 * Class Constructor
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @since       1.5
+	 * @since   1.5
 	 * @deprecated  4.0
 	 */
 	public function __construct($config = array())
@@ -38,7 +38,7 @@ class ConfigControllerComponent extends JControllerLegacy
 	 *
 	 * @return  void
 	 *
-	 * @since       3.0
+	 * @since   3.0
 	 * @deprecated  4.0  Use ConfigControllerComponentCancel instead.
 	 */
 	public function cancel()

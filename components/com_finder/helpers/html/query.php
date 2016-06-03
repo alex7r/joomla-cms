@@ -19,7 +19,7 @@ abstract class JHtmlQuery
 	/**
 	 * Method to get the explained (human-readable) search query.
 	 *
-	 * @param   FinderIndexerQuery $query A FinderIndexerQuery object to explain.
+	 * @param   FinderIndexerQuery  $query  A FinderIndexerQuery object to explain.
 	 *
 	 * @return  mixed  String if there is data to explain, null otherwise.
 	 *
@@ -59,17 +59,17 @@ abstract class JHtmlQuery
 		// Process the start date.
 		if ($query->date1)
 		{
-			$date          = JFactory::getDate($query->date1)->format(JText::_('DATE_FORMAT_LC'));
+			$date = JFactory::getDate($query->date1)->format(JText::_('DATE_FORMAT_LC'));
 			$datecondition = JText::_('COM_FINDER_QUERY_DATE_CONDITION_' . strtoupper($query->when1));
-			$parts[]       = '<span class="query-start-date">' . JText::sprintf('COM_FINDER_QUERY_START_DATE', $datecondition, $date) . '</span>';
+			$parts[] = '<span class="query-start-date">' . JText::sprintf('COM_FINDER_QUERY_START_DATE', $datecondition, $date) . '</span>';
 		}
 
 		// Process the end date.
 		if ($query->date2)
 		{
-			$date          = JFactory::getDate($query->date2)->format(JText::_('DATE_FORMAT_LC'));
+			$date = JFactory::getDate($query->date2)->format(JText::_('DATE_FORMAT_LC'));
 			$datecondition = JText::_('COM_FINDER_QUERY_DATE_CONDITION_' . strtoupper($query->when2));
-			$parts[]       = '<span class="query-end-date">' . JText::sprintf('COM_FINDER_QUERY_END_DATE', $datecondition, $date) . '</span>';
+			$parts[] = '<span class="query-end-date">' . JText::sprintf('COM_FINDER_QUERY_END_DATE', $datecondition, $date) . '</span>';
 		}
 
 		// Process the taxonomy filters.
@@ -113,7 +113,7 @@ abstract class JHtmlQuery
 	/**
 	 * Method to get the suggested search query.
 	 *
-	 * @param   FinderIndexerQuery $query A FinderIndexerQuery object.
+	 * @param   FinderIndexerQuery  $query  A FinderIndexerQuery object.
 	 *
 	 * @return  mixed  String if there is a suggestion, false otherwise.
 	 *

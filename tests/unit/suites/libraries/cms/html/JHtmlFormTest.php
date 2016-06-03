@@ -25,25 +25,6 @@ class JHtmlFormTest extends TestCase
 	protected $backupServer;
 
 	/**
-	 * Tests the JHtmlForm::token method.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function testToken()
-	{
-		JFactory::$application = $this->getMockWeb();
-
-		$token = JSession::getFormToken();
-
-		$this->assertThat(
-			JHtml::_('form.token'),
-			$this->equalTo('<input type="hidden" name="' . $token . '" value="1" />')
-		);
-	}
-
-	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
@@ -61,7 +42,7 @@ class JHtmlFormTest extends TestCase
 
 		$this->backupServer = $_SERVER;
 
-		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['HTTP_HOST'] = 'example.com';
 		$_SERVER['SCRIPT_NAME'] = '';
 	}
 
@@ -81,5 +62,24 @@ class JHtmlFormTest extends TestCase
 		$this->restoreFactoryState();
 
 		parent::tearDown();
+	}
+
+	/**
+	 * Tests the JHtmlForm::token method.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	public function testToken()
+	{
+		JFactory::$application = $this->getMockWeb();
+
+		$token = JSession::getFormToken();
+
+		$this->assertThat(
+			JHtml::_('form.token'),
+			$this->equalTo('<input type="hidden" name="' . $token . '" value="1" />')
+		);
 	}
 }

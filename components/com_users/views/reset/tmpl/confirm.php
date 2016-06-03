@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidator');
 ?>
-<div class="reset-confirm<?php echo $this->pageclass_sfx ?>">
+<div class="reset-confirm<?php echo $this->pageclass_sfx?>">
 	<?php if ($this->params->get('show_page_heading')) : ?>
 		<div class="page-header">
 			<h1>
@@ -21,8 +21,7 @@ JHtml::_('behavior.formvalidator');
 		</div>
 	<?php endif; ?>
 
-	<form action="<?php echo JRoute::_('index.php?option=com_users&task=reset.confirm'); ?>" method="post"
-	      class="form-validate form-horizontal well">
+	<form action="<?php echo JRoute::_('index.php?option=com_users&task=reset.confirm'); ?>" method="post" class="form-validate form-horizontal well">
 		<?php foreach ($this->form->getFieldsets() as $fieldset) : ?>
 			<fieldset>
 				<p><?php echo JText::_($fieldset->label); ?></p>
@@ -33,8 +32,8 @@ JHtml::_('behavior.formvalidator');
 						</div>
 						<div class="controls">
 							<?php echo $field->input; ?>
+							</div>
 						</div>
-					</div>
 				<?php endforeach; ?>
 			</fieldset>
 		<?php endforeach; ?>

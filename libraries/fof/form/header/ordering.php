@@ -1,9 +1,9 @@
 <?php
 /**
- * @package     FrameworkOnFramework
- * @subpackage  form
+ * @package    FrameworkOnFramework
+ * @subpackage form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -25,7 +25,7 @@ class FOFFormHeaderOrdering extends FOFFormHeader
 	{
 		$sortable = ($this->element['sortable'] != 'false');
 
-		$view  = $this->form->getView();
+		$view = $this->form->getView();
 		$model = $this->form->getModel();
 
 		$hasAjaxOrderingSupport = $view->hasAjaxOrderingSupport();

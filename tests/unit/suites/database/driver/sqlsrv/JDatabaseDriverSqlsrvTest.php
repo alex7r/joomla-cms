@@ -49,9 +49,9 @@ class JDatabaseDriverSqlsrvTest extends TestCaseDatabaseSqlsrv
 	/**
 	 * Tests the escape method.
 	 *
-	 * @param   string  $text     The string to be escaped.
-	 * @param   boolean $extra    Optional parameter to provide extra escaping.
-	 * @param   string  $expected The expected result.
+	 * @param   string   $text      The string to be escaped.
+	 * @param   boolean  $extra     Optional parameter to provide extra escaping.
+	 * @param   string   $expected  The expected result.
 	 *
 	 * @return  void
 	 *
@@ -146,7 +146,7 @@ class JDatabaseDriverSqlsrvTest extends TestCaseDatabaseSqlsrv
 		$this->assertThat(
 			self::$driver->getVersion(),
 			$this->isType('string'),
-			'Line:' . __LINE__ . ' The getVersion method should return a string containing the driver version.'
+		'Line:' . __LINE__ . ' The getVersion method should return a string containing the driver version.'
 		);
 	}
 
@@ -231,10 +231,10 @@ class JDatabaseDriverSqlsrvTest extends TestCaseDatabaseSqlsrv
 		self::$driver->setQuery($query);
 		$result = self::$driver->loadObject();
 
-		$objCompare              = new \stdClass;
-		$objCompare->id          = 3;
-		$objCompare->title       = 'Testing3';
-		$objCompare->start_date  = '1980-04-18 00:00:00.000';
+		$objCompare = new \stdClass;
+		$objCompare->id = 3;
+		$objCompare->title = 'Testing3';
+		$objCompare->start_date = '1980-04-18 00:00:00.000';
 		$objCompare->description = 'three';
 
 		$this->assertThat($result, $this->equalTo($objCompare), __LINE__);
@@ -258,34 +258,34 @@ class JDatabaseDriverSqlsrvTest extends TestCaseDatabaseSqlsrv
 
 		$expected = array();
 
-		$objCompare              = new \stdClass;
-		$objCompare->id          = 1;
-		$objCompare->title       = 'Testing';
-		$objCompare->start_date  = '1980-04-18 00:00:00.000';
+		$objCompare = new \stdClass;
+		$objCompare->id = 1;
+		$objCompare->title = 'Testing';
+		$objCompare->start_date = '1980-04-18 00:00:00.000';
 		$objCompare->description = 'one';
 
 		$expected[] = clone $objCompare;
 
-		$objCompare              = new \stdClass;
-		$objCompare->id          = 2;
-		$objCompare->title       = 'Testing2';
-		$objCompare->start_date  = '1980-04-18 00:00:00.000';
+		$objCompare = new \stdClass;
+		$objCompare->id = 2;
+		$objCompare->title = 'Testing2';
+		$objCompare->start_date = '1980-04-18 00:00:00.000';
 		$objCompare->description = 'one';
 
 		$expected[] = clone $objCompare;
 
-		$objCompare              = new \stdClass;
-		$objCompare->id          = 3;
-		$objCompare->title       = 'Testing3';
-		$objCompare->start_date  = '1980-04-18 00:00:00.000';
+		$objCompare = new \stdClass;
+		$objCompare->id = 3;
+		$objCompare->title = 'Testing3';
+		$objCompare->start_date = '1980-04-18 00:00:00.000';
 		$objCompare->description = 'three';
 
 		$expected[] = clone $objCompare;
 
-		$objCompare              = new \stdClass;
-		$objCompare->id          = 4;
-		$objCompare->title       = 'Testing4';
-		$objCompare->start_date  = '1980-04-18 00:00:00.000';
+		$objCompare = new \stdClass;
+		$objCompare->id = 4;
+		$objCompare->title = 'Testing4';
+		$objCompare->start_date = '1980-04-18 00:00:00.000';
 		$objCompare->description = 'four';
 
 		$expected[] = clone $objCompare;

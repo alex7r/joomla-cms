@@ -46,7 +46,7 @@ class JFormFieldList extends JFormField
 		$attr .= $this->autofocus ? ' autofocus' : '';
 
 		// To avoid user's confusion, readonly="true" should imply disabled="true".
-		if ((string) $this->readonly == '1' || (string) $this->readonly == 'true' || (string) $this->disabled == '1' || (string) $this->disabled == 'true')
+		if ((string) $this->readonly == '1' || (string) $this->readonly == 'true' || (string) $this->disabled == '1'|| (string) $this->disabled == 'true')
 		{
 			$attr .= ' disabled="disabled"';
 		}
@@ -81,7 +81,7 @@ class JFormFieldList extends JFormField
 			}
 		}
 		else
-			// Create a regular list.
+		// Create a regular list.
 		{
 			$html[] = JHtml::_('select.genericlist', $options, $this->name, trim($attr), 'value', 'text', $this->value, $this->id);
 		}
@@ -99,7 +99,7 @@ class JFormFieldList extends JFormField
 	protected function getOptions()
 	{
 		$fieldname = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname);
-		$options   = array();
+		$options = array();
 
 		foreach ($this->element->xpath('option') as $option)
 		{
@@ -120,7 +120,7 @@ class JFormFieldList extends JFormField
 			}
 
 			$value = (string) $option['value'];
-			$text  = trim((string) $option) ? trim((string) $option) : $value;
+			$text = trim((string) $option) ? trim((string) $option) : $value;
 
 			$disabled = (string) $option['disabled'];
 			$disabled = ($disabled == 'true' || $disabled == 'disabled' || $disabled == '1');
@@ -133,17 +133,17 @@ class JFormFieldList extends JFormField
 			$selected = ($selected == 'true' || $selected == 'selected' || $selected == '1');
 
 			$tmp = array(
-				'value'    => $value,
-				'text'     => JText::alt($text, $fieldname),
-				'disable'  => $disabled,
-				'class'    => (string) $option['class'],
-				'selected' => ($checked || $selected),
-				'checked'  => ($checked || $selected)
-			);
+					'value'    => $value,
+					'text'     => JText::alt($text, $fieldname),
+					'disable'  => $disabled,
+					'class'    => (string) $option['class'],
+					'selected' => ($checked || $selected),
+					'checked'  => ($checked || $selected)
+				);
 
 			// Set some event handler attributes. But really, should be using unobtrusive js.
 			$tmp['onclick']  = (string) $option['onclick'];
-			$tmp['onchange'] = (string) $option['onchange'];
+			$tmp['onchange']  = (string) $option['onchange'];
 
 			// Add the option object to the result set.
 			$options[] = (object) $tmp;

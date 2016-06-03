@@ -19,7 +19,7 @@ class MenusModelItems extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -47,7 +47,7 @@ class MenusModelItems extends JModelList
 				'a.ordering'
 			);
 
-			$app   = JFactory::getApplication();
+			$app = JFactory::getApplication();
 			$assoc = JLanguageAssociations::isEnabled();
 
 			if ($assoc)
@@ -64,8 +64,8 @@ class MenusModelItems extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -73,7 +73,7 @@ class MenusModelItems extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app  = JFactory::getApplication('administrator');
+		$app = JFactory::getApplication('administrator');
 		$user = JFactory::getUser();
 
 		$parentId = $this->getUserStateFromRequest($this->context . '.filter.parent_id', 'filter_parent_id');
@@ -105,11 +105,11 @@ class MenusModelItems extends JModelList
 
 		if ($menuType)
 		{
-			$db    = $this->getDbo();
+			$db = $this->getDbo();
 			$query = $db->getQuery(true)
-				->select($db->qn(array('id', 'title')))
-				->from($db->qn('#__menu_types'))
-				->where($db->qn('menutype') . ' = ' . $db->q($menuType));
+						->select($db->qn(array('id', 'title')))
+						->from($db->qn('#__menu_types'))
+						->where($db->qn('menutype') . ' = ' . $db->q($menuType));
 
 			$menuTypeItem = $db->setQuery($query)->loadObject();
 
@@ -158,7 +158,7 @@ class MenusModelItems extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id A prefix for the store id.
+	 * @param   string  $id  A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -187,10 +187,10 @@ class MenusModelItems extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = JFactory::getUser();
-		$app   = JFactory::getApplication();
+		$user = JFactory::getUser();
+		$app = JFactory::getApplication();
 
 		// Select all fields from the table.
 		$query->select(
@@ -212,15 +212,15 @@ class MenusModelItems extends JModelList
 		);
 		$query->select(
 			'CASE ' .
-			' WHEN a.type = ' . $db->quote('component') . ' THEN a.published+2*(e.enabled-1) ' .
-			' WHEN a.type = ' . $db->quote('url') . 'AND a.published != -2 THEN a.published+2 ' .
-			' WHEN a.type = ' . $db->quote('url') . 'AND a.published = -2 THEN a.published-1 ' .
-			' WHEN a.type = ' . $db->quote('alias') . 'AND a.published != -2 THEN a.published+4 ' .
-			' WHEN a.type = ' . $db->quote('alias') . 'AND a.published = -2 THEN a.published-1 ' .
-			' WHEN a.type = ' . $db->quote('separator') . 'AND a.published != -2 THEN a.published+6 ' .
-			' WHEN a.type = ' . $db->quote('separator') . 'AND a.published = -2 THEN a.published-1 ' .
-			' WHEN a.type = ' . $db->quote('heading') . 'AND a.published != -2 THEN a.published+8 ' .
-			' WHEN a.type = ' . $db->quote('heading') . 'AND a.published = -2 THEN a.published-1 ' .
+				' WHEN a.type = ' . $db->quote('component') . ' THEN a.published+2*(e.enabled-1) ' .
+				' WHEN a.type = ' . $db->quote('url') . 'AND a.published != -2 THEN a.published+2 ' .
+				' WHEN a.type = ' . $db->quote('url') . 'AND a.published = -2 THEN a.published-1 ' .
+				' WHEN a.type = ' . $db->quote('alias') . 'AND a.published != -2 THEN a.published+4 ' .
+				' WHEN a.type = ' . $db->quote('alias') . 'AND a.published = -2 THEN a.published-1 ' .
+				' WHEN a.type = ' . $db->quote('separator') . 'AND a.published != -2 THEN a.published+6 ' .
+				' WHEN a.type = ' . $db->quote('separator') . 'AND a.published = -2 THEN a.published-1 ' .
+				' WHEN a.type = ' . $db->quote('heading') . 'AND a.published != -2 THEN a.published+8 ' .
+				' WHEN a.type = ' . $db->quote('heading') . 'AND a.published = -2 THEN a.published-1 ' .
 			' END AS published '
 		);
 		$query->from($db->quoteName('#__menu') . ' AS a');

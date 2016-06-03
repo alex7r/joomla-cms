@@ -75,7 +75,7 @@ class FOFInflector
 			'/people$/i'                                                       => 'person',
 			'/taxa$/i'                                                         => 'taxon',
 			'/databases$/i'                                                    => 'database',
-			'/menus$/i'                                                        => 'menu',
+      '/menus$/i'                                                        => 'menu',
 			'/(quiz)zes$/i'                                                    => '\1',
 			'/(matr|suff)ices$/i'                                              => '\1ix',
 			'/(vert|ind|cod)ices$/i'                                           => '\1ex',
@@ -147,15 +147,15 @@ class FOFInflector
 
 	public static function deleteCache()
 	{
-		static::$_cache['pluralized']   = array();
+		static::$_cache['pluralized'] = array();
 		static::$_cache['singularized'] = array();
 	}
 
 	/**
 	 * Add a word to the cache, useful to make exceptions or to add words in other languages.
 	 *
-	 * @param   string $singular word.
-	 * @param   string $plural   word.
+	 * @param   string  $singular  word.
+	 * @param   string  $plural    word.
 	 *
 	 * @return  void
 	 */
@@ -166,123 +166,9 @@ class FOFInflector
 	}
 
 	/**
-	 * Convert  an array of strings into a "CamelCased" word.
-	 *
-	 * @param   array $words Array to implode
-	 *
-	 * @return  string UpperCamelCasedWord
-	 */
-	public static function implode($words)
-	{
-		$result = self::camelize(implode('_', $words));
-
-		return $result;
-	}
-
-	/**
-	 * Returns given word as CamelCased.
-	 *
-	 * Converts a word like "foo_bar" or "foo bar" to "FooBar". It
-	 * will remove non alphanumeric characters from the word, so
-	 * "who's online" will be converted to "WhoSOnline"
-	 *
-	 * @param   string $word Word to convert to camel case.
-	 *
-	 * @return  string  UpperCamelCasedWord
-	 */
-	public static function camelize($word)
-	{
-		$word = preg_replace('/[^a-zA-Z0-9\s]/', ' ', $word);
-		$word = str_replace(' ', '', ucwords(strtolower(str_replace('_', ' ', $word))));
-
-		return $word;
-	}
-
-	/**
-	 * Returns a human-readable string from $word.
-	 *
-	 * Returns a human-readable string from $word, by replacing
-	 * underscores with a space, and by upper-casing the initial
-	 * character by default.
-	 *
-	 * @param   string $word String to "humanize"
-	 *
-	 * @return string Human-readable word
-	 */
-	public static function humanize($word)
-	{
-		$result = ucwords(strtolower(str_replace("_", " ", $word)));
-
-		return $result;
-	}
-
-	/**
-	 * Converts a class name to its table name according to Koowa
-	 * naming conventions.
-	 *
-	 * Converts "Person" to "people"
-	 *
-	 * @param   string $className Class name for getting related table_name.
-	 *
-	 * @return  string  plural_table_name
-	 *
-	 * @see classify
-	 */
-	public static function tableize($className)
-	{
-		$result = self::underscore($className);
-
-		if (!self::isPlural($className))
-		{
-			$result = self::pluralize($result);
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Converts a word "into_it_s_underscored_version"
-	 *
-	 * Convert any "CamelCased" or "ordinary Word" into an "underscored_word".
-	 *
-	 * @param   string $word Word to underscore
-	 *
-	 * @return string Underscored word
-	 */
-	public static function underscore($word)
-	{
-		$word = preg_replace('/(\s)+/', '_', $word);
-		$word = strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', $word));
-
-		return $word;
-	}
-
-	/**
-	 * Check to see if an Enlish word is plural.
-	 *
-	 * @param   string $string String to be checked.
-	 *
-	 * @return boolean
-	 */
-	public static function isPlural($string)
-	{
-		// Check cache assuming the string is singular.
-		$plural   = isset(static::$_cache['pluralized'][$string]) ? static::$_cache['pluralized'][$string] : null;
-		$singular = $plural && isset(static::$_cache['singularized'][$plural]) ? static::$_cache['singularized'][$plural] : null;
-
-		if ($plural && $singular)
-		{
-			return $singular != $string;
-		}
-
-		// If string is not in the cache, try to singularize and pluralize it.
-		return self::pluralize(self::singularize($string)) == $string;
-	}
-
-	/**
 	 * Singular English word to plural.
 	 *
-	 * @param   string $word word to pluralize.
+	 * @param   string  $word  word to pluralize.
 	 *
 	 * @return  string Plural noun.
 	 */
@@ -323,7 +209,7 @@ class FOFInflector
 	/**
 	 * Plural English word to singular.
 	 *
-	 * @param   string $word Word to singularize.
+	 * @param   string  $word  Word to singularize.
 	 *
 	 * @return  string Singular noun.
 	 */
@@ -362,14 +248,123 @@ class FOFInflector
 	}
 
 	/**
+	 * Returns given word as CamelCased.
+	 *
+	 * Converts a word like "foo_bar" or "foo bar" to "FooBar". It
+	 * will remove non alphanumeric characters from the word, so
+	 * "who's online" will be converted to "WhoSOnline"
+	 *
+	 * @param   string  $word  Word to convert to camel case.
+	 *
+	 * @return  string  UpperCamelCasedWord
+	 */
+	public static function camelize($word)
+	{
+		$word = preg_replace('/[^a-zA-Z0-9\s]/', ' ', $word);
+		$word = str_replace(' ', '', ucwords(strtolower(str_replace('_', ' ', $word))));
+
+		return $word;
+	}
+
+	/**
+	 * Converts a word "into_it_s_underscored_version"
+	 *
+	 * Convert any "CamelCased" or "ordinary Word" into an "underscored_word".
+	 *
+	 * @param   string  $word  Word to underscore
+	 *
+	 * @return string Underscored word
+	 */
+	public static function underscore($word)
+	{
+		$word = preg_replace('/(\s)+/', '_', $word);
+		$word = strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', $word));
+
+		return $word;
+	}
+
+	/**
+	 * Convert any "CamelCased" word into an array of strings
+	 *
+	 * Returns an array of strings each of which is a substring of string formed
+	 * by splitting it at the camelcased letters.
+	 *
+	 * @param   string  $word  Word to explode
+	 *
+	 * @return  array   Array of strings
+	 */
+	public static function explode($word)
+	{
+		$result = explode('_', self::underscore($word));
+
+		return $result;
+	}
+
+	/**
+	 * Convert  an array of strings into a "CamelCased" word.
+	 *
+	 * @param   array  $words  Array to implode
+	 *
+	 * @return  string UpperCamelCasedWord
+	 */
+	public static function implode($words)
+	{
+		$result = self::camelize(implode('_', $words));
+
+		return $result;
+	}
+
+	/**
+	 * Returns a human-readable string from $word.
+	 *
+	 * Returns a human-readable string from $word, by replacing
+	 * underscores with a space, and by upper-casing the initial
+	 * character by default.
+	 *
+	 * @param   string  $word  String to "humanize"
+	 *
+	 * @return string Human-readable word
+	 */
+	public static function humanize($word)
+	{
+		$result = ucwords(strtolower(str_replace("_", " ", $word)));
+
+		return $result;
+	}
+
+	/**
+	 * Converts a class name to its table name according to Koowa
+	 * naming conventions.
+	 *
+	 * Converts "Person" to "people"
+	 *
+	 * @param   string  $className  Class name for getting related table_name.
+	 *
+	 * @return  string  plural_table_name
+	 *
+	 * @see classify
+	 */
+	public static function tableize($className)
+	{
+		$result = self::underscore($className);
+
+		if (!self::isPlural($className))
+		{
+			$result = self::pluralize($result);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Converts a table name to its class name according to Koowa naming conventions.
 	 *
-	 * @param   string $tableName Table name for getting related ClassName.
+	 * @param   string  $tableName  Table name for getting related ClassName.
 	 *
 	 * @return string SingularClassName
 	 *
 	 * @example  Converts "people" to "Person"
-	 * @see      tableize
+	 * @see tableize
 	 */
 	public static function classify($tableName)
 	{
@@ -381,7 +376,7 @@ class FOFInflector
 	/**
 	 * Returns camelBacked version of a string. Same as camelize but first char is lowercased.
 	 *
-	 * @param   string $string String to be camelBacked.
+	 * @param   string  $string  String to be camelBacked.
 	 *
 	 * @return string
 	 *
@@ -399,7 +394,7 @@ class FOFInflector
 	/**
 	 * Check to see if an English word is singular
 	 *
-	 * @param   string $string The word to check
+	 * @param   string  $string  The word to check
 	 *
 	 * @return boolean
 	 */
@@ -419,14 +414,36 @@ class FOFInflector
 	}
 
 	/**
+	 * Check to see if an Enlish word is plural.
+	 *
+	 * @param   string  $string  String to be checked.
+	 *
+	 * @return boolean
+	 */
+	public static function isPlural($string)
+	{
+		// Check cache assuming the string is singular.
+		$plural   = isset(static::$_cache['pluralized'][$string]) ? static::$_cache['pluralized'][$string] : null;
+		$singular = $plural && isset(static::$_cache['singularized'][$plural]) ? static::$_cache['singularized'][$plural] : null;
+
+		if ($plural && $singular)
+		{
+			return $singular != $string;
+		}
+
+		// If string is not in the cache, try to singularize and pluralize it.
+		return self::pluralize(self::singularize($string)) == $string;
+	}
+
+	/**
 	 * Gets a part of a CamelCased word by index.
 	 *
 	 * Use a negative index to start at the last part of the word (-1 is the
 	 * last part)
 	 *
-	 * @param   string  $string  Word
-	 * @param   integer $index   Index of the part
-	 * @param   string  $default Default value
+	 * @param   string   $string   Word
+	 * @param   integer  $index    Index of the part
+	 * @param   string   $default  Default value
 	 *
 	 * @return string
 	 */
@@ -440,22 +457,5 @@ class FOFInflector
 		}
 
 		return isset($parts[$index]) ? $parts[$index] : $default;
-	}
-
-	/**
-	 * Convert any "CamelCased" word into an array of strings
-	 *
-	 * Returns an array of strings each of which is a substring of string formed
-	 * by splitting it at the camelcased letters.
-	 *
-	 * @param   string $word Word to explode
-	 *
-	 * @return  array   Array of strings
-	 */
-	public static function explode($word)
-	{
-		$result = explode('_', self::underscore($word));
-
-		return $result;
 	}
 }

@@ -27,7 +27,7 @@ class FinderViewSearch extends JViewLegacy
 	/**
 	 * Method to display the view.
 	 *
-	 * @param   string $tpl A template file to load. [optional]
+	 * @param   string  $tpl  A template file to load. [optional]
 	 *
 	 * @return  mixed  JError object on failure, void on success.
 	 *
@@ -35,7 +35,7 @@ class FinderViewSearch extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app    = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$params = $app->getParams();
 
 		// Get view data.
@@ -53,7 +53,6 @@ class FinderViewSearch extends JViewLegacy
 		if (count($errors = $this->get('Errors')))
 		{
 			JError::raiseError(500, implode("\n", $errors));
-
 			return false;
 		}
 
@@ -64,11 +63,11 @@ class FinderViewSearch extends JViewLegacy
 		}
 
 		// Push out the view data.
-		$this->state      = &$state;
-		$this->params     = &$params;
-		$this->query      = &$query;
-		$this->results    = &$results;
-		$this->total      = &$total;
+		$this->state = &$state;
+		$this->params = &$params;
+		$this->query = &$query;
+		$this->results = &$results;
+		$this->total = &$total;
 		$this->pagination = &$pagination;
 
 		// Check for a double quote in the query string.
@@ -114,9 +113,66 @@ class FinderViewSearch extends JViewLegacy
 	}
 
 	/**
+	 * Method to get hidden input fields for a get form so that control variables
+	 * are not lost upon form submission
+	 *
+	 * @return  string  A string of hidden input form fields
+	 *
+	 * @since   2.5
+	 */
+	protected function getFields()
+	{
+		$fields = null;
+
+		// Get the URI.
+		$uri = JUri::getInstance(JRoute::_($this->query->toUri()));
+		$uri->delVar('q');
+		$uri->delVar('o');
+		$uri->delVar('t');
+		$uri->delVar('d1');
+		$uri->delVar('d2');
+		$uri->delVar('w1');
+		$uri->delVar('w2');
+		$elements = $uri->getQuery(true);
+
+		// Create hidden input elements for each part of the URI.
+		foreach ($elements as $n => $v)
+		{
+			if (is_scalar($v))
+			{
+				$fields .= '<input type="hidden" name="' . $n . '" value="' . $v . '" />';
+			}
+		}
+
+		return $fields;
+	}
+
+	/**
+	 * Method to get the layout file for a search result object.
+	 *
+	 * @param   string  $layout  The layout file to check. [optional]
+	 *
+	 * @return  string  The layout file to use.
+	 *
+	 * @since   2.5
+	 */
+	protected function getLayoutFile($layout = null)
+	{
+		// Create and sanitize the file name.
+		$file = $this->_layout . '_' . preg_replace('/[^A-Z0-9_\.-]/i', '', $layout);
+
+		// Check if the file exists.
+		jimport('joomla.filesystem.path');
+		$filetofind = $this->_createFileName('template', array('name' => $file));
+		$exists = JPath::find($this->_path['template'], $filetofind);
+
+		return ($exists ? $layout : 'result');
+	}
+
+	/**
 	 * Prepares the document
 	 *
-	 * @param   FinderIndexerQuery $query The search query
+	 * @param   FinderIndexerQuery  $query  The search query
 	 *
 	 * @return  void
 	 *
@@ -124,7 +180,7 @@ class FinderViewSearch extends JViewLegacy
 	 */
 	protected function prepareDocument($query)
 	{
-		$app   = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$menus = $app->getMenu();
 		$title = null;
 
@@ -194,62 +250,5 @@ class FinderViewSearch extends JViewLegacy
 			$route = JRoute::_($this->query->toUri() . '&format=feed&type=atom');
 			$this->document->addHeadLink($route, 'alternate', 'rel', $props);
 		}
-	}
-
-	/**
-	 * Method to get hidden input fields for a get form so that control variables
-	 * are not lost upon form submission
-	 *
-	 * @return  string  A string of hidden input form fields
-	 *
-	 * @since   2.5
-	 */
-	protected function getFields()
-	{
-		$fields = null;
-
-		// Get the URI.
-		$uri = JUri::getInstance(JRoute::_($this->query->toUri()));
-		$uri->delVar('q');
-		$uri->delVar('o');
-		$uri->delVar('t');
-		$uri->delVar('d1');
-		$uri->delVar('d2');
-		$uri->delVar('w1');
-		$uri->delVar('w2');
-		$elements = $uri->getQuery(true);
-
-		// Create hidden input elements for each part of the URI.
-		foreach ($elements as $n => $v)
-		{
-			if (is_scalar($v))
-			{
-				$fields .= '<input type="hidden" name="' . $n . '" value="' . $v . '" />';
-			}
-		}
-
-		return $fields;
-	}
-
-	/**
-	 * Method to get the layout file for a search result object.
-	 *
-	 * @param   string $layout The layout file to check. [optional]
-	 *
-	 * @return  string  The layout file to use.
-	 *
-	 * @since   2.5
-	 */
-	protected function getLayoutFile($layout = null)
-	{
-		// Create and sanitize the file name.
-		$file = $this->_layout . '_' . preg_replace('/[^A-Z0-9_\.-]/i', '', $layout);
-
-		// Check if the file exists.
-		jimport('joomla.filesystem.path');
-		$filetofind = $this->_createFileName('template', array('name' => $file));
-		$exists     = JPath::find($this->_path['template'], $filetofind);
-
-		return ($exists ? $layout : 'result');
 	}
 }

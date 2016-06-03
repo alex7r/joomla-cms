@@ -20,6 +20,20 @@ class JSchemaChangesetTestPdomysql extends TestCaseDatabasePdomysql
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		// Register the object
+		$this->object = new JSchemaChangeset(static::$driver, __DIR__ . '/stubs');
+	}
+
+	/**
 	 * @testdox  The object is instantiated correctly
 	 *
 	 * @covers   JSchemaChangeset::__construct
@@ -55,19 +69,5 @@ class JSchemaChangesetTestPdomysql extends TestCaseDatabasePdomysql
 	public function testTheLatestSchemaVersionIsReturned()
 	{
 		$this->assertSame('3.5.0-2016-03-01', $this->object->getSchema(), 'The latest schema version was not returned');
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		// Register the object
-		$this->object = new JSchemaChangeset(static::$driver, __DIR__ . '/stubs');
 	}
 }

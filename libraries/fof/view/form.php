@@ -23,7 +23,7 @@ class FOFViewForm extends FOFViewHtml
 	/**
 	 * Displays the view
 	 *
-	 * @param   string $tpl The template to use
+	 * @param   string  $tpl  The template to use
 	 *
 	 * @return  boolean|null False if we can't render anything
 	 */
@@ -97,7 +97,7 @@ class FOFViewForm extends FOFViewHtml
 	 */
 	public function getRenderedForm()
 	{
-		$html     = '';
+		$html = '';
 		$renderer = $this->getRenderer();
 
 		if ($renderer instanceof FOFRenderAbstract)
@@ -116,7 +116,7 @@ class FOFViewForm extends FOFViewHtml
 	/**
 	 * The event which runs when we are displaying the Add page
 	 *
-	 * @param   string $tpl The view sub-template to use
+	 * @param   string  $tpl  The view sub-template to use
 	 *
 	 * @return  boolean  True to allow display of the view
 	 */

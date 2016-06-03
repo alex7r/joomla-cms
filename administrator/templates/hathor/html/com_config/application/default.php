@@ -25,8 +25,7 @@ JFactory::getDocument()->addScriptDeclaration("
 ");
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" id="application-form" method="post"
-      name="adminForm" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" id="application-form" method="post" name="adminForm" class="form-validate">
 	<?php if ($this->ftp) : ?>
 		<?php echo $this->loadTemplate('ftplogin'); ?>
 	<?php endif; ?>
@@ -78,7 +77,7 @@ JFactory::getDocument()->addScriptDeclaration("
 				<?php echo $this->loadTemplate('filters'); ?>
 			</div>
 		</div>
-		<input type="hidden" name="task" value=""/>
+		<input type="hidden" name="task" value="" />
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 	<div class="clr"></div>

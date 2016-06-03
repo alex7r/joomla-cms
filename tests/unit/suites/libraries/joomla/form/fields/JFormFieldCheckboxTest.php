@@ -28,6 +28,45 @@ class JFormFieldCheckboxTest extends TestCaseDatabase
 	protected $backupServer;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Test...
 	 *
 	 * @return  array
@@ -49,7 +88,7 @@ class JFormFieldCheckboxTest extends TestCaseDatabase
 	 */
 	public function testSetupChecked()
 	{
-		$field   = new JFormFieldCheckbox;
+		$field = new JFormFieldCheckbox;
 		$element = simplexml_load_string(
 			'<field name="myName" type="checkbox" checked="true" />');
 
@@ -70,12 +109,12 @@ class JFormFieldCheckboxTest extends TestCaseDatabase
 	 * Test the getInput method where there is no value from the element
 	 * and no checked attribute.
 	 *
-	 * @param   array  $data     @todo
-	 * @param   string $expected @todo
+	 * @param   array   $data  	   @todo
+	 * @param   string  $expected  @todo
 	 *
 	 * @return  void
 	 *
-	 * @since         12.2
+	 * @since   12.2
 	 *
 	 * @dataProvider  getInputData
 	 */
@@ -93,44 +132,5 @@ class JFormFieldCheckboxTest extends TestCaseDatabase
 			TestReflection::invoke($formField, 'getInput'),
 			'Line:' . __LINE__ . ' The field with no value and no checked attribute did not produce the right html'
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST']   = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 }

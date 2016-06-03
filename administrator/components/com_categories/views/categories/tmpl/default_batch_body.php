@@ -8,7 +8,7 @@
  */
 defined('_JEXEC') or die;
 
-$options   = array(
+$options = array(
 	JHtml::_('select.option', 'c', JText::_('JLIB_HTML_BATCH_COPY')),
 	JHtml::_('select.option', 'm', JText::_('JLIB_HTML_BATCH_MOVE'))
 );

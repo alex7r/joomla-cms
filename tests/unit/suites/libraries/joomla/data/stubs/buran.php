@@ -21,7 +21,7 @@ class JDataBuran extends JData
 	/**
 	 * Method to set the test_value.
 	 *
-	 * @param   string $value The test value.
+	 * @param   string  $value  The test value.
 	 *
 	 * @return  JData  Chainable.
 	 *

@@ -14,33 +14,32 @@ defined('_JEXEC') or die;
 </div>
 
 <?php if ($new_totp): ?>
-	<fieldset>
-		<legend>
-			<?php echo JText::_('PLG_TWOFACTORAUTH_YUBIKEY_STEP1_HEAD') ?>
-		</legend>
+<fieldset>
+	<legend>
+		<?php echo JText::_('PLG_TWOFACTORAUTH_YUBIKEY_STEP1_HEAD') ?>
+	</legend>
 
-		<p>
-			<?php echo JText::_('PLG_TWOFACTORAUTH_YUBIKEY_STEP1_TEXT') ?>
-		</p>
+	<p>
+		<?php echo JText::_('PLG_TWOFACTORAUTH_YUBIKEY_STEP1_TEXT') ?>
+	</p>
 
-		<div class="control-group">
-			<label class="control-label" for="yubikeysecuritycode">
-				<?php echo JText::_('PLG_TWOFACTORAUTH_YUBIKEY_SECURITYCODE') ?>
-			</label>
-			<div class="controls">
-				<input type="text" class="input-medium" name="jform[twofactor][yubikey][securitycode]"
-				       id="yubikeysecuritycode" autocomplete="0">
-			</div>
+	<div class="control-group">
+		<label class="control-label" for="yubikeysecuritycode">
+			<?php echo JText::_('PLG_TWOFACTORAUTH_YUBIKEY_SECURITYCODE') ?>
+		</label>
+		<div class="controls">
+			<input type="text" class="input-medium" name="jform[twofactor][yubikey][securitycode]" id="yubikeysecuritycode" autocomplete="0">
 		</div>
-	</fieldset>
+	</div>
+</fieldset>
 <?php else: ?>
-	<fieldset>
-		<legend>
-			<?php echo JText::_('PLG_TWOFACTORAUTH_TOTP_RESET_HEAD') ?>
-		</legend>
+<fieldset>
+	<legend>
+		<?php echo JText::_('PLG_TWOFACTORAUTH_TOTP_RESET_HEAD') ?>
+	</legend>
 
-		<p>
-			<?php echo JText::_('PLG_TWOFACTORAUTH_TOTP_RESET_TEXT') ?>
-		</p>
-	</fieldset>
+	<p>
+		<?php echo JText::_('PLG_TWOFACTORAUTH_TOTP_RESET_TEXT') ?>
+	</p>
+</fieldset>
 <?php endif; ?>

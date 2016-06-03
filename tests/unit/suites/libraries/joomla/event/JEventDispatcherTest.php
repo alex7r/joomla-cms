@@ -24,6 +24,29 @@ class JEventDispatcherTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$this->object = new JEventDispatcher;
+		TestReflection::setValue($this->object, 'instance', $this->object);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+		TestReflection::setValue($this->object, 'instance', null);
+	}
+
+	/**
 	 * Tests the JEventDispatcher::getInstance method.
 	 *
 	 * @return  void
@@ -139,7 +162,7 @@ class JEventDispatcherTest extends PHPUnit_Framework_TestCase
 			TestReflection::getValue($this->object, '_methods'),
 			$this->equalTo(
 				array(
-					'ontestevent'      => array(0),
+					'ontestevent' => array(0),
 					'ontestotherevent' => array(1)
 				)
 			)
@@ -149,7 +172,7 @@ class JEventDispatcherTest extends PHPUnit_Framework_TestCase
 		$this->object->register('', 'JEventInspector');
 
 		$observers = TestReflection::getValue($this->object, '_observers');
-		$object    = $observers[2];
+		$object = $observers[2];
 
 		$this->assertThat(
 			TestReflection::getValue($this->object, '_observers'),
@@ -166,7 +189,7 @@ class JEventDispatcherTest extends PHPUnit_Framework_TestCase
 			TestReflection::getValue($this->object, '_methods'),
 			$this->equalTo(
 				array(
-					'ontestevent'      => array(0, 2),
+					'ontestevent' => array(0, 2),
 					'ontestotherevent' => array(1)
 				)
 			)
@@ -275,7 +298,7 @@ class JEventDispatcherTest extends PHPUnit_Framework_TestCase
 		);
 
 		// Let's test a callable function observer
-		$observer  = array('handler' => 'JEventMockFunction', 'event' => 'onTestEvent');
+		$observer = array('handler' => 'JEventMockFunction', 'event' => 'onTestEvent');
 		$observers = array($observer);
 
 		$this->object->attach($observer);
@@ -295,7 +318,7 @@ class JEventDispatcherTest extends PHPUnit_Framework_TestCase
 		);
 
 		// Let's test that an observer is not attached twice
-		$observer  = array('handler' => 'JEventMockFunction', 'event' => 'onTestEvent');
+		$observer = array('handler' => 'JEventMockFunction', 'event' => 'onTestEvent');
 		$observers = array($observer);
 
 		$this->object->attach($observer);
@@ -334,7 +357,7 @@ class JEventDispatcherTest extends PHPUnit_Framework_TestCase
 		);
 
 		// Let's test a valid event object
-		$observer    = new JEventInspector($this->object);
+		$observer = new JEventInspector($this->object);
 		$observers[] = $observer;
 
 		$this->object->attach($observer);
@@ -473,28 +496,5 @@ class JEventDispatcherTest extends PHPUnit_Framework_TestCase
 			TestReflection::getValue($this->object, '_observers'),
 			$this->equalTo(array())
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->object = new JEventDispatcher;
-		TestReflection::setValue($this->object, 'instance', $this->object);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-		TestReflection::setValue($this->object, 'instance', null);
 	}
 }

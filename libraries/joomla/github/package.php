@@ -31,7 +31,7 @@ abstract class JGithubPackage extends JGithubObject
 	/**
 	 * Magic method to lazily create API objects
 	 *
-	 * @param   string $name Name of property to retrieve
+	 * @param   string  $name  Name of property to retrieve
 	 *
 	 * @return  JGithubPackage  GitHub API package object.
 	 *

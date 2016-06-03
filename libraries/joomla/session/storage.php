@@ -27,7 +27,7 @@ abstract class JSessionStorage
 	/**
 	 * Constructor
 	 *
-	 * @param   array $options Optional parameters.
+	 * @param   array  $options  Optional parameters.
 	 *
 	 * @since   11.1
 	 */
@@ -37,26 +37,10 @@ abstract class JSessionStorage
 	}
 
 	/**
-	 * Register the functions of this class with PHP's session handler
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	public function register()
-	{
-		// Use this object as the session handler
-		session_set_save_handler(
-			array($this, 'open'), array($this, 'close'), array($this, 'read'), array($this, 'write'),
-			array($this, 'destroy'), array($this, 'gc')
-		);
-	}
-
-	/**
 	 * Returns a session storage handler object, only creating it if it doesn't already exist.
 	 *
-	 * @param   string $name    The session store to instantiate
-	 * @param   array  $options Array of options
+	 * @param   string  $name     The session store to instantiate
+	 * @param   array   $options  Array of options
 	 *
 	 * @return  JSessionStorage
 	 *
@@ -105,37 +89,26 @@ abstract class JSessionStorage
 	}
 
 	/**
-	 * Test to see if the SessionHandler is available.
+	 * Register the functions of this class with PHP's session handler
 	 *
-	 * @return  boolean  True on success, false otherwise.
+	 * @return  void
 	 *
-	 * @since   12.1
+	 * @since   11.1
 	 */
-	public static function isSupported()
+	public function register()
 	{
-		return true;
-	}
-
-	/**
-	 * Test to see if the SessionHandler is available.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since       11.1
-	 * @deprecated  12.3 (Platform) & 4.0 (CMS) - Use JSessionStorage::isSupported() instead.
-	 */
-	public static function test()
-	{
-		JLog::add('JSessionStorage::test() is deprecated. Use JSessionStorage::isSupported() instead.', JLog::WARNING, 'deprecated');
-
-		return static::isSupported();
+		// Use this object as the session handler
+		session_set_save_handler(
+			array($this, 'open'), array($this, 'close'), array($this, 'read'), array($this, 'write'),
+			array($this, 'destroy'), array($this, 'gc')
+		);
 	}
 
 	/**
 	 * Open the SessionHandler backend.
 	 *
-	 * @param   string $save_path    The path to the session object.
-	 * @param   string $session_name The name of the session.
+	 * @param   string  $save_path     The path to the session object.
+	 * @param   string  $session_name  The name of the session.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
@@ -162,7 +135,7 @@ abstract class JSessionStorage
 	 * Read the data for a particular session identifier from the
 	 * SessionHandler backend.
 	 *
-	 * @param   string $id The session identifier.
+	 * @param   string  $id  The session identifier.
 	 *
 	 * @return  string  The session data.
 	 *
@@ -176,8 +149,8 @@ abstract class JSessionStorage
 	/**
 	 * Write session data to the SessionHandler backend.
 	 *
-	 * @param   string $id           The session identifier.
-	 * @param   string $session_data The session data.
+	 * @param   string  $id            The session identifier.
+	 * @param   string  $session_data  The session data.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
@@ -192,7 +165,7 @@ abstract class JSessionStorage
 	 * Destroy the data for a particular session identifier in the
 	 * SessionHandler backend.
 	 *
-	 * @param   string $id The session identifier.
+	 * @param   string  $id  The session identifier.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
@@ -206,7 +179,7 @@ abstract class JSessionStorage
 	/**
 	 * Garbage collect stale sessions from the SessionHandler backend.
 	 *
-	 * @param   integer $maxlifetime The maximum age of a session.
+	 * @param   integer  $maxlifetime  The maximum age of a session.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
@@ -215,5 +188,32 @@ abstract class JSessionStorage
 	public function gc($maxlifetime = null)
 	{
 		return true;
+	}
+
+	/**
+	 * Test to see if the SessionHandler is available.
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		return true;
+	}
+
+	/**
+	 * Test to see if the SessionHandler is available.
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   11.1
+	 * @deprecated  12.3 (Platform) & 4.0 (CMS) - Use JSessionStorage::isSupported() instead.
+	 */
+	public static function test()
+	{
+		JLog::add('JSessionStorage::test() is deprecated. Use JSessionStorage::isSupported() instead.', JLog::WARNING, 'deprecated');
+
+		return static::isSupported();
 	}
 }

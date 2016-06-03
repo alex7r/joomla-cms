@@ -19,198 +19,10 @@ use Joomla\Registry\Registry;
 abstract class JModuleHelper
 {
 	/**
-	 * Get modules by position
-	 *
-	 * @param   string $position The position of the module
-	 *
-	 * @return  array  An array of module objects
-	 *
-	 * @since   1.5
-	 */
-	public static function &getModules($position)
-	{
-		$position = strtolower($position);
-		$result   = array();
-		$input    = JFactory::getApplication()->input;
-
-		$modules =& static::load();
-
-		$total = count($modules);
-
-		for ($i = 0; $i < $total; $i++)
-		{
-			if ($modules[$i]->position == $position)
-			{
-				$result[] = &$modules[$i];
-			}
-		}
-
-		if (count($result) == 0)
-		{
-			if ($input->getBool('tp') && JComponentHelper::getParams('com_templates')->get('template_positions_display'))
-			{
-				$result[0]           = static::getModule('mod_' . $position);
-				$result[0]->title    = $position;
-				$result[0]->content  = $position;
-				$result[0]->position = $position;
-			}
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Load published modules.
-	 *
-	 * @return  array
-	 *
-	 * @since   3.2
-	 */
-	protected static function &load()
-	{
-		static $modules;
-
-		if (isset($modules))
-		{
-			return $modules;
-		}
-
-		$app = JFactory::getApplication();
-
-		$modules = null;
-
-		$app->triggerEvent('onPrepareModuleList', array(&$modules));
-
-		// If the onPrepareModuleList event returns an array of modules, then ignore the default module list creation
-		if (!is_array($modules))
-		{
-			$modules = static::getModuleList();
-		}
-
-		$app->triggerEvent('onAfterModuleList', array(&$modules));
-
-		$modules = static::cleanModuleList($modules);
-
-		$app->triggerEvent('onAfterCleanModuleList', array(&$modules));
-
-		return $modules;
-	}
-
-	/**
-	 * Module list
-	 *
-	 * @return  array
-	 */
-	public static function getModuleList()
-	{
-		$app      = JFactory::getApplication();
-		$Itemid   = $app->input->getInt('Itemid');
-		$groups   = implode(',', JFactory::getUser()->getAuthorisedViewLevels());
-		$lang     = JFactory::getLanguage()->getTag();
-		$clientId = (int) $app->getClientId();
-
-		$db = JFactory::getDbo();
-
-		$query = $db->getQuery(true)
-			->select('m.id, m.title, m.module, m.position, m.content, m.showtitle, m.params, mm.menuid')
-			->from('#__modules AS m')
-			->join('LEFT', '#__modules_menu AS mm ON mm.moduleid = m.id')
-			->where('m.published = 1')
-			->join('LEFT', '#__extensions AS e ON e.element = m.module AND e.client_id = m.client_id')
-			->where('e.enabled = 1');
-
-		$date     = JFactory::getDate();
-		$now      = $date->toSql();
-		$nullDate = $db->getNullDate();
-		$query->where('(m.publish_up = ' . $db->quote($nullDate) . ' OR m.publish_up <= ' . $db->quote($now) . ')')
-			->where('(m.publish_down = ' . $db->quote($nullDate) . ' OR m.publish_down >= ' . $db->quote($now) . ')')
-			->where('m.access IN (' . $groups . ')')
-			->where('m.client_id = ' . $clientId)
-			->where('(mm.menuid = ' . (int) $Itemid . ' OR mm.menuid <= 0)');
-
-		// Filter by language
-		if ($app->isSite() && $app->getLanguageFilter())
-		{
-			$query->where('m.language IN (' . $db->quote($lang) . ',' . $db->quote('*') . ')');
-		}
-
-		$query->order('m.position, m.ordering');
-
-		// Set the query
-		$db->setQuery($query);
-
-		try
-		{
-			$modules = $db->loadObjectList();
-		}
-		catch (RuntimeException $e)
-		{
-			JLog::add(JText::sprintf('JLIB_APPLICATION_ERROR_MODULE_LOAD', $e->getMessage()), JLog::WARNING, 'jerror');
-
-			return array();
-		}
-
-		return $modules;
-	}
-
-	/**
-	 * Clean the module list
-	 *
-	 * @param   array $modules Array with module objects
-	 *
-	 * @return  array
-	 */
-	public static function cleanModuleList($modules)
-	{
-		// Apply negative selections and eliminate duplicates
-		$Itemid = JFactory::getApplication()->input->getInt('Itemid');
-		$negId  = $Itemid ? -(int) $Itemid : false;
-		$clean  = array();
-		$dupes  = array();
-
-		foreach ($modules as $i => $module)
-		{
-			// The module is excluded if there is an explicit prohibition
-			$negHit = ($negId === (int) $module->menuid);
-
-			if (isset($dupes[$module->id]))
-			{
-				// If this item has been excluded, keep the duplicate flag set,
-				// but remove any item from the modules array.
-				if ($negHit)
-				{
-					unset($clean[$module->id]);
-				}
-
-				continue;
-			}
-
-			$dupes[$module->id] = true;
-
-			// Only accept modules without explicit exclusions.
-			if ($negHit)
-			{
-				continue;
-			}
-
-			$module->name     = substr($module->module, 4);
-			$module->style    = null;
-			$module->position = strtolower($module->position);
-
-			$clean[$module->id] = $module;
-		}
-
-		unset($dupes);
-
-		// Return to simple indexing that matches the query order.
-		return array_values($clean);
-	}
-
-	/**
 	 * Get module by name (real, eg 'Breadcrumbs' or folder, eg 'mod_breadcrumbs')
 	 *
-	 * @param   string $name  The name of the module
-	 * @param   string $title The title of the module, optional
+	 * @param   string  $name   The name of the module
+	 * @param   string  $title  The title of the module, optional
 	 *
 	 * @return  stdClass  The Module object
 	 *
@@ -218,9 +30,9 @@ abstract class JModuleHelper
 	 */
 	public static function &getModule($name, $title = null)
 	{
-		$result  = null;
+		$result = null;
 		$modules =& static::load();
-		$total   = count($modules);
+		$total = count($modules);
 
 		for ($i = 0; $i < $total; $i++)
 		{
@@ -255,12 +67,53 @@ abstract class JModuleHelper
 	}
 
 	/**
+	 * Get modules by position
+	 *
+	 * @param   string  $position  The position of the module
+	 *
+	 * @return  array  An array of module objects
+	 *
+	 * @since   1.5
+	 */
+	public static function &getModules($position)
+	{
+		$position = strtolower($position);
+		$result = array();
+		$input  = JFactory::getApplication()->input;
+
+		$modules =& static::load();
+
+		$total = count($modules);
+
+		for ($i = 0; $i < $total; $i++)
+		{
+			if ($modules[$i]->position == $position)
+			{
+				$result[] = &$modules[$i];
+			}
+		}
+
+		if (count($result) == 0)
+		{
+			if ($input->getBool('tp') && JComponentHelper::getParams('com_templates')->get('template_positions_display'))
+			{
+				$result[0] = static::getModule('mod_' . $position);
+				$result[0]->title = $position;
+				$result[0]->content = $position;
+				$result[0]->position = $position;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Checks if a module is enabled. A given module will only be returned
 	 * if it meets the following criteria: it is enabled, it is assigned to
 	 * the current menu item or all items, and the user meets the access level
 	 * requirements.
 	 *
-	 * @param   string $module The module name
+	 * @param   string  $module  The module name
 	 *
 	 * @return  boolean See description for conditions.
 	 *
@@ -276,8 +129,8 @@ abstract class JModuleHelper
 	/**
 	 * Render the module.
 	 *
-	 * @param   object $module  A module object.
-	 * @param   array  $attribs An array of attributes for the module (probably from the XML).
+	 * @param   object  $module   A module object.
+	 * @param   array   $attribs  An array of attributes for the module (probably from the XML).
 	 *
 	 * @return  string  The HTML content of the module output.
 	 *
@@ -321,7 +174,7 @@ abstract class JModuleHelper
 
 		// Get module path
 		$module->module = preg_replace('/[^A-Z0-9_\.-]/i', '', $module->module);
-		$path           = JPATH_BASE . '/modules/' . $module->module . '/' . $module->module . '.php';
+		$path = JPATH_BASE . '/modules/' . $module->module . '/' . $module->module . '.php';
 
 		// Load the module
 		if (file_exists($path))
@@ -330,7 +183,7 @@ abstract class JModuleHelper
 
 			// 1.5 or Core then 1.6 3PD
 			$lang->load($module->module, JPATH_BASE, null, false, true) ||
-			$lang->load($module->module, dirname($path), null, false, true);
+				$lang->load($module->module, dirname($path), null, false, true);
 
 			$content = '';
 			ob_start();
@@ -418,8 +271,8 @@ abstract class JModuleHelper
 	/**
 	 * Get the path to a layout for a module
 	 *
-	 * @param   string $module The name of the module
-	 * @param   string $layout The name of the module layout. If alternative layout, in the form template:filename.
+	 * @param   string  $module  The name of the module
+	 * @param   string  $layout  The name of the module layout. If alternative layout, in the form template:filename.
 	 *
 	 * @return  string  The path to the module layout
 	 *
@@ -427,15 +280,15 @@ abstract class JModuleHelper
 	 */
 	public static function getLayoutPath($module, $layout = 'default')
 	{
-		$template      = JFactory::getApplication()->getTemplate();
+		$template = JFactory::getApplication()->getTemplate();
 		$defaultLayout = $layout;
 
 		if (strpos($layout, ':') !== false)
 		{
 			// Get the template and file name from the string
-			$temp          = explode(':', $layout);
-			$template      = ($temp[0] == '_') ? $template : $temp[0];
-			$layout        = $temp[1];
+			$temp = explode(':', $layout);
+			$template = ($temp[0] == '_') ? $template : $temp[0];
+			$layout = $temp[1];
 			$defaultLayout = ($temp[1]) ? $temp[1] : 'default';
 		}
 
@@ -459,6 +312,166 @@ abstract class JModuleHelper
 	}
 
 	/**
+	 * Load published modules.
+	 *
+	 * @return  array
+	 *
+	 * @since   1.5
+	 * @deprecated  4.0  Use JModuleHelper::load() instead
+	 */
+	protected static function &_load()
+	{
+		return static::load();
+	}
+
+	/**
+	 * Load published modules.
+	 *
+	 * @return  array
+	 *
+	 * @since   3.2
+	 */
+	protected static function &load()
+	{
+		static $modules;
+
+		if (isset($modules))
+		{
+			return $modules;
+		}
+
+		$app = JFactory::getApplication();
+
+		$modules = null;
+
+		$app->triggerEvent('onPrepareModuleList', array(&$modules));
+
+		// If the onPrepareModuleList event returns an array of modules, then ignore the default module list creation
+		if (!is_array($modules))
+		{
+			$modules = static::getModuleList();
+		}
+
+		$app->triggerEvent('onAfterModuleList', array(&$modules));
+
+		$modules = static::cleanModuleList($modules);
+
+		$app->triggerEvent('onAfterCleanModuleList', array(&$modules));
+
+		return $modules;
+	}
+
+	/**
+	 * Module list
+	 *
+	 * @return  array
+	 */
+	public static function getModuleList()
+	{
+		$app = JFactory::getApplication();
+		$Itemid = $app->input->getInt('Itemid');
+		$groups = implode(',', JFactory::getUser()->getAuthorisedViewLevels());
+		$lang = JFactory::getLanguage()->getTag();
+		$clientId = (int) $app->getClientId();
+
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true)
+			->select('m.id, m.title, m.module, m.position, m.content, m.showtitle, m.params, mm.menuid')
+			->from('#__modules AS m')
+			->join('LEFT', '#__modules_menu AS mm ON mm.moduleid = m.id')
+			->where('m.published = 1')
+			->join('LEFT', '#__extensions AS e ON e.element = m.module AND e.client_id = m.client_id')
+			->where('e.enabled = 1');
+
+		$date = JFactory::getDate();
+		$now = $date->toSql();
+		$nullDate = $db->getNullDate();
+		$query->where('(m.publish_up = ' . $db->quote($nullDate) . ' OR m.publish_up <= ' . $db->quote($now) . ')')
+			->where('(m.publish_down = ' . $db->quote($nullDate) . ' OR m.publish_down >= ' . $db->quote($now) . ')')
+			->where('m.access IN (' . $groups . ')')
+			->where('m.client_id = ' . $clientId)
+			->where('(mm.menuid = ' . (int) $Itemid . ' OR mm.menuid <= 0)');
+
+		// Filter by language
+		if ($app->isSite() && $app->getLanguageFilter())
+		{
+			$query->where('m.language IN (' . $db->quote($lang) . ',' . $db->quote('*') . ')');
+		}
+
+		$query->order('m.position, m.ordering');
+
+		// Set the query
+		$db->setQuery($query);
+
+		try
+		{
+			$modules = $db->loadObjectList();
+		}
+		catch (RuntimeException $e)
+		{
+			JLog::add(JText::sprintf('JLIB_APPLICATION_ERROR_MODULE_LOAD', $e->getMessage()), JLog::WARNING, 'jerror');
+
+			return array();
+		}
+
+		return $modules;
+	}
+
+	/**
+	 * Clean the module list
+	 *
+	 * @param   array  $modules  Array with module objects
+	 *
+	 * @return  array
+	 */
+	public static function cleanModuleList($modules)
+	{
+		// Apply negative selections and eliminate duplicates
+		$Itemid = JFactory::getApplication()->input->getInt('Itemid');
+		$negId = $Itemid ? -(int) $Itemid : false;
+		$clean = array();
+		$dupes = array();
+
+		foreach ($modules as $i => $module)
+		{
+			// The module is excluded if there is an explicit prohibition
+			$negHit = ($negId === (int) $module->menuid);
+
+			if (isset($dupes[$module->id]))
+			{
+				// If this item has been excluded, keep the duplicate flag set,
+				// but remove any item from the modules array.
+				if ($negHit)
+				{
+					unset($clean[$module->id]);
+				}
+
+				continue;
+			}
+
+			$dupes[$module->id] = true;
+
+			// Only accept modules without explicit exclusions.
+			if ($negHit)
+			{
+				continue;
+			}
+
+			$module->name = substr($module->module, 4);
+			$module->style = null;
+			$module->position = strtolower($module->position);
+
+			$clean[$module->id] = $module;
+		}
+
+		unset($dupes);
+
+		// Return to simple indexing that matches the query order.
+		return array_values($clean);
+	}
+
+	/**
 	 * Module cache helper
 	 *
 	 * Caching modes:
@@ -470,9 +483,9 @@ abstract class JModuleHelper
 	 * 'safeuri'     Id created from $cacheparams->modeparams array,
 	 * 'id'          Module sets own cache id's
 	 *
-	 * @param   object $module       Module object
-	 * @param   object $moduleparams Module parameters
-	 * @param   object $cacheparams  Module cache parameters - id or url parameters, depending on the module cache mode
+	 * @param   object  $module        Module object
+	 * @param   object  $moduleparams  Module parameters
+	 * @param   object  $cacheparams   Module cache parameters - id or url parameters, depending on the module cache mode
 	 *
 	 * @return  string
 	 *
@@ -491,9 +504,9 @@ abstract class JModuleHelper
 			$cacheparams->cachegroup = $module->module;
 		}
 
-		$user  = JFactory::getUser();
+		$user = JFactory::getUser();
 		$cache = JFactory::getCache($cacheparams->cachegroup, 'callback');
-		$conf  = JFactory::getConfig();
+		$conf = JFactory::getConfig();
 
 		// Turn cache off for internal callers if parameters are set to off and for all logged in users
 		if ($moduleparams->get('owncache', null) === '0' || $conf->get('caching') == 0 || $user->get('id'))
@@ -506,7 +519,7 @@ abstract class JModuleHelper
 
 		$wrkaroundoptions = array('nopathway' => 1, 'nohead' => 0, 'nomodules' => 1, 'modulemode' => 1, 'mergehead' => 1);
 
-		$wrkarounds  = true;
+		$wrkarounds = true;
 		$view_levels = md5(serialize($user->getAuthorisedViewLevels()));
 
 		switch ($cacheparams->cachemode)
@@ -526,9 +539,9 @@ abstract class JModuleHelper
 
 				if (is_array($cacheparams->modeparams))
 				{
-					$input        = JFactory::getApplication()->input;
-					$uri          = $input->getArray();
-					$safeuri      = new stdClass;
+					$input   = JFactory::getApplication()->input;
+					$uri     = $input->getArray();
+					$safeuri = new stdClass;
 					$noHtmlFilter = JFilterInput::getInstance();
 
 					foreach ($cacheparams->modeparams as $key => $value)
@@ -542,7 +555,7 @@ abstract class JModuleHelper
 				}
 
 				$secureid = md5(serialize(array($safeuri, $cacheparams->method, $moduleparams)));
-				$ret      = $cache->get(
+				$ret = $cache->get(
 					array($cacheparams->class, $cacheparams->method),
 					$cacheparams->methodparams,
 					$module->id . $view_levels . $secureid,
@@ -586,18 +599,5 @@ abstract class JModuleHelper
 		}
 
 		return $ret;
-	}
-
-	/**
-	 * Load published modules.
-	 *
-	 * @return  array
-	 *
-	 * @since       1.5
-	 * @deprecated  4.0  Use JModuleHelper::load() instead
-	 */
-	protected static function &_load()
-	{
-		return static::load();
 	}
 }

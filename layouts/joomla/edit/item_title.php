@@ -11,7 +11,7 @@
 
 defined('JPATH_BASE') or die;
 $title = $displayData->getForm()->getValue('title');
-$name  = $displayData->getForm()->getValue('name');
+$name = $displayData->getForm()->getValue('name');
 
 ?>
 

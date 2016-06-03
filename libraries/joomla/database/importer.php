@@ -79,22 +79,6 @@ abstract class JDatabaseImporter
 	}
 
 	/**
-	 * Sets an internal option to merge the structure based on the input data.
-	 *
-	 * @param   boolean $setting True to export the structure, false to not.
-	 *
-	 * @return  JDatabaseImporter  Method supports chaining.
-	 *
-	 * @since   13.1
-	 */
-	public function withStructure($setting = true)
-	{
-		$this->options->withStructure = (boolean) $setting;
-
-		return $this;
-	}
-
-	/**
 	 * Set the output option for the exporter to XML format.
 	 *
 	 * @return  JDatabaseImporter  Method supports chaining.
@@ -121,7 +105,7 @@ abstract class JDatabaseImporter
 	/**
 	 * Specifies the data source to import.
 	 *
-	 * @param   mixed $from The data source to import.
+	 * @param   mixed  $from  The data source to import.
 	 *
 	 * @return  JDatabaseImporter  Method supports chaining.
 	 *
@@ -132,6 +116,40 @@ abstract class JDatabaseImporter
 		$this->from = $from;
 
 		return $this;
+	}
+
+	/**
+	 * Get the SQL syntax to drop a column.
+	 *
+	 * @param   string  $table  The table name.
+	 * @param   string  $name   The name of the field to drop.
+	 *
+	 * @return  string
+	 *
+	 * @since   13.1
+	 */
+	protected function getDropColumnSql($table, $name)
+	{
+		return 'ALTER TABLE ' . $this->db->quoteName($table) . ' DROP COLUMN ' . $this->db->quoteName($name);
+	}
+
+	/**
+	 * Get the real name of the table, converting the prefix wildcard string if present.
+	 *
+	 * @param   string  $table  The name of the table.
+	 *
+	 * @return  string	The real name of the table.
+	 *
+	 * @since   13.1
+	 */
+	protected function getRealTableName($table)
+	{
+		$prefix = $this->db->getPrefix();
+
+		// Replace the magic prefix if found.
+		$table = preg_replace('|^#__|', $prefix, $table);
+
+		return $table;
 	}
 
 	/**
@@ -193,7 +211,7 @@ abstract class JDatabaseImporter
 	/**
 	 * Sets the database connector to use for exporting structure and/or data.
 	 *
-	 * @param   JDatabaseDriver $db The database connector.
+	 * @param   JDatabaseDriver  $db  The database connector.
 	 *
 	 * @return  JDatabaseImporter  Method supports chaining.
 	 *
@@ -207,36 +225,18 @@ abstract class JDatabaseImporter
 	}
 
 	/**
-	 * Get the SQL syntax to drop a column.
+	 * Sets an internal option to merge the structure based on the input data.
 	 *
-	 * @param   string $table The table name.
-	 * @param   string $name  The name of the field to drop.
+	 * @param   boolean  $setting  True to export the structure, false to not.
 	 *
-	 * @return  string
-	 *
-	 * @since   13.1
-	 */
-	protected function getDropColumnSql($table, $name)
-	{
-		return 'ALTER TABLE ' . $this->db->quoteName($table) . ' DROP COLUMN ' . $this->db->quoteName($name);
-	}
-
-	/**
-	 * Get the real name of the table, converting the prefix wildcard string if present.
-	 *
-	 * @param   string $table The name of the table.
-	 *
-	 * @return  string    The real name of the table.
+	 * @return  JDatabaseImporter  Method supports chaining.
 	 *
 	 * @since   13.1
 	 */
-	protected function getRealTableName($table)
+	public function withStructure($setting = true)
 	{
-		$prefix = $this->db->getPrefix();
+		$this->options->withStructure = (boolean) $setting;
 
-		// Replace the magic prefix if found.
-		$table = preg_replace('|^#__|', $prefix, $table);
-
-		return $table;
+		return $this;
 	}
 }

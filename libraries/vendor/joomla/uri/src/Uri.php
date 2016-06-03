@@ -22,8 +22,8 @@ class Uri extends AbstractUri
 	 * Adds a query variable and value, replacing the value if it
 	 * already exists and returning the old value.
 	 *
-	 * @param   string $name  Name of the query variable to set.
-	 * @param   string $value Value of the query variable.
+	 * @param   string  $name   Name of the query variable to set.
+	 * @param   string  $value  Value of the query variable.
 	 *
 	 * @return  string  Previous value for the query variable.
 	 *
@@ -44,7 +44,7 @@ class Uri extends AbstractUri
 	/**
 	 * Removes an item from the query string variables if it exists.
 	 *
-	 * @param   string $name Name of variable to remove.
+	 * @param   string  $name  Name of variable to remove.
 	 *
 	 * @return  void
 	 *
@@ -65,7 +65,7 @@ class Uri extends AbstractUri
 	 * Sets the query to a supplied string in format:
 	 * foo=bar&x=y
 	 *
-	 * @param   mixed $query The query string or array.
+	 * @param   mixed  $query  The query string or array.
 	 *
 	 * @return  void
 	 *
@@ -95,7 +95,7 @@ class Uri extends AbstractUri
 	 * Set URI scheme (protocol)
 	 * ie. http, https, ftp, etc...
 	 *
-	 * @param   string $scheme The URI scheme.
+	 * @param   string  $scheme  The URI scheme.
 	 *
 	 * @return  void
 	 *
@@ -109,7 +109,7 @@ class Uri extends AbstractUri
 	/**
 	 * Set URI username.
 	 *
-	 * @param   string $user The URI username.
+	 * @param   string  $user  The URI username.
 	 *
 	 * @return  void
 	 *
@@ -123,7 +123,7 @@ class Uri extends AbstractUri
 	/**
 	 * Set URI password.
 	 *
-	 * @param   string $pass The URI password.
+	 * @param   string  $pass  The URI password.
 	 *
 	 * @return  void
 	 *
@@ -137,7 +137,7 @@ class Uri extends AbstractUri
 	/**
 	 * Set URI host.
 	 *
-	 * @param   string $host The URI host.
+	 * @param   string  $host  The URI host.
 	 *
 	 * @return  void
 	 *
@@ -151,7 +151,7 @@ class Uri extends AbstractUri
 	/**
 	 * Set URI port.
 	 *
-	 * @param   integer $port The URI port number.
+	 * @param   integer  $port  The URI port number.
 	 *
 	 * @return  void
 	 *
@@ -165,7 +165,7 @@ class Uri extends AbstractUri
 	/**
 	 * Set the URI path string.
 	 *
-	 * @param   string $path The URI path string.
+	 * @param   string  $path  The URI path string.
 	 *
 	 * @return  void
 	 *
@@ -180,7 +180,7 @@ class Uri extends AbstractUri
 	 * Set the URI anchor string
 	 * everything after the "#".
 	 *
-	 * @param   string $anchor The URI anchor string.
+	 * @param   string  $anchor  The URI anchor string.
 	 *
 	 * @return  void
 	 *

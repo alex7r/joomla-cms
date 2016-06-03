@@ -16,12 +16,6 @@ defined('FOF_INCLUDED') or die;
 class FOFHalRenderJson implements FOFHalRenderInterface
 {
 	/**
-	 * The document to render
-	 *
-	 * @var   FOFHalDocument
-	 */
-	protected $_document;
-	/**
 	 * When data is an array we'll output the list of data under this key
 	 *
 	 * @var   string
@@ -29,9 +23,16 @@ class FOFHalRenderJson implements FOFHalRenderInterface
 	private $_dataKey = '_list';
 
 	/**
+	 * The document to render
+	 *
+	 * @var   FOFHalDocument
+	 */
+	protected $_document;
+
+	/**
 	 * Public constructor
 	 *
-	 * @param   FOFHalDocument &$document The document to render
+	 * @param   FOFHalDocument  &$document  The document to render
 	 */
 	public function __construct(&$document)
 	{
@@ -41,7 +42,7 @@ class FOFHalRenderJson implements FOFHalRenderInterface
 	/**
 	 * Render a HAL document in JSON format
 	 *
-	 * @param   array $options Rendering options. You can currently only set json_options (json_encode options)
+	 * @param   array  $options  Rendering options. You can currently only set json_options (json_encode options)
 	 *
 	 * @return  string  The JSON representation of the HAL document
 	 */
@@ -64,7 +65,7 @@ class FOFHalRenderJson implements FOFHalRenderInterface
 		$serialiseThis = new stdClass;
 
 		// Add links
-		$collection            = $this->_document->getLinks();
+		$collection = $this->_document->getLinks();
 		$serialiseThis->_links = new stdClass;
 
 		foreach ($collection as $rel => $links)
@@ -141,14 +142,14 @@ class FOFHalRenderJson implements FOFHalRenderInterface
 	 * Converts a FOFHalLink object into a stdClass object which will be used
 	 * for JSON serialisation
 	 *
-	 * @param   FOFHalLink $link The link you want converted
+	 * @param   FOFHalLink  $link  The link you want converted
 	 *
 	 * @return  stdClass  The converted link object
 	 */
 	protected function _getLink(FOFHalLink $link)
 	{
 		$ret = array(
-			'href' => $link->href
+			'href'	=> $link->href
 		);
 
 		if ($link->templated)

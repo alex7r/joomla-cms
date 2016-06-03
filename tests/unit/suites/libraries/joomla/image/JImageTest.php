@@ -20,6 +20,32 @@ require_once __DIR__ . '/stubs/JImageFilterInspector.php';
 class JImageTest extends TestCase
 {
 	/**
+	 * Setup for testing.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.3
+	 */
+	protected function setUp()
+	{
+		// Verify that GD support for PHP is available.
+		if (!extension_loaded('gd'))
+		{
+			$this->markTestSkipped('No GD support so skipping JImage tests.');
+		}
+
+		parent::setUp();
+
+		$this->testFile = __DIR__ . '/stubs/koala.jpg';
+
+		$this->testFileGif = __DIR__ . '/stubs/koala.gif';
+
+		$this->testFilePng = __DIR__ . '/stubs/koala.png';
+
+		$this->testFileBmp = __DIR__ . '/stubs/koala.bmp';
+	}
+
+	/**
 	 * Data for prepareDimensions method.  Don't put percentages in here.  We test elsewhere that
 	 * percentages get sanitized into appropriate integer values based on scale.  Here we just want
 	 * to test the logic that calculates scale dimensions.
@@ -625,18 +651,18 @@ class JImageTest extends TestCase
 	 * rectangle [Rectangle1].  Then we crop the image to the exact coordinates of Rectangle1 and
 	 * verify both it's corners and the corners inside of it.
 	 *
-	 * @param   mixed   $startHeight The original image height.
-	 * @param   mixed   $startWidth  The original image width.
-	 * @param   integer $cropHeight  The height of the cropped image.
-	 * @param   integer $cropWidth   The width of the cropped image.
-	 * @param   integer $cropTop     The pixel offset from the top for the cropped image.
-	 * @param   integer $cropLeft    The pixel offset from the left for the cropped image.
-	 * @param   boolean $transparent True to add transparency to the image.
+	 * @param   mixed    $startHeight  The original image height.
+	 * @param   mixed    $startWidth   The original image width.
+	 * @param   integer  $cropHeight   The height of the cropped image.
+	 * @param   integer  $cropWidth    The width of the cropped image.
+	 * @param   integer  $cropTop      The pixel offset from the top for the cropped image.
+	 * @param   integer  $cropLeft     The pixel offset from the left for the cropped image.
+	 * @param   boolean  $transparent  True to add transparency to the image.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getCropData
-	 * @since        11.3
+	 * @since   11.3
 	 */
 	public function testCrop($startHeight, $startWidth, $cropHeight, $cropWidth, $cropTop, $cropLeft, $transparent = false)
 	{
@@ -650,7 +676,7 @@ class JImageTest extends TestCase
 		}
 
 		// Define red and white.
-		$red   = imagecolorallocate($imageHandle, 255, 0, 0);
+		$red = imagecolorallocate($imageHandle, 255, 0, 0);
 		$white = imagecolorallocate($imageHandle, 255, 255, 255);
 
 		// Draw a red rectangle in the crop area.
@@ -719,7 +745,7 @@ class JImageTest extends TestCase
 		$imageHandle = imagecreatetruecolor(101, 101);
 
 		// Define red and white.
-		$red   = imagecolorallocate($imageHandle, 255, 0, 0);
+		$red = imagecolorallocate($imageHandle, 255, 0, 0);
 		$white = imagecolorallocate($imageHandle, 255, 255, 255);
 
 		// Draw a red horizontal line in the middle of the image.
@@ -763,7 +789,7 @@ class JImageTest extends TestCase
 			->method('execute');
 
 		// Create a new JImageInspector object.
-		$image             = new JImageInspector($handle);
+		$image = new JImageInspector($handle);
 		$image->mockFilter = $mockFilter;
 
 		// Execute the filter.
@@ -805,18 +831,18 @@ class JImageTest extends TestCase
 	/**
 	 * Tests the JImage::prepareDimensions method.
 	 *
-	 * @param   mixed   $inputHeight    The height input.
-	 * @param   mixed   $inputWidth     The width input.
-	 * @param   integer $inputScale     The scaling type.
-	 * @param   integer $imageHeight    The original image height.
-	 * @param   integer $imageWidth     The original image width.
-	 * @param   integer $expectedHeight The expected result image height.
-	 * @param   integer $expectedWidth  The expected result image width.
+	 * @param   mixed    $inputHeight     The height input.
+	 * @param   mixed    $inputWidth      The width input.
+	 * @param   integer  $inputScale      The scaling type.
+	 * @param   integer  $imageHeight     The original image height.
+	 * @param   integer  $imageWidth      The original image width.
+	 * @param   integer  $expectedHeight  The expected result image height.
+	 * @param   integer  $expectedWidth   The expected result image width.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getPrepareDimensionsData
-	 * @since        11.3
+	 * @since   11.3
 	 */
 	public function testPrepareDimensions($inputHeight, $inputWidth, $inputScale, $imageHeight, $imageWidth, $expectedHeight, $expectedWidth)
 	{
@@ -855,17 +881,17 @@ class JImageTest extends TestCase
 	/**
 	 * Tests the JImage::sanitizeHeight method.
 	 *
-	 * @param   mixed   $inputHeight    The height input.
-	 * @param   mixed   $inputWidth     The width input.
-	 * @param   integer $imageHeight    The original image height.
-	 * @param   integer $imageWidth     The original image width.
-	 * @param   integer $expectedHeight The expected result image height.
-	 * @param   integer $expectedWidth  The expected result image width.
+	 * @param   mixed    $inputHeight     The height input.
+	 * @param   mixed    $inputWidth      The width input.
+	 * @param   integer  $imageHeight     The original image height.
+	 * @param   integer  $imageWidth      The original image width.
+	 * @param   integer  $expectedHeight  The expected result image height.
+	 * @param   integer  $expectedWidth   The expected result image width.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getSanitizeDimensionData
-	 * @since        11.3
+	 * @since   11.3
 	 */
 	public function testSanitizeHeight($inputHeight, $inputWidth, $imageHeight, $imageWidth, $expectedHeight, $expectedWidth)
 	{
@@ -882,17 +908,17 @@ class JImageTest extends TestCase
 	/**
 	 * Tests the JImage::sanitizeWidth method.
 	 *
-	 * @param   mixed   $inputHeight    The height input.
-	 * @param   mixed   $inputWidth     The width input.
-	 * @param   integer $imageHeight    The original image height.
-	 * @param   integer $imageWidth     The original image width.
-	 * @param   integer $expectedHeight The expected result image height.
-	 * @param   integer $expectedWidth  The expected result image width.
+	 * @param   mixed    $inputHeight     The height input.
+	 * @param   mixed    $inputWidth      The width input.
+	 * @param   integer  $imageHeight     The original image height.
+	 * @param   integer  $imageWidth      The original image width.
+	 * @param   integer  $expectedHeight  The expected result image height.
+	 * @param   integer  $expectedWidth   The expected result image width.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getSanitizeDimensionData
-	 * @since        11.3
+	 * @since   11.3
 	 */
 	public function testSanitizeWidth($inputHeight, $inputWidth, $imageHeight, $imageWidth, $expectedHeight, $expectedWidth)
 	{
@@ -909,13 +935,13 @@ class JImageTest extends TestCase
 	/**
 	 * Tests the JImage::sanitizeOffset method.
 	 *
-	 * @param   mixed   $input    The input offset.
-	 * @param   integer $expected The expected result offest.
+	 * @param   mixed    $input     The input offset.
+	 * @param   integer  $expected  The expected result offest.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getSanitizeOffsetData
-	 * @since        11.3
+	 * @since   11.3
 	 */
 	public function testSanitizeOffset($input, $expected)
 	{
@@ -943,31 +969,5 @@ class JImageTest extends TestCase
 
 		// Destroying the image should return boolean true
 		$this->assertTrue($image->destroy());
-	}
-
-	/**
-	 * Setup for testing.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.3
-	 */
-	protected function setUp()
-	{
-		// Verify that GD support for PHP is available.
-		if (!extension_loaded('gd'))
-		{
-			$this->markTestSkipped('No GD support so skipping JImage tests.');
-		}
-
-		parent::setUp();
-
-		$this->testFile = __DIR__ . '/stubs/koala.jpg';
-
-		$this->testFileGif = __DIR__ . '/stubs/koala.gif';
-
-		$this->testFilePng = __DIR__ . '/stubs/koala.png';
-
-		$this->testFileBmp = __DIR__ . '/stubs/koala.bmp';
 	}
 }

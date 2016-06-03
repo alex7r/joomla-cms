@@ -37,11 +37,11 @@ class FOFUtilsUpdate extends FOFModel
 
 	/**
 	 * Public constructor. Initialises the protected members as well. Useful $config keys:
-	 * update_component        The component name, e.g. com_foobar
-	 * update_version        The default version if the manifest cache is unreadable
-	 * update_site            The URL to the component's update XML stream
-	 * update_extraquery    The extra query to append to (commercial) components' download URLs
-	 * update_sitename        The update site's name (description)
+	 * update_component		The component name, e.g. com_foobar
+	 * update_version		The default version if the manifest cache is unreadable
+	 * update_site			The URL to the component's update XML stream
+	 * update_extraquery	The extra query to append to (commercial) components' download URLs
+	 * update_sitename		The update site's name (description)
 	 *
 	 * @param array $config
 	 */
@@ -87,7 +87,7 @@ class FOFUtilsUpdate extends FOFModel
 		}
 
 		// Find the extension ID
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select('*')
 			->from($db->qn('#__extensions'))
@@ -99,7 +99,7 @@ class FOFUtilsUpdate extends FOFModel
 		if (is_object($extension))
 		{
 			$this->extension_id = $extension->extension_id;
-			$data               = json_decode($extension->manifest_cache, true);
+			$data = json_decode($extension->manifest_cache, true);
 
 			if (isset($data['version']))
 			{
@@ -111,11 +111,11 @@ class FOFUtilsUpdate extends FOFModel
 	/**
 	 * Retrieves the update information of the component, returning an array with the following keys:
 	 *
-	 * hasUpdate    True if an update is available
-	 * version        The version of the available update
-	 * infoURL        The URL to the download page of the update
+	 * hasUpdate	True if an update is available
+	 * version		The version of the available update
+	 * infoURL		The URL to the download page of the update
 	 *
-	 * @param   bool $force Set to true if you want to forcibly reload the update information
+	 * @param   bool  $force  Set to true if you want to forcibly reload the update information
 	 *
 	 * @return  array  See the method description for more information
 	 */
@@ -151,21 +151,21 @@ class FOFUtilsUpdate extends FOFModel
 			$query = $db->getQuery(true)
 				->update($db->qn('#__update_sites'))
 				->set($db->qn('last_check_timestamp') . ' = ' . $db->q('0'))
-				->where($db->qn('update_site_id') . ' IN (' . implode(', ', $updateSiteIds) . ')');
+				->where($db->qn('update_site_id') .' IN ('.implode(', ', $updateSiteIds).')');
 			$db->setQuery($query);
 			$db->execute();
 
 			// Remove cached component update info from #__updates
 			$query = $db->getQuery(true)
 				->delete($db->qn('#__updates'))
-				->where($db->qn('update_site_id') . ' IN (' . implode(', ', $updateSiteIds) . ')');
+				->where($db->qn('update_site_id') .' IN ('.implode(', ', $updateSiteIds).')');
 			$db->setQuery($query);
 			$db->execute();
 		}
 
 		// Use the update cache timeout specified in com_installer
 		$comInstallerParams = JComponentHelper::getParams('com_installer', false);
-		$timeout            = 3600 * $comInstallerParams->get('cachetimeout', '6');
+		$timeout = 3600 * $comInstallerParams->get('cachetimeout', '6');
 
 		// Load any updates from the network into the #__updates table
 		$this->updater->findUpdates($this->extension_id, $timeout);
@@ -194,11 +194,11 @@ class FOFUtilsUpdate extends FOFModel
 	/**
 	 * Gets the update site Ids for our extension.
 	 *
-	 * @return    mixed    An array of Ids or null if the query failed.
+	 * @return 	mixed	An array of Ids or null if the query failed.
 	 */
 	public function getUpdateSiteIds()
 	{
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select($db->qn('update_site_id'))
 			->from($db->qn('#__update_sites_extensions'))
@@ -222,7 +222,7 @@ class FOFUtilsUpdate extends FOFModel
 	/**
 	 * Override the currently installed version as reported by the #__extensions table
 	 *
-	 * @param  string $version
+	 * @param  string  $version
 	 */
 	public function setVersion($version)
 	{
@@ -243,12 +243,12 @@ class FOFUtilsUpdate extends FOFModel
 
 		// Create the update site definition we want to store to the database
 		$update_site = array(
-			'name'                 => $this->updateSiteName,
-			'type'                 => 'extension',
-			'location'             => $this->updateSite,
-			'enabled'              => 1,
-			'last_check_timestamp' => 0,
-			'extra_query'          => $this->extraQuery
+			'name'		=> $this->updateSiteName,
+			'type'		=> 'extension',
+			'location'	=> $this->updateSite,
+			'enabled'	=> 1,
+			'last_check_timestamp'	=> 0,
+			'extra_query'	=> $this->extraQuery
 		);
 
 		// Get a reference to the db driver
@@ -268,14 +268,14 @@ class FOFUtilsUpdate extends FOFModel
 		if (!count($updateSiteIds))
 		{
 			// No update sites defined. Create a new one.
-			$newSite = (object) $update_site;
+			$newSite = (object)$update_site;
 			$db->insertObject('#__update_sites', $newSite);
 
 			$id = $db->insertid();
 
-			$updateSiteExtension = (object) array(
-				'update_site_id' => $id,
-				'extension_id'   => $this->extension_id,
+			$updateSiteExtension = (object)array(
+				'update_site_id'	=> $id,
+				'extension_id'		=> $this->extension_id,
 			);
 			$db->insertObject('#__update_sites_extensions', $updateSiteExtension);
 		}
@@ -295,7 +295,7 @@ class FOFUtilsUpdate extends FOFModel
 				{
 					// Update site not defined. Create a new one.
 					$update_site['update_site_id'] = $id;
-					$newSite                       = (object) $update_site;
+					$newSite = (object)$update_site;
 					$db->insertObject('#__update_sites', $newSite);
 
 					// Update site is now up-to-date, don't need to refresh it anymore.
@@ -325,7 +325,7 @@ class FOFUtilsUpdate extends FOFModel
 				}
 
 				$update_site['update_site_id'] = $id;
-				$newSite                       = (object) $update_site;
+				$newSite = (object)$update_site;
 				$db->updateObject('#__update_sites', $newSite, 'update_site_id', true);
 			}
 		}

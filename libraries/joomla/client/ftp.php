@@ -54,40 +54,41 @@ if (!defined('FTP_NATIVE'))
 class JClientFtp
 {
 	/**
-	 * @var    array  JClientFtp instances container.
-	 * @since  12.1
-	 */
-	protected static $instances = array();
-	/**
 	 * @var    resource  Socket resource
 	 * @since  12.1
 	 */
 	protected $_conn = null;
+
 	/**
 	 * @var    resource  Data port connection resource
 	 * @since  12.1
 	 */
 	protected $_dataconn = null;
+
 	/**
 	 * @var    array  Passive connection information
 	 * @since  12.1
 	 */
 	protected $_pasv = null;
+
 	/**
 	 * @var    string  Response Message
 	 * @since  12.1
 	 */
 	protected $_response = null;
+
 	/**
 	 * @var    integer  Timeout limit
 	 * @since  12.1
 	 */
 	protected $_timeout = 15;
+
 	/**
 	 * @var    integer  Transfer Type
 	 * @since  12.1
 	 */
 	protected $_type = null;
+
 	/**
 	 * @var    array  Array to hold ascii format file extensions
 	 * @since   12.1
@@ -114,6 +115,7 @@ class JClientFtp
 		"txt",
 		"xhtml",
 		"xml");
+
 	/**
 	 * Array to hold native line ending characters
 	 *
@@ -123,9 +125,15 @@ class JClientFtp
 	protected $_lineEndings = array('UNIX' => "\n", 'WIN' => "\r\n");
 
 	/**
+	 * @var    array  JClientFtp instances container.
+	 * @since  12.1
+	 */
+	protected static $instances = array();
+
+	/**
 	 * JClientFtp object constructor
 	 *
-	 * @param   array $options Associative array of options to set
+	 * @param   array  $options  Associative array of options to set
 	 *
 	 * @since   12.1
 	 */
@@ -150,27 +158,18 @@ class JClientFtp
 	}
 
 	/**
-	 * Set client options
+	 * JClientFtp object destructor
 	 *
-	 * @param   array $options Associative array of options to set
-	 *
-	 * @return  boolean  True if successful
+	 * Closes an existing connection, if we have one
 	 *
 	 * @since   12.1
 	 */
-	public function setOptions(array $options)
+	public function __destruct()
 	{
-		if (isset($options['type']))
+		if (is_resource($this->_conn))
 		{
-			$this->_type = $options['type'];
+			$this->quit();
 		}
-
-		if (isset($options['timeout']))
-		{
-			$this->_timeout = $options['timeout'];
-		}
-
-		return true;
 	}
 
 	/**
@@ -182,11 +181,11 @@ class JClientFtp
 	 * If you do not use this option, you must quit() the current connection when you
 	 * are done, to free it for use by others.
 	 *
-	 * @param   string $host    Host to connect to
-	 * @param   string $port    Port to connect to
-	 * @param   array  $options Array with any of these options: type=>[FTP_AUTOASCII|FTP_ASCII|FTP_BINARY], timeout=>(int)
-	 * @param   string $user    Username to use for a connection
-	 * @param   string $pass    Password to use for a connection
+	 * @param   string  $host     Host to connect to
+	 * @param   string  $port     Port to connect to
+	 * @param   array   $options  Array with any of these options: type=>[FTP_AUTOASCII|FTP_ASCII|FTP_BINARY], timeout=>(int)
+	 * @param   string  $user     Username to use for a connection
+	 * @param   string  $pass     Password to use for a connection
 	 *
 	 * @return  JClientFtp        The FTP Client object.
 	 *
@@ -221,40 +220,25 @@ class JClientFtp
 	}
 
 	/**
-	 * JClientFtp object destructor
+	 * Set client options
 	 *
-	 * Closes an existing connection, if we have one
-	 *
-	 * @since   12.1
-	 */
-	public function __destruct()
-	{
-		if (is_resource($this->_conn))
-		{
-			$this->quit();
-		}
-	}
-
-	/**
-	 * Method to quit and close the connection
+	 * @param   array  $options  Associative array of options to set
 	 *
 	 * @return  boolean  True if successful
 	 *
 	 * @since   12.1
 	 */
-	public function quit()
+	public function setOptions(array $options)
 	{
-		// If native FTP support is enabled lets use it...
-		if (FTP_NATIVE)
+		if (isset($options['type']))
 		{
-			@ftp_close($this->_conn);
-
-			return true;
+			$this->_type = $options['type'];
 		}
 
-		// Logout and close connection
-		@fwrite($this->_conn, "QUIT\r\n");
-		@fclose($this->_conn);
+		if (isset($options['timeout']))
+		{
+			$this->_timeout = $options['timeout'];
+		}
 
 		return true;
 	}
@@ -262,8 +246,8 @@ class JClientFtp
 	/**
 	 * Method to connect to a FTP server
 	 *
-	 * @param   string $host Host to connect to [Default: 127.0.0.1]
-	 * @param   string $port Port to connect on [Default: port 21]
+	 * @param   string  $host  Host to connect to [Default: 127.0.0.1]
+	 * @param   string  $port  Port to connect on [Default: port 21]
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -272,7 +256,7 @@ class JClientFtp
 	public function connect($host = '127.0.0.1', $port = 21)
 	{
 		$errno = null;
-		$err   = null;
+		$err = null;
 
 		// If already connected, return
 		if (is_resource($this->_conn))
@@ -322,67 +306,6 @@ class JClientFtp
 	}
 
 	/**
-	 * Verify the response code from the server and log response if flag is set
-	 *
-	 * @param   mixed $expected Integer response code or array of integer response codes
-	 *
-	 * @return  boolean  True if response code from the server is expected
-	 *
-	 * @since   12.1
-	 */
-	protected function _verifyResponse($expected)
-	{
-		$parts = null;
-
-		// Wait for a response from the server, but timeout after the set time limit
-		$endTime         = time() + $this->_timeout;
-		$this->_response = '';
-
-		do
-		{
-			$this->_response .= fgets($this->_conn, 4096);
-		} while (!preg_match("/^([0-9]{3})(-(.*" . CRLF . ")+\\1)? [^" . CRLF . "]+" . CRLF . "$/", $this->_response, $parts) && time() < $endTime);
-
-		// Catch a timeout or bad response
-		if (!isset($parts[1]))
-		{
-			JLog::add(JText::sprintf('JLIB_CLIENT_ERROR_JFTP_VERIFYRESPONSE', $this->_response), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-
-		// Separate the code from the message
-		$this->_responseCode = $parts[1];
-		$this->_responseMsg  = $parts[0];
-
-		// Did the server respond with the code we wanted?
-		if (is_array($expected))
-		{
-			if (in_array($this->_responseCode, $expected))
-			{
-				$retval = true;
-			}
-			else
-			{
-				$retval = false;
-			}
-		}
-		else
-		{
-			if ($this->_responseCode == $expected)
-			{
-				$retval = true;
-			}
-			else
-			{
-				$retval = false;
-			}
-		}
-
-		return $retval;
-	}
-
-	/**
 	 * Method to determine if the object is connected to an FTP server
 	 *
 	 * @return  boolean  True if connected
@@ -397,8 +320,8 @@ class JClientFtp
 	/**
 	 * Method to login to a server once connected
 	 *
-	 * @param   string $user Username to login to the server
-	 * @param   string $pass Password to login to the server
+	 * @param   string  $user  Username to login to the server
+	 * @param   string  $pass  Password to login to the server
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -445,32 +368,27 @@ class JClientFtp
 	}
 
 	/**
-	 * Send command to the FTP server and validate an expected response code
+	 * Method to quit and close the connection
 	 *
-	 * @param   string $cmd              Command to send to the FTP server
-	 * @param   mixed  $expectedResponse Integer response code or array of integer response codes
-	 *
-	 * @return  boolean  True if command executed successfully
+	 * @return  boolean  True if successful
 	 *
 	 * @since   12.1
 	 */
-	protected function _putCmd($cmd, $expectedResponse)
+	public function quit()
 	{
-		// Make sure we have a connection to the server
-		if (!is_resource($this->_conn))
+		// If native FTP support is enabled lets use it...
+		if (FTP_NATIVE)
 		{
-			JLog::add(JText::_('JLIB_CLIENT_ERROR_JFTP_PUTCMD_UNCONNECTED'), JLog::WARNING, 'jerror');
+			@ftp_close($this->_conn);
 
-			return false;
+			return true;
 		}
 
-		// Send the command to the server
-		if (!fwrite($this->_conn, $cmd . "\r\n"))
-		{
-			JLog::add(JText::sprintf('DDD', JText::sprintf('JLIB_CLIENT_ERROR_JFTP_PUTCMD_SEND', $cmd)), JLog::WARNING, 'jerror');
-		}
+		// Logout and close connection
+		@fwrite($this->_conn, "QUIT\r\n");
+		@fclose($this->_conn);
 
-		return $this->_verifyResponse($expectedResponse);
+		return true;
 	}
 
 	/**
@@ -565,7 +483,7 @@ class JClientFtp
 	/**
 	 * Method to change the current working directory on the FTP server
 	 *
-	 * @param   string $path Path to change into on the server
+	 * @param   string  $path  Path to change into on the server
 	 *
 	 * @return  boolean True if successful
 	 *
@@ -635,8 +553,8 @@ class JClientFtp
 	/**
 	 * Method to rename a file/folder on the FTP server
 	 *
-	 * @param   string $from Path to change file/folder from
-	 * @param   string $to   Path to change file/folder to
+	 * @param   string  $from  Path to change file/folder from
+	 * @param   string  $to    Path to change file/folder to
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -679,8 +597,8 @@ class JClientFtp
 	/**
 	 * Method to change mode for a path on the FTP server
 	 *
-	 * @param   string $path Path to change mode on
-	 * @param   mixed  $mode Octal value to change mode to, e.g. '0777', 0777 or 511 (string or integer)
+	 * @param   string  $path  Path to change mode on
+	 * @param   mixed   $mode  Octal value to change mode to, e.g. '0777', 0777 or 511 (string or integer)
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -733,7 +651,7 @@ class JClientFtp
 	/**
 	 * Method to delete a path [file/folder] on the FTP server
 	 *
-	 * @param   string $path Path to delete
+	 * @param   string  $path  Path to delete
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -774,7 +692,7 @@ class JClientFtp
 	/**
 	 * Method to create a directory on the FTP server
 	 *
-	 * @param   string $path Directory to create
+	 * @param   string  $path  Directory to create
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -809,7 +727,7 @@ class JClientFtp
 	/**
 	 * Method to restart data transfer at a given byte
 	 *
-	 * @param   integer $point Byte to restart transfer at
+	 * @param   integer  $point  Byte to restart transfer at
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -844,7 +762,7 @@ class JClientFtp
 	/**
 	 * Method to create an empty file on the FTP server
 	 *
-	 * @param   string $path Path local file to store on the FTP server
+	 * @param   string  $path  Path local file to store on the FTP server
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -908,95 +826,10 @@ class JClientFtp
 	}
 
 	/**
-	 * Set server to passive mode and open a data port connection
-	 *
-	 * @return  boolean  True if successful
-	 *
-	 * @since   12.1
-	 */
-	protected function _passive()
-	{
-		$match = array();
-		$parts = array();
-		$errno = null;
-		$err   = null;
-
-		// Make sure we have a connection to the server
-		if (!is_resource($this->_conn))
-		{
-			JLog::add(JText::_('JLIB_CLIENT_ERROR_JFTP_PASSIVE_CONNECT_PORT'), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-
-		// Request a passive connection - this means, we'll talk to you, you don't talk to us.
-		@ fwrite($this->_conn, "PASV\r\n");
-
-		// Wait for a response from the server, but timeout after the set time limit
-		$endTime         = time() + $this->_timeout;
-		$this->_response = '';
-
-		do
-		{
-			$this->_response .= fgets($this->_conn, 4096);
-		} while (!preg_match("/^([0-9]{3})(-(.*" . CRLF . ")+\\1)? [^" . CRLF . "]+" . CRLF . "$/", $this->_response, $parts) && time() < $endTime);
-
-		// Catch a timeout or bad response
-		if (!isset($parts[1]))
-		{
-			JLog::add(JText::sprintf('JLIB_CLIENT_ERROR_JFTP_PASSIVE_RESPONSE', $this->_response), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-
-		// Separate the code from the message
-		$this->_responseCode = $parts[1];
-		$this->_responseMsg  = $parts[0];
-
-		// If it's not 227, we weren't given an IP and port, which means it failed.
-		if ($this->_responseCode != '227')
-		{
-			JLog::add(JText::sprintf('JLIB_CLIENT_ERROR_JFTP_PASSIVE_IP_OBTAIN', $this->_responseMsg), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-
-		// Snatch the IP and port information, or die horribly trying...
-		if (preg_match('~\((\d+),\s*(\d+),\s*(\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))\)~', $this->_responseMsg, $match) == 0)
-		{
-			JLog::add(JText::sprintf('JLIB_CLIENT_ERROR_JFTP_PASSIVE_IP_VALID', $this->_responseMsg), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-
-		// This is pretty simple - store it for later use ;).
-		$this->_pasv = array('ip' => $match[1] . '.' . $match[2] . '.' . $match[3] . '.' . $match[4], 'port' => $match[5] * 256 + $match[6]);
-
-		// Connect, assuming we've got a connection.
-		$this->_dataconn = @fsockopen($this->_pasv['ip'], $this->_pasv['port'], $errno, $err, $this->_timeout);
-
-		if (!$this->_dataconn)
-		{
-			JLog::add(
-				JText::sprintf('JLIB_CLIENT_ERROR_JFTP_PASSIVE_CONNECT', $this->_pasv['ip'], $this->_pasv['port'], $errno, $err),
-				JLog::WARNING,
-				'jerror'
-			);
-
-			return false;
-		}
-
-		// Set the timeout for this connection
-		socket_set_timeout($this->_conn, $this->_timeout, 0);
-
-		return true;
-	}
-
-	/**
 	 * Method to read a file from the FTP server's contents into a buffer
 	 *
-	 * @param   string $remote  Path to remote file to read on the FTP server
-	 * @param   string &$buffer Buffer variable to read file contents into
+	 * @param   string  $remote   Path to remote file to read on the FTP server
+	 * @param   string  &$buffer  Buffer variable to read file contents into
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -1094,81 +927,10 @@ class JClientFtp
 	}
 
 	/**
-	 * Method to find out the correct transfer mode for a specific file
-	 *
-	 * @param   string $fileName Name of the file
-	 *
-	 * @return  integer Transfer-mode for this filetype [FTP_ASCII|FTP_BINARY]
-	 *
-	 * @since   12.1
-	 */
-	protected function _findMode($fileName)
-	{
-		if ($this->_type == FTP_AUTOASCII)
-		{
-			$dot = strrpos($fileName, '.') + 1;
-			$ext = substr($fileName, $dot);
-
-			if (in_array($ext, $this->_autoAscii))
-			{
-				$mode = FTP_ASCII;
-			}
-			else
-			{
-				$mode = FTP_BINARY;
-			}
-		}
-		elseif ($this->_type == FTP_ASCII)
-		{
-			$mode = FTP_ASCII;
-		}
-		else
-		{
-			$mode = FTP_BINARY;
-		}
-
-		return $mode;
-	}
-
-	/**
-	 * Set transfer mode
-	 *
-	 * @param   integer $mode Integer representation of data transfer mode [1:Binary|0:Ascii]
-	 *                        Defined constants can also be used [FTP_BINARY|FTP_ASCII]
-	 *
-	 * @return  boolean  True if successful
-	 *
-	 * @since   12.1
-	 */
-	protected function _mode($mode)
-	{
-		if ($mode == FTP_BINARY)
-		{
-			if (!$this->_putCmd("TYPE I", 200))
-			{
-				JLog::add(JText::sprintf('JLIB_CLIENT_ERROR_JFTP_MODE_BINARY', $this->_response), JLog::WARNING, 'jerror');
-
-				return false;
-			}
-		}
-		else
-		{
-			if (!$this->_putCmd("TYPE A", 200))
-			{
-				JLog::add(JText::sprintf('JLIB_CLIENT_ERROR_JFTP_MODE_ASCII', $this->_response), JLog::WARNING, 'jerror');
-
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	 * Method to get a file from the FTP server and save it to a local file
 	 *
-	 * @param   string $local  Local path to save remote file to
-	 * @param   string $remote Path to remote file to get on the FTP server
+	 * @param   string  $local   Local path to save remote file to
+	 * @param   string  $remote  Path to remote file to get on the FTP server
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -1252,8 +1014,8 @@ class JClientFtp
 	/**
 	 * Method to store a file to the FTP server
 	 *
-	 * @param   string $local  Path to local file to store on the FTP server
-	 * @param   string $remote FTP path to file to create
+	 * @param   string  $local   Path to local file to store on the FTP server
+	 * @param   string  $remote  FTP path to file to create
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -1347,7 +1109,8 @@ class JClientFtp
 				}
 
 				$line = substr($line, $result);
-			} while ($line != "");
+			}
+			while ($line != "");
 		}
 
 		fclose($fp);
@@ -1366,8 +1129,8 @@ class JClientFtp
 	/**
 	 * Method to write a string to the FTP server
 	 *
-	 * @param   string $remote FTP path to file to write to
-	 * @param   string $buffer Contents to write to the FTP server
+	 * @param   string  $remote  FTP path to file to write to
+	 * @param   string  $buffer  Contents to write to the FTP server
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -1437,7 +1200,8 @@ class JClientFtp
 			}
 
 			$buffer = substr($buffer, $result);
-		} while ($buffer != "");
+		}
+		while ($buffer != "");
 
 		// Close the data connection port [Data transfer complete]
 		fclose($this->_dataconn);
@@ -1456,8 +1220,8 @@ class JClientFtp
 	/**
 	 * Method to append a string to the FTP server
 	 *
-	 * @param   string $remote FTP path to file to append to
-	 * @param   string $buffer Contents to append to the FTP server
+	 * @param   string  $remote  FTP path to file to append to
+	 * @param   string  $buffer  Contents to append to the FTP server
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -1525,7 +1289,8 @@ class JClientFtp
 			}
 
 			$buffer = substr($buffer, $result);
-		} while ($buffer != '');
+		}
+		while ($buffer != '');
 
 		// Close the data connection port [Data transfer complete]
 		fclose($this->_dataconn);
@@ -1542,7 +1307,7 @@ class JClientFtp
 	/**
 	 * Get the size of the remote file.
 	 *
-	 * @param   string $remote FTP path to file whose size to get
+	 * @param   string  $remote  FTP path to file whose size to get
 	 *
 	 * @return  mixed  number of bytes or false on error
 	 *
@@ -1557,8 +1322,8 @@ class JClientFtp
 			// In case ftp_size fails, try the SIZE command directly.
 			if ($size === -1)
 			{
-				$response        = ftp_raw($this->_conn, 'SIZE ' . $remote);
-				$responseCode    = substr($response[0], 0, 3);
+				$response = ftp_raw($this->_conn, 'SIZE ' . $remote);
+				$responseCode = substr($response[0], 0, 3);
 				$responseMessage = substr($response[0], 4);
 
 				if ($responseCode != '213')
@@ -1595,7 +1360,7 @@ class JClientFtp
 	 * Note: Some servers also return folder names. However, to be sure to list folders on all
 	 * servers, you should use listDetails() instead if you also need to deal with folders
 	 *
-	 * @param   string $path Path local file to store on the FTP server
+	 * @param   string  $path  Path local file to store on the FTP server
 	 *
 	 * @return  string  Directory listing
 	 *
@@ -1704,8 +1469,8 @@ class JClientFtp
 	/**
 	 * Method to list the contents of a directory on the FTP server
 	 *
-	 * @param   string $path Path to the local file to be stored on the FTP server
-	 * @param   string $type Return type [raw|all|folders|files]
+	 * @param   string  $path  Path to the local file to be stored on the FTP server
+	 * @param   string  $type  Return type [raw|all|folders|files]
 	 *
 	 * @return  mixed  If $type is raw: string Directory listing, otherwise array of string with file-names
 	 *
@@ -1714,8 +1479,8 @@ class JClientFtp
 	public function listDetails($path = null, $type = 'all')
 	{
 		$dir_list = array();
-		$data     = null;
-		$regs     = null;
+		$data = null;
+		$regs = null;
 
 		// TODO: Deal with recurse -- nightmare
 		// For now we will just set it to false
@@ -1812,9 +1577,9 @@ class JClientFtp
 		$regexps = array(
 			'UNIX' => '#([-dl][rwxstST-]+).* ([0-9]*) ([a-zA-Z0-9]+).* ([a-zA-Z0-9]+).* ([0-9]*)'
 				. ' ([a-zA-Z]+[0-9: ]*[0-9])[ ]+(([0-9]{1,2}:[0-9]{2})|[0-9]{4}) (.+)#',
-			'MAC'  => '#([-dl][rwxstST-]+).* ?([0-9 ]*)?([a-zA-Z0-9]+).* ([a-zA-Z0-9]+).* ([0-9]*)'
+			'MAC' => '#([-dl][rwxstST-]+).* ?([0-9 ]*)?([a-zA-Z0-9]+).* ([a-zA-Z0-9]+).* ([0-9]*)'
 				. ' ([a-zA-Z]+[0-9: ]*[0-9])[ ]+(([0-9]{2}:[0-9]{2})|[0-9]{4}) (.+)#',
-			'WIN'  => '#([0-9]{2})-([0-9]{2})-([0-9]{2}) +([0-9]{2}):([0-9]{2})(AM|PM) +([0-9]+|<DIR>) +(.+)#'
+			'WIN' => '#([0-9]{2})-([0-9]{2})-([0-9]{2}) +([0-9]{2}):([0-9]{2})(AM|PM) +([0-9]+|<DIR>) +(.+)#'
 		);
 
 		// Find out the format of the directory listing by matching one of the regexps
@@ -1849,16 +1614,16 @@ class JClientFtp
 					$fType = (int) strpos("-dl", $regs[1]{0});
 
 					// $tmp_array['line'] = $regs[0];
-					$tmp_array['type']   = $fType;
+					$tmp_array['type'] = $fType;
 					$tmp_array['rights'] = $regs[1];
 
 					// $tmp_array['number'] = $regs[2];
-					$tmp_array['user']  = $regs[3];
+					$tmp_array['user'] = $regs[3];
 					$tmp_array['group'] = $regs[4];
-					$tmp_array['size']  = $regs[5];
-					$tmp_array['date']  = @date("m-d", strtotime($regs[6]));
-					$tmp_array['time']  = $regs[7];
-					$tmp_array['name']  = $regs[9];
+					$tmp_array['size'] = $regs[5];
+					$tmp_array['date'] = @date("m-d", strtotime($regs[6]));
+					$tmp_array['time'] = $regs[7];
+					$tmp_array['name'] = $regs[9];
 				}
 
 				// If we just want files, do not add a folder
@@ -1887,20 +1652,20 @@ class JClientFtp
 
 				if (@preg_match($regexp, $file, $regs))
 				{
-					$fType     = (int) ($regs[7] == '<DIR>');
+					$fType = (int) ($regs[7] == '<DIR>');
 					$timestamp = strtotime("$regs[3]-$regs[1]-$regs[2] $regs[4]:$regs[5]$regs[6]");
 
 					// $tmp_array['line'] = $regs[0];
-					$tmp_array['type']   = $fType;
+					$tmp_array['type'] = $fType;
 					$tmp_array['rights'] = '';
 
 					// $tmp_array['number'] = 0;
-					$tmp_array['user']  = '';
+					$tmp_array['user'] = '';
 					$tmp_array['group'] = '';
-					$tmp_array['size']  = (int) $regs[7];
-					$tmp_array['date']  = date('m-d', $timestamp);
-					$tmp_array['time']  = date('H:i', $timestamp);
-					$tmp_array['name']  = $regs[8];
+					$tmp_array['size'] = (int) $regs[7];
+					$tmp_array['date'] = date('m-d', $timestamp);
+					$tmp_array['time'] = date('H:i', $timestamp);
+					$tmp_array['name'] = $regs[8];
 				}
 				// If we just want files, do not add a folder
 				if ($type == 'files' && $tmp_array['type'] == 1)
@@ -1922,6 +1687,254 @@ class JClientFtp
 
 		return $dir_list;
 	}
+
+	/**
+	 * Send command to the FTP server and validate an expected response code
+	 *
+	 * @param   string  $cmd               Command to send to the FTP server
+	 * @param   mixed   $expectedResponse  Integer response code or array of integer response codes
+	 *
+	 * @return  boolean  True if command executed successfully
+	 *
+	 * @since   12.1
+	 */
+	protected function _putCmd($cmd, $expectedResponse)
+	{
+		// Make sure we have a connection to the server
+		if (!is_resource($this->_conn))
+		{
+			JLog::add(JText::_('JLIB_CLIENT_ERROR_JFTP_PUTCMD_UNCONNECTED'), JLog::WARNING, 'jerror');
+
+			return false;
+		}
+
+		// Send the command to the server
+		if (!fwrite($this->_conn, $cmd . "\r\n"))
+		{
+			JLog::add(JText::sprintf('DDD', JText::sprintf('JLIB_CLIENT_ERROR_JFTP_PUTCMD_SEND', $cmd)), JLog::WARNING, 'jerror');
+		}
+
+		return $this->_verifyResponse($expectedResponse);
+	}
+
+	/**
+	 * Verify the response code from the server and log response if flag is set
+	 *
+	 * @param   mixed  $expected  Integer response code or array of integer response codes
+	 *
+	 * @return  boolean  True if response code from the server is expected
+	 *
+	 * @since   12.1
+	 */
+	protected function _verifyResponse($expected)
+	{
+		$parts = null;
+
+		// Wait for a response from the server, but timeout after the set time limit
+		$endTime = time() + $this->_timeout;
+		$this->_response = '';
+
+		do
+		{
+			$this->_response .= fgets($this->_conn, 4096);
+		}
+		while (!preg_match("/^([0-9]{3})(-(.*" . CRLF . ")+\\1)? [^" . CRLF . "]+" . CRLF . "$/", $this->_response, $parts) && time() < $endTime);
+
+		// Catch a timeout or bad response
+		if (!isset($parts[1]))
+		{
+			JLog::add(JText::sprintf('JLIB_CLIENT_ERROR_JFTP_VERIFYRESPONSE', $this->_response), JLog::WARNING, 'jerror');
+
+			return false;
+		}
+
+		// Separate the code from the message
+		$this->_responseCode = $parts[1];
+		$this->_responseMsg = $parts[0];
+
+		// Did the server respond with the code we wanted?
+		if (is_array($expected))
+		{
+			if (in_array($this->_responseCode, $expected))
+			{
+				$retval = true;
+			}
+			else
+			{
+				$retval = false;
+			}
+		}
+		else
+		{
+			if ($this->_responseCode == $expected)
+			{
+				$retval = true;
+			}
+			else
+			{
+				$retval = false;
+			}
+		}
+
+		return $retval;
+	}
+
+	/**
+	 * Set server to passive mode and open a data port connection
+	 *
+	 * @return  boolean  True if successful
+	 *
+	 * @since   12.1
+	 */
+	protected function _passive()
+	{
+		$match = array();
+		$parts = array();
+		$errno = null;
+		$err = null;
+
+		// Make sure we have a connection to the server
+		if (!is_resource($this->_conn))
+		{
+			JLog::add(JText::_('JLIB_CLIENT_ERROR_JFTP_PASSIVE_CONNECT_PORT'), JLog::WARNING, 'jerror');
+
+			return false;
+		}
+
+		// Request a passive connection - this means, we'll talk to you, you don't talk to us.
+		@ fwrite($this->_conn, "PASV\r\n");
+
+		// Wait for a response from the server, but timeout after the set time limit
+		$endTime = time() + $this->_timeout;
+		$this->_response = '';
+
+		do
+		{
+			$this->_response .= fgets($this->_conn, 4096);
+		}
+		while (!preg_match("/^([0-9]{3})(-(.*" . CRLF . ")+\\1)? [^" . CRLF . "]+" . CRLF . "$/", $this->_response, $parts) && time() < $endTime);
+
+		// Catch a timeout or bad response
+		if (!isset($parts[1]))
+		{
+			JLog::add(JText::sprintf('JLIB_CLIENT_ERROR_JFTP_PASSIVE_RESPONSE', $this->_response), JLog::WARNING, 'jerror');
+
+			return false;
+		}
+
+		// Separate the code from the message
+		$this->_responseCode = $parts[1];
+		$this->_responseMsg = $parts[0];
+
+		// If it's not 227, we weren't given an IP and port, which means it failed.
+		if ($this->_responseCode != '227')
+		{
+			JLog::add(JText::sprintf('JLIB_CLIENT_ERROR_JFTP_PASSIVE_IP_OBTAIN', $this->_responseMsg), JLog::WARNING, 'jerror');
+
+			return false;
+		}
+
+		// Snatch the IP and port information, or die horribly trying...
+		if (preg_match('~\((\d+),\s*(\d+),\s*(\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))\)~', $this->_responseMsg, $match) == 0)
+		{
+			JLog::add(JText::sprintf('JLIB_CLIENT_ERROR_JFTP_PASSIVE_IP_VALID', $this->_responseMsg), JLog::WARNING, 'jerror');
+
+			return false;
+		}
+
+		// This is pretty simple - store it for later use ;).
+		$this->_pasv = array('ip' => $match[1] . '.' . $match[2] . '.' . $match[3] . '.' . $match[4], 'port' => $match[5] * 256 + $match[6]);
+
+		// Connect, assuming we've got a connection.
+		$this->_dataconn = @fsockopen($this->_pasv['ip'], $this->_pasv['port'], $errno, $err, $this->_timeout);
+
+		if (!$this->_dataconn)
+		{
+			JLog::add(
+				JText::sprintf('JLIB_CLIENT_ERROR_JFTP_PASSIVE_CONNECT', $this->_pasv['ip'], $this->_pasv['port'], $errno, $err),
+				JLog::WARNING,
+				'jerror'
+			);
+
+			return false;
+		}
+
+		// Set the timeout for this connection
+		socket_set_timeout($this->_conn, $this->_timeout, 0);
+
+		return true;
+	}
+
+	/**
+	 * Method to find out the correct transfer mode for a specific file
+	 *
+	 * @param   string  $fileName  Name of the file
+	 *
+	 * @return  integer Transfer-mode for this filetype [FTP_ASCII|FTP_BINARY]
+	 *
+	 * @since   12.1
+	 */
+	protected function _findMode($fileName)
+	{
+		if ($this->_type == FTP_AUTOASCII)
+		{
+			$dot = strrpos($fileName, '.') + 1;
+			$ext = substr($fileName, $dot);
+
+			if (in_array($ext, $this->_autoAscii))
+			{
+				$mode = FTP_ASCII;
+			}
+			else
+			{
+				$mode = FTP_BINARY;
+			}
+		}
+		elseif ($this->_type == FTP_ASCII)
+		{
+			$mode = FTP_ASCII;
+		}
+		else
+		{
+			$mode = FTP_BINARY;
+		}
+
+		return $mode;
+	}
+
+	/**
+	 * Set transfer mode
+	 *
+	 * @param   integer  $mode  Integer representation of data transfer mode [1:Binary|0:Ascii]
+	 * Defined constants can also be used [FTP_BINARY|FTP_ASCII]
+	 *
+	 * @return  boolean  True if successful
+	 *
+	 * @since   12.1
+	 */
+	protected function _mode($mode)
+	{
+		if ($mode == FTP_BINARY)
+		{
+			if (!$this->_putCmd("TYPE I", 200))
+			{
+				JLog::add(JText::sprintf('JLIB_CLIENT_ERROR_JFTP_MODE_BINARY', $this->_response), JLog::WARNING, 'jerror');
+
+				return false;
+			}
+		}
+		else
+		{
+			if (!$this->_putCmd("TYPE A", 200))
+			{
+				JLog::add(JText::sprintf('JLIB_CLIENT_ERROR_JFTP_MODE_ASCII', $this->_response), JLog::WARNING, 'jerror');
+
+				return false;
+			}
+		}
+
+		return true;
+	}
 }
 
 /**
@@ -1935,7 +1948,7 @@ class JFTP extends JClientFtp
 	/**
 	 * JFTP object constructor
 	 *
-	 * @param   array $options Associative array of options to set
+	 * @param   array  $options  Associative array of options to set
 	 *
 	 * @since   11.1
 	 */

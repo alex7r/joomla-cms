@@ -7,6 +7,11 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 use SeleniumClient\By;
+use SeleniumClient\SelectElement;
+use SeleniumClient\WebDriver;
+use SeleniumClient\WebDriverWait;
+use SeleniumClient\DesiredCapabilities;
+use SeleniumClient\WebElement;
 
 /**
  * Class for the back-end control panel screen.
@@ -15,31 +20,36 @@ use SeleniumClient\By;
  */
 class MenuManagerPage extends AdminManagerPage
 {
-	public $filters = array();
-	public $toolbar = array(
-		'New'     => 'toolbar-new',
-		'Edit'    => 'toolbar-edit',
-		'Delete'  => 'toolbar-delete',
-		'Rebuild' => 'toolbar-refresh',
-		'Options' => 'toolbar-options',
-		'Help'    => 'toolbar-help',
-	);
-	public $submenu = array(
-		'option=com_menus&view=items',
-	);
 	protected $waitForXpath = "//ul/li/a[@href='index.php?option=com_menus&view=menus']";
+
 	protected $url = 'administrator/index.php?option=com_menus&view=menus';
+
+	public $filters = array();
+
+	public $toolbar = array (
+			'New' => 'toolbar-new',
+			'Edit' => 'toolbar-edit',
+			'Delete' => 'toolbar-delete',
+			'Rebuild' => 'toolbar-refresh',
+			'Options' => 'toolbar-options',
+			'Help' => 'toolbar-help',
+	);
+
+	public $submenu = array (
+			'option=com_menus&view=items',
+	);
+
 
 	/**
 	 * function to add a menu
 	 *
-	 * @param   string $title       stores value of title
-	 * @param   string $type        stores value of menu type
-	 * @param   string $description stores value of description
+	 * @param   string  $title        stores value of title
+	 * @param   string  $type         stores value of menu type
+	 * @param   string  $description  stores value of description
 	 *
 	 * @return AdminPage
 	 */
-	public function addMenu($title = 'Test Menu', $type = 'testMenu', $description = 'This is a test menu.')
+	public function addMenu($title='Test Menu', $type='testMenu', $description='This is a test menu.')
 	{
 		$this->clickButton('toolbar-new');
 		$menuEditPage = $this->test->getPageObject('MenuEditPage');
@@ -52,7 +62,7 @@ class MenuManagerPage extends AdminManagerPage
 	/**
 	 * function to delete menu
 	 *
-	 * @param   string $title stores value of title
+	 * @param   string  $title  stores value of title
 	 *
 	 * @return void
 	 */
@@ -68,22 +78,10 @@ class MenuManagerPage extends AdminManagerPage
 	}
 
 	/**
-	 * function to check box
-	 *
-	 * @param   string $title stores value of title
-	 *
-	 * @return void
-	 */
-	public function checkBox($title)
-	{
-		$this->driver->findElement(By::xPath("//td[contains(., '" . $title . "')]/../td/input"))->click();
-	}
-
-	/**
 	 * function to edit page
 	 *
-	 * @param   string $title  stores value of title
-	 * @param   array  $fields stores value of input fields
+	 * @param   string $title   stores value of title
+	 * @param   array  $fields  stores value of input fields
 	 *
 	 * @return AdminPage
 	 */
@@ -92,7 +90,7 @@ class MenuManagerPage extends AdminManagerPage
 		$this->checkBox($title);
 		$this->clickButton('Edit');
 
-		/* @var $menuEditPage MenuEditPage */
+		/* @var $menuEditPage MenuEditPage*/
 
 		$menuEditPage = $this->test->getPageObject('MenuEditPage');
 		$menuEditPage->setFieldValues($fields);
@@ -102,10 +100,22 @@ class MenuManagerPage extends AdminManagerPage
 	}
 
 	/**
+	 * function to check box
+	 *
+	 * @param   string  $title  stores value of title
+	 *
+	 * @return void
+	 */
+	public function checkBox($title)
+	{
+		$this->driver->findElement(By::xPath("//td[contains(., '" . $title . "')]/../td/input"))->click();
+	}
+
+	/**
 	 * Returns an array of field values from an edit screen.
 	 *
-	 * @param string $itemName   Name of item (user name, article title, and so on)
-	 * @param array  $fieldNames Array of field labels to get values of.
+	 * @param string  $itemName    Name of item (user name, article title, and so on)
+	 * @param array   $fieldNames  Array of field labels to get values of.
 	 *
 	 * @return string
 	 */
@@ -114,7 +124,7 @@ class MenuManagerPage extends AdminManagerPage
 		$this->checkBox($itemName);
 		$this->clickButton('Edit');
 		$this->editItem = $this->test->getPageObject($className);
-		$result         = array();
+		$result = array();
 
 		if (is_array($fieldNames))
 		{

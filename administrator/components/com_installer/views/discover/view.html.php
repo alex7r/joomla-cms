@@ -21,7 +21,7 @@ class InstallerViewDiscover extends InstallerViewDefault
 	/**
 	 * Display the view.
 	 *
-	 * @param   string $tpl Template
+	 * @param   string  $tpl  Template
 	 *
 	 * @return  void
 	 *
@@ -52,28 +52,6 @@ class InstallerViewDiscover extends InstallerViewDefault
 	}
 
 	/**
-	 * Check extensions.
-	 *
-	 * Checks uninstalled extensions in extensions table.
-	 *
-	 * @return  boolean  True if there are discovered extensions on the database.
-	 *
-	 * @since   3.5
-	 */
-	public function checkExtensions()
-	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true)
-			->select('*')
-			->from($db->quoteName('#__extensions'))
-			->where($db->quoteName('state') . ' = -1');
-		$db->setQuery($query);
-		$discoveredExtensions = $db->loadObjectList();
-
-		return (count($discoveredExtensions) === 0) ? false : true;
-	}
-
-	/**
 	 * Add the page title and toolbar.
 	 *
 	 * @return  void
@@ -93,5 +71,27 @@ class InstallerViewDiscover extends InstallerViewDefault
 
 		parent::addToolbar();
 		JToolbarHelper::help('JHELP_EXTENSIONS_EXTENSION_MANAGER_DISCOVER');
+	}
+
+	/**
+	 * Check extensions.
+	 *
+	 * Checks uninstalled extensions in extensions table.
+	 *
+	 * @return  boolean  True if there are discovered extensions on the database.
+	 *
+	 * @since   3.5
+	 */
+	public function checkExtensions()
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName('#__extensions'))
+			->where($db->quoteName('state') . ' = -1');
+		$db->setQuery($query);
+		$discoveredExtensions = $db->loadObjectList();
+
+		return (count($discoveredExtensions) === 0) ? false : true;
 	}
 }

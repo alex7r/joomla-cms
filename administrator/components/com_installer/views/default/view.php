@@ -19,7 +19,7 @@ class InstallerViewDefault extends JViewLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config Configuration array
+	 * @param   array  $config  Configuration array
 	 *
 	 * @since   1.5
 	 */
@@ -34,7 +34,7 @@ class InstallerViewDefault extends JViewLegacy
 	/**
 	 * Display the view.
 	 *
-	 * @param   string $tpl Template
+	 * @param   string  $tpl  Template
 	 *
 	 * @return  void
 	 *

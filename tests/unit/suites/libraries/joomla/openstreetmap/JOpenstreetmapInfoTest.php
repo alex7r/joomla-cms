@@ -58,12 +58,45 @@ XML;
 
 	/**
 	 * @var    string  Sample XML error message.
-	 * @since  13.1
-	 */
+	* @since  13.1
+	*/
 	protected $errorString = <<<XML
 <?xml version='1.0'?>
 <osm>ERROR</osm>
 XML;
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	* This method is called before a test is executed.
+	*
+	* @access protected
+	*
+	* @return void
+	*/
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$key = "app_key";
+		$secret = "app_secret";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input = new JInput;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth = new JOpenstreetmapOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JOpenstreetmapInfo($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('sendheaders', true);
+	}
 
 	/**
 	 * Tests the getCapabilities method
@@ -74,20 +107,20 @@ XML;
 	 */
 	public function testGetCapabilities()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleXml;
 
 		$path = 'capabilities';
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
-			$this->object->getCapabilities(),
-			$this->equalTo(new SimpleXMLElement($this->sampleXml))
+				$this->object->getCapabilities(),
+				$this->equalTo(new SimpleXMLElement($this->sampleXml))
 		);
 	}
 
@@ -101,16 +134,16 @@ XML;
 	 */
 	public function testGetCapabilitiesFailure()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = 'capabilities';
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->object->getCapabilities();
 	}
@@ -124,25 +157,25 @@ XML;
 	 */
 	public function testRetrieveMapData()
 	{
-		$left   = '1';
+		$left = '1';
 		$bottom = '1';
-		$right  = '2';
-		$top    = '2';
+		$right = '2';
+		$top = '2';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleXml;
 
 		$path = 'map?bbox=' . $left . ',' . $bottom . ',' . $right . ',' . $top;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
-			$this->object->retrieveMapData($left, $bottom, $right, $top),
-			$this->equalTo(new SimpleXMLElement($this->sampleXml))
+				$this->object->retrieveMapData($left, $bottom, $right, $top),
+				$this->equalTo(new SimpleXMLElement($this->sampleXml))
 		);
 	}
 
@@ -156,21 +189,21 @@ XML;
 	 */
 	public function testRetrieveMapDataFailure()
 	{
-		$left   = '1';
+		$left = '1';
 		$bottom = '1';
-		$right  = '2';
-		$top    = '2';
+		$right = '2';
+		$top = '2';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = 'map?bbox=' . $left . ',' . $bottom . ',' . $right . ',' . $top;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->object->retrieveMapData($left, $bottom, $right, $top);
 	}
@@ -185,20 +218,20 @@ XML;
 	public function testRetrievePermissions()
 	{
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleXml;
 
 		$path = 'permissions';
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
-			$this->object->retrievePermissions(),
-			$this->equalTo(new SimpleXMLElement($this->sampleXml))
+				$this->object->retrievePermissions(),
+				$this->equalTo(new SimpleXMLElement($this->sampleXml))
 		);
 	}
 
@@ -213,50 +246,17 @@ XML;
 	public function testRetrievePermissionsFailure()
 	{
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = 'permissions';
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->object->retrievePermissions();
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$key    = "app_key";
-		$secret = "app_secret";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input   = new JInput;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth   = new JOpenstreetmapOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JOpenstreetmapInfo($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('sendheaders', true);
 	}
 }

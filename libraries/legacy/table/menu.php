@@ -21,7 +21,7 @@ class JTableMenu extends JTableNested
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver $db Database driver object.
+	 * @param   JDatabaseDriver  $db  Database driver object.
 	 *
 	 * @since   11.1
 	 */
@@ -36,8 +36,8 @@ class JTableMenu extends JTableNested
 	/**
 	 * Overloaded bind function
 	 *
-	 * @param   array $array  Named array
-	 * @param   mixed $ignore An optional array or space separated list of properties to ignore while binding.
+	 * @param   array  $array   Named array
+	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  mixed  Null if operation was satisfactory, otherwise returns an error
 	 *
@@ -170,7 +170,7 @@ class JTableMenu extends JTableNested
 	/**
 	 * Overloaded store function
 	 *
-	 * @param   boolean $updateNulls True to update fields even if they are null.
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
 	 * @return  mixed  False on failure, positive integer on success.
 	 *
@@ -186,14 +186,13 @@ class JTableMenu extends JTableNested
 
 		if ($table->load(
 				array(
-					'alias'     => $this->alias,
-					'parent_id' => $this->parent_id,
-					'client_id' => (int) $this->client_id,
-					'language'  => $this->language
+				'alias' => $this->alias,
+				'parent_id' => $this->parent_id,
+				'client_id' => (int) $this->client_id,
+				'language' => $this->language
 				)
 			)
-			&& ($table->id != $this->id || $this->id == 0)
-		)
+			&& ($table->id != $this->id || $this->id == 0))
 		{
 			if ($this->menutype == $table->menutype)
 			{
@@ -212,13 +211,12 @@ class JTableMenu extends JTableNested
 			// Verify that the home page for this menu is unique.
 			if ($table->load(
 					array(
-						'menutype'  => $this->menutype,
-						'client_id' => (int) $this->client_id,
-						'home'      => '1'
+					'menutype' => $this->menutype,
+					'client_id' => (int) $this->client_id,
+					'home' => '1'
 					)
 				)
-				&& ($table->language != $this->language)
-			)
+				&& ($table->language != $this->language))
 			{
 				$this->setError(JText::_('JLIB_DATABASE_ERROR_MENU_HOME_NOT_UNIQUE_IN_MENU'));
 
@@ -235,8 +233,8 @@ class JTableMenu extends JTableNested
 					return false;
 				}
 
-				$table->home             = 0;
-				$table->checked_out      = 0;
+				$table->home = 0;
+				$table->checked_out = 0;
 				$table->checked_out_time = $db->getNullDate();
 				$table->store();
 			}
@@ -249,7 +247,7 @@ class JTableMenu extends JTableNested
 
 		// Get the new path in case the node was moved
 		$pathNodes = $this->getPath();
-		$segments  = array();
+		$segments = array();
 
 		foreach ($pathNodes as $node)
 		{

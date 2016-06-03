@@ -28,7 +28,7 @@ class JFolderTest extends TestCase
 	 */
 	public function testDeleteArrayPath()
 	{
-		JFolder::delete(array('/path/to/folder'));
+		JFolder::delete(array('/path/to/folder') );
 	}
 
 	/**
@@ -64,7 +64,7 @@ class JFolderTest extends TestCase
 		file_put_contents(JPath::clean(JPATH_TESTS . '/tmp/test/test/index.txt'), 'test');
 
 		// Use of realpath to ensure test works for on all platforms
-		$result    = JFolder::files(JPath::clean(JPATH_TESTS . '/tmp/test'), 'index.*', true, true, array('index.html'));
+		$result = JFolder::files(JPath::clean(JPATH_TESTS . '/tmp/test'), 'index.*', true, true, array('index.html'));
 		$result[0] = realpath($result[0]);
 		$result[1] = realpath($result[1]);
 		$this->assertEquals(
@@ -77,7 +77,7 @@ class JFolderTest extends TestCase
 		);
 
 		// Use of realpath to ensure test works for on all platforms
-		$result    = JFolder::files(JPath::clean(JPATH_TESTS . '/tmp/test'), 'index.html', true, true);
+		$result = JFolder::files(JPath::clean(JPATH_TESTS . '/tmp/test'), 'index.html', true, true);
 		$result[0] = realpath($result[0]);
 		$result[1] = realpath($result[1]);
 		$this->assertEquals(
@@ -99,7 +99,7 @@ class JFolderTest extends TestCase
 		);
 
 		// Use of realpath to ensure test works for on all platforms
-		$result    = JFolder::files(JPath::clean(JPATH_TESTS . '/tmp/test'), 'index.html', false, true);
+		$result = JFolder::files(JPath::clean(JPATH_TESTS . '/tmp/test'), 'index.html', false, true);
 		$result[0] = realpath($result[0]);
 		$this->assertEquals(
 			array(
@@ -133,47 +133,6 @@ class JFolderTest extends TestCase
 	}
 
 	/**
-	 * Convenience method to cleanup before and after testFiles
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	private function _cleanupTestFiles()
-	{
-		$this->_cleanupFile(JPath::clean(JPATH_TESTS . '/tmp/test/test/index.html'));
-		$this->_cleanupFile(JPath::clean(JPATH_TESTS . '/tmp/test/test/index.txt'));
-		$this->_cleanupFile(JPath::clean(JPATH_TESTS . '/tmp/test/test'));
-		$this->_cleanupFile(JPath::clean(JPATH_TESTS . '/tmp/test/index.html'));
-		$this->_cleanupFile(JPath::clean(JPATH_TESTS . '/tmp/test/index.txt'));
-		$this->_cleanupFile(JPath::clean(JPATH_TESTS . '/tmp/test'));
-	}
-
-	/**
-	 * Convenience method to clean up for files test
-	 *
-	 * @param   string $path The path to clean
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	private function _cleanupFile($path)
-	{
-		if (file_exists($path))
-		{
-			if (is_file($path))
-			{
-				unlink($path);
-			}
-			elseif (is_dir($path))
-			{
-				rmdir($path);
-			}
-		}
-	}
-
-	/**
 	 * Tests the JFolder::folders method.
 	 *
 	 * @return  void
@@ -200,7 +159,7 @@ class JFolderTest extends TestCase
 		);
 
 		// Use of realpath to ensure test works for on all platforms
-		$result    = JFolder::folders(JPath::clean(JPATH_TESTS . '/tmp/test'), 'bar1', true, true, array('foo1'));
+		$result = JFolder::folders(JPath::clean(JPATH_TESTS . '/tmp/test'), 'bar1', true, true, array('foo1'));
 		$result[0] = realpath($result[0]);
 		$this->assertEquals(
 			array(JPath::clean(JPATH_TESTS . '/tmp/test/foo2/bar1')),
@@ -208,7 +167,7 @@ class JFolderTest extends TestCase
 		);
 
 		// Use of realpath to ensure test works for on all platforms
-		$result    = JFolder::folders(JPath::clean(JPATH_TESTS . '/tmp/test'), 'bar1', true, true);
+		$result = JFolder::folders(JPath::clean(JPATH_TESTS . '/tmp/test'), 'bar1', true, true);
 		$result[0] = realpath($result[0]);
 		$result[1] = realpath($result[1]);
 		$this->assertEquals(
@@ -220,7 +179,7 @@ class JFolderTest extends TestCase
 		);
 
 		// Use of realpath to ensure test works for on all platforms
-		$result    = JFolder::folders(JPath::clean(JPATH_TESTS . '/tmp/test'), 'bar', true, true);
+		$result = JFolder::folders(JPath::clean(JPATH_TESTS . '/tmp/test'), 'bar', true, true);
 		$result[0] = realpath($result[0]);
 		$result[1] = realpath($result[1]);
 		$result[2] = realpath($result[2]);
@@ -236,7 +195,7 @@ class JFolderTest extends TestCase
 		);
 
 		// Use of realpath to ensure test works for on all platforms
-		$result    = JFolder::folders(JPath::clean(JPATH_TESTS . '/tmp/test'), '.', true, true);
+		$result = JFolder::folders(JPath::clean(JPATH_TESTS . '/tmp/test'), '.', true, true);
 		$result[0] = realpath($result[0]);
 		$result[1] = realpath($result[1]);
 		$result[2] = realpath($result[2]);
@@ -269,7 +228,7 @@ class JFolderTest extends TestCase
 		);
 
 		// Use of realpath to ensure test works for on all platforms
-		$result    = JFolder::folders(JPath::clean(JPATH_TESTS . '/tmp/test'), '.', false, true);
+		$result = JFolder::folders(JPath::clean(JPATH_TESTS . '/tmp/test'), '.', false, true);
 		$result[0] = realpath($result[0]);
 		$result[1] = realpath($result[1]);
 
@@ -315,5 +274,46 @@ class JFolderTest extends TestCase
 	{
 		$actual = JFolder::makeSafe('test1/testdirectory');
 		$this->assertEquals('test1/testdirectory', $actual);
+	}
+
+	/**
+	 * Convenience method to cleanup before and after testFiles
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	private function _cleanupTestFiles()
+	{
+		$this->_cleanupFile(JPath::clean(JPATH_TESTS . '/tmp/test/test/index.html'));
+		$this->_cleanupFile(JPath::clean(JPATH_TESTS . '/tmp/test/test/index.txt'));
+		$this->_cleanupFile(JPath::clean(JPATH_TESTS . '/tmp/test/test'));
+		$this->_cleanupFile(JPath::clean(JPATH_TESTS . '/tmp/test/index.html'));
+		$this->_cleanupFile(JPath::clean(JPATH_TESTS . '/tmp/test/index.txt'));
+		$this->_cleanupFile(JPath::clean(JPATH_TESTS . '/tmp/test'));
+	}
+
+	/**
+	 * Convenience method to clean up for files test
+	 *
+	 * @param   string  $path  The path to clean
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	private function _cleanupFile($path)
+	{
+		if (file_exists($path))
+		{
+			if (is_file($path))
+			{
+				unlink($path);
+			}
+			elseif (is_dir($path))
+			{
+				rmdir($path);
+			}
+		}
 	}
 }

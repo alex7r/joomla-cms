@@ -93,22 +93,22 @@ class JCategories
 	/**
 	 * Class constructor
 	 *
-	 * @param   array $options Array of options
+	 * @param   array  $options  Array of options
 	 *
 	 * @since   11.1
 	 */
 	public function __construct($options)
 	{
-		$this->_extension       = $options['extension'];
-		$this->_table           = $options['table'];
-		$this->_field           = (isset($options['field']) && $options['field']) ? $options['field'] : 'catid';
-		$this->_key             = (isset($options['key']) && $options['key']) ? $options['key'] : 'id';
-		$this->_statefield      = (isset($options['statefield'])) ? $options['statefield'] : 'state';
-		$options['access']      = (isset($options['access'])) ? $options['access'] : 'true';
-		$options['published']   = (isset($options['published'])) ? $options['published'] : 1;
-		$options['countItems']  = (isset($options['countItems'])) ? $options['countItems'] : 0;
+		$this->_extension = $options['extension'];
+		$this->_table = $options['table'];
+		$this->_field = (isset($options['field']) && $options['field']) ? $options['field'] : 'catid';
+		$this->_key = (isset($options['key']) && $options['key']) ? $options['key'] : 'id';
+		$this->_statefield = (isset($options['statefield'])) ? $options['statefield'] : 'state';
+		$options['access'] = (isset($options['access'])) ? $options['access'] : 'true';
+		$options['published'] = (isset($options['published'])) ? $options['published'] : 1;
+		$options['countItems'] = (isset($options['countItems'])) ? $options['countItems'] : 0;
 		$options['currentlang'] = JLanguageMultilang::isEnabled() ? JFactory::getLanguage()->getTag() : 0;
-		$this->_options         = $options;
+		$this->_options = $options;
 
 		return true;
 	}
@@ -116,8 +116,8 @@ class JCategories
 	/**
 	 * Returns a reference to a JCategories object
 	 *
-	 * @param   string $extension Name of the categories extension
-	 * @param   array  $options   An array of options
+	 * @param   string  $extension  Name of the categories extension
+	 * @param   array   $options    An array of options
 	 *
 	 * @return  JCategories         JCategories object
 	 *
@@ -132,9 +132,9 @@ class JCategories
 			return self::$instances[$hash];
 		}
 
-		$parts     = explode('.', $extension);
+		$parts = explode('.', $extension);
 		$component = 'com_' . strtolower($parts[0]);
-		$section   = count($parts) > 1 ? $parts[1] : '';
+		$section = count($parts) > 1 ? $parts[1] : '';
 		$classname = ucfirst(substr($component, 4)) . ucfirst($section) . 'Categories';
 
 		if (!class_exists($classname))
@@ -159,8 +159,8 @@ class JCategories
 	/**
 	 * Loads a specific category and all its children in a JCategoryNode object
 	 *
-	 * @param   mixed   $id        an optional id integer or equal to 'root'
-	 * @param   boolean $forceload True to force  the _load method to execute
+	 * @param   mixed    $id         an optional id integer or equal to 'root'
+	 * @param   boolean  $forceload  True to force  the _load method to execute
 	 *
 	 * @return  mixed    JCategoryNode object or null if $id is not valid
 	 *
@@ -201,7 +201,7 @@ class JCategories
 	/**
 	 * Load method
 	 *
-	 * @param   integer $id Id of category to load
+	 * @param   integer  $id  Id of category to load
 	 *
 	 * @return  void
 	 *
@@ -209,9 +209,9 @@ class JCategories
 	 */
 	protected function _load($id)
 	{
-		$db        = JFactory::getDbo();
-		$app       = JFactory::getApplication();
-		$user      = JFactory::getUser();
+		$db = JFactory::getDbo();
+		$app = JFactory::getApplication();
+		$user = JFactory::getUser();
 		$extension = $this->_extension;
 
 		// Record that has this $id has been checked
@@ -306,7 +306,7 @@ class JCategories
 
 		// Get the results
 		$db->setQuery($query);
-		$results        = $db->loadObjectList('id');
+		$results = $db->loadObjectList('id');
 		$childrenLoaded = false;
 
 		if (count($results))
@@ -675,8 +675,8 @@ class JCategoryNode extends JObject
 	/**
 	 * Class constructor
 	 *
-	 * @param   array         $category    The category data.
-	 * @param   JCategoryNode $constructor The tree constructor.
+	 * @param   array          $category     The category data.
+	 * @param   JCategoryNode  $constructor  The tree constructor.
 	 *
 	 * @since   11.1
 	 */
@@ -698,11 +698,58 @@ class JCategoryNode extends JObject
 	}
 
 	/**
+	 * Set the parent of this category
+	 *
+	 * If the category already has a parent, the link is unset
+	 *
+	 * @param   mixed  $parent  JCategoryNode for the parent to be set or null
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public function setParent($parent)
+	{
+		if ($parent instanceof JCategoryNode || is_null($parent))
+		{
+			if (!is_null($this->_parent))
+			{
+				$key = array_search($this, $this->_parent->_children);
+				unset($this->_parent->_children[$key]);
+			}
+
+			if (!is_null($parent))
+			{
+				$parent->_children[] = & $this;
+			}
+
+			$this->_parent = $parent;
+
+			if ($this->id != 'root')
+			{
+				if ($this->parent_id != 1)
+				{
+					$this->_path = $parent->getPath();
+				}
+
+				$this->_path[] = $this->id . ':' . $this->alias;
+			}
+
+			if (count($parent->_children) > 1)
+			{
+				end($parent->_children);
+				$this->_leftSibling = prev($parent->_children);
+				$this->_leftSibling->_rightsibling = & $this;
+			}
+		}
+	}
+
+	/**
 	 * Add child to this node
 	 *
 	 * If the child already has a parent, the link is unset
 	 *
-	 * @param   JCategoryNode $child The child to be added.
+	 * @param   JCategoryNode  $child  The child to be added.
 	 *
 	 * @return  void
 	 *
@@ -719,7 +766,7 @@ class JCategoryNode extends JObject
 	/**
 	 * Remove a specific child
 	 *
-	 * @param   integer $id ID of a category
+	 * @param   integer  $id  ID of a category
 	 *
 	 * @return  void
 	 *
@@ -729,6 +776,58 @@ class JCategoryNode extends JObject
 	{
 		$key = array_search($this, $this->_parent->_children);
 		unset($this->_parent->_children[$key]);
+	}
+
+	/**
+	 * Get the children of this node
+	 *
+	 * @param   boolean  $recursive  False by default
+	 *
+	 * @return  array  The children
+	 *
+	 * @since   11.1
+	 */
+	public function &getChildren($recursive = false)
+	{
+		if (!$this->_allChildrenloaded)
+		{
+			$temp = $this->_constructor->get($this->id, true);
+
+			if ($temp)
+			{
+				$this->_children = $temp->getChildren();
+				$this->_leftSibling = $temp->getSibling(false);
+				$this->_rightSibling = $temp->getSibling(true);
+				$this->setAllLoaded();
+			}
+		}
+
+		if ($recursive)
+		{
+			$items = array();
+
+			foreach ($this->_children as $child)
+			{
+				$items[] = $child;
+				$items = array_merge($items, $child->getChildren(true));
+			}
+
+			return $items;
+		}
+
+		return $this->_children;
+	}
+
+	/**
+	 * Get the parent of this node
+	 *
+	 * @return  mixed  JCategoryNode or null
+	 *
+	 * @since   11.1
+	 */
+	public function getParent()
+	{
+		return $this->_parent;
 	}
 
 	/**
@@ -756,69 +855,10 @@ class JCategoryNode extends JObject
 	}
 
 	/**
-	 * Get the parent of this node
-	 *
-	 * @return  mixed  JCategoryNode or null
-	 *
-	 * @since   11.1
-	 */
-	public function getParent()
-	{
-		return $this->_parent;
-	}
-
-	/**
-	 * Set the parent of this category
-	 *
-	 * If the category already has a parent, the link is unset
-	 *
-	 * @param   mixed $parent JCategoryNode for the parent to be set or null
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	public function setParent($parent)
-	{
-		if ($parent instanceof JCategoryNode || is_null($parent))
-		{
-			if (!is_null($this->_parent))
-			{
-				$key = array_search($this, $this->_parent->_children);
-				unset($this->_parent->_children[$key]);
-			}
-
-			if (!is_null($parent))
-			{
-				$parent->_children[] = &$this;
-			}
-
-			$this->_parent = $parent;
-
-			if ($this->id != 'root')
-			{
-				if ($this->parent_id != 1)
-				{
-					$this->_path = $parent->getPath();
-				}
-
-				$this->_path[] = $this->id . ':' . $this->alias;
-			}
-
-			if (count($parent->_children) > 1)
-			{
-				end($parent->_children);
-				$this->_leftSibling                = prev($parent->_children);
-				$this->_leftSibling->_rightsibling = &$this;
-			}
-		}
-	}
-
-	/**
 	 * Function to set the left or right sibling of a category
 	 *
-	 * @param   JCategoryNode $sibling JCategoryNode object for the sibling
-	 * @param   boolean       $right   If set to false, the sibling is the left one
+	 * @param   JCategoryNode  $sibling  JCategoryNode object for the sibling
+	 * @param   boolean        $right    If set to false, the sibling is the left one
 	 *
 	 * @return  void
 	 *
@@ -839,7 +879,7 @@ class JCategoryNode extends JObject
 	/**
 	 * Returns the right or left sibling of a category
 	 *
-	 * @param   boolean $right If set to false, returns the left sibling
+	 * @param   boolean  $right  If set to false, returns the left sibling
 	 *
 	 * @return  mixed  JCategoryNode object with the sibling information or
 	 *                 NULL if there is no sibling on that side.
@@ -850,9 +890,9 @@ class JCategoryNode extends JObject
 	{
 		if (!$this->_allChildrenloaded)
 		{
-			$temp                = $this->_constructor->get($this->id, true);
-			$this->_children     = $temp->getChildren();
-			$this->_leftSibling  = $temp->getSibling(false);
+			$temp = $this->_constructor->get($this->id, true);
+			$this->_children = $temp->getChildren();
+			$this->_leftSibling = $temp->getSibling(false);
 			$this->_rightSibling = $temp->getSibling(true);
 			$this->setAllLoaded();
 		}
@@ -864,23 +904,6 @@ class JCategoryNode extends JObject
 		else
 		{
 			return $this->_leftSibling;
-		}
-	}
-
-	/**
-	 * Set to load all children
-	 *
-	 * @return  void
-	 *
-	 * @since 11.1
-	 */
-	public function setAllLoaded()
-	{
-		$this->_allChildrenloaded = true;
-
-		foreach ($this->_children as $child)
-		{
-			$child->setAllLoaded();
 		}
 	}
 
@@ -937,7 +960,7 @@ class JCategoryNode extends JObject
 	/**
 	 * Returns the user that created the category
 	 *
-	 * @param   boolean $modified_user Returns the modified_user when set to true
+	 * @param   boolean  $modified_user  Returns the modified_user when set to true
 	 *
 	 * @return  JUser  A JUser object containing a userid
 	 *
@@ -954,9 +977,26 @@ class JCategoryNode extends JObject
 	}
 
 	/**
+	 * Set to load all children
+	 *
+	 * @return  void
+	 *
+	 * @since 11.1
+	 */
+	public function setAllLoaded()
+	{
+		$this->_allChildrenloaded = true;
+
+		foreach ($this->_children as $child)
+		{
+			$child->setAllLoaded();
+		}
+	}
+
+	/**
 	 * Returns the number of items.
 	 *
-	 * @param   boolean $recursive If false number of children, if true number of descendants
+	 * @param   boolean  $recursive  If false number of children, if true number of descendants
 	 *
 	 * @return  integer  Number of children or descendants
 	 *
@@ -977,45 +1017,5 @@ class JCategoryNode extends JObject
 		}
 
 		return $this->numitems;
-	}
-
-	/**
-	 * Get the children of this node
-	 *
-	 * @param   boolean $recursive False by default
-	 *
-	 * @return  array  The children
-	 *
-	 * @since   11.1
-	 */
-	public function &getChildren($recursive = false)
-	{
-		if (!$this->_allChildrenloaded)
-		{
-			$temp = $this->_constructor->get($this->id, true);
-
-			if ($temp)
-			{
-				$this->_children     = $temp->getChildren();
-				$this->_leftSibling  = $temp->getSibling(false);
-				$this->_rightSibling = $temp->getSibling(true);
-				$this->setAllLoaded();
-			}
-		}
-
-		if ($recursive)
-		{
-			$items = array();
-
-			foreach ($this->_children as $child)
-			{
-				$items[] = $child;
-				$items   = array_merge($items, $child->getChildren(true));
-			}
-
-			return $items;
-		}
-
-		return $this->_children;
 	}
 }

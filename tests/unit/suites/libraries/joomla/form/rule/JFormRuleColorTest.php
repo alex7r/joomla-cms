@@ -24,7 +24,7 @@ class JFormRuleColorTest extends TestCase
 	public function testColor()
 	{
 		$rule = new JFormRuleColor;
-		$xml  = simplexml_load_string('<form><field name="color" /></form>');
+		$xml = simplexml_load_string('<form><field name="color" /></form>');
 
 		// Test fail conditions.
 		$this->assertThat(
@@ -65,8 +65,8 @@ class JFormRuleColorTest extends TestCase
 	/**
 	 * Test...
 	 *
-	 * @param   string $color          @todo
-	 * @param   string $expectedResult @todo
+	 * @param   string  $color           @todo
+	 * @param   string  $expectedResult  @todo
 	 *
 	 * @dataProvider colorData
 	 *
@@ -75,7 +75,7 @@ class JFormRuleColorTest extends TestCase
 	public function testColorData($color, $expectedResult)
 	{
 		$rule = new JFormRuleColor;
-		$xml  = simplexml_load_string('<form><field name="color1" /></form>');
+		$xml = simplexml_load_string('<form><field name="color1" /></form>');
 		$this->assertThat(
 			$rule->test($xml->field[0], $color),
 			$this->equalTo($expectedResult),

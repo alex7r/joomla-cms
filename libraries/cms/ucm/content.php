@@ -17,13 +17,6 @@ defined('JPATH_PLATFORM') or die;
 class JUcmContent extends JUcmBase
 {
 	/**
-	 * The UCM data array
-	 *
-	 * @var    array
-	 * @since  3.1
-	 */
-	public $ucmData;
-	/**
 	 * The related table object
 	 *
 	 * @var    JTable
@@ -32,11 +25,19 @@ class JUcmContent extends JUcmBase
 	protected $table;
 
 	/**
+	 * The UCM data array
+	 *
+	 * @var    array
+	 * @since  3.1
+	 */
+	public $ucmData;
+
+	/**
 	 * Instantiate JUcmContent.
 	 *
-	 * @param   JTableInterface $table The table object
-	 * @param   string          $alias The type alias
-	 * @param   JUcmType        $type  The type object
+	 * @param   JTableInterface  $table  The table object
+	 * @param   string           $alias  The type alias
+	 * @param   JUcmType         $type   The type object
 	 *
 	 * @since   3.1
 	 */
@@ -58,8 +59,8 @@ class JUcmContent extends JUcmBase
 	/**
 	 * Method to save the data
 	 *
-	 * @param   array    $original The original data to be saved
-	 * @param   JUcmType $type     The UCM Type object
+	 * @param   array     $original  The original data to be saved
+	 * @param   JUcmType  $type      The UCM Type object
 	 *
 	 * @return  boolean  true
 	 *
@@ -84,10 +85,41 @@ class JUcmContent extends JUcmBase
 	}
 
 	/**
+	 * Delete content from the Core Content table
+	 *
+	 * @param   mixed     $pk    The string/array of id's to delete
+	 * @param   JUcmType  $type  The content type object
+	 *
+	 * @return  boolean  True if success
+	 *
+	 * @since   3.1
+	 */
+	public function delete($pk, JUcmType $type = null)
+	{
+		$db   = JFactory::getDbo();
+		$type = $type ? $type : $this->type;
+
+		if (is_array($pk))
+		{
+			$pk = implode(',', $pk);
+		}
+
+		$query = $db->getQuery(true)
+			->delete('#__ucm_content')
+			->where($db->quoteName('core_type_id') . ' = ' . (int) $type->type_id)
+			->where($db->quoteName('core_content_item_id') . ' IN (' . $pk . ')');
+
+		$db->setQuery($query);
+		$db->execute();
+
+		return true;
+	}
+
+	/**
 	 * Map the original content to the Core Content fields
 	 *
-	 * @param   array    $original The original data array
-	 * @param   JUcmType $type     Type object for this data
+	 * @param   array     $original  The original data array
+	 * @param   JUcmType  $type      Type object for this data
 	 *
 	 * @return  array  $ucmData  The mapped UCM data
 	 *
@@ -140,9 +172,9 @@ class JUcmContent extends JUcmBase
 	/**
 	 * Store data to the appropriate table
 	 *
-	 * @param   array           $data       Data to be stored
-	 * @param   JTableInterface $table      JTable Object
-	 * @param   boolean         $primaryKey Flag that is true for data that are using #__ucm_content as their primary table
+	 * @param   array            $data        Data to be stored
+	 * @param   JTableInterface  $table       JTable Object
+	 * @param   boolean          $primaryKey  Flag that is true for data that are using #__ucm_content as their primary table
 	 *
 	 * @return  boolean  true on success
 	 *
@@ -158,7 +190,7 @@ class JUcmContent extends JUcmBase
 		if (!$primaryKey)
 		{
 			// Store the core UCM mappings
-			$baseData                    = array();
+			$baseData = array();
 			$baseData['ucm_type_id']     = $typeId;
 			$baseData['ucm_item_id']     = $data['core_content_item_id'];
 			$baseData['ucm_language_id'] = JHelperContent::getLanguageId($data['core_language']);
@@ -175,8 +207,8 @@ class JUcmContent extends JUcmBase
 	/**
 	 * Get the value of the primary key from #__ucm_base
 	 *
-	 * @param   string  $typeId        The ID for the type
-	 * @param   integer $contentItemId Value of the primary key in the legacy or secondary table
+	 * @param   string   $typeId         The ID for the type
+	 * @param   integer  $contentItemId  Value of the primary key in the legacy or secondary table
 	 *
 	 * @return  integer  The integer of the primary key
 	 *
@@ -184,7 +216,7 @@ class JUcmContent extends JUcmBase
 	 */
 	public function getPrimaryKey($typeId, $contentItemId)
 	{
-		$db        = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$queryccid = $db->getQuery(true);
 		$queryccid->select($db->quoteName('ucm_id'))
 			->from($db->quoteName('#__ucm_base'))
@@ -198,36 +230,5 @@ class JUcmContent extends JUcmBase
 		$primaryKey = $db->loadResult();
 
 		return $primaryKey;
-	}
-
-	/**
-	 * Delete content from the Core Content table
-	 *
-	 * @param   mixed    $pk   The string/array of id's to delete
-	 * @param   JUcmType $type The content type object
-	 *
-	 * @return  boolean  True if success
-	 *
-	 * @since   3.1
-	 */
-	public function delete($pk, JUcmType $type = null)
-	{
-		$db   = JFactory::getDbo();
-		$type = $type ? $type : $this->type;
-
-		if (is_array($pk))
-		{
-			$pk = implode(',', $pk);
-		}
-
-		$query = $db->getQuery(true)
-			->delete('#__ucm_content')
-			->where($db->quoteName('core_type_id') . ' = ' . (int) $type->type_id)
-			->where($db->quoteName('core_content_item_id') . ' IN (' . $pk . ')');
-
-		$db->setQuery($query);
-		$db->execute();
-
-		return true;
 	}
 }

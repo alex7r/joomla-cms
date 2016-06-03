@@ -66,6 +66,22 @@ abstract class JHtmlSidebar
 	}
 
 	/**
+	 * Method to add a menu item to submenu.
+	 *
+	 * @param   string  $name    Name of the menu item.
+	 * @param   string  $link    URL of the menu item.
+	 * @param   bool    $active  True if the item is active, false otherwise.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.0
+	 */
+	public static function addEntry($name, $link = '', $active = false)
+	{
+		array_push(static::$entries, array($name, $link, $active));
+	}
+
+	/**
 	 * Returns an array of all submenu entries
 	 *
 	 * @return  array
@@ -75,6 +91,23 @@ abstract class JHtmlSidebar
 	public static function getEntries()
 	{
 		return static::$entries;
+	}
+
+	/**
+	 * Method to add a filter to the submenu
+	 *
+	 * @param   string  $label      Label for the menu item.
+	 * @param   string  $name       Name for the filter. Also used as id.
+	 * @param   string  $options    Options for the select field.
+	 * @param   bool    $noDefault  Don't the label as the empty option
+	 *
+	 * @return  void
+	 *
+	 * @since   3.0
+	 */
+	public static function addFilter($label, $name, $options, $noDefault = false)
+	{
+		array_push(static::$filters, array('label' => $label, 'name' => $name, 'options' => $options, 'noDefault' => $noDefault));
 	}
 
 	/**
@@ -90,21 +123,9 @@ abstract class JHtmlSidebar
 	}
 
 	/**
-	 * Get value for the action attribute of the filter form
-	 *
-	 * @return  string
-	 *
-	 * @since   3.0
-	 */
-	public static function getAction()
-	{
-		return static::$action;
-	}
-
-	/**
 	 * Set value for the action attribute of the filter form
 	 *
-	 * @param   string $action Value for the action attribute of the form
+	 * @param   string  $action  Value for the action attribute of the form
 	 *
 	 * @return  void
 	 *
@@ -116,35 +137,14 @@ abstract class JHtmlSidebar
 	}
 
 	/**
-	 * Method to add a menu item to submenu.
+	 * Get value for the action attribute of the filter form
 	 *
-	 * @param   string $name   Name of the menu item.
-	 * @param   string $link   URL of the menu item.
-	 * @param   bool   $active True if the item is active, false otherwise.
-	 *
-	 * @return  void
+	 * @return  string
 	 *
 	 * @since   3.0
 	 */
-	public static function addEntry($name, $link = '', $active = false)
+	public static function getAction()
 	{
-		array_push(static::$entries, array($name, $link, $active));
-	}
-
-	/**
-	 * Method to add a filter to the submenu
-	 *
-	 * @param   string $label     Label for the menu item.
-	 * @param   string $name      Name for the filter. Also used as id.
-	 * @param   string $options   Options for the select field.
-	 * @param   bool   $noDefault Don't the label as the empty option
-	 *
-	 * @return  void
-	 *
-	 * @since   3.0
-	 */
-	public static function addFilter($label, $name, $options, $noDefault = false)
-	{
-		array_push(static::$filters, array('label' => $label, 'name' => $name, 'options' => $options, 'noDefault' => $noDefault));
+		return static::$action;
 	}
 }

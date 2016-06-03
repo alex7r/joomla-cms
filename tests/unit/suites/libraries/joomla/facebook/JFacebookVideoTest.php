@@ -55,6 +55,45 @@ class JFacebookVideoTest extends TestCase
 	protected $errorString = '{"error": {"message": "Generic Error."}}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   13.1
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$app_id = "app_id";
+		$app_secret = "app_secret";
+		$my_url = "http://localhost/gsoc/joomla-platform/facebook_test.php";
+		$access_token = array(
+			'access_token' => 'token',
+			'expires' => '51837673', 'created' => '2443672521');
+
+		$this->options = new Registry;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->input = new JInput;
+		$this->oauth = new JFacebookOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JFacebookVideo($this->options, $this->client, $this->oauth);
+
+		$this->options->set('clientid', $app_id);
+		$this->options->set('clientsecret', $app_secret);
+		$this->options->set('redirecturi', $my_url);
+		$this->options->set('sendheaders', true);
+		$this->options->set('authmethod', 'get');
+
+		parent::setUp();
+	}
+
+	/**
 	 * Tests the getVideo method
 	 *
 	 * @return  void
@@ -66,14 +105,14 @@ class JFacebookVideoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$video = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($video . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($video . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getVideo($video),
@@ -94,14 +133,14 @@ class JFacebookVideoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$video = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($video . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($video . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->getVideo($video);
 	}
@@ -118,14 +157,14 @@ class JFacebookVideoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$video = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($video . '/comments?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($video . '/comments?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getComments($video),
@@ -146,14 +185,14 @@ class JFacebookVideoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$video = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($video . '/comments?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($video . '/comments?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->getComments($video);
 	}
@@ -167,22 +206,22 @@ class JFacebookVideoTest extends TestCase
 	 */
 	public function testCreateComment()
 	{
-		$token   = $this->oauth->getToken();
-		$video   = '124346363456';
+		$token = $this->oauth->getToken();
+		$video = '124346363456';
 		$message = 'test message';
 
 		// Set POST request parameters.
-		$data            = array();
+		$data = array();
 		$data['message'] = $message;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($video . '/comments?access_token=' . $token['access_token'], $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($video . '/comments?access_token=' . $token['access_token'], $data)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createComment($video, $message),
@@ -200,22 +239,22 @@ class JFacebookVideoTest extends TestCase
 	 */
 	public function testCreateCommentFailure()
 	{
-		$token   = $this->oauth->getToken();
-		$video   = '124346363456';
+		$token = $this->oauth->getToken();
+		$video = '124346363456';
 		$message = 'test message';
 
 		// Set POST request parameters.
-		$data            = array();
+		$data = array();
 		$data['message'] = $message;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($video . '/comments?access_token=' . $token['access_token'], $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($video . '/comments?access_token=' . $token['access_token'], $data)
+		->will($this->returnValue($returnData));
 
 		$this->object->createComment($video, $message);
 	}
@@ -229,17 +268,17 @@ class JFacebookVideoTest extends TestCase
 	 */
 	public function testDeleteComment()
 	{
-		$token   = $this->oauth->getToken();
+		$token = $this->oauth->getToken();
 		$comment = '5148941614_12343468';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = true;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($comment . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($comment . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteComment($comment, $this->oauth),
@@ -257,17 +296,17 @@ class JFacebookVideoTest extends TestCase
 	 */
 	public function testDeleteCommentFailure()
 	{
-		$token   = $this->oauth->getToken();
+		$token = $this->oauth->getToken();
 		$comment = '5148941614_12343468';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($comment . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($comment . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->deleteComment($comment, $this->oauth);
 	}
@@ -284,14 +323,14 @@ class JFacebookVideoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$video = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($video . '/likes?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($video . '/likes?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getLikes($video),
@@ -312,14 +351,14 @@ class JFacebookVideoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$video = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($video . '/likes?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($video . '/likes?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->getLikes($video);
 	}
@@ -336,14 +375,14 @@ class JFacebookVideoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$video = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($video . '/likes?access_token=' . $token['access_token'], '')
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($video . '/likes?access_token=' . $token['access_token'], '')
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createLike($video),
@@ -364,14 +403,14 @@ class JFacebookVideoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$video = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($video . '/likes?access_token=' . $token['access_token'], '')
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($video . '/likes?access_token=' . $token['access_token'], '')
+		->will($this->returnValue($returnData));
 
 		$this->object->createLike($video);
 	}
@@ -388,14 +427,14 @@ class JFacebookVideoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$video = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = true;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($video . '/likes?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($video . '/likes?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteLike($video),
@@ -416,14 +455,14 @@ class JFacebookVideoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$video = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($video . '/likes?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($video . '/likes?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->deleteLike($video);
 	}
@@ -440,14 +479,14 @@ class JFacebookVideoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$video = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($video . '/picture?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($video . '/picture?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getPicture($video),
@@ -468,54 +507,15 @@ class JFacebookVideoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$video = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($video . '/picture?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($video . '/picture?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->getPicture($video);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   13.1
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$app_id       = "app_id";
-		$app_secret   = "app_secret";
-		$my_url       = "http://localhost/gsoc/joomla-platform/facebook_test.php";
-		$access_token = array(
-			'access_token' => 'token',
-			'expires'      => '51837673', 'created' => '2443672521');
-
-		$this->options = new Registry;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->input   = new JInput;
-		$this->oauth   = new JFacebookOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JFacebookVideo($this->options, $this->client, $this->oauth);
-
-		$this->options->set('clientid', $app_id);
-		$this->options->set('clientsecret', $app_secret);
-		$this->options->set('redirecturi', $my_url);
-		$this->options->set('sendheaders', true);
-		$this->options->set('authmethod', 'get');
-
-		parent::setUp();
 	}
 }

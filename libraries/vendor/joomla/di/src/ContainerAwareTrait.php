@@ -8,6 +8,8 @@
 
 namespace Joomla\DI;
 
+use Joomla\DI\Container;
+
 /**
  * Defines the trait for a Container Aware Class.
  *
@@ -47,7 +49,7 @@ trait ContainerAwareTrait
 	/**
 	 * Set the DI container.
 	 *
-	 * @param   Container $container The DI container.
+	 * @param   Container  $container  The DI container.
 	 *
 	 * @return  mixed  Returns itself to support chaining.
 	 *

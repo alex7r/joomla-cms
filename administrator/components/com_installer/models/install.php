@@ -29,9 +29,30 @@ class InstallerModelInstall extends JModelLegacy
 	/**
 	 * Model context string.
 	 *
-	 * @var        string
+	 * @var		string
 	 */
 	protected $_context = 'com_installer.install';
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('administrator');
+
+		$this->setState('message', $app->getUserState('com_installer.message'));
+		$this->setState('extension_message', $app->getUserState('com_installer.extension_message'));
+		$app->setUserState('com_installer.message', '');
+		$app->setUserState('com_installer.extension_message', '');
+
+		parent::populateState();
+	}
 
 	/**
 	 * Install an extension from either folder, url or upload.
@@ -166,15 +187,15 @@ class InstallerModelInstall extends JModelLegacy
 		if (!$installer->install($package['dir']))
 		{
 			// There was an error installing the package.
-			$msg     = JText::sprintf('COM_INSTALLER_INSTALL_ERROR', JText::_('COM_INSTALLER_TYPE_TYPE_' . strtoupper($package['type'])));
-			$result  = false;
+			$msg = JText::sprintf('COM_INSTALLER_INSTALL_ERROR', JText::_('COM_INSTALLER_TYPE_TYPE_' . strtoupper($package['type'])));
+			$result = false;
 			$msgType = 'error';
 		}
 		else
 		{
 			// Package installed sucessfully.
-			$msg     = JText::sprintf('COM_INSTALLER_INSTALL_SUCCESS', JText::_('COM_INSTALLER_TYPE_TYPE_' . strtoupper($package['type'])));
-			$result  = true;
+			$msg = JText::sprintf('COM_INSTALLER_INSTALL_SUCCESS', JText::_('COM_INSTALLER_TYPE_TYPE_' . strtoupper($package['type'])));
+			$result = true;
 			$msgType = 'message';
 		}
 
@@ -193,53 +214,13 @@ class InstallerModelInstall extends JModelLegacy
 		// Cleanup the install files.
 		if (!is_file($package['packagefile']))
 		{
-			$config                 = JFactory::getConfig();
+			$config = JFactory::getConfig();
 			$package['packagefile'] = $config->get('tmp_path') . '/' . $package['packagefile'];
 		}
 
 		JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
 
 		return $result;
-	}
-
-	/**
-	 * Install an extension from a directory
-	 *
-	 * @return  array  Package details or false on failure
-	 *
-	 * @since   1.5
-	 */
-	protected function _getPackageFromFolder()
-	{
-		$input = JFactory::getApplication()->input;
-
-		// Get the path to the package to install.
-		$p_dir = $input->getString('install_directory');
-		$p_dir = JPath::clean($p_dir);
-
-		// Did you give us a valid directory?
-		if (!is_dir($p_dir))
-		{
-			JError::raiseWarning('', JText::_('COM_INSTALLER_MSG_INSTALL_PLEASE_ENTER_A_PACKAGE_DIRECTORY'));
-
-			return false;
-		}
-
-		// Detect the package type
-		$type = JInstallerHelper::detectType($p_dir);
-
-		// Did you give us a valid package?
-		if (!$type)
-		{
-			JError::raiseWarning('', JText::_('COM_INSTALLER_MSG_INSTALL_PATH_DOES_NOT_HAVE_A_VALID_PACKAGE'));
-		}
-
-		$package['packagefile'] = null;
-		$package['extractdir']  = null;
-		$package['dir']         = $p_dir;
-		$package['type']        = $type;
-
-		return $package;
 	}
 
 	/**
@@ -250,7 +231,7 @@ class InstallerModelInstall extends JModelLegacy
 	protected function _getPackageFromUpload()
 	{
 		// Get the uploaded file information.
-		$input = JFactory::getApplication()->input;
+		$input    = JFactory::getApplication()->input;
 
 		// Do not change the filter type 'raw'. We need this to let files containing PHP code to upload. See JInputFiles::get.
 		$userfile = $input->files->get('install_package', null, 'raw');
@@ -325,6 +306,46 @@ class InstallerModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Install an extension from a directory
+	 *
+	 * @return  array  Package details or false on failure
+	 *
+	 * @since   1.5
+	 */
+	protected function _getPackageFromFolder()
+	{
+		$input = JFactory::getApplication()->input;
+
+		// Get the path to the package to install.
+		$p_dir = $input->getString('install_directory');
+		$p_dir = JPath::clean($p_dir);
+
+		// Did you give us a valid directory?
+		if (!is_dir($p_dir))
+		{
+			JError::raiseWarning('', JText::_('COM_INSTALLER_MSG_INSTALL_PLEASE_ENTER_A_PACKAGE_DIRECTORY'));
+
+			return false;
+		}
+
+		// Detect the package type
+		$type = JInstallerHelper::detectType($p_dir);
+
+		// Did you give us a valid package?
+		if (!$type)
+		{
+			JError::raiseWarning('', JText::_('COM_INSTALLER_MSG_INSTALL_PATH_DOES_NOT_HAVE_A_VALID_PACKAGE'));
+		}
+
+		$package['packagefile'] = null;
+		$package['extractdir'] = null;
+		$package['dir'] = $p_dir;
+		$package['type'] = $type;
+
+		return $package;
+	}
+
+	/**
 	 * Install an extension from a URL.
 	 *
 	 * @return  Package details or false on failure.
@@ -380,26 +401,5 @@ class InstallerModelInstall extends JModelLegacy
 		$package = JInstallerHelper::unpack($tmp_dest . '/' . $p_file, true);
 
 		return $package;
-	}
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication('administrator');
-
-		$this->setState('message', $app->getUserState('com_installer.message'));
-		$this->setState('extension_message', $app->getUserState('com_installer.extension_message'));
-		$app->setUserState('com_installer.message', '');
-		$app->setUserState('com_installer.extension_message', '');
-
-		parent::populateState();
 	}
 }

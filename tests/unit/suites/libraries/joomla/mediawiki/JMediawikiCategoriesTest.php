@@ -52,13 +52,29 @@ class JMediawikiCategoriesTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '<message>Generic Error</message>';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JMediawikiCategories($this->options, $this->client);
+	}
+
+	/**
 	 * Tests the getCategories method
 	 *
 	 * @return void
 	 */
 	public function testGetCategories()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -80,7 +96,7 @@ class JMediawikiCategoriesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetCategoriesUsed()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -102,7 +118,7 @@ class JMediawikiCategoriesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetCategoriesInfo()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -124,7 +140,7 @@ class JMediawikiCategoriesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetCategoryMembers()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -146,7 +162,7 @@ class JMediawikiCategoriesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEnumerateCategories()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -168,7 +184,7 @@ class JMediawikiCategoriesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetChangeTags()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -181,21 +197,5 @@ class JMediawikiCategoriesTest extends PHPUnit_Framework_TestCase
 			$this->object->getChangeTags(),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->options = new JRegistry;
-		$this->client  = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JMediawikiCategories($this->options, $this->client);
 	}
 }

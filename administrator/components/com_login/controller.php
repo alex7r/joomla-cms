@@ -19,10 +19,10 @@ class LoginController extends JControllerLegacy
 	/**
 	 * Method to display a view.
 	 *
-	 * @param   boolean $cachable  If true, the view output will be cached
-	 * @param   array   $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean  $cachable   If true, the view output will be cached
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
-	 * @return  JController        This object to support chaining.
+	 * @return  JController		This object to support chaining.
 	 *
 	 * @since   1.5
 	 */
@@ -51,9 +51,9 @@ class LoginController extends JControllerLegacy
 
 		$app = JFactory::getApplication();
 
-		$model       = $this->getModel('login');
+		$model = $this->getModel('login');
 		$credentials = $model->getState('credentials');
-		$return      = $model->getState('return');
+		$return = $model->getState('return');
 
 		$result = $app->login($credentials, array('action' => 'core.login.admin'));
 

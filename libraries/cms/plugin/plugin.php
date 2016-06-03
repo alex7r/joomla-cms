@@ -53,8 +53,8 @@ abstract class JPlugin extends JEvent
 	/**
 	 * Constructor
 	 *
-	 * @param   object &$subject   The object to observe
-	 * @param   array  $config     An optional associative array of configuration settings.
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 *
@@ -96,7 +96,7 @@ abstract class JPlugin extends JEvent
 
 		if (property_exists($this, 'app'))
 		{
-			$reflection  = new ReflectionClass($this);
+			$reflection = new ReflectionClass($this);
 			$appProperty = $reflection->getProperty('app');
 
 			if ($appProperty->isPrivate() === false && is_null($this->app))
@@ -122,8 +122,8 @@ abstract class JPlugin extends JEvent
 	/**
 	 * Loads the plugin language file
 	 *
-	 * @param   string $extension The extension for which a language file should be loaded
-	 * @param   string $basePath  The basepath to use
+	 * @param   string  $extension  The extension for which a language file should be loaded
+	 * @param   string  $basePath   The basepath to use
 	 *
 	 * @return  boolean  True, if the file has successfully loaded.
 	 *
@@ -139,6 +139,6 @@ abstract class JPlugin extends JEvent
 		$lang = JFactory::getLanguage();
 
 		return $lang->load(strtolower($extension), $basePath, null, false, true)
-		|| $lang->load(strtolower($extension), JPATH_PLUGINS . '/' . $this->_type . '/' . $this->_name, null, false, true);
+			|| $lang->load(strtolower($extension), JPATH_PLUGINS . '/' . $this->_type . '/' . $this->_name, null, false, true);
 	}
 }

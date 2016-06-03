@@ -22,9 +22,9 @@ class Apc extends Storage
 	/**
 	 * Constructor
 	 *
-	 * @param   array $options Optional parameters
+	 * @param   array  $options  Optional parameters
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @throws  \RuntimeException
 	 * @deprecated  2.0
 	 */
@@ -39,27 +39,14 @@ class Apc extends Storage
 	}
 
 	/**
-	 * Test to see if the SessionHandler is available.
-	 *
-	 * @return boolean  True on success, false otherwise.
-	 *
-	 * @since       1.0
-	 * @deprecated  2.0
-	 */
-	public static function isSupported()
-	{
-		return extension_loaded('apc');
-	}
-
-	/**
 	 * Read the data for a particular session identifier from the
 	 * SessionHandler backend.
 	 *
-	 * @param   string $id The session identifier.
+	 * @param   string  $id  The session identifier.
 	 *
 	 * @return  string  The session data.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	public function read($id)
@@ -72,12 +59,12 @@ class Apc extends Storage
 	/**
 	 * Write session data to the SessionHandler backend.
 	 *
-	 * @param   string $id           The session identifier.
-	 * @param   string $session_data The session data.
+	 * @param   string  $id            The session identifier.
+	 * @param   string  $session_data  The session data.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	public function write($id, $session_data)
@@ -90,11 +77,11 @@ class Apc extends Storage
 	/**
 	 * Destroy the data for a particular session identifier in the SessionHandler backend.
 	 *
-	 * @param   string $id The session identifier.
+	 * @param   string  $id  The session identifier.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	public function destroy($id)
@@ -102,5 +89,18 @@ class Apc extends Storage
 		$sess_id = 'sess_' . $id;
 
 		return apc_delete($sess_id);
+	}
+
+	/**
+	 * Test to see if the SessionHandler is available.
+	 *
+	 * @return boolean  True on success, false otherwise.
+	 *
+	 * @since   1.0
+	 * @deprecated  2.0
+	 */
+	public static function isSupported()
+	{
+		return extension_loaded('apc');
 	}
 }

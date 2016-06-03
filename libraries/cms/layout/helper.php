@@ -29,10 +29,10 @@ class JLayoutHelper
 	/**
 	 * Method to render a layout with debug info
 	 *
-	 * @param   string $layoutFile  Dot separated path to the layout file, relative to base path
-	 * @param   object $displayData Object which properties are used inside the layout file to build displayed output
-	 * @param   string $basePath    Base path to use when loading layout files
-	 * @param   mixed  $options     Optional custom options to load. Registry or array format
+	 * @param   string  $layoutFile   Dot separated path to the layout file, relative to base path
+	 * @param   object  $displayData  Object which properties are used inside the layout file to build displayed output
+	 * @param   string  $basePath     Base path to use when loading layout files
+	 * @param   mixed   $options      Optional custom options to load. Registry or array format
 	 *
 	 * @return  string
 	 *
@@ -43,8 +43,8 @@ class JLayoutHelper
 		$basePath = empty($basePath) ? self::$defaultBasePath : $basePath;
 
 		// Make sure we send null to JLayoutFile if no path set
-		$basePath       = empty($basePath) ? null : $basePath;
-		$layout         = new JLayoutFile($layoutFile, $basePath, $options);
+		$basePath = empty($basePath) ? null : $basePath;
+		$layout = new JLayoutFile($layoutFile, $basePath, $options);
 		$renderedLayout = $layout->debug($displayData);
 
 		return $renderedLayout;
@@ -53,10 +53,10 @@ class JLayoutHelper
 	/**
 	 * Method to render the layout.
 	 *
-	 * @param   string $layoutFile  Dot separated path to the layout file, relative to base path
-	 * @param   object $displayData Object which properties are used inside the layout file to build displayed output
-	 * @param   string $basePath    Base path to use when loading layout files
-	 * @param   mixed  $options     Optional custom options to load. Registry or array format
+	 * @param   string  $layoutFile   Dot separated path to the layout file, relative to base path
+	 * @param   object  $displayData  Object which properties are used inside the layout file to build displayed output
+	 * @param   string  $basePath     Base path to use when loading layout files
+	 * @param   mixed   $options      Optional custom options to load. Registry or array format
 	 *
 	 * @return  string
 	 *
@@ -67,8 +67,8 @@ class JLayoutHelper
 		$basePath = empty($basePath) ? self::$defaultBasePath : $basePath;
 
 		// Make sure we send null to JLayoutFile if no path set
-		$basePath       = empty($basePath) ? null : $basePath;
-		$layout         = new JLayoutFile($layoutFile, $basePath, $options);
+		$basePath = empty($basePath) ? null : $basePath;
+		$layout = new JLayoutFile($layoutFile, $basePath, $options);
 		$renderedLayout = $layout->render($displayData);
 
 		return $renderedLayout;

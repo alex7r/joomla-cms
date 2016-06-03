@@ -23,33 +23,33 @@ defined('FOF_INCLUDED') or die;
  */
 interface FOFPlatformInterface
 {
-	/**
-	 * Checks if the current script is run inside a valid CMS execution
-	 *
-	 * @return bool
-	 */
-	public function checkExecution();
+    /**
+     * Checks if the current script is run inside a valid CMS execution
+     *
+     * @return bool
+     */
+    public function checkExecution();
 
 	/**
 	 * Set the error Handling, if possible
 	 *
-	 * @param   integer $level     PHP error level (E_ALL)
-	 * @param   string  $log_level What to do with the error (ignore, callback)
-	 * @param   array   $options   Options for the error handler
+	 * @param   integer  $level      PHP error level (E_ALL)
+	 * @param   string   $log_level  What to do with the error (ignore, callback)
+	 * @param   array    $options    Options for the error handler
 	 *
 	 * @return  void
 	 */
 	public function setErrorHandling($level, $log_level, $options = array());
 
-	/**
-	 * Raises an error, using the logic requested by the CMS (PHP Exception or dedicated class)
-	 *
-	 * @param   integer $code
-	 * @param   string  $message
-	 *
-	 * @return mixed
-	 */
-	public function raiseError($code, $message);
+    /**
+     * Raises an error, using the logic requested by the CMS (PHP Exception or dedicated class)
+     *
+     * @param   integer  $code
+     * @param   string   $message
+     *
+     * @return mixed
+     */
+    public function raiseError($code, $message);
 
 	/**
 	 * Returns the ordering of the platform class. Files with a lower ordering
@@ -62,7 +62,7 @@ interface FOFPlatformInterface
 	/**
 	 * Returns a platform integration object
 	 *
-	 * @param   string $key The key name of the platform integration object, e.g. 'filesystem'
+	 * @param   string  $key  The key name of the platform integration object, e.g. 'filesystem'
 	 *
 	 * @return  object
 	 *
@@ -73,8 +73,8 @@ interface FOFPlatformInterface
 	/**
 	 * Forces a platform integration object instance
 	 *
-	 * @param   string $key    The key name of the platform integration object, e.g. 'filesystem'
-	 * @param   object $object The object to force for this key
+	 * @param   string  $key     The key name of the platform integration object, e.g. 'filesystem'
+	 * @param   object  $object  The object to force for this key
 	 *
 	 * @return  object
 	 *
@@ -125,19 +125,19 @@ interface FOFPlatformInterface
 	 */
 	public function getPlatformHumanName();
 
-	/**
-	 * Returns absolute path to directories used by the CMS.
-	 *
-	 * The return is a table with the following key:
-	 * * root    Path to the site root
-	 * * public  Path to the public area of the site
-	 * * admin   Path to the administrative area of the site
-	 * * tmp     Path to the temp directory
-	 * * log     Path to the log directory
-	 *
-	 * @return  array  A hash array with keys root, public, admin, tmp and log.
-	 */
-	public function getPlatformBaseDirs();
+    /**
+     * Returns absolute path to directories used by the CMS.
+     *
+     * The return is a table with the following key:
+     * * root    Path to the site root
+     * * public  Path to the public area of the site
+     * * admin   Path to the administrative area of the site
+     * * tmp     Path to the temp directory
+     * * log     Path to the log directory
+     *
+     * @return  array  A hash array with keys root, public, admin, tmp and log.
+     */
+    public function getPlatformBaseDirs();
 
 	/**
 	 * Returns the base (root) directories for a given component. The
@@ -146,15 +146,15 @@ interface FOFPlatformInterface
 	 * is running inside our main application (CMS).
 	 *
 	 * The return is a table with the following keys:
-	 * * main    The normal location of component files. For a back-end Joomla!
+	 * * main	The normal location of component files. For a back-end Joomla!
 	 *          component this is the administrator/components/com_example
 	 *          directory.
-	 * * alt    The alternate location of component files. For a back-end
+	 * * alt	The alternate location of component files. For a back-end
 	 *          Joomla! component this is the front-end directory, e.g.
 	 *          components/com_example
-	 * * site    The location of the component files serving the public part of
+	 * * site	The location of the component files serving the public part of
 	 *          the application.
-	 * * admin    The location of the component files serving the administrative
+	 * * admin	The location of the component files serving the administrative
 	 *          part of the application.
 	 *
 	 * All paths MUST be absolute. All four paths MAY be the same if the
@@ -162,7 +162,7 @@ interface FOFPlatformInterface
 	 * or when the component does not provide both a public and private part.
 	 * All of the directories MUST be defined and non-empty.
 	 *
-	 * @param   string $component   The name of the component. For Joomla! this
+	 * @param   string  $component  The name of the component. For Joomla! this
 	 *                              is something like "com_example"
 	 *
 	 * @return  array  A hash array with keys main, alt, site and admin.
@@ -177,13 +177,13 @@ interface FOFPlatformInterface
 	 * The list of paths returned is a prioritised list. If a file is
 	 * found in the first path the other paths will not be scanned.
 	 *
-	 * @param   string  $component   The name of the component. For Joomla! this
+	 * @param   string   $component  The name of the component. For Joomla! this
 	 *                               is something like "com_example"
-	 * @param   string  $view        The name of the view you're looking a
+	 * @param   string   $view       The name of the view you're looking a
 	 *                               template for
-	 * @param   string  $layout      The layout name to load, e.g. 'default'
-	 * @param   string  $tpl         The sub-template name to load (null by default)
-	 * @param   boolean $strict      If true, only the specified layout will be
+	 * @param   string   $layout     The layout name to load, e.g. 'default'
+	 * @param   string   $tpl        The sub-template name to load (null by default)
+	 * @param   boolean  $strict     If true, only the specified layout will be
 	 *                               searched for. Otherwise we'll fall back to
 	 *                               the 'default' layout if the specified layout
 	 *                               is not found.
@@ -206,8 +206,8 @@ interface FOFPlatformInterface
 	 * files instead of the regular component directorues. If the application
 	 * does not have such a thing as template overrides return an empty string.
 	 *
-	 * @param   string  $component The name of the component for which to fetch the overrides
-	 * @param   boolean $absolute  Should I return an absolute or relative path?
+	 * @param   string   $component  The name of the component for which to fetch the overrides
+	 * @param   boolean  $absolute   Should I return an absolute or relative path?
 	 *
 	 * @return  string  The path to the template overrides directory
 	 */
@@ -219,7 +219,7 @@ interface FOFPlatformInterface
 	 * "plugin" in WordPress and "module" in Drupal, i.e. an application which
 	 * is running inside our main application (CMS).
 	 *
-	 * @param   string $component   The name of the component. For Joomla! this
+	 * @param   string  $component  The name of the component. For Joomla! this
 	 *                              is something like "com_example"
 	 *
 	 * @return  void
@@ -233,7 +233,7 @@ interface FOFPlatformInterface
 	 * Dispatcher. This method MUST implement this authorisation check. If you
 	 * do not need this in your platform, please always return true.
 	 *
-	 * @param   string $component The name of the component.
+	 * @param   string  $component  The name of the component.
 	 *
 	 * @return  boolean  True to allow loading the component, false to halt loading
 	 */
@@ -246,12 +246,12 @@ interface FOFPlatformInterface
 	 * value will be used. If $setUserState is set to true, the retrieved
 	 * variable will be stored in the user session.
 	 *
-	 * @param   string   $key          The user state key for the variable
-	 * @param   string   $request      The request variable name for the variable
-	 * @param   FOFInput $input        The FOFInput object with the request (input) data
-	 * @param   mixed    $default      The default value. Default: null
-	 * @param   string   $type         The filter type for the variable data. Default: none (no filtering)
-	 * @param   boolean  $setUserState Should I set the user state with the fetched value?
+	 * @param   string    $key           The user state key for the variable
+	 * @param   string    $request       The request variable name for the variable
+	 * @param   FOFInput  $input         The FOFInput object with the request (input) data
+	 * @param   mixed     $default       The default value. Default: null
+	 * @param   string    $type          The filter type for the variable data. Default: none (no filtering)
+	 * @param   boolean   $setUserState  Should I set the user state with the fetched value?
 	 *
 	 * @return  mixed  The value of the variable
 	 */
@@ -261,7 +261,7 @@ interface FOFPlatformInterface
 	 * Load plugins of a specific type. Obviously this seems to only be required
 	 * in the Joomla! CMS.
 	 *
-	 * @param   string $type The type of the plugins to be loaded
+	 * @param   string  $type  The type of the plugins to be loaded
 	 *
 	 * @return void
 	 */
@@ -271,8 +271,8 @@ interface FOFPlatformInterface
 	 * Execute plugins (system-level triggers) and fetch back an array with
 	 * their return values.
 	 *
-	 * @param   string $event The event (trigger) name, e.g. onBeforeScratchMyEar
-	 * @param   array  $data  A hash array of data sent to the plugins as part of the trigger
+	 * @param   string  $event  The event (trigger) name, e.g. onBeforeScratchMyEar
+	 * @param   array   $data   A hash array of data sent to the plugins as part of the trigger
 	 *
 	 * @return  array  A simple array containing the resutls of the plugins triggered
 	 */
@@ -284,8 +284,8 @@ interface FOFPlatformInterface
 	 * If your platform uses different conventions you'll have to override the
 	 * FOF defaults using fof.xml or by specialising the controller.
 	 *
-	 * @param   string $action    The ACL privilege to check, e.g. core.edit
-	 * @param   string $assetname The asset name to check, typically the component's name
+	 * @param   string  $action     The ACL privilege to check, e.g. core.edit
+	 * @param   string  $assetname  The asset name to check, typically the component's name
 	 *
 	 * @return  boolean  True if the user is allowed this action
 	 */
@@ -294,7 +294,7 @@ interface FOFPlatformInterface
 	/**
 	 * Returns a user object.
 	 *
-	 * @param   integer $id   The user ID to load. Skip or use null to retrieve
+	 * @param   integer  $id  The user ID to load. Skip or use null to retrieve
 	 *                        the object for the currently logged in user.
 	 *
 	 * @return  JUser  The JUser object for the specified user
@@ -312,20 +312,20 @@ interface FOFPlatformInterface
 	 */
 	public function getDocument();
 
-	/**
-	 * Returns an object to handle dates
-	 *
-	 * @param   mixed $time     The initial time
-	 * @param   null  $tzOffest The timezone offset
-	 * @param   bool  $locale   Should I try to load a specific class for current language?
-	 *
-	 * @return  JDate object
-	 */
-	public function getDate($time = 'now', $tzOffest = null, $locale = true);
+    /**
+     * Returns an object to handle dates
+     *
+     * @param   mixed   $time       The initial time
+     * @param   null    $tzOffest   The timezone offset
+     * @param   bool    $locale     Should I try to load a specific class for current language?
+     *
+     * @return  JDate object
+     */
+    public function getDate($time = 'now', $tzOffest = null, $locale = true);
 
-	public function getLanguage();
+    public function getLanguage();
 
-	public function getDbo();
+    public function getDbo();
 
 	/**
 	 * Is this the administrative section of the component?
@@ -360,12 +360,12 @@ interface FOFPlatformInterface
 	 * Performs a check between two versions. Use this function instead of PHP version_compare
 	 * so we can mock it while testing
 	 *
-	 * @param   string $version1 First version number
-	 * @param   string $version2 Second version number
-	 * @param   string $operator Operator (see version_compare for valid operators)
+	 * @param   string  $version1  First version number
+	 * @param   string  $version2  Second version number
+	 * @param   string  $operator  Operator (see version_compare for valid operators)
 	 *
-	 * @deprecated Use PHP's version_compare against JVERSION in your code. This method is scheduled for removal in FOF 3.0
-	 *
+     * @deprecated Use PHP's version_compare against JVERSION in your code. This method is scheduled for removal in FOF 3.0
+     *
 	 * @return  boolean
 	 */
 	public function checkVersion($version1, $version2, $operator);
@@ -374,8 +374,8 @@ interface FOFPlatformInterface
 	 * Saves something to the cache. This is supposed to be used for system-wide
 	 * FOF data, not application data.
 	 *
-	 * @param   string $key     The key of the data to save
-	 * @param   string $content The actual data to save
+	 * @param   string  $key      The key of the data to save
+	 * @param   string  $content  The actual data to save
 	 *
 	 * @return  boolean  True on success
 	 */
@@ -385,8 +385,8 @@ interface FOFPlatformInterface
 	 * Retrieves data from the cache. This is supposed to be used for system-side
 	 * FOF data, not application data.
 	 *
-	 * @param   string $key     The key of the data to retrieve
-	 * @param   string $default The default value to return if the key is not found or the cache is not populated
+	 * @param   string  $key      The key of the data to retrieve
+	 * @param   string  $default  The default value to return if the key is not found or the cache is not populated
 	 *
 	 * @return  string  The cached value
 	 */
@@ -403,12 +403,12 @@ interface FOFPlatformInterface
 	 */
 	public function clearCache();
 
-	/**
-	 * Returns an object that holds the configuration of the current site.
-	 *
-	 * @return  mixed
-	 */
-	public function getConfig();
+    /**
+     * Returns an object that holds the configuration of the current site.
+     *
+     * @return  mixed
+     */
+    public function getConfig();
 
 	/**
 	 * Is the global FOF cache enabled?
@@ -420,7 +420,7 @@ interface FOFPlatformInterface
 	/**
 	 * logs in a user
 	 *
-	 * @param   array $authInfo authentification information
+	 * @param   array  $authInfo  authentification information
 	 *
 	 * @return  boolean  True on success
 	 */
@@ -433,56 +433,55 @@ interface FOFPlatformInterface
 	 */
 	public function logoutUser();
 
-	public function logAddLogger($file);
+    public function logAddLogger($file);
 
 	/**
 	 * Logs a deprecated practice. In Joomla! this results in the $message being output in the
 	 * deprecated log file, found in your site's log directory.
 	 *
-	 * @param   string $message The deprecated practice log message
+	 * @param   string  $message  The deprecated practice log message
 	 *
 	 * @return  void
 	 */
 	public function logDeprecated($message);
 
-	public function logDebug($message);
+    public function logDebug($message);
 
-	/**
-	 * Returns the root URI for the request.
-	 *
-	 * @param   boolean $pathonly If false, prepend the scheme, host and port information. Default is false.
-	 * @param   string  $path     The path
-	 *
-	 * @return  string  The root URI string.
-	 */
-	public function URIroot($pathonly = false, $path = null);
+    /**
+     * Returns the root URI for the request.
+     *
+     * @param   boolean  $pathonly  If false, prepend the scheme, host and port information. Default is false.
+     * @param   string   $path      The path
+     *
+     * @return  string  The root URI string.
+     */
+    public function URIroot($pathonly = false, $path = null);
 
-	/**
-	 * Returns the base URI for the request.
-	 *
-	 * @param   boolean $pathonly If false, prepend the scheme, host and port information. Default is false.
-	 *                            |
-	 *
-	 * @return  string  The base URI string
-	 */
-	public function URIbase($pathonly = false);
+    /**
+     * Returns the base URI for the request.
+     *
+     * @param   boolean  $pathonly  If false, prepend the scheme, host and port information. Default is false.
+     * |
+     * @return  string  The base URI string
+     */
+    public function URIbase($pathonly = false);
 
-	/**
-	 * Method to set a response header.  If the replace flag is set then all headers
-	 * with the given name will be replaced by the new one (only if the current platform supports header caching)
-	 *
-	 * @param   string  $name    The name of the header to set.
-	 * @param   string  $value   The value of the header to set.
-	 * @param   boolean $replace True to replace any headers with the same name.
-	 *
-	 * @return  void
-	 */
-	public function setHeader($name, $value, $replace = false);
+    /**
+     * Method to set a response header.  If the replace flag is set then all headers
+     * with the given name will be replaced by the new one (only if the current platform supports header caching)
+     *
+     * @param   string   $name     The name of the header to set.
+     * @param   string   $value    The value of the header to set.
+     * @param   boolean  $replace  True to replace any headers with the same name.
+     *
+     * @return  void
+     */
+    public function setHeader($name, $value, $replace = false);
 
-	/**
-	 * In platforms that perform header caching, send all headers.
-	 *
-	 * @return  void
-	 */
-	public function sendHeaders();
+    /**
+     * In platforms that perform header caching, send all headers.
+     *
+     * @return  void
+     */
+    public function sendHeaders();
 }

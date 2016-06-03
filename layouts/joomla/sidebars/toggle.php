@@ -18,6 +18,6 @@ JText::script('JTOGGLE_SHOW_SIDEBAR');
 	class="j-toggle-sidebar-button hidden-phone hasTooltip"
 	type="button"
 	onclick="toggleSidebar(false); return false;"
->
+	>
 	<span id="j-toggle-sidebar-icon" class="icon-arrow-left-2"></span>
 </div>

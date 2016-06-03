@@ -17,14 +17,30 @@ defined('_JEXEC') or die;
 class PlgSearchContent extends JPlugin
 {
 	/**
+	 * Determine areas searchable by this plugin.
+	 *
+	 * @return  array  An array of search areas.
+	 *
+	 * @since   1.6
+	 */
+	public function onContentSearchAreas()
+	{
+		static $areas = array(
+			'content' => 'JGLOBAL_ARTICLES'
+		);
+
+		return $areas;
+	}
+
+	/**
 	 * Search content (articles).
 	 * The SQL must return the following fields that are used in a common display
 	 * routine: href, title, section, created, text, browsernav.
 	 *
-	 * @param   string $text     Target search string.
-	 * @param   string $phrase   Matching option (possible values: exact|any|all).  Default is "any".
-	 * @param   string $ordering Ordering option (possible values: newest|oldest|popular|alpha|category).  Default is "newest".
-	 * @param   mixed  $areas    An array if the search it to be restricted to areas or null to search all areas.
+	 * @param   string  $text      Target search string.
+	 * @param   string  $phrase    Matching option (possible values: exact|any|all).  Default is "any".
+	 * @param   string  $ordering  Ordering option (possible values: newest|oldest|popular|alpha|category).  Default is "newest".
+	 * @param   mixed   $areas     An array if the search it to be restricted to areas or null to search all areas.
 	 *
 	 * @return  array  Search results.
 	 *
@@ -55,9 +71,9 @@ class PlgSearchContent extends JPlugin
 		$sArchived = $this->params->get('search_archived', 1);
 		$limit     = $this->params->def('search_limit', 50);
 
-		$nullDate = $db->getNullDate();
-		$date     = JFactory::getDate();
-		$now      = $date->toSql();
+		$nullDate  = $db->getNullDate();
+		$date      = JFactory::getDate();
+		$now       = $date->toSql();
 
 		$text = trim($text);
 
@@ -82,7 +98,7 @@ class PlgSearchContent extends JPlugin
 			case 'all':
 			case 'any':
 			default:
-				$words  = explode(' ', $text);
+				$words = explode(' ', $text);
 				$wheres = array();
 
 				foreach ($words as $word)
@@ -125,7 +141,7 @@ class PlgSearchContent extends JPlugin
 				break;
 		}
 
-		$rows  = array();
+		$rows = array();
 		$query = $db->getQuery(true);
 
 		// Search articles.
@@ -134,15 +150,15 @@ class PlgSearchContent extends JPlugin
 			$query->clear();
 
 			// SQLSRV changes.
-			$case_when = ' CASE WHEN ';
+			$case_when  = ' CASE WHEN ';
 			$case_when .= $query->charLength('a.alias', '!=', '0');
 			$case_when .= ' THEN ';
-			$a_id = $query->castAsChar('a.id');
+			$a_id       = $query->castAsChar('a.id');
 			$case_when .= $query->concatenate(array($a_id, 'a.alias'), ':');
 			$case_when .= ' ELSE ';
 			$case_when .= $a_id . ' END as slug';
 
-			$case_when1 = ' CASE WHEN ';
+			$case_when1  = ' CASE WHEN ';
 			$case_when1 .= $query->charLength('c.alias', '!=', '0');
 			$case_when1 .= ' THEN ';
 			$c_id = $query->castAsChar('c.id');
@@ -153,13 +169,14 @@ class PlgSearchContent extends JPlugin
 			$query->select('a.title AS title, a.metadesc, a.metakey, a.created AS created, a.language, a.catid')
 				->select($query->concatenate(array('a.introtext', 'a.fulltext')) . ' AS text')
 				->select('c.title AS section, ' . $case_when . ',' . $case_when1 . ', ' . '\'2\' AS browsernav')
+
 				->from('#__content AS a')
 				->join('INNER', '#__categories AS c ON c.id=a.catid')
 				->where(
 					'(' . $where . ') AND a.state=1 AND c.published = 1 AND a.access IN (' . $groups . ') '
-					. 'AND c.access IN (' . $groups . ') '
-					. 'AND (a.publish_up = ' . $db->quote($nullDate) . ' OR a.publish_up <= ' . $db->quote($now) . ') '
-					. 'AND (a.publish_down = ' . $db->quote($nullDate) . ' OR a.publish_down >= ' . $db->quote($now) . ')'
+						. 'AND c.access IN (' . $groups . ') '
+						. 'AND (a.publish_up = ' . $db->quote($nullDate) . ' OR a.publish_up <= ' . $db->quote($now) . ') '
+						. 'AND (a.publish_down = ' . $db->quote($nullDate) . ' OR a.publish_down >= ' . $db->quote($now) . ')'
 				)
 				->group('a.id, a.title, a.metadesc, a.metakey, a.created, a.language, a.catid, a.introtext, a.fulltext, c.title, a.alias, c.alias, c.id')
 				->order($order);
@@ -201,15 +218,15 @@ class PlgSearchContent extends JPlugin
 			$query->clear();
 
 			// SQLSRV changes.
-			$case_when = ' CASE WHEN ';
+			$case_when  = ' CASE WHEN ';
 			$case_when .= $query->charLength('a.alias', '!=', '0');
 			$case_when .= ' THEN ';
-			$a_id = $query->castAsChar('a.id');
+			$a_id       = $query->castAsChar('a.id');
 			$case_when .= $query->concatenate(array($a_id, 'a.alias'), ':');
 			$case_when .= ' ELSE ';
 			$case_when .= $a_id . ' END as slug';
 
-			$case_when1 = ' CASE WHEN ';
+			$case_when1  = ' CASE WHEN ';
 			$case_when1 .= $query->charLength('c.alias', '!=', '0');
 			$case_when1 .= ' THEN ';
 			$c_id = $query->castAsChar('c.id');
@@ -219,9 +236,9 @@ class PlgSearchContent extends JPlugin
 
 			$query->select(
 				'a.title AS title, a.metadesc, a.metakey, a.created AS created, '
-				. $query->concatenate(array("a.introtext", "a.fulltext")) . ' AS text,'
-				. $case_when . ',' . $case_when1 . ', '
-				. 'c.title AS section, \'2\' AS browsernav'
+					. $query->concatenate(array("a.introtext", "a.fulltext")) . ' AS text,'
+					. $case_when . ',' . $case_when1 . ', '
+					. 'c.title AS section, \'2\' AS browsernav'
 			);
 
 			// .'CONCAT_WS("/", c.title) AS section, \'2\' AS browsernav' );
@@ -229,9 +246,9 @@ class PlgSearchContent extends JPlugin
 				->join('INNER', '#__categories AS c ON c.id=a.catid AND c.access IN (' . $groups . ')')
 				->where(
 					'(' . $where . ') AND a.state = 2 AND c.published = 1 AND a.access IN (' . $groups
-					. ') AND c.access IN (' . $groups . ') '
-					. 'AND (a.publish_up = ' . $db->quote($nullDate) . ' OR a.publish_up <= ' . $db->quote($now) . ') '
-					. 'AND (a.publish_down = ' . $db->quote($nullDate) . ' OR a.publish_down >= ' . $db->quote($now) . ')'
+						. ') AND c.access IN (' . $groups . ') '
+						. 'AND (a.publish_up = ' . $db->quote($nullDate) . ' OR a.publish_up <= ' . $db->quote($now) . ') '
+						. 'AND (a.publish_down = ' . $db->quote($nullDate) . ' OR a.publish_down >= ' . $db->quote($now) . ')'
 				)
 				->order($order);
 
@@ -255,7 +272,7 @@ class PlgSearchContent extends JPlugin
 			}
 
 			// Find an itemid for archived to use if there isn't another one.
-			$item   = $app->getMenu()->getItems('link', 'index.php?option=com_content&view=archive', true);
+			$item = $app->getMenu()->getItems('link', 'index.php?option=com_content&view=archive', true);
 			$itemid = isset($item->id) ? '&Itemid=' . $item->id : '';
 
 			if (isset($list3))
@@ -295,21 +312,5 @@ class PlgSearchContent extends JPlugin
 		}
 
 		return $results;
-	}
-
-	/**
-	 * Determine areas searchable by this plugin.
-	 *
-	 * @return  array  An array of search areas.
-	 *
-	 * @since   1.6
-	 */
-	public function onContentSearchAreas()
-	{
-		static $areas = array(
-			'content' => 'JGLOBAL_ARTICLES'
-		);
-
-		return $areas;
 	}
 }

@@ -21,10 +21,10 @@ abstract class JHtmlEmail
 	 *
 	 * By default replaces an email with a mailto link with email cloaked
 	 *
-	 * @param   string  $mail   The -mail address to cloak.
-	 * @param   boolean $mailto True if text and mailing address differ
-	 * @param   string  $text   Text for the link
-	 * @param   boolean $email  True if text is an e-mail address
+	 * @param   string   $mail    The -mail address to cloak.
+	 * @param   boolean  $mailto  True if text and mailing address differ
+	 * @param   string   $text    Text for the link
+	 * @param   boolean  $email   True if text is an e-mail address
 	 *
 	 * @return  string  The cloaked email.
 	 *
@@ -48,7 +48,7 @@ abstract class JHtmlEmail
 		$mail = static::convertEncoding($mail);
 
 		// Split email by @ symbol
-		$mail       = explode('@', $mail);
+		$mail = explode('@', $mail);
 		$mail_parts = explode('.', $mail[1]);
 
 		// Random number
@@ -73,7 +73,7 @@ abstract class JHtmlEmail
 				if ($email)
 				{
 					// Split email by @ symbol
-					$text       = explode('@', $text);
+					$text = explode('@', $text);
 					$text_parts = explode('.', $text[1]);
 					$replacement .= "\n var addy_text" . $rand . " = '" . @$text[0] . "' + '&#64;' + '" . implode("' + '&#46;' + '", @$text_parts)
 						. "';";
@@ -106,7 +106,7 @@ abstract class JHtmlEmail
 	/**
 	 * Convert encoded text
 	 *
-	 * @param   string $text Text to convert
+	 * @param   string  $text  Text to convert
 	 *
 	 * @return  string  The converted text.
 	 *

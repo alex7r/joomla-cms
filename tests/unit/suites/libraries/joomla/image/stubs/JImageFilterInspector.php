@@ -21,7 +21,7 @@ class JImageFilterInspector extends JImageFilter
 	/**
 	 * Method to apply a filter to an image resource.
 	 *
-	 * @param   array $options An array of options for the filter.
+	 * @param   array  $options  An array of options for the filter.
 	 *
 	 * @return  void
 	 *

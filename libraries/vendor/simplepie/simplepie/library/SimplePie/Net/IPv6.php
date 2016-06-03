@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- *    * Redistributions of source code must retain the above copyright notice, this list of
- *      conditions and the following disclaimer.
+ * 	* Redistributions of source code must retain the above copyright notice, this list of
+ * 	  conditions and the following disclaimer.
  *
- *    * Redistributions in binary form must reproduce the above copyright notice, this list
- *      of conditions and the following disclaimer in the documentation and/or other materials
- *      provided with the distribution.
+ * 	* Redistributions in binary form must reproduce the above copyright notice, this list
+ * 	  of conditions and the following disclaimer in the documentation and/or other materials
+ * 	  provided with the distribution.
  *
- *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
- *      to endorse or promote products derived from this software without specific prior
- *      written permission.
+ * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
+ * 	  to endorse or promote products derived from this software without specific prior
+ * 	  written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,84 +32,32 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package   SimplePie
- * @version   1.3.1
+ * @package SimplePie
+ * @version 1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author    Ryan Parman
- * @author    Geoffrey Sneddon
- * @author    Ryan McCue
- * @link      http://simplepie.org/ SimplePie
- * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author Ryan Parman
+ * @author Geoffrey Sneddon
+ * @author Ryan McCue
+ * @link http://simplepie.org/ SimplePie
+ * @license http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 
 /**
  * Class to validate and to work with IPv6 addresses.
  *
- * @package    SimplePie
+ * @package SimplePie
  * @subpackage HTTP
- * @copyright  2003-2005 The PHP Group
- * @license    http://www.opensource.org/licenses/bsd-license.php
- * @link       http://pear.php.net/package/Net_IPv6
- * @author     Alexander Merz <alexander.merz@web.de>
- * @author     elfrink at introweb dot nl
- * @author     Josh Peck <jmp at joshpeck dot org>
- * @author     Geoffrey Sneddon <geoffers@gmail.com>
+ * @copyright 2003-2005 The PHP Group
+ * @license http://www.opensource.org/licenses/bsd-license.php
+ * @link http://pear.php.net/package/Net_IPv6
+ * @author Alexander Merz <alexander.merz@web.de>
+ * @author elfrink at introweb dot nl
+ * @author Josh Peck <jmp at joshpeck dot org>
+ * @author Geoffrey Sneddon <geoffers@gmail.com>
  */
 class SimplePie_Net_IPv6
 {
-	/**
-	 * Compresses an IPv6 address
-	 *
-	 * RFC 4291 allows you to compress concecutive zero pieces in an address to
-	 * '::'. This method expects a valid IPv6 address and compresses consecutive
-	 * zero pieces to '::'.
-	 *
-	 * Example:  FF01:0:0:0:0:0:0:101   ->  FF01::101
-	 *           0:0:0:0:0:0:0:1        ->  ::1
-	 *
-	 * @see uncompress()
-	 *
-	 * @param string $ip An IPv6 address
-	 *
-	 * @return string The compressed IPv6 address
-	 */
-	public static function compress($ip)
-	{
-		// Prepare the IP to be compressed
-		$ip       = self::uncompress($ip);
-		$ip_parts = self::split_v6_v4($ip);
-
-		// Replace all leading zeros
-		$ip_parts[0] = preg_replace('/(^|:)0+([0-9])/', '\1\2', $ip_parts[0]);
-
-		// Find bunches of zeros
-		if (preg_match_all('/(?:^|:)(?:0(?::|$))+/', $ip_parts[0], $matches, PREG_OFFSET_CAPTURE))
-		{
-			$max = 0;
-			$pos = null;
-			foreach ($matches[0] as $match)
-			{
-				if (strlen($match[0]) > $max)
-				{
-					$max = strlen($match[0]);
-					$pos = $match[1];
-				}
-			}
-
-			$ip_parts[0] = substr_replace($ip_parts[0], '::', $pos, $max);
-		}
-
-		if ($ip_parts[1] !== '')
-		{
-			return implode(':', $ip_parts);
-		}
-		else
-		{
-			return $ip_parts[0];
-		}
-	}
-
 	/**
 	 * Uncompresses an IPv6 address
 	 *
@@ -120,14 +68,12 @@ class SimplePie_Net_IPv6
 	 * Example:  FF01::101   ->  FF01:0:0:0:0:0:0:101
 	 *           ::1         ->  0:0:0:0:0:0:0:1
 	 *
-	 * @author    Alexander Merz <alexander.merz@web.de>
-	 * @author    elfrink at introweb dot nl
-	 * @author    Josh Peck <jmp at joshpeck dot org>
+	 * @author Alexander Merz <alexander.merz@web.de>
+	 * @author elfrink at introweb dot nl
+	 * @author Josh Peck <jmp at joshpeck dot org>
 	 * @copyright 2003-2005 The PHP Group
-	 * @license   http://www.opensource.org/licenses/bsd-license.php
-	 *
+	 * @license http://www.opensource.org/licenses/bsd-license.php
 	 * @param string $ip An IPv6 address
-	 *
 	 * @return string The uncompressed IPv6 address
 	 */
 	public static function uncompress($ip)
@@ -166,23 +112,72 @@ class SimplePie_Net_IPv6
 			else if ($c1 === -1)
 			{
 				$fill = str_repeat('0:', 7 - $c2);
-				$ip   = str_replace('::', $fill, $ip);
+				$ip = str_replace('::', $fill, $ip);
 			}
 			// xxx::
 			else if ($c2 === -1)
 			{
 				$fill = str_repeat(':0', 7 - $c1);
-				$ip   = str_replace('::', $fill, $ip);
+				$ip = str_replace('::', $fill, $ip);
 			}
 			// xxx::xxx
 			else
 			{
 				$fill = ':' . str_repeat('0:', 6 - $c2 - $c1);
-				$ip   = str_replace('::', $fill, $ip);
+				$ip = str_replace('::', $fill, $ip);
 			}
 		}
-
 		return $ip;
+	}
+
+	/**
+	 * Compresses an IPv6 address
+	 *
+	 * RFC 4291 allows you to compress concecutive zero pieces in an address to
+	 * '::'. This method expects a valid IPv6 address and compresses consecutive
+	 * zero pieces to '::'.
+	 *
+	 * Example:  FF01:0:0:0:0:0:0:101   ->  FF01::101
+	 *           0:0:0:0:0:0:0:1        ->  ::1
+	 *
+	 * @see uncompress()
+	 * @param string $ip An IPv6 address
+	 * @return string The compressed IPv6 address
+	 */
+	public static function compress($ip)
+	{
+		// Prepare the IP to be compressed
+		$ip = self::uncompress($ip);
+		$ip_parts = self::split_v6_v4($ip);
+
+		// Replace all leading zeros
+		$ip_parts[0] = preg_replace('/(^|:)0+([0-9])/', '\1\2', $ip_parts[0]);
+
+		// Find bunches of zeros
+		if (preg_match_all('/(?:^|:)(?:0(?::|$))+/', $ip_parts[0], $matches, PREG_OFFSET_CAPTURE))
+		{
+			$max = 0;
+			$pos = null;
+			foreach ($matches[0] as $match)
+			{
+				if (strlen($match[0]) > $max)
+				{
+					$max = strlen($match[0]);
+					$pos = $match[1];
+				}
+			}
+
+			$ip_parts[0] = substr_replace($ip_parts[0], '::', $pos, $max);
+		}
+
+		if ($ip_parts[1] !== '')
+		{
+			return implode(':', $ip_parts);
+		}
+		else
+		{
+			return $ip_parts[0];
+		}
 	}
 
 	/**
@@ -195,17 +190,15 @@ class SimplePie_Net_IPv6
 	 *           0:0:0:0:0:FFFF:129.144.52.38
 	 *
 	 * @param string $ip An IPv6 address
-	 *
 	 * @return array [0] contains the IPv6 represented part, and [1] the IPv4 represented part
 	 */
 	private static function split_v6_v4($ip)
 	{
 		if (strpos($ip, '.') !== false)
 		{
-			$pos       = strrpos($ip, ':');
+			$pos = strrpos($ip, ':');
 			$ipv6_part = substr($ip, 0, $pos);
 			$ipv4_part = substr($ip, $pos + 1);
-
 			return array($ipv6_part, $ipv4_part);
 		}
 		else
@@ -215,28 +208,11 @@ class SimplePie_Net_IPv6
 	}
 
 	/**
-	 * Checks if the given IP is a valid IPv6 address
-	 *
-	 * @codeCoverageIgnore
-	 * @deprecated Use {@see SimplePie_Net_IPv6::check_ipv6()} instead
-	 * @see        check_ipv6
-	 *
-	 * @param string $ip An IPv6 address
-	 *
-	 * @return bool true if $ip is a valid IPv6 address
-	 */
-	public static function checkIPv6($ip)
-	{
-		return self::check_ipv6($ip);
-	}
-
-	/**
 	 * Checks an IPv6 address
 	 *
 	 * Checks if the given IP is a valid IPv6 address
 	 *
 	 * @param string $ip An IPv6 address
-	 *
 	 * @return bool true if $ip is a valid IPv6 address
 	 */
 	public static function check_ipv6($ip)
@@ -276,12 +252,25 @@ class SimplePie_Net_IPv6
 						return false;
 				}
 			}
-
 			return true;
 		}
 		else
 		{
 			return false;
 		}
+	}
+
+	/**
+	 * Checks if the given IP is a valid IPv6 address
+	 *
+	 * @codeCoverageIgnore
+	 * @deprecated Use {@see SimplePie_Net_IPv6::check_ipv6()} instead
+	 * @see check_ipv6
+	 * @param string $ip An IPv6 address
+	 * @return bool true if $ip is a valid IPv6 address
+	 */
+	public static function checkIPv6($ip)
+	{
+		return self::check_ipv6($ip);
 	}
 }

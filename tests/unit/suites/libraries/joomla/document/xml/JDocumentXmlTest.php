@@ -18,30 +18,6 @@ class JDocumentXmlTest extends TestCase
 	protected $object;
 
 	/**
-	 * @testdox  Test the default return for render
-	 */
-	public function testTheDefaultReturnForRender()
-	{
-		$this->assertEmpty($this->object->render());
-	}
-
-	/**
-	 * @testdox  Test the default return for getName
-	 */
-	public function testTheDefaultReturnForGetName()
-	{
-		$this->assertSame('joomla', $this->object->getName());
-	}
-
-	/**
-	 * @testdox  Test that setName returns an instance of $this
-	 */
-	public function testEnsureSetNameReturnsThisObject()
-	{
-		$this->assertSame($this->object, $this->object->setName('CMS'));
-	}
-
-	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
@@ -65,5 +41,29 @@ class JDocumentXmlTest extends TestCase
 		$this->restoreFactoryState();
 
 		parent::tearDown();
+	}
+
+	/**
+	 * @testdox  Test the default return for render
+	 */
+	public function testTheDefaultReturnForRender()
+	{
+		$this->assertEmpty($this->object->render());
+	}
+
+	/**
+	 * @testdox  Test the default return for getName
+	 */
+	public function testTheDefaultReturnForGetName()
+	{
+		$this->assertSame('joomla', $this->object->getName());
+	}
+
+	/**
+	 * @testdox  Test that setName returns an instance of $this
+	 */
+	public function testEnsureSetNameReturnsThisObject()
+	{
+		$this->assertSame($this->object, $this->object->setName('CMS'));
 	}
 }

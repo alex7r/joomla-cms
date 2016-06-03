@@ -12,17 +12,16 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidator');
 ?>
-<div class="reset<?php echo $this->pageclass_sfx ?>">
+<div class="reset<?php echo $this->pageclass_sfx?>">
 	<?php if ($this->params->get('show_page_heading')) : ?>
-		<div class="page-header">
-			<h1>
-				<?php echo $this->escape($this->params->get('page_heading')); ?>
-			</h1>
-		</div>
+	<div class="page-header">
+		<h1>
+			<?php echo $this->escape($this->params->get('page_heading')); ?>
+		</h1>
+	</div>
 	<?php endif; ?>
 
-	<form id="user-registration" action="<?php echo JRoute::_('index.php?option=com_users&task=reset.request'); ?>"
-	      method="post" class="form-validate form-horizontal well">
+	<form id="user-registration" action="<?php echo JRoute::_('index.php?option=com_users&task=reset.request'); ?>" method="post" class="form-validate form-horizontal well">
 		<?php foreach ($this->form->getFieldsets() as $fieldset) : ?>
 			<fieldset>
 				<p><?php echo JText::_($fieldset->label); ?></p>

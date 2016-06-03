@@ -18,48 +18,6 @@ defined('JPATH_PLATFORM') or die;
 class JCacheStorage
 {
 	/**
-	 * Time that the cache storage handler was instantiated
-	 *
-	 * @var    integer
-	 * @since  11.1
-	 */
-	public $_now;
-	/**
-	 * Cache lifetime
-	 *
-	 * @var    integer
-	 * @since  11.1
-	 */
-	public $_lifetime;
-	/**
-	 * Flag if locking is enabled
-	 *
-	 * @var    boolean
-	 * @since  11.1
-	 */
-	public $_locking;
-	/**
-	 * Language code
-	 *
-	 * @var    string
-	 * @since  11.1
-	 */
-	public $_language;
-	/**
-	 * Application name
-	 *
-	 * @var    string
-	 * @since  11.1
-	 */
-	public $_application;
-	/**
-	 * Object hash
-	 *
-	 * @var    string
-	 * @since  11.1
-	 */
-	public $_hash;
-	/**
 	 * The raw object name
 	 *
 	 * @var    string
@@ -68,9 +26,57 @@ class JCacheStorage
 	protected $rawname;
 
 	/**
+	 * Time that the cache storage handler was instantiated
+	 *
+	 * @var    integer
+	 * @since  11.1
+	 */
+	public $_now;
+
+	/**
+	 * Cache lifetime
+	 *
+	 * @var    integer
+	 * @since  11.1
+	 */
+	public $_lifetime;
+
+	/**
+	 * Flag if locking is enabled
+	 *
+	 * @var    boolean
+	 * @since  11.1
+	 */
+	public $_locking;
+
+	/**
+	 * Language code
+	 *
+	 * @var    string
+	 * @since  11.1
+	 */
+	public $_language;
+
+	/**
+	 * Application name
+	 *
+	 * @var    string
+	 * @since  11.1
+	 */
+	public $_application;
+
+	/**
+	 * Object hash
+	 *
+	 * @var    string
+	 * @since  11.1
+	 */
+	public $_hash;
+
+	/**
 	 * Constructor
 	 *
-	 * @param   array $options Optional parameters
+	 * @param   array  $options  Optional parameters
 	 *
 	 * @since   11.1
 	 */
@@ -90,7 +96,7 @@ class JCacheStorage
 		if (empty($this->_lifetime))
 		{
 			$this->_threshold = $this->_now - 60;
-			$this->_lifetime  = 60;
+			$this->_lifetime = 60;
 		}
 		else
 		{
@@ -101,8 +107,8 @@ class JCacheStorage
 	/**
 	 * Returns a cache storage handler object.
 	 *
-	 * @param   string $handler The cache storage handler to instantiate
-	 * @param   array  $options Array of handler options
+	 * @param   string  $handler  The cache storage handler to instantiate
+	 * @param   array   $options  Array of handler options
 	 *
 	 * @return  JCacheStorage
 	 *
@@ -171,65 +177,11 @@ class JCacheStorage
 	}
 
 	/**
-	 * Add a directory where JCacheStorage should search for handlers. You may either pass a string or an array of directories.
-	 *
-	 * @param   array|string $path A path to search.
-	 *
-	 * @return  array  An array with directory elements
-	 *
-	 * @since   11.1
-	 */
-	public static function addIncludePath($path = '')
-	{
-		static $paths;
-
-		if (!isset($paths))
-		{
-			$paths = array();
-		}
-
-		if (!empty($path) && !in_array($path, $paths))
-		{
-			jimport('joomla.filesystem.path');
-			array_unshift($paths, JPath::clean($path));
-		}
-
-		return $paths;
-	}
-
-	/**
-	 * Test to see if the storage handler is available.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		return true;
-	}
-
-	/**
-	 * Test to see if the storage handler is available.
-	 *
-	 * @return  boolean
-	 *
-	 * @since       11.1
-	 * @deprecated  12.3 (Platform) & 4.0 (CMS)
-	 */
-	public static function test()
-	{
-		JLog::add(__METHOD__ . '() is deprecated. Use JCacheStorage::isSupported() instead.', JLog::WARNING, 'deprecated');
-
-		return static::isSupported();
-	}
-
-	/**
 	 * Get cached data by ID and group
 	 *
-	 * @param   string  $id        The cache data ID
-	 * @param   string  $group     The cache data group
-	 * @param   boolean $checkTime True to verify cache time expiration threshold
+	 * @param   string   $id         The cache data ID
+	 * @param   string   $group      The cache data group
+	 * @param   boolean  $checkTime  True to verify cache time expiration threshold
 	 *
 	 * @return  mixed  Boolean false on failure or a cached data object
 	 *
@@ -255,9 +207,9 @@ class JCacheStorage
 	/**
 	 * Store the data to cache by ID and group
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
-	 * @param   string $data  The data to store in cache
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
+	 * @param   string  $data   The data to store in cache
 	 *
 	 * @return  boolean
 	 *
@@ -271,8 +223,8 @@ class JCacheStorage
 	/**
 	 * Remove a cached data entry by ID and group
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
 	 *
 	 * @return  boolean
 	 *
@@ -289,8 +241,8 @@ class JCacheStorage
 	 * group mode    : cleans all cache in the group
 	 * notgroup mode : cleans all cache not in the group
 	 *
-	 * @param   string $group The cache data group
-	 * @param   string $mode  The mode for cleaning cache [group|notgroup]
+	 * @param   string  $group  The cache data group
+	 * @param   string  $mode   The mode for cleaning cache [group|notgroup]
 	 *
 	 * @return  boolean
 	 *
@@ -314,11 +266,38 @@ class JCacheStorage
 	}
 
 	/**
+	 * Test to see if the storage handler is available.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		return true;
+	}
+
+	/**
+	 * Test to see if the storage handler is available.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 * @deprecated  12.3 (Platform) & 4.0 (CMS)
+	 */
+	public static function test()
+	{
+		JLog::add(__METHOD__ . '() is deprecated. Use JCacheStorage::isSupported() instead.', JLog::WARNING, 'deprecated');
+
+		return static::isSupported();
+	}
+
+	/**
 	 * Lock cached item
 	 *
-	 * @param   string  $id       The cache data ID
-	 * @param   string  $group    The cache data group
-	 * @param   integer $locktime Cached item max lock time
+	 * @param   string   $id        The cache data ID
+	 * @param   string   $group     The cache data group
+	 * @param   integer  $locktime  Cached item max lock time
 	 *
 	 * @return  mixed  Boolean false if locking failed or an object containing properties lock and locklooped
 	 *
@@ -332,8 +311,8 @@ class JCacheStorage
 	/**
 	 * Unlock cached item
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
 	 *
 	 * @return  boolean
 	 *
@@ -347,8 +326,8 @@ class JCacheStorage
 	/**
 	 * Get a cache ID string from an ID/group pair
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
 	 *
 	 * @return  string
 	 *
@@ -360,5 +339,32 @@ class JCacheStorage
 		$this->rawname = $this->_hash . '-' . $name;
 
 		return JCache::getPlatformPrefix() . $this->_hash . '-cache-' . $group . '-' . $name;
+	}
+
+	/**
+	 * Add a directory where JCacheStorage should search for handlers. You may either pass a string or an array of directories.
+	 *
+	 * @param   array|string  $path  A path to search.
+	 *
+	 * @return  array  An array with directory elements
+	 *
+	 * @since   11.1
+	 */
+	public static function addIncludePath($path = '')
+	{
+		static $paths;
+
+		if (!isset($paths))
+		{
+			$paths = array();
+		}
+
+		if (!empty($path) && !in_array($path, $paths))
+		{
+			jimport('joomla.filesystem.path');
+			array_unshift($paths, JPath::clean($path));
+		}
+
+		return $paths;
 	}
 }

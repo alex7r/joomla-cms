@@ -21,8 +21,8 @@ class JGithubPackageRepositoriesKeys extends JGithubPackage
 	/**
 	 * List keys in a repository.
 	 *
-	 * @param   string $owner The name of the owner of the GitHub repository.
-	 * @param   string $repo  The name of the GitHub repository.
+	 * @param   string  $owner  The name of the owner of the GitHub repository.
+	 * @param   string  $repo   The name of the GitHub repository.
 	 *
 	 * @since 12.4
 	 *
@@ -41,9 +41,9 @@ class JGithubPackageRepositoriesKeys extends JGithubPackage
 	/**
 	 * Get a key.
 	 *
-	 * @param   string  $owner The name of the owner of the GitHub repository.
-	 * @param   string  $repo  The name of the GitHub repository.
-	 * @param   integer $id    The id of the key.
+	 * @param   string   $owner  The name of the owner of the GitHub repository.
+	 * @param   string   $repo   The name of the GitHub repository.
+	 * @param   integer  $id     The id of the key.
 	 *
 	 * @since 12.4
 	 *
@@ -62,10 +62,10 @@ class JGithubPackageRepositoriesKeys extends JGithubPackage
 	/**
 	 * Create a key.
 	 *
-	 * @param   string $owner The name of the owner of the GitHub repository.
-	 * @param   string $repo  The name of the GitHub repository.
-	 * @param   string $title The key title.
-	 * @param   string $key   The key.
+	 * @param   string  $owner  The name of the owner of the GitHub repository.
+	 * @param   string  $repo   The name of the GitHub repository.
+	 * @param   string  $title  The key title.
+	 * @param   string  $key    The key.
 	 *
 	 * @since 12.4
 	 *
@@ -90,11 +90,11 @@ class JGithubPackageRepositoriesKeys extends JGithubPackage
 	/**
 	 * Edit a key.
 	 *
-	 * @param   string  $owner The name of the owner of the GitHub repository.
-	 * @param   string  $repo  The name of the GitHub repository.
-	 * @param   integer $id    The id of the key.
-	 * @param   string  $title The key title.
-	 * @param   string  $key   The key.
+	 * @param   string   $owner  The name of the owner of the GitHub repository.
+	 * @param   string   $repo   The name of the GitHub repository.
+	 * @param   integer  $id     The id of the key.
+	 * @param   string   $title  The key title.
+	 * @param   string   $key    The key.
 	 *
 	 * @since 12.4
 	 *
@@ -118,9 +118,9 @@ class JGithubPackageRepositoriesKeys extends JGithubPackage
 	/**
 	 * Delete a key.
 	 *
-	 * @param   string  $owner The name of the owner of the GitHub repository.
-	 * @param   string  $repo  The name of the GitHub repository.
-	 * @param   integer $id    The id of the key.
+	 * @param   string   $owner  The name of the owner of the GitHub repository.
+	 * @param   string   $repo   The name of the GitHub repository.
+	 * @param   integer  $id     The id of the key.
 	 *
 	 * @since 12.4
 	 *

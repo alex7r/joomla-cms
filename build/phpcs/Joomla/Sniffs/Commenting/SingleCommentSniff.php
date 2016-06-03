@@ -34,7 +34,7 @@ class Joomla_Sniffs_Commenting_SingleCommentSniff implements PHP_CodeSniffer_Sni
 		if (0 === strpos($comment, '#'))
 		{
 			$phpcsFile->addError('Hash comments are prohibited; found %s'
-				, $stackPtr, 'HashComment', array($comment));
+					, $stackPtr, 'HashComment', array($comment));
 
 			return;
 		}
@@ -54,7 +54,7 @@ class Joomla_Sniffs_Commenting_SingleCommentSniff implements PHP_CodeSniffer_Sni
 		if (isset($comment{2}) && $comment{2} != ' ')
 		{
 			$phpcsFile->addError('Please put a space between the // and the start of comment text; found "%s"'
-				, $stackPtr, 'NoSpace', array($comment));
+					, $stackPtr, 'NoSpace', array($comment));
 
 			return;
 		}
@@ -85,7 +85,7 @@ class Joomla_Sniffs_Commenting_SingleCommentSniff implements PHP_CodeSniffer_Sni
 			}
 
 			$phpcsFile->addError('Please start your comment with a capital letter; found "%s"'
-				, $stackPtr, 'LowerCase', array($comment));
+					, $stackPtr, 'LowerCase', array($comment));
 
 			return;
 		}
@@ -101,7 +101,7 @@ class Joomla_Sniffs_Commenting_SingleCommentSniff implements PHP_CodeSniffer_Sni
 		if ($tokens[$previous]['line'] == $tokens[$stackPtr]['line'])
 		{
 			$phpcsFile->addError('Please put your comment on a separate line *preceding* your code; found "%s"'
-				, $stackPtr, 'Inline', array($comment));
+					, $stackPtr, 'Inline', array($comment));
 
 			return;
 		}
@@ -113,7 +113,7 @@ class Joomla_Sniffs_Commenting_SingleCommentSniff implements PHP_CodeSniffer_Sni
 		if ($tokens[$previous]['line'] == $tokens[$stackPtr]['line'] - 1)
 		{
 			$phpcsFile->addError('Please consider a blank line preceding your comment'
-				, $stackPtr, 'TooClose');
+					, $stackPtr, 'TooClose');
 
 			return;
 		}
@@ -136,7 +136,7 @@ class Joomla_Sniffs_Commenting_SingleCommentSniff implements PHP_CodeSniffer_Sni
 			{
 				// Found 3 lines of // comments - too much.
 				$phpcsFile->addError('Please consider the /* */ style for comments that span over multiple lines.'
-					, $stackPtr, 'MultiLine');
+						, $stackPtr, 'MultiLine');
 
 				return;
 			}

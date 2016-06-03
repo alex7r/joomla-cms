@@ -24,9 +24,25 @@ final class UriImmutable extends AbstractUri
 	private $constructed = false;
 
 	/**
+	 * Prevent setting undeclared properties.
+	 *
+	 * @param   string  $name   This is an immutable object, setting $name is not allowed.
+	 * @param   mixed   $value  This is an immutable object, setting $value is not allowed.
+	 *
+	 * @return  null  This method always throws an exception.
+	 *
+	 * @since   1.0
+	 * @throws  \BadMethodCallException
+	 */
+	public function __set($name, $value)
+	{
+		throw new \BadMethodCallException('This is an immutable object');
+	}
+
+	/**
 	 * This is a special constructor that prevents calling the __construct method again.
 	 *
-	 * @param   string $uri The optional URI string
+	 * @param   string  $uri  The optional URI string
 	 *
 	 * @since   1.0
 	 * @throws  \BadMethodCallException
@@ -41,21 +57,5 @@ final class UriImmutable extends AbstractUri
 		$this->constructed = true;
 
 		parent::__construct($uri);
-	}
-
-	/**
-	 * Prevent setting undeclared properties.
-	 *
-	 * @param   string $name  This is an immutable object, setting $name is not allowed.
-	 * @param   mixed  $value This is an immutable object, setting $value is not allowed.
-	 *
-	 * @return  null  This method always throws an exception.
-	 *
-	 * @since   1.0
-	 * @throws  \BadMethodCallException
-	 */
-	public function __set($name, $value)
-	{
-		throw new \BadMethodCallException('This is an immutable object');
 	}
 }

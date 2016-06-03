@@ -21,7 +21,7 @@ class JFilterOutput extends OutputFilter
 	/**
 	 * This method processes a string and replaces all instances of & with &amp; in links only.
 	 *
-	 * @param   string $input String to process
+	 * @param   string  $input  String to process
 	 *
 	 * @return  string  Processed string
 	 *
@@ -37,7 +37,7 @@ class JFilterOutput extends OutputFilter
 	/**
 	 * This method processes a string and escapes it for use in JavaScript
 	 *
-	 * @param   string $string String to process
+	 * @param   string  $string  String to process
 	 *
 	 * @return  string  Processed text
 	 */
@@ -47,7 +47,6 @@ class JFilterOutput extends OutputFilter
 		{
 			$new_str .= (ord(substr($string, $i, 1)) < 16 ? '\\x0' : '\\x') . dechex(ord(substr($string, $i, 1)));
 		}
-
 		return $new_str;
 	}
 
@@ -55,8 +54,8 @@ class JFilterOutput extends OutputFilter
 	 * This method processes a string and replaces all accented UTF-8 characters by unaccented
 	 * ASCII-7 "equivalents", whitespaces are replaced by hyphens and the string is lowercase.
 	 *
-	 * @param   string $string   String to process
-	 * @param   string $language Language to transilterate to
+	 * @param   string  $string    String to process
+	 * @param   string  $language  Language to transilterate to
 	 *
 	 * @return  string  Processed string
 	 *
@@ -69,7 +68,7 @@ class JFilterOutput extends OutputFilter
 
 		// Transliterate on the language requested (fallback to current language if not specified)
 		$lang = $language == '' || $language == '*' ? JFactory::getLanguage() : JLanguage::getInstance($language);
-		$str  = $lang->transliterate($str);
+		$str = $lang->transliterate($str);
 
 		// Trim white spaces at beginning and end of alias and make lowercase
 		$str = trim(JString::strtolower($str));
@@ -86,22 +85,7 @@ class JFilterOutput extends OutputFilter
 	/**
 	 * Callback method for replacing & with &amp; in a string
 	 *
-	 * @param   string $m String to process
-	 *
-	 * @return  string  Replaced string
-	 *
-	 * @since       11.1
-	 * @deprecated  4.0 Use JFilterOutput::ampReplaceCallback() instead
-	 */
-	public static function _ampReplaceCallback($m)
-	{
-		return static::ampReplaceCallback($m);
-	}
-
-	/**
-	 * Callback method for replacing & with &amp; in a string
-	 *
-	 * @param   string $m String to process
+	 * @param   string  $m  String to process
 	 *
 	 * @return  string  Replaced string
 	 *
@@ -112,5 +96,20 @@ class JFilterOutput extends OutputFilter
 		$rx = '&(?!amp;)';
 
 		return preg_replace('#' . $rx . '#', '&amp;', $m[0]);
+	}
+
+	/**
+	 * Callback method for replacing & with &amp; in a string
+	 *
+	 * @param   string  $m  String to process
+	 *
+	 * @return  string  Replaced string
+	 *
+	 * @since       11.1
+	 * @deprecated  4.0 Use JFilterOutput::ampReplaceCallback() instead
+	 */
+	public static function _ampReplaceCallback($m)
+	{
+		return static::ampReplaceCallback($m);
 	}
 }

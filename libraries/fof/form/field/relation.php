@@ -1,9 +1,9 @@
 <?php
 /**
- * @package     FrameworkOnFramework
- * @subpackage  form
+ * @package    FrameworkOnFramework
+ * @subpackage form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -25,8 +25,7 @@ class FOFFormFieldRelation extends FOFFormFieldList
 	 *
 	 * @return  string  The field HTML
 	 */
-	public function getStatic()
-	{
+	public function getStatic() {
 		return $this->getRepeatable();
 	}
 
@@ -59,15 +58,14 @@ class FOFFormFieldRelation extends FOFFormFieldList
 		$relationName = FOFInflector::pluralize($this->name);
 		$relations    = $this->item->getRelations()->getMultiple($relationName);
 
-		foreach ($relations as $relation)
-		{
+		foreach ($relations as $relation) {
 
 			$html = '<span class="' . $relationclass . '">';
 
 			if ($link_url)
 			{
-				$keyfield          = $relation->getKeyName();
-				$this->_relationId = $relation->$keyfield;
+				$keyfield = $relation->getKeyName();
+				$this->_relationId =  $relation->$keyfield;
 
 				$url = $this->parseFieldTags($link_url);
 				$html .= '<a href="' . $url . '">';
@@ -105,49 +103,6 @@ class FOFFormFieldRelation extends FOFFormFieldList
 		$html .= '</span>';
 
 		return $html;
-	}
-
-	/**
-	 * Replace string with tags that reference fields
-	 *
-	 * @param   string $text Text to process
-	 *
-	 * @return  string         Text with tags replace
-	 */
-	protected function parseFieldTags($text)
-	{
-		$ret = $text;
-
-		// Replace [ITEM:ID] in the URL with the item's key value (usually:
-		// the auto-incrementing numeric ID)
-		$keyfield = $this->item->getKeyName();
-		$replace  = $this->item->$keyfield;
-		$ret      = str_replace('[ITEM:ID]', $replace, $ret);
-
-		// Replace the [ITEMID] in the URL with the current Itemid parameter
-		$ret = str_replace('[ITEMID]', JFactory::getApplication()->input->getInt('Itemid', 0), $ret);
-
-		// Replace the [RELATION:ID] in the URL with the relation's key value
-		$ret = str_replace('[RELATION:ID]', $this->_relationId, $ret);
-
-		// Replace other field variables in the URL
-		$fields = $this->item->getTableFields();
-
-		foreach ($fields as $fielddata)
-		{
-			$fieldname = $fielddata->Field;
-
-			if (empty($fieldname))
-			{
-				$fieldname = $fielddata->column_name;
-			}
-
-			$search  = '[ITEM:' . strtoupper($fieldname) . ']';
-			$replace = $this->item->$fieldname;
-			$ret     = str_replace($search, $replace, $ret);
-		}
-
-		return $ret;
 	}
 
 	/**
@@ -192,5 +147,48 @@ class FOFFormFieldRelation extends FOFFormFieldList
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Replace string with tags that reference fields
+	 *
+	 * @param   string  $text  Text to process
+	 *
+	 * @return  string         Text with tags replace
+	 */
+	protected function parseFieldTags($text)
+	{
+		$ret = $text;
+
+		// Replace [ITEM:ID] in the URL with the item's key value (usually:
+		// the auto-incrementing numeric ID)
+		$keyfield = $this->item->getKeyName();
+		$replace  = $this->item->$keyfield;
+		$ret = str_replace('[ITEM:ID]', $replace, $ret);
+
+		// Replace the [ITEMID] in the URL with the current Itemid parameter
+		$ret = str_replace('[ITEMID]', JFactory::getApplication()->input->getInt('Itemid', 0), $ret);
+
+		// Replace the [RELATION:ID] in the URL with the relation's key value
+		$ret = str_replace('[RELATION:ID]', $this->_relationId, $ret);
+
+		// Replace other field variables in the URL
+		$fields = $this->item->getTableFields();
+
+		foreach ($fields as $fielddata)
+		{
+			$fieldname = $fielddata->Field;
+
+			if (empty($fieldname))
+			{
+				$fieldname = $fielddata->column_name;
+			}
+
+			$search    = '[ITEM:' . strtoupper($fieldname) . ']';
+			$replace   = $this->item->$fieldname;
+			$ret  = str_replace($search, $replace, $ret);
+		}
+
+		return $ret;
 	}
 }

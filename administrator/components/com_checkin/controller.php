@@ -19,8 +19,8 @@ class CheckinController extends JControllerLegacy
 	/**
 	 * Method to display a view.
 	 *
-	 * @param   boolean $cachable  If true, the view output will be cached
-	 * @param   array   $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean  $cachable   If true, the view output will be cached
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  CheckinController  A JControllerLegacy object to support chaining.
 	 */
@@ -30,35 +30,6 @@ class CheckinController extends JControllerLegacy
 		$this->addSubmenu($this->input->getWord('option', 'com_checkin'));
 
 		return parent::display();
-	}
-
-	/**
-	 * Configure the Linkbar.
-	 *
-	 * @param   string $vName The name of the active view.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function addSubmenu($vName)
-	{
-		JHtmlSidebar::addEntry(
-			JText::_('JGLOBAL_SUBMENU_CHECKIN'),
-			'index.php?option=com_checkin',
-			$vName == 'com_checkin'
-		);
-
-		JHtmlSidebar::addEntry(
-			JText::_('JGLOBAL_SUBMENU_CLEAR_CACHE'),
-			'index.php?option=com_cache',
-			$vName == 'cache'
-		);
-		JHtmlSidebar::addEntry(
-			JText::_('JGLOBAL_SUBMENU_PURGE_EXPIRED_CACHE'),
-			'index.php?option=com_cache&view=purge',
-			$vName == 'purge'
-		);
 	}
 
 	/**
@@ -88,5 +59,34 @@ class CheckinController extends JControllerLegacy
 		}
 
 		$this->setRedirect('index.php?option=com_checkin');
+	}
+
+	/**
+	 * Configure the Linkbar.
+	 *
+	 * @param   string  $vName  The name of the active view.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function addSubmenu($vName)
+	{
+		JHtmlSidebar::addEntry(
+			JText::_('JGLOBAL_SUBMENU_CHECKIN'),
+			'index.php?option=com_checkin',
+			$vName == 'com_checkin'
+		);
+
+		JHtmlSidebar::addEntry(
+			JText::_('JGLOBAL_SUBMENU_CLEAR_CACHE'),
+			'index.php?option=com_cache',
+			$vName == 'cache'
+		);
+		JHtmlSidebar::addEntry(
+			JText::_('JGLOBAL_SUBMENU_PURGE_EXPIRED_CACHE'),
+			'index.php?option=com_cache&view=purge',
+			$vName == 'purge'
+		);
 	}
 }

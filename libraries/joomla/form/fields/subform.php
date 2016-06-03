@@ -15,60 +15,53 @@ jimport('joomla.filesystem.path');
  * The Field to load the form inside current form
  *
  * @Example with all attributes:
- *    <field name="field-name" type="subform"
- *        formsource="path/to/form.xml" min="1" max="3" multiple="true" buttons="add,remove,move"
- *        layout="joomla.form.field.subform.repeatable-table" groupByFieldset="false" component="com_example" client="site"
- *        label="Field Label" description="Field Description" />
+ * 	<field name="field-name" type="subform"
+ * 		formsource="path/to/form.xml" min="1" max="3" multiple="true" buttons="add,remove,move"
+ * 		layout="joomla.form.field.subform.repeatable-table" groupByFieldset="false" component="com_example" client="site"
+ * 		label="Field Label" description="Field Description" />
  *
- * @since   3.6
+ * @since  3.6
  */
 class JFormFieldSubform extends JFormField
 {
 	/**
 	 * The form field type.
-	 *
 	 * @var    string
 	 */
 	protected $type = 'Subform';
 
 	/**
 	 * Form source
-	 *
 	 * @var string
 	 */
 	protected $formsource;
 
 	/**
 	 * Minimum items in repeat mode
-	 *
 	 * @var int
 	 */
 	protected $min = 0;
 
 	/**
 	 * Maximum items in repeat mode
-	 *
 	 * @var int
 	 */
 	protected $max = 1000;
 
 	/**
 	 * Layout to render the form
-	 *
 	 * @var  string
 	 */
 	protected $layout = 'joomla.form.field.subform.default';
 
 	/**
 	 * Whether group subform fields by it`s fieldset
-	 *
 	 * @var boolean
 	 */
 	protected $groupByFieldset = false;
 
 	/**
 	 * Which buttons to show in miltiple mode
-	 *
 	 * @var array $buttons
 	 */
 	protected $buttons = array('add' => true, 'remove' => true, 'move' => true);
@@ -76,7 +69,7 @@ class JFormFieldSubform extends JFormField
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string $name The property name for which to the the value.
+	 * @param   string  $name  The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -101,8 +94,8 @@ class JFormFieldSubform extends JFormField
 	/**
 	 * Method to set certain otherwise inaccessible properties of the form field object.
 	 *
-	 * @param   string $name  The property name for which to the the value.
-	 * @param   mixed  $value The value of the property.
+	 * @param   string  $name   The property name for which to the the value.
+	 * @param   mixed   $value  The value of the property.
 	 *
 	 * @return  void
 	 *
@@ -132,7 +125,7 @@ class JFormFieldSubform extends JFormField
 				break;
 
 			case 'groupByFieldset':
-				$value                 = (string) $value;
+				$value = (string) $value;
 				$this->groupByFieldset = !($value === 'false' || $value === 'off' || $value === '0');
 				break;
 
@@ -164,7 +157,7 @@ class JFormFieldSubform extends JFormField
 
 				if ($value)
 				{
-					$value         = array_merge(array('add' => false, 'remove' => false, 'move' => false), $value);
+					$value = array_merge(array('add' => false, 'remove' => false, 'move' => false), $value);
 					$this->buttons = $value;
 				}
 
@@ -178,9 +171,9 @@ class JFormFieldSubform extends JFormField
 	/**
 	 * Method to attach a JForm object to the field.
 	 *
-	 * @param   SimpleXMLElement $element The SimpleXMLElement object representing the <field /> tag for the form field object.
-	 * @param   mixed            $value   The form field value to validate.
-	 * @param   string           $group   The field name group control value.
+	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the <field /> tag for the form field object.
+	 * @param   mixed             $value    The form field value to validate.
+	 * @param   string            $group    The field name group control value.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -227,15 +220,15 @@ class JFormFieldSubform extends JFormField
 		try
 		{
 			// Prepare the form template
-			$formname    = 'subform' . ($this->group ? $this->group . '.' : '.') . $this->fieldname;
+			$formname = 'subform' . ($this->group ? $this->group . '.' : '.') . $this->fieldname;
 			$tmplcontrol = !$this->multiple ? $control : $control . '[' . $this->fieldname . 'X]';
-			$tmpl        = JForm::getInstance($formname, $this->formsource, array('control' => $tmplcontrol));
+			$tmpl = JForm::getInstance($formname, $this->formsource, array('control' => $tmplcontrol));
 
 			// Prepare the forms for exiting values
 			if ($this->multiple)
 			{
 				$value = array_values($value);
-				$c     = max($this->min, min(count($value), $this->max));
+				$c = max($this->min, min(count($value), $this->max));
 				for ($i = 0; $i < $c; $i++)
 				{
 					$itemcontrol = $control . '[' . $this->fieldname . $i . ']';
@@ -260,13 +253,13 @@ class JFormFieldSubform extends JFormField
 			return $e->getMessage();
 		}
 
-		$data['tmpl']            = $tmpl;
-		$data['forms']           = $forms;
-		$data['min']             = $this->min;
-		$data['max']             = $this->max;
-		$data['control']         = $control;
-		$data['buttons']         = $this->buttons;
-		$data['fieldname']       = $this->fieldname;
+		$data['tmpl']      = $tmpl;
+		$data['forms']     = $forms;
+		$data['min']       = $this->min;
+		$data['max']       = $this->max;
+		$data['control']   = $control;
+		$data['buttons']   = $this->buttons;
+		$data['fieldname'] = $this->fieldname;
 		$data['groupByFieldset'] = $this->groupByFieldset;
 
 		// Prepare renderer
@@ -299,7 +292,7 @@ class JFormFieldSubform extends JFormField
 	/**
 	 * Method to get the name used for the field input tag.
 	 *
-	 * @param   string $fieldName The field element name.
+	 * @param   string  $fieldName  The field element name.
 	 *
 	 * @return  string  The name to be used for the field input tag.
 	 *

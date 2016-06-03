@@ -19,19 +19,20 @@ JFormHelper::loadFieldClass('list');
 class JFormFieldAuthor extends JFormFieldList
 {
 	/**
-	 * Cached array of the category items.
-	 *
-	 * @var    array
-	 * @since  3.2
-	 */
-	protected static $options = array();
-	/**
 	 * The form field type.
 	 *
 	 * @var    string
 	 * @since  3.2
 	 */
 	public $type = 'Author';
+
+	/**
+	 * Cached array of the category items.
+	 *
+	 * @var    array
+	 * @since  3.2
+	 */
+	protected static $options = array();
 
 	/**
 	 * Method to get the options to populate list

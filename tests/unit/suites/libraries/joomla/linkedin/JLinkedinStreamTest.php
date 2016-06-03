@@ -61,39 +61,81 @@ class JLinkedinStreamTest extends TestCase
 	protected $errorString = '{"errorCode":401, "message": "Generic error"}';
 
 	/**
-	 * Provides test data for request format detection.
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
 	 *
-	 * @return array
-	 *
-	 * @since 13.1
+	 * @return void
 	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$key = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/linkedin_test.php";
+
+		$this->options = new JRegistry;
+		$this->input = new JInput;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth = new JLinkedinOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
+
+		$this->object = new JLinkedinStream($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+	}
+
+	/**
+	* Provides test data for request format detection.
+	*
+	* @return array
+	*
+	* @since 13.1
+	*/
 	public function seedShare()
 	{
 		// Company comment, title, url, image, description
 		return array(
 			array('some comment', 'title example', 'www.example.com', 'www.image-example.com', 'description text'),
 			array(null, 'title example', null, 'www.image-example.com', 'description text')
-		);
+			);
 	}
 
 	/**
 	 * Tests the share method
 	 *
-	 * @param   string $comment     Text of member's comment.
-	 * @param   string $title       Title of shared document.
-	 * @param   string $url         URL for shared content.
-	 * @param   string $image       URL for image of shared content.
-	 * @param   string $description Description of shared content.
+	 * @param   string  $comment      Text of member's comment.
+	 * @param   string  $title        Title of shared document.
+	 * @param   string  $url          URL for shared content.
+	 * @param   string  $image        URL for image of shared content.
+	 * @param   string  $description  Description of shared content.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedShare
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testShare($comment, $title, $url, $image, $description)
 	{
 		$visibility = 'anyone';
-		$twitter    = true;
+		$twitter = true;
 
 		$path = '/v1/people/~/shares?twitter-post=true';
 
@@ -129,7 +171,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
@@ -154,7 +196,7 @@ class JLinkedinStreamTest extends TestCase
 	 */
 	public function testShareFailure()
 	{
-		$comment    = 'some comment';
+		$comment = 'some comment';
 		$visibility = 'anyone';
 
 		$path = '/v1/people/~/shares';
@@ -169,7 +211,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -190,10 +232,10 @@ class JLinkedinStreamTest extends TestCase
 	 */
 	public function testReshare()
 	{
-		$id         = 's123435';
+		$id = 's123435';
 		$visibility = 'anyone';
-		$comment    = 'some comment';
-		$twitter    = true;
+		$comment = 'some comment';
+		$twitter = true;
 
 		$path = '/v1/people/~/shares?twitter-post=true';
 
@@ -218,7 +260,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
@@ -243,10 +285,10 @@ class JLinkedinStreamTest extends TestCase
 	 */
 	public function testReshareFailure()
 	{
-		$id         = 's123435';
+		$id = 's123435';
 		$visibility = 'anyone';
-		$comment    = 'some comment';
-		$twitter    = true;
+		$comment = 'some comment';
+		$twitter = true;
 
 		$path = '/v1/people/~/shares?twitter-post=true';
 
@@ -271,7 +313,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -284,12 +326,12 @@ class JLinkedinStreamTest extends TestCase
 	}
 
 	/**
-	 * Provides test data for request format detection.
-	 *
-	 * @return array
-	 *
-	 * @since 13.1
-	 */
+	* Provides test data for request format detection.
+	*
+	* @return array
+	*
+	* @since 13.1
+	*/
 	public function seedIdUrl()
 	{
 		// Member ID or url
@@ -297,19 +339,19 @@ class JLinkedinStreamTest extends TestCase
 			array('lcnIwDU0S6', null),
 			array(null, 'http://www.linkedin.com/in/dianaprajescu'),
 			array(null, null)
-		);
+			);
 	}
 
 	/**
 	 * Tests the getCurrentShare method
 	 *
-	 * @param   string $id  Member id of the profile you want.
-	 * @param   string $url The public profile URL.
+	 * @param   string  $id   Member id of the profile you want.
+	 * @param   string  $url  The public profile URL.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedIdUrl
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testGetCurrentShare($id, $url)
 	{
@@ -334,7 +376,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$path .= ':(current-share)';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -366,7 +408,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$path = '/v1/people/~:(current-share)';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -383,20 +425,20 @@ class JLinkedinStreamTest extends TestCase
 	/**
 	 * Tests the getShareStream method
 	 *
-	 * @param   string $id  Member id of the profile you want.
-	 * @param   string $url The public profile URL.
+	 * @param   string  $id   Member id of the profile you want.
+	 * @param   string  $url  The public profile URL.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedIdUrl
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testGetShareStream($id, $url)
 	{
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['type']   = 'SHAR';
-		$data['scope']  = 'self';
+		$data['type'] = 'SHAR';
+		$data['scope'] = 'self';
 
 		$path = '/v1/people/';
 
@@ -416,7 +458,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$path .= '/network';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -445,12 +487,12 @@ class JLinkedinStreamTest extends TestCase
 	{
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['type']   = 'SHAR';
-		$data['scope']  = 'self';
+		$data['type'] = 'SHAR';
+		$data['scope'] = 'self';
 
 		$path = '/v1/people/~/network';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -465,48 +507,48 @@ class JLinkedinStreamTest extends TestCase
 	}
 
 	/**
-	 * Provides test data for request format detection.
-	 *
-	 * @return array
-	 *
-	 * @since 13.1
-	 */
+	* Provides test data for request format detection.
+	*
+	* @return array
+	*
+	* @since 13.1
+	*/
 	public function seedId()
 	{
 		// Member ID or url
 		return array(
 			array('lcnIwDU0S6'),
 			array(null)
-		);
+			);
 	}
 
 	/**
 	 * Tests the getNetworkUpdates method
 	 *
-	 * @param   string $id Member id.
+	 * @param   string  $id  Member id.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedId
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testGetNetworkUpdates($id)
 	{
-		$self   = true;
-		$type   = array('PICT', 'STAT');
-		$count  = 50;
-		$start  = 1;
-		$after  = '123346574';
+		$self = true;
+		$type = array('PICT', 'STAT');
+		$count = 50;
+		$start = 1;
+		$after = '123346574';
 		$before = '123534663';
 		$hidden = true;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['scope']  = 'self';
-		$data['type']   = $type;
-		$data['count']  = $count;
-		$data['start']  = $start;
-		$data['after']  = $after;
+		$data['scope'] = 'self';
+		$data['type'] = $type;
+		$data['count'] = $count;
+		$data['start'] = $start;
+		$data['after'] = $after;
 		$data['before'] = $before;
 		$data['hidden'] = true;
 
@@ -523,7 +565,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$path .= '/network/updates';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -550,27 +592,27 @@ class JLinkedinStreamTest extends TestCase
 	 */
 	public function testGetNetworkUpdatesFailure()
 	{
-		$self   = true;
-		$type   = array('PICT', 'STAT');
-		$count  = 50;
-		$start  = 1;
-		$after  = '123346574';
+		$self = true;
+		$type = array('PICT', 'STAT');
+		$count = 50;
+		$start = 1;
+		$after = '123346574';
 		$before = '123534663';
 		$hidden = true;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['scope']  = 'self';
-		$data['type']   = $type;
-		$data['count']  = $count;
-		$data['start']  = $start;
-		$data['after']  = $after;
+		$data['scope'] = 'self';
+		$data['type'] = $type;
+		$data['count'] = $count;
+		$data['start'] = $start;
+		$data['after'] = $after;
 		$data['before'] = $before;
 		$data['hidden'] = true;
 
 		$path = '/v1/people/~/network/updates';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -598,7 +640,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$path = '/v1/people/~/network/network-stats';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -630,7 +672,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$path = '/v1/people/~/network/network-stats';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -667,7 +709,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
@@ -706,7 +748,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -734,7 +776,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$path = '/v1/people/~/network/updates/key=' . $key . '/update-comments';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -768,7 +810,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$path = '/v1/people/~/network/updates/key=' . $key . '/update-comments';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -791,7 +833,7 @@ class JLinkedinStreamTest extends TestCase
 	 */
 	public function testPostComment()
 	{
-		$key     = 'APPM-187317358-5635333363205165056-196773';
+		$key = 'APPM-187317358-5635333363205165056-196773';
 		$comment = 'Comment text';
 
 		$path = '/v1/people/~/network/updates/key=' . $key . '/update-comments';
@@ -803,7 +845,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
@@ -828,7 +870,7 @@ class JLinkedinStreamTest extends TestCase
 	 */
 	public function testPostCommentFailure()
 	{
-		$key     = 'APPM-187317358-5635333363205165056-196773';
+		$key = 'APPM-187317358-5635333363205165056-196773';
 		$comment = 'Comment text';
 
 		$path = '/v1/people/~/network/updates/key=' . $key . '/update-comments';
@@ -840,7 +882,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -868,7 +910,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$path = '/v1/people/~/network/updates/key=' . $key . '/likes';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -902,7 +944,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$path = '/v1/people/~/network/updates/key=' . $key . '/likes';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -946,7 +988,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -979,7 +1021,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -1008,7 +1050,7 @@ class JLinkedinStreamTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -1021,47 +1063,5 @@ class JLinkedinStreamTest extends TestCase
 			$this->object->unlike($key),
 			$this->equalTo($returnData)
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$key    = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/linkedin_test.php";
-
-		$this->options = new JRegistry;
-		$this->input   = new JInput;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth   = new JLinkedinOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
-
-		$this->object = new JLinkedinStream($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
 	}
 }

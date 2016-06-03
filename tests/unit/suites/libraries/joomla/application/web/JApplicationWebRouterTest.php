@@ -25,6 +25,30 @@ class JApplicationWebRouterTest extends TestCase
 	private $_instance;
 
 	/**
+	 * Prepares the environment before running a test.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->_instance = $this->getMockForAbstractClass('JApplicationWebRouter', array($this->getMockWeb()));
+	}
+
+	/**
+	 * Cleans up the environment after running a test.
+	 *
+	 * @return  void
+	 */
+	protected function tearDown()
+	{
+		$this->_instance = null;
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Tests the __construct method.
 	 *
 	 * @return  void
@@ -136,29 +160,5 @@ class JApplicationWebRouterTest extends TestCase
 			'TControllerBar',
 			TestReflection::invoke($this->_instance, 'fetchController', 'TControllerBar')
 		);
-	}
-
-	/**
-	 * Prepares the environment before running a test.
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->_instance = $this->getMockForAbstractClass('JApplicationWebRouter', array($this->getMockWeb()));
-	}
-
-	/**
-	 * Cleans up the environment after running a test.
-	 *
-	 * @return  void
-	 */
-	protected function tearDown()
-	{
-		$this->_instance = null;
-
-		parent::tearDown();
 	}
 }

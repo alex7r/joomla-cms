@@ -20,50 +20,59 @@ use Joomla\String\StringHelper;
 class JApplicationWeb extends JApplicationBase
 {
 	/**
-	 * @var    JApplicationWeb  The application instance.
-	 * @since  11.3
-	 */
-	protected static $instance;
-	/**
 	 * @var    string  Character encoding string.
 	 * @since  11.3
 	 */
 	public $charSet = 'utf-8';
+
 	/**
 	 * @var    string  Response mime type.
 	 * @since  11.3
 	 */
 	public $mimeType = 'text/html';
+
 	/**
 	 * @var    JDate  The body modified date for response headers.
 	 * @since  11.3
 	 */
 	public $modifiedDate;
+
 	/**
 	 * @var    JApplicationWebClient  The application client object.
 	 * @since  11.3
 	 */
 	public $client;
+
 	/**
 	 * @var    JDocument  The application document object.
 	 * @since  11.3
 	 */
 	protected $document;
+
 	/**
 	 * @var    JLanguage  The application language object.
 	 * @since  11.3
 	 */
 	protected $language;
+
 	/**
 	 * @var    JSession  The application session object.
 	 * @since  11.3
 	 */
 	protected $session;
+
 	/**
 	 * @var    object  The application response object.
 	 * @since  11.3
 	 */
 	protected $response;
+
+	/**
+	 * @var    JApplicationWeb  The application instance.
+	 * @since  11.3
+	 */
+	protected static $instance;
+
 	/**
 	 * A map of integer HTTP 1.1 response codes to the full HTTP Status for the headers.
 	 *
@@ -86,13 +95,13 @@ class JApplicationWeb extends JApplicationBase
 	/**
 	 * Class constructor.
 	 *
-	 * @param   JInput                $input    An optional argument to provide dependency injection for the application's
+	 * @param   JInput                 $input   An optional argument to provide dependency injection for the application's
 	 *                                          input object.  If the argument is a JInput object that object will become
 	 *                                          the application's input object, otherwise a default input object is created.
-	 * @param   Registry              $config   An optional argument to provide dependency injection for the application's
+	 * @param   Registry               $config  An optional argument to provide dependency injection for the application's
 	 *                                          config object.  If the argument is a Registry object that object will become
 	 *                                          the application's config object, otherwise a default config object is created.
-	 * @param   JApplicationWebClient $client   An optional argument to provide dependency injection for the application's
+	 * @param   JApplicationWebClient  $client  An optional argument to provide dependency injection for the application's
 	 *                                          client object.  If the argument is a JApplicationWebClient object that object will become
 	 *                                          the application's client object, otherwise a default client object is created.
 	 *
@@ -141,234 +150,13 @@ class JApplicationWeb extends JApplicationBase
 		$this->set('execution.timestamp', time());
 
 		// Setup the response object.
-		$this->response           = new stdClass;
+		$this->response = new stdClass;
 		$this->response->cachable = false;
-		$this->response->headers  = array();
-		$this->response->body     = array();
+		$this->response->headers = array();
+		$this->response->body = array();
 
 		// Set the system URIs.
 		$this->loadSystemUris();
-	}
-
-	/**
-	 * Load an object or array into the application configuration object.
-	 *
-	 * @param   mixed $data Either an array or object to be loaded into the configuration object.
-	 *
-	 * @return  JApplicationWeb  Instance of $this to allow chaining.
-	 *
-	 * @since   11.3
-	 */
-	public function loadConfiguration($data)
-	{
-		// Load the data into the configuration object.
-		if (is_array($data))
-		{
-			$this->config->loadArray($data);
-		}
-		elseif (is_object($data))
-		{
-			$this->config->loadObject($data);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Method to load a PHP configuration class file based on convention and return the instantiated data object.  You
-	 * will extend this method in child classes to provide configuration data from whatever data source is relevant
-	 * for your specific application.
-	 *
-	 * @param   string $file    The path and filename of the configuration file. If not provided, configuration.php
-	 *                          in JPATH_BASE will be used.
-	 * @param   string $class   The class name to instantiate.
-	 *
-	 * @return  mixed   Either an array or object to be loaded into the configuration object.
-	 *
-	 * @since   11.3
-	 * @throws  RuntimeException
-	 */
-	protected function fetchConfigurationData($file = '', $class = 'JConfig')
-	{
-		// Instantiate variables.
-		$config = array();
-
-		if (empty($file) && defined('JPATH_ROOT'))
-		{
-			$file = JPATH_ROOT . '/configuration.php';
-
-			// Applications can choose not to have any configuration data
-			// by not implementing this method and not having a config file.
-			if (!file_exists($file))
-			{
-				$file = '';
-			}
-		}
-
-		if (!empty($file))
-		{
-			JLoader::register($class, $file);
-
-			if (class_exists($class))
-			{
-				$config = new $class;
-			}
-			else
-			{
-				throw new RuntimeException('Configuration class does not exist.');
-			}
-		}
-
-		return $config;
-	}
-
-	/**
-	 * Method to load the system URI strings for the application.
-	 *
-	 * @param   string $requestUri   An optional request URI to use instead of detecting one from the
-	 *                               server environment variables.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.3
-	 */
-	protected function loadSystemUris($requestUri = null)
-	{
-		// Set the request URI.
-		// @codeCoverageIgnoreStart
-		if (!empty($requestUri))
-		{
-			$this->set('uri.request', $requestUri);
-		}
-		else
-		{
-			$this->set('uri.request', $this->detectRequestUri());
-		}
-		// @codeCoverageIgnoreEnd
-
-		// Check to see if an explicit base URI has been set.
-		$siteUri = trim($this->get('site_uri'));
-
-		if ($siteUri != '')
-		{
-			$uri  = JUri::getInstance($siteUri);
-			$path = $uri->toString(array('path'));
-		}
-		// No explicit base URI was set so we need to detect it.
-		else
-		{
-			// Start with the requested URI.
-			$uri = JUri::getInstance($this->get('uri.request'));
-
-			// If we are working from a CGI SAPI with the 'cgi.fix_pathinfo' directive disabled we use PHP_SELF.
-			if (strpos(php_sapi_name(), 'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI']))
-			{
-				// We aren't expecting PATH_INFO within PHP_SELF so this should work.
-				$path = dirname($_SERVER['PHP_SELF']);
-			}
-			// Pretty much everything else should be handled with SCRIPT_NAME.
-			else
-			{
-				$path = dirname($_SERVER['SCRIPT_NAME']);
-			}
-		}
-
-		$host = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
-
-		// Check if the path includes "index.php".
-		if (strpos($path, 'index.php') !== false)
-		{
-			// Remove the index.php portion of the path.
-			$path = substr_replace($path, '', strpos($path, 'index.php'), 9);
-		}
-
-		$path = rtrim($path, '/\\');
-
-		// Set the base URI both as just a path and as the full URI.
-		$this->set('uri.base.full', $host . $path . '/');
-		$this->set('uri.base.host', $host);
-		$this->set('uri.base.path', $path . '/');
-
-		// Set the extended (non-base) part of the request URI as the route.
-		if (stripos($this->get('uri.request'), $this->get('uri.base.full')) === 0)
-		{
-			$this->set('uri.route', substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full'))));
-		}
-
-		// Get an explicitly set media URI is present.
-		$mediaURI = trim($this->get('media_uri'));
-
-		if ($mediaURI)
-		{
-			if (strpos($mediaURI, '://') !== false)
-			{
-				$this->set('uri.media.full', $mediaURI);
-				$this->set('uri.media.path', $mediaURI);
-			}
-			else
-			{
-				// Normalise slashes.
-				$mediaURI = trim($mediaURI, '/\\');
-				$mediaURI = !empty($mediaURI) ? '/' . $mediaURI . '/' : '/';
-				$this->set('uri.media.full', $this->get('uri.base.host') . $mediaURI);
-				$this->set('uri.media.path', $mediaURI);
-			}
-		}
-		// No explicit media URI was set, build it dynamically from the base uri.
-		else
-		{
-			$this->set('uri.media.full', $this->get('uri.base.full') . 'media/');
-			$this->set('uri.media.path', $this->get('uri.base.path') . 'media/');
-		}
-	}
-
-	/**
-	 * Method to detect the requested URI from server environment variables.
-	 *
-	 * @return  string  The requested URI
-	 *
-	 * @since   11.3
-	 */
-	protected function detectRequestUri()
-	{
-		// First we need to detect the URI scheme.
-		if (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off'))
-		{
-			$scheme = 'https://';
-		}
-		else
-		{
-			$scheme = 'http://';
-		}
-
-		/*
-		 * There are some differences in the way that Apache and IIS populate server environment variables.  To
-		 * properly detect the requested URI we need to adjust our algorithm based on whether or not we are getting
-		 * information from Apache or IIS.
-		 */
-		// Define variable to return
-		$uri = '';
-
-		// If PHP_SELF and REQUEST_URI are both populated then we will assume "Apache Mode".
-		if (!empty($_SERVER['PHP_SELF']) && !empty($_SERVER['REQUEST_URI']))
-		{
-			// The URI is built from the HTTP_HOST and REQUEST_URI environment variables in an Apache environment.
-			$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-		}
-		// If not in "Apache Mode" we will assume that we are in an IIS environment and proceed.
-		elseif (isset($_SERVER['HTTP_HOST']))
-		{
-			// IIS uses the SCRIPT_NAME variable instead of a REQUEST_URI variable... thanks, MS
-			$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
-
-			// If the QUERY_STRING variable exists append it to the URI string.
-			if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']))
-			{
-				$uri .= '?' . $_SERVER['QUERY_STRING'];
-			}
-		}
-
-		return trim($uri);
 	}
 
 	/**
@@ -376,7 +164,7 @@ class JApplicationWeb extends JApplicationBase
 	 *
 	 * This method must be invoked as: $web = JApplicationWeb::getInstance();
 	 *
-	 * @param   string $name The name (optional) of the JApplicationWeb class to instantiate.
+	 * @param   string  $name  The name (optional) of the JApplicationWeb class to instantiate.
 	 *
 	 * @return  JApplicationWeb
 	 *
@@ -403,22 +191,22 @@ class JApplicationWeb extends JApplicationBase
 	/**
 	 * Initialise the application.
 	 *
-	 * @param   mixed $session      An optional argument to provide dependency injection for the application's
+	 * @param   mixed  $session     An optional argument to provide dependency injection for the application's
 	 *                              session object.  If the argument is a JSession object that object will become
 	 *                              the application's session object, if it is false then there will be no session
 	 *                              object, and if it is null then the default session object will be created based
 	 *                              on the application's loadSession() method.
-	 * @param   mixed $document     An optional argument to provide dependency injection for the application's
+	 * @param   mixed  $document    An optional argument to provide dependency injection for the application's
 	 *                              document object.  If the argument is a JDocument object that object will become
 	 *                              the application's document object, if it is false then there will be no document
 	 *                              object, and if it is null then the default document object will be created based
 	 *                              on the application's loadDocument() method.
-	 * @param   mixed $language     An optional argument to provide dependency injection for the application's
+	 * @param   mixed  $language    An optional argument to provide dependency injection for the application's
 	 *                              language object.  If the argument is a JLanguage object that object will become
 	 *                              the application's language object, if it is false then there will be no language
 	 *                              object, and if it is null then the default language object will be created based
 	 *                              on the application's loadLanguage() method.
-	 * @param   mixed $dispatcher   An optional argument to provide dependency injection for the application's
+	 * @param   mixed  $dispatcher  An optional argument to provide dependency injection for the application's
 	 *                              event dispatcher.  If the argument is a JEventDispatcher object that object will become
 	 *                              the application's event dispatcher, if it is null then the default event dispatcher
 	 *                              will be created based on the application's loadDispatcher() method.
@@ -426,11 +214,11 @@ class JApplicationWeb extends JApplicationBase
 	 * @return  JApplicationWeb  Instance of $this to allow chaining.
 	 *
 	 * @deprecated  13.1 (Platform) & 4.0 (CMS)
-	 * @see         JApplicationWeb::loadSession()
-	 * @see         JApplicationWeb::loadDocument()
-	 * @see         JApplicationWeb::loadLanguage()
-	 * @see         JApplicationBase::loadDispatcher()
-	 * @since       11.3
+	 * @see     JApplicationWeb::loadSession()
+	 * @see     JApplicationWeb::loadDocument()
+	 * @see     JApplicationWeb::loadLanguage()
+	 * @see     JApplicationBase::loadDispatcher()
+	 * @since   11.3
 	 */
 	public function initialise($session = null, $document = null, $language = null, $dispatcher = null)
 	{
@@ -453,105 +241,6 @@ class JApplicationWeb extends JApplicationBase
 		}
 
 		$this->loadDispatcher($dispatcher);
-
-		return $this;
-	}
-
-	/**
-	 * Allows the application to load a custom or default session.
-	 *
-	 * The logic and options for creating this object are adequately generic for default cases
-	 * but for many applications it will make sense to override this method and create a session,
-	 * if required, based on more specific needs.
-	 *
-	 * @param   JSession $session An optional session object. If omitted, the session is created.
-	 *
-	 * @return  JApplicationWeb This method is chainable.
-	 *
-	 * @since   11.3
-	 */
-	public function loadSession(JSession $session = null)
-	{
-		if ($session !== null)
-		{
-			$this->session = $session;
-
-			return $this;
-		}
-
-		// Generate a session name.
-		$name = md5($this->get('secret') . $this->get('session_name', get_class($this)));
-
-		// Calculate the session lifetime.
-		$lifetime = (($this->get('sess_lifetime')) ? $this->get('sess_lifetime') * 60 : 900);
-
-		// Get the session handler from the configuration.
-		$handler = $this->get('sess_handler', 'none');
-
-		// Initialize the options for JSession.
-		$options = array(
-			'name'      => $name,
-			'expire'    => $lifetime,
-			'force_ssl' => $this->get('force_ssl')
-		);
-
-		$this->registerEvent('onAfterSessionStart', array($this, 'afterSessionStart'));
-
-		// Instantiate the session object.
-		$session = JSession::getInstance($handler, $options);
-		$session->initialise($this->input, $this->dispatcher);
-
-		if ($session->getState() == 'expired')
-		{
-			$session->restart();
-		}
-		else
-		{
-			$session->start();
-		}
-
-		// Set the session object.
-		$this->session = $session;
-
-		return $this;
-	}
-
-	/**
-	 * Allows the application to load a custom or default document.
-	 *
-	 * The logic and options for creating this object are adequately generic for default cases
-	 * but for many applications it will make sense to override this method and create a document,
-	 * if required, based on more specific needs.
-	 *
-	 * @param   JDocument $document An optional document object. If omitted, the factory document is created.
-	 *
-	 * @return  JApplicationWeb This method is chainable.
-	 *
-	 * @since   11.3
-	 */
-	public function loadDocument(JDocument $document = null)
-	{
-		$this->document = ($document === null) ? JFactory::getDocument() : $document;
-
-		return $this;
-	}
-
-	/**
-	 * Allows the application to load a custom or default language.
-	 *
-	 * The logic and options for creating this object are adequately generic for default cases
-	 * but for many applications it will make sense to override this method and create a language,
-	 * if required, based on more specific needs.
-	 *
-	 * @param   JLanguage $language An optional language object. If omitted, the factory language is created.
-	 *
-	 * @return  JApplicationWeb This method is chainable.
-	 *
-	 * @since   11.3
-	 */
-	public function loadLanguage(JLanguage $language = null)
-	{
-		$this->language = ($language === null) ? JFactory::getLanguage() : $language;
 
 		return $this;
 	}
@@ -632,8 +321,8 @@ class JApplicationWeb extends JApplicationBase
 		// Setup the document options.
 		$options = array(
 			'template' => $this->get('theme'),
-			'file'     => $this->get('themeFile', 'index.php'),
-			'params'   => $this->get('themeParams')
+			'file' => $this->get('themeFile', 'index.php'),
+			'params' => $this->get('themeParams')
 		);
 
 		if ($this->get('themes.base'))
@@ -657,22 +346,6 @@ class JApplicationWeb extends JApplicationBase
 	}
 
 	/**
-	 * Set body content.  If body content already defined, this will replace it.
-	 *
-	 * @param   string $content The content to set as the response body.
-	 *
-	 * @return  JApplicationWeb  Instance of $this to allow chaining.
-	 *
-	 * @since   11.3
-	 */
-	public function setBody($content)
-	{
-		$this->response->body = array((string) $content);
-
-		return $this;
-	}
-
-	/**
 	 * Checks the accept encoding of the browser and compresses the data before
 	 * sending it to the client if possible.
 	 *
@@ -684,8 +357,8 @@ class JApplicationWeb extends JApplicationBase
 	{
 		// Supported compression encodings.
 		$supported = array(
-			'x-gzip'  => 'gz',
-			'gzip'    => 'gz',
+			'x-gzip' => 'gz',
+			'gzip' => 'gz',
 			'deflate' => 'deflate'
 		);
 
@@ -718,7 +391,7 @@ class JApplicationWeb extends JApplicationBase
 				// @codeCoverageIgnoreEnd
 
 				// Attempt to gzip encode the data with an optimal level 4.
-				$data   = $this->getBody();
+				$data = $this->getBody();
 				$gzdata = gzencode($data, 4, ($supported[$encoding] == 'gz') ? FORCE_GZIP : FORCE_DEFLATE);
 
 				// If there was a problem encoding the data just try the next encoding scheme.
@@ -745,90 +418,6 @@ class JApplicationWeb extends JApplicationBase
 				break;
 			}
 		}
-	}
-
-	/**
-	 * Method to check to see if headers have already been sent.  We are wrapping this to isolate the
-	 * headers_sent() function from our code base for testing reasons.
-	 *
-	 * @return  boolean  True if the headers have already been sent.
-	 *
-	 * @codeCoverageIgnore
-	 * @see     headers_sent()
-	 * @since   11.3
-	 */
-	protected function checkHeadersSent()
-	{
-		return headers_sent();
-	}
-
-	/**
-	 * Method to check the current client connnection status to ensure that it is alive.  We are
-	 * wrapping this to isolate the connection_status() function from our code base for testing reasons.
-	 *
-	 * @return  boolean  True if the connection is valid and normal.
-	 *
-	 * @codeCoverageIgnore
-	 * @see     connection_status()
-	 * @since   11.3
-	 */
-	protected function checkConnectionAlive()
-	{
-		return (connection_status() === CONNECTION_NORMAL);
-	}
-
-	/**
-	 * Return the body content
-	 *
-	 * @param   boolean $asArray True to return the body as an array of strings.
-	 *
-	 * @return  mixed  The response body either as an array or concatenated string.
-	 *
-	 * @since   11.3
-	 */
-	public function getBody($asArray = false)
-	{
-		return $asArray ? $this->response->body : implode((array) $this->response->body);
-	}
-
-	/**
-	 * Method to set a response header.  If the replace flag is set then all headers
-	 * with the given name will be replaced by the new one.  The headers are stored
-	 * in an internal array to be sent when the site is sent to the browser.
-	 *
-	 * @param   string  $name    The name of the header to set.
-	 * @param   string  $value   The value of the header to set.
-	 * @param   boolean $replace True to replace any headers with the same name.
-	 *
-	 * @return  JApplicationWeb  Instance of $this to allow chaining.
-	 *
-	 * @since   11.3
-	 */
-	public function setHeader($name, $value, $replace = false)
-	{
-		// Sanitize the input values.
-		$name  = (string) $name;
-		$value = (string) $value;
-
-		// If the replace flag is set, unset all known headers with the given name.
-		if ($replace)
-		{
-			foreach ($this->response->headers as $key => $header)
-			{
-				if ($name == $header['name'])
-				{
-					unset($this->response->headers[$key]);
-				}
-			}
-
-			// Clean up the array as unsetting nested arrays leaves some junk.
-			$this->response->headers = array_values($this->response->headers);
-		}
-
-		// Add the header to the internal array.
-		$this->response->headers[] = array('name' => $name, 'value' => $value);
-
-		return $this;
 	}
 
 	/**
@@ -875,64 +464,14 @@ class JApplicationWeb extends JApplicationBase
 	}
 
 	/**
-	 * Send the response headers.
-	 *
-	 * @return  JApplicationWeb  Instance of $this to allow chaining.
-	 *
-	 * @since   11.3
-	 */
-	public function sendHeaders()
-	{
-		if (!$this->checkHeadersSent())
-		{
-			foreach ($this->response->headers as $header)
-			{
-				if ('status' == strtolower($header['name']))
-				{
-					// 'status' headers indicate an HTTP status, and need to be handled slightly differently
-					$this->header('HTTP/1.1 ' . $header['value'], null, (int) $header['value']);
-				}
-				else
-				{
-					$this->header($header['name'] . ': ' . $header['value']);
-				}
-			}
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Method to send a header to the client.  We are wrapping this to isolate the header() function
-	 * from our code base for testing reasons.
-	 *
-	 * @param   string  $string    The header string.
-	 * @param   boolean $replace   The optional replace parameter indicates whether the header should
-	 *                             replace a previous similar header, or add a second header of the same type.
-	 * @param   integer $code      Forces the HTTP response code to the specified value. Note that
-	 *                             this parameter only has an effect if the string is not empty.
-	 *
-	 * @return  void
-	 *
-	 * @codeCoverageIgnore
-	 * @see     header()
-	 * @since   11.3
-	 */
-	protected function header($string, $replace = true, $code = null)
-	{
-		$string = str_replace(chr(0), '', $string);
-		header($string, $replace, $code);
-	}
-
-	/**
 	 * Redirect to another URL.
 	 *
 	 * If the headers have not been sent the redirect will be accomplished using a "301 Moved Permanently"
 	 * or "303 See Other" code in the header pointing to the new location. If the headers have already been
 	 * sent this will be accomplished using a JavaScript statement.
 	 *
-	 * @param   string  $url    The URL to redirect to. Can only be http/https URL.
-	 * @param   integer $status The HTTP 1.1 status code to be provided. 303 is assumed by default.
+	 * @param   string   $url     The URL to redirect to. Can only be http/https URL.
+	 * @param   integer  $status  The HTTP 1.1 status code to be provided. 303 is assumed by default.
 	 *
 	 * @return  void
 	 *
@@ -975,7 +514,7 @@ class JApplicationWeb extends JApplicationBase
 				$parts = explode('/', $uri->toString(array('path')));
 				array_pop($parts);
 				$path = implode('/', $parts) . '/';
-				$url  = $prefix . $path . $url;
+				$url = $prefix . $path . $url;
 			}
 		}
 
@@ -1024,10 +563,34 @@ class JApplicationWeb extends JApplicationBase
 	}
 
 	/**
+	 * Load an object or array into the application configuration object.
+	 *
+	 * @param   mixed  $data  Either an array or object to be loaded into the configuration object.
+	 *
+	 * @return  JApplicationWeb  Instance of $this to allow chaining.
+	 *
+	 * @since   11.3
+	 */
+	public function loadConfiguration($data)
+	{
+		// Load the data into the configuration object.
+		if (is_array($data))
+		{
+			$this->config->loadArray($data);
+		}
+		elseif (is_object($data))
+		{
+			$this->config->loadObject($data);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Set/get cachable state for the response.  If $allow is set, sets the cachable state of the
 	 * response.  Always returns the current state.
 	 *
-	 * @param   boolean $allow True to allow browser caching.
+	 * @param   boolean  $allow  True to allow browser caching.
 	 *
 	 * @return  boolean
 	 *
@@ -1041,6 +604,46 @@ class JApplicationWeb extends JApplicationBase
 		}
 
 		return $this->response->cachable;
+	}
+
+	/**
+	 * Method to set a response header.  If the replace flag is set then all headers
+	 * with the given name will be replaced by the new one.  The headers are stored
+	 * in an internal array to be sent when the site is sent to the browser.
+	 *
+	 * @param   string   $name     The name of the header to set.
+	 * @param   string   $value    The value of the header to set.
+	 * @param   boolean  $replace  True to replace any headers with the same name.
+	 *
+	 * @return  JApplicationWeb  Instance of $this to allow chaining.
+	 *
+	 * @since   11.3
+	 */
+	public function setHeader($name, $value, $replace = false)
+	{
+		// Sanitize the input values.
+		$name = (string) $name;
+		$value = (string) $value;
+
+		// If the replace flag is set, unset all known headers with the given name.
+		if ($replace)
+		{
+			foreach ($this->response->headers as $key => $header)
+			{
+				if ($name == $header['name'])
+				{
+					unset($this->response->headers[$key]);
+				}
+			}
+
+			// Clean up the array as unsetting nested arrays leaves some junk.
+			$this->response->headers = array_values($this->response->headers);
+		}
+
+		// Add the header to the internal array.
+		$this->response->headers[] = array('name' => $name, 'value' => $value);
+
+		return $this;
 	}
 
 	/**
@@ -1071,9 +674,53 @@ class JApplicationWeb extends JApplicationBase
 	}
 
 	/**
+	 * Send the response headers.
+	 *
+	 * @return  JApplicationWeb  Instance of $this to allow chaining.
+	 *
+	 * @since   11.3
+	 */
+	public function sendHeaders()
+	{
+		if (!$this->checkHeadersSent())
+		{
+			foreach ($this->response->headers as $header)
+			{
+				if ('status' == strtolower($header['name']))
+				{
+					// 'status' headers indicate an HTTP status, and need to be handled slightly differently
+					$this->header('HTTP/1.1 ' . $header['value'], null, (int) $header['value']);
+				}
+				else
+				{
+					$this->header($header['name'] . ': ' . $header['value']);
+				}
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Set body content.  If body content already defined, this will replace it.
+	 *
+	 * @param   string  $content  The content to set as the response body.
+	 *
+	 * @return  JApplicationWeb  Instance of $this to allow chaining.
+	 *
+	 * @since   11.3
+	 */
+	public function setBody($content)
+	{
+		$this->response->body = array((string) $content);
+
+		return $this;
+	}
+
+	/**
 	 * Prepend content to the body content
 	 *
-	 * @param   string $content The content to prepend to the response body.
+	 * @param   string  $content  The content to prepend to the response body.
 	 *
 	 * @return  JApplicationWeb  Instance of $this to allow chaining.
 	 *
@@ -1089,7 +736,7 @@ class JApplicationWeb extends JApplicationBase
 	/**
 	 * Append content to the body content
 	 *
-	 * @param   string $content The content to append to the response body.
+	 * @param   string  $content  The content to append to the response body.
 	 *
 	 * @return  JApplicationWeb  Instance of $this to allow chaining.
 	 *
@@ -1100,6 +747,20 @@ class JApplicationWeb extends JApplicationBase
 		array_push($this->response->body, (string) $content);
 
 		return $this;
+	}
+
+	/**
+	 * Return the body content
+	 *
+	 * @param   boolean  $asArray  True to return the body as an array of strings.
+	 *
+	 * @return  mixed  The response body either as an array or concatenated string.
+	 *
+	 * @since   11.3
+	 */
+	public function getBody($asArray = false)
+	{
+		return $asArray ? $this->response->body : implode((array) $this->response->body);
 	}
 
 	/**
@@ -1139,6 +800,133 @@ class JApplicationWeb extends JApplicationBase
 	}
 
 	/**
+	 * Method to check the current client connnection status to ensure that it is alive.  We are
+	 * wrapping this to isolate the connection_status() function from our code base for testing reasons.
+	 *
+	 * @return  boolean  True if the connection is valid and normal.
+	 *
+	 * @codeCoverageIgnore
+	 * @see     connection_status()
+	 * @since   11.3
+	 */
+	protected function checkConnectionAlive()
+	{
+		return (connection_status() === CONNECTION_NORMAL);
+	}
+
+	/**
+	 * Method to check to see if headers have already been sent.  We are wrapping this to isolate the
+	 * headers_sent() function from our code base for testing reasons.
+	 *
+	 * @return  boolean  True if the headers have already been sent.
+	 *
+	 * @codeCoverageIgnore
+	 * @see     headers_sent()
+	 * @since   11.3
+	 */
+	protected function checkHeadersSent()
+	{
+		return headers_sent();
+	}
+
+	/**
+	 * Method to detect the requested URI from server environment variables.
+	 *
+	 * @return  string  The requested URI
+	 *
+	 * @since   11.3
+	 */
+	protected function detectRequestUri()
+	{
+		// First we need to detect the URI scheme.
+		if (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off'))
+		{
+			$scheme = 'https://';
+		}
+		else
+		{
+			$scheme = 'http://';
+		}
+
+		/*
+		 * There are some differences in the way that Apache and IIS populate server environment variables.  To
+		 * properly detect the requested URI we need to adjust our algorithm based on whether or not we are getting
+		 * information from Apache or IIS.
+		 */
+		// Define variable to return
+		$uri = '';
+
+		// If PHP_SELF and REQUEST_URI are both populated then we will assume "Apache Mode".
+		if (!empty($_SERVER['PHP_SELF']) && !empty($_SERVER['REQUEST_URI']))
+		{
+			// The URI is built from the HTTP_HOST and REQUEST_URI environment variables in an Apache environment.
+			$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		}
+		// If not in "Apache Mode" we will assume that we are in an IIS environment and proceed.
+		elseif (isset($_SERVER['HTTP_HOST']))
+		{
+			// IIS uses the SCRIPT_NAME variable instead of a REQUEST_URI variable... thanks, MS
+			$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
+
+			// If the QUERY_STRING variable exists append it to the URI string.
+			if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']))
+			{
+				$uri .= '?' . $_SERVER['QUERY_STRING'];
+			}
+		}
+
+		return trim($uri);
+	}
+
+	/**
+	 * Method to load a PHP configuration class file based on convention and return the instantiated data object.  You
+	 * will extend this method in child classes to provide configuration data from whatever data source is relevant
+	 * for your specific application.
+	 *
+	 * @param   string  $file   The path and filename of the configuration file. If not provided, configuration.php
+	 *                          in JPATH_BASE will be used.
+	 * @param   string  $class  The class name to instantiate.
+	 *
+	 * @return  mixed   Either an array or object to be loaded into the configuration object.
+	 *
+	 * @since   11.3
+	 * @throws  RuntimeException
+	 */
+	protected function fetchConfigurationData($file = '', $class = 'JConfig')
+	{
+		// Instantiate variables.
+		$config = array();
+
+		if (empty($file) && defined('JPATH_ROOT'))
+		{
+			$file = JPATH_ROOT . '/configuration.php';
+
+			// Applications can choose not to have any configuration data
+			// by not implementing this method and not having a config file.
+			if (!file_exists($file))
+			{
+				$file = '';
+			}
+		}
+
+		if (!empty($file))
+		{
+			JLoader::register($class, $file);
+
+			if (class_exists($class))
+			{
+				$config = new $class;
+			}
+			else
+			{
+				throw new RuntimeException('Configuration class does not exist.');
+			}
+		}
+
+		return $config;
+	}
+
+	/**
 	 * Flush the media version to refresh versionable assets
 	 *
 	 * @return  void
@@ -1152,6 +940,28 @@ class JApplicationWeb extends JApplicationBase
 	}
 
 	/**
+	 * Method to send a header to the client.  We are wrapping this to isolate the header() function
+	 * from our code base for testing reasons.
+	 *
+	 * @param   string   $string   The header string.
+	 * @param   boolean  $replace  The optional replace parameter indicates whether the header should
+	 *                             replace a previous similar header, or add a second header of the same type.
+	 * @param   integer  $code     Forces the HTTP response code to the specified value. Note that
+	 *                             this parameter only has an effect if the string is not empty.
+	 *
+	 * @return  void
+	 *
+	 * @codeCoverageIgnore
+	 * @see     header()
+	 * @since   11.3
+	 */
+	protected function header($string, $replace = true, $code = null)
+	{
+		$string = str_replace(chr(0), '', $string);
+		header($string, $replace, $code);
+	}
+
+	/**
 	 * Determine if we are using a secure (SSL) connection.
 	 *
 	 * @return  boolean  True if using SSL, false if not.
@@ -1161,6 +971,105 @@ class JApplicationWeb extends JApplicationBase
 	public function isSSLConnection()
 	{
 		return ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) || getenv('SSL_PROTOCOL_VERSION'));
+	}
+
+	/**
+	 * Allows the application to load a custom or default document.
+	 *
+	 * The logic and options for creating this object are adequately generic for default cases
+	 * but for many applications it will make sense to override this method and create a document,
+	 * if required, based on more specific needs.
+	 *
+	 * @param   JDocument  $document  An optional document object. If omitted, the factory document is created.
+	 *
+	 * @return  JApplicationWeb This method is chainable.
+	 *
+	 * @since   11.3
+	 */
+	public function loadDocument(JDocument $document = null)
+	{
+		$this->document = ($document === null) ? JFactory::getDocument() : $document;
+
+		return $this;
+	}
+
+	/**
+	 * Allows the application to load a custom or default language.
+	 *
+	 * The logic and options for creating this object are adequately generic for default cases
+	 * but for many applications it will make sense to override this method and create a language,
+	 * if required, based on more specific needs.
+	 *
+	 * @param   JLanguage  $language  An optional language object. If omitted, the factory language is created.
+	 *
+	 * @return  JApplicationWeb This method is chainable.
+	 *
+	 * @since   11.3
+	 */
+	public function loadLanguage(JLanguage $language = null)
+	{
+		$this->language = ($language === null) ? JFactory::getLanguage() : $language;
+
+		return $this;
+	}
+
+	/**
+	 * Allows the application to load a custom or default session.
+	 *
+	 * The logic and options for creating this object are adequately generic for default cases
+	 * but for many applications it will make sense to override this method and create a session,
+	 * if required, based on more specific needs.
+	 *
+	 * @param   JSession  $session  An optional session object. If omitted, the session is created.
+	 *
+	 * @return  JApplicationWeb This method is chainable.
+	 *
+	 * @since   11.3
+	 */
+	public function loadSession(JSession $session = null)
+	{
+		if ($session !== null)
+		{
+			$this->session = $session;
+
+			return $this;
+		}
+
+		// Generate a session name.
+		$name = md5($this->get('secret') . $this->get('session_name', get_class($this)));
+
+		// Calculate the session lifetime.
+		$lifetime = (($this->get('sess_lifetime')) ? $this->get('sess_lifetime') * 60 : 900);
+
+		// Get the session handler from the configuration.
+		$handler = $this->get('sess_handler', 'none');
+
+		// Initialize the options for JSession.
+		$options = array(
+			'name' => $name,
+			'expire' => $lifetime,
+			'force_ssl' => $this->get('force_ssl')
+		);
+
+		$this->registerEvent('onAfterSessionStart', array($this, 'afterSessionStart'));
+
+		// Instantiate the session object.
+		$session = JSession::getInstance($handler, $options);
+		$session->initialise($this->input, $this->dispatcher);
+
+		if ($session->getState() == 'expired')
+		{
+			$session->restart();
+		}
+		else
+		{
+			$session->start();
+		}
+
+		// Set the session object.
+		$this->session = $session;
+
+		return $this;
 	}
 
 	/**
@@ -1178,6 +1087,106 @@ class JApplicationWeb extends JApplicationBase
 		{
 			$session->set('registry', new Registry('session'));
 			$session->set('user', new JUser);
+		}
+	}
+
+	/**
+	 * Method to load the system URI strings for the application.
+	 *
+	 * @param   string  $requestUri  An optional request URI to use instead of detecting one from the
+	 *                               server environment variables.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.3
+	 */
+	protected function loadSystemUris($requestUri = null)
+	{
+		// Set the request URI.
+		// @codeCoverageIgnoreStart
+		if (!empty($requestUri))
+		{
+			$this->set('uri.request', $requestUri);
+		}
+		else
+		{
+			$this->set('uri.request', $this->detectRequestUri());
+		}
+		// @codeCoverageIgnoreEnd
+
+		// Check to see if an explicit base URI has been set.
+		$siteUri = trim($this->get('site_uri'));
+
+		if ($siteUri != '')
+		{
+			$uri = JUri::getInstance($siteUri);
+			$path = $uri->toString(array('path'));
+		}
+		// No explicit base URI was set so we need to detect it.
+		else
+		{
+			// Start with the requested URI.
+			$uri = JUri::getInstance($this->get('uri.request'));
+
+			// If we are working from a CGI SAPI with the 'cgi.fix_pathinfo' directive disabled we use PHP_SELF.
+			if (strpos(php_sapi_name(), 'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI']))
+			{
+				// We aren't expecting PATH_INFO within PHP_SELF so this should work.
+				$path = dirname($_SERVER['PHP_SELF']);
+			}
+			// Pretty much everything else should be handled with SCRIPT_NAME.
+			else
+			{
+				$path = dirname($_SERVER['SCRIPT_NAME']);
+			}
+		}
+
+		$host = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
+
+		// Check if the path includes "index.php".
+		if (strpos($path, 'index.php') !== false)
+		{
+			// Remove the index.php portion of the path.
+			$path = substr_replace($path, '', strpos($path, 'index.php'), 9);
+		}
+
+		$path = rtrim($path, '/\\');
+
+		// Set the base URI both as just a path and as the full URI.
+		$this->set('uri.base.full', $host . $path . '/');
+		$this->set('uri.base.host', $host);
+		$this->set('uri.base.path', $path . '/');
+
+		// Set the extended (non-base) part of the request URI as the route.
+		if (stripos($this->get('uri.request'), $this->get('uri.base.full')) === 0)
+		{
+			$this->set('uri.route', substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full'))));
+		}
+
+		// Get an explicitly set media URI is present.
+		$mediaURI = trim($this->get('media_uri'));
+
+		if ($mediaURI)
+		{
+			if (strpos($mediaURI, '://') !== false)
+			{
+				$this->set('uri.media.full', $mediaURI);
+				$this->set('uri.media.path', $mediaURI);
+			}
+			else
+			{
+				// Normalise slashes.
+				$mediaURI = trim($mediaURI, '/\\');
+				$mediaURI = !empty($mediaURI) ? '/' . $mediaURI . '/' : '/';
+				$this->set('uri.media.full', $this->get('uri.base.host') . $mediaURI);
+				$this->set('uri.media.path', $mediaURI);
+			}
+		}
+		// No explicit media URI was set, build it dynamically from the base uri.
+		else
+		{
+			$this->set('uri.media.full', $this->get('uri.base.full') . 'media/');
+			$this->set('uri.media.path', $this->get('uri.base.path') . 'media/');
 		}
 	}
 }

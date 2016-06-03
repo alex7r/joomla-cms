@@ -48,6 +48,24 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JGithubPackageAuthorization($this->options, $this->client);
+	}
+
+	/**
 	 * Tests the createAuthorisation method
 	 *
 	 * @return  void
@@ -56,13 +74,13 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreate()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
-		$authorisation           = new stdClass;
-		$authorisation->scopes   = array('public_repo');
-		$authorisation->note     = 'My test app';
+		$authorisation = new stdClass;
+		$authorisation->scopes = array('public_repo');
+		$authorisation->note = 'My test app';
 		$authorisation->note_url = 'https://www.joomla.org';
 
 		$this->client->expects($this->once())
@@ -87,13 +105,13 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$authorisation           = new stdClass;
-		$authorisation->scopes   = array('public_repo');
-		$authorisation->note     = 'My test app';
+		$authorisation = new stdClass;
+		$authorisation->scopes = array('public_repo');
+		$authorisation->note = 'My test app';
 		$authorisation->note_url = 'https://www.joomla.org';
 
 		$this->client->expects($this->once())
@@ -126,7 +144,7 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testDelete()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -152,7 +170,7 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -186,14 +204,14 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEditAddScopes()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$authorisation             = new stdClass;
+		$authorisation = new stdClass;
 		$authorisation->add_scopes = array('public_repo', 'gist');
-		$authorisation->note       = 'My test app';
-		$authorisation->note_url   = 'https://www.joomla.org';
+		$authorisation->note = 'My test app';
+		$authorisation->note_url = 'https://www.joomla.org';
 
 		$this->client->expects($this->once())
 			->method('patch')
@@ -215,14 +233,14 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEditRemoveScopes()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$authorisation                = new stdClass;
+		$authorisation = new stdClass;
 		$authorisation->remove_scopes = array('public_repo', 'gist');
-		$authorisation->note          = 'My test app';
-		$authorisation->note_url      = 'https://www.joomla.org';
+		$authorisation->note = 'My test app';
+		$authorisation->note_url = 'https://www.joomla.org';
 
 		$this->client->expects($this->once())
 			->method('patch')
@@ -244,13 +262,13 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEditScopes()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$authorisation           = new stdClass;
-		$authorisation->scopes   = array('public_repo', 'gist');
-		$authorisation->note     = 'My test app';
+		$authorisation = new stdClass;
+		$authorisation->scopes = array('public_repo', 'gist');
+		$authorisation->note = 'My test app';
 		$authorisation->note_url = 'https://www.joomla.org';
 
 		$this->client->expects($this->once())
@@ -275,14 +293,14 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$authorisation             = new stdClass;
+		$authorisation = new stdClass;
 		$authorisation->add_scopes = array('public_repo', 'gist');
-		$authorisation->note       = 'My test app';
-		$authorisation->note_url   = 'https://www.joomla.org';
+		$authorisation->note = 'My test app';
+		$authorisation->note_url = 'https://www.joomla.org';
 
 		$this->client->expects($this->once())
 			->method('patch')
@@ -328,7 +346,7 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGet()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -354,7 +372,7 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetFailure()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -375,7 +393,7 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetList()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -401,7 +419,7 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetListFailure()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -422,7 +440,7 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetRateLimit()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -448,7 +466,7 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetRateLimitFailure()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -462,7 +480,7 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 
 	public function testGetAuthorizationLink()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = 'https://github.com/login/oauth/authorize?client_id=12345'
 			. '&redirect_uri=aaa&scope=bbb&state=ccc';
@@ -475,7 +493,7 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 
 	public function testRequestToken()
 	{
-		$returnData       = new JHttpResponse;
+		$returnData = new JHttpResponse;
 		$returnData->code = 200;
 		$returnData->body = '';
 
@@ -490,10 +508,9 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 			$this->equalTo($returnData->body)
 		);
 	}
-
 	public function testRequestTokenJson()
 	{
-		$returnData       = new JHttpResponse;
+		$returnData = new JHttpResponse;
 		$returnData->code = 200;
 		$returnData->body = '';
 
@@ -508,10 +525,9 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 			$this->equalTo($returnData->body)
 		);
 	}
-
 	public function testRequestTokenXml()
 	{
-		$returnData       = new JHttpResponse;
+		$returnData = new JHttpResponse;
 		$returnData->code = 200;
 		$returnData->body = '';
 
@@ -532,28 +548,10 @@ class JGithubPackageAuthorizationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testRequestTokenInvalidFormat()
 	{
-		$returnData       = new JHttpResponse;
+		$returnData = new JHttpResponse;
 		$returnData->code = 200;
 		$returnData->body = '';
 
 		$this->object->requestToken('12345', 'aaa', 'bbb', 'ccc', 'invalid');
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options = new JRegistry;
-		$this->client  = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JGithubPackageAuthorization($this->options, $this->client);
 	}
 }

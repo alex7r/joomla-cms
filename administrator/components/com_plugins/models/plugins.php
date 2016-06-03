@@ -19,7 +19,7 @@ class PluginsModelPlugins extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -51,8 +51,8 @@ class PluginsModelPlugins extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -85,17 +85,40 @@ class PluginsModelPlugins extends JModelList
 	}
 
 	/**
+	 * Method to get a store id based on model configuration state.
+	 *
+	 * This is necessary because the model is used by the component and
+	 * different modules that might need different sets of data or different
+	 * ordering requirements.
+	 *
+	 * @param   string  $id  A prefix for the store id.
+	 *
+	 * @return  string    A store id.
+	 */
+	protected function getStoreId($id = '')
+	{
+		// Compile the store id.
+		$id .= ':' . $this->getState('filter.search');
+		$id .= ':' . $this->getState('filter.access');
+		$id .= ':' . $this->getState('filter.enabled');
+		$id .= ':' . $this->getState('filter.folder');
+		$id .= ':' . $this->getState('filter.language');
+
+		return parent::getStoreId($id);
+	}
+
+	/**
 	 * Returns an object list.
 	 *
-	 * @param   JDatabaseQuery $query      A database query object.
-	 * @param   integer        $limitstart Offset.
-	 * @param   integer        $limit      The number of records.
+	 * @param   JDatabaseQuery  $query       A database query object.
+	 * @param   integer         $limitstart  Offset.
+	 * @param   integer         $limit       The number of records.
 	 *
 	 * @return  array
 	 */
 	protected function _getList($query, $limitstart = 0, $limit = 0)
 	{
-		$search   = $this->getState('filter.search');
+		$search = $this->getState('filter.search');
 		$ordering = $this->getState('list.ordering', 'ordering');
 
 		// If "Sort Table By:" is not set, set ordering to name
@@ -126,7 +149,7 @@ class PluginsModelPlugins extends JModelList
 			$direction = ($this->getState('list.direction') == 'desc') ? -1 : 1;
 			JArrayHelper::sortObjects($result, $ordering, $direction, true, true);
 
-			$total                                      = count($result);
+			$total = count($result);
 			$this->cache[$this->getStoreId('getTotal')] = $total;
 
 			if ($total < $limitstart)
@@ -162,7 +185,7 @@ class PluginsModelPlugins extends JModelList
 	/**
 	 * Translate a list of objects.
 	 *
-	 * @param   array &$items The array of objects.
+	 * @param   array  &$items  The array of objects.
 	 *
 	 * @return  array The array of translated objects.
 	 */
@@ -172,35 +195,12 @@ class PluginsModelPlugins extends JModelList
 
 		foreach ($items as &$item)
 		{
-			$source    = JPATH_PLUGINS . '/' . $item->folder . '/' . $item->element;
+			$source = JPATH_PLUGINS . '/' . $item->folder . '/' . $item->element;
 			$extension = 'plg_' . $item->folder . '_' . $item->element;
 			$lang->load($extension . '.sys', JPATH_ADMINISTRATOR, null, false, true)
-			|| $lang->load($extension . '.sys', $source, null, false, true);
+				|| $lang->load($extension . '.sys', $source, null, false, true);
 			$item->name = JText::_($item->name);
 		}
-	}
-
-	/**
-	 * Method to get a store id based on model configuration state.
-	 *
-	 * This is necessary because the model is used by the component and
-	 * different modules that might need different sets of data or different
-	 * ordering requirements.
-	 *
-	 * @param   string $id A prefix for the store id.
-	 *
-	 * @return  string    A store id.
-	 */
-	protected function getStoreId($id = '')
-	{
-		// Compile the store id.
-		$id .= ':' . $this->getState('filter.search');
-		$id .= ':' . $this->getState('filter.access');
-		$id .= ':' . $this->getState('filter.enabled');
-		$id .= ':' . $this->getState('filter.folder');
-		$id .= ':' . $this->getState('filter.language');
-
-		return parent::getStoreId($id);
 	}
 
 	/**
@@ -211,7 +211,7 @@ class PluginsModelPlugins extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the required fields from the table.
@@ -219,7 +219,7 @@ class PluginsModelPlugins extends JModelList
 			$this->getState(
 				'list.select',
 				'a.extension_id , a.name, a.element, a.folder, a.checked_out, a.checked_out_time,' .
-				' a.enabled, a.access, a.ordering'
+					' a.enabled, a.access, a.ordering'
 			)
 		)
 			->from($db->quoteName('#__extensions') . ' AS a')
@@ -277,16 +277,16 @@ class PluginsModelPlugins extends JModelList
 	/**
 	 * Method to get the data that should be injected in the form.
 	 *
-	 * @return    mixed    The data for the form.
+	 * @return	mixed	The data for the form.
 	 *
-	 * @since    3.5
+	 * @since	3.5
 	 */
 	protected function loadFormData()
 	{
 		$data = parent::loadFormData();
 
 		// Set the selected filter values for pages that use the JLayouts for filtering
-		$data->list['sortTable']      = $this->state->get('list.ordering');
+		$data->list['sortTable'] = $this->state->get('list.ordering');
 		$data->list['directionTable'] = $this->state->get('list.direction');
 
 		return $data;

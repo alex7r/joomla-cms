@@ -34,9 +34,9 @@ class JAccessWrapperAccess
 	/**
 	 * Helper wrapper method for check
 	 *
-	 * @param   integer $userId Id of the user for which to check authorisation.
-	 * @param   string  $action The name of the action to authorise.
-	 * @param   mixed   $asset  Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
+	 * @param   integer  $userId  Id of the user for which to check authorisation.
+	 * @param   string   $action  The name of the action to authorise.
+	 * @param   mixed    $asset   Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
 	 *
 	 * @return boolean  True if authorised.
 	 *
@@ -51,9 +51,9 @@ class JAccessWrapperAccess
 	/**
 	 * Helper wrapper method for checkGroup
 	 *
-	 * @param   integer $groupId The path to the group for which to check authorisation.
-	 * @param   string  $action  The name of the action to authorise.
-	 * @param   mixed   $asset   Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
+	 * @param   integer  $groupId  The path to the group for which to check authorisation.
+	 * @param   string   $action   The name of the action to authorise.
+	 * @param   mixed    $asset    Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
 	 *
 	 * @return  boolean  True if authorised.
 	 *
@@ -68,8 +68,8 @@ class JAccessWrapperAccess
 	/**
 	 * Helper wrapper method for getAssetRules
 	 *
-	 * @param   mixed   $asset     Integer asset id or the name of the asset as a string.
-	 * @param   boolean $recursive True to return the rules object with inherited rules.
+	 * @param   mixed    $asset      Integer asset id or the name of the asset as a string.
+	 * @param   boolean  $recursive  True to return the rules object with inherited rules.
 	 *
 	 * @return  JAccessRules   JAccessRules object for the asset.
 	 *
@@ -84,8 +84,8 @@ class JAccessWrapperAccess
 	/**
 	 * Helper wrapper method for getGroupsByUser
 	 *
-	 * @param   integer $userId    Id of the user for which to get the list of groups.
-	 * @param   boolean $recursive True to include inherited user groups.
+	 * @param   integer  $userId     Id of the user for which to get the list of groups.
+	 * @param   boolean  $recursive  True to include inherited user groups.
 	 *
 	 * @return  array    List of user group ids to which the user is mapped.
 	 *
@@ -100,8 +100,8 @@ class JAccessWrapperAccess
 	/**
 	 * Helper wrapper method for getUsersByGroup
 	 *
-	 * @param   integer $groupId   The group Id
-	 * @param   boolean $recursive Recursively include all child groups (optional)
+	 * @param   integer  $groupId    The group Id
+	 * @param   boolean  $recursive  Recursively include all child groups (optional)
 	 *
 	 * @return  array
 	 *
@@ -116,7 +116,7 @@ class JAccessWrapperAccess
 	/**
 	 * Helper wrapper method for getAuthorisedViewLevels
 	 *
-	 * @param   integer $userId Id of the user for which to get the list of authorised view levels.
+	 * @param   integer  $userId  Id of the user for which to get the list of authorised view levels.
 	 *
 	 * @return  array    List of view levels for which the user is authorised.
 	 *
@@ -131,8 +131,8 @@ class JAccessWrapperAccess
 	/**
 	 * Helper wrapper method for getActions
 	 *
-	 * @param   string $component The component from which to retrieve the actions.
-	 * @param   string $section   The name of the section within the component from which to retrieve the actions.
+	 * @param   string  $component  The component from which to retrieve the actions.
+	 * @param   string  $section    The name of the section within the component from which to retrieve the actions.
 	 *
 	 * @return array  List of actions available for the given component and section.
 	 *
@@ -147,8 +147,8 @@ class JAccessWrapperAccess
 	/**
 	 * Helper wrapper method for getActionsFromFile
 	 *
-	 * @param   string $file  The path to the XML file.
-	 * @param   string $xpath An optional xpath to search for the fields.
+	 * @param   string  $file   The path to the XML file.
+	 * @param   string  $xpath  An optional xpath to search for the fields.
 	 *
 	 * @return  boolean|array   False if case of error or the list of actions available.
 	 *
@@ -163,8 +163,8 @@ class JAccessWrapperAccess
 	/**
 	 * Helper wrapper method for getActionsFromData
 	 *
-	 * @param   string|SimpleXMLElement $data  The XML string or an XML element.
-	 * @param   string                  $xpath An optional xpath to search for the fields.
+	 * @param   string|SimpleXMLElement  $data   The XML string or an XML element.
+	 * @param   string                   $xpath  An optional xpath to search for the fields.
 	 *
 	 * @return  boolean|array   False if case of error or the list of actions available.
 	 *

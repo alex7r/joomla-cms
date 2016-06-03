@@ -46,8 +46,8 @@ abstract class FOFUtilsArray
 	/**
 	 * Function to convert array to integer values
 	 *
-	 * @param   array &$array  The source array to convert
-	 * @param   mixed $default A default value (int|array) to assign if $array is not an array
+	 * @param   array  &$array   The source array to convert
+	 * @param   mixed  $default  A default value (int|array) to assign if $array is not an array
 	 *
 	 * @return  void
 	 */
@@ -81,8 +81,8 @@ abstract class FOFUtilsArray
 	/**
 	 * Utility function to map an array to a stdClass object.
 	 *
-	 * @param   array  &$array The array to map.
-	 * @param   string $class  Name of the class to create
+	 * @param   array   &$array  The array to map.
+	 * @param   string  $class   Name of the class to create
 	 *
 	 * @return  object   The object mapped from the given array
 	 */
@@ -106,17 +106,16 @@ abstract class FOFUtilsArray
 				}
 			}
 		}
-
 		return $obj;
 	}
 
 	/**
 	 * Utility function to map an array to a string.
 	 *
-	 * @param   array   $array        The array to map.
-	 * @param   string  $inner_glue   The glue (optional, defaults to '=') between the key and the value.
-	 * @param   string  $outer_glue   The glue (optional, defaults to ' ') between array elements.
-	 * @param   boolean $keepOuterKey True if final key should be kept.
+	 * @param   array    $array         The array to map.
+	 * @param   string   $inner_glue    The glue (optional, defaults to '=') between the key and the value.
+	 * @param   string   $outer_glue    The glue (optional, defaults to ' ') between array elements.
+	 * @param   boolean  $keepOuterKey  True if final key should be kept.
 	 *
 	 * @return  string   The string mapped from the given array
 	 */
@@ -150,9 +149,9 @@ abstract class FOFUtilsArray
 	/**
 	 * Utility function to map an object to an array
 	 *
-	 * @param   object  $p_obj   The source object
-	 * @param   boolean $recurse True to recurse through multi-level objects
-	 * @param   string  $regex   An optional regular expression to match on field names
+	 * @param   object   $p_obj    The source object
+	 * @param   boolean  $recurse  True to recurse through multi-level objects
+	 * @param   string   $regex    An optional regular expression to match on field names
 	 *
 	 * @return  array    The array mapped from the given object
 	 */
@@ -171,9 +170,9 @@ abstract class FOFUtilsArray
 	/**
 	 * Utility function to map an object or array to an array
 	 *
-	 * @param   mixed   $item    The source object or array
-	 * @param   boolean $recurse True to recurse through multi-level objects
-	 * @param   string  $regex   An optional regular expression to match on field names
+	 * @param   mixed    $item     The source object or array
+	 * @param   boolean  $recurse  True to recurse through multi-level objects
+	 * @param   string   $regex    An optional regular expression to match on field names
 	 *
 	 * @return  array  The array mapped from the given object
 	 */
@@ -211,15 +210,14 @@ abstract class FOFUtilsArray
 		{
 			$result = $item;
 		}
-
 		return $result;
 	}
 
 	/**
 	 * Extracts a column from an array of arrays or objects
 	 *
-	 * @param   array  &$array The source array
-	 * @param   string $index  The index of the column or name of object property
+	 * @param   array   &$array  The source array
+	 * @param   string  $index   The index of the column or name of object property
 	 *
 	 * @return  array  Column of values from the source array
 	 */
@@ -242,17 +240,16 @@ abstract class FOFUtilsArray
 				// Else ignore the entry
 			}
 		}
-
 		return $result;
 	}
 
 	/**
 	 * Utility function to return a value from a named array or a specified default
 	 *
-	 * @param   array  &$array  A named array
-	 * @param   string $name    The key to search for
-	 * @param   mixed  $default The default value to give if no key found
-	 * @param   string $type    Return type for the variable (INT, FLOAT, STRING, WORD, BOOLEAN, ARRAY)
+	 * @param   array   &$array   A named array
+	 * @param   string  $name     The key to search for
+	 * @param   mixed   $default  The default value to give if no key found
+	 * @param   string  $type     Return type for the variable (INT, FLOAT, STRING, WORD, BOOLEAN, ARRAY)
 	 *
 	 * @return  mixed  The value from the source array
 	 */
@@ -313,7 +310,6 @@ abstract class FOFUtilsArray
 				// No casting necessary
 				break;
 		}
-
 		return $result;
 	}
 
@@ -338,7 +334,7 @@ abstract class FOFUtilsArray
 	 *     '6000' => 'Used'
 	 * );
 	 *
-	 * @param   array $array The source array.
+	 * @param   array  $array  The source array.
 	 *
 	 * @return  array  The inverted array.
 	 */
@@ -362,14 +358,13 @@ abstract class FOFUtilsArray
 				}
 			}
 		}
-
 		return $return;
 	}
 
 	/**
 	 * Method to determine if an array is an associative array.
 	 *
-	 * @param   array $array An array to test.
+	 * @param   array  $array  An array to test.
 	 *
 	 * @return  boolean  True if the array is an associative array.
 	 */
@@ -392,14 +387,14 @@ abstract class FOFUtilsArray
 	/**
 	 * Pivots an array to create a reverse lookup of an array of scalars, arrays or objects.
 	 *
-	 * @param   array  $source The source array.
-	 * @param   string $key    Where the elements of the source array are objects or arrays, the key to pivot on.
+	 * @param   array   $source  The source array.
+	 * @param   string  $key     Where the elements of the source array are objects or arrays, the key to pivot on.
 	 *
 	 * @return  array  An array of arrays pivoted either on the value of the keys, or an individual key of an object or array.
 	 */
 	public static function pivot($source, $key = null)
 	{
-		$result  = array();
+		$result = array();
 		$counter = array();
 
 		foreach ($source as $index => $value)
@@ -413,7 +408,7 @@ abstract class FOFUtilsArray
 					continue;
 				}
 
-				$resultKey   = $value[$key];
+				$resultKey = $value[$key];
 				$resultValue = &$source[$index];
 			}
 			elseif (is_object($value))
@@ -424,13 +419,13 @@ abstract class FOFUtilsArray
 					continue;
 				}
 
-				$resultKey   = $value->$key;
+				$resultKey = $value->$key;
 				$resultValue = &$source[$index];
 			}
 			else
 			{
 				// Just a scalar value.
-				$resultKey   = $value;
+				$resultKey = $value;
 				$resultValue = $index;
 			}
 
@@ -438,7 +433,7 @@ abstract class FOFUtilsArray
 			if (empty($counter[$resultKey]))
 			{
 				// The first time around we just assign the value to the key.
-				$result[$resultKey]  = $resultValue;
+				$result[$resultKey] = $resultValue;
 				$counter[$resultKey] = 1;
 			}
 			elseif ($counter[$resultKey] == 1)
@@ -465,11 +460,11 @@ abstract class FOFUtilsArray
 	/**
 	 * Utility function to sort an array of objects on a given field
 	 *
-	 * @param   array &$a            An array of objects
-	 * @param   mixed $k             The key (string) or an array of keys to sort on
-	 * @param   mixed $direction     Direction (integer) or an array of direction to sort in [1 = Ascending] [-1 = Descending]
-	 * @param   mixed $caseSensitive Boolean or array of booleans to let sort occur case sensitive or insensitive
-	 * @param   mixed $locale        Boolean or array of booleans to let sort occur using the locale language or not
+	 * @param   array  &$a             An array of objects
+	 * @param   mixed  $k              The key (string) or an array of keys to sort on
+	 * @param   mixed  $direction      Direction (integer) or an array of direction to sort in [1 = Ascending] [-1 = Descending]
+	 * @param   mixed  $caseSensitive  Boolean or array of booleans to let sort occur case sensitive or insensitive
+	 * @param   mixed  $locale         Boolean or array of booleans to let sort occur using the locale language or not
 	 *
 	 * @return  array  The sorted array of objects
 	 */
@@ -480,57 +475,26 @@ abstract class FOFUtilsArray
 			$locale = array($locale);
 		}
 
-		self::$sortCase      = (array) $caseSensitive;
+		self::$sortCase = (array) $caseSensitive;
 		self::$sortDirection = (array) $direction;
-		self::$sortKey       = (array) $k;
-		self::$sortLocale    = $locale;
+		self::$sortKey = (array) $k;
+		self::$sortLocale = $locale;
 
 		usort($a, array(__CLASS__, '_sortObjects'));
 
-		self::$sortCase      = null;
+		self::$sortCase = null;
 		self::$sortDirection = null;
-		self::$sortKey       = null;
-		self::$sortLocale    = null;
+		self::$sortKey = null;
+		self::$sortLocale = null;
 
 		return $a;
 	}
 
 	/**
-	 * Multidimensional array safe unique test
-	 *
-	 * @param   array $myArray The array to make unique.
-	 *
-	 * @return  array
-	 *
-	 * @see     http://php.net/manual/en/function.array-unique.php
-	 */
-	public static function arrayUnique($myArray)
-	{
-		if (!is_array($myArray))
-		{
-			return $myArray;
-		}
-
-		foreach ($myArray as &$myvalue)
-		{
-			$myvalue = serialize($myvalue);
-		}
-
-		$myArray = array_unique($myArray);
-
-		foreach ($myArray as &$myvalue)
-		{
-			$myvalue = unserialize($myvalue);
-		}
-
-		return $myArray;
-	}
-
-	/**
 	 * Callback function for sorting an array of objects on a key
 	 *
-	 * @param   array &$a An array of objects
-	 * @param   array &$b An array of objects
+	 * @param   array  &$a  An array of objects
+	 * @param   array  &$b  An array of objects
 	 *
 	 * @return  integer  Comparison status
 	 *
@@ -586,5 +550,36 @@ abstract class FOFUtilsArray
 		}
 
 		return 0;
+	}
+
+	/**
+	 * Multidimensional array safe unique test
+	 *
+	 * @param   array  $myArray  The array to make unique.
+	 *
+	 * @return  array
+	 *
+	 * @see     http://php.net/manual/en/function.array-unique.php
+	 */
+	public static function arrayUnique($myArray)
+	{
+		if (!is_array($myArray))
+		{
+			return $myArray;
+		}
+
+		foreach ($myArray as &$myvalue)
+		{
+			$myvalue = serialize($myvalue);
+		}
+
+		$myArray = array_unique($myArray);
+
+		foreach ($myArray as &$myvalue)
+		{
+			$myvalue = unserialize($myvalue);
+		}
+
+		return $myArray;
 	}
 }

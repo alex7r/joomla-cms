@@ -46,10 +46,11 @@ class JFormFieldMenuOrdering extends JFormFieldList
 			return false;
 		}
 
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('a.id AS value, a.title AS text')
 			->from('#__menu AS a')
+
 			->where('a.published >= 0')
 			->where('a.parent_id =' . (int) $parent_id);
 

@@ -15,9 +15,9 @@ use Joomla\Registry\Registry;
  * Layout variables
  * ---------------------
  *
- * @var  string  $selector      The id of the field
- * @var  string  $minTermLength The minimum number of characters for the tag
- * @var  boolean $allowCustom   Can we insert custom tags?
+ * @var  string   $selector       The id of the field
+ * @var  string   $minTermLength  The minimum number of characters for the tag
+ * @var  boolean  $allowCustom    Can we insert custom tags?
  */
 
 extract($displayData);

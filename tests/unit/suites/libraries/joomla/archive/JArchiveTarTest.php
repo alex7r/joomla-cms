@@ -25,6 +25,19 @@ class JArchiveTarTest extends JArchiveTestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->object = new JArchiveTar;
+	}
+
+	/**
 	 * Tests the extract Method.
 	 *
 	 * @return  void
@@ -50,18 +63,5 @@ class JArchiveTarTest extends JArchiveTestCase
 		$this->assertTrue(
 			JArchiveTar::isSupported()
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object = new JArchiveTar;
 	}
 }

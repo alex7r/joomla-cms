@@ -33,91 +33,11 @@ class FinderIndexerTaxonomy
 	public static $nodes = array();
 
 	/**
-	 * Method to add a node to the taxonomy tree.
-	 *
-	 * @param   string  $branch The title of the branch to store the node in.
-	 * @param   string  $title  The title of the node.
-	 * @param   integer $state  The published state of the node. [optional]
-	 * @param   integer $access The access state of the node. [optional]
-	 *
-	 * @return  integer  The id of the node.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	public static function addNode($branch, $title, $state = 1, $access = 1)
-	{
-		// Check to see if the node is in the cache.
-		if (isset(self::$nodes[$branch][$title]))
-		{
-			return self::$nodes[$branch][$title]->id;
-		}
-
-		// Get the branch id, insert it if it does not exist.
-		$branchId = self::addBranch($branch);
-
-		// Check to see if the node is in the table.
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true)
-			->select('*')
-			->from($db->quoteName('#__finder_taxonomy'))
-			->where($db->quoteName('parent_id') . ' = ' . $db->quote($branchId))
-			->where($db->quoteName('title') . ' = ' . $db->quote($title));
-		$db->setQuery($query);
-
-		// Get the result.
-		$result = $db->loadObject();
-
-		// Check if the database matches the input data.
-		if (!empty($result) && $result->state == $state && $result->access == $access)
-		{
-			// The data matches, add the item to the cache.
-			self::$nodes[$branch][$title] = $result;
-
-			return self::$nodes[$branch][$title]->id;
-		}
-
-		/*
-		 * The database did not match the input. This could be because the
-		 * state has changed or because the node does not exist. Let's figure
-		 * out which case is true and deal with it.
-		 */
-		$node = new JObject;
-
-		if (empty($result))
-		{
-			// Prepare the node object.
-			$node->parent_id = (int) $branchId;
-			$node->title     = $title;
-			$node->state     = (int) $state;
-			$node->access    = (int) $access;
-		}
-		else
-		{
-			// Prepare the node object.
-			$node->id        = (int) $result->id;
-			$node->parent_id = (int) $result->parent_id;
-			$node->title     = $result->title;
-			$node->state     = (int) $result->title;
-			$node->access    = (int) $result->access;
-			$node->ordering  = (int) $result->ordering;
-		}
-
-		// Store the node.
-		self::storeNode($node);
-
-		// Add the node to the cache.
-		self::$nodes[$branch][$title] = $node;
-
-		return self::$nodes[$branch][$title]->id;
-	}
-
-	/**
 	 * Method to add a branch to the taxonomy tree.
 	 *
-	 * @param   string  $title  The title of the branch.
-	 * @param   integer $state  The published state of the branch. [optional]
-	 * @param   integer $access The access state of the branch. [optional]
+	 * @param   string   $title   The title of the branch.
+	 * @param   integer  $state   The published state of the branch. [optional]
+	 * @param   integer  $access  The access state of the branch. [optional]
 	 *
 	 * @return  integer  The id of the branch.
 	 *
@@ -133,7 +53,7 @@ class FinderIndexerTaxonomy
 		}
 
 		// Check to see if the branch is in the table.
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('*')
 			->from($db->quoteName('#__finder_taxonomy'))
@@ -164,19 +84,19 @@ class FinderIndexerTaxonomy
 		{
 			// Prepare the branch object.
 			$branch->parent_id = 1;
-			$branch->title     = $title;
-			$branch->state     = (int) $state;
-			$branch->access    = (int) $access;
+			$branch->title = $title;
+			$branch->state = (int) $state;
+			$branch->access = (int) $access;
 		}
 		else
 		{
 			// Prepare the branch object.
-			$branch->id        = (int) $result->id;
+			$branch->id = (int) $result->id;
 			$branch->parent_id = (int) $result->parent_id;
-			$branch->title     = $result->title;
-			$branch->state     = (int) $result->title;
-			$branch->access    = (int) $result->access;
-			$branch->ordering  = (int) $result->ordering;
+			$branch->title = $result->title;
+			$branch->state = (int) $result->title;
+			$branch->access = (int) $result->access;
+			$branch->ordering = (int) $result->ordering;
 		}
 
 		// Store the branch.
@@ -189,39 +109,90 @@ class FinderIndexerTaxonomy
 	}
 
 	/**
-	 * Method to store a node to the database.  This method will accept either a branch or a node.
+	 * Method to add a node to the taxonomy tree.
 	 *
-	 * @param   object $item The item to store.
+	 * @param   string   $branch  The title of the branch to store the node in.
+	 * @param   string   $title   The title of the node.
+	 * @param   integer  $state   The published state of the node. [optional]
+	 * @param   integer  $access  The access state of the node. [optional]
 	 *
-	 * @return  boolean  True on success.
+	 * @return  integer  The id of the node.
 	 *
 	 * @since   2.5
 	 * @throws  Exception on database error.
 	 */
-	protected static function storeNode($item)
+	public static function addNode($branch, $title, $state = 1, $access = 1)
 	{
-		$db = JFactory::getDbo();
-
-		// Check if we are updating or inserting the item.
-		if (empty($item->id))
+		// Check to see if the node is in the cache.
+		if (isset(self::$nodes[$branch][$title]))
 		{
-			// Insert the item.
-			$db->insertObject('#__finder_taxonomy', $item, 'id');
+			return self::$nodes[$branch][$title]->id;
+		}
+
+		// Get the branch id, insert it if it does not exist.
+		$branchId = self::addBranch($branch);
+
+		// Check to see if the node is in the table.
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName('#__finder_taxonomy'))
+			->where($db->quoteName('parent_id') . ' = ' . $db->quote($branchId))
+			->where($db->quoteName('title') . ' = ' . $db->quote($title));
+		$db->setQuery($query);
+
+		// Get the result.
+		$result = $db->loadObject();
+
+		// Check if the database matches the input data.
+		if (!empty($result) && $result->state == $state && $result->access == $access)
+		{
+			// The data matches, add the item to the cache.
+			self::$nodes[$branch][$title] = $result;
+
+			return self::$nodes[$branch][$title]->id;
+		}
+
+		/*
+		 * The database did not match the input. This could be because the
+		 * state has changed or because the node does not exist. Let's figure
+		 * out which case is true and deal with it.
+		 */
+		$node = new JObject;
+
+		if (empty($result))
+		{
+			// Prepare the node object.
+			$node->parent_id = (int) $branchId;
+			$node->title = $title;
+			$node->state = (int) $state;
+			$node->access = (int) $access;
 		}
 		else
 		{
-			// Update the item.
-			$db->updateObject('#__finder_taxonomy', $item, 'id');
+			// Prepare the node object.
+			$node->id = (int) $result->id;
+			$node->parent_id = (int) $result->parent_id;
+			$node->title = $result->title;
+			$node->state = (int) $result->title;
+			$node->access = (int) $result->access;
+			$node->ordering = (int) $result->ordering;
 		}
 
-		return true;
+		// Store the node.
+		self::storeNode($node);
+
+		// Add the node to the cache.
+		self::$nodes[$branch][$title] = $node;
+
+		return self::$nodes[$branch][$title]->id;
 	}
 
 	/**
 	 * Method to add a map entry between a link and a taxonomy node.
 	 *
-	 * @param   integer $linkId The link to map to.
-	 * @param   integer $nodeId The node to map to.
+	 * @param   integer  $linkId  The link to map to.
+	 * @param   integer  $nodeId  The node to map to.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -242,7 +213,7 @@ class FinderIndexerTaxonomy
 		$db->execute();
 		$id = (int) $db->loadResult();
 
-		$map          = new JObject;
+		$map = new JObject;
 		$map->link_id = (int) $linkId;
 		$map->node_id = (int) $nodeId;
 
@@ -271,7 +242,7 @@ class FinderIndexerTaxonomy
 		$db = JFactory::getDbo();
 
 		// Set user variables
-		$user   = JFactory::getUser();
+		$user = JFactory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		// Create a query to get the taxonomy branch titles.
@@ -292,8 +263,8 @@ class FinderIndexerTaxonomy
 	/**
 	 * Method to find a taxonomy node in a branch.
 	 *
-	 * @param   string $branch The branch to search.
-	 * @param   string $title  The title of the node.
+	 * @param   string  $branch  The branch to search.
+	 * @param   string  $title   The title of the node.
 	 *
 	 * @return  mixed  Integer id on success, null on no match.
 	 *
@@ -305,7 +276,7 @@ class FinderIndexerTaxonomy
 		$db = JFactory::getDbo();
 
 		// Set user variables
-		$user   = JFactory::getUser();
+		$user = JFactory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		// Create a query to get the node.
@@ -330,7 +301,7 @@ class FinderIndexerTaxonomy
 	/**
 	 * Method to remove map entries for a link.
 	 *
-	 * @param   integer $linkId The link to remove.
+	 * @param   integer  $linkId  The link to remove.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -340,7 +311,7 @@ class FinderIndexerTaxonomy
 	public static function removeMaps($linkId)
 	{
 		// Delete the maps.
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->delete($db->quoteName('#__finder_taxonomy_map'))
 			->where($db->quoteName('link_id') . ' = ' . (int) $linkId);
@@ -361,7 +332,7 @@ class FinderIndexerTaxonomy
 	public static function removeOrphanNodes()
 	{
 		// Delete all orphaned nodes.
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = 'DELETE t' .
 			' FROM ' . $db->quoteName('#__finder_taxonomy') . ' AS t' .
 			' LEFT JOIN ' . $db->quoteName('#__finder_taxonomy_map') . ' AS m ON m.node_id = t.id' .
@@ -371,5 +342,34 @@ class FinderIndexerTaxonomy
 		$db->execute();
 
 		return $db->getAffectedRows();
+	}
+
+	/**
+	 * Method to store a node to the database.  This method will accept either a branch or a node.
+	 *
+	 * @param   object  $item  The item to store.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
+	 */
+	protected static function storeNode($item)
+	{
+		$db = JFactory::getDbo();
+
+		// Check if we are updating or inserting the item.
+		if (empty($item->id))
+		{
+			// Insert the item.
+			$db->insertObject('#__finder_taxonomy', $item, 'id');
+		}
+		else
+		{
+			// Update the item.
+			$db->updateObject('#__finder_taxonomy', $item, 'id');
+		}
+
+		return true;
 	}
 }

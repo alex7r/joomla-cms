@@ -31,7 +31,7 @@ class JWebClientInspector extends JApplicationWebClient
 	/**
 	 * Allows public access to protected method.
 	 *
-	 * @param   string $userAgent The user-agent string to parse.
+	 * @param   string  $userAgent  The user-agent string to parse.
 	 *
 	 * @return  array
 	 *
@@ -45,7 +45,7 @@ class JWebClientInspector extends JApplicationWebClient
 	/**
 	 * Allows public access to protected method.
 	 *
-	 * @param   string $userAgent The user-agent string to parse.
+	 * @param   string  $userAgent  The user-agent string to parse.
 	 *
 	 * @return  string
 	 *
@@ -59,7 +59,7 @@ class JWebClientInspector extends JApplicationWebClient
 	/**
 	 * Allows public access to protected method.
 	 *
-	 * @param   string $userAgent The user-agent string to parse.
+	 * @param   string  $userAgent  The user-agent string to parse.
 	 *
 	 * @return  string
 	 *
@@ -73,7 +73,7 @@ class JWebClientInspector extends JApplicationWebClient
 	/**
 	 * Allows public access to protected method.
 	 *
-	 * @param   string $acceptEncoding The accept encoding string to parse.
+	 * @param   string  $acceptEncoding  The accept encoding string to parse.
 	 *
 	 * @return  string
 	 *
@@ -87,7 +87,7 @@ class JWebClientInspector extends JApplicationWebClient
 	/**
 	 * Allows public access to protected method.
 	 *
-	 * @param   string $acceptLanguage The accept language string to parse.
+	 * @param   string  $acceptLanguage  The accept language string to parse.
 	 *
 	 * @return  string
 	 *
@@ -101,7 +101,7 @@ class JWebClientInspector extends JApplicationWebClient
 	/**
 	 * Allows public access to protected method.
 	 *
-	 * @param   string $userAgent The user-agent string to parse.
+	 * @param   string  $userAgent  The user-agent string to parse.
 	 *
 	 * @return  void
 	 *
@@ -115,7 +115,7 @@ class JWebClientInspector extends JApplicationWebClient
 	/**
 	 * Method for inspecting protected variables.
 	 *
-	 * @param   string $name The name of the property.
+	 * @param   string  $name  The name of the property.
 	 *
 	 * @return  mixed  The value of the class variable.
 	 *
@@ -136,7 +136,7 @@ class JWebClientInspector extends JApplicationWebClient
 	/**
 	 * loadClientInformation()
 	 *
-	 * @param   string $userAgent The user-agent string to parse.
+	 * @param   string  $userAgent  The user-agent string to parse.
 	 *
 	 * @return  void
 	 *
@@ -174,7 +174,7 @@ class JWebClientInspector extends JApplicationWebClient
 	/**
 	 * loadSystemURIs()
 	 *
-	 * @param   string $ua The user-agent string to parse.
+	 * @param   string  $ua  The user-agent string to parse.
 	 *
 	 * @return  string
 	 *

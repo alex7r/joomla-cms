@@ -21,7 +21,7 @@ class TemplatesModelStyle extends JModelAdmin
 	/**
 	 * The help screen key for the module.
 	 *
-	 * @var        string
+	 * @var	    string
 	 * @since   1.6
 	 */
 	protected $helpKey = 'JHELP_EXTENSIONS_TEMPLATE_MANAGER_STYLES_EDIT';
@@ -45,7 +45,7 @@ class TemplatesModelStyle extends JModelAdmin
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -63,9 +63,31 @@ class TemplatesModelStyle extends JModelAdmin
 	}
 
 	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * @note    Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('administrator');
+
+		// Load the User state.
+		$pk = $app->input->getInt('id');
+		$this->setState('style.id', $pk);
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_templates');
+		$this->setState('params', $params);
+	}
+
+	/**
 	 * Method to delete rows.
 	 *
-	 * @param   array &$pks An array of item ids.
+	 * @param   array  &$pks  An array of item ids.
 	 *
 	 * @return  boolean  Returns true on success, false on failure.
 	 *
@@ -129,39 +151,9 @@ class TemplatesModelStyle extends JModelAdmin
 	}
 
 	/**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param   type   $type   The table type to instantiate
-	 * @param   string $prefix A prefix for the table class name. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A database object
-	 */
-	public function getTable($type = 'Style', $prefix = 'TemplatesTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
-
-	/**
-	 * Custom clean cache method
-	 *
-	 * @param   string  $group     The cache group
-	 * @param   integer $client_id The ID of the client
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
-	{
-		parent::cleanCache('com_templates');
-		parent::cleanCache('_system');
-	}
-
-	/**
 	 * Method to duplicate styles.
 	 *
-	 * @param   array &$pks An array of primary key IDs.
+	 * @param   array  &$pks  An array of primary key IDs.
 	 *
 	 * @return  boolean  True if successful.
 	 *
@@ -196,7 +188,7 @@ class TemplatesModelStyle extends JModelAdmin
 				$table->home = 0;
 
 				// Alter the title.
-				$m            = null;
+				$m = null;
 				$table->title = $this->generateNewTitle(null, null, $table->title);
 
 				if (!$table->check())
@@ -230,9 +222,9 @@ class TemplatesModelStyle extends JModelAdmin
 	/**
 	 * Method to change the title.
 	 *
-	 * @param   integer $category_id The id of the category.
-	 * @param   string  $alias       The alias.
-	 * @param   string  $title       The title.
+	 * @param   integer  $category_id  The id of the category.
+	 * @param   string   $alias        The alias.
+	 * @param   string   $title        The title.
 	 *
 	 * @return  string  New title.
 	 *
@@ -254,8 +246,8 @@ class TemplatesModelStyle extends JModelAdmin
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array   $data     An optional array of data for the form to interogate.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      An optional array of data for the form to interogate.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  JForm  A JForm object on success, false on failure
 	 *
@@ -266,14 +258,14 @@ class TemplatesModelStyle extends JModelAdmin
 		// The folder and element vars are passed when saving the form.
 		if (empty($data))
 		{
-			$item     = $this->getItem();
-			$clientId = $item->client_id;
-			$template = $item->template;
+			$item	   = $this->getItem();
+			$clientId  = $item->client_id;
+			$template  = $item->template;
 		}
 		else
 		{
-			$clientId = JArrayHelper::getValue($data, 'client_id');
-			$template = JArrayHelper::getValue($data, 'template');
+			$clientId  = JArrayHelper::getValue($data, 'client_id');
+			$template  = JArrayHelper::getValue($data, 'template');
 		}
 
 		// Add the default fields directory
@@ -307,9 +299,31 @@ class TemplatesModelStyle extends JModelAdmin
 	}
 
 	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_templates.edit.style.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+
+		$this->preprocessData('com_templates.style', $data);
+
+		return $data;
+	}
+
+	/**
 	 * Method to get a single record.
 	 *
-	 * @param   integer $pk The id of the primary key.
+	 * @param   integer  $pk  The id of the primary key.
 	 *
 	 * @return  mixed  Object on success, false on failure.
 	 */
@@ -360,9 +374,94 @@ class TemplatesModelStyle extends JModelAdmin
 	}
 
 	/**
+	 * Returns a reference to the a Table object, always creating it.
+	 *
+	 * @param   type    $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A database object
+	*/
+	public function getTable($type = 'Style', $prefix = 'TemplatesTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
+	 * Method to allow derived classes to preprocess the form.
+	 *
+	 * @param   JForm   $form   A JForm object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 * @throws  Exception if there is an error in the form event.
+	 */
+	protected function preprocessForm(JForm $form, $data, $group = 'content')
+	{
+		$clientId = $this->getState('item.client_id');
+		$template = $this->getState('item.template');
+		$lang     = JFactory::getLanguage();
+		$client   = JApplicationHelper::getClientInfo($clientId);
+
+		if (!$form->loadFile('style_' . $client->name, true))
+		{
+			throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
+		}
+
+		jimport('joomla.filesystem.path');
+
+		$formFile = JPath::clean($client->path . '/templates/' . $template . '/templateDetails.xml');
+
+		// Load the core and/or local language file(s).
+			$lang->load('tpl_' . $template, $client->path, null, false, true)
+		||	$lang->load('tpl_' . $template, $client->path . '/templates/' . $template, null, false, true);
+
+		if (file_exists($formFile))
+		{
+			// Get the template form.
+			if (!$form->loadFile($formFile, false, '//config'))
+			{
+				throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
+			}
+		}
+
+		// Disable home field if it is default style
+
+		if ((is_array($data) && array_key_exists('home', $data) && $data['home'] == '1')
+			|| ((is_object($data) && isset($data->home) && $data->home == '1')))
+		{
+			$form->setFieldAttribute('home', 'readonly', 'true');
+		}
+
+		// Attempt to load the xml file.
+		if (!$xml = simplexml_load_file($formFile))
+		{
+			throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
+		}
+
+		// Get the help data from the XML file if present.
+		$help = $xml->xpath('/extension/help');
+
+		if (!empty($help))
+		{
+			$helpKey = trim((string) $help[0]['key']);
+			$helpURL = trim((string) $help[0]['url']);
+
+			$this->helpKey = $helpKey ? $helpKey : $this->helpKey;
+			$this->helpURL = $helpURL ? $helpURL : $this->helpURL;
+		}
+
+		// Trigger the default form events.
+		parent::preprocessForm($form, $data, $group);
+	}
+
+	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success.
 	 */
@@ -493,11 +592,11 @@ class TemplatesModelStyle extends JModelAdmin
 	/**
 	 * Method to set a template style as home.
 	 *
-	 * @param   integer $id The primary key ID for the style.
+	 * @param   integer  $id  The primary key ID for the style.
 	 *
 	 * @return  boolean  True if successful.
 	 *
-	 * @throws    Exception
+	 * @throws	Exception
 	 */
 	public function setHome($id = 0)
 	{
@@ -551,11 +650,11 @@ class TemplatesModelStyle extends JModelAdmin
 	/**
 	 * Method to unset a template style as default for a language.
 	 *
-	 * @param   integer $id The primary key ID for the style.
+	 * @param   integer  $id  The primary key ID for the style.
 	 *
 	 * @return  boolean  True if successful.
 	 *
-	 * @throws    Exception
+	 * @throws	Exception
 	 */
 	public function unsetHome($id = 0)
 	{
@@ -612,118 +711,18 @@ class TemplatesModelStyle extends JModelAdmin
 	}
 
 	/**
-	 * Method to auto-populate the model state.
+	 * Custom clean cache method
 	 *
-	 * @note    Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication('administrator');
-
-		// Load the User state.
-		$pk = $app->input->getInt('id');
-		$this->setState('style.id', $pk);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_templates');
-		$this->setState('params', $params);
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_templates.edit.style.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
-		}
-
-		$this->preprocessData('com_templates.style', $data);
-
-		return $data;
-	}
-
-	/**
-	 * Method to allow derived classes to preprocess the form.
-	 *
-	 * @param   JForm  $form  A JForm object.
-	 * @param   mixed  $data  The data expected for the form.
-	 * @param   string $group The name of the plugin group to import (defaults to "content").
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
 	 *
 	 * @return  void
 	 *
 	 * @since   1.6
-	 * @throws  Exception if there is an error in the form event.
 	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
+	protected function cleanCache($group = null, $client_id = 0)
 	{
-		$clientId = $this->getState('item.client_id');
-		$template = $this->getState('item.template');
-		$lang     = JFactory::getLanguage();
-		$client   = JApplicationHelper::getClientInfo($clientId);
-
-		if (!$form->loadFile('style_' . $client->name, true))
-		{
-			throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
-		}
-
-		jimport('joomla.filesystem.path');
-
-		$formFile = JPath::clean($client->path . '/templates/' . $template . '/templateDetails.xml');
-
-		// Load the core and/or local language file(s).
-		$lang->load('tpl_' . $template, $client->path, null, false, true)
-		|| $lang->load('tpl_' . $template, $client->path . '/templates/' . $template, null, false, true);
-
-		if (file_exists($formFile))
-		{
-			// Get the template form.
-			if (!$form->loadFile($formFile, false, '//config'))
-			{
-				throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
-			}
-		}
-
-		// Disable home field if it is default style
-
-		if ((is_array($data) && array_key_exists('home', $data) && $data['home'] == '1')
-			|| ((is_object($data) && isset($data->home) && $data->home == '1'))
-		)
-		{
-			$form->setFieldAttribute('home', 'readonly', 'true');
-		}
-
-		// Attempt to load the xml file.
-		if (!$xml = simplexml_load_file($formFile))
-		{
-			throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
-		}
-
-		// Get the help data from the XML file if present.
-		$help = $xml->xpath('/extension/help');
-
-		if (!empty($help))
-		{
-			$helpKey = trim((string) $help[0]['key']);
-			$helpURL = trim((string) $help[0]['url']);
-
-			$this->helpKey = $helpKey ? $helpKey : $this->helpKey;
-			$this->helpURL = $helpURL ? $helpURL : $this->helpURL;
-		}
-
-		// Trigger the default form events.
-		parent::preprocessForm($form, $data, $group);
+		parent::cleanCache('com_templates');
+		parent::cleanCache('_system');
 	}
 }

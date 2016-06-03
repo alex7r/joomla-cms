@@ -49,7 +49,7 @@ class JErrorInspector extends JError
 	/**
 	 * Stub method to set $levels
 	 *
-	 * @param   array $levels An array of error levels
+	 * @param   array  $levels  An array of error levels
 	 *
 	 * @return  void
 	 */
@@ -61,7 +61,7 @@ class JErrorInspector extends JError
 	/**
 	 * Stub method to set $handlers
 	 *
-	 * @param   array $handlers An array of error handlers
+	 * @param   array  $handlers  An array of error handlers
 	 *
 	 * @return  void
 	 */
@@ -73,7 +73,7 @@ class JErrorInspector extends JError
 	/**
 	 * Stub method to set $stack
 	 *
-	 * @param   array $stack An array of error stacks
+	 * @param   array  $stack  An array of error stacks
 	 *
 	 * @return  void
 	 */

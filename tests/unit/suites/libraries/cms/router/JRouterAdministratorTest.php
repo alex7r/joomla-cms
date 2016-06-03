@@ -34,37 +34,6 @@ class JRouterAdministratorTest extends TestCase
 	protected $object;
 
 	/**
-	 * Tests the parse method
-	 *
-	 * @return  void
-	 * @testdox JRouterAdministrator::parse() returns an array
-	 * @since   3.0
-	 */
-	public function testParse()
-	{
-		$uri = JUri::getInstance('http://localhost');
-
-		$vars = $this->object->parse($uri);
-		$this->assertTrue(is_array($vars));
-	}
-
-	/**
-	 * Tests the build method
-	 *
-	 * @return  void
-	 * @testdox JRouterAdministrator::build() returns an instance of JUri
-	 * @since   3.1
-	 */
-	public function testBuild()
-	{
-		$uri = JUri::getInstance('http://localhost/joomla-cms/intro/to/joomla');
-
-		$this->assertInstanceOf('JUri', $this->object->build($uri));
-
-		$this->assertEquals('/joomla-cms/intro/to/joomla', $uri->getPath());
-	}
-
-	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
@@ -99,5 +68,36 @@ class JRouterAdministratorTest extends TestCase
 		$_SERVER = $this->server;
 
 		parent::tearDown();
+	}
+
+	/**
+	 * Tests the parse method
+	 *
+	 * @return  void
+	 * @testdox JRouterAdministrator::parse() returns an array
+	 * @since   3.0
+	 */
+	public function testParse()
+	{
+		$uri = JUri::getInstance('http://localhost');
+
+		$vars = $this->object->parse($uri);
+		$this->assertTrue(is_array($vars));
+	}
+
+	/**
+	 * Tests the build method
+	 *
+	 * @return  void
+	 * @testdox JRouterAdministrator::build() returns an instance of JUri
+	 * @since   3.1
+	 */
+	public function testBuild()
+	{
+		$uri = JUri::getInstance('http://localhost/joomla-cms/intro/to/joomla');
+
+		$this->assertInstanceOf('JUri', $this->object->build($uri));
+
+		$this->assertEquals('/joomla-cms/intro/to/joomla', $uri->getPath());
 	}
 }

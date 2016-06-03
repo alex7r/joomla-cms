@@ -58,7 +58,7 @@ if ($this->direction == 'rtl')
 }
 
 // Load specific language related CSS
-$file = 'language/' . $lang->getTag() . '/' . $lang->getTag() . '.css';
+$file = 'language/' . $lang->getTag() . '/' . $lang->getTag().'.css';
 
 if (JFile::exists($file))
 {
@@ -86,18 +86,16 @@ else
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>"
-      lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo  $this->language; ?>" lang="<?php echo  $this->language; ?>" dir="<?php echo  $this->direction; ?>" >
 <head>
-	<jdoc:include type="head"/>
-	<!--[if lt IE 9]>
+<jdoc:include type="head" />
+<!--[if lt IE 9]>
 	<script src="<?php echo JUri::root(true); ?>/media/jui/js/html5.js"></script>
-	<![endif]-->
+<![endif]-->
 </head>
 <body class="contentpane">
-<jdoc:include type="message"/>
-<jdoc:include type="component"/>
+	<jdoc:include type="message" />
+	<jdoc:include type="component" />
 </body>
 </html>

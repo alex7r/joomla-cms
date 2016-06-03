@@ -45,18 +45,6 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	protected $nameQuote = '`';
 
 	/**
-	 * Test to see if the PDO ODBC connector is available.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		return class_exists('PDO') && in_array('sqlite', PDO::getAvailableDrivers());
-	}
-
-	/**
 	 * Destructor.
 	 *
 	 * @since   12.1
@@ -83,8 +71,8 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	/**
 	 * Drops a table from the database.
 	 *
-	 * @param   string  $tableName The name of the database table to drop.
-	 * @param   boolean $ifExists  Optionally specify that the table must exist before it is dropped.
+	 * @param   string   $tableName  The name of the database table to drop.
+	 * @param   boolean  $ifExists   Optionally specify that the table must exist before it is dropped.
 	 *
 	 * @return  JDatabaseDriverSqlite  Returns this object to support chaining.
 	 *
@@ -109,8 +97,8 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	 * Note: Using query objects with bound variables is
 	 * preferable to the below.
 	 *
-	 * @param   string  $text  The string to be escaped.
-	 * @param   boolean $extra Unused optional parameter to provide extra escaping.
+	 * @param   string   $text   The string to be escaped.
+	 * @param   boolean  $extra  Unused optional parameter to provide extra escaping.
 	 *
 	 * @return  string  The escaped string.
 	 *
@@ -154,7 +142,7 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	 *
 	 * Note: Doesn't appear to have support in SQLite
 	 *
-	 * @param   mixed $tables A table name or a list of table names.
+	 * @param   mixed  $tables  A table name or a list of table names.
 	 *
 	 * @return  array  A list of the create SQL for the tables.
 	 *
@@ -174,8 +162,8 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	/**
 	 * Retrieves field information about a given table.
 	 *
-	 * @param   string  $table    The name of the database table.
-	 * @param   boolean $typeOnly True to only return field types.
+	 * @param   string   $table     The name of the database table.
+	 * @param   boolean  $typeOnly  True to only return field types.
 	 *
 	 * @return  array  An array of fields for the database table.
 	 *
@@ -187,7 +175,7 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 		$this->connect();
 
 		$columns = array();
-		$query   = $this->getQuery(true);
+		$query = $this->getQuery(true);
 
 		$fieldCasing = $this->getOption(PDO::ATTR_CASE);
 
@@ -214,11 +202,11 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 				// Do some dirty translation to MySQL output.
 				// TODO: Come up with and implement a standard across databases.
 				$columns[$field->NAME] = (object) array(
-					'Field'   => $field->NAME,
-					'Type'    => $field->TYPE,
-					'Null'    => ($field->NOTNULL == '1' ? 'NO' : 'YES'),
+					'Field' => $field->NAME,
+					'Type' => $field->TYPE,
+					'Null' => ($field->NOTNULL == '1' ? 'NO' : 'YES'),
 					'Default' => $field->DFLT_VALUE,
-					'Key'     => ($field->PK != '0' ? 'PRI' : '')
+					'Key' => ($field->PK != '0' ? 'PRI' : '')
 				);
 			}
 		}
@@ -231,7 +219,7 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	/**
 	 * Get the details list of keys for a table.
 	 *
-	 * @param   string $table The name of the table.
+	 * @param   string  $table  The name of the table.
 	 *
 	 * @return  array  An array of the column specification for the table.
 	 *
@@ -242,7 +230,7 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	{
 		$this->connect();
 
-		$keys  = array();
+		$keys = array();
 		$query = $this->getQuery(true);
 
 		$fieldCasing = $this->getOption(PDO::ATTR_CASE);
@@ -317,7 +305,7 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	/**
 	 * Select a database for use.
 	 *
-	 * @param   string $database The name of the database to select for use.
+	 * @param   string  $database  The name of the database to select for use.
 	 *
 	 * @return  boolean  True if the database was successfully selected.
 	 *
@@ -352,7 +340,7 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	/**
 	 * Locks a table in the database.
 	 *
-	 * @param   string $table The name of the table to unlock.
+	 * @param   string  $table  The name of the table to unlock.
 	 *
 	 * @return  JDatabaseDriverSqlite  Returns this object to support chaining.
 	 *
@@ -367,10 +355,10 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	/**
 	 * Renames a table in the database.
 	 *
-	 * @param   string $oldTable The name of the table to be renamed
-	 * @param   string $newTable The new name for the table.
-	 * @param   string $backup   Not used by Sqlite.
-	 * @param   string $prefix   Not used by Sqlite.
+	 * @param   string  $oldTable  The name of the table to be renamed
+	 * @param   string  $newTable  The new name for the table.
+	 * @param   string  $backup    Not used by Sqlite.
+	 * @param   string  $prefix    Not used by Sqlite.
 	 *
 	 * @return  JDatabaseDriverSqlite  Returns this object to support chaining.
 	 *
@@ -398,9 +386,21 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	}
 
 	/**
+	 * Test to see if the PDO ODBC connector is available.
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		return class_exists('PDO') && in_array('sqlite', PDO::getAvailableDrivers());
+	}
+
+	/**
 	 * Method to commit a transaction.
 	 *
-	 * @param   boolean $toSavepoint If true, commit to the last savepoint.
+	 * @param   boolean  $toSavepoint  If true, commit to the last savepoint.
 	 *
 	 * @return  void
 	 *
@@ -424,7 +424,7 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	/**
 	 * Method to roll back a transaction.
 	 *
-	 * @param   boolean $toSavepoint If true, rollback to the last savepoint.
+	 * @param   boolean  $toSavepoint  If true, rollback to the last savepoint.
 	 *
 	 * @return  void
 	 *
@@ -454,7 +454,7 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	/**
 	 * Method to initialize a transaction.
 	 *
-	 * @param   boolean $asSavepoint If true and a transaction is already active, a savepoint will be created.
+	 * @param   boolean  $asSavepoint  If true and a transaction is already active, a savepoint will be created.
 	 *
 	 * @return  void
 	 *
@@ -482,7 +482,7 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	/**
 	 * Get the query strings to alter the character set and collation of a table.
 	 *
-	 * @param   string $tableName The name of the table
+	 * @param   string  $tableName  The name of the table
 	 *
 	 * @return  string[]  The queries required to alter the table's character set and collation
 	 *
@@ -497,9 +497,9 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 	 * Return the query string to create new Database.
 	 * Each database driver, other than MySQL, need to override this member to return correct string.
 	 *
-	 * @param   stdClass $options Object used to pass user and database name to database driver.
-	 *                            This object must have "db_name" and "db_user" set.
-	 * @param   boolean  $utf     True if the database supports the UTF-8 character set.
+	 * @param   stdClass  $options  Object used to pass user and database name to database driver.
+	 *                   This object must have "db_name" and "db_user" set.
+	 * @param   boolean   $utf      True if the database supports the UTF-8 character set.
 	 *
 	 * @return  string  The query that creates database
 	 *

@@ -56,7 +56,7 @@ class Updatecron extends JApplicationCli
 		// Get the update cache time
 		$component = JComponentHelper::getComponent('com_installer');
 
-		$params        = $component->params;
+		$params = $component->params;
 		$cache_timeout = $params->get('cachetimeout', 6, 'int');
 		$cache_timeout = 3600 * $cache_timeout;
 

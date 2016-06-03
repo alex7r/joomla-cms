@@ -21,7 +21,7 @@ class SearchViewSearch extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -144,7 +144,7 @@ class SearchViewSearch extends JViewLegacy
 
 			for ($i = 0, $count = count($results); $i < $count; $i++)
 			{
-				$row = &$results[$i]->text;
+				$row = & $results[$i]->text;
 
 				if ($state->get('match') == 'exact')
 				{
@@ -190,7 +190,7 @@ class SearchViewSearch extends JViewLegacy
 							// Iconv transliterates '€' to 'EUR'
 							// TODO: add other expanding translations?
 							$eur_compensation = $pos > 0 ? substr_count($row, "\xE2\x82\xAC", 0, $pos) * 2 : 0;
-							$pos -= $eur_compensation;
+							$pos              -= $eur_compensation;
 
 							if ($correctPos)
 							{
@@ -214,7 +214,7 @@ class SearchViewSearch extends JViewLegacy
 							// Iconv transliterates '€' to 'EUR'
 							// TODO: add other expanding translations?
 							$eur_compensation = $pos > 0 ? substr_count($row, "\xE2\x82\xAC", 0, $pos) * 2 : 0;
-							$pos -= $eur_compensation;
+							$pos              -= $eur_compensation;
 
 							if ($correctPos)
 							{
@@ -240,7 +240,7 @@ class SearchViewSearch extends JViewLegacy
 					$cnt                = 0;
 					$lastHighlighterEnd = -1;
 
-					foreach ($posCollector as $pos => $hlword)
+					foreach ($posCollector as  $pos => $hlword)
 					{
 						$pos += $cnt * $highlighterLen;
 
@@ -261,7 +261,7 @@ class SearchViewSearch extends JViewLegacy
 							else
 							{
 								$hlwordLen = JString::strlen($hlword);
-								$row       = JString::substr($row, 0, $pos) . $hl1 . JString::substr($row, $pos, JString::strlen($hlword))
+								$row = JString::substr($row, 0, $pos) . $hl1 . JString::substr($row, $pos, JString::strlen($hlword))
 									. $hl2 . JString::substr($row, $pos + JString::strlen($hlword));
 							}
 
@@ -271,7 +271,7 @@ class SearchViewSearch extends JViewLegacy
 					}
 				}
 
-				$result = &$results[$i];
+				$result = & $results[$i];
 
 				if ($result->created)
 				{

@@ -59,13 +59,13 @@ class ModulesModelModule extends JModelAdmin
 	 */
 	protected $batch_commands = array(
 		'assetgroup_id' => 'batchAccess',
-		'language_id'   => 'batchLanguage',
+		'language_id' => 'batchLanguage',
 	);
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -86,9 +86,224 @@ class ModulesModelModule extends JModelAdmin
 	}
 
 	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('administrator');
+
+		// Load the User state.
+		$pk = $app->input->getInt('id');
+
+		if (!$pk)
+		{
+			if ($extensionId = (int) $app->getUserState('com_modules.add.module.extension_id'))
+			{
+				$this->setState('extension.id', $extensionId);
+			}
+		}
+
+		$this->setState('module.id', $pk);
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_modules');
+		$this->setState('params', $params);
+	}
+
+	/**
+	 * Batch copy modules to a new position or current.
+	 *
+	 * @param   integer  $value     The new value matching a module position.
+	 * @param   array    $pks       An array of row IDs.
+	 * @param   array    $contexts  An array of item contexts.
+	 *
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
+	 */
+	protected function batchCopy($value, $pks, $contexts)
+	{
+		// Set the variables
+		$user = JFactory::getUser();
+		$table = $this->getTable();
+		$newIds = array();
+
+		foreach ($pks as $pk)
+		{
+			if ($user->authorise('core.create', 'com_modules'))
+			{
+				$table->reset();
+				$table->load($pk);
+
+				// Set the new position
+				if ($value == 'noposition')
+				{
+					$position = '';
+				}
+				elseif ($value == 'nochange')
+				{
+					$position = $table->position;
+				}
+				else
+				{
+					$position = $value;
+				}
+
+				$table->position = $position;
+
+				// Alter the title if necessary
+				$data = $this->generateNewTitle(0, $table->title, $table->position);
+				$table->title = $data['0'];
+
+				// Reset the ID because we are making a copy
+				$table->id = 0;
+
+				// Unpublish the new module
+				$table->published = 0;
+
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+
+					return false;
+				}
+
+				// Get the new item ID
+				$newId = $table->get('id');
+
+				// Add the new ID to the array
+				$newIds[$pk] = $newId;
+
+				// Now we need to handle the module assignments
+				$db = $this->getDbo();
+				$query = $db->getQuery(true)
+					->select($db->quoteName('menuid'))
+					->from($db->quoteName('#__modules_menu'))
+					->where($db->quoteName('moduleid') . ' = ' . $pk);
+				$db->setQuery($query);
+				$menus = $db->loadColumn();
+
+				// Insert the new records into the table
+				foreach ($menus as $menu)
+				{
+					$query->clear()
+						->insert($db->quoteName('#__modules_menu'))
+						->columns(array($db->quoteName('moduleid'), $db->quoteName('menuid')))
+						->values($newId . ', ' . $menu);
+					$db->setQuery($query);
+					$db->execute();
+				}
+			}
+			else
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
+
+				return false;
+			}
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return $newIds;
+	}
+
+	/**
+	 * Batch move modules to a new position or current.
+	 *
+	 * @param   integer  $value     The new value matching a module position.
+	 * @param   array    $pks       An array of row IDs.
+	 * @param   array    $contexts  An array of item contexts.
+	 *
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
+	 */
+	protected function batchMove($value, $pks, $contexts)
+	{
+		// Set the variables
+		$user = JFactory::getUser();
+		$table = $this->getTable();
+
+		foreach ($pks as $pk)
+		{
+			if ($user->authorise('core.edit', 'com_modules'))
+			{
+				$table->reset();
+				$table->load($pk);
+
+				// Set the new position
+				if ($value == 'noposition')
+				{
+					$position = '';
+				}
+				elseif ($value == 'nochange')
+				{
+					$position = $table->position;
+				}
+				else
+				{
+					$position = $value;
+				}
+
+				$table->position = $position;
+
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+
+					return false;
+				}
+			}
+			else
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+				return false;
+			}
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Method to test whether a record can have its state edited.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
+	 *
+	 * @since   3.2
+	 */
+	protected function canEditState($record)
+	{
+		$user = JFactory::getUser();
+
+		// Check for existing module.
+		if (!empty($record->id))
+		{
+			return $user->authorise('core.edit.state', 'com_modules.module.' . (int) $record->id);
+		}
+		// Default to component settings if module not known.
+		else
+		{
+			return parent::canEditState('com_modules');
+		}
+	}
+
+	/**
 	 * Method to delete rows.
 	 *
-	 * @param   array &$pks An array of item ids.
+	 * @param   array  &$pks  An array of item ids.
 	 *
 	 * @return  boolean  Returns true on success, false on failure.
 	 *
@@ -158,7 +373,7 @@ class ModulesModelModule extends JModelAdmin
 	/**
 	 * Method to duplicate modules.
 	 *
-	 * @param   array &$pks An array of primary key IDs.
+	 * @param   array  &$pks  An array of primary key IDs.
 	 *
 	 * @return  boolean  True if successful.
 	 *
@@ -193,7 +408,7 @@ class ModulesModelModule extends JModelAdmin
 					$table->title = preg_replace('#\(\d+\)$#', '(' . ($m[1] + 1) . ')', $table->title);
 				}
 
-				$data         = $this->generateNewTitle(0, $table->title, $table->position);
+				$data = $this->generateNewTitle(0, $table->title, $table->position);
 				$table->title = $data[0];
 
 				// Unpublish duplicate module
@@ -250,10 +465,46 @@ class ModulesModelModule extends JModelAdmin
 	}
 
 	/**
+	 * Method to change the title.
+	 *
+	 * @param   integer  $category_id  The id of the category. Not used here.
+	 * @param   string   $title        The title.
+	 * @param   string   $position     The position.
+	 *
+	 * @return  array  Contains the modified title.
+	 *
+	 * @since   2.5
+	 */
+	protected function generateNewTitle($category_id, $title, $position)
+	{
+		// Alter the title & alias
+		$table = $this->getTable();
+
+		while ($table->load(array('position' => $position, 'title' => $title)))
+		{
+			$title = JString::increment($title);
+		}
+
+		return array($title);
+	}
+
+	/**
+	 * Method to get the client object
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	public function &getClient()
+	{
+		return $this->_client;
+	}
+
+	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array   $data     Data for the form.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  JForm  A JForm object on success, false on failure
 	 *
@@ -301,8 +552,7 @@ class ModulesModelModule extends JModelAdmin
 		 * Modify the form based on Edit State access controls.
 		 */
 		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_modules.module.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_modules'))
-		)
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_modules'))		)
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -322,9 +572,56 @@ class ModulesModelModule extends JModelAdmin
 	}
 
 	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		$app = JFactory::getApplication();
+
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_modules.edit.module.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+
+			// Pre-select some filters (Status, Module Position, Language, Access Level) in edit form if those have been selected in Module Manager
+			if (!$data->id)
+			{
+				$filters = (array) $app->getUserState('com_modules.modules.filter');
+				$data->set('published', $app->input->getInt('published', ((isset($filters['state']) && $filters['state'] !== '') ? $filters['state'] : null)));
+				$data->set('position', $app->input->getInt('position', (!empty($filters['position']) ? $filters['position'] : null)));
+				$data->set('language', $app->input->getString('language', (!empty($filters['language']) ? $filters['language'] : null)));
+				$data->set('access', $app->input->getInt('access', (!empty($filters['access']) ? $filters['access'] : JFactory::getConfig()->get('access'))));
+			}
+
+			// Avoid to delete params of a second module opened in a new browser tab while new one is not saved yet.
+			if (empty($data->params))
+			{
+
+				// This allows us to inject parameter settings into a new module.
+				$params = $app->getUserState('com_modules.add.module.params');
+
+				if (is_array($params))
+				{
+					$data->set('params', $params);
+				}
+			}
+		}
+
+		$this->preprocessData('com_modules.module', $data);
+
+		return $data;
+	}
+
+	/**
 	 * Method to get a single record.
 	 *
-	 * @param   integer $pk The id of the primary key.
+	 * @param   integer  $pk  The id of the primary key.
 	 *
 	 * @return  mixed  Object on success, false on failure.
 	 *
@@ -470,11 +767,104 @@ class ModulesModelModule extends JModelAdmin
 	}
 
 	/**
+	 * Returns a reference to the a Table object, always creating it.
+	 *
+	 * @param   string  $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A database object
+	 *
+	 * @since   1.6
+	 */
+	public function getTable($type = 'Module', $prefix = 'JTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
+	 * Prepare and sanitise the table prior to saving.
+	 *
+	 * @param   JTable  $table  The database object
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function prepareTable($table)
+	{
+		$table->title    = htmlspecialchars_decode($table->title, ENT_QUOTES);
+		$table->position = trim($table->position);
+	}
+
+	/**
+	 * Method to preprocess the form
+	 *
+	 * @param   JForm   $form   A form object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 * @throws  Exception if there is an error loading the form.
+	 */
+	protected function preprocessForm(JForm $form, $data, $group = 'content')
+	{
+		jimport('joomla.filesystem.path');
+
+		$lang     = JFactory::getLanguage();
+		$clientId = $this->getState('item.client_id');
+		$module   = $this->getState('item.module');
+
+		$client   = JApplicationHelper::getClientInfo($clientId);
+		$formFile = JPath::clean($client->path . '/modules/' . $module . '/' . $module . '.xml');
+
+		// Load the core and/or local language file(s).
+		$lang->load($module, $client->path, null, false, true)
+		||	$lang->load($module, $client->path . '/modules/' . $module, null, false, true);
+
+		if (file_exists($formFile))
+		{
+			// Get the module form.
+			if (!$form->loadFile($formFile, false, '//config'))
+			{
+				throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
+			}
+
+			// Attempt to load the xml file.
+			if (!$xml = simplexml_load_file($formFile))
+			{
+				throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
+			}
+
+			// Get the help data from the XML file if present.
+			$help = $xml->xpath('/extension/help');
+
+			if (!empty($help))
+			{
+				$helpKey = trim((string) $help[0]['key']);
+				$helpURL = trim((string) $help[0]['url']);
+
+				$this->helpKey = $helpKey ? $helpKey : $this->helpKey;
+				$this->helpURL = $helpURL ? $helpURL : $this->helpURL;
+			}
+		}
+
+		// Load the default advanced params
+		JForm::addFormPath(JPATH_ADMINISTRATOR . '/components/com_modules/models/forms');
+		$form->loadFile('advanced', false);
+
+		// Trigger the default form events.
+		parent::preprocessForm($form, $data, $group);
+	}
+
+	/**
 	 * Loads ContentHelper for filters before validating data.
 	 *
-	 * @param   object $form  The form to validate against.
-	 * @param   array  $data  The data to validate.
-	 * @param   string $group The name of the group(defaults to null).
+	 * @param   object  $form   The form to validate against.
+	 * @param   array   $data   The data to validate.
+	 * @param   string  $group  The name of the group(defaults to null).
 	 *
 	 * @return  mixed  Array of filtered data if valid, false otherwise.
 	 *
@@ -490,7 +880,7 @@ class ModulesModelModule extends JModelAdmin
 	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -686,194 +1076,28 @@ class ModulesModelModule extends JModelAdmin
 	}
 
 	/**
-	 * Prepare and sanitise the table prior to saving.
+	 * A protected method to get a set of ordering conditions.
 	 *
-	 * @param   JTable $table The database object
+	 * @param   object  $table  A record object.
 	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function prepareTable($table)
-	{
-		$table->title    = htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->position = trim($table->position);
-	}
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
+	 * @return  array  An array of conditions to add to add to ordering queries.
 	 *
 	 * @since   1.6
 	 */
-	protected function populateState()
+	protected function getReorderConditions($table)
 	{
-		$app = JFactory::getApplication('administrator');
+		$condition = array();
+		$condition[] = 'client_id = ' . (int) $table->client_id;
+		$condition[] = 'position = ' . $this->_db->quote($table->position);
 
-		// Load the User state.
-		$pk = $app->input->getInt('id');
-
-		if (!$pk)
-		{
-			if ($extensionId = (int) $app->getUserState('com_modules.add.module.extension_id'))
-			{
-				$this->setState('extension.id', $extensionId);
-			}
-		}
-
-		$this->setState('module.id', $pk);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_modules');
-		$this->setState('params', $params);
-	}
-
-	/**
-	 * Batch copy modules to a new position or current.
-	 *
-	 * @param   integer $value    The new value matching a module position.
-	 * @param   array   $pks      An array of row IDs.
-	 * @param   array   $contexts An array of item contexts.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	protected function batchCopy($value, $pks, $contexts)
-	{
-		// Set the variables
-		$user   = JFactory::getUser();
-		$table  = $this->getTable();
-		$newIds = array();
-
-		foreach ($pks as $pk)
-		{
-			if ($user->authorise('core.create', 'com_modules'))
-			{
-				$table->reset();
-				$table->load($pk);
-
-				// Set the new position
-				if ($value == 'noposition')
-				{
-					$position = '';
-				}
-				elseif ($value == 'nochange')
-				{
-					$position = $table->position;
-				}
-				else
-				{
-					$position = $value;
-				}
-
-				$table->position = $position;
-
-				// Alter the title if necessary
-				$data         = $this->generateNewTitle(0, $table->title, $table->position);
-				$table->title = $data['0'];
-
-				// Reset the ID because we are making a copy
-				$table->id = 0;
-
-				// Unpublish the new module
-				$table->published = 0;
-
-				if (!$table->store())
-				{
-					$this->setError($table->getError());
-
-					return false;
-				}
-
-				// Get the new item ID
-				$newId = $table->get('id');
-
-				// Add the new ID to the array
-				$newIds[$pk] = $newId;
-
-				// Now we need to handle the module assignments
-				$db    = $this->getDbo();
-				$query = $db->getQuery(true)
-					->select($db->quoteName('menuid'))
-					->from($db->quoteName('#__modules_menu'))
-					->where($db->quoteName('moduleid') . ' = ' . $pk);
-				$db->setQuery($query);
-				$menus = $db->loadColumn();
-
-				// Insert the new records into the table
-				foreach ($menus as $menu)
-				{
-					$query->clear()
-						->insert($db->quoteName('#__modules_menu'))
-						->columns(array($db->quoteName('moduleid'), $db->quoteName('menuid')))
-						->values($newId . ', ' . $menu);
-					$db->setQuery($query);
-					$db->execute();
-				}
-			}
-			else
-			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
-
-				return false;
-			}
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return $newIds;
-	}
-
-	/**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param   string $type   The table type to instantiate
-	 * @param   string $prefix A prefix for the table class name. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A database object
-	 *
-	 * @since   1.6
-	 */
-	public function getTable($type = 'Module', $prefix = 'JTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
-
-	/**
-	 * Method to change the title.
-	 *
-	 * @param   integer $category_id The id of the category. Not used here.
-	 * @param   string  $title       The title.
-	 * @param   string  $position    The position.
-	 *
-	 * @return  array  Contains the modified title.
-	 *
-	 * @since   2.5
-	 */
-	protected function generateNewTitle($category_id, $title, $position)
-	{
-		// Alter the title & alias
-		$table = $this->getTable();
-
-		while ($table->load(array('position' => $position, 'title' => $title)))
-		{
-			$title = JString::increment($title);
-		}
-
-		return array($title);
+		return $condition;
 	}
 
 	/**
 	 * Custom clean cache method for different clients
 	 *
-	 * @param   string  $group     The name of the plugin group to import (defaults to null).
-	 * @param   integer $client_id The client ID. [optional]
+	 * @param   string   $group      The name of the plugin group to import (defaults to null).
+	 * @param   integer  $client_id  The client ID. [optional]
 	 *
 	 * @return  void
 	 *
@@ -882,230 +1106,5 @@ class ModulesModelModule extends JModelAdmin
 	protected function cleanCache($group = null, $client_id = 0)
 	{
 		parent::cleanCache('com_modules', $this->getClient());
-	}
-
-	/**
-	 * Method to get the client object
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	public function &getClient()
-	{
-		return $this->_client;
-	}
-
-	/**
-	 * Batch move modules to a new position or current.
-	 *
-	 * @param   integer $value    The new value matching a module position.
-	 * @param   array   $pks      An array of row IDs.
-	 * @param   array   $contexts An array of item contexts.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	protected function batchMove($value, $pks, $contexts)
-	{
-		// Set the variables
-		$user  = JFactory::getUser();
-		$table = $this->getTable();
-
-		foreach ($pks as $pk)
-		{
-			if ($user->authorise('core.edit', 'com_modules'))
-			{
-				$table->reset();
-				$table->load($pk);
-
-				// Set the new position
-				if ($value == 'noposition')
-				{
-					$position = '';
-				}
-				elseif ($value == 'nochange')
-				{
-					$position = $table->position;
-				}
-				else
-				{
-					$position = $value;
-				}
-
-				$table->position = $position;
-
-				if (!$table->store())
-				{
-					$this->setError($table->getError());
-
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-				return false;
-			}
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Method to test whether a record can have its state edited.
-	 *
-	 * @param   object $record A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
-	 *
-	 * @since   3.2
-	 */
-	protected function canEditState($record)
-	{
-		$user = JFactory::getUser();
-
-		// Check for existing module.
-		if (!empty($record->id))
-		{
-			return $user->authorise('core.edit.state', 'com_modules.module.' . (int) $record->id);
-		}
-		// Default to component settings if module not known.
-		else
-		{
-			return parent::canEditState('com_modules');
-		}
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		$app = JFactory::getApplication();
-
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_modules.edit.module.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
-
-			// Pre-select some filters (Status, Module Position, Language, Access Level) in edit form if those have been selected in Module Manager
-			if (!$data->id)
-			{
-				$filters = (array) $app->getUserState('com_modules.modules.filter');
-				$data->set('published', $app->input->getInt('published', ((isset($filters['state']) && $filters['state'] !== '') ? $filters['state'] : null)));
-				$data->set('position', $app->input->getInt('position', (!empty($filters['position']) ? $filters['position'] : null)));
-				$data->set('language', $app->input->getString('language', (!empty($filters['language']) ? $filters['language'] : null)));
-				$data->set('access', $app->input->getInt('access', (!empty($filters['access']) ? $filters['access'] : JFactory::getConfig()->get('access'))));
-			}
-
-			// Avoid to delete params of a second module opened in a new browser tab while new one is not saved yet.
-			if (empty($data->params))
-			{
-
-				// This allows us to inject parameter settings into a new module.
-				$params = $app->getUserState('com_modules.add.module.params');
-
-				if (is_array($params))
-				{
-					$data->set('params', $params);
-				}
-			}
-		}
-
-		$this->preprocessData('com_modules.module', $data);
-
-		return $data;
-	}
-
-	/**
-	 * Method to preprocess the form
-	 *
-	 * @param   JForm  $form  A form object.
-	 * @param   mixed  $data  The data expected for the form.
-	 * @param   string $group The name of the plugin group to import (defaults to "content").
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 * @throws  Exception if there is an error loading the form.
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
-	{
-		jimport('joomla.filesystem.path');
-
-		$lang     = JFactory::getLanguage();
-		$clientId = $this->getState('item.client_id');
-		$module   = $this->getState('item.module');
-
-		$client   = JApplicationHelper::getClientInfo($clientId);
-		$formFile = JPath::clean($client->path . '/modules/' . $module . '/' . $module . '.xml');
-
-		// Load the core and/or local language file(s).
-		$lang->load($module, $client->path, null, false, true)
-		|| $lang->load($module, $client->path . '/modules/' . $module, null, false, true);
-
-		if (file_exists($formFile))
-		{
-			// Get the module form.
-			if (!$form->loadFile($formFile, false, '//config'))
-			{
-				throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
-			}
-
-			// Attempt to load the xml file.
-			if (!$xml = simplexml_load_file($formFile))
-			{
-				throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
-			}
-
-			// Get the help data from the XML file if present.
-			$help = $xml->xpath('/extension/help');
-
-			if (!empty($help))
-			{
-				$helpKey = trim((string) $help[0]['key']);
-				$helpURL = trim((string) $help[0]['url']);
-
-				$this->helpKey = $helpKey ? $helpKey : $this->helpKey;
-				$this->helpURL = $helpURL ? $helpURL : $this->helpURL;
-			}
-		}
-
-		// Load the default advanced params
-		JForm::addFormPath(JPATH_ADMINISTRATOR . '/components/com_modules/models/forms');
-		$form->loadFile('advanced', false);
-
-		// Trigger the default form events.
-		parent::preprocessForm($form, $data, $group);
-	}
-
-	/**
-	 * A protected method to get a set of ordering conditions.
-	 *
-	 * @param   object $table A record object.
-	 *
-	 * @return  array  An array of conditions to add to add to ordering queries.
-	 *
-	 * @since   1.6
-	 */
-	protected function getReorderConditions($table)
-	{
-		$condition   = array();
-		$condition[] = 'client_id = ' . (int) $table->client_id;
-		$condition[] = 'position = ' . $this->_db->quote($table->position);
-
-		return $condition;
 	}
 }

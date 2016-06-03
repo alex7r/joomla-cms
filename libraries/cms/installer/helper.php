@@ -23,8 +23,8 @@ abstract class JInstallerHelper
 	/**
 	 * Downloads a package
 	 *
-	 * @param   string $url    URL of file to download
-	 * @param   mixed  $target Download target filename or false to get the filename from the URL
+	 * @param   string  $url     URL of file to download
+	 * @param   mixed   $target  Download target filename or false to get the filename from the URL
 	 *
 	 * @return  string|boolean  Path to downloaded package or boolean false on failure
 	 *
@@ -46,7 +46,7 @@ abstract class JInstallerHelper
 		$headers = array();
 		JPluginHelper::importPlugin('installer');
 		$dispatcher = JEventDispatcher::getInstance();
-		$results    = $dispatcher->trigger('onInstallerBeforePackageDownload', array(&$url, &$headers));
+		$results = $dispatcher->trigger('onInstallerBeforePackageDownload', array(&$url, &$headers));
 
 		try
 		{
@@ -72,10 +72,9 @@ abstract class JInstallerHelper
 
 		// Parse the Content-Disposition header to get the file name
 		if (isset($response->headers['Content-Disposition'])
-			&& preg_match("/\s*filename\s?=\s?(.*)/", $response->headers['Content-Disposition'], $parts)
-		)
+			&& preg_match("/\s*filename\s?=\s?(.*)/", $response->headers['Content-Disposition'], $parts))
 		{
-			$flds   = explode(';', $parts[1]);
+			$flds = explode(';', $parts[1]);
 			$target = trim($flds[0], '"');
 		}
 
@@ -103,32 +102,11 @@ abstract class JInstallerHelper
 	}
 
 	/**
-	 * Gets a file name out of a url
-	 *
-	 * @param   string $url URL to get name from
-	 *
-	 * @return  mixed   String filename or boolean false if failed
-	 *
-	 * @since   3.1
-	 */
-	public static function getFilenameFromUrl($url)
-	{
-		if (is_string($url))
-		{
-			$parts = explode('/', $url);
-
-			return $parts[count($parts) - 1];
-		}
-
-		return false;
-	}
-
-	/**
 	 * Unpacks a file and verifies it as a Joomla element package
 	 * Supports .gz .tar .tar.gz and .zip
 	 *
-	 * @param   string  $p_filename        The uploaded package filename or install directory
-	 * @param   boolean $alwaysReturnArray If should return false (and leave garbage behind) or return $retval['type']=false
+	 * @param   string   $p_filename         The uploaded package filename or install directory
+	 * @param   boolean  $alwaysReturnArray  If should return false (and leave garbage behind) or return $retval['type']=false
 	 *
 	 * @return  array|boolean  Array on success or boolean false on failure
 	 *
@@ -143,7 +121,7 @@ abstract class JInstallerHelper
 		$tmpdir = uniqid('install_');
 
 		// Clean the paths to use for archive extraction
-		$extractdir  = JPath::clean(dirname($p_filename) . '/' . $tmpdir);
+		$extractdir = JPath::clean(dirname($p_filename) . '/' . $tmpdir);
 		$archivename = JPath::clean($archivename);
 
 		// Do the unpacking of the archive
@@ -183,7 +161,7 @@ abstract class JInstallerHelper
 		 * Let's set the extraction directory and package file in the result array so we can
 		 * cleanup everything properly later on.
 		 */
-		$retval['extractdir']  = $extractdir;
+		$retval['extractdir'] = $extractdir;
 		$retval['packagefile'] = $archivename;
 
 		/*
@@ -228,7 +206,7 @@ abstract class JInstallerHelper
 	/**
 	 * Method to detect the extension type from a package directory
 	 *
-	 * @param   string $p_dir Path to package directory
+	 * @param   string  $p_dir  Path to package directory
 	 *
 	 * @return  mixed  Extension type string or boolean false on fail
 	 *
@@ -278,10 +256,31 @@ abstract class JInstallerHelper
 	}
 
 	/**
+	 * Gets a file name out of a url
+	 *
+	 * @param   string  $url  URL to get name from
+	 *
+	 * @return  mixed   String filename or boolean false if failed
+	 *
+	 * @since   3.1
+	 */
+	public static function getFilenameFromUrl($url)
+	{
+		if (is_string($url))
+		{
+			$parts = explode('/', $url);
+
+			return $parts[count($parts) - 1];
+		}
+
+		return false;
+	}
+
+	/**
 	 * Clean up temporary uploaded package and unpacked extension
 	 *
-	 * @param   string $package   Path to the uploaded package file
-	 * @param   string $resultdir Path to the unpacked extension
+	 * @param   string  $package    Path to the uploaded package file
+	 * @param   string  $resultdir  Path to the unpacked extension
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -313,11 +312,11 @@ abstract class JInstallerHelper
 	 * Splits contents of a sql file into array of discreet queries.
 	 * Queries need to be delimited with end of statement marker ';'
 	 *
-	 * @param   string $query The SQL statement.
+	 * @param   string  $query  The SQL statement.
 	 *
 	 * @return  array  Array of queries
 	 *
-	 * @since       3.1
+	 * @since   3.1
 	 * @deprecated  13.3  Use JDatabaseDriver::splitSql() directly
 	 * @codeCoverageIgnore
 	 */

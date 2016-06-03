@@ -19,7 +19,7 @@ class AdminViewSysinfo extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 *
@@ -73,7 +73,7 @@ class AdminViewSysinfo extends JViewLegacy
 		$model = $this->getModel();
 
 		return array(
-			'info'        => array(
+			'info' => array(
 				'title' => JText::_('COM_ADMIN_SYSTEM_INFORMATION', true),
 				'data'  => $model->getSafeData('info')
 			),
@@ -81,7 +81,7 @@ class AdminViewSysinfo extends JViewLegacy
 				'title' => JText::_('COM_ADMIN_PHP_SETTINGS', true),
 				'data'  => $model->getSafeData('phpSettings')
 			),
-			'config'      => array(
+			'config' => array(
 				'title' => JText::_('COM_ADMIN_CONFIGURATION_FILE', true),
 				'data'  => $model->getSafeData('config')
 			),
@@ -89,11 +89,11 @@ class AdminViewSysinfo extends JViewLegacy
 				'title' => JText::_('COM_ADMIN_DIRECTORY_PERMISSIONS', true),
 				'data'  => $model->getSafeData('directory', true)
 			),
-			'phpInfo'     => array(
+			'phpInfo' => array(
 				'title' => JText::_('COM_ADMIN_PHP_INFORMATION', true),
 				'data'  => $model->getSafeData('phpInfoArray')
 			),
-			'extensions'  => array(
+			'extensions' => array(
 				'title' => JText::_('COM_ADMIN_EXTENSIONS', true),
 				'data'  => $model->getSafeData('extensions')
 			)
@@ -103,9 +103,9 @@ class AdminViewSysinfo extends JViewLegacy
 	/**
 	 * Render a section
 	 *
-	 * @param   string  $sectionName Name of the section to render
-	 * @param   array   $sectionData Data of the section to render
-	 * @param   integer $level       Depth level for indentation
+	 * @param   string   $sectionName  Name of the section to render
+	 * @param   array    $sectionData  Data of the section to render
+	 * @param   integer  $level        Depth level for indentation
 	 *
 	 * @return  string
 	 *
@@ -156,9 +156,9 @@ class AdminViewSysinfo extends JViewLegacy
 	/**
 	 * Specific rendering for directories
 	 *
-	 * @param   string  $sectionName Name of the section
-	 * @param   array   $sectionData Directories information
-	 * @param   integer $level       Starting level
+	 * @param   string   $sectionName  Name of the section
+	 * @param   array    $sectionData  Directories information
+	 * @param   integer  $level        Starting level
 	 *
 	 * @return  string
 	 *

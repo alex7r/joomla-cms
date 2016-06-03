@@ -23,7 +23,7 @@ class JGithubPackageUsersKeys extends JGithubPackage
 	 *
 	 * Lists the verified public keys for a user. This is accessible by anyone.
 	 *
-	 * @param   string $user The name of the user.
+	 * @param   string  $user  The name of the user.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -63,7 +63,7 @@ class JGithubPackageUsersKeys extends JGithubPackage
 	/**
 	 * Get a single public key.
 	 *
-	 * @param   integer $id The id of the key.
+	 * @param   integer  $id  The id of the key.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -82,8 +82,8 @@ class JGithubPackageUsersKeys extends JGithubPackage
 	/**
 	 * Create a public key
 	 *
-	 * @param   string $title The title of the key.
-	 * @param   string $key   The key.
+	 * @param   string  $title  The title of the key.
+	 * @param   string  $key    The key.
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -108,9 +108,9 @@ class JGithubPackageUsersKeys extends JGithubPackage
 	/**
 	 * Update a public key.
 	 *
-	 * @param   integer $id    The id of the key.
-	 * @param   string  $title The title of the key.
-	 * @param   string  $key   The key.
+	 * @param   integer  $id     The id of the key.
+	 * @param   string   $title  The title of the key.
+	 * @param   string   $key    The key.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -134,7 +134,7 @@ class JGithubPackageUsersKeys extends JGithubPackage
 	/**
 	 * Delete a public key.
 	 *
-	 * @param   integer $id The id of the key.
+	 * @param   integer  $id  The id of the key.
 	 *
 	 * @since 3.3 (CMS)
 	 *

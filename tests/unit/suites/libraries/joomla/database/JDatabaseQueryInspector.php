@@ -19,8 +19,8 @@ class JDatabaseQueryInspector extends JDatabaseQuery
 	/**
 	 * Sets any property from the class.
 	 *
-	 * @param   string $property The name of the class property.
-	 * @param   string $value    The value of the class property.
+	 * @param   string  $property  The name of the class property.
+	 * @param   string  $value     The value of the class property.
 	 *
 	 * @return  void
 	 *
@@ -34,7 +34,7 @@ class JDatabaseQueryInspector extends JDatabaseQuery
 	/**
 	 * Gets any property from the class.
 	 *
-	 * @param   string $property The name of the class property.
+	 * @param   string  $property  The name of the class property.
 	 *
 	 * @return  mixed   The value of the class property.
 	 *

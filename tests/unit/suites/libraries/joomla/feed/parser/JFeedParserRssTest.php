@@ -40,7 +40,7 @@ class JFeedParserRssTest extends TestCase
 		return array(
 			array('0.91', '<rss version="0.91"><channel><test /></channel></rss>'),
 			array('0.92', '<rss version="0.92"><channel><test /></channel></rss>'),
-			array('2.0', '<rss version="2.0"><channel><test /></channel></rss>')
+			array('2.0',  '<rss version="2.0"><channel><test /></channel></rss>')
 		);
 	}
 
@@ -442,8 +442,8 @@ class JFeedParserRssTest extends TestCase
 	/**
 	 * Tests JFeedParserRss::initialise()
 	 *
-	 * @param   string $expected The expected rss version string.
-	 * @param   string $xml      The XML string for which to detect the version.
+	 * @param   string  $expected  The expected rss version string.
+	 * @param   string  $xml       The XML string for which to detect the version.
 	 *
 	 * @return  void
 	 *
@@ -459,7 +459,8 @@ class JFeedParserRssTest extends TestCase
 		do
 		{
 			$this->_reader->read();
-		} while ($this->_reader->nodeType != XMLReader::ELEMENT);
+		}
+		while ($this->_reader->nodeType != XMLReader::ELEMENT);
 
 		TestReflection::invoke($this->_instance, 'initialise');
 
@@ -491,7 +492,7 @@ class JFeedParserRssTest extends TestCase
 	public function testProcessFeedEntry()
 	{
 		$entry = new JFeedEntry;
-		$el    = new SimpleXMLElement(
+		$el = new SimpleXMLElement(
 			'<entry>
 				<link>http://example.com/id</link>
 				<title>title</title>
@@ -524,9 +525,9 @@ class JFeedParserRssTest extends TestCase
 	/**
 	 * Tests JFeedParserRss::processPerson()
 	 *
-	 * @param   string $input The person string consisting of name and email address.
-	 * @param   string $name  The person's name.
-	 * @param   string $email The person's email address.
+	 * @param   string  $input  The person string consisting of name and email address.
+	 * @param   string  $name   The person's name.
+	 * @param   string  $email  The person's email address.
 	 *
 	 * @return  void
 	 *

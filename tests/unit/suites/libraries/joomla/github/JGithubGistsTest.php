@@ -54,23 +54,42 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackageGists($this->options, $this->client);
+	}
+
+	/**
 	 * Tests the create method
 	 *
 	 * @return void
 	 */
 	public function testCreate()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
 		// Build the request data.
 		$data = json_encode(
 			array(
-				'files'       => array(
+				'files' => array(
 					'file2.txt' => array('content' => 'This is the second file')
 				),
-				'public'      => true,
+				'public' => true,
 				'description' => 'This is a gist'
 			)
 		);
@@ -99,17 +118,17 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreateGistFromFile()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
 		// Build the request data.
 		$data = json_encode(
 			array(
-				'files'       => array(
+				'files' => array(
 					'gittest' => array('content' => 'GistContent' . PHP_EOL)
 				),
-				'public'      => true,
+				'public' => true,
 				'description' => 'This is a gist'
 			)
 		);
@@ -140,7 +159,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreateGistFromFileNotFound()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 501;
 		$returnData->body = $this->sampleString;
 
@@ -162,7 +181,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -199,11 +218,11 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreateComment()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
-		$gist       = new stdClass;
+		$gist = new stdClass;
 		$gist->body = 'My Insightful Comment';
 
 		$this->client->expects($this->once())
@@ -226,11 +245,11 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$gist       = new stdClass;
+		$gist = new stdClass;
 		$gist->body = 'My Insightful Comment';
 
 		$this->client->expects($this->once())
@@ -261,7 +280,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testDelete()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -282,7 +301,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -314,7 +333,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testDeleteComment()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -335,7 +354,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -367,7 +386,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEdit()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -375,8 +394,8 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 		$data = json_encode(
 			array(
 				'description' => 'This is a gist',
-				'public'      => true,
-				'files'       => array(
+				'public' => true,
+				'files' => array(
 					'file1.txt' => array('content' => 'This is the first file'),
 					'file2.txt' => array('content' => 'This is the second file')
 				)
@@ -411,7 +430,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -419,8 +438,8 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 		$data = json_encode(
 			array(
 				'description' => 'This is a gist',
-				'public'      => true,
-				'files'       => array(
+				'public' => true,
+				'files' => array(
 					'file1.txt' => array('content' => 'This is the first file'),
 					'file2.txt' => array('content' => 'This is the second file')
 				)
@@ -463,11 +482,11 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEditComment()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$gist       = new stdClass;
+		$gist = new stdClass;
 		$gist->body = 'This comment is now even more insightful';
 
 		$this->client->expects($this->once())
@@ -490,11 +509,11 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$gist       = new stdClass;
+		$gist = new stdClass;
 		$gist->body = 'This comment is now even more insightful';
 
 		$this->client->expects($this->once())
@@ -525,7 +544,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testFork()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
@@ -549,7 +568,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 501;
 		$returnData->body = $this->errorString;
 
@@ -581,7 +600,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGet()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -605,7 +624,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -637,7 +656,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetComment()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -661,7 +680,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -693,7 +712,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetComments()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -717,7 +736,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -749,7 +768,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetList()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -773,7 +792,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -805,7 +824,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetListByUser()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -829,7 +848,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -861,7 +880,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetListPublic()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -885,7 +904,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -917,7 +936,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetListStarred()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -941,7 +960,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -973,7 +992,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testIsStarredTrue()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -995,7 +1014,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testIsStarredFalse()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 404;
 		$returnData->body = $this->sampleString;
 
@@ -1019,7 +1038,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -1051,7 +1070,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testStar()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -1072,7 +1091,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 504;
 		$returnData->body = $this->errorString;
 
@@ -1104,7 +1123,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testUnstar()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -1125,7 +1144,7 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 504;
 		$returnData->body = $this->errorString;
 
@@ -1148,24 +1167,5 @@ class JGithubGistsTest extends PHPUnit_Framework_TestCase
 			);
 		}
 		$this->assertTrue($exception);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options  = new JRegistry;
-		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackageGists($this->options, $this->client);
 	}
 }

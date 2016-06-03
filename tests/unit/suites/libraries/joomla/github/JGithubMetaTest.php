@@ -53,6 +53,25 @@ class JGithubMetaTest extends TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   13.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubMeta($this->options, $this->client);
+	}
+
+	/**
 	 * Tests the getMeta method
 	 *
 	 * @return  void
@@ -66,7 +85,7 @@ class JGithubMetaTest extends TestCase
 
 		$decodedResponse = array(
 			'hooks' => array('127.0.0.1', '192.168.1.1'),
-			'git'   => array('127.0.0.1')
+			'git' => array('127.0.0.1')
 		);
 
 		$this->client->expects($this->once())
@@ -100,24 +119,5 @@ class JGithubMetaTest extends TestCase
 			->will($this->returnValue($this->response));
 
 		$this->object->getMeta();
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   13.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options  = new JRegistry;
-		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubMeta($this->options, $this->client);
 	}
 }

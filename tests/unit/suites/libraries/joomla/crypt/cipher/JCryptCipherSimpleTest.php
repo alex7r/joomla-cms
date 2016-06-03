@@ -23,6 +23,39 @@ class JCryptCipherSimpleTest extends TestCase
 	private $_cipher;
 
 	/**
+	 * Prepares the environment before running a test.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->_cipher = new JCryptCipherSimple;
+
+		$this->key = new JCryptKey('simple');
+		$this->key->private = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUgkVF4mLxAUf80ZJPAJHXHoac';
+		$this->key->public = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUgkVF4mLxAUf80ZJPAJHXHoac';
+	}
+
+	/**
+	 * Cleans up the environment after running a test.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	protected function tearDown()
+	{
+		$this->_cipher = null;
+		$this->key = null;
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Test...
 	 *
 	 * @return array
@@ -36,13 +69,13 @@ class JCryptCipherSimpleTest extends TestCase
 			array(
 				'2.txt',
 				'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
-				'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ' .
-				'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt ' .
-				'in culpa qui officia deserunt mollit anim id est laborum.'),
+					'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ' .
+					'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt ' .
+					'in culpa qui officia deserunt mollit anim id est laborum.'),
 			array('3.txt', 'لا أحد يحب الألم بذاته، يسعى ورائه أو يبتغيه، ببساطة لأنه الألم...'),
 			array('4.txt',
 				'Широкая электрификация южных губерний даст мощный ' .
-				'толчок подъёму сельского хозяйства'),
+					'толчок подъёму сельского хозяйства'),
 			array('5.txt', 'The quick brown fox jumps over the lazy dog.')
 		);
 	}
@@ -50,13 +83,13 @@ class JCryptCipherSimpleTest extends TestCase
 	/**
 	 * Tests JCryptCipherSimple->decrypt()
 	 *
-	 * @param   string $file @todo
-	 * @param   string $data @todo
+	 * @param   string  $file  @todo
+	 * @param   string  $data  @todo
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider dataForEncrypt
-	 * @since        12.1
+	 * @since   12.1
 	 */
 	public function testDecrypt($file, $data)
 	{
@@ -70,13 +103,13 @@ class JCryptCipherSimpleTest extends TestCase
 	/**
 	 * Tests JCryptCipherSimple->encrypt()
 	 *
-	 * @param   string $file @todo
-	 * @param   string $data @todo
+	 * @param   string  $file  @todo
+	 * @param   string  $data  @todo
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider dataForEncrypt
-	 * @since        12.1
+	 * @since   12.1
 	 */
 	public function testEncrypt($file, $data)
 	{
@@ -108,38 +141,5 @@ class JCryptCipherSimpleTest extends TestCase
 
 		// Assert the key is of the correct type.
 		$this->assertAttributeEquals('simple', 'type', $key);
-	}
-
-	/**
-	 * Prepares the environment before running a test.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->_cipher = new JCryptCipherSimple;
-
-		$this->key          = new JCryptKey('simple');
-		$this->key->private = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUgkVF4mLxAUf80ZJPAJHXHoac';
-		$this->key->public  = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUgkVF4mLxAUf80ZJPAJHXHoac';
-	}
-
-	/**
-	 * Cleans up the environment after running a test.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	protected function tearDown()
-	{
-		$this->_cipher = null;
-		$this->key     = null;
-
-		parent::tearDown();
 	}
 }

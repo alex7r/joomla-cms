@@ -45,6 +45,23 @@ class JMediawikiPagesTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '<message>Generic Error</message>';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JMediawikiPages(
+			$this->options,
+			$this->client
+		);
+	}
+
+	/**
 	 * Tests the getPageInfo method
 	 */
 	public function testGetPageInfo()
@@ -61,18 +78,6 @@ class JMediawikiPagesTest extends PHPUnit_Framework_TestCase
 			simplexml_load_string($this->sampleString),
 			$this->object->getPageInfo(array('Main Page'))
 		);
-	}
-
-	/**
-	 * @return stdClass
-	 */
-	private function getReturnData()
-	{
-		$returnData       = new stdClass;
-		$returnData->code = 200;
-		$returnData->body = $this->sampleString;
-
-		return $returnData;
 	}
 
 	/**
@@ -130,19 +135,14 @@ class JMediawikiPagesTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
+	 * @return stdClass
 	 */
-	protected function setUp()
+	private function getReturnData()
 	{
-		$this->options = new JRegistry;
-		$this->client  = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$returnData = new stdClass;
+		$returnData->code = 200;
+		$returnData->body = $this->sampleString;
 
-		$this->object = new JMediawikiPages(
-			$this->options,
-			$this->client
-		);
+		return $returnData;
 	}
 }

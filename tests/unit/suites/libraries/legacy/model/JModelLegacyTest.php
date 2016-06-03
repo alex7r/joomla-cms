@@ -29,19 +29,6 @@ class JModelLegacyTest extends TestCaseDatabase
 	protected $fixture;
 
 	/**
-	 * This method is called after the last test of this test class is run.
-	 *
-	 * @return  void
-	 *
-	 * @since    3.1
-	 */
-	public static function tearDownAfterClass()
-	{
-		// Reset JTable::$_includePaths
-		TestReflection::setValue('JTable', '_includePaths', array());
-	}
-
-	/**
 	 * Setup each test.
 	 *
 	 * @since   12.3
@@ -65,6 +52,19 @@ class JModelLegacyTest extends TestCaseDatabase
 	{
 		$this->fixture = null;
 		parent::tearDown();
+	}
+
+	/**
+	 * This method is called after the last test of this test class is run.
+	 *
+	 * @return  void
+	 *
+	 * @since    3.1
+	 */
+	public static function tearDownAfterClass()
+	{
+		// Reset JTable::$_includePaths
+		TestReflection::setValue('JTable', '_includePaths', array());
 	}
 
 	/**
@@ -164,12 +164,12 @@ class JModelLegacyTest extends TestCaseDatabase
 	 */
 	public function testConstructorAppliesConfigCorrectly()
 	{
-		$config        = array(
-			'name'              => 'bash',
-			'state'             => 'foo',
-			'dbo'               => 'bar',
-			'table_path'        => 'baz',
-			'ignore_request'    => true,
+		$config = array(
+			'name' => 'bash',
+			'state' => 'foo',
+			'dbo' => 'bar',
+			'table_path' => 'baz',
+			'ignore_request' => true,
 			'event_clean_cache' => 'buz'
 		);
 		$this->fixture = new RemodelModelRoom($config);
@@ -406,11 +406,11 @@ class JModelLegacyTest extends TestCaseDatabase
 	 * @expectedException      Exception
 	 * @expectedExceptionCode  500
 	 *
-	 * @since                  12.3
+	 * @since   12.3
 	 *
 	 * @return  void
 	 *
-	 * @testdox                getName() throws exception if class has no 'model' in classname
+	 * @testdox getName() throws exception if class has no 'model' in classname
 	 */
 	public function testNameOfExistingClassThatDoesNotContainModel()
 	{

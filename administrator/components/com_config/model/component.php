@@ -17,18 +17,47 @@ defined('_JEXEC') or die;
 class ConfigModelComponent extends ConfigModelForm
 {
 	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return	void
+	 *
+	 * @since	3.2
+	 */
+	protected function populateState()
+	{
+		$input = JFactory::getApplication()->input;
+
+		// Set the component (option) we are dealing with.
+		$component = $input->get('component');
+		$state = $this->loadState();
+		$state->set('component.option', $component);
+
+		// Set an alternative path for the configuration file.
+		if ($path = $input->getString('path'))
+		{
+			$path = JPath::clean(JPATH_SITE . '/' . $path);
+			JPath::check($path);
+			$state->set('component.path', $path);
+		}
+
+		$this->setState($state);
+	}
+
+	/**
 	 * Method to get a form object.
 	 *
-	 * @param   array   $data     Data for the form.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
-	 * @since    3.2
+	 * @since	3.2
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		$state  = $this->getState();
+		$state = $this->getState();
 		$option = $state->get('component.option');
 
 		if ($path = $state->get('component.path'))
@@ -66,13 +95,13 @@ class ConfigModelComponent extends ConfigModelForm
 	/**
 	 * Get the component information.
 	 *
-	 * @return    object
+	 * @return	object
 	 *
-	 * @since    3.2
+	 * @since	3.2
 	 */
 	public function getComponent()
 	{
-		$state  = $this->getState();
+		$state = $this->getState();
 		$option = $state->get('component.option');
 
 		// Load common and local language files.
@@ -88,11 +117,11 @@ class ConfigModelComponent extends ConfigModelForm
 	/**
 	 * Method to save the configuration data.
 	 *
-	 * @param   array $data An array containing all global config data.
+	 * @param   array  $data  An array containing all global config data.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *
-	 * @since    3.2
+	 * @since	3.2
 	 * @throws  RuntimeException
 	 */
 	public function save($data)
@@ -112,7 +141,7 @@ class ConfigModelComponent extends ConfigModelForm
 			{
 				$root = JTable::getInstance('asset');
 				$root->loadByName('root.1');
-				$asset->name  = $data['option'];
+				$asset->name = $data['option'];
 				$asset->title = $data['option'];
 				$asset->setLocation($root->id, 'last-child');
 			}
@@ -151,7 +180,7 @@ class ConfigModelComponent extends ConfigModelForm
 
 		$result = $dispatcher->trigger('onExtensionBeforeSave', array($context, &$table, false));
 
-		// Store the data.
+			// Store the data.
 		if (in_array(false, $result, true) || !$table->store())
 		{
 			throw new RuntimeException($table->getError());
@@ -165,34 +194,5 @@ class ConfigModelComponent extends ConfigModelForm
 		$this->cleanCache('_system', 1);
 
 		return true;
-	}
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return    void
-	 *
-	 * @since    3.2
-	 */
-	protected function populateState()
-	{
-		$input = JFactory::getApplication()->input;
-
-		// Set the component (option) we are dealing with.
-		$component = $input->get('component');
-		$state     = $this->loadState();
-		$state->set('component.option', $component);
-
-		// Set an alternative path for the configuration file.
-		if ($path = $input->getString('path'))
-		{
-			$path = JPath::clean(JPATH_SITE . '/' . $path);
-			JPath::check($path);
-			$state->set('component.path', $path);
-		}
-
-		$this->setState($state);
 	}
 }

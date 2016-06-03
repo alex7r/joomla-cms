@@ -51,19 +51,42 @@ class JFacebookObjectTest extends TestCase
 	protected $errorString = '{"error": {"message": "Generic Error."}}';
 
 	/**
-	 * Provides test data for request format detection.
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
 	 *
-	 * @return array
+	 * @return   void
 	 *
-	 * @since 13.1
+	 * @since    13.1
 	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$this->options = new Registry;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+
+		$this->object = new JFacebookObjectMock($this->options, $this->client);
+
+		parent::setUp();
+	}
+
+	/**
+	* Provides test data for request format detection.
+	*
+	* @return array
+	*
+	* @since 13.1
+	*/
 	public function seedFetchUrl()
 	{
 		// Limit, offset, until, since and expected
 		return array(
 			array(0, 0, null, null, 'https://graph.facebook.com/456431243/likes?access_token=235twegsdgsdhtry3tgwgf'),
 			array(5, 0, null, null, 'https://graph.facebook.com/456431243/likes?access_token=235twegsdgsdhtry3tgwgf&limit=5'),
-			array(5, 1, null, null, 'https://graph.facebook.com/456431243/likes?access_token=235twegsdgsdhtry3tgwgf&limit=5&offset=1'),
+			array(5, 1, null ,null, 'https://graph.facebook.com/456431243/likes?access_token=235twegsdgsdhtry3tgwgf&limit=5&offset=1'),
 			array(5, 1, 1893909600, null, 'https://graph.facebook.com/456431243/likes?access_token=235twegsdgsdhtry3tgwgf&limit=5&offset=1&until=1893909600'),
 			array(5, 1, null, 1325829600, 'https://graph.facebook.com/456431243/likes?access_token=235twegsdgsdhtry3tgwgf&limit=5&offset=1&since=1325829600'),
 			array(0, 0, 1893909600, 1325829600,
@@ -74,22 +97,22 @@ class JFacebookObjectTest extends TestCase
 	/**
 	 * Test the fetchUrl method.
 	 *
-	 * @param   integer   $limit    The number of objects per page.
-	 * @param   integer   $offset   The object's number on the page.
-	 * @param   timestamp $until    A unix timestamp or any date accepted by strtotime.
-	 * @param   timestamp $since    A unix timestamp or any date accepted by strtotime.
-	 * @param   string    $expected The expected result.
+	 * @param   integer    $limit     The number of objects per page.
+	 * @param   integer    $offset    The object's number on the page.
+	 * @param   timestamp  $until     A unix timestamp or any date accepted by strtotime.
+	 * @param   timestamp  $since     A unix timestamp or any date accepted by strtotime.
+	 * @param   string     $expected  The expected result.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedFetchUrl
 	 *
-	 * @since         13.1
+	 * @since    13.1
 	 */
 	public function testFetchUrl($limit, $offset, $until, $since, $expected)
 	{
 		$apiUrl = 'https://graph.facebook.com/';
-		$path   = '456431243/likes?access_token=235twegsdgsdhtry3tgwgf';
+		$path = '456431243/likes?access_token=235twegsdgsdhtry3tgwgf';
 
 		$this->options->set('api.url', $apiUrl);
 
@@ -214,28 +237,5 @@ class JFacebookObjectTest extends TestCase
 	{
 		// Method tested via requesting classes
 		$this->markTestSkipped('This method is tested via requesting classes.');
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return   void
-	 *
-	 * @since    13.1
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$this->options = new Registry;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-
-		$this->object = new JFacebookObjectMock($this->options, $this->client);
-
-		parent::setUp();
 	}
 }

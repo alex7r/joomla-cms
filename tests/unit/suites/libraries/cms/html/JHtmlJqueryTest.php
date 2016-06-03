@@ -27,6 +27,49 @@ class JHtmlJqueryTest extends TestCase
 	protected $backupServer;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		// Ensure the loaded states are reset
+		JHtmlJqueryInspector::resetLoaded();
+
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+		JFactory::$document = $this->getMockDocument();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Tests the framework method.
 	 *
 	 * @return  void
@@ -80,48 +123,5 @@ class JHtmlJqueryTest extends TestCase
 			$document->_scripts,
 			'Verify that the jQueryUI sortable script is loaded'
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		// Ensure the loaded states are reset
-		JHtmlJqueryInspector::resetLoaded();
-
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$document    = $this->getMockDocument();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST']   = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 }

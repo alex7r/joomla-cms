@@ -27,7 +27,7 @@ class UsersViewProfile extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed   A string if successful, otherwise an Error object.
 	 *
@@ -36,8 +36,8 @@ class UsersViewProfile extends JViewLegacy
 	public function display($tpl = null)
 	{
 		// Get the view data.
-		$this->data             = $this->get('Data');
-		$this->form             = $this->get('Form');
+		$this->data	            = $this->get('Data');
+		$this->form	            = $this->get('Form');
 		$this->state            = $this->get('State');
 		$this->params           = $this->state->get('params');
 		$this->twofactorform    = $this->get('Twofactorform');
@@ -53,7 +53,7 @@ class UsersViewProfile extends JViewLegacy
 		}
 
 		// View also takes responsibility for checking if the user logged in with remember me.
-		$user        = JFactory::getUser();
+		$user = JFactory::getUser();
 		$cookieLogin = $user->get('cookieLogin');
 
 		if (!empty($cookieLogin))

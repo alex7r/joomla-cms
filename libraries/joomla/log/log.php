@@ -24,7 +24,6 @@ class JLog
 {
 	/**
 	 * All log priorities.
-	 *
 	 * @var    integer
 	 * @since  11.1
 	 */
@@ -32,7 +31,6 @@ class JLog
 
 	/**
 	 * The system is unusable.
-	 *
 	 * @var    integer
 	 * @since  11.1
 	 */
@@ -40,7 +38,6 @@ class JLog
 
 	/**
 	 * Action must be taken immediately.
-	 *
 	 * @var    integer
 	 * @since  11.1
 	 */
@@ -48,7 +45,6 @@ class JLog
 
 	/**
 	 * Critical conditions.
-	 *
 	 * @var    integer
 	 * @since  11.1
 	 */
@@ -56,7 +52,6 @@ class JLog
 
 	/**
 	 * Error conditions.
-	 *
 	 * @var    integer
 	 * @since  11.1
 	 */
@@ -64,7 +59,6 @@ class JLog
 
 	/**
 	 * Warning conditions.
-	 *
 	 * @var    integer
 	 * @since  11.1
 	 */
@@ -72,7 +66,6 @@ class JLog
 
 	/**
 	 * Normal, but significant condition.
-	 *
 	 * @var    integer
 	 * @since  11.1
 	 */
@@ -80,7 +73,6 @@ class JLog
 
 	/**
 	 * Informational message.
-	 *
 	 * @var    integer
 	 * @since  11.1
 	 */
@@ -88,7 +80,6 @@ class JLog
 
 	/**
 	 * Debugging message.
-	 *
 	 * @var    integer
 	 * @since  11.1
 	 */
@@ -96,7 +87,6 @@ class JLog
 
 	/**
 	 * The global JLog instance.
-	 *
 	 * @var    JLog
 	 * @since  11.1
 	 */
@@ -104,7 +94,6 @@ class JLog
 
 	/**
 	 * Container for JLogLogger configurations.
-	 *
 	 * @var    array
 	 * @since  11.1
 	 */
@@ -112,7 +101,6 @@ class JLog
 
 	/**
 	 * Container for JLogLogger objects.
-	 *
 	 * @var    array
 	 * @since  11.1
 	 */
@@ -120,7 +108,6 @@ class JLog
 
 	/**
 	 * Lookup array for loggers.
-	 *
 	 * @var    array
 	 * @since  11.1
 	 */
@@ -138,10 +125,10 @@ class JLog
 	/**
 	 * Method to add an entry to the log.
 	 *
-	 * @param   mixed   $entry    The JLogEntry object to add to the log or the message for a new JLogEntry object.
-	 * @param   integer $priority Message priority.
-	 * @param   string  $category Type of entry
-	 * @param   string  $date     Date of entry (defaults to now if not specified or blank)
+	 * @param   mixed    $entry     The JLogEntry object to add to the log or the message for a new JLogEntry object.
+	 * @param   integer  $priority  Message priority.
+	 * @param   string   $category  Type of entry
+	 * @param   string   $date      Date of entry (defaults to now if not specified or blank)
 	 *
 	 * @return  void
 	 *
@@ -165,10 +152,93 @@ class JLog
 	}
 
 	/**
+	 * Add a logger to the JLog instance.  Loggers route log entries to the correct files/systems to be logged.
+	 *
+	 * @param   array    $options     The object configuration array.
+	 * @param   integer  $priorities  Message priority
+	 * @param   array    $categories  Types of entry
+	 * @param   boolean  $exclude     If true, all categories will be logged except those in the $categories array
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public static function addLogger(array $options, $priorities = self::ALL, $categories = array(), $exclude = false)
+	{
+		// Automatically instantiate the singleton object if not already done.
+		if (empty(self::$instance))
+		{
+			self::setInstance(new JLog);
+		}
+
+		self::$instance->addLoggerInternal($options, $priorities, $categories, $exclude);
+	}
+
+	/**
+	 * Add a logger to the JLog instance.  Loggers route log entries to the correct files/systems to be logged.
+	 * This method allows you to extend JLog completely.
+	 *
+	 * @param   array    $options     The object configuration array.
+	 * @param   integer  $priorities  Message priority
+	 * @param   array    $categories  Types of entry
+	 * @param   boolean  $exclude     If true, all categories will be logged except those in the $categories array
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function addLoggerInternal(array $options, $priorities = self::ALL, $categories = array(), $exclude = false)
+	{
+		// The default logger is the formatted text log file.
+		if (empty($options['logger']))
+		{
+			$options['logger'] = 'formattedtext';
+		}
+
+		$options['logger'] = strtolower($options['logger']);
+
+		// Special case - if a Closure object is sent as the callback (in case of JLogLoggerCallback)
+		// Closure objects are not serializable so swap it out for a unique id first then back again later
+		if (isset($options['callback']))
+		{
+			if (is_a($options['callback'], 'closure'))
+			{
+				$callback = $options['callback'];
+				$options['callback'] = spl_object_hash($options['callback']);
+			}
+			elseif (is_array($options['callback']) && count($options['callback']) == 2 && is_object($options['callback'][0]))
+			{
+				$callback = $options['callback'];
+				$options['callback'] = spl_object_hash($options['callback'][0]) . '::' . $options['callback'][1];
+			}
+		}
+
+		// Generate a unique signature for the JLog instance based on its options.
+		$signature = md5(serialize($options));
+
+		// Now that the options array has been serialized, swap the callback back in
+		if (isset($callback))
+		{
+			$options['callback'] = $callback;
+		}
+
+		// Register the configuration if it doesn't exist.
+		if (empty($this->configurations[$signature]))
+		{
+			$this->configurations[$signature] = $options;
+		}
+
+		$this->lookup[$signature] = (object) array(
+			'priorities' => $priorities,
+			'categories' => array_map('strtolower', (array) $categories),
+			'exclude' => (bool) $exclude);
+	}
+
+	/**
 	 * Returns a reference to the a JLog object, only creating it if it doesn't already exist.
 	 * Note: This is principally made available for testing and internal purposes.
 	 *
-	 * @param   JLog $instance The logging object instance to be used by the static methods.
+	 * @param   JLog  $instance  The logging object instance to be used by the static methods.
 	 *
 	 * @return  void
 	 *
@@ -178,14 +248,14 @@ class JLog
 	{
 		if (($instance instanceof JLog) || $instance === null)
 		{
-			self::$instance = &$instance;
+			self::$instance = & $instance;
 		}
 	}
 
 	/**
 	 * Method to add an entry to the appropriate loggers.
 	 *
-	 * @param   JLogEntry $entry The JLogEntry object to send to the loggers.
+	 * @param   JLogEntry  $entry  The JLogEntry object to send to the loggers.
 	 *
 	 * @return  void
 	 *
@@ -222,8 +292,8 @@ class JLog
 	/**
 	 * Method to find the loggers to use based on priority and category values.
 	 *
-	 * @param   integer $priority Message priority.
-	 * @param   string  $category Type of entry
+	 * @param   integer  $priority  Message priority.
+	 * @param   string   $category  Type of entry
 	 *
 	 * @return  array  The array of loggers to use for the given priority and category values.
 	 *
@@ -263,88 +333,5 @@ class JLog
 		}
 
 		return $loggers;
-	}
-
-	/**
-	 * Add a logger to the JLog instance.  Loggers route log entries to the correct files/systems to be logged.
-	 *
-	 * @param   array   $options    The object configuration array.
-	 * @param   integer $priorities Message priority
-	 * @param   array   $categories Types of entry
-	 * @param   boolean $exclude    If true, all categories will be logged except those in the $categories array
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	public static function addLogger(array $options, $priorities = self::ALL, $categories = array(), $exclude = false)
-	{
-		// Automatically instantiate the singleton object if not already done.
-		if (empty(self::$instance))
-		{
-			self::setInstance(new JLog);
-		}
-
-		self::$instance->addLoggerInternal($options, $priorities, $categories, $exclude);
-	}
-
-	/**
-	 * Add a logger to the JLog instance.  Loggers route log entries to the correct files/systems to be logged.
-	 * This method allows you to extend JLog completely.
-	 *
-	 * @param   array   $options    The object configuration array.
-	 * @param   integer $priorities Message priority
-	 * @param   array   $categories Types of entry
-	 * @param   boolean $exclude    If true, all categories will be logged except those in the $categories array
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function addLoggerInternal(array $options, $priorities = self::ALL, $categories = array(), $exclude = false)
-	{
-		// The default logger is the formatted text log file.
-		if (empty($options['logger']))
-		{
-			$options['logger'] = 'formattedtext';
-		}
-
-		$options['logger'] = strtolower($options['logger']);
-
-		// Special case - if a Closure object is sent as the callback (in case of JLogLoggerCallback)
-		// Closure objects are not serializable so swap it out for a unique id first then back again later
-		if (isset($options['callback']))
-		{
-			if (is_a($options['callback'], 'closure'))
-			{
-				$callback            = $options['callback'];
-				$options['callback'] = spl_object_hash($options['callback']);
-			}
-			elseif (is_array($options['callback']) && count($options['callback']) == 2 && is_object($options['callback'][0]))
-			{
-				$callback            = $options['callback'];
-				$options['callback'] = spl_object_hash($options['callback'][0]) . '::' . $options['callback'][1];
-			}
-		}
-
-		// Generate a unique signature for the JLog instance based on its options.
-		$signature = md5(serialize($options));
-
-		// Now that the options array has been serialized, swap the callback back in
-		if (isset($callback))
-		{
-			$options['callback'] = $callback;
-		}
-
-		// Register the configuration if it doesn't exist.
-		if (empty($this->configurations[$signature]))
-		{
-			$this->configurations[$signature] = $options;
-		}
-
-		$this->lookup[$signature] = (object) array(
-			'priorities' => $priorities,
-			'categories' => array_map('strtolower', (array) $categories),
-			'exclude'    => (bool) $exclude);
 	}
 }

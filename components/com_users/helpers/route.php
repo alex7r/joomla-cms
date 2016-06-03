@@ -17,36 +17,9 @@ defined('_JEXEC') or die;
 class UsersHelperRoute
 {
 	/**
-	 * Method to get a route configuration for the login view.
-	 *
-	 * @return  mixed    Integer menu id on success, null on failure.
-	 *
-	 * @since   1.6
-	 * @static
-	 */
-	public static function getLoginRoute()
-	{
-		// Get the items.
-		$items  = self::getItems();
-		$itemid = null;
-
-		// Search for a suitable menu id.
-		foreach ($items as $item)
-		{
-			if (isset($item->query['view']) && $item->query['view'] === 'login')
-			{
-				$itemid = $item->id;
-				break;
-			}
-		}
-
-		return $itemid;
-	}
-
-	/**
 	 * Method to get the menu items for the component.
 	 *
-	 * @return  array    An array of menu items.
+	 * @return  array  	An array of menu items.
 	 *
 	 * @since   1.6
 	 */
@@ -73,9 +46,36 @@ class UsersHelperRoute
 	}
 
 	/**
+	 * Method to get a route configuration for the login view.
+	 *
+	 * @return  mixed  	Integer menu id on success, null on failure.
+	 *
+	 * @since   1.6
+	 * @static
+	 */
+	public static function getLoginRoute()
+	{
+		// Get the items.
+		$items  = self::getItems();
+		$itemid = null;
+
+		// Search for a suitable menu id.
+		foreach ($items as $item)
+		{
+			if (isset($item->query['view']) && $item->query['view'] === 'login')
+			{
+				$itemid = $item->id;
+				break;
+			}
+		}
+
+		return $itemid;
+	}
+
+	/**
 	 * Method to get a route configuration for the profile view.
 	 *
-	 * @return  mixed    Integer menu id on success, null on failure.
+	 * @return  mixed  	Integer menu id on success, null on failure.
 	 *
 	 * @since   1.6
 	 */
@@ -103,7 +103,7 @@ class UsersHelperRoute
 	/**
 	 * Method to get a route configuration for the registration view.
 	 *
-	 * @return  mixed    Integer menu id on success, null on failure.
+	 * @return  mixed  	Integer menu id on success, null on failure.
 	 *
 	 * @since   1.6
 	 */
@@ -129,7 +129,7 @@ class UsersHelperRoute
 	/**
 	 * Method to get a route configuration for the remind view.
 	 *
-	 * @return  mixed    Integer menu id on success, null on failure.
+	 * @return  mixed  	Integer menu id on success, null on failure.
 	 *
 	 * @since   1.6
 	 */
@@ -155,7 +155,7 @@ class UsersHelperRoute
 	/**
 	 * Method to get a route configuration for the resend view.
 	 *
-	 * @return  mixed    Integer menu id on success, null on failure.
+	 * @return  mixed  	Integer menu id on success, null on failure.
 	 *
 	 * @since   1.6
 	 */
@@ -181,7 +181,7 @@ class UsersHelperRoute
 	/**
 	 * Method to get a route configuration for the reset view.
 	 *
-	 * @return  mixed    Integer menu id on success, null on failure.
+	 * @return  mixed  	Integer menu id on success, null on failure.
 	 *
 	 * @since   1.6
 	 */

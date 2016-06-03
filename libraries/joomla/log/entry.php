@@ -21,7 +21,6 @@ class JLogEntry
 {
 	/**
 	 * Application responsible for log entry.
-	 *
 	 * @var    string
 	 * @since  11.1
 	 */
@@ -29,7 +28,6 @@ class JLogEntry
 
 	/**
 	 * The date the message was logged.
-	 *
 	 * @var    JDate
 	 * @since  11.1
 	 */
@@ -37,7 +35,6 @@ class JLogEntry
 
 	/**
 	 * Message to be logged.
-	 *
 	 * @var    string
 	 * @since  11.1
 	 */
@@ -45,22 +42,14 @@ class JLogEntry
 
 	/**
 	 * The priority of the message to be logged.
-	 *
 	 * @var    string
 	 * @since  11.1
 	 * @see    JLogEntry::$priorities
 	 */
 	public $priority = JLog::INFO;
-	/**
-	 * Call stack and back trace of the logged call.
-	 *
-	 * @var    array
-	 * @since  12.3
-	 */
-	public $callStack = array();
+
 	/**
 	 * List of available log priority levels [Based on the Syslog default levels].
-	 *
 	 * @var    array
 	 * @since  11.1
 	 */
@@ -76,12 +65,19 @@ class JLogEntry
 	);
 
 	/**
+	 * Call stack and back trace of the logged call.
+	 * @var    array
+	 * @since  12.3
+	 */
+	public $callStack = array();
+
+	/**
 	 * Constructor
 	 *
-	 * @param   string $message  The message to log.
-	 * @param   int    $priority Message priority based on {$this->priorities}.
-	 * @param   string $category Type of entry
-	 * @param   string $date     Date of entry (defaults to now if not specified or blank)
+	 * @param   string  $message   The message to log.
+	 * @param   int     $priority  Message priority based on {$this->priorities}.
+	 * @param   string  $category  Type of entry
+	 * @param   string  $date      Date of entry (defaults to now if not specified or blank)
 	 *
 	 * @since   11.1
 	 */

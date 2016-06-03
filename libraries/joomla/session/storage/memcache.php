@@ -24,7 +24,7 @@ class JSessionStorageMemcache extends JSessionStorage
 	/**
 	 * Constructor
 	 *
-	 * @param   array $options Optional parameters.
+	 * @param   array  $options  Optional parameters.
 	 *
 	 * @since   11.1
 	 * @throws  RuntimeException
@@ -51,18 +51,6 @@ class JSessionStorageMemcache extends JSessionStorage
 	}
 
 	/**
-	 * Test to see if the SessionHandler is available.
-	 *
-	 * @return boolean  True on success, false otherwise.
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		return (extension_loaded('memcache') && class_exists('Memcache'));
-	}
-
-	/**
 	 * Register the functions of this class with PHP's session handler
 	 *
 	 * @return  void
@@ -77,5 +65,17 @@ class JSessionStorageMemcache extends JSessionStorage
 			ini_set('session.save_path', "{$serverConf['host']}:{$serverConf['port']}");
 			ini_set('session.save_handler', 'memcache');
 		}
+	}
+
+	/**
+	 * Test to see if the SessionHandler is available.
+	 *
+	 * @return boolean  True on success, false otherwise.
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		return (extension_loaded('memcache') && class_exists('Memcache'));
 	}
 }

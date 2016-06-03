@@ -94,7 +94,7 @@ elseif ($input->get('module'))
 				$basePath = JPATH_BASE;
 				$lang     = JFactory::getLanguage();
 				$lang->load('mod_' . $module, $basePath, null, false, true)
-				|| $lang->load('mod_' . $module, $basePath . '/modules/mod_' . $module, null, false, true);
+				||  $lang->load('mod_' . $module, $basePath . '/modules/mod_' . $module, null, false, true);
 
 				try
 				{
@@ -134,7 +134,7 @@ elseif ($input->get('module'))
  */
 elseif ($input->get('plugin'))
 {
-	$group = $input->get('group', 'ajax');
+	$group      = $input->get('group', 'ajax');
 	JPluginHelper::importPlugin($group);
 	$plugin     = ucfirst($input->get('plugin'));
 	$dispatcher = JEventDispatcher::getInstance();

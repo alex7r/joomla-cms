@@ -21,9 +21,9 @@ class Wincache extends Storage
 	/**
 	 * Constructor
 	 *
-	 * @param   array $options Optional parameters.
+	 * @param   array  $options  Optional parameters.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @throws  \RuntimeException
 	 * @deprecated  2.0
 	 */
@@ -38,28 +38,28 @@ class Wincache extends Storage
 	}
 
 	/**
-	 * Test to see if the SessionHandler is available.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since       1.0
-	 * @deprecated  2.0
-	 */
-	static public function isSupported()
-	{
-		return (extension_loaded('wincache') && function_exists('wincache_ucache_get') && !strcmp(ini_get('wincache.ucenabled'), "1"));
-	}
-
-	/**
 	 * Register the functions of this class with PHP's session handler
 	 *
 	 * @return  void
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	public function register()
 	{
 		ini_set('session.save_handler', 'wincache');
+	}
+
+	/**
+	 * Test to see if the SessionHandler is available.
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   1.0
+	 * @deprecated  2.0
+	 */
+	static public function isSupported()
+	{
+		return (extension_loaded('wincache') && function_exists('wincache_ucache_get') && !strcmp(ini_get('wincache.ucenabled'), "1"));
 	}
 }

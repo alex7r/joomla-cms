@@ -19,8 +19,8 @@ class MediaModelManager extends JModelLegacy
 	/**
 	 * Method to get model state variables
 	 *
-	 * @param   string $property Optional parameter name
-	 * @param   mixed  $default  Optional default value
+	 * @param   string  $property  Optional parameter name
+	 * @param   mixed   $default   Optional default value
 	 *
 	 * @return  object  The property where specified, the state object where omitted
 	 *
@@ -52,7 +52,7 @@ class MediaModelManager extends JModelLegacy
 	/**
 	 * Get a select field with a list of available folders
 	 *
-	 * @param   string $base The image directory to display
+	 * @param   string  $base  The image directory to display
 	 *
 	 * @return  html
 	 *
@@ -66,7 +66,7 @@ class MediaModelManager extends JModelLegacy
 			$base = COM_MEDIA_BASE;
 		}
 		// Corrections for windows paths
-		$base               = str_replace(DIRECTORY_SEPARATOR, '/', $base);
+		$base = str_replace(DIRECTORY_SEPARATOR, '/', $base);
 		$com_media_base_uni = str_replace(DIRECTORY_SEPARATOR, '/', COM_MEDIA_BASE);
 
 		// Get the list of folders
@@ -108,7 +108,7 @@ class MediaModelManager extends JModelLegacy
 
 		// Create the drop-down folder select list
 		$attribs = 'size="1" onchange="ImageManager.setFolder(this.options[this.selectedIndex].value, ' . $asset . ', ' . $author . ')" ';
-		$list    = JHtml::_('select.genericlist', $options, 'folderlist', $attribs, 'value', 'text', $base);
+		$list = JHtml::_('select.genericlist', $options, 'folderlist', $attribs, 'value', 'text', $base);
 
 		return $list;
 	}
@@ -116,7 +116,7 @@ class MediaModelManager extends JModelLegacy
 	/**
 	 * Get the folder tree
 	 *
-	 * @param   mixed $base Base folder | null for using base media folder
+	 * @param   mixed  $base  Base folder | null for using base media folder
 	 *
 	 * @return  array
 	 *

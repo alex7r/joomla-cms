@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 
 // Include the component HTML helpers.
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 
 JHtml::_('behavior.formvalidator');
 
@@ -30,27 +30,26 @@ JFactory::getDocument()->addScriptDeclaration("
 
 <div class="menu-edit">
 
-	<form action="<?php echo JRoute::_('index.php?option=com_menus&layout=edit&id=' . (int) $this->item->id); ?>"
-	      method="post" name="adminForm" id="item-form">
-		<div class="col main-section">
-			<fieldset class="adminform">
-				<legend><?php echo JText::_('COM_MENUS_MENU_DETAILS'); ?></legend>
-				<ul class="adminformlist">
-					<li><?php echo $this->form->getLabel('title'); ?>
-						<?php echo $this->form->getInput('title'); ?></li>
+<form action="<?php echo JRoute::_('index.php?option=com_menus&layout=edit&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="item-form">
+<div class="col main-section">
+	<fieldset class="adminform">
+		<legend><?php echo JText::_('COM_MENUS_MENU_DETAILS');?></legend>
+			<ul class="adminformlist">
+				<li><?php echo $this->form->getLabel('title'); ?>
+				<?php echo $this->form->getInput('title'); ?></li>
 
-					<li><?php echo $this->form->getLabel('menutype'); ?>
-						<?php echo $this->form->getInput('menutype'); ?></li>
+				<li><?php echo $this->form->getLabel('menutype'); ?>
+				<?php echo $this->form->getInput('menutype'); ?></li>
 
-					<li><?php echo $this->form->getLabel('description'); ?>
-						<?php echo $this->form->getInput('description'); ?></li>
-				</ul>
-			</fieldset>
-		</div>
-		<div class="clr"></div>
-		<?php if ($this->canDo->get('core.admin')) : ?>
-			<div class="col rules-section">
-				<?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
+				<li><?php echo $this->form->getLabel('description'); ?>
+				<?php echo $this->form->getInput('description'); ?></li>
+			</ul>
+	</fieldset>
+</div>
+	<div class="clr"></div>
+	<?php if ($this->canDo->get('core.admin')) : ?>
+		<div  class="col rules-section">
+			<?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
 
 				<?php echo JHtml::_('sliders.panel', JText::_('COM_MENUS_FIELDSET_RULES'), 'access-rules'); ?>
 				<fieldset class="panelform">
@@ -59,12 +58,12 @@ JFactory::getDocument()->addScriptDeclaration("
 					<?php echo $this->form->getInput('rules'); ?>
 				</fieldset>
 
-				<?php echo JHtml::_('sliders.end'); ?>
-			</div>
-		<?php endif; ?>
-		<input type="hidden" name="task" value=""/>
-		<?php echo JHtml::_('form.token'); ?>
+			<?php echo JHtml::_('sliders.end'); ?>
+		</div>
+	<?php endif; ?>
+	<input type="hidden" name="task" value="" />
+	<?php echo JHtml::_('form.token'); ?>
 
-	</form>
-	<div class="clr"></div>
+</form>
+<div class="clr"></div>
 </div>

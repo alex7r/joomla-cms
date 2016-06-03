@@ -42,9 +42,9 @@ class JFormFieldFrontend_Language extends JFormFieldList
 		$query = $db->getQuery(true);
 
 		$query->select('a.lang_code AS value, a.title AS text')
-			->from($db->quoteName('#__languages') . ' AS a')
-			->where('a.published = 1')
-			->order('a.title');
+				->from($db->quoteName('#__languages') . ' AS a')
+				->where('a.published = 1')
+				->order('a.title');
 
 		// Select the language home pages.
 		$query->select('l.home, l.language')

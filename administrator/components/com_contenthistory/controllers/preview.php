@@ -19,9 +19,9 @@ class ContenthistoryControllerPreview extends JControllerLegacy
 	/**
 	 * Proxy for getModel.
 	 *
-	 * @param   string $name   The name of the model
-	 * @param   string $prefix The prefix for the model
-	 * @param   array  $config An additional array of parameters
+	 * @param   string  $name    The name of the model
+	 * @param   string  $prefix  The prefix for the model
+	 * @param   array   $config  An additional array of parameters
 	 *
 	 * @return  JModelLegacy  The model
 	 *

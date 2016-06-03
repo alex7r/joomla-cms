@@ -55,10 +55,10 @@ class JLoaderTest extends PHPUnit_Framework_TestCase
 	 */
 	public static function setUpBeforeClass()
 	{
-		self::$cache['classes']      = TestReflection::getValue('JLoader', 'classes');
-		self::$cache['imported']     = TestReflection::getValue('JLoader', 'imported');
-		self::$cache['prefixes']     = TestReflection::getValue('JLoader', 'prefixes');
-		self::$cache['namespaces']   = TestReflection::getValue('JLoader', 'namespaces');
+		self::$cache['classes']    = TestReflection::getValue('JLoader', 'classes');
+		self::$cache['imported']   = TestReflection::getValue('JLoader', 'imported');
+		self::$cache['prefixes']   = TestReflection::getValue('JLoader', 'prefixes');
+		self::$cache['namespaces'] = TestReflection::getValue('JLoader', 'namespaces');
 		self::$cache['classAliases'] = TestReflection::getValue('JLoader', 'classAliases');
 	}
 
@@ -89,11 +89,11 @@ class JLoaderTest extends PHPUnit_Framework_TestCase
 	public function casesImport()
 	{
 		return array(
-			'factory'      => array('joomla.factory', null, null, true, 'factory should load properly', true),
-			'jfactory'     => array('joomla.jfactory', null, null, false, 'JFactory does not exist so should not load properly', true),
+			'factory' => array('joomla.factory', null, null, true, 'factory should load properly', true),
+			'jfactory' => array('joomla.jfactory', null, null, false, 'JFactory does not exist so should not load properly', true),
 			'fred.factory' => array('fred.factory', null, null, false, 'fred.factory does not exist', true),
-			'bogus'        => array('bogusload', JPATH_TEST_STUBS, '', true, 'bogusload.php should load properly', false),
-			'helper'       => array('joomla.user.helper', null, '', true, 'userhelper should load properly', true));
+			'bogus' => array('bogusload', JPATH_TEST_STUBS, '', true, 'bogusload.php should load properly', false),
+			'helper' => array('joomla.user.helper', null, '', true, 'userhelper should load properly', true));
 	}
 
 	/**
@@ -107,7 +107,7 @@ class JLoaderTest extends PHPUnit_Framework_TestCase
 	{
 		return array(
 			'fred.factory' => array('fred.factory', false, 'fred.factory does not exist'),
-			'browser'      => array('joomla.environment.browser', true, 'JBrowser should load properly'));
+			'browser' => array('joomla.environment.browser', true, 'JBrowser should load properly'));
 	}
 
 	/**
@@ -257,17 +257,17 @@ class JLoaderTest extends PHPUnit_Framework_TestCase
 	/**
 	 * The success of this test depends on some files being in the file system to be imported. If the FS changes, this test may need revisited.
 	 *
-	 * @param   string  $filePath    Path to object
-	 * @param   string  $base        Path to location of object
-	 * @param   string  $libraries   Which libraries to use
-	 * @param   boolean $expect      Result of import (True = success)
-	 * @param   string  $message     Failure message
-	 * @param   boolean $useDefaults Use the default function arguments
+	 * @param   string   $filePath     Path to object
+	 * @param   string   $base         Path to location of object
+	 * @param   string   $libraries    Which libraries to use
+	 * @param   boolean  $expect       Result of import (True = success)
+	 * @param   string   $message      Failure message
+	 * @param   boolean  $useDefaults  Use the default function arguments
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesImport
-	 * @since        11.1
+	 * @since   11.1
 	 */
 	public function testImport($filePath, $base, $libraries, $expect, $message, $useDefaults)
 	{
@@ -286,14 +286,14 @@ class JLoaderTest extends PHPUnit_Framework_TestCase
 	/**
 	 * This tests the convenience function jimport.
 	 *
-	 * @param   string  $object  Name of object to be imported
-	 * @param   boolean $expect  Expected result
-	 * @param   string  $message Failure message to be displayed
+	 * @param   string   $object   Name of object to be imported
+	 * @param   boolean  $expect   Expected result
+	 * @param   string   $message  Failure message to be displayed
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesJimport
-	 * @since        11.1
+	 * @since   11.1
 	 */
 	public function testJimport($object, $expect, $message)
 	{
@@ -441,7 +441,7 @@ class JLoaderTest extends PHPUnit_Framework_TestCase
 		JLoader::registerAlias('foo', 'bar');
 
 		// Get the current prefixes array
-		$aliases        = TestReflection::getValue('JLoader', 'classAliases');
+		$aliases = TestReflection::getValue('JLoader', 'classAliases');
 		$aliasesInverse = TestReflection::getValue('JLoader', 'classAliasesInverse');
 
 		$this->assertEquals(
@@ -514,9 +514,9 @@ class JLoaderTest extends PHPUnit_Framework_TestCase
 		// Get the list of autoload functions.
 		$newLoaders = spl_autoload_functions();
 
-		$foundLoad        = false;
-		$foundAutoload    = false;
-		$foundLoadByPsr0  = false;
+		$foundLoad = false;
+		$foundAutoload = false;
+		$foundLoadByPsr0 = false;
 		$foundLoadByAlias = false;
 
 		// We search the list of autoload functions to see if our methods are there.
@@ -561,33 +561,6 @@ class JLoaderTest extends PHPUnit_Framework_TestCase
 
 		// Assert the Alias loader is found.
 		$this->assertTrue($foundLoadByAlias);
-	}
-
-	/**
-	 * A function to unregister the Joomla auto loaders.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function unregisterLoaders()
-	{
-		// Get all auto load functions.
-		$loaders = spl_autoload_functions();
-
-		// Unregister all Joomla loader functions if registered.
-		foreach ($loaders as $loader)
-		{
-			if (is_array($loader) && $loader[0] === 'JLoader'
-				&& ($loader[1] === 'load'
-					|| $loader[1] === '_autoload'
-					|| $loader[1] === 'loadByPsr0'
-					|| $loader[1] === 'loadByAlias')
-			)
-			{
-				spl_autoload_unregister($loader);
-			}
-		}
 	}
 
 	/**
@@ -688,7 +661,7 @@ class JLoaderTest extends PHPUnit_Framework_TestCase
 		// Get the autoload functions
 		$loaders = spl_autoload_functions();
 
-		$foundLoadPsr0  = false;
+		$foundLoadPsr0 = false;
 		$foundLoadAlias = false;
 
 		// We search the list of autoload functions to see if our method is here.
@@ -716,6 +689,32 @@ class JLoaderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * A function to unregister the Joomla auto loaders.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function unregisterLoaders()
+	{
+		// Get all auto load functions.
+		$loaders = spl_autoload_functions();
+
+		// Unregister all Joomla loader functions if registered.
+		foreach ($loaders as $loader)
+		{
+			if (is_array($loader) && $loader[0] === 'JLoader'
+				&& ($loader[1] === 'load'
+				|| $loader[1] === '_autoload'
+				|| $loader[1] === 'loadByPsr0'
+				|| $loader[1] === 'loadByAlias'))
+			{
+				spl_autoload_unregister($loader);
+			}
+		}
+	}
+
+	/**
 	 * Sets up the fixture.
 	 *
 	 * This method is called before a test is executed.
@@ -726,7 +725,7 @@ class JLoaderTest extends PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->bogusPath     = JPATH_TEST_STUBS . '';
+		$this->bogusPath = JPATH_TEST_STUBS . '';
 		$this->bogusFullPath = JPATH_TEST_STUBS . '/bogusload.php';
 	}
 }

@@ -27,9 +27,9 @@ class JGoogleDataPicasaPhoto extends JGoogleData
 	/**
 	 * Constructor.
 	 *
-	 * @param   SimpleXMLElement $xml     XML from Google
-	 * @param   Registry         $options Google options object
-	 * @param   JGoogleAuth      $auth    Google data http client object
+	 * @param   SimpleXMLElement  $xml      XML from Google
+	 * @param   Registry          $options  Google options object
+	 * @param   JGoogleAuth       $auth     Google data http client object
 	 *
 	 * @since   12.3
 	 */
@@ -48,7 +48,7 @@ class JGoogleDataPicasaPhoto extends JGoogleData
 	/**
 	 * Method to delete a Picasa photo
 	 *
-	 * @param   mixed $match Check for most up to date photo
+	 * @param   mixed  $match  Check for most up to date photo
 	 *
 	 * @return  boolean  Success or failure.
 	 *
@@ -101,7 +101,7 @@ class JGoogleDataPicasaPhoto extends JGoogleData
 	/**
 	 * Method to get the photo link
 	 *
-	 * @param   string $type Type of link to return
+	 * @param   string  $type  Type of link to return
 	 *
 	 * @return  string  Link or false on failure
 	 *
@@ -147,9 +147,9 @@ class JGoogleDataPicasaPhoto extends JGoogleData
 
 		foreach ($this->xml->children('media', true)->group->thumbnail as $item)
 		{
-			$url            = (string) $item->attributes()->url;
-			$width          = (int) $item->attributes()->width;
-			$height         = (int) $item->attributes()->height;
+			$url = (string) $item->attributes()->url;
+			$width = (int) $item->attributes()->width;
+			$height = (int) $item->attributes()->height;
 			$thumbs[$width] = array('url' => $url, 'w' => $width, 'h' => $height);
 		}
 
@@ -243,7 +243,7 @@ class JGoogleDataPicasaPhoto extends JGoogleData
 	/**
 	 * Method to set the title of the photo
 	 *
-	 * @param   string $title New photo title
+	 * @param   string  $title  New photo title
 	 *
 	 * @return  JGoogleDataPicasaPhoto  The object for method chaining
 	 *
@@ -259,7 +259,7 @@ class JGoogleDataPicasaPhoto extends JGoogleData
 	/**
 	 * Method to set the summary of the photo
 	 *
-	 * @param   string $summary New photo description
+	 * @param   string  $summary  New photo description
 	 *
 	 * @return  JGoogleDataPicasaPhoto  The object for method chaining
 	 *
@@ -275,7 +275,7 @@ class JGoogleDataPicasaPhoto extends JGoogleData
 	/**
 	 * Method to set the access level of the photo
 	 *
-	 * @param   string $access New photo access level
+	 * @param   string  $access  New photo access level
 	 *
 	 * @return  JGoogleDataPicasaPhoto  The object for method chaining
 	 *
@@ -291,7 +291,7 @@ class JGoogleDataPicasaPhoto extends JGoogleData
 	/**
 	 * Method to set the time of the photo
 	 *
-	 * @param   int $time New photo time
+	 * @param   int  $time  New photo time
 	 *
 	 * @return  JGoogleDataPicasaPhoto  The object for method chaining
 	 *
@@ -307,7 +307,7 @@ class JGoogleDataPicasaPhoto extends JGoogleData
 	/**
 	 * Method to modify a Picasa Photo
 	 *
-	 * @param   string $match Optional eTag matching parameter
+	 * @param   string  $match  Optional eTag matching parameter
 	 *
 	 * @return  mixed  Data from Google.
 	 *
@@ -328,7 +328,7 @@ class JGoogleDataPicasaPhoto extends JGoogleData
 			try
 			{
 				$headers = array('GData-Version' => 2, 'Content-type' => 'application/atom+xml', 'If-Match' => $match);
-				$jdata   = $this->query($url, $this->xml->asXml(), $headers, 'put');
+				$jdata = $this->query($url, $this->xml->asXml(), $headers, 'put');
 			}
 			catch (Exception $e)
 			{
@@ -361,8 +361,8 @@ class JGoogleDataPicasaPhoto extends JGoogleData
 	{
 		if ($this->isAuthenticated())
 		{
-			$url       = $this->getLink();
-			$jdata     = $this->query($url, null, array('GData-Version' => 2));
+			$url = $this->getLink();
+			$jdata = $this->query($url, null, array('GData-Version' => 2));
 			$this->xml = $this->safeXml($jdata->body);
 
 			return $this;

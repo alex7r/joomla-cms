@@ -9,6 +9,12 @@
 
 require_once 'JoomlaWebdriverTestCase.php';
 
+use SeleniumClient\By;
+use SeleniumClient\SelectElement;
+use SeleniumClient\WebDriver;
+use SeleniumClient\WebDriverWait;
+use SeleniumClient\DesiredCapabilities;
+
 /**
  * This class tests the  Category: Add / Edit  Screen.
  *
@@ -62,22 +68,22 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 	 */
 	public function frontEndCategoryChange_ChangeCategoryState_CategoryStateChanged()
 	{
-		$cfg         = new SeleniumConfig;
+		$cfg = new SeleniumConfig;
 		$homePageUrl = 'index.php';
 		$this->driver->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
-		$arrayTitles        = $this->siteHomePage->getArticleTitles();
+		$arrayTitles = $this->siteHomePage->getArticleTitles();
 		$this->assertTrue(in_array('Professionals', $arrayTitles), 'Article Must be present');
 		$this->assertTrue(in_array('Beginners', $arrayTitles), 'Article Must be present');
 		$this->assertTrue(in_array('Upgraders', $arrayTitles), 'Article Must be present');
 		$this->assertTrue(in_array('Joomla!', $arrayTitles), 'Article Must be present');
-		$cpPage                    = $this->doAdminLogin();
+		$cpPage = $this->doAdminLogin();
 		$this->categoryManagerPage = $cpPage->clickMenu('Category Manager', 'CategoryManagerPage');
 		$this->categoryManagerPage = $this->getPageObject('CategoryManagerPage');
 		$this->categoryManagerPage->changeCategoryState('Sample Data-Articles', 'unpublished');
 		$this->driver->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
-		$arrayTitles        = $this->siteHomePage->getArticleTitles();
+		$arrayTitles = $this->siteHomePage->getArticleTitles();
 		$this->assertFalse(in_array('Professionals', $arrayTitles), 'Article Must not be present');
 		$this->assertFalse(in_array('Beginners', $arrayTitles), 'Article Must not be present');
 		$this->assertFalse(in_array('Upgraders', $arrayTitles), 'Article Must not be present');
@@ -88,14 +94,14 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 		$this->assertTrue($this->siteHomePage->isEditPresent(), 'Articles Must be Editable');
 		$this->doSiteLogout();
 
-		$cpPage                    = $this->doAdminLogin();
+		$cpPage = $this->doAdminLogin();
 		$this->categoryManagerPage = $cpPage->clickMenu('Category Manager', 'CategoryManagerPage');
 		$this->categoryManagerPage = $this->getPageObject('CategoryManagerPage');
 		$this->categoryManagerPage->setFilter('Select Status', 'Unpublished');
 		$this->categoryManagerPage->changeCategoryState('Sample Data-Articles', 'published');
 		$this->driver->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
-		$arrayTitles        = $this->siteHomePage->getArticleTitles();
+		$arrayTitles = $this->siteHomePage->getArticleTitles();
 		$this->assertTrue(in_array('Professionals', $arrayTitles), 'Article Must be present');
 		$this->assertTrue(in_array('Beginners', $arrayTitles), 'Article Must be present');
 		$this->assertTrue(in_array('Upgraders', $arrayTitles), 'Article Must be present');
@@ -111,22 +117,22 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 	 */
 	public function frontEndCategoryState_StateChangedToArchived_StateChanged()
 	{
-		$cfg         = new SeleniumConfig;
+		$cfg = new SeleniumConfig;
 		$homePageUrl = 'index.php';
 		$this->driver->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
-		$arrayTitles        = $this->siteHomePage->getArticleTitles();
+		$arrayTitles = $this->siteHomePage->getArticleTitles();
 		$this->assertTrue(in_array('Professionals', $arrayTitles), 'Article Must be present');
 		$this->assertTrue(in_array('Beginners', $arrayTitles), 'Article Must be present');
 		$this->assertTrue(in_array('Upgraders', $arrayTitles), 'Article Must be present');
 		$this->assertTrue(in_array('Joomla!', $arrayTitles), 'Article Must be present');
-		$cpPage                    = $this->doAdminLogin();
+		$cpPage = $this->doAdminLogin();
 		$this->categoryManagerPage = $cpPage->clickMenu('Category Manager', 'CategoryManagerPage');
 		$this->categoryManagerPage = $this->getPageObject('CategoryManagerPage');
 		$this->categoryManagerPage->changeCategoryState('Sample Data-Articles', 'archived');
 		$this->driver->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
-		$arrayTitles        = $this->siteHomePage->getArticleTitles();
+		$arrayTitles = $this->siteHomePage->getArticleTitles();
 		$this->assertFalse(in_array('Professionals', $arrayTitles), 'Article Must not be present');
 		$this->assertFalse(in_array('Beginners', $arrayTitles), 'Article Must not be present');
 		$this->assertFalse(in_array('Upgraders', $arrayTitles), 'Article Must not be present');
@@ -140,7 +146,7 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 		$this->doSiteLogout();
 
 		/*set back the category to published state*/
-		$cpPage                    = $this->doAdminLogin();
+		$cpPage = $this->doAdminLogin();
 		$this->categoryManagerPage = $cpPage->clickMenu('Category Manager', 'CategoryManagerPage');
 		$this->categoryManagerPage = $this->getPageObject('CategoryManagerPage');
 		$this->categoryManagerPage->setFilter('Select Status', 'Archived');
@@ -151,7 +157,7 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 		$this->articleManagerPage->changeArticleState('Beginners', 'unpublished');
 		$this->driver->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
-		$arrayTitles        = $this->siteHomePage->getArticleTitles();
+		$arrayTitles = $this->siteHomePage->getArticleTitles();
 		$this->assertTrue(in_array('Professionals', $arrayTitles), 'Article Must be present');
 		$this->assertFalse(in_array('Beginners', $arrayTitles), 'Article Must not be present');
 		$this->assertTrue(in_array('Upgraders', $arrayTitles), 'Article Must be present');
@@ -164,7 +170,7 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 		$this->doSiteLogout();
 
 		/*set back Beginners Article to Published State*/
-		$cpPage         = $this->doAdminLogin();
+		$cpPage = $this->doAdminLogin();
 		$articleManager = 'administrator/index.php?option=com_content';
 		$this->driver->get($cfg->host . $cfg->path . $articleManager);
 		$this->articleManagerPage = $this->getPageObject('ArticleManagerPage');
@@ -172,7 +178,7 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 		$this->articleManagerPage->changeArticleState('Beginners', 'Published');
 		$this->driver->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
-		$arrayTitles        = $this->siteHomePage->getArticleTitles();
+		$arrayTitles = $this->siteHomePage->getArticleTitles();
 		$this->assertTrue(in_array('Beginners', $arrayTitles), 'Article Must be present');
 	}
 
@@ -185,12 +191,12 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 	 */
 	public function frontEndArticleState_ChangeArticleStateToTrashed_ArticleStateChanged()
 	{
-		$cfg            = new SeleniumConfig;
-		$homePageUrl    = 'index.php';
+		$cfg = new SeleniumConfig;
+		$homePageUrl = 'index.php';
 		$articleManager = 'administrator/index.php?option=com_content';
 		$this->driver->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
-		$arrayTitles        = $this->siteHomePage->getArticleTitles();
+		$arrayTitles = $this->siteHomePage->getArticleTitles();
 		$this->assertTrue(in_array('Beginners', $arrayTitles), 'Article Must be present');
 
 		$cpPage = $this->doAdminLogin();
@@ -199,7 +205,7 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 		$this->articleManagerPage->changeArticleState('Beginners', 'Trashed');
 		$this->driver->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
-		$arrayTitles        = $this->siteHomePage->getArticleTitles();
+		$arrayTitles = $this->siteHomePage->getArticleTitles();
 		$this->assertFalse(in_array('Beginners', $arrayTitles), 'Article Must not be present');
 
 		$this->doSiteLogin();
@@ -210,7 +216,7 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 		$this->doSiteLogout();
 
 		/*set back Beginners Article to Published State*/
-		$cpPage         = $this->doAdminLogin();
+		$cpPage = $this->doAdminLogin();
 		$articleManager = 'administrator/index.php?option=com_content';
 		$this->driver->get($cfg->host . $cfg->path . $articleManager);
 		$this->articleManagerPage = $this->getPageObject('ArticleManagerPage');
@@ -218,7 +224,7 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 		$this->articleManagerPage->changeArticleState('Beginners', 'Published');
 		$this->driver->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
-		$arrayTitles        = $this->siteHomePage->getArticleTitles();
+		$arrayTitles = $this->siteHomePage->getArticleTitles();
 		$this->assertTrue(in_array('Beginners', $arrayTitles), 'Article Must be present');
 	}
 
@@ -231,22 +237,22 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 	 */
 	public function frontEndCategoryState_ChangeCategoryState_FrontEndCategoryChanged()
 	{
-		$cfg         = new SeleniumConfig;
+		$cfg = new SeleniumConfig;
 		$categoryUrl = 'index.php/using-joomla/extensions/components/content-component/article-categories';
 		$this->driver->get($cfg->host . $cfg->path . $categoryUrl);
 		$this->siteCategoryPage = $this->getPageObject('SiteContentCategoriesPage');
-		$arrayTitles            = $this->siteCategoryPage->getCategoryTitles();
+		$arrayTitles = $this->siteCategoryPage->getCategoryTitles();
 		$this->assertTrue(in_array('Park Site', $arrayTitles), 'Category Must be present');
 		$this->assertTrue(in_array('Joomla!', $arrayTitles), 'Category Must be present');
 		$this->assertTrue(in_array('Fruit Shop Site', $arrayTitles), 'Category Must be present');
-		$cpPage                    = $this->doAdminLogin();
+		$cpPage = $this->doAdminLogin();
 		$this->categoryManagerPage = $cpPage->clickMenu('Category Manager', 'CategoryManagerPage');
 		$this->categoryManagerPage = $this->getPageObject('CategoryManagerPage');
 		$this->categoryManagerPage->changeCategoryState('Park Site', 'unpublished');
 
 		$this->driver->get($cfg->host . $cfg->path . $categoryUrl);
 		$this->siteCategoryPage = $this->getPageObject('SiteContentCategoriesPage');
-		$arrayTitles            = $this->siteCategoryPage->getCategoryTitles();
+		$arrayTitles = $this->siteCategoryPage->getCategoryTitles();
 		$this->assertFalse(in_array('Park Site', $arrayTitles), 'Category Must not be present');
 		$this->assertTrue(in_array('Joomla!', $arrayTitles), 'Category Must be present');
 		$this->assertTrue(in_array('Fruit Shop Site', $arrayTitles), 'Category Must be present');
@@ -254,20 +260,20 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 		$this->doSiteLogin();
 		$this->driver->get($cfg->host . $cfg->path . $categoryUrl);
 		$this->siteCategoryPage = $this->getPageObject('SiteContentCategoriesPage');
-		$arrayTitles            = $this->siteCategoryPage->getCategoryTitles();
+		$arrayTitles = $this->siteCategoryPage->getCategoryTitles();
 		$this->assertFalse(in_array('Park Site', $arrayTitles), 'Category Must not be present');
 		$this->assertTrue(in_array('Joomla!', $arrayTitles), 'Category Must be present');
 		$this->assertTrue(in_array('Fruit Shop Site', $arrayTitles), 'Category Must be present');
 		$this->doSiteLogout();
 
-		$cpPage                    = $this->doAdminLogin();
+		$cpPage = $this->doAdminLogin();
 		$this->categoryManagerPage = $cpPage->clickMenu('Category Manager', 'CategoryManagerPage');
 		$this->categoryManagerPage = $this->getPageObject('CategoryManagerPage');
 		$this->categoryManagerPage->setFilter('Select Status', 'Unpublished');
 		$this->categoryManagerPage->changeCategoryState('Park Site', 'published');
 		$this->driver->get($cfg->host . $cfg->path . $categoryUrl);
 		$this->siteCategoryPage = $this->getPageObject('SiteContentCategoriesPage');
-		$arrayTitles            = $this->siteCategoryPage->getCategoryTitles();
+		$arrayTitles = $this->siteCategoryPage->getCategoryTitles();
 		$this->assertTrue(in_array('Park Site', $arrayTitles), 'Category Must be present');
 		$this->assertTrue(in_array('Joomla!', $arrayTitles), 'Category Must be present');
 		$this->assertTrue(in_array('Fruit Shop Site', $arrayTitles), 'Category Must be present');
@@ -282,23 +288,23 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 	 */
 	public function frontEndCategoryStateChange_ChangeCategoryToArchive_StateChanged()
 	{
-		$cfg         = new SeleniumConfig;
+		$cfg = new SeleniumConfig;
 		$categoryUrl = 'index.php/using-joomla/extensions/components/content-component/article-categories';
 		$this->driver->get($cfg->host . $cfg->path . $categoryUrl);
 		$this->siteCategoryPage = $this->getPageObject('SiteContentCategoriesPage');
-		$arrayTitles            = $this->siteCategoryPage->getCategoryTitles();
+		$arrayTitles = $this->siteCategoryPage->getCategoryTitles();
 		$this->assertTrue(in_array('Park Site', $arrayTitles), 'Category Must be present');
 		$this->assertTrue(in_array('Joomla!', $arrayTitles), 'Category Must be present');
 		$this->assertTrue(in_array('Fruit Shop Site', $arrayTitles), 'Category Must be present');
 
 		/*Change Category State to Archive*/
-		$cpPage                    = $this->doAdminLogin();
+		$cpPage = $this->doAdminLogin();
 		$this->categoryManagerPage = $cpPage->clickMenu('Category Manager', 'CategoryManagerPage');
 		$this->categoryManagerPage = $this->getPageObject('CategoryManagerPage');
 		$this->categoryManagerPage->changeCategoryState('Park Site', 'archived');
 		$this->driver->get($cfg->host . $cfg->path . $categoryUrl);
 		$this->siteCategoryPage = $this->getPageObject('SiteContentCategoriesPage');
-		$arrayTitles            = $this->siteCategoryPage->getCategoryTitles();
+		$arrayTitles = $this->siteCategoryPage->getCategoryTitles();
 		$this->assertFalse(in_array('Park Site', $arrayTitles), 'Category Must not be present');
 		$this->assertTrue(in_array('Joomla!', $arrayTitles), 'Category Must be present');
 		$this->assertTrue(in_array('Fruit Shop Site', $arrayTitles), 'Category Must be present');
@@ -306,21 +312,21 @@ class CategoryManager0004Test extends JoomlaWebdriverTestCase
 		$this->doSiteLogin();
 		$this->driver->get($cfg->host . $cfg->path . $categoryUrl);
 		$this->siteCategoryPage = $this->getPageObject('SiteContentCategoriesPage');
-		$arrayTitles            = $this->siteCategoryPage->getCategoryTitles();
+		$arrayTitles = $this->siteCategoryPage->getCategoryTitles();
 		$this->assertFalse(in_array('Park Site', $arrayTitles), 'Category Must not be present');
 		$this->assertTrue(in_array('Joomla!', $arrayTitles), 'Category Must be present');
 		$this->assertTrue(in_array('Fruit Shop Site', $arrayTitles), 'Category Must be present');
 		$this->doSiteLogout();
 
 		/*change the category State Back to Published*/
-		$cpPage                    = $this->doAdminLogin();
+		$cpPage = $this->doAdminLogin();
 		$this->categoryManagerPage = $cpPage->clickMenu('Category Manager', 'CategoryManagerPage');
 		$this->categoryManagerPage = $this->getPageObject('CategoryManagerPage');
 		$this->categoryManagerPage->setFilter('Select Status', 'Archived');
 		$this->categoryManagerPage->changeCategoryState('Park Site', 'published');
 		$this->driver->get($cfg->host . $cfg->path . $categoryUrl);
 		$this->siteCategoryPage = $this->getPageObject('SiteContentCategoriesPage');
-		$arrayTitles            = $this->siteCategoryPage->getCategoryTitles();
+		$arrayTitles = $this->siteCategoryPage->getCategoryTitles();
 		$this->assertTrue(in_array('Park Site', $arrayTitles), 'Category Must be present');
 		$this->assertTrue(in_array('Joomla!', $arrayTitles), 'Category Must be present');
 		$this->assertTrue(in_array('Fruit Shop Site', $arrayTitles), 'Category Must be present');

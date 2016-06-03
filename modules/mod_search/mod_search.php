@@ -21,13 +21,13 @@ if ($params->get('opensearch', 1))
 
 	$ostitle = $params->get('opensearch_title', JText::_('MOD_SEARCH_SEARCHBUTTON_TEXT') . ' ' . $app->get('sitename'));
 	$doc->addHeadLink(
-		JUri::getInstance()->toString(array('scheme', 'host', 'port'))
-		. JRoute::_('&option=com_search&format=opensearch'), 'search', 'rel',
-		array(
-			'title' => htmlspecialchars($ostitle, ENT_COMPAT, 'UTF-8'),
-			'type'  => 'application/opensearchdescription+xml'
-		)
-	);
+			JUri::getInstance()->toString(array('scheme', 'host', 'port'))
+			. JRoute::_('&option=com_search&format=opensearch'), 'search', 'rel',
+			array(
+				'title' => htmlspecialchars($ostitle, ENT_COMPAT, 'UTF-8'),
+				'type' => 'application/opensearchdescription+xml'
+			)
+		);
 }
 
 $upper_limit     = $lang->getUpperLimitSearchWord();

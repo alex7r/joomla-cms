@@ -1,10 +1,10 @@
 <?php
 /**
- * @package        Joomla.UnitTest
- * @subpackage     Toolbar
+ * @package	    Joomla.UnitTest
+ * @subpackage  Toolbar
  *
- * @copyright      Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
- * @license        GNU General Public License version 2 or later; see LICENSE
+ * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license	    GNU General Public License version 2 or later; see LICENSE
  */
 
 /**
@@ -33,21 +33,6 @@ class JToolbarButtonStandardTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
-	 * Tests the fetchId method
-	 *
-	 * @return  void
-	 *
-	 * @since   3.0
-	 */
-	public function testFetchId()
-	{
-		$this->assertThat(
-			$this->object->fetchId('standard', 'test'),
-			$this->equalTo('toolbar-test')
-		);
-	}
-
-	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
@@ -61,5 +46,20 @@ class JToolbarButtonStandardTest extends PHPUnit_Framework_TestCase
 
 		$this->toolbar = JToolbar::getInstance();
 		$this->object  = $this->toolbar->loadButtonType('standard');
+	}
+
+	/**
+	 * Tests the fetchId method
+	 *
+	 * @return  void
+	 *
+	 * @since   3.0
+	 */
+	public function testFetchId()
+	{
+		$this->assertThat(
+			$this->object->fetchId('standard', 'test'),
+			$this->equalTo('toolbar-test')
+		);
 	}
 }

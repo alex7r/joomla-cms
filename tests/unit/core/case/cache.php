@@ -33,6 +33,55 @@ abstract class TestCaseCache extends TestCase
 	protected $group = '_testing';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+		JFactory::$session     = $this->getMockSession();
+
+		$this->id = bin2hex(random_bytes(8));
+	}
+
+	/**
+	 * Tears down the fixture, for example, close a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		if ($this->handler instanceof JCacheStorage)
+		{
+			$this->handler->clean($this->group);
+		}
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Check if the adapter is blacklisted in an environment
+	 *
+	 * @param   string  $name  The name of the adapter
+	 *
+	 * @return  boolean
+	 */
+	protected function isBlacklisted($name)
+	{
+		// Memcached & Redis test as supported on the Jenkins server but data processing fails, temporarily block them only in this environment
+		return in_array($name, array('memcached', 'redis')) && isset($_ENV['BUILD_TAG']) && strpos($_ENV['BUILD_TAG'], 'jenkins-cms-') === 0;
+	}
+
+	/**
 	 * @testdox  Data is correctly stored to and retrieved from the cache storage handler
 	 */
 	public function testCacheHit()
@@ -115,54 +164,5 @@ abstract class TestCaseCache extends TestCase
 	public function testIsSupported()
 	{
 		$this->assertTrue($this->handler->isSupported(), 'Claims the cache handler is not supported.');
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$session     = $this->getMockSession();
-
-		$this->id = bin2hex(random_bytes(8));
-	}
-
-	/**
-	 * Tears down the fixture, for example, close a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		if ($this->handler instanceof JCacheStorage)
-		{
-			$this->handler->clean($this->group);
-		}
-
-		parent::tearDown();
-	}
-
-	/**
-	 * Check if the adapter is blacklisted in an environment
-	 *
-	 * @param   string $name The name of the adapter
-	 *
-	 * @return  boolean
-	 */
-	protected function isBlacklisted($name)
-	{
-		// Memcached & Redis test as supported on the Jenkins server but data processing fails, temporarily block them only in this environment
-		return in_array($name, array('memcached', 'redis')) && isset($_ENV['BUILD_TAG']) && strpos($_ENV['BUILD_TAG'], 'jenkins-cms-') === 0;
 	}
 }

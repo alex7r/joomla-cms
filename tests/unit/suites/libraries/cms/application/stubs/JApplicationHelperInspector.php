@@ -31,7 +31,7 @@ class JApplicationHelperInspector extends JApplicationHelper
 	/**
 	 * Set the application data.
 	 *
-	 * @param   string $apps The app to set.
+	 * @param   string  $apps  The app to set.
 	 *
 	 * @return  void
 	 *

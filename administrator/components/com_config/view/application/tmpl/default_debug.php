@@ -9,6 +9,6 @@
 
 defined('_JEXEC') or die;
 
-$this->name       = JText::_('COM_CONFIG_DEBUG_SETTINGS');
+$this->name = JText::_('COM_CONFIG_DEBUG_SETTINGS');
 $this->fieldsname = 'debug';
 echo JLayoutHelper::render('joomla.content.options_default', $this);

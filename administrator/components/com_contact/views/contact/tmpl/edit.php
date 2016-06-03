@@ -16,7 +16,7 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-$app   = JFactory::getApplication();
+$app = JFactory::getApplication();
 $input = $app->input;
 
 $assoc = JLanguageAssociations::isEnabled();
@@ -42,13 +42,11 @@ $this->ignore_fieldsets = array('details', 'item_associations', 'jmetadata');
 
 // In case of modal
 $isModal = $input->get('layout') == 'modal' ? true : false;
-$layout  = $isModal ? 'modal' : 'edit';
-$tmpl    = $isModal ? '&tmpl=component' : '';
+$layout = $isModal ? 'modal' : 'edit';
+$tmpl = $isModal ? '&tmpl=component' : '';
 ?>
 
-<form
-	action="<?php echo JRoute::_('index.php?option=com_contact&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
-	method="post" name="adminForm" id="contact-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_contact&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="contact-form" class="form-validate">
 
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
@@ -89,9 +87,9 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'misc', JText::_('JGLOBAL_FIELDSET_MISCELLANEOUS')); ?>
 		<div class="row-fluid form-horizontal-desktop">
-			<div class="form-vertical">
-				<?php echo $this->form->renderField('misc'); ?>
-			</div>
+				<div class="form-vertical">
+					<?php echo $this->form->renderField('misc'); ?>
+				</div>
 		</div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
 
@@ -108,7 +106,7 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 
 		<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 
-		<?php if (!$isModal && $assoc) : ?>
+		<?php if ( ! $isModal && $assoc) : ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations', JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')); ?>
 			<?php echo $this->loadTemplate('associations'); ?>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
@@ -118,6 +116,6 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 	</div>
-	<input type="hidden" name="task" value=""/>
+	<input type="hidden" name="task" value="" />
 	<?php echo JHtml::_('form.token'); ?>
 </form>

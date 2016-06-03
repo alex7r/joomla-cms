@@ -21,8 +21,8 @@ class ModRandomImageHelper
 	/**
 	 * Retrieves a random image
 	 *
-	 * @param   \Joomla\Registry\Registry &$params module parameters object
-	 * @param   array                     $images  list of images
+	 * @param   \Joomla\Registry\Registry  &$params  module parameters object
+	 * @param   array                      $images   list of images
 	 *
 	 * @return  mixed
 	 */
@@ -76,8 +76,8 @@ class ModRandomImageHelper
 	/**
 	 * Retrieves images from a specific folder
 	 *
-	 * @param   \Joomla\Registry\Registry &$params module params
-	 * @param   string                    $folder  folder to get the images from
+	 * @param   \Joomla\Registry\Registry  &$params  module params
+	 * @param   string                     $folder   folder to get the images from
 	 *
 	 * @return array
 	 */
@@ -129,7 +129,7 @@ class ModRandomImageHelper
 	/**
 	 * Get sanitized folder
 	 *
-	 * @param   \Joomla\Registry\Registry &$params module params objects
+	 * @param   \Joomla\Registry\Registry  &$params  module params objects
 	 *
 	 * @return  mixed
 	 */

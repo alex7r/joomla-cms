@@ -19,18 +19,18 @@ use Joomla\Registry\Registry;
 class JTwitterOAuth extends JOAuth1Client
 {
 	/**
-	 * @var Registry  Options for the JTwitterOauth object.
-	 * @since  12.3
-	 */
+	* @var Registry  Options for the JTwitterOauth object.
+	* @since  12.3
+	*/
 	protected $options;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry        $options     JTwitterOauth options object.
-	 * @param   JHttp           $client      The HTTP client object.
-	 * @param   JInput          $input       The input object.
-	 * @param   JApplicationWeb $application The application object.
+	 * @param   Registry         $options      JTwitterOauth options object.
+	 * @param   JHttp            $client       The HTTP client object.
+	 * @param   JInput           $input        The input object.
+	 * @param   JApplicationWeb  $application  The application object.
 	 *
 	 * @since   12.3
 	 */
@@ -104,8 +104,8 @@ class JTwitterOAuth extends JOAuth1Client
 	/**
 	 * Method to validate a response.
 	 *
-	 * @param   string        $url      The request URL.
-	 * @param   JHttpResponse $response The response to validate.
+	 * @param   string         $url       The request URL.
+	 * @param   JHttpResponse  $response  The response to validate.
 	 *
 	 * @return  void
 	 *

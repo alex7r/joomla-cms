@@ -27,7 +27,7 @@ class JComponentRouterLegacy implements JComponentRouterInterface
 	/**
 	 * Constructor
 	 *
-	 * @param   string $component Component name without the com_ prefix this router should react upon
+	 * @param   string  $component  Component name without the com_ prefix this router should react upon
 	 *
 	 * @since   3.3
 	 */
@@ -39,7 +39,7 @@ class JComponentRouterLegacy implements JComponentRouterInterface
 	/**
 	 * Generic preprocess function for missing or legacy component router
 	 *
-	 * @param   array $query An associative array of URL arguments
+	 * @param   array  $query  An associative array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *
@@ -53,7 +53,7 @@ class JComponentRouterLegacy implements JComponentRouterInterface
 	/**
 	 * Generic build function for missing or legacy component router
 	 *
-	 * @param   array &$query An array of URL arguments
+	 * @param   array  &$query  An array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *
@@ -82,7 +82,7 @@ class JComponentRouterLegacy implements JComponentRouterInterface
 	/**
 	 * Generic parse function for missing or legacy component router
 	 *
-	 * @param   array &$segments The segments of the URL to parse.
+	 * @param   array  &$segments  The segments of the URL to parse.
 	 *
 	 * @return  array  The URL attributes to be used by the application.
 	 *

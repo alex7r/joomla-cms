@@ -21,7 +21,7 @@ class JFormFieldMenutype extends JFormFieldList
 	/**
 	 * The form field type.
 	 *
-	 * @var        string
+	 * @var		string
 	 * @since   1.6
 	 */
 	protected $type = 'menutype';
@@ -29,7 +29,7 @@ class JFormFieldMenutype extends JFormFieldList
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @return  string    The field input markup.
+	 * @return  string	The field input markup.
 	 *
 	 * @since   1.6
 	 */
@@ -80,7 +80,7 @@ class JFormFieldMenutype extends JFormFieldList
 			}
 		');
 
-		$link   = JRoute::_('index.php?option=com_menus&view=menutypes&tmpl=component&recordId=' . $recordId);
+		$link = JRoute::_('index.php?option=com_menus&view=menutypes&tmpl=component&recordId=' . $recordId);
 		$html[] = '<span class="input-append"><input type="text" ' . $required . ' readonly="readonly" id="' . $this->id
 			. '" value="' . $value . '"' . $size . $class . ' />';
 		$html[] = '<a href="#menuTypeModal" role="button" class="btn btn-primary" data-toggle="modal" title="' . JText::_('JSELECT') . '">'
@@ -97,7 +97,7 @@ class JFormFieldMenutype extends JFormFieldList
 				'modalWidth' => '80',
 				'bodyHeight' => '70',
 				'footer'     => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">'
-					. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
+						. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
 			)
 		);
 		$html[] = '<input class="input-small" type="hidden" name="' . $this->name . '" value="'

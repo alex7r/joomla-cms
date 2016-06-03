@@ -20,8 +20,8 @@ class FOFInput extends JInput
 	 * Public constructor. Overriden to allow specifying the global input array
 	 * to use as a string and instantiate from an objetc holding variables.
 	 *
-	 * @param   array|string|object|null $source  Source data; set null to use $_REQUEST
-	 * @param   array                    $options Filter options
+	 * @param   array|string|object|null  $source   Source data; set null to use $_REQUEST
+	 * @param   array                     $options  Filter options
 	 */
 	public function __construct($source = null, array $options = array())
 	{
@@ -53,7 +53,7 @@ class FOFInput extends JInput
 					break;
 				default:
 					$source = $_REQUEST;
-					$hash   = 'REQUEST';
+					$hash = 'REQUEST';
 					break;
 			}
 		}
@@ -76,7 +76,7 @@ class FOFInput extends JInput
 		{
 			// Any other case
 			$source = $_REQUEST;
-			$hash   = 'REQUEST';
+			$hash = 'REQUEST';
 		}
 
 		// Magic quotes GPC handling (something JInput simply can't handle at all)
@@ -90,12 +90,43 @@ class FOFInput extends JInput
 	}
 
 	/**
+	 * Gets a value from the input data. Overriden to allow specifying a filter
+	 * mask.
+	 *
+	 * @param   string  $name     Name of the value to get.
+	 * @param   mixed   $default  Default value to return if variable does not exist.
+	 * @param   string  $filter   Filter to apply to the value.
+	 * @param   int     $mask     The filter mask
+	 *
+	 * @return  mixed  The filtered input value.
+	 */
+	public function get($name, $default = null, $filter = 'cmd', $mask = 0)
+	{
+		if (isset($this->data[$name]))
+		{
+			return $this->_cleanVar($this->data[$name], $mask, $filter);
+		}
+
+		return $default;
+	}
+
+	/**
+	 * Returns a copy of the raw data stored in the class
+	 *
+	 * @return  array
+	 */
+	public function getData()
+	{
+		return $this->data;
+	}
+
+	/**
 	 * Old static methods are now deprecated. This magic method makes sure there
 	 * is a continuity in our approach. The downside is that it's only compatible
 	 * with PHP 5.3.0. Sorry!
 	 *
-	 * @param   string $name      Name of the method we're calling
-	 * @param   array  $arguments The arguments passed to the method
+	 * @param   string  $name       Name of the method we're calling
+	 * @param   array   $arguments  The arguments passed to the method
 	 *
 	 * @return  mixed
 	 */
@@ -106,11 +137,11 @@ class FOFInput extends JInput
 		if (substr($name, 0, 3) == 'get')
 		{
 			// Initialise arguments
-			$key     = array_shift($arguments);
+			$key = array_shift($arguments);
 			$default = array_shift($arguments);
-			$input   = array_shift($arguments);
-			$type    = 'none';
-			$mask    = 0;
+			$input = array_shift($arguments);
+			$type = 'none';
+			$mask = 0;
 
 			$type = strtolower(substr($name, 3));
 
@@ -142,12 +173,43 @@ class FOFInput extends JInput
 	}
 
 	/**
+	 * Magic method to get filtered input data.
+	 *
+	 * @param   mixed   $name       Name of the value to get.
+	 * @param   string  $arguments  Default value to return if variable does not exist.
+	 *
+	 * @return  boolean  The filtered boolean input value.
+	 */
+	public function __call($name, $arguments)
+	{
+		if (substr($name, 0, 3) == 'get')
+		{
+			$filter = substr($name, 3);
+
+			$default = null;
+			$mask = 0;
+
+			if (isset($arguments[1]))
+			{
+				$default = $arguments[1];
+			}
+
+			if (isset($arguments[2]))
+			{
+				$mask = $arguments[2];
+			}
+
+			return $this->get($arguments[0], $default, $filter, $mask);
+		}
+	}
+
+	/**
 	 * Sets an input variable. WARNING: IT SHOULD NO LONGER BE USED!
 	 *
-	 * @param   string  $name      The name of the variable to set
-	 * @param   mixed   $value     The value to set it to
-	 * @param   array   &$input    The input array or FOFInput object
-	 * @param   boolean $overwrite Should I overwrite existing values (default: true)
+	 * @param   string   $name       The name of the variable to set
+	 * @param   mixed    $value      The value to set it to
+	 * @param   array    &$input     The input array or FOFInput object
+	 * @param   boolean  $overwrite  Should I overwrite existing values (default: true)
 	 *
 	 * @return  string   Previous value
 	 *
@@ -188,74 +250,12 @@ class FOFInput extends JInput
 	}
 
 	/**
-	 * Returns a copy of the raw data stored in the class
-	 *
-	 * @return  array
-	 */
-	public function getData()
-	{
-		return $this->data;
-	}
-
-	/**
-	 * Magic method to get filtered input data.
-	 *
-	 * @param   mixed  $name      Name of the value to get.
-	 * @param   string $arguments Default value to return if variable does not exist.
-	 *
-	 * @return  boolean  The filtered boolean input value.
-	 */
-	public function __call($name, $arguments)
-	{
-		if (substr($name, 0, 3) == 'get')
-		{
-			$filter = substr($name, 3);
-
-			$default = null;
-			$mask    = 0;
-
-			if (isset($arguments[1]))
-			{
-				$default = $arguments[1];
-			}
-
-			if (isset($arguments[2]))
-			{
-				$mask = $arguments[2];
-			}
-
-			return $this->get($arguments[0], $default, $filter, $mask);
-		}
-	}
-
-	/**
-	 * Gets a value from the input data. Overriden to allow specifying a filter
-	 * mask.
-	 *
-	 * @param   string $name    Name of the value to get.
-	 * @param   mixed  $default Default value to return if variable does not exist.
-	 * @param   string $filter  Filter to apply to the value.
-	 * @param   int    $mask    The filter mask
-	 *
-	 * @return  mixed  The filtered input value.
-	 */
-	public function get($name, $default = null, $filter = 'cmd', $mask = 0)
-	{
-		if (isset($this->data[$name]))
-		{
-			return $this->_cleanVar($this->data[$name], $mask, $filter);
-		}
-
-		return $default;
-	}
-
-	/**
 	 * Custom filter implementation. Works better with arrays and allows the use
 	 * of a filter mask.
 	 *
-	 * @param   mixed   $var  The variable (value) to clean
-	 * @param   integer $mask The clean mask
-	 * @param   string  $type The variable type
+	 * @param   mixed    $var   The variable (value) to clean
+	 * @param   integer  $mask  The clean mask
+	 * @param   string   $type  The variable type
 	 *
 	 * @return   mixed
 	 */
@@ -289,7 +289,7 @@ class FOFInput extends JInput
 		{
 			// If the allow HTML flag is set, apply a safe HTML filter to the variable
 			$safeHtmlFilter = JFilterInput::getInstance(null, null, 1, 1);
-			$var            = $safeHtmlFilter->clean($var, $type);
+			$var = $safeHtmlFilter->clean($var, $type);
 		}
 		else
 		{

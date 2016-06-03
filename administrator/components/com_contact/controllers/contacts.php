@@ -21,7 +21,7 @@ class ContactControllerContacts extends JControllerAdmin
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JControllerLegacy
 	 * @since   1.6
@@ -30,7 +30,7 @@ class ContactControllerContacts extends JControllerAdmin
 	{
 		parent::__construct($config);
 
-		$this->registerTask('unfeatured', 'featured');
+		$this->registerTask('unfeatured',	'featured');
 	}
 
 	/**
@@ -52,7 +52,7 @@ class ContactControllerContacts extends JControllerAdmin
 
 		// Get the model.
 		/** @var ContactModelContact $model */
-		$model = $this->getModel();
+		$model  = $this->getModel();
 
 		// Access checks.
 		foreach ($ids as $i => $id)
@@ -86,9 +86,9 @@ class ContactControllerContacts extends JControllerAdmin
 	/**
 	 * Proxy for getModel.
 	 *
-	 * @param   string $name   The name of the model.
-	 * @param   string $prefix The prefix for the PHP class name.
-	 * @param   array  $config Array of configuration parameters.
+	 * @param   string  $name    The name of the model.
+	 * @param   string  $prefix  The prefix for the PHP class name.
+	 * @param   array   $config  Array of configuration parameters.
 	 *
 	 * @return  JModelLegacy
 	 *

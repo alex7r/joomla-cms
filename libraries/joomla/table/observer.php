@@ -28,7 +28,7 @@ abstract class JTableObserver implements JObserverInterface
 	/**
 	 * Constructor: Associates to $table $this observer
 	 *
-	 * @param   JTableInterface $table Table to be observed
+	 * @param   JTableInterface  $table  Table to be observed
 	 *
 	 * @since   3.1.2
 	 */
@@ -41,9 +41,9 @@ abstract class JTableObserver implements JObserverInterface
 	/**
 	 * Pre-processor for $table->load($keys, $reset)
 	 *
-	 * @param   mixed   $keys    An optional primary key value to load the row by, or an array of fields to match.  If not
+	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
 	 *                           set the instance property value is used.
-	 * @param   boolean $reset   True to reset the default values before loading the new row.
+	 * @param   boolean  $reset  True to reset the default values before loading the new row.
 	 *
 	 * @return  void
 	 *
@@ -56,8 +56,8 @@ abstract class JTableObserver implements JObserverInterface
 	/**
 	 * Post-processor for $table->load($keys, $reset)
 	 *
-	 * @param   boolean &$result The result of the load
-	 * @param   array   $row     The loaded (and already binded to $this->table) row of the database table
+	 * @param   boolean  &$result  The result of the load
+	 * @param   array    $row      The loaded (and already binded to $this->table) row of the database table
 	 *
 	 * @return  void
 	 *
@@ -70,8 +70,8 @@ abstract class JTableObserver implements JObserverInterface
 	/**
 	 * Pre-processor for $table->store($updateNulls)
 	 *
-	 * @param   boolean $updateNulls The result of the load
-	 * @param   string  $tableKey    The key of the table
+	 * @param   boolean  $updateNulls  The result of the load
+	 * @param   string   $tableKey     The key of the table
 	 *
 	 * @return  void
 	 *
@@ -84,7 +84,7 @@ abstract class JTableObserver implements JObserverInterface
 	/**
 	 * Post-processor for $table->store($updateNulls)
 	 *
-	 * @param   boolean &$result The result of the store
+	 * @param   boolean  &$result  The result of the store
 	 *
 	 * @return  void
 	 *
@@ -97,7 +97,7 @@ abstract class JTableObserver implements JObserverInterface
 	/**
 	 * Pre-processor for $table->delete($pk)
 	 *
-	 * @param   mixed $pk An optional primary key value to delete.  If not set the instance property value is used.
+	 * @param   mixed  $pk  An optional primary key value to delete.  If not set the instance property value is used.
 	 *
 	 * @return  void
 	 *
@@ -111,7 +111,7 @@ abstract class JTableObserver implements JObserverInterface
 	/**
 	 * Post-processor for $table->delete($pk)
 	 *
-	 * @param   mixed $pk The deleted primary key value.
+	 * @param   mixed  $pk  The deleted primary key value.
 	 *
 	 * @return  void
 	 *

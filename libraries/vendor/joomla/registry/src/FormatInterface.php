@@ -18,8 +18,8 @@ interface FormatInterface
 	/**
 	 * Converts an object into a formatted string.
 	 *
-	 * @param   object $object  Data Source Object.
-	 * @param   array  $options An array of options for the formatter.
+	 * @param   object  $object   Data Source Object.
+	 * @param   array   $options  An array of options for the formatter.
 	 *
 	 * @return  string  Formatted string.
 	 *
@@ -30,8 +30,8 @@ interface FormatInterface
 	/**
 	 * Converts a formatted string into an object.
 	 *
-	 * @param   string $data    Formatted string
-	 * @param   array  $options An array of options for the formatter.
+	 * @param   string  $data     Formatted string
+	 * @param   array   $options  An array of options for the formatter.
 	 *
 	 * @return  object  Data Object
 	 *

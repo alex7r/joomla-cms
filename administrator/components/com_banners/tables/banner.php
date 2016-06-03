@@ -22,7 +22,7 @@ class BannersTableBanner extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver &$db Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 *
 	 * @since   1.5
 	 */
@@ -49,129 +49,6 @@ class BannersTableBanner extends JTable
 
 		$this->_db->setQuery($query);
 		$this->_db->execute();
-	}
-
-	/**
-	 * Overloaded bind function
-	 *
-	 * @param   mixed $array  An associative array or object to bind to the JTable instance.
-	 * @param   mixed $ignore An optional array or space separated list of properties to ignore while binding.
-	 *
-	 * @return  boolean  True on success
-	 *
-	 * @since   1.5
-	 */
-	public function bind($array, $ignore = array())
-	{
-		if (isset($array['params']) && is_array($array['params']))
-		{
-			$registry = new Registry;
-			$registry->loadArray($array['params']);
-
-			if ((int) $registry->get('width', 0) < 0)
-			{
-				$this->setError(JText::sprintf('JLIB_DATABASE_ERROR_NEGATIVE_NOT_PERMITTED', JText::_('COM_BANNERS_FIELD_WIDTH_LABEL')));
-
-				return false;
-			}
-
-			if ((int) $registry->get('height', 0) < 0)
-			{
-				$this->setError(JText::sprintf('JLIB_DATABASE_ERROR_NEGATIVE_NOT_PERMITTED', JText::_('COM_BANNERS_FIELD_HEIGHT_LABEL')));
-
-				return false;
-			}
-
-			// Converts the width and height to an absolute numeric value:
-			$width  = abs((int) $registry->get('width', 0));
-			$height = abs((int) $registry->get('height', 0));
-
-			// Sets the width and height to an empty string if = 0
-			$registry->set('width', ($width ? $width : ''));
-			$registry->set('height', ($height ? $height : ''));
-
-			$array['params'] = (string) $registry;
-		}
-
-		if (isset($array['imptotal']))
-		{
-			$array['imptotal'] = abs((int) $array['imptotal']);
-		}
-
-		return parent::bind($array, $ignore);
-	}
-
-	/**
-	 * Method to set the sticky state for a row or list of rows in the database
-	 * table.  The method respects checked out rows by other users and will attempt
-	 * to checkin rows that it can after adjustments are made.
-	 *
-	 * @param   mixed   $pks    An optional array of primary key values to update.  If not set the instance property value is used.
-	 * @param   integer $state  The sticky state. eg. [0 = unsticked, 1 = sticked]
-	 * @param   integer $userId The user id of the user performing the operation.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   1.6
-	 */
-	public function stick($pks = null, $state = 1, $userId = 0)
-	{
-		$k = $this->_tbl_key;
-
-		// Sanitize input.
-		$pks    = ArrayHelper::toInteger($pks);
-		$userId = (int) $userId;
-		$state  = (int) $state;
-
-		// If there are no primary keys set check to see if the instance key is set.
-		if (empty($pks))
-		{
-			if ($this->$k)
-			{
-				$pks = array($this->$k);
-			}
-			// Nothing to set publishing state on, return false.
-			else
-			{
-				$this->setError(JText::_('JLIB_DATABASE_ERROR_NO_ROWS_SELECTED'));
-
-				return false;
-			}
-		}
-
-		// Get an instance of the table
-		/** @var BannersTableBanner $table */
-		$table = JTable::getInstance('Banner', 'BannersTable');
-
-		// For all keys
-		foreach ($pks as $pk)
-		{
-			// Load the banner
-			if (!$table->load($pk))
-			{
-				$this->setError($table->getError());
-			}
-
-			// Verify checkout
-			if ($table->checked_out == 0 || $table->checked_out == $userId)
-			{
-				// Change the state
-				$table->sticky           = $state;
-				$table->checked_out      = 0;
-				$table->checked_out_time = $this->_db->getNullDate();
-
-				// Check the row
-				$table->check();
-
-				// Store the row
-				if (!$table->store())
-				{
-					$this->setError($table->getError());
-				}
-			}
-		}
-
-		return count($this->getErrors()) == 0;
 	}
 
 	/**
@@ -239,9 +116,59 @@ class BannersTableBanner extends JTable
 	}
 
 	/**
+	 * Overloaded bind function
+	 *
+	 * @param   mixed  $array   An associative array or object to bind to the JTable instance.
+	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   1.5
+	 */
+	public function bind($array, $ignore = array())
+	{
+		if (isset($array['params']) && is_array($array['params']))
+		{
+			$registry = new Registry;
+			$registry->loadArray($array['params']);
+
+			if ((int) $registry->get('width', 0) < 0)
+			{
+				$this->setError(JText::sprintf('JLIB_DATABASE_ERROR_NEGATIVE_NOT_PERMITTED', JText::_('COM_BANNERS_FIELD_WIDTH_LABEL')));
+
+				return false;
+			}
+
+			if ((int) $registry->get('height', 0) < 0)
+			{
+				$this->setError(JText::sprintf('JLIB_DATABASE_ERROR_NEGATIVE_NOT_PERMITTED', JText::_('COM_BANNERS_FIELD_HEIGHT_LABEL')));
+
+				return false;
+			}
+
+			// Converts the width and height to an absolute numeric value:
+			$width  = abs((int) $registry->get('width', 0));
+			$height = abs((int) $registry->get('height', 0));
+
+			// Sets the width and height to an empty string if = 0
+			$registry->set('width', ($width ? $width : ''));
+			$registry->set('height', ($height ? $height : ''));
+
+			$array['params'] = (string) $registry;
+		}
+
+		if (isset($array['imptotal']))
+		{
+			$array['imptotal'] = abs((int) $array['imptotal']);
+		}
+
+		return parent::bind($array, $ignore);
+	}
+
+	/**
 	 * Method to store a row
 	 *
-	 * @param   boolean $updateNulls True to update fields even if they are null.
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 */
@@ -270,19 +197,19 @@ class BannersTableBanner extends JTable
 					$this->reset = $this->_db->getNullDate();
 					break;
 				case 2:
-					$date        = JFactory::getDate('+1 year ' . date('Y-m-d', strtotime('now')));
+					$date = JFactory::getDate('+1 year ' . date('Y-m-d', strtotime('now')));
 					$this->reset = $date->toSql();
 					break;
 				case 3:
-					$date        = JFactory::getDate('+1 month ' . date('Y-m-d', strtotime('now')));
+					$date = JFactory::getDate('+1 month ' . date('Y-m-d', strtotime('now')));
 					$this->reset = $date->toSql();
 					break;
 				case 4:
-					$date        = JFactory::getDate('+7 day ' . date('Y-m-d', strtotime('now')));
+					$date = JFactory::getDate('+7 day ' . date('Y-m-d', strtotime('now')));
 					$this->reset = $date->toSql();
 					break;
 				case 5:
-					$date        = JFactory::getDate('+1 day ' . date('Y-m-d', strtotime('now')));
+					$date = JFactory::getDate('+1 day ' . date('Y-m-d', strtotime('now')));
 					$this->reset = $date->toSql();
 					break;
 			}
@@ -320,6 +247,79 @@ class BannersTableBanner extends JTable
 			{
 				// Reorder the oldrow
 				$this->reorder($this->_db->quoteName('catid') . '=' . $this->_db->quote($oldrow->catid) . ' AND state>=0');
+			}
+		}
+
+		return count($this->getErrors()) == 0;
+	}
+
+	/**
+	 * Method to set the sticky state for a row or list of rows in the database
+	 * table.  The method respects checked out rows by other users and will attempt
+	 * to checkin rows that it can after adjustments are made.
+	 *
+	 * @param   mixed    $pks     An optional array of primary key values to update.  If not set the instance property value is used.
+	 * @param   integer  $state   The sticky state. eg. [0 = unsticked, 1 = sticked]
+	 * @param   integer  $userId  The user id of the user performing the operation.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   1.6
+	 */
+	public function stick($pks = null, $state = 1, $userId = 0)
+	{
+		$k = $this->_tbl_key;
+
+		// Sanitize input.
+		$pks    = ArrayHelper::toInteger($pks);
+		$userId = (int) $userId;
+		$state  = (int) $state;
+
+		// If there are no primary keys set check to see if the instance key is set.
+		if (empty($pks))
+		{
+			if ($this->$k)
+			{
+				$pks = array($this->$k);
+			}
+			// Nothing to set publishing state on, return false.
+			else
+			{
+				$this->setError(JText::_('JLIB_DATABASE_ERROR_NO_ROWS_SELECTED'));
+
+				return false;
+			}
+		}
+
+		// Get an instance of the table
+		/** @var BannersTableBanner $table */
+		$table = JTable::getInstance('Banner', 'BannersTable');
+
+		// For all keys
+		foreach ($pks as $pk)
+		{
+			// Load the banner
+			if (!$table->load($pk))
+			{
+				$this->setError($table->getError());
+			}
+
+			// Verify checkout
+			if ($table->checked_out == 0 || $table->checked_out == $userId)
+			{
+				// Change the state
+				$table->sticky = $state;
+				$table->checked_out = 0;
+				$table->checked_out_time = $this->_db->getNullDate();
+
+				// Check the row
+				$table->check();
+
+				// Store the row
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+				}
 			}
 		}
 

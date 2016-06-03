@@ -1,9 +1,9 @@
 <?php
 /**
- * @package     FrameworkOnFramework
- * @subpackage  form
+ * @package    FrameworkOnFramework
+ * @subpackage form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -47,14 +47,14 @@ class FOFFormHeaderFieldselectable extends FOFFormHeaderField
 		}
 
 		// Do we have a class and method source for our options?
-		$source_file      = empty($this->element['source_file']) ? '' : (string) $this->element['source_file'];
-		$source_class     = empty($this->element['source_class']) ? '' : (string) $this->element['source_class'];
-		$source_method    = empty($this->element['source_method']) ? '' : (string) $this->element['source_method'];
-		$source_key       = empty($this->element['source_key']) ? '*' : (string) $this->element['source_key'];
-		$source_value     = empty($this->element['source_value']) ? '*' : (string) $this->element['source_value'];
+		$source_file = empty($this->element['source_file']) ? '' : (string) $this->element['source_file'];
+		$source_class = empty($this->element['source_class']) ? '' : (string) $this->element['source_class'];
+		$source_method = empty($this->element['source_method']) ? '' : (string) $this->element['source_method'];
+		$source_key = empty($this->element['source_key']) ? '*' : (string) $this->element['source_key'];
+		$source_value = empty($this->element['source_value']) ? '*' : (string) $this->element['source_value'];
 		$source_translate = empty($this->element['source_translate']) ? 'true' : (string) $this->element['source_translate'];
-		$source_translate = in_array(strtolower($source_translate), array('true', 'yes', '1', 'on')) ? true : false;
-		$source_format    = empty($this->element['source_format']) ? '' : (string) $this->element['source_format'];
+		$source_translate = in_array(strtolower($source_translate), array('true','yes','1','on')) ? true : false;
+		$source_format = empty($this->element['source_format']) ? '' : (string) $this->element['source_format'];
 
 		if ($source_class && $source_method)
 		{
@@ -87,7 +87,7 @@ class FOFFormHeaderFieldselectable extends FOFFormHeaderField
 						// Loop through the data and prime the $options array
 						foreach ($source_data as $k => $v)
 						{
-							$key   = (empty($source_key) || ($source_key == '*')) ? $k : $v[$source_key];
+							$key = (empty($source_key) || ($source_key == '*')) ? $k : $v[$source_key];
 							$value = (empty($source_value) || ($source_value == '*')) ? $v : $v[$source_value];
 
 							if ($source_translate)

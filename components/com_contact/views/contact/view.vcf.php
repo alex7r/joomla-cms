@@ -34,7 +34,7 @@ class ContactViewContact extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -47,7 +47,6 @@ class ContactViewContact extends JViewLegacy
 		if (count($errors = $this->get('Errors')))
 		{
 			JError::raiseWarning(500, implode("\n", $errors));
-
 			return false;
 		}
 
@@ -60,10 +59,10 @@ class ContactViewContact extends JViewLegacy
 		// e.g. "de Gaulle, Charles"
 		$namearray = explode(',', $item->name);
 
-		if (count($namearray) > 1)
+		if (count($namearray) > 1 )
 		{
-			$lastname         = $namearray[0];
-			$card_name        = $lastname;
+			$lastname = $namearray[0];
+			$card_name = $lastname;
 			$name_and_midname = trim($namearray[1]);
 
 			$firstname = '';
@@ -71,9 +70,9 @@ class ContactViewContact extends JViewLegacy
 			{
 				$namearray = explode(' ', $name_and_midname);
 
-				$firstname  = $namearray[0];
+				$firstname = $namearray[0];
 				$middlename = (count($namearray) > 1) ? $namearray[1] : '';
-				$card_name  = $firstname . ' ' . ($middlename ? $middlename . ' ' : '') . $card_name;
+				$card_name = $firstname . ' ' . ($middlename ? $middlename . ' ' : '') . $card_name;
 			}
 		}
 		// "Firstname Middlename Lastname" format support
@@ -82,9 +81,9 @@ class ContactViewContact extends JViewLegacy
 			$namearray = explode(' ', $item->name);
 
 			$middlename = (count($namearray) > 2) ? $namearray[1] : '';
-			$firstname  = array_shift($namearray);
-			$lastname   = count($namearray) ? end($namearray) : '';
-			$card_name  = $firstname . ($middlename ? ' ' . $middlename : '') . ($lastname ? ' ' . $lastname : '');
+			$firstname = array_shift($namearray);
+			$lastname = count($namearray) ? end($namearray) : '';
+			$card_name = $firstname . ($middlename ? ' ' . $middlename : '') . ($lastname ? ' ' . $lastname : '');
 		}
 
 		$rev = date('c', strtotime($item->modified));
@@ -94,18 +93,18 @@ class ContactViewContact extends JViewLegacy
 		$vcard = array();
 		$vcard[] .= 'BEGIN:VCARD';
 		$vcard[] .= 'VERSION:3.0';
-		$vcard[] = 'N:' . $lastname . ';' . $firstname . ';' . $middlename;
-		$vcard[] = 'FN:' . $item->name;
-		$vcard[] = 'TITLE:' . $item->con_position;
-		$vcard[] = 'TEL;TYPE=WORK,VOICE:' . $item->telephone;
-		$vcard[] = 'TEL;TYPE=WORK,FAX:' . $item->fax;
-		$vcard[] = 'TEL;TYPE=WORK,MOBILE:' . $item->mobile;
-		$vcard[] = 'ADR;TYPE=WORK:;;' . $item->address . ';' . $item->suburb . ';' . $item->state . ';' . $item->postcode . ';' . $item->country;
-		$vcard[] = 'LABEL;TYPE=WORK:' . $item->address . "\n" . $item->suburb . "\n" . $item->state . "\n" . $item->postcode . "\n" . $item->country;
-		$vcard[] = 'EMAIL;TYPE=PREF,INTERNET:' . $item->email_to;
-		$vcard[] = 'URL:' . $item->webpage;
-		$vcard[] = 'REV:' . $rev . 'Z';
-		$vcard[] = 'END:VCARD';
+		$vcard[]  = 'N:' . $lastname . ';' . $firstname . ';' . $middlename;
+		$vcard[]  = 'FN:' . $item->name;
+		$vcard[]  = 'TITLE:' . $item->con_position;
+		$vcard[]  = 'TEL;TYPE=WORK,VOICE:' . $item->telephone;
+		$vcard[]  = 'TEL;TYPE=WORK,FAX:' . $item->fax;
+		$vcard[]  = 'TEL;TYPE=WORK,MOBILE:' . $item->mobile;
+		$vcard[]  = 'ADR;TYPE=WORK:;;' . $item->address . ';' . $item->suburb . ';' . $item->state . ';' . $item->postcode . ';' . $item->country;
+		$vcard[]  = 'LABEL;TYPE=WORK:' . $item->address . "\n" . $item->suburb . "\n" . $item->state . "\n" . $item->postcode . "\n" . $item->country;
+		$vcard[]  = 'EMAIL;TYPE=PREF,INTERNET:' . $item->email_to;
+		$vcard[]  = 'URL:' . $item->webpage;
+		$vcard[]  = 'REV:' . $rev . 'Z';
+		$vcard[]  = 'END:VCARD';
 
 		echo implode("\n", $vcard);
 	}

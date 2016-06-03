@@ -27,8 +27,8 @@ class CallbackFilterIterator extends \FilterIterator
 	 * Creates a filtered iterator using the callback to determine
 	 * which items are accepted or rejected.
 	 *
-	 * @param   \Iterator $iterator   The iterator to be filtered.
-	 * @param   callable  $callback   The callback, which should return TRUE to accept the current item
+	 * @param   \Iterator  $iterator  The iterator to be filtered.
+	 * @param   callable   $callback  The callback, which should return TRUE to accept the current item
 	 *                                or FALSE otherwise. May be any valid callable value.
 	 *                                The callback should accept up to three arguments: the current item,
 	 *                                the current key and the iterator, respectively.

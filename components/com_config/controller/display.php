@@ -17,19 +17,20 @@ defined('_JEXEC') or die;
 class ConfigControllerDisplay extends JControllerBase
 {
 	/**
-	 * Prefix for the view and model classes
-	 *
-	 * @var    string
-	 * @since  3.2
-	 */
-	public $prefix = 'Config';
-	/**
 	 * Application object - Redeclared for proper typehinting
 	 *
 	 * @var    JApplicationCms
 	 * @since  3.2
 	 */
 	protected $app;
+
+	/**
+	 * Prefix for the view and model classes
+	 *
+	 * @var    string
+	 * @since  3.2
+	 */
+	public $prefix = 'Config';
 
 	/**
 	 * Execute the controller.
@@ -79,8 +80,7 @@ class ConfigControllerDisplay extends JControllerBase
 
 			// Access check.
 			if (!JFactory::getUser()->authorise('core.admin', $component)
-				&& !JFactory::getUser()->authorise('core.options', $component)
-			)
+				&& !JFactory::getUser()->authorise('core.options', $component))
 			{
 				$this->app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 

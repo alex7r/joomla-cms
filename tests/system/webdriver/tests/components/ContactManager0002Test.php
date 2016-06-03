@@ -9,6 +9,12 @@
 
 require_once 'JoomlaWebdriverTestCase.php';
 
+use SeleniumClient\By;
+use SeleniumClient\SelectElement;
+use SeleniumClient\WebDriver;
+use SeleniumClient\WebDriverWait;
+use SeleniumClient\DesiredCapabilities;
+
 /**
  * This class tests the  Contact: Add / Edit  Screen.
  *
@@ -36,7 +42,7 @@ class ContactManager0002Test extends JoomlaWebdriverTestCase
 	public function setUp()
 	{
 		parent::setUp();
-		$cpPage                   = $this->doAdminLogin();
+		$cpPage = $this->doAdminLogin();
 		$this->contactManagerPage = $cpPage->clickMenu('Contacts', 'ContactManagerPage');
 	}
 
@@ -62,7 +68,7 @@ class ContactManager0002Test extends JoomlaWebdriverTestCase
 	 */
 	public function getFilters_GetListOfFilters_ShouldMatchExpected()
 	{
-		$actualIds   = $this->contactManagerPage->getFilters();
+		$actualIds = $this->contactManagerPage->getFilters();
 		$expectedIds = array_values($this->contactManagerPage->filters);
 		$this->assertEquals($expectedIds, $actualIds, 'Filter ids should match expected');
 	}
@@ -76,7 +82,7 @@ class ContactManager0002Test extends JoomlaWebdriverTestCase
 	 */
 	public function setFilter_SetFilterValues_ShouldExecuteFilter()
 	{
-		$salt        = rand();
+		$salt = rand();
 		$contactName = 'Test Filter' . $salt;
 		$this->contactManagerPage->addContact($contactName, false);
 		$message = $this->contactManagerPage->getAlertMessage();

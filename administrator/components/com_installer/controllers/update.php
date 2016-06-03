@@ -35,8 +35,8 @@ class InstallerControllerUpdate extends JControllerLegacy
 		JArrayHelper::toInteger($uid, array());
 
 		// Get the minimum stability.
-		$component         = JComponentHelper::getComponent('com_installer');
-		$params            = $component->params;
+		$component     = JComponentHelper::getComponent('com_installer');
+		$params        = $component->params;
 		$minimum_stability = $params->get('minimum_stability', JUpdater::STABILITY_STABLE, 'int');
 
 		$model->update($uid, $minimum_stability);
@@ -155,8 +155,8 @@ class InstallerControllerUpdate extends JControllerLegacy
 		$cache_timeout     = $this->input->getInt('cache_timeout', 0);
 		$minimum_stability = $this->input->getInt('minimum_stability', -1);
 
-		$component = JComponentHelper::getComponent('com_installer');
-		$params    = $component->params;
+		$component     = JComponentHelper::getComponent('com_installer');
+		$params        = $component->params;
 
 		if ($cache_timeout == 0)
 		{

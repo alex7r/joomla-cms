@@ -17,6 +17,24 @@ defined('_JEXEC') or die;
 class FinderControllerIndex extends JControllerAdmin
 {
 	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  object  The model.
+	 *
+	 * @since   2.5
+	 */
+	public function getModel($name = 'Index', $prefix = 'FinderModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
+	}
+
+	/**
 	 * Method to purge all indexed links from the database.
 	 *
 	 * @return  boolean  True on success.
@@ -49,23 +67,5 @@ class FinderControllerIndex extends JControllerAdmin
 
 			return true;
 		}
-	}
-
-	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param   string $name   The model name. Optional.
-	 * @param   string $prefix The class prefix. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  object  The model.
-	 *
-	 * @since   2.5
-	 */
-	public function getModel($name = 'Index', $prefix = 'FinderModel', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
 	}
 }

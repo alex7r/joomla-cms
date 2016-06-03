@@ -118,9 +118,9 @@ class JErrorTest extends TestCase
 	{
 		JErrorInspector::manipulateLevels(
 			array(
-				E_NOTICE  => 'Notice',
+				E_NOTICE => 'Notice',
 				E_WARNING => 'Warning',
-				E_ERROR   => 'Error'
+				E_ERROR => 'Error'
 			)
 		);
 		$errorHandling = JErrorInspector::inspectHandlers();

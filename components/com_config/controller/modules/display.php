@@ -15,13 +15,13 @@ defined('_JEXEC') or die;
  * @package     Joomla.Site
  * @subpackage  com_config
  * @since       3.2
- */
+*/
 class ConfigControllerModulesDisplay extends ConfigControllerDisplay
 {
 	/**
 	 * Method to display module editing.
 	 *
-	 * @return  bool    True on success, false on failure.
+	 * @return  bool	True on success, false on failure.
 	 *
 	 * @since   3.2
 	 */
@@ -32,12 +32,12 @@ class ConfigControllerModulesDisplay extends ConfigControllerDisplay
 		$app = $this->getApplication();
 
 		// Get the document object.
-		$document = JFactory::getDocument();
+		$document     = JFactory::getDocument();
 
-		$viewName   = $this->input->getWord('view', 'modules');
-		$viewFormat = $document->getType();
-		$layoutName = $this->input->getWord('layout', 'default');
-		$returnUri  = $this->input->get->get('return', null, 'base64');
+		$viewName     = $this->input->getWord('view', 'modules');
+		$viewFormat   = $document->getType();
+		$layoutName   = $this->input->getWord('layout', 'default');
+		$returnUri    = $this->input->get->get('return', null, 'base64');
 
 		// Construct redirect URI
 		if (!empty($returnUri))
@@ -91,8 +91,7 @@ class ConfigControllerModulesDisplay extends ConfigControllerDisplay
 			$user = JFactory::getUser();
 
 			if (!$user->authorise('module.edit.frontend', 'com_modules.module.' . $serviceData['id'])
-				&& !$user->authorise('module.edit.frontend', 'com_modules')
-			)
+				&& !$user->authorise('module.edit.frontend', 'com_modules'))
 			{
 				$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 				$app->redirect($redirect);
@@ -124,7 +123,6 @@ class ConfigControllerModulesDisplay extends ConfigControllerDisplay
 			// Render view.
 			echo $view->render();
 		}
-
 		return true;
 	}
 

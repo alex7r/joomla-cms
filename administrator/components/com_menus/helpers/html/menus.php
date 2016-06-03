@@ -23,7 +23,7 @@ abstract class MenusHtmlMenus
 	/**
 	 * Generate the markup to display the item associations
 	 *
-	 * @param   int $itemid The menu item id
+	 * @param   int  $itemid  The menu item id
 	 *
 	 * @return  string
 	 *
@@ -40,7 +40,7 @@ abstract class MenusHtmlMenus
 		if ($associations = MenusHelper::getAssociations($itemid))
 		{
 			// Get the associated menu items
-			$db    = JFactory::getDbo();
+			$db = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select('m.id, m.title')
 				->select('l.sef as lang_sef')
@@ -67,8 +67,8 @@ abstract class MenusHtmlMenus
 			{
 				foreach ($items as &$item)
 				{
-					$text         = strtoupper($item->lang_sef);
-					$url          = JRoute::_('index.php?option=com_menus&task=item.edit&id=' . (int) $item->id);
+					$text = strtoupper($item->lang_sef);
+					$url = JRoute::_('index.php?option=com_menus&task=item.edit&id=' . (int) $item->id);
 					$tooltipParts = array(
 						JHtml::_('image', 'mod_languages/' . $item->image . '.gif',
 							$item->language_title,
@@ -78,8 +78,8 @@ abstract class MenusHtmlMenus
 						$item->title,
 						'(' . $item->menu_title . ')'
 					);
-					$class        = 'hasTooltip label label-association label-' . $item->lang_sef;
-					$item->link   = JHtml::_('tooltip', implode(' ', $tooltipParts), null, null, $text, $url, null, $class);
+					$class = 'hasTooltip label label-association label-' . $item->lang_sef;
+					$item->link = JHtml::_('tooltip', implode(' ', $tooltipParts), null, null, $text, $url, null, $class);
 				}
 			}
 
@@ -92,21 +92,21 @@ abstract class MenusHtmlMenus
 	/**
 	 * Returns a published state on a grid
 	 *
-	 * @param   integer $value    The state value.
-	 * @param   integer $i        The row index
-	 * @param   boolean $enabled  An optional setting for access control on the action.
-	 * @param   string  $checkbox An optional prefix for checkboxes.
+	 * @param   integer  $value     The state value.
+	 * @param   integer  $i         The row index
+	 * @param   boolean  $enabled   An optional setting for access control on the action.
+	 * @param   string   $checkbox  An optional prefix for checkboxes.
 	 *
 	 * @return  string        The Html code
 	 *
-	 * @see     JHtmlJGrid::state
+	 * @see JHtmlJGrid::state
 	 *
 	 * @since   1.7.1
 	 */
 	public static function state($value, $i, $enabled = true, $checkbox = 'cb')
 	{
 		$states = array(
-			9  => array(
+			9 => array(
 				'unpublish',
 				'',
 				'COM_MENUS_HTML_UNPUBLISH_HEADING',
@@ -115,7 +115,7 @@ abstract class MenusHtmlMenus
 				'publish',
 				'publish'
 			),
-			8  => array(
+			8 => array(
 				'publish',
 				'',
 				'COM_MENUS_HTML_PUBLISH_HEADING',
@@ -124,7 +124,7 @@ abstract class MenusHtmlMenus
 				'unpublish',
 				'unpublish'
 			),
-			7  => array(
+			7 => array(
 				'unpublish',
 				'',
 				'COM_MENUS_HTML_UNPUBLISH_SEPARATOR',
@@ -133,7 +133,7 @@ abstract class MenusHtmlMenus
 				'publish',
 				'publish'
 			),
-			6  => array(
+			6 => array(
 				'publish',
 				'',
 				'COM_MENUS_HTML_PUBLISH_SEPARATOR',
@@ -142,7 +142,7 @@ abstract class MenusHtmlMenus
 				'unpublish',
 				'unpublish'
 			),
-			5  => array(
+			5 => array(
 				'unpublish',
 				'',
 				'COM_MENUS_HTML_UNPUBLISH_ALIAS',
@@ -151,7 +151,7 @@ abstract class MenusHtmlMenus
 				'publish',
 				'publish'
 			),
-			4  => array(
+			4 => array(
 				'publish',
 				'',
 				'COM_MENUS_HTML_PUBLISH_ALIAS',
@@ -160,7 +160,7 @@ abstract class MenusHtmlMenus
 				'unpublish',
 				'unpublish'
 			),
-			3  => array(
+			3 => array(
 				'unpublish',
 				'',
 				'COM_MENUS_HTML_UNPUBLISH_URL',
@@ -169,7 +169,7 @@ abstract class MenusHtmlMenus
 				'publish',
 				'publish'
 			),
-			2  => array(
+			2 => array(
 				'publish',
 				'',
 				'COM_MENUS_HTML_PUBLISH_URL',
@@ -178,7 +178,7 @@ abstract class MenusHtmlMenus
 				'unpublish',
 				'unpublish'
 			),
-			1  => array(
+			1 => array(
 				'unpublish',
 				'COM_MENUS_EXTENSION_PUBLISHED_ENABLED',
 				'COM_MENUS_HTML_UNPUBLISH_ENABLED',
@@ -187,7 +187,7 @@ abstract class MenusHtmlMenus
 				'publish',
 				'publish'
 			),
-			0  => array(
+			0 => array(
 				'publish',
 				'COM_MENUS_EXTENSION_UNPUBLISHED_ENABLED',
 				'COM_MENUS_HTML_PUBLISH_ENABLED',

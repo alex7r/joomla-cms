@@ -24,7 +24,7 @@ class JFormRuleEmailTest extends TestCase
 	public function testValidEmail()
 	{
 		$rule = new JFormRuleEmail;
-		$xml  = simplexml_load_string('<form><field name="email1" /><field name="email2" unique="true" /></form>');
+		$xml = simplexml_load_string('<form><field name="email1" /><field name="email2" unique="true" /></form>');
 
 		$this->assertTrue($rule->test($xml->field[0], 'me@example.com'));
 	}
@@ -37,7 +37,7 @@ class JFormRuleEmailTest extends TestCase
 	public function testAnInvalidEmail()
 	{
 		$rule = new JFormRuleEmail;
-		$xml  = simplexml_load_string('<form><field name="email1" /><field name="email2" unique="true" /></form>');
+		$xml = simplexml_load_string('<form><field name="email1" /><field name="email2" unique="true" /></form>');
 
 		// Test fail conditions.
 		$this->assertFalse($rule->test($xml->field[0], 'ThisIsNotALoveSong'));
@@ -69,19 +69,19 @@ class JFormRuleEmailTest extends TestCase
 	/**
 	 * Test the email rule
 	 *
-	 * @param   string  $emailAddress   Email to be tested
-	 * @param   boolean $expectedResult Result of test
+	 * @param   string   $emailAddress    Email to be tested
+	 * @param   boolean  $expectedResult  Result of test
 	 *
 	 * @dataProvider emailData1
 	 *
 	 * @return void
 	 *
-	 * @since        11.1
+	 * @since 11.1
 	 */
 	public function testEmailData($emailAddress, $expectedResult)
 	{
 		$rule = new JFormRuleEmail;
-		$xml  = simplexml_load_string('<form><field name="email1" /></form>');
+		$xml = simplexml_load_string('<form><field name="email1" /></form>');
 		$this->assertThat(
 			$rule->test($xml->field[0], $emailAddress),
 			$this->equalTo($expectedResult),
@@ -107,19 +107,19 @@ class JFormRuleEmailTest extends TestCase
 	/**
 	 * Test the email rule with the multiple attribute
 	 *
-	 * @param   string  $emailAddress   Email to be tested
-	 * @param   boolean $expectedResult Result of test
+	 * @param   string   $emailAddress    Email to be tested
+	 * @param   boolean  $expectedResult  Result of test
 	 *
 	 * @dataProvider emailData2
 	 *
 	 * @return void
 	 *
-	 * @since        12.3
+	 * @since 12.3
 	 */
 	public function testEmailData2($emailAddress, $expectedResult)
 	{
 		$rule = new JFormRuleEmail;
-		$xml  = simplexml_load_string('<form><field name="email1" multiple="multiple" /></form>');
+		$xml = simplexml_load_string('<form><field name="email1" multiple="multiple" /></form>');
 		$this->assertThat(
 			$rule->test($xml->field[0], $emailAddress),
 			$this->equalTo($expectedResult),
@@ -148,19 +148,19 @@ class JFormRuleEmailTest extends TestCase
 	/**
 	 * Test the email rule with the tld attribute
 	 *
-	 * @param   string  $emailAddress   Email to be tested
-	 * @param   boolean $expectedResult Result of test
+	 * @param   string   $emailAddress    Email to be tested
+	 * @param   boolean  $expectedResult  Result of test
 	 *
 	 * @dataProvider emailData3
 	 *
 	 * @return void
 	 *
-	 * @since        12.3
+	 * @since 12.3
 	 */
 	public function testEmailData3($emailAddress, $expectedResult)
 	{
 		$rule = new JFormRuleEmail;
-		$xml  = simplexml_load_string('<form><field name="email1" tld="tld" /></form>');
+		$xml = simplexml_load_string('<form><field name="email1" tld="tld" /></form>');
 		$this->assertThat(
 			$rule->test($xml->field[0], $emailAddress),
 			$this->equalTo($expectedResult),

@@ -19,7 +19,7 @@ class FinderModelMaps extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An associative array of configuration settings. [optional]
+	 * @param   array  $config  An associative array of configuration settings. [optional]
 	 *
 	 * @since   2.5
 	 * @see     JController
@@ -41,9 +41,41 @@ class FinderModelMaps extends JModelList
 	}
 
 	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
+	 *
+	 * @since   2.5
+	 */
+	protected function canDelete($record)
+	{
+		$user = JFactory::getUser();
+
+		return $user->authorise('core.delete', $this->option);
+	}
+
+	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+	 *
+	 * @since   2.5
+	 */
+	protected function canEditState($record)
+	{
+		$user = JFactory::getUser();
+
+		return $user->authorise('core.edit.state', $this->option);
+	}
+
+	/**
 	 * Method to delete one or more records.
 	 *
-	 * @param   array &$pks An array of record primary keys.
+	 * @param   array  &$pks  An array of record primary keys.
 	 *
 	 * @return  boolean  True if successful, false if an error occurs.
 	 *
@@ -52,8 +84,8 @@ class FinderModelMaps extends JModelList
 	public function delete(&$pks)
 	{
 		$dispatcher = JEventDispatcher::getInstance();
-		$pks        = (array) $pks;
-		$table      = $this->getTable();
+		$pks = (array) $pks;
+		$table = $this->getTable();
 
 		// Include the content plugins for the on delete events.
 		JPluginHelper::importPlugin('content');
@@ -113,143 +145,6 @@ class FinderModelMaps extends JModelList
 
 		// Clear the component's cache
 		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Returns a JTable object, always creating it.
-	 *
-	 * @param   string $type   The table type to instantiate. [optional]
-	 * @param   string $prefix A prefix for the table class name. [optional]
-	 * @param   array  $config Configuration array for model. [optional]
-	 *
-	 * @return  JTable  A database object
-	 *
-	 * @since   2.5
-	 */
-	public function getTable($type = 'Map', $prefix = 'FinderTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
-
-	/**
-	 * Method to test whether a record can be deleted.
-	 *
-	 * @param   object $record A record object.
-	 *
-	 * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
-	 *
-	 * @since   2.5
-	 */
-	protected function canDelete($record)
-	{
-		$user = JFactory::getUser();
-
-		return $user->authorise('core.delete', $this->option);
-	}
-
-	/**
-	 * Method to change the published state of one or more records.
-	 *
-	 * @param   array   &$pks  A list of the primary keys to change.
-	 * @param   integer $value The value of the published state. [optional]
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 */
-	public function publish(&$pks, $value = 1)
-	{
-		$dispatcher = JEventDispatcher::getInstance();
-		$user       = JFactory::getUser();
-		$table      = $this->getTable();
-		$pks        = (array) $pks;
-
-		// Include the content plugins for the change of state event.
-		JPluginHelper::importPlugin('content');
-
-		// Access checks.
-		foreach ($pks as $i => $pk)
-		{
-			$table->reset();
-
-			if ($table->load($pk))
-			{
-				if (!$this->canEditState($table))
-				{
-					// Prune items that you can't change.
-					unset($pks[$i]);
-					$this->setError(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-
-					return false;
-				}
-			}
-		}
-
-		// Attempt to change the state of the records.
-		if (!$table->publish($pks, $value, $user->get('id')))
-		{
-			$this->setError($table->getError());
-
-			return false;
-		}
-
-		$context = $this->option . '.' . $this->name;
-
-		// Trigger the onContentChangeState event.
-		$result = $dispatcher->trigger('onContentChangeState', array($context, $pks, $value));
-
-		if (in_array(false, $result, true))
-		{
-			$this->setError($table->getError());
-
-			return false;
-		}
-
-		// Clear the component's cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Method to test whether a record can be deleted.
-	 *
-	 * @param   object $record A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
-	 *
-	 * @since   2.5
-	 */
-	protected function canEditState($record)
-	{
-		$user = JFactory::getUser();
-
-		return $user->authorise('core.edit.state', $this->option);
-	}
-
-	/**
-	 * Method to purge all maps from the taxonomy.
-	 *
-	 * @return  boolean  Returns true on success, false on failure.
-	 *
-	 * @since   2.5
-	 */
-	public function purge()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true)
-			->delete($db->quoteName('#__finder_taxonomy'))
-			->where($db->quoteName('parent_id') . ' > 1');
-		$db->setQuery($query);
-		$db->execute();
-
-		$query->clear()
-			->delete($db->quoteName('#__finder_taxonomy_map'))
-			->where('1');
-		$db->setQuery($query);
-		$db->execute();
 
 		return true;
 	}
@@ -382,7 +277,7 @@ class FinderModelMaps extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id A prefix for the store id. [optional]
+	 * @param   string  $id  A prefix for the store id. [optional]
 	 *
 	 * @return  string  A store id.
 	 *
@@ -400,10 +295,26 @@ class FinderModelMaps extends JModelList
 	}
 
 	/**
+	 * Returns a JTable object, always creating it.
+	 *
+	 * @param   string  $type    The table type to instantiate. [optional]
+	 * @param   string  $prefix  A prefix for the table class name. [optional]
+	 * @param   array   $config  Configuration array for model. [optional]
+	 *
+	 * @return  JTable  A database object
+	 *
+	 * @since   2.5
+	 */
+	public function getTable($type = 'Map', $prefix = 'FinderTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
 	 * Method to auto-populate the model state.  Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field. [optional]
-	 * @param   string $direction An optional direction. [optional]
+	 * @param   string  $ordering   An optional ordering field. [optional]
+	 * @param   string  $direction  An optional direction. [optional]
 	 *
 	 * @return  void
 	 *
@@ -423,5 +334,94 @@ class FinderModelMaps extends JModelList
 
 		// List state information.
 		parent::populateState($ordering, $direction);
+	}
+
+	/**
+	 * Method to change the published state of one or more records.
+	 *
+	 * @param   array    &$pks   A list of the primary keys to change.
+	 * @param   integer  $value  The value of the published state. [optional]
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 */
+	public function publish(&$pks, $value = 1)
+	{
+		$dispatcher = JEventDispatcher::getInstance();
+		$user = JFactory::getUser();
+		$table = $this->getTable();
+		$pks = (array) $pks;
+
+		// Include the content plugins for the change of state event.
+		JPluginHelper::importPlugin('content');
+
+		// Access checks.
+		foreach ($pks as $i => $pk)
+		{
+			$table->reset();
+
+			if ($table->load($pk))
+			{
+				if (!$this->canEditState($table))
+				{
+					// Prune items that you can't change.
+					unset($pks[$i]);
+					$this->setError(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+
+					return false;
+				}
+			}
+		}
+
+		// Attempt to change the state of the records.
+		if (!$table->publish($pks, $value, $user->get('id')))
+		{
+			$this->setError($table->getError());
+
+			return false;
+		}
+
+		$context = $this->option . '.' . $this->name;
+
+		// Trigger the onContentChangeState event.
+		$result = $dispatcher->trigger('onContentChangeState', array($context, $pks, $value));
+
+		if (in_array(false, $result, true))
+		{
+			$this->setError($table->getError());
+
+			return false;
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Method to purge all maps from the taxonomy.
+	 *
+	 * @return  boolean  Returns true on success, false on failure.
+	 *
+	 * @since   2.5
+	 */
+	public function purge()
+	{
+		$db = $this->getDbo();
+		$query = $db->getQuery(true)
+			->delete($db->quoteName('#__finder_taxonomy'))
+			->where($db->quoteName('parent_id') . ' > 1');
+		$db->setQuery($query);
+		$db->execute();
+
+		$query->clear()
+			->delete($db->quoteName('#__finder_taxonomy_map'))
+			->where('1');
+		$db->setQuery($query);
+		$db->execute();
+
+		return true;
 	}
 }

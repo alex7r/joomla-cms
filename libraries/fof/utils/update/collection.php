@@ -15,26 +15,11 @@ defined('FOF_INCLUDED') or die;
 class FOFUtilsUpdateCollection
 {
 	/**
-	 * Returns only the category definitions of a collection
-	 *
-	 * @param   string $url      The URL of the collection update source
-	 * @param   string $jVersion Joomla! version to fetch updates for, or null to use JVERSION
-	 *
-	 * @return  array  An array of category update definitions
-	 */
-	public function getCategories($url, $jVersion = null)
-	{
-		$allUpdates = $this->getAllUpdates($url, $jVersion);
-
-		return $allUpdates['categories'];
-	}
-
-	/**
 	 * Reads a "collection" XML update source and returns the complete tree of categories
 	 * and extensions applicable for platform version $jVersion
 	 *
-	 * @param   string $url      The collection XML update source URL to read from
-	 * @param   string $jVersion Joomla! version to fetch updates for, or null to use JVERSION
+	 * @param   string  $url       The collection XML update source URL to read from
+	 * @param   string  $jVersion  Joomla! version to fetch updates for, or null to use JVERSION
 	 *
 	 * @return  array  A list of update sources applicable to $jVersion
 	 */
@@ -48,23 +33,23 @@ class FOFUtilsUpdateCollection
 
 		// Initialise return value
 		$updates = array(
-			'metadata'   => array(
-				'name'        => '',
-				'description' => '',
+			'metadata'		=> array(
+				'name'			=> '',
+				'description'	=> '',
 			),
-			'categories' => array(),
-			'extensions' => array(),
+			'categories'	=> array(),
+			'extensions'	=> array(),
 		);
 
 		// Download and parse the XML file
 		$donwloader = new FOFDownload();
-		$xmlSource  = $donwloader->getFromURL($url);
+		$xmlSource = $donwloader->getFromURL($url);
 
 		try
 		{
 			$xml = new SimpleXMLElement($xmlSource, LIBXML_NONET);
 		}
-		catch (Exception $e)
+		catch(Exception $e)
 		{
 			return $updates;
 		}
@@ -81,13 +66,13 @@ class FOFUtilsUpdateCollection
 		$rootAttributes = $xml->attributes();
 		foreach ($rootAttributes as $k => $v)
 		{
-			$updates['metadata'][$k] = (string) $v;
+			$updates['metadata'][$k] = (string)$v;
 		}
 
 		// Initialise the raw list of updates
 		$rawUpdates = array(
-			'categories' => array(),
-			'extensions' => array(),
+			'categories'	=> array(),
+			'extensions'	=> array(),
 		);
 
 		// Segregate the raw list to a hierarchy of extension and category entries
@@ -99,11 +84,11 @@ class FOFUtilsUpdateCollection
 				case 'category':
 					// These are the parameters we expect in a category
 					$params = array(
-						'name'                  => '',
-						'description'           => '',
-						'category'              => '',
-						'ref'                   => '',
-						'targetplatformversion' => $jVersion,
+						'name'					=> '',
+						'description'			=> '',
+						'category'				=> '',
+						'ref'					=> '',
+						'targetplatformversion'	=> $jVersion,
 					);
 
 					// These are the attributes of the element
@@ -112,7 +97,7 @@ class FOFUtilsUpdateCollection
 					// Merge them all
 					foreach ($attributes as $k => $v)
 					{
-						$params[$k] = (string) $v;
+						$params[$k] = (string)$v;
 					}
 
 					// We can't have a category with an empty category name
@@ -144,12 +129,12 @@ class FOFUtilsUpdateCollection
 				case 'extension':
 					// These are the parameters we expect in a category
 					$params = array(
-						'element'               => '',
-						'type'                  => '',
-						'version'               => '',
-						'name'                  => '',
-						'detailsurl'            => '',
-						'targetplatformversion' => $jVersion,
+						'element'				=> '',
+						'type'					=> '',
+						'version'				=> '',
+						'name'					=> '',
+						'detailsurl'			=> '',
+						'targetplatformversion'	=> $jVersion,
 					);
 
 					// These are the attributes of the element
@@ -158,7 +143,7 @@ class FOFUtilsUpdateCollection
 					// Merge them all
 					foreach ($attributes as $k => $v)
 					{
-						$params[$k] = (string) $v;
+						$params[$k] = (string)$v;
 					}
 
 					// We can't have an extension with an empty element
@@ -208,7 +193,7 @@ class FOFUtilsUpdateCollection
 		{
 			foreach ($rawUpdates['categories'] as $category => $entries)
 			{
-				$update                           = $this->filterListByPlatform($entries, $jVersion);
+				$update = $this->filterListByPlatform($entries, $jVersion);
 				$updates['categories'][$category] = $update;
 			}
 		}
@@ -223,7 +208,7 @@ class FOFUtilsUpdateCollection
 				{
 					foreach ($extensions as $element => $entries)
 					{
-						$update                                 = $this->filterListByPlatform($entries, $jVersion);
+						$update = $this->filterListByPlatform($entries, $jVersion);
 						$updates['extensions'][$type][$element] = $update;
 					}
 				}
@@ -237,8 +222,8 @@ class FOFUtilsUpdateCollection
 	 * Filters a list of updates, returning only those available for the
 	 * specified platform version $jVersion
 	 *
-	 * @param   array  $updates  An array containing update definitions (categories or extensions)
-	 * @param   string $jVersion Joomla! version to fetch updates for, or null to use JVERSION
+	 * @param   array   $updates   An array containing update definitions (categories or extensions)
+	 * @param   string  $jVersion  Joomla! version to fetch updates for, or null to use JVERSION
 	 *
 	 * @return  array|null  The update definition that is compatible, or null if none is compatible
 	 */
@@ -250,38 +235,38 @@ class FOFUtilsUpdateCollection
 			$jVersion = JVERSION;
 		}
 
-		$versionParts          = explode('.', $jVersion, 4);
-		$platformVersionMajor  = $versionParts[0];
-		$platformVersionMinor  = (count($versionParts) > 1) ? $platformVersionMajor . '.' . $versionParts[1] : $platformVersionMajor;
+		$versionParts = explode('.', $jVersion, 4);
+		$platformVersionMajor = $versionParts[0];
+		$platformVersionMinor = (count($versionParts) > 1) ? $platformVersionMajor . '.' . $versionParts[1] : $platformVersionMajor;
 		$platformVersionNormal = (count($versionParts) > 2) ? $platformVersionMinor . '.' . $versionParts[2] : $platformVersionMinor;
-		$platformVersionFull   = (count($versionParts) > 3) ? $platformVersionNormal . '.' . $versionParts[3] : $platformVersionNormal;
+		$platformVersionFull = (count($versionParts) > 3) ? $platformVersionNormal . '.' . $versionParts[3] : $platformVersionNormal;
 
-		$pickedExtension   = null;
+		$pickedExtension = null;
 		$pickedSpecificity = -1;
 
 		foreach ($updates as $update)
 		{
 			// Test the target platform
-			$targetPlatform = (string) $update['targetplatformversion'];
+			$targetPlatform = (string)$update['targetplatformversion'];
 
 			if ($targetPlatform === $platformVersionFull)
 			{
-				$pickedExtension   = $update;
+				$pickedExtension = $update;
 				$pickedSpecificity = 4;
 			}
 			elseif (($targetPlatform === $platformVersionNormal) && ($pickedSpecificity <= 3))
 			{
-				$pickedExtension   = $update;
+				$pickedExtension = $update;
 				$pickedSpecificity = 3;
 			}
 			elseif (($targetPlatform === $platformVersionMinor) && ($pickedSpecificity <= 2))
 			{
-				$pickedExtension   = $update;
+				$pickedExtension = $update;
 				$pickedSpecificity = 2;
 			}
 			elseif (($targetPlatform === $platformVersionMajor) && ($pickedSpecificity <= 1))
 			{
-				$pickedExtension   = $update;
+				$pickedExtension = $update;
 				$pickedSpecificity = 1;
 			}
 		}
@@ -290,11 +275,26 @@ class FOFUtilsUpdateCollection
 	}
 
 	/**
+	 * Returns only the category definitions of a collection
+	 *
+	 * @param   string  $url       The URL of the collection update source
+	 * @param   string  $jVersion  Joomla! version to fetch updates for, or null to use JVERSION
+	 *
+	 * @return  array  An array of category update definitions
+	 */
+	public function getCategories($url, $jVersion = null)
+	{
+		$allUpdates = $this->getAllUpdates($url, $jVersion);
+
+		return $allUpdates['categories'];
+	}
+
+	/**
 	 * Returns the update source for a specific category
 	 *
-	 * @param   string $url      The URL of the collection update source
-	 * @param   string $category The category name you want to get the update source URL of
-	 * @param   string $jVersion Joomla! version to fetch updates for, or null to use JVERSION
+	 * @param   string  $url       The URL of the collection update source
+	 * @param   string  $category  The category name you want to get the update source URL of
+	 * @param   string  $jVersion  Joomla! version to fetch updates for, or null to use JVERSION
 	 *
 	 * @return  string|null  The update stream URL, or null if it's not found
 	 */
@@ -313,41 +313,12 @@ class FOFUtilsUpdateCollection
 	}
 
 	/**
-	 * Get the update source URL for a specific extension, based on the type and element, e.g.
-	 * type=file and element=joomla is Joomla! itself.
-	 *
-	 * @param   string $url      The URL of the collection update source
-	 * @param   string $type     The extension type you want to get the update source URL of
-	 * @param   string $element  The extension element you want to get the update source URL of
-	 * @param   string $jVersion Joomla! version to fetch updates for, or null to use JVERSION
-	 *
-	 * @return  string|null  The update source URL or null if the extension is not found
-	 */
-	public function getExtensionUpdateSource($url, $type, $element, $jVersion = null)
-	{
-		$allUpdates = $this->getExtensions($url, $type, $jVersion);
-
-		if (empty($allUpdates))
-		{
-			return null;
-		}
-		elseif (array_key_exists($element, $allUpdates))
-		{
-			return $allUpdates[$element]['detailsurl'];
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/**
 	 * Get a list of updates for extensions only, optionally of a specific type
 	 *
-	 * @param   string $url        The URL of the collection update source
-	 * @param   string $type       The extension type you want to get the update source URL of, empty to get all
+	 * @param   string  $url       The URL of the collection update source
+	 * @param   string  $type      The extension type you want to get the update source URL of, empty to get all
 	 *                             extension types
-	 * @param   string $jVersion   Joomla! version to fetch updates for, or null to use JVERSION
+	 * @param   string  $jVersion  Joomla! version to fetch updates for, or null to use JVERSION
 	 *
 	 * @return  array|null  An array of extension update definitions or null if none is found
 	 */
@@ -362,6 +333,35 @@ class FOFUtilsUpdateCollection
 		elseif (array_key_exists($type, $allUpdates['extensions']))
 		{
 			return $allUpdates['extensions'][$type];
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Get the update source URL for a specific extension, based on the type and element, e.g.
+	 * type=file and element=joomla is Joomla! itself.
+	 *
+	 * @param   string  $url       The URL of the collection update source
+	 * @param   string  $type      The extension type you want to get the update source URL of
+	 * @param   string  $element   The extension element you want to get the update source URL of
+	 * @param   string  $jVersion  Joomla! version to fetch updates for, or null to use JVERSION
+	 *
+	 * @return  string|null  The update source URL or null if the extension is not found
+	 */
+	public function getExtensionUpdateSource($url, $type, $element, $jVersion = null)
+	{
+		$allUpdates = $this->getExtensions($url, $type, $jVersion);
+
+		if (empty($allUpdates))
+		{
+			return null;
+		}
+		elseif (array_key_exists($element, $allUpdates))
+		{
+			return $allUpdates[$element]['detailsurl'];
 		}
 		else
 		{

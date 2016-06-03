@@ -57,71 +57,71 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 		$this->dbo->expects(
 			$this->any()
 		)
-			->method('getPrefix')
-			->will(
-				$this->returnValue(
-					'jos_'
-				)
-			);
+		->method('getPrefix')
+		->will(
+			$this->returnValue(
+				'jos_'
+			)
+		);
 
 		$this->dbo->expects(
 			$this->any()
 		)
-			->method('getTableColumns')
-			->will(
-				$this->returnValue(
-					array(
-						'id'    => (object) array(
-							'Field'    => 'id',
-							'Type'     => 'integer',
-							'Null'     => 'NO',
-							'Default'  => 'nextval(\'jos_dbtest_id_seq\'::regclass)',
-							'Comments' => '',
-						),
-						'title' => (object) array(
-							'Field'    => 'title',
-							'Type'     => 'character varying(50)',
-							'Null'     => 'NO',
-							'Default'  => 'NULL',
-							'Comments' => '',
-						),
-					)
+		->method('getTableColumns')
+		->will(
+			$this->returnValue(
+				array(
+					'id' => (object) array(
+						'Field' => 'id',
+						'Type' => 'integer',
+						'Null' => 'NO',
+						'Default' => 'nextval(\'jos_dbtest_id_seq\'::regclass)',
+						'Comments' => '',
+					),
+					'title' => (object) array(
+						'Field' => 'title',
+						'Type' => 'character varying(50)',
+						'Null' => 'NO',
+						'Default' => 'NULL',
+						'Comments' => '',
+					),
 				)
-			);
+			)
+		);
 
 		$this->dbo->expects(
 			$this->any()
 		)
-			->method('getTableKeys')
-			->will(
-				$this->returnValue(
-					array(
-						(object) array(
-							'Index'      => 'jos_dbtest_pkey',
-							'is_primary' => 'TRUE',
-							'is_unique'  => 'TRUE',
-							'Query'      => 'ALTER TABLE jos_dbtest ADD PRIMARY KEY (id)',
-						),
-						(object) array(
-							'Index'      => 'jos_dbtest_idx_name',
-							'is_primary' => 'FALSE',
-							'is_unique'  => 'FALSE',
-							'Query'      => 'CREATE INDEX jos_dbtest_idx_name ON jos_dbtest USING btree (name)',
-						)
+		->method('getTableKeys')
+		->will(
+			$this->returnValue(
+				array(
+					(object) array(
+						'Index' => 'jos_dbtest_pkey',
+						'is_primary' => 'TRUE',
+						'is_unique' => 'TRUE',
+						'Query' => 'ALTER TABLE jos_dbtest ADD PRIMARY KEY (id)',
+					),
+					(object) array(
+						'Index' => 'jos_dbtest_idx_name',
+						'is_primary' => 'FALSE',
+						'is_unique' => 'FALSE',
+						'Query' => 'CREATE INDEX jos_dbtest_idx_name ON jos_dbtest USING btree (name)',
 					)
 				)
-			);
+			)
+		);
 
 		// Check if database is at least 9.1.0
 		$this->dbo->expects(
 			$this->any()
 		)
-			->method('getVersion')
-			->will(
-				$this->returnValue(
-					'7.1.2'
-				)
-			);
+		->method('getVersion')
+		->will(
+			$this->returnValue(
+				'7.1.2'
+			)
+		);
 
 		if (version_compare($this->dbo->getVersion(), '9.1.0') >= 0)
 		{
@@ -136,65 +136,65 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 		$this->dbo->expects(
 			$this->any()
 		)
-			->method('getTableSequences')
-			->will(
-				$this->returnValue(
-					array(
-						(object) array(
-							'Name'         => 'jos_dbtest_id_seq',
-							'Schema'       => 'public',
-							'Table'        => 'jos_dbtest',
-							'Column'       => 'id',
-							'Type'         => 'bigint',
-							'Start_Value'  => $start_val,
-							'Min_Value'    => '1',
-							'Max_Value'    => '9223372036854775807',
-							'Increment'    => '1',
-							'Cycle_option' => 'NO',
-						)
+		->method('getTableSequences')
+		->will(
+			$this->returnValue(
+			array(
+					(object) array(
+						'Name' => 'jos_dbtest_id_seq',
+						'Schema' => 'public',
+						'Table' => 'jos_dbtest',
+						'Column' => 'id',
+						'Type' => 'bigint',
+						'Start_Value' => $start_val,
+						'Min_Value' => '1',
+						'Max_Value' => '9223372036854775807',
+						'Increment' => '1',
+						'Cycle_option' => 'NO',
 					)
 				)
-			);
+			)
+		);
 
 		$this->dbo->expects(
 			$this->any()
 		)
-			->method('quoteName')
-			->will(
-				$this->returnCallback(
-					array($this, 'callbackQuoteName')
-				)
-			);
+		->method('quoteName')
+		->will(
+			$this->returnCallback(
+				array($this, 'callbackQuoteName')
+			)
+		);
 
 		$this->dbo->expects(
 			$this->any()
 		)
-			->method('quote')
-			->will(
-				$this->returnCallback(
-					array($this, 'callbackQuote')
-				)
-			);
+		->method('quote')
+		->will(
+			$this->returnCallback(
+				array($this, 'callbackQuote')
+			)
+		);
 
 		$this->dbo->expects(
 			$this->any()
 		)
-			->method('setQuery')
-			->will(
-				$this->returnCallback(
-					array($this, 'callbackSetQuery')
-				)
-			);
+		->method('setQuery')
+		->will(
+			$this->returnCallback(
+				array($this, 'callbackSetQuery')
+			)
+		);
 
 		$this->dbo->expects(
 			$this->any()
 		)
-			->method('loadObjectList')
-			->will(
-				$this->returnCallback(
-					array($this, 'callbackLoadObjectList')
-				)
-			);
+		->method('loadObjectList')
+		->will(
+			$this->returnCallback(
+				array($this, 'callbackLoadObjectList')
+			)
+		);
 	}
 
 	/**
@@ -210,7 +210,7 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Callback for the dbo quote method.
 	 *
-	 * @param   string $value The value to be quoted.
+	 * @param   string  $value  The value to be quoted.
 	 *
 	 * @return  string  The value passed wrapped in MySQL quotes.
 	 */
@@ -222,7 +222,7 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Callback for the dbo quoteName method.
 	 *
-	 * @param   string $value The value to be quoted.
+	 * @param   string  $value  The value to be quoted.
 	 *
 	 * @return  string  The value passed wrapped in MySQL quotes.
 	 */
@@ -234,7 +234,7 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Callback for the dbo setQuery method.
 	 *
-	 * @param   string $query The query.
+	 * @param   string  $query  The query.
 	 */
 	public function callbackSetQuery($query)
 	{
@@ -248,10 +248,10 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 	 */
 	public function dataGetAlterTableSql()
 	{
-		$f1     = '<field Field="id" Type="integer" Null="NO" Default="nextval(\'jos_dbtest_id_seq\'::regclass)" ' .
+		$f1 = '<field Field="id" Type="integer" Null="NO" Default="nextval(\'jos_dbtest_id_seq\'::regclass)" ' .
 			'Comments="" />';
-		$f2     = '<field Field="title" Type="character varying(50)" Null="NO" Default="NULL" Comments="" />';
-		$f3     = '<field Field="alias" Type="character varying(255)" Null="NO" Default="test" Comments="" />';
+		$f2 = '<field Field="title" Type="character varying(50)" Null="NO" Default="NULL" Comments="" />';
+		$f3 = '<field Field="alias" Type="character varying(255)" Null="NO" Default="test" Comments="" />';
 		$f2_def = '<field Field="title" Type="character varying(50)" Null="NO" Default="add default" Comments="" />';
 
 		$k1 = '<key Index="jos_dbtest_pkey" is_primary="TRUE" is_unique="TRUE" Query="ALTER TABLE jos_dbtest ADD PRIMARY KEY (id)" />';
@@ -271,15 +271,16 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 
 		$addSequence = 'CREATE SEQUENCE jos_dbtest_title_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 ' .
 			'NO CYCLE OWNED BY "public.jos_dbtest.title"';
-		$changeCol   = "ALTER TABLE \"jos_test\" ALTER COLUMN \"title\"  TYPE character " .
+		$changeCol = "ALTER TABLE \"jos_test\" ALTER COLUMN \"title\"  TYPE character " .
 			"varying(50),\nALTER COLUMN \"title\" SET NOT NULL,\nALTER COLUMN \"title\" SET DEFAULT 'add default'";
-		$changeSeq   = "CREATE SEQUENCE jos_dbtest_title_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 " .
+		$changeSeq = "CREATE SEQUENCE jos_dbtest_title_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 " .
 			"START 1 NO CYCLE OWNED BY \"public.jos_dbtest.title\"";
 
 		return array(
 			array(
 				new SimpleXmlElement('<table_structure name="#__dbtest">' . $s1 . $f1 . $f2 . $k1 . $k2 . '</table_structure>'),
-				array(),
+				array(
+				),
 				'getAlterTableSQL should not change anything.'
 			),
 			array(
@@ -345,7 +346,7 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 				'getAlterTableSQL should drop the sequence.'
 			),
 			array(
-				// Drop pkey
+			// Drop pkey
 				new SimpleXmlElement('<table_structure name="#__test">' . $s1 . $f1 . $f2 . $k2 . '</table_structure>'),
 				array(
 					'ALTER TABLE ONLY "jos_test" DROP CONSTRAINT "jos_dbtest_pkey"',
@@ -395,10 +396,10 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 	public function dataGetColumnSql()
 	{
 		$sample = array(
-			'xml-id-field'    => '<field Field="id" Type="integer" Null="NO" Default="nextval(\'jos_dbtest_id_seq\'::regclass)" Comments="" />',
+			'xml-id-field' => '<field Field="id" Type="integer" Null="NO" Default="nextval(\'jos_dbtest_id_seq\'::regclass)" Comments="" />',
 			'xml-title-field' => '<field Field="title" Type="character varying(50)" Null="NO" Default="NULL" Comments="" />',
-			'xml-title-def'   => '<field Field="title" Type="character varying(50)" Null="NO" Default="this is a test" Comments="" />',
-			'xml-body-field'  => '<field Field="description" Type="text" Null="NO" Default="NULL" Comments="" />',);
+			'xml-title-def' => '<field Field="title" Type="character varying(50)" Null="NO" Default="this is a test" Comments="" />',
+			'xml-body-field' => '<field Field="description" Type="text" Null="NO" Default="NULL" Comments="" />',);
 
 		return array(
 			array(
@@ -531,8 +532,8 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 
 		$sample = array(
 			'xml-title-field' => '<field Field="title" Type="character varying(50)" Null="NO" Default="NULL" Comments="" />',
-			'xml-title-def'   => '<field Field="title" Type="character varying(50)" Null="NO" Default="this is a test" Comments="" />',
-			'xml-int-defnum'  => '<field Field="title" Type="integer" Null="NO" Default="0" Comments="" />',);
+			'xml-title-def' => '<field Field="title" Type="character varying(50)" Null="NO" Default="this is a test" Comments="" />',
+			'xml-int-defnum' => '<field Field="title" Type="integer" Null="NO" Default="0" Comments="" />',);
 
 		$this->assertThat(
 			TestReflection::invoke($instance, 'getAddColumnSQL', 'jos_test', new SimpleXmlElement($sample['xml-title-field'])),
@@ -586,7 +587,7 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetAddIndexSql()
 	{
-		$xmlIndex      = '<key Index="jos_dbtest_idx_name" is_primary="FALSE" is_unique="FALSE" ' .
+		$xmlIndex = '<key Index="jos_dbtest_idx_name" is_primary="FALSE" is_unique="FALSE" ' .
 			'Query="CREATE INDEX jos_dbtest_idx_name ON jos_dbtest USING btree (name)" />';
 		$xmlPrimaryKey = '<key Index="jos_dbtest_pkey" is_primary="TRUE" is_unique="TRUE" ' .
 			'Query="ALTER TABLE jos_dbtest ADD PRIMARY KEY (id)" />';
@@ -614,9 +615,9 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the getAlterTableSQL method.
 	 *
-	 * @param   SimpleXMLElement $structure XML structure of field
-	 * @param   string           $expected  Expected string
-	 * @param   string           $message   Error message
+	 * @param   SimpleXMLElement  $structure  XML structure of field
+	 * @param   string            $expected   Expected string
+	 * @param   string            $message    Error message
 	 *
 	 * @dataProvider dataGetAlterTableSQL
 	 */
@@ -680,15 +681,15 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the getColumnSQL method.
 	 *
-	 * @param   SimpleXmlElement $field    The database field as an object.
-	 * @param   string           $expected The expected result from the getColumnSQL method.
-	 * @param   string           $message  The error message to display if the result does not match the expected value.
+	 * @param   SimpleXmlElement  $field     The database field as an object.
+	 * @param   string            $expected  The expected result from the getColumnSQL method.
+	 * @param   string            $message   The error message to display if the result does not match the expected value.
 	 *
 	 * @dataProvider dataGetColumnSQL
 	 */
 	public function testGetColumnSql($field, $expected, $message)
 	{
-		$instance = new JDatabaseImporterPostgresql;
+		$instance	= new JDatabaseImporterPostgresql;
 		$instance->setDbo($this->dbo);
 
 		$this->assertThat(
@@ -781,7 +782,7 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 			TestReflection::invoke($instance, 'getIdxLookup', array($o1, $o2, $o3)),
 			$this->equalTo(
 				array(
-					'id'    => array($o1, $o2),
+					'id' => array($o1, $o2),
 					'title' => array($o3)
 				)
 			),
@@ -796,7 +797,7 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 			TestReflection::invoke($instance, 'getIdxLookup', array($o1, $o2, $o3)),
 			$this->equalTo(
 				array(
-					'id'    => array($o1, $o2),
+					'id' => array($o1, $o2),
 					'title' => array($o3)
 				)
 			),
@@ -809,7 +810,7 @@ class JDatabaseImporterPostgresqlTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetRealTableName()
 	{
-		$instance = new JDatabaseImporterPostgresql;
+		$instance	= new JDatabaseImporterPostgresql;
 		$instance->setDbo($this->dbo);
 
 		$this->assertThat(

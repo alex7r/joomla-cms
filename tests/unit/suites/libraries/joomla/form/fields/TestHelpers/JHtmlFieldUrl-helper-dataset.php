@@ -19,16 +19,16 @@ class JHtmlFieldUrlTest_DataSet
 	public static $getInputTest = array(
 		'NoValue' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 			),
 			'<input type="url" name="myTestName" id="myTestId" value="" />',
 		),
 
-		'Value'  => array(
+		'Value' => array(
 			array(
-				'id'    => 'myTestId',
-				'name'  => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'value' => 'http://foobar.com',
 			),
 			'<input type="url" name="myTestName" id="myTestId" value="http://foobar.com" />',
@@ -37,8 +37,8 @@ class JHtmlFieldUrlTest_DataSet
 		// Stript always illegal characters that may be used in XSS.
 		'Value2' => array(
 			array(
-				'id'    => 'myTestId',
-				'name'  => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'value' => 'http://<>"foobar.com',
 			),
 			'<input type="url" name="myTestName" id="myTestId" value="http://&lt;&gt;&quot;foobar.com" />',
@@ -46,8 +46,8 @@ class JHtmlFieldUrlTest_DataSet
 
 		'Class' => array(
 			array(
-				'id'    => 'myTestId',
-				'name'  => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'class' => 'foo bar',
 			),
 			'<input type="url" name="myTestName" class="foo bar" id="myTestId" value="" />',
@@ -55,7 +55,7 @@ class JHtmlFieldUrlTest_DataSet
 
 		'Size' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 				'size' => 60,
 			),
@@ -64,8 +64,8 @@ class JHtmlFieldUrlTest_DataSet
 
 		'Disabled' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'disabled' => true,
 			),
 			'<input type="url" name="myTestName" id="myTestId" value="" disabled />',
@@ -73,8 +73,8 @@ class JHtmlFieldUrlTest_DataSet
 
 		'Readonly' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'readonly' => true,
 			),
 			'<input type="url" name="myTestName" id="myTestId" value="" readonly />',
@@ -82,7 +82,7 @@ class JHtmlFieldUrlTest_DataSet
 
 		'Hint' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 				'hint' => 'Type any url.',
 			),
@@ -91,8 +91,8 @@ class JHtmlFieldUrlTest_DataSet
 
 		'Autocomplete' => array(
 			array(
-				'id'           => 'myTestId',
-				'name'         => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'autocomplete' => false,
 			),
 			'<input type="url" name="myTestName" id="myTestId" value="" autocomplete="off" />',
@@ -100,8 +100,8 @@ class JHtmlFieldUrlTest_DataSet
 
 		'Autofocus' => array(
 			array(
-				'id'        => 'myTestId',
-				'name'      => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'autofocus' => true,
 			),
 			'<input type="url" name="myTestName" id="myTestId" value="" autofocus />',
@@ -109,8 +109,8 @@ class JHtmlFieldUrlTest_DataSet
 
 		'Spellcheck' => array(
 			array(
-				'id'         => 'myTestId',
-				'name'       => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'spellcheck' => false,
 			),
 			'<input type="url" name="myTestName" id="myTestId" value="" spellcheck="false" />',
@@ -118,8 +118,8 @@ class JHtmlFieldUrlTest_DataSet
 
 		'Onchange' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'onchange' => 'foobar();',
 			),
 			'<input type="url" name="myTestName" id="myTestId" value="" onchange="foobar();" />',
@@ -127,8 +127,8 @@ class JHtmlFieldUrlTest_DataSet
 
 		'Maxlength' => array(
 			array(
-				'id'        => 'myTestId',
-				'name'      => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'maxLength' => 250,
 			),
 			'<input type="url" name="myTestName" id="myTestId" value="" maxlength="250" />',
@@ -136,8 +136,8 @@ class JHtmlFieldUrlTest_DataSet
 
 		'Required' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'required' => true,
 			),
 			'<input type="url" name="myTestName" id="myTestId" value="" required aria-required="true" />',

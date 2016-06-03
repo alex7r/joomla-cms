@@ -70,6 +70,41 @@ class JTwitterBlockTest extends TestCase
 			}}}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$key = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input = new JInput;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth = new JTwitterOAuth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JTwitterBlock($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+		$this->options->set('sendheaders', true);
+	}
+
+	/**
 	 * Tests the getBlocking method
 	 *
 	 * @return  void
@@ -79,32 +114,32 @@ class JTwitterBlockTest extends TestCase
 	public function testGetBlocking()
 	{
 		$stringify_ids = true;
-		$cursor        = 123;
+		$cursor = 123;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "blocks"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$data['stringify_ids'] = $stringify_ids;
-		$data['cursor']        = $cursor;
+		$data['cursor'] = $cursor;
 
 		$path = $this->object->fetchUrl('/blocks/ids.json', $data);
 
 		$this->client->expects($this->at(1))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getBlocking($stringify_ids, $cursor),
@@ -123,43 +158,43 @@ class JTwitterBlockTest extends TestCase
 	public function testGetBlockingFailure()
 	{
 		$stringify_ids = true;
-		$cursor        = 123;
+		$cursor = 123;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "blocks"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$data['stringify_ids'] = $stringify_ids;
-		$data['cursor']        = $cursor;
+		$data['cursor'] = $cursor;
 
 		$path = $this->object->fetchUrl('/blocks/ids.json', $data);
 
 		$this->client->expects($this->at(1))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->object->getBlocking($stringify_ids, $cursor);
 	}
 
 	/**
-	 * Provides test data for request format detection.
-	 *
-	 * @return array
-	 *
-	 * @since 12.3
-	 */
+	* Provides test data for request format detection.
+	*
+	* @return array
+	*
+	* @since 12.3
+	*/
 	public function seedUser()
 	{
 		// User ID or screen name
@@ -167,36 +202,36 @@ class JTwitterBlockTest extends TestCase
 			array(234654235457),
 			array('testUser'),
 			array(null)
-		);
+			);
 	}
 
 	/**
 	 * Tests the block method
 	 *
-	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
-	 * @since         12.3
+	 * @since 12.3
 	 */
 	public function testBlock($user)
 	{
-		$entities    = true;
+		$entities = true;
 		$skip_status = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "blocks"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -216,14 +251,14 @@ class JTwitterBlockTest extends TestCase
 		}
 
 		$data['include_entities'] = $entities;
-		$data['skip_status']      = $skip_status;
+		$data['skip_status'] = $skip_status;
 
 		$path = $this->object->fetchUrl('/blocks/create.json');
 
 		$this->client->expects($this->at(1))
-			->method('post')
-			->with($path, $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($path, $data)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->block($user, $entities, $skip_status),
@@ -234,31 +269,31 @@ class JTwitterBlockTest extends TestCase
 	/**
 	 * Tests the block method - failure
 	 *
-	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
 	 * @expectedException DomainException
-	 * @since         12.3
+	 * @since 12.3
 	 */
 	public function testBlockFailure($user)
 	{
-		$entities    = true;
+		$entities = true;
 		$skip_status = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "blocks"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -278,14 +313,14 @@ class JTwitterBlockTest extends TestCase
 		}
 
 		$data['include_entities'] = $entities;
-		$data['skip_status']      = $skip_status;
+		$data['skip_status'] = $skip_status;
 
 		$path = $this->object->fetchUrl('/blocks/create.json');
 
 		$this->client->expects($this->at(1))
-			->method('post')
-			->with($path, $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($path, $data)
+		->will($this->returnValue($returnData));
 
 		$this->object->block($user, $entities, $skip_status);
 	}
@@ -293,30 +328,30 @@ class JTwitterBlockTest extends TestCase
 	/**
 	 * Tests the unblock method
 	 *
-	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
-	 * @since         12.3
+	 * @since 12.3
 	 */
 	public function testUnlock($user)
 	{
-		$entities    = true;
+		$entities = true;
 		$skip_status = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "blocks"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -336,14 +371,14 @@ class JTwitterBlockTest extends TestCase
 		}
 
 		$data['include_entities'] = $entities;
-		$data['skip_status']      = $skip_status;
+		$data['skip_status'] = $skip_status;
 
 		$path = $this->object->fetchUrl('/blocks/destroy.json');
 
 		$this->client->expects($this->at(1))
-			->method('post')
-			->with($path, $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($path, $data)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->unblock($user, $entities, $skip_status),
@@ -354,31 +389,31 @@ class JTwitterBlockTest extends TestCase
 	/**
 	 * Tests the unblock method - failure
 	 *
-	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
 	 * @expectedException DomainException
-	 * @since         12.3
+	 * @since 12.3
 	 */
 	public function testUnblockFailure($user)
 	{
-		$entities    = true;
+		$entities = true;
 		$skip_status = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "blocks"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -398,50 +433,15 @@ class JTwitterBlockTest extends TestCase
 		}
 
 		$data['include_entities'] = $entities;
-		$data['skip_status']      = $skip_status;
+		$data['skip_status'] = $skip_status;
 
 		$path = $this->object->fetchUrl('/blocks/destroy.json');
 
 		$this->client->expects($this->at(1))
-			->method('post')
-			->with($path, $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($path, $data)
+		->will($this->returnValue($returnData));
 
 		$this->object->unblock($user, $entities, $skip_status);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$key    = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input   = new JInput;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth   = new JTwitterOAuth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JTwitterBlock($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-		$this->options->set('sendheaders', true);
 	}
 }

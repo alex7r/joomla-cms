@@ -14,13 +14,13 @@ use Joomla\Registry\Registry;
 /**
  * Joomla Platform class for interacting with a Mediawiki server instance.
  *
- * @property-read  JMediawikiSites      $sites          MediaWiki API object for sites.
- * @property-read  JMediawikiPages      $pages          MediaWiki API object for pages.
- * @property-read  JMediawikiUsers      $users          MediaWiki API object for users.
- * @property-read  JMediawikiLinks      $links          MediaWiki API object for links.
- * @property-read  JMediawikiCategories $categories     MediaWiki API object for categories.
- * @property-read  JMediawikiImages     $images         MediaWiki API object for images.
- * @property-read  JMediawikiSearch     $search         MediaWiki API object for search.
+ * @property-read  JMediawikiSites          $sites          MediaWiki API object for sites.
+ * @property-read  JMediawikiPages          $pages          MediaWiki API object for pages.
+ * @property-read  JMediawikiUsers          $users          MediaWiki API object for users.
+ * @property-read  JMediawikiLinks          $links          MediaWiki API object for links.
+ * @property-read  JMediawikiCategories     $categories     MediaWiki API object for categories.
+ * @property-read  JMediawikiImages         $images         MediaWiki API object for images.
+ * @property-read  JMediawikiSearch         $search         MediaWiki API object for search.
  *
  * @since  12.3
  */
@@ -81,23 +81,23 @@ class JMediawiki
 	protected $search;
 
 	/**
-	 * Constructor.
-	 *
-	 * @param   Registry       $options MediaWiki options object.
-	 * @param   JMediawikiHttp $client  The HTTP client object.
-	 *
-	 * @since   12.3
-	 */
+     * Constructor.
+     *
+     * @param   Registry        $options  MediaWiki options object.
+     * @param   JMediawikiHttp  $client   The HTTP client object.
+     *
+     * @since   12.3
+     */
 	public function __construct(Registry $options = null, JMediawikiHttp $client = null)
 	{
 		$this->options = isset($options) ? $options : new Registry;
-		$this->client  = isset($client) ? $client : new JMediawikiHttp($this->options);
+		$this->client = isset($client) ? $client : new JMediawikiHttp($this->options);
 	}
 
 	/**
 	 * Magic method to lazily create API objects
 	 *
-	 * @param   string $name Name of property to retrieve
+	 * @param   string  $name  Name of property to retrieve
 	 *
 	 * @return  JMediaWikiObject  MediaWiki API object (users, reviews, etc).
 	 *
@@ -106,8 +106,8 @@ class JMediawiki
 	 */
 	public function __get($name)
 	{
-		$name       = strtolower($name);
-		$class      = 'JMediawiki' . ucfirst($name);
+		$name = strtolower($name);
+		$class = 'JMediawiki' . ucfirst($name);
 		$accessible = array(
 			'categories',
 			'images',
@@ -134,7 +134,7 @@ class JMediawiki
 	/**
 	 * Get an option from the JMediawiki instance.
 	 *
-	 * @param   string $key The name of the option to get.
+	 * @param   string  $key  The name of the option to get.
 	 *
 	 * @return  mixed  The option value.
 	 *
@@ -148,8 +148,8 @@ class JMediawiki
 	/**
 	 * Set an option for the JMediawiki instance.
 	 *
-	 * @param   string $key   The name of the option to set.
-	 * @param   mixed  $value The option value to set.
+	 * @param   string  $key    The name of the option to set.
+	 * @param   mixed   $value  The option value to set.
 	 *
 	 * @return  JMediawiki  This object for method chaining.
 	 *

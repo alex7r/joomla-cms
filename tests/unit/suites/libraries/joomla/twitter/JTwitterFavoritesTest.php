@@ -68,12 +68,47 @@ class JTwitterFavoritesTest extends TestCase
 			}}}';
 
 	/**
-	 * Provides test data for request format detection.
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
 	 *
-	 * @return array
+	 * @access protected
 	 *
-	 * @since 12.3
+	 * @return void
 	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$key = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input = new JInput;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth = new JTwitterOAuth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JTwitterFavorites($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+		$this->options->set('sendheaders', true);
+	}
+
+	/**
+	* Provides test data for request format detection.
+	*
+	* @return array
+	*
+	* @since 12.3
+	*/
 	public function seedUser()
 	{
 		// User ID or screen name
@@ -81,38 +116,38 @@ class JTwitterFavoritesTest extends TestCase
 			array(234654235457),
 			array('testUser'),
 			array(null)
-		);
+			);
 	}
 
 	/**
 	 * Tests the getFavorites method
 	 *
-	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
-	 * @since         12.3
+	 * @since   12.3
 	 */
 	public function testGetFavorites($user)
 	{
-		$count    = 10;
+		$count = 10;
 		$since_id = 12345;
-		$max_id   = 54321;
+		$max_id = 54321;
 		$entities = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "favorites"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -126,17 +161,17 @@ class JTwitterFavoritesTest extends TestCase
 			$data['screen_name'] = $user;
 		}
 
-		$data['count']            = $count;
-		$data['since_id']         = $since_id;
-		$data['max_id']           = $max_id;
+		$data['count'] = $count;
+		$data['since_id'] = $since_id;
+		$data['max_id'] = $max_id;
 		$data['include_entities'] = $entities;
 
 		$path = $this->object->fetchUrl('/favorites/list.json', $data);
 
 		$this->client->expects($this->at(1))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getFavorites($user, $count, $since_id, $max_id, $entities),
@@ -147,30 +182,30 @@ class JTwitterFavoritesTest extends TestCase
 	/**
 	 * Tests the getFavorites method - failure
 	 *
-	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
 	 * @expectedException DomainException
-	 * @since         12.3
+	 * @since   12.3
 	 */
 	public function testGetFavoritesFailure($user)
 	{
 		$count = 10;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "favorites"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -188,9 +223,9 @@ class JTwitterFavoritesTest extends TestCase
 		$path = $this->object->fetchUrl('/favorites/list.json', $data);
 
 		$this->client->expects($this->at(1))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->object->getFavorites($user, $count);
 	}
@@ -204,23 +239,23 @@ class JTwitterFavoritesTest extends TestCase
 	 */
 	public function testCreateFavorites()
 	{
-		$id       = 12345;
+		$id = 12345;
 		$entities = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request parameters.
-		$data['id']               = $id;
+		$data['id'] = $id;
 		$data['include_entities'] = $entities;
 
 		$path = $this->object->fetchUrl('/favorites/create.json');
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($path, $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($path, $data)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createFavorites($id, $entities),
@@ -238,23 +273,23 @@ class JTwitterFavoritesTest extends TestCase
 	 */
 	public function testCreateFavoritesFailure()
 	{
-		$id       = 12345;
+		$id = 12345;
 		$entities = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set request parameters.
-		$data['id']               = $id;
+		$data['id'] = $id;
 		$data['include_entities'] = $entities;
 
 		$path = $this->object->fetchUrl('/favorites/create.json');
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($path, $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($path, $data)
+		->will($this->returnValue($returnData));
 
 		$this->object->createFavorites($id, $entities);
 	}
@@ -268,23 +303,23 @@ class JTwitterFavoritesTest extends TestCase
 	 */
 	public function testDeleteFavorites()
 	{
-		$id       = 12345;
+		$id = 12345;
 		$entities = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request parameters.
-		$data['id']               = $id;
+		$data['id'] = $id;
 		$data['include_entities'] = $entities;
 
 		$path = $this->object->fetchUrl('/favorites/destroy.json');
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteFavorites($id, $entities),
@@ -302,59 +337,24 @@ class JTwitterFavoritesTest extends TestCase
 	 */
 	public function testDeleteFavoritesFailure()
 	{
-		$id       = 12345;
+		$id = 12345;
 		$entities = true;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set request parameters.
-		$data['id']               = $id;
+		$data['id'] = $id;
 		$data['include_entities'] = $entities;
 
 		$path = $this->object->fetchUrl('/favorites/destroy.json');
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->object->deleteFavorites($id, $entities);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$key    = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input   = new JInput;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth   = new JTwitterOAuth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JTwitterFavorites($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-		$this->options->set('sendheaders', true);
 	}
 }

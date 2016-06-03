@@ -52,13 +52,31 @@ class JGithubRefsTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JGithubRefs($this->options, $this->client);
+	}
+
+	/**
 	 * Tests the get method
 	 *
 	 * @return void
 	 */
 	public function testGet()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -82,7 +100,7 @@ class JGithubRefsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetFailure()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -101,7 +119,7 @@ class JGithubRefsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreate()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
@@ -133,7 +151,7 @@ class JGithubRefsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreateFailure()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 501;
 		$returnData->body = $this->errorString;
 
@@ -160,7 +178,7 @@ class JGithubRefsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEdit()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -168,7 +186,7 @@ class JGithubRefsTest extends PHPUnit_Framework_TestCase
 		$data = json_encode(
 			array(
 				'force' => true,
-				'sha'   => 'This is the sha'
+				'sha' => 'This is the sha'
 			)
 		);
 
@@ -192,7 +210,7 @@ class JGithubRefsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEditFailure()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -218,7 +236,7 @@ class JGithubRefsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetList()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -242,7 +260,7 @@ class JGithubRefsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetListFailure()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -252,23 +270,5 @@ class JGithubRefsTest extends PHPUnit_Framework_TestCase
 			->will($this->returnValue($returnData));
 
 		$this->object->getList('joomla', 'joomla-platform');
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options = new JRegistry;
-		$this->client  = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JGithubRefs($this->options, $this->client);
 	}
 }

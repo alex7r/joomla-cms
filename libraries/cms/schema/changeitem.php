@@ -110,45 +110,26 @@ abstract class JSchemaChangeitem
 	/**
 	 * Constructor: builds check query and message from $updateQuery
 	 *
-	 * @param   JDatabaseDriver $db    Database connector object
-	 * @param   string          $file  Full path name of the sql file
-	 * @param   string          $query Text of the sql query (one line of the file)
+	 * @param   JDatabaseDriver  $db     Database connector object
+	 * @param   string           $file   Full path name of the sql file
+	 * @param   string           $query  Text of the sql query (one line of the file)
 	 *
 	 * @since   2.5
 	 */
 	public function __construct($db, $file, $query)
 	{
 		$this->updateQuery = $query;
-		$this->file        = $file;
-		$this->db          = $db;
+		$this->file = $file;
+		$this->db = $db;
 		$this->buildCheckQuery();
 	}
 
 	/**
-	 * Checks a DDL query to see if it is a known type
-	 * If yes, build a check query to see if the DDL has been run on the database.
-	 * If successful, the $msgElements, $queryType, $checkStatus and $checkQuery fields are populated.
-	 * The $msgElements contains the text to create the user message.
-	 * The $checkQuery contains the SQL query to check whether the schema change has
-	 * been run against the current database. The $queryType contains the type of
-	 * DDL query that was run (for example, CREATE_TABLE, ADD_COLUMN, CHANGE_COLUMN_TYPE, ADD_INDEX).
-	 * The $checkStatus field is set to zero if the query is created
-	 *
-	 * If not successful, $checkQuery is empty and , and $checkStatus is -1.
-	 * For example, this will happen if the current line is a non-DDL statement.
-	 *
-	 * @return void
-	 *
-	 * @since  2.5
-	 */
-	abstract protected function buildCheckQuery();
-
-	/**
 	 * Returns a reference to the JSchemaChangeitem object.
 	 *
-	 * @param   JDatabaseDriver $db    Database connector object
-	 * @param   string          $file  Full path name of the sql file
-	 * @param   string          $query Text of the sql query (one line of the file)
+	 * @param   JDatabaseDriver  $db     Database connector object
+	 * @param   string           $file   Full path name of the sql file
+	 * @param   string           $query  Text of the sql query (one line of the file)
 	 *
 	 * @return  JSchemaChangeitem instance based on the database driver
 	 *
@@ -181,38 +162,23 @@ abstract class JSchemaChangeitem
 	}
 
 	/**
-	 * Runs the update query to apply the change to the database
+	 * Checks a DDL query to see if it is a known type
+	 * If yes, build a check query to see if the DDL has been run on the database.
+	 * If successful, the $msgElements, $queryType, $checkStatus and $checkQuery fields are populated.
+	 * The $msgElements contains the text to create the user message.
+	 * The $checkQuery contains the SQL query to check whether the schema change has
+	 * been run against the current database. The $queryType contains the type of
+	 * DDL query that was run (for example, CREATE_TABLE, ADD_COLUMN, CHANGE_COLUMN_TYPE, ADD_INDEX).
+	 * The $checkStatus field is set to zero if the query is created
 	 *
-	 * @return  void
+	 * If not successful, $checkQuery is empty and , and $checkStatus is -1.
+	 * For example, this will happen if the current line is a non-DDL statement.
 	 *
-	 * @since   2.5
+	 * @return void
+	 *
+	 * @since  2.5
 	 */
-	public function fix()
-	{
-		if ($this->checkStatus === -2)
-		{
-			// At this point we have a failed query
-			$query = $this->db->convertUtf8mb4QueryToUtf8($this->updateQuery);
-			$this->db->setQuery($query);
-
-			if ($this->db->execute())
-			{
-				if ($this->check())
-				{
-					$this->checkStatus = 1;
-					$this->rerunStatus = 1;
-				}
-				else
-				{
-					$this->rerunStatus = -2;
-				}
-			}
-			else
-			{
-				$this->rerunStatus = -2;
-			}
-		}
-	}
+	abstract protected function buildCheckQuery();
 
 	/**
 	 * Runs the check query and checks that 1 row is returned
@@ -260,5 +226,39 @@ abstract class JSchemaChangeitem
 		}
 
 		return $this->checkStatus;
+	}
+
+	/**
+	 * Runs the update query to apply the change to the database
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	public function fix()
+	{
+		if ($this->checkStatus === -2)
+		{
+			// At this point we have a failed query
+			$query = $this->db->convertUtf8mb4QueryToUtf8($this->updateQuery);
+			$this->db->setQuery($query);
+
+			if ($this->db->execute())
+			{
+				if ($this->check())
+				{
+					$this->checkStatus = 1;
+					$this->rerunStatus = 1;
+				}
+				else
+				{
+					$this->rerunStatus = -2;
+				}
+			}
+			else
+			{
+				$this->rerunStatus = -2;
+			}
+		}
 	}
 }

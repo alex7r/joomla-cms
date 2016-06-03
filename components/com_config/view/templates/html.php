@@ -29,7 +29,7 @@ class ConfigViewTemplatesHtml extends ConfigViewCmsHtml
 	 */
 	public function render()
 	{
-		$user                   = JFactory::getUser();
+		$user = JFactory::getUser();
 		$this->userIsSuperAdmin = $user->authorise('core.admin');
 
 		return parent::render();

@@ -19,7 +19,7 @@ class FinderRouter extends JComponentRouterBase
 	/**
 	 * Build the route for the com_finder component
 	 *
-	 * @param   array &$query An array of URL arguments
+	 * @param   array  &$query  An array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *
@@ -97,7 +97,7 @@ class FinderRouter extends JComponentRouterBase
 	/**
 	 * Parse the segments of a URL.
 	 *
-	 * @param   array &$segments The segments of the URL to parse.
+	 * @param   array  &$segments  The segments of the URL to parse.
 	 *
 	 * @return  array  The URL attributes to be used by the application.
 	 *
@@ -106,7 +106,7 @@ class FinderRouter extends JComponentRouterBase
 	public function parse(&$segments)
 	{
 		$total = count($segments);
-		$vars  = array();
+		$vars = array();
 
 		for ($i = 0; $i < $total; $i++)
 		{
@@ -129,7 +129,7 @@ class FinderRouter extends JComponentRouterBase
  * These functions are proxys for the new router interface
  * for old SEF extensions.
  *
- * @param   array &$query An array of URL arguments
+ * @param   array  &$query  An array of URL arguments
  *
  * @return  array  The URL arguments to use to assemble the subsequent URL.
  *
@@ -148,7 +148,7 @@ function FinderBuildRoute(&$query)
  * These functions are proxys for the new router interface
  * for old SEF extensions.
  *
- * @param   array $segments The segments of the URL to parse.
+ * @param   array  $segments  The segments of the URL to parse.
  *
  * @return  array  The URL attributes to be used by the application.
  *

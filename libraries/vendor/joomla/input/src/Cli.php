@@ -37,8 +37,8 @@ class Cli extends Input
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $source  Source data (Optional, default is $_REQUEST)
-	 * @param   array $options Array of configuration parameters (Optional)
+	 * @param   array  $source   Source data (Optional, default is $_REQUEST)
+	 * @param   array  $options  Array of configuration parameters (Optional)
 	 *
 	 * @since   1.0
 	 */
@@ -58,6 +58,68 @@ class Cli extends Input
 
 		// Set the options for the class.
 		$this->options = $options;
+	}
+
+	/**
+	 * Method to serialize the input.
+	 *
+	 * @return  string  The serialized input.
+	 *
+	 * @since   1.0
+	 */
+	public function serialize()
+	{
+		// Load all of the inputs.
+		$this->loadAllInputs();
+
+		// Remove $_ENV and $_SERVER from the inputs.
+		$inputs = $this->inputs;
+		unset($inputs['env']);
+		unset($inputs['server']);
+
+		// Serialize the executable, args, options, data, and inputs.
+		return serialize(array($this->executable, $this->args, $this->options, $this->data, $inputs));
+	}
+
+	/**
+	 * Gets a value from the input data.
+	 *
+	 * @param   string  $name     Name of the value to get.
+	 * @param   mixed   $default  Default value to return if variable does not exist.
+	 * @param   string  $filter   Filter to apply to the value.
+	 *
+	 * @return  mixed  The filtered input value.
+	 *
+	 * @since   1.0
+	 */
+	public function get($name, $default = null, $filter = 'string')
+	{
+		return parent::get($name, $default, $filter);
+	}
+
+	/**
+	 * Method to unserialize the input.
+	 *
+	 * @param   string  $input  The serialized input.
+	 *
+	 * @return  Input  The input object.
+	 *
+	 * @since   1.0
+	 */
+	public function unserialize($input)
+	{
+		// Unserialize the executable, args, options, data, and inputs.
+		list($this->executable, $this->args, $this->options, $this->data, $this->inputs) = unserialize($input);
+
+		// Load the filter.
+		if (isset($this->options['filter']))
+		{
+			$this->filter = $this->options['filter'];
+		}
+		else
+		{
+			$this->filter = new Filter\InputFilter;
+		}
 	}
 
 	/**
@@ -94,22 +156,22 @@ class Cli extends Input
 					// --foo value
 					if ($i + 1 < $j && $argv[$i + 1][0] !== '-')
 					{
-						$value = $argv[$i + 1];
+						$value          = $argv[$i + 1];
 						$i++;
 					}
 					else
 					{
-						$value = isset($out[$key]) ? $out[$key] : true;
+						$value          = isset($out[$key]) ? $out[$key] : true;
 					}
-					$out[$key] = $value;
+					$out[$key]          = $value;
 				}
 
 				// --bar=baz
 				else
 				{
-					$key       = substr($arg, 2, $eqPos - 2);
-					$value     = substr($arg, $eqPos + 1);
-					$out[$key] = $value;
+					$key                = substr($arg, 2, $eqPos - 2);
+					$value              = substr($arg, $eqPos + 1);
+					$out[$key]          = $value;
 				}
 			}
 
@@ -119,26 +181,26 @@ class Cli extends Input
 				// -k=value
 				if (substr($arg, 2, 1) === '=')
 				{
-					$key       = substr($arg, 1, 1);
-					$value     = substr($arg, 3);
-					$out[$key] = $value;
+					$key                = substr($arg, 1, 1);
+					$value              = substr($arg, 3);
+					$out[$key]          = $value;
 				}
 				// -abc
 				else
 				{
-					$chars = str_split(substr($arg, 1));
+					$chars              = str_split(substr($arg, 1));
 
 					foreach ($chars as $char)
 					{
-						$key       = $char;
-						$value     = isset($out[$key]) ? $out[$key] : true;
-						$out[$key] = $value;
+						$key            = $char;
+						$value          = isset($out[$key]) ? $out[$key] : true;
+						$out[$key]      = $value;
 					}
 
 					// -a a-value
 					if ((count($chars) === 1) && ($i + 1 < $j) && ($argv[$i + 1][0] !== '-'))
 					{
-						$out[$key] = $argv[$i + 1];
+						$out[$key]      = $argv[$i + 1];
 						$i++;
 					}
 				}
@@ -152,67 +214,5 @@ class Cli extends Input
 		}
 
 		$this->data = $out;
-	}
-
-	/**
-	 * Method to serialize the input.
-	 *
-	 * @return  string  The serialized input.
-	 *
-	 * @since   1.0
-	 */
-	public function serialize()
-	{
-		// Load all of the inputs.
-		$this->loadAllInputs();
-
-		// Remove $_ENV and $_SERVER from the inputs.
-		$inputs = $this->inputs;
-		unset($inputs['env']);
-		unset($inputs['server']);
-
-		// Serialize the executable, args, options, data, and inputs.
-		return serialize(array($this->executable, $this->args, $this->options, $this->data, $inputs));
-	}
-
-	/**
-	 * Gets a value from the input data.
-	 *
-	 * @param   string $name    Name of the value to get.
-	 * @param   mixed  $default Default value to return if variable does not exist.
-	 * @param   string $filter  Filter to apply to the value.
-	 *
-	 * @return  mixed  The filtered input value.
-	 *
-	 * @since   1.0
-	 */
-	public function get($name, $default = null, $filter = 'string')
-	{
-		return parent::get($name, $default, $filter);
-	}
-
-	/**
-	 * Method to unserialize the input.
-	 *
-	 * @param   string $input The serialized input.
-	 *
-	 * @return  Input  The input object.
-	 *
-	 * @since   1.0
-	 */
-	public function unserialize($input)
-	{
-		// Unserialize the executable, args, options, data, and inputs.
-		list($this->executable, $this->args, $this->options, $this->data, $this->inputs) = unserialize($input);
-
-		// Load the filter.
-		if (isset($this->options['filter']))
-		{
-			$this->filter = $this->options['filter'];
-		}
-		else
-		{
-			$this->filter = new Filter\InputFilter;
-		}
 	}
 }

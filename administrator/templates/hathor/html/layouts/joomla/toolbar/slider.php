@@ -16,8 +16,7 @@ $name    = $displayData['name'];
 $onClose = $displayData['onClose'];
 ?>
 
-<a onclick="<?php echo $doTask; ?>" data-toggle="collapse"
-   data-target="#collapse-<?php echo $name; ?>"<?php echo $onClose; ?>>
+<a onclick="<?php echo $doTask; ?>" data-toggle="collapse" data-target="#collapse-<?php echo $name; ?>"<?php echo $onClose; ?>>
 	<span class="<?php echo $class; ?>"></span>
 	<?php echo $text; ?>
 </a>

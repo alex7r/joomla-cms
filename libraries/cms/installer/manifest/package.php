@@ -43,7 +43,7 @@ class JInstallerManifestPackage extends JInstallerManifest
 	/**
 	 * Apply manifest data from a SimpleXMLElement to the object.
 	 *
-	 * @param   SimpleXMLElement $xml Data to load
+	 * @param   SimpleXMLElement  $xml  Data to load
 	 *
 	 * @return  void
 	 *

@@ -21,7 +21,7 @@ class JFormFieldNewsfeeds extends JFormFieldList
 	/**
 	 * The form field type.
 	 *
-	 * @var        string
+	 * @var		string
 	 * @since   1.6
 	 */
 	protected $type = 'Newsfeeds';

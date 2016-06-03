@@ -29,9 +29,9 @@ class JOpenstreetmapOauth extends JOAuth1Client
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry $options JOpenstreetmapOauth options object.
-	 * @param   JHttp    $client  The HTTP client object.
-	 * @param   JInput   $input   The input object
+	 * @param   Registry  $options  JOpenstreetmapOauth options object.
+	 * @param   JHttp     $client   The HTTP client object.
+	 * @param   JInput    $input    The input object
 	 *
 	 * @since   13.1
 	 */
@@ -68,8 +68,8 @@ class JOpenstreetmapOauth extends JOAuth1Client
 	/**
 	 * Method to validate a response.
 	 *
-	 * @param   string        $url      The request URL.
-	 * @param   JHttpResponse $response The response to validate.
+	 * @param   string         $url       The request URL.
+	 * @param   JHttpResponse  $response  The response to validate.
 	 *
 	 * @return  void
 	 *

@@ -43,9 +43,9 @@ class JRouterSite extends JRouter
 	/**
 	 * Class constructor
 	 *
-	 * @param   array           $options Array of options
-	 * @param   JApplicationCms $app     JApplicationCms Object
-	 * @param   JMenu           $menu    JMenu object
+	 * @param   array            $options  Array of options
+	 * @param   JApplicationCms  $app      JApplicationCms Object
+	 * @param   JMenu            $menu     JMenu object
 	 *
 	 * @since   3.4
 	 */
@@ -60,7 +60,7 @@ class JRouterSite extends JRouter
 	/**
 	 * Function to convert a route to an internal URI
 	 *
-	 * @param   JUri &$uri The uri.
+	 * @param   JUri  &$uri  The uri.
 	 *
 	 * @return  array
 	 *
@@ -123,7 +123,7 @@ class JRouterSite extends JRouter
 	/**
 	 * Function to convert an internal URI to a route
 	 *
-	 * @param   string $url The internal URL
+	 * @param   string  $url  The internal URL
 	 *
 	 * @return  string  The absolute search engine friendly URL
 	 *
@@ -169,39 +169,73 @@ class JRouterSite extends JRouter
 	}
 
 	/**
-	 * Set a router for a component
+	 * Function to convert a raw route to an internal URI
 	 *
-	 * @param   string $component Component name with com_ prefix
-	 * @param   object $router    Component router
+	 * @param   JUri  &$uri  The raw route
 	 *
-	 * @return  boolean  True if the router was accepted, false if not
+	 * @return  array
 	 *
-	 * @since   3.3
+	 * @since   3.2
+	 * @deprecated  4.0  Attach your logic as rule to the main parse stage
 	 */
-	public function setComponentRouter($component, $router)
+	protected function parseRawRoute(&$uri)
 	{
-		$reflection = new ReflectionClass($router);
+		$vars = array();
 
-		if (in_array('JComponentRouterInterface', $reflection->getInterfaceNames()))
+		// Handle an empty URL (special case)
+		if (!$uri->getVar('Itemid') && !$uri->getVar('option'))
 		{
-			$this->componentRouters[$component] = $router;
+			$item = $this->menu->getDefault($this->app->getLanguage()->getTag());
 
-			return true;
+			if (!is_object($item))
+			{
+				// No default item set
+				return $vars;
+			}
+
+			// Set the information in the request
+			$vars = $item->query;
+
+			// Get the itemid
+			$vars['Itemid'] = $item->id;
+
+			// Set the active menu item
+			$this->menu->setActive($vars['Itemid']);
+
+			return $vars;
 		}
-		else
+
+		// Get the variables from the uri
+		$this->setVars($uri->getQuery(true));
+
+		// Get the itemid, if it hasn't been set force it to null
+		$this->setVar('Itemid', $this->app->input->getInt('Itemid', null));
+
+		// Only an Itemid  OR if filter language plugin set? Get the full information from the itemid
+		if (count($this->getVars()) == 1 || ($this->app->getLanguageFilter() && count($this->getVars()) == 2 ))
 		{
-			return false;
+			$item = $this->menu->getItem($this->getVar('Itemid'));
+
+			if ($item !== null && is_array($item->query))
+			{
+				$vars = $vars + $item->query;
+			}
 		}
+
+		// Set the active menu item
+		$this->menu->setActive($this->getVar('Itemid'));
+
+		return $vars;
 	}
 
 	/**
 	 * Function to convert a sef route to an internal URI
 	 *
-	 * @param   JUri &$uri The sef URI
+	 * @param   JUri  &$uri  The sef URI
 	 *
 	 * @return  string  Internal URI
 	 *
-	 * @since       3.2
+	 * @since   3.2
 	 * @deprecated  4.0  Attach your logic as rule to the main parse stage
 	 */
 	protected function parseSefRoute(&$uri)
@@ -256,7 +290,7 @@ class JRouterSite extends JRouter
 		{
 			$vars['option'] = 'com_' . $segments[1];
 			$vars['Itemid'] = null;
-			$route          = implode('/', array_slice($segments, 2));
+			$route = implode('/', array_slice($segments, 2));
 		}
 		else
 		{
@@ -358,7 +392,7 @@ class JRouterSite extends JRouter
 			if (count($segments))
 			{
 				$crouter = $this->getComponentRouter($component);
-				$vars    = $crouter->parse($segments);
+				$vars = $crouter->parse($segments);
 
 				$this->setVars($vars);
 			}
@@ -376,120 +410,13 @@ class JRouterSite extends JRouter
 	}
 
 	/**
-	 * Function to convert a raw route to an internal URI
-	 *
-	 * @param   JUri &$uri The raw route
-	 *
-	 * @return  array
-	 *
-	 * @since       3.2
-	 * @deprecated  4.0  Attach your logic as rule to the main parse stage
-	 */
-	protected function parseRawRoute(&$uri)
-	{
-		$vars = array();
-
-		// Handle an empty URL (special case)
-		if (!$uri->getVar('Itemid') && !$uri->getVar('option'))
-		{
-			$item = $this->menu->getDefault($this->app->getLanguage()->getTag());
-
-			if (!is_object($item))
-			{
-				// No default item set
-				return $vars;
-			}
-
-			// Set the information in the request
-			$vars = $item->query;
-
-			// Get the itemid
-			$vars['Itemid'] = $item->id;
-
-			// Set the active menu item
-			$this->menu->setActive($vars['Itemid']);
-
-			return $vars;
-		}
-
-		// Get the variables from the uri
-		$this->setVars($uri->getQuery(true));
-
-		// Get the itemid, if it hasn't been set force it to null
-		$this->setVar('Itemid', $this->app->input->getInt('Itemid', null));
-
-		// Only an Itemid  OR if filter language plugin set? Get the full information from the itemid
-		if (count($this->getVars()) == 1 || ($this->app->getLanguageFilter() && count($this->getVars()) == 2))
-		{
-			$item = $this->menu->getItem($this->getVar('Itemid'));
-
-			if ($item !== null && is_array($item->query))
-			{
-				$vars = $vars + $item->query;
-			}
-		}
-
-		// Set the active menu item
-		$this->menu->setActive($this->getVar('Itemid'));
-
-		return $vars;
-	}
-
-	/**
-	 * Get component router
-	 *
-	 * @param   string $component Name of the component including com_ prefix
-	 *
-	 * @return  JComponentRouterInterface  Component router
-	 *
-	 * @since   3.3
-	 */
-	public function getComponentRouter($component)
-	{
-		if (!isset($this->componentRouters[$component]))
-		{
-			$compname = ucfirst(substr($component, 4));
-			$class    = $compname . 'Router';
-
-			if (!class_exists($class))
-			{
-				// Use the component routing handler if it exists
-				$path = JPATH_SITE . '/components/' . $component . '/router.php';
-
-				// Use the custom routing handler if it exists
-				if (file_exists($path))
-				{
-					require_once $path;
-				}
-			}
-
-			if (class_exists($class))
-			{
-				$reflection = new ReflectionClass($class);
-
-				if (in_array('JComponentRouterInterface', $reflection->getInterfaceNames()))
-				{
-					$this->componentRouters[$component] = new $class($this->app, $this->menu);
-				}
-			}
-
-			if (!isset($this->componentRouters[$component]))
-			{
-				$this->componentRouters[$component] = new JComponentRouterLegacy($compname);
-			}
-		}
-
-		return $this->componentRouters[$component];
-	}
-
-	/**
 	 * Function to build a raw route
 	 *
-	 * @param   JUri &$uri The internal URL
+	 * @param   JUri  &$uri  The internal URL
 	 *
 	 * @return  string  Raw Route
 	 *
-	 * @since       3.2
+	 * @since   3.2
 	 * @deprecated  4.0  Attach your logic as rule to the main build stage
 	 */
 	protected function buildRawRoute(&$uri)
@@ -512,11 +439,11 @@ class JRouterSite extends JRouter
 	/**
 	 * Function to build a sef route
 	 *
-	 * @param   JUri &$uri The internal URL
+	 * @param   JUri  &$uri  The internal URL
 	 *
 	 * @return  void
 	 *
-	 * @since       1.5
+	 * @since   1.5
 	 * @deprecated  4.0  Attach your logic as rule to the main build stage
 	 * @codeCoverageIgnore
 	 */
@@ -528,11 +455,11 @@ class JRouterSite extends JRouter
 	/**
 	 * Function to build a sef route
 	 *
-	 * @param   JUri &$uri The uri
+	 * @param   JUri  &$uri  The uri
 	 *
 	 * @return  void
 	 *
-	 * @since       3.2
+	 * @since   3.2
 	 * @deprecated  4.0  Attach your logic as rule to the main build stage
 	 */
 	protected function buildSefRoute(&$uri)
@@ -606,8 +533,8 @@ class JRouterSite extends JRouter
 	/**
 	 * Process the parsed router variables based on custom defined rules
 	 *
-	 * @param   JUri   &$uri    The URI to parse
-	 * @param   string $stage   The stage that should be processed.
+	 * @param   JUri    &$uri   The URI to parse
+	 * @param   string  $stage  The stage that should be processed.
 	 *                          Possible values: 'preprocess', 'postprocess'
 	 *                          and '' for the main parse stage
 	 *
@@ -639,14 +566,14 @@ class JRouterSite extends JRouter
 	/**
 	 * Process the build uri query data based on custom defined rules
 	 *
-	 * @param   JUri   &$uri    The URI
-	 * @param   string $stage   The stage that should be processed.
+	 * @param   JUri    &$uri   The URI
+	 * @param   string  $stage  The stage that should be processed.
 	 *                          Possible values: 'preprocess', 'postprocess'
 	 *                          and '' for the main build stage
 	 *
 	 * @return  void
 	 *
-	 * @since       3.2
+	 * @since   3.2
 	 * @deprecated  4.0  The special logic should be implemented as rule
 	 */
 	protected function processBuildRules(&$uri, $stage = self::PROCESS_DURING)
@@ -657,13 +584,12 @@ class JRouterSite extends JRouter
 			$query = $uri->getQuery(true);
 			if ($this->_mode != 1
 				&& isset($query['Itemid'])
-				&& (count($query) == 2 || (count($query) == 3 && isset($query['lang'])))
-			)
+				&& (count($query) == 2 || (count($query) == 3 && isset($query['lang']))))
 			{
 				// Get the active menu item
 				$itemid = $uri->getVar('Itemid');
-				$lang   = $uri->getVar('lang');
-				$item   = $this->menu->getItem($itemid);
+				$lang = $uri->getVar('lang');
+				$item = $this->menu->getItem($itemid);
 
 				if ($item)
 				{
@@ -694,7 +620,7 @@ class JRouterSite extends JRouter
 
 			// Build the component route
 			$component = preg_replace('/[^A-Z0-9_\.-]/i', '', $query['option']);
-			$router    = $this->getComponentRouter($component);
+			$router   = $this->getComponentRouter($component);
 			$query     = $router->preprocess($query);
 			$uri->setQuery($query);
 		}
@@ -720,7 +646,7 @@ class JRouterSite extends JRouter
 	/**
 	 * Create a uri based on a full or partial url string
 	 *
-	 * @param   string $url The URI
+	 * @param   string  $url  The URI
 	 *
 	 * @return  JUri
 	 *
@@ -770,5 +696,78 @@ class JRouterSite extends JRouter
 		}
 
 		return $uri;
+	}
+
+	/**
+	 * Get component router
+	 *
+	 * @param   string  $component  Name of the component including com_ prefix
+	 *
+	 * @return  JComponentRouterInterface  Component router
+	 *
+	 * @since   3.3
+	 */
+	public function getComponentRouter($component)
+	{
+		if (!isset($this->componentRouters[$component]))
+		{
+			$compname = ucfirst(substr($component, 4));
+			$class = $compname . 'Router';
+
+			if (!class_exists($class))
+			{
+				// Use the component routing handler if it exists
+				$path = JPATH_SITE . '/components/' . $component . '/router.php';
+
+				// Use the custom routing handler if it exists
+				if (file_exists($path))
+				{
+					require_once $path;
+				}
+			}
+
+			if (class_exists($class))
+			{
+				$reflection = new ReflectionClass($class);
+
+				if (in_array('JComponentRouterInterface', $reflection->getInterfaceNames()))
+				{
+					$this->componentRouters[$component] = new $class($this->app, $this->menu);
+				}
+			}
+
+			if (!isset($this->componentRouters[$component]))
+			{
+				$this->componentRouters[$component] = new JComponentRouterLegacy($compname);
+			}
+		}
+
+		return $this->componentRouters[$component];
+	}
+
+	/**
+	 * Set a router for a component
+	 *
+	 * @param   string  $component  Component name with com_ prefix
+	 * @param   object  $router     Component router
+	 *
+	 * @return  boolean  True if the router was accepted, false if not
+	 *
+	 * @since   3.3
+	 */
+	public function setComponentRouter($component, $router)
+	{
+		$reflection = new ReflectionClass($router);
+
+		if (in_array('JComponentRouterInterface', $reflection->getInterfaceNames()))
+		{
+			$this->componentRouters[$component] = $router;
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

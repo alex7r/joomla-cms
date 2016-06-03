@@ -59,9 +59,9 @@ class JKeychainTest extends PHPUnit_Framework_TestCase
 	{
 		$keychain = new JKeychain;
 
-		$keychainFile   = __DIR__ . '/data/cli-keychain.dat';
+		$keychainFile = __DIR__ . '/data/cli-keychain.dat';
 		$passphraseFile = __DIR__ . '/data/cli-passphrase.dat';
-		$publicKeyFile  = __DIR__ . '/data/publickey.pem';
+		$publicKeyFile = __DIR__ . '/data/publickey.pem';
 
 		$keychain->loadKeychain($keychainFile, $passphraseFile, $publicKeyFile);
 
@@ -94,12 +94,12 @@ class JKeychainTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since                     12.3
+	 * @since   12.3
 	 */
 	public function testLoadKeychainNonexistant()
 	{
-		$keychainFile   = __DIR__ . '/data/fake-web-keychain.dat';
-		$publicKeyFile  = __DIR__ . '/data/publickey.pem';
+		$keychainFile = __DIR__ . '/data/fake-web-keychain.dat';
+		$publicKeyFile = __DIR__ . '/data/publickey.pem';
 		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
 
 		$keychain = new JKeychain;
@@ -116,11 +116,11 @@ class JKeychainTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since                     12.3
+	 * @since   12.3
 	 */
 	public function testLoadKeychainInvalid()
 	{
-		$publicKeyFile  = __DIR__ . '/data/publickey.pem';
+		$publicKeyFile = __DIR__ . '/data/publickey.pem';
 		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
 
 		$keychain = new JKeychain;
@@ -135,12 +135,12 @@ class JKeychainTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since    12.3
+	 * @since   12.3
 	 */
 	public function testSaveKeychain()
 	{
-		$keychainFile   = __DIR__ . '/data/web-keychain.dat';
-		$publicKeyFile  = __DIR__ . '/data/publickey.pem';
+		$keychainFile = __DIR__ . '/data/web-keychain.dat';
+		$publicKeyFile = __DIR__ . '/data/publickey.pem';
 		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
 
 		$keychain = new JKeychain;
@@ -161,8 +161,8 @@ class JKeychainTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testLoadKeychain()
 	{
-		$keychainFile   = __DIR__ . '/data/web-keychain.dat';
-		$publicKeyFile  = __DIR__ . '/data/publickey.pem';
+		$keychainFile = __DIR__ . '/data/web-keychain.dat';
+		$publicKeyFile = __DIR__ . '/data/publickey.pem';
 		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
 
 		$keychain = new JKeychain;
@@ -183,8 +183,8 @@ class JKeychainTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testDeleteValue()
 	{
-		$keychainFile   = __DIR__ . '/data/web-keychain.dat';
-		$publicKeyFile  = __DIR__ . '/data/publickey.pem';
+		$keychainFile = __DIR__ . '/data/web-keychain.dat';
+		$publicKeyFile = __DIR__ . '/data/publickey.pem';
 		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
 
 		$keychain = new JKeychain;

@@ -12,17 +12,17 @@ defined('JPATH_PLATFORM') or die();
 /**
  * Class to encapsulate a feed for the Joomla Platform.
  *
- * @property  JFeedPerson $author         Person responsible for feed content.
- * @property  array       $categories     Categories to which the feed belongs.
- * @property  array       $contributors   People who contributed to the feed content.
- * @property  string      $copyright      Information about rights, e.g. copyrights, held in and over the feed.
- * @property  string      $description    A phrase or sentence describing the feed.
- * @property  string      $generator      A string indicating the program used to generate the feed.
- * @property  string      $image          Specifies a GIF, JPEG or PNG image that should be displayed with the feed.
- * @property  JDate       $publishedDate  The publication date for the feed content.
- * @property  string      $title          A human readable title for the feed.
- * @property  JDate       $updatedDate    The last time the content of the feed changed.
- * @property  string      $uri            Universal, permanent identifier for the feed.
+ * @property  JFeedPerson  $author         Person responsible for feed content.
+ * @property  array        $categories     Categories to which the feed belongs.
+ * @property  array        $contributors   People who contributed to the feed content.
+ * @property  string       $copyright      Information about rights, e.g. copyrights, held in and over the feed.
+ * @property  string       $description    A phrase or sentence describing the feed.
+ * @property  string       $generator      A string indicating the program used to generate the feed.
+ * @property  string       $image          Specifies a GIF, JPEG or PNG image that should be displayed with the feed.
+ * @property  JDate        $publishedDate  The publication date for the feed content.
+ * @property  string       $title          A human readable title for the feed.
+ * @property  JDate        $updatedDate    The last time the content of the feed changed.
+ * @property  string       $uri            Universal, permanent identifier for the feed.
  *
  * @since  12.3
  */
@@ -33,11 +33,11 @@ class JFeed implements ArrayAccess
 	 * @since  12.3
 	 */
 	protected $properties = array(
-		'uri'          => '',
-		'title'        => '',
-		'updatedDate'  => '',
-		'description'  => '',
-		'categories'   => array(),
+		'uri' => '',
+		'title' => '',
+		'updatedDate' => '',
+		'description' => '',
+		'categories' => array(),
 		'contributors' => array()
 	);
 
@@ -50,7 +50,7 @@ class JFeed implements ArrayAccess
 	/**
 	 * Magic method to return values for feed properties.
 	 *
-	 * @param   string $name The name of the property.
+	 * @param   string  $name  The name of the property.
 	 *
 	 * @return  mixed
 	 *
@@ -64,8 +64,8 @@ class JFeed implements ArrayAccess
 	/**
 	 * Magic method to set values for feed properties.
 	 *
-	 * @param   string $name  The name of the property.
-	 * @param   mixed  $value The value to set for the property.
+	 * @param   string  $name   The name of the property.
+	 * @param   mixed   $value  The value to set for the property.
 	 *
 	 * @return  void
 	 *
@@ -97,8 +97,8 @@ class JFeed implements ArrayAccess
 	/**
 	 * Method to add a category to the feed object.
 	 *
-	 * @param   string $name The name of the category to add.
-	 * @param   string $uri  The optional URI for the category to add.
+	 * @param   string  $name  The name of the category to add.
+	 * @param   string  $uri   The optional URI for the category to add.
 	 *
 	 * @return  JFeed
 	 *
@@ -114,10 +114,10 @@ class JFeed implements ArrayAccess
 	/**
 	 * Method to add a contributor to the feed object.
 	 *
-	 * @param   string $name  The full name of the person to add.
-	 * @param   string $email The email address of the person to add.
-	 * @param   string $uri   The optional URI for the person to add.
-	 * @param   string $type  The optional type of person to add.
+	 * @param   string  $name   The full name of the person to add.
+	 * @param   string  $email  The email address of the person to add.
+	 * @param   string  $uri    The optional URI for the person to add.
+	 * @param   string  $type   The optional type of person to add.
 	 *
 	 * @return  JFeed
 	 *
@@ -145,7 +145,7 @@ class JFeed implements ArrayAccess
 	/**
 	 * Method to add an entry to the feed object.
 	 *
-	 * @param   JFeedEntry $entry The entry object to add.
+	 * @param   JFeedEntry  $entry  The entry object to add.
 	 *
 	 * @return  JFeed
 	 *
@@ -172,7 +172,7 @@ class JFeed implements ArrayAccess
 	 * Whether or not an offset exists.  This method is executed when using isset() or empty() on
 	 * objects implementing ArrayAccess.
 	 *
-	 * @param   mixed $offset An offset to check for.
+	 * @param   mixed  $offset  An offset to check for.
 	 *
 	 * @return  boolean
 	 *
@@ -187,7 +187,7 @@ class JFeed implements ArrayAccess
 	/**
 	 * Returns the value at specified offset.
 	 *
-	 * @param   mixed $offset The offset to retrieve.
+	 * @param   mixed  $offset  The offset to retrieve.
 	 *
 	 * @return  mixed  The value at the offset.
 	 *
@@ -202,8 +202,8 @@ class JFeed implements ArrayAccess
 	/**
 	 * Assigns a value to the specified offset.
 	 *
-	 * @param   mixed      $offset The offset to assign the value to.
-	 * @param   JFeedEntry $value  The JFeedEntry to set.
+	 * @param   mixed       $offset  The offset to assign the value to.
+	 * @param   JFeedEntry  $value   The JFeedEntry to set.
 	 *
 	 * @return  boolean
 	 *
@@ -226,7 +226,7 @@ class JFeed implements ArrayAccess
 	/**
 	 * Unsets an offset.
 	 *
-	 * @param   mixed $offset The offset to unset.
+	 * @param   mixed  $offset  The offset to unset.
 	 *
 	 * @return  void
 	 *
@@ -241,7 +241,7 @@ class JFeed implements ArrayAccess
 	/**
 	 * Method to remove a category from the feed object.
 	 *
-	 * @param   string $name The name of the category to remove.
+	 * @param   string  $name  The name of the category to remove.
 	 *
 	 * @return  JFeed
 	 *
@@ -257,7 +257,7 @@ class JFeed implements ArrayAccess
 	/**
 	 * Method to remove a contributor from the feed object.
 	 *
-	 * @param   JFeedPerson $contributor The person object to remove.
+	 * @param   JFeedPerson  $contributor  The person object to remove.
 	 *
 	 * @return  JFeed
 	 *
@@ -283,7 +283,7 @@ class JFeed implements ArrayAccess
 	/**
 	 * Method to remove an entry from the feed object.
 	 *
-	 * @param   JFeedEntry $entry The entry object to remove.
+	 * @param   JFeedEntry  $entry  The entry object to remove.
 	 *
 	 * @return  JFeed
 	 *
@@ -309,10 +309,10 @@ class JFeed implements ArrayAccess
 	/**
 	 * Shortcut method to set the author for the feed object.
 	 *
-	 * @param   string $name  The full name of the person to set.
-	 * @param   string $email The email address of the person to set.
-	 * @param   string $uri   The optional URI for the person to set.
-	 * @param   string $type  The optional type of person to set.
+	 * @param   string  $name   The full name of the person to set.
+	 * @param   string  $email  The email address of the person to set.
+	 * @param   string  $uri    The optional URI for the person to set.
+	 * @param   string  $type   The optional type of person to set.
 	 *
 	 * @return  JFeed
 	 *
@@ -337,7 +337,6 @@ class JFeed implements ArrayAccess
 		{
 			$this->entries = array_reverse($this->entries);
 		}
-
 		return $this;
 	}
 }

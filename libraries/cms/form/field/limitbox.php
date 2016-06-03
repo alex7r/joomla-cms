@@ -19,19 +19,21 @@ JFormHelper::loadFieldClass('list');
 class JFormFieldLimitbox extends JFormFieldList
 {
 	/**
-	 * Cached array of the category items.
-	 *
-	 * @var    array
-	 * @since  3.2
-	 */
-	protected static $options = array();
-	/**
 	 * The form field type.
 	 *
 	 * @var    string
 	 * @since  3.2
 	 */
 	public $type = 'Limitbox';
+
+	/**
+	 * Cached array of the category items.
+	 *
+	 * @var    array
+	 * @since  3.2
+	 */
+	protected static $options = array();
+
 	/**
 	 * Default options
 	 *
@@ -56,7 +58,7 @@ class JFormFieldLimitbox extends JFormFieldList
 			static::$options[$hash] = parent::getOptions();
 
 			$options = array();
-			$limits  = $this->defaultLimits;
+			$limits = $this->defaultLimits;
 
 			// Limits manually specified
 			if (isset($this->element['limits']))
@@ -93,7 +95,7 @@ class JFormFieldLimitbox extends JFormFieldList
 				{
 					$options[] = (object) array(
 						'value' => $value,
-						'text'  => ($value != 0) ? JText::_('J' . $value) : JText::_('JALL')
+						'text' => ($value != 0) ? JText::_('J' . $value) : JText::_('JALL')
 					);
 				}
 

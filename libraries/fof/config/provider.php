@@ -1,9 +1,9 @@
 <?php
 /**
- * @package     FrameworkOnFramework
- * @subpackage  config
+ *  @package     FrameworkOnFramework
+ *  @subpackage  config
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license     GNU General Public License version 2, or later
+ *  @license     GNU General Public License version 2, or later
  */
 
 defined('FOF_INCLUDED') or die();
@@ -25,84 +25,10 @@ class FOFConfigProvider
 	public static $configurations = array();
 
 	/**
-	 * Returns the value of a variable. Variables use a dot notation, e.g.
-	 * view.config.whatever where the first part is the domain, the rest of the
-	 * parts specify the path to the variable.
-	 *
-	 * @param   string $variable The variable name
-	 * @param   mixed  $default  The default value, or null if not specified
-	 *
-	 * @return  mixed  The value of the variable
-	 */
-	public function get($variable, $default = null)
-	{
-		static $domains = null;
-
-		if (is_null($domains))
-		{
-			$domains = $this->getDomains();
-		}
-
-		list($component, $domain, $var) = explode('.', $variable, 3);
-
-		if (!isset(self::$configurations[$component]))
-		{
-			$this->parseComponent($component);
-		}
-
-		if (!in_array($domain, $domains))
-		{
-			return $default;
-		}
-
-		$class = 'FOFConfigDomain' . ucfirst($domain);
-		$o     = new $class;
-
-		return $o->get(self::$configurations[$component], $var, $default);
-	}
-
-	/**
-	 * Gets a list of the available configuration domain adapters
-	 *
-	 * @return  array  A list of the available domains
-	 */
-	protected function getDomains()
-	{
-		static $domains = array();
-
-		if (empty($domains))
-		{
-			$filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
-
-			$files = $filesystem->folderFiles(__DIR__ . '/domain', '.php');
-
-			if (!empty($files))
-			{
-				foreach ($files as $file)
-				{
-					$domain = basename($file, '.php');
-
-					if ($domain == 'interface')
-					{
-						continue;
-					}
-
-					$domain    = preg_replace('/[^A-Za-z0-9]/', '', $domain);
-					$domains[] = $domain;
-				}
-
-				$domains = array_unique($domains);
-			}
-		}
-
-		return $domains;
-	}
-
-	/**
 	 * Parses the configuration of the specified component
 	 *
-	 * @param   string  $component The name of the component, e.g. com_foobar
-	 * @param   boolean $force     Force reload even if it's already parsed?
+	 * @param   string   $component  The name of the component, e.g. com_foobar
+	 * @param   boolean  $force      Force reload even if it's already parsed?
 	 *
 	 * @return  void
 	 */
@@ -128,21 +54,58 @@ class FOFConfigProvider
 
 		$order[] = 'common';
 
-		$order                            = array_reverse($order);
+		$order = array_reverse($order);
 		self::$configurations[$component] = array();
 
 		foreach ($order as $area)
 		{
-			$config                           = $this->parseComponentArea($component, $area);
+			$config = $this->parseComponentArea($component, $area);
 			self::$configurations[$component] = array_merge_recursive(self::$configurations[$component], $config);
 		}
 	}
 
 	/**
+	 * Returns the value of a variable. Variables use a dot notation, e.g.
+	 * view.config.whatever where the first part is the domain, the rest of the
+	 * parts specify the path to the variable.
+	 *
+	 * @param   string  $variable  The variable name
+	 * @param   mixed   $default   The default value, or null if not specified
+	 *
+	 * @return  mixed  The value of the variable
+	 */
+	public function get($variable, $default = null)
+	{
+		static $domains = null;
+
+		if (is_null($domains))
+		{
+			$domains = $this->getDomains();
+		}
+
+		list($component, $domain, $var) = explode('.', $variable, 3);
+
+		if (!isset(self::$configurations[$component]))
+		{
+			$this->parseComponent($component);
+		}
+
+		if (!in_array($domain, $domains))
+		{
+			return $default;
+		}
+
+		$class = 'FOFConfigDomain' . ucfirst($domain);
+		$o = new $class;
+
+		return $o->get(self::$configurations[$component], $var, $default);
+	}
+
+	/**
 	 * Parses the configuration options of a specific component area
 	 *
-	 * @param   string $component Which component's cionfiguration to parse
-	 * @param   string $area      Which area to parse (frontend, backend, cli)
+	 * @param   string  $component  Which component's cionfiguration to parse
+	 * @param   string  $area       Which area to parse (frontend, backend, cli)
 	 *
 	 * @return  array  A hash array with the configuration data
 	 */
@@ -153,7 +116,7 @@ class FOFConfigProvider
 
 		// Get the folders of the component
 		$componentPaths = FOFPlatform::getInstance()->getComponentBaseDirs($component);
-		$filesystem     = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
+        $filesystem     = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
 
 		// Check that the path exists
 		$path = $componentPaths['admin'];
@@ -208,5 +171,42 @@ class FOFConfigProvider
 
 		// Finally, return the result
 		return $ret;
+	}
+
+	/**
+	 * Gets a list of the available configuration domain adapters
+	 *
+	 * @return  array  A list of the available domains
+	 */
+	protected function getDomains()
+	{
+		static $domains = array();
+
+		if (empty($domains))
+		{
+			$filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
+
+			$files = $filesystem->folderFiles(__DIR__ . '/domain', '.php');
+
+			if (!empty($files))
+			{
+				foreach ($files as $file)
+				{
+					$domain = basename($file, '.php');
+
+					if ($domain == 'interface')
+					{
+						continue;
+					}
+
+					$domain = preg_replace('/[^A-Za-z0-9]/', '', $domain);
+					$domains[] = $domain;
+				}
+
+				$domains = array_unique($domains);
+			}
+		}
+
+		return $domains;
 	}
 }

@@ -63,7 +63,7 @@ class JFormFieldTel extends JFormFieldText
 		JHtml::_('script', 'system/html5fallback.js', false, true);
 
 		return '<input type="tel" name="' . $this->name . '"' . $class . ' id="' . $this->id . '" value="'
-		. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $size . $disabled . $readonly
-		. $hint . $autocomplete . $autofocus . $spellcheck . $onchange . $maxLength . $required . ' />';
+			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $size . $disabled . $readonly
+			. $hint . $autocomplete . $autofocus . $spellcheck . $onchange . $maxLength . $required . ' />';
 	}
 }

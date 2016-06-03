@@ -29,9 +29,38 @@ class ContentModelForm extends ContentModelArticle
 	public $typeAlias = 'com_content.article';
 
 	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication();
+
+		// Load state from the request.
+		$pk = $app->input->getInt('a_id');
+		$this->setState('article.id', $pk);
+
+		$this->setState('article.catid', $app->input->getInt('catid'));
+
+		$return = $app->input->get('return', null, 'base64');
+		$this->setState('return_page', base64_decode($return));
+
+		// Load the parameters.
+		$params = $app->getParams();
+		$this->setState('params', $params);
+
+		$this->setState('layout', $app->input->getString('layout'));
+	}
+
+	/**
 	 * Method to get article data.
 	 *
-	 * @param   integer $itemId The id of the article.
+	 * @param   integer  $itemId  The id of the article.
 	 *
 	 * @return  mixed  Content item data object on success, false on failure.
 	 */
@@ -54,7 +83,7 @@ class ContentModelForm extends ContentModelArticle
 		}
 
 		$properties = $table->getProperties(1);
-		$value      = JArrayHelper::toObject($properties, 'JObject');
+		$value = JArrayHelper::toObject($properties, 'JObject');
 
 		// Convert attrib field to Registry.
 		$value->params = new Registry;
@@ -128,7 +157,7 @@ class ContentModelForm extends ContentModelArticle
 	/**
 	 * Get the return URL.
 	 *
-	 * @return  string    The return URL.
+	 * @return  string	The return URL.
 	 *
 	 * @since   1.6
 	 */
@@ -140,7 +169,7 @@ class ContentModelForm extends ContentModelArticle
 	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -163,34 +192,5 @@ class ContentModelForm extends ContentModelArticle
 		}
 
 		return parent::save($data);
-	}
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication();
-
-		// Load state from the request.
-		$pk = $app->input->getInt('a_id');
-		$this->setState('article.id', $pk);
-
-		$this->setState('article.catid', $app->input->getInt('catid'));
-
-		$return = $app->input->get('return', null, 'base64');
-		$this->setState('return_page', base64_decode($return));
-
-		// Load the parameters.
-		$params = $app->getParams();
-		$this->setState('params', $params);
-
-		$this->setState('layout', $app->input->getString('layout'));
 	}
 }

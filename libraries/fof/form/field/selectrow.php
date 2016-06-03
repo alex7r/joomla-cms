@@ -1,9 +1,9 @@
 <?php
 /**
- * @package     FrameworkOnFramework
- * @subpackage  form
+ * @package    FrameworkOnFramework
+ * @subpackage form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -17,17 +17,20 @@ defined('FOF_INCLUDED') or die;
  */
 class FOFFormFieldSelectrow extends JFormField implements FOFFormField
 {
+	protected $static;
+
+	protected $repeatable;
+
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
 	public $item;
+
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
-	protected $static;
-	protected $repeatable;
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string $name The property name for which to the the value.
+	 * @param   string  $name  The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -58,6 +61,18 @@ class FOFFormFieldSelectrow extends JFormField implements FOFFormField
 			default:
 				return parent::__get($name);
 		}
+	}
+
+	/**
+	 * Method to get the field input markup for this field type.
+	 *
+	 * @since 2.0
+	 *
+	 * @return  string  The field input markup.
+	 */
+	protected function getInput()
+	{
+		throw new Exception(__CLASS__ . ' cannot be used in input forms');
 	}
 
 	/**
@@ -105,17 +120,5 @@ class FOFFormFieldSelectrow extends JFormField implements FOFFormField
 
 		// Get the HTML
 		return JHTML::_('grid.id', $this->rowid, $key_id, $checked_out);
-	}
-
-	/**
-	 * Method to get the field input markup for this field type.
-	 *
-	 * @since 2.0
-	 *
-	 * @return  string  The field input markup.
-	 */
-	protected function getInput()
-	{
-		throw new Exception(__CLASS__ . ' cannot be used in input forms');
 	}
 }

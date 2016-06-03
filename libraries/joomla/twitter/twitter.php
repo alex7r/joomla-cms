@@ -111,15 +111,15 @@ class JTwitter
 	/**
 	 * Constructor.
 	 *
-	 * @param   JTwitterOauth $oauth   The oauth client.
-	 * @param   Registry      $options Twitter options object.
-	 * @param   JHttp         $client  The HTTP client object.
+	 * @param   JTwitterOauth  $oauth    The oauth client.
+	 * @param   Registry       $options  Twitter options object.
+	 * @param   JHttp          $client   The HTTP client object.
 	 *
 	 * @since   12.3
 	 */
 	public function __construct(JTwitterOAuth $oauth = null, Registry $options = null, JHttp $client = null)
 	{
-		$this->oauth   = $oauth;
+		$this->oauth = $oauth;
 		$this->options = isset($options) ? $options : new Registry;
 		$this->client  = isset($client) ? $client : new JHttp($this->options);
 
@@ -130,7 +130,7 @@ class JTwitter
 	/**
 	 * Magic method to lazily create API objects
 	 *
-	 * @param   string $name Name of property to retrieve
+	 * @param   string  $name  Name of property to retrieve
 	 *
 	 * @return  JTwitterObject  Twitter API object (statuses, users, favorites, etc.).
 	 *
@@ -157,7 +157,7 @@ class JTwitter
 	/**
 	 * Get an option from the JTwitter instance.
 	 *
-	 * @param   string $key The name of the option to get.
+	 * @param   string  $key  The name of the option to get.
 	 *
 	 * @return  mixed  The option value.
 	 *
@@ -171,8 +171,8 @@ class JTwitter
 	/**
 	 * Set an option for the JTwitter instance.
 	 *
-	 * @param   string $key   The name of the option to set.
-	 * @param   mixed  $value The option value to set.
+	 * @param   string  $key    The name of the option to set.
+	 * @param   mixed   $value  The option value to set.
 	 *
 	 * @return  JTwitter  This object for method chaining.
 	 *

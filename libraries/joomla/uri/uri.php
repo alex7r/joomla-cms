@@ -47,38 +47,9 @@ class JUri extends Uri
 	protected static $current;
 
 	/**
-	 * Returns the root URI for the request.
-	 *
-	 * @param   boolean $pathonly If false, prepend the scheme, host and port information. Default is false.
-	 * @param   string  $path     The path
-	 *
-	 * @return  string  The root URI string.
-	 *
-	 * @since   11.1
-	 */
-	public static function root($pathonly = false, $path = null)
-	{
-		// Get the scheme
-		if (empty(static::$root))
-		{
-			$uri                    = static::getInstance(static::base());
-			static::$root['prefix'] = $uri->toString(array('scheme', 'host', 'port'));
-			static::$root['path']   = rtrim($uri->toString(array('path')), '/\\');
-		}
-
-		// Get the scheme
-		if (isset($path))
-		{
-			static::$root['path'] = $path;
-		}
-
-		return $pathonly === false ? static::$root['prefix'] . static::$root['path'] . '/' : static::$root['path'];
-	}
-
-	/**
 	 * Returns the global JUri object, only creating it if it doesn't already exist.
 	 *
-	 * @param   string $uri The URI to parse.  [optional: if null uses script URI]
+	 * @param   string  $uri  The URI to parse.  [optional: if null uses script URI]
 	 *
 	 * @return  JUri  The URI object.
 	 *
@@ -149,7 +120,7 @@ class JUri extends Uri
 	/**
 	 * Returns the base URI for the request.
 	 *
-	 * @param   boolean $pathonly If false, prepend the scheme, host and port information. Default is false.
+	 * @param   boolean  $pathonly  If false, prepend the scheme, host and port information. Default is false.
 	 *
 	 * @return  string  The base URI string
 	 *
@@ -160,15 +131,15 @@ class JUri extends Uri
 		// Get the base request path.
 		if (empty(static::$base))
 		{
-			$config    = JFactory::getConfig();
-			$uri       = static::getInstance();
+			$config = JFactory::getConfig();
+			$uri = static::getInstance();
 			$live_site = ($uri->isSsl()) ? str_replace("http://", "https://", $config->get('live_site')) : $config->get('live_site');
 
 			if (trim($live_site) != '')
 			{
-				$uri                    = static::getInstance($live_site);
+				$uri = static::getInstance($live_site);
 				static::$base['prefix'] = $uri->toString(array('scheme', 'host', 'port'));
-				static::$base['path']   = rtrim($uri->toString(array('path')), '/\\');
+				static::$base['path'] = rtrim($uri->toString(array('path')), '/\\');
 
 				if (defined('JPATH_BASE') && defined('JPATH_ADMINISTRATOR'))
 				{
@@ -204,6 +175,35 @@ class JUri extends Uri
 	}
 
 	/**
+	 * Returns the root URI for the request.
+	 *
+	 * @param   boolean  $pathonly  If false, prepend the scheme, host and port information. Default is false.
+	 * @param   string   $path      The path
+	 *
+	 * @return  string  The root URI string.
+	 *
+	 * @since   11.1
+	 */
+	public static function root($pathonly = false, $path = null)
+	{
+		// Get the scheme
+		if (empty(static::$root))
+		{
+			$uri = static::getInstance(static::base());
+			static::$root['prefix'] = $uri->toString(array('scheme', 'host', 'port'));
+			static::$root['path'] = rtrim($uri->toString(array('path')), '/\\');
+		}
+
+		// Get the scheme
+		if (isset($path))
+		{
+			static::$root['path'] = $path;
+		}
+
+		return $pathonly === false ? static::$root['prefix'] . static::$root['path'] . '/' : static::$root['path'];
+	}
+
+	/**
 	 * Returns the URL for the request, minus the query.
 	 *
 	 * @return  string
@@ -215,7 +215,7 @@ class JUri extends Uri
 		// Get the current URL.
 		if (empty(static::$current))
 		{
-			$uri             = static::getInstance();
+			$uri = static::getInstance();
 			static::$current = $uri->toString(array('scheme', 'host', 'port', 'path'));
 		}
 
@@ -232,59 +232,15 @@ class JUri extends Uri
 	public static function reset()
 	{
 		static::$instances = array();
-		static::$base      = array();
-		static::$root      = array();
-		static::$current   = '';
-	}
-
-	/**
-	 * Checks if the supplied URL is internal
-	 *
-	 * @param   string $url The URL to check.
-	 *
-	 * @return  boolean  True if Internal.
-	 *
-	 * @since   11.1
-	 */
-	public static function isInternal($url)
-	{
-		$uri  = static::getInstance($url);
-		$base = $uri->toString(array('scheme', 'host', 'port', 'path'));
-		$host = $uri->toString(array('scheme', 'host', 'port'));
-
-		// @see JUriTest
-		if (empty($host) && strpos($uri->path, 'index.php') === 0
-			|| !empty($host) && preg_match('#' . preg_quote(static::base(), '#') . '#', $base)
-			|| !empty($host) && $host === static::getInstance(static::base())->host && strpos($uri->path, 'index.php') !== false
-			|| !empty($host) && $base === $host && preg_match('#' . preg_quote($base, '#') . '#', static::base())
-		)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Build a query from an array (reverse of the PHP parse_str()).
-	 *
-	 * @param   array $params The array of key => value pairs to return as a query string.
-	 *
-	 * @return  string  The resulting query string.
-	 *
-	 * @see     parse_str()
-	 * @since   11.1
-	 * @note    The parent method is protected, this exposes it as public for B/C
-	 */
-	public static function buildQuery(array $params)
-	{
-		return parent::buildQuery($params);
+		static::$base = array();
+		static::$root = array();
+		static::$current = '';
 	}
 
 	/**
 	 * Set the URI path string. Note we keep this method here so it uses the old _cleanPath function
 	 *
-	 * @param   string $path The URI path string.
+	 * @param   string  $path  The URI path string.
 	 *
 	 * @return  void
 	 *
@@ -298,29 +254,52 @@ class JUri extends Uri
 	}
 
 	/**
-	 * Resolves //, ../ and ./ from a path and returns
-	 * the result. Eg:
+	 * Checks if the supplied URL is internal
 	 *
-	 * /foo/bar/../boo.php    => /foo/boo.php
-	 * /foo/bar/../../boo.php => /boo.php
-	 * /foo/bar/.././/boo.php => /foo/boo.php
+	 * @param   string  $url  The URL to check.
 	 *
-	 * @param   string $path The URI path to clean.
+	 * @return  boolean  True if Internal.
 	 *
-	 * @return  string  Cleaned and resolved URI path.
-	 *
-	 * @since       11.1
-	 * @deprecated  4.0   Use {@link \Joomla\Uri\Uri::cleanPath()} instead
+	 * @since   11.1
 	 */
-	protected function _cleanPath($path)
+	public static function isInternal($url)
 	{
-		return parent::cleanPath($path);
+		$uri = static::getInstance($url);
+		$base = $uri->toString(array('scheme', 'host', 'port', 'path'));
+		$host = $uri->toString(array('scheme', 'host', 'port'));
+
+		// @see JUriTest
+		if (empty($host) && strpos($uri->path, 'index.php') === 0
+			|| !empty($host) && preg_match('#' . preg_quote(static::base(), '#') . '#', $base)
+			|| !empty($host) && $host === static::getInstance(static::base())->host && strpos($uri->path, 'index.php') !== false
+			|| !empty($host) && $base === $host && preg_match('#' . preg_quote($base, '#') . '#', static::base()))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Build a query from an array (reverse of the PHP parse_str()).
+	 *
+	 * @param   array  $params  The array of key => value pairs to return as a query string.
+	 *
+	 * @return  string  The resulting query string.
+	 *
+	 * @see     parse_str()
+	 * @since   11.1
+	 * @note    The parent method is protected, this exposes it as public for B/C
+	 */
+	public static function buildQuery(array $params)
+	{
+		return parent::buildQuery($params);
 	}
 
 	/**
 	 * Parse a given URI and populate the class fields.
 	 *
-	 * @param   string $uri The URI string to parse.
+	 * @param   string  $uri  The URI string to parse.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -330,5 +309,25 @@ class JUri extends Uri
 	public function parse($uri)
 	{
 		return parent::parse($uri);
+	}
+
+	/**
+	 * Resolves //, ../ and ./ from a path and returns
+	 * the result. Eg:
+	 *
+	 * /foo/bar/../boo.php    => /foo/boo.php
+	 * /foo/bar/../../boo.php => /boo.php
+	 * /foo/bar/.././/boo.php => /foo/boo.php
+	 *
+	 * @param   string  $path  The URI path to clean.
+	 *
+	 * @return  string  Cleaned and resolved URI path.
+	 *
+	 * @since       11.1
+	 * @deprecated  4.0   Use {@link \Joomla\Uri\Uri::cleanPath()} instead
+	 */
+	protected function _cleanPath($path)
+	{
+		return parent::cleanPath($path);
 	}
 }

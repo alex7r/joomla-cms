@@ -29,9 +29,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 ?>
 <div class="container-popup">
 
-	<form
-		action="<?php echo JRoute::_('index.php?option=com_newsfeeds&view=newsfeeds&layout=modal&tmpl=component&function=' . $function); ?>"
-		method="post" name="adminForm" id="adminForm" class="form-inline">
+	<form action="<?php echo JRoute::_('index.php?option=com_newsfeeds&view=newsfeeds&layout=modal&tmpl=component&function=' . $function);?>" method="post" name="adminForm" id="adminForm" class="form-inline">
 
 		<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
 
@@ -42,38 +40,38 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 		<?php else : ?>
 			<table class="table table-striped table-condensed">
 				<thead>
-				<tr>
-					<th width="1%" class="nowrap center">
-						<?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
-					</th>
-					<th class="nowrap title">
-						<?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.name', $listDirn, $listOrder); ?>
-					</th>
-					<th width="15%" class="nowrap hidden-phone">
-						<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
-					</th>
-					<th width="15%" class="nowrap hidden-phone">
-						<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language_title', $listDirn, $listOrder); ?>
-					</th>
-					<th width="1%" class="nowrap hidden-phone">
-						<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
-					</th>
-				</tr>
+					<tr>
+						<th width="1%" class="nowrap center">
+							<?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
+						</th>
+						<th class="nowrap title">
+							<?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.name', $listDirn, $listOrder); ?>
+						</th>
+						<th width="15%" class="nowrap hidden-phone">
+							<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
+						</th>
+						<th width="15%" class="nowrap hidden-phone">
+							<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language_title', $listDirn, $listOrder); ?>
+						</th>
+						<th width="1%" class="nowrap hidden-phone">
+							<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+						</th>
+					</tr>
 				</thead>
 				<tfoot>
-				<tr>
-					<td colspan="5">
-						<?php echo $this->pagination->getListFooter(); ?>
-					</td>
-				</tr>
+					<tr>
+						<td colspan="5">
+							<?php echo $this->pagination->getListFooter(); ?>
+						</td>
+					</tr>
 				</tfoot>
 				<tbody>
 				<?php
 				$iconStates = array(
 					-2 => 'icon-trash',
-					0  => 'icon-unpublish',
-					1  => 'icon-publish',
-					2  => 'icon-archive',
+					0 => 'icon-unpublish',
+					1 => 'icon-publish',
+					2 => 'icon-archive',
 				);
 				?>
 				<?php foreach ($this->items as $i => $item) : ?>
@@ -88,8 +86,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 						{
 							$lang = substr($item->language, 0, 3);
 						}
-						else
-						{
+						else {
 							$lang = "";
 						}
 					}
@@ -103,9 +100,8 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 							<span class="<?php echo $iconStates[$this->escape($item->published)]; ?>"></span>
 						</td>
 						<td>
-							<a href="javascript:void(0)"
-							   onclick="if (window.parent) window.parent.<?php echo $this->escape($function); ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->name)); ?>', '<?php echo $this->escape($item->catid); ?>', null, '<?php echo $this->escape(NewsfeedsHelperRoute::getNewsfeedRoute($item->id, $item->catid, $item->language)); ?>', '<?php echo $this->escape($lang); ?>', null);">
-								<?php echo $this->escape($item->name); ?></a>
+							<a href="javascript:void(0)" onclick="if (window.parent) window.parent.<?php echo $this->escape($function);?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->name)); ?>', '<?php echo $this->escape($item->catid); ?>', null, '<?php echo $this->escape(NewsfeedsHelperRoute::getNewsfeedRoute($item->id, $item->catid, $item->language)); ?>', '<?php echo $this->escape($lang); ?>', null);">
+							<?php echo $this->escape($item->name); ?></a>
 							<div class="small">
 								<?php echo JText::_('JCATEGORY') . ": " . $this->escape($item->category_title); ?>
 							</div>
@@ -114,11 +110,11 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 							<?php echo $this->escape($item->access_level); ?>
 						</td>
 						<td class="small hidden-phone">
-							<?php if ($item->language == '*'): ?>
+							<?php if ($item->language == '*'):?>
 								<?php echo JText::alt('JALL', 'language'); ?>
-							<?php else: ?>
+							<?php else:?>
 								<?php echo $item->language_title ? JHtml::_('image', 'mod_languages/' . $item->language_image . '.gif', $item->language_title, array('title' => $item->language_title), true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
-							<?php endif; ?>
+							<?php endif;?>
 						</td>
 						<td class="hidden-phone">
 							<?php echo (int) $item->id; ?>
@@ -129,10 +125,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 			</table>
 		<?php endif; ?>
 
-		<input type="hidden" name="task" value=""/>
-		<input type="hidden" name="boxchecked" value="0"/>
-		<input type="hidden" name="forcedLanguage"
-		       value="<?php echo $app->input->get('forcedLanguage', '', 'CMD'); ?>"/>
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="boxchecked" value="0" />
+		<input type="hidden" name="forcedLanguage" value="<?php echo $app->input->get('forcedLanguage', '', 'CMD'); ?>" />
 		<?php echo JHtml::_('form.token'); ?>
 
 	</form>

@@ -45,12 +45,12 @@ class JApplicationDaemonInspector extends JApplicationDaemon
 	 * @var     array  Container for successfully setup signal handlers.
 	 * @since   11.3
 	 */
-	public $setupSignalHandlers = array();
+		public $setupSignalHandlers = array();
 
 	/**
 	 * Method for inspecting protected variables.
 	 *
-	 * @param   string $name The name of the property.
+	 * @param   string  $name  The name of the property.
 	 *
 	 * @return  mixed  The value of the class variable.
 	 *
@@ -71,7 +71,7 @@ class JApplicationDaemonInspector extends JApplicationDaemon
 	/**
 	 * Method for setting protected static $instance.
 	 *
-	 * @param   mixed $value The value of the property.
+	 * @param   mixed  $value  The value of the property.
 	 *
 	 * @return  void.
 	 *
@@ -85,7 +85,7 @@ class JApplicationDaemonInspector extends JApplicationDaemon
 	/**
 	 * Method for setting protected static $signals.
 	 *
-	 * @param   mixed $value The value of the property.
+	 * @param   mixed  $value  The value of the property.
 	 *
 	 * @return  void.
 	 *
@@ -99,8 +99,8 @@ class JApplicationDaemonInspector extends JApplicationDaemon
 	/**
 	 * Method for setting protected variables.
 	 *
-	 * @param   string $name  The name of the property.
-	 * @param   mixed  $value The value of the property.
+	 * @param   string  $name   The name of the property.
+	 * @param   mixed   $value  The value of the property.
 	 *
 	 * @return  void.
 	 *
@@ -193,7 +193,7 @@ class JApplicationDaemonInspector extends JApplicationDaemon
 	/**
 	 * Allows public access to protected method.
 	 *
-	 * @param   boolean $restart True to restart the daemon on exit.
+	 * @param   boolean  $restart  True to restart the daemon on exit.
 	 *
 	 * @return  void
 	 *
@@ -207,7 +207,7 @@ class JApplicationDaemonInspector extends JApplicationDaemon
 	/**
 	 * Method to return the exit code of a terminated child process.
 	 *
-	 * @param   integer $status The status parameter is the status parameter supplied to a successful call to pcntl_waitpid().
+	 * @param   integer  $status  The status parameter is the status parameter supplied to a successful call to pcntl_waitpid().
 	 *
 	 * @return  integer  The child process exit code.
 	 *
@@ -238,10 +238,10 @@ class JApplicationDaemonInspector extends JApplicationDaemon
 	/**
 	 * Method to install a signal handler.
 	 *
-	 * @param   integer  $signal    The signal number.
-	 * @param   callback $handler   The signal handler which may be the name of a user created function,
+	 * @param   integer   $signal   The signal number.
+	 * @param   callback  $handler  The signal handler which may be the name of a user created function,
 	 *                              or method, or either of the two global constants SIG_IGN or SIG_DFL.
-	 * @param   boolean  $restart   Specifies whether system call restarting should be used when this
+	 * @param   boolean   $restart  Specifies whether system call restarting should be used when this
 	 *                              signal arrives.
 	 *
 	 * @return  boolean  True on success.
@@ -249,7 +249,7 @@ class JApplicationDaemonInspector extends JApplicationDaemon
 	 * @see     pcntl_signal()
 	 * @since   11.3
 	 */
-	public function pcntlSignal($signal, $handler, $restart = true)
+	public function pcntlSignal($signal , $handler, $restart = true)
 	{
 		if (self::$pcntlSignal)
 		{
@@ -262,8 +262,8 @@ class JApplicationDaemonInspector extends JApplicationDaemon
 	/**
 	 * Method to wait on or return the status of a forked child.
 	 *
-	 * @param   integer &$status   Status information.
-	 * @param   integer $options   If wait3 is available on your system (mostly BSD-style systems),
+	 * @param   integer  &$status  Status information.
+	 * @param   integer  $options  If wait3 is available on your system (mostly BSD-style systems),
 	 *                             you can provide the optional options parameter.
 	 *
 	 * @return  integer  The process ID of the child which exited, -1 on error or zero if WNOHANG

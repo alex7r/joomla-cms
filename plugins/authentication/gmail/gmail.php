@@ -21,9 +21,9 @@ class PlgAuthenticationGMail extends JPlugin
 	/**
 	 * This method should handle any authentication and report back to the subject
 	 *
-	 * @param   array  $credentials Array holding the user credentials
-	 * @param   array  $options     Array of extra options
-	 * @param   object &$response   Authentication response object
+	 * @param   array   $credentials  Array holding the user credentials
+	 * @param   array   $options      Array of extra options
+	 * @param   object  &$response    Authentication response object
 	 *
 	 * @return  boolean
 	 *
@@ -122,7 +122,7 @@ class PlgAuthenticationGMail extends JPlugin
 		catch (Exception $e)
 		{
 			// If there was an error in the request then create a 'false' dummy response.
-			$result       = new JHttpResponse;
+			$result = new JHttpResponse;
 			$result->code = false;
 		}
 

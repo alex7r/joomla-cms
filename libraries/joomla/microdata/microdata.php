@@ -83,8 +83,8 @@ class JMicrodata
 	/**
 	 * Initialize the class and setup the default $Type
 	 *
-	 * @param   string  $type Optional, fallback to 'Thing' Type
-	 * @param   boolean $flag Enable or disable the library output
+	 * @param   string   $type  Optional, fallback to 'Thing' Type
+	 * @param   boolean  $flag  Enable or disable the library output
 	 *
 	 * @since   3.2
 	 */
@@ -103,37 +103,42 @@ class JMicrodata
 	}
 
 	/**
-	 * Return an array with all available Types and Properties from the http://schema.org vocabulary
+	 * Load all available Types and Properties from the http://schema.org vocabulary contained in the types.json file
 	 *
-	 * @return  array
+	 * @return  void
 	 *
 	 * @since   3.2
 	 */
-	public static function getTypes()
+	protected static function loadTypes()
 	{
-		static::loadTypes();
-
-		return static::$types;
+		// Load the JSON
+		if (!static::$types)
+		{
+			$path = JPATH_PLATFORM . '/joomla/microdata/types.json';
+			static::$types = json_decode(file_get_contents($path), true);
+		}
 	}
 
 	/**
-	 * Return an array with all available Types from the http://schema.org vocabulary
+	 * Reset all params
 	 *
-	 * @return  array
+	 * @return void
 	 *
 	 * @since   3.2
 	 */
-	public static function getAvailableTypes()
+	protected function resetParams()
 	{
-		static::loadTypes();
-
-		return array_keys(static::$types);
+		$this->content          = null;
+		$this->machineContent   = null;
+		$this->property         = null;
+		$this->fallbackProperty = null;
+		$this->fallbackType     = null;
 	}
 
 	/**
 	 * Enable or Disable the library output
 	 *
-	 * @param   boolean $flag Enable or disable the library output
+	 * @param   boolean  $flag  Enable or disable the library output
 	 *
 	 * @return  JMicrodata  Instance of $this
 	 *
@@ -159,21 +164,9 @@ class JMicrodata
 	}
 
 	/**
-	 * Return the current $Type name
-	 *
-	 * @return  string
-	 *
-	 * @since   3.2
-	 */
-	public function getType()
-	{
-		return $this->type;
-	}
-
-	/**
 	 * Set a new http://schema.org Type
 	 *
-	 * @param   string $type The $Type to be setup
+	 * @param   string  $type  The $Type to be setup
 	 *
 	 * @return  JMicrodata  Instance of $this
 	 *
@@ -199,9 +192,21 @@ class JMicrodata
 	}
 
 	/**
+	 * Return the current $Type name
+	 *
+	 * @return  string
+	 *
+	 * @since   3.2
+	 */
+	public function getType()
+	{
+		return $this->type;
+	}
+
+	/**
 	 * Setup a $Property
 	 *
-	 * @param   string $property The Property
+	 * @param   string  $property  The Property
 	 *
 	 * @return  JMicrodata  Instance of $this
 	 *
@@ -227,87 +232,6 @@ class JMicrodata
 	}
 
 	/**
-	 * Return the sanitized $Property
-	 *
-	 * @param   string $property The Property to sanitize
-	 *
-	 * @return  string
-	 *
-	 * @since   3.2
-	 */
-	public static function sanitizeProperty($property)
-	{
-		return lcfirst(trim($property));
-	}
-
-	/**
-	 * Recursive function, control if the given Type has the given Property
-	 *
-	 * @param   string $type     The Type where to check
-	 * @param   string $property The Property to check
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.2
-	 */
-	public static function isPropertyInType($type, $property)
-	{
-		if (!static::isTypeAvailable($type))
-		{
-			return false;
-		}
-
-		// Control if the $Property exists, and return 'true'
-		if (array_key_exists($property, static::$types[$type]['properties']))
-		{
-			return true;
-		}
-
-		// Recursive: Check if the $Property is inherit
-		$extendedType = static::$types[$type]['extends'];
-
-		if (!empty($extendedType))
-		{
-			return static::isPropertyInType($extendedType, $property);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Control if the given Type class is available
-	 *
-	 * @param   string $type The Type to check
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.2
-	 */
-	public static function isTypeAvailable($type)
-	{
-		static::loadTypes();
-
-		return (array_key_exists($type, static::$types)) ? true : false;
-	}
-
-	/**
-	 * Load all available Types and Properties from the http://schema.org vocabulary contained in the types.json file
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected static function loadTypes()
-	{
-		// Load the JSON
-		if (!static::$types)
-		{
-			$path          = JPATH_PLATFORM . '/joomla/microdata/types.json';
-			static::$types = json_decode(file_get_contents($path), true);
-		}
-	}
-
-	/**
 	 * Return the current $Property name
 	 *
 	 * @return  string
@@ -322,8 +246,8 @@ class JMicrodata
 	/**
 	 * Setup a Human content or content for the Machines
 	 *
-	 * @param   string $content        The human content or machine content to be used
-	 * @param   string $machineContent The machine content
+	 * @param   string  $content         The human content or machine content to be used
+	 * @param   string  $machineContent  The machine content
 	 *
 	 * @return  JMicrodata  Instance of $this
 	 *
@@ -331,7 +255,7 @@ class JMicrodata
 	 */
 	public function content($content, $machineContent = null)
 	{
-		$this->content        = $content;
+		$this->content = $content;
 		$this->machineContent = $machineContent;
 
 		return $this;
@@ -364,8 +288,8 @@ class JMicrodata
 	/**
 	 * Setup a Fallback Type and Property
 	 *
-	 * @param   string $type     The Fallback Type
-	 * @param   string $property The Fallback Property
+	 * @param   string  $type      The Fallback Type
+	 * @param   string  $property  The Fallback Property
 	 *
 	 * @return  JMicrodata  Instance of $this
 	 *
@@ -401,20 +325,6 @@ class JMicrodata
 	}
 
 	/**
-	 * Return the sanitized $Type
-	 *
-	 * @param   string $type The Type to sanitize
-	 *
-	 * @return  string
-	 *
-	 * @since   3.2
-	 */
-	public static function sanitizeType($type)
-	{
-		return ucfirst(trim($type));
-	}
-
-	/**
 	 * Return the current $fallbackType
 	 *
 	 * @return  string
@@ -443,8 +353,8 @@ class JMicrodata
 	 * It checks if the Type, Property are available, if not check for a Fallback,
 	 * then reset all params for the next use and return the HTML.
 	 *
-	 * @param   string  $displayType Optional, 'inline', available options ['inline'|'span'|'div'|meta]
-	 * @param   boolean $emptyOutput Return an empty string if the library output is disabled and there is a $content value
+	 * @param   string   $displayType  Optional, 'inline', available options ['inline'|'span'|'div'|meta]
+	 * @param   boolean  $emptyOutput  Return an empty string if the library output is disabled and there is a $content value
 	 *
 	 * @return  string
 	 *
@@ -502,7 +412,7 @@ class JMicrodata
 				{
 					case 'nested':
 						// Retrieve the expected 'nested' Type of the $Property
-						$nestedType     = static::getExpectedTypes($this->type, $this->property);
+						$nestedType = static::getExpectedTypes($this->type, $this->property);
 						$nestedProperty = '';
 
 						// If there is a Fallback Type then probably it could be the expectedType
@@ -664,28 +574,224 @@ class JMicrodata
 	}
 
 	/**
-	 * Reset all params
+	 * Return the HTML of the current Scope
 	 *
-	 * @return void
+	 * @return  string
 	 *
 	 * @since   3.2
 	 */
-	protected function resetParams()
+	public function displayScope()
 	{
-		$this->content          = null;
-		$this->machineContent   = null;
-		$this->property         = null;
-		$this->fallbackProperty = null;
-		$this->fallbackType     = null;
+		// Control if the library output is enabled, otherwise return the $content or empty string
+		if (!$this->enabled)
+		{
+			return '';
+		}
+
+		return static::htmlScope($this->type);
+	}
+
+	/**
+	 * Return the sanitized $Type
+	 *
+	 * @param   string  $type  The Type to sanitize
+	 *
+	 * @return  string
+	 *
+	 * @since   3.2
+	 */
+	public static function sanitizeType($type)
+	{
+		return ucfirst(trim($type));
+	}
+
+	/**
+	 * Return the sanitized $Property
+	 *
+	 * @param   string  $property  The Property to sanitize
+	 *
+	 * @return  string
+	 *
+	 * @since   3.2
+	 */
+	public static function sanitizeProperty($property)
+	{
+		return lcfirst(trim($property));
+	}
+
+	/**
+	 * Return an array with all available Types and Properties from the http://schema.org vocabulary
+	 *
+	 * @return  array
+	 *
+	 * @since   3.2
+	 */
+	public static function getTypes()
+	{
+		static::loadTypes();
+
+		return static::$types;
+	}
+
+	/**
+	 * Return an array with all available Types from the http://schema.org vocabulary
+	 *
+	 * @return  array
+	 *
+	 * @since   3.2
+	 */
+	public static function getAvailableTypes()
+	{
+		static::loadTypes();
+
+		return array_keys(static::$types);
+	}
+
+	/**
+	 * Return the expected Types of the given Property
+	 *
+	 * @param   string  $type      The Type to process
+	 * @param   string  $property  The Property to process
+	 *
+	 * @return  array
+	 *
+	 * @since   3.2
+	 */
+	public static function getExpectedTypes($type, $property)
+	{
+		static::loadTypes();
+
+		$tmp = static::$types[$type]['properties'];
+
+		// Check if the $Property is in the $Type
+		if (isset($tmp[$property]))
+		{
+			return $tmp[$property]['expectedTypes'];
+		}
+
+		// Check if the $Property is inherit
+		$extendedType = static::$types[$type]['extends'];
+
+		// Recursive
+		if (!empty($extendedType))
+		{
+			return static::getExpectedTypes($extendedType, $property);
+		}
+
+		return array();
+	}
+
+	/**
+	 * Return the expected display type: [normal|nested|meta]
+	 * In which way to display the Property:
+	 * normal -> itemprop="name"
+	 * nested -> itemprop="director" itemscope itemtype="https://schema.org/Person"
+	 * meta   -> `<meta itemprop="datePublished" content="1991-05-01">`
+	 *
+	 * @param   string  $type      The Type where to find the Property
+	 * @param   string  $property  The Property to process
+	 *
+	 * @return  string
+	 *
+	 * @since   3.2
+	 */
+	protected static function getExpectedDisplayType($type, $property)
+	{
+		$expectedTypes = static::getExpectedTypes($type, $property);
+
+		// Retrieve the first expected type
+		$type = $expectedTypes[0];
+
+		// Check if it's a 'meta' display
+		if ($type === 'Date' || $type === 'DateTime' || $property === 'interactionCount')
+		{
+			return 'meta';
+		}
+
+		// Check if it's a 'normal' display
+		if ($type === 'Text' || $type === 'URL' || $type === 'Boolean' || $type === 'Number')
+		{
+			return 'normal';
+		}
+
+		// Otherwise it's a 'nested' display
+		return 'nested';
+	}
+
+	/**
+	 * Recursive function, control if the given Type has the given Property
+	 *
+	 * @param   string  $type      The Type where to check
+	 * @param   string  $property  The Property to check
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.2
+	 */
+	public static function isPropertyInType($type, $property)
+	{
+		if (!static::isTypeAvailable($type))
+		{
+			return false;
+		}
+
+		// Control if the $Property exists, and return 'true'
+		if (array_key_exists($property, static::$types[$type]['properties']))
+		{
+			return true;
+		}
+
+		// Recursive: Check if the $Property is inherit
+		$extendedType = static::$types[$type]['extends'];
+
+		if (!empty($extendedType))
+		{
+			return static::isPropertyInType($extendedType, $property);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Control if the given Type class is available
+	 *
+	 * @param   string  $type  The Type to check
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.2
+	 */
+	public static function isTypeAvailable($type)
+	{
+		static::loadTypes();
+
+		return (array_key_exists($type, static::$types)) ? true : false;
+	}
+
+	/**
+	 * Return Microdata semantics in a `<meta>` tag with content for machines.
+	 *
+	 * @param   string   $content   The machine content to display
+	 * @param   string   $property  The Property
+	 * @param   string   $scope     Optional, the Type scope to display
+	 * @param   boolean  $invert    Optional, default = false, invert the $scope with the $property
+	 *
+	 * @return  string
+	 *
+	 * @since   3.2
+	 */
+	public static function htmlMeta($content, $property, $scope = '', $invert = false)
+	{
+		return static::htmlTag('meta', $content, $property, $scope, $invert);
 	}
 
 	/**
 	 * Return Microdata semantics in a `<span>` tag.
 	 *
-	 * @param   string  $content  The human content
-	 * @param   string  $property Optional, the human content to display
-	 * @param   string  $scope    Optional, the Type scope to display
-	 * @param   boolean $invert   Optional, default = false, invert the $scope with the $property
+	 * @param   string   $content   The human content
+	 * @param   string   $property  Optional, the human content to display
+	 * @param   string   $scope     Optional, the Type scope to display
+	 * @param   boolean  $invert    Optional, default = false, invert the $scope with the $property
 	 *
 	 * @return  string
 	 *
@@ -697,13 +803,30 @@ class JMicrodata
 	}
 
 	/**
+	 * Return Microdata semantics in a `<div>` tag.
+	 *
+	 * @param   string   $content   The human content
+	 * @param   string   $property  Optional, the human content to display
+	 * @param   string   $scope     Optional, the Type scope to display
+	 * @param   boolean  $invert    Optional, default = false, invert the $scope with the $property
+	 *
+	 * @return  string
+	 *
+	 * @since   3.2
+	 */
+	public static function htmlDiv($content, $property = '', $scope = '', $invert = false)
+	{
+		return static::htmlTag('div', $content, $property, $scope, $invert);
+	}
+
+	/**
 	 * Return Microdata semantics in a specified tag.
 	 *
-	 * @param   string  $tag      The HTML tag
-	 * @param   string  $content  The human content
-	 * @param   string  $property Optional, the human content to display
-	 * @param   string  $scope    Optional, the Type scope to display
-	 * @param   boolean $invert   Optional, default = false, invert the $scope with the $property
+	 * @param   string   $tag       The HTML tag
+	 * @param   string   $content   The human content
+	 * @param   string   $property  Optional, the human content to display
+	 * @param   string   $scope     Optional, the Type scope to display
+	 * @param   boolean  $invert    Optional, default = false, invert the $scope with the $property
 	 *
 	 * @return  string
 	 *
@@ -746,23 +869,9 @@ class JMicrodata
 	}
 
 	/**
-	 * Return the HTML Property
-	 *
-	 * @param   string $property The Property to process
-	 *
-	 * @return  string
-	 *
-	 * @since   3.2
-	 */
-	public static function htmlProperty($property)
-	{
-		return "itemprop='$property'";
-	}
-
-	/**
 	 * Return the HTML Scope
 	 *
-	 * @param   string $scope The Scope to process
+	 * @param   string  $scope  The Scope to process
 	 *
 	 * @return  string
 	 *
@@ -774,125 +883,16 @@ class JMicrodata
 	}
 
 	/**
-	 * Return Microdata semantics in a `<div>` tag.
+	 * Return the HTML Property
 	 *
-	 * @param   string  $content  The human content
-	 * @param   string  $property Optional, the human content to display
-	 * @param   string  $scope    Optional, the Type scope to display
-	 * @param   boolean $invert   Optional, default = false, invert the $scope with the $property
+	 * @param   string  $property  The Property to process
 	 *
 	 * @return  string
 	 *
 	 * @since   3.2
 	 */
-	public static function htmlDiv($content, $property = '', $scope = '', $invert = false)
+	public static function htmlProperty($property)
 	{
-		return static::htmlTag('div', $content, $property, $scope, $invert);
-	}
-
-	/**
-	 * Return Microdata semantics in a `<meta>` tag with content for machines.
-	 *
-	 * @param   string  $content  The machine content to display
-	 * @param   string  $property The Property
-	 * @param   string  $scope    Optional, the Type scope to display
-	 * @param   boolean $invert   Optional, default = false, invert the $scope with the $property
-	 *
-	 * @return  string
-	 *
-	 * @since   3.2
-	 */
-	public static function htmlMeta($content, $property, $scope = '', $invert = false)
-	{
-		return static::htmlTag('meta', $content, $property, $scope, $invert);
-	}
-
-	/**
-	 * Return the expected display type: [normal|nested|meta]
-	 * In which way to display the Property:
-	 * normal -> itemprop="name"
-	 * nested -> itemprop="director" itemscope itemtype="https://schema.org/Person"
-	 * meta   -> `<meta itemprop="datePublished" content="1991-05-01">`
-	 *
-	 * @param   string $type     The Type where to find the Property
-	 * @param   string $property The Property to process
-	 *
-	 * @return  string
-	 *
-	 * @since   3.2
-	 */
-	protected static function getExpectedDisplayType($type, $property)
-	{
-		$expectedTypes = static::getExpectedTypes($type, $property);
-
-		// Retrieve the first expected type
-		$type = $expectedTypes[0];
-
-		// Check if it's a 'meta' display
-		if ($type === 'Date' || $type === 'DateTime' || $property === 'interactionCount')
-		{
-			return 'meta';
-		}
-
-		// Check if it's a 'normal' display
-		if ($type === 'Text' || $type === 'URL' || $type === 'Boolean' || $type === 'Number')
-		{
-			return 'normal';
-		}
-
-		// Otherwise it's a 'nested' display
-		return 'nested';
-	}
-
-	/**
-	 * Return the expected Types of the given Property
-	 *
-	 * @param   string $type     The Type to process
-	 * @param   string $property The Property to process
-	 *
-	 * @return  array
-	 *
-	 * @since   3.2
-	 */
-	public static function getExpectedTypes($type, $property)
-	{
-		static::loadTypes();
-
-		$tmp = static::$types[$type]['properties'];
-
-		// Check if the $Property is in the $Type
-		if (isset($tmp[$property]))
-		{
-			return $tmp[$property]['expectedTypes'];
-		}
-
-		// Check if the $Property is inherit
-		$extendedType = static::$types[$type]['extends'];
-
-		// Recursive
-		if (!empty($extendedType))
-		{
-			return static::getExpectedTypes($extendedType, $property);
-		}
-
-		return array();
-	}
-
-	/**
-	 * Return the HTML of the current Scope
-	 *
-	 * @return  string
-	 *
-	 * @since   3.2
-	 */
-	public function displayScope()
-	{
-		// Control if the library output is enabled, otherwise return the $content or empty string
-		if (!$this->enabled)
-		{
-			return '';
-		}
-
-		return static::htmlScope($this->type);
+		return "itemprop='$property'";
 	}
 }

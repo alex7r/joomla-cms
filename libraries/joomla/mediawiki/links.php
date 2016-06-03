@@ -19,12 +19,12 @@ class JMediawikiLinks extends JMediawikiObject
 	/**
 	 * Method to return all links from the given page(s).
 	 *
-	 * @param   array  $titles      Page titles to retrieve links.
-	 * @param   array  $plnamespace Namespaces to get links.
-	 * @param   string $pllimit     Number of links to return.
-	 * @param   string $plcontinue  Continue when more results are available.
-	 * @param   array  $pltitles    List links to these titles.
-	 * @param   string $pldir       Direction of listing.
+	 * @param   array   $titles       Page titles to retrieve links.
+	 * @param   array   $plnamespace  Namespaces to get links.
+	 * @param   string  $pllimit      Number of links to return.
+	 * @param   string  $plcontinue   Continue when more results are available.
+	 * @param   array   $pltitles     List links to these titles.
+	 * @param   string  $pldir        Direction of listing.
 	 *
 	 * @return  object
 	 *
@@ -72,7 +72,7 @@ class JMediawikiLinks extends JMediawikiObject
 	/**
 	 * Method to return info about the link pages.
 	 *
-	 * @param   array $titles Page titles to retrieve links.
+	 * @param   array  $titles  Page titles to retrieve links.
 	 *
 	 * @return  object
 	 *
@@ -95,13 +95,13 @@ class JMediawikiLinks extends JMediawikiObject
 	/**
 	 * Method to return all interwiki links from the given page(s).
 	 *
-	 * @param   array   $titles     Page titles to retrieve links.
-	 * @param   boolean $iwurl      Whether to get the full url.
-	 * @param   integer $iwlimit    Number of interwiki links to return.
-	 * @param   boolean $iwcontinue When more results are available, use this to continue.
-	 * @param   string  $iwprefix   Prefix for the interwiki.
-	 * @param   string  $iwtitle    Interwiki link to search for.
-	 * @param   string  $iwdir      The direction in which to list.
+	 * @param   array    $titles      Page titles to retrieve links.
+	 * @param   boolean  $iwurl       Whether to get the full url.
+	 * @param   integer  $iwlimit     Number of interwiki links to return.
+	 * @param   boolean  $iwcontinue  When more results are available, use this to continue.
+	 * @param   string   $iwprefix    Prefix for the interwiki.
+	 * @param   string   $iwtitle     Interwiki link to search for.
+	 * @param   string   $iwdir       The direction in which to list.
 	 *
 	 * @return  object
 	 *
@@ -154,13 +154,13 @@ class JMediawikiLinks extends JMediawikiObject
 	/**
 	 * Method to return all interlanguage links from the given page(s).
 	 *
-	 * @param   array   $titles     Page titles to retrieve links.
-	 * @param   integer $lllimit    Number of langauge links to return.
-	 * @param   boolean $llcontinue When more results are available, use this to continue.
-	 * @param   string  $llurl      Whether to get the full URL.
-	 * @param   string  $lllang     Language code.
-	 * @param   string  $lltitle    Link to search for.
-	 * @param   string  $lldir      The direction in which to list.
+	 * @param   array    $titles      Page titles to retrieve links.
+	 * @param   integer  $lllimit     Number of langauge links to return.
+	 * @param   boolean  $llcontinue  When more results are available, use this to continue.
+	 * @param   string   $llurl       Whether to get the full URL.
+	 * @param   string   $lllang      Language code.
+	 * @param   string   $lltitle     Link to search for.
+	 * @param   string   $lldir       The direction in which to list.
 	 *
 	 * @return  object
 	 *
@@ -213,11 +213,11 @@ class JMediawikiLinks extends JMediawikiObject
 	/**
 	 * Method to return all external urls from the given page(s).
 	 *
-	 * @param   array   $titles     Page titles to retrieve links.
-	 * @param   integer $ellimit    Number of links to return.
-	 * @param   string  $eloffset   When more results are available, use this to continue.
-	 * @param   string  $elprotocol Protocol of the url.
-	 * @param   string  $elquery    Search string without protocol.
+	 * @param   array    $titles      Page titles to retrieve links.
+	 * @param   integer  $ellimit     Number of links to return.
+	 * @param   string   $eloffset    When more results are available, use this to continue.
+	 * @param   string   $elprotocol  Protocol of the url.
+	 * @param   string   $elquery     Search string without protocol.
 	 *
 	 * @return  object
 	 *
@@ -260,21 +260,21 @@ class JMediawikiLinks extends JMediawikiObject
 	/**
 	 * Method to enumerate all links that point to a given namespace.
 	 *
-	 * @param   boolean $alcontinue  When more results are available, use this to continue.
-	 * @param   string  $alfrom      Start listing at this title. The title need not exist.
-	 * @param   string  $alto        The page title to stop enumerating at.
-	 * @param   string  $alprefix    Search for all page titles that begin with this value.
-	 * @param   string  $alunique    Only show unique links.
-	 * @param   array   $alprop      What pieces of information to include.
-	 * @param   string  $alnamespace The namespace to enumerate.
-	 * @param   integer $allimit     Number of links to return.
+	 * @param   boolean  $alcontinue   When more results are available, use this to continue.
+	 * @param   string   $alfrom       Start listing at this title. The title need not exist.
+	 * @param   string   $alto         The page title to stop enumerating at.
+	 * @param   string   $alprefix     Search for all page titles that begin with this value.
+	 * @param   string   $alunique     Only show unique links.
+	 * @param   array    $alprop       What pieces of information to include.
+	 * @param   string   $alnamespace  The namespace to enumerate.
+	 * @param   integer  $allimit      Number of links to return.
 	 *
 	 * @return  object
 	 *
 	 * @since   12.3
 	 */
 	public function enumerateLinks($alcontinue = false, $alfrom = null, $alto = null, $alprefix = null, $alunique = null, array $alprop = null,
-	                               $alnamespace = null, $allimit = null)
+		$alnamespace = null, $allimit = null)
 	{
 		// Build the request.
 		$path = '?action=query&meta=siteinfo';

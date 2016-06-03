@@ -17,10 +17,30 @@ defined('_JEXEC') or die;
 class ConfigModelTemplates extends ConfigModelForm
 {
 	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 * 
+	 * @return  null
+	 *
+	 * @since   3.2
+	 */
+	protected function populateState()
+	{
+		$state = $this->loadState();
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_templates');
+		$state->set('params', $params);
+
+		$this->setState($state);
+	}
+
+	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array   $data     An optional array of data for the form to interogate.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      An optional array of data for the form to interogate.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  JForm    A JForm object on success, false on failure
 	 *
@@ -58,14 +78,14 @@ class ConfigModelTemplates extends ConfigModelForm
 	/**
 	 * Method to preprocess the form
 	 *
-	 * @param   JForm  $form  A form object.
-	 * @param   mixed  $data  The data expected for the form.
-	 * @param   string $group Plugin group to load
+	 * @param   JForm   $form   A form object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  Plugin group to load
 	 *
 	 * @return  void
 	 *
 	 * @since   3.2
-	 * @throws    Exception if there is an error in the form event.
+	 * @throws	Exception if there is an error in the form event.
 	 */
 	protected function preprocessForm(JForm $form, $data, $group = 'content')
 	{
@@ -105,25 +125,5 @@ class ConfigModelTemplates extends ConfigModelForm
 
 		// Trigger the default form events.
 		parent::preprocessForm($form, $data, $group);
-	}
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  null
-	 *
-	 * @since   3.2
-	 */
-	protected function populateState()
-	{
-		$state = $this->loadState();
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_templates');
-		$state->set('params', $params);
-
-		$this->setState($state);
 	}
 }

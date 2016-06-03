@@ -41,6 +41,21 @@ class JGithubPackageActivityWatchingTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackageActivityWatching($this->options, $this->client);
+	}
+
+	/**
 	 * @covers JGithubPackageActivityWatching::getList
 	 *
 	 *     GET /repos/:owner/:repo/subscribers
@@ -59,14 +74,16 @@ class JGithubPackageActivityWatchingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/repos/joomla/joomla-platform/subscribers', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/repos/joomla/joomla-platform/subscribers', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->getList('joomla', 'joomla-platform'),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -92,14 +109,16 @@ class JGithubPackageActivityWatchingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/user/subscriptions', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/user/subscriptions', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->getRepositories(),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	public function testGetRepositoriesUser()
@@ -108,14 +127,16 @@ class JGithubPackageActivityWatchingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/users/joomla/subscriptions', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/users/joomla/subscriptions', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->getRepositories('joomla'),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -135,14 +156,16 @@ class JGithubPackageActivityWatchingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/repos/joomla/joomla-platform/subscription', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/repos/joomla/joomla-platform/subscription', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->getSubscription('joomla', 'joomla-platform'),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -169,14 +192,16 @@ class JGithubPackageActivityWatchingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('put')
-			->with('/repos/joomla/joomla-platform/subscription', '{"subscribed":true,"ignored":false}', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('put')
+		             ->with('/repos/joomla/joomla-platform/subscription', '{"subscribed":true,"ignored":false}', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->setSubscription('joomla', 'joomla-platform', true, false),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -196,14 +221,16 @@ class JGithubPackageActivityWatchingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = '';
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with('/repos/joomla/joomla-platform/subscription', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('delete')
+		             ->with('/repos/joomla/joomla-platform/subscription', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->deleteSubscription('joomla', 'joomla-platform'),
 			$this->equalTo($this->response->body)
-		);
+		)
+		;
 	}
 
 	/**
@@ -229,14 +256,16 @@ class JGithubPackageActivityWatchingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = '';
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/user/subscriptions/joomla/joomla-platform', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/user/subscriptions/joomla/joomla-platform', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->check('joomla', 'joomla-platform'),
 			$this->equalTo(true)
-		);
+		)
+		;
 	}
 
 	public function testCheckFalse()
@@ -245,14 +274,16 @@ class JGithubPackageActivityWatchingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = '';
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/user/subscriptions/joomla/joomla-platform', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/user/subscriptions/joomla/joomla-platform', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->check('joomla', 'joomla-platform'),
 			$this->equalTo(false)
-		);
+		)
+		;
 	}
 
 	/**
@@ -264,9 +295,10 @@ class JGithubPackageActivityWatchingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = '';
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/user/subscriptions/joomla/joomla-platform', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/user/subscriptions/joomla/joomla-platform', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->object->check('joomla', 'joomla-platform');
 	}
@@ -288,14 +320,16 @@ class JGithubPackageActivityWatchingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = '';
 
 		$this->client->expects($this->once())
-			->method('put')
-			->with('/user/subscriptions/joomla/joomla-platform', '', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('put')
+		             ->with('/user/subscriptions/joomla/joomla-platform', '', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->watch('joomla', 'joomla-platform'),
 			$this->equalTo($this->response->body)
-		);
+		)
+		;
 	}
 
 	/**
@@ -315,28 +349,15 @@ class JGithubPackageActivityWatchingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = '';
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with('/user/subscriptions/joomla/joomla-platform', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('delete')
+		             ->with('/user/subscriptions/joomla/joomla-platform', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->unwatch('joomla', 'joomla-platform'),
 			$this->equalTo($this->response->body)
-		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options  = new JRegistry;
-		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackageActivityWatching($this->options, $this->client);
+		)
+		;
 	}
 }

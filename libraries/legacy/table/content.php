@@ -22,7 +22,7 @@ class JTableContent extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver $db A database connector object
+	 * @param   JDatabaseDriver  $db  A database connector object
 	 *
 	 * @since   11.1
 	 */
@@ -38,10 +38,81 @@ class JTableContent extends JTable
 	}
 
 	/**
+	 * Method to compute the default name of the asset.
+	 * The default name is in the form table_name.id
+	 * where id is the value of the primary key of the table.
+	 *
+	 * @return  string
+	 *
+	 * @since   11.1
+	 */
+	protected function _getAssetName()
+	{
+		$k = $this->_tbl_key;
+
+		return 'com_content.article.' . (int) $this->$k;
+	}
+
+	/**
+	 * Method to return the title to use for the asset table.
+	 *
+	 * @return  string
+	 *
+	 * @since   11.1
+	 */
+	protected function _getAssetTitle()
+	{
+		return $this->title;
+	}
+
+	/**
+	 * Method to get the parent asset id for the record
+	 *
+	 * @param   JTable   $table  A JTable object (optional) for the asset parent
+	 * @param   integer  $id     The id (optional) of the content.
+	 *
+	 * @return  integer
+	 *
+	 * @since   11.1
+	 */
+	protected function _getAssetParentId(JTable $table = null, $id = null)
+	{
+		$assetId = null;
+
+		// This is an article under a category.
+		if ($this->catid)
+		{
+			// Build the query to get the asset id for the parent category.
+			$query = $this->_db->getQuery(true)
+				->select($this->_db->quoteName('asset_id'))
+				->from($this->_db->quoteName('#__categories'))
+				->where($this->_db->quoteName('id') . ' = ' . (int) $this->catid);
+
+			// Get the asset id from the database.
+			$this->_db->setQuery($query);
+
+			if ($result = $this->_db->loadResult())
+			{
+				$assetId = (int) $result;
+			}
+		}
+
+		// Return the asset id.
+		if ($assetId)
+		{
+			return $assetId;
+		}
+		else
+		{
+			return parent::_getAssetParentId($table, $id);
+		}
+	}
+
+	/**
 	 * Overloaded bind function
 	 *
-	 * @param   array $array    Named array
-	 * @param   mixed $ignore   An optional array or space separated list of properties
+	 * @param   array  $array   Named array
+	 * @param   mixed  $ignore  An optional array or space separated list of properties
 	 *                          to ignore while binding.
 	 *
 	 * @return  mixed  Null if operation was satisfactory, otherwise returns an error string
@@ -55,12 +126,12 @@ class JTableContent extends JTable
 		if (isset($array['articletext']))
 		{
 			$pattern = '#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i';
-			$tagPos  = preg_match($pattern, $array['articletext']);
+			$tagPos = preg_match($pattern, $array['articletext']);
 
 			if ($tagPos == 0)
 			{
 				$this->introtext = $array['articletext'];
-				$this->fulltext  = '';
+				$this->fulltext = '';
 			}
 			else
 			{
@@ -168,8 +239,8 @@ class JTableContent extends JTable
 		if ($this->publish_down > $this->_db->getNullDate() && $this->publish_down < $this->publish_up)
 		{
 			// Swap the dates.
-			$temp               = $this->publish_up;
-			$this->publish_up   = $this->publish_down;
+			$temp = $this->publish_up;
+			$this->publish_up = $this->publish_down;
 			$this->publish_down = $temp;
 		}
 
@@ -208,14 +279,14 @@ class JTableContent extends JTable
 	/**
 	 * Gets the default asset values for a component.
 	 *
-	 * @param   $string $component  The component asset name to search for
+	 * @param   $string  $component  The component asset name to search for
 	 *
 	 * @return  JAccessRules  The JAccessRules object for the asset
 	 */
 	protected function getDefaultAssetValues($component)
 	{
 		// Need to find the asset id by the name of the component.
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select($db->quoteName('id'))
 			->from($db->quoteName('#__assets'))
@@ -229,7 +300,7 @@ class JTableContent extends JTable
 	/**
 	 * Overrides JTable::store to set modified data and user id.
 	 *
-	 * @param   boolean $updateNulls True to update fields even if they are null.
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -273,76 +344,5 @@ class JTableContent extends JTable
 		}
 
 		return parent::store($updateNulls);
-	}
-
-	/**
-	 * Method to compute the default name of the asset.
-	 * The default name is in the form table_name.id
-	 * where id is the value of the primary key of the table.
-	 *
-	 * @return  string
-	 *
-	 * @since   11.1
-	 */
-	protected function _getAssetName()
-	{
-		$k = $this->_tbl_key;
-
-		return 'com_content.article.' . (int) $this->$k;
-	}
-
-	/**
-	 * Method to return the title to use for the asset table.
-	 *
-	 * @return  string
-	 *
-	 * @since   11.1
-	 */
-	protected function _getAssetTitle()
-	{
-		return $this->title;
-	}
-
-	/**
-	 * Method to get the parent asset id for the record
-	 *
-	 * @param   JTable  $table A JTable object (optional) for the asset parent
-	 * @param   integer $id    The id (optional) of the content.
-	 *
-	 * @return  integer
-	 *
-	 * @since   11.1
-	 */
-	protected function _getAssetParentId(JTable $table = null, $id = null)
-	{
-		$assetId = null;
-
-		// This is an article under a category.
-		if ($this->catid)
-		{
-			// Build the query to get the asset id for the parent category.
-			$query = $this->_db->getQuery(true)
-				->select($this->_db->quoteName('asset_id'))
-				->from($this->_db->quoteName('#__categories'))
-				->where($this->_db->quoteName('id') . ' = ' . (int) $this->catid);
-
-			// Get the asset id from the database.
-			$this->_db->setQuery($query);
-
-			if ($result = $this->_db->loadResult())
-			{
-				$assetId = (int) $result;
-			}
-		}
-
-		// Return the asset id.
-		if ($assetId)
-		{
-			return $assetId;
-		}
-		else
-		{
-			return parent::_getAssetParentId($table, $id);
-		}
 	}
 }

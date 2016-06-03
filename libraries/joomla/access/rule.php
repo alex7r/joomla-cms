@@ -30,7 +30,7 @@ class JAccessRule
 	 * The input array must be in the form: array(-42 => true, 3 => true, 4 => false)
 	 * or an equivalent JSON encoded string.
 	 *
-	 * @param   mixed $identities A JSON format string (probably from the database) or a named array.
+	 * @param   mixed  $identities  A JSON format string (probably from the database) or a named array.
 	 *
 	 * @since   11.1
 	 */
@@ -46,9 +46,21 @@ class JAccessRule
 	}
 
 	/**
+	 * Get the data for the action.
+	 *
+	 * @return  array  A named array
+	 *
+	 * @since   11.1
+	 */
+	public function getData()
+	{
+		return $this->data;
+	}
+
+	/**
 	 * Merges the identities
 	 *
-	 * @param   mixed $identities An integer or array of integers representing the identities to check.
+	 * @param   mixed  $identities  An integer or array of integers representing the identities to check.
 	 *
 	 * @return  void
 	 *
@@ -71,22 +83,10 @@ class JAccessRule
 	}
 
 	/**
-	 * Get the data for the action.
-	 *
-	 * @return  array  A named array
-	 *
-	 * @since   11.1
-	 */
-	public function getData()
-	{
-		return $this->data;
-	}
-
-	/**
 	 * Merges the values for an identity.
 	 *
-	 * @param   integer $identity The identity.
-	 * @param   boolean $allow    The value for the identity (true == allow, false == deny).
+	 * @param   integer  $identity  The identity.
+	 * @param   boolean  $allow     The value for the identity (true == allow, false == deny).
 	 *
 	 * @return  void
 	 *
@@ -95,7 +95,7 @@ class JAccessRule
 	public function mergeIdentity($identity, $allow)
 	{
 		$identity = (int) $identity;
-		$allow    = (int) ((boolean) $allow);
+		$allow = (int) ((boolean) $allow);
 
 		// Check that the identity exists.
 		if (isset($this->data[$identity]))
@@ -118,7 +118,7 @@ class JAccessRule
 	 * The identity is an integer where +ve represents a user group,
 	 * and -ve represents a user.
 	 *
-	 * @param   mixed $identities An integer or array of integers representing the identities to check.
+	 * @param   mixed  $identities  An integer or array of integers representing the identities to check.
 	 *
 	 * @return  mixed  True if allowed, false for an explicit deny, null for an implicit deny.
 	 *

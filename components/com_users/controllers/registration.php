@@ -27,8 +27,8 @@ class UsersControllerRegistration extends UsersController
 	 */
 	public function activate()
 	{
-		$user    = JFactory::getUser();
-		$input   = JFactory::getApplication()->input;
+		$user  	 = JFactory::getUser();
+		$input 	 = JFactory::getApplication()->input;
 		$uParams = JComponentHelper::getParams('com_users');
 
 		// Check for admin activation. Don't allow non-super-admin to delete a super admin

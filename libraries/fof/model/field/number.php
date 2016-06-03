@@ -19,7 +19,7 @@ class FOFModelFieldNumber extends FOFModelField
 	/**
 	 * The partial match is mapped to an exact match
 	 *
-	 * @param   mixed $value The value to compare to
+	 * @param   mixed  $value  The value to compare to
 	 *
 	 * @return  string  The SQL where clause for this search
 	 */
@@ -35,9 +35,9 @@ class FOFModelFieldNumber extends FOFModelField
 	 * When $include is false the condition tested is:
 	 * $from < VALUE < $to
 	 *
-	 * @param   mixed   $from    The lowest value to compare to
-	 * @param   mixed   $to      The higherst value to compare to
-	 * @param   boolean $include Should we include the boundaries in the search?
+	 * @param   mixed    $from     The lowest value to compare to
+	 * @param   mixed    $to       The higherst value to compare to
+	 * @param   boolean  $include  Should we include the boundaries in the search?
 	 *
 	 * @return  string  The SQL where clause for this search
 	 */
@@ -68,9 +68,9 @@ class FOFModelFieldNumber extends FOFModelField
 	 * When $include is false the condition tested is:
 	 * (VALUE < $from) || (VALUE > $to)
 	 *
-	 * @param   mixed   $from    The lowest value of the excluded range
-	 * @param   mixed   $to      The higherst value of the excluded range
-	 * @param   boolean $include Should we include the boundaries in the search?
+	 * @param   mixed    $from     The lowest value of the excluded range
+	 * @param   mixed    $to       The higherst value of the excluded range
+	 * @param   boolean  $include  Should we include the boundaries in the search?
 	 *
 	 * @return  string  The SQL where clause for this search
 	 */
@@ -99,9 +99,9 @@ class FOFModelFieldNumber extends FOFModelField
 	 * from and to values are calculated based on $value and $interval:
 	 * $value - $interval < VALUE < $value + $interval
 	 *
-	 * @param   integer|float $value    The center value of the search space
-	 * @param   integer|float $interval The width of the search space
-	 * @param   boolean       $include  Should I include the boundaries in the search?
+	 * @param   integer|float  $value     The center value of the search space
+	 * @param   integer|float  $interval  The width of the search space
+	 * @param   boolean        $include   Should I include the boundaries in the search?
 	 *
 	 * @return  string  The SQL where clause
 	 */
@@ -113,7 +113,7 @@ class FOFModelFieldNumber extends FOFModelField
 		}
 
 		$from = $value - $interval;
-		$to   = $value + $interval;
+		$to = $value + $interval;
 
 		$extra = '';
 
@@ -135,9 +135,9 @@ class FOFModelFieldNumber extends FOFModelField
 	 * When $include is false the condition tested is:
 	 * $from < VALUE < $to
 	 *
-	 * @param   mixed   $from    The lowest value to compare to
-	 * @param   mixed   $to      The higherst value to compare to
-	 * @param   boolean $include Should we include the boundaries in the search?
+	 * @param   mixed    $from     The lowest value to compare to
+	 * @param   mixed    $to       The higherst value to compare to
+	 * @param   boolean  $include  Should we include the boundaries in the search?
 	 *
 	 * @return  string  The SQL where clause for this search
 	 */
@@ -170,9 +170,9 @@ class FOFModelFieldNumber extends FOFModelField
 	 * from and to values are calculated based on $value and $interval:
 	 * $value - $interval < VALUE < $value + $interval
 	 *
-	 * @param   integer|float $value    The starting value of the search space
-	 * @param   integer|float $interval The interval period of the search space
-	 * @param   boolean       $include  Should I include the boundaries in the search?
+	 * @param   integer|float  $value     The starting value of the search space
+	 * @param   integer|float  $interval  The interval period of the search space
+	 * @param   boolean        $include   Should I include the boundaries in the search?
 	 *
 	 * @return  string  The SQL where clause
 	 */

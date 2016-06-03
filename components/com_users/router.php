@@ -19,7 +19,7 @@ class UsersRouter extends JComponentRouterBase
 	/**
 	 * Build the route for the com_users component
 	 *
-	 * @param   array &$query An array of URL arguments
+	 * @param   array  &$query  An array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *
@@ -204,7 +204,7 @@ class UsersRouter extends JComponentRouterBase
 	/**
 	 * Parse the segments of a URL.
 	 *
-	 * @param   array &$segments The segments of the URL to parse.
+	 * @param   array  &$segments  The segments of the URL to parse.
 	 *
 	 * @return  array  The URL attributes to be used by the application.
 	 *
@@ -213,7 +213,7 @@ class UsersRouter extends JComponentRouterBase
 	public function parse(&$segments)
 	{
 		$total = count($segments);
-		$vars  = array();
+		$vars = array();
 
 		for ($i = 0; $i < $total; $i++)
 		{
@@ -238,7 +238,7 @@ class UsersRouter extends JComponentRouterBase
 
 		if (is_numeric($userId))
 		{
-			$db    = JFactory::getDbo();
+			$db = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select($db->quoteName('id'))
 				->from($db->quoteName('#__users'))
@@ -274,7 +274,7 @@ class UsersRouter extends JComponentRouterBase
  * These functions are proxys for the new router interface
  * for old SEF extensions.
  *
- * @param   array &$query REQUEST query
+ * @param   array  &$query  REQUEST query
  *
  * @return  array  Segments of the SEF url
  *
@@ -290,7 +290,7 @@ function usersBuildRoute(&$query)
 /**
  * Convert SEF URL segments into query variables
  *
- * @param   array $segments Segments in the current URL
+ * @param   array  $segments  Segments in the current URL
  *
  * @return  array  Query variables
  *

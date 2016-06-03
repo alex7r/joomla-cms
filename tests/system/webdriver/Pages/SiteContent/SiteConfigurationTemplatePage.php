@@ -8,6 +8,11 @@
  */
 
 use SeleniumClient\By;
+use SeleniumClient\SelectElement;
+use SeleniumClient\WebDriver;
+use SeleniumClient\WebDriverWait;
+use SeleniumClient\DesiredCapabilities;
+use SeleniumClient\WebElement;
 
 /**
  * @package     Joomla.Test
@@ -45,7 +50,7 @@ class SiteConfigurationTemplatePage extends SitePage
 	/**
 	 * Function which changes the template color saving the changes
 	 *
-	 * @param   string $templateColor stores the color of the template
+	 * @param   string  $templateColor  stores the color of the template
 	 *
 	 * @return  null
 	 */
@@ -73,7 +78,7 @@ class SiteConfigurationTemplatePage extends SitePage
 	/**
 	 * Function which changes the Background Color saving the changes
 	 *
-	 * @param   string $backgroundColor stores the background color
+	 * @param   string  $backgroundColor  stores the background color
 	 *
 	 * @return  null
 	 */

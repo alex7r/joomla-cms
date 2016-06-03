@@ -19,6 +19,44 @@ JFormHelper::loadFieldClass('checkboxes');
 class JFormFieldCheckboxesTest extends TestCaseDatabase
 {
 	/**
+	 * Sets up dependencies for the test.
+	 *
+	 * @since       11.3
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Test the getInput method with no value and no checked attribute.
 	 *
 	 * @since       12.2
@@ -68,13 +106,13 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'red' option exists
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'  => 'checkbox',
-				'name'  => 'myTestName',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
 				'value' => 'red'
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -84,13 +122,13 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'blue' option exists
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'  => 'checkbox',
-				'name'  => 'myTestName',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
 				'value' => 'blue'
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -100,11 +138,11 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that no option is checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
 				'checked' => true
-			)
-		);
+				)
+			);
 
 		$this->assertNotTag(
 			$matcher,
@@ -164,14 +202,14 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'red' option exists and is checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'    => 'checkbox',
-				'name'    => 'myTestName',
-				'value'   => 'red',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
+				'value' => 'red',
 				'checked' => true
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -181,14 +219,14 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'blue' option exists and is not checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'    => 'checkbox',
-				'name'    => 'myTestName',
-				'value'   => 'blue',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
+				'value' => 'blue',
 				'checked' => false
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -224,7 +262,7 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 			->will($this->returnValue($optionsReturn));
 
 		// Test with one value checked, no checked element
-		$element    = simplexml_load_string(
+		$element = simplexml_load_string(
 			'<field name="color" type="checkboxes">
 			<option value="red">red</option>
 			<option value="blue">blue</option>
@@ -249,14 +287,14 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'red' option exists and is checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'    => 'checkbox',
-				'name'    => 'myTestName',
-				'value'   => 'red',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
+				'value' => 'red',
 				'checked' => true
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -266,14 +304,14 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'blue' option exists and is not checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'    => 'checkbox',
-				'name'    => 'myTestName',
-				'value'   => 'blue',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
+				'value' => 'blue',
 				'checked' => false
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -326,14 +364,14 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'red' option exists and is not checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'    => 'checkbox',
-				'name'    => 'myTestName',
-				'value'   => 'red',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
+				'value' => 'red',
 				'checked' => false
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -343,14 +381,14 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'blue' option exists and is checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'    => 'checkbox',
-				'name'    => 'myTestName',
-				'value'   => 'blue',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
+				'value' => 'blue',
 				'checked' => true
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -405,14 +443,14 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'red' option exists and is not checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'    => 'checkbox',
-				'name'    => 'myTestName',
-				'value'   => 'red',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
+				'value' => 'red',
 				'checked' => false
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -422,14 +460,14 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'blue' option exists and is not checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'    => 'checkbox',
-				'name'    => 'myTestName',
-				'value'   => 'blue',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
+				'value' => 'blue',
 				'checked' => false
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -484,14 +522,14 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'red' option exists and is checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'    => 'checkbox',
-				'name'    => 'myTestName',
-				'value'   => 'red',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
+				'value' => 'red',
 				'checked' => true
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -501,14 +539,14 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'blue' option exists and is not checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'    => 'checkbox',
-				'name'    => 'myTestName',
-				'value'   => 'blue',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
+				'value' => 'blue',
 				'checked' => false
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -562,14 +600,14 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'red' option exists and is not checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'    => 'checkbox',
-				'name'    => 'myTestName',
-				'value'   => 'red',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
+				'value' => 'red',
 				'checked' => false
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -579,14 +617,14 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 
 		// Test that the 'blue' option exists and is not checked
 		$matcher['descendant'] = array(
-			'tag'        => 'input',
+			'tag' => 'input',
 			'attributes' => array(
-				'type'    => 'checkbox',
-				'name'    => 'myTestName',
-				'value'   => 'blue',
+				'type' => 'checkbox',
+				'name' => 'myTestName',
+				'value' => 'blue',
 				'checked' => false
-			)
-		);
+				)
+			);
 
 		$this->assertTag(
 			$matcher,
@@ -606,23 +644,23 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 	{
 		$formFieldCheckboxes = new JFormFieldCheckboxes;
 
-		$option1           = new stdClass;
-		$option1->value    = 'yellow';
-		$option1->text     = 'yellow';
-		$option1->disable  = true;
-		$option1->class    = '';
-		$option1->onclick  = '';
-		$option1->checked  = false;
+		$option1 = new stdClass;
+		$option1->value = 'yellow';
+		$option1->text = 'yellow';
+		$option1->disable = true;
+		$option1->class = '';
+		$option1->onclick = '';
+		$option1->checked = false;
 		$option1->selected = false;
 		$option1->onchange = '';
 
-		$option2           = new stdClass;
-		$option2->value    = 'green';
-		$option2->text     = 'green';
-		$option2->disable  = false;
-		$option2->class    = '';
-		$option2->onclick  = '';
-		$option2->checked  = true;
+		$option2 = new stdClass;
+		$option2->value = 'green';
+		$option2->text = 'green';
+		$option2->disable = false;
+		$option2->class = '';
+		$option2->onclick = '';
+		$option2->checked = true;
 		$option2->selected = true;
 		$option2->onchange = '';
 
@@ -631,7 +669,7 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 		// Test with two values checked, no checked element
 		TestReflection::setValue(
 			$formFieldCheckboxes, 'element', simplexml_load_string(
-				'<field name="color" type="checkboxes">
+			'<field name="color" type="checkboxes">
 			<option value="yellow" disabled="true">yellow</option>
 			<option value="green" checked="true">green</option>
 			</field>')
@@ -642,43 +680,5 @@ class JFormFieldCheckboxesTest extends TestCaseDatabase
 			TestReflection::invoke($formFieldCheckboxes, 'getOptions'),
 			'The field with two values did not produce the right options'
 		);
-	}
-
-	/**
-	 * Sets up dependencies for the test.
-	 *
-	 * @since       11.3
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST']   = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 }

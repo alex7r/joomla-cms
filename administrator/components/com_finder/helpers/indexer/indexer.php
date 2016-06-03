@@ -110,7 +110,7 @@ abstract class FinderIndexer
 			$format = 'sqlsrv';
 		}
 
-		$path  = __DIR__ . '/driver/' . $format . '.php';
+		$path = __DIR__ . '/driver/' . $format . '.php';
 		$class = 'FinderIndexerDriver' . ucfirst($format);
 
 		// Check if a parser exists for the format.
@@ -126,46 +126,6 @@ abstract class FinderIndexer
 			// Throw invalid format exception.
 			throw new RuntimeException(JText::sprintf('COM_FINDER_INDEXER_INVALID_DRIVER', $format));
 		}
-	}
-
-	/**
-	 * Method to reset the indexer state.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.5
-	 */
-	public static function resetState()
-	{
-		// Reset the internal state to null.
-		self::$state = null;
-
-		// Reset the session state to null.
-		$session = JFactory::getSession();
-		$session->set('_finder.state', null);
-	}
-
-	/**
-	 * Method to get a content item's signature.
-	 *
-	 * @param   object $item The content item to index.
-	 *
-	 * @return  string  The content item's signature.
-	 *
-	 * @since   2.5
-	 */
-	protected static function getSignature($item)
-	{
-		// Get the indexer state.
-		$state = self::getState();
-
-		// Get the relevant configuration variables.
-		$config   = array();
-		$config[] = $state->weights;
-		$config[] = $state->options->get('stem', 1);
-		$config[] = $state->options->get('stemmer', 'porter_en');
-
-		return md5(serialize(array($item, $config)));
 	}
 
 	/**
@@ -185,7 +145,7 @@ abstract class FinderIndexer
 
 		// If we couldn't load from the internal state, try the session.
 		$session = JFactory::getSession();
-		$data    = $session->get('_finder.state', null);
+		$data = $session->get('_finder.state', null);
 
 		// If the state is empty, load the values for the first time.
 		if (empty($data))
@@ -235,7 +195,7 @@ abstract class FinderIndexer
 	/**
 	 * Method to set the indexer state.
 	 *
-	 * @param   object $data A new indexer state object.
+	 * @param   object  $data  A new indexer state object.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *
@@ -260,10 +220,27 @@ abstract class FinderIndexer
 	}
 
 	/**
+	 * Method to reset the indexer state.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	public static function resetState()
+	{
+		// Reset the internal state to null.
+		self::$state = null;
+
+		// Reset the session state to null.
+		$session = JFactory::getSession();
+		$session->set('_finder.state', null);
+	}
+
+	/**
 	 * Method to index a content item.
 	 *
-	 * @param   FinderIndexerResult $item   The content item to index.
-	 * @param   string              $format The format of the content. [optional]
+	 * @param   FinderIndexerResult  $item    The content item to index.
+	 * @param   string               $format  The format of the content. [optional]
 	 *
 	 * @return  integer  The ID of the record in the links table.
 	 *
@@ -275,7 +252,7 @@ abstract class FinderIndexer
 	/**
 	 * Method to remove a link from the index.
 	 *
-	 * @param   integer $linkId The id of the link.
+	 * @param   integer  $linkId  The id of the link.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -296,15 +273,38 @@ abstract class FinderIndexer
 	abstract public function optimize();
 
 	/**
+	 * Method to get a content item's signature.
+	 *
+	 * @param   object  $item  The content item to index.
+	 *
+	 * @return  string  The content item's signature.
+	 *
+	 * @since   2.5
+	 */
+	protected static function getSignature($item)
+	{
+		// Get the indexer state.
+		$state = self::getState();
+
+		// Get the relevant configuration variables.
+		$config = array();
+		$config[] = $state->weights;
+		$config[] = $state->options->get('stem', 1);
+		$config[] = $state->options->get('stemmer', 'porter_en');
+
+		return md5(serialize(array($item, $config)));
+	}
+
+	/**
 	 * Method to parse input, tokenize it, and then add it to the database.
 	 *
-	 * @param   mixed   $input     String or resource to use as input. A resource
+	 * @param   mixed    $input    String or resource to use as input. A resource
 	 *                             input will automatically be chunked to conserve
 	 *                             memory. Strings will be chunked if longer than
 	 *                             2K in size.
-	 * @param   integer $context   The context of the input. See context constants.
-	 * @param   string  $lang      The language of the input.
-	 * @param   string  $format    The format of the input.
+	 * @param   integer  $context  The context of the input. See context constants.
+	 * @param   string   $lang     The language of the input.
+	 * @param   string   $format   The format of the input.
 	 *
 	 * @return  integer  The number of tokens extracted from the input.
 	 *
@@ -312,7 +312,7 @@ abstract class FinderIndexer
 	 */
 	protected function tokenizeToDb($input, $context, $lang, $format)
 	{
-		$count  = 0;
+		$count = 0;
 		$buffer = null;
 
 		if (!empty($input))
@@ -387,7 +387,7 @@ abstract class FinderIndexer
 			elseif (strlen($input) > 2048)
 			{
 				$start = 0;
-				$end   = strlen($input);
+				$end = strlen($input);
 				$chunk = 2048;
 
 				/*
@@ -459,8 +459,8 @@ abstract class FinderIndexer
 	/**
 	 * Method to add a set of tokens to the database.
 	 *
-	 * @param   mixed $tokens  An array or single FinderIndexerToken object.
-	 * @param   mixed $context The context of the tokens. See context constants. [optional]
+	 * @param   mixed  $tokens   An array or single FinderIndexerToken object.
+	 * @param   mixed  $context  The context of the tokens. See context constants. [optional]
 	 *
 	 * @return  integer  The number of tokens inserted into the database.
 	 *
@@ -473,7 +473,7 @@ abstract class FinderIndexer
 	 * Method to switch the token tables from Memory tables to MyISAM tables
 	 * when they are close to running out of memory.
 	 *
-	 * @param   boolean $memory Flag to control how they should be toggled.
+	 * @param   boolean  $memory  Flag to control how they should be toggled.
 	 *
 	 * @return  boolean  True on success.
 	 *

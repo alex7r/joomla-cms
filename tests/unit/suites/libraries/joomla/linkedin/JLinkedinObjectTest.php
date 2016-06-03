@@ -51,23 +51,6 @@ class JLinkedinObjectTest extends TestCase
 	protected $errorString = '{"errors":[{"message":"Sorry, that page does not exist","code":34}]}';
 
 	/**
-	 * Tests the setOption method
-	 *
-	 * @return void
-	 *
-	 * @since 13.1
-	 */
-	public function testSetOption()
-	{
-		$this->object->setOption('api.url', 'https://example.com/settest');
-
-		$this->assertThat(
-			$this->options->get('api.url'),
-			$this->equalTo('https://example.com/settest')
-		);
-	}
-
-	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
@@ -78,7 +61,7 @@ class JLinkedinObjectTest extends TestCase
 	protected function setUp()
 	{
 		$this->options = new JRegistry;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
 
 		$this->object = new JLinkedinObjectMock($this->options, $this->client);
 	}
@@ -93,5 +76,22 @@ class JLinkedinObjectTest extends TestCase
 	 */
 	protected function tearDown()
 	{
+	}
+
+	/**
+	 * Tests the setOption method
+	 *
+	 * @return void
+	 *
+	 * @since 13.1
+	 */
+	public function testSetOption()
+	{
+		$this->object->setOption('api.url', 'https://example.com/settest');
+
+		$this->assertThat(
+			$this->options->get('api.url'),
+			$this->equalTo('https://example.com/settest')
+		);
 	}
 }

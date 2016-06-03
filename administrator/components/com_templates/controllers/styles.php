@@ -52,9 +52,9 @@ class TemplatesControllerStyles extends JControllerAdmin
 	/**
 	 * Proxy for getModel.
 	 *
-	 * @param   string $name   The model name. Optional.
-	 * @param   string $prefix The class prefix. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return  JModelLegacy
 	 *
@@ -91,7 +91,7 @@ class TemplatesControllerStyles extends JControllerAdmin
 			JArrayHelper::toInteger($pks);
 
 			// Pop off the first element.
-			$id    = array_shift($pks);
+			$id = array_shift($pks);
 			$model = $this->getModel();
 			$model->setHome($id);
 			$this->setMessage(JText::_('COM_TEMPLATES_SUCCESS_HOME_SET'));
@@ -127,7 +127,7 @@ class TemplatesControllerStyles extends JControllerAdmin
 			}
 
 			// Pop off the first element.
-			$id    = array_shift($pks);
+			$id = array_shift($pks);
 			$model = $this->getModel();
 			$model->unsetHome($id);
 			$this->setMessage(JText::_('COM_TEMPLATES_SUCCESS_HOME_UNSET'));

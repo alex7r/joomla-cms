@@ -65,12 +65,54 @@ class JOAuth1ClientTest extends TestCase
 	protected $errorString = '{"errorCode":401, "message": "Generic error"}';
 
 	/**
-	 * Provides test data.
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
 	 *
-	 * @return array
-	 *
-	 * @since 13.1
+	 * @return void
 	 */
+	protected function setUp()
+	{
+		$this->saveFactoryState();
+
+		JFactory::$session = $this->getMockSession();
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$key = "TEST_KEY";
+		$secret = "TEST_SECRET";
+		$my_url = "TEST_URL";
+
+		$this->options = new Registry;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->input = new JInput(array());
+		$this->application = $this->getMockWeb();
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->object = new JOAuth1ClientInspector($this->options, $this->client, $this->input, $this->application);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+	}
+
+	/**
+	* Provides test data.
+	*
+	* @return array
+	*
+	* @since 13.1
+	*/
 	public function seedAuthenticate()
 	{
 		// Token, fail and oauth version.
@@ -79,20 +121,20 @@ class JOAuth1ClientTest extends TestCase
 			array(null, false, '1.0'),
 			array(null, false, '1.0a'),
 			array(null, true, '1.0a')
-		);
+			);
 	}
 
 	/**
 	 * Tests the authenticate method
 	 *
-	 * @param   array   $token   The passed token.
-	 * @param   boolean $fail    Mark if should fail or not.
-	 * @param   string  $version Specify oauth version 1.0 or 1.0a.
+	 * @param   array    $token    The passed token.
+	 * @param   boolean  $fail     Mark if should fail or not.
+	 * @param   string   $version  Specify oauth version 1.0 or 1.0a.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedAuthenticate
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testAuthenticate($token, $fail, $version)
 	{
@@ -110,7 +152,7 @@ class JOAuth1ClientTest extends TestCase
 			$this->object->setOption('accessTokenURL', 'https://example.com/access_token');
 
 			// Request token.
-			$returnData       = new stdClass;
+			$returnData = new stdClass;
 			$returnData->code = 200;
 			$returnData->body = 'oauth_token=token&oauth_token_secret=secret&oauth_callback_confirmed=true';
 
@@ -148,19 +190,19 @@ class JOAuth1ClientTest extends TestCase
 			TestReflection::setValue($input, 'data', $data);
 
 			// Get mock session
-			$mockSession = $this->getMock('JSession', array('_start', 'get'));
+			$mockSession = $this->getMock('JSession', array( '_start', 'get'));
 
 			if ($fail)
 			{
 				$mockSession->expects($this->at(0))
-					->method('get')
-					->with('key', null, 'oauth_token')
-					->will($this->returnValue('bad'));
+							->method('get')
+							->with('key', null, 'oauth_token')
+							->will($this->returnValue('bad'));
 
 				$mockSession->expects($this->at(1))
-					->method('get')
-					->with('secret', null, 'oauth_token')
-					->will($this->returnValue('session'));
+							->method('get')
+							->with('secret', null, 'oauth_token')
+							->will($this->returnValue('session'));
 
 				JFactory::$session = $mockSession;
 
@@ -169,18 +211,18 @@ class JOAuth1ClientTest extends TestCase
 			}
 
 			$mockSession->expects($this->at(0))
-				->method('get')
-				->with('key', null, 'oauth_token')
-				->will($this->returnValue('token'));
+						->method('get')
+						->with('key', null, 'oauth_token')
+						->will($this->returnValue('token'));
 
 			$mockSession->expects($this->at(1))
-				->method('get')
-				->with('secret', null, 'oauth_token')
-				->will($this->returnValue('secret'));
+						->method('get')
+						->with('secret', null, 'oauth_token')
+						->will($this->returnValue('secret'));
 
 			JFactory::$session = $mockSession;
 
-			$returnData       = new stdClass;
+			$returnData = new stdClass;
 			$returnData->code = 200;
 			$returnData->body = 'oauth_token=token_key&oauth_token_secret=token_secret';
 
@@ -208,7 +250,7 @@ class JOAuth1ClientTest extends TestCase
 	{
 		$this->object->setOption('requestTokenURL', 'https://example.com/request_token');
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = 'oauth_token=token&oauth_token_secret=secret&oauth_callback_confirmed=false';
 
@@ -221,12 +263,12 @@ class JOAuth1ClientTest extends TestCase
 	}
 
 	/**
-	 * Provides test data.
-	 *
-	 * @return array
-	 *
-	 * @since 13.1
-	 */
+	* Provides test data.
+	*
+	* @return array
+	*
+	* @since 13.1
+	*/
 	public function seedOauthRequest()
 	{
 		// Method
@@ -234,22 +276,22 @@ class JOAuth1ClientTest extends TestCase
 			array('GET'),
 			array('PUT'),
 			array('DELETE')
-		);
+			);
 	}
 
 	/**
 	 * Tests the oauthRequest method
 	 *
-	 * @param   string $method The request method.
+	 * @param   string  $method  The request method.
 	 *
 	 * @dataProvider seedOauthRequest
 	 * @return  void
 	 *
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testOauthRequest($method)
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -264,7 +306,7 @@ class JOAuth1ClientTest extends TestCase
 			$this->assertThat(
 				$this->object->oauthRequest('www.example.com', $method, array('oauth_token' => '1235'), $data, array('Content-Type' => 'multipart/form-data')),
 				$this->equalTo($returnData)
-			);
+				);
 
 		}
 		else
@@ -277,7 +319,7 @@ class JOAuth1ClientTest extends TestCase
 			$this->assertThat(
 				$this->object->oauthRequest('www.example.com', $method, array('oauth_token' => '1235'), array(), array('Content-Type' => 'multipart/form-data')),
 				$this->equalTo($returnData)
-			);
+				);
 		}
 	}
 
@@ -293,48 +335,6 @@ class JOAuth1ClientTest extends TestCase
 		$this->assertThat(
 			$this->object->safeEncode(null),
 			$this->equalTo('')
-		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->saveFactoryState();
-
-		JFactory::$session = $this->getMockSession();
-
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$key    = "TEST_KEY";
-		$secret = "TEST_SECRET";
-		$my_url = "TEST_URL";
-
-		$this->options     = new Registry;
-		$this->client      = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->input       = new JInput(array());
-		$this->application = $this->getMockWeb();
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->object = new JOAuth1ClientInspector($this->options, $this->client, $this->input, $this->application);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
+			);
 	}
 }

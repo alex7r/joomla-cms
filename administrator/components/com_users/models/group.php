@@ -19,7 +19,7 @@ class UsersModelGroup extends JModelAdmin
 	/**
 	 * Constructor
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -37,12 +37,30 @@ class UsersModelGroup extends JModelAdmin
 	}
 
 	/**
+	 * Returns a reference to the a Table object, always creating it.
+	 *
+	 * @param   string  $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  JTable	A database object
+	 *
+	 * @since   1.6
+	 */
+	public function getTable($type = 'Usergroup', $prefix = 'JTable', $config = array())
+	{
+		$return = JTable::getInstance($type, $prefix, $config);
+
+		return $return;
+	}
+
+	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array   $data     An optional array of data for the form to interogate.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      An optional array of data for the form to interogate.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return  JForm    A JForm object on success, false on failure
+	 * @return  JForm	A JForm object on success, false on failure
 	 *
 	 * @since   1.6
 	 */
@@ -60,9 +78,56 @@ class UsersModelGroup extends JModelAdmin
 	}
 
 	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_users.edit.group.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+
+		$this->preprocessData('com_users.group', $data);
+
+		return $data;
+	}
+
+	/**
+	 * Override preprocessForm to load the user plugin group instead of content.
+	 *
+	 * @param   JForm   $form   A form object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 * @throws  Exception if there is an error loading the form.
+	 */
+	protected function preprocessForm(JForm $form, $data, $group = '')
+	{
+		$obj = is_array($data) ? JArrayHelper::toObject($data, 'JObject') : $data;
+
+		if (isset($obj->parent_id) && $obj->parent_id == 0 && $obj->id > 0)
+		{
+			$form->setFieldAttribute('parent_id', 'type', 'hidden');
+			$form->setFieldAttribute('parent_id', 'hidden', 'true');
+		}
+
+		parent::preprocessForm($form, $data, 'user');
+	}
+
+	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -120,7 +185,7 @@ class UsersModelGroup extends JModelAdmin
 			if (in_array($data['id'], $myGroups))
 			{
 				// Now, would we have super admin permissions without the current group?
-				$otherGroups     = array_diff($myGroups, array($data['id']));
+				$otherGroups = array_diff($myGroups, array($data['id']));
 				$otherSuperAdmin = false;
 
 				foreach ($otherGroups as $otherGroup)
@@ -151,53 +216,9 @@ class UsersModelGroup extends JModelAdmin
 	}
 
 	/**
-	 * Method to generate the title of group on Save as Copy action
-	 *
-	 * @param   integer $parentId The id of the parent.
-	 * @param   string  $title    The title of group
-	 *
-	 * @return  string  Contains the modified title.
-	 *
-	 * @since   3.3.7
-	 */
-	protected function generateGroupTitle($parentId, $title)
-	{
-		// Alter the title & alias
-		$table = $this->getTable();
-
-		while ($table->load(array('title' => $title, 'parent_id' => $parentId)))
-		{
-			if ($title == $table->title)
-			{
-				$title = JString::increment($title);
-			}
-		}
-
-		return $title;
-	}
-
-	/**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param   string $type   The table type to instantiate
-	 * @param   string $prefix A prefix for the table class name. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  JTable    A database object
-	 *
-	 * @since   1.6
-	 */
-	public function getTable($type = 'Usergroup', $prefix = 'JTable', $config = array())
-	{
-		$return = JTable::getInstance($type, $prefix, $config);
-
-		return $return;
-	}
-
-	/**
 	 * Method to delete rows.
 	 *
-	 * @param   array &$pks An array of item ids.
+	 * @param   array  &$pks  An array of item ids.
 	 *
 	 * @return  boolean  Returns true on success, false on failure.
 	 *
@@ -278,49 +299,28 @@ class UsersModelGroup extends JModelAdmin
 	}
 
 	/**
-	 * Method to get the data that should be injected in the form.
+	 * Method to generate the title of group on Save as Copy action
 	 *
-	 * @return  mixed  The data for the form.
+	 * @param   integer  $parentId  The id of the parent.
+	 * @param   string   $title     The title of group
 	 *
-	 * @since   1.6
+	 * @return  string  Contains the modified title.
+	 *
+	 * @since   3.3.7
 	 */
-	protected function loadFormData()
+	protected function generateGroupTitle($parentId, $title)
 	{
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_users.edit.group.data', array());
+		// Alter the title & alias
+		$table = $this->getTable();
 
-		if (empty($data))
+		while ($table->load(array('title' => $title, 'parent_id' => $parentId)))
 		{
-			$data = $this->getItem();
+			if ($title == $table->title)
+			{
+				$title = JString::increment($title);
+			}
 		}
 
-		$this->preprocessData('com_users.group', $data);
-
-		return $data;
-	}
-
-	/**
-	 * Override preprocessForm to load the user plugin group instead of content.
-	 *
-	 * @param   JForm  $form  A form object.
-	 * @param   mixed  $data  The data expected for the form.
-	 * @param   string $group The name of the plugin group to import (defaults to "content").
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 * @throws  Exception if there is an error loading the form.
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = '')
-	{
-		$obj = is_array($data) ? JArrayHelper::toObject($data, 'JObject') : $data;
-
-		if (isset($obj->parent_id) && $obj->parent_id == 0 && $obj->id > 0)
-		{
-			$form->setFieldAttribute('parent_id', 'type', 'hidden');
-			$form->setFieldAttribute('parent_id', 'hidden', 'true');
-		}
-
-		parent::preprocessForm($form, $data, 'user');
+		return $title;
 	}
 }

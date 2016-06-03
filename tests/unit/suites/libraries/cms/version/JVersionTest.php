@@ -1,10 +1,10 @@
 <?php
 /**
- * @package        Joomla.UnitTest
- * @subpackage     Version
+ * @package	    Joomla.UnitTest
+ * @subpackage  Version
  *
- * @copyright      Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
- * @license        GNU General Public License version 2 or later; see LICENSE
+ * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license	    GNU General Public License version 2 or later; see LICENSE
  */
 
 /**
@@ -23,6 +23,19 @@ class JVersionTest extends PHPUnit_Framework_TestCase
 	 * @since  3.0
 	 */
 	protected $object;
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.0
+	 */
+	protected function setUp()
+	{
+		$this->object = new JVersion;
+	}
 
 	/**
 	 * Tests the isCompatible method
@@ -118,18 +131,5 @@ class JVersionTest extends PHPUnit_Framework_TestCase
 	public function testGetUserAgent_ComponentNotNull()
 	{
 		$this->assertContains('Component_test', $this->object->getUserAgent('Component_test', false, true));
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.0
-	 */
-	protected function setUp()
-	{
-		$this->object = new JVersion;
 	}
 }

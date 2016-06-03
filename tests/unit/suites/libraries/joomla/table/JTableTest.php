@@ -25,6 +25,34 @@ class JTableTest extends TestCaseDatabase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->object = new TableDbTestComposite(TestCaseDatabase::$driver);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function tearDown()
+	{
+		parent::tearDown();
+	}
+
+	/**
 	 * Test for getFields method.
 	 *
 	 * @return  void
@@ -35,89 +63,89 @@ class JTableTest extends TestCaseDatabase
 	{
 		$this->assertEquals(
 			array(
-				'id1'              => (object) array(
-					'Field'   => 'id1',
-					'Type'    => 'INTEGER',
-					'Null'    => 'NO',
+				'id1' => (object) array(
+					'Field' => 'id1',
+					'Type' => 'INTEGER',
+					'Null' => 'NO',
 					'Default' => '\'0\'',
-					'Key'     => 'PRI'
+					'Key' => 'PRI'
 				),
-				'id2'              => (object) array(
-					'Field'   => 'id2',
-					'Type'    => 'INTEGER',
-					'Null'    => 'NO',
+				'id2' => (object) array(
+					'Field' => 'id2',
+					'Type' => 'INTEGER',
+					'Null' => 'NO',
 					'Default' => '\'0\'',
-					'Key'     => 'PRI'
+					'Key' => 'PRI'
 				),
-				'title'            => (object) array(
-					'Field'   => 'title',
-					'Type'    => 'TEXT',
-					'Null'    => 'NO',
+				'title' => (object) array(
+					'Field' => 'title',
+					'Type' => 'TEXT',
+					'Null' => 'NO',
 					'Default' => '\'\'',
-					'Key'     => ''
+					'Key' => ''
 				),
-				'asset_id'         => (object) array(
-					'Field'   => 'asset_id',
-					'Type'    => 'INTEGER',
-					'Null'    => 'NO',
+				'asset_id' => (object) array(
+					'Field' => 'asset_id',
+					'Type' => 'INTEGER',
+					'Null' => 'NO',
 					'Default' => '\'0\'',
-					'Key'     => ''
+					'Key' => ''
 				),
-				'hits'             => (object) array(
-					'Field'   => 'hits',
-					'Type'    => 'INTEGER',
-					'Null'    => 'NO',
+				'hits' => (object) array(
+					'Field' => 'hits',
+					'Type' => 'INTEGER',
+					'Null' => 'NO',
 					'Default' => '\'0\'',
-					'Key'     => ''
+					'Key' => ''
 				),
-				'checked_out'      => (object) array(
-					'Field'   => 'checked_out',
-					'Type'    => 'INTEGER',
-					'Null'    => 'NO',
+				'checked_out' => (object) array(
+					'Field' => 'checked_out',
+					'Type' => 'INTEGER',
+					'Null' => 'NO',
 					'Default' => '\'0\'',
-					'Key'     => ''
+					'Key' => ''
 				),
 				'checked_out_time' => (object) array(
-					'Field'   => 'checked_out_time',
-					'Type'    => 'TEXT',
-					'Null'    => 'NO',
+					'Field' => 'checked_out_time',
+					'Type' => 'TEXT',
+					'Null' => 'NO',
 					'Default' => '\'0000-00-00 00:00:00\'',
-					'Key'     => ''
+					'Key' => ''
 				),
-				'published'        => (object) array(
-					'Field'   => 'published',
-					'Type'    => 'INTEGER',
-					'Null'    => 'NO',
+				'published' => (object) array(
+					'Field' => 'published',
+					'Type' => 'INTEGER',
+					'Null' => 'NO',
 					'Default' => '\'0\'',
-					'Key'     => ''
+					'Key' => ''
 				),
-				'publish_up'       => (object) array(
-					'Field'   => 'publish_up',
-					'Type'    => 'TEXT',
-					'Null'    => 'NO',
+				'publish_up' => (object) array(
+					'Field' => 'publish_up',
+					'Type' => 'TEXT',
+					'Null' => 'NO',
 					'Default' => '\'0000-00-00 00:00:00\'',
-					'Key'     => ''
+					'Key' => ''
 				),
-				'publish_down'     => (object) array(
-					'Field'   => 'publish_down',
-					'Type'    => 'TEXT',
-					'Null'    => 'NO',
+				'publish_down' => (object) array(
+					'Field' => 'publish_down',
+					'Type' => 'TEXT',
+					'Null' => 'NO',
 					'Default' => '\'0000-00-00 00:00:00\'',
-					'Key'     => ''
+					'Key' => ''
 				),
-				'ordering'         => (object) array(
-					'Field'   => 'ordering',
-					'Type'    => 'INTEGER',
-					'Null'    => 'NO',
+				'ordering' => (object) array(
+					'Field' => 'ordering',
+					'Type' => 'INTEGER',
+					'Null' => 'NO',
 					'Default' => '\'0\'',
-					'Key'     => ''
+					'Key' => ''
 				),
-				'params'           => (object) array(
-					'Field'   => 'params',
-					'Type'    => 'TEXT',
-					'Null'    => 'NO',
+				'params' => (object) array(
+					'Field' => 'params',
+					'Type' => 'TEXT',
+					'Null' => 'NO',
 					'Default' => '\'\'',
-					'Key'     => ''
+					'Key' => ''
 				),
 			),
 			$this->object->getFields()
@@ -268,8 +296,8 @@ class JTableTest extends TestCaseDatabase
 	public function testReset()
 	{
 		$this->object->title = 'My Title';
-		$this->object->id1   = 25;
-		$this->object->id2   = 50;
+		$this->object->id1 = 25;
+		$this->object->id2 = 50;
 
 		$this->object->reset();
 
@@ -324,6 +352,24 @@ class JTableTest extends TestCaseDatabase
 			$this->object->params,
 			'The object should be json encoded'
 		);
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   12.3
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_dbtest_composite', __DIR__ . '/stubs/jos_dbtest_composite.csv');
+		$dataSet->addTable('jos_assets', __DIR__ . '/stubs/jos_assets_composite.csv');
+		$dataSet->addTable('jos_session', __DIR__ . '/stubs/jos_session.csv');
+
+		return $dataSet;
 	}
 
 	/**
@@ -712,51 +758,5 @@ class JTableTest extends TestCaseDatabase
 
 		$this->object->load(array('id1' => 25, 'id2' => 51));
 		$this->assertEquals(2, $this->object->published);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object = new TableDbTestComposite(TestCaseDatabase::$driver);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function tearDown()
-	{
-		parent::tearDown();
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   12.3
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_dbtest_composite', __DIR__ . '/stubs/jos_dbtest_composite.csv');
-		$dataSet->addTable('jos_assets', __DIR__ . '/stubs/jos_assets_composite.csv');
-		$dataSet->addTable('jos_session', __DIR__ . '/stubs/jos_session.csv');
-
-		return $dataSet;
 	}
 }

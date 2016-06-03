@@ -35,7 +35,7 @@ class ContentViewFeatured extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -87,18 +87,18 @@ class ContentViewFeatured extends JViewLegacy
 			}
 
 			JPluginHelper::importPlugin('content');
-			$dispatcher->trigger('onContentPrepare', array('com_content.featured', &$item, &$item->params, 0));
+			$dispatcher->trigger('onContentPrepare', array ('com_content.featured', &$item, &$item->params, 0));
 
 			// Old plugins: Use processed text as introtext
 			$item->introtext = $item->text;
 
-			$results                        = $dispatcher->trigger('onContentAfterTitle', array('com_content.featured', &$item, &$item->params, 0));
+			$results = $dispatcher->trigger('onContentAfterTitle', array('com_content.featured', &$item, &$item->params, 0));
 			$item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-			$results                           = $dispatcher->trigger('onContentBeforeDisplay', array('com_content.featured', &$item, &$item->params, 0));
+			$results = $dispatcher->trigger('onContentBeforeDisplay', array('com_content.featured', &$item, &$item->params, 0));
 			$item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-			$results                          = $dispatcher->trigger('onContentAfterDisplay', array('com_content.featured', &$item, &$item->params, 0));
+			$results = $dispatcher->trigger('onContentAfterDisplay', array('com_content.featured', &$item, &$item->params, 0));
 			$item->event->afterDisplayContent = trim(implode("\n", $results));
 		}
 
@@ -124,7 +124,7 @@ class ContentViewFeatured extends JViewLegacy
 		}
 
 		$this->columns = max(1, $params->def('num_columns', 1));
-		$order         = $params->def('multi_column_order', 1);
+		$order = $params->def('multi_column_order', 1);
 
 		if ($order == 0 && $this->columns > 1)
 		{

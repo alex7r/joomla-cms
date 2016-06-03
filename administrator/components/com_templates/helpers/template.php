@@ -19,7 +19,7 @@ abstract class TemplateHelper
 	/**
 	 * Checks if the file is an image
 	 *
-	 * @param   string $fileName The filename
+	 * @param   string  $fileName  The filename
 	 *
 	 * @return  boolean
 	 *
@@ -34,8 +34,8 @@ abstract class TemplateHelper
 	/**
 	 * Checks if the file can be uploaded
 	 *
-	 * @param   array  $file File information
-	 * @param   string $err  An error message to be returned
+	 * @param   array   $file  File information
+	 * @param   string  $err   An error message to be returned
 	 *
 	 * @return  boolean
 	 *
@@ -54,8 +54,8 @@ abstract class TemplateHelper
 		}
 
 		// Media file names should never have executable extensions buried in them.
-		$executable       = array(
-			'exe', 'phtml', 'java', 'perl', 'py', 'asp', 'dll', 'go', 'jar',
+		$executable = array(
+			'exe', 'phtml','java', 'perl', 'py', 'asp','dll', 'go', 'jar',
 			'ade', 'adp', 'bat', 'chm', 'cmd', 'com', 'cpl', 'hta', 'ins', 'isp',
 			'jse', 'lib', 'mde', 'msc', 'msp', 'mst', 'pif', 'scr', 'sct', 'shb',
 			'sys', 'vb', 'vbe', 'vbs', 'vxd', 'wsc', 'wsf', 'wsh'

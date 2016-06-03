@@ -38,13 +38,13 @@ class JDatabaseQueryOracle extends JDatabaseQueryPdo implements JDatabaseQueryPr
 	 * Method to add a variable to an internal array that will be bound to a prepared SQL statement before query execution. Also
 	 * removes a variable that has been bounded from the internal bounded array when the passed in value is null.
 	 *
-	 * @param   string|integer $key             The key that will be used in your SQL query to reference the value. Usually of
+	 * @param   string|integer  $key            The key that will be used in your SQL query to reference the value. Usually of
 	 *                                          the form ':key', but can also be an integer.
-	 * @param   mixed          &$value          The value that will be bound. The value is passed by reference to support output
+	 * @param   mixed           &$value         The value that will be bound. The value is passed by reference to support output
 	 *                                          parameters such as those possible with stored procedures.
-	 * @param   integer        $dataType        Constant corresponding to a SQL datatype.
-	 * @param   integer        $length          The length of the variable. Usually required for OUTPUT parameters.
-	 * @param   array          $driverOptions   Optional driver options to be used.
+	 * @param   integer         $dataType       Constant corresponding to a SQL datatype.
+	 * @param   integer         $length         The length of the variable. Usually required for OUTPUT parameters.
+	 * @param   array           $driverOptions  Optional driver options to be used.
 	 *
 	 * @return  JDatabaseQueryOracle
 	 *
@@ -73,9 +73,9 @@ class JDatabaseQueryOracle extends JDatabaseQueryPdo implements JDatabaseQueryPr
 
 		$obj = new stdClass;
 
-		$obj->value         = &$value;
-		$obj->dataType      = $dataType;
-		$obj->length        = $length;
+		$obj->value = &$value;
+		$obj->dataType = $dataType;
+		$obj->length = $length;
 		$obj->driverOptions = $driverOptions;
 
 		// Case 3: Simply add the Key/Value into the bounded array
@@ -88,7 +88,7 @@ class JDatabaseQueryOracle extends JDatabaseQueryPdo implements JDatabaseQueryPr
 	 * Retrieves the bound parameters array when key is null and returns it by reference. If a key is provided then that item is
 	 * returned.
 	 *
-	 * @param   mixed $key The bounded variable key to retrieve.
+	 * @param   mixed  $key  The bounded variable key to retrieve.
 	 *
 	 * @return  mixed
 	 *
@@ -112,7 +112,7 @@ class JDatabaseQueryOracle extends JDatabaseQueryPdo implements JDatabaseQueryPr
 	/**
 	 * Clear data from the query or a specific clause of the query.
 	 *
-	 * @param   string $clause Optionally, the name of the clause to clear, or nothing to clear the whole query.
+	 * @param   string  $clause  Optionally, the name of the clause to clear, or nothing to clear the whole query.
 	 *
 	 * @return  JDatabaseQueryOracle  Returns this object to allow chaining.
 	 *
@@ -139,9 +139,9 @@ class JDatabaseQueryOracle extends JDatabaseQueryPdo implements JDatabaseQueryPr
 	 * automatically by the __toString() method if it detects that the
 	 * query implements the JDatabaseQueryLimitable interface.
 	 *
-	 * @param   string  $query  The query in string format
-	 * @param   integer $limit  The limit for the result set
-	 * @param   integer $offset The offset for the result set
+	 * @param   string   $query   The query in string format
+	 * @param   integer  $limit   The limit for the result set
+	 * @param   integer  $offset  The offset for the result set
 	 *
 	 * @return  string
 	 *
@@ -185,8 +185,8 @@ class JDatabaseQueryOracle extends JDatabaseQueryPdo implements JDatabaseQueryPr
 	 * $query->setLimit(100, 0); (retrieve 100 rows, starting at first record)
 	 * $query->setLimit(50, 50); (retrieve 50 rows, starting at 50th record)
 	 *
-	 * @param   integer $limit  The limit for the result set
-	 * @param   integer $offset The offset for the result set
+	 * @param   integer  $limit   The limit for the result set
+	 * @param   integer  $offset  The offset for the result set
 	 *
 	 * @return  JDatabaseQueryOracle  Returns this object to allow chaining.
 	 *
@@ -194,7 +194,7 @@ class JDatabaseQueryOracle extends JDatabaseQueryPdo implements JDatabaseQueryPr
 	 */
 	public function setLimit($limit = 0, $offset = 0)
 	{
-		$this->limit  = (int) $limit;
+		$this->limit = (int) $limit;
 		$this->offset = (int) $offset;
 
 		return $this;

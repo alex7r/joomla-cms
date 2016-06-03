@@ -29,7 +29,7 @@ class InstallerViewManage extends InstallerViewDefault
 	/**
 	 * Display the view.
 	 *
-	 * @param   string $tpl Template
+	 * @param   string  $tpl  Template
 	 *
 	 * @return  mixed|void
 	 *

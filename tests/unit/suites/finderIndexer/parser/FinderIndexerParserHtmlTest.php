@@ -21,6 +21,15 @@ class FinderIndexerParserHtmlTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		$this->object = new FinderIndexerParserHtml;
+	}
+
+	/**
 	 * Method to test the parse and process methods.
 	 */
 	public function testParse()
@@ -45,7 +54,7 @@ class FinderIndexerParserHtmlTest extends PHPUnit_Framework_TestCase
 		$testResult3 = 'title';
 		$testResult4 = 'title immediately';
 
-		$input  = file_get_contents(dirname(__DIR__) . '/data/parseHtml2.txt');
+		$input = file_get_contents(dirname(__DIR__) . '/data/parseHtml2.txt');
 		$output = $this->object->parse($input);
 
 		// String $testResult1 will only be present if <span> tags are removed.
@@ -86,7 +95,7 @@ class FinderIndexerParserHtmlTest extends PHPUnit_Framework_TestCase
 		$testResult4 = 'This is a title';
 		$testResult5 = 'an invalid block';
 
-		$input  = file_get_contents(dirname(__DIR__) . '/data/parseHtml2.txt');
+		$input = file_get_contents(dirname(__DIR__) . '/data/parseHtml2.txt');
 		$output = $this->object->parse($input);
 
 		// String $testResult1 is contained in a <script> block that should be removed.
@@ -128,7 +137,7 @@ class FinderIndexerParserHtmlTest extends PHPUnit_Framework_TestCase
 	{
 		$testResult1 = 'some';
 
-		$input  = file_get_contents(dirname(__DIR__) . '/data/parseHtml3.txt');
+		$input = file_get_contents(dirname(__DIR__) . '/data/parseHtml3.txt');
 		$output = $this->object->parse($input);
 
 		// String $testResult1 is beyond the 2Kb boundary with a <script> tag
@@ -137,14 +146,5 @@ class FinderIndexerParserHtmlTest extends PHPUnit_Framework_TestCase
 			$testResult1,
 			$output
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		$this->object = new FinderIndexerParserHtml;
 	}
 }

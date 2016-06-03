@@ -23,6 +23,53 @@ class FinderIndexerTest extends TestCaseDatabase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		// Store the factory state so we can mock the necessary objects
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+		JFactory::$database    = $this->getMockDatabase('Mysqli');
+		JFactory::$session     = $this->getMockSession();
+
+		// Register the object
+		$this->object = FinderIndexer::getInstance();
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 */
+	protected function tearDown()
+	{
+		// Restore the factory state
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   3.1
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
+
+		return $dataSet;
+	}
+
+	/**
 	 * Tests the getInstance method
 	 *
 	 * @return  void
@@ -94,7 +141,7 @@ class FinderIndexerTest extends TestCaseDatabase
 	public function testSetState()
 	{
 		// Set up our test object
-		$test         = new JObject;
+		$test = new JObject;
 		$test->string = 'Testing FinderIndexer::setState()';
 
 		// First, assert we can successfully set the state
@@ -148,52 +195,5 @@ class FinderIndexerTest extends TestCaseDatabase
 		$this->assertNull(
 			JFactory::getSession()->get('_finder.state', null)
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		// Store the factory state so we can mock the necessary objects
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$database    = $this->getMockDatabase('Mysqli');
-		JFactory::$session     = $this->getMockSession();
-
-		// Register the object
-		$this->object = FinderIndexer::getInstance();
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		// Restore the factory state
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   3.1
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
-
-		return $dataSet;
 	}
 }

@@ -88,9 +88,9 @@ final class ColorStyle
 	/**
 	 * Constructor
 	 *
-	 * @param   string $fg      Foreground color.
-	 * @param   string $bg      Background color.
-	 * @param   array  $options Style options.
+	 * @param   string  $fg       Foreground color.
+	 * @param   string  $bg       Background color.
+	 * @param   array   $options  Style options.
 	 *
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
@@ -144,27 +144,15 @@ final class ColorStyle
 	}
 
 	/**
-	 * Get the known colors.
+	 * Convert to a string.
 	 *
 	 * @return  string
 	 *
 	 * @since   1.0
 	 */
-	public function getKnownColors()
+	public function __toString()
 	{
-		return array_keys(static::$knownColors);
-	}
-
-	/**
-	 * Get the known options.
-	 *
-	 * @return  array
-	 *
-	 * @since   1.0
-	 */
-	public function getKnownOptions()
-	{
-		return array_keys(static::$knownOptions);
+		return $this->getStyle();
 	}
 
 	/**
@@ -172,7 +160,7 @@ final class ColorStyle
 	 *
 	 * Example: fg=red;bg=blue;options=bold,blink
 	 *
-	 * @param   string $string The parameter string.
+	 * @param   string  $string  The parameter string.
 	 *
 	 * @return  ColorStyle  Instance of $this to allow chaining.
 	 *
@@ -181,8 +169,8 @@ final class ColorStyle
 	 */
 	public static function fromString($string)
 	{
-		$fg      = '';
-		$bg      = '';
+		$fg = '';
+		$bg = '';
 		$options = array();
 
 		$parts = explode(';', $string);
@@ -220,18 +208,6 @@ final class ColorStyle
 	}
 
 	/**
-	 * Convert to a string.
-	 *
-	 * @return  string
-	 *
-	 * @since   1.0
-	 */
-	public function __toString()
-	{
-		return $this->getStyle();
-	}
-
-	/**
 	 * Get the translated color code.
 	 *
 	 * @return  string
@@ -258,5 +234,29 @@ final class ColorStyle
 		}
 
 		return implode(';', $values);
+	}
+
+	/**
+	 * Get the known colors.
+	 *
+	 * @return  string
+	 *
+	 * @since   1.0
+	 */
+	public function getKnownColors()
+	{
+		return array_keys(static::$knownColors);
+	}
+
+	/**
+	 * Get the known options.
+	 *
+	 * @return  array
+	 *
+	 * @since   1.0
+	 */
+	public function getKnownOptions()
+	{
+		return array_keys(static::$knownOptions);
 	}
 }

@@ -45,8 +45,8 @@ class Ini extends AbstractRegistryFormat
 	 * levels deep.  Therefore we will only go through the first two levels of
 	 * the object.
 	 *
-	 * @param   object $object  Data source object.
-	 * @param   array  $options Options used by the formatter.
+	 * @param   object  $object   Data source object.
+	 * @param   array   $options  Options used by the formatter.
 	 *
 	 * @return  string  INI formatted string.
 	 *
@@ -56,7 +56,7 @@ class Ini extends AbstractRegistryFormat
 	{
 		$options = array_merge(self::$options, $options);
 
-		$local  = array();
+		$local = array();
 		$global = array();
 
 		$variables = get_object_vars($object);
@@ -91,7 +91,7 @@ class Ini extends AbstractRegistryFormat
 						foreach ($v as $array_key => $item)
 						{
 							$array_key = ($assoc) ? $array_key : '';
-							$local[]   = $k . '[' . $array_key . ']=' . $this->getValueAsIni($item);
+							$local[] = $k . '[' . $array_key . ']=' . $this->getValueAsIni($item);
 						}
 					}
 					else
@@ -113,13 +113,13 @@ class Ini extends AbstractRegistryFormat
 				foreach ($value as $array_key => $item)
 				{
 					$array_key = ($assoc) ? $array_key : '';
-					$global[]  = $key . '[' . $array_key . ']=' . $this->getValueAsIni($item);
+					$global[] = $key . '[' . $array_key . ']=' . $this->getValueAsIni($item);
 				}
 			}
 			else
 			{
 				// Not in a section so add the property to the global array.
-				$global[]   = $key . '=' . $this->getValueAsIni($value);
+				$global[] = $key . '=' . $this->getValueAsIni($value);
 				$in_section = false;
 			}
 		}
@@ -130,8 +130,8 @@ class Ini extends AbstractRegistryFormat
 	/**
 	 * Parse an INI formatted string and convert it into an object.
 	 *
-	 * @param   string $data    INI formatted string to convert.
-	 * @param   array  $options An array of options used by the formatter, or a boolean setting to process sections.
+	 * @param   string  $data     INI formatted string to convert.
+	 * @param   array   $options  An array of options used by the formatter, or a boolean setting to process sections.
 	 *
 	 * @return  object   Data object.
 	 *
@@ -155,10 +155,10 @@ class Ini extends AbstractRegistryFormat
 			return new stdClass;
 		}
 
-		$obj     = new stdClass;
+		$obj = new stdClass;
 		$section = false;
-		$array   = false;
-		$lines   = explode("\n", $data);
+		$array = false;
+		$lines = explode("\n", $data);
 
 		// Process the lines.
 		foreach ($lines as $line)
@@ -179,7 +179,7 @@ class Ini extends AbstractRegistryFormat
 				// If we are processing sections and the line is a section add the object and continue.
 				if (($line[0] == '[') && ($line[$length - 1] == ']'))
 				{
-					$section       = substr($line, 1, $length - 2);
+					$section = substr($line, 1, $length - 2);
 					$obj->$section = new stdClass;
 					continue;
 				}
@@ -204,7 +204,7 @@ class Ini extends AbstractRegistryFormat
 			{
 				if ($options['supportArrayValues'])
 				{
-					$array     = true;
+					$array = true;
 					$array_key = substr($key, $open_brace + 1, -1);
 
 					// If we have a multi-dimensional array or malformed key
@@ -248,17 +248,17 @@ class Ini extends AbstractRegistryFormat
 					$value = false;
 				}
 				elseif ($value == 'true')
-					// If the value is 'true' assume boolean true.
+				// If the value is 'true' assume boolean true.
 				{
 					$value = true;
 				}
 				elseif ($options['parseBooleanWords'] && in_array(strtolower($value), array('yes', 'no')))
-					// If the value is 'yes' or 'no' and option is enabled assume appropriate boolean
+				// If the value is 'yes' or 'no' and option is enabled assume appropriate boolean
 				{
 					$value = (strtolower($value) == 'yes');
 				}
 				elseif (is_numeric($value))
-					// If the value is numeric than it is either a float or int.
+				// If the value is numeric than it is either a float or int.
 				{
 					// If there is a period then we assume a float.
 					if (strpos($value, '.') !== false)
@@ -332,7 +332,7 @@ class Ini extends AbstractRegistryFormat
 	/**
 	 * Method to get a value in an INI format.
 	 *
-	 * @param   mixed $value The value to convert to INI format.
+	 * @param   mixed  $value  The value to convert to INI format.
 	 *
 	 * @return  string  The value in INI format.
 	 *

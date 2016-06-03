@@ -70,6 +70,41 @@ class JTwitterTrendsTest extends TestCase
 			}}}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$key = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/twitter_test.php";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input = new JInput;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth = new JTwitterOAuth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JTwitterTrends($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+		$this->options->set('sendheaders', true);
+	}
+
+	/**
 	 * Tests the getTrends method
 	 *
 	 * @return  void
@@ -78,33 +113,33 @@ class JTwitterTrendsTest extends TestCase
 	 */
 	public function testGetTrends()
 	{
-		$id      = '1a2b3c4d';
+		$id = '1a2b3c4d';
 		$exclude = 'hashtags';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "trends"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$data['id']      = $id;
+		$data['id'] = $id;
 		$data['exclude'] = $exclude;
 
 		$path = $this->object->fetchUrl('/trends/place.json', $data);
 
 		$this->client->expects($this->at(1))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getTrends($id, $exclude),
@@ -122,33 +157,33 @@ class JTwitterTrendsTest extends TestCase
 	 */
 	public function testGetTrendsFailure()
 	{
-		$id      = '1a2b3c4d';
+		$id = '1a2b3c4d';
 		$exclude = 'hashtags';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "trends"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$data['id']      = $id;
+		$data['id'] = $id;
 		$data['exclude'] = $exclude;
 
 		$path = $this->object->fetchUrl('/trends/place.json', $data);
 
 		$this->client->expects($this->at(1))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->object->getTrends($id, $exclude);
 	}
@@ -162,27 +197,27 @@ class JTwitterTrendsTest extends TestCase
 	 */
 	public function testGetLocations()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "trends"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$path = $this->object->fetchUrl('/trends/available.json');
 
 		$this->client->expects($this->at(1))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getLocations(),
@@ -200,27 +235,27 @@ class JTwitterTrendsTest extends TestCase
 	 */
 	public function testGetLocationsFailure()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "trends"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = $this->object->fetchUrl('/trends/available.json');
 
 		$this->client->expects($this->at(1))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->object->getLocations();
 	}
@@ -234,37 +269,37 @@ class JTwitterTrendsTest extends TestCase
 	 */
 	public function testGetClosest()
 	{
-		$lat  = 45;
+		$lat = 45;
 		$long = 45;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "trends"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$data['lat']  = $lat;
+		$data['lat'] = $lat;
 		$data['long'] = $long;
 
 		$path = $this->object->fetchUrl('/trends/closest.json', $data);
 
 		$this->client->expects($this->at(1))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
-			$this->object->getClosest($lat, $long),
-			$this->equalTo(json_decode($this->sampleString))
+				$this->object->getClosest($lat, $long),
+				$this->equalTo(json_decode($this->sampleString))
 		);
 	}
 
@@ -278,69 +313,34 @@ class JTwitterTrendsTest extends TestCase
 	 */
 	public function testGetClosestFailure()
 	{
-		$lat  = 45;
+		$lat = 45;
 		$long = 45;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "trends"));
 
 		$this->client->expects($this->at(0))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$data['lat']  = $lat;
+		$data['lat'] = $lat;
 		$data['long'] = $long;
 
 		$path = $this->object->fetchUrl('/trends/closest.json', $data);
 
 		$this->client->expects($this->at(1))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($path)
+		->will($this->returnValue($returnData));
 
 		$this->object->getClosest($lat, $long);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$key    = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/twitter_test.php";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input   = new JInput;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth   = new JTwitterOAuth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JTwitterTrends($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-		$this->options->set('sendheaders', true);
 	}
 }

@@ -25,7 +25,7 @@ defined('_JEXEC') or die;
 
 			<?php echo JText::sprintf('COM_FINDER_SEARCH_SIMILAR', $link); ?>
 
-			<?php // Display the explained search query. ?>
+		<?php // Display the explained search query. ?>
 		<?php elseif ($this->explained && $this->params->get('show_explained_query', 1)) : ?>
 			<?php echo $this->explained; ?>
 		<?php endif; ?>
@@ -50,7 +50,7 @@ defined('_JEXEC') or die;
 <?php endif; ?>
 
 <?php // Display a list of results ?>
-<br id="highlighter-start"/>
+<br id="highlighter-start" />
 <ul class="search-results<?php echo $this->pageclass_sfx; ?> list-striped">
 	<?php $this->baseUrl = JUri::getInstance()->toString(array('scheme', 'host', 'port')); ?>
 
@@ -60,7 +60,7 @@ defined('_JEXEC') or die;
 		<?php echo $this->loadTemplate($layout); ?>
 	<?php endforeach; ?>
 </ul>
-<br id="highlighter-end"/>
+<br id="highlighter-end" />
 
 <?php // Display the pagination ?>
 <div class="search-pagination">
@@ -69,13 +69,13 @@ defined('_JEXEC') or die;
 	</div>
 	<div class="search-pages-counter">
 		<?php
-		// Prepare the pagination string.  Results X - Y of Z
-		$start = (int) $this->pagination->get('limitstart') + 1;
-		$total = (int) $this->pagination->get('total');
-		$limit = (int) $this->pagination->get('limit') * $this->pagination->get('pages.current');
-		$limit = (int) ($limit > $total ? $total : $limit);
+			// Prepare the pagination string.  Results X - Y of Z
+			$start = (int) $this->pagination->get('limitstart') + 1;
+			$total = (int) $this->pagination->get('total');
+			$limit = (int) $this->pagination->get('limit') * $this->pagination->get('pages.current');
+			$limit = (int) ($limit > $total ? $total : $limit);
 
-		echo JText::sprintf('COM_FINDER_SEARCH_RESULTS_OF', $start, $limit, $total);
+			echo JText::sprintf('COM_FINDER_SEARCH_RESULTS_OF', $start, $limit, $total);
 		?>
 	</div>
 </div>

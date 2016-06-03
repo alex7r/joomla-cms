@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- *    * Redistributions of source code must retain the above copyright notice, this list of
- *      conditions and the following disclaimer.
+ * 	* Redistributions of source code must retain the above copyright notice, this list of
+ * 	  conditions and the following disclaimer.
  *
- *    * Redistributions in binary form must reproduce the above copyright notice, this list
- *      of conditions and the following disclaimer in the documentation and/or other materials
- *      provided with the distribution.
+ * 	* Redistributions in binary form must reproduce the above copyright notice, this list
+ * 	  of conditions and the following disclaimer in the documentation and/or other materials
+ * 	  provided with the distribution.
  *
- *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
- *      to endorse or promote products derived from this software without specific prior
- *      written permission.
+ * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
+ * 	  to endorse or promote products derived from this software without specific prior
+ * 	  written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,14 +32,14 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package   SimplePie
- * @version   1.3.1
+ * @package SimplePie
+ * @version 1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author    Ryan Parman
- * @author    Geoffrey Sneddon
- * @author    Ryan McCue
- * @link      http://simplepie.org/ SimplePie
- * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author Ryan Parman
+ * @author Geoffrey Sneddon
+ * @author Ryan McCue
+ * @link http://simplepie.org/ SimplePie
+ * @license http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 /**
@@ -51,9 +51,9 @@
  * connect to memcache on `localhost` on port 11211. All tables will be
  * prefixed with `sp_` and data will expire after 3600 seconds
  *
- * @package    SimplePie
+ * @package SimplePie
  * @subpackage Caching
- * @uses       Memcache
+ * @uses Memcache
  */
 class SimplePie_Cache_Memcache implements SimplePie_Cache_Base
 {
@@ -82,24 +82,24 @@ class SimplePie_Cache_Memcache implements SimplePie_Cache_Base
 	 * Create a new cache object
 	 *
 	 * @param string $location Location string (from SimplePie::$cache_location)
-	 * @param string $name     Unique ID for the cache
-	 * @param string $type     Either TYPE_FEED for SimplePie data, or TYPE_IMAGE for image data
+	 * @param string $name Unique ID for the cache
+	 * @param string $type Either TYPE_FEED for SimplePie data, or TYPE_IMAGE for image data
 	 */
 	public function __construct($location, $name, $type)
 	{
-		$this->options           = array(
-			'host'   => '127.0.0.1',
-			'port'   => 11211,
+		$this->options = array(
+			'host' => '127.0.0.1',
+			'port' => 11211,
 			'extras' => array(
 				'timeout' => 3600, // one hour
-				'prefix'  => 'simplepie_',
+				'prefix' => 'simplepie_',
 			),
 		);
-		$parsed                  = SimplePie_Cache::parse_URL($location);
-		$this->options['host']   = empty($parsed['host']) ? $this->options['host'] : $parsed['host'];
-		$this->options['port']   = empty($parsed['port']) ? $this->options['port'] : $parsed['port'];
+		$parsed = SimplePie_Cache::parse_URL($location);
+		$this->options['host'] = empty($parsed['host']) ? $this->options['host'] : $parsed['host'];
+		$this->options['port'] = empty($parsed['port']) ? $this->options['port'] : $parsed['port'];
 		$this->options['extras'] = array_merge($this->options['extras'], $parsed['extras']);
-		$this->name              = $this->options['extras']['prefix'] . md5("$name:$type");
+		$this->name = $this->options['extras']['prefix'] . md5("$name:$type");
 
 		$this->cache = new Memcache();
 		$this->cache->addServer($this->options['host'], (int) $this->options['port']);
@@ -109,7 +109,6 @@ class SimplePie_Cache_Memcache implements SimplePie_Cache_Base
 	 * Save data to the cache
 	 *
 	 * @param array|SimplePie $data Data to store in the cache. If passed a SimplePie object, only cache the $data property
-	 *
 	 * @return bool Successfulness
 	 */
 	public function save($data)
@@ -118,7 +117,6 @@ class SimplePie_Cache_Memcache implements SimplePie_Cache_Base
 		{
 			$data = $data->data;
 		}
-
 		return $this->cache->set($this->name, serialize($data), MEMCACHE_COMPRESSED, (int) $this->options['extras']['timeout']);
 	}
 
@@ -135,7 +133,6 @@ class SimplePie_Cache_Memcache implements SimplePie_Cache_Base
 		{
 			return unserialize($data);
 		}
-
 		return false;
 	}
 

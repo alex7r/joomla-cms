@@ -61,6 +61,48 @@ class JLinkedinGroupsTest extends TestCase
 	protected $errorString = '{"errorCode":401, "message": "Generic error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$key = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/linkedin_test.php";
+
+		$this->options = new JRegistry;
+		$this->input = new JInput;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth = new JLinkedinOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
+
+		$this->object = new JLinkedinGroups($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+	}
+
+	/**
 	 * Tests the getGroup method
 	 *
 	 * @return  void
@@ -69,21 +111,21 @@ class JLinkedinGroupsTest extends TestCase
 	 */
 	public function testGetGroup()
 	{
-		$id     = '12345';
+		$id = '12345';
 		$fields = '(id,name,short-description,description,relation-to-viewer:(membership-state,available-actions),is-open-to-non-members)';
-		$start  = 1;
-		$count  = 10;
+		$start = 1;
+		$count = 10;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['start']  = $start;
-		$data['count']  = $count;
+		$data['start'] = $start;
+		$data['count'] = $count;
 
 		$path = '/v1/groups/' . $id;
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -110,20 +152,20 @@ class JLinkedinGroupsTest extends TestCase
 	 */
 	public function testGetGroupFailure()
 	{
-		$id     = '12345';
+		$id = '12345';
 		$fields = '(id,name,short-description,description,relation-to-viewer:(membership-state,available-actions),is-open-to-non-members)';
-		$start  = 1;
-		$count  = 10;
+		$start = 1;
+		$count = 10;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['start']  = $start;
-		$data['count']  = $count;
+		$data['start'] = $start;
+		$data['count'] = $count;
 
 		$path = '/v1/groups/' . $id;
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -138,42 +180,42 @@ class JLinkedinGroupsTest extends TestCase
 	}
 
 	/**
-	 * Provides test data for request format detection.
-	 *
-	 * @return array
-	 *
-	 * @since 13.1
-	 */
+	* Provides test data for request format detection.
+	*
+	* @return array
+	*
+	* @since 13.1
+	*/
 	public function seedId()
 	{
 		// Member ID
 		return array(
 			array('lcnIwDU0S6'),
 			array(null)
-		);
+			);
 	}
 
 	/**
 	 * Tests the getMemberships method
 	 *
-	 * @param   string $person_id The unique identifier for a user.
+	 * @param   string  $person_id  The unique identifier for a user.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedId
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testGetMemberships($person_id)
 	{
-		$fields           = '(id,name,short-description,description,relation-to-viewer:(membership-state,available-actions),is-open-to-non-members)';
-		$start            = 1;
-		$count            = 10;
+		$fields = '(id,name,short-description,description,relation-to-viewer:(membership-state,available-actions),is-open-to-non-members)';
+		$start = 1;
+		$count = 10;
 		$membership_state = 'member';
 
 		// Set request parameters.
-		$data['format']           = 'json';
-		$data['start']            = $start;
-		$data['count']            = $count;
+		$data['format'] = 'json';
+		$data['start'] = $start;
+		$data['count'] = $count;
 		$data['membership-state'] = $membership_state;
 
 		if ($person_id)
@@ -187,7 +229,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -207,25 +249,25 @@ class JLinkedinGroupsTest extends TestCase
 	/**
 	 * Tests the getMemberships method - failure
 	 *
-	 * @param   string $person_id The unique identifier for a user.
+	 * @param   string  $person_id  The unique identifier for a user.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedId
 	 * @expectedException DomainException
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testGetMembershipsFailure($person_id)
 	{
-		$fields           = '(id,name,short-description,description,relation-to-viewer:(membership-state,available-actions),is-open-to-non-members)';
-		$start            = 1;
-		$count            = 10;
+		$fields = '(id,name,short-description,description,relation-to-viewer:(membership-state,available-actions),is-open-to-non-members)';
+		$start = 1;
+		$count = 10;
 		$membership_state = 'member';
 
 		// Set request parameters.
-		$data['format']           = 'json';
-		$data['start']            = $start;
-		$data['count']            = $count;
+		$data['format'] = 'json';
+		$data['start'] = $start;
+		$data['count'] = $count;
 		$data['membership-state'] = $membership_state;
 
 		if ($person_id)
@@ -239,7 +281,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -256,25 +298,25 @@ class JLinkedinGroupsTest extends TestCase
 	/**
 	 * Tests the getSettings method
 	 *
-	 * @param   string $person_id The unique identifier for a user.
+	 * @param   string  $person_id  The unique identifier for a user.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedId
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testGetSettings($person_id)
 	{
 		$group_id = '12345';
-		$fields   = '(group:(id,name),membership-state,email-digest-frequency,email-announcements-from-managers,
+		$fields = '(group:(id,name),membership-state,email-digest-frequency,email-announcements-from-managers,
 			allow-messages-from-members,email-for-every-new-post)';
-		$start    = 1;
-		$count    = 10;
+		$start = 1;
+		$count = 10;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['start']  = $start;
-		$data['count']  = $count;
+		$data['start'] = $start;
+		$data['count'] = $count;
 
 		if ($person_id)
 		{
@@ -289,7 +331,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -309,26 +351,26 @@ class JLinkedinGroupsTest extends TestCase
 	/**
 	 * Tests the getSettings method - failure
 	 *
-	 * @param   string $person_id The unique identifier for a user.
+	 * @param   string  $person_id  The unique identifier for a user.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedId
 	 * @expectedException DomainException
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testGetSettingsFailure($person_id)
 	{
 		$group_id = '12345';
-		$fields   = '(group:(id,name),membership-state,email-digest-frequency,email-announcements-from-managers,
+		$fields = '(group:(id,name),membership-state,email-digest-frequency,email-announcements-from-managers,
 			allow-messages-from-members,email-for-every-new-post)';
-		$start    = 1;
-		$count    = 10;
+		$start = 1;
+		$count = 10;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['start']  = $start;
-		$data['count']  = $count;
+		$data['start'] = $start;
+		$data['count'] = $count;
 
 		if ($person_id)
 		{
@@ -343,7 +385,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -366,12 +408,12 @@ class JLinkedinGroupsTest extends TestCase
 	 */
 	public function testChangeSettings()
 	{
-		$group_id         = '12345';
-		$show_logo        = true;
+		$group_id = '12345';
+		$show_logo = true;
 		$digest_frequency = 'daily';
-		$announcements    = true;
-		$allow_messages   = true;
-		$new_post         = true;
+		$announcements = true;
+		$allow_messages = true;
+		$new_post = true;
 
 		$path = '/v1/people/~/group-memberships/' . $group_id;
 
@@ -387,7 +429,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -412,12 +454,12 @@ class JLinkedinGroupsTest extends TestCase
 	 */
 	public function testChangeSettingsFailure()
 	{
-		$group_id         = '12345';
-		$show_logo        = true;
+		$group_id = '12345';
+		$show_logo = true;
 		$digest_frequency = 'daily';
-		$announcements    = true;
-		$allow_messages   = true;
-		$new_post         = true;
+		$announcements = true;
+		$allow_messages = true;
+		$new_post = true;
 
 		$path = '/v1/people/~/group-memberships/' . $group_id;
 
@@ -433,7 +475,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 403;
 		$returnData->body = 'Throttle limit for calls to this resource is reached.';
 
@@ -454,12 +496,12 @@ class JLinkedinGroupsTest extends TestCase
 	 */
 	public function testJoinGroup()
 	{
-		$group_id         = '12345';
-		$show_logo        = true;
+		$group_id = '12345';
+		$show_logo = true;
 		$digest_frequency = 'daily';
-		$announcements    = true;
-		$allow_messages   = true;
-		$new_post         = true;
+		$announcements = true;
+		$allow_messages = true;
+		$new_post = true;
 
 		$path = '/v1/people/~/group-memberships';
 
@@ -481,7 +523,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
@@ -506,12 +548,12 @@ class JLinkedinGroupsTest extends TestCase
 	 */
 	public function testJoinGroupFailure()
 	{
-		$group_id         = '12345';
-		$show_logo        = true;
+		$group_id = '12345';
+		$show_logo = true;
 		$digest_frequency = 'daily';
-		$announcements    = true;
-		$allow_messages   = true;
-		$new_post         = true;
+		$announcements = true;
+		$allow_messages = true;
+		$new_post = true;
 
 		$path = '/v1/people/~/group-memberships';
 
@@ -533,7 +575,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 403;
 		$returnData->body = 'Throttle limit for calls to this resource is reached.';
 
@@ -558,7 +600,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path = '/v1/people/~/group-memberships/' . $group_id;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -587,7 +629,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path = '/v1/people/~/group-memberships/' . $group_id;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = 'unauthorized';
 
@@ -608,27 +650,27 @@ class JLinkedinGroupsTest extends TestCase
 	 */
 	public function testGetDiscussions()
 	{
-		$id             = '12345';
-		$fields         = '(creation-timestamp,title,summary,creator:(first-name,last-name),likes,attachment:(content-url,title),relation-to-viewer)';
-		$start          = 1;
-		$count          = 10;
-		$order          = 'recency';
-		$category       = 'discussion';
+		$id = '12345';
+		$fields = '(creation-timestamp,title,summary,creator:(first-name,last-name),likes,attachment:(content-url,title),relation-to-viewer)';
+		$start = 1;
+		$count = 10;
+		$order = 'recency';
+		$category = 'discussion';
 		$modified_since = '1302727083000';
 
 		// Set request parameters.
-		$data['format']         = 'json';
-		$data['start']          = $start;
-		$data['count']          = $count;
-		$data['order']          = $order;
-		$data['category']       = $category;
+		$data['format'] = 'json';
+		$data['start'] = $start;
+		$data['count'] = $count;
+		$data['order'] = $order;
+		$data['category'] = $category;
 		$data['modified-since'] = $modified_since;
 
 		$path = '/v1/groups/' . $id . '/posts';
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -655,27 +697,27 @@ class JLinkedinGroupsTest extends TestCase
 	 */
 	public function testGetDiscussionsFailure()
 	{
-		$id             = '12345';
-		$fields         = '(creation-timestamp,title,summary,creator:(first-name,last-name),likes,attachment:(content-url,title),relation-to-viewer)';
-		$start          = 1;
-		$count          = 10;
-		$order          = 'recency';
-		$category       = 'discussion';
+		$id = '12345';
+		$fields = '(creation-timestamp,title,summary,creator:(first-name,last-name),likes,attachment:(content-url,title),relation-to-viewer)';
+		$start = 1;
+		$count = 10;
+		$order = 'recency';
+		$category = 'discussion';
 		$modified_since = '1302727083000';
 
 		// Set request parameters.
-		$data['format']         = 'json';
-		$data['start']          = $start;
-		$data['count']          = $count;
-		$data['order']          = $order;
-		$data['category']       = $category;
+		$data['format'] = 'json';
+		$data['start'] = $start;
+		$data['count'] = $count;
+		$data['order'] = $order;
+		$data['category'] = $category;
 		$data['modified-since'] = $modified_since;
 
 		$path = '/v1/groups/' . $id . '/posts';
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -692,31 +734,31 @@ class JLinkedinGroupsTest extends TestCase
 	/**
 	 * Tests the getUserPosts method
 	 *
-	 * @param   string $person_id The unique identifier for a user.
+	 * @param   string  $person_id  The unique identifier for a user.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedId
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testGetUserPosts($person_id)
 	{
-		$group_id       = '12345';
-		$role           = 'creator';
-		$fields         = '(creation-timestamp,title,summary,creator:(first-name,last-name),likes,attachment:(content-url,title),relation-to-viewer)';
-		$start          = 1;
-		$count          = 10;
-		$order          = 'recency';
-		$category       = 'discussion';
+		$group_id = '12345';
+		$role = 'creator';
+		$fields = '(creation-timestamp,title,summary,creator:(first-name,last-name),likes,attachment:(content-url,title),relation-to-viewer)';
+		$start = 1;
+		$count = 10;
+		$order = 'recency';
+		$category = 'discussion';
 		$modified_since = '1302727083000';
 
 		// Set request parameters.
-		$data['format']         = 'json';
-		$data['role']           = $role;
-		$data['start']          = $start;
-		$data['count']          = $count;
-		$data['order']          = $order;
-		$data['category']       = $category;
+		$data['format'] = 'json';
+		$data['role'] = $role;
+		$data['start'] = $start;
+		$data['count'] = $count;
+		$data['order'] = $order;
+		$data['category'] = $category;
 		$data['modified-since'] = $modified_since;
 
 		if ($person_id)
@@ -730,7 +772,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -757,30 +799,30 @@ class JLinkedinGroupsTest extends TestCase
 	 */
 	public function testGetUserPostsFailure()
 	{
-		$group_id       = '12345';
-		$role           = 'creator';
-		$person_id      = '123345456';
-		$fields         = '(creation-timestamp,title,summary,creator:(first-name,last-name),likes,attachment:(content-url,title),relation-to-viewer)';
-		$start          = 1;
-		$count          = 10;
-		$order          = 'recency';
-		$category       = 'discussion';
+		$group_id = '12345';
+		$role = 'creator';
+		$person_id = '123345456';
+		$fields = '(creation-timestamp,title,summary,creator:(first-name,last-name),likes,attachment:(content-url,title),relation-to-viewer)';
+		$start = 1;
+		$count = 10;
+		$order = 'recency';
+		$category = 'discussion';
 		$modified_since = '1302727083000';
 
 		// Set request parameters.
-		$data['format']         = 'json';
-		$data['role']           = $role;
-		$data['start']          = $start;
-		$data['count']          = $count;
-		$data['order']          = $order;
-		$data['category']       = $category;
+		$data['format'] = 'json';
+		$data['role'] = $role;
+		$data['start'] = $start;
+		$data['count'] = $count;
+		$data['order'] = $order;
+		$data['category'] = $category;
 		$data['modified-since'] = $modified_since;
 
 		$path = '/v1/people/' . $person_id . '/group-memberships/' . $group_id . '/posts';
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -804,7 +846,7 @@ class JLinkedinGroupsTest extends TestCase
 	public function testGetPost()
 	{
 		$post_id = 'g-12345';
-		$fields  = '(id,type,category,creator,title,relation-to-viewer:(is-following,is-liked),likes,comments,site-group-post-url)';
+		$fields = '(id,type,category,creator,title,relation-to-viewer:(is-following,is-liked),likes,comments,site-group-post-url)';
 
 		// Set request parameters.
 		$data['format'] = 'json';
@@ -813,7 +855,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -841,7 +883,7 @@ class JLinkedinGroupsTest extends TestCase
 	public function testGetPostFailure()
 	{
 		$post_id = 'g-12345';
-		$fields  = '(id,type,category,creator,title,relation-to-viewer:(is-following,is-liked),likes,comments,site-group-post-url)';
+		$fields = '(id,type,category,creator,title,relation-to-viewer:(is-following,is-liked),likes,comments,site-group-post-url)';
 
 		// Set request parameters.
 		$data['format'] = 'json';
@@ -850,7 +892,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -874,20 +916,20 @@ class JLinkedinGroupsTest extends TestCase
 	public function testGetPostComments()
 	{
 		$post_id = 'g-12345';
-		$fields  = '(creator:(first-name,last-name,picture-url),creation-timestamp,text))';
-		$start   = 1;
-		$count   = 5;
+		$fields = '(creator:(first-name,last-name,picture-url),creation-timestamp,text))';
+		$start = 1;
+		$count = 5;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['start']  = $start;
-		$data['count']  = $count;
+		$data['start'] = $start;
+		$data['count'] = $count;
 
 		$path = '/v1/posts/' . $post_id . '/comments';
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -915,20 +957,20 @@ class JLinkedinGroupsTest extends TestCase
 	public function testGetPostCommentsFailure()
 	{
 		$post_id = 'g-12345';
-		$fields  = '(creator:(first-name,last-name,picture-url),creation-timestamp,text))';
-		$start   = 1;
-		$count   = 5;
+		$fields = '(creator:(first-name,last-name,picture-url),creation-timestamp,text))';
+		$start = 1;
+		$count = 5;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['start']  = $start;
-		$data['count']  = $count;
+		$data['start'] = $start;
+		$data['count'] = $count;
 
 		$path = '/v1/posts/' . $post_id . '/comments';
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -952,8 +994,8 @@ class JLinkedinGroupsTest extends TestCase
 	public function testCreatePost()
 	{
 		$group_id = '12345';
-		$title    = 'post title';
-		$summary  = 'post summary';
+		$title = 'post title';
+		$summary = 'post summary';
 
 		$path = '/v1/groups/' . $group_id . '/posts';
 
@@ -961,9 +1003,9 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData          = new stdClass;
-		$returnData->code    = 201;
-		$returnData->body    = $this->sampleString;
+		$returnData = new stdClass;
+		$returnData->code = 201;
+		$returnData->body = $this->sampleString;
 		$returnData->headers = array('Location' => 'https://api.linkedin.com/v1/posts/g_12334_234512');
 
 		$this->client->expects($this->once())
@@ -988,8 +1030,8 @@ class JLinkedinGroupsTest extends TestCase
 	public function testCreatePostFailure()
 	{
 		$group_id = '12345';
-		$title    = 'post title';
-		$summary  = 'post summary';
+		$title = 'post title';
+		$summary = 'post summary';
 
 		$path = '/v1/groups/' . $group_id . '/posts';
 
@@ -997,7 +1039,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -1039,7 +1081,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -1072,7 +1114,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -1101,7 +1143,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -1146,7 +1188,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -1179,7 +1221,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -1208,7 +1250,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -1232,7 +1274,7 @@ class JLinkedinGroupsTest extends TestCase
 	 */
 	public function testFalgPost()
 	{
-		$flag    = 'promotion';
+		$flag = 'promotion';
 		$post_id = 'g_12345';
 
 		$path = '/v1/posts/' . $post_id . '/category/code';
@@ -1241,7 +1283,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -1266,7 +1308,7 @@ class JLinkedinGroupsTest extends TestCase
 	 */
 	public function testFalgPostFailure()
 	{
-		$flag    = 'promotion';
+		$flag = 'promotion';
 		$post_id = 'g_12345';
 
 		$path = '/v1/posts/' . $post_id . '/category/code';
@@ -1275,7 +1317,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -1300,7 +1342,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path = '/v1/posts/' . $post_id;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -1329,7 +1371,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path = '/v1/posts/' . $post_id;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -1351,7 +1393,7 @@ class JLinkedinGroupsTest extends TestCase
 	public function testGetComment()
 	{
 		$comment_id = 'g-12345';
-		$fields     = '(id,text,creator,creation-timestamp,relation-to-viewer)';
+		$fields = '(id,text,creator,creation-timestamp,relation-to-viewer)';
 
 		// Set request parameters.
 		$data['format'] = 'json';
@@ -1360,7 +1402,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -1388,7 +1430,7 @@ class JLinkedinGroupsTest extends TestCase
 	public function testGetCommentFailure()
 	{
 		$comment_id = 'g-12345';
-		$fields     = '(id,text,creator,creation-timestamp,relation-to-viewer)';
+		$fields = '(id,text,creator,creation-timestamp,relation-to-viewer)';
 
 		// Set request parameters.
 		$data['format'] = 'json';
@@ -1397,7 +1439,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -1429,9 +1471,9 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData          = new stdClass;
-		$returnData->code    = 201;
-		$returnData->body    = $this->sampleString;
+		$returnData = new stdClass;
+		$returnData->code = 201;
+		$returnData->body = $this->sampleString;
 		$returnData->headers = array('Location' => 'https://api.linkedin.com/v1/comments/g_12334_234512');
 
 		$this->client->expects($this->once())
@@ -1464,7 +1506,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -1489,7 +1531,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path = '/v1/comments/' . $comment_id;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -1518,7 +1560,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path = '/v1/comments/' . $comment_id;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -1533,12 +1575,12 @@ class JLinkedinGroupsTest extends TestCase
 	/**
 	 * Tests the getSuggested method
 	 *
-	 * @param   string $person_id The unique identifier for a user.
+	 * @param   string  $person_id  The unique identifier for a user.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedId
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testGetSuggested($person_id)
 	{
@@ -1561,7 +1603,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -1581,13 +1623,13 @@ class JLinkedinGroupsTest extends TestCase
 	/**
 	 * Tests the getSuggested method - failure
 	 *
-	 * @param   string $person_id The unique identifier for a user.
+	 * @param   string  $person_id  The unique identifier for a user.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedId
 	 * @expectedException DomainException
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testGetSuggestedFailure($person_id)
 	{
@@ -1610,7 +1652,7 @@ class JLinkedinGroupsTest extends TestCase
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -1627,12 +1669,12 @@ class JLinkedinGroupsTest extends TestCase
 	/**
 	 * Tests the deleteSuggestion method
 	 *
-	 * @param   string $person_id The unique identifier for a user.
+	 * @param   string  $person_id  The unique identifier for a user.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedId
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testDeleteSuggestion($person_id)
 	{
@@ -1650,7 +1692,7 @@ class JLinkedinGroupsTest extends TestCase
 			$path .= '~/suggestions/groups/' . $suggestion_id;
 		}
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -1668,13 +1710,13 @@ class JLinkedinGroupsTest extends TestCase
 	/**
 	 * Tests the deleteSuggestion method - failure
 	 *
-	 * @param   string $person_id The unique identifier for a user.
+	 * @param   string  $person_id  The unique identifier for a user.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedId
 	 * @expectedException DomainException
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testDeleteSuggestionFailure($person_id)
 	{
@@ -1692,7 +1734,7 @@ class JLinkedinGroupsTest extends TestCase
 			$path .= '~/suggestions/groups/' . $suggestion_id;
 		}
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -1702,47 +1744,5 @@ class JLinkedinGroupsTest extends TestCase
 			->will($this->returnValue($returnData));
 
 		$this->object->deleteSuggestion($suggestion_id, $person_id);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$key    = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/linkedin_test.php";
-
-		$this->options = new JRegistry;
-		$this->input   = new JInput;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth   = new JLinkedinOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
-
-		$this->object = new JLinkedinGroups($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
 	}
 }

@@ -27,7 +27,7 @@ class JHttpTransportCurl implements JHttpTransport
 	/**
 	 * Constructor. CURLOPT_FOLLOWLOCATION must be disabled when open_basedir or safe_mode are enabled.
 	 *
-	 * @param   Registry $options Client options object.
+	 * @param   Registry  $options  Client options object.
 	 *
 	 * @see     http://www.php.net/manual/en/function.curl-setopt.php
 	 * @since   11.3
@@ -44,26 +44,14 @@ class JHttpTransportCurl implements JHttpTransport
 	}
 
 	/**
-	 * Method to check if HTTP transport cURL is available for use
-	 *
-	 * @return boolean true if available, else false
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		return function_exists('curl_version') && curl_version();
-	}
-
-	/**
 	 * Send a request to the server and return a JHttpResponse object with the response.
 	 *
-	 * @param   string  $method    The HTTP method for sending the request.
-	 * @param   JUri    $uri       The URI to the resource to request.
-	 * @param   mixed   $data      Either an associative array or a string to be sent with the request.
-	 * @param   array   $headers   An array of request headers to send with the request.
-	 * @param   integer $timeout   Read timeout in seconds.
-	 * @param   string  $userAgent The optional user agent string to send with the request.
+	 * @param   string   $method     The HTTP method for sending the request.
+	 * @param   JUri     $uri        The URI to the resource to request.
+	 * @param   mixed    $data       Either an associative array or a string to be sent with the request.
+	 * @param   array    $headers    An array of request headers to send with the request.
+	 * @param   integer  $timeout    Read timeout in seconds.
+	 * @param   string   $userAgent  The optional user agent string to send with the request.
 	 *
 	 * @return  JHttpResponse
 	 *
@@ -150,7 +138,7 @@ class JHttpTransportCurl implements JHttpTransport
 		// If an explicit timeout is given user it.
 		if (isset($timeout))
 		{
-			$options[CURLOPT_TIMEOUT]        = (int) $timeout;
+			$options[CURLOPT_TIMEOUT] = (int) $timeout;
 			$options[CURLOPT_CONNECTTIMEOUT] = (int) $timeout;
 		}
 
@@ -201,7 +189,7 @@ class JHttpTransportCurl implements JHttpTransport
 		// Authentification, if needed
 		if ($this->options->get('userauth') && $this->options->get('passwordauth'))
 		{
-			$options[CURLOPT_USERPWD]  = $this->options->get('userauth') . ':' . $this->options->get('passwordauth');
+			$options[CURLOPT_USERPWD] = $this->options->get('userauth') . ':' . $this->options->get('passwordauth');
 			$options[CURLOPT_HTTPAUTH] = CURLAUTH_BASIC;
 		}
 
@@ -248,53 +236,11 @@ class JHttpTransportCurl implements JHttpTransport
 	}
 
 	/**
-	 * Check if redirects are allowed
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.1
-	 */
-	private function redirectsAllowed()
-	{
-		$curlVersion = curl_version();
-
-		// In PHP 5.6.0 or later there are no issues with curl redirects
-		if (version_compare(PHP_VERSION, '5.6', '>='))
-		{
-			// But if open_basedir is enabled we also need to check if libcurl version is 7.19.4 or higher
-			if (!ini_get('open_basedir') || version_compare($curlVersion['version'], '7.19.4', '>='))
-			{
-				return true;
-			}
-		}
-
-		// From PHP 5.4.0 to 5.5.30 curl redirects are only allowed if open_basedir is disabled
-		elseif (version_compare(PHP_VERSION, '5.4', '>='))
-		{
-			if (!ini_get('open_basedir'))
-			{
-				return true;
-			}
-		}
-
-		// From PHP 5.1.5 to 5.3.30 curl redirects are only allowed if safe_mode and open_basedir are disabled
-		else
-		{
-			if (!ini_get('safe_mode') && !ini_get('open_basedir'))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * Method to get a response object from a server response.
 	 *
-	 * @param   string $content   The complete server response, including headers
+	 * @param   string  $content  The complete server response, including headers
 	 *                            as a string if the response has no errors.
-	 * @param   array  $info      The cURL request information.
+	 * @param   array   $info     The cURL request information.
 	 *
 	 * @return  JHttpResponse
 	 *
@@ -341,10 +287,64 @@ class JHttpTransportCurl implements JHttpTransport
 		// Add the response headers to the response object.
 		foreach ($headers as $header)
 		{
-			$pos                                             = strpos($header, ':');
+			$pos = strpos($header, ':');
 			$return->headers[trim(substr($header, 0, $pos))] = trim(substr($header, ($pos + 1)));
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Method to check if HTTP transport cURL is available for use
+	 *
+	 * @return boolean true if available, else false
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		return function_exists('curl_version') && curl_version();
+	}
+
+	/**
+	 * Check if redirects are allowed
+	 *
+	 * @return  boolean
+	 *
+	 * @since   12.1
+	 */
+	private function redirectsAllowed()
+	{
+		$curlVersion = curl_version();
+
+		// In PHP 5.6.0 or later there are no issues with curl redirects
+		if (version_compare(PHP_VERSION, '5.6', '>='))
+		{
+			// But if open_basedir is enabled we also need to check if libcurl version is 7.19.4 or higher
+			if (!ini_get('open_basedir') || version_compare($curlVersion['version'], '7.19.4', '>='))
+			{
+				return true;
+			}
+		}
+
+		// From PHP 5.4.0 to 5.5.30 curl redirects are only allowed if open_basedir is disabled
+		elseif (version_compare(PHP_VERSION, '5.4', '>='))
+		{
+			if (!ini_get('open_basedir'))
+			{
+				return true;
+			}
+		}
+
+		// From PHP 5.1.5 to 5.3.30 curl redirects are only allowed if safe_mode and open_basedir are disabled
+		else
+		{
+			if (!ini_get('safe_mode') && !ini_get('open_basedir'))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

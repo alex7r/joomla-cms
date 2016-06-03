@@ -25,7 +25,7 @@ class ContentViewArticle extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 *
@@ -36,14 +36,13 @@ class ContentViewArticle extends JViewLegacy
 		if ($this->getLayout() == 'pagebreak')
 		{
 			// TODO: This is really dogy - should change this one day.
-			$input    = JFactory::getApplication()->input;
-			$eName    = $input->getCmd('e_name');
+			$input = JFactory::getApplication()->input;
+			$eName = $input->getCmd('e_name');
 			$eName    = preg_replace('#[^A-Z0-9\-\_\[\]]#i', '', $eName);
 			$document = JFactory::getDocument();
 			$document->setTitle(JText::_('COM_CONTENT_PAGEBREAK_DOC_TITLE'));
 			$this->eName = &$eName;
 			parent::display($tpl);
-
 			return;
 		}
 
@@ -56,7 +55,6 @@ class ContentViewArticle extends JViewLegacy
 		if (count($errors = $this->get('Errors')))
 		{
 			JError::raiseError(500, implode("\n", $errors));
-
 			return false;
 		}
 

@@ -54,7 +54,7 @@ class ContactModelCategory extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @since   1.6
 	 */
@@ -93,7 +93,7 @@ class ContactModelCategory extends JModelList
 		// Convert the params field into an object, saving original in _params
 		for ($i = 0, $n = count($items); $i < $n; $i++)
 		{
-			$item = &$items[$i];
+			$item = & $items[$i];
 			if (!isset($this->_params))
 			{
 				$params = new Registry;
@@ -108,140 +108,6 @@ class ContactModelCategory extends JModelList
 	}
 
 	/**
-	 * Get the parent category.
-	 *
-	 * @return  mixed  An array of categories or false if an error occurs.
-	 */
-	public function getParent()
-	{
-		if (!is_object($this->_item))
-		{
-			$this->getCategory();
-		}
-
-		return $this->_parent;
-	}
-
-	/**
-	 * Method to get category data for the current category
-	 *
-	 * @return  object  The category object
-	 *
-	 * @since   1.5
-	 */
-	public function getCategory()
-	{
-		if (!is_object($this->_item))
-		{
-			$app    = JFactory::getApplication();
-			$menu   = $app->getMenu();
-			$active = $menu->getActive();
-			$params = new Registry;
-
-			if ($active)
-			{
-				$params->loadString($active->params);
-			}
-
-			$options               = array();
-			$options['countItems'] = $params->get('show_cat_items', 1) || $params->get('show_empty_categories', 0);
-			$categories            = JCategories::getInstance('Contact', $options);
-			$this->_item           = $categories->get($this->getState('category.id', 'root'));
-			if (is_object($this->_item))
-			{
-				$this->_children = $this->_item->getChildren();
-				$this->_parent   = false;
-
-				if ($this->_item->getParent())
-				{
-					$this->_parent = $this->_item->getParent();
-				}
-
-				$this->_rightsibling = $this->_item->getSibling();
-				$this->_leftsibling  = $this->_item->getSibling(false);
-			}
-			else
-			{
-				$this->_children = false;
-				$this->_parent   = false;
-			}
-		}
-
-		return $this->_item;
-	}
-
-	/**
-	 * Get the sibling (adjacent) categories.
-	 *
-	 * @return  mixed  An array of categories or false if an error occurs.
-	 */
-	public function &getLeftSibling()
-	{
-		if (!is_object($this->_item))
-		{
-			$this->getCategory();
-		}
-
-		return $this->_leftsibling;
-	}
-
-	/**
-	 * Get the sibling (adjacent) categories.
-	 *
-	 * @return  mixed  An array of categories or false if an error occurs.
-	 */
-	public function &getRightSibling()
-	{
-		if (!is_object($this->_item))
-		{
-			$this->getCategory();
-		}
-
-		return $this->_rightsibling;
-	}
-
-	/**
-	 * Get the child categories.
-	 *
-	 * @return  mixed  An array of categories or false if an error occurs.
-	 */
-	public function &getChildren()
-	{
-		if (!is_object($this->_item))
-		{
-			$this->getCategory();
-		}
-
-		return $this->_children;
-	}
-
-	/**
-	 * Increment the hit counter for the category.
-	 *
-	 * @param   integer $pk Optional primary key of the category to increment.
-	 *
-	 * @return  boolean  True if successful; false otherwise and internal error set.
-	 *
-	 * @since   3.2
-	 */
-	public function hit($pk = 0)
-	{
-		$input    = JFactory::getApplication()->input;
-		$hitcount = $input->getInt('hitcount', 1);
-
-		if ($hitcount)
-		{
-			$pk = (!empty($pk)) ? $pk : (int) $this->getState('category.id');
-
-			$table = JTable::getInstance('Category', 'JTable');
-			$table->load($pk);
-			$table->hit($pk);
-		}
-
-		return true;
-	}
-
-	/**
 	 * Method to build an SQL query to load the list data.
 	 *
 	 * @return  string    An SQL query
@@ -250,11 +116,11 @@ class ContactModelCategory extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		$user   = JFactory::getUser();
+		$user = JFactory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		// Create a new query object.
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select required fields from the categories.
@@ -275,11 +141,11 @@ class ContactModelCategory extends JModelList
 		$case_when1 .= ' ELSE ';
 		$case_when1 .= $c_id . ' END as catslug';
 		$query->select($this->getState('list.select', 'a.*') . ',' . $case_when . ',' . $case_when1)
-			/**
-			 * TODO: we actually should be doing it but it's wrong this way
-			 *    . ' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug, '
-			 *    . ' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END AS catslug ');
-			 */
+		/**
+		 * TODO: we actually should be doing it but it's wrong this way
+		 *	. ' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug, '
+		 *	. ' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END AS catslug ');
+		 */
 			->from($db->quoteName('#__contact_details') . ' AS a')
 			->join('LEFT', '#__categories AS c ON c.id = a.catid')
 			->where('a.access IN (' . $groups . ')');
@@ -294,6 +160,7 @@ class ContactModelCategory extends JModelList
 		// Join over the users for the author and modified_by names.
 		$query->select("CASE WHEN a.created_by_alias > ' ' THEN a.created_by_alias ELSE ua.name END AS author")
 			->select("ua.email AS author_email")
+
 			->join('LEFT', '#__users AS ua ON ua.id = a.created_by')
 			->join('LEFT', '#__users AS uam ON uam.id = a.modified_by');
 
@@ -311,7 +178,7 @@ class ContactModelCategory extends JModelList
 
 		// Filter by start and end dates.
 		$nullDate = $db->quote($db->getNullDate());
-		$nowDate  = $db->quote(JFactory::getDate()->toSql());
+		$nowDate = $db->quote(JFactory::getDate()->toSql());
 
 		if ($this->getState('filter.publish_date'))
 		{
@@ -353,8 +220,8 @@ class ContactModelCategory extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -362,7 +229,7 @@ class ContactModelCategory extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app    = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$params = JComponentHelper::getParams('com_contact');
 
 		// List state information
@@ -430,5 +297,139 @@ class ContactModelCategory extends JModelList
 
 		// Load the parameters.
 		$this->setState('params', $params);
+	}
+
+	/**
+	 * Method to get category data for the current category
+	 *
+	 * @return  object  The category object
+	 *
+	 * @since   1.5
+	 */
+	public function getCategory()
+	{
+		if (!is_object($this->_item))
+		{
+			$app = JFactory::getApplication();
+			$menu = $app->getMenu();
+			$active = $menu->getActive();
+			$params = new Registry;
+
+			if ($active)
+			{
+				$params->loadString($active->params);
+			}
+
+			$options = array();
+			$options['countItems'] = $params->get('show_cat_items', 1) || $params->get('show_empty_categories', 0);
+			$categories = JCategories::getInstance('Contact', $options);
+			$this->_item = $categories->get($this->getState('category.id', 'root'));
+			if (is_object($this->_item))
+			{
+				$this->_children = $this->_item->getChildren();
+				$this->_parent = false;
+
+				if ($this->_item->getParent())
+				{
+					$this->_parent = $this->_item->getParent();
+				}
+
+				$this->_rightsibling = $this->_item->getSibling();
+				$this->_leftsibling = $this->_item->getSibling(false);
+			}
+			else
+			{
+				$this->_children = false;
+				$this->_parent = false;
+			}
+		}
+
+		return $this->_item;
+	}
+
+	/**
+	 * Get the parent category.
+	 *
+	 * @return  mixed  An array of categories or false if an error occurs.
+	 */
+	public function getParent()
+	{
+		if (!is_object($this->_item))
+		{
+			$this->getCategory();
+		}
+
+		return $this->_parent;
+	}
+
+	/**
+	 * Get the sibling (adjacent) categories.
+	 *
+	 * @return  mixed  An array of categories or false if an error occurs.
+	 */
+	public function &getLeftSibling()
+	{
+		if (!is_object($this->_item))
+		{
+			$this->getCategory();
+		}
+
+		return $this->_leftsibling;
+	}
+
+	/**
+	 * Get the sibling (adjacent) categories.
+	 *
+	 * @return  mixed  An array of categories or false if an error occurs.
+	 */
+	public function &getRightSibling()
+	{
+		if (!is_object($this->_item))
+		{
+			$this->getCategory();
+		}
+
+		return $this->_rightsibling;
+	}
+
+	/**
+	 * Get the child categories.
+	 *
+	 * @return  mixed  An array of categories or false if an error occurs.
+	 */
+	public function &getChildren()
+	{
+		if (!is_object($this->_item))
+		{
+			$this->getCategory();
+		}
+
+		return $this->_children;
+	}
+
+	/**
+	 * Increment the hit counter for the category.
+	 *
+	 * @param   integer  $pk  Optional primary key of the category to increment.
+	 *
+	 * @return  boolean  True if successful; false otherwise and internal error set.
+	 *
+	 * @since   3.2
+	 */
+	public function hit($pk = 0)
+	{
+		$input = JFactory::getApplication()->input;
+		$hitcount = $input->getInt('hitcount', 1);
+
+		if ($hitcount)
+		{
+			$pk = (!empty($pk)) ? $pk : (int) $this->getState('category.id');
+
+			$table = JTable::getInstance('Category', 'JTable');
+			$table->load($pk);
+			$table->hit($pk);
+		}
+
+		return true;
 	}
 }

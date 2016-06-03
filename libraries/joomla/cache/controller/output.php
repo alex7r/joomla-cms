@@ -43,8 +43,8 @@ class JCacheControllerOutput extends JCacheController
 	/**
 	 * Start the cache
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
 	 *
 	 * @return  boolean
 	 *
@@ -92,7 +92,7 @@ class JCacheControllerOutput extends JCacheController
 		ob_implicit_flush(false);
 
 		// Set id and group placeholders
-		$this->_id    = $id;
+		$this->_id = $id;
 		$this->_group = $group;
 
 		return false;

@@ -28,7 +28,7 @@ class JDocumentJson extends JDocument
 	/**
 	 * Class constructor
 	 *
-	 * @param   array $options Associative array of options
+	 * @param   array  $options  Associative array of options
 	 *
 	 * @since  11.1
 	 */
@@ -39,8 +39,7 @@ class JDocumentJson extends JDocument
 		// Set mime type
 		if (isset($_SERVER['HTTP_ACCEPT'])
 			&& strpos($_SERVER['HTTP_ACCEPT'], 'application/json') === false
-			&& strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false
-		)
+			&& strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false)
 		{
 			// Internet Explorer < 10
 			$this->_mime = 'text/plain';
@@ -57,8 +56,8 @@ class JDocumentJson extends JDocument
 	/**
 	 * Render the document.
 	 *
-	 * @param   boolean $cache  If true, cache the output
-	 * @param   array   $params Associative array of attributes
+	 * @param   boolean  $cache   If true, cache the output
+	 * @param   array    $params  Associative array of attributes
 	 *
 	 * @return  The rendered data
 	 *
@@ -96,7 +95,7 @@ class JDocumentJson extends JDocument
 	/**
 	 * Sets the document name
 	 *
-	 * @param   string $name Document name
+	 * @param   string  $name  Document name
 	 *
 	 * @return  JDocumentJSON instance of $this to allow chaining
 	 *

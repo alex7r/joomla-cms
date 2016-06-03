@@ -21,11 +21,11 @@ class JGithubPackageRepositoriesMerging extends JGithubPackage
 	/**
 	 * Perform a merge.
 	 *
-	 * @param   string $owner            The name of the owner of the GitHub repository.
-	 * @param   string $repo             The name of the GitHub repository.
-	 * @param   string $base             The name of the base branch that the head will be merged into.
-	 * @param   string $head             The head to merge. This can be a branch name or a commit SHA1.
-	 * @param   string $commit_message   Commit message to use for the merge commit.
+	 * @param   string  $owner           The name of the owner of the GitHub repository.
+	 * @param   string  $repo            The name of the GitHub repository.
+	 * @param   string  $base            The name of the base branch that the head will be merged into.
+	 * @param   string  $head            The head to merge. This can be a branch name or a commit SHA1.
+	 * @param   string  $commit_message  Commit message to use for the merge commit.
 	 *                                   If omitted, a default message will be used.
 	 *
 	 * @throws UnexpectedValueException

@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 ?>
-<input type="hidden" name="jform[twofactor][totp][key]" value="<?php echo $secret ?>"/>
+<input type="hidden" name="jform[twofactor][totp][key]" value="<?php echo $secret ?>" />
 
 <div class="well">
 	<?php echo JText::_('PLG_TWOFACTORAUTH_TOTP_INTRO') ?>
@@ -71,8 +71,8 @@ defined('_JEXEC') or die;
 	<div class="span6">
 		<p>
 			<?php echo JText::_('PLG_TWOFACTORAUTH_TOTP_STEP2_ALTTEXT') ?>
-			<br/>
-			<img src="<?php echo $url ?>" style="float: none;"/>
+			<br />
+			<img src="<?php echo $url ?>" style="float: none;" />
 		</p>
 	</div>
 
@@ -84,21 +84,20 @@ defined('_JEXEC') or die;
 </fieldset>
 
 <?php if ($new_totp): ?>
-	<fieldset>
-		<legend>
-			<?php echo JText::_('PLG_TWOFACTORAUTH_TOTP_STEP3_HEAD') ?>
-		</legend>
-		<p>
-			<?php echo JText::_('PLG_TWOFACTORAUTH_TOTP_STEP3_TEXT') ?>
-		</p>
-		<div class="control-group">
-			<label class="control-label" for="totpsecuritycode">
-				<?php echo JText::_('PLG_TWOFACTORAUTH_TOTP_STEP3_SECURITYCODE') ?>
-			</label>
-			<div class="controls">
-				<input type="text" class="input-small" name="jform[twofactor][totp][securitycode]" id="totpsecuritycode"
-				       autocomplete="0">
-			</div>
+<fieldset>
+	<legend>
+		<?php echo JText::_('PLG_TWOFACTORAUTH_TOTP_STEP3_HEAD') ?>
+	</legend>
+	<p>
+		<?php echo JText::_('PLG_TWOFACTORAUTH_TOTP_STEP3_TEXT') ?>
+	</p>
+	<div class="control-group">
+		<label class="control-label" for="totpsecuritycode">
+			<?php echo JText::_('PLG_TWOFACTORAUTH_TOTP_STEP3_SECURITYCODE') ?>
+		</label>
+		<div class="controls">
+			<input type="text" class="input-small" name="jform[twofactor][totp][securitycode]" id="totpsecuritycode" autocomplete="0">
 		</div>
-	</fieldset>
+	</div>
+</fieldset>
 <?php endif; ?>

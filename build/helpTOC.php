@@ -80,7 +80,7 @@ class MediawikiCli extends JApplicationCli
 		$language = JFactory::getLanguage();
 
 		// Get the language strings via Reflection as the property is protected
-		$refl     = new ReflectionClass($language);
+		$refl = new ReflectionClass($language);
 		$property = $refl->getProperty('strings');
 		$property->setAccessible(true);
 		$strings = $property->getValue($language);

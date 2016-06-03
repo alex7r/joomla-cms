@@ -23,9 +23,41 @@ JLoader::register('idna_convert', JPATH_LIBRARIES . '/idna_convert/idna_convert.
 abstract class JStringPunycode
 {
 	/**
+	 * Transforms a UTF-8 string to a Punycode string
+	 *
+	 * @param   string  $utfString  The UTF-8 string to transform
+	 *
+	 * @return  string  The punycode string
+	 *
+	 * @since   3.1.2
+	 */
+	public static function toPunycode($utfString)
+	{
+		$idn = new idna_convert;
+
+		return $idn->encode($utfString);
+	}
+
+	/**
+	 * Transforms a Punycode string to a UTF-8 string
+	 *
+	 * @param   string  $punycodeString  The Punycode string to transform
+	 *
+	 * @return  string  The UF-8 URL
+	 *
+	 * @since   3.1.2
+	 */
+	public static function fromPunycode($punycodeString)
+	{
+		$idn = new idna_convert;
+
+		return $idn->decode($punycodeString);
+	}
+
+	/**
 	 * Transforms a UTF-8 URL to a Punycode URL
 	 *
-	 * @param   string $uri The UTF-8 URL to transform
+	 * @param   string  $uri  The UTF-8 URL to transform
 	 *
 	 * @return  string  The punycode URL
 	 *
@@ -41,9 +73,9 @@ abstract class JStringPunycode
 			return $uri;
 		}
 
-		$host         = $parsed['host'];
+		$host = $parsed['host'];
 		$hostExploded = explode('.', $host);
-		$newhost      = '';
+		$newhost = '';
 
 		foreach ($hostExploded as $hostex)
 		{
@@ -52,7 +84,7 @@ abstract class JStringPunycode
 		}
 
 		$newhost = substr($newhost, 0, -1);
-		$newuri  = '';
+		$newuri = '';
 
 		if (!empty($parsed['scheme']))
 		{
@@ -89,25 +121,9 @@ abstract class JStringPunycode
 	}
 
 	/**
-	 * Transforms a UTF-8 string to a Punycode string
-	 *
-	 * @param   string $utfString The UTF-8 string to transform
-	 *
-	 * @return  string  The punycode string
-	 *
-	 * @since   3.1.2
-	 */
-	public static function toPunycode($utfString)
-	{
-		$idn = new idna_convert;
-
-		return $idn->encode($utfString);
-	}
-
-	/**
 	 * Transforms a Punycode URL to a UTF-8 URL
 	 *
-	 * @param   string $uri The Punycode URL to transform
+	 * @param   string  $uri  The Punycode URL to transform
 	 *
 	 * @return  string  The UTF-8 URL
 	 *
@@ -128,9 +144,9 @@ abstract class JStringPunycode
 			return $uri;
 		}
 
-		$host         = $parsed['host'];
+		$host = $parsed['host'];
 		$hostExploded = explode('.', $host);
-		$newhost      = '';
+		$newhost = '';
 
 		foreach ($hostExploded as $hostex)
 		{
@@ -139,7 +155,7 @@ abstract class JStringPunycode
 		}
 
 		$newhost = substr($newhost, 0, -1);
-		$newuri  = '';
+		$newuri = '';
 
 		if (!empty($parsed['scheme']))
 		{
@@ -176,26 +192,10 @@ abstract class JStringPunycode
 	}
 
 	/**
-	 * Transforms a Punycode string to a UTF-8 string
-	 *
-	 * @param   string $punycodeString The Punycode string to transform
-	 *
-	 * @return  string  The UF-8 URL
-	 *
-	 * @since   3.1.2
-	 */
-	public static function fromPunycode($punycodeString)
-	{
-		$idn = new idna_convert;
-
-		return $idn->decode($punycodeString);
-	}
-
-	/**
 	 * Transforms a UTF-8 e-mail to a Punycode e-mail
 	 * This assumes a valid email address
 	 *
-	 * @param   string $email The UTF-8 e-mail to transform
+	 * @param   string  $email  The UTF-8 e-mail to transform
 	 *
 	 * @return  string  The punycode e-mail
 	 *
@@ -211,7 +211,7 @@ abstract class JStringPunycode
 		if (!empty($explodedAddress[1]))
 		{
 			$domainExploded = explode('.', $explodedAddress[1]);
-			$newdomain      = '';
+			$newdomain = '';
 
 			foreach ($domainExploded as $domainex)
 			{
@@ -220,7 +220,7 @@ abstract class JStringPunycode
 			}
 
 			$newdomain = substr($newdomain, 0, -1);
-			$newEmail  = $newEmail . '@' . $newdomain;
+			$newEmail = $newEmail . '@' . $newdomain;
 		}
 
 		return $newEmail;
@@ -230,7 +230,7 @@ abstract class JStringPunycode
 	 * Transforms a Punycode e-mail to a UTF-8 e-mail
 	 * This assumes a valid email address
 	 *
-	 * @param   string $email The punycode e-mail to transform
+	 * @param   string  $email  The punycode e-mail to transform
 	 *
 	 * @return  string  The punycode e-mail
 	 *
@@ -246,7 +246,7 @@ abstract class JStringPunycode
 		if (!empty($explodedAddress[1]))
 		{
 			$domainExploded = explode('.', $explodedAddress[1]);
-			$newdomain      = '';
+			$newdomain = '';
 
 			foreach ($domainExploded as $domainex)
 			{
@@ -255,7 +255,7 @@ abstract class JStringPunycode
 			}
 
 			$newdomain = substr($newdomain, 0, -1);
-			$newEmail  = $newEmail . '@' . $newdomain;
+			$newEmail = $newEmail . '@' . $newdomain;
 		}
 
 		return $newEmail;

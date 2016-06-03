@@ -10,9 +10,7 @@ defined('_JEXEC') or die;
 
 $menuType = JFactory::getApplication()->getUserState('com_menus.items.menutype');
 ?>
-<button class="btn" type="button"
-        onclick="document.getElementById('batch-menu-id').value='';document.getElementById('batch-access').value='';document.getElementById('batch-language-id').value=''"
-        data-dismiss="modal">
+<button class="btn" type="button" onclick="document.getElementById('batch-menu-id').value='';document.getElementById('batch-access').value='';document.getElementById('batch-language-id').value=''" data-dismiss="modal">
 	<?php echo JText::_('JCANCEL'); ?>
 </button>
 <?php if (strlen($menuType) && $menuType != '*') : ?>

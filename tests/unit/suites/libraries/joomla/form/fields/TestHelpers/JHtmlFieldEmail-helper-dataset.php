@@ -19,7 +19,7 @@ class JHtmlFieldEmailTest_DataSet
 	public static $getInputTest = array(
 		'NoValue' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 			),
 			'<input type="email" name="myTestName" class="validate-email" id="myTestId" value="" />',
@@ -27,8 +27,8 @@ class JHtmlFieldEmailTest_DataSet
 
 		'Value' => array(
 			array(
-				'id'    => 'myTestId',
-				'name'  => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'value' => 'foo@bar.com',
 			),
 			'<input type="email" name="myTestName" class="validate-email" id="myTestId" value="foo@bar.com" />',
@@ -36,8 +36,8 @@ class JHtmlFieldEmailTest_DataSet
 
 		'Class' => array(
 			array(
-				'id'    => 'myTestId',
-				'name'  => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'class' => 'foo bar',
 			),
 			'<input type="email" name="myTestName" class="validate-email foo bar" id="myTestId" value="" />',
@@ -45,7 +45,7 @@ class JHtmlFieldEmailTest_DataSet
 
 		'Size' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 				'size' => 60,
 			),
@@ -54,8 +54,8 @@ class JHtmlFieldEmailTest_DataSet
 
 		'Disabled' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'disabled' => true,
 			),
 			'<input type="email" name="myTestName" class="validate-email" id="myTestId" value="" disabled />',
@@ -63,8 +63,8 @@ class JHtmlFieldEmailTest_DataSet
 
 		'Readonly' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'readonly' => true,
 			),
 			'<input type="email" name="myTestName" class="validate-email" id="myTestId" value="" readonly />',
@@ -72,7 +72,7 @@ class JHtmlFieldEmailTest_DataSet
 
 		'Hint' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 				'hint' => 'Type any email.',
 			),
@@ -81,8 +81,8 @@ class JHtmlFieldEmailTest_DataSet
 
 		'Autocomplete' => array(
 			array(
-				'id'           => 'myTestId',
-				'name'         => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'autocomplete' => false,
 			),
 			'<input type="email" name="myTestName" class="validate-email" id="myTestId" value="" autocomplete="off" />',
@@ -90,8 +90,8 @@ class JHtmlFieldEmailTest_DataSet
 
 		'Autofocus' => array(
 			array(
-				'id'        => 'myTestId',
-				'name'      => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'autofocus' => true,
 			),
 			'<input type="email" name="myTestName" class="validate-email" id="myTestId" value="" autofocus />',
@@ -99,8 +99,8 @@ class JHtmlFieldEmailTest_DataSet
 
 		'Spellcheck' => array(
 			array(
-				'id'         => 'myTestId',
-				'name'       => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'spellcheck' => false,
 			),
 			'<input type="email" name="myTestName" class="validate-email" id="myTestId" value="" spellcheck="false" />',
@@ -108,8 +108,8 @@ class JHtmlFieldEmailTest_DataSet
 
 		'Onchange' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'onchange' => 'foobar();',
 			),
 			'<input type="email" name="myTestName" class="validate-email" id="myTestId" value="" onchange="foobar();" />',
@@ -117,8 +117,8 @@ class JHtmlFieldEmailTest_DataSet
 
 		'Maxlength' => array(
 			array(
-				'id'        => 'myTestId',
-				'name'      => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'maxLength' => 250,
 			),
 			'<input type="email" name="myTestName" class="validate-email" id="myTestId" value="" maxlength="250" />',
@@ -126,8 +126,8 @@ class JHtmlFieldEmailTest_DataSet
 
 		'Required' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'required' => true,
 			),
 			'<input type="email" name="myTestName" class="validate-email" id="myTestId" value="" required aria-required="true" />',

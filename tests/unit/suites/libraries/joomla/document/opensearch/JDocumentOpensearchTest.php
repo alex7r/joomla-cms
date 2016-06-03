@@ -18,6 +18,38 @@ class JDocumentOpensearchTest extends TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		$_SERVER['HTTP_HOST'] = 'localhost';
+		$_SERVER['SCRIPT_NAME'] = '';
+
+		JFactory::$application = $this->getMockCmsApp();
+		JFactory::$config = $this->getMockConfig();
+
+		$this->object = new JDocumentOpensearch;
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		JDocument::$_buffer = null;
+
+		parent::tearDown();
+	}
+
+	/**
 	 * @testdox  Test the default return for render
 	 */
 	public function testTheDefaultReturnForRender()
@@ -47,37 +79,5 @@ class JDocumentOpensearchTest extends TestCase
 	public function testEnsureAddImageReturnsThisObject()
 	{
 		$this->assertSame($this->object, $this->object->addImage(new JOpenSearchImage('https://www.joomla.org')));
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		$_SERVER['HTTP_HOST']   = 'localhost';
-		$_SERVER['SCRIPT_NAME'] = '';
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$config      = $this->getMockConfig();
-
-		$this->object = new JDocumentOpensearch;
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		JDocument::$_buffer = null;
-
-		parent::tearDown();
 	}
 }

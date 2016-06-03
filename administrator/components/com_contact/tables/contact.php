@@ -29,7 +29,7 @@ class ContactTableContact extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver &$db Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 *
 	 * @since   1.0
 	 */
@@ -44,7 +44,7 @@ class ContactTableContact extends JTable
 	/**
 	 * Stores a contact.
 	 *
-	 * @param   boolean $updateNulls True to update fields even if they are null.
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *
@@ -188,7 +188,7 @@ class ContactTableContact extends JTable
 			$after_clean = JString::str_ireplace($bad_characters, "", $this->metakey);
 
 			// Create array using commas as delimiter.
-			$keys       = explode(',', $after_clean);
+			$keys = explode(',', $after_clean);
 			$clean_keys = array();
 
 			foreach ($keys as $key)

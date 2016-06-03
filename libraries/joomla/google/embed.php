@@ -35,15 +35,15 @@ abstract class JGoogleEmbed
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry $options Google options object
-	 * @param   JUri     $uri     URL of the page being rendered
+	 * @param   Registry  $options  Google options object
+	 * @param   JUri      $uri      URL of the page being rendered
 	 *
 	 * @since   12.3
 	 */
 	public function __construct(Registry $options = null, JUri $uri = null)
 	{
 		$this->options = $options ? $options : new Registry;
-		$this->uri     = $uri ? $uri : JUri::getInstance();
+		$this->uri = $uri ? $uri : JUri::getInstance();
 	}
 
 	/**
@@ -59,6 +59,24 @@ abstract class JGoogleEmbed
 	}
 
 	/**
+	 * Method to retrieve the header for the API
+	 *
+	 * @return  string  The header
+	 *
+	 * @since   12.3
+	 */
+	abstract public function getHeader();
+
+	/**
+	 * Method to retrieve the body for the API
+	 *
+	 * @return  string  The body
+	 *
+	 * @since   12.3
+	 */
+	abstract public function getBody();
+
+	/**
 	 * Method to output the javascript header for the embed API
 	 *
 	 * @return  null
@@ -69,15 +87,6 @@ abstract class JGoogleEmbed
 	{
 		echo $this->getHeader();
 	}
-
-	/**
-	 * Method to retrieve the header for the API
-	 *
-	 * @return  string  The header
-	 *
-	 * @since   12.3
-	 */
-	abstract public function getHeader();
 
 	/**
 	 * Method to output the body for the API
@@ -92,18 +101,9 @@ abstract class JGoogleEmbed
 	}
 
 	/**
-	 * Method to retrieve the body for the API
-	 *
-	 * @return  string  The body
-	 *
-	 * @since   12.3
-	 */
-	abstract public function getBody();
-
-	/**
 	 * Get an option from the JGoogleEmbed instance.
 	 *
-	 * @param   string $key The name of the option to get.
+	 * @param   string  $key  The name of the option to get.
 	 *
 	 * @return  mixed  The option value.
 	 *
@@ -117,8 +117,8 @@ abstract class JGoogleEmbed
 	/**
 	 * Set an option for the JGoogleEmbed instance.
 	 *
-	 * @param   string $key   The name of the option to set.
-	 * @param   mixed  $value The option value to set.
+	 * @param   string  $key    The name of the option to set.
+	 * @param   mixed   $value  The option value to set.
 	 *
 	 * @return  JGoogleEmbed  This object for method chaining.
 	 *

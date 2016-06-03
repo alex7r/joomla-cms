@@ -80,8 +80,7 @@ JFactory::getDocument()->addScriptDeclaration($script);
 
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_menus&view=item&layout=edit&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="item-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_menus&view=item&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
 
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
@@ -144,15 +143,14 @@ JFactory::getDocument()->addScriptDeclaration($script);
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
 
 		<?php
-		$this->fieldsets        = array();
+		$this->fieldsets = array();
 		$this->ignore_fieldsets = array('aliasoptions', 'request', 'item_associations');
 		echo JLayoutHelper::render('joomla.edit.params', $this);
 		?>
 
 		<?php if ($assoc) : ?>
 			<?php if ($this->item->type !== 'alias' && $this->item->type !== 'url'
-				&& $this->item->type !== 'separator' && $this->item->type !== 'heading'
-			) : ?>
+				&& $this->item->type !== 'separator' && $this->item->type !== 'heading') : ?>
 				<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations', JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')); ?>
 				<?php echo $this->loadTemplate('associations'); ?>
 				<?php echo JHtml::_('bootstrap.endTab'); ?>
@@ -168,8 +166,8 @@ JFactory::getDocument()->addScriptDeclaration($script);
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 	</div>
 
-	<input type="hidden" name="task" value=""/>
+	<input type="hidden" name="task" value="" />
 	<?php echo $this->form->getInput('component_id'); ?>
 	<?php echo JHtml::_('form.token'); ?>
-	<input type="hidden" id="fieldtype" name="fieldtype" value=""/>
+	<input type="hidden" id="fieldtype" name="fieldtype" value="" />
 </form>

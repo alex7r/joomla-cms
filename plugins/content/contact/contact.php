@@ -29,12 +29,12 @@ class PlgContentContact extends JPlugin
 	/**
 	 * Plugin that retrieves contact information for contact
 	 *
-	 * @param   string  $context The context of the content being passed to the plugin.
-	 * @param   mixed   &$row    An object with a "text" property
-	 * @param   mixed   $params  Additional parameters. See {@see PlgContentContent()}.
-	 * @param   integer $page    Optional page number. Unused. Defaults to zero.
+	 * @param   string   $context  The context of the content being passed to the plugin.
+	 * @param   mixed    &$row     An object with a "text" property
+	 * @param   mixed    $params   Additional parameters. See {@see PlgContentContent()}.
+	 * @param   integer  $page     Optional page number. Unused. Defaults to zero.
 	 *
-	 * @return  boolean    True on success.
+	 * @return  boolean	True on success.
 	 */
 	public function onContentPrepare($context, &$row, $params, $page = 0)
 	{
@@ -61,10 +61,10 @@ class PlgContentContact extends JPlugin
 
 		if ($row->contactid)
 		{
-			$needle            = 'index.php?option=com_contact&view=contact&id=' . $row->contactid;
-			$menu              = JFactory::getApplication()->getMenu();
-			$item              = $menu->getItems('link', $needle, true);
-			$link              = $item ? $needle . '&Itemid=' . $item->id : $needle;
+			$needle = 'index.php?option=com_contact&view=contact&id=' . $row->contactid;
+			$menu = JFactory::getApplication()->getMenu();
+			$item = $menu->getItems('link', $needle, true);
+			$link = $item ? $needle . '&Itemid=' . $item->id : $needle;
 			$row->contact_link = JRoute::_($link);
 		}
 		else
@@ -78,7 +78,7 @@ class PlgContentContact extends JPlugin
 	/**
 	 * Retrieve Contact
 	 *
-	 * @param   int $created_by Id of the user who created the contact
+	 * @param   int  $created_by  Id of the user who created the contact
 	 *
 	 * @return  mixed|null|integer
 	 */

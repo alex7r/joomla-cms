@@ -43,11 +43,11 @@ class JCacheControllerCallback extends JCacheController
 	/**
 	 * Executes a cacheable callback if not found in cache else returns cached output and result
 	 *
-	 * @param   mixed   $callback   Callback or string shorthand for a callback
-	 * @param   array   $args       Callback arguments
-	 * @param   mixed   $id         Cache ID
-	 * @param   boolean $wrkarounds True to use wrkarounds
-	 * @param   array   $woptions   Workaround options
+	 * @param   mixed    $callback    Callback or string shorthand for a callback
+	 * @param   array    $args        Callback arguments
+	 * @param   mixed    $id          Cache ID
+	 * @param   boolean  $wrkarounds  True to use wrkarounds
+	 * @param   array    $woptions    Workaround options
 	 *
 	 * @return  mixed  Result of the callback
 	 *
@@ -134,12 +134,12 @@ class JCacheControllerCallback extends JCacheController
 
 			if (isset($woptions['modulemode']) && $woptions['modulemode'] == 1)
 			{
-				$document               = JFactory::getDocument();
+				$document = JFactory::getDocument();
 				$coptions['modulemode'] = 1;
 				if (method_exists($document, 'getHeadData'))
 				{
 					$coptions['headerbefore'] = $document->getHeadData();
-				}
+				}	
 			}
 			else
 			{
@@ -178,8 +178,8 @@ class JCacheControllerCallback extends JCacheController
 	/**
 	 * Generate a callback cache ID
 	 *
-	 * @param   callback $callback Callback to cache
-	 * @param   array    $args     Arguments to the callback method to cache
+	 * @param   callback  $callback  Callback to cache
+	 * @param   array     $args      Arguments to the callback method to cache
 	 *
 	 * @return  string  MD5 Hash
 	 *

@@ -43,7 +43,7 @@ class JCacheStorageHelper
 	/**
 	 * Constructor
 	 *
-	 * @param   string $group The cache data group
+	 * @param   string  $group  The cache data group
 	 *
 	 * @since   11.1
 	 */
@@ -55,7 +55,7 @@ class JCacheStorageHelper
 	/**
 	 * Increase cache items count.
 	 *
-	 * @param   string $size Cached item size
+	 * @param   string  $size  Cached item size
 	 *
 	 * @return  void
 	 *

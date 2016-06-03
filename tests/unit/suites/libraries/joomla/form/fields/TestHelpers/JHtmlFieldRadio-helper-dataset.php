@@ -20,7 +20,7 @@ class JHtmlFieldRadioTest_DataSet
 		'NoOptions' => array(
 			'<field name="myTestId" type="radio" />',
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 			),
 			'<fieldset id="myTestId" class="radio" ></fieldset>',
@@ -32,7 +32,7 @@ class JHtmlFieldRadioTest_DataSet
 				<option value="0">No</option>
 			</field>',
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 			),
 			'<fieldset id="myTestId" class="radio" ><label class="radio"><input type="radio" name="myTestName" value="1" />Yes</label><label class="radio"><input type="radio" name="myTestName" value="0" />No</label></fieldset>'
@@ -41,8 +41,8 @@ class JHtmlFieldRadioTest_DataSet
 		'FieldClass' => array(
 			'<field name="myTestId" class="foo bar" type="radio"></field>',
 			array(
-				'id'    => 'myTestId',
-				'name'  => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'class' => 'foo bar',
 			),
 			'<fieldset id="myTestId" class="radio foo bar" ></fieldset>',
@@ -54,7 +54,7 @@ class JHtmlFieldRadioTest_DataSet
 				<option value="0" class="bar">No</option>
 			</field>',
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 			),
 			'<fieldset id="myTestId" class="radio" ><label class="radio foo"><input type="radio" name="myTestName" value="1" />Yes</label><label class="radio bar"><input type="radio" name="myTestName" value="0" />No</label></fieldset>',
@@ -66,8 +66,8 @@ class JHtmlFieldRadioTest_DataSet
 				<option value="0">No</option>
 			</field>',
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'disabled' => true,
 			),
 			'<fieldset id="myTestId" class="radio" disabled ><label class="radio"><input type="radio" name="myTestName" value="1" />Yes</label><label class="radio"><input type="radio" name="myTestName" value="0" />No</label></fieldset>',
@@ -79,7 +79,7 @@ class JHtmlFieldRadioTest_DataSet
 				<option value="0">No</option>
 			</field>',
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 			),
 			'<fieldset id="myTestId" class="radio" ><label class="radio"><input type="radio" name="myTestName" value="1" disabled />Yes</label><label class="radio"><input type="radio" name="myTestName" value="0" />No</label></fieldset>',
@@ -92,10 +92,10 @@ class JHtmlFieldRadioTest_DataSet
 				<option value="-1">None</option>
 			</field>',
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'readonly' => true,
-				'value'    => '0',
+				'value' => '0',
 			),
 			'<fieldset id="myTestId" class="radio" ><label class="radio"><input type="radio" name="myTestName" value="1" disabled />Yes</label><label class="radio"><input type="radio" name="myTestName" value="0" checked="checked" />No</label><label class="radio"><input type="radio" name="myTestName" value="-1" disabled />None</label></fieldset>',
 		),
@@ -103,8 +103,8 @@ class JHtmlFieldRadioTest_DataSet
 		'Autofocus' => array(
 			'<field name="myTestId" type="radio" required="true"></field>',
 			array(
-				'id'        => 'myTestId',
-				'name'      => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'autofocus' => true,
 			),
 			'<fieldset id="myTestId" class="radio" autofocus ></fieldset>',
@@ -116,7 +116,7 @@ class JHtmlFieldRadioTest_DataSet
 				<option value="0" onchange="bar();">No</option>
 			</field>',
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 			),
 			'<fieldset id="myTestId" class="radio" ><label class="radio"><input type="radio" name="myTestName" value="1" onclick="foo();" />Yes</label><label class="radio"><input type="radio" name="myTestName" value="0" onchange="bar();" />No</label></fieldset>',
@@ -128,8 +128,8 @@ class JHtmlFieldRadioTest_DataSet
 				<option value="0">No</option>
 			</field>',
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'required' => true,
 			),
 			'<fieldset id="myTestId" class="radio" required aria-required="true" ><label class="radio"><input type="radio" name="myTestName" value="1" required aria-required="true" />Yes</label><label class="radio"><input type="radio" name="myTestName" value="0" />No</label></fieldset>',

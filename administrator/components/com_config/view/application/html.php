@@ -62,9 +62,9 @@ class ConfigViewApplicationHtml extends ConfigViewCmsHtml
 		// Load settings for the FTP layer.
 		$ftp = JClientHelper::setCredentialsFromRequest('ftp');
 
-		$this->form        = &$form;
-		$this->data        = &$data;
-		$this->ftp         = &$ftp;
+		$this->form = &$form;
+		$this->data = &$data;
+		$this->ftp = &$ftp;
 		$this->usersParams = &$usersParams;
 		$this->mediaParams = &$mediaParams;
 
@@ -90,7 +90,7 @@ class ConfigViewApplicationHtml extends ConfigViewCmsHtml
 	 *
 	 * @return  void
 	 *
-	 * @since    3.2
+	 * @since	3.2
 	 */
 	protected function addToolbar()
 	{

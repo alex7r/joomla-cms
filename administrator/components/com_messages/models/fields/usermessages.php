@@ -21,7 +21,7 @@ class JFormFieldUserMessages extends JFormFieldUser
 	/**
 	 * The form field type.
 	 *
-	 * @var        string
+	 * @var		string
 	 * @since   1.6
 	 */
 	public $type = 'UserMessages';
@@ -29,14 +29,14 @@ class JFormFieldUserMessages extends JFormFieldUser
 	/**
 	 * Method to get the filtering groups (null means no filtering)
 	 *
-	 * @return  array|null    array of filtering groups or null.
+	 * @return  array|null	array of filtering groups or null.
 	 *
 	 * @since   1.6
 	 */
 	protected function getGroups()
 	{
 		// Compute usergroups
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('id')
 			->from('#__usergroups');

@@ -54,6 +54,25 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackageIssues($this->options, $this->client);
+	}
+
+	/**
 	 * Tests the create method
 	 *
 	 * @return void
@@ -63,12 +82,12 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 201;
 		$this->response->body = $this->sampleString;
 
-		$issue            = new stdClass;
-		$issue->title     = 'My issue';
-		$issue->assignee  = 'JoeUser';
+		$issue = new stdClass;
+		$issue->title = 'My issue';
+		$issue->assignee = 'JoeUser';
 		$issue->milestone = '11.5';
-		$issue->labels    = array();
-		$issue->body      = 'These are my changes - please review them';
+		$issue->labels = array();
+		$issue->body = 'These are my changes - please review them';
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -93,12 +112,12 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 501;
 		$this->response->body = $this->errorString;
 
-		$issue            = new stdClass;
-		$issue->title     = 'My issue';
-		$issue->assignee  = 'JoeUser';
+		$issue = new stdClass;
+		$issue->title = 'My issue';
+		$issue->assignee = 'JoeUser';
 		$issue->milestone = '11.5';
-		$issue->labels    = array();
-		$issue->body      = 'These are my changes - please review them';
+		$issue->labels = array();
+		$issue->body = 'These are my changes - please review them';
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -118,7 +137,7 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 201;
 		$this->response->body = $this->sampleString;
 
-		$issue       = new stdClass;
+		$issue = new stdClass;
 		$issue->body = 'My Insightful Comment';
 
 		$this->client->expects($this->once())
@@ -144,7 +163,7 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 501;
 		$this->response->body = $this->errorString;
 
-		$issue       = new stdClass;
+		$issue = new stdClass;
 		$issue->body = 'My Insightful Comment';
 
 		$this->client->expects($this->once())
@@ -156,6 +175,137 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Tests the createLabel method
+	 * @todo move
+	 * @return void
+	 *
+	public function testCreateLabel()
+	{
+		$this->response->code = 201;
+		$this->response->body = $this->sampleString;
+
+		$issue = new stdClass;
+		$issue->name = 'My Insightful Label';
+		$issue->color = 'My Insightful Color';
+
+		$this->client->expects($this->once())
+			->method('post')
+			->with('/repos/joomla/joomla-platform/labels', json_encode($issue))
+			->will($this->returnValue($this->response));
+
+		$this->assertThat(
+			$this->object->createLabel('joomla', 'joomla-platform', 'My Insightful Label', 'My Insightful Color'),
+			$this->equalTo(json_decode($this->sampleString))
+		);
+	}
+	 */
+
+	/**
+	 * Tests the createLabel method - failure
+	 * @todo move
+	 * @expectedException  DomainException
+	 *
+	 * @return void
+	 *
+	public function testCreateLabelFailure()
+	{
+		$this->response->code = 501;
+		$this->response->body = $this->errorString;
+
+		$issue = new stdClass;
+		$issue->name = 'My Insightful Label';
+		$issue->color = 'My Insightful Color';
+
+		$this->client->expects($this->once())
+			->method('post')
+			->with('/repos/joomla/joomla-platform/labels', json_encode($issue))
+			->will($this->returnValue($this->response));
+
+		$this->object->createLabel('joomla', 'joomla-platform', 'My Insightful Label', 'My Insightful Color');
+	}
+	 */
+
+	/**
+	 * Tests the deleteComment method
+	 * @todo move
+	 * @return void
+	 *
+	public function testDeleteComment()
+	{
+		$this->response->code = 204;
+		$this->response->body = $this->sampleString;
+
+		$this->client->expects($this->once())
+			->method('delete')
+			->with('/repos/joomla/joomla-platform/issues/comments/254')
+			->will($this->returnValue($this->response));
+
+		$this->object->deleteComment('joomla', 'joomla-platform', 254);
+	}
+	 */
+
+	/**
+	 * Tests the deleteComment method - failure
+	 * @todo move
+	 * @expectedException  DomainException
+	 *
+	 * @return void
+	 *
+	public function testDeleteCommentFailure()
+	{
+		$this->response->code = 504;
+		$this->response->body = $this->errorString;
+
+		$this->client->expects($this->once())
+			->method('delete')
+			->with('/repos/joomla/joomla-platform/issues/comments/254')
+			->will($this->returnValue($this->response));
+
+		$this->object->deleteComment('joomla', 'joomla-platform', 254);
+	}
+	 */
+
+	/**
+	 * Tests the deleteLabel method
+	 * @todo move
+	 * @return void
+	 *
+	public function testDeleteLabel()
+	{
+		$this->response->code = 204;
+		$this->response->body = $this->sampleString;
+
+		$this->client->expects($this->once())
+			->method('delete')
+			->with('/repos/joomla/joomla-platform/labels/254')
+			->will($this->returnValue($this->response));
+
+		$this->object->deleteLabel('joomla', 'joomla-platform', 254);
+	}
+	 */
+
+	/**
+	 * Tests the deleteLabel method - failure
+	 * @todo move
+	 * @expectedException  DomainException
+	 *
+	 * @return void
+	 *
+	public function testDeleteLabelFailure()
+	{
+		$this->response->code = 504;
+		$this->response->body = $this->errorString;
+
+		$this->client->expects($this->once())
+			->method('delete')
+			->with('/repos/joomla/joomla-platform/labels/254')
+			->will($this->returnValue($this->response));
+
+		$this->object->deleteLabel('joomla', 'joomla-platform', 254);
+	}
+	 */
+
+	/**
 	 * Tests the edit method
 	 *
 	 * @return void
@@ -165,13 +315,13 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 200;
 		$this->response->body = $this->sampleString;
 
-		$issue            = new stdClass;
-		$issue->title     = 'My issue';
-		$issue->body      = 'These are my changes - please review them';
-		$issue->state     = 'Closed';
-		$issue->assignee  = 'JoeAssignee';
+		$issue = new stdClass;
+		$issue->title = 'My issue';
+		$issue->body = 'These are my changes - please review them';
+		$issue->state = 'Closed';
+		$issue->assignee = 'JoeAssignee';
 		$issue->milestone = '12.2';
-		$issue->labels    = array('Fixed');
+		$issue->labels = array('Fixed');
 
 		$this->client->expects($this->once())
 			->method('patch')
@@ -187,143 +337,6 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests the createLabel method
-	 *
-	 * @todo move
-	 * @return void
-	 *
-	 * public function testCreateLabel()
-	 * {
-	 * $this->response->code = 201;
-	 * $this->response->body = $this->sampleString;
-	 *
-	 * $issue = new stdClass;
-	 * $issue->name = 'My Insightful Label';
-	 * $issue->color = 'My Insightful Color';
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('post')
-	 * ->with('/repos/joomla/joomla-platform/labels', json_encode($issue))
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->assertThat(
-	 * $this->object->createLabel('joomla', 'joomla-platform', 'My Insightful Label', 'My Insightful Color'),
-	 * $this->equalTo(json_decode($this->sampleString))
-	 * );
-	 * }
-	 */
-
-	/**
-	 * Tests the createLabel method - failure
-	 *
-	 * @todo move
-	 * @expectedException  DomainException
-	 *
-	 * @return void
-	 *
-	 * public function testCreateLabelFailure()
-	 * {
-	 * $this->response->code = 501;
-	 * $this->response->body = $this->errorString;
-	 *
-	 * $issue = new stdClass;
-	 * $issue->name = 'My Insightful Label';
-	 * $issue->color = 'My Insightful Color';
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('post')
-	 * ->with('/repos/joomla/joomla-platform/labels', json_encode($issue))
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->object->createLabel('joomla', 'joomla-platform', 'My Insightful Label', 'My Insightful Color');
-	 * }
-	 */
-
-	/**
-	 * Tests the deleteComment method
-	 *
-	 * @todo move
-	 * @return void
-	 *
-	 * public function testDeleteComment()
-	 * {
-	 * $this->response->code = 204;
-	 * $this->response->body = $this->sampleString;
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('delete')
-	 * ->with('/repos/joomla/joomla-platform/issues/comments/254')
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->object->deleteComment('joomla', 'joomla-platform', 254);
-	 * }
-	 */
-
-	/**
-	 * Tests the deleteComment method - failure
-	 *
-	 * @todo move
-	 * @expectedException  DomainException
-	 *
-	 * @return void
-	 *
-	 * public function testDeleteCommentFailure()
-	 * {
-	 * $this->response->code = 504;
-	 * $this->response->body = $this->errorString;
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('delete')
-	 * ->with('/repos/joomla/joomla-platform/issues/comments/254')
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->object->deleteComment('joomla', 'joomla-platform', 254);
-	 * }
-	 */
-
-	/**
-	 * Tests the deleteLabel method
-	 *
-	 * @todo move
-	 * @return void
-	 *
-	 * public function testDeleteLabel()
-	 * {
-	 * $this->response->code = 204;
-	 * $this->response->body = $this->sampleString;
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('delete')
-	 * ->with('/repos/joomla/joomla-platform/labels/254')
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->object->deleteLabel('joomla', 'joomla-platform', 254);
-	 * }
-	 */
-
-	/**
-	 * Tests the deleteLabel method - failure
-	 *
-	 * @todo move
-	 * @expectedException  DomainException
-	 *
-	 * @return void
-	 *
-	 * public function testDeleteLabelFailure()
-	 * {
-	 * $this->response->code = 504;
-	 * $this->response->body = $this->errorString;
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('delete')
-	 * ->with('/repos/joomla/joomla-platform/labels/254')
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->object->deleteLabel('joomla', 'joomla-platform', 254);
-	 * }
-	 */
-
-	/**
 	 * Tests the edit method - failure
 	 *
 	 * @expectedException  DomainException
@@ -335,9 +348,9 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 500;
 		$this->response->body = $this->errorString;
 
-		$issue        = new stdClass;
+		$issue = new stdClass;
 		$issue->title = 'My issue';
-		$issue->body  = 'These are my changes - please review them';
+		$issue->body = 'These are my changes - please review them';
 		$issue->state = 'Closed';
 
 		$this->client->expects($this->once())
@@ -347,6 +360,106 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 
 		$this->object->edit('joomla', 'joomla-platform', 523, 'Closed', 'My issue', 'These are my changes - please review them');
 	}
+
+	/**
+	 * Tests the editComment method
+	 * @todo move
+	 * @return void
+	 *
+	public function testEditComment()
+	{
+		$this->response->code = 200;
+		$this->response->body = $this->sampleString;
+
+		$issue = new stdClass;
+		$issue->body = 'This comment is now even more insightful';
+
+		$this->client->expects($this->once())
+			->method('patch')
+			->with('/repos/joomla/joomla-platform/issues/comments/523', json_encode($issue))
+			->will($this->returnValue($this->response));
+
+		$this->assertThat(
+			$this->object->editComment('joomla', 'joomla-platform', 523, 'This comment is now even more insightful'),
+			$this->equalTo(json_decode($this->sampleString))
+		);
+	}
+	 */
+
+	/**
+	 * Tests the editComment method - failure
+	 * @todo move
+	 * @expectedException  DomainException
+	 *
+	 * @return void
+	 *
+	public function testEditCommentFailure()
+	{
+		$this->response->code = 500;
+		$this->response->body = $this->errorString;
+
+		$issue = new stdClass;
+		$issue->body = 'This comment is now even more insightful';
+
+		$this->client->expects($this->once())
+			->method('patch')
+			->with('/repos/joomla/joomla-platform/issues/comments/523', json_encode($issue))
+			->will($this->returnValue($this->response));
+
+		$this->object->editComment('joomla', 'joomla-platform', 523, 'This comment is now even more insightful');
+	}
+	 */
+
+	/**
+	 * Tests the editLabel method
+	 * @todo move
+	 * @return void
+	 *
+	public function testEditLabel()
+	{
+		$this->response->code = 200;
+		$this->response->body = $this->sampleString;
+
+		$issue = new stdClass;
+		$issue->name = 'This label is now even more insightful';
+		$issue->color = 'This color is now even more insightful';
+
+		$this->client->expects($this->once())
+			->method('patch')
+			->with('/repos/joomla/joomla-platform/labels/523', json_encode($issue))
+			->will($this->returnValue($this->response));
+
+		$this->assertThat(
+			$this->object->editLabel('joomla', 'joomla-platform', 523, 'This label is now even more insightful', 'This color is now even more insightful'),
+			$this->equalTo(json_decode($this->sampleString))
+		);
+	}
+	 */
+
+	/**
+	 * Tests the editLabel method - failure
+	 * @todo move
+	 * @expectedException  DomainException
+	 *
+	 * @return void
+	 *
+	public function testEditLabelFailure()
+	{
+		$this->response->code = 500;
+		$this->response->body = $this->errorString;
+
+		$issue = new stdClass;
+		$issue->name = 'This label is now even more insightful';
+		$issue->color = 'This color is now even more insightful';
+
+		$this->client->expects($this->once())
+			->method('patch')
+			->with('/repos/joomla/joomla-platform/labels/523', json_encode($issue))
+			->will($this->returnValue($this->response));
+
+		$this->object->editLabel('joomla', 'joomla-platform', 523, 'This label is now even more insightful', 'This color is now even more insightful');
+	}
+	 */
 
 	/**
 	 * Tests the get method
@@ -370,110 +483,6 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests the editComment method
-	 *
-	 * @todo move
-	 * @return void
-	 *
-	 * public function testEditComment()
-	 * {
-	 * $this->response->code = 200;
-	 * $this->response->body = $this->sampleString;
-	 *
-	 * $issue = new stdClass;
-	 * $issue->body = 'This comment is now even more insightful';
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('patch')
-	 * ->with('/repos/joomla/joomla-platform/issues/comments/523', json_encode($issue))
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->assertThat(
-	 * $this->object->editComment('joomla', 'joomla-platform', 523, 'This comment is now even more insightful'),
-	 * $this->equalTo(json_decode($this->sampleString))
-	 * );
-	 * }
-	 */
-
-	/**
-	 * Tests the editComment method - failure
-	 *
-	 * @todo move
-	 * @expectedException  DomainException
-	 *
-	 * @return void
-	 *
-	 * public function testEditCommentFailure()
-	 * {
-	 * $this->response->code = 500;
-	 * $this->response->body = $this->errorString;
-	 *
-	 * $issue = new stdClass;
-	 * $issue->body = 'This comment is now even more insightful';
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('patch')
-	 * ->with('/repos/joomla/joomla-platform/issues/comments/523', json_encode($issue))
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->object->editComment('joomla', 'joomla-platform', 523, 'This comment is now even more insightful');
-	 * }
-	 */
-
-	/**
-	 * Tests the editLabel method
-	 *
-	 * @todo move
-	 * @return void
-	 *
-	 * public function testEditLabel()
-	 * {
-	 * $this->response->code = 200;
-	 * $this->response->body = $this->sampleString;
-	 *
-	 * $issue = new stdClass;
-	 * $issue->name = 'This label is now even more insightful';
-	 * $issue->color = 'This color is now even more insightful';
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('patch')
-	 * ->with('/repos/joomla/joomla-platform/labels/523', json_encode($issue))
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->assertThat(
-	 * $this->object->editLabel('joomla', 'joomla-platform', 523, 'This label is now even more insightful', 'This color is now even more insightful'),
-	 * $this->equalTo(json_decode($this->sampleString))
-	 * );
-	 * }
-	 */
-
-	/**
-	 * Tests the editLabel method - failure
-	 *
-	 * @todo move
-	 * @expectedException  DomainException
-	 *
-	 * @return void
-	 *
-	 * public function testEditLabelFailure()
-	 * {
-	 * $this->response->code = 500;
-	 * $this->response->body = $this->errorString;
-	 *
-	 * $issue = new stdClass;
-	 * $issue->name = 'This label is now even more insightful';
-	 * $issue->color = 'This color is now even more insightful';
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('patch')
-	 * ->with('/repos/joomla/joomla-platform/labels/523', json_encode($issue))
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->object->editLabel('joomla', 'joomla-platform', 523, 'This label is now even more insightful', 'This color is now even more insightful');
-	 * }
-	 */
-
-	/**
 	 * Tests the get method - failure
 	 *
 	 * @expectedException  DomainException
@@ -492,6 +501,178 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 
 		$this->object->get('joomla', 'joomla-platform', 523);
 	}
+
+	/**
+	 * Tests the getComment method
+	 * @todo move
+	 * @return void
+	 *
+	public function testGetComment()
+	{
+		$this->response->code = 200;
+		$this->response->body = $this->sampleString;
+
+		$this->client->expects($this->once())
+			->method('get')
+			->with('/repos/joomla/joomla-platform/issues/comments/523')
+			->will($this->returnValue($this->response));
+
+		$this->assertThat(
+			$this->object->getComment('joomla', 'joomla-platform', 523),
+			$this->equalTo(json_decode($this->sampleString))
+		);
+	}
+	 */
+
+	/**
+	 * Tests the getComment method - failure
+	 * @todo move
+	 * @expectedException  DomainException
+	 *
+	 * @return void
+	 *
+	public function testGetCommentFailure()
+	{
+		$this->response->code = 500;
+		$this->response->body = $this->errorString;
+
+		$this->client->expects($this->once())
+			->method('get')
+			->with('/repos/joomla/joomla-platform/issues/comments/523')
+			->will($this->returnValue($this->response));
+
+		$this->object->getComment('joomla', 'joomla-platform', 523);
+	}
+	 */
+
+	/**
+	 * Tests the getComments method
+	 * @todo move
+	 * @return void
+	 *
+	public function testGetComments()
+	{
+		$this->response->code = 200;
+		$this->response->body = $this->sampleString;
+
+		$this->client->expects($this->once())
+			->method('get')
+			->with('/repos/joomla/joomla-platform/issues/523/comments')
+			->will($this->returnValue($this->response));
+
+		$this->assertThat(
+			$this->object->getComments('joomla', 'joomla-platform', 523),
+			$this->equalTo(json_decode($this->sampleString))
+		);
+	}
+	 */
+
+	/**
+	 * Tests the getComments method - failure
+	 * @todo move
+	 * @expectedException  DomainException
+	 *
+	 * @return void
+	 *
+	public function testGetCommentsFailure()
+	{
+		$this->response->code = 500;
+		$this->response->body = $this->errorString;
+
+		$this->client->expects($this->once())
+			->method('get')
+			->with('/repos/joomla/joomla-platform/issues/523/comments')
+			->will($this->returnValue($this->response));
+
+		$this->object->getComments('joomla', 'joomla-platform', 523);
+	}
+	 */
+
+	/**
+	 * Tests the getLabel method
+	 * @todo move
+	 * @return void
+	 *
+	public function testGetLabel()
+	{
+		$this->response->code = 200;
+		$this->response->body = $this->sampleString;
+
+		$this->client->expects($this->once())
+			->method('get')
+			->with('/repos/joomla/joomla-platform/labels/My Insightful Label')
+			->will($this->returnValue($this->response));
+
+		$this->assertThat(
+			$this->object->getLabel('joomla', 'joomla-platform', 'My Insightful Label'),
+			$this->equalTo(json_decode($this->sampleString))
+		);
+	}
+	 */
+
+	/**
+	 * Tests the getLabel method - failure
+	 * @todo move
+	 * @expectedException  DomainException
+	 *
+	 * @return void
+	 *
+	public function testGetLabelFailure()
+	{
+		$this->response->code = 500;
+		$this->response->body = $this->errorString;
+
+		$this->client->expects($this->once())
+			->method('get')
+			->with('/repos/joomla/joomla-platform/labels/My Insightful Label')
+			->will($this->returnValue($this->response));
+
+		$this->object->getLabel('joomla', 'joomla-platform', 'My Insightful Label');
+	}
+	 */
+
+	/**
+	 * Tests the getLabels method
+	 * @todo move
+	 * @return void
+	 *
+	public function testGetLabels()
+	{
+		$this->response->code = 200;
+		$this->response->body = $this->sampleString;
+
+		$this->client->expects($this->once())
+			->method('get')
+			->with('/repos/joomla/joomla-platform/labels')
+			->will($this->returnValue($this->response));
+
+		$this->assertThat(
+			$this->object->getLabels('joomla', 'joomla-platform'),
+			$this->equalTo(json_decode($this->sampleString))
+		);
+	}
+	 */
+
+	/**
+	 * Tests the getLabels method - failure
+	 * @todo move
+	 * @expectedException  DomainException
+	 *
+	 * @return void
+	 *
+	public function testGetLabelsFailure()
+	{
+		$this->response->code = 500;
+		$this->response->body = $this->errorString;
+
+		$this->client->expects($this->once())
+			->method('get')
+			->with('/repos/joomla/joomla-platform/labels')
+			->will($this->returnValue($this->response));
+
+		$this->object->getLabels('joomla', 'joomla-platform');
+	}
+	 */
 
 	/**
 	 * Tests the getList method
@@ -513,186 +694,6 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 			$this->equalTo(json_decode($this->sampleString))
 		);
 	}
-
-	/**
-	 * Tests the getComment method
-	 *
-	 * @todo move
-	 * @return void
-	 *
-	 * public function testGetComment()
-	 * {
-	 * $this->response->code = 200;
-	 * $this->response->body = $this->sampleString;
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('get')
-	 * ->with('/repos/joomla/joomla-platform/issues/comments/523')
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->assertThat(
-	 * $this->object->getComment('joomla', 'joomla-platform', 523),
-	 * $this->equalTo(json_decode($this->sampleString))
-	 * );
-	 * }
-	 */
-
-	/**
-	 * Tests the getComment method - failure
-	 *
-	 * @todo move
-	 * @expectedException  DomainException
-	 *
-	 * @return void
-	 *
-	 * public function testGetCommentFailure()
-	 * {
-	 * $this->response->code = 500;
-	 * $this->response->body = $this->errorString;
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('get')
-	 * ->with('/repos/joomla/joomla-platform/issues/comments/523')
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->object->getComment('joomla', 'joomla-platform', 523);
-	 * }
-	 */
-
-	/**
-	 * Tests the getComments method
-	 *
-	 * @todo move
-	 * @return void
-	 *
-	 * public function testGetComments()
-	 * {
-	 * $this->response->code = 200;
-	 * $this->response->body = $this->sampleString;
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('get')
-	 * ->with('/repos/joomla/joomla-platform/issues/523/comments')
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->assertThat(
-	 * $this->object->getComments('joomla', 'joomla-platform', 523),
-	 * $this->equalTo(json_decode($this->sampleString))
-	 * );
-	 * }
-	 */
-
-	/**
-	 * Tests the getComments method - failure
-	 *
-	 * @todo move
-	 * @expectedException  DomainException
-	 *
-	 * @return void
-	 *
-	 * public function testGetCommentsFailure()
-	 * {
-	 * $this->response->code = 500;
-	 * $this->response->body = $this->errorString;
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('get')
-	 * ->with('/repos/joomla/joomla-platform/issues/523/comments')
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->object->getComments('joomla', 'joomla-platform', 523);
-	 * }
-	 */
-
-	/**
-	 * Tests the getLabel method
-	 *
-	 * @todo move
-	 * @return void
-	 *
-	 * public function testGetLabel()
-	 * {
-	 * $this->response->code = 200;
-	 * $this->response->body = $this->sampleString;
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('get')
-	 * ->with('/repos/joomla/joomla-platform/labels/My Insightful Label')
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->assertThat(
-	 * $this->object->getLabel('joomla', 'joomla-platform', 'My Insightful Label'),
-	 * $this->equalTo(json_decode($this->sampleString))
-	 * );
-	 * }
-	 */
-
-	/**
-	 * Tests the getLabel method - failure
-	 *
-	 * @todo move
-	 * @expectedException  DomainException
-	 *
-	 * @return void
-	 *
-	 * public function testGetLabelFailure()
-	 * {
-	 * $this->response->code = 500;
-	 * $this->response->body = $this->errorString;
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('get')
-	 * ->with('/repos/joomla/joomla-platform/labels/My Insightful Label')
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->object->getLabel('joomla', 'joomla-platform', 'My Insightful Label');
-	 * }
-	 */
-
-	/**
-	 * Tests the getLabels method
-	 *
-	 * @todo move
-	 * @return void
-	 *
-	 * public function testGetLabels()
-	 * {
-	 * $this->response->code = 200;
-	 * $this->response->body = $this->sampleString;
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('get')
-	 * ->with('/repos/joomla/joomla-platform/labels')
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->assertThat(
-	 * $this->object->getLabels('joomla', 'joomla-platform'),
-	 * $this->equalTo(json_decode($this->sampleString))
-	 * );
-	 * }
-	 */
-
-	/**
-	 * Tests the getLabels method - failure
-	 *
-	 * @todo move
-	 * @expectedException  DomainException
-	 *
-	 * @return void
-	 *
-	 * public function testGetLabelsFailure()
-	 * {
-	 * $this->response->code = 500;
-	 * $this->response->body = $this->errorString;
-	 *
-	 * $this->client->expects($this->once())
-	 * ->method('get')
-	 * ->with('/repos/joomla/joomla-platform/labels')
-	 * ->will($this->returnValue($this->response));
-	 *
-	 * $this->object->getLabels('joomla', 'joomla-platform');
-	 * }
-	 */
 
 	/**
 	 * Tests the getList method - failure
@@ -742,7 +743,7 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetListByRepositoryAll()
 	{
-		$date                 = new JDate('January 1, 2012 12:12:12');
+		$date = new JDate('January 1, 2012 12:12:12');
 		$this->response->code = 200;
 		$this->response->body = $this->sampleString;
 
@@ -789,24 +790,5 @@ class JGithubPackageIssuesTest extends PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->object->getListByRepository('joomla', 'joomla-platform');
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options  = new JRegistry;
-		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackageIssues($this->options, $this->client);
 	}
 }

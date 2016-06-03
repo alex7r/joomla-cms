@@ -21,7 +21,7 @@ class ContentControllerArticle extends JControllerForm
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array $config A named array of configuration variables.
+	 * @param   array  $config  A named array of configuration variables.
 	 *
 	 * @since   1.6
 	 */
@@ -39,31 +39,9 @@ class ContentControllerArticle extends JControllerForm
 	}
 
 	/**
-	 * Method to run batch operations.
-	 *
-	 * @param   object $model The model.
-	 *
-	 * @return  boolean   True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   1.6
-	 */
-	public function batch($model = null)
-	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-		// Set the model
-		$model = $this->getModel('Article', '', array());
-
-		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_content&view=articles' . $this->getRedirectToListAppend(), false));
-
-		return parent::batch($model);
-	}
-
-	/**
 	 * Method override to check if you can add a new record.
 	 *
-	 * @param   array $data An array of input data.
+	 * @param   array  $data  An array of input data.
 	 *
 	 * @return  boolean
 	 *
@@ -71,9 +49,9 @@ class ContentControllerArticle extends JControllerForm
 	 */
 	protected function allowAdd($data = array())
 	{
-		$user       = JFactory::getUser();
+		$user = JFactory::getUser();
 		$categoryId = JArrayHelper::getValue($data, 'catid', $this->input->getInt('filter_category_id'), 'int');
-		$allow      = null;
+		$allow = null;
 
 		if ($categoryId)
 		{
@@ -95,8 +73,8 @@ class ContentControllerArticle extends JControllerForm
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param   array  $data An array of input data.
-	 * @param   string $key  The name of the key for the primary key.
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *
@@ -105,8 +83,8 @@ class ContentControllerArticle extends JControllerForm
 	protected function allowEdit($data = array(), $key = 'id')
 	{
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-		$user     = JFactory::getUser();
-		$userId   = $user->get('id');
+		$user = JFactory::getUser();
+		$userId = $user->get('id');
 
 		// Check general edit permission first.
 		if ($user->authorise('core.edit', 'com_content.article.' . $recordId))
@@ -145,14 +123,36 @@ class ContentControllerArticle extends JControllerForm
 	}
 
 	/**
+	 * Method to run batch operations.
+	 *
+	 * @param   object  $model  The model.
+	 *
+	 * @return  boolean   True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   1.6
+	 */
+	public function batch($model = null)
+	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		// Set the model
+		$model = $this->getModel('Article', '', array());
+
+		// Preset the redirect
+		$this->setRedirect(JRoute::_('index.php?option=com_content&view=articles' . $this->getRedirectToListAppend(), false));
+
+		return parent::batch($model);
+	}
+
+	/**
 	 * Function that allows child controller access to model data after the data has been saved.
 	 *
-	 * @param   JModelLegacy $model     The data model object.
-	 * @param   array        $validData The validated data.
+	 * @param   JModelLegacy  $model      The data model object.
+	 * @param   array         $validData  The validated data.
 	 *
-	 * @return    void
+	 * @return	void
 	 *
-	 * @since    3.1
+	 * @since	3.1
 	 */
 	protected function postSaveHook(JModelLegacy $model, $validData = array())
 	{

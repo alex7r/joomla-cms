@@ -35,8 +35,8 @@ class ContenthistoryModelCompare extends JModelItem
 		/** @var JTableContenthistory $table2 */
 		$table2 = JTable::getInstance('Contenthistory');
 
-		$id1    = $input->getInt('id1');
-		$id2    = $input->getInt('id2');
+		$id1 = $input->getInt('id1');
+		$id2 = $input->getInt('id2');
 		$result = array();
 
 		if ($table1->load($id1) && $table2->load($id2))
@@ -63,11 +63,11 @@ class ContenthistoryModelCompare extends JModelItem
 			// All's well, process the records
 			foreach (array($table1, $table2) as $table)
 			{
-				$object               = new stdClass;
-				$object->data         = ContenthistoryHelper::prepareData($table);
+				$object = new stdClass;
+				$object->data = ContenthistoryHelper::prepareData($table);
 				$object->version_note = $table->version_note;
-				$object->save_date    = $table->save_date;
-				$result[]             = $object;
+				$object->save_date = $table->save_date;
+				$result[] = $object;
 			}
 
 			return $result;

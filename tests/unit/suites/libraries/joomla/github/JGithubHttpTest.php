@@ -39,6 +39,36 @@ class JGithubHttpTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.4
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->transport = $this->getMock('JHttpTransportStream', array('request'), array($this->options), 'CustomTransport', false);
+
+		$this->object = new JGithubHttp($this->options, $this->transport);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.4
+	 */
+	protected function tearDown()
+	{
+	}
+
+	/**
 	 * Tests the __construct method
 	 *
 	 * @return  void
@@ -57,35 +87,5 @@ class JGithubHttpTest extends PHPUnit_Framework_TestCase
 			$this->object->getOption('timeout'),
 			$this->equalTo(120)
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.4
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options   = new JRegistry;
-		$this->transport = $this->getMock('JHttpTransportStream', array('request'), array($this->options), 'CustomTransport', false);
-
-		$this->object = new JGithubHttp($this->options, $this->transport);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.4
-	 */
-	protected function tearDown()
-	{
 	}
 }

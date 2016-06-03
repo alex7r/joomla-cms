@@ -23,19 +23,6 @@ class JSessionStorageNoneTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
-	 * Test JSessionStorageNone::Register().
-	 *
-	 * @return void
-	 */
-	public function testRegister()
-	{
-		$this->assertThat(
-			$this->object->register(),
-			$this->equalTo(null)
-		);
-	}
-
-	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
@@ -46,5 +33,18 @@ class JSessionStorageNoneTest extends PHPUnit_Framework_TestCase
 		parent::setUp();
 
 		$this->object = JSessionStorage::getInstance('None');
+	}
+
+	/**
+	 * Test JSessionStorageNone::Register().
+	 *
+	 * @return void
+	 */
+	public function testRegister()
+	{
+		$this->assertThat(
+			$this->object->register(),
+			$this->equalTo(null)
+		);
 	}
 }

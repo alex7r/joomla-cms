@@ -28,7 +28,7 @@ class JCacheStorageFile extends JCacheStorage
 	/**
 	 * Constructor
 	 *
-	 * @param   array $options Optional parameters
+	 * @param   array  $options  Optional parameters
 	 *
 	 * @since   11.1
 	 */
@@ -39,23 +39,11 @@ class JCacheStorageFile extends JCacheStorage
 	}
 
 	/**
-	 * Test to see if the storage handler is available.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		return is_writable(JFactory::getConfig()->get('cache_path', JPATH_CACHE));
-	}
-
-	/**
 	 * Get cached data by ID and group
 	 *
-	 * @param   string  $id        The cache data ID
-	 * @param   string  $group     The cache data group
-	 * @param   boolean $checkTime True to verify cache time expiration threshold
+	 * @param   string   $id         The cache data ID
+	 * @param   string   $group      The cache data group
+	 * @param   boolean  $checkTime  True to verify cache time expiration threshold
 	 *
 	 * @return  mixed  Boolean false on failure or a cached data object
 	 *
@@ -80,70 +68,6 @@ class JCacheStorageFile extends JCacheStorage
 			}
 
 			return $data;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Get a cache file path from an ID/group pair
-	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
-	 *
-	 * @return  boolean|string  The path to the data object or boolean false if the cache directory does not exist
-	 *
-	 * @since   11.1
-	 */
-	protected function _getFilePath($id, $group)
-	{
-		$name = $this->_getCacheId($id, $group);
-		$dir  = $this->_root . '/' . $group;
-
-		// If the folder doesn't exist try to create it
-		if (!is_dir($dir))
-		{
-			// Make sure the index file is there
-			$indexFile = $dir . '/index.html';
-			@mkdir($dir) && file_put_contents($indexFile, '<!DOCTYPE html><title></title>');
-		}
-
-		// Make sure the folder exists
-		if (!is_dir($dir))
-		{
-			return false;
-		}
-
-		return $dir . '/' . $name . '.php';
-	}
-
-	/**
-	 * Check if a cache object has expired
-	 *
-	 * @param   string $id    Cache ID to check
-	 * @param   string $group The cache data group
-	 *
-	 * @return  boolean  True if the cache ID is valid
-	 *
-	 * @since   11.1
-	 */
-	protected function _checkExpire($id, $group)
-	{
-		$path = $this->_getFilePath($id, $group);
-
-		// Check prune period
-		if (file_exists($path))
-		{
-			$time = @filemtime($path);
-
-			if (($time + $this->_lifetime) < $this->_now || empty($time))
-			{
-				@unlink($path);
-
-				return false;
-			}
-
-			return true;
 		}
 
 		return false;
@@ -179,218 +103,11 @@ class JCacheStorageFile extends JCacheStorage
 	}
 
 	/**
-	 * Utility function to read the folders in a folder.
-	 *
-	 * @param   string  $path          The path of the folder to read.
-	 * @param   string  $filter        A filter for folder names.
-	 * @param   mixed   $recurse       True to recursively search into sub-folders, or an integer to specify the maximum depth.
-	 * @param   boolean $fullpath      True to return the full path to the folders.
-	 * @param   array   $exclude       Array with names of folders which should not be shown in the result.
-	 * @param   array   $excludefilter Array with regular expressions matching folders which should not be shown in the result.
-	 *
-	 * @return  array  Folders in the given folder.
-	 *
-	 * @since   11.1
-	 */
-	protected function _folders($path, $filter = '.', $recurse = false, $fullpath = false, $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX'),
-	                            $excludefilter = array('^\..*'))
-	{
-		$arr = array();
-
-		// Check to make sure the path valid and clean
-		$path = $this->_cleanPath($path);
-
-		// Is the path a folder?
-		if (!is_dir($path))
-		{
-			JLog::add(__METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER', $path), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-
-		// Read the source directory
-		if (!($handle = @opendir($path)))
-		{
-			return $arr;
-		}
-
-		if (count($excludefilter))
-		{
-			$excludefilter_string = '/(' . implode('|', $excludefilter) . ')/';
-		}
-		else
-		{
-			$excludefilter_string = '';
-		}
-
-		while (($file = readdir($handle)) !== false)
-		{
-			if (($file != '.') && ($file != '..')
-				&& (!in_array($file, $exclude))
-				&& (empty($excludefilter_string) || !preg_match($excludefilter_string, $file))
-			)
-			{
-				$dir   = $path . '/' . $file;
-				$isDir = is_dir($dir);
-
-				if ($isDir)
-				{
-					// Removes filtered directories
-					if (preg_match("/$filter/", $file))
-					{
-						if ($fullpath)
-						{
-							$arr[] = $dir;
-						}
-						else
-						{
-							$arr[] = $file;
-						}
-					}
-
-					if ($recurse)
-					{
-						if (is_int($recurse))
-						{
-							$arr2 = $this->_folders($dir, $filter, $recurse - 1, $fullpath, $exclude, $excludefilter);
-						}
-						else
-						{
-							$arr2 = $this->_folders($dir, $filter, $recurse, $fullpath, $exclude, $excludefilter);
-						}
-
-						$arr = array_merge($arr, $arr2);
-					}
-				}
-			}
-		}
-
-		closedir($handle);
-
-		return $arr;
-	}
-
-	/**
-	 * Function to strip additional / or \ in a path name
-	 *
-	 * @param   string $path The path to clean
-	 * @param   string $ds   Directory separator (optional)
-	 *
-	 * @return  string  The cleaned path
-	 *
-	 * @since   11.1
-	 */
-	protected function _cleanPath($path, $ds = DIRECTORY_SEPARATOR)
-	{
-		$path = trim($path);
-
-		if (empty($path))
-		{
-			return $this->_root;
-		}
-
-		// Remove double slashes and backslahses and convert all slashes and backslashes to DIRECTORY_SEPARATOR
-		$path = preg_replace('#[/\\\\]+#', $ds, $path);
-
-		return $path;
-	}
-
-	/**
-	 * Utility function to quickly read the files in a folder.
-	 *
-	 * @param   string  $path          The path of the folder to read.
-	 * @param   string  $filter        A filter for file names.
-	 * @param   mixed   $recurse       True to recursively search into sub-folders, or an integer to specify the maximum depth.
-	 * @param   boolean $fullpath      True to return the full path to the file.
-	 * @param   array   $exclude       Array with names of files which should not be shown in the result.
-	 * @param   array   $excludefilter Array of folder names to exclude
-	 *
-	 * @return  array  Files in the given folder.
-	 *
-	 * @since   11.1
-	 */
-	protected function _filesInFolder($path, $filter = '.', $recurse = false, $fullpath = false,
-	                                  $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX'), $excludefilter = array('^\..*', '.*~'))
-	{
-		$arr = array();
-
-		// Check to make sure the path valid and clean
-		$path = $this->_cleanPath($path);
-
-		// Is the path a folder?
-		if (!is_dir($path))
-		{
-			JLog::add(__METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER', $path), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-
-		// Read the source directory.
-		if (!($handle = @opendir($path)))
-		{
-			return $arr;
-		}
-
-		if (count($excludefilter))
-		{
-			$excludefilter = '/(' . implode('|', $excludefilter) . ')/';
-		}
-		else
-		{
-			$excludefilter = '';
-		}
-
-		while (($file = readdir($handle)) !== false)
-		{
-			if (($file != '.') && ($file != '..') && (!in_array($file, $exclude)) && (!$excludefilter || !preg_match($excludefilter, $file)))
-			{
-				$dir   = $path . '/' . $file;
-				$isDir = is_dir($dir);
-
-				if ($isDir)
-				{
-					if ($recurse)
-					{
-						if (is_int($recurse))
-						{
-							$arr2 = $this->_filesInFolder($dir, $filter, $recurse - 1, $fullpath);
-						}
-						else
-						{
-							$arr2 = $this->_filesInFolder($dir, $filter, $recurse, $fullpath);
-						}
-
-						$arr = array_merge($arr, $arr2);
-					}
-				}
-				else
-				{
-					if (preg_match("/$filter/", $file))
-					{
-						if ($fullpath)
-						{
-							$arr[] = $path . '/' . $file;
-						}
-						else
-						{
-							$arr[] = $file;
-						}
-					}
-				}
-			}
-		}
-
-		closedir($handle);
-
-		return $arr;
-	}
-
-	/**
 	 * Store the data to cache by ID and group
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
-	 * @param   string $data  The data to store in cache
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
+	 * @param   string  $data   The data to store in cache
 	 *
 	 * @return  boolean
 	 *
@@ -421,8 +138,8 @@ class JCacheStorageFile extends JCacheStorage
 	/**
 	 * Remove a cached data entry by ID and group
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
 	 *
 	 * @return  boolean
 	 *
@@ -446,8 +163,8 @@ class JCacheStorageFile extends JCacheStorage
 	 * group mode    : cleans all cache in the group
 	 * notgroup mode : cleans all cache not in the group
 	 *
-	 * @param   string $group The cache data group
-	 * @param   string $mode  The mode for cleaning cache [group|notgroup]
+	 * @param   string  $group  The cache data group
+	 * @param   string  $mode   The mode for cleaning cache [group|notgroup]
 	 *
 	 * @return  boolean
 	 *
@@ -492,9 +209,193 @@ class JCacheStorageFile extends JCacheStorage
 	}
 
 	/**
+	 * Garbage collect expired cache data
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 */
+	public function gc()
+	{
+		$result = true;
+
+		// Files older than lifeTime get deleted from cache
+		$files = $this->_filesInFolder($this->_root, '', true, true, array('.svn', 'CVS', '.DS_Store', '__MACOSX', 'index.html'));
+
+		foreach ($files as $file)
+		{
+			$time = @filemtime($file);
+
+			if (($time + $this->_lifetime) < $this->_now || empty($time))
+			{
+				$result |= @unlink($file);
+			}
+		}
+
+		return (bool) $result;
+	}
+
+	/**
+	 * Test to see if the storage handler is available.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		return is_writable(JFactory::getConfig()->get('cache_path', JPATH_CACHE));
+	}
+
+	/**
+	 * Lock cached item
+	 *
+	 * @param   string   $id        The cache data ID
+	 * @param   string   $group     The cache data group
+	 * @param   integer  $locktime  Cached item max lock time
+	 *
+	 * @return  mixed  Boolean false if locking failed or an object containing properties lock and locklooped
+	 *
+	 * @since   11.1
+	 */
+	public function lock($id, $group, $locktime)
+	{
+		$returning             = new stdClass;
+		$returning->locklooped = false;
+
+		$looptime  = $locktime * 10;
+		$path      = $this->_getFilePath($id, $group);
+		$_fileopen = @fopen($path, "r+b");
+
+		if ($_fileopen)
+		{
+			$data_lock = @flock($_fileopen, LOCK_EX);
+		}
+		else
+		{
+			$data_lock = false;
+		}
+
+		if ($data_lock === false)
+		{
+			$lock_counter = 0;
+
+			// Loop until you find that the lock has been released.
+			// That implies that data get from other thread has finished
+			while ($data_lock === false)
+			{
+				if ($lock_counter > $looptime)
+				{
+					$returning->locked     = false;
+					$returning->locklooped = true;
+					break;
+				}
+
+				usleep(100);
+				$data_lock = @flock($_fileopen, LOCK_EX);
+				$lock_counter++;
+			}
+		}
+
+		$returning->locked = $data_lock;
+
+		return $returning;
+	}
+
+	/**
+	 * Unlock cached item
+	 *
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 */
+	public function unlock($id, $group = null)
+	{
+		$path      = $this->_getFilePath($id, $group);
+		$_fileopen = @fopen($path, "r+b");
+
+		if ($_fileopen)
+		{
+			$ret = @flock($_fileopen, LOCK_UN);
+			@fclose($_fileopen);
+
+			return $ret;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if a cache object has expired
+	 *
+	 * @param   string  $id     Cache ID to check
+	 * @param   string  $group  The cache data group
+	 *
+	 * @return  boolean  True if the cache ID is valid
+	 *
+	 * @since   11.1
+	 */
+	protected function _checkExpire($id, $group)
+	{
+		$path = $this->_getFilePath($id, $group);
+
+		// Check prune period
+		if (file_exists($path))
+		{
+			$time = @filemtime($path);
+
+			if (($time + $this->_lifetime) < $this->_now || empty($time))
+			{
+				@unlink($path);
+
+				return false;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get a cache file path from an ID/group pair
+	 *
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
+	 *
+	 * @return  boolean|string  The path to the data object or boolean false if the cache directory does not exist
+	 *
+	 * @since   11.1
+	 */
+	protected function _getFilePath($id, $group)
+	{
+		$name = $this->_getCacheId($id, $group);
+		$dir  = $this->_root . '/' . $group;
+
+		// If the folder doesn't exist try to create it
+		if (!is_dir($dir))
+		{
+			// Make sure the index file is there
+			$indexFile = $dir . '/index.html';
+			@mkdir($dir) && file_put_contents($indexFile, '<!DOCTYPE html><title></title>');
+		}
+
+		// Make sure the folder exists
+		if (!is_dir($dir))
+		{
+			return false;
+		}
+
+		return $dir . '/' . $name . '.php';
+	}
+
+	/**
 	 * Quickly delete a folder of files
 	 *
-	 * @param   string $path The path to the folder to delete.
+	 * @param   string  $path  The path to the folder to delete.
 	 *
 	 * @return  boolean
 	 *
@@ -580,110 +481,208 @@ class JCacheStorageFile extends JCacheStorage
 	}
 
 	/**
-	 * Garbage collect expired cache data
+	 * Function to strip additional / or \ in a path name
 	 *
-	 * @return  boolean
+	 * @param   string  $path  The path to clean
+	 * @param   string  $ds    Directory separator (optional)
+	 *
+	 * @return  string  The cleaned path
 	 *
 	 * @since   11.1
 	 */
-	public function gc()
+	protected function _cleanPath($path, $ds = DIRECTORY_SEPARATOR)
 	{
-		$result = true;
+		$path = trim($path);
 
-		// Files older than lifeTime get deleted from cache
-		$files = $this->_filesInFolder($this->_root, '', true, true, array('.svn', 'CVS', '.DS_Store', '__MACOSX', 'index.html'));
-
-		foreach ($files as $file)
+		if (empty($path))
 		{
-			$time = @filemtime($file);
-
-			if (($time + $this->_lifetime) < $this->_now || empty($time))
-			{
-				$result |= @unlink($file);
-			}
+			return $this->_root;
 		}
 
-		return (bool) $result;
+		// Remove double slashes and backslahses and convert all slashes and backslashes to DIRECTORY_SEPARATOR
+		$path = preg_replace('#[/\\\\]+#', $ds, $path);
+
+		return $path;
 	}
 
 	/**
-	 * Lock cached item
+	 * Utility function to quickly read the files in a folder.
 	 *
-	 * @param   string  $id       The cache data ID
-	 * @param   string  $group    The cache data group
-	 * @param   integer $locktime Cached item max lock time
+	 * @param   string   $path           The path of the folder to read.
+	 * @param   string   $filter         A filter for file names.
+	 * @param   mixed    $recurse        True to recursively search into sub-folders, or an integer to specify the maximum depth.
+	 * @param   boolean  $fullpath       True to return the full path to the file.
+	 * @param   array    $exclude        Array with names of files which should not be shown in the result.
+	 * @param   array    $excludefilter  Array of folder names to exclude
 	 *
-	 * @return  mixed  Boolean false if locking failed or an object containing properties lock and locklooped
+	 * @return  array  Files in the given folder.
 	 *
 	 * @since   11.1
 	 */
-	public function lock($id, $group, $locktime)
+	protected function _filesInFolder($path, $filter = '.', $recurse = false, $fullpath = false,
+		$exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX'), $excludefilter = array('^\..*', '.*~'))
 	{
-		$returning             = new stdClass;
-		$returning->locklooped = false;
+		$arr = array();
 
-		$looptime  = $locktime * 10;
-		$path      = $this->_getFilePath($id, $group);
-		$_fileopen = @fopen($path, "r+b");
+		// Check to make sure the path valid and clean
+		$path = $this->_cleanPath($path);
 
-		if ($_fileopen)
+		// Is the path a folder?
+		if (!is_dir($path))
 		{
-			$data_lock = @flock($_fileopen, LOCK_EX);
+			JLog::add(__METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER', $path), JLog::WARNING, 'jerror');
+
+			return false;
+		}
+
+		// Read the source directory.
+		if (!($handle = @opendir($path)))
+		{
+			return $arr;
+		}
+
+		if (count($excludefilter))
+		{
+			$excludefilter = '/(' . implode('|', $excludefilter) . ')/';
 		}
 		else
 		{
-			$data_lock = false;
+			$excludefilter = '';
 		}
 
-		if ($data_lock === false)
+		while (($file = readdir($handle)) !== false)
 		{
-			$lock_counter = 0;
-
-			// Loop until you find that the lock has been released.
-			// That implies that data get from other thread has finished
-			while ($data_lock === false)
+			if (($file != '.') && ($file != '..') && (!in_array($file, $exclude)) && (!$excludefilter || !preg_match($excludefilter, $file)))
 			{
-				if ($lock_counter > $looptime)
-				{
-					$returning->locked     = false;
-					$returning->locklooped = true;
-					break;
-				}
+				$dir   = $path . '/' . $file;
+				$isDir = is_dir($dir);
 
-				usleep(100);
-				$data_lock = @flock($_fileopen, LOCK_EX);
-				$lock_counter++;
+				if ($isDir)
+				{
+					if ($recurse)
+					{
+						if (is_int($recurse))
+						{
+							$arr2 = $this->_filesInFolder($dir, $filter, $recurse - 1, $fullpath);
+						}
+						else
+						{
+							$arr2 = $this->_filesInFolder($dir, $filter, $recurse, $fullpath);
+						}
+
+						$arr = array_merge($arr, $arr2);
+					}
+				}
+				else
+				{
+					if (preg_match("/$filter/", $file))
+					{
+						if ($fullpath)
+						{
+							$arr[] = $path . '/' . $file;
+						}
+						else
+						{
+							$arr[] = $file;
+						}
+					}
+				}
 			}
 		}
 
-		$returning->locked = $data_lock;
+		closedir($handle);
 
-		return $returning;
+		return $arr;
 	}
 
 	/**
-	 * Unlock cached item
+	 * Utility function to read the folders in a folder.
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
+	 * @param   string   $path           The path of the folder to read.
+	 * @param   string   $filter         A filter for folder names.
+	 * @param   mixed    $recurse        True to recursively search into sub-folders, or an integer to specify the maximum depth.
+	 * @param   boolean  $fullpath       True to return the full path to the folders.
+	 * @param   array    $exclude        Array with names of folders which should not be shown in the result.
+	 * @param   array    $excludefilter  Array with regular expressions matching folders which should not be shown in the result.
 	 *
-	 * @return  boolean
+	 * @return  array  Folders in the given folder.
 	 *
 	 * @since   11.1
 	 */
-	public function unlock($id, $group = null)
+	protected function _folders($path, $filter = '.', $recurse = false, $fullpath = false, $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX'),
+		$excludefilter = array('^\..*'))
 	{
-		$path      = $this->_getFilePath($id, $group);
-		$_fileopen = @fopen($path, "r+b");
+		$arr = array();
 
-		if ($_fileopen)
+		// Check to make sure the path valid and clean
+		$path = $this->_cleanPath($path);
+
+		// Is the path a folder?
+		if (!is_dir($path))
 		{
-			$ret = @flock($_fileopen, LOCK_UN);
-			@fclose($_fileopen);
+			JLog::add(__METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER', $path), JLog::WARNING, 'jerror');
 
-			return $ret;
+			return false;
 		}
 
-		return true;
+		// Read the source directory
+		if (!($handle = @opendir($path)))
+		{
+			return $arr;
+		}
+
+		if (count($excludefilter))
+		{
+			$excludefilter_string = '/(' . implode('|', $excludefilter) . ')/';
+		}
+		else
+		{
+			$excludefilter_string = '';
+		}
+
+		while (($file = readdir($handle)) !== false)
+		{
+			if (($file != '.') && ($file != '..')
+				&& (!in_array($file, $exclude))
+				&& (empty($excludefilter_string) || !preg_match($excludefilter_string, $file)))
+			{
+				$dir   = $path . '/' . $file;
+				$isDir = is_dir($dir);
+
+				if ($isDir)
+				{
+					// Removes filtered directories
+					if (preg_match("/$filter/", $file))
+					{
+						if ($fullpath)
+						{
+							$arr[] = $dir;
+						}
+						else
+						{
+							$arr[] = $file;
+						}
+					}
+
+					if ($recurse)
+					{
+						if (is_int($recurse))
+						{
+							$arr2 = $this->_folders($dir, $filter, $recurse - 1, $fullpath, $exclude, $excludefilter);
+						}
+						else
+						{
+							$arr2 = $this->_folders($dir, $filter, $recurse, $fullpath, $exclude, $excludefilter);
+						}
+
+						$arr = array_merge($arr, $arr2);
+					}
+				}
+			}
+		}
+
+		closedir($handle);
+
+		return $arr;
 	}
 }

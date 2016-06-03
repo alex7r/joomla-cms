@@ -21,7 +21,7 @@ class ModulesModelModules extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -60,8 +60,8 @@ class ModulesModelModules extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -107,7 +107,7 @@ class ModulesModelModules extends JModelList
 		else
 		{
 			$clientId = (int) $this->getUserStateFromRequest($this->context . '.client_id', 'client_id', 0, 'int');
-			$clientId = (!in_array($clientId, array(0, 1))) ? 0 : $clientId;
+			$clientId = (!in_array($clientId, array (0, 1))) ? 0 : $clientId;
 			$this->setState('client_id', $clientId);
 		}
 
@@ -120,11 +120,37 @@ class ModulesModelModules extends JModelList
 	}
 
 	/**
+	 * Method to get a store id based on model configuration state.
+	 *
+	 * This is necessary because the model is used by the component and
+	 * different modules that might need different sets of data or different
+	 * ordering requirements.
+	 *
+	 * @param   string  $id  A prefix for the store id.
+	 *
+	 * @return  string    A store id.
+	 */
+	protected function getStoreId($id = '')
+	{
+		// Compile the store id.
+		$id .= ':' . $this->getState('client_id');
+		$id .= ':' . $this->getState('filter.search');
+		$id .= ':' . $this->getState('filter.state');
+		$id .= ':' . $this->getState('filter.position');
+		$id .= ':' . $this->getState('filter.module');
+		$id .= ':' . $this->getState('filter.menuitem');
+		$id .= ':' . $this->getState('filter.access');
+		$id .= ':' . $this->getState('filter.language');
+
+		return parent::getStoreId($id);
+	}
+
+	/**
 	 * Returns an object list
 	 *
-	 * @param   string $query      The query
-	 * @param   int    $limitstart Offset
-	 * @param   int    $limit      The number of records
+	 * @param   string  $query       The query
+	 * @param   int     $limitstart  Offset
+	 * @param   int     $limit       The number of records
 	 *
 	 * @return  array
 	 */
@@ -147,7 +173,7 @@ class ModulesModelModules extends JModelList
 			$result = ArrayHelper::sortObjects($result, $listOrder, strtolower($listDirn) == 'desc' ? -1 : 1, true, true);
 
 			// Process pagination.
-			$total                                      = count($result);
+			$total = count($result);
 			$this->cache[$this->getStoreId('getTotal')] = $total;
 			if ($total < $limitstart)
 			{
@@ -186,21 +212,21 @@ class ModulesModelModules extends JModelList
 	/**
 	 * Translate a list of objects
 	 *
-	 * @param   array &$items The array of objects
+	 * @param   array  &$items  The array of objects
 	 *
 	 * @return  array The array of translated objects
 	 */
 	protected function translate(&$items)
 	{
-		$lang       = JFactory::getLanguage();
+		$lang = JFactory::getLanguage();
 		$clientPath = $this->getState('client_id') ? JPATH_ADMINISTRATOR : JPATH_SITE;
 
 		foreach ($items as $item)
 		{
 			$extension = $item->module;
-			$source    = $clientPath . "/modules/$extension";
+			$source = $clientPath . "/modules/$extension";
 			$lang->load("$extension.sys", $clientPath, null, false, true)
-			|| $lang->load("$extension.sys", $source, null, false, true);
+				|| $lang->load("$extension.sys", $source, null, false, true);
 			$item->name = JText::_($item->name);
 
 			if (is_null($item->pages))
@@ -223,32 +249,6 @@ class ModulesModelModules extends JModelList
 	}
 
 	/**
-	 * Method to get a store id based on model configuration state.
-	 *
-	 * This is necessary because the model is used by the component and
-	 * different modules that might need different sets of data or different
-	 * ordering requirements.
-	 *
-	 * @param   string $id A prefix for the store id.
-	 *
-	 * @return  string    A store id.
-	 */
-	protected function getStoreId($id = '')
-	{
-		// Compile the store id.
-		$id .= ':' . $this->getState('client_id');
-		$id .= ':' . $this->getState('filter.search');
-		$id .= ':' . $this->getState('filter.state');
-		$id .= ':' . $this->getState('filter.position');
-		$id .= ':' . $this->getState('filter.module');
-		$id .= ':' . $this->getState('filter.menuitem');
-		$id .= ':' . $this->getState('filter.access');
-		$id .= ':' . $this->getState('filter.language');
-
-		return parent::getStoreId($id);
-	}
-
-	/**
 	 * Build an SQL query to load the list data.
 	 *
 	 * @return  JDatabaseQuery
@@ -258,7 +258,7 @@ class ModulesModelModules extends JModelList
 		$app = JFactory::getApplication();
 
 		// Create a new query object.
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the required fields.
@@ -266,7 +266,7 @@ class ModulesModelModules extends JModelList
 			$this->getState(
 				'list.select',
 				'a.id, a.title, a.note, a.position, a.module, a.language,' .
-				'a.checked_out, a.checked_out_time, a.published AS published, e.enabled AS enabled, a.access, a.ordering, a.publish_up, a.publish_down'
+					'a.checked_out, a.checked_out_time, a.published AS published, e.enabled AS enabled, a.access, a.ordering, a.publish_up, a.publish_down'
 			)
 		);
 
@@ -296,10 +296,10 @@ class ModulesModelModules extends JModelList
 
 		// Group (careful with PostgreSQL)
 		$query->group(
-			'a.id, a.title, a.note, a.position, a.module, a.language, a.checked_out, ' .
-			'a.checked_out_time, a.published, a.access, a.ordering, l.title, l.image, uc.name, ag.title, e.name, ' .
-			'l.lang_code, uc.id, ag.id, mm.moduleid, e.element, a.publish_up, a.publish_down, e.enabled'
-		);
+				'a.id, a.title, a.note, a.position, a.module, a.language, a.checked_out, ' .
+					'a.checked_out_time, a.published, a.access, a.ordering, l.title, l.image, uc.name, ag.title, e.name, ' .
+					'l.lang_code, uc.id, ag.id, mm.moduleid, e.element, a.publish_up, a.publish_down, e.enabled'
+			);
 
 		// Filter by client.
 		$clientId = $this->getState('client_id');

@@ -16,12 +16,12 @@ defined('JPATH_PLATFORM') or die;
  *
  * @since  11.1
  *
- * @property-read    JInput       $get
- * @property-read    JInput       $post
- * @property-read    JInput       $request
- * @property-read    JInput       $server
- * @property-read    JInputFiles  $files
- * @property-read    JInputCookie $cookie
+ * @property-read    JInput        $get
+ * @property-read    JInput        $post
+ * @property-read    JInput        $request
+ * @property-read    JInput        $server
+ * @property-read    JInputFiles   $files
+ * @property-read    JInputCookie  $cookie
  *
  * @method      integer  getInt()       getInt($name, $default = null)    Get a signed integer.
  * @method      integer  getUint()      getUint($name, $default = null)   Get an unsigned integer.
@@ -73,8 +73,8 @@ class JInput implements Serializable, Countable
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $source  Source data (Optional, default is $_REQUEST)
-	 * @param   array $options Array of configuration parameters (Optional)
+	 * @param   array  $source   Source data (Optional, default is $_REQUEST)
+	 * @param   array  $options  Array of configuration parameters (Optional)
 	 *
 	 * @since   11.1
 	 */
@@ -105,7 +105,7 @@ class JInput implements Serializable, Countable
 	/**
 	 * Magic method to get an input object
 	 *
-	 * @param   mixed $name Name of the input object to retrieve.
+	 * @param   mixed  $name  Name of the input object to retrieve.
 	 *
 	 * @return  JInput  The request input object
 	 *
@@ -153,14 +153,35 @@ class JInput implements Serializable, Countable
 	}
 
 	/**
+	 * Gets a value from the input data.
+	 *
+	 * @param   string  $name     Name of the value to get.
+	 * @param   mixed   $default  Default value to return if variable does not exist.
+	 * @param   string  $filter   Filter to apply to the value.
+	 *
+	 * @return  mixed  The filtered input value.
+	 *
+	 * @since   11.1
+	 */
+	public function get($name, $default = null, $filter = 'cmd')
+	{
+		if (isset($this->data[$name]))
+		{
+			return $this->filter->clean($this->data[$name], $filter);
+		}
+
+		return $default;
+	}
+
+	/**
 	 * Gets an array of values from the request.
 	 *
-	 * @param   array  $vars            Associative array of keys and filter types to apply.
+	 * @param   array   $vars           Associative array of keys and filter types to apply.
 	 *                                  If empty and datasource is null, all the input data will be returned
 	 *                                  but filtered using the filter given by the parameter defaultFilter in
 	 *                                  JFilterInput::clean.
-	 * @param   mixed  $datasource      Array to retrieve data from, or null.
-	 * @param   string $defaultFilter   Default filter used in JFilterInput::clean if vars is empty and
+	 * @param   mixed   $datasource     Array to retrieve data from, or null.
+	 * @param   string  $defaultFilter  Default filter used in JFilterInput::clean if vars is empty and
 	 *                                  datasource is null. If 'unknown', the default case is used in
 	 *                                  JFilterInput::clean.
 	 *
@@ -176,15 +197,15 @@ class JInput implements Serializable, Countable
 	/**
 	 * Gets an array of values from the request.
 	 *
-	 * @param   array  $vars            Associative array of keys and filter types to apply.
+	 * @param   array   $vars           Associative array of keys and filter types to apply.
 	 *                                  If empty and datasource is null, all the input data will be returned
 	 *                                  but filtered using the filter given by the parameter defaultFilter in
 	 *                                  JFilterInput::clean.
-	 * @param   mixed  $datasource      Array to retrieve data from, or null.
-	 * @param   string $defaultFilter   Default filter used in JFilterInput::clean if vars is empty and
+	 * @param   mixed   $datasource     Array to retrieve data from, or null.
+	 * @param   string  $defaultFilter  Default filter used in JFilterInput::clean if vars is empty and
 	 *                                  datasource is null. If 'unknown', the default case is used in
 	 *                                  JFilterInput::clean.
-	 * @param   bool   $recursion       Flag to indicate a recursive function call.
+	 * @param   bool    $recursion      Flag to indicate a recursive function call.
 	 *
 	 * @return  mixed  The filtered input data.
 	 *
@@ -242,31 +263,10 @@ class JInput implements Serializable, Countable
 	}
 
 	/**
-	 * Gets a value from the input data.
-	 *
-	 * @param   string $name    Name of the value to get.
-	 * @param   mixed  $default Default value to return if variable does not exist.
-	 * @param   string $filter  Filter to apply to the value.
-	 *
-	 * @return  mixed  The filtered input value.
-	 *
-	 * @since   11.1
-	 */
-	public function get($name, $default = null, $filter = 'cmd')
-	{
-		if (isset($this->data[$name]))
-		{
-			return $this->filter->clean($this->data[$name], $filter);
-		}
-
-		return $default;
-	}
-
-	/**
 	 * Sets a value
 	 *
-	 * @param   string $name  Name of the value to set.
-	 * @param   mixed  $value Value to assign to the input.
+	 * @param   string  $name   Name of the value to set.
+	 * @param   mixed   $value  Value to assign to the input.
 	 *
 	 * @return  void
 	 *
@@ -280,8 +280,8 @@ class JInput implements Serializable, Countable
 	/**
 	 * Define a value. The value will only be set if there's no value for the name or if it is null.
 	 *
-	 * @param   string $name  Name of the value to define.
-	 * @param   mixed  $value Value to assign to the input.
+	 * @param   string  $name   Name of the value to define.
+	 * @param   mixed   $value  Value to assign to the input.
 	 *
 	 * @return  void
 	 *
@@ -300,8 +300,8 @@ class JInput implements Serializable, Countable
 	/**
 	 * Magic method to get filtered input data.
 	 *
-	 * @param   string $name      Name of the filter type prefixed with 'get'.
-	 * @param   array  $arguments [0] The name of the variable [1] The default value.
+	 * @param   string  $name       Name of the filter type prefixed with 'get'.
+	 * @param   array   $arguments  [0] The name of the variable [1] The default value.
 	 *
 	 * @return  mixed   The filtered input value.
 	 *
@@ -362,6 +362,31 @@ class JInput implements Serializable, Countable
 	}
 
 	/**
+	 * Method to unserialize the input.
+	 *
+	 * @param   string  $input  The serialized input.
+	 *
+	 * @return  JInput  The input object.
+	 *
+	 * @since   12.1
+	 */
+	public function unserialize($input)
+	{
+		// Unserialize the options, data, and inputs.
+		list($this->options, $this->data, $this->inputs) = unserialize($input);
+
+		// Load the filter.
+		if (isset($this->options['filter']))
+		{
+			$this->filter = $this->options['filter'];
+		}
+		else
+		{
+			$this->filter = JFilterInput::getInstance();
+		}
+	}
+
+	/**
 	 * Method to load all of the global inputs.
 	 *
 	 * @return  void
@@ -390,31 +415,6 @@ class JInput implements Serializable, Countable
 			}
 
 			$loaded = true;
-		}
-	}
-
-	/**
-	 * Method to unserialize the input.
-	 *
-	 * @param   string $input The serialized input.
-	 *
-	 * @return  JInput  The input object.
-	 *
-	 * @since   12.1
-	 */
-	public function unserialize($input)
-	{
-		// Unserialize the options, data, and inputs.
-		list($this->options, $this->data, $this->inputs) = unserialize($input);
-
-		// Load the filter.
-		if (isset($this->options['filter']))
-		{
-			$this->filter = $this->options['filter'];
-		}
-		else
-		{
-			$this->filter = JFilterInput::getInstance();
 		}
 	}
 }

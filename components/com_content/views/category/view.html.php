@@ -63,7 +63,7 @@ class ContentViewCategory extends JViewCategory
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -103,18 +103,18 @@ class ContentViewCategory extends JViewCategory
 			}
 
 			JPluginHelper::importPlugin('content');
-			$dispatcher->trigger('onContentPrepare', array('com_content.category', &$item, &$item->params, 0));
+			$dispatcher->trigger('onContentPrepare', array ('com_content.category', &$item, &$item->params, 0));
 
 			// Old plugins: Use processed text as introtext
 			$item->introtext = $item->text;
 
-			$results                        = $dispatcher->trigger('onContentAfterTitle', array('com_content.category', &$item, &$item->params, 0));
+			$results = $dispatcher->trigger('onContentAfterTitle', array('com_content.category', &$item, &$item->params, 0));
 			$item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-			$results                           = $dispatcher->trigger('onContentBeforeDisplay', array('com_content.category', &$item, &$item->params, 0));
+			$results = $dispatcher->trigger('onContentBeforeDisplay', array('com_content.category', &$item, &$item->params, 0));
 			$item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-			$results                          = $dispatcher->trigger('onContentAfterDisplay', array('com_content.category', &$item, &$item->params, 0));
+			$results = $dispatcher->trigger('onContentAfterDisplay', array('com_content.category', &$item, &$item->params, 0));
 			$item->event->afterDisplayContent = trim(implode("\n", $results));
 		}
 
@@ -267,16 +267,16 @@ class ContentViewCategory extends JViewCategory
 	{
 		parent::prepareDocument();
 		$menu = $this->menu;
-		$id   = (int) @$menu->query['id'];
+		$id = (int) @$menu->query['id'];
 
 		if ($menu && ($menu->query['option'] != 'com_content' || $menu->query['view'] == 'article' || $id != $this->category->id))
 		{
-			$path     = array(array('title' => $this->category->title, 'link' => ''));
+			$path = array(array('title' => $this->category->title, 'link' => ''));
 			$category = $this->category->getParent();
 
 			while (($menu->query['option'] != 'com_content' || $menu->query['view'] == 'article' || $id != $category->id) && $category->id > 1)
 			{
-				$path[]   = array('title' => $category->title, 'link' => ContentHelperRoute::getCategoryRoute($category->id));
+				$path[] = array('title' => $category->title, 'link' => ContentHelperRoute::getCategoryRoute($category->id));
 				$category = $category->getParent();
 			}
 

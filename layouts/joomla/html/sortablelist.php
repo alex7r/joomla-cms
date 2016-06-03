@@ -13,12 +13,12 @@ defined('JPATH_BASE') or die;
  * Layout variables
  * ---------------------
  *
- * @var  string $tableId                The id of the table
- * @var  string $formId                 The id of the form
- * @var  string $saveOrderingUrl        Save the ordering URL?
- * @var  string $sortDir                The direction of the order (asc/desc)
- * @var  string $nestedList             Is it nested list?
- * @var  string $proceedSaveOrderButton Is there a button to initiate the ordering?
+ * @var  string   $tableId                 The id of the table
+ * @var  string   $formId                  The id of the form
+ * @var  string   $saveOrderingUrl         Save the ordering URL?
+ * @var  string   $sortDir                 The direction of the order (asc/desc)
+ * @var  string   $nestedList              Is it nested list?
+ * @var  string   $proceedSaveOrderButton  Is there a button to initiate the ordering?
  */
 
 extract($displayData);

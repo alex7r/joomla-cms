@@ -19,7 +19,7 @@ class ContactHelper extends JHelperContent
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string $vName The name of the active view.
+	 * @param   string  $vName  The name of the active view.
 	 *
 	 * @return  void
 	 *
@@ -43,7 +43,7 @@ class ContactHelper extends JHelperContent
 	/**
 	 * Adds Count Items for Category Manager.
 	 *
-	 * @param   stdClass[] &$items The banner category objects
+	 * @param   stdClass[]  &$items  The banner category objects
 	 *
 	 * @return  stdClass[]
 	 *
@@ -55,11 +55,11 @@ class ContactHelper extends JHelperContent
 
 		foreach ($items as $item)
 		{
-			$item->count_trashed     = 0;
-			$item->count_archived    = 0;
+			$item->count_trashed = 0;
+			$item->count_archived = 0;
 			$item->count_unpublished = 0;
-			$item->count_published   = 0;
-			$query                   = $db->getQuery(true);
+			$item->count_published = 0;
+			$query = $db->getQuery(true);
 			$query->select('published AS state, count(*) AS count')
 				->from($db->qn('#__contact_details'))
 				->where('catid = ' . (int) $item->id)

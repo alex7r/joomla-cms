@@ -14,7 +14,7 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select', null, array('disable_search_threshold' => 0));
+JHtml::_('formbehavior.chosen', 'select', null, array('disable_search_threshold' => 0 ));
 
 $this->configFieldsets  = array('editorConfig');
 $this->hiddenFieldsets  = array('basic-limited');
@@ -23,20 +23,20 @@ $this->ignore_fieldsets = array('jmetadata', 'item_associations');
 // Create shortcut to parameters.
 $params = $this->state->get('params');
 
-$app   = JFactory::getApplication();
+$app = JFactory::getApplication();
 $input = $app->input;
 
 $assoc = JLanguageAssociations::isEnabled();
 
 // This checks if the config options have ever been saved. If they haven't they will fall back to the original settings.
-$params        = json_decode($params);
+$params = json_decode($params);
 $editoroptions = isset($params->show_publishing_options);
 
 if (!$editoroptions)
 {
-	$params->show_publishing_options   = '1';
-	$params->show_article_options      = '1';
-	$params->show_urls_images_backend  = '0';
+	$params->show_publishing_options = '1';
+	$params->show_article_options = '1';
+	$params->show_urls_images_backend = '0';
 	$params->show_urls_images_frontend = '0';
 }
 
@@ -80,13 +80,11 @@ JFactory::getDocument()->addScriptDeclaration('
 
 // In case of modal
 $isModal = $input->get('layout') == 'modal' ? true : false;
-$layout  = $isModal ? 'modal' : 'edit';
-$tmpl    = $isModal ? '&tmpl=component' : '';
+$layout = $isModal ? 'modal' : 'edit';
+$tmpl = $isModal ? '&tmpl=component' : '';
 ?>
 
-<form
-	action="<?php echo JRoute::_('index.php?option=com_content&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
-	method="post" name="adminForm" id="item-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_content&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
 
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
@@ -139,7 +137,7 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
 		<?php endif; ?>
 
-		<?php if (!$isModal && $assoc) : ?>
+		<?php if ( ! $isModal && $assoc) : ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations', JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')); ?>
 			<?php echo $this->loadTemplate('associations'); ?>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
@@ -158,14 +156,14 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 
 		<?php if ($this->canDo->get('core.admin')) : ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('COM_CONTENT_FIELDSET_RULES')); ?>
-			<?php echo $this->form->getInput('rules'); ?>
+				<?php echo $this->form->getInput('rules'); ?>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
 		<?php endif; ?>
 
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 
-		<input type="hidden" name="task" value=""/>
-		<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>" />
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>

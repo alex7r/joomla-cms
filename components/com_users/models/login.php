@@ -22,10 +22,10 @@ class UsersModelLogin extends JModelForm
 	 * The base form is loaded from XML and then an event is fired
 	 * for users plugins to extend the form with extra fields.
 	 *
-	 * @param   array   $data     An optional array of data for the form to interogate.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      An optional array of data for the form to interogate.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return  JForm    A JForm object on success, false on failure
+	 * @return  JForm	A JForm object on success, false on failure
 	 *
 	 * @since   1.6
 	 */
@@ -55,7 +55,7 @@ class UsersModelLogin extends JModelForm
 		$app  = JFactory::getApplication();
 		$data = $app->getUserState('users.login.form.data', array());
 
-		$input  = $app->input;
+		$input = $app->input;
 		$method = $input->getMethod();
 
 		// Check for return URL from the request first
@@ -103,9 +103,9 @@ class UsersModelLogin extends JModelForm
 	/**
 	 * Override JModelAdmin::preprocessForm to ensure the correct plugin group is loaded.
 	 *
-	 * @param   JForm  $form  A JForm object.
-	 * @param   mixed  $data  The data expected for the form.
-	 * @param   string $group The name of the plugin group to import (defaults to "content").
+	 * @param   JForm   $form   A JForm object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
 	 *
 	 * @return  void
 	 *

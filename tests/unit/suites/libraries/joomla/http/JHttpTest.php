@@ -35,6 +35,25 @@ class JHttpTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.4
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		static $classNumber = 1;
+		$this->options = $this->getMock('\\Joomla\\Registry\\Registry', array('get', 'set'));
+		$this->transport = $this->getMock('JHttpTransportStream', array('request'), array($this->options), 'CustomTransport' . $classNumber ++, false);
+
+		$this->object = new JHttp($this->options, $this->transport);
+	}
+
+	/**
 	 * Tests the getOption method
 	 *
 	 * @return  void
@@ -231,24 +250,5 @@ class JHttpTest extends PHPUnit_Framework_TestCase
 			$this->object->patch('http://example.com', array('key' => 'value'), array('testHeader')),
 			$this->equalTo('ReturnString')
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		static $classNumber = 1;
-		$this->options   = $this->getMock('\\Joomla\\Registry\\Registry', array('get', 'set'));
-		$this->transport = $this->getMock('JHttpTransportStream', array('request'), array($this->options), 'CustomTransport' . $classNumber++, false);
-
-		$this->object = new JHttp($this->options, $this->transport);
 	}
 }

@@ -32,7 +32,7 @@ class ConfigViewApplicationJson extends ConfigViewCmsJson
 		try
 		{
 			$this->data = $this->model->getData();
-			$user       = JFactory::getUser();
+			$user = JFactory::getUser();
 		}
 		catch (Exception $e)
 		{

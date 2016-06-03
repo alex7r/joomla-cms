@@ -32,8 +32,8 @@ class InstallerControllerLanguages extends JControllerLegacy
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Get the caching duration
-		$component     = JComponentHelper::getComponent('com_installer');
-		$params        = $component->params;
+		$component = JComponentHelper::getComponent('com_installer');
+		$params = $component->params;
 		$cache_timeout = $params->get('cachetimeout', 6, 'int');
 		$cache_timeout = 3600 * $cache_timeout;
 

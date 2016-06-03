@@ -17,7 +17,7 @@ abstract class En_GBLocalise
 	/**
 	 * Returns the potential suffixes for a specific number of items
 	 *
-	 * @param   integer $count The number of items.
+	 * @param   integer  $count  The number of items.
 	 *
 	 * @since    1.6
 	 * @return    array  An array of potential suffixes.
@@ -36,7 +36,6 @@ abstract class En_GBLocalise
 		{
 			$return = array('MORE');
 		}
-
 		return $return;
 	}
 
@@ -48,7 +47,7 @@ abstract class En_GBLocalise
 	 */
 	public static function getIgnoredSearchWords()
 	{
-		$search_ignore   = array();
+		$search_ignore = array();
 		$search_ignore[] = "and";
 		$search_ignore[] = "in";
 		$search_ignore[] = "on";

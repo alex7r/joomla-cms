@@ -59,9 +59,9 @@ class JUriTest extends PHPUnit_Framework_TestCase
 		);
 
 		$this->object->parse('http://www.example.com:80/joomla/index.php?var=value 10');
-		$_SERVER['HTTP_HOST']   = 'www.example.com:80';
+		$_SERVER['HTTP_HOST'] = 'www.example.com:80';
 		$_SERVER['SCRIPT_NAME'] = '/joomla/index.php';
-		$_SERVER['PHP_SELF']    = '/joomla/index.php';
+		$_SERVER['PHP_SELF'] = '/joomla/index.php';
 		$_SERVER['REQUEST_URI'] = '/joomla/index.php?var=value 10';
 
 		$return = JUri::getInstance();
@@ -327,11 +327,11 @@ class JUriTest extends PHPUnit_Framework_TestCase
 			'field' => array(
 				'price' => array(
 					'from' => 5,
-					'to'   => 10,
+					'to' => 10,
 				),
-				'name'  => 'foo'
+				'name' => 'foo'
 			),
-			'v'     => 45);
+			'v' => 45);
 
 		$expected = 'field[price][from]=5&field[price][to]=10&field[name]=foo&v=45';
 		$this->assertEquals($expected, JUri::buildQuery($params));
@@ -726,9 +726,9 @@ class JUriTest extends PHPUnit_Framework_TestCase
 	{
 		JUri::reset();
 
-		$_SERVER['HTTP_HOST']   = 'www.example.com:80';
+		$_SERVER['HTTP_HOST'] = 'www.example.com:80';
 		$_SERVER['SCRIPT_NAME'] = '/index.php';
-		$_SERVER['PHP_SELF']    = '/index.php';
+		$_SERVER['PHP_SELF'] = '/index.php';
 		$_SERVER['REQUEST_URI'] = '/index.php?var=value 10';
 
 		$this->object = new JUri;
@@ -858,9 +858,9 @@ class JUriTest extends PHPUnit_Framework_TestCase
 
 		JUri::reset();
 
-		$_SERVER['HTTP_HOST']   = 'www.example.com:80';
+		$_SERVER['HTTP_HOST'] = 'www.example.com:80';
 		$_SERVER['SCRIPT_NAME'] = '/joomla/index.php';
-		$_SERVER['PHP_SELF']    = '/joomla/index.php';
+		$_SERVER['PHP_SELF'] = '/joomla/index.php';
 		$_SERVER['REQUEST_URI'] = '/joomla/index.php?var=value 10';
 
 		$this->object = new JUri;

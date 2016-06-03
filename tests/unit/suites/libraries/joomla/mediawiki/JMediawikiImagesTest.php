@@ -52,13 +52,29 @@ class JMediawikiImagesTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '<message>Generic Error</message>';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JMediawikiImages($this->options, $this->client);
+	}
+
+	/**
 	 * Tests the getImages method
 	 *
 	 * @return void
 	 */
 	public function testGetImages()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -80,7 +96,7 @@ class JMediawikiImagesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetImagesUsed()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -102,7 +118,7 @@ class JMediawikiImagesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetImageInfo()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -124,7 +140,7 @@ class JMediawikiImagesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEnumerateImages()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -137,21 +153,5 @@ class JMediawikiImagesTest extends PHPUnit_Framework_TestCase
 			$this->object->enumerateImages(),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->options = new JRegistry;
-		$this->client  = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JMediawikiImages($this->options, $this->client);
 	}
 }

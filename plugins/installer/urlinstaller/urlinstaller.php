@@ -20,8 +20,8 @@ class PlgInstallerUrlInstaller extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object &$subject   The object to observe
-	 * @param   array  $config     An optional associative array of configuration settings.
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 *
@@ -52,8 +52,7 @@ class PlgInstallerUrlInstaller extends JPlugin
 				<label for="install_url"
 				       class="control-label"><?php echo JText::_('PLG_INSTALLER_URLINSTALLER_TEXT'); ?></label>
 				<div class="controls">
-					<input type="text" id="install_url" name="install_url" class="span5 input_box" size="70"
-					       placeholder="https://"/>
+					<input type="text" id="install_url" name="install_url" class="span5 input_box" size="70" placeholder="https://"/>
 				</div>
 			</div>
 			<div class="form-actions">

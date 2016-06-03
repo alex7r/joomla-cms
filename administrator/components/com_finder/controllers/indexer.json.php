@@ -87,55 +87,6 @@ class FinderControllerIndexer extends JControllerLegacy
 	}
 
 	/**
-	 * Method to handle a send a JSON response. The body parameter
-	 * can be an Exception object for when an error has occurred or
-	 * a JObject for a good response.
-	 *
-	 * @param   mixed  $data  JObject on success, Exception on error. [optional]
-	 *
-	 * @return  void
-	 *
-	 * @since   2.5
-	 */
-	public static function sendResponse($data = null)
-	{
-		static $log;
-
-		$params = JComponentHelper::getParams('com_finder');
-
-		if ($params->get('enable_logging', '0'))
-		{
-			if ($log == null)
-			{
-				$options['format'] = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
-				$options['text_file'] = 'indexer.php';
-				$log = JLog::addLogger($options);
-			}
-		}
-
-		// Send the assigned error code if we are catching an exception.
-		if ($data instanceof Exception)
-		{
-			$app = JFactory::getApplication();
-			JLog::add($data->getMessage(), JLog::ERROR);
-			$app->setHeader('status', $data->getCode());
-			$app->sendHeaders();
-		}
-
-		// Create the response object.
-		$response = new FinderIndexerResponse($data);
-
-		// Add the buffer.
-		$response->buffer = JDEBUG ? ob_get_contents() : ob_end_clean();
-
-		// Send the JSON response.
-		echo json_encode($response);
-
-		// Close the application.
-		JFactory::getApplication()->close();
-	}
-
-	/**
 	 * Method to run the next batch of content through the indexer.
 	 *
 	 * @return  void
@@ -296,6 +247,55 @@ class FinderControllerIndexer extends JControllerLegacy
 		{
 			$this->sendResponse($e);
 		}
+	}
+
+	/**
+	 * Method to handle a send a JSON response. The body parameter
+	 * can be an Exception object for when an error has occurred or
+	 * a JObject for a good response.
+	 *
+	 * @param   mixed  $data  JObject on success, Exception on error. [optional]
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	public static function sendResponse($data = null)
+	{
+		static $log;
+
+		$params = JComponentHelper::getParams('com_finder');
+
+		if ($params->get('enable_logging', '0'))
+		{
+			if ($log == null)
+			{
+				$options['format'] = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
+				$options['text_file'] = 'indexer.php';
+				$log = JLog::addLogger($options);
+			}
+		}
+
+		// Send the assigned error code if we are catching an exception.
+		if ($data instanceof Exception)
+		{
+			$app = JFactory::getApplication();
+			JLog::add($data->getMessage(), JLog::ERROR);
+			$app->setHeader('status', $data->getCode());
+			$app->sendHeaders();
+		}
+
+		// Create the response object.
+		$response = new FinderIndexerResponse($data);
+
+		// Add the buffer.
+		$response->buffer = JDEBUG ? ob_get_contents() : ob_end_clean();
+
+		// Send the JSON response.
+		echo json_encode($response);
+
+		// Close the application.
+		JFactory::getApplication()->close();
 	}
 }
 

@@ -51,6 +51,22 @@ class JMediawikiHttpTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '<message>Generic Error</message>';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$this->options = new JRegistry;
+		$this->transport = $this->getMock('JHttpTransportStream', array('request'), array($this->options), 'CustomTransport', false);
+
+		$this->object = new JMediawikiHttp($this->options, $this->transport);
+	}
+
+	/**
 	 * Tests the get method
 	 *
 	 * @return void
@@ -88,21 +104,5 @@ class JMediawikiHttpTest extends PHPUnit_Framework_TestCase
 			$this->object->post('https://example.com/gettest', array()),
 			$this->equalTo('requestResponse')
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->options   = new JRegistry;
-		$this->transport = $this->getMock('JHttpTransportStream', array('request'), array($this->options), 'CustomTransport', false);
-
-		$this->object = new JMediawikiHttp($this->options, $this->transport);
 	}
 }

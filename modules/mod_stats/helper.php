@@ -21,7 +21,7 @@ class ModStatsHelper
 	/**
 	 * Get list of stats
 	 *
-	 * @param   \Joomla\Registry\Registry &$params module parameters
+	 * @param   \Joomla\Registry\Registry  &$params  module parameters
 	 *
 	 * @return  array
 	 */
@@ -40,32 +40,32 @@ class ModStatsHelper
 
 		if ($serverinfo)
 		{
-			$rows[$i]        = new stdClass;
+			$rows[$i] = new stdClass;
 			$rows[$i]->title = JText::_('MOD_STATS_OS');
 			$rows[$i]->data  = substr(php_uname(), 0, 7);
 			$i++;
 
-			$rows[$i]        = new stdClass;
+			$rows[$i] = new stdClass;
 			$rows[$i]->title = JText::_('MOD_STATS_PHP');
 			$rows[$i]->data  = phpversion();
 			$i++;
 
-			$rows[$i]        = new stdClass;
+			$rows[$i] = new stdClass;
 			$rows[$i]->title = JText::_($db->name);
 			$rows[$i]->data  = $db->getVersion();
 			$i++;
 
-			$rows[$i]        = new stdClass;
+			$rows[$i] = new stdClass;
 			$rows[$i]->title = JText::_('MOD_STATS_TIME');
 			$rows[$i]->data  = JHtml::_('date', 'now', 'H:i');
 			$i++;
 
-			$rows[$i]        = new stdClass;
+			$rows[$i] = new stdClass;
 			$rows[$i]->title = JText::_('MOD_STATS_CACHING');
 			$rows[$i]->data  = $app->get('caching') ? JText::_('JENABLED') : JText::_('JDISABLED');
 			$i++;
 
-			$rows[$i]        = new stdClass;
+			$rows[$i] = new stdClass;
 			$rows[$i]->title = JText::_('MOD_STATS_GZIP');
 			$rows[$i]->data  = $app->get('gzip') ? JText::_('JENABLED') : JText::_('JDISABLED');
 			$i++;
@@ -103,7 +103,7 @@ class ModStatsHelper
 
 			if ($users)
 			{
-				$rows[$i]        = new stdClass;
+				$rows[$i] = new stdClass;
 				$rows[$i]->title = JText::_('MOD_STATS_USERS');
 				$rows[$i]->data  = $users;
 				$i++;
@@ -111,7 +111,7 @@ class ModStatsHelper
 
 			if ($items)
 			{
-				$rows[$i]        = new stdClass;
+				$rows[$i] = new stdClass;
 				$rows[$i]->title = JText::_('MOD_STATS_ARTICLES');
 				$rows[$i]->data  = $items;
 				$i++;
@@ -164,7 +164,7 @@ class ModStatsHelper
 
 			if ($hits)
 			{
-				$rows[$i]        = new stdClass;
+				$rows[$i] = new stdClass;
 				$rows[$i]->title = JText::_('MOD_STATS_ARTICLES_VIEW_HITS');
 				$rows[$i]->data  = $hits + $increase;
 			}

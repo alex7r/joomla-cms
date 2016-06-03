@@ -24,6 +24,30 @@ class JApplicationTest extends TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		$this->object = new JApplication(array('session' => false));
+		parent::setUp();
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function tearDown()
+	{
+		$this->object = null;
+		parent::tearDown();
+	}
+
+	/**
 	 * Test JApplication::__construct
 	 *
 	 * @return  void
@@ -51,7 +75,7 @@ class JApplicationTest extends TestCase
 	public function testGetHash()
 	{
 		// Temporarily override the config cache in JFactory.
-		$temp             = JFactory::$config;
+		$temp = JFactory::$config;
 		JFactory::$config = new JObject(array('secret' => 'foo'));
 
 		$this->assertThat(
@@ -83,29 +107,5 @@ class JApplicationTest extends TestCase
 			$this->object->isSSLConnection(),
 			$this->equalTo(true)
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		$this->object = new JApplication(array('session' => false));
-		parent::setUp();
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function tearDown()
-	{
-		$this->object = null;
-		parent::tearDown();
 	}
 }

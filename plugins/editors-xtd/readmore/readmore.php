@@ -27,7 +27,7 @@ class PlgButtonReadmore extends JPlugin
 	/**
 	 * Readmore button
 	 *
-	 * @param   string $name The name of the button to add
+	 * @param   string  $name  The name of the button to add
 	 *
 	 * @return array A two element array of (imageName, textToInsert)
 	 */
@@ -38,8 +38,8 @@ class PlgButtonReadmore extends JPlugin
 		// Button is not active in specific content components
 
 		$getContent = $this->_subject->getContent($name);
-		$present    = JText::_('PLG_READMORE_ALREADY_EXISTS', true);
-		$js         = "
+		$present = JText::_('PLG_READMORE_ALREADY_EXISTS', true);
+		$js = "
 			function insertReadmore(editor)
 			{
 				var content = $getContent
@@ -64,7 +64,7 @@ class PlgButtonReadmore extends JPlugin
 
 		// @TODO: The button writer needs to take into account the javascript directive
 		// $button->link', 'javascript:void(0)');
-		$button->link = '#';
+		$button->link    = '#';
 
 		return $button;
 	}

@@ -19,7 +19,7 @@ class PlgSystemLog extends JPlugin
 	/**
 	 * Called if user fails to be logged in.
 	 *
-	 * @param   array $response Array of response data.
+	 * @param   array  $response  Array of response data.
 	 *
 	 * @return  void
 	 *
@@ -37,7 +37,7 @@ class PlgSystemLog extends JPlugin
 				break;
 
 			case JAuthentication::STATUS_FAILURE:
-				$errorlog['status'] = $response['type'] . " FAILURE: ";
+				$errorlog['status']  = $response['type'] . " FAILURE: ";
 
 				if ($this->params->get('log_username', 0))
 				{

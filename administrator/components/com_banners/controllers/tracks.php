@@ -25,6 +25,22 @@ class BannersControllerTracks extends JControllerLegacy
 	protected $context = 'com_banners.tracks';
 
 	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  JModelLegacy  The model.
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'Tracks', $prefix = 'BannersModel', $config = array('ignore_request' => true))
+	{
+		return parent::getModel($name, $prefix, $config);
+	}
+
+	/**
 	 * Method to remove a record.
 	 *
 	 * @return  void
@@ -68,21 +84,5 @@ class BannersControllerTracks extends JControllerLegacy
 		}
 
 		$this->setRedirect('index.php?option=com_banners&view=tracks');
-	}
-
-	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param   string $name   The model name. Optional.
-	 * @param   string $prefix The class prefix. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  JModelLegacy  The model.
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'Tracks', $prefix = 'BannersModel', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
 	}
 }

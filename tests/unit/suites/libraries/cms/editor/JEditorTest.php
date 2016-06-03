@@ -1,10 +1,10 @@
 <?php
 /**
- * @package        Joomla.UnitTest
- * @subpackage     Editor
+ * @package	    Joomla.UnitTest
+ * @subpackage  Editor
  *
- * @copyright      Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
- * @license        GNU General Public License version 2 or later; see LICENSE
+ * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license	    GNU General Public License version 2 or later; see LICENSE
  */
 
 require_once __DIR__ . '/stubs/EditorObserver.php';
@@ -27,12 +27,25 @@ class JEditorTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.0
+	 */
+	protected function setUp()
+	{
+		$this->object = new JEditor;
+	}
+
+	/**
 	 * Tests the getInstance method
 	 *
 	 * @return  void
 	 *
 	 * @since   3.0
-	 * @covers  JEditor::getInstance
+	 * @covers JEditor::getInstance
 	 */
 	public function testGetInstance()
 	{
@@ -48,7 +61,7 @@ class JEditorTest extends PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @since   3.0
-	 * @covers  JEditor::getState
+	 * @covers JEditor::getState
 	 */
 	public function testGetState()
 	{
@@ -64,14 +77,13 @@ class JEditorTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox Test attaching a single closure as an observer in the JEditor class
 	 *
-	 * @since   3.4.4
+	 * @since  3.4.4
 	 */
 	public function testAttachWithClosure()
 	{
 		$testObserver = array(
-			'event'   => 'onInit',
-			'handler' => function ()
-			{
+			'event' => 'onInit',
+			'handler' => function () {
 				return 'teststring';
 			}
 		);
@@ -99,21 +111,19 @@ class JEditorTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox Test attaching multiple closures as observers in the JEditor class using the same event names
 	 *
-	 * @since   3.4.4
+	 * @since  3.4.4
 	 */
 	public function testAttachWithMultipleClosuresForSameEvent()
 	{
-		$testObserver  = array(
-			'event'   => 'onInit',
-			'handler' => function ()
-			{
+		$testObserver = array(
+			'event' => 'onInit',
+			'handler' => function () {
 				return 'teststring';
 			}
 		);
 		$testObserver2 = array(
-			'event'   => 'onInit',
-			'handler' => function ()
-			{
+			'event' => 'onInit',
+			'handler' => function () {
 				return 'secondTestString';
 			}
 		);
@@ -143,21 +153,19 @@ class JEditorTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox Test attaching multiple closures as observers in the JEditor class with different event names
 	 *
-	 * @since   3.4.4
+	 * @since  3.4.4
 	 */
 	public function testAttachWithMultipleClosuresForDifferentEvents()
 	{
-		$testObserver  = array(
-			'event'   => 'onInit',
-			'handler' => function ()
-			{
+		$testObserver = array(
+			'event' => 'onInit',
+			'handler' => function () {
 				return 'teststring';
 			}
 		);
 		$testObserver2 = array(
-			'event'   => 'onAfterStuff',
-			'handler' => function ()
-			{
+			'event' => 'onAfterStuff',
+			'handler' => function () {
 				return 'secondTestString';
 			}
 		);
@@ -173,7 +181,7 @@ class JEditorTest extends PHPUnit_Framework_TestCase
 
 		$this->assertAttributeSame(
 			array(
-				'oninit'       => array(
+				'oninit' => array(
 					0 => 0,
 				),
 				'onafterstuff' => array(
@@ -189,7 +197,7 @@ class JEditorTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox Test an observer object is correctly stored in the JEditor class
 	 *
-	 * @since   3.4.4
+	 * @since  3.4.4
 	 */
 	public function testAttachWithClass()
 	{
@@ -202,18 +210,5 @@ class JEditorTest extends PHPUnit_Framework_TestCase
 			$this->object,
 			'Observer was not attached to the editor'
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.0
-	 */
-	protected function setUp()
-	{
-		$this->object = new JEditor;
 	}
 }

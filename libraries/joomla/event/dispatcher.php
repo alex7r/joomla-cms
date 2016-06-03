@@ -22,19 +22,13 @@ defined('JPATH_PLATFORM') or die;
 class JEventDispatcher extends JObject
 {
 	/**
-	 * Stores the singleton instance of the dispatcher.
-	 *
-	 * @var    JEventDispatcher
-	 * @since  11.3
-	 */
-	protected static $instance = null;
-	/**
 	 * An array of Observer objects to notify
 	 *
 	 * @var    array
 	 * @since  11.3
 	 */
 	protected $_observers = array();
+
 	/**
 	 * The state of the observable object
 	 *
@@ -42,6 +36,7 @@ class JEventDispatcher extends JObject
 	 * @since  11.3
 	 */
 	protected $_state = null;
+
 	/**
 	 * A multi dimensional array of [function][] = key for observers
 	 *
@@ -49,6 +44,14 @@ class JEventDispatcher extends JObject
 	 * @since  11.3
 	 */
 	protected $_methods = array();
+
+	/**
+	 * Stores the singleton instance of the dispatcher.
+	 *
+	 * @var    JEventDispatcher
+	 * @since  11.3
+	 */
+	protected static $instance = null;
 
 	/**
 	 * Returns the global Event Dispatcher object, only creating it
@@ -83,8 +86,8 @@ class JEventDispatcher extends JObject
 	/**
 	 * Registers an event handler to the event dispatcher
 	 *
-	 * @param   string $event   Name of the event to register handler for
-	 * @param   string $handler Name of the event handler
+	 * @param   string  $event    Name of the event to register handler for
+	 * @param   string  $handler  Name of the event handler
 	 *
 	 * @return  void
 	 *
@@ -112,79 +115,11 @@ class JEventDispatcher extends JObject
 	}
 
 	/**
-	 * Attach an observer object
-	 *
-	 * @param   object $observer An observer object to attach
-	 *
-	 * @return  void
-	 *
-	 * @since   11.3
-	 */
-	public function attach($observer)
-	{
-		if (is_array($observer))
-		{
-			if (!isset($observer['handler']) || !isset($observer['event']) || !is_callable($observer['handler']))
-			{
-				return;
-			}
-
-			// Make sure we haven't already attached this array as an observer
-			foreach ($this->_observers as $check)
-			{
-				if (is_array($check) && $check['event'] == $observer['event'] && $check['handler'] == $observer['handler'])
-				{
-					return;
-				}
-			}
-
-			$this->_observers[] = $observer;
-			$methods            = array($observer['event']);
-		}
-		else
-		{
-			if (!($observer instanceof JEvent))
-			{
-				return;
-			}
-
-			// Make sure we haven't already attached this object as an observer
-			$class = get_class($observer);
-
-			foreach ($this->_observers as $check)
-			{
-				if ($check instanceof $class)
-				{
-					return;
-				}
-			}
-
-			$this->_observers[] = $observer;
-			$methods            = array_diff(get_class_methods($observer), get_class_methods('JPlugin'));
-		}
-
-		end($this->_observers);
-		$key = key($this->_observers);
-
-		foreach ($methods as $method)
-		{
-			$method = strtolower($method);
-
-			if (!isset($this->_methods[$method]))
-			{
-				$this->_methods[$method] = array();
-			}
-
-			$this->_methods[$method][] = $key;
-		}
-	}
-
-	/**
 	 * Triggers an event by dispatching arguments to all observers that handle
 	 * the event and returning their return values.
 	 *
-	 * @param   string $event The event to trigger.
-	 * @param   array  $args  An array of arguments.
+	 * @param   string  $event  The event to trigger.
+	 * @param   array   $args   An array of arguments.
 	 *
 	 * @return  array  An array of results from each function call.
 	 *
@@ -222,7 +157,7 @@ class JEventDispatcher extends JObject
 			if (is_object($this->_observers[$key]))
 			{
 				$args['event'] = $event;
-				$value         = $this->_observers[$key]->update($args);
+				$value = $this->_observers[$key]->update($args);
 			}
 			// Fire the event for a function based observer.
 			elseif (is_array($this->_observers[$key]))
@@ -240,9 +175,77 @@ class JEventDispatcher extends JObject
 	}
 
 	/**
+	 * Attach an observer object
+	 *
+	 * @param   object  $observer  An observer object to attach
+	 *
+	 * @return  void
+	 *
+	 * @since   11.3
+	 */
+	public function attach($observer)
+	{
+		if (is_array($observer))
+		{
+			if (!isset($observer['handler']) || !isset($observer['event']) || !is_callable($observer['handler']))
+			{
+				return;
+			}
+
+			// Make sure we haven't already attached this array as an observer
+			foreach ($this->_observers as $check)
+			{
+				if (is_array($check) && $check['event'] == $observer['event'] && $check['handler'] == $observer['handler'])
+				{
+					return;
+				}
+			}
+
+			$this->_observers[] = $observer;
+			$methods = array($observer['event']);
+		}
+		else
+		{
+			if (!($observer instanceof JEvent))
+			{
+				return;
+			}
+
+			// Make sure we haven't already attached this object as an observer
+			$class = get_class($observer);
+
+			foreach ($this->_observers as $check)
+			{
+				if ($check instanceof $class)
+				{
+					return;
+				}
+			}
+
+			$this->_observers[] = $observer;
+			$methods = array_diff(get_class_methods($observer), get_class_methods('JPlugin'));
+		}
+
+		end($this->_observers);
+		$key = key($this->_observers);
+
+		foreach ($methods as $method)
+		{
+			$method = strtolower($method);
+
+			if (!isset($this->_methods[$method]))
+			{
+				$this->_methods[$method] = array();
+			}
+
+			$this->_methods[$method][] = $key;
+		}
+	}
+
+	/**
 	 * Detach an observer object
 	 *
-	 * @param   object $observer An observer object to detach.
+	 * @param   object  $observer  An observer object to detach.
 	 *
 	 * @return  boolean  True if the observer object was detached.
 	 *

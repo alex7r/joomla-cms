@@ -53,7 +53,7 @@ class JFormFieldText extends JFormField
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string $name The property name for which to the the value.
+	 * @param   string  $name  The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -75,8 +75,8 @@ class JFormFieldText extends JFormField
 	/**
 	 * Method to set certain otherwise inaccessible properties of the form field object.
 	 *
-	 * @param   string $name  The property name for which to the the value.
-	 * @param   mixed  $value The value of the property.
+	 * @param   string  $name   The property name for which to the the value.
+	 * @param   mixed   $value  The value of the property.
 	 *
 	 * @return  void
 	 *
@@ -91,7 +91,7 @@ class JFormFieldText extends JFormField
 				break;
 
 			case 'dirname':
-				$value         = (string) $value;
+				$value = (string) $value;
 				$this->dirname = ($value == $name || $value == 'true' || $value == '1');
 				break;
 
@@ -107,9 +107,9 @@ class JFormFieldText extends JFormField
 	/**
 	 * Method to attach a JForm object to the field.
 	 *
-	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
-	 * @param   mixed            $value     The form field value to validate.
-	 * @param   string           $group     The field name group control value. This acts as as an array container for the field.
+	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed             $value    The form field value to validate.
+	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
 	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
 	 *
@@ -125,11 +125,11 @@ class JFormFieldText extends JFormField
 		if ($result == true)
 		{
 			$inputmode = (string) $this->element['inputmode'];
-			$dirname   = (string) $this->element['dirname'];
+			$dirname = (string) $this->element['dirname'];
 
 			$this->inputmode = '';
-			$inputmode       = preg_replace('/\s+/', ' ', trim($inputmode));
-			$inputmode       = explode(' ', $inputmode);
+			$inputmode = preg_replace('/\s+/', ' ', trim($inputmode));
+			$inputmode = explode(' ', $inputmode);
 
 			if (!empty($inputmode))
 			{
@@ -144,7 +144,7 @@ class JFormFieldText extends JFormField
 			}
 
 			// Set the dirname.
-			$dirname       = ((string) $dirname == 'dirname' || $dirname == 'true' || $dirname == '1');
+			$dirname = ((string) $dirname == 'dirname' || $dirname == 'true' || $dirname == '1');
 			$this->dirname = $dirname ? $this->getName($this->fieldname . '_dir') : false;
 
 			$this->maxLength = (int) $this->element['maxlength'];
@@ -193,7 +193,7 @@ class JFormFieldText extends JFormField
 
 		/* Get the field options for the datalist.
 		Note: getSuggestions() is deprecated and will be changed to getOptions() with 4.0. */
-		$options = (array) $this->getSuggestions();
+		$options  = (array) $this->getSuggestions();
 
 		if ($options)
 		{
@@ -210,7 +210,7 @@ class JFormFieldText extends JFormField
 			}
 
 			$datalist .= '</datalist>';
-			$list = ' list="' . $this->id . '_datalist"';
+			$list     = ' list="' . $this->id . '_datalist"';
 		}
 
 		$html[] = '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' . $dirname . ' value="'
@@ -219,19 +219,6 @@ class JFormFieldText extends JFormField
 		$html[] = $datalist;
 
 		return implode($html);
-	}
-
-	/**
-	 * Method to get the field suggestions.
-	 *
-	 * @return  array  The field option objects.
-	 *
-	 * @since       3.2
-	 * @deprecated  4.0  Use getOptions instead
-	 */
-	protected function getSuggestions()
-	{
-		return $this->getOptions();
 	}
 
 	/**
@@ -261,5 +248,18 @@ class JFormFieldText extends JFormField
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Method to get the field suggestions.
+	 *
+	 * @return  array  The field option objects.
+	 *
+	 * @since       3.2
+	 * @deprecated  4.0  Use getOptions instead
+	 */
+	protected function getSuggestions()
+	{
+		return $this->getOptions();
 	}
 }

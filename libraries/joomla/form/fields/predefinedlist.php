@@ -19,19 +19,21 @@ JFormHelper::loadFieldClass('list');
 abstract class JFormFieldPredefinedList extends JFormFieldList
 {
 	/**
-	 * Cached array of the category items.
-	 *
-	 * @var    array
-	 * @since  3.2
-	 */
-	protected static $options = array();
-	/**
 	 * The form field type.
 	 *
 	 * @var    string
 	 * @since  3.2
 	 */
 	protected $type = 'PredefinedList';
+
+	/**
+	 * Cached array of the category items.
+	 *
+	 * @var    array
+	 * @since  3.2
+	 */
+	protected static $options = array();
+
 	/**
 	 * Available predefined options
 	 *

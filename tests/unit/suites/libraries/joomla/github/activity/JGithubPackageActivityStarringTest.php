@@ -41,6 +41,21 @@ class JGithubPackageActivityStarringTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackageActivityStarring($this->options, $this->client);
+	}
+
+	/**
 	 * @covers JGithubPackageActivityStarring::getList
 	 *
 	 *     GET /repos/:owner/:repo/stargazers
@@ -62,14 +77,16 @@ class JGithubPackageActivityStarringTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/repos/joomla/joomla-platform/stargazers', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/repos/joomla/joomla-platform/stargazers', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->getList('joomla', 'joomla-platform'),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -94,6 +111,8 @@ class JGithubPackageActivityStarringTest extends PHPUnit_Framework_TestCase
 	 * <https://api.github.com/resource?page=5>; rel="last"
 	 * X-RateLimit-Limit: 5000
 	 * X-RateLimit-Remaining: 4999
+
+
 	 */
 	public function testGetRepositories()
 	{
@@ -101,14 +120,16 @@ class JGithubPackageActivityStarringTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/user/starred', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/user/starred', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->getRepositories(),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -137,14 +158,16 @@ class JGithubPackageActivityStarringTest extends PHPUnit_Framework_TestCase
 		$this->response->body = true;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/user/starred/joomla/joomla-platform', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/user/starred/joomla/joomla-platform', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->check('joomla', 'joomla-platform'),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	public function testCheckFalse()
@@ -153,14 +176,16 @@ class JGithubPackageActivityStarringTest extends PHPUnit_Framework_TestCase
 		$this->response->body = false;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/user/starred/joomla/joomla-platform', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/user/starred/joomla/joomla-platform', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->check('joomla', 'joomla-platform'),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -172,14 +197,16 @@ class JGithubPackageActivityStarringTest extends PHPUnit_Framework_TestCase
 		$this->response->body = false;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/user/starred/joomla/joomla-platform', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/user/starred/joomla/joomla-platform', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->check('joomla', 'joomla-platform'),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -202,14 +229,16 @@ class JGithubPackageActivityStarringTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('put')
-			->with('/user/starred/joomla/joomla-platform', '', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('put')
+		             ->with('/user/starred/joomla/joomla-platform', '', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->star('joomla', 'joomla-platform'),
 			$this->equalTo(json_decode($this->response->body))
-		);
+		)
+		;
 	}
 
 	/**
@@ -232,28 +261,15 @@ class JGithubPackageActivityStarringTest extends PHPUnit_Framework_TestCase
 		$this->response->body = '';
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with('/user/starred/joomla/joomla-platform', 0, 0)
-			->will($this->returnValue($this->response));
+		             ->method('delete')
+		             ->with('/user/starred/joomla/joomla-platform', 0, 0)
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->unstar('joomla', 'joomla-platform'),
 			$this->equalTo(json_decode($this->response->body))
-		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options  = new JRegistry;
-		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackageActivityStarring($this->options, $this->client);
+		)
+		;
 	}
 }

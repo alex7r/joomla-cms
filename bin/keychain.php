@@ -79,7 +79,7 @@ class KeychainManager extends JApplicationCli
 	 *
 	 * @since   12.3
 	 */
-	public function execute()
+	public function execute( )
 	{
 		if (!count($this->input->args))
 		{
@@ -139,6 +139,214 @@ class KeychainManager extends JApplicationCli
 	}
 
 	/**
+	 * Load the keychain from a file.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function loadKeychain()
+	{
+		$keychain = $this->input->get('keychain', '', 'raw');
+		$publicKeyFile = $this->input->get('public-key', '', 'raw');
+		$passphraseFile = $this->input->get('passphrase', '', 'raw');
+
+		$this->keychain = new JKeychain;
+
+		if (file_exists($keychain))
+		{
+			if (file_exists($publicKeyFile))
+			{
+				$this->keychain->loadKeychain($keychain, $passphraseFile, $publicKeyFile);
+			}
+			else
+			{
+				$this->out('Public key not specified or missing!');
+				exit(1);
+			}
+		}
+	}
+
+	/**
+	 * Save this keychain to a file.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function saveKeychain()
+	{
+		$keychain = $this->input->get('keychain', '', 'raw');
+		$publicKeyFile = $this->input->get('public-key', '', 'raw');
+		$passphraseFile = $this->input->get('passphrase', '', 'raw');
+
+		if (!file_exists($publicKeyFile))
+		{
+			$this->out("Public key file specified doesn't exist: $publicKeyFile");
+			exit(1);
+		}
+
+		$this->keychain->saveKeychain($keychain, $passphraseFile, $publicKeyFile);
+	}
+
+	/**
+	 * Initialise a new passphrase file.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function initPassphraseFile()
+	{
+		$keychain = new JKeychain;
+
+		$passphraseFile = $this->input->get('passphrase', '', 'raw');
+		$privateKeyFile = $this->input->get('private-key', '', 'raw');
+
+		if (!strlen($passphraseFile))
+		{
+			$this->out('A passphrase file must be specified with --passphrase');
+			exit(1);
+		}
+
+		if (!file_exists($privateKeyFile))
+		{
+			$this->out("protected key file specified doesn't exist: $privateKeyFile");
+			exit(1);
+		}
+
+		$this->out('Please enter the new passphrase:');
+		$passphrase = $this->in();
+
+		$this->out('Please enter the passphrase for the protected key:');
+		$privateKeyPassphrase = $this->in();
+
+		$keychain->createPassphraseFile($passphrase, $passphraseFile, $privateKeyFile, $privateKeyPassphrase);
+	}
+
+	/**
+	 * Create a new entry
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function create()
+	{
+		if (count($this->input->args) != 3)
+		{
+			$this->out("usage: {$this->input->executable} [options] create entry_name entry_value");
+			exit(1);
+		}
+
+		if ($this->keychain->exists($this->input->args[1]))
+		{
+			$this->out('error: entry already exists. To change this entry, use "change"');
+			exit(1);
+		}
+
+		$this->change();
+	}
+
+	/**
+	 * Change an existing entry to a new value or create an entry if missing.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function change()
+	{
+		if (count($this->input->args) != 3)
+		{
+			$this->out("usage: {$this->input->executable} [options] change entry_name entry_value");
+			exit(1);
+		}
+
+		$this->updated = true;
+		$this->keychain->setValue($this->input->args[1], $this->input->args[2]);
+	}
+
+	/**
+	 * Read an entry from the keychain
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function read()
+	{
+		if (count($this->input->args) != 2)
+		{
+			$this->out("usage: {$this->input->executable} [options] read entry_name");
+			exit(1);
+		}
+
+		$key = $this->input->args[1];
+		$this->out($key . ': ' . $this->dumpVar($this->keychain->get($key)));
+	}
+
+	/**
+	 * Get the string from var_dump
+	 *
+	 * @param   mixed  $var  The variable you want to have dumped.
+	 *
+	 * @return  string  The result of var_dump
+	 *
+	 * @since   12.3
+	 */
+	private function dumpVar($var)
+	{
+		ob_start();
+		var_dump($var);
+		$result = trim(ob_get_contents());
+		ob_end_clean();
+
+		return $result;
+	}
+
+	/**
+	 * Delete an entry from the keychain
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function delete()
+	{
+		if (count($this->input->args) != 2)
+		{
+			$this->out("usage: {$this->input->executable} [options] delete entry_name");
+			exit(1);
+		}
+
+		$this->updated = true;
+		$this->keychain->deleteValue($this->input->args[1]);
+	}
+
+	/**
+	 * List entries in the keychain
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function listEntries()
+	{
+		foreach ($this->keychain->toArray() as $key => $value)
+		{
+			$line = $key;
+
+			if ($this->input->get('print-values'))
+			{
+				$line .= ': ' . $this->dumpVar($value);
+			}
+
+			$this->out($line);
+		}
+	}
+
+	/**
 	 * Display the help information
 	 *
 	 * @return  void
@@ -147,15 +355,15 @@ class KeychainManager extends JApplicationCli
 	 */
 	protected function displayHelp()
 	{
-		/*
-		COMMANDS
-		
-		 - list
-		 - create entry_name entry_value
-		 - change entry_name entry_value
-		 - delete entry_name
-		 - read   entry_name
-		*/
+/*
+COMMANDS
+
+ - list
+ - create entry_name entry_value
+ - change entry_name entry_value
+ - delete entry_name
+ - read   entry_name
+*/
 
 		$help = <<<HELP
 Keychain Management Utility
@@ -205,214 +413,6 @@ COMMANDS
 
 HELP;
 		$this->out($help);
-	}
-
-	/**
-	 * Load the keychain from a file.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function loadKeychain()
-	{
-		$keychain       = $this->input->get('keychain', '', 'raw');
-		$publicKeyFile  = $this->input->get('public-key', '', 'raw');
-		$passphraseFile = $this->input->get('passphrase', '', 'raw');
-
-		$this->keychain = new JKeychain;
-
-		if (file_exists($keychain))
-		{
-			if (file_exists($publicKeyFile))
-			{
-				$this->keychain->loadKeychain($keychain, $passphraseFile, $publicKeyFile);
-			}
-			else
-			{
-				$this->out('Public key not specified or missing!');
-				exit(1);
-			}
-		}
-	}
-
-	/**
-	 * Initialise a new passphrase file.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function initPassphraseFile()
-	{
-		$keychain = new JKeychain;
-
-		$passphraseFile = $this->input->get('passphrase', '', 'raw');
-		$privateKeyFile = $this->input->get('private-key', '', 'raw');
-
-		if (!strlen($passphraseFile))
-		{
-			$this->out('A passphrase file must be specified with --passphrase');
-			exit(1);
-		}
-
-		if (!file_exists($privateKeyFile))
-		{
-			$this->out("protected key file specified doesn't exist: $privateKeyFile");
-			exit(1);
-		}
-
-		$this->out('Please enter the new passphrase:');
-		$passphrase = $this->in();
-
-		$this->out('Please enter the passphrase for the protected key:');
-		$privateKeyPassphrase = $this->in();
-
-		$keychain->createPassphraseFile($passphrase, $passphraseFile, $privateKeyFile, $privateKeyPassphrase);
-	}
-
-	/**
-	 * List entries in the keychain
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function listEntries()
-	{
-		foreach ($this->keychain->toArray() as $key => $value)
-		{
-			$line = $key;
-
-			if ($this->input->get('print-values'))
-			{
-				$line .= ': ' . $this->dumpVar($value);
-			}
-
-			$this->out($line);
-		}
-	}
-
-	/**
-	 * Get the string from var_dump
-	 *
-	 * @param   mixed $var The variable you want to have dumped.
-	 *
-	 * @return  string  The result of var_dump
-	 *
-	 * @since   12.3
-	 */
-	private function dumpVar($var)
-	{
-		ob_start();
-		var_dump($var);
-		$result = trim(ob_get_contents());
-		ob_end_clean();
-
-		return $result;
-	}
-
-	/**
-	 * Create a new entry
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function create()
-	{
-		if (count($this->input->args) != 3)
-		{
-			$this->out("usage: {$this->input->executable} [options] create entry_name entry_value");
-			exit(1);
-		}
-
-		if ($this->keychain->exists($this->input->args[1]))
-		{
-			$this->out('error: entry already exists. To change this entry, use "change"');
-			exit(1);
-		}
-
-		$this->change();
-	}
-
-	/**
-	 * Change an existing entry to a new value or create an entry if missing.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function change()
-	{
-		if (count($this->input->args) != 3)
-		{
-			$this->out("usage: {$this->input->executable} [options] change entry_name entry_value");
-			exit(1);
-		}
-
-		$this->updated = true;
-		$this->keychain->setValue($this->input->args[1], $this->input->args[2]);
-	}
-
-	/**
-	 * Delete an entry from the keychain
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function delete()
-	{
-		if (count($this->input->args) != 2)
-		{
-			$this->out("usage: {$this->input->executable} [options] delete entry_name");
-			exit(1);
-		}
-
-		$this->updated = true;
-		$this->keychain->deleteValue($this->input->args[1]);
-	}
-
-	/**
-	 * Read an entry from the keychain
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function read()
-	{
-		if (count($this->input->args) != 2)
-		{
-			$this->out("usage: {$this->input->executable} [options] read entry_name");
-			exit(1);
-		}
-
-		$key = $this->input->args[1];
-		$this->out($key . ': ' . $this->dumpVar($this->keychain->get($key)));
-	}
-
-	/**
-	 * Save this keychain to a file.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function saveKeychain()
-	{
-		$keychain       = $this->input->get('keychain', '', 'raw');
-		$publicKeyFile  = $this->input->get('public-key', '', 'raw');
-		$passphraseFile = $this->input->get('passphrase', '', 'raw');
-
-		if (!file_exists($publicKeyFile))
-		{
-			$this->out("Public key file specified doesn't exist: $publicKeyFile");
-			exit(1);
-		}
-
-		$this->keychain->saveKeychain($keychain, $passphraseFile, $publicKeyFile);
 	}
 }
 

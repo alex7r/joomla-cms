@@ -74,12 +74,34 @@ abstract class FOFDatabaseIterator implements Iterator
 	private $_tableObject = null;
 
 	/**
+	 * Returns an iterator object for a specific database type
+	 *
+	 * @param   string  $dbName  The database type, e.g. mysql, mysqli, sqlazure etc.
+	 * @param   mixed   $cursor  The database cursor
+	 * @param   string  $column  An option column to use as the iterator key
+	 * @param   string  $class   The table class of the returned objects
+	 * @param   array   $config  Configuration parameters to push to the table class
+	 *
+	 * @return  FOFDatabaseIterator
+	 *
+	 * @throws  InvalidArgumentException
+	 */
+	public static function &getIterator($dbName, $cursor, $column = null, $class, $config = array())
+	{
+		$className = 'FOFDatabaseIterator' . ucfirst($dbName);
+
+		$object = new $className($cursor, $column, $class, $config);
+
+		return $object;
+	}
+
+	/**
 	 * Database iterator constructor.
 	 *
-	 * @param   mixed  $cursor The database cursor.
-	 * @param   string $column An option column to use as the iterator key.
-	 * @param   string $class  The table class of the returned objects.
-	 * @param   array  $config Configuration parameters to push to the table class
+	 * @param   mixed   $cursor  The database cursor.
+	 * @param   string  $column  An option column to use as the iterator key.
+	 * @param   string  $class   The table class of the returned objects.
+	 * @param   array   $config  Configuration parameters to push to the table class
 	 *
 	 * @throws  InvalidArgumentException
 	 */
@@ -88,10 +110,10 @@ abstract class FOFDatabaseIterator implements Iterator
 		// Figure out the type and prefix of the class by the class name
 		$parts = FOFInflector::explode($class);
 
-		if (count($parts) != 3)
-		{
-			throw new InvalidArgumentException('Invalid table name, expected a pattern like ComponentTableFoobar got ' . $class);
-		}
+        if(count($parts) != 3)
+        {
+            throw new InvalidArgumentException('Invalid table name, expected a pattern like ComponentTableFoobar got '.$class);
+        }
 
 		$this->_tableObject = FOFTable::getInstance($parts[2], ucfirst($parts[0]) . ucfirst($parts[1]))->getClone();
 
@@ -101,6 +123,41 @@ abstract class FOFDatabaseIterator implements Iterator
 		$this->_fetched = 0;
 
 		$this->next();
+	}
+
+	/**
+	 * Database iterator destructor.
+	 */
+	public function __destruct()
+	{
+		if ($this->cursor)
+		{
+			$this->freeResult($this->cursor);
+		}
+	}
+
+	/**
+	 * The current element in the iterator.
+	 *
+	 * @return  object
+	 *
+	 * @see     Iterator::current()
+	 */
+	public function current()
+	{
+		return $this->_currentTable;
+	}
+
+	/**
+	 * The key of the current element in the iterator.
+	 *
+	 * @return  scalar
+	 *
+	 * @see     Iterator::key()
+	 */
+	public function key()
+	{
+		return $this->_key;
 	}
 
 	/**
@@ -135,11 +192,43 @@ abstract class FOFDatabaseIterator implements Iterator
 	}
 
 	/**
+	 * Rewinds the iterator.
+	 *
+	 * This iterator cannot be rewound.
+	 *
+	 * @return  void
+	 *
+	 * @see     Iterator::rewind()
+	 */
+	public function rewind()
+	{
+	}
+
+	/**
+	 * Checks if the current position of the iterator is valid.
+	 *
+	 * @return  boolean
+	 *
+	 * @see     Iterator::valid()
+	 */
+	public function valid()
+	{
+		return (boolean) $this->_current;
+	}
+
+	/**
 	 * Method to fetch a row from the result set cursor as an object.
 	 *
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 */
 	abstract protected function fetchObject();
+
+	/**
+	 * Method to free up the memory used for the result set.
+	 *
+	 * @return  void
+	 */
+	abstract protected function freeResult();
 
 	/**
 	 * Returns the data in $this->_current as a FOFTable instance
@@ -158,94 +247,5 @@ abstract class FOFDatabaseIterator implements Iterator
 		$this->_tableObject->bind($this->_current);
 
 		return $this->_tableObject;
-	}
-
-	/**
-	 * Checks if the current position of the iterator is valid.
-	 *
-	 * @return  boolean
-	 *
-	 * @see     Iterator::valid()
-	 */
-	public function valid()
-	{
-		return (boolean) $this->_current;
-	}
-
-	/**
-	 * Returns an iterator object for a specific database type
-	 *
-	 * @param   string $dbName The database type, e.g. mysql, mysqli, sqlazure etc.
-	 * @param   mixed  $cursor The database cursor
-	 * @param   string $column An option column to use as the iterator key
-	 * @param   string $class  The table class of the returned objects
-	 * @param   array  $config Configuration parameters to push to the table class
-	 *
-	 * @return  FOFDatabaseIterator
-	 *
-	 * @throws  InvalidArgumentException
-	 */
-	public static function &getIterator($dbName, $cursor, $column = null, $class, $config = array())
-	{
-		$className = 'FOFDatabaseIterator' . ucfirst($dbName);
-
-		$object = new $className($cursor, $column, $class, $config);
-
-		return $object;
-	}
-
-	/**
-	 * Database iterator destructor.
-	 */
-	public function __destruct()
-	{
-		if ($this->cursor)
-		{
-			$this->freeResult($this->cursor);
-		}
-	}
-
-	/**
-	 * Method to free up the memory used for the result set.
-	 *
-	 * @return  void
-	 */
-	abstract protected function freeResult();
-
-	/**
-	 * The current element in the iterator.
-	 *
-	 * @return  object
-	 *
-	 * @see     Iterator::current()
-	 */
-	public function current()
-	{
-		return $this->_currentTable;
-	}
-
-	/**
-	 * The key of the current element in the iterator.
-	 *
-	 * @return  scalar
-	 *
-	 * @see     Iterator::key()
-	 */
-	public function key()
-	{
-		return $this->_key;
-	}
-
-	/**
-	 * Rewinds the iterator.
-	 *
-	 * This iterator cannot be rewound.
-	 *
-	 * @return  void
-	 *
-	 * @see     Iterator::rewind()
-	 */
-	public function rewind()
-	{
 	}
 }

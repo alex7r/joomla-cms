@@ -21,8 +21,8 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 	/**
 	 * Method to get the list of labels on a repo.
 	 *
-	 * @param   string $owner The name of the owner of the GitHub repository.
-	 * @param   string $repo  The name of the GitHub repository.
+	 * @param   string  $owner  The name of the owner of the GitHub repository.
+	 * @param   string  $repo   The name of the GitHub repository.
 	 *
 	 * @throws DomainException
 	 * @since   12.3
@@ -43,9 +43,9 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 	/**
 	 * Method to get a specific label on a repo.
 	 *
-	 * @param   string $user The name of the owner of the GitHub repository.
-	 * @param   string $repo The name of the GitHub repository.
-	 * @param   string $name The label name to get.
+	 * @param   string  $user  The name of the owner of the GitHub repository.
+	 * @param   string  $repo  The name of the GitHub repository.
+	 * @param   string  $name  The label name to get.
 	 *
 	 * @throws DomainException
 	 * @since   12.3
@@ -66,10 +66,10 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 	/**
 	 * Method to create a label on a repo.
 	 *
-	 * @param   string $owner The name of the owner of the GitHub repository.
-	 * @param   string $repo  The name of the GitHub repository.
-	 * @param   string $name  The label name.
-	 * @param   string $color The label color.
+	 * @param   string  $owner  The name of the owner of the GitHub repository.
+	 * @param   string  $repo   The name of the GitHub repository.
+	 * @param   string  $name   The label name.
+	 * @param   string  $color  The label color.
 	 *
 	 * @throws DomainException
 	 * @since   12.3
@@ -106,11 +106,11 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 	/**
 	 * Method to update a label on a repo.
 	 *
-	 * @param   string $user  The name of the owner of the GitHub repository.
-	 * @param   string $repo  The name of the GitHub repository.
-	 * @param   string $label The label name.
-	 * @param   string $name  The new label name.
-	 * @param   string $color The new label color.
+	 * @param   string  $user   The name of the owner of the GitHub repository.
+	 * @param   string  $repo   The name of the GitHub repository.
+	 * @param   string  $label  The label name.
+	 * @param   string  $name   The new label name.
+	 * @param   string  $color  The new label color.
 	 *
 	 * @throws DomainException
 	 * @since   12.3
@@ -139,9 +139,9 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 	/**
 	 * Method to delete a label on a repo.
 	 *
-	 * @param   string $owner The name of the owner of the GitHub repository.
-	 * @param   string $repo  The name of the GitHub repository.
-	 * @param   string $name  The label name.
+	 * @param   string  $owner  The name of the owner of the GitHub repository.
+	 * @param   string  $repo   The name of the GitHub repository.
+	 * @param   string  $name   The label name.
 	 *
 	 * @throws DomainException
 	 * @return  object
@@ -163,9 +163,9 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 	/**
 	 * List labels on an issue.
 	 *
-	 * @param   string  $owner  The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
-	 * @param   integer $number The issue number.
+	 * @param   string   $owner   The name of the owner of the GitHub repository.
+	 * @param   string   $repo    The name of the GitHub repository.
+	 * @param   integer  $number  The issue number.
 	 *
 	 * @since   3.3 (CMS)
 	 *
@@ -185,10 +185,10 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 	/**
 	 * Add labels to an issue.
 	 *
-	 * @param   string $owner  The name of the owner of the GitHub repository.
-	 * @param   string $repo   The name of the GitHub repository.
-	 * @param   string $number The issue number.
-	 * @param   array  $labels An array of labels to add.
+	 * @param   string  $owner   The name of the owner of the GitHub repository.
+	 * @param   string  $repo    The name of the GitHub repository.
+	 * @param   string  $number  The issue number.
+	 * @param   array   $labels  An array of labels to add.
 	 *
 	 * @since   3.3 (CMS)
 	 *
@@ -208,10 +208,10 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 	/**
 	 * Remove a label from an issue.
 	 *
-	 * @param   string $owner  The name of the owner of the GitHub repository.
-	 * @param   string $repo   The name of the GitHub repository.
-	 * @param   string $number The issue number.
-	 * @param   string $name   The name of the label to remove.
+	 * @param   string  $owner   The name of the owner of the GitHub repository.
+	 * @param   string  $repo    The name of the GitHub repository.
+	 * @param   string  $number  The issue number.
+	 * @param   string  $name    The name of the label to remove.
 	 *
 	 * @since   3.3 (CMS)
 	 *
@@ -232,10 +232,10 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 	 *
 	 * Sending an empty array ([]) will remove all Labels from the Issue.
 	 *
-	 * @param   string $owner  The name of the owner of the GitHub repository.
-	 * @param   string $repo   The name of the GitHub repository.
-	 * @param   string $number The issue number.
-	 * @param   array  $labels New labels
+	 * @param   string  $owner   The name of the owner of the GitHub repository.
+	 * @param   string  $repo    The name of the GitHub repository.
+	 * @param   string  $number  The issue number.
+	 * @param   array   $labels  New labels
 	 *
 	 * @since   3.3 (CMS)
 	 *
@@ -253,11 +253,11 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 	}
 
 	/**
-	 * .* Remove all labels from an issue.
+	.* Remove all labels from an issue.
 	 *
-	 * @param   string $owner  The name of the owner of the GitHub repository.
-	 * @param   string $repo   The name of the GitHub repository.
-	 * @param   string $number The issue number.
+	 * @param   string  $owner   The name of the owner of the GitHub repository.
+	 * @param   string  $repo    The name of the GitHub repository.
+	 * @param   string  $number  The issue number.
 	 *
 	 * @since   3.3 (CMS)
 	 *
@@ -278,9 +278,9 @@ class JGithubPackageIssuesLabels extends JGithubPackage
 	/**
 	 * Get labels for every issue in a milestone.
 	 *
-	 * @param   string $owner  The name of the owner of the GitHub repository.
-	 * @param   string $repo   The name of the GitHub repository.
-	 * @param   string $number The issue number.
+	 * @param   string  $owner   The name of the owner of the GitHub repository.
+	 * @param   string  $repo    The name of the GitHub repository.
+	 * @param   string  $number  The issue number.
 	 *
 	 * @since   3.3 (CMS)
 	 *

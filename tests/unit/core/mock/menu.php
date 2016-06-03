@@ -19,7 +19,7 @@ class TestMockMenu
 	/**
 	 * Creates an instance of the mock JMenu object.
 	 *
-	 * @param   PHPUnit_Framework_TestCase $test A test object.
+	 * @param   PHPUnit_Framework_TestCase  $test  A test object.
 	 *
 	 * @return  PHPUnit_Framework_MockObject_MockObject
 	 *
@@ -56,12 +56,12 @@ class TestMockMenu
 		self::createMenuSampleData();
 
 		$mockObject->expects($test->any())
-			->method('getItem')
-			->will($test->returnValueMap(self::prepareGetItemData()));
+				->method('getItem')
+				->will($test->returnValueMap(self::prepareGetItemData()));
 
 		$mockObject->expects($test->any())
-			->method('getMenu')
-			->will($test->returnValue(self::$data));
+				->method('getMenu')
+				->will($test->returnValue(self::$data));
 
 		if ($setDefault)
 		{
@@ -78,6 +78,32 @@ class TestMockMenu
 		}
 
 		return $mockObject;
+	}
+
+	protected static function prepareGetItemData()
+	{
+		$return = array();
+
+		foreach (self::$data as $id => $item)
+		{
+			$return[] = array($id, $item);
+			$return[] = array((string)$id, $item);
+		}
+
+		return $return;
+	}
+
+	protected static function prepareDefaultData()
+	{
+		$return   = array();
+		$return[] = array('en-GB', self::$data[45]);
+
+		return $return;
+	}
+
+	protected static function prepareGetItemsData()
+	{
+		// Why this is clear here?
 	}
 
 	protected static function createMenuSampleData()
@@ -195,102 +221,76 @@ class TestMockMenu
 			'component'    => 'com_test',
 			'query'        => array('option' => 'com_test', 'view' => 'test2'));
 
-		/**    self::$data[48] = (object) array(
-		 * 'id'           => '48',
-		 * 'menutype'     => '',
-		 * 'title'        => '',
-		 * 'alias'        => '',
-		 * 'route'        => '',
-		 * 'link'         => '',
-		 * 'type'         => '',
-		 * 'level'        => '',
-		 * 'language'     => '',
-		 * 'access'       => '',
-		 * 'params'       => '',
-		 * 'home'         => '',
-		 * 'component_id' => '',
-		 * 'parent_id'    => '',
-		 * 'component'    => '',
-		 * 'query'        => array());
-		 *
-		 * self::$data[49] = (object) array(
-		 * 'id'           => '49',
-		 * 'menutype'     => '',
-		 * 'title'        => '',
-		 * 'alias'        => '',
-		 * 'route'        => '',
-		 * 'link'         => '',
-		 * 'type'         => '',
-		 * 'level'        => '',
-		 * 'language'     => '',
-		 * 'access'       => '',
-		 * 'params'       => '',
-		 * 'home'         => '',
-		 * 'component_id' => '',
-		 * 'parent_id'    => '',
-		 * 'component'    => '',
-		 * 'query'        => array());
-		 *
-		 * self::$data[50] = (object) array(
-		 * 'id'           => '50',
-		 * 'menutype'     => '',
-		 * 'title'        => '',
-		 * 'alias'        => '',
-		 * 'route'        => '',
-		 * 'link'         => '',
-		 * 'type'         => '',
-		 * 'level'        => '',
-		 * 'language'     => '',
-		 * 'access'       => '',
-		 * 'params'       => '',
-		 * 'home'         => '',
-		 * 'component_id' => '',
-		 * 'parent_id'    => '',
-		 * 'component'    => '',
-		 * 'query'        => array());
-		 *
-		 * self::$data[51] = (object) array(
-		 * 'id'           => '51',
-		 * 'menutype'     => '',
-		 * 'title'        => '',
-		 * 'alias'        => '',
-		 * 'route'        => '',
-		 * 'link'         => '',
-		 * 'type'         => '',
-		 * 'level'        => '',
-		 * 'language'     => '',
-		 * 'access'       => '',
-		 * 'params'       => '',
-		 * 'home'         => '',
-		 * 'component_id' => '',
-		 * 'parent_id'    => '',
-		 * 'component'    => '',
-		 * 'query'        => array());**/
-	}
+	/**	self::$data[48] = (object) array(
+			'id'           => '48',
+			'menutype'     => '',
+			'title'        => '',
+			'alias'        => '',
+			'route'        => '',
+			'link'         => '',
+			'type'         => '',
+			'level'        => '',
+			'language'     => '',
+			'access'       => '',
+			'params'       => '',
+			'home'         => '',
+			'component_id' => '',
+			'parent_id'    => '',
+			'component'    => '',
+			'query'        => array());
 
-	protected static function prepareGetItemData()
-	{
-		$return = array();
+		self::$data[49] = (object) array(
+			'id'           => '49',
+			'menutype'     => '',
+			'title'        => '',
+			'alias'        => '',
+			'route'        => '',
+			'link'         => '',
+			'type'         => '',
+			'level'        => '',
+			'language'     => '',
+			'access'       => '',
+			'params'       => '',
+			'home'         => '',
+			'component_id' => '',
+			'parent_id'    => '',
+			'component'    => '',
+			'query'        => array());
 
-		foreach (self::$data as $id => $item)
-		{
-			$return[] = array($id, $item);
-			$return[] = array((string) $id, $item);
-		}
+		self::$data[50] = (object) array(
+			'id'           => '50',
+			'menutype'     => '',
+			'title'        => '',
+			'alias'        => '',
+			'route'        => '',
+			'link'         => '',
+			'type'         => '',
+			'level'        => '',
+			'language'     => '',
+			'access'       => '',
+			'params'       => '',
+			'home'         => '',
+			'component_id' => '',
+			'parent_id'    => '',
+			'component'    => '',
+			'query'        => array());
 
-		return $return;
-	}
-
-	protected static function prepareDefaultData()
-	{
-		$return   = array();
-		$return[] = array('en-GB', self::$data[45]);
-
-		return $return;
-	}
-
-	protected static function prepareGetItemsData()
-	{
-		// Why this is clear here?
+		self::$data[51] = (object) array(
+			'id'           => '51',
+			'menutype'     => '',
+			'title'        => '',
+			'alias'        => '',
+			'route'        => '',
+			'link'         => '',
+			'type'         => '',
+			'level'        => '',
+			'language'     => '',
+			'access'       => '',
+			'params'       => '',
+			'home'         => '',
+			'component_id' => '',
+			'parent_id'    => '',
+			'component'    => '',
+			'query'        => array());**/
 	}
 }

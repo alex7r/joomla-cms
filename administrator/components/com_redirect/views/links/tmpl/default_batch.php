@@ -21,15 +21,13 @@ defined('_JEXEC') or die;
 		<div class="row-fluid">
 			<div class="control-group span12">
 				<div class="controls">
-					<textarea class="span12" rows="10" aria-required="true" value="" id="batch_urls"
-					          name="batch_urls"></textarea>
+					<textarea class="span12" rows="10" aria-required="true" value="" id="batch_urls" name="batch_urls"></textarea>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" type="button"
-		        onclick="document.getElementById('batch_urls').value='';">
+		<button class="btn" data-dismiss="modal" type="button" onclick="document.getElementById('batch_urls').value='';">
 			<?php echo JText::_('JCANCEL'); ?>
 		</button>
 		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('links.batch');">

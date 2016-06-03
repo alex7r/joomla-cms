@@ -23,7 +23,7 @@ interface JComponentRouterInterface
 	 * This method is executed on each URL, regardless of SEF mode switched
 	 * on or not.
 	 *
-	 * @param   array $query An associative array of URL arguments
+	 * @param   array  $query  An associative array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *
@@ -36,7 +36,7 @@ interface JComponentRouterInterface
 	 * This method is meant to transform the query parameters into a more human
 	 * readable form. It is only executed when SEF mode is switched on.
 	 *
-	 * @param   array &$query An array of URL arguments
+	 * @param   array  &$query  An array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *
@@ -49,7 +49,7 @@ interface JComponentRouterInterface
 	 * This method is meant to transform the human readable URL back into
 	 * query parameters. It is only executed when SEF mode is switched on.
 	 *
-	 * @param   array &$segments The segments of the URL to parse.
+	 * @param   array  &$segments  The segments of the URL to parse.
 	 *
 	 * @return  array  The URL attributes to be used by the application.
 	 *

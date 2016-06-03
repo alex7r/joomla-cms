@@ -1,10 +1,10 @@
 <?php
 /**
- * @package        Joomla.UnitTest
- * @subpackage     Media
+ * @package	    Joomla.UnitTest
+ * @subpackage  Media
  *
- * @copyright      Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
- * @license        GNU General Public License version 2 or later; see LICENSE
+ * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license	    GNU General Public License version 2 or later; see LICENSE
  */
 
 /**
@@ -23,6 +23,57 @@ class JHelperMediaTest extends TestCaseDatabase
 	 * @since  3.2
 	 */
 	protected $object;
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+		JFactory::$session     = $this->getMockSession();
+
+		$this->object = new JHelperMedia;
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   3.2
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
+
+		return $dataSet;
+	}
 
 	/**
 	 * isImage data
@@ -44,8 +95,8 @@ class JHelperMediaTest extends TestCaseDatabase
 	/**
 	 * Tests the isImage method
 	 *
-	 * @param   string $fileName The filename
-	 * @param   string $expected Expected result
+	 * @param   string  $fileName  The filename
+	 * @param   string  $expected  Expected result
 	 *
 	 * @return  void
 	 *
@@ -105,14 +156,14 @@ class JHelperMediaTest extends TestCaseDatabase
 			array('Unknown format' => array('name' => 'myfile.xyz', 'type' => 'image/jpeg', 'tmp_name' => JPATH_TESTS . '/suites/libraries/joomla/image/stubs/koala.jpg', 'error' => 0, 'size' => 8), false),
 			array('File above php limit' => array('name' => 'mypicture.jpg', 'type' => 'image/jpeg', 'tmp_name' => JPATH_TESTS . '/suites/libraries/joomla/image/stubs/koala.jpg', 'error' => 0, 'size' => 20485770), false),
 			array('File above max configured but below php limit' => array('name' => 'mypicture.jpg', 'type' => 'image/jpeg', 'tmp_name' => JPATH_TESTS . '/suites/libraries/joomla/image/stubs/koala.jpg', 'error' => 0, 'size' => 10685770), false),
-		);
+			);
 	}
 
 	/**
 	 * Tests the canUpload method
 	 *
-	 * @param   array   $file     File information
-	 * @param   boolean $expected Expected result
+	 * @param   array    $file      File information
+	 * @param   boolean  $expected  Expected result
 	 *
 	 * @return  void
 	 *
@@ -135,20 +186,20 @@ class JHelperMediaTest extends TestCaseDatabase
 	public function imageResizeProvider()
 	{
 		return array(
-			array('Bigger Height' => 300, 200, 150, array(150, 100)),
-			array('Bigger Width' => 200, 300, 150, array(100, 150)),
-			array('Square' => 300, 300, 150, array(150, 150)),
-			array('0 Height' => 300, 0, 150, array(150, 0)),
-			array('0 Width' => 0, 300, 150, array(0, 150)),
-			array('0 Target' => 300, 200, 0, array(0, 0)),
+				array('Bigger Height' => 300, 200, 150, array(150, 100)),
+				array('Bigger Width' => 200, 300, 150, array(100, 150)),
+				array('Square' => 300, 300, 150, array(150, 150)),
+				array('0 Height' => 300, 0, 150, array(150, 0)),
+				array('0 Width' => 0, 300, 150, array(0, 150)),
+				array('0 Target' => 300, 200, 0, array(0, 0)),
 		);
 	}
 
 	/**
 	 * Tests the imageResize method
 	 *
-	 * @param   string $fileName The filename
-	 * @param   string $expected Expected result
+	 * @param   string  $fileName  The filename
+	 * @param   string  $expected  Expected result
 	 *
 	 * @return  void
 	 *
@@ -159,56 +210,5 @@ class JHelperMediaTest extends TestCaseDatabase
 	{
 		$newSize = $this->object->imageResize($width, $height, $target);
 		$this->assertEquals($newSize, $expected);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$session     = $this->getMockSession();
-
-		$this->object = new JHelperMedia;
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   3.2
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
-
-		return $dataSet;
 	}
 }

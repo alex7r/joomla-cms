@@ -13,9 +13,9 @@ foreach ($this->fieldsets as $name => $fieldset)
 {
 	if (!isset($fieldset->repeat) || isset($fieldset->repeat) && $fieldset->repeat == false)
 	{
-		$label       = !empty($fieldset->label) ? JText::_($fieldset->label, true) : JText::_('COM_PLUGINS_' . $fieldset->name . '_FIELDSET_LABEL', true);
+		$label = !empty($fieldset->label) ? JText::_($fieldset->label, true) : JText::_('COM_PLUGINS_' . $fieldset->name . '_FIELDSET_LABEL', true);
 		$optionsname = 'options-' . $fieldset->name;
-		echo JHtml::_('bootstrap.addTab', 'myTab', $optionsname, $label);
+		echo JHtml::_('bootstrap.addTab', 'myTab', $optionsname,  $label);
 
 		if (isset($fieldset->description) && trim($fieldset->description))
 		{
@@ -37,7 +37,7 @@ foreach ($this->fieldsets as $name => $fieldset)
 						<?php echo $field->input; ?>
 					</div>
 				</div>
-				<?php
+			<?php
 			}
 			else
 			{

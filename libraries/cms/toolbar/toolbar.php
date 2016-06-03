@@ -17,30 +17,26 @@ defined('JPATH_PLATFORM') or die;
 class JToolbar
 {
 	/**
-	 * Stores the singleton instances of various toolbar.
-	 *
-	 * @var    JToolbar
-	 * @since  2.5
-	 */
-	protected static $instances = array();
-	/**
 	 * Toolbar name
 	 *
 	 * @var    string
 	 */
 	protected $_name = array();
+
 	/**
 	 * Toolbar array
 	 *
 	 * @var    array
 	 */
 	protected $_bar = array();
+
 	/**
 	 * Loaded buttons
 	 *
 	 * @var    array
 	 */
 	protected $_buttons = array();
+
 	/**
 	 * Directories, where button types can be stored.
 	 *
@@ -49,9 +45,17 @@ class JToolbar
 	protected $_buttonPath = array();
 
 	/**
+	 * Stores the singleton instances of various toolbar.
+	 *
+	 * @var    JToolbar
+	 * @since  2.5
+	 */
+	protected static $instances = array();
+
+	/**
 	 * Constructor
 	 *
-	 * @param   string $name The toolbar name.
+	 * @param   string  $name  The toolbar name.
 	 *
 	 * @since   1.5
 	 */
@@ -67,7 +71,7 @@ class JToolbar
 	 * Returns the global JToolbar object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @param   string $name The name of the toolbar.
+	 * @param   string  $name  The name of the toolbar.
 	 *
 	 * @return  JToolbar  The JToolbar object.
 	 *
@@ -172,7 +176,7 @@ class JToolbar
 	/**
 	 * Render a button.
 	 *
-	 * @param   object &$node A toolbar node.
+	 * @param   object  &$node  A toolbar node.
 	 *
 	 * @return  string
 	 *
@@ -197,8 +201,8 @@ class JToolbar
 	/**
 	 * Loads a button type.
 	 *
-	 * @param   string  $type Button Type
-	 * @param   boolean $new  False by default
+	 * @param   string   $type  Button Type
+	 * @param   boolean  $new   False by default
 	 *
 	 * @return  boolean
 	 *
@@ -275,7 +279,7 @@ class JToolbar
 	 * added them. If the parameter type cannot be found in the custom folders,
 	 * it will look in libraries/joomla/html/toolbar/button.
 	 *
-	 * @param   mixed $path Directory or directories to search.
+	 * @param   mixed  $path  Directory or directories to search.
 	 *
 	 * @return  void
 	 *

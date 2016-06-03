@@ -20,9 +20,9 @@ class ConfigControllerApplication extends JControllerLegacy
 	/**
 	 * Class Constructor
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @since       1.5
+	 * @since   1.5
 	 * @deprecated  4.0
 	 */
 	public function __construct($config = array())
@@ -38,7 +38,7 @@ class ConfigControllerApplication extends JControllerLegacy
 	 *
 	 * @return  bool  True on success, false on failure.
 	 *
-	 * @since       1.5
+	 * @since   1.5
 	 * @deprecated  4.0  Use ConfigControllerApplicationSave instead.
 	 */
 	public function save()
@@ -71,7 +71,7 @@ class ConfigControllerApplication extends JControllerLegacy
 	 *
 	 * @return  bool  True on success, false on failure.
 	 *
-	 * @since       1.5
+	 * @since   1.5
 	 * @deprecated  4.0  Use ConfigControllerApplicationRemoveroot instead.
 	 */
 	public function removeroot()

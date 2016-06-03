@@ -15,16 +15,12 @@ defined('_JEXEC') or die;
 <form action="index.php" method="post" id="adminForm" class="form-validate form-horizontal">
 	<div class="btn-toolbar">
 		<div class="btn-group pull-right">
-			<a class="btn" href="#" onclick="return Install.goToPage('site');" rel="prev"
-			   title="<?php echo JText::_('JPREVIOUS'); ?>"><span
-					class="icon-arrow-left"></span> <?php echo JText::_('JPREVIOUS'); ?></a>
-			<a class="btn btn-primary" href="#" onclick="Install.submitform();" rel="next"
-			   title="<?php echo JText::_('JNEXT'); ?>"><span
-					class="icon-arrow-right icon-white"></span> <?php echo JText::_('JNEXT'); ?></a>
+			<a class="btn" href="#" onclick="return Install.goToPage('site');" rel="prev" title="<?php echo JText::_('JPREVIOUS'); ?>"><span class="icon-arrow-left"></span> <?php echo JText::_('JPREVIOUS'); ?></a>
+			<a  class="btn btn-primary" href="#" onclick="Install.submitform();" rel="next" title="<?php echo JText::_('JNEXT'); ?>"><span class="icon-arrow-right icon-white"></span> <?php echo JText::_('JNEXT'); ?></a>
 		</div>
 	</div>
 	<h3><?php echo JText::_('INSTL_DATABASE'); ?></h3>
-	<hr class="hr-condensed"/>
+	<hr class="hr-condensed" />
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('db_type'); ?>
@@ -106,16 +102,12 @@ defined('_JEXEC') or die;
 	<div class="row-fluid">
 		<div class="btn-toolbar">
 			<div class="btn-group pull-right">
-				<a class="btn" href="#" onclick="return Install.goToPage('site');" rel="prev"
-				   title="<?php echo JText::_('JPREVIOUS'); ?>"><span
-						class="icon-arrow-left"></span> <?php echo JText::_('JPREVIOUS'); ?></a>
-				<a class="btn btn-primary" href="#" onclick="Install.submitform();" rel="next"
-				   title="<?php echo JText::_('JNEXT'); ?>"><span
-						class="icon-arrow-right icon-white"></span> <?php echo JText::_('JNEXT'); ?></a>
+				<a class="btn" href="#" onclick="return Install.goToPage('site');" rel="prev" title="<?php echo JText::_('JPREVIOUS'); ?>"><span class="icon-arrow-left"></span> <?php echo JText::_('JPREVIOUS'); ?></a>
+				<a  class="btn btn-primary" href="#" onclick="Install.submitform();" rel="next" title="<?php echo JText::_('JNEXT'); ?>"><span class="icon-arrow-right icon-white"></span> <?php echo JText::_('JNEXT'); ?></a>
 			</div>
 		</div>
 	</div>
 
-	<input type="hidden" name="task" value="database"/>
+	<input type="hidden" name="task" value="database" />
 	<?php echo JHtml::_('form.token'); ?>
 </form>

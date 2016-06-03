@@ -24,6 +24,18 @@ class JInputCliTest extends PHPUnit_Framework_TestCase
 	protected $inspector;
 
 	/**
+	 * Setup for testing.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		include_once __DIR__ . '/stubs/JFilterInputMock.php';
+	}
+
+	/**
 	 * Test the JInput::parseArguments method.
 	 *
 	 * @dataProvider provider_parseArguments
@@ -99,15 +111,15 @@ class JInputCliTest extends PHPUnit_Framework_TestCase
 				array('test.php', 'plain-arg', '--foo', '--bar=baz', '--funny=spam=eggs', '--also-funny=spam=eggs',
 					'plain arg 2', '-abc', '-k=value', 'plain arg 3', '--s=original', '--s=overwrite', '--s'),
 				array(
-					'foo'        => true,
-					'bar'        => 'baz',
-					'funny'      => 'spam=eggs',
+					'foo' => true,
+					'bar' => 'baz',
+					'funny' => 'spam=eggs',
 					'also-funny' => 'spam=eggs',
-					'a'          => true,
-					'b'          => true,
-					'c'          => true,
-					'k'          => 'value',
-					's'          => 'overwrite'
+					'a' => true,
+					'b' => true,
+					'c' => true,
+					'k' => 'value',
+					's' => 'overwrite'
 				),
 				array(
 					'plain-arg',
@@ -121,9 +133,9 @@ class JInputCliTest extends PHPUnit_Framework_TestCase
 				array('test.php', '--key', 'value', '-abc', 'not-c-value'),
 				array(
 					'key' => 'value',
-					'a'   => true,
-					'b'   => true,
-					'c'   => true
+					'a' => true,
+					'b' => true,
+					'c' => true
 				),
 				array(
 					'not-c-value'
@@ -135,10 +147,10 @@ class JInputCliTest extends PHPUnit_Framework_TestCase
 				array('test.php', '--key1', 'value1', '-a', '--key2', '-b', 'b-value', '--c'),
 				array(
 					'key1' => 'value1',
-					'a'    => true,
+					'a' => true,
 					'key2' => true,
-					'b'    => 'b-value',
-					'c'    => true
+					'b' => 'b-value',
+					'c' => true
 				),
 				array()
 			)
@@ -278,17 +290,5 @@ class JInputCliTest extends PHPUnit_Framework_TestCase
 			$this->identicalTo($_SERVER['PHP_SELF']),
 			'Line: ' . __LINE__ . '.'
 		);
-	}
-
-	/**
-	 * Setup for testing.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		include_once __DIR__ . '/stubs/JFilterInputMock.php';
 	}
 }

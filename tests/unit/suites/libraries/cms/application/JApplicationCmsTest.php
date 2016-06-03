@@ -95,10 +95,10 @@ class JApplicationCmsTest extends TestCaseDatabase
 
 		$this->backupServer = $_SERVER;
 
-		$_SERVER['HTTP_HOST']       = self::TEST_HTTP_HOST;
+		$_SERVER['HTTP_HOST'] = self::TEST_HTTP_HOST;
 		$_SERVER['HTTP_USER_AGENT'] = self::TEST_USER_AGENT;
-		$_SERVER['REQUEST_URI']     = self::TEST_REQUEST_URI;
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
+		$_SERVER['REQUEST_URI'] = self::TEST_REQUEST_URI;
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
 
 		// Set the config for the app
 		$config = new Registry;
@@ -106,6 +106,48 @@ class JApplicationCmsTest extends TestCaseDatabase
 
 		// Get a new JApplicationCmsInspector instance.
 		$this->class = new JApplicationCmsInspector($this->getMockInput(), $config);
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDown()
+	 * @since   3.2
+	 */
+	protected function tearDown()
+	{
+		// Reset the dispatcher instance.
+		TestReflection::setValue('JEventDispatcher', 'instance', null);
+
+		// Reset some web inspector static settings.
+		JApplicationCmsInspector::$headersSent = false;
+		JApplicationCmsInspector::$connectionAlive = true;
+
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   3.2
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_usergroups', JPATH_TEST_DATABASE . '/jos_usergroups.csv');
+		$dataSet->addTable('jos_users', JPATH_TEST_DATABASE . '/jos_users.csv');
+		$dataSet->addTable('jos_viewlevels', JPATH_TEST_DATABASE . '/jos_viewlevels.csv');
+
+		return $dataSet;
 	}
 
 	/**
@@ -185,7 +227,7 @@ class JApplicationCmsTest extends TestCaseDatabase
 		JFactory::$application = $this->class;
 
 		$dispatcher = $this->getMockDispatcher();
-		$document   = $this->getMockDocument();
+		$document = $this->getMockDocument();
 
 		$this->assignMockReturns($document, array('render' => 'JWeb Body'));
 
@@ -331,7 +373,7 @@ class JApplicationCmsTest extends TestCaseDatabase
 	public function testRedirect()
 	{
 		$base = 'http://mydomain.com/';
-		$url  = 'index.php';
+		$url = 'index.php';
 
 		// Inject the client information.
 		TestReflection::setValue(
@@ -370,7 +412,7 @@ class JApplicationCmsTest extends TestCaseDatabase
 	public function testRedirectLegacy()
 	{
 		$base = 'http://mydomain.com/';
-		$url  = 'index.php';
+		$url = 'index.php';
 
 		// Inject the client information.
 		TestReflection::setValue(
@@ -393,7 +435,7 @@ class JApplicationCmsTest extends TestCaseDatabase
 			array(
 				array(
 					'message' => 'Test Message',
-					'type'    => 'message'
+					'type' => 'message'
 				)
 			),
 			$this->class->getMessageQueue()
@@ -419,7 +461,7 @@ class JApplicationCmsTest extends TestCaseDatabase
 	public function testRedirectLegacyWithEmptyMessageAndEmptyStatus()
 	{
 		$base = 'http://mydomain.com/';
-		$url  = 'index.php';
+		$url = 'index.php';
 
 		// Inject the client information.
 		TestReflection::setValue(
@@ -464,7 +506,7 @@ class JApplicationCmsTest extends TestCaseDatabase
 	public function testRedirectWithHeadersSent()
 	{
 		$base = 'http://mydomain.com/';
-		$url  = 'index.php';
+		$url = 'index.php';
 
 		// Emulate headers already sent.
 		JApplicationCmsInspector::$headersSent = true;
@@ -552,15 +594,15 @@ class JApplicationCmsTest extends TestCaseDatabase
 	/**
 	 * Tests the JApplicationCms::redirect method with assorted URL's.
 	 *
-	 * @param   string $url      @todo
-	 * @param   string $base     @todo
-	 * @param   string $request  @todo
-	 * @param   string $expected @todo
+	 * @param   string  $url       @todo
+	 * @param   string  $base      @todo
+	 * @param   string  $request   @todo
+	 * @param   string  $expected  @todo
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  getRedirectData
-	 * @since         3.2
+	 * @since   3.2
 	 */
 	public function testRedirectWithUrl($url, $base, $request, $expected)
 	{
@@ -606,47 +648,5 @@ class JApplicationCmsTest extends TestCaseDatabase
 		TestReflection::invoke($this->class, 'render');
 
 		$this->assertEquals(array('JWeb Body'), TestReflection::getValue($this->class, 'response')->body);
-	}
-
-	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDown()
-	 * @since   3.2
-	 */
-	protected function tearDown()
-	{
-		// Reset the dispatcher instance.
-		TestReflection::setValue('JEventDispatcher', 'instance', null);
-
-		// Reset some web inspector static settings.
-		JApplicationCmsInspector::$headersSent     = false;
-		JApplicationCmsInspector::$connectionAlive = true;
-
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   3.2
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_usergroups', JPATH_TEST_DATABASE . '/jos_usergroups.csv');
-		$dataSet->addTable('jos_users', JPATH_TEST_DATABASE . '/jos_users.csv');
-		$dataSet->addTable('jos_viewlevels', JPATH_TEST_DATABASE . '/jos_viewlevels.csv');
-
-		return $dataSet;
 	}
 }

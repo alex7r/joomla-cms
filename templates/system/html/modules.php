@@ -22,23 +22,23 @@ function modChrome_none($module, &$params, &$attribs)
  */
 function modChrome_html5($module, &$params, &$attribs)
 {
-	$moduleTag     = $params->get('module_tag', 'div');
-	$headerTag     = htmlspecialchars($params->get('header_tag', 'h3'), ENT_COMPAT, 'UTF-8');
-	$bootstrapSize = (int) $params->get('bootstrap_size', 0);
-	$moduleClass   = $bootstrapSize != 0 ? ' span' . $bootstrapSize : '';
+	$moduleTag      = $params->get('module_tag', 'div');
+	$headerTag      = htmlspecialchars($params->get('header_tag', 'h3'), ENT_COMPAT, 'UTF-8');
+	$bootstrapSize  = (int) $params->get('bootstrap_size', 0);
+	$moduleClass    = $bootstrapSize != 0 ? ' span' . $bootstrapSize : '';
 
 	// Temporarily store header class in variable
-	$headerClass = $params->get('header_class');
-	$headerClass = !empty($headerClass) ? ' class="' . htmlspecialchars($headerClass, ENT_COMPAT, 'UTF-8') . '"' : '';
+	$headerClass    = $params->get('header_class');
+	$headerClass    = !empty($headerClass) ? ' class="' . htmlspecialchars($headerClass, ENT_COMPAT, 'UTF-8') . '"' : '';
 
 	if (!empty ($module->content)) : ?>
 		<<?php echo $moduleTag; ?> class="moduletable<?php echo htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT, 'UTF-8') . $moduleClass; ?>">
 
-		<?php if ((bool) $module->showtitle) : ?>
+		<?php if ((bool) $module->showtitle) :?>
 			<<?php echo $headerTag . $headerClass . '>' . $module->title; ?></<?php echo $headerTag; ?>>
 		<?php endif; ?>
 
-		<?php echo $module->content; ?>
+			<?php echo $module->content; ?>
 
 		</<?php echo $moduleTag; ?>>
 
@@ -50,21 +50,20 @@ function modChrome_html5($module, &$params, &$attribs)
  */
 function modChrome_table($module, &$params, &$attribs)
 { ?>
-	<table cellpadding="0" cellspacing="0"
-	       class="moduletable<?php echo htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT, 'UTF-8'); ?>">
-		<?php if ((bool) $module->showtitle) : ?>
-			<tr>
-				<th>
-					<?php echo $module->title; ?>
-				</th>
-			</tr>
-		<?php endif; ?>
+	<table cellpadding="0" cellspacing="0" class="moduletable<?php echo htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT, 'UTF-8'); ?>">
+	<?php if ((bool) $module->showtitle) : ?>
+		<tr>
+			<th>
+				<?php echo $module->title; ?>
+			</th>
+		</tr>
+	<?php endif; ?>
 		<tr>
 			<td>
 				<?php echo $module->content; ?>
 			</td>
 		</tr>
-	</table>
+		</table>
 	<?php
 }
 
@@ -89,21 +88,21 @@ function modChrome_horz($module, &$params, &$attribs)
  */
 function modChrome_xhtml($module, &$params, &$attribs)
 {
-	$moduleTag     = $params->get('module_tag', 'div');
-	$headerTag     = htmlspecialchars($params->get('header_tag', 'h3'), ENT_COMPAT, 'UTF-8');
-	$bootstrapSize = (int) $params->get('bootstrap_size', 0);
-	$moduleClass   = $bootstrapSize != 0 ? ' span' . $bootstrapSize : '';
+	$moduleTag      = $params->get('module_tag', 'div');
+	$headerTag      = htmlspecialchars($params->get('header_tag', 'h3'), ENT_COMPAT, 'UTF-8');
+	$bootstrapSize  = (int) $params->get('bootstrap_size', 0);
+	$moduleClass    = $bootstrapSize != 0 ? ' span' . $bootstrapSize : '';
 
 	// Temporarily store header class in variable
-	$headerClass = $params->get('header_class');
-	$headerClass = ($headerClass) ? ' class="' . htmlspecialchars($headerClass, ENT_COMPAT, 'UTF-8') . '"' : '';
+	$headerClass    = $params->get('header_class');
+	$headerClass    = ($headerClass) ? ' class="' . htmlspecialchars($headerClass, ENT_COMPAT, 'UTF-8') . '"' : '';
 
 	if (!empty ($module->content)) : ?>
 		<<?php echo $moduleTag; ?> class="moduletable<?php echo htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT, 'UTF-8') . $moduleClass; ?>">
-		<?php if ((bool) $module->showtitle) : ?>
-			<<?php echo $headerTag . $headerClass . '>' . $module->title; ?></<?php echo $headerTag; ?>>
-		<?php endif; ?>
-		<?php echo $module->content; ?>
+			<?php if ((bool) $module->showtitle) : ?>
+				<<?php echo $headerTag . $headerClass . '>' . $module->title; ?></<?php echo $headerTag; ?>>
+			<?php endif; ?>
+			<?php echo $module->content; ?>
 		</<?php echo $moduleTag; ?>>
 	<?php endif;
 }
@@ -113,18 +112,18 @@ function modChrome_xhtml($module, &$params, &$attribs)
  */
 function modChrome_rounded($module, &$params, &$attribs)
 { ?>
-	<div class="module<?php echo htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT, 'UTF-8'); ?>">
-		<div>
+		<div class="module<?php echo htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT, 'UTF-8'); ?>">
 			<div>
 				<div>
-					<?php if ((bool) $module->showtitle) : ?>
-						<h3><?php echo $module->title; ?></h3>
-					<?php endif; ?>
+					<div>
+						<?php if ((bool) $module->showtitle) : ?>
+							<h3><?php echo $module->title; ?></h3>
+						<?php endif; ?>
 					<?php echo $module->content; ?>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 	<?php
 }
 
@@ -145,8 +144,7 @@ function modChrome_outline($module, &$params, &$attribs)
 	}
 	?>
 	<div class="mod-preview">
-		<div
-			class="mod-preview-info"><?php echo 'Position: ' . $module->position . ' [ Style: ' . $module->style . ']'; ?></div>
+		<div class="mod-preview-info"><?php echo 'Position: ' . $module->position . ' [ Style: ' . $module->style . ']'; ?></div>
 		<div class="mod-preview-wrapper">
 			<?php echo $module->content; ?>
 		</div>

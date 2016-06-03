@@ -77,11 +77,12 @@ JFactory::getDocument()->addStyleDeclaration(
 
 <script type="text/javascript">
 	// Set the first tab to active if there is no other active tab
-	jQuery(document).ready(function ($) {
-		var hasTab = function (href) {
+	jQuery(document).ready(function($) {
+		var hasTab = function(href){
 			return $('a[data-toggle="tab"]a[href*=' + href + ']').length;
 		};
-		if (!hasTab(localStorage.getItem('tab-href'))) {
+		if (!hasTab(localStorage.getItem('tab-href')))
+		{
 			var tabAnchor = $("#myTabTabs li:first a");
 			window.localStorage.setItem('tab-href', tabAnchor.attr('href'));
 			tabAnchor.click();
@@ -91,7 +92,7 @@ JFactory::getDocument()->addStyleDeclaration(
 
 <div id="installer-install" class="clearfix">
 	<form enctype="multipart/form-data" action="<?php echo JRoute::_('index.php?option=com_installer&view=install'); ?>"
-	      method="post" name="adminForm" id="adminForm" class="form-horizontal">
+		method="post" name="adminForm" id="adminForm" class="form-horizontal">
 		<?php if (!empty($this->sidebar)) : ?>
 		<div id="j-sidebar-container" class="span2">
 			<?php echo $this->sidebar; ?>
@@ -105,7 +106,7 @@ JFactory::getDocument()->addStyleDeclaration(
 					<?php echo $this->loadTemplate('message'); ?>
 				<?php elseif ($this->showJedAndWebInstaller) : ?>
 					<div class="alert alert-info j-jed-message"
-					     style="margin-bottom: 40px; line-height: 2em; color:#333333;">
+						style="margin-bottom: 40px; line-height: 2em; color:#333333;">
 						<?php echo JHtml::_(
 							'link',
 							JRoute::_('index.php?option=com_config&view=component&component=com_installer&path=&return=' . urlencode(base64_encode(JUri::getInstance()))),
@@ -116,8 +117,8 @@ JFactory::getDocument()->addStyleDeclaration(
 						<p><?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_INFO'); ?>
 							<?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_TOS'); ?></p>
 						<input class="btn" type="button"
-						       value="<?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_ADD_TAB'); ?>"
-						       onclick="Joomla.submitbuttonInstallWebInstaller()"/>
+							value="<?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_ADD_TAB'); ?>"
+							onclick="Joomla.submitbuttonInstallWebInstaller()"/>
 					</div>
 				<?php endif; ?>
 				<?php echo JHtml::_('bootstrap.startTabSet', 'myTab'); ?>

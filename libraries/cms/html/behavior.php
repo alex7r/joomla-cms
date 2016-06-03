@@ -25,9 +25,76 @@ abstract class JHtmlBehavior
 	protected static $loaded = array();
 
 	/**
+	 * Method to load the MooTools framework into the document head
+	 *
+	 * If debugging mode is on an uncompressed version of MooTools is included for easier debugging.
+	 *
+	 * @param   boolean  $extras  Flag to determine whether to load MooTools More in addition to Core
+	 * @param   mixed    $debug   Is debugging mode on? [optional]
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	public static function framework($extras = false, $debug = null)
+	{
+		$type = $extras ? 'more' : 'core';
+
+		// Only load once
+		if (!empty(static::$loaded[__METHOD__][$type]))
+		{
+			return;
+		}
+
+		// If no debugging value is set, use the configuration setting
+		if ($debug === null)
+		{
+			$config = JFactory::getConfig();
+			$debug = $config->get('debug');
+		}
+
+		if ($type != 'core' && empty(static::$loaded[__METHOD__]['core']))
+		{
+			static::framework(false, $debug);
+		}
+
+		JHtml::_('script', 'system/mootools-' . $type . '.js', false, true, false, false, $debug);
+
+		// Keep loading core.js for BC reasons
+		static::core();
+
+		static::$loaded[__METHOD__][$type] = true;
+
+		return;
+	}
+
+	/**
+	 * Method to load core.js into the document head.
+	 *
+	 * Core.js defines the 'Joomla' namespace and contains functions which are used across extensions
+	 *
+	 * @return  void
+	 *
+	 * @since   3.3
+	 */
+	public static function core()
+	{
+		// Only load once
+		if (isset(static::$loaded[__METHOD__]))
+		{
+			return;
+		}
+
+		JHtml::_('script', 'system/core.js', false, true);
+		static::$loaded[__METHOD__] = true;
+
+		return;
+	}
+
+	/**
 	 * Add unobtrusive JavaScript support for image captions.
 	 *
-	 * @param   string $selector The selector for which a caption behaviour is to be applied.
+	 * @param   string  $selector  The selector for which a caption behaviour is to be applied.
 	 *
 	 * @return  void
 	 *
@@ -67,7 +134,7 @@ abstract class JHtmlBehavior
 	 *
 	 * @return  void
 	 *
-	 * @since      1.5
+	 * @since   1.5
 	 *
 	 * @Deprecated 3.4 Use formvalidator instead
 	 */
@@ -86,73 +153,6 @@ abstract class JHtmlBehavior
 
 		// Load the new jQuery code
 		static::formvalidator();
-	}
-
-	/**
-	 * Method to load the MooTools framework into the document head
-	 *
-	 * If debugging mode is on an uncompressed version of MooTools is included for easier debugging.
-	 *
-	 * @param   boolean $extras Flag to determine whether to load MooTools More in addition to Core
-	 * @param   mixed   $debug  Is debugging mode on? [optional]
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	public static function framework($extras = false, $debug = null)
-	{
-		$type = $extras ? 'more' : 'core';
-
-		// Only load once
-		if (!empty(static::$loaded[__METHOD__][$type]))
-		{
-			return;
-		}
-
-		// If no debugging value is set, use the configuration setting
-		if ($debug === null)
-		{
-			$config = JFactory::getConfig();
-			$debug  = $config->get('debug');
-		}
-
-		if ($type != 'core' && empty(static::$loaded[__METHOD__]['core']))
-		{
-			static::framework(false, $debug);
-		}
-
-		JHtml::_('script', 'system/mootools-' . $type . '.js', false, true, false, false, $debug);
-
-		// Keep loading core.js for BC reasons
-		static::core();
-
-		static::$loaded[__METHOD__][$type] = true;
-
-		return;
-	}
-
-	/**
-	 * Method to load core.js into the document head.
-	 *
-	 * Core.js defines the 'Joomla' namespace and contains functions which are used across extensions
-	 *
-	 * @return  void
-	 *
-	 * @since   3.3
-	 */
-	public static function core()
-	{
-		// Only load once
-		if (isset(static::$loaded[__METHOD__]))
-		{
-			return;
-		}
-
-		JHtml::_('script', 'system/core.js', false, true);
-		static::$loaded[__METHOD__] = true;
-
-		return;
 	}
 
 	/**
@@ -254,18 +254,18 @@ abstract class JHtmlBehavior
 	 *
 	 * Uses the core Tips class in MooTools.
 	 *
-	 * @param   string $selector     The class selector for the tooltip.
-	 * @param   array  $params       An array of options for the tooltip.
-	 *                               Options for the tooltip can be:
-	 *                               - maxTitleChars  integer   The maximum number of characters in the tooltip title (defaults to 50).
-	 *                               - offsets        object    The distance of your tooltip from the mouse (defaults to {'x': 16, 'y': 16}).
-	 *                               - showDelay      integer   The millisecond delay the show event is fired (defaults to 100).
-	 *                               - hideDelay      integer   The millisecond delay the hide hide is fired (defaults to 100).
-	 *                               - className      string    The className your tooltip container will get.
-	 *                               - fixed          boolean   If set to true, the toolTip will not follow the mouse.
-	 *                               - onShow         function  The default function for the show event, passes the tip element
+	 * @param   string  $selector  The class selector for the tooltip.
+	 * @param   array   $params    An array of options for the tooltip.
+	 *                             Options for the tooltip can be:
+	 *                             - maxTitleChars  integer   The maximum number of characters in the tooltip title (defaults to 50).
+	 *                             - offsets        object    The distance of your tooltip from the mouse (defaults to {'x': 16, 'y': 16}).
+	 *                             - showDelay      integer   The millisecond delay the show event is fired (defaults to 100).
+	 *                             - hideDelay      integer   The millisecond delay the hide hide is fired (defaults to 100).
+	 *                             - className      string    The className your tooltip container will get.
+	 *                             - fixed          boolean   If set to true, the toolTip will not follow the mouse.
+	 *                             - onShow         function  The default function for the show event, passes the tip element
 	 *                               and the currently hovered element.
-	 *                               - onHide         function  The default function for the hide event, passes the currently
+	 *                             - onHide         function  The default function for the hide event, passes the currently
 	 *                               hovered element.
 	 *
 	 * @return  void
@@ -326,19 +326,19 @@ abstract class JHtmlBehavior
 	/**
 	 * Add unobtrusive JavaScript support for modal links.
 	 *
-	 * @param   string $selector   The selector for which a modal behaviour is to be applied.
-	 * @param   array  $params     An array of parameters for the modal behaviour.
+	 * @param   string  $selector  The selector for which a modal behaviour is to be applied.
+	 * @param   array   $params    An array of parameters for the modal behaviour.
 	 *                             Options for the modal behaviour can be:
-	 *                             - ajaxOptions
-	 *                             - size
-	 *                             - shadow
-	 *                             - overlay
-	 *                             - onOpen
-	 *                             - onClose
-	 *                             - onUpdate
-	 *                             - onResize
-	 *                             - onShow
-	 *                             - onHide
+	 *                            - ajaxOptions
+	 *                            - size
+	 *                            - shadow
+	 *                            - overlay
+	 *                            - onOpen
+	 *                            - onClose
+	 *                            - onUpdate
+	 *                            - onResize
+	 *                            - onShow
+	 *                            - onHide
 	 *
 	 * @return  void
 	 *
@@ -390,7 +390,7 @@ abstract class JHtmlBehavior
 
 		if (isset($params['fullScreen']) && (bool) $params['fullScreen'])
 		{
-			$opt['size'] = array('x' => '\\jQuery(window).width() - 80', 'y' => '\\jQuery(window).height() - 80');
+			$opt['size']      = array('x' => '\\jQuery(window).width() - 80', 'y' => '\\jQuery(window).height() - 80');
 		}
 
 		$options = JHtml::getJSObject($opt);
@@ -398,7 +398,7 @@ abstract class JHtmlBehavior
 		// Attach modal behavior to document
 		$document
 			->addScriptDeclaration(
-				"
+			"
 		jQuery(function($) {
 			SqueezeBox.initialize(" . $options . ");
 			SqueezeBox.assign($('" . $selector . "').get(), {
@@ -408,7 +408,7 @@ abstract class JHtmlBehavior
 		function jModalClose() {
 			SqueezeBox.close();
 		}"
-			);
+		);
 
 		// Set static array
 		static::$loaded[__METHOD__][$sig] = true;
@@ -419,7 +419,7 @@ abstract class JHtmlBehavior
 	/**
 	 * JavaScript behavior to allow shift select in grids
 	 *
-	 * @param   string $id The id of the form for which a multiselect behaviour is to be applied.
+	 * @param   string  $id  The id of the form for which a multiselect behaviour is to be applied.
 	 *
 	 * @return  void
 	 *
@@ -457,9 +457,9 @@ abstract class JHtmlBehavior
 	/**
 	 * Add unobtrusive javascript support for a collapsible tree.
 	 *
-	 * @param   string $id     An index
-	 * @param   array  $params An array of options.
-	 * @param   array  $root   The root node
+	 * @param   string  $id      An index
+	 * @param   array   $params  An array of options.
+	 * @param   array   $root    The root node
 	 *
 	 * @return  void
 	 *
@@ -491,7 +491,7 @@ abstract class JHtmlBehavior
 		$opt['onExpand'] = (array_key_exists('onExpand', $params)) ? '\\' . $params['onExpand'] : null;
 		$opt['onSelect'] = (array_key_exists('onSelect', $params)) ? '\\' . $params['onSelect'] : null;
 		$opt['onClick']  = (array_key_exists('onClick', $params)) ? '\\' . $params['onClick']
-			: '\\function(node){  window.open(node.data.url, node.data.target != null ? node.data.target : \'_self\'); }';
+		: '\\function(node){  window.open(node.data.url, node.data.target != null ? node.data.target : \'_self\'); }';
 
 		$options = JHtml::getJSObject($opt);
 
@@ -503,7 +503,7 @@ abstract class JHtmlBehavior
 		$rt['icon']     = (array_key_exists('icon', $root)) ? $root['icon'] : null;
 		$rt['openicon'] = (array_key_exists('openicon', $root)) ? $root['openicon'] : null;
 		$rt['data']     = (array_key_exists('data', $root)) ? $root['data'] : null;
-		$rootNode       = JHtml::getJSObject($rt);
+		$rootNode = JHtml::getJSObject($rt);
 
 		$treeName = (array_key_exists('treeName', $params)) ? $params['treeName'] : '';
 
@@ -537,7 +537,7 @@ abstract class JHtmlBehavior
 		}
 
 		$document = JFactory::getDocument();
-		$tag      = JFactory::getLanguage()->getTag();
+		$tag = JFactory::getLanguage()->getTag();
 
 		JHtml::_('stylesheet', 'system/calendar-jos.css', array(' title' => JText::_('JLIB_HTML_BEHAVIOR_GREEN'), ' media' => 'all'), true);
 		JHtml::_('script', $tag . '/calendar.js', false, true);
@@ -551,95 +551,6 @@ abstract class JHtmlBehavior
 		}
 
 		static::$loaded[__METHOD__] = true;
-	}
-
-	/**
-	 * Internal method to translate the JavaScript Calendar
-	 *
-	 * @return  string  JavaScript that translates the object
-	 *
-	 * @since   1.5
-	 */
-	protected static function calendartranslation()
-	{
-		static $jsscript = 0;
-
-		// Guard clause, avoids unnecessary nesting
-		if ($jsscript)
-		{
-			return false;
-		}
-
-		$jsscript = 1;
-
-		// To keep the code simple here, run strings through JText::_() using array_map()
-		$callback       = array('JText', '_');
-		$weekdays_full  = array_map(
-			$callback, array(
-				'SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'
-			)
-		);
-		$weekdays_short = array_map(
-			$callback,
-			array(
-				'SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'
-			)
-		);
-		$months_long    = array_map(
-			$callback, array(
-				'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
-				'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
-			)
-		);
-		$months_short   = array_map(
-			$callback, array(
-				'JANUARY_SHORT', 'FEBRUARY_SHORT', 'MARCH_SHORT', 'APRIL_SHORT', 'MAY_SHORT', 'JUNE_SHORT',
-				'JULY_SHORT', 'AUGUST_SHORT', 'SEPTEMBER_SHORT', 'OCTOBER_SHORT', 'NOVEMBER_SHORT', 'DECEMBER_SHORT'
-			)
-		);
-
-		// This will become an object in Javascript but define it first in PHP for readability
-		$today = " " . JText::_('JLIB_HTML_BEHAVIOR_TODAY') . " ";
-		$text  = array(
-			'INFO'            => JText::_('JLIB_HTML_BEHAVIOR_ABOUT_THE_CALENDAR'),
-			'ABOUT'           => "DHTML Date/Time Selector\n"
-				. "(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n"
-				. "For latest version visit: http://www.dynarch.com/projects/calendar/\n"
-				. "Distributed under GNU LGPL.  See http://gnu.org/licenses/lgpl.html for details."
-				. "\n\n"
-				. JText::_('JLIB_HTML_BEHAVIOR_DATE_SELECTION')
-				. JText::_('JLIB_HTML_BEHAVIOR_YEAR_SELECT')
-				. JText::_('JLIB_HTML_BEHAVIOR_MONTH_SELECT')
-				. JText::_('JLIB_HTML_BEHAVIOR_HOLD_MOUSE'),
-			'ABOUT_TIME'      => "\n\n"
-				. "Time selection:\n"
-				. "- Click on any of the time parts to increase it\n"
-				. "- or Shift-click to decrease it\n"
-				. "- or click and drag for faster selection.",
-			'PREV_YEAR'       => JText::_('JLIB_HTML_BEHAVIOR_PREV_YEAR_HOLD_FOR_MENU'),
-			'PREV_MONTH'      => JText::_('JLIB_HTML_BEHAVIOR_PREV_MONTH_HOLD_FOR_MENU'),
-			'GO_TODAY'        => JText::_('JLIB_HTML_BEHAVIOR_GO_TODAY'),
-			'NEXT_MONTH'      => JText::_('JLIB_HTML_BEHAVIOR_NEXT_MONTH_HOLD_FOR_MENU'),
-			'SEL_DATE'        => JText::_('JLIB_HTML_BEHAVIOR_SELECT_DATE'),
-			'DRAG_TO_MOVE'    => JText::_('JLIB_HTML_BEHAVIOR_DRAG_TO_MOVE'),
-			'PART_TODAY'      => $today,
-			'DAY_FIRST'       => JText::_('JLIB_HTML_BEHAVIOR_DISPLAY_S_FIRST'),
-			'WEEKEND'         => JFactory::getLanguage()->getWeekEnd(),
-			'CLOSE'           => JText::_('JLIB_HTML_BEHAVIOR_CLOSE'),
-			'TODAY'           => JText::_('JLIB_HTML_BEHAVIOR_TODAY'),
-			'TIME_PART'       => JText::_('JLIB_HTML_BEHAVIOR_SHIFT_CLICK_OR_DRAG_TO_CHANGE_VALUE'),
-			'DEF_DATE_FORMAT' => "%Y-%m-%d",
-			'TT_DATE_FORMAT'  => JText::_('JLIB_HTML_BEHAVIOR_TT_DATE_FORMAT'),
-			'WK'              => JText::_('JLIB_HTML_BEHAVIOR_WK'),
-			'TIME'            => JText::_('JLIB_HTML_BEHAVIOR_TIME')
-		);
-
-		return 'Calendar._DN = ' . json_encode($weekdays_full) . ';'
-		. ' Calendar._SDN = ' . json_encode($weekdays_short) . ';'
-		. ' Calendar._FD = 0;'
-		. ' Calendar._MN = ' . json_encode($months_long) . ';'
-		. ' Calendar._SMN = ' . json_encode($months_short) . ';'
-		. ' Calendar._TT = ' . json_encode($text) . ';';
 	}
 
 	/**
@@ -776,13 +687,13 @@ abstract class JHtmlBehavior
 	/**
 	 * Highlight some words via Javascript.
 	 *
-	 * @param   array  $terms       Array of words that should be highlighted.
-	 * @param   string $start       ID of the element that marks the begin of the section in which words
+	 * @param   array   $terms      Array of words that should be highlighted.
+	 * @param   string  $start      ID of the element that marks the begin of the section in which words
 	 *                              should be highlighted. Note this element will be removed from the DOM.
-	 * @param   string $end         ID of the element that end this section.
+	 * @param   string  $end        ID of the element that end this section.
 	 *                              Note this element will be removed from the DOM.
-	 * @param   string $className   Class name of the element highlights are wrapped in.
-	 * @param   string $tag         Tag that will be used to wrap the highlighted words.
+	 * @param   string  $className  Class name of the element highlights are wrapped in.
+	 * @param   string  $tag        Tag that will be used to wrap the highlighted words.
 	 *
 	 * @return  void
 	 *
@@ -803,7 +714,6 @@ abstract class JHtmlBehavior
 		if (empty($terms))
 		{
 			static::$loaded[__METHOD__][$sig] = true;
-
 			return;
 		}
 
@@ -866,7 +776,7 @@ abstract class JHtmlBehavior
 		// Include jQuery
 		JHtml::_('jquery.framework');
 
-		$js       = 'jQuery(function () {
+		$js = 'jQuery(function () {
 			if (top == self) {
 				document.documentElement.style.display = "block";
 			}
@@ -885,6 +795,112 @@ abstract class JHtmlBehavior
 		JFactory::getApplication()->setHeader('X-Frame-Options', 'SAMEORIGIN');
 
 		static::$loaded[__METHOD__] = true;
+	}
+
+	/**
+	 * Internal method to get a JavaScript object notation string from an array
+	 *
+	 * @param   array  $array  The array to convert to JavaScript object notation
+	 *
+	 * @return  string  JavaScript object notation representation of the array
+	 *
+	 * @since       1.5
+	 * @deprecated  13.3 (Platform) & 4.0 (CMS) - Use JHtml::getJSObject() instead.
+	 */
+	protected static function _getJSObject($array = array())
+	{
+		JLog::add('JHtmlBehavior::_getJSObject() is deprecated. JHtml::getJSObject() instead..', JLog::WARNING, 'deprecated');
+
+		return JHtml::getJSObject($array);
+	}
+
+	/**
+	 * Internal method to translate the JavaScript Calendar
+	 *
+	 * @return  string  JavaScript that translates the object
+	 *
+	 * @since   1.5
+	 */
+	protected static function calendartranslation()
+	{
+		static $jsscript = 0;
+
+		// Guard clause, avoids unnecessary nesting
+		if ($jsscript)
+		{
+			return false;
+		}
+
+		$jsscript = 1;
+
+		// To keep the code simple here, run strings through JText::_() using array_map()
+		$callback = array('JText','_');
+		$weekdays_full = array_map(
+			$callback, array(
+				'SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'
+			)
+		);
+		$weekdays_short = array_map(
+			$callback,
+			array(
+				'SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'
+			)
+		);
+		$months_long = array_map(
+			$callback, array(
+				'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+				'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
+			)
+		);
+		$months_short = array_map(
+			$callback, array(
+				'JANUARY_SHORT', 'FEBRUARY_SHORT', 'MARCH_SHORT', 'APRIL_SHORT', 'MAY_SHORT', 'JUNE_SHORT',
+				'JULY_SHORT', 'AUGUST_SHORT', 'SEPTEMBER_SHORT', 'OCTOBER_SHORT', 'NOVEMBER_SHORT', 'DECEMBER_SHORT'
+			)
+		);
+
+		// This will become an object in Javascript but define it first in PHP for readability
+		$today = " " . JText::_('JLIB_HTML_BEHAVIOR_TODAY') . " ";
+		$text = array(
+			'INFO'           => JText::_('JLIB_HTML_BEHAVIOR_ABOUT_THE_CALENDAR'),
+			'ABOUT'          => "DHTML Date/Time Selector\n"
+				. "(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n"
+				. "For latest version visit: http://www.dynarch.com/projects/calendar/\n"
+				. "Distributed under GNU LGPL.  See http://gnu.org/licenses/lgpl.html for details."
+				. "\n\n"
+				. JText::_('JLIB_HTML_BEHAVIOR_DATE_SELECTION')
+				. JText::_('JLIB_HTML_BEHAVIOR_YEAR_SELECT')
+				. JText::_('JLIB_HTML_BEHAVIOR_MONTH_SELECT')
+				. JText::_('JLIB_HTML_BEHAVIOR_HOLD_MOUSE'),
+			'ABOUT_TIME'      => "\n\n"
+				. "Time selection:\n"
+				. "- Click on any of the time parts to increase it\n"
+				. "- or Shift-click to decrease it\n"
+				. "- or click and drag for faster selection.",
+			'PREV_YEAR'       => JText::_('JLIB_HTML_BEHAVIOR_PREV_YEAR_HOLD_FOR_MENU'),
+			'PREV_MONTH'      => JText::_('JLIB_HTML_BEHAVIOR_PREV_MONTH_HOLD_FOR_MENU'),
+			'GO_TODAY'        => JText::_('JLIB_HTML_BEHAVIOR_GO_TODAY'),
+			'NEXT_MONTH'      => JText::_('JLIB_HTML_BEHAVIOR_NEXT_MONTH_HOLD_FOR_MENU'),
+			'SEL_DATE'        => JText::_('JLIB_HTML_BEHAVIOR_SELECT_DATE'),
+			'DRAG_TO_MOVE'    => JText::_('JLIB_HTML_BEHAVIOR_DRAG_TO_MOVE'),
+			'PART_TODAY'      => $today,
+			'DAY_FIRST'       => JText::_('JLIB_HTML_BEHAVIOR_DISPLAY_S_FIRST'),
+			'WEEKEND'         => JFactory::getLanguage()->getWeekEnd(),
+			'CLOSE'           => JText::_('JLIB_HTML_BEHAVIOR_CLOSE'),
+			'TODAY'           => JText::_('JLIB_HTML_BEHAVIOR_TODAY'),
+			'TIME_PART'       => JText::_('JLIB_HTML_BEHAVIOR_SHIFT_CLICK_OR_DRAG_TO_CHANGE_VALUE'),
+			'DEF_DATE_FORMAT' => "%Y-%m-%d",
+			'TT_DATE_FORMAT'  => JText::_('JLIB_HTML_BEHAVIOR_TT_DATE_FORMAT'),
+			'WK'              => JText::_('JLIB_HTML_BEHAVIOR_WK'),
+			'TIME'            => JText::_('JLIB_HTML_BEHAVIOR_TIME')
+		);
+
+		return 'Calendar._DN = ' . json_encode($weekdays_full) . ';'
+			. ' Calendar._SDN = ' . json_encode($weekdays_short) . ';'
+			. ' Calendar._FD = 0;'
+			. ' Calendar._MN = ' . json_encode($months_long) . ';'
+			. ' Calendar._SMN = ' . json_encode($months_short) . ';'
+			. ' Calendar._TT = ' . json_encode($text) . ';';
 	}
 
 	/**
@@ -913,22 +929,5 @@ abstract class JHtmlBehavior
 		JHtml::_('jquery.framework');
 		JHtml::_('script', 'system/tabs-state.js', false, true);
 		self::$loaded[__METHOD__] = true;
-	}
-
-	/**
-	 * Internal method to get a JavaScript object notation string from an array
-	 *
-	 * @param   array $array The array to convert to JavaScript object notation
-	 *
-	 * @return  string  JavaScript object notation representation of the array
-	 *
-	 * @since       1.5
-	 * @deprecated  13.3 (Platform) & 4.0 (CMS) - Use JHtml::getJSObject() instead.
-	 */
-	protected static function _getJSObject($array = array())
-	{
-		JLog::add('JHtmlBehavior::_getJSObject() is deprecated. JHtml::getJSObject() instead..', JLog::WARNING, 'deprecated');
-
-		return JHtml::getJSObject($array);
 	}
 }

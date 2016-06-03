@@ -52,12 +52,12 @@ final class JPlatform
 	/**
 	 * Compares two a "PHP standardized" version number against the current Joomla Platform version.
 	 *
-	 * @param   string $minimum The minimum version of the Joomla Platform which is compatible.
+	 * @param   string  $minimum  The minimum version of the Joomla Platform which is compatible.
 	 *
 	 * @return  boolean  True if the version is compatible.
 	 *
-	 * @see         http://www.php.net/version_compare
-	 * @since       11.1
+	 * @see     http://www.php.net/version_compare
+	 * @since   11.1
 	 * @deprecated  4.0  Deprecated without replacement
 	 */
 	public static function isCompatible($minimum)
@@ -70,7 +70,7 @@ final class JPlatform
 	 *
 	 * @return  string  Version string.
 	 *
-	 * @since       11.1
+	 * @since   11.1
 	 * @deprecated  4.0  Deprecated without replacement
 	 */
 	public static function getShortVersion()
@@ -83,12 +83,12 @@ final class JPlatform
 	 *
 	 * @return  string  Complete version string.
 	 *
-	 * @since       11.1
+	 * @since   11.1
 	 * @deprecated  4.0  Deprecated without replacement
 	 */
 	public static function getLongVersion()
 	{
 		return self::PRODUCT . ' ' . self::RELEASE . '.' . self::MAINTENANCE . ' ' . self::STATUS . ' [ ' . self::CODE_NAME . ' ] '
-		. self::RELEASE_DATE . ' ' . self::RELEASE_TIME . ' ' . self::RELEASE_TIME_ZONE;
+			. self::RELEASE_DATE . ' ' . self::RELEASE_TIME . ' ' . self::RELEASE_TIME_ZONE;
 	}
 }

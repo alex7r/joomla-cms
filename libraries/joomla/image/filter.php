@@ -25,7 +25,7 @@ abstract class JImageFilter
 	/**
 	 * Class constructor.
 	 *
-	 * @param   resource $handle The image resource on which to apply the filter.
+	 * @param   resource  $handle  The image resource on which to apply the filter.
 	 *
 	 * @since   11.3
 	 * @throws  InvalidArgumentException
@@ -56,7 +56,7 @@ abstract class JImageFilter
 	/**
 	 * Method to apply a filter to an image resource.
 	 *
-	 * @param   array $options An array of options for the filter.
+	 * @param   array  $options  An array of options for the filter.
 	 *
 	 * @return  void
 	 *

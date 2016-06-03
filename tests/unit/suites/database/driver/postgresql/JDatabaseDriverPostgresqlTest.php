@@ -70,7 +70,7 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	 */
 	public function dataGetCreateDbQuery()
 	{
-		$obj          = new stdClass;
+		$obj = new stdClass;
 		$obj->db_user = 'testName';
 		$obj->db_name = 'testDb';
 
@@ -153,28 +153,28 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	 */
 	public function dataTestLoadNextObject()
 	{
-		$objCompOne              = new stdClass;
-		$objCompOne->id          = 1;
-		$objCompOne->title       = 'Testing';
-		$objCompOne->start_date  = '1980-04-18 00:00:00';
+		$objCompOne = new stdClass;
+		$objCompOne->id = 1;
+		$objCompOne->title = 'Testing';
+		$objCompOne->start_date = '1980-04-18 00:00:00';
 		$objCompOne->description = 'one';
 
-		$objCompTwo              = new stdClass;
-		$objCompTwo->id          = 2;
-		$objCompTwo->title       = 'Testing2';
-		$objCompTwo->start_date  = '1980-04-18 00:00:00';
+		$objCompTwo = new stdClass;
+		$objCompTwo->id = 2;
+		$objCompTwo->title = 'Testing2';
+		$objCompTwo->start_date = '1980-04-18 00:00:00';
 		$objCompTwo->description = 'one';
 
-		$objCompThree              = new stdClass;
-		$objCompThree->id          = 3;
-		$objCompThree->title       = 'Testing3';
-		$objCompThree->start_date  = '1980-04-18 00:00:00';
+		$objCompThree = new stdClass;
+		$objCompThree->id = 3;
+		$objCompThree->title = 'Testing3';
+		$objCompThree->start_date = '1980-04-18 00:00:00';
 		$objCompThree->description = 'three';
 
-		$objCompFour              = new stdClass;
-		$objCompFour->id          = 4;
-		$objCompFour->title       = 'Testing4';
-		$objCompFour->start_date  = '1980-04-18 00:00:00';
+		$objCompFour = new stdClass;
+		$objCompFour->id = 4;
+		$objCompFour->title = 'Testing4';
+		$objCompFour->start_date = '1980-04-18 00:00:00';
 		$objCompFour->description = 'four';
 
 		return array(array(array($objCompOne, $objCompTwo, $objCompThree, $objCompFour)));
@@ -211,13 +211,13 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	/**
 	 * Tests the JDatabasePostgresql escape method.
 	 *
-	 * @param   string $text   The string to be escaped.
-	 * @param   bool   $extra  Optional parameter to provide extra escaping.
-	 * @param   string $result Correct string escaped
+	 * @param   string  $text    The string to be escaped.
+	 * @param   bool    $extra   Optional parameter to provide extra escaping.
+	 * @param   string  $result  Correct string escaped
 	 *
 	 * @return  void
 	 *
-	 * @since         11.3
+	 * @since   11.3
 	 * @dataProvider  dataTestEscape
 	 */
 	public function testEscape($text, $extra, $result)
@@ -301,45 +301,45 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 		$this->assertEquals($tableCol, self::$driver->getTableColumns('jos_dbtest'));
 
 		/* not only type field */
-		$id              = new stdClass;
+		$id = new stdClass;
 		$id->column_name = 'id';
-		$id->Field       = 'id';
-		$id->type        = 'integer';
-		$id->Type        = 'integer';
-		$id->null        = 'NO';
-		$id->Null        = 'NO';
-		$id->Default     = 'nextval(\'jos_dbtest_id_seq\'::regclass)';
-		$id->comments    = '';
+		$id->Field = 'id';
+		$id->type = 'integer';
+		$id->Type = 'integer';
+		$id->null = 'NO';
+		$id->Null = 'NO';
+		$id->Default = 'nextval(\'jos_dbtest_id_seq\'::regclass)';
+		$id->comments = '';
 
-		$title              = new stdClass;
+		$title = new stdClass;
 		$title->column_name = 'title';
-		$title->Field       = 'title';
-		$title->type        = 'character varying(50)';
-		$title->Type        = 'character varying(50)';
-		$title->null        = 'NO';
-		$title->Null        = 'NO';
-		$title->Default     = null;
-		$title->comments    = '';
+		$title->Field = 'title';
+		$title->type = 'character varying(50)';
+		$title->Type = 'character varying(50)';
+		$title->null = 'NO';
+		$title->Null = 'NO';
+		$title->Default = null;
+		$title->comments = '';
 
-		$start_date              = new stdClass;
+		$start_date = new stdClass;
 		$start_date->column_name = 'start_date';
-		$start_date->Field       = 'start_date';
-		$start_date->type        = 'timestamp without time zone';
-		$start_date->Type        = 'timestamp without time zone';
-		$start_date->null        = 'NO';
-		$start_date->Null        = 'NO';
-		$start_date->Default     = null;
-		$start_date->comments    = '';
+		$start_date->Field = 'start_date';
+		$start_date->type = 'timestamp without time zone';
+		$start_date->Type = 'timestamp without time zone';
+		$start_date->null = 'NO';
+		$start_date->Null = 'NO';
+		$start_date->Default = null;
+		$start_date->comments = '';
 
-		$description              = new stdClass;
+		$description = new stdClass;
 		$description->column_name = 'description';
-		$description->Field       = 'description';
-		$description->type        = 'text';
-		$description->Type        = 'text';
-		$description->null        = 'NO';
-		$description->Null        = 'NO';
-		$description->Default     = null;
-		$description->comments    = '';
+		$description->Field = 'description';
+		$description->type = 'text';
+		$description->Type = 'text';
+		$description->null = 'NO';
+		$description->Null = 'NO';
+		$description->Default = null;
+		$description->comments = '';
 
 		$this->assertEquals(
 			array('id' => $id, 'title' => $title, 'start_date' => $start_date, 'description' => $description),
@@ -354,29 +354,29 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	 */
 	public function testGetTableKeys()
 	{
-		$pkey            = new stdClass;
-		$pkey->idxName   = 'jos_assets_pkey';
+		$pkey = new stdClass;
+		$pkey->idxName = 'jos_assets_pkey';
 		$pkey->isPrimary = 't';
-		$pkey->isUnique  = 't';
-		$pkey->Query     = 'ALTER TABLE jos_assets ADD PRIMARY KEY (id)';
+		$pkey->isUnique = 't';
+		$pkey->Query = 'ALTER TABLE jos_assets ADD PRIMARY KEY (id)';
 
-		$asset            = new stdClass;
-		$asset->idxName   = 'idx_asset_name';
+		$asset = new stdClass;
+		$asset->idxName = 'idx_asset_name';
 		$asset->isPrimary = 'f';
-		$asset->isUnique  = 't';
-		$asset->Query     = 'CREATE UNIQUE INDEX idx_asset_name ON jos_assets USING btree (name)';
+		$asset->isUnique = 't';
+		$asset->Query = 'CREATE UNIQUE INDEX idx_asset_name ON jos_assets USING btree (name)';
 
-		$lftrgt            = new stdClass;
-		$lftrgt->idxName   = 'jos_assets_idx_lft_rgt';
+		$lftrgt = new stdClass;
+		$lftrgt->idxName = 'jos_assets_idx_lft_rgt';
 		$lftrgt->isPrimary = 'f';
-		$lftrgt->isUnique  = 'f';
-		$lftrgt->Query     = 'CREATE INDEX jos_assets_idx_lft_rgt ON jos_assets USING btree (lft, rgt)';
+		$lftrgt->isUnique = 'f';
+		$lftrgt->Query = 'CREATE INDEX jos_assets_idx_lft_rgt ON jos_assets USING btree (lft, rgt)';
 
-		$id            = new stdClass;
-		$id->idxName   = 'jos_assets_idx_parent_id';
+		$id = new stdClass;
+		$id->idxName = 'jos_assets_idx_parent_id';
 		$id->isPrimary = 'f';
-		$id->isUnique  = 'f';
-		$id->Query     = 'CREATE INDEX jos_assets_idx_parent_id ON jos_assets USING btree (parent_id)';
+		$id->isUnique = 'f';
+		$id->Query = 'CREATE INDEX jos_assets_idx_parent_id ON jos_assets USING btree (parent_id)';
 
 		$this->assertEquals(array($pkey, $id, $lftrgt, $asset), self::$driver->getTableKeys('jos_assets'));
 	}
@@ -388,27 +388,27 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	 */
 	public function testGetTableSequences()
 	{
-		$seq            = new stdClass;
-		$seq->sequence  = 'jos_dbtest_id_seq';
-		$seq->schema    = 'public';
-		$seq->table     = 'jos_dbtest';
-		$seq->column    = 'id';
+		$seq = new stdClass;
+		$seq->sequence = 'jos_dbtest_id_seq';
+		$seq->schema = 'public';
+		$seq->table = 'jos_dbtest';
+		$seq->column = 'id';
 		$seq->data_type = 'bigint';
 
 		if (version_compare(self::$driver->getVersion(), '9.1.0') >= 0)
 		{
-			$seq->start_value   = '1';
+			$seq->start_value = '1';
 			$seq->minimum_value = '1';
 			$seq->maximum_value = '9223372036854775807';
-			$seq->increment     = '1';
-			$seq->cycle_option  = 'NO';
+			$seq->increment = '1';
+			$seq->cycle_option = 'NO';
 		}
 		else
 		{
 			$seq->minimum_value = null;
 			$seq->maximum_value = null;
-			$seq->increment     = null;
-			$seq->cycle_option  = null;
+			$seq->increment = null;
+			$seq->cycle_option = null;
 		}
 
 		$this->assertEquals(array($seq), self::$driver->getTableSequences('jos_dbtest'));
@@ -424,16 +424,16 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	public function testGetTableList()
 	{
 		$expected = array(
-			"0"  => "jos_assets",
-			"1"  => "jos_categories",
-			"2"  => "jos_content",
-			"3"  => "jos_core_log_searches",
-			"4"  => "jos_dbtest",
-			"5"  => "jos_extensions",
-			"6"  => "jos_languages",
-			"7"  => "jos_log_entries",
-			"8"  => "jos_menu",
-			"9"  => "jos_menu_types",
+			"0" => "jos_assets",
+			"1" => "jos_categories",
+			"2" => "jos_content",
+			"3" => "jos_core_log_searches",
+			"4" => "jos_dbtest",
+			"5" => "jos_extensions",
+			"6" => "jos_languages",
+			"7" => "jos_log_entries",
+			"8" => "jos_menu",
+			"9" => "jos_menu_types",
 			"10" => "jos_modules",
 			"11" => "jos_modules_menu",
 			"12" => "jos_schemas",
@@ -481,7 +481,7 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	 */
 	public function testGetVersion()
 	{
-		$versionRow   = self::$driver->setQuery('SELECT version();')->loadRow();
+		$versionRow = self::$driver->setQuery('SELECT version();')->loadRow();
 		$versionArray = explode(' ', $versionRow[0]);
 
 		$this->assertGreaterThanOrEqual($versionArray[1], self::$driver->getVersion());
@@ -544,9 +544,9 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 		self::$driver->truncateTable('jos_dbtest');
 		self::$driver->execute();
 
-		$tst              = new JObject;
-		$tst->title       = "PostgreSQL test insertObject";
-		$tst->start_date  = '2012-04-07 15:00:00';
+		$tst = new JObject;
+		$tst->title = "PostgreSQL test insertObject";
+		$tst->start_date = '2012-04-07 15:00:00';
 		$tst->description = "Test insertObject";
 
 		// Insert object without retrieving key
@@ -564,11 +564,11 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 		$this->assertTrue($ret);
 
 		// Insert object retrieving the key
-		$tstK              = new JObject;
-		$tstK->title       = "PostgreSQL test insertObject with key";
-		$tstK->start_date  = '2012-04-07 15:00:00';
+		$tstK = new JObject;
+		$tstK->title = "PostgreSQL test insertObject with key";
+		$tstK->start_date = '2012-04-07 15:00:00';
 		$tstK->description = "Test insertObject with key";
-		$retK              = self::$driver->insertObject('#__dbtest', $tstK, 'id');
+		$retK = self::$driver->insertObject('#__dbtest', $tstK, 'id');
 
 		$this->assertEquals(2, $tstK->id);
 		$this->assertTrue($retK);
@@ -644,7 +644,7 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	/**
 	 * Test loadNextObject function
 	 *
-	 * @param   array $objArr Array of expected objects
+	 * @param   array  $objArr  Array of expected objects
 	 *
 	 * @return  void
 	 *
@@ -669,7 +669,7 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	/**
 	 * Test loadNextObject function with preceding loadObject call
 	 *
-	 * @param   array $objArr Array of expected objects
+	 * @param   array  $objArr  Array of expected objects
 	 *
 	 * @return  void
 	 *
@@ -696,7 +696,7 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	/**
 	 * Test loadNextObject function with preceding query call
 	 *
-	 * @param   array $objArr Array of expected objects
+	 * @param   array  $objArr  Array of expected objects
 	 *
 	 * @return  void
 	 *
@@ -723,7 +723,7 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	/**
 	 * Test loadNextRow function
 	 *
-	 * @param   array $rowArr Array of expected arrays
+	 * @param   array  $rowArr  Array of expected arrays
 	 *
 	 * @return   void
 	 *
@@ -748,7 +748,7 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	/**
 	 * Test loadNextRow function with preceding query call
 	 *
-	 * @param   array $rowArr Array of expected arrays
+	 * @param   array  $rowArr  Array of expected arrays
 	 *
 	 * @return  void
 	 *
@@ -775,7 +775,7 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	/**
 	 * Test loadNextRow function with preceding loadRow call
 	 *
-	 * @param   array $rowArr Array of expected arrays
+	 * @param   array  $rowArr  Array of expected arrays
 	 *
 	 * @return  void
 	 *
@@ -815,10 +815,10 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 		self::$driver->setQuery($query);
 		$result = self::$driver->loadObject();
 
-		$objCompare              = new stdClass;
-		$objCompare->id          = 3;
-		$objCompare->title       = 'Testing3';
-		$objCompare->start_date  = '1980-04-18 00:00:00';
+		$objCompare = new stdClass;
+		$objCompare->id = 3;
+		$objCompare->title = 'Testing3';
+		$objCompare->start_date = '1980-04-18 00:00:00';
 		$objCompare->description = 'three';
 
 		$this->assertEquals($objCompare, $result);
@@ -842,34 +842,34 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 
 		$expected = array();
 
-		$objCompare              = new stdClass;
-		$objCompare->id          = 1;
-		$objCompare->title       = 'Testing';
-		$objCompare->start_date  = '1980-04-18 00:00:00';
+		$objCompare = new stdClass;
+		$objCompare->id = 1;
+		$objCompare->title = 'Testing';
+		$objCompare->start_date = '1980-04-18 00:00:00';
 		$objCompare->description = 'one';
 
 		$expected[] = clone $objCompare;
 
-		$objCompare              = new stdClass;
-		$objCompare->id          = 2;
-		$objCompare->title       = 'Testing2';
-		$objCompare->start_date  = '1980-04-18 00:00:00';
+		$objCompare = new stdClass;
+		$objCompare->id = 2;
+		$objCompare->title = 'Testing2';
+		$objCompare->start_date = '1980-04-18 00:00:00';
 		$objCompare->description = 'one';
 
 		$expected[] = clone $objCompare;
 
-		$objCompare              = new stdClass;
-		$objCompare->id          = 3;
-		$objCompare->title       = 'Testing3';
-		$objCompare->start_date  = '1980-04-18 00:00:00';
+		$objCompare = new stdClass;
+		$objCompare->id = 3;
+		$objCompare->title = 'Testing3';
+		$objCompare->start_date = '1980-04-18 00:00:00';
 		$objCompare->description = 'three';
 
 		$expected[] = clone $objCompare;
 
-		$objCompare              = new stdClass;
-		$objCompare->id          = 4;
-		$objCompare->title       = 'Testing4';
-		$objCompare->start_date  = '1980-04-18 00:00:00';
+		$objCompare = new stdClass;
+		$objCompare->id = 4;
+		$objCompare->title = 'Testing4';
+		$objCompare->start_date = '1980-04-18 00:00:00';
 		$objCompare->description = 'four';
 
 		$expected[] = clone $objCompare;
@@ -964,13 +964,13 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	/**
 	 * Test quoteName function, with and without dot notation.
 	 *
-	 * @param   string $quoteMe  String to be quoted
-	 * @param   string $asPart   String used for AS query part
-	 * @param   string $expected Expected string
+	 * @param   string  $quoteMe   String to be quoted
+	 * @param   string  $asPart    String used for AS query part
+	 * @param   string  $expected  Expected string
 	 *
 	 * @return  void
 	 *
-	 * @since        11.3
+	 * @since   11.3
 	 * @dataProvider dataTestQuoteName
 	 */
 	public function testQuoteName($quoteMe, $asPart, $expected)
@@ -1002,30 +1002,30 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	{
 		// Array of columns' description as that returned by getTableColumns
 		$tablCol = array(
-			'id'        => 'integer',
-			'charVar'   => 'character varying',
+			'id' => 'integer',
+			'charVar' => 'character varying',
 			'timeStamp' => 'timestamp without time zone',
-			'nullDate'  => 'timestamp without time zone',
-			'txt'       => 'text',
-			'boolTrue'  => 'boolean',
+			'nullDate' => 'timestamp without time zone',
+			'txt' => 'text',
+			'boolTrue' => 'boolean',
 			'boolFalse' => 'boolean',
-			'num'       => 'numeric,',
-			'nullInt'   => 'integer'
+			'num' => 'numeric,',
+			'nullInt' => 'integer'
 		);
 
 		$values = array();
 
 		// Object containing fields of integer, character varying, timestamp and text type
-		$tst            = new JObject;
-		$tst->id        = '5';
-		$tst->charVar   = "PostgreSQL test insertObject";
+		$tst = new JObject;
+		$tst->id = '5';
+		$tst->charVar = "PostgreSQL test insertObject";
 		$tst->timeStamp = '2012-04-07 15:00:00';
-		$tst->nullDate  = null;
-		$tst->txt       = "Test insertObject";
-		$tst->boolTrue  = 't';
+		$tst->nullDate = null;
+		$tst->txt = "Test insertObject";
+		$tst->boolTrue = 't';
 		$tst->boolFalse = 'f';
-		$tst->num       = '43.2';
-		$tst->nullInt   = '';
+		$tst->num = '43.2';
+		$tst->nullInt = '';
 
 		foreach (get_object_vars($tst) as $key => $val)
 		{
@@ -1095,12 +1095,12 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	 * Tests the JDatabasePostgresql transactionRollback method,
 	 * with and without savepoint.
 	 *
-	 * @param   string $toSavepoint Savepoint name to rollback transaction to
-	 * @param   int    $tupleCount  Number of tuple found after insertion and rollback
+	 * @param   string  $toSavepoint  Savepoint name to rollback transaction to
+	 * @param   int     $tupleCount   Number of tuple found after insertion and rollback
 	 *
 	 * @return  void
 	 *
-	 * @since        11.3
+	 * @since   11.3
 	 * @dataProvider dataTestTransactionRollback
 	 */
 	public function testTransactionRollback($toSavepoint, $tupleCount)
@@ -1180,8 +1180,8 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 
 	/**
 	 * Test for release of transaction savepoint, correct case is already tested inside
-	 *        testTransactionRollback, here will be tested a RELEASE SAVEPOINT of an
-	 *        inexistent savepoint that will throw and exception.
+	 * 		testTransactionRollback, here will be tested a RELEASE SAVEPOINT of an
+	 * 		inexistent savepoint that will throw and exception.
 	 *
 	 * @return  void
 	 *
@@ -1256,13 +1256,13 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	/**
 	 * Tests the JDatabasePostgresql replacePrefix method.
 	 *
-	 * @param   text $stringToReplace The string in which replace the prefix.
-	 * @param   text $prefix          The prefix.
-	 * @param   text $expected        The string expected.
+	 * @param   text  $stringToReplace  The string in which replace the prefix.
+	 * @param   text  $prefix           The prefix.
+	 * @param   text  $expected         The string expected.
 	 *
 	 * @return  void
 	 *
-	 * @since         11.3
+	 * @since   11.3
 	 * @dataProvider  dataTestReplacePrefix
 	 */
 	public function testReplacePrefix($stringToReplace, $prefix, $expected)
@@ -1275,9 +1275,9 @@ class JDatabaseDriverPostgresqlTest extends TestCaseDatabasePostgresql
 	/**
 	 * Tests the JDatabasePostgresql getCreateDbQuery method.
 	 *
-	 * @param   JObject $options          JObject coming from "initialise" function to pass user
-	 *                                    and database name to database driver.
-	 * @param   boolean $utf              True if the database supports the UTF-8 character set.
+	 * @param   JObject  $options  JObject coming from "initialise" function to pass user
+	 * 									and database name to database driver.
+	 * @param   boolean  $utf      True if the database supports the UTF-8 character set.
 	 *
 	 * @return  void
 	 *

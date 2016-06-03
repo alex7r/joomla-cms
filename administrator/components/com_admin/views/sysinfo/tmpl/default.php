@@ -13,8 +13,7 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_admin&view=sysinfo'); ?>" method="post" name="adminForm"
-      id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_admin&view=sysinfo'); ?>" method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid">
 		<!-- Begin Content -->
 		<div class="span12">
@@ -42,7 +41,7 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 			<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 		</div>
-		<input type="hidden" name="task" value=""/>
+		<input type="hidden" name="task" value="" />
 		<?php echo JHtml::_('form.token'); ?>
 		<!-- End Content -->
 	</div>

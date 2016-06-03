@@ -61,6 +61,48 @@ class JLinkedinJobsTest extends TestCase
 	protected $errorString = '{"errorCode":401, "message": "Generic error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$key = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/linkedin_test.php";
+
+		$this->options = new JRegistry;
+		$this->input = new JInput;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth = new JLinkedinOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
+
+		$this->object = new JLinkedinJobs($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+	}
+
+	/**
 	 * Tests the getJob method
 	 *
 	 * @return  void
@@ -69,7 +111,7 @@ class JLinkedinJobsTest extends TestCase
 	 */
 	public function testGetJob()
 	{
-		$id     = 12345;
+		$id = 12345;
 		$fields = '(id,company,posting-date)';
 
 		// Set request parameters.
@@ -77,7 +119,7 @@ class JLinkedinJobsTest extends TestCase
 
 		$path = '/v1/jobs/' . $id . ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -104,7 +146,7 @@ class JLinkedinJobsTest extends TestCase
 	 */
 	public function testGetJobFailure()
 	{
-		$id     = 12345;
+		$id = 12345;
 		$fields = '(id,company,posting-date)';
 
 		// Set request parameters.
@@ -112,7 +154,7 @@ class JLinkedinJobsTest extends TestCase
 
 		$path = '/v1/jobs/' . $id . ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -142,7 +184,7 @@ class JLinkedinJobsTest extends TestCase
 
 		$path = '/v1/people/~/job-bookmarks:' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -176,7 +218,7 @@ class JLinkedinJobsTest extends TestCase
 
 		$path = '/v1/people/~/job-bookmarks:' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -207,7 +249,7 @@ class JLinkedinJobsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
@@ -240,7 +282,7 @@ class JLinkedinJobsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -265,7 +307,7 @@ class JLinkedinJobsTest extends TestCase
 
 		$path = '/v1/people/~/job-bookmarks/' . $id;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -294,7 +336,7 @@ class JLinkedinJobsTest extends TestCase
 
 		$path = '/v1/people/~/job-bookmarks/' . $id;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -316,17 +358,17 @@ class JLinkedinJobsTest extends TestCase
 	public function testGetSuggested()
 	{
 		$fields = '(jobs)';
-		$start  = 1;
-		$count  = 10;
+		$start = 1;
+		$count = 10;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['start']  = $start;
-		$data['count']  = $count;
+		$data['start'] = $start;
+		$data['count'] = $count;
 
 		$path = '/v1/people/~/suggestions/job-suggestions:' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -354,17 +396,17 @@ class JLinkedinJobsTest extends TestCase
 	public function testGetSuggestedFailure()
 	{
 		$fields = '(jobs)';
-		$start  = 1;
-		$count  = 10;
+		$start = 1;
+		$count = 10;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['start']  = $start;
-		$data['count']  = $count;
+		$data['start'] = $start;
+		$data['count'] = $count;
 
 		$path = '/v1/people/~/suggestions/job-suggestions:' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -387,45 +429,45 @@ class JLinkedinJobsTest extends TestCase
 	 */
 	public function testSearch()
 	{
-		$fields       = '(facets)';
-		$keywords     = 'quality, internet';
+		$fields = '(facets)';
+		$keywords = 'quality, internet';
 		$company_name = 'Google';
-		$job_title    = 'Software Engineer';
+		$job_title = 'Software Engineer';
 		$country_code = 'us';
-		$postal_code  = 12345;
-		$distance     = 500;
-		$facets       = 'company,date-posted,location,job-function,industry,salary';
-		$facet        = array('Google', 1232435, 'us:84', 'developer', 6, 1000);
-		$start        = 1;
-		$count        = 50;
-		$sort         = 'R';
+		$postal_code = 12345;
+		$distance = 500;
+		$facets = 'company,date-posted,location,job-function,industry,salary';
+		$facet = array('Google', 1232435, 'us:84', 'developer', 6, 1000);
+		$start = 1;
+		$count = 50;
+		$sort = 'R';
 
 		// Set request parameters.
-		$data['format']       = 'json';
-		$data['keywords']     = $keywords;
+		$data['format'] = 'json';
+		$data['keywords'] = $keywords;
 		$data['company-name'] = $company_name;
-		$data['job-title']    = $job_title;
+		$data['job-title'] = $job_title;
 		$data['country-code'] = $country_code;
-		$data['postal-code']  = $postal_code;
-		$data['distance']     = $distance;
-		$data['facets']       = $facets;
-		$data['facet']        = array();
-		$data['facet'][]      = 'company,' . $this->oauth->safeEncode($facet[0]);
-		$data['facet'][]      = 'date-posted,' . $facet[1];
-		$data['facet'][]      = 'location,' . $facet[2];
-		$data['facet'][]      = 'job-function,' . $this->oauth->safeEncode($facet[3]);
-		$data['facet'][]      = 'industry,' . $facet[4];
-		$data['facet'][]      = 'salary,' . $facet[5];
+		$data['postal-code'] = $postal_code;
+		$data['distance'] = $distance;
+		$data['facets'] = $facets;
+		$data['facet'] = array();
+		$data['facet'][] = 'company,' . $this->oauth->safeEncode($facet[0]);
+		$data['facet'][] = 'date-posted,' . $facet[1];
+		$data['facet'][] = 'location,' . $facet[2];
+		$data['facet'][] = 'job-function,' . $this->oauth->safeEncode($facet[3]);
+		$data['facet'][] = 'industry,' . $facet[4];
+		$data['facet'][] = 'salary,' . $facet[5];
 
 		$data['start'] = $start;
 		$data['count'] = $count;
-		$data['sort']  = $sort;
+		$data['sort'] = $sort;
 
 		$path = '/v1/job-search';
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -440,7 +482,7 @@ class JLinkedinJobsTest extends TestCase
 			$this->object->search(
 				$fields, $keywords, $company_name, $job_title, $country_code, $postal_code, $distance,
 				$facets, $facet, $start, $count, $sort
-			),
+				),
 			$this->equalTo(json_decode($this->sampleString))
 		);
 	}
@@ -455,45 +497,45 @@ class JLinkedinJobsTest extends TestCase
 	 */
 	public function testSearchFailure()
 	{
-		$fields       = '(facets)';
-		$keywords     = 'quality, internet';
+		$fields = '(facets)';
+		$keywords = 'quality, internet';
 		$company_name = 'Google';
-		$job_title    = 'Software Engineer';
+		$job_title = 'Software Engineer';
 		$country_code = 'us';
-		$postal_code  = 12345;
-		$distance     = 500;
-		$facets       = 'company,date-posted,location,job-function,industry,salary';
-		$facet        = array('Google', 1232435, 'us:84', 'developer', 6, 1000);
-		$start        = 1;
-		$count        = 50;
-		$sort         = 'R';
+		$postal_code = 12345;
+		$distance = 500;
+		$facets = 'company,date-posted,location,job-function,industry,salary';
+		$facet = array('Google', 1232435, 'us:84', 'developer', 6, 1000);
+		$start = 1;
+		$count = 50;
+		$sort = 'R';
 
 		// Set request parameters.
-		$data['format']       = 'json';
-		$data['keywords']     = $keywords;
+		$data['format'] = 'json';
+		$data['keywords'] = $keywords;
 		$data['company-name'] = $company_name;
-		$data['job-title']    = $job_title;
+		$data['job-title'] = $job_title;
 		$data['country-code'] = $country_code;
-		$data['postal-code']  = $postal_code;
-		$data['distance']     = $distance;
-		$data['facets']       = $facets;
-		$data['facet']        = array();
-		$data['facet'][]      = 'company,' . $this->oauth->safeEncode($facet[0]);
-		$data['facet'][]      = 'date-posted,' . $facet[1];
-		$data['facet'][]      = 'location,' . $facet[2];
-		$data['facet'][]      = 'job-function,' . $this->oauth->safeEncode($facet[3]);
-		$data['facet'][]      = 'industry,' . $facet[4];
-		$data['facet'][]      = 'salary,' . $facet[5];
+		$data['postal-code'] = $postal_code;
+		$data['distance'] = $distance;
+		$data['facets'] = $facets;
+		$data['facet'] = array();
+		$data['facet'][] = 'company,' . $this->oauth->safeEncode($facet[0]);
+		$data['facet'][] = 'date-posted,' . $facet[1];
+		$data['facet'][] = 'location,' . $facet[2];
+		$data['facet'][] = 'job-function,' . $this->oauth->safeEncode($facet[3]);
+		$data['facet'][] = 'industry,' . $facet[4];
+		$data['facet'][] = 'salary,' . $facet[5];
 
 		$data['start'] = $start;
 		$data['count'] = $count;
-		$data['sort']  = $sort;
+		$data['sort'] = $sort;
 
 		$path = '/v1/job-search';
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -507,48 +549,6 @@ class JLinkedinJobsTest extends TestCase
 		$this->object->search(
 			$fields, $keywords, $company_name, $job_title, $country_code, $postal_code, $distance,
 			$facets, $facet, $start, $count, $sort
-		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$key    = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/linkedin_test.php";
-
-		$this->options = new JRegistry;
-		$this->input   = new JInput;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth   = new JLinkedinOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
-
-		$this->object = new JLinkedinJobs($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
+			);
 	}
 }

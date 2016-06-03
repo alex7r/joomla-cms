@@ -82,6 +82,23 @@ class JGithubPackageActivityEventsTest extends PHPUnit_Framework_TestCase
 	protected $repo = 'joomla-platform';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @since   12.4
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client  = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JGithubPackageActivityEvents($this->options, $this->client);
+	}
+
+	/**
 	 * Tests the getPublic method
 	 *
 	 * @since   12.4
@@ -328,22 +345,5 @@ class JGithubPackageActivityEventsTest extends PHPUnit_Framework_TestCase
 			$this->object->getUserOrg($this->owner, $this->repo),
 			$this->equalTo(json_decode($returnData->body))
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @since   12.4
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options = new JRegistry;
-		$this->client  = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JGithubPackageActivityEvents($this->options, $this->client);
 	}
 }

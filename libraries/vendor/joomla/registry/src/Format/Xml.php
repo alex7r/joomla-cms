@@ -21,11 +21,11 @@ class Xml extends AbstractRegistryFormat
 {
 	/**
 	 * Converts an object into an XML formatted string.
-	 * -    If more than two levels of nested groups are necessary, since INI is not
+	 * -	If more than two levels of nested groups are necessary, since INI is not
 	 * useful, XML or another format should be used.
 	 *
-	 * @param   object $object  Data source object.
-	 * @param   array  $options Options used by the formatter.
+	 * @param   object  $object   Data source object.
+	 * @param   array   $options  Options used by the formatter.
 	 *
 	 * @return  string  XML formatted string.
 	 *
@@ -48,8 +48,8 @@ class Xml extends AbstractRegistryFormat
 	/**
 	 * Parse a XML formatted string and convert it into an object.
 	 *
-	 * @param   string $data    XML formatted string to convert.
-	 * @param   array  $options Options used by the formatter.
+	 * @param   string  $data     XML formatted string to convert.
+	 * @param   array   $options  Options used by the formatter.
 	 *
 	 * @return  object   Data object.
 	 *
@@ -73,7 +73,7 @@ class Xml extends AbstractRegistryFormat
 	/**
 	 * Method to get a PHP native value for a SimpleXMLElement object. -- called recursively
 	 *
-	 * @param   object $node SimpleXMLElement object for which to get the native value.
+	 * @param   object  $node  SimpleXMLElement object for which to get the native value.
 	 *
 	 * @return  mixed  Native value of the SimpleXMLElement object.
 	 *
@@ -132,9 +132,9 @@ class Xml extends AbstractRegistryFormat
 	/**
 	 * Method to build a level of the XML string -- called recursively
 	 *
-	 * @param   SimpleXMLElement $node     SimpleXMLElement object to attach children.
-	 * @param   object           $var      Object that represents a node of the XML document.
-	 * @param   string           $nodeName The name to use for node elements.
+	 * @param   SimpleXMLElement  $node      SimpleXMLElement object to attach children.
+	 * @param   object            $var       Object that represents a node of the XML document.
+	 * @param   string            $nodeName  The name to use for node elements.
 	 *
 	 * @return  void
 	 *

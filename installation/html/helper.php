@@ -25,10 +25,10 @@ class InstallationHtmlHelper
 	public static function stepbar()
 	{
 		// Determine if the configuration file path is writable.
-		$path   = JPATH_CONFIGURATION . '/configuration.php';
+		$path = JPATH_CONFIGURATION . '/configuration.php';
 		$useftp = (file_exists($path)) ? !is_writable($path) : !is_writable(JPATH_CONFIGURATION . '/');
 
-		$tabs   = array();
+		$tabs = array();
 		$tabs[] = 'site';
 		$tabs[] = 'database';
 
@@ -39,7 +39,34 @@ class InstallationHtmlHelper
 
 		$tabs[] = 'summary';
 
-		$html   = array();
+		$html = array();
+		$html[] = '<ul class="nav nav-tabs">';
+
+		foreach ($tabs as $tab)
+		{
+			$html[] = static::getTab($tab, $tabs);
+		}
+
+		$html[] = '</ul>';
+
+		return implode('', $html);
+	}
+
+	/**
+	 * Method to generate the side bar.
+	 *
+	 * @return  string  Markup for the side bar.
+	 *
+	 * @since   3.1
+	 */
+	public static function stepbarlanguages()
+	{
+		$tabs = array();
+		$tabs[] = 'languages';
+		$tabs[] = 'defaultlanguage';
+		$tabs[] = 'complete';
+
+		$html = array();
 		$html[] = '<ul class="nav nav-tabs">';
 
 		foreach ($tabs as $tab)
@@ -55,8 +82,8 @@ class InstallationHtmlHelper
 	/**
 	 * Method to generate the navigation tab.
 	 *
-	 * @param   string $id   The container ID.
-	 * @param   array  $tabs The navigation tabs.
+	 * @param   string  $id    The container ID.
+	 * @param   array   $tabs  The navigation tabs.
 	 *
 	 * @return  string  Markup for the tab.
 	 *
@@ -88,8 +115,8 @@ class InstallationHtmlHelper
 	/**
 	 * Method to determine the tab (step) number.
 	 *
-	 * @param   string $id   The container ID.
-	 * @param   array  $tabs The navigation tabs.
+	 * @param   string  $id    The container ID.
+	 * @param   array   $tabs  The navigation tabs.
 	 *
 	 * @return  integer  Tab number in navigation sequence.
 	 *
@@ -101,32 +128,5 @@ class InstallationHtmlHelper
 		$num++;
 
 		return $num;
-	}
-
-	/**
-	 * Method to generate the side bar.
-	 *
-	 * @return  string  Markup for the side bar.
-	 *
-	 * @since   3.1
-	 */
-	public static function stepbarlanguages()
-	{
-		$tabs   = array();
-		$tabs[] = 'languages';
-		$tabs[] = 'defaultlanguage';
-		$tabs[] = 'complete';
-
-		$html   = array();
-		$html[] = '<ul class="nav nav-tabs">';
-
-		foreach ($tabs as $tab)
-		{
-			$html[] = static::getTab($tab, $tabs);
-		}
-
-		$html[] = '</ul>';
-
-		return implode('', $html);
 	}
 }

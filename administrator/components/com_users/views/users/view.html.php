@@ -43,7 +43,7 @@ class UsersViewUsers extends JViewLegacy
 	/**
 	 * Display the view
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -120,8 +120,7 @@ class UsersViewUsers extends JViewLegacy
 		// Add a batch button
 		if ($user->authorise('core.create', 'com_users')
 			&& $user->authorise('core.edit', 'com_users')
-			&& $user->authorise('core.edit.state', 'com_users')
-		)
+			&& $user->authorise('core.edit.state', 'com_users'))
 		{
 			$title = JText::_('JTOOLBAR_BATCH');
 
@@ -151,14 +150,14 @@ class UsersViewUsers extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'a.name'          => JText::_('COM_USERS_HEADING_NAME'),
-			'a.username'      => JText::_('JGLOBAL_USERNAME'),
-			'a.block'         => JText::_('COM_USERS_HEADING_ENABLED'),
-			'a.activation'    => JText::_('COM_USERS_HEADING_ACTIVATED'),
-			'a.email'         => JText::_('JGLOBAL_EMAIL'),
-			'a.lastvisitDate' => JText::_('COM_USERS_HEADING_LAST_VISIT_DATE'),
-			'a.registerDate'  => JText::_('COM_USERS_HEADING_REGISTRATION_DATE'),
-			'a.id'            => JText::_('JGRID_HEADING_ID')
+				'a.name' => JText::_('COM_USERS_HEADING_NAME'),
+				'a.username' => JText::_('JGLOBAL_USERNAME'),
+				'a.block' => JText::_('COM_USERS_HEADING_ENABLED'),
+				'a.activation' => JText::_('COM_USERS_HEADING_ACTIVATED'),
+				'a.email' => JText::_('JGLOBAL_EMAIL'),
+				'a.lastvisitDate' => JText::_('COM_USERS_HEADING_LAST_VISIT_DATE'),
+				'a.registerDate' => JText::_('COM_USERS_HEADING_REGISTRATION_DATE'),
+				'a.id' => JText::_('JGRID_HEADING_ID')
 		);
 	}
 }

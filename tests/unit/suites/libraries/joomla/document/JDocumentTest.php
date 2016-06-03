@@ -18,6 +18,28 @@ class JDocumentTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, open a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->object = new JDocument;
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 */
+	protected function tearDown()
+	{
+		JDocument::$_buffer = null;
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Provides constructor data for test methods
 	 *
 	 * @return  array
@@ -28,48 +50,48 @@ class JDocumentTest extends PHPUnit_Framework_TestCase
 			array(
 				array('lineend' => "\12"),
 				array(
-					'lineend'   => "\12",
-					'charset'   => 'utf-8',
-					'language'  => 'en-gb',
+					'lineend' => "\12",
+					'charset' => 'utf-8',
+					'language' => 'en-gb',
 					'direction' => 'ltr',
-					'tab'       => "\11",
-					'link'      => '',
-					'base'      => ''
+					'tab' => "\11",
+					'link' => '',
+					'base' => ''
 				)
 			),
 			array(
 				array('charset' => "euc-jp", 'mediaversion' => '1a2b3c4d'),
 				array(
-					'lineend'      => "\12",
-					'charset'      => 'euc-jp',
-					'language'     => 'en-gb',
-					'direction'    => 'ltr',
-					'tab'          => "\11",
-					'link'         => '',
-					'base'         => '',
-					'mediaversion' => '1a2b3c4d'
+					'lineend' => "\12",
+					'charset' => 'euc-jp',
+					'language' => 'en-gb',
+					'direction' => 'ltr',
+					'tab' => "\11",
+					'link' => '',
+					'base' => '',
+				    'mediaversion' => '1a2b3c4d'
 				)
 			),
 			array(
 				array('language' => "de-de", 'direction' => 'rtl',
-				      'tab'      => 'Crazy Tab', 'link' => 'http://joomla.org',
-				      'base'     => 'http://base.joomla.org/dir'),
+					'tab' => 'Crazy Tab', 'link' => 'http://joomla.org',
+					'base' => 'http://base.joomla.org/dir'),
 				array(
-					'lineend'   => "\12",
-					'charset'   => 'utf-8',
-					'language'  => 'de-de',
+					'lineend' => "\12",
+					'charset' => 'utf-8',
+					'language' => 'de-de',
 					'direction' => 'rtl',
-					'tab'       => "Crazy Tab",
-					'link'      => 'http://joomla.org',
-					'base'      => 'http://base.joomla.org/dir'
+					'tab' => "Crazy Tab",
+					'link' => 'http://joomla.org',
+					'base' => 'http://base.joomla.org/dir'
 				)
 			)
 		);
 	}
 
 	/**
-	 * @param   array $options Options array to inject
-	 * @param   array $expects Expected data values
+	 * @param   array  $options  Options array to inject
+	 * @param   array  $expects  Expected data values
 	 *
 	 * @dataProvider constructData
 	 */
@@ -559,27 +581,5 @@ class JDocumentTest extends PHPUnit_Framework_TestCase
 	public function testEnsureParseReturnsThisObject()
 	{
 		$this->assertSame($this->object, $this->object->parse());
-	}
-
-	/**
-	 * Sets up the fixture, for example, open a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object = new JDocument;
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		JDocument::$_buffer = null;
-
-		parent::tearDown();
 	}
 }

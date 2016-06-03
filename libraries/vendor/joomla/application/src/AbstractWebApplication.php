@@ -90,13 +90,13 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Class constructor.
 	 *
-	 * @param   Input         $input    An optional argument to provide dependency injection for the application's
+	 * @param   Input          $input   An optional argument to provide dependency injection for the application's
 	 *                                  input object.  If the argument is an Input object that object will become
 	 *                                  the application's input object, otherwise a default input object is created.
-	 * @param   Registry      $config   An optional argument to provide dependency injection for the application's
+	 * @param   Registry       $config  An optional argument to provide dependency injection for the application's
 	 *                                  config object.  If the argument is a Registry object that object will become
 	 *                                  the application's config object, otherwise a default config object is created.
-	 * @param   Web\WebClient $client   An optional argument to provide dependency injection for the application's
+	 * @param   Web\WebClient  $client  An optional argument to provide dependency injection for the application's
 	 *                                  client object.  If the argument is a Web\WebClient object that object will become
 	 *                                  the application's client object, otherwise a default client object is created.
 	 *
@@ -107,10 +107,10 @@ abstract class AbstractWebApplication extends AbstractApplication
 		$this->client = $client instanceof Web\WebClient ? $client : new Web\WebClient;
 
 		// Setup the response object.
-		$this->response           = new \stdClass;
+		$this->response = new \stdClass;
 		$this->response->cachable = false;
-		$this->response->headers  = array();
-		$this->response->body     = array();
+		$this->response->headers = array();
+		$this->response->body = array();
 
 		// Call the constructor as late as possible (it runs `initialise`).
 		parent::__construct($input, $config);
@@ -161,8 +161,8 @@ abstract class AbstractWebApplication extends AbstractApplication
 	{
 		// Supported compression encodings.
 		$supported = array(
-			'x-gzip'  => 'gz',
-			'gzip'    => 'gz',
+			'x-gzip' => 'gz',
+			'gzip' => 'gz',
 			'deflate' => 'deflate'
 		);
 
@@ -196,7 +196,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 				// @codeCoverageIgnoreEnd
 
 				// Attempt to gzip encode the data with an optimal level 4.
-				$data   = $this->getBody();
+				$data = $this->getBody();
 				$gzdata = gzencode($data, 4, ($supported[$encoding] == 'gz') ? FORCE_GZIP : FORCE_DEFLATE);
 
 				// If there was a problem encoding the data just try the next encoding scheme.
@@ -272,8 +272,8 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * or "303 See Other" code in the header pointing to the new location. If the headers have already been
 	 * sent this will be accomplished using a JavaScript statement.
 	 *
-	 * @param   string  $url    The URL to redirect to. Can only be http/https URL
-	 * @param   integer $status The HTTP 1.1 status code to be provided. 303 is assumed by default.
+	 * @param   string   $url     The URL to redirect to. Can only be http/https URL
+	 * @param   integer  $status  The HTTP 1.1 status code to be provided. 303 is assumed by default.
 	 *
 	 * @return  void
 	 *
@@ -311,12 +311,12 @@ abstract class AbstractWebApplication extends AbstractApplication
 				$url = $prefix . $url;
 			}
 			else
-				// It's relative to where we are now, so lets add that.
+			// It's relative to where we are now, so lets add that.
 			{
 				$parts = explode('/', $uri->toString(array('path')));
 				array_pop($parts);
 				$path = implode('/', $parts) . '/';
-				$url  = $prefix . $path . $url;
+				$url = $prefix . $path . $url;
 			}
 		}
 
@@ -369,7 +369,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * Set/get cachable state for the response.  If $allow is set, sets the cachable state of the
 	 * response.  Always returns the current state.
 	 *
-	 * @param   boolean $allow True to allow browser caching.
+	 * @param   boolean  $allow  True to allow browser caching.
 	 *
 	 * @return  boolean
 	 *
@@ -390,9 +390,9 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * with the given name will be replaced by the new one.  The headers are stored
 	 * in an internal array to be sent when the site is sent to the browser.
 	 *
-	 * @param   string  $name    The name of the header to set.
-	 * @param   string  $value   The value of the header to set.
-	 * @param   boolean $replace True to replace any headers with the same name.
+	 * @param   string   $name     The name of the header to set.
+	 * @param   string   $value    The value of the header to set.
+	 * @param   boolean  $replace  True to replace any headers with the same name.
 	 *
 	 * @return  AbstractWebApplication  Instance of $this to allow chaining.
 	 *
@@ -401,7 +401,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	public function setHeader($name, $value, $replace = false)
 	{
 		// Sanitize the input values.
-		$name  = (string) $name;
+		$name = (string) $name;
 		$value = (string) $value;
 
 		// If the replace flag is set, unset all known headers with the given name.
@@ -483,7 +483,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Set body content.  If body content already defined, this will replace it.
 	 *
-	 * @param   string $content The content to set as the response body.
+	 * @param   string  $content  The content to set as the response body.
 	 *
 	 * @return  AbstractWebApplication  Instance of $this to allow chaining.
 	 *
@@ -499,7 +499,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Prepend content to the body content
 	 *
-	 * @param   string $content The content to prepend to the response body.
+	 * @param   string  $content  The content to prepend to the response body.
 	 *
 	 * @return  AbstractWebApplication  Instance of $this to allow chaining.
 	 *
@@ -515,7 +515,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Append content to the body content
 	 *
-	 * @param   string $content The content to append to the response body.
+	 * @param   string  $content  The content to append to the response body.
 	 *
 	 * @return  AbstractWebApplication  Instance of $this to allow chaining.
 	 *
@@ -531,7 +531,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Return the body content
 	 *
-	 * @param   boolean $asArray True to return the body as an array of strings.
+	 * @param   boolean  $asArray  True to return the body as an array of strings.
 	 *
 	 * @return  mixed  The response body either as an array or concatenated string.
 	 *
@@ -614,7 +614,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 		 * information from Apache or IIS.
 		 */
 
-		$phpSelf    = $this->input->server->getString('PHP_SELF', '');
+		$phpSelf = $this->input->server->getString('PHP_SELF', '');
 		$requestUri = $this->input->server->getString('REQUEST_URI', '');
 
 		// If PHP_SELF and REQUEST_URI are both populated then we will assume "Apache Mode".
@@ -624,10 +624,10 @@ abstract class AbstractWebApplication extends AbstractApplication
 			$uri = $scheme . $this->input->server->getString('HTTP_HOST') . $requestUri;
 		}
 		else
-			// If not in "Apache Mode" we will assume that we are in an IIS environment and proceed.
+		// If not in "Apache Mode" we will assume that we are in an IIS environment and proceed.
 		{
 			// IIS uses the SCRIPT_NAME variable instead of a REQUEST_URI variable... thanks, MS
-			$uri       = $scheme . $this->input->server->getString('HTTP_HOST') . $this->input->server->getString('SCRIPT_NAME');
+			$uri = $scheme . $this->input->server->getString('HTTP_HOST') . $this->input->server->getString('SCRIPT_NAME');
 			$queryHost = $this->input->server->getString('QUERY_STRING', '');
 
 			// If the QUERY_STRING variable exists append it to the URI string.
@@ -644,10 +644,10 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * Method to send a header to the client.  We are wrapping this to isolate the header() function
 	 * from our code base for testing reasons.
 	 *
-	 * @param   string  $string    The header string.
-	 * @param   boolean $replace   The optional replace parameter indicates whether the header should
+	 * @param   string   $string   The header string.
+	 * @param   boolean  $replace  The optional replace parameter indicates whether the header should
 	 *                             replace a previous similar header, or add a second header of the same type.
-	 * @param   integer $code      Forces the HTTP response code to the specified value. Note that
+	 * @param   integer  $code     Forces the HTTP response code to the specified value. Note that
 	 *                             this parameter only has an effect if the string is not empty.
 	 *
 	 * @return  void
@@ -678,7 +678,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Sets the session for the application to use, if required.
 	 *
-	 * @param   Session $session A session object.
+	 * @param   Session  $session  A session object.
 	 *
 	 * @return  AbstractWebApplication  Returns itself to support chaining.
 	 *
@@ -694,7 +694,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Method to load the system URI strings for the application.
 	 *
-	 * @param   string $requestUri   An optional request URI to use instead of detecting one from the
+	 * @param   string  $requestUri  An optional request URI to use instead of detecting one from the
 	 *                               server environment variables.
 	 *
 	 * @return  void
@@ -721,11 +721,11 @@ abstract class AbstractWebApplication extends AbstractApplication
 
 		if ($siteUri != '')
 		{
-			$uri  = new Uri($siteUri);
+			$uri = new Uri($siteUri);
 			$path = $uri->toString(array('path'));
 		}
 		else
-			// No explicit base URI was set so we need to detect it.
+		// No explicit base URI was set so we need to detect it.
 		{
 			// Start with the requested URI.
 			$uri = new Uri($this->get('uri.request'));
@@ -739,7 +739,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 				$path = dirname($this->input->server->getString('PHP_SELF', ''));
 			}
 			else
-				// Pretty much everything else should be handled with SCRIPT_NAME.
+			// Pretty much everything else should be handled with SCRIPT_NAME.
 			{
 				$path = dirname($this->input->server->getString('SCRIPT_NAME', ''));
 			}
@@ -788,7 +788,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 			}
 		}
 		else
-			// No explicit media URI was set, build it dynamically from the base uri.
+		// No explicit media URI was set, build it dynamically from the base uri.
 		{
 			$this->set('uri.media.full', $this->get('uri.base.full') . 'media/');
 			$this->set('uri.media.path', $this->get('uri.base.path') . 'media/');
@@ -800,7 +800,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 *
 	 * Use in conjunction with getFormToken.
 	 *
-	 * @param   string $method The request method in which to look for the token key.
+	 * @param   string  $method  The request method in which to look for the token key.
 	 *
 	 * @return  boolean  True if found and valid, false otherwise.
 	 *
@@ -832,7 +832,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	/**
 	 * Method to determine a hash for anti-spoofing variable names
 	 *
-	 * @param   boolean $forceNew If true, force a new token to be created
+	 * @param   boolean  $forceNew  If true, force a new token to be created
 	 *
 	 * @return  string  Hashed var name
 	 *
@@ -841,7 +841,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	public function getFormToken($forceNew = false)
 	{
 		// @todo we need the user id somehow here
-		$userId = 0;
+		$userId  = 0;
 
 		return md5($this->get('secret') . $userId . $this->getSession()->getToken($forceNew));
 	}
@@ -853,7 +853,7 @@ abstract class AbstractWebApplication extends AbstractApplication
 	 * needs handling as UTF-8 or not, potentially offering performance
 	 * benefits by using the native PHP equivalent if it's just ASCII e.g.;
 	 *
-	 * @param   string $str The string to test.
+	 * @param   string  $str  The string to test.
 	 *
 	 * @return  boolean True if the string is all ASCII
 	 *

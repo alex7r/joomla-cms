@@ -27,42 +27,14 @@ class TagsModelTags extends JModelList
 	public $_context = 'com_tags.tags';
 
 	/**
-	 * Redefine the function and add some properties to make the styling more easy
-	 *
-	 * @return  mixed  An array of data items on success, false on failure.
-	 *
-	 * @since   3.1
-	 */
-	public function getItems()
-	{
-		// Invoke the parent getItems method to get the main list
-		$items = parent::getItems();
-
-		if (!count($items))
-		{
-			$app    = JFactory::getApplication();
-			$menu   = $app->getMenu();
-			$active = $menu->getActive();
-			$params = new Registry;
-
-			if ($active)
-			{
-				$params->loadString($active->params);
-			}
-		}
-
-		return $items;
-	}
-
-	/**
 	 * Method to auto-populate the model state.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
-	 * @note    Calling getState in this method will result in recursion.
+	 * @note Calling getState in this method will result in recursion.
 	 *
 	 * @since   3.1
 	 */
@@ -91,15 +63,43 @@ class TagsModelTags extends JModelList
 
 		$user = JFactory::getUser();
 
-		if ((!$user->authorise('core.edit.state', 'com_tags')) && (!$user->authorise('core.edit', 'com_tags')))
+		if ((!$user->authorise('core.edit.state', 'com_tags')) &&  (!$user->authorise('core.edit', 'com_tags')))
 		{
 			$this->setState('filter.published', 1);
 		}
 
 		// Optional filter text
-		$itemid       = $pid . ':' . $app->input->getInt('Itemid', 0);
+		$itemid = $pid . ':' . $app->input->getInt('Itemid', 0);
 		$filterSearch = $app->getUserStateFromRequest('com_tags.tags.list.' . $itemid . '.filter_search', 'filter-search', '', 'string');
 		$this->setState('list.filter', $filterSearch);
+	}
+
+	/**
+	 * Redefine the function and add some properties to make the styling more easy
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 *
+	 * @since   3.1
+	 */
+	public function getItems()
+	{
+		// Invoke the parent getItems method to get the main list
+		$items = parent::getItems();
+
+		if (!count($items))
+		{
+			$app = JFactory::getApplication();
+			$menu = $app->getMenu();
+			$active = $menu->getActive();
+			$params = new Registry;
+
+			if ($active)
+			{
+				$params->loadString($active->params);
+			}
+		}
+
+		return $items;
 	}
 
 	/**

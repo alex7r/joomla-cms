@@ -25,9 +25,9 @@ class JGithubPackageDataBlobs extends JGithubPackage
 	/**
 	 * Get a Blob.
 	 *
-	 * @param   string $owner Repository owner.
-	 * @param   string $repo  Repository name.
-	 * @param   string $sha   The commit SHA.
+	 * @param   string  $owner  Repository owner.
+	 * @param   string  $repo   Repository name.
+	 * @param   string  $sha    The commit SHA.
 	 *
 	 * @return object
 	 */
@@ -44,10 +44,10 @@ class JGithubPackageDataBlobs extends JGithubPackage
 	/**
 	 * Create a Blob.
 	 *
-	 * @param   string $owner    Repository owner.
-	 * @param   string $repo     Repository name.
-	 * @param   string $content  The content of the blob.
-	 * @param   string $encoding The encoding to use.
+	 * @param   string  $owner     Repository owner.
+	 * @param   string  $repo      Repository name.
+	 * @param   string  $content   The content of the blob.
+	 * @param   string  $encoding  The encoding to use.
 	 *
 	 * @return object
 	 */

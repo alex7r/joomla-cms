@@ -21,7 +21,7 @@ class FinderIndexerParserRtf extends FinderIndexerParser
 	/**
 	 * Method to process RTF input and extract the plain text.
 	 *
-	 * @param   string $input The input to process.
+	 * @param   string  $input  The input to process.
 	 *
 	 * @return  string  The plain text input.
 	 *

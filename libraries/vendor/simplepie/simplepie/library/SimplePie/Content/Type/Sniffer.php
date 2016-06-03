@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- *    * Redistributions of source code must retain the above copyright notice, this list of
- *      conditions and the following disclaimer.
+ * 	* Redistributions of source code must retain the above copyright notice, this list of
+ * 	  conditions and the following disclaimer.
  *
- *    * Redistributions in binary form must reproduce the above copyright notice, this list
- *      of conditions and the following disclaimer in the documentation and/or other materials
- *      provided with the distribution.
+ * 	* Redistributions in binary form must reproduce the above copyright notice, this list
+ * 	  of conditions and the following disclaimer in the documentation and/or other materials
+ * 	  provided with the distribution.
  *
- *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
- *      to endorse or promote products derived from this software without specific prior
- *      written permission.
+ * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
+ * 	  to endorse or promote products derived from this software without specific prior
+ * 	  written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,14 +32,14 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package   SimplePie
- * @version   1.3.1
+ * @package SimplePie
+ * @version 1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author    Ryan Parman
- * @author    Geoffrey Sneddon
- * @author    Ryan McCue
- * @link      http://simplepie.org/ SimplePie
- * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author Ryan Parman
+ * @author Geoffrey Sneddon
+ * @author Ryan McCue
+ * @link http://simplepie.org/ SimplePie
+ * @license http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 
@@ -54,7 +54,7 @@
  *
  * This class can be overloaded with {@see SimplePie::set_content_type_sniffer_class()}
  *
- * @package    SimplePie
+ * @package SimplePie
  * @subpackage HTTP
  */
 class SimplePie_Content_Type_Sniffer
@@ -89,8 +89,7 @@ class SimplePie_Content_Type_Sniffer
 				&& ($this->file->headers['content-type'] === 'text/plain'
 					|| $this->file->headers['content-type'] === 'text/plain; charset=ISO-8859-1'
 					|| $this->file->headers['content-type'] === 'text/plain; charset=iso-8859-1'
-					|| $this->file->headers['content-type'] === 'text/plain; charset=UTF-8')
-			)
+					|| $this->file->headers['content-type'] === 'text/plain; charset=UTF-8'))
 			{
 				return $this->text_or_binary();
 			}
@@ -106,15 +105,13 @@ class SimplePie_Content_Type_Sniffer
 			$official = trim(strtolower($official));
 
 			if ($official === 'unknown/unknown'
-				|| $official === 'application/unknown'
-			)
+				|| $official === 'application/unknown')
 			{
 				return $this->unknown();
 			}
 			elseif (substr($official, -4) === '+xml'
 				|| $official === 'text/xml'
-				|| $official === 'application/xml'
-			)
+				|| $official === 'application/xml')
 			{
 				return $official;
 			}
@@ -154,8 +151,7 @@ class SimplePie_Content_Type_Sniffer
 		if (substr($this->file->body, 0, 2) === "\xFE\xFF"
 			|| substr($this->file->body, 0, 2) === "\xFF\xFE"
 			|| substr($this->file->body, 0, 4) === "\x00\x00\xFE\xFF"
-			|| substr($this->file->body, 0, 3) === "\xEF\xBB\xBF"
-		)
+			|| substr($this->file->body, 0, 3) === "\xEF\xBB\xBF")
 		{
 			return 'text/plain';
 		}
@@ -179,8 +175,7 @@ class SimplePie_Content_Type_Sniffer
 		$ws = strspn($this->file->body, "\x09\x0A\x0B\x0C\x0D\x20");
 		if (strtolower(substr($this->file->body, $ws, 14)) === '<!doctype html'
 			|| strtolower(substr($this->file->body, $ws, 5)) === '<html'
-			|| strtolower(substr($this->file->body, $ws, 7)) === '<script'
-		)
+			|| strtolower(substr($this->file->body, $ws, 7)) === '<script')
 		{
 			return 'text/html';
 		}
@@ -193,8 +188,7 @@ class SimplePie_Content_Type_Sniffer
 			return 'application/postscript';
 		}
 		elseif (substr($this->file->body, 0, 6) === 'GIF87a'
-			|| substr($this->file->body, 0, 6) === 'GIF89a'
-		)
+			|| substr($this->file->body, 0, 6) === 'GIF89a')
 		{
 			return 'image/gif';
 		}
@@ -228,8 +222,7 @@ class SimplePie_Content_Type_Sniffer
 	public function image()
 	{
 		if (substr($this->file->body, 0, 6) === 'GIF87a'
-			|| substr($this->file->body, 0, 6) === 'GIF89a'
-		)
+			|| substr($this->file->body, 0, 6) === 'GIF89a')
 		{
 			return 'image/gif';
 		}
@@ -319,8 +312,7 @@ class SimplePie_Content_Type_Sniffer
 				}
 			}
 			elseif (substr($this->file->body, $pos, 3) === 'rss'
-				|| substr($this->file->body, $pos, 7) === 'rdf:RDF'
-			)
+				|| substr($this->file->body, $pos, 7) === 'rdf:RDF')
 			{
 				return 'application/rss+xml';
 			}

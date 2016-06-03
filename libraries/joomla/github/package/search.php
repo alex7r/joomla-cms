@@ -21,10 +21,10 @@ class JGithubPackageSearch extends JGithubPackage
 	/**
 	 * Search issues.
 	 *
-	 * @param   string $owner   The name of the owner of the repository.
-	 * @param   string $repo    The name of the repository.
-	 * @param   string $state   The state - open or closed.
-	 * @param   string $keyword The search term.
+	 * @param   string  $owner    The name of the owner of the repository.
+	 * @param   string  $repo     The name of the repository.
+	 * @param   string  $state    The state - open or closed.
+	 * @param   string  $keyword  The search term.
 	 *
 	 * @throws UnexpectedValueException
 	 *
@@ -56,9 +56,9 @@ class JGithubPackageSearch extends JGithubPackage
 	 * This method returns up to 100 results per page and pages can be fetched
 	 * using the start_page parameter.
 	 *
-	 * @param   string  $keyword    The search term.
-	 * @param   string  $language   Filter results by language https://github.com/languages
-	 * @param   integer $start_page Page number to fetch
+	 * @param   string   $keyword     The search term.
+	 * @param   string   $language    Filter results by language https://github.com/languages
+	 * @param   integer  $start_page  Page number to fetch
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -83,8 +83,8 @@ class JGithubPackageSearch extends JGithubPackage
 	 *
 	 * Find users by keyword.
 	 *
-	 * @param   string  $keyword    The search term.
-	 * @param   integer $start_page Page number to fetch
+	 * @param   string   $keyword     The search term.
+	 * @param   integer  $start_page  Page number to fetch
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -111,7 +111,7 @@ class JGithubPackageSearch extends JGithubPackage
 	 * address must be left unencoded. Searches only against public email addresses
 	 * (as configured on the user’s GitHub profile).
 	 *
-	 * @param   string $email The email address(es).
+	 * @param   string  $email  The email address(es).
 	 *
 	 * @since 3.3 (CMS)
 	 *

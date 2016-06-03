@@ -46,7 +46,7 @@ class PlgEditorNone extends JPlugin
 	/**
 	 * Get the editor content.
 	 *
-	 * @param   string $id The id of the editor field.
+	 * @param   string  $id  The id of the editor field.
 	 *
 	 * @return  string
 	 */
@@ -58,8 +58,8 @@ class PlgEditorNone extends JPlugin
 	/**
 	 * Set the editor content.
 	 *
-	 * @param   string $id   The id of the editor field.
-	 * @param   string $html The content to set.
+	 * @param   string  $id    The id of the editor field.
+	 * @param   string  $html  The content to set.
 	 *
 	 * @return  string
 	 */
@@ -71,7 +71,7 @@ class PlgEditorNone extends JPlugin
 	/**
 	 * Inserts html code into the editor
 	 *
-	 * @param   string $id The id of the editor field
+	 * @param   string  $id  The id of the editor field
 	 *
 	 * @return  void
 	 */
@@ -83,22 +83,22 @@ class PlgEditorNone extends JPlugin
 	/**
 	 * Display the editor area.
 	 *
-	 * @param   string  $name    The control name.
-	 * @param   string  $content The contents of the text area.
-	 * @param   string  $width   The width of the text area (px or %).
-	 * @param   string  $height  The height of the text area (px or %).
-	 * @param   integer $col     The number of columns for the textarea.
-	 * @param   integer $row     The number of rows for the textarea.
-	 * @param   boolean $buttons True and the editor buttons will be displayed.
-	 * @param   string  $id      An optional ID for the textarea (note: since 1.6). If not supplied the name is used.
-	 * @param   string  $asset   The object asset
-	 * @param   object  $author  The author.
-	 * @param   array   $params  Associative array of editor parameters.
+	 * @param   string   $name     The control name.
+	 * @param   string   $content  The contents of the text area.
+	 * @param   string   $width    The width of the text area (px or %).
+	 * @param   string   $height   The height of the text area (px or %).
+	 * @param   integer  $col      The number of columns for the textarea.
+	 * @param   integer  $row      The number of rows for the textarea.
+	 * @param   boolean  $buttons  True and the editor buttons will be displayed.
+	 * @param   string   $id       An optional ID for the textarea (note: since 1.6). If not supplied the name is used.
+	 * @param   string   $asset    The object asset
+	 * @param   object   $author   The author.
+	 * @param   array    $params   Associative array of editor parameters.
 	 *
 	 * @return  string
 	 */
 	public function onDisplay($name, $content, $width, $height, $col, $row, $buttons = true,
-	                          $id = null, $asset = null, $author = null, $params = array())
+		$id = null, $asset = null, $author = null, $params = array())
 	{
 		if (empty($id))
 		{
@@ -117,8 +117,8 @@ class PlgEditorNone extends JPlugin
 		}
 
 		$editor = '<textarea name="' . $name . '" id="' . $id . '" cols="' . $col . '" rows="' . $row
-			. '" style="width: ' . $width . '; height: ' . $height . ';">' . $content . '</textarea>'
-			. $this->_displayButtons($id, $buttons, $asset, $author);
+				. '" style="width: ' . $width . '; height: ' . $height . ';">' . $content . '</textarea>'
+				. $this->_displayButtons($id, $buttons, $asset, $author);
 
 		return $editor;
 	}
@@ -126,10 +126,10 @@ class PlgEditorNone extends JPlugin
 	/**
 	 * Displays the editor buttons.
 	 *
-	 * @param   string $name    The control name.
-	 * @param   mixed  $buttons [array with button objects | boolean true to display buttons]
-	 * @param   string $asset   The object asset
-	 * @param   object $author  The author.
+	 * @param   string  $name     The control name.
+	 * @param   mixed   $buttons  [array with button objects | boolean true to display buttons]
+	 * @param   string  $asset    The object asset
+	 * @param   object  $author   The author.
 	 *
 	 * @return  string HTML
 	 */

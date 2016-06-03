@@ -27,27 +27,6 @@ class JApplicationDaemonTest extends TestCase
 	protected $inspector;
 
 	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDownAfterClass()
-	 * @since   11.3
-	 */
-	public static function tearDownAfterClass()
-	{
-		$pidPath = JPATH_BASE . '/japplicationdaemontest.pid';
-
-		if (file_exists($pidPath))
-		{
-			unlink($pidPath);
-		}
-
-		ini_restore('memory_limit');
-		parent::tearDownAfterClass();
-	}
-
-	/**
 	 * Setup for testing.
 	 *
 	 * @return  void
@@ -72,6 +51,54 @@ class JApplicationDaemonTest extends TestCase
 
 		// We are only coupled to Document and Language in JFactory.
 		$this->saveFactoryState();
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDown()
+	 * @since   11.3
+	 */
+	protected function tearDown()
+	{
+		// Reset some daemon inspector static settings.
+		JApplicationDaemonInspector::$pcntlChildExitStatus = 0;
+		JApplicationDaemonInspector::$pcntlFork = 0;
+		JApplicationDaemonInspector::$pcntlSignal = true;
+		JApplicationDaemonInspector::$pcntlWait = 0;
+
+		// Check if the inspector was instantiated.
+		if (isset($this->inspector))
+		{
+			$this->inspector->setClassInstance(null);
+		}
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDownAfterClass()
+	 * @since   11.3
+	 */
+	public static function tearDownAfterClass()
+	{
+		$pidPath = JPATH_BASE . '/japplicationdaemontest.pid';
+
+		if (file_exists($pidPath))
+		{
+			unlink($pidPath);
+		}
+
+		ini_restore('memory_limit');
+		parent::tearDownAfterClass();
 	}
 
 	/**
@@ -163,32 +190,5 @@ class JApplicationDaemonTest extends TestCase
 			substr(decoct(fileperms($this->inspector->getClassProperty('config')->get('application_pid_file'))), 1),
 			'Line: ' . __LINE__
 		);
-	}
-
-	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDown()
-	 * @since   11.3
-	 */
-	protected function tearDown()
-	{
-		// Reset some daemon inspector static settings.
-		JApplicationDaemonInspector::$pcntlChildExitStatus = 0;
-		JApplicationDaemonInspector::$pcntlFork            = 0;
-		JApplicationDaemonInspector::$pcntlSignal          = true;
-		JApplicationDaemonInspector::$pcntlWait            = 0;
-
-		// Check if the inspector was instantiated.
-		if (isset($this->inspector))
-		{
-			$this->inspector->setClassInstance(null);
-		}
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 }

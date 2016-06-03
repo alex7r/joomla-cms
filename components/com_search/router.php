@@ -19,7 +19,7 @@ class SearchRouter extends JComponentRouterBase
 	/**
 	 * Build the route for the com_search component
 	 *
-	 * @param   array &$query An array of URL arguments
+	 * @param   array  &$query  An array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *
@@ -49,7 +49,7 @@ class SearchRouter extends JComponentRouterBase
 	/**
 	 * Parse the segments of a URL.
 	 *
-	 * @param   array &$segments The segments of the URL to parse.
+	 * @param   array  &$segments  The segments of the URL to parse.
 	 *
 	 * @return  array  The URL attributes to be used by the application.
 	 *
@@ -83,7 +83,7 @@ class SearchRouter extends JComponentRouterBase
  * These functions are proxies for the new router interface
  * for old SEF extensions.
  *
- * @param   array &$query An array of URL arguments
+ * @param   array  &$query  An array of URL arguments
  *
  * @return array
  *
@@ -102,7 +102,7 @@ function searchBuildRoute(&$query)
  * These functions are proxies for the new router interface
  * for old SEF extensions.
  *
- * @param   array $segments The segments of the URL to parse.
+ * @param   array  $segments  The segments of the URL to parse.
  *
  * @return array
  *

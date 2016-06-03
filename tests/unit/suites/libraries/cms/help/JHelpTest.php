@@ -25,6 +25,50 @@ class JHelpTest extends TestCase
 	protected $config;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.0
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		// Store the factory state so we can mock the necessary objects
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+		JFactory::$config      = $this->getMockConfig();
+		JFactory::$session     = $this->getMockSession();
+		JFactory::$language    = JLanguage::getInstance('en-GB');
+
+		// Set up our mock config
+		$this->config = JFactory::getConfig();
+		$this->config->set('helpurl', 'https://help.joomla.org/proxy/index.php?option=com_help&amp;keyref=Help{major}{minor}:{keyref}');
+
+		// Load the admin en-GB.ini language file
+		JFactory::getLanguage()->load('', JPATH_ADMINISTRATOR);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.0
+	 */
+	protected function tearDown()
+	{
+		// Restore the state
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Tests the createURL method for com_content's Article Manager view
 	 *
 	 * @return  void
@@ -70,55 +114,11 @@ class JHelpTest extends TestCase
 	public function testCreateSiteList()
 	{
 		$helpsite = array(
-			'text'  => 'English (GB) help.joomla.org',
+			'text' => 'English (GB) help.joomla.org',
 			'value' => 'http://help.joomla.org'
 		);
 		$this->assertEquals(array($helpsite), JHelp::createSiteList(null), 'Returns the default help site list');
 
 		$this->assertInternalType('array', JHelp::createSiteList(JPATH_ADMINISTRATOR . '/help/helpsites.xml'), 'Returns the help site list defined in the XML file');
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.0
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		// Store the factory state so we can mock the necessary objects
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$config      = $this->getMockConfig();
-		JFactory::$session     = $this->getMockSession();
-		JFactory::$language    = JLanguage::getInstance('en-GB');
-
-		// Set up our mock config
-		$this->config = JFactory::getConfig();
-		$this->config->set('helpurl', 'https://help.joomla.org/proxy/index.php?option=com_help&amp;keyref=Help{major}{minor}:{keyref}');
-
-		// Load the admin en-GB.ini language file
-		JFactory::getLanguage()->load('', JPATH_ADMINISTRATOR);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.0
-	 */
-	protected function tearDown()
-	{
-		// Restore the state
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 }

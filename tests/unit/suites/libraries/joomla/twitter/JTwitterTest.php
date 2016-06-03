@@ -41,6 +41,35 @@ class JTwitterTest extends TestCase
 	protected $oauth;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+
+		$this->object = new JTwitter($this->oauth, $this->options, $this->client);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+	}
+
+	/**
 	 * Tests the magic __get method - friends
 	 *
 	 * @return  void
@@ -265,34 +294,5 @@ class JTwitterTest extends TestCase
 			$this->object->getOption('api.url', 'https://example.com/gettest'),
 			$this->equalTo('https://example.com/gettest')
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$this->options = new JRegistry;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-
-		$this->object = new JTwitter($this->oauth, $this->options, $this->client);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
 	}
 }

@@ -19,13 +19,13 @@ class JTwitterFavorites extends JTwitterObject
 	/**
 	 * Method to get the most recent favorite statuses for the authenticating or specified user.
 	 *
-	 * @param   mixed   $user         Either an integer containing the user ID or a string containing the screen name.
-	 * @param   integer $count        Specifies the number of tweets to try and retrieve, up to a maximum of 200.  Retweets are always included
-	 *                                in the count, so it is always suggested to set $include_rts to true
-	 * @param   integer $since_id     Returns results with an ID greater than (that is, more recent than) the specified ID.
-	 * @param   integer $max_id       Returns results with an ID less than (that is, older than) the specified ID.
-	 * @param   boolean $entities     When set to true,  each tweet will include a node called "entities,". This node offers a variety
-	 *                                of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
+	 * @param   mixed    $user      Either an integer containing the user ID or a string containing the screen name.
+	 * @param   integer  $count     Specifies the number of tweets to try and retrieve, up to a maximum of 200.  Retweets are always included
+	 *                              in the count, so it is always suggested to set $include_rts to true
+	 * @param   integer  $since_id  Returns results with an ID greater than (that is, more recent than) the specified ID.
+	 * @param   integer  $max_id    Returns results with an ID less than (that is, older than) the specified ID.
+	 * @param   boolean  $entities  When set to true,  each tweet will include a node called "entities,". This node offers a variety
+	 * 								of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -77,9 +77,9 @@ class JTwitterFavorites extends JTwitterObject
 	/**
 	 * Method to favorite the status specified in the ID parameter as the authenticating user
 	 *
-	 * @param   integer $id           The numerical ID of the desired status.
-	 * @param   boolean $entities     When set to true,  each tweet will include a node called "entities,". This node offers a variety
-	 *                                of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
+	 * @param   integer  $id        The numerical ID of the desired status.
+	 * @param   boolean  $entities  When set to true,  each tweet will include a node called "entities,". This node offers a variety
+	 * 								of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -105,9 +105,9 @@ class JTwitterFavorites extends JTwitterObject
 	/**
 	 * Method to un-favorites the status specified in the ID parameter as the authenticating user.
 	 *
-	 * @param   integer $id           The numerical ID of the desired status.
-	 * @param   boolean $entities     When set to true,  each tweet will include a node called "entities,". This node offers a variety
-	 *                                of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
+	 * @param   integer  $id        The numerical ID of the desired status.
+	 * @param   boolean  $entities  When set to true,  each tweet will include a node called "entities,". This node offers a variety
+	 * 								of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
 	 *
 	 * @return  array  The decoded JSON response
 	 *

@@ -197,7 +197,6 @@ abstract class FOFUtilsInstallscript
 	 *
 	 * This array contains the message definitions for the Post-installation Messages component added in Joomla! 3.2 and
 	 * later versions. Each element is also a hashed array. For the keys used in these message definitions please
-	 *
 	 * @see FOFUtilsInstallscript::addPostInstallationMessage
 	 *
 	 * @var array
@@ -296,6 +295,309 @@ abstract class FOFUtilsInstallscript
 		}
 
 		return true;
+	}
+
+	/**
+	 * Runs after install, update or discover_update. In other words, it executes after Joomla! has finished installing
+	 * or updating your component. This is the last chance you've got to perform any additional installations, clean-up,
+	 * database updates and similar housekeeping functions.
+	 *
+	 * @param   string     $type   install, update or discover_update
+	 * @param   JInstaller $parent Parent object
+	 */
+	public function postflight($type, $parent)
+	{
+		// Install or update database
+		$dbInstaller = new FOFDatabaseInstaller(array(
+			'dbinstaller_directory' =>
+				($this->schemaXmlPathRelative ? JPATH_ADMINISTRATOR . '/components/' . $this->componentName : '') . '/' .
+				$this->schemaXmlPath
+		));
+		$dbInstaller->updateSchema();
+
+		// Install subextensions
+		$status = $this->installSubextensions($parent);
+
+		// Install FOF
+		$fofInstallationStatus = $this->installFOF($parent);
+
+		// Install Akeeba Straper
+		$strapperInstallationStatus = $this->installStrapper($parent);
+
+		// Make sure menu items are installed
+		$this->_createAdminMenus($parent);
+
+		// Make sure menu items are published (surprise goal in the 92' by JInstaller wins the cup for "most screwed up
+		// bug in the history of Joomla!")
+		$this->_reallyPublishAdminMenuItems($parent);
+
+		// Which files should I remove?
+		if ($this->isPaid)
+		{
+			// This is the paid version, only remove the removeFilesAllVersions files
+			$removeFiles = $this->removeFilesAllVersions;
+		}
+		else
+		{
+			// This is the free version, remove the removeFilesAllVersions and removeFilesFree files
+			$removeFiles = array('files' => array(), 'folders' => array());
+
+			if (isset($this->removeFilesAllVersions['files']))
+			{
+				if (isset($this->removeFilesFree['files']))
+				{
+					$removeFiles['files'] = array_merge($this->removeFilesAllVersions['files'], $this->removeFilesFree['files']);
+				}
+				else
+				{
+					$removeFiles['files'] = $this->removeFilesAllVersions['files'];
+				}
+			}
+			elseif (isset($this->removeFilesFree['files']))
+			{
+				$removeFiles['files'] = $this->removeFilesFree['files'];
+			}
+
+			if (isset($this->removeFilesAllVersions['folders']))
+			{
+				if (isset($this->removeFilesFree['folders']))
+				{
+					$removeFiles['folders'] = array_merge($this->removeFilesAllVersions['folders'], $this->removeFilesFree['folders']);
+				}
+				else
+				{
+					$removeFiles['folders'] = $this->removeFilesAllVersions['folders'];
+				}
+			}
+			elseif (isset($this->removeFilesFree['folders']))
+			{
+				$removeFiles['folders'] = $this->removeFilesFree['folders'];
+			}
+		}
+
+		// Remove obsolete files and folders
+		$this->removeFilesAndFolders($removeFiles);
+
+		// Copy the CLI files (if any)
+		$this->copyCliFiles($parent);
+
+		// Show the post-installation page
+		$this->renderPostInstallation($status, $fofInstallationStatus, $strapperInstallationStatus, $parent);
+
+		// Uninstall obsolete subextensions
+		$uninstall_status = $this->uninstallObsoleteSubextensions($parent);
+
+		// Clear the FOF cache
+		$platform = FOFPlatform::getInstance();
+
+		if (method_exists($platform, 'clearCache'))
+		{
+			FOFPlatform::getInstance()->clearCache();
+		}
+
+		// Make sure the Joomla! menu structure is correct
+		$this->_rebuildMenu();
+
+		// Add post-installation messages on Joomla! 3.2 and later
+		$this->_applyPostInstallationMessages();
+	}
+
+	/**
+	 * Runs on uninstallation
+	 *
+	 * @param   JInstaller $parent The parent object
+	 */
+	public function uninstall($parent)
+	{
+		// Uninstall database
+		$dbInstaller = new FOFDatabaseInstaller(array(
+			'dbinstaller_directory' =>
+				($this->schemaXmlPathRelative ? JPATH_ADMINISTRATOR . '/components/' . $this->componentName : '') . '/' .
+				$this->schemaXmlPath
+		));
+		$dbInstaller->removeSchema();
+
+		// Uninstall modules and plugins
+		$status = $this->uninstallSubextensions($parent);
+
+		// Uninstall post-installation messages on Joomla! 3.2 and later
+		$this->uninstallPostInstallationMessages();
+
+		// Show the post-uninstallation page
+		$this->renderPostUninstallation($status, $parent);
+	}
+
+	/**
+	 * Copies the CLI scripts into Joomla!'s cli directory
+	 *
+	 * @param JInstaller $parent
+	 */
+	protected function copyCliFiles($parent)
+	{
+		$src = $parent->getParent()->getPath('source');
+
+		foreach ($this->cliScriptFiles as $script)
+		{
+			if (JFile::exists(JPATH_ROOT . '/cli/' . $script))
+			{
+				JFile::delete(JPATH_ROOT . '/cli/' . $script);
+			}
+
+			if (JFile::exists($src . '/' . $this->cliSourcePath . '/' . $script))
+			{
+				JFile::copy($src . '/' . $this->cliSourcePath . '/' . $script, JPATH_ROOT . '/cli/' . $script);
+			}
+		}
+	}
+
+	/**
+	 * Renders the message after installing or upgrading the component
+	 */
+	protected function renderPostInstallation($status, $fofInstallationStatus, $strapperInstallationStatus, $parent)
+	{
+		$rows = 0;
+		?>
+		<table class="adminlist table table-striped" width="100%">
+			<thead>
+			<tr>
+				<th class="title" colspan="2">Extension</th>
+				<th width="30%">Status</th>
+			</tr>
+			</thead>
+			<tfoot>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			</tfoot>
+			<tbody>
+			<tr class="row<?php echo($rows++ % 2); ?>">
+				<td class="key" colspan="2"><?php echo $this->componentTitle ?></td>
+				<td><strong style="color: green">Installed</strong></td>
+			</tr>
+			<?php if ($fofInstallationStatus['required']): ?>
+				<tr class="row<?php echo($rows++ % 2); ?>">
+					<td class="key" colspan="2">
+						<strong>Framework on Framework (FOF) <?php echo $fofInstallationStatus['version'] ?></strong>
+						[<?php echo $fofInstallationStatus['date'] ?>]
+					</td>
+					<td><strong>
+							<span
+								style="color: <?php echo $fofInstallationStatus['required'] ? ($fofInstallationStatus['installed'] ? 'green' : 'red') : '#660' ?>; font-weight: bold;">
+		<?php echo $fofInstallationStatus['required'] ? ($fofInstallationStatus['installed'] ? 'Installed' : 'Not Installed') : 'Already up-to-date'; ?>
+							</span>
+						</strong></td>
+				</tr>
+			<?php endif; ?>
+			<?php if ($strapperInstallationStatus['required']): ?>
+				<tr class="row<?php echo($rows++ % 2); ?>">
+					<td class="key" colspan="2">
+						<strong>Akeeba Strapper <?php echo $strapperInstallationStatus['version'] ?></strong>
+						[<?php echo $strapperInstallationStatus['date'] ?>]
+					</td>
+					<td><strong>
+							<span
+								style="color: <?php echo $strapperInstallationStatus['required'] ? ($strapperInstallationStatus['installed'] ? 'green' : 'red') : '#660' ?>; font-weight: bold;">
+				<?php echo $strapperInstallationStatus['required'] ? ($strapperInstallationStatus['installed'] ? 'Installed' : 'Not Installed') : 'Already up-to-date'; ?>
+							</span>
+						</strong></td>
+				</tr>
+			<?php endif; ?>
+			<?php if (count($status->modules)) : ?>
+				<tr>
+					<th>Module</th>
+					<th>Client</th>
+					<th></th>
+				</tr>
+				<?php foreach ($status->modules as $module) : ?>
+					<tr class="row<?php echo($rows++ % 2); ?>">
+						<td class="key"><?php echo $module['name']; ?></td>
+						<td class="key"><?php echo ucfirst($module['client']); ?></td>
+						<td><strong
+								style="color: <?php echo ($module['result']) ? "green" : "red" ?>"><?php echo ($module['result']) ? 'Installed' : 'Not installed'; ?></strong>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			<?php endif; ?>
+			<?php if (count($status->plugins)) : ?>
+				<tr>
+					<th>Plugin</th>
+					<th>Group</th>
+					<th></th>
+				</tr>
+				<?php foreach ($status->plugins as $plugin) : ?>
+					<tr class="row<?php echo($rows++ % 2); ?>">
+						<td class="key"><?php echo ucfirst($plugin['name']); ?></td>
+						<td class="key"><?php echo ucfirst($plugin['group']); ?></td>
+						<td><strong
+								style="color: <?php echo ($plugin['result']) ? "green" : "red" ?>"><?php echo ($plugin['result']) ? 'Installed' : 'Not installed'; ?></strong>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			<?php endif; ?>
+			</tbody>
+		</table>
+	<?php
+	}
+
+	/**
+	 * Renders the message after uninstalling the component
+	 */
+	protected function renderPostUninstallation($status, $parent)
+	{
+		$rows = 1;
+		?>
+		<table class="adminlist table table-striped" width="100%">
+			<thead>
+			<tr>
+				<th class="title" colspan="2"><?php echo JText::_('Extension'); ?></th>
+				<th width="30%"><?php echo JText::_('Status'); ?></th>
+			</tr>
+			</thead>
+			<tfoot>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			</tfoot>
+			<tbody>
+			<tr class="row<?php echo($rows++ % 2); ?>">
+				<td class="key" colspan="2"><?php echo $this->componentTitle; ?></td>
+				<td><strong style="color: green">Removed</strong></td>
+			</tr>
+			<?php if (count($status->modules)) : ?>
+				<tr>
+					<th>Module</th>
+					<th>Client</th>
+					<th></th>
+				</tr>
+				<?php foreach ($status->modules as $module) : ?>
+					<tr class="row<?php echo($rows++ % 2); ?>">
+						<td class="key"><?php echo $module['name']; ?></td>
+						<td class="key"><?php echo ucfirst($module['client']); ?></td>
+						<td><strong
+								style="color: <?php echo ($module['result']) ? "green" : "red" ?>"><?php echo ($module['result']) ? 'Removed' : 'Not removed'; ?></strong>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			<?php endif; ?>
+			<?php if (count($status->plugins)) : ?>
+				<tr>
+					<th>Plugin</th>
+					<th>Group</th>
+					<th></th>
+				</tr>
+				<?php foreach ($status->plugins as $plugin) : ?>
+					<tr class="row<?php echo($rows++ % 2); ?>">
+						<td class="key"><?php echo ucfirst($plugin['name']); ?></td>
+						<td class="key"><?php echo ucfirst($plugin['group']); ?></td>
+						<td><strong
+								style="color: <?php echo ($plugin['result']) ? "green" : "red" ?>"><?php echo ($plugin['result']) ? 'Removed' : 'Not removed'; ?></strong>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			<?php endif; ?>
+			</tbody>
+		</table>
+	<?php
 	}
 
 	/**
@@ -481,177 +783,72 @@ abstract class FOFUtilsInstallscript
 		// Remove #__menu records for good measure! –– I think this is not necessary and causes the menu item to
 		// disappear on extension update.
 		/**
-		 * $query = $db->getQuery(true);
-		 * $query->select('id')
-		 * ->from('#__menu')
-		 * ->where($db->qn('type') . ' = ' . $db->q('component'))
-		 * ->where($db->qn('menutype') . ' = ' . $db->q('main'))
-		 * ->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->componentName));
-		 * $db->setQuery($query);
-		 *
-		 * try
-		 * {
-		 * $ids1 = $db->loadColumn();
-		 * }
-		 * catch (Exception $exc)
-		 * {
-		 * $ids1 = array();
-		 * }
-		 *
-		 * if (empty($ids1))
-		 * {
-		 * $ids1 = array();
-		 * }
-		 *
-		 * $query = $db->getQuery(true);
-		 * $query->select('id')
-		 * ->from('#__menu')
-		 * ->where($db->qn('type') . ' = ' . $db->q('component'))
-		 * ->where($db->qn('menutype') . ' = ' . $db->q('main'))
-		 * ->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->componentName . '&%'));
-		 * $db->setQuery($query);
-		 *
-		 * try
-		 * {
-		 * $ids2 = $db->loadColumn();
-		 * }
-		 * catch (Exception $exc)
-		 * {
-		 * $ids2 = array();
-		 * }
-		 *
-		 * if (empty($ids2))
-		 * {
-		 * $ids2 = array();
-		 * }
-		 *
-		 * $ids = array_merge($ids1, $ids2);
-		 *
-		 * if (!empty($ids))
-		 * {
-		 * foreach ($ids as $id)
-		 * {
-		 * $query = $db->getQuery(true);
-		 * $query->delete('#__menu')
-		 * ->where($db->qn('id') . ' = ' . $db->q($id));
-		 * $db->setQuery($query);
-		 *
-		 * try
-		 * {
-		 * $db->execute();
-		 * }
-		 * catch (Exception $exc)
-		 * {
-		 * // Nothing
-		 * }
-		 * }
-		 * }
-		 * /**/
-	}
+		$query = $db->getQuery(true);
+		$query->select('id')
+			->from('#__menu')
+			->where($db->qn('type') . ' = ' . $db->q('component'))
+			->where($db->qn('menutype') . ' = ' . $db->q('main'))
+			->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->componentName));
+		$db->setQuery($query);
 
-	/**
-	 * Runs after install, update or discover_update. In other words, it executes after Joomla! has finished installing
-	 * or updating your component. This is the last chance you've got to perform any additional installations, clean-up,
-	 * database updates and similar housekeeping functions.
-	 *
-	 * @param   string     $type   install, update or discover_update
-	 * @param   JInstaller $parent Parent object
-	 */
-	public function postflight($type, $parent)
-	{
-		// Install or update database
-		$dbInstaller = new FOFDatabaseInstaller(array(
-			'dbinstaller_directory' =>
-				($this->schemaXmlPathRelative ? JPATH_ADMINISTRATOR . '/components/' . $this->componentName : '') . '/' .
-				$this->schemaXmlPath
-		));
-		$dbInstaller->updateSchema();
-
-		// Install subextensions
-		$status = $this->installSubextensions($parent);
-
-		// Install FOF
-		$fofInstallationStatus = $this->installFOF($parent);
-
-		// Install Akeeba Straper
-		$strapperInstallationStatus = $this->installStrapper($parent);
-
-		// Make sure menu items are installed
-		$this->_createAdminMenus($parent);
-
-		// Make sure menu items are published (surprise goal in the 92' by JInstaller wins the cup for "most screwed up
-		// bug in the history of Joomla!")
-		$this->_reallyPublishAdminMenuItems($parent);
-
-		// Which files should I remove?
-		if ($this->isPaid)
+		try
 		{
-			// This is the paid version, only remove the removeFilesAllVersions files
-			$removeFiles = $this->removeFilesAllVersions;
+			$ids1 = $db->loadColumn();
 		}
-		else
+		catch (Exception $exc)
 		{
-			// This is the free version, remove the removeFilesAllVersions and removeFilesFree files
-			$removeFiles = array('files' => array(), 'folders' => array());
-
-			if (isset($this->removeFilesAllVersions['files']))
-			{
-				if (isset($this->removeFilesFree['files']))
-				{
-					$removeFiles['files'] = array_merge($this->removeFilesAllVersions['files'], $this->removeFilesFree['files']);
-				}
-				else
-				{
-					$removeFiles['files'] = $this->removeFilesAllVersions['files'];
-				}
-			}
-			elseif (isset($this->removeFilesFree['files']))
-			{
-				$removeFiles['files'] = $this->removeFilesFree['files'];
-			}
-
-			if (isset($this->removeFilesAllVersions['folders']))
-			{
-				if (isset($this->removeFilesFree['folders']))
-				{
-					$removeFiles['folders'] = array_merge($this->removeFilesAllVersions['folders'], $this->removeFilesFree['folders']);
-				}
-				else
-				{
-					$removeFiles['folders'] = $this->removeFilesAllVersions['folders'];
-				}
-			}
-			elseif (isset($this->removeFilesFree['folders']))
-			{
-				$removeFiles['folders'] = $this->removeFilesFree['folders'];
-			}
+			$ids1 = array();
 		}
 
-		// Remove obsolete files and folders
-		$this->removeFilesAndFolders($removeFiles);
-
-		// Copy the CLI files (if any)
-		$this->copyCliFiles($parent);
-
-		// Show the post-installation page
-		$this->renderPostInstallation($status, $fofInstallationStatus, $strapperInstallationStatus, $parent);
-
-		// Uninstall obsolete subextensions
-		$uninstall_status = $this->uninstallObsoleteSubextensions($parent);
-
-		// Clear the FOF cache
-		$platform = FOFPlatform::getInstance();
-
-		if (method_exists($platform, 'clearCache'))
+		if (empty($ids1))
 		{
-			FOFPlatform::getInstance()->clearCache();
+			$ids1 = array();
 		}
 
-		// Make sure the Joomla! menu structure is correct
-		$this->_rebuildMenu();
+		$query = $db->getQuery(true);
+		$query->select('id')
+			->from('#__menu')
+			->where($db->qn('type') . ' = ' . $db->q('component'))
+			->where($db->qn('menutype') . ' = ' . $db->q('main'))
+			->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->componentName . '&%'));
+		$db->setQuery($query);
 
-		// Add post-installation messages on Joomla! 3.2 and later
-		$this->_applyPostInstallationMessages();
+		try
+		{
+			$ids2 = $db->loadColumn();
+		}
+		catch (Exception $exc)
+		{
+			$ids2 = array();
+		}
+
+		if (empty($ids2))
+		{
+			$ids2 = array();
+		}
+
+		$ids = array_merge($ids1, $ids2);
+
+		if (!empty($ids))
+		{
+			foreach ($ids as $id)
+			{
+				$query = $db->getQuery(true);
+				$query->delete('#__menu')
+					->where($db->qn('id') . ' = ' . $db->q($id));
+				$db->setQuery($query);
+
+				try
+				{
+					$db->execute();
+				}
+				catch (Exception $exc)
+				{
+					// Nothing
+				}
+			}
+		}
+		/**/
 	}
 
 	/**
@@ -667,7 +864,7 @@ abstract class FOFUtilsInstallscript
 
 		$db = JFactory::getDbo();
 
-		$status          = new JObject();
+		$status = new JObject();
 		$status->modules = array();
 		$status->plugins = array();
 
@@ -724,8 +921,8 @@ abstract class FOFUtilsInstallscript
 							$count = 0;
 						}
 
-						$installer         = new JInstaller;
-						$result            = $installer->install($path);
+						$installer = new JInstaller;
+						$result = $installer->install($path);
 						$status->modules[] = array(
 							'name'   => 'mod_' . $module,
 							'client' => $folder,
@@ -799,11 +996,11 @@ abstract class FOFUtilsInstallscript
 									->where($db->qn('moduleid') . ' = ' . $db->q($moduleid));
 								$db->setQuery($query);
 								$assignments = $db->loadObjectList();
-								$isAssigned  = !empty($assignments);
+								$isAssigned = !empty($assignments);
 
 								if (!$isAssigned)
 								{
-									$o = (object) array(
+									$o = (object)array(
 										'moduleid' => $moduleid,
 										'menuid'   => 0
 									);
@@ -869,7 +1066,7 @@ abstract class FOFUtilsInstallscript
 						}
 
 						$installer = new JInstaller;
-						$result    = $installer->install($path);
+						$result = $installer->install($path);
 
 						$status->plugins[] = array('name' => 'plg_' . $plugin, 'group' => $folder, 'result' => $result);
 
@@ -903,6 +1100,152 @@ abstract class FOFUtilsInstallscript
 	}
 
 	/**
+	 * Uninstalls subextensions (modules, plugins) bundled with the main extension
+	 *
+	 * @param   JInstaller $parent The parent object
+	 *
+	 * @return  stdClass  The subextension uninstallation status
+	 */
+	protected function uninstallSubextensions($parent)
+	{
+		$db = JFactory::getDBO();
+
+		$status = new stdClass();
+		$status->modules = array();
+		$status->plugins = array();
+
+		$src = $parent->getParent()->getPath('source');
+
+		// Modules uninstallation
+		if (isset($this->installation_queue['modules']) && count($this->installation_queue['modules']))
+		{
+			foreach ($this->installation_queue['modules'] as $folder => $modules)
+			{
+				if (count($modules))
+				{
+					foreach ($modules as $module => $modulePreferences)
+					{
+						// Find the module ID
+						$sql = $db->getQuery(true)
+							->select($db->qn('extension_id'))
+							->from($db->qn('#__extensions'))
+							->where($db->qn('element') . ' = ' . $db->q('mod_' . $module))
+							->where($db->qn('type') . ' = ' . $db->q('module'));
+						$db->setQuery($sql);
+
+						try
+						{
+							$id = $db->loadResult();
+						}
+						catch (Exception $exc)
+						{
+							$id = 0;
+						}
+
+						// Uninstall the module
+						if ($id)
+						{
+							$installer = new JInstaller;
+							$result = $installer->uninstall('module', $id, 1);
+							$status->modules[] = array(
+								'name'   => 'mod_' . $module,
+								'client' => $folder,
+								'result' => $result
+							);
+						}
+					}
+				}
+			}
+		}
+
+		// Plugins uninstallation
+		if (isset($this->installation_queue['plugins']) && count($this->installation_queue['plugins']))
+		{
+			foreach ($this->installation_queue['plugins'] as $folder => $plugins)
+			{
+				if (count($plugins))
+				{
+					foreach ($plugins as $plugin => $published)
+					{
+						$sql = $db->getQuery(true)
+							->select($db->qn('extension_id'))
+							->from($db->qn('#__extensions'))
+							->where($db->qn('type') . ' = ' . $db->q('plugin'))
+							->where($db->qn('element') . ' = ' . $db->q($plugin))
+							->where($db->qn('folder') . ' = ' . $db->q($folder));
+						$db->setQuery($sql);
+
+						try
+						{
+							$id = $db->loadResult();
+						}
+						catch (Exception $exc)
+						{
+							$id = 0;
+						}
+
+						if ($id)
+						{
+							$installer = new JInstaller;
+							$result = $installer->uninstall('plugin', $id, 1);
+							$status->plugins[] = array(
+								'name'   => 'plg_' . $plugin,
+								'group'  => $folder,
+								'result' => $result
+							);
+						}
+					}
+				}
+			}
+		}
+
+		// Clear com_modules and com_plugins cache (needed when we alter module/plugin state)
+		FOFUtilsCacheCleaner::clearPluginsAndModulesCache();
+
+		return $status;
+	}
+
+	/**
+	 * Removes obsolete files and folders
+	 *
+	 * @param   array $removeList The files and directories to remove
+	 */
+	protected function removeFilesAndFolders($removeList)
+	{
+		// Remove files
+		if (isset($removeList['files']) && !empty($removeList['files']))
+		{
+			foreach ($removeList['files'] as $file)
+			{
+				$f = JPATH_ROOT . '/' . $file;
+
+				if (!JFile::exists($f))
+				{
+					continue;
+				}
+
+				JFile::delete($f);
+			}
+		}
+
+		// Remove folders
+		if (isset($removeList['folders']) && !empty($removeList['folders']))
+		{
+			foreach ($removeList['folders'] as $folder)
+			{
+				$f = JPATH_ROOT . '/' . $folder;
+
+				if (!JFolder::exists($f))
+				{
+					continue;
+				}
+
+				JFolder::delete($f);
+			}
+		}
+	}
+
+	/**
 	 * Installs FOF if necessary
 	 *
 	 * @param   JInstaller $parent The parent object
@@ -912,7 +1255,7 @@ abstract class FOFUtilsInstallscript
 	protected function installFOF($parent)
 	{
 		// Get the source path
-		$src    = $parent->getParent()->getPath('source');
+		$src = $parent->getParent()->getPath('source');
 		$source = $src . '/' . $this->fofSourcePath;
 
 		if (!JFolder::exists($source))
@@ -950,9 +1293,9 @@ abstract class FOFUtilsInstallscript
 
 			if (JFile::exists($target . '/version.txt'))
 			{
-				$rawData                 = JFile::read($target . '/version.txt');
-				$rawData                 = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
-				$info                    = explode("\n", $rawData);
+				$rawData = JFile::read($target . '/version.txt');
+				$rawData = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
+				$info = explode("\n", $rawData);
 				$fofVersion['installed'] = array(
 					'version' => trim($info[0]),
 					'date'    => new JDate(trim($info[1]))
@@ -968,7 +1311,7 @@ abstract class FOFUtilsInstallscript
 
 			$rawData = @file_get_contents($source . '/version.txt');
 			$rawData = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
-			$info    = explode("\n", $rawData);
+			$info = explode("\n", $rawData);
 
 			$fofVersion['package'] = array(
 				'version' => trim($info[0]),
@@ -983,8 +1326,8 @@ abstract class FOFUtilsInstallscript
 		if ($haveToInstallFOF)
 		{
 			$versionSource = 'package';
-			$installer     = new JInstaller;
-			$installedFOF  = $installer->install($source);
+			$installer = new JInstaller;
+			$installedFOF = $installer->install($source);
 		}
 		else
 		{
@@ -997,9 +1340,9 @@ abstract class FOFUtilsInstallscript
 
 			if (JFile::exists($target . '/version.txt'))
 			{
-				$rawData                 = @file_get_contents($source . '/version.txt');
-				$rawData                 = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
-				$info                    = explode("\n", $rawData);
+				$rawData = @file_get_contents($source . '/version.txt');
+				$rawData = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
+				$info = explode("\n", $rawData);
 				$fofVersion['installed'] = array(
 					'version' => trim($info[0]),
 					'date'    => new JDate(trim($info[1]))
@@ -1015,7 +1358,7 @@ abstract class FOFUtilsInstallscript
 
 			$rawData = @file_get_contents($source . '/version.txt');
 			$rawData = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
-			$info    = explode("\n", $rawData);
+			$info = explode("\n", $rawData);
 
 			$fofVersion['package'] = array(
 				'version' => trim($info[0]),
@@ -1047,7 +1390,7 @@ abstract class FOFUtilsInstallscript
 	 */
 	protected function installStrapper($parent)
 	{
-		$src    = $parent->getParent()->getPath('source');
+		$src = $parent->getParent()->getPath('source');
 		$source = $src . '/' . $this->strapperSourcePath;
 
 		$target = JPATH_ROOT . '/media/akeeba_strapper';
@@ -1074,55 +1417,9 @@ abstract class FOFUtilsInstallscript
 
 			if (JFile::exists($target . '/version.txt'))
 			{
-				$rawData                      = JFile::read($target . '/version.txt');
-				$rawData                      = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
-				$info                         = explode("\n", $rawData);
-				$strapperVersion['installed'] = array(
-					'version' => trim($info[0]),
-					'date'    => new JDate(trim($info[1]))
-				);
-			}
-			else
-			{
-				$strapperVersion['installed'] = array(
-					'version' => '0.0',
-					'date'    => new JDate('2011-01-01')
-				);
-			}
-
-			$rawData                    = JFile::read($source . '/version.txt');
-			$rawData                    = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
-			$info                       = explode("\n", $rawData);
-			$strapperVersion['package'] = array(
-				'version' => trim($info[0]),
-				'date'    => new JDate(trim($info[1]))
-			);
-
-			$haveToInstallStrapper = $strapperVersion['package']['date']->toUNIX() > $strapperVersion['installed']['date']->toUNIX();
-		}
-
-		$installedStraper = false;
-
-		if ($haveToInstallStrapper)
-		{
-			$versionSource    = 'package';
-			$installer        = new JInstaller;
-			$installedStraper = $installer->install($source);
-		}
-		else
-		{
-			$versionSource = 'installed';
-		}
-
-		if (!isset($strapperVersion))
-		{
-			$strapperVersion = array();
-
-			if (JFile::exists($target . '/version.txt'))
-			{
-				$rawData                      = JFile::read($target . '/version.txt');
-				$rawData                      = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
-				$info                         = explode("\n", $rawData);
+				$rawData = JFile::read($target . '/version.txt');
+				$rawData = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
+				$info = explode("\n", $rawData);
 				$strapperVersion['installed'] = array(
 					'version' => trim($info[0]),
 					'date'    => new JDate(trim($info[1]))
@@ -1138,7 +1435,53 @@ abstract class FOFUtilsInstallscript
 
 			$rawData = JFile::read($source . '/version.txt');
 			$rawData = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
-			$info    = explode("\n", $rawData);
+			$info = explode("\n", $rawData);
+			$strapperVersion['package'] = array(
+				'version' => trim($info[0]),
+				'date'    => new JDate(trim($info[1]))
+			);
+
+			$haveToInstallStrapper = $strapperVersion['package']['date']->toUNIX() > $strapperVersion['installed']['date']->toUNIX();
+		}
+
+		$installedStraper = false;
+
+		if ($haveToInstallStrapper)
+		{
+			$versionSource = 'package';
+			$installer = new JInstaller;
+			$installedStraper = $installer->install($source);
+		}
+		else
+		{
+			$versionSource = 'installed';
+		}
+
+		if (!isset($strapperVersion))
+		{
+			$strapperVersion = array();
+
+			if (JFile::exists($target . '/version.txt'))
+			{
+				$rawData = JFile::read($target . '/version.txt');
+				$rawData = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
+				$info = explode("\n", $rawData);
+				$strapperVersion['installed'] = array(
+					'version' => trim($info[0]),
+					'date'    => new JDate(trim($info[1]))
+				);
+			}
+			else
+			{
+				$strapperVersion['installed'] = array(
+					'version' => '0.0',
+					'date'    => new JDate('2011-01-01')
+				);
+			}
+
+			$rawData = JFile::read($source . '/version.txt');
+			$rawData = ($rawData === false) ? "0.0.0\n2011-01-01\n" : $rawData;
+			$info = explode("\n", $rawData);
 
 			$strapperVersion['package'] = array(
 				'version' => trim($info[0]),
@@ -1162,6 +1505,94 @@ abstract class FOFUtilsInstallscript
 	}
 
 	/**
+	 * Uninstalls obsolete subextensions (modules, plugins) bundled with the main extension
+	 *
+	 * @param   JInstaller $parent The parent object
+	 *
+	 * @return  stdClass The subextension uninstallation status
+	 */
+	protected function uninstallObsoleteSubextensions($parent)
+	{
+		JLoader::import('joomla.installer.installer');
+
+		$db = JFactory::getDBO();
+
+		$status = new stdClass();
+		$status->modules = array();
+		$status->plugins = array();
+
+		$src = $parent->getParent()->getPath('source');
+
+		// Modules uninstallation
+		if (isset($this->uninstallation_queue['modules']) && count($this->uninstallation_queue['modules']))
+		{
+			foreach ($this->uninstallation_queue['modules'] as $folder => $modules)
+			{
+				if (count($modules))
+				{
+					foreach ($modules as $module)
+					{
+						// Find the module ID
+						$sql = $db->getQuery(true)
+							->select($db->qn('extension_id'))
+							->from($db->qn('#__extensions'))
+							->where($db->qn('element') . ' = ' . $db->q('mod_' . $module))
+							->where($db->qn('type') . ' = ' . $db->q('module'));
+						$db->setQuery($sql);
+						$id = $db->loadResult();
+						// Uninstall the module
+						if ($id)
+						{
+							$installer = new JInstaller;
+							$result = $installer->uninstall('module', $id, 1);
+							$status->modules[] = array(
+								'name'   => 'mod_' . $module,
+								'client' => $folder,
+								'result' => $result
+							);
+						}
+					}
+				}
+			}
+		}
+
+		// Plugins uninstallation
+		if (isset($this->uninstallation_queue['plugins']) && count($this->uninstallation_queue['plugins']))
+		{
+			foreach ($this->uninstallation_queue['plugins'] as $folder => $plugins)
+			{
+				if (count($plugins))
+				{
+					foreach ($plugins as $plugin)
+					{
+						$sql = $db->getQuery(true)
+							->select($db->qn('extension_id'))
+							->from($db->qn('#__extensions'))
+							->where($db->qn('type') . ' = ' . $db->q('plugin'))
+							->where($db->qn('element') . ' = ' . $db->q($plugin))
+							->where($db->qn('folder') . ' = ' . $db->q($folder));
+						$db->setQuery($sql);
+
+						$id = $db->loadResult();
+						if ($id)
+						{
+							$installer = new JInstaller;
+							$result = $installer->uninstall('plugin', $id, 1);
+							$status->plugins[] = array(
+								'name'   => 'plg_' . $plugin,
+								'group'  => $folder,
+								'result' => $result
+							);
+						}
+					}
+				}
+			}
+		}
+
+		return $status;
+	}
+
+	/**
 	 * @param JInstallerAdapterComponent $parent
 	 *
 	 * @return bool
@@ -1172,7 +1603,7 @@ abstract class FOFUtilsInstallscript
 	{
 		$db = $parent->getParent()->getDbo();
 		/** @var JTableMenu $table */
-		$table  = JTable::getInstance('menu');
+		$table = JTable::getInstance('menu');
 		$option = $parent->get('element');
 
 		// If a component exists with this option in the table then we don't need to add menus
@@ -1209,7 +1640,7 @@ abstract class FOFUtilsInstallscript
 		// We need to insert the menu item as the last child of Joomla!'s menu root node. By default this is the
 		// menu item with ID=1. However, some crappy upgrade scripts enjoy screwing it up. Hey, ho, the workaround
 		// way I go.
-		$query      = $db->getQuery(true)
+		$query = $db->getQuery(true)
 			->select($db->qn('id'))
 			->from($db->qn('#__menu'))
 			->where($db->qn('id') . ' = ' . $db->q(1));
@@ -1219,7 +1650,7 @@ abstract class FOFUtilsInstallscript
 		{
 			// Guess what? The Problem has happened. Let's find the root node by title.
 			$rootItemId = null;
-			$query      = $db->getQuery(true)
+			$query = $db->getQuery(true)
 				->select($db->qn('id'))
 				->from($db->qn('#__menu'))
 				->where($db->qn('title') . ' = ' . $db->q('Menu_Item_Root'));
@@ -1230,7 +1661,7 @@ abstract class FOFUtilsInstallscript
 		{
 			// For crying out loud, did that idiot changed the title too?! Let's find it by alias.
 			$rootItemId = null;
-			$query      = $db->getQuery(true)
+			$query = $db->getQuery(true)
 				->select($db->qn('id'))
 				->from($db->qn('#__menu'))
 				->where($db->qn('alias') . ' = ' . $db->q('root'));
@@ -1241,7 +1672,7 @@ abstract class FOFUtilsInstallscript
 		{
 			// Dude. Dude! Duuuuuuude! The alias is screwed up, too?! Find it by component ID.
 			$rootItemId = null;
-			$query      = $db->getQuery(true)
+			$query = $db->getQuery(true)
 				->select($db->qn('id'))
 				->from($db->qn('#__menu'))
 				->where($db->qn('component_id') . ' = ' . $db->q('0'));
@@ -1252,7 +1683,7 @@ abstract class FOFUtilsInstallscript
 		{
 			// Your site is more of a "shite" than a "site". Let's try with minimum lft value.
 			$rootItemId = null;
-			$query      = $db->getQuery(true)
+			$query = $db->getQuery(true)
 				->select($db->qn('id'))
 				->from($db->qn('#__menu'))
 				->order($db->qn('lft') . ' ASC');
@@ -1267,34 +1698,34 @@ abstract class FOFUtilsInstallscript
 
 		if ($menuElement)
 		{
-			$data                 = array();
-			$data['menutype']     = 'main';
-			$data['client_id']    = 1;
-			$data['title']        = (string) trim($menuElement);
-			$data['alias']        = (string) $menuElement;
-			$data['link']         = 'index.php?option=' . $option;
-			$data['type']         = 'component';
-			$data['published']    = 0;
-			$data['parent_id']    = 1;
+			$data = array();
+			$data['menutype'] = 'main';
+			$data['client_id'] = 1;
+			$data['title'] = (string)trim($menuElement);
+			$data['alias'] = (string)$menuElement;
+			$data['link'] = 'index.php?option=' . $option;
+			$data['type'] = 'component';
+			$data['published'] = 0;
+			$data['parent_id'] = 1;
 			$data['component_id'] = $component_id;
-			$data['img']          = ((string) $menuElement->attributes()->img) ? (string) $menuElement->attributes()->img : 'class:component';
-			$data['home']         = 0;
+			$data['img'] = ((string)$menuElement->attributes()->img) ? (string)$menuElement->attributes()->img : 'class:component';
+			$data['home'] = 0;
 		}
 		// No menu element was specified, Let's make a generic menu item
 		else
 		{
-			$data                 = array();
-			$data['menutype']     = 'main';
-			$data['client_id']    = 1;
-			$data['title']        = $option;
-			$data['alias']        = $option;
-			$data['link']         = 'index.php?option=' . $option;
-			$data['type']         = 'component';
-			$data['published']    = 0;
-			$data['parent_id']    = 1;
+			$data = array();
+			$data['menutype'] = 'main';
+			$data['client_id'] = 1;
+			$data['title'] = $option;
+			$data['alias'] = $option;
+			$data['link'] = 'index.php?option=' . $option;
+			$data['type'] = 'component';
+			$data['published'] = 0;
+			$data['parent_id'] = 1;
 			$data['component_id'] = $component_id;
-			$data['img']          = 'class:component';
-			$data['home']         = 0;
+			$data['img'] = 'class:component';
+			$data['home'] = 0;
 		}
 
 		try
@@ -1390,20 +1821,20 @@ abstract class FOFUtilsInstallscript
 
 		foreach ($parent->get('manifest')->administration->submenu->menu as $child)
 		{
-			$data                 = array();
-			$data['menutype']     = 'main';
-			$data['client_id']    = 1;
-			$data['title']        = (string) trim($child);
-			$data['alias']        = (string) $child;
-			$data['type']         = 'component';
-			$data['published']    = 0;
-			$data['parent_id']    = $parent_id;
+			$data = array();
+			$data['menutype'] = 'main';
+			$data['client_id'] = 1;
+			$data['title'] = (string)trim($child);
+			$data['alias'] = (string)$child;
+			$data['type'] = 'component';
+			$data['published'] = 0;
+			$data['parent_id'] = $parent_id;
 			$data['component_id'] = $component_id;
-			$data['img']          = ((string) $child->attributes()->img) ? (string) $child->attributes()->img : 'class:component';
-			$data['home']         = 0;
+			$data['img'] = ((string)$child->attributes()->img) ? (string)$child->attributes()->img : 'class:component';
+			$data['home'] = 0;
 
 			// Set the sub menu link
-			if ((string) $child->attributes()->link)
+			if ((string)$child->attributes()->link)
 			{
 				$data['link'] = 'index.php?' . $child->attributes()->link;
 			}
@@ -1411,37 +1842,37 @@ abstract class FOFUtilsInstallscript
 			{
 				$request = array();
 
-				if ((string) $child->attributes()->act)
+				if ((string)$child->attributes()->act)
 				{
 					$request[] = 'act=' . $child->attributes()->act;
 				}
 
-				if ((string) $child->attributes()->task)
+				if ((string)$child->attributes()->task)
 				{
 					$request[] = 'task=' . $child->attributes()->task;
 				}
 
-				if ((string) $child->attributes()->controller)
+				if ((string)$child->attributes()->controller)
 				{
 					$request[] = 'controller=' . $child->attributes()->controller;
 				}
 
-				if ((string) $child->attributes()->view)
+				if ((string)$child->attributes()->view)
 				{
 					$request[] = 'view=' . $child->attributes()->view;
 				}
 
-				if ((string) $child->attributes()->layout)
+				if ((string)$child->attributes()->layout)
 				{
 					$request[] = 'layout=' . $child->attributes()->layout;
 				}
 
-				if ((string) $child->attributes()->sub)
+				if ((string)$child->attributes()->sub)
 				{
 					$request[] = 'sub=' . $child->attributes()->sub;
 				}
 
-				$qstring      = (count($request)) ? '&' . implode('&', $request) : '';
+				$qstring = (count($request)) ? '&' . implode('&', $request) : '';
 				$data['link'] = 'index.php?option=' . $option . $qstring;
 			}
 
@@ -1481,7 +1912,7 @@ abstract class FOFUtilsInstallscript
 	 */
 	private function _reallyPublishAdminMenuItems($parent)
 	{
-		$db     = $parent->getParent()->getDbo();
+		$db = $parent->getParent()->getDbo();
 		$option = $parent->get('element');
 
 		$query = $db->getQuery(true)
@@ -1505,246 +1936,6 @@ abstract class FOFUtilsInstallscript
 	}
 
 	/**
-	 * Removes obsolete files and folders
-	 *
-	 * @param   array $removeList The files and directories to remove
-	 */
-	protected function removeFilesAndFolders($removeList)
-	{
-		// Remove files
-		if (isset($removeList['files']) && !empty($removeList['files']))
-		{
-			foreach ($removeList['files'] as $file)
-			{
-				$f = JPATH_ROOT . '/' . $file;
-
-				if (!JFile::exists($f))
-				{
-					continue;
-				}
-
-				JFile::delete($f);
-			}
-		}
-
-		// Remove folders
-		if (isset($removeList['folders']) && !empty($removeList['folders']))
-		{
-			foreach ($removeList['folders'] as $folder)
-			{
-				$f = JPATH_ROOT . '/' . $folder;
-
-				if (!JFolder::exists($f))
-				{
-					continue;
-				}
-
-				JFolder::delete($f);
-			}
-		}
-	}
-
-	/**
-	 * Copies the CLI scripts into Joomla!'s cli directory
-	 *
-	 * @param JInstaller $parent
-	 */
-	protected function copyCliFiles($parent)
-	{
-		$src = $parent->getParent()->getPath('source');
-
-		foreach ($this->cliScriptFiles as $script)
-		{
-			if (JFile::exists(JPATH_ROOT . '/cli/' . $script))
-			{
-				JFile::delete(JPATH_ROOT . '/cli/' . $script);
-			}
-
-			if (JFile::exists($src . '/' . $this->cliSourcePath . '/' . $script))
-			{
-				JFile::copy($src . '/' . $this->cliSourcePath . '/' . $script, JPATH_ROOT . '/cli/' . $script);
-			}
-		}
-	}
-
-	/**
-	 * Renders the message after installing or upgrading the component
-	 */
-	protected function renderPostInstallation($status, $fofInstallationStatus, $strapperInstallationStatus, $parent)
-	{
-		$rows = 0;
-		?>
-		<table class="adminlist table table-striped" width="100%">
-			<thead>
-			<tr>
-				<th class="title" colspan="2">Extension</th>
-				<th width="30%">Status</th>
-			</tr>
-			</thead>
-			<tfoot>
-			<tr>
-				<td colspan="3"></td>
-			</tr>
-			</tfoot>
-			<tbody>
-			<tr class="row<?php echo($rows++ % 2); ?>">
-				<td class="key" colspan="2"><?php echo $this->componentTitle ?></td>
-				<td><strong style="color: green">Installed</strong></td>
-			</tr>
-			<?php if ($fofInstallationStatus['required']): ?>
-				<tr class="row<?php echo($rows++ % 2); ?>">
-					<td class="key" colspan="2">
-						<strong>Framework on Framework (FOF) <?php echo $fofInstallationStatus['version'] ?></strong>
-						[<?php echo $fofInstallationStatus['date'] ?>]
-					</td>
-					<td><strong>
-							<span
-								style="color: <?php echo $fofInstallationStatus['required'] ? ($fofInstallationStatus['installed'] ? 'green' : 'red') : '#660' ?>; font-weight: bold;">
-		<?php echo $fofInstallationStatus['required'] ? ($fofInstallationStatus['installed'] ? 'Installed' : 'Not Installed') : 'Already up-to-date'; ?>
-							</span>
-						</strong></td>
-				</tr>
-			<?php endif; ?>
-			<?php if ($strapperInstallationStatus['required']): ?>
-				<tr class="row<?php echo($rows++ % 2); ?>">
-					<td class="key" colspan="2">
-						<strong>Akeeba Strapper <?php echo $strapperInstallationStatus['version'] ?></strong>
-						[<?php echo $strapperInstallationStatus['date'] ?>]
-					</td>
-					<td><strong>
-							<span
-								style="color: <?php echo $strapperInstallationStatus['required'] ? ($strapperInstallationStatus['installed'] ? 'green' : 'red') : '#660' ?>; font-weight: bold;">
-				<?php echo $strapperInstallationStatus['required'] ? ($strapperInstallationStatus['installed'] ? 'Installed' : 'Not Installed') : 'Already up-to-date'; ?>
-							</span>
-						</strong></td>
-				</tr>
-			<?php endif; ?>
-			<?php if (count($status->modules)) : ?>
-				<tr>
-					<th>Module</th>
-					<th>Client</th>
-					<th></th>
-				</tr>
-				<?php foreach ($status->modules as $module) : ?>
-					<tr class="row<?php echo($rows++ % 2); ?>">
-						<td class="key"><?php echo $module['name']; ?></td>
-						<td class="key"><?php echo ucfirst($module['client']); ?></td>
-						<td><strong
-								style="color: <?php echo ($module['result']) ? "green" : "red" ?>"><?php echo ($module['result']) ? 'Installed' : 'Not installed'; ?></strong>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-			<?php endif; ?>
-			<?php if (count($status->plugins)) : ?>
-				<tr>
-					<th>Plugin</th>
-					<th>Group</th>
-					<th></th>
-				</tr>
-				<?php foreach ($status->plugins as $plugin) : ?>
-					<tr class="row<?php echo($rows++ % 2); ?>">
-						<td class="key"><?php echo ucfirst($plugin['name']); ?></td>
-						<td class="key"><?php echo ucfirst($plugin['group']); ?></td>
-						<td><strong
-								style="color: <?php echo ($plugin['result']) ? "green" : "red" ?>"><?php echo ($plugin['result']) ? 'Installed' : 'Not installed'; ?></strong>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-			<?php endif; ?>
-			</tbody>
-		</table>
-		<?php
-	}
-
-	/**
-	 * Uninstalls obsolete subextensions (modules, plugins) bundled with the main extension
-	 *
-	 * @param   JInstaller $parent The parent object
-	 *
-	 * @return  stdClass The subextension uninstallation status
-	 */
-	protected function uninstallObsoleteSubextensions($parent)
-	{
-		JLoader::import('joomla.installer.installer');
-
-		$db = JFactory::getDBO();
-
-		$status          = new stdClass();
-		$status->modules = array();
-		$status->plugins = array();
-
-		$src = $parent->getParent()->getPath('source');
-
-		// Modules uninstallation
-		if (isset($this->uninstallation_queue['modules']) && count($this->uninstallation_queue['modules']))
-		{
-			foreach ($this->uninstallation_queue['modules'] as $folder => $modules)
-			{
-				if (count($modules))
-				{
-					foreach ($modules as $module)
-					{
-						// Find the module ID
-						$sql = $db->getQuery(true)
-							->select($db->qn('extension_id'))
-							->from($db->qn('#__extensions'))
-							->where($db->qn('element') . ' = ' . $db->q('mod_' . $module))
-							->where($db->qn('type') . ' = ' . $db->q('module'));
-						$db->setQuery($sql);
-						$id = $db->loadResult();
-						// Uninstall the module
-						if ($id)
-						{
-							$installer         = new JInstaller;
-							$result            = $installer->uninstall('module', $id, 1);
-							$status->modules[] = array(
-								'name'   => 'mod_' . $module,
-								'client' => $folder,
-								'result' => $result
-							);
-						}
-					}
-				}
-			}
-		}
-
-		// Plugins uninstallation
-		if (isset($this->uninstallation_queue['plugins']) && count($this->uninstallation_queue['plugins']))
-		{
-			foreach ($this->uninstallation_queue['plugins'] as $folder => $plugins)
-			{
-				if (count($plugins))
-				{
-					foreach ($plugins as $plugin)
-					{
-						$sql = $db->getQuery(true)
-							->select($db->qn('extension_id'))
-							->from($db->qn('#__extensions'))
-							->where($db->qn('type') . ' = ' . $db->q('plugin'))
-							->where($db->qn('element') . ' = ' . $db->q($plugin))
-							->where($db->qn('folder') . ' = ' . $db->q($folder));
-						$db->setQuery($sql);
-
-						$id = $db->loadResult();
-						if ($id)
-						{
-							$installer         = new JInstaller;
-							$result            = $installer->uninstall('plugin', $id, 1);
-							$status->plugins[] = array(
-								'name'   => 'plg_' . $plugin,
-								'group'  => $folder,
-								'result' => $result
-							);
-						}
-					}
-				}
-			}
-		}
-
-		return $status;
-	}
-
-	/**
 	 * Tells Joomla! to rebuild its menu structure to make triple-sure that the Components menu items really do exist
 	 * in the correct place and can really be rendered.
 	 */
@@ -1752,11 +1943,11 @@ abstract class FOFUtilsInstallscript
 	{
 		/** @var JTableMenu $table */
 		$table = JTable::getInstance('menu');
-		$db    = $table->getDbo();
+		$db = $table->getDbo();
 
 		// We need to rebuild the menu based on its root item. By default this is the menu item with ID=1. However, some
 		// crappy upgrade scripts enjoy screwing it up. Hey, ho, the workaround way I go.
-		$query      = $db->getQuery(true)
+		$query = $db->getQuery(true)
 			->select($db->qn('id'))
 			->from($db->qn('#__menu'))
 			->where($db->qn('id') . ' = ' . $db->q(1));
@@ -1766,7 +1957,7 @@ abstract class FOFUtilsInstallscript
 		{
 			// Guess what? The Problem has happened. Let's find the root node by title.
 			$rootItemId = null;
-			$query      = $db->getQuery(true)
+			$query = $db->getQuery(true)
 				->select($db->qn('id'))
 				->from($db->qn('#__menu'))
 				->where($db->qn('title') . ' = ' . $db->q('Menu_Item_Root'));
@@ -1777,7 +1968,7 @@ abstract class FOFUtilsInstallscript
 		{
 			// For crying out loud, did that idiot changed the title too?! Let's find it by alias.
 			$rootItemId = null;
-			$query      = $db->getQuery(true)
+			$query = $db->getQuery(true)
 				->select($db->qn('id'))
 				->from($db->qn('#__menu'))
 				->where($db->qn('alias') . ' = ' . $db->q('root'));
@@ -1788,7 +1979,7 @@ abstract class FOFUtilsInstallscript
 		{
 			// Dude. Dude! Duuuuuuude! The alias is screwed up, too?! Find it by component ID.
 			$rootItemId = null;
-			$query      = $db->getQuery(true)
+			$query = $db->getQuery(true)
 				->select($db->qn('id'))
 				->from($db->qn('#__menu'))
 				->where($db->qn('component_id') . ' = ' . $db->q('0'));
@@ -1799,7 +1990,7 @@ abstract class FOFUtilsInstallscript
 		{
 			// Your site is more of a "shite" than a "site". Let's try with minimum lft value.
 			$rootItemId = null;
-			$query      = $db->getQuery(true)
+			$query = $db->getQuery(true)
 				->select($db->qn('id'))
 				->from($db->qn('#__menu'))
 				->order($db->qn('lft') . ' ASC');
@@ -1813,56 +2004,6 @@ abstract class FOFUtilsInstallscript
 		}
 
 		$table->rebuild($rootItemId);
-	}
-
-	/**
-	 * Applies the post-installation messages for Joomla! 3.2 or later
-	 *
-	 * @return void
-	 */
-	protected function _applyPostInstallationMessages()
-	{
-		// Make sure it's Joomla! 3.2.0 or later
-		if (!version_compare(JVERSION, '3.2.0', 'ge'))
-		{
-			return;
-		}
-
-		// Make sure there are post-installation messages
-		if (empty($this->postInstallationMessages))
-		{
-			return;
-		}
-
-		// Get the extension ID for our component
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('extension_id')
-			->from('#__extensions')
-			->where($db->qn('element') . ' = ' . $db->q($this->componentName));
-		$db->setQuery($query);
-
-		try
-		{
-			$ids = $db->loadColumn();
-		}
-		catch (Exception $exc)
-		{
-			return;
-		}
-
-		if (empty($ids))
-		{
-			return;
-		}
-
-		$extension_id = array_shift($ids);
-
-		foreach ($this->postInstallationMessages as $message)
-		{
-			$message['extension_id'] = $extension_id;
-			$this->addPostInstallationMessage($message);
-		}
 	}
 
 	/**
@@ -1964,8 +2105,8 @@ abstract class FOFUtilsInstallscript
 
 		// Array normalisation. Removes array keys not belonging to a definition.
 		$defaultKeys = array_keys($defaultOptions);
-		$allKeys     = array_keys($options);
-		$extraKeys   = array_diff($allKeys, $defaultKeys);
+		$allKeys = array_keys($options);
+		$extraKeys = array_diff($allKeys, $defaultKeys);
 
 		if (!empty($extraKeys))
 		{
@@ -1976,9 +2117,9 @@ abstract class FOFUtilsInstallscript
 		}
 
 		// Normalisation of integer values
-		$options['extension_id']       = (int) $options['extension_id'];
-		$options['language_client_id'] = (int) $options['language_client_id'];
-		$options['enabled']            = (int) $options['enabled'];
+		$options['extension_id'] = (int)$options['extension_id'];
+		$options['language_client_id'] = (int)$options['language_client_id'];
+		$options['enabled'] = (int)$options['enabled'];
 
 		// Normalisation of 0/1 values
 		foreach (array('language_client_id', 'enabled') as $key)
@@ -1987,7 +2128,7 @@ abstract class FOFUtilsInstallscript
 		}
 
 		// Make sure there's an extension_id
-		if (!(int) $options['extension_id'])
+		if (!(int)$options['extension_id'])
 		{
 			throw new Exception('Post-installation message definitions need an extension_id', 500);
 		}
@@ -2075,8 +2216,8 @@ abstract class FOFUtilsInstallscript
 		// Check if the definition exists
 		$tableName = '#__postinstall_messages';
 
-		$db          = JFactory::getDbo();
-		$query       = $db->getQuery(true)
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
 			->select('*')
 			->from($db->qn($tableName))
 			->where($db->qn('extension_id') . ' = ' . $db->q($options['extension_id']))
@@ -2119,139 +2260,58 @@ abstract class FOFUtilsInstallscript
 		}
 
 		// Insert the new row
-		$options = (object) $options;
+		$options = (object)$options;
 		$db->insertObject($tableName, $options);
 	}
 
 	/**
-	 * Runs on uninstallation
+	 * Applies the post-installation messages for Joomla! 3.2 or later
 	 *
-	 * @param   JInstaller $parent The parent object
+	 * @return void
 	 */
-	public function uninstall($parent)
+	protected function _applyPostInstallationMessages()
 	{
-		// Uninstall database
-		$dbInstaller = new FOFDatabaseInstaller(array(
-			'dbinstaller_directory' =>
-				($this->schemaXmlPathRelative ? JPATH_ADMINISTRATOR . '/components/' . $this->componentName : '') . '/' .
-				$this->schemaXmlPath
-		));
-		$dbInstaller->removeSchema();
-
-		// Uninstall modules and plugins
-		$status = $this->uninstallSubextensions($parent);
-
-		// Uninstall post-installation messages on Joomla! 3.2 and later
-		$this->uninstallPostInstallationMessages();
-
-		// Show the post-uninstallation page
-		$this->renderPostUninstallation($status, $parent);
-	}
-
-	/**
-	 * Uninstalls subextensions (modules, plugins) bundled with the main extension
-	 *
-	 * @param   JInstaller $parent The parent object
-	 *
-	 * @return  stdClass  The subextension uninstallation status
-	 */
-	protected function uninstallSubextensions($parent)
-	{
-		$db = JFactory::getDBO();
-
-		$status          = new stdClass();
-		$status->modules = array();
-		$status->plugins = array();
-
-		$src = $parent->getParent()->getPath('source');
-
-		// Modules uninstallation
-		if (isset($this->installation_queue['modules']) && count($this->installation_queue['modules']))
+		// Make sure it's Joomla! 3.2.0 or later
+		if (!version_compare(JVERSION, '3.2.0', 'ge'))
 		{
-			foreach ($this->installation_queue['modules'] as $folder => $modules)
-			{
-				if (count($modules))
-				{
-					foreach ($modules as $module => $modulePreferences)
-					{
-						// Find the module ID
-						$sql = $db->getQuery(true)
-							->select($db->qn('extension_id'))
-							->from($db->qn('#__extensions'))
-							->where($db->qn('element') . ' = ' . $db->q('mod_' . $module))
-							->where($db->qn('type') . ' = ' . $db->q('module'));
-						$db->setQuery($sql);
-
-						try
-						{
-							$id = $db->loadResult();
-						}
-						catch (Exception $exc)
-						{
-							$id = 0;
-						}
-
-						// Uninstall the module
-						if ($id)
-						{
-							$installer         = new JInstaller;
-							$result            = $installer->uninstall('module', $id, 1);
-							$status->modules[] = array(
-								'name'   => 'mod_' . $module,
-								'client' => $folder,
-								'result' => $result
-							);
-						}
-					}
-				}
-			}
+			return;
 		}
 
-		// Plugins uninstallation
-		if (isset($this->installation_queue['plugins']) && count($this->installation_queue['plugins']))
+		// Make sure there are post-installation messages
+		if (empty($this->postInstallationMessages))
 		{
-			foreach ($this->installation_queue['plugins'] as $folder => $plugins)
-			{
-				if (count($plugins))
-				{
-					foreach ($plugins as $plugin => $published)
-					{
-						$sql = $db->getQuery(true)
-							->select($db->qn('extension_id'))
-							->from($db->qn('#__extensions'))
-							->where($db->qn('type') . ' = ' . $db->q('plugin'))
-							->where($db->qn('element') . ' = ' . $db->q($plugin))
-							->where($db->qn('folder') . ' = ' . $db->q($folder));
-						$db->setQuery($sql);
-
-						try
-						{
-							$id = $db->loadResult();
-						}
-						catch (Exception $exc)
-						{
-							$id = 0;
-						}
-
-						if ($id)
-						{
-							$installer         = new JInstaller;
-							$result            = $installer->uninstall('plugin', $id, 1);
-							$status->plugins[] = array(
-								'name'   => 'plg_' . $plugin,
-								'group'  => $folder,
-								'result' => $result
-							);
-						}
-					}
-				}
-			}
+			return;
 		}
 
-		// Clear com_modules and com_plugins cache (needed when we alter module/plugin state)
-		FOFUtilsCacheCleaner::clearPluginsAndModulesCache();
+		// Get the extension ID for our component
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('extension_id')
+			->from('#__extensions')
+			->where($db->qn('element') . ' = ' . $db->q($this->componentName));
+		$db->setQuery($query);
 
-		return $status;
+		try
+		{
+			$ids = $db->loadColumn();
+		}
+		catch (Exception $exc)
+		{
+			return;
+		}
+
+		if (empty($ids))
+		{
+			return;
+		}
+
+		$extension_id = array_shift($ids);
+
+		foreach ($this->postInstallationMessages as $message)
+		{
+			$message['extension_id'] = $extension_id;
+			$this->addPostInstallationMessage($message);
+		}
 	}
 
 	protected function uninstallPostInstallationMessages()
@@ -2269,7 +2329,7 @@ abstract class FOFUtilsInstallscript
 		}
 
 		// Get the extension ID for our component
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('extension_id')
 			->from('#__extensions')
@@ -2304,66 +2364,5 @@ abstract class FOFUtilsInstallscript
 		{
 			return;
 		}
-	}
-
-	/**
-	 * Renders the message after uninstalling the component
-	 */
-	protected function renderPostUninstallation($status, $parent)
-	{
-		$rows = 1;
-		?>
-		<table class="adminlist table table-striped" width="100%">
-			<thead>
-			<tr>
-				<th class="title" colspan="2"><?php echo JText::_('Extension'); ?></th>
-				<th width="30%"><?php echo JText::_('Status'); ?></th>
-			</tr>
-			</thead>
-			<tfoot>
-			<tr>
-				<td colspan="3"></td>
-			</tr>
-			</tfoot>
-			<tbody>
-			<tr class="row<?php echo($rows++ % 2); ?>">
-				<td class="key" colspan="2"><?php echo $this->componentTitle; ?></td>
-				<td><strong style="color: green">Removed</strong></td>
-			</tr>
-			<?php if (count($status->modules)) : ?>
-				<tr>
-					<th>Module</th>
-					<th>Client</th>
-					<th></th>
-				</tr>
-				<?php foreach ($status->modules as $module) : ?>
-					<tr class="row<?php echo($rows++ % 2); ?>">
-						<td class="key"><?php echo $module['name']; ?></td>
-						<td class="key"><?php echo ucfirst($module['client']); ?></td>
-						<td><strong
-								style="color: <?php echo ($module['result']) ? "green" : "red" ?>"><?php echo ($module['result']) ? 'Removed' : 'Not removed'; ?></strong>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-			<?php endif; ?>
-			<?php if (count($status->plugins)) : ?>
-				<tr>
-					<th>Plugin</th>
-					<th>Group</th>
-					<th></th>
-				</tr>
-				<?php foreach ($status->plugins as $plugin) : ?>
-					<tr class="row<?php echo($rows++ % 2); ?>">
-						<td class="key"><?php echo ucfirst($plugin['name']); ?></td>
-						<td class="key"><?php echo ucfirst($plugin['group']); ?></td>
-						<td><strong
-								style="color: <?php echo ($plugin['result']) ? "green" : "red" ?>"><?php echo ($plugin['result']) ? 'Removed' : 'Not removed'; ?></strong>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-			<?php endif; ?>
-			</tbody>
-		</table>
-		<?php
 	}
 }

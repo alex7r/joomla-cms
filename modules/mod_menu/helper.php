@@ -21,7 +21,7 @@ class ModMenuHelper
 	/**
 	 * Get a list of the menu items.
 	 *
-	 * @param   \Joomla\Registry\Registry &$params The module options.
+	 * @param   \Joomla\Registry\Registry  &$params  The module options.
 	 *
 	 * @return  array
 	 *
@@ -29,15 +29,15 @@ class ModMenuHelper
 	 */
 	public static function getList(&$params)
 	{
-		$app  = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$menu = $app->getMenu();
 
 		// Get active menu item
-		$base   = self::getBase($params);
-		$user   = JFactory::getUser();
+		$base = self::getBase($params);
+		$user = JFactory::getUser();
 		$levels = $user->getAuthorisedViewLevels();
 		asort($levels);
-		$key   = 'menu_items' . $params . implode(',', $levels) . '.' . $base->id;
+		$key = 'menu_items' . $params . implode(',', $levels) . '.' . $base->id;
 		$cache = JFactory::getCache('mod_menu', '');
 
 		if (!($items = $cache->get($key)))
@@ -57,8 +57,7 @@ class ModMenuHelper
 					if (($start && $start > $item->level)
 						|| ($end && $item->level > $end)
 						|| (!$showAll && $item->level > 1 && !in_array($item->parent_id, $path))
-						|| ($start > 1 && !in_array($item->tree[$start - 2], $path))
-					)
+						|| ($start > 1 && !in_array($item->tree[$start - 2], $path)))
 					{
 						unset($items[$i]);
 						continue;
@@ -128,16 +127,16 @@ class ModMenuHelper
 					$item->title        = htmlspecialchars($item->title, ENT_COMPAT, 'UTF-8', false);
 					$item->anchor_css   = htmlspecialchars($item->params->get('menu-anchor_css', ''), ENT_COMPAT, 'UTF-8', false);
 					$item->anchor_title = htmlspecialchars($item->params->get('menu-anchor_title', ''), ENT_COMPAT, 'UTF-8', false);
-					$item->anchor_rel   = htmlspecialchars($item->params->get('menu-anchor_rel', ''), ENT_COMPAT, 'UTF-8', false);
+					$item->anchor_rel = htmlspecialchars($item->params->get('menu-anchor_rel', ''), ENT_COMPAT, 'UTF-8', false);
 					$item->menu_image   = $item->params->get('menu_image', '') ?
 						htmlspecialchars($item->params->get('menu_image', ''), ENT_COMPAT, 'UTF-8', false) : '';
 				}
 
 				if (isset($items[$lastitem]))
 				{
-					$items[$lastitem]->deeper     = (($start ? $start : 1) > $items[$lastitem]->level);
-					$items[$lastitem]->shallower  = (($start ? $start : 1) < $items[$lastitem]->level);
-					$items[$lastitem]->level_diff = ($items[$lastitem]->level - ($start ? $start : 1));
+					$items[$lastitem]->deeper     = (($start?$start:1) > $items[$lastitem]->level);
+					$items[$lastitem]->shallower  = (($start?$start:1) < $items[$lastitem]->level);
+					$items[$lastitem]->level_diff = ($items[$lastitem]->level - ($start?$start:1));
 				}
 			}
 
@@ -150,11 +149,11 @@ class ModMenuHelper
 	/**
 	 * Get base menu item.
 	 *
-	 * @param   \Joomla\Registry\Registry &$params The module options.
+	 * @param   \Joomla\Registry\Registry  &$params  The module options.
 	 *
 	 * @return  object
 	 *
-	 * @since    3.0.2
+	 * @since	3.0.2
 	 */
 	public static function getBase(&$params)
 	{
@@ -180,11 +179,11 @@ class ModMenuHelper
 	/**
 	 * Get active menu item.
 	 *
-	 * @param   \Joomla\Registry\Registry &$params The module options.
+	 * @param   \Joomla\Registry\Registry  &$params  The module options.
 	 *
 	 * @return  object
 	 *
-	 * @since    3.0.2
+	 * @since	3.0.2
 	 */
 	public static function getActive(&$params)
 	{

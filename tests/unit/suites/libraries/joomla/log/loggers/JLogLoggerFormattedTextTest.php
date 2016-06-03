@@ -27,8 +27,8 @@ class JLogLoggerFormattedTextTest extends TestCase
 	{
 		// Setup the basic configuration.
 		$config = array(
-			'text_file_path'    => JPATH_TESTS . '/tmp',
-			'text_file'         => '',
+			'text_file_path' => JPATH_TESTS . '/tmp',
+			'text_file' => '',
 			'text_entry_format' => null
 		);
 		$logger = new JLogLoggerFormattedTextInspector($config);
@@ -52,8 +52,8 @@ class JLogLoggerFormattedTextTest extends TestCase
 	{
 		// Setup the basic configuration.
 		$config = array(
-			'text_file_path'    => JPATH_TESTS . '/tmp',
-			'text_file'         => 'foo.log',
+			'text_file_path' => JPATH_TESTS . '/tmp',
+			'text_file' => 'foo.log',
 			'text_entry_format' => null
 		);
 		$logger = new JLogLoggerFormattedTextInspector($config);
@@ -77,8 +77,8 @@ class JLogLoggerFormattedTextTest extends TestCase
 	{
 		// Setup the basic configuration.
 		$config = array(
-			'text_file_path'    => JPATH_TESTS . '/tmp',
-			'text_file'         => '',
+			'text_file_path' => JPATH_TESTS . '/tmp',
+			'text_file' => '',
 			'text_entry_format' => '{DATETIME}	{PRIORITY}	{MESSAGE}'
 		);
 		$logger = new JLogLoggerFormattedTextInspector($config);
@@ -101,13 +101,13 @@ class JLogLoggerFormattedTextTest extends TestCase
 	public function testConstructor04()
 	{
 		// Temporarily override the config cache in JFactory.
-		$temp             = JFactory::$config;
+		$temp = JFactory::$config;
 		JFactory::$config = new JObject(array('log_path' => '/var/logs'));
 
 		// Setup the basic configuration.
 		$config = array(
-			'text_file_path'    => '',
-			'text_file'         => '',
+			'text_file_path' => '',
+			'text_file' => '',
 			'text_entry_format' => '{DATETIME}	{PRIORITY}	{MESSAGE}'
 		);
 		$logger = new JLogLoggerFormattedTextInspector($config);
@@ -133,8 +133,8 @@ class JLogLoggerFormattedTextTest extends TestCase
 	{
 		// Setup the basic configuration.
 		$config = array(
-			'text_file_path'    => JPATH_TESTS . '/tmp',
-			'text_file'         => '',
+			'text_file_path' => JPATH_TESTS . '/tmp',
+			'text_file' => '',
 			'text_entry_format' => '{PRIORITY}	{CATEGORY}	{MESSAGE}'
 		);
 		$logger = new JLogLoggerFormattedTextInspector($config);
@@ -170,7 +170,7 @@ class JLogLoggerFormattedTextTest extends TestCase
 	/**
 	 * Method to get the last line of a file.  This is fairly safe for very large files.
 	 *
-	 * @param   string $path The path to the file for which to get the last line.
+	 * @param   string  $path  The path to the file for which to get the last line.
 	 *
 	 * @return  string
 	 *
@@ -179,7 +179,7 @@ class JLogLoggerFormattedTextTest extends TestCase
 	protected function getLastLine($path)
 	{
 		$cursor = -1;
-		$line   = '';
+		$line = '';
 
 		// Open the file up to the last character.
 		$f = fopen($path, 'r');

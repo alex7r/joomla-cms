@@ -36,7 +36,7 @@ class PlgSystemHighlight extends JPlugin
 		}
 
 		// Set the variables.
-		$input     = JFactory::getApplication()->input;
+		$input = JFactory::getApplication()->input;
 		$extension = $input->get('option', '', 'cmd');
 
 		// Check if the highlighter is enabled.
@@ -62,7 +62,7 @@ class PlgSystemHighlight extends JPlugin
 		}
 
 		// Clean the terms array.
-		$filter = JFilterInput::getInstance();
+		$filter     = JFilterInput::getInstance();
 
 		$cleanTerms = array();
 

@@ -17,7 +17,7 @@ class TestMockDocument
 	/**
 	 * Creates and instance of the mock JLanguage object.
 	 *
-	 * @param   PHPUnit_Framework_TestCase $test A test object.
+	 * @param   PHPUnit_Framework_TestCase  $test  A test object.
 	 *
 	 * @return  PHPUnit_Framework_MockObject_MockObject
 	 *
@@ -49,7 +49,7 @@ class TestMockDocument
 			$mockObject, array(
 				'parse' => $mockObject,
 				// An additional 'test' method for confirming this object is successfully mocked.
-				'test'  => 'ok'
+				'test' => 'ok'
 			)
 		);
 

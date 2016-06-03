@@ -20,9 +20,9 @@ class JCacheStorageXcache extends JCacheStorage
 	/**
 	 * Get cached data by ID and group
 	 *
-	 * @param   string  $id        The cache data ID
-	 * @param   string  $group     The cache data group
-	 * @param   boolean $checkTime True to verify cache time expiration threshold
+	 * @param   string   $id         The cache data ID
+	 * @param   string   $group      The cache data group
+	 * @param   boolean  $checkTime  True to verify cache time expiration threshold
 	 *
 	 * @return  mixed  Boolean false on failure or a cached data object
 	 *
@@ -36,7 +36,7 @@ class JCacheStorageXcache extends JCacheStorage
 			return false;
 		}
 
-		$cache_id      = $this->_getCacheId($id, $group);
+		$cache_id = $this->_getCacheId($id, $group);
 		$cache_content = xcache_get($cache_id);
 
 		if ($cache_content === null)
@@ -45,43 +45,6 @@ class JCacheStorageXcache extends JCacheStorage
 		}
 
 		return $cache_content;
-	}
-
-	/**
-	 * Test to see if the storage handler is available.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		if (extension_loaded('xcache'))
-		{
-			// XCache Admin must be disabled for Joomla to use XCache
-			$xcache_admin_enable_auth = ini_get('xcache.admin.enable_auth');
-
-			// Some extensions ini variables are reported as strings
-			if ($xcache_admin_enable_auth == 'Off')
-			{
-				return true;
-			}
-
-			// We require a string with contents 0, not a null value because it is not set since that then defaults to On/True
-			if ($xcache_admin_enable_auth === '0')
-			{
-				return true;
-			}
-
-			// In some enviorments empty is equivalent to Off; See JC: #34044 && Github: #4083
-			if ($xcache_admin_enable_auth === '')
-			{
-				return true;
-			}
-		}
-
-		// If the settings are not correct, give up
-		return false;
 	}
 
 	/**
@@ -135,9 +98,9 @@ class JCacheStorageXcache extends JCacheStorage
 	/**
 	 * Store the data to cache by ID and group
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
-	 * @param   string $data  The data to store in cache
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
+	 * @param   string  $data   The data to store in cache
 	 *
 	 * @return  boolean
 	 *
@@ -157,8 +120,8 @@ class JCacheStorageXcache extends JCacheStorage
 	/**
 	 * Remove a cached data entry by ID and group
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
 	 *
 	 * @return  boolean
 	 *
@@ -188,8 +151,8 @@ class JCacheStorageXcache extends JCacheStorage
 	 * group mode    : cleans all cache in the group
 	 * notgroup mode : cleans all cache not in the group
 	 *
-	 * @param   string $group The cache data group
-	 * @param   string $mode  The mode for cleaning cache [group|notgroup]
+	 * @param   string  $group  The cache data group
+	 * @param   string  $mode   The mode for cleaning cache [group|notgroup]
 	 *
 	 * @return  boolean
 	 *
@@ -216,5 +179,42 @@ class JCacheStorageXcache extends JCacheStorage
 		}
 
 		return true;
+	}
+
+	/**
+	 * Test to see if the storage handler is available.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		if (extension_loaded('xcache'))
+		{
+			// XCache Admin must be disabled for Joomla to use XCache
+			$xcache_admin_enable_auth = ini_get('xcache.admin.enable_auth');
+
+			// Some extensions ini variables are reported as strings
+			if ($xcache_admin_enable_auth == 'Off')
+			{
+				return true;
+			}
+
+			// We require a string with contents 0, not a null value because it is not set since that then defaults to On/True
+			if ($xcache_admin_enable_auth === '0')
+			{
+				return true;
+			}
+
+			// In some enviorments empty is equivalent to Off; See JC: #34044 && Github: #4083
+			if ($xcache_admin_enable_auth === '')
+			{
+				return true;
+			}
+		}
+
+		// If the settings are not correct, give up
+		return false;
 	}
 }

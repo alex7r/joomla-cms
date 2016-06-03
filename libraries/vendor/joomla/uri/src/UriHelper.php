@@ -20,7 +20,7 @@ class UriHelper
 	/**
 	 * Does a UTF-8 safe version of PHP parse_url function
 	 *
-	 * @param   string $url URL to parse
+	 * @param   string  $url  URL to parse
 	 *
 	 * @return  mixed  Associative array or false if badly formed URL.
 	 *
@@ -32,7 +32,7 @@ class UriHelper
 		$result = false;
 
 		// Build arrays of values we need to decode before parsing
-		$entities     = array('%21', '%2A', '%27', '%28', '%29', '%3B', '%3A', '%40', '%26', '%3D', '%24', '%2C', '%2F', '%3F', '%23', '%5B', '%5D');
+		$entities = array('%21', '%2A', '%27', '%28', '%29', '%3B', '%3A', '%40', '%26', '%3D', '%24', '%2C', '%2F', '%3F', '%23', '%5B', '%5D');
 		$replacements = array('!', '*', "'", "(", ")", ";", ":", "@", "&", "=", "$", ",", "/", "?", "#", "[", "]");
 
 		// Create encoded URL with special URL characters decoded so it can be parsed

@@ -25,15 +25,31 @@ class PlgSearchTags extends JPlugin
 	protected $autoloadLanguage = true;
 
 	/**
+	 * Determine areas searchable by this plugin.
+	 *
+	 * @return  array  An array of search areas.
+	 *
+	 * @since   3.3
+	 */
+	public function onContentSearchAreas()
+	{
+		static $areas = array(
+			'tags' => 'PLG_SEARCH_TAGS_TAGS'
+		);
+
+		return $areas;
+	}
+
+	/**
 	 * Search content (tags).
 	 *
 	 * The SQL must return the following fields that are used in a common display
 	 * routine: href, title, section, created, text, browsernav.
 	 *
-	 * @param   string $text     Target search string.
-	 * @param   string $phrase   Matching option (possible values: exact|any|all).  Default is "any".
-	 * @param   string $ordering Ordering option (possible values: newest|oldest|popular|alpha|category).  Default is "newest".
-	 * @param   string $areas    An array if the search is to be restricted to areas or null to search all areas.
+	 * @param   string  $text      Target search string.
+	 * @param   string  $phrase    Matching option (possible values: exact|any|all).  Default is "any".
+	 * @param   string  $ordering  Ordering option (possible values: newest|oldest|popular|alpha|category).  Default is "newest".
+	 * @param   string  $areas     An array if the search is to be restricted to areas or null to search all areas.
 	 *
 	 * @return  array  Search results.
 	 *
@@ -91,10 +107,10 @@ class PlgSearchTags extends JPlugin
 			. ', a.path, a.parent_id, a.level, a.lft, a.rgt'
 			. ', a.language, a.created_time AS created, a.description');
 
-		$case_when_item_alias = ' CASE WHEN ';
+		$case_when_item_alias  = ' CASE WHEN ';
 		$case_when_item_alias .= $query->charLength('a.alias', '!=', '0');
 		$case_when_item_alias .= ' THEN ';
-		$a_id = $query->castAsChar('a.id');
+		$a_id                  = $query->castAsChar('a.id');
 		$case_when_item_alias .= $query->concatenate(array($a_id, 'a.alias'), ':');
 		$case_when_item_alias .= ' ELSE ';
 		$case_when_item_alias .= $a_id . ' END as slug';
@@ -137,9 +153,9 @@ class PlgSearchTags extends JPlugin
 
 			foreach ($rows as $key => $row)
 			{
-				$rows[$key]->href = TagsHelperRoute::getTagRoute($row->id);
-				$rows[$key]->text = ($row->description != "" ? $row->description : $row->title);
-				$rows[$key]->text .= $row->note;
+				$rows[$key]->href       = TagsHelperRoute::getTagRoute($row->id);
+				$rows[$key]->text       = ($row->description != "" ? $row->description : $row->title);
+				$rows[$key]->text      .= $row->note;
 				$rows[$key]->section    = $section;
 				$rows[$key]->created    = $row->created;
 				$rows[$key]->browsernav = 0;
@@ -168,7 +184,7 @@ class PlgSearchTags extends JPlugin
 					{
 						// For 3rd party extensions we need to load the component strings from its sys.ini file
 						$parts = explode('.', $item->type_alias);
-						$comp  = array_shift($parts);
+						$comp = array_shift($parts);
 						$lang->load($comp, JPATH_SITE, null, false, true)
 						|| $lang->load($comp, JPATH_SITE . '/components/' . $comp, null, false, true);
 
@@ -199,21 +215,5 @@ class PlgSearchTags extends JPlugin
 
 			return $final_items;
 		}
-	}
-
-	/**
-	 * Determine areas searchable by this plugin.
-	 *
-	 * @return  array  An array of search areas.
-	 *
-	 * @since   3.3
-	 */
-	public function onContentSearchAreas()
-	{
-		static $areas = array(
-			'tags' => 'PLG_SEARCH_TAGS_TAGS'
-		);
-
-		return $areas;
 	}
 }

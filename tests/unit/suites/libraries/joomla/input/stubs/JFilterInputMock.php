@@ -19,7 +19,7 @@ class JFilterInputMock
 	/**
 	 * Test...
 	 *
-	 * @param   mixed $input @todo
+	 * @param   mixed  $input  @todo
 	 *
 	 * @return void
 	 */

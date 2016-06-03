@@ -19,7 +19,7 @@ class CategoriesModelCategories extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JControllerLegacy
 	 * @since   1.6
@@ -51,72 +51,12 @@ class CategoriesModelCategories extends JModelList
 	}
 
 	/**
-	 * Method to get an array of data items.
-	 *
-	 * @return  mixed  An array of data items on success, false on failure.
-	 *
-	 * @since   12.2
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-
-		if ($items != false)
-		{
-			$extension = $this->getState('filter.extension');
-
-			$this->countItems($items, $extension);
-		}
-
-		return $items;
-	}
-
-	/**
-	 * Method to load the countItems method from the extensions
-	 *
-	 * @param   stdClass[] &$items    The category items
-	 * @param   string     $extension The category extension
-	 *
-	 * @return  void
-	 *
-	 * @since   3.5
-	 */
-	public function countItems(&$items, $extension)
-	{
-		$parts     = explode('.', $extension);
-		$component = $parts[0];
-		$section   = null;
-
-		if (count($parts) > 1)
-		{
-			$section = $parts[1];
-		}
-
-		// Try to find the component helper.
-		$eName = str_replace('com_', '', $component);
-		$file  = JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component . '/helpers/' . $eName . '.php');
-
-		if (file_exists($file))
-		{
-			require_once $file;
-
-			$prefix = ucfirst(str_replace('com_', '', $component));
-			$cName  = $prefix . 'Helper';
-
-			if (class_exists($cName) && is_callable(array($cName, 'countItems')))
-			{
-				call_user_func(array($cName, 'countItems'), $items, $section);
-			}
-		}
-	}
-
-	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -175,7 +115,7 @@ class CategoriesModelCategories extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id A prefix for the store id.
+	 * @param   string  $id  A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -205,9 +145,9 @@ class CategoriesModelCategories extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = JFactory::getUser();
+		$user = JFactory::getUser();
 
 		// Select the required fields from the table.
 		$query->select(
@@ -322,7 +262,7 @@ class CategoriesModelCategories extends JModelList
 
 		// Add the list ordering clause
 		$listOrdering = $this->getState('list.ordering', 'a.lft');
-		$listDirn     = $db->escape($this->getState('list.direction', 'ASC'));
+		$listDirn = $db->escape($this->getState('list.direction', 'ASC'));
 
 		if ($listOrdering == 'a.access')
 		{
@@ -354,7 +294,7 @@ class CategoriesModelCategories extends JModelList
 				uc.name, 
 				ag.title, 
 				ua.name'
-		);
+			);
 
 		return $query;
 	}
@@ -377,10 +317,10 @@ class CategoriesModelCategories extends JModelList
 
 		$extension = $this->getState('filter.extension');
 
-		$assoc     = JLanguageAssociations::isEnabled();
+		$assoc = JLanguageAssociations::isEnabled();
 		$extension = explode('.', $extension);
 		$component = array_shift($extension);
-		$cname     = str_replace('com_', '', $component);
+		$cname = str_replace('com_', '', $component);
 
 		if (!$assoc || !$component || !$cname)
 		{
@@ -395,5 +335,65 @@ class CategoriesModelCategories extends JModelList
 		}
 
 		return $assoc;
+	}
+
+	/**
+	 * Method to get an array of data items.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 *
+	 * @since   12.2
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+
+		if ($items != false)
+		{
+			$extension = $this->getState('filter.extension');
+
+			$this->countItems($items, $extension);
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Method to load the countItems method from the extensions
+	 * 
+	 * @param   stdClass[]  &$items     The category items
+	 * @param   string      $extension  The category extension
+	 *
+	 * @return  void
+	 *
+	 * @since   3.5
+	 */
+	public function countItems(&$items, $extension)
+	{
+		$parts = explode('.', $extension);
+		$component = $parts[0];
+		$section = null;
+
+		if (count($parts) > 1)
+		{
+			$section = $parts[1];
+		}
+
+		// Try to find the component helper.
+		$eName = str_replace('com_', '', $component);
+		$file = JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component . '/helpers/' . $eName . '.php');
+
+		if (file_exists($file))
+		{
+			require_once $file;
+
+			$prefix = ucfirst(str_replace('com_', '', $component));
+			$cName = $prefix . 'Helper';
+
+			if (class_exists($cName) && is_callable(array($cName, 'countItems')))
+			{
+				call_user_func(array($cName, 'countItems'), $items, $section);
+			}
+		}
 	}
 }

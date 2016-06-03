@@ -19,7 +19,7 @@ class CategoriesHelper
 	/**
 	 * Configure the Submenu links.
 	 *
-	 * @param   string $extension The extension being used for the categories.
+	 * @param   string  $extension  The extension being used for the categories.
 	 *
 	 * @return  void
 	 *
@@ -33,7 +33,7 @@ class CategoriesHelper
 			return;
 		}
 
-		$parts     = explode('.', $extension);
+		$parts = explode('.', $extension);
 		$component = $parts[0];
 
 		if (count($parts) > 1)
@@ -43,14 +43,14 @@ class CategoriesHelper
 
 		// Try to find the component helper.
 		$eName = str_replace('com_', '', $component);
-		$file  = JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component . '/helpers/' . $eName . '.php');
+		$file = JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component . '/helpers/' . $eName . '.php');
 
 		if (file_exists($file))
 		{
 			require_once $file;
 
 			$prefix = ucfirst(str_replace('com_', '', $component));
-			$cName  = $prefix . 'Helper';
+			$cName = $prefix . 'Helper';
 
 			if (class_exists($cName))
 			{
@@ -72,12 +72,12 @@ class CategoriesHelper
 	/**
 	 * Gets a list of the actions that can be performed.
 	 *
-	 * @param   string  $extension  The extension.
-	 * @param   integer $categoryId The category ID.
+	 * @param   string   $extension   The extension.
+	 * @param   integer  $categoryId  The category ID.
 	 *
 	 * @return  JObject
 	 *
-	 * @since       1.6
+	 * @since   1.6
 	 * @deprecated  3.2  Use JHelperContent::getActions() instead
 	 */
 	public static function getActions($extension, $categoryId = 0)
@@ -92,15 +92,15 @@ class CategoriesHelper
 	/**
 	 * Gets a list of associations for a given item.
 	 *
-	 * @param   integer $pk        Content item key.
-	 * @param   string  $extension Optional extension name.
+	 * @param   integer  $pk         Content item key.
+	 * @param   string   $extension  Optional extension name.
 	 *
 	 * @return  array of associations.
 	 */
 	public static function getAssociations($pk, $extension = 'com_content')
 	{
 		$langAssociations = JLanguageAssociations::getAssociations($extension, '#__categories', 'com_categories.item', $pk, 'id', 'alias', '');
-		$associations     = array();
+		$associations = array();
 
 		foreach ($langAssociations as $langAssociation)
 		{
@@ -113,8 +113,8 @@ class CategoriesHelper
 	/**
 	 * Check if Category ID exists otherwise assign to ROOT category.
 	 *
-	 * @param   mixed  $catid     Name or ID of category.
-	 * @param   string $extension Extension that triggers this function
+	 * @param   mixed   $catid      Name or ID of category.
+	 * @param   string  $extension  Extension that triggers this function
 	 *
 	 * @return int $catid  Category ID.
 	 */
@@ -124,8 +124,8 @@ class CategoriesHelper
 
 		$categoryTable = JTable::getInstance('Category');
 
-		$data              = array();
-		$data['id']        = $catid;
+		$data = array();
+		$data['id'] = $catid;
 		$data['extension'] = $extension;
 
 		if (!$categoryTable->load($data))
@@ -139,7 +139,7 @@ class CategoriesHelper
 	/**
 	 * Create new Category from within item view.
 	 *
-	 * @param   array $data Array of data for new category.
+	 * @param   array  $data  Array of data for new category.
 	 *
 	 * @return  integer.
 	 */

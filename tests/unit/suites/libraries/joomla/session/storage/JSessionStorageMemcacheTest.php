@@ -21,6 +21,36 @@ class JSessionStorageMemcacheTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		// Skip these tests if Memcache isn't available.
+		if (!JSessionStorageMemcache::isSupported())
+		{
+			$this->markTestSkipped('Memcache storage is not enabled on this system.');
+		}
+
+		$this->object = JSessionStorage::getInstance('Memcache');
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+
+	}
+
+	/**
 	 * Test...
 	 *
 	 * @todo Implement testOpen().
@@ -109,36 +139,6 @@ class JSessionStorageMemcacheTest extends PHPUnit_Framework_TestCase
 	{
 		// Remove the following lines when you implement this test.
 		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		// Skip these tests if Memcache isn't available.
-		if (!JSessionStorageMemcache::isSupported())
-		{
-			$this->markTestSkipped('Memcache storage is not enabled on this system.');
-		}
-
-		$this->object = JSessionStorage::getInstance('Memcache');
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-
 	}
 
 }

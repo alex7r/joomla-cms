@@ -54,6 +54,25 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackageIssues($this->options, $this->client);
+	}
+
+	/**
 	 * Tests the create method
 	 *
 	 * @return void
@@ -63,12 +82,12 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 201;
 		$this->response->body = $this->sampleString;
 
-		$issue            = new stdClass;
-		$issue->title     = 'My issue';
-		$issue->assignee  = 'JoeUser';
+		$issue = new stdClass;
+		$issue->title = 'My issue';
+		$issue->assignee = 'JoeUser';
 		$issue->milestone = '11.5';
-		$issue->labels    = array();
-		$issue->body      = 'These are my changes - please review them';
+		$issue->labels = array();
+		$issue->body = 'These are my changes - please review them';
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -93,12 +112,12 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 501;
 		$this->response->body = $this->errorString;
 
-		$issue            = new stdClass;
-		$issue->title     = 'My issue';
-		$issue->assignee  = 'JoeUser';
+		$issue = new stdClass;
+		$issue->title = 'My issue';
+		$issue->assignee = 'JoeUser';
 		$issue->milestone = '11.5';
-		$issue->labels    = array();
-		$issue->body      = 'These are my changes - please review them';
+		$issue->labels = array();
+		$issue->body = 'These are my changes - please review them';
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -118,7 +137,7 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 201;
 		$this->response->body = $this->sampleString;
 
-		$issue       = new stdClass;
+		$issue = new stdClass;
 		$issue->body = 'My Insightful Comment';
 
 		$this->client->expects($this->once())
@@ -144,7 +163,7 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 501;
 		$this->response->body = $this->errorString;
 
-		$issue       = new stdClass;
+		$issue = new stdClass;
 		$issue->body = 'My Insightful Comment';
 
 		$this->client->expects($this->once())
@@ -165,8 +184,8 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 201;
 		$this->response->body = $this->sampleString;
 
-		$issue        = new stdClass;
-		$issue->name  = 'My Insightful Label';
+		$issue = new stdClass;
+		$issue->name = 'My Insightful Label';
 		$issue->color = 'My Insightful Color';
 
 		$this->client->expects($this->once())
@@ -192,8 +211,8 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 501;
 		$this->response->body = $this->errorString;
 
-		$issue        = new stdClass;
-		$issue->name  = 'My Insightful Label';
+		$issue = new stdClass;
+		$issue->name = 'My Insightful Label';
 		$issue->color = 'My Insightful Color';
 
 		$this->client->expects($this->once())
@@ -290,13 +309,13 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 200;
 		$this->response->body = $this->sampleString;
 
-		$issue            = new stdClass;
-		$issue->title     = 'My issue';
-		$issue->body      = 'These are my changes - please review them';
-		$issue->state     = 'Closed';
-		$issue->assignee  = 'JoeAssignee';
+		$issue = new stdClass;
+		$issue->title = 'My issue';
+		$issue->body = 'These are my changes - please review them';
+		$issue->state = 'Closed';
+		$issue->assignee = 'JoeAssignee';
 		$issue->milestone = '12.2';
-		$issue->labels    = array('Fixed');
+		$issue->labels = array('Fixed');
 
 		$this->client->expects($this->once())
 			->method('patch')
@@ -323,9 +342,9 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 500;
 		$this->response->body = $this->errorString;
 
-		$issue        = new stdClass;
+		$issue = new stdClass;
 		$issue->title = 'My issue';
-		$issue->body  = 'These are my changes - please review them';
+		$issue->body = 'These are my changes - please review them';
 		$issue->state = 'Closed';
 
 		$this->client->expects($this->once())
@@ -346,7 +365,7 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 200;
 		$this->response->body = $this->sampleString;
 
-		$issue       = new stdClass;
+		$issue = new stdClass;
 		$issue->body = 'This comment is now even more insightful';
 
 		$this->client->expects($this->once())
@@ -372,7 +391,7 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 500;
 		$this->response->body = $this->errorString;
 
-		$issue       = new stdClass;
+		$issue = new stdClass;
 		$issue->body = 'This comment is now even more insightful';
 
 		$this->client->expects($this->once())
@@ -393,8 +412,8 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 200;
 		$this->response->body = $this->sampleString;
 
-		$issue        = new stdClass;
-		$issue->name  = 'This label is now even more insightful';
+		$issue = new stdClass;
+		$issue->name = 'This label is now even more insightful';
 		$issue->color = 'This color is now even more insightful';
 
 		$this->client->expects($this->once())
@@ -420,8 +439,8 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 500;
 		$this->response->body = $this->errorString;
 
-		$issue        = new stdClass;
-		$issue->name  = 'This label is now even more insightful';
+		$issue = new stdClass;
+		$issue->name = 'This label is now even more insightful';
 		$issue->color = 'This color is now even more insightful';
 
 		$this->client->expects($this->once())
@@ -754,24 +773,5 @@ class JGithubIssuesTest extends PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->object->getListByRepository('joomla', 'joomla-platform');
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options  = new JRegistry;
-		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackageIssues($this->options, $this->client);
 	}
 }

@@ -62,12 +62,12 @@ class JJsonResponse
 	/**
 	 * Constructor
 	 *
-	 * @param   mixed   $response The Response data.
-	 * @param   string  $message  The main response message.
-	 * @param   boolean $error    True, if the success flag shall be set to false, defaults to false.
+	 * @param   mixed    $response  The Response data.
+	 * @param   string   $message   The main response message.
+	 * @param   boolean  $error     True, if the success flag shall be set to false, defaults to false.
 	 *
-	 * @since         2.5
-	 * @deprecated    4.0     Use JResponseJson instead.
+	 * @since		2.5
+	 * @deprecated	4.0	 Use JResponseJson instead.
 	 */
 	public function __construct($response = null, $message = null, $error = false)
 	{

@@ -21,6 +21,15 @@ class FinderIndexerStemmerPorter_EnTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		$this->object = new FinderIndexerStemmerPorter_En;
+	}
+
+	/**
 	 * Tests the stem method of the porter_en stemmer
 	 *
 	 * @return  void
@@ -106,14 +115,5 @@ class FinderIndexerStemmerPorter_EnTest extends PHPUnit_Framework_TestCase
 			'party',
 			$this->object->stem('party', 'fr')
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		$this->object = new FinderIndexerStemmerPorter_En;
 	}
 }

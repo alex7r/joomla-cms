@@ -18,13 +18,6 @@ defined('JPATH_PLATFORM') or die;
 class JTableNested extends JTable
 {
 	/**
-	 * Cache for the root ID
-	 *
-	 * @var    integer
-	 * @since  3.3
-	 */
-	protected static $root_id = 0;
-	/**
 	 * Object property holding the primary key of the parent node.  Provides
 	 * adjacency list data for nodes.
 	 *
@@ -32,6 +25,7 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	public $parent_id;
+
 	/**
 	 * Object property holding the depth level of the node in the tree.
 	 *
@@ -39,6 +33,7 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	public $level;
+
 	/**
 	 * Object property holding the left value of the node for managing its
 	 * placement in the nested sets tree.
@@ -47,6 +42,7 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	public $lft;
+
 	/**
 	 * Object property holding the right value of the node for managing its
 	 * placement in the nested sets tree.
@@ -55,6 +51,7 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	public $rgt;
+
 	/**
 	 * Object property holding the alias of this node used to constuct the
 	 * full text path, forward-slash delimited.
@@ -63,6 +60,7 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	public $alias;
+
 	/**
 	 * Object property to hold the location type to use when storing the row.
 	 * Possible values are: ['before', 'after', 'first-child', 'last-child'].
@@ -71,6 +69,7 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	protected $_location;
+
 	/**
 	 * Object property to hold the primary key of the location reference node to
 	 * use when storing the row.  A combination of location type and reference
@@ -80,6 +79,7 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	protected $_location_id;
+
 	/**
 	 * An array to cache values in recursive processes.
 	 *
@@ -87,6 +87,7 @@ class JTableNested extends JTable
 	 * @since  11.1
 	 */
 	protected $_cache = array();
+
 	/**
 	 * Debug level
 	 *
@@ -96,9 +97,17 @@ class JTableNested extends JTable
 	protected $_debug = 0;
 
 	/**
+	 * Cache for the root ID
+	 *
+	 * @var    integer
+	 * @since  3.3
+	 */
+	protected static $root_id = 0;
+
+	/**
 	 * Sets the debug level on or off
 	 *
-	 * @param   integer $level 0 = off, 1 = on
+	 * @param   integer  $level  0 = off, 1 = on
 	 *
 	 * @return  void
 	 *
@@ -112,8 +121,8 @@ class JTableNested extends JTable
 	/**
 	 * Method to get an array of nodes from a given node to its root.
 	 *
-	 * @param   integer $pk         Primary key of the node for which to get the path.
-	 * @param   boolean $diagnostic Only select diagnostic data for the nested sets.
+	 * @param   integer  $pk          Primary key of the node for which to get the path.
+	 * @param   boolean  $diagnostic  Only select diagnostic data for the nested sets.
 	 *
 	 * @return  mixed    An array of node objects including the start node.
 	 *
@@ -122,12 +131,12 @@ class JTableNested extends JTable
 	 */
 	public function getPath($pk = null, $diagnostic = false)
 	{
-		$k  = $this->_tbl_key;
+		$k = $this->_tbl_key;
 		$pk = (is_null($pk)) ? $this->$k : $pk;
 
 		// Get the path from the node to the root.
 		$select = ($diagnostic) ? 'p.' . $k . ', p.parent_id, p.level, p.lft, p.rgt' : 'p.*';
-		$query  = $this->_db->getQuery(true)
+		$query = $this->_db->getQuery(true)
 			->select($select)
 			->from($this->_tbl . ' AS n, ' . $this->_tbl . ' AS p')
 			->where('n.lft BETWEEN p.lft AND p.rgt')
@@ -142,8 +151,8 @@ class JTableNested extends JTable
 	/**
 	 * Method to get a node and all its child nodes.
 	 *
-	 * @param   integer $pk         Primary key of the node for which to get the tree.
-	 * @param   boolean $diagnostic Only select diagnostic data for the nested sets.
+	 * @param   integer  $pk          Primary key of the node for which to get the tree.
+	 * @param   boolean  $diagnostic  Only select diagnostic data for the nested sets.
 	 *
 	 * @return  mixed    Boolean false on failure or array of node objects on success.
 	 *
@@ -152,12 +161,12 @@ class JTableNested extends JTable
 	 */
 	public function getTree($pk = null, $diagnostic = false)
 	{
-		$k  = $this->_tbl_key;
+		$k = $this->_tbl_key;
 		$pk = (is_null($pk)) ? $this->$k : $pk;
 
 		// Get the node and children as a tree.
 		$select = ($diagnostic) ? 'n.' . $k . ', n.parent_id, n.level, n.lft, n.rgt' : 'n.*';
-		$query  = $this->_db->getQuery(true)
+		$query = $this->_db->getQuery(true)
 			->select($select)
 			->from($this->_tbl . ' AS n, ' . $this->_tbl . ' AS p')
 			->where('n.lft BETWEEN p.lft AND p.rgt')
@@ -170,7 +179,7 @@ class JTableNested extends JTable
 	/**
 	 * Method to determine if a node is a leaf node in the tree (has no children).
 	 *
-	 * @param   integer $pk Primary key of the node to check.
+	 * @param   integer  $pk  Primary key of the node to check.
 	 *
 	 * @return  boolean  True if a leaf node, false if not or null if the node does not exist.
 	 *
@@ -180,8 +189,8 @@ class JTableNested extends JTable
 	 */
 	public function isLeaf($pk = null)
 	{
-		$k    = $this->_tbl_key;
-		$pk   = (is_null($pk)) ? $this->$k : $pk;
+		$k = $this->_tbl_key;
+		$pk = (is_null($pk)) ? $this->$k : $pk;
 		$node = $this->_getNode($pk);
 
 		// Get the node by primary key.
@@ -196,69 +205,38 @@ class JTableNested extends JTable
 	}
 
 	/**
-	 * Method to get nested set properties for a node in the tree.
+	 * Method to set the location of a node in the tree object.  This method does not
+	 * save the new location to the database, but will set it in the object so
+	 * that when the node is stored it will be stored in the new location.
 	 *
-	 * @param   integer $id    Value to look up the node by.
-	 * @param   string  $key   An optional key to look up the node by (parent | left | right).
-	 *                         If omitted, the primary key of the table is used.
+	 * @param   integer  $referenceId  The primary key of the node to reference new location by.
+	 * @param   string   $position     Location type string. ['before', 'after', 'first-child', 'last-child']
 	 *
-	 * @return  mixed    Boolean false on failure or node object on success.
+	 * @return  void
 	 *
+	 * @note    Since 12.1 this method returns void and throws an InvalidArgumentException when an invalid position is passed.
 	 * @since   11.1
-	 * @throws  RuntimeException on database error.
+	 * @throws  InvalidArgumentException
 	 */
-	protected function _getNode($id, $key = null)
+	public function setLocation($referenceId, $position = 'after')
 	{
-		// Determine which key to get the node base on.
-		switch ($key)
+		// Make sure the location is valid.
+		if (($position != 'before') && ($position != 'after') && ($position != 'first-child') && ($position != 'last-child'))
 		{
-			case 'parent':
-				$k = 'parent_id';
-				break;
-
-			case 'left':
-				$k = 'lft';
-				break;
-
-			case 'right':
-				$k = 'rgt';
-				break;
-
-			default:
-				$k = $this->_tbl_key;
-				break;
+			throw new InvalidArgumentException(sprintf('%s::setLocation(%d, *%s*)', get_class($this), $referenceId, $position));
 		}
 
-		// Get the node data.
-		$query = $this->_db->getQuery(true)
-			->select($this->_tbl_key . ', parent_id, level, lft, rgt')
-			->from($this->_tbl)
-			->where($k . ' = ' . (int) $id);
-
-		$row = $this->_db->setQuery($query, 0, 1)->loadObject();
-
-		// Check for no $row returned
-		if (empty($row))
-		{
-			$e = new UnexpectedValueException(sprintf('%s::_getNode(%d, %s) failed.', get_class($this), $id, $key));
-			$this->setError($e);
-
-			return false;
-		}
-
-		// Do some simple calculations.
-		$row->numChildren = (int) ($row->rgt - $row->lft - 1) / 2;
-		$row->width       = (int) $row->rgt - $row->lft + 1;
-
-		return $row;
+		// Set the location properties.
+		$this->_location = $position;
+		$this->_location_id = $referenceId;
 	}
 
 	/**
 	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
 	 * Negative numbers move the row up in the sequence and positive numbers move it down.
 	 *
-	 * @param   integer $delta   The direction and magnitude to move the row in the ordering sequence.
-	 * @param   string  $where   WHERE clause to use for limiting the selection of rows to compact the
+	 * @param   integer  $delta  The direction and magnitude to move the row in the ordering sequence.
+	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the
 	 *                           ordering values.
 	 *
 	 * @return  mixed    Boolean true on success.
@@ -268,7 +246,7 @@ class JTableNested extends JTable
 	 */
 	public function move($delta, $where = '')
 	{
-		$k  = $this->_tbl_key;
+		$k = $this->_tbl_key;
 		$pk = $this->$k;
 
 		$query = $this->_db->getQuery(true)
@@ -310,9 +288,9 @@ class JTableNested extends JTable
 	/**
 	 * Method to move a node and its children to a new location in the tree.
 	 *
-	 * @param   integer $referenceId The primary key of the node to reference new location by.
-	 * @param   string  $position    Location type string. ['before', 'after', 'first-child', 'last-child']
-	 * @param   integer $pk          The primary key of the node to move.
+	 * @param   integer  $referenceId  The primary key of the node to reference new location by.
+	 * @param   string   $position     Location type string. ['before', 'after', 'first-child', 'last-child']
+	 * @param   integer  $pk           The primary key of the node to move.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -329,7 +307,7 @@ class JTableNested extends JTable
 		}
 		// @codeCoverageIgnoreEnd
 
-		$k  = $this->_tbl_key;
+		$k = $this->_tbl_key;
 		$pk = (is_null($pk)) ? $this->$k : $pk;
 
 		// Get the node by id.
@@ -479,7 +457,7 @@ class JTableNested extends JTable
 		 * Calculate the offset between where the node used to be in the tree and
 		 * where it needs to be in the tree for left ids (also works for right ids).
 		 */
-		$offset      = $repositionData->new_lft - $node->lft;
+		$offset = $repositionData->new_lft - $node->lft;
 		$levelOffset = $repositionData->new_level - $node->level;
 
 		// Move the nodes back into position in the tree using the calculated offsets.
@@ -507,7 +485,7 @@ class JTableNested extends JTable
 				$query->set('title = ' . $this->_db->quote($this->title));
 			}
 
-			if (array_key_exists('alias', $fields) && $this->alias !== null)
+			if (array_key_exists('alias', $fields)  && $this->alias !== null)
 			{
 				$query->set('alias = ' . $this->_db->quote($this->alias));
 			}
@@ -524,188 +502,18 @@ class JTableNested extends JTable
 
 		// Set the object values.
 		$this->parent_id = $repositionData->new_parent_id;
-		$this->level     = $repositionData->new_level;
-		$this->lft       = $repositionData->new_lft;
-		$this->rgt       = $repositionData->new_rgt;
+		$this->level = $repositionData->new_level;
+		$this->lft = $repositionData->new_lft;
+		$this->rgt = $repositionData->new_rgt;
 
 		return true;
 	}
 
 	/**
-	 * Method to create a log table in the buffer optionally showing the query and/or data.
-	 *
-	 * @param   boolean $showData  True to show data
-	 * @param   boolean $showQuery True to show query
-	 *
-	 * @return  void
-	 *
-	 * @codeCoverageIgnore
-	 * @since   11.1
-	 */
-	protected function _logtable($showData = true, $showQuery = true)
-	{
-		$sep    = "\n" . str_pad('', 40, '-');
-		$buffer = '';
-
-		if ($showQuery)
-		{
-			$buffer .= "\n" . $this->_db->getQuery() . $sep;
-		}
-
-		if ($showData)
-		{
-			$query = $this->_db->getQuery(true)
-				->select($this->_tbl_key . ', parent_id, lft, rgt, level')
-				->from($this->_tbl)
-				->order($this->_tbl_key);
-			$this->_db->setQuery($query);
-
-			$rows = $this->_db->loadRowList();
-			$buffer .= sprintf("\n| %4s | %4s | %4s | %4s |", $this->_tbl_key, 'par', 'lft', 'rgt');
-			$buffer .= $sep;
-
-			foreach ($rows as $row)
-			{
-				$buffer .= sprintf("\n| %4s | %4s | %4s | %4s |", $row[0], $row[1], $row[2], $row[3]);
-			}
-
-			$buffer .= $sep;
-		}
-
-		echo $buffer;
-	}
-
-	/**
-	 * Runs a query and unlocks the database on an error.
-	 *
-	 * @param   mixed  $query        A string or JDatabaseQuery object.
-	 * @param   string $errorMessage Unused.
-	 *
-	 * @return  boolean  void
-	 *
-	 * @note    Since 12.1 this method returns void and will rethrow the database exception.
-	 * @since   11.1
-	 * @throws  Exception on database error.
-	 */
-	protected function _runQuery($query, $errorMessage)
-	{
-		// Prepare to catch an exception.
-		try
-		{
-			$this->_db->setQuery($query)->execute();
-
-			// @codeCoverageIgnoreStart
-			if ($this->_debug)
-			{
-				$this->_logtable();
-			}
-			// @codeCoverageIgnoreEnd
-		}
-		catch (Exception $e)
-		{
-			// Unlock the tables and rethrow.
-			$this->_unlock();
-
-			throw $e;
-		}
-	}
-
-	/**
-	 * Method to get various data necessary to make room in the tree at a location
-	 * for a node and its children.  The returned data object includes conditions
-	 * for SQL WHERE clauses for updating left and right id values to make room for
-	 * the node as well as the new left and right ids for the node.
-	 *
-	 * @param   object  $referenceNode   A node object with at least a 'lft' and 'rgt' with
-	 *                                   which to make room in the tree around for a new node.
-	 * @param   integer $nodeWidth       The width of the node for which to make room in the tree.
-	 * @param   string  $position        The position relative to the reference node where the room
-	 *                                   should be made.
-	 *
-	 * @return  mixed    Boolean false on failure or data object on success.
-	 *
-	 * @since   11.1
-	 */
-	protected function _getTreeRepositionData($referenceNode, $nodeWidth, $position = 'before')
-	{
-		// Make sure the reference an object with a left and right id.
-		if (!is_object($referenceNode) || !(isset($referenceNode->lft) && isset($referenceNode->rgt)))
-		{
-			return false;
-		}
-
-		// A valid node cannot have a width less than 2.
-		if ($nodeWidth < 2)
-		{
-			return false;
-		}
-
-		$k    = $this->_tbl_key;
-		$data = new stdClass;
-
-		// Run the calculations and build the data object by reference position.
-		switch ($position)
-		{
-			case 'first-child':
-				$data->left_where  = 'lft > ' . $referenceNode->lft;
-				$data->right_where = 'rgt >= ' . $referenceNode->lft;
-
-				$data->new_lft       = $referenceNode->lft + 1;
-				$data->new_rgt       = $referenceNode->lft + $nodeWidth;
-				$data->new_parent_id = $referenceNode->$k;
-				$data->new_level     = $referenceNode->level + 1;
-				break;
-
-			case 'last-child':
-				$data->left_where  = 'lft > ' . ($referenceNode->rgt);
-				$data->right_where = 'rgt >= ' . ($referenceNode->rgt);
-
-				$data->new_lft       = $referenceNode->rgt;
-				$data->new_rgt       = $referenceNode->rgt + $nodeWidth - 1;
-				$data->new_parent_id = $referenceNode->$k;
-				$data->new_level     = $referenceNode->level + 1;
-				break;
-
-			case 'before':
-				$data->left_where  = 'lft >= ' . $referenceNode->lft;
-				$data->right_where = 'rgt >= ' . $referenceNode->lft;
-
-				$data->new_lft       = $referenceNode->lft;
-				$data->new_rgt       = $referenceNode->lft + $nodeWidth - 1;
-				$data->new_parent_id = $referenceNode->parent_id;
-				$data->new_level     = $referenceNode->level;
-				break;
-
-			default:
-			case 'after':
-				$data->left_where  = 'lft > ' . $referenceNode->rgt;
-				$data->right_where = 'rgt > ' . $referenceNode->rgt;
-
-				$data->new_lft       = $referenceNode->rgt + 1;
-				$data->new_rgt       = $referenceNode->rgt + $nodeWidth;
-				$data->new_parent_id = $referenceNode->parent_id;
-				$data->new_level     = $referenceNode->level;
-				break;
-		}
-
-		// @codeCoverageIgnoreStart
-		if ($this->_debug)
-		{
-			echo "\nRepositioning Data for $position" . "\n-----------------------------------" . "\nLeft Where:    $data->left_where"
-				. "\nRight Where:   $data->right_where" . "\nNew Lft:       $data->new_lft" . "\nNew Rgt:       $data->new_rgt"
-				. "\nNew Parent ID: $data->new_parent_id" . "\nNew Level:     $data->new_level" . "\n";
-		}
-
-		// @codeCoverageIgnoreEnd
-
-		return $data;
-	}
-
-	/**
 	 * Method to delete a node and, optionally, its child nodes from the table.
 	 *
-	 * @param   integer $pk       The primary key of the node to delete.
-	 * @param   boolean $children True to delete child nodes, false to move them up a level.
+	 * @param   integer  $pk        The primary key of the node to delete.
+	 * @param   boolean  $children  True to delete child nodes, false to move them up a level.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -713,7 +521,7 @@ class JTableNested extends JTable
 	 */
 	public function delete($pk = null, $children = true)
 	{
-		$k  = $this->_tbl_key;
+		$k = $this->_tbl_key;
 		$pk = (is_null($pk)) ? $this->$k : $pk;
 
 		// Implement JObservableInterface: Pre-processing by observers
@@ -729,7 +537,7 @@ class JTableNested extends JTable
 		// If tracking assets, remove the asset first.
 		if ($this->_trackAssets)
 		{
-			$name  = $this->_getAssetName();
+			$name = $this->_getAssetName();
 			$asset = JTable::getInstance('Asset', 'JTable', array('dbo' => $this->getDbo()));
 
 			// Lock the table for writing.
@@ -881,7 +689,7 @@ class JTableNested extends JTable
 	/**
 	 * Method to store a node in the database table.
 	 *
-	 * @param   boolean $updateNulls True to update null values as well.
+	 * @param   boolean  $updateNulls  True to update null values as well.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -984,9 +792,9 @@ class JTableNested extends JTable
 
 				// Set the object values.
 				$this->parent_id = $repositionData->new_parent_id;
-				$this->level     = $repositionData->new_level;
-				$this->lft       = $repositionData->new_lft;
-				$this->rgt       = $repositionData->new_rgt;
+				$this->level = $repositionData->new_level;
+				$this->lft = $repositionData->new_lft;
+				$this->rgt = $repositionData->new_rgt;
 			}
 			else
 			{
@@ -1070,10 +878,10 @@ class JTableNested extends JTable
 	 * allow you to set a publishing state higher than any ancestor node and will
 	 * not allow you to set a publishing state on a node with a checked out child.
 	 *
-	 * @param   mixed   $pks      An optional array of primary key values to update.  If not
+	 * @param   mixed    $pks     An optional array of primary key values to update.  If not
 	 *                            set the instance property value is used.
-	 * @param   integer $state    The publishing state. eg. [0 = unpublished, 1 = published]
-	 * @param   integer $userId   The user id of the user performing the operation.
+	 * @param   integer  $state   The publishing state. eg. [0 = unpublished, 1 = published]
+	 * @param   integer  $userId  The user id of the user performing the operation.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -1083,13 +891,13 @@ class JTableNested extends JTable
 	 */
 	public function publish($pks = null, $state = 1, $userId = 0)
 	{
-		$k     = $this->_tbl_key;
+		$k = $this->_tbl_key;
 		$query = $this->_db->getQuery(true);
 
 		// Sanitize input.
 		JArrayHelper::toInteger($pks);
 		$userId = (int) $userId;
-		$state  = (int) $state;
+		$state = (int) $state;
 
 		// If $state > 1, then we allow state changes even if an ancestor has lower state
 		// (for example, can change a child state to Archived (2) if an ancestor is Published (1)
@@ -1204,7 +1012,7 @@ class JTableNested extends JTable
 	/**
 	 * Method to move a node one position to the left in the same level.
 	 *
-	 * @param   integer $pk Primary key of the node to move.
+	 * @param   integer  $pk  Primary key of the node to move.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -1213,7 +1021,7 @@ class JTableNested extends JTable
 	 */
 	public function orderUp($pk)
 	{
-		$k  = $this->_tbl_key;
+		$k = $this->_tbl_key;
 		$pk = (is_null($pk)) ? $this->$k : $pk;
 
 		// Lock the table for writing.
@@ -1287,7 +1095,7 @@ class JTableNested extends JTable
 	/**
 	 * Method to move a node one position to the right in the same level.
 	 *
-	 * @param   integer $pk Primary key of the node to move.
+	 * @param   integer  $pk  Primary key of the node to move.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -1296,7 +1104,7 @@ class JTableNested extends JTable
 	 */
 	public function orderDown($pk)
 	{
-		$k  = $this->_tbl_key;
+		$k = $this->_tbl_key;
 		$pk = (is_null($pk)) ? $this->$k : $pk;
 
 		// Lock the table for writing.
@@ -1371,166 +1179,86 @@ class JTableNested extends JTable
 	}
 
 	/**
-	 * Method to rebuild the node's path field from the alias values of the
-	 * nodes from the current node to the root node of the tree.
+	 * Gets the ID of the root item in the tree
 	 *
-	 * @param   integer $pk Primary key of the node for which to get the path.
+	 * @return  mixed  The primary id of the root row, or false if not found and the internal error is set.
 	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @link    https://docs.joomla.org/JTableNested/rebuildPath
 	 * @since   11.1
 	 */
-	public function rebuildPath($pk = null)
+	public function getRootId()
 	{
+		if ((int) self::$root_id > 0)
+		{
+			return self::$root_id;
+		}
+
+		// Get the root item.
+		$k = $this->_tbl_key;
+
+		// Test for a unique record with parent_id = 0
+		$query = $this->_db->getQuery(true)
+			->select($k)
+			->from($this->_tbl)
+			->where('parent_id = 0');
+
+		$result = $this->_db->setQuery($query)->loadColumn();
+
+		if (count($result) == 1)
+		{
+			self::$root_id = $result[0];
+
+			return self::$root_id;
+		}
+
+		// Test for a unique record with lft = 0
+		$query->clear()
+			->select($k)
+			->from($this->_tbl)
+			->where('lft = 0');
+
+		$result = $this->_db->setQuery($query)->loadColumn();
+
+		if (count($result) == 1)
+		{
+			self::$root_id = $result[0];
+
+			return self::$root_id;
+		}
+
 		$fields = $this->getFields();
 
-		// If there is no alias or path field, just return true.
-		if (!array_key_exists('alias', $fields) || !array_key_exists('path', $fields))
+		if (array_key_exists('alias', $fields))
 		{
-			return true;
-		}
+			// Test for a unique record alias = root
+			$query->clear()
+				->select($k)
+				->from($this->_tbl)
+				->where('alias = ' . $this->_db->quote('root'));
 
-		$k  = $this->_tbl_key;
-		$pk = (is_null($pk)) ? $this->$k : $pk;
+			$result = $this->_db->setQuery($query)->loadColumn();
 
-		// Get the aliases for the path from the node to the root node.
-		$query = $this->_db->getQuery(true)
-			->select('p.alias')
-			->from($this->_tbl . ' AS n, ' . $this->_tbl . ' AS p')
-			->where('n.lft BETWEEN p.lft AND p.rgt')
-			->where('n.' . $this->_tbl_key . ' = ' . (int) $pk)
-			->order('p.lft');
-		$this->_db->setQuery($query);
-
-		$segments = $this->_db->loadColumn();
-
-		// Make sure to remove the root path if it exists in the list.
-		if ($segments[0] == 'root')
-		{
-			array_shift($segments);
-		}
-
-		// Build the path.
-		$path = trim(implode('/', $segments), ' /\\');
-
-		// Update the path field for the node.
-		$query->clear()
-			->update($this->_tbl)
-			->set('path = ' . $this->_db->quote($path))
-			->where($this->_tbl_key . ' = ' . (int) $pk);
-
-		$this->_db->setQuery($query)->execute();
-
-		// Update the current record's path to the new one:
-		$this->path = $path;
-
-		return true;
-	}
-
-	/**
-	 * Method to reset class properties to the defaults set in the class
-	 * definition. It will ignore the primary key as well as any private class
-	 * properties (except $_errors).
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2.1
-	 */
-	public function reset()
-	{
-		parent::reset();
-
-		// Reset the location properties.
-		$this->setLocation(0);
-	}
-
-	/**
-	 * Method to set the location of a node in the tree object.  This method does not
-	 * save the new location to the database, but will set it in the object so
-	 * that when the node is stored it will be stored in the new location.
-	 *
-	 * @param   integer $referenceId The primary key of the node to reference new location by.
-	 * @param   string  $position    Location type string. ['before', 'after', 'first-child', 'last-child']
-	 *
-	 * @return  void
-	 *
-	 * @note    Since 12.1 this method returns void and throws an InvalidArgumentException when an invalid position is passed.
-	 * @since   11.1
-	 * @throws  InvalidArgumentException
-	 */
-	public function setLocation($referenceId, $position = 'after')
-	{
-		// Make sure the location is valid.
-		if (($position != 'before') && ($position != 'after') && ($position != 'first-child') && ($position != 'last-child'))
-		{
-			throw new InvalidArgumentException(sprintf('%s::setLocation(%d, *%s*)', get_class($this), $referenceId, $position));
-		}
-
-		// Set the location properties.
-		$this->_location    = $position;
-		$this->_location_id = $referenceId;
-	}
-
-	/**
-	 * Method to update order of table rows
-	 *
-	 * @param   array $idArray   id numbers of rows to be reordered.
-	 * @param   array $lft_array lft values of rows to be reordered.
-	 *
-	 * @return  integer  1 + value of root rgt on success, false on failure.
-	 *
-	 * @since   11.1
-	 * @throws  Exception on database error.
-	 */
-	public function saveorder($idArray = null, $lft_array = null)
-	{
-		try
-		{
-			$query = $this->_db->getQuery(true);
-
-			// Validate arguments
-			if (is_array($idArray) && is_array($lft_array) && count($idArray) == count($lft_array))
+			if (count($result) == 1)
 			{
-				for ($i = 0, $count = count($idArray); $i < $count; $i++)
-				{
-					// Do an update to change the lft values in the table for each id
-					$query->clear()
-						->update($this->_tbl)
-						->where($this->_tbl_key . ' = ' . (int) $idArray[$i])
-						->set('lft = ' . (int) $lft_array[$i]);
+				self::$root_id = $result[0];
 
-					$this->_db->setQuery($query)->execute();
-
-					// @codeCoverageIgnoreStart
-					if ($this->_debug)
-					{
-						$this->_logtable();
-					}
-					// @codeCoverageIgnoreEnd
-				}
-
-				return $this->rebuild();
-			}
-			else
-			{
-				return false;
+				return self::$root_id;
 			}
 		}
-		catch (Exception $e)
-		{
-			$this->_unlock();
-			throw $e;
-		}
+
+		$e = new UnexpectedValueException(sprintf('%s::getRootId', get_class($this)));
+		$this->setError($e);
+		self::$root_id = false;
+
+		return false;
 	}
 
 	/**
 	 * Method to recursively rebuild the whole nested set tree.
 	 *
-	 * @param   integer $parentId The root of the tree to rebuild.
-	 * @param   integer $leftId   The left id to start with in building the tree.
-	 * @param   integer $level    The level to assign to the current nodes.
-	 * @param   string  $path     The path to the current nodes.
+	 * @param   integer  $parentId  The root of the tree to rebuild.
+	 * @param   integer  $leftId    The left id to start with in building the tree.
+	 * @param   integer  $level     The level to assign to the current nodes.
+	 * @param   string   $path      The path to the current nodes.
 	 *
 	 * @return  integer  1 + value of root rgt on success, false on failure
 	 *
@@ -1618,76 +1346,356 @@ class JTableNested extends JTable
 	}
 
 	/**
-	 * Gets the ID of the root item in the tree
+	 * Method to rebuild the node's path field from the alias values of the
+	 * nodes from the current node to the root node of the tree.
 	 *
-	 * @return  mixed  The primary id of the root row, or false if not found and the internal error is set.
+	 * @param   integer  $pk  Primary key of the node for which to get the path.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @link    https://docs.joomla.org/JTableNested/rebuildPath
+	 * @since   11.1
+	 */
+	public function rebuildPath($pk = null)
+	{
+		$fields = $this->getFields();
+
+		// If there is no alias or path field, just return true.
+		if (!array_key_exists('alias', $fields) || !array_key_exists('path', $fields))
+		{
+			return true;
+		}
+
+		$k = $this->_tbl_key;
+		$pk = (is_null($pk)) ? $this->$k : $pk;
+
+		// Get the aliases for the path from the node to the root node.
+		$query = $this->_db->getQuery(true)
+			->select('p.alias')
+			->from($this->_tbl . ' AS n, ' . $this->_tbl . ' AS p')
+			->where('n.lft BETWEEN p.lft AND p.rgt')
+			->where('n.' . $this->_tbl_key . ' = ' . (int) $pk)
+			->order('p.lft');
+		$this->_db->setQuery($query);
+
+		$segments = $this->_db->loadColumn();
+
+		// Make sure to remove the root path if it exists in the list.
+		if ($segments[0] == 'root')
+		{
+			array_shift($segments);
+		}
+
+		// Build the path.
+		$path = trim(implode('/', $segments), ' /\\');
+
+		// Update the path field for the node.
+		$query->clear()
+			->update($this->_tbl)
+			->set('path = ' . $this->_db->quote($path))
+			->where($this->_tbl_key . ' = ' . (int) $pk);
+
+		$this->_db->setQuery($query)->execute();
+
+		// Update the current record's path to the new one:
+		$this->path = $path;
+
+		return true;
+	}
+
+	/**
+	 * Method to reset class properties to the defaults set in the class
+	 * definition. It will ignore the primary key as well as any private class
+	 * properties (except $_errors).
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2.1
+	 */
+	public function reset()
+	{
+		parent::reset();
+
+		// Reset the location properties.
+		$this->setLocation(0);
+	}
+
+	/**
+	 * Method to update order of table rows
+	 *
+	 * @param   array  $idArray    id numbers of rows to be reordered.
+	 * @param   array  $lft_array  lft values of rows to be reordered.
+	 *
+	 * @return  integer  1 + value of root rgt on success, false on failure.
+	 *
+	 * @since   11.1
+	 * @throws  Exception on database error.
+	 */
+	public function saveorder($idArray = null, $lft_array = null)
+	{
+		try
+		{
+			$query = $this->_db->getQuery(true);
+
+			// Validate arguments
+			if (is_array($idArray) && is_array($lft_array) && count($idArray) == count($lft_array))
+			{
+				for ($i = 0, $count = count($idArray); $i < $count; $i++)
+				{
+					// Do an update to change the lft values in the table for each id
+					$query->clear()
+						->update($this->_tbl)
+						->where($this->_tbl_key . ' = ' . (int) $idArray[$i])
+						->set('lft = ' . (int) $lft_array[$i]);
+
+					$this->_db->setQuery($query)->execute();
+
+					// @codeCoverageIgnoreStart
+					if ($this->_debug)
+					{
+						$this->_logtable();
+					}
+					// @codeCoverageIgnoreEnd
+				}
+
+				return $this->rebuild();
+			}
+			else
+			{
+				return false;
+			}
+		}
+		catch (Exception $e)
+		{
+			$this->_unlock();
+			throw $e;
+		}
+	}
+
+	/**
+	 * Method to get nested set properties for a node in the tree.
+	 *
+	 * @param   integer  $id   Value to look up the node by.
+	 * @param   string   $key  An optional key to look up the node by (parent | left | right).
+	 *                         If omitted, the primary key of the table is used.
+	 *
+	 * @return  mixed    Boolean false on failure or node object on success.
+	 *
+	 * @since   11.1
+	 * @throws  RuntimeException on database error.
+	 */
+	protected function _getNode($id, $key = null)
+	{
+		// Determine which key to get the node base on.
+		switch ($key)
+		{
+			case 'parent':
+				$k = 'parent_id';
+				break;
+
+			case 'left':
+				$k = 'lft';
+				break;
+
+			case 'right':
+				$k = 'rgt';
+				break;
+
+			default:
+				$k = $this->_tbl_key;
+				break;
+		}
+
+		// Get the node data.
+		$query = $this->_db->getQuery(true)
+			->select($this->_tbl_key . ', parent_id, level, lft, rgt')
+			->from($this->_tbl)
+			->where($k . ' = ' . (int) $id);
+
+		$row = $this->_db->setQuery($query, 0, 1)->loadObject();
+
+		// Check for no $row returned
+		if (empty($row))
+		{
+			$e = new UnexpectedValueException(sprintf('%s::_getNode(%d, %s) failed.', get_class($this), $id, $key));
+			$this->setError($e);
+
+			return false;
+		}
+
+		// Do some simple calculations.
+		$row->numChildren = (int) ($row->rgt - $row->lft - 1) / 2;
+		$row->width = (int) $row->rgt - $row->lft + 1;
+
+		return $row;
+	}
+
+	/**
+	 * Method to get various data necessary to make room in the tree at a location
+	 * for a node and its children.  The returned data object includes conditions
+	 * for SQL WHERE clauses for updating left and right id values to make room for
+	 * the node as well as the new left and right ids for the node.
+	 *
+	 * @param   object   $referenceNode  A node object with at least a 'lft' and 'rgt' with
+	 *                                   which to make room in the tree around for a new node.
+	 * @param   integer  $nodeWidth      The width of the node for which to make room in the tree.
+	 * @param   string   $position       The position relative to the reference node where the room
+	 *                                   should be made.
+	 *
+	 * @return  mixed    Boolean false on failure or data object on success.
 	 *
 	 * @since   11.1
 	 */
-	public function getRootId()
+	protected function _getTreeRepositionData($referenceNode, $nodeWidth, $position = 'before')
 	{
-		if ((int) self::$root_id > 0)
+		// Make sure the reference an object with a left and right id.
+		if (!is_object($referenceNode) || !(isset($referenceNode->lft) && isset($referenceNode->rgt)))
 		{
-			return self::$root_id;
+			return false;
 		}
 
-		// Get the root item.
+		// A valid node cannot have a width less than 2.
+		if ($nodeWidth < 2)
+		{
+			return false;
+		}
+
 		$k = $this->_tbl_key;
+		$data = new stdClass;
 
-		// Test for a unique record with parent_id = 0
-		$query = $this->_db->getQuery(true)
-			->select($k)
-			->from($this->_tbl)
-			->where('parent_id = 0');
-
-		$result = $this->_db->setQuery($query)->loadColumn();
-
-		if (count($result) == 1)
+		// Run the calculations and build the data object by reference position.
+		switch ($position)
 		{
-			self::$root_id = $result[0];
+			case 'first-child':
+				$data->left_where = 'lft > ' . $referenceNode->lft;
+				$data->right_where = 'rgt >= ' . $referenceNode->lft;
 
-			return self::$root_id;
+				$data->new_lft = $referenceNode->lft + 1;
+				$data->new_rgt = $referenceNode->lft + $nodeWidth;
+				$data->new_parent_id = $referenceNode->$k;
+				$data->new_level = $referenceNode->level + 1;
+				break;
+
+			case 'last-child':
+				$data->left_where = 'lft > ' . ($referenceNode->rgt);
+				$data->right_where = 'rgt >= ' . ($referenceNode->rgt);
+
+				$data->new_lft = $referenceNode->rgt;
+				$data->new_rgt = $referenceNode->rgt + $nodeWidth - 1;
+				$data->new_parent_id = $referenceNode->$k;
+				$data->new_level = $referenceNode->level + 1;
+				break;
+
+			case 'before':
+				$data->left_where = 'lft >= ' . $referenceNode->lft;
+				$data->right_where = 'rgt >= ' . $referenceNode->lft;
+
+				$data->new_lft = $referenceNode->lft;
+				$data->new_rgt = $referenceNode->lft + $nodeWidth - 1;
+				$data->new_parent_id = $referenceNode->parent_id;
+				$data->new_level = $referenceNode->level;
+				break;
+
+			default:
+			case 'after':
+				$data->left_where = 'lft > ' . $referenceNode->rgt;
+				$data->right_where = 'rgt > ' . $referenceNode->rgt;
+
+				$data->new_lft = $referenceNode->rgt + 1;
+				$data->new_rgt = $referenceNode->rgt + $nodeWidth;
+				$data->new_parent_id = $referenceNode->parent_id;
+				$data->new_level = $referenceNode->level;
+				break;
 		}
 
-		// Test for a unique record with lft = 0
-		$query->clear()
-			->select($k)
-			->from($this->_tbl)
-			->where('lft = 0');
-
-		$result = $this->_db->setQuery($query)->loadColumn();
-
-		if (count($result) == 1)
+		// @codeCoverageIgnoreStart
+		if ($this->_debug)
 		{
-			self::$root_id = $result[0];
+			echo "\nRepositioning Data for $position" . "\n-----------------------------------" . "\nLeft Where:    $data->left_where"
+				. "\nRight Where:   $data->right_where" . "\nNew Lft:       $data->new_lft" . "\nNew Rgt:       $data->new_rgt"
+				. "\nNew Parent ID: $data->new_parent_id" . "\nNew Level:     $data->new_level" . "\n";
+		}
+		// @codeCoverageIgnoreEnd
 
-			return self::$root_id;
+		return $data;
+	}
+
+	/**
+	 * Method to create a log table in the buffer optionally showing the query and/or data.
+	 *
+	 * @param   boolean  $showData   True to show data
+	 * @param   boolean  $showQuery  True to show query
+	 *
+	 * @return  void
+	 *
+	 * @codeCoverageIgnore
+	 * @since   11.1
+	 */
+	protected function _logtable($showData = true, $showQuery = true)
+	{
+		$sep = "\n" . str_pad('', 40, '-');
+		$buffer = '';
+
+		if ($showQuery)
+		{
+			$buffer .= "\n" . $this->_db->getQuery() . $sep;
 		}
 
-		$fields = $this->getFields();
-
-		if (array_key_exists('alias', $fields))
+		if ($showData)
 		{
-			// Test for a unique record alias = root
-			$query->clear()
-				->select($k)
+			$query = $this->_db->getQuery(true)
+				->select($this->_tbl_key . ', parent_id, lft, rgt, level')
 				->from($this->_tbl)
-				->where('alias = ' . $this->_db->quote('root'));
+				->order($this->_tbl_key);
+			$this->_db->setQuery($query);
 
-			$result = $this->_db->setQuery($query)->loadColumn();
+			$rows = $this->_db->loadRowList();
+			$buffer .= sprintf("\n| %4s | %4s | %4s | %4s |", $this->_tbl_key, 'par', 'lft', 'rgt');
+			$buffer .= $sep;
 
-			if (count($result) == 1)
+			foreach ($rows as $row)
 			{
-				self::$root_id = $result[0];
-
-				return self::$root_id;
+				$buffer .= sprintf("\n| %4s | %4s | %4s | %4s |", $row[0], $row[1], $row[2], $row[3]);
 			}
+
+			$buffer .= $sep;
 		}
 
-		$e = new UnexpectedValueException(sprintf('%s::getRootId', get_class($this)));
-		$this->setError($e);
-		self::$root_id = false;
+		echo $buffer;
+	}
 
-		return false;
+	/**
+	 * Runs a query and unlocks the database on an error.
+	 *
+	 * @param   mixed   $query         A string or JDatabaseQuery object.
+	 * @param   string  $errorMessage  Unused.
+	 *
+	 * @return  boolean  void
+	 *
+	 * @note    Since 12.1 this method returns void and will rethrow the database exception.
+	 * @since   11.1
+	 * @throws  Exception on database error.
+	 */
+	protected function _runQuery($query, $errorMessage)
+	{
+		// Prepare to catch an exception.
+		try
+		{
+			$this->_db->setQuery($query)->execute();
+
+			// @codeCoverageIgnoreStart
+			if ($this->_debug)
+			{
+				$this->_logtable();
+			}
+			// @codeCoverageIgnoreEnd
+		}
+		catch (Exception $e)
+		{
+			// Unlock the tables and rethrow.
+			$this->_unlock();
+
+			throw $e;
+		}
 	}
 }

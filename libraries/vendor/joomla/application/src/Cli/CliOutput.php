@@ -28,13 +28,29 @@ abstract class CliOutput
 	/**
 	 * Constructor
 	 *
-	 * @param   ProcessorInterface $processor The output processor.
+	 * @param   ProcessorInterface  $processor  The output processor.
 	 *
 	 * @since   1.1.2
 	 */
 	public function __construct(ProcessorInterface $processor = null)
 	{
 		$this->setProcessor(($processor instanceof ProcessorInterface) ? $processor : new Output\Processor\ColorProcessor);
+	}
+
+	/**
+	 * Set a processor
+	 *
+	 * @param   ProcessorInterface  $processor  The output processor.
+	 *
+	 * @return  Stdout  Instance of $this to allow chaining.
+	 *
+	 * @since   1.0
+	 */
+	public function setProcessor(ProcessorInterface $processor)
+	{
+		$this->processor = $processor;
+
+		return $this;
 	}
 
 	/**
@@ -56,26 +72,10 @@ abstract class CliOutput
 	}
 
 	/**
-	 * Set a processor
-	 *
-	 * @param   ProcessorInterface $processor The output processor.
-	 *
-	 * @return  Stdout  Instance of $this to allow chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function setProcessor(ProcessorInterface $processor)
-	{
-		$this->processor = $processor;
-
-		return $this;
-	}
-
-	/**
 	 * Write a string to an output handler.
 	 *
-	 * @param   string  $text The text to display.
-	 * @param   boolean $nl   True (default) to append a new line at the end of the output string.
+	 * @param   string   $text  The text to display.
+	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
 	 *
 	 * @return  void
 	 *

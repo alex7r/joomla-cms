@@ -19,7 +19,7 @@ class ModBannersHelper
 	/**
 	 * Retrieve list of banners
 	 *
-	 * @param   \Joomla\Registry\Registry &$params module parameters
+	 * @param   \Joomla\Registry\Registry  &$params  module parameters
 	 *
 	 * @return  mixed
 	 */

@@ -82,7 +82,7 @@ class JDatabaseIteratorSqlsrvTest extends TestCaseDatabaseSqlsrv
 				0,
 				0,
 				array(
-					'Testing'  => (object) array('title' => 'Testing', 'id' => '1'),
+					'Testing' => (object) array('title' => 'Testing', 'id' => '1'),
 					'Testing2' => (object) array('title' => 'Testing2', 'id' => '2'),
 					'Testing3' => (object) array('title' => 'Testing3', 'id' => '3'),
 					'Testing4' => (object) array('title' => 'Testing4', 'id' => '4')
@@ -107,20 +107,20 @@ class JDatabaseIteratorSqlsrvTest extends TestCaseDatabaseSqlsrv
 	/**
 	 * Test foreach control
 	 *
-	 * @param   string  $select    Fields to select
-	 * @param   string  $from      Table to search for
-	 * @param   string  $column    The column to use as a key.
-	 * @param   string  $class     The class on which to bind the result rows.
-	 * @param   integer $limit     The result set record limit.
-	 * @param   integer $offset    The result set record offset.
-	 * @param   array   $expected  Array of expected results
-	 * @param   mixed   $exception Exception thrown
+	 * @param   string   $select     Fields to select
+	 * @param   string   $from       Table to search for
+	 * @param   string   $column     The column to use as a key.
+	 * @param   string   $class      The class on which to bind the result rows.
+	 * @param   integer  $limit      The result set record limit.
+	 * @param   integer  $offset     The result set record offset.
+	 * @param   array    $expected   Array of expected results
+	 * @param   mixed    $exception  Exception thrown
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesForEachData
 	 *
-	 * @since        12.1
+	 * @since    12.1
 	 */
 	public function testForEach($select, $from, $column, $class, $limit, $offset, $expected, $exception)
 	{

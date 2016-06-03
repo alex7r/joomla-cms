@@ -7,6 +7,11 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 use SeleniumClient\By;
+use SeleniumClient\SelectElement;
+use SeleniumClient\WebDriver;
+use SeleniumClient\WebDriverWait;
+use SeleniumClient\DesiredCapabilities;
+use SeleniumClient\WebElement;
 
 /**
  * Class for the back-end login screen
@@ -14,13 +19,12 @@ use SeleniumClient\By;
  */
 class AdminLoginPage extends AdminPage
 {
-	protected $waitForXpath = "//input[@id='mod-login-username']";
+	protected $waitForXpath =  "//input[@id='mod-login-username']";
 	protected $url = 'administrator/index.php';
 
 	public function loginValidUser($userName, $password)
 	{
 		$this->executeLogin($userName, $password);
-
 		return $this->test->getPageObject('ControlPanelPage');
 	}
 

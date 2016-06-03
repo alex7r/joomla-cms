@@ -19,7 +19,7 @@ if ($show_description)
 	// Calculate number of characters to display around the result
 	$term_length = JString::strlen($this->query->input);
 	$desc_length = $this->params->get('description_length', 255);
-	$pad_length  = $term_length < $desc_length ? (int) floor(($desc_length - $term_length) / 2) : 0;
+	$pad_length = $term_length < $desc_length ? (int) floor(($desc_length - $term_length) / 2) : 0;
 
 	// Find the position of the search term
 	$pos = $term_length ? JString::strpos(JString::strtolower($this->result->description), JString::strtolower($this->query->input)) : false;
@@ -40,8 +40,7 @@ $route = $this->result->route;
 if (!empty($this->query->highlight)
 	&& empty($this->result->mime)
 	&& $this->params->get('highlight_terms', 1)
-	&& JPluginHelper::isEnabled('system', 'highlight')
-)
+	&& JPluginHelper::isEnabled('system', 'highlight'))
 {
 	$route .= '&highlight=' . base64_encode(json_encode($this->query->highlight));
 }

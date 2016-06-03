@@ -19,8 +19,8 @@ class JDataCapitaliser extends JData
 	/**
 	 * Set an object property.
 	 *
-	 * @param   string $property The property name.
-	 * @param   mixed  $value    The property value.
+	 * @param   string  $property  The property name.
+	 * @param   mixed   $value     The property value.
 	 *
 	 * @return  mixed  The property value.
 	 *

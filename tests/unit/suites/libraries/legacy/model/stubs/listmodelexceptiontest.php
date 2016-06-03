@@ -20,9 +20,9 @@ class ListModelExceptionTest extends JModelList
 	/**
 	 * throws an Exception for testing purposes
 	 *
-	 * @param   string  $query      The query.
-	 * @param   integer $limitstart Offset.
-	 * @param   integer $limit      The number of records.
+	 * @param   string   $query       The query.
+	 * @param   integer  $limitstart  Offset.
+	 * @param   integer  $limit       The number of records.
 	 *
 	 * @return  array  An array of results.
 	 *

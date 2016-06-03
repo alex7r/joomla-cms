@@ -19,7 +19,7 @@ class JHtmlFieldRangeTest_DataSet
 	public static $getInputTest = array(
 		'NoValue' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 			),
 			'<input type="range" name="myTestName" id="myTestId" value="0" />',
@@ -27,8 +27,8 @@ class JHtmlFieldRangeTest_DataSet
 
 		'Value' => array(
 			array(
-				'id'    => 'myTestId',
-				'name'  => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'value' => 2,
 			),
 			'<input type="range" name="myTestName" id="myTestId" value="2" />',
@@ -36,25 +36,25 @@ class JHtmlFieldRangeTest_DataSet
 
 		'Min' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
-				'min'  => 2,
+				'min' => 2,
 			),
 			'<input type="range" name="myTestName" id="myTestId" value="2" min="2" />',
 		),
 
 		'Max' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
-				'max'  => 200,
+				'max' => 200,
 			),
 			'<input type="range" name="myTestName" id="myTestId" value="0" max="200" />',
 		),
 
 		'Step' => array(
 			array(
-				'id'   => 'myTestId',
+				'id' => 'myTestId',
 				'name' => 'myTestName',
 				'step' => 5,
 			),
@@ -63,8 +63,8 @@ class JHtmlFieldRangeTest_DataSet
 
 		'Class' => array(
 			array(
-				'id'    => 'myTestId',
-				'name'  => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'class' => 'foo bar',
 			),
 			'<input type="range" name="myTestName" id="myTestId" value="0" class="foo bar" />',
@@ -72,8 +72,8 @@ class JHtmlFieldRangeTest_DataSet
 
 		'Disabled' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'disabled' => true,
 			),
 			'<input type="range" name="myTestName" id="myTestId" value="0" disabled />',
@@ -81,8 +81,8 @@ class JHtmlFieldRangeTest_DataSet
 
 		'Readonly' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'readonly' => true,
 			),
 			'<input type="range" name="myTestName" id="myTestId" value="0" readonly />',
@@ -90,8 +90,8 @@ class JHtmlFieldRangeTest_DataSet
 
 		'Autofocus' => array(
 			array(
-				'id'        => 'myTestId',
-				'name'      => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'autofocus' => true,
 			),
 			'<input type="range" name="myTestName" id="myTestId" value="0" autofocus />',
@@ -99,8 +99,8 @@ class JHtmlFieldRangeTest_DataSet
 
 		'Onchange' => array(
 			array(
-				'id'       => 'myTestId',
-				'name'     => 'myTestName',
+				'id' => 'myTestId',
+				'name' => 'myTestName',
 				'onchange' => 'foobar();',
 			),
 			'<input type="range" name="myTestName" id="myTestId" value="0" onchange="foobar();" />',

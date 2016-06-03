@@ -34,10 +34,113 @@ class MenusModelMenu extends JModelForm
 	protected $_context = 'com_menus.menu';
 
 	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
+	 *
+	 * @since   1.6
+	 */
+	protected function canDelete($record)
+	{
+		$user = JFactory::getUser();
+
+		return $user->authorise('core.delete', 'com_menus.menu.' . (int) $record->id);
+	}
+
+	/**
+	 * Method to test whether the state of a record can be edited.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
+	 *
+	 * @since   1.6
+	 */
+	protected function canEditState($record)
+	{
+		$user = JFactory::getUser();
+
+		return $user->authorise('core.edit.state', 'com_menus.menu.' . (int) $record->id);
+	}
+
+	/**
+	 * Returns a Table object, always creating it
+	 *
+	 * @param   type    $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  JTable    A database object
+	 *
+	 * @since   1.6
+	 */
+	public function getTable($type = 'MenuType', $prefix = 'JTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
+	 * Auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('administrator');
+
+		// Load the User state.
+		$id = $app->input->getInt('id');
+		$this->setState('menu.id', $id);
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_menus');
+		$this->setState('params', $params);
+	}
+
+	/**
+	 * Method to get a menu item.
+	 *
+	 * @param   integer  $itemId  The id of the menu item to get.
+	 *
+	 * @return  mixed  Menu item data object on success, false on failure.
+	 *
+	 * @since   1.6
+	 */
+	public function &getItem($itemId = null)
+	{
+		$itemId = (!empty($itemId)) ? $itemId : (int) $this->getState('menu.id');
+
+		// Get a menu item row instance.
+		$table = $this->getTable();
+
+		// Attempt to load the row.
+		$return = $table->load($itemId);
+
+		// Check for a table object error.
+		if ($return === false && $table->getError())
+		{
+			$this->setError($table->getError());
+
+			return false;
+		}
+
+		$properties = $table->getProperties(1);
+		$value      = JArrayHelper::toObject($properties, 'JObject');
+
+		return $value;
+	}
+
+	/**
 	 * Method to get the menu item form.
 	 *
-	 * @param   array   $data     Data for the form.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  JForm    A JForm object on success, false on failure
 	 *
@@ -57,9 +160,31 @@ class MenusModelMenu extends JModelForm
 	}
 
 	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_menus.edit.menu.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+
+		$this->preprocessData('com_menus.menu', $data);
+
+		return $data;
+	}
+
+	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -123,25 +248,9 @@ class MenusModelMenu extends JModelForm
 	}
 
 	/**
-	 * Custom clean the cache
-	 *
-	 * @param   string  $group     Cache group name.
-	 * @param   integer $client_id Application client id.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
-	{
-		parent::cleanCache('com_modules');
-		parent::cleanCache('mod_menu');
-	}
-
-	/**
 	 * Method to delete groups.
 	 *
-	 * @param   array $itemIds An array of item ids.
+	 * @param   array  $itemIds  An array of item ids.
 	 *
 	 * @return  boolean  Returns true on success, false on failure.
 	 *
@@ -224,134 +333,25 @@ class MenusModelMenu extends JModelForm
 				$result[$menuType] = array();
 			}
 
-			$result[$menuType][] = &$module;
+			$result[$menuType][] = & $module;
 		}
 
 		return $result;
 	}
 
 	/**
-	 * Method to test whether a record can be deleted.
+	 * Custom clean the cache
 	 *
-	 * @param   object $record A record object.
-	 *
-	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
-	 */
-	protected function canDelete($record)
-	{
-		$user = JFactory::getUser();
-
-		return $user->authorise('core.delete', 'com_menus.menu.' . (int) $record->id);
-	}
-
-	/**
-	 * Method to test whether the state of a record can be edited.
-	 *
-	 * @param   object $record A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
-	 */
-	protected function canEditState($record)
-	{
-		$user = JFactory::getUser();
-
-		return $user->authorise('core.edit.state', 'com_menus.menu.' . (int) $record->id);
-	}
-
-	/**
-	 * Auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
+	 * @param   string   $group      Cache group name.
+	 * @param   integer  $client_id  Application client id.
 	 *
 	 * @return  void
 	 *
 	 * @since   1.6
 	 */
-	protected function populateState()
+	protected function cleanCache($group = null, $client_id = 0)
 	{
-		$app = JFactory::getApplication('administrator');
-
-		// Load the User state.
-		$id = $app->input->getInt('id');
-		$this->setState('menu.id', $id);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_menus');
-		$this->setState('params', $params);
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_menus.edit.menu.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
-		}
-
-		$this->preprocessData('com_menus.menu', $data);
-
-		return $data;
-	}
-
-	/**
-	 * Method to get a menu item.
-	 *
-	 * @param   integer $itemId The id of the menu item to get.
-	 *
-	 * @return  mixed  Menu item data object on success, false on failure.
-	 *
-	 * @since   1.6
-	 */
-	public function &getItem($itemId = null)
-	{
-		$itemId = (!empty($itemId)) ? $itemId : (int) $this->getState('menu.id');
-
-		// Get a menu item row instance.
-		$table = $this->getTable();
-
-		// Attempt to load the row.
-		$return = $table->load($itemId);
-
-		// Check for a table object error.
-		if ($return === false && $table->getError())
-		{
-			$this->setError($table->getError());
-
-			return false;
-		}
-
-		$properties = $table->getProperties(1);
-		$value      = JArrayHelper::toObject($properties, 'JObject');
-
-		return $value;
-	}
-
-	/**
-	 * Returns a Table object, always creating it
-	 *
-	 * @param   type   $type   The table type to instantiate
-	 * @param   string $prefix A prefix for the table class name. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  JTable    A database object
-	 *
-	 * @since   1.6
-	 */
-	public function getTable($type = 'MenuType', $prefix = 'JTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
+		parent::cleanCache('com_modules');
+		parent::cleanCache('mod_menu');
 	}
 }

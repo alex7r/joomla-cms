@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 
 // Include the HTML helpers.
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 
 JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
@@ -26,8 +26,7 @@ JFactory::getDocument()->addScriptDeclaration("
 ");
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_messages'); ?>" method="post" name="adminForm"
-      id="message-form" class="form-validate form-horizontal">
+<form action="<?php echo JRoute::_('index.php?option=com_messages'); ?>" method="post" name="adminForm" id="message-form" class="form-validate form-horizontal">
 	<fieldset class="adminform">
 		<ul class="adminformlist">
 			<li><?php echo $this->form->getLabel('user_id_to'); ?>
@@ -43,6 +42,6 @@ JFactory::getDocument()->addScriptDeclaration("
 			<li><?php echo $this->form->getInput('message'); ?> </li>
 		</ul>
 	</fieldset>
-	<input type="hidden" name="task" value=""/>
+	<input type="hidden" name="task" value="" />
 	<?php echo JHtml::_('form.token'); ?>
 </form>

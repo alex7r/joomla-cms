@@ -19,10 +19,13 @@ use Joomla\Registry\Registry;
 class JUser extends JObject
 {
 	/**
-	 * @var    array  JUser instances container.
-	 * @since  11.3
+	 * A cached switch for if this user has root access rights.
+	 *
+	 * @var    boolean
+	 * @since  11.1
 	 */
-	protected static $instances = array();
+	protected $isRoot = null;
+
 	/**
 	 * Unique id
 	 *
@@ -158,13 +161,7 @@ class JUser extends JObject
 	 * @since  3.2
 	 */
 	public $requireReset = null;
-	/**
-	 * A cached switch for if this user has root access rights.
-	 *
-	 * @var    boolean
-	 * @since  11.1
-	 */
-	protected $isRoot = null;
+
 	/**
 	 * User parameters
 	 *
@@ -172,6 +169,7 @@ class JUser extends JObject
 	 * @since  11.1
 	 */
 	protected $_params = null;
+
 	/**
 	 * Authorised access groups
 	 *
@@ -179,6 +177,7 @@ class JUser extends JObject
 	 * @since  11.1
 	 */
 	protected $_authGroups = null;
+
 	/**
 	 * Authorised access levels
 	 *
@@ -186,6 +185,7 @@ class JUser extends JObject
 	 * @since  11.1
 	 */
 	protected $_authLevels = null;
+
 	/**
 	 * Authorised access actions
 	 *
@@ -193,6 +193,7 @@ class JUser extends JObject
 	 * @since  11.1
 	 */
 	protected $_authActions = null;
+
 	/**
 	 * Error message
 	 *
@@ -200,6 +201,7 @@ class JUser extends JObject
 	 * @since  11.1
 	 */
 	protected $_errorMsg = null;
+
 	/**
 	 * JUserWrapperHelper object
 	 *
@@ -209,10 +211,16 @@ class JUser extends JObject
 	protected $userHelper = null;
 
 	/**
+	 * @var    array  JUser instances container.
+	 * @since  11.3
+	 */
+	protected static $instances = array();
+
+	/**
 	 * Constructor activating the default information of the language
 	 *
-	 * @param   integer            $identifier The primary key of the user to load (optional).
-	 * @param   JUserWrapperHelper $userHelper The JUserWrapperHelper for the static methods.
+	 * @param   integer             $identifier  The primary key of the user to load (optional).
+	 * @param   JUserWrapperHelper  $userHelper  The JUserWrapperHelper for the static methods.
 	 *
 	 * @since   11.1
 	 */
@@ -236,104 +244,18 @@ class JUser extends JObject
 		else
 		{
 			// Initialise
-			$this->id        = 0;
+			$this->id = 0;
 			$this->sendEmail = 0;
-			$this->aid       = 0;
-			$this->guest     = 1;
-		}
-	}
-
-	/**
-	 * Method to load a JUser object by user id number
-	 *
-	 * @param   mixed $id The user id of the user to load
-	 *
-	 * @return  boolean  True on success
-	 *
-	 * @since   11.1
-	 */
-	public function load($id)
-	{
-		// Create the user table object
-		$table = $this->getTable();
-
-		// Load the JUserModel object based on the user id or throw a warning.
-		if (!$table->load($id))
-		{
-			// Reset to guest user
-			$this->guest = 1;
-
-			JLog::add(JText::sprintf('JLIB_USER_ERROR_UNABLE_TO_LOAD_USER', $id), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-
-		/*
-		 * Set the user parameters using the default XML file.  We might want to
-		 * extend this in the future to allow for the ability to have custom
-		 * user parameters, but for right now we'll leave it how it is.
-		 */
-
-		$this->_params->loadString($table->params);
-
-		// Assuming all is well at this point let's bind the data
-		$this->setProperties($table->getProperties());
-
-		// The user is no longer a guest
-		if ($this->id != 0)
-		{
-			$this->guest = 0;
-		}
-		else
-		{
+			$this->aid = 0;
 			$this->guest = 1;
 		}
-
-		return true;
-	}
-
-	/**
-	 * Method to get the user table object
-	 *
-	 * This function uses a static variable to store the table name of the user table to
-	 * instantiate. You can call this function statically to set the table name if
-	 * needed.
-	 *
-	 * @param   string $type   The user table name to be used
-	 * @param   string $prefix The user table prefix to be used
-	 *
-	 * @return  object  The user table object
-	 *
-	 * @note    At 4.0 this method will no longer be static
-	 * @since   11.1
-	 */
-	public static function getTable($type = null, $prefix = 'JTable')
-	{
-		static $tabletype;
-
-		// Set the default tabletype;
-		if (!isset($tabletype))
-		{
-			$tabletype['name']   = 'user';
-			$tabletype['prefix'] = 'JTable';
-		}
-
-		// Set a custom table type is defined
-		if (isset($type))
-		{
-			$tabletype['name']   = $type;
-			$tabletype['prefix'] = $prefix;
-		}
-
-		// Create the user table object
-		return JTable::getInstance($tabletype['name'], $tabletype['prefix']);
 	}
 
 	/**
 	 * Returns the global User object, only creating it if it doesn't already exist.
 	 *
-	 * @param   integer            $identifier The primary key of the user to load (optional).
-	 * @param   JUserWrapperHelper $userHelper The JUserWrapperHelper for the static methods.
+	 * @param   integer             $identifier  The primary key of the user to load (optional).
+	 * @param   JUserWrapperHelper  $userHelper  The JUserWrapperHelper for the static methods.
 	 *
 	 * @return  JUser  The User object.
 	 *
@@ -370,7 +292,7 @@ class JUser extends JObject
 		// Check if the user ID is already cached.
 		if (empty(self::$instances[$id]))
 		{
-			$user                 = new JUser($id, $userHelper);
+			$user = new JUser($id, $userHelper);
 			self::$instances[$id] = $user;
 		}
 
@@ -380,8 +302,8 @@ class JUser extends JObject
 	/**
 	 * Method to get a parameter value
 	 *
-	 * @param   string $key     Parameter key
-	 * @param   mixed  $default Parameter default value
+	 * @param   string  $key      Parameter key
+	 * @param   mixed   $default  Parameter default value
 	 *
 	 * @return  mixed  The value or the default if it did not exist
 	 *
@@ -395,8 +317,8 @@ class JUser extends JObject
 	/**
 	 * Method to set a parameter
 	 *
-	 * @param   string $key   Parameter key
-	 * @param   mixed  $value Parameter value
+	 * @param   string  $key    Parameter key
+	 * @param   mixed   $value  Parameter value
 	 *
 	 * @return  mixed  Set parameter value
 	 *
@@ -410,8 +332,8 @@ class JUser extends JObject
 	/**
 	 * Method to set a default parameter if it does not exist
 	 *
-	 * @param   string $key   Parameter key
-	 * @param   mixed  $value Parameter value
+	 * @param   string  $key    Parameter key
+	 * @param   mixed   $value  Parameter value
 	 *
 	 * @return  mixed  Set parameter value
 	 *
@@ -423,52 +345,11 @@ class JUser extends JObject
 	}
 
 	/**
-	 * Method to return a list of all categories that a user has permission for a given action
-	 *
-	 * @param   string $component The component from which to retrieve the categories
-	 * @param   string $action    The name of the section within the component from which to retrieve the actions.
-	 *
-	 * @return  array  List of categories that this group can do this action to (empty array if none). Categories must be published.
-	 *
-	 * @since   11.1
-	 */
-	public function getAuthorisedCategories($component, $action)
-	{
-		// Brute force method: get all published category rows for the component and check each one
-		// TODO: Modify the way permissions are stored in the db to allow for faster implementation and better scaling
-		$db = JFactory::getDbo();
-
-		$subQuery = $db->getQuery(true)
-			->select('id,asset_id')
-			->from('#__categories')
-			->where('extension = ' . $db->quote($component))
-			->where('published = 1');
-
-		$query = $db->getQuery(true)
-			->select('c.id AS id, a.name AS asset_name')
-			->from('(' . (string) $subQuery . ') AS c')
-			->join('INNER', '#__assets AS a ON c.asset_id = a.id');
-		$db->setQuery($query);
-		$allCategories     = $db->loadObjectList('id');
-		$allowedCategories = array();
-
-		foreach ($allCategories as $category)
-		{
-			if ($this->authorise($action, $category->asset_name))
-			{
-				$allowedCategories[] = (int) $category->id;
-			}
-		}
-
-		return $allowedCategories;
-	}
-
-	/**
 	 * Method to check JUser object authorisation against an access control
 	 * object and optionally an access extension object
 	 *
-	 * @param   string $action    The name of the action to check for permission.
-	 * @param   string $assetname The name of the asset on which to perform the action.
+	 * @param   string  $action     The name of the action to check for permission.
+	 * @param   string  $assetname  The name of the asset on which to perform the action.
 	 *
 	 * @return  boolean  True if authorised
 	 *
@@ -482,7 +363,7 @@ class JUser extends JObject
 			$this->isRoot = false;
 
 			// Check for the configuration file failsafe.
-			$config   = JFactory::getConfig();
+			$config = JFactory::getConfig();
 			$rootUser = $config->get('root_user');
 
 			// The root_user variable can be a numeric user ID or a username.
@@ -513,25 +394,44 @@ class JUser extends JObject
 	}
 
 	/**
-	 * Gets an array of the authorised user groups
+	 * Method to return a list of all categories that a user has permission for a given action
 	 *
-	 * @return  array
+	 * @param   string  $component  The component from which to retrieve the categories
+	 * @param   string  $action     The name of the section within the component from which to retrieve the actions.
+	 *
+	 * @return  array  List of categories that this group can do this action to (empty array if none). Categories must be published.
 	 *
 	 * @since   11.1
 	 */
-	public function getAuthorisedGroups()
+	public function getAuthorisedCategories($component, $action)
 	{
-		if ($this->_authGroups === null)
+		// Brute force method: get all published category rows for the component and check each one
+		// TODO: Modify the way permissions are stored in the db to allow for faster implementation and better scaling
+		$db = JFactory::getDbo();
+
+		$subQuery = $db->getQuery(true)
+			->select('id,asset_id')
+			->from('#__categories')
+			->where('extension = ' . $db->quote($component))
+			->where('published = 1');
+
+		$query = $db->getQuery(true)
+			->select('c.id AS id, a.name AS asset_name')
+			->from('(' . (string) $subQuery . ') AS c')
+			->join('INNER', '#__assets AS a ON c.asset_id = a.id');
+		$db->setQuery($query);
+		$allCategories = $db->loadObjectList('id');
+		$allowedCategories = array();
+
+		foreach ($allCategories as $category)
 		{
-			$this->_authGroups = array();
+			if ($this->authorise($action, $category->asset_name))
+			{
+				$allowedCategories[] = (int) $category->id;
+			}
 		}
 
-		if (empty($this->_authGroups))
-		{
-			$this->_authGroups = JAccess::getGroupsByUser($this->id);
-		}
-
-		return $this->_authGroups;
+		return $allowedCategories;
 	}
 
 	/**
@@ -557,6 +457,28 @@ class JUser extends JObject
 	}
 
 	/**
+	 * Gets an array of the authorised user groups
+	 *
+	 * @return  array
+	 *
+	 * @since   11.1
+	 */
+	public function getAuthorisedGroups()
+	{
+		if ($this->_authGroups === null)
+		{
+			$this->_authGroups = array();
+		}
+
+		if (empty($this->_authGroups))
+		{
+			$this->_authGroups = JAccess::getGroupsByUser($this->id);
+		}
+
+		return $this->_authGroups;
+	}
+
+	/**
 	 * Clears the access rights cache of this user
 	 *
 	 * @return  void
@@ -567,14 +489,14 @@ class JUser extends JObject
 	{
 		$this->_authLevels = null;
 		$this->_authGroups = null;
-		$this->isRoot      = null;
+		$this->isRoot = null;
 		JAccess::clearStatics();
 	}
 
 	/**
 	 * Pass through method to the table for setting the last visit date
 	 *
-	 * @param   integer $timestamp The timestamp, defaults to 'now'.
+	 * @param   integer  $timestamp  The timestamp, defaults to 'now'.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -596,7 +518,7 @@ class JUser extends JObject
 	 *
 	 * @return  object   The user parameters object.
 	 *
-	 * @since       11.1
+	 * @since   11.1
 	 * @deprecated  12.3 (Platform) & 4.0 (CMS) - Instead use JUser::getParam()
 	 */
 	public function getParameters()
@@ -610,9 +532,60 @@ class JUser extends JObject
 	}
 
 	/**
+	 * Method to get the user parameters
+	 *
+	 * @param   object  $params  The user parameters object
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public function setParameters($params)
+	{
+		$this->_params = $params;
+	}
+
+	/**
+	 * Method to get the user table object
+	 *
+	 * This function uses a static variable to store the table name of the user table to
+	 * instantiate. You can call this function statically to set the table name if
+	 * needed.
+	 *
+	 * @param   string  $type    The user table name to be used
+	 * @param   string  $prefix  The user table prefix to be used
+	 *
+	 * @return  object  The user table object
+	 *
+	 * @note    At 4.0 this method will no longer be static
+	 * @since   11.1
+	 */
+	public static function getTable($type = null, $prefix = 'JTable')
+	{
+		static $tabletype;
+
+		// Set the default tabletype;
+		if (!isset($tabletype))
+		{
+			$tabletype['name'] = 'user';
+			$tabletype['prefix'] = 'JTable';
+		}
+
+		// Set a custom table type is defined
+		if (isset($type))
+		{
+			$tabletype['name'] = $type;
+			$tabletype['prefix'] = $prefix;
+		}
+
+		// Create the user table object
+		return JTable::getInstance($tabletype['name'], $tabletype['prefix']);
+	}
+
+	/**
 	 * Method to bind an associative array of data to a user object
 	 *
-	 * @param   array &$array The associative array to bind to the object
+	 * @param   array  &$array  The associative array to bind to the object
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -626,7 +599,7 @@ class JUser extends JObject
 			// Check the password and create the crypted password
 			if (empty($array['password']))
 			{
-				$array['password']  = $this->userHelper->genRandomPassword();
+				$array['password'] = $this->userHelper->genRandomPassword();
 				$array['password2'] = $array['password'];
 			}
 
@@ -721,7 +694,7 @@ class JUser extends JObject
 	/**
 	 * Method to save the JUser object to the database
 	 *
-	 * @param   boolean $updateOnly   Save the object only if not a new user
+	 * @param   boolean  $updateOnly  Save the object only if not a new user
 	 *                                Currently only used in the user reset password method.
 	 *
 	 * @return  boolean  True on success
@@ -732,7 +705,7 @@ class JUser extends JObject
 	public function save($updateOnly = false)
 	{
 		// Create the user table object
-		$table        = $this->getTable();
+		$table = $this->getTable();
 		$this->params = (string) $this->_params;
 		$table->bind($this->getProperties());
 
@@ -844,20 +817,6 @@ class JUser extends JObject
 	}
 
 	/**
-	 * Method to get the user parameters
-	 *
-	 * @param   object $params The user parameters object
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	public function setParameters($params)
-	{
-		$this->_params = $params;
-	}
-
-	/**
 	 * Method to delete the JUser object from the database
 	 *
 	 * @return  boolean  True on success
@@ -884,6 +843,55 @@ class JUser extends JObject
 		$dispatcher->trigger('onUserAfterDelete', array($this->getProperties(), $result, $this->getError()));
 
 		return $result;
+	}
+
+	/**
+	 * Method to load a JUser object by user id number
+	 *
+	 * @param   mixed  $id  The user id of the user to load
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   11.1
+	 */
+	public function load($id)
+	{
+		// Create the user table object
+		$table = $this->getTable();
+
+		// Load the JUserModel object based on the user id or throw a warning.
+		if (!$table->load($id))
+		{
+			// Reset to guest user
+			$this->guest = 1;
+
+			JLog::add(JText::sprintf('JLIB_USER_ERROR_UNABLE_TO_LOAD_USER', $id), JLog::WARNING, 'jerror');
+
+			return false;
+		}
+
+		/*
+		 * Set the user parameters using the default XML file.  We might want to
+		 * extend this in the future to allow for the ability to have custom
+		 * user parameters, but for right now we'll leave it how it is.
+		 */
+
+		$this->_params->loadString($table->params);
+
+		// Assuming all is well at this point let's bind the data
+		$this->setProperties($table->getProperties());
+
+		// The user is no longer a guest
+		if ($this->id != 0)
+		{
+			$this->guest = 0;
+		}
+		else
+		{
+			$this->guest = 1;
+		}
+
+		return true;
 	}
 
 	/**
@@ -919,10 +927,10 @@ class JUser extends JObject
 		else
 		{
 			// Initialise
-			$this->id        = 0;
+			$this->id = 0;
 			$this->sendEmail = 0;
-			$this->aid       = 0;
-			$this->guest     = 1;
+			$this->aid = 0;
+			$this->guest = 1;
 		}
 	}
 }

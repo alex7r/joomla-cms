@@ -19,7 +19,7 @@ class TemplatesModelStyles extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JControllerLegacy
 	 * @since   1.6
@@ -45,8 +45,8 @@ class TemplatesModelStyles extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -61,7 +61,7 @@ class TemplatesModelStyles extends JModelList
 
 		// Special case for the client id.
 		$clientId = (int) $this->getUserStateFromRequest($this->context . '.client_id', 'client_id', 0, 'int');
-		$clientId = (!in_array($clientId, array(0, 1))) ? 0 : $clientId;
+		$clientId = (!in_array($clientId, array (0, 1))) ? 0 : $clientId;
 		$this->setState('client_id', $clientId);
 
 		// Load the parameters.
@@ -79,7 +79,7 @@ class TemplatesModelStyles extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id A prefix for the store id.
+	 * @param   string  $id  A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 */
@@ -104,7 +104,7 @@ class TemplatesModelStyles extends JModelList
 		$clientId = (int) $this->getState('client_id');
 
 		// Create a new query object.
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the required fields from the table.
@@ -172,7 +172,7 @@ class TemplatesModelStyles extends JModelList
 					$db->quoteName('a.home') . ' IN (' . $menuItemLanguageSubQuery . ') OR ' .
 					// Custom template styles override (only if assigned to the selected menu item).
 					'(' . $db->quoteName('a.home') . ' = ' . $db->quote(0) . ' AND ' . $menuItemId . ' IN (' . $templateStylesMenuItemsSubQuery . '))' .
-					')');
+				')');
 			}
 		}
 

@@ -19,7 +19,7 @@ class ModStatsHelper
 	/**
 	 * Method to retrieve information about the site
 	 *
-	 * @param   JObject &$params Params object
+	 * @param   JObject  &$params  Params object
 	 *
 	 * @return  array  Array containing site information
 	 *

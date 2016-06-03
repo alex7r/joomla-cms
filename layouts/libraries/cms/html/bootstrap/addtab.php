@@ -9,7 +9,7 @@
 
 defined('JPATH_BASE') or die;
 
-$id     = empty($displayData['id']) ? '' : $displayData['id'];
+$id = empty($displayData['id']) ? '' : $displayData['id'];
 $active = empty($displayData['active']) ? '' : $displayData['active'];
 
 ?>

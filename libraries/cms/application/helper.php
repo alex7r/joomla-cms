@@ -27,7 +27,7 @@ class JApplicationHelper
 	/**
 	 * Return the name of the request component [main component]
 	 *
-	 * @param   string $default The default option
+	 * @param   string  $default  The default option
 	 *
 	 * @return  string  Option (e.g. com_something)
 	 *
@@ -42,7 +42,7 @@ class JApplicationHelper
 			return $option;
 		}
 
-		$input  = JFactory::getApplication()->input;
+		$input = JFactory::getApplication()->input;
 		$option = strtolower($input->get('option'));
 
 		if (empty($option))
@@ -58,7 +58,7 @@ class JApplicationHelper
 	/**
 	 * Provides a secure hash based on a seed
 	 *
-	 * @param   string $seed Seed string.
+	 * @param   string  $seed  Seed string.
 	 *
 	 * @return  string  A secure hash
 	 *
@@ -74,8 +74,8 @@ class JApplicationHelper
 	 * safe string or returns a URL safe UTF-8 string
 	 * based on the global configuration
 	 *
-	 * @param   string $string   String to process
-	 * @param   string $language Language to transliterate to if unicode slugs are disabled
+	 * @param   string  $string    String to process
+	 * @param   string  $language  Language to transliterate to if unicode slugs are disabled
 	 *
 	 * @return  string  Processed string
 	 *
@@ -92,45 +92,12 @@ class JApplicationHelper
 			if ($language == '*' || $language == '')
 			{
 				$languageParams = JComponentHelper::getParams('com_languages');
-				$language       = $languageParams->get('site');
+				$language = $languageParams->get('site');
 			}
 			$output = JFilterOutput::stringURLSafe($string, $language);
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Adds information for a client.
-	 *
-	 * @param   mixed $client A client identifier either an array or object
-	 *
-	 * @return  boolean  True if the information is added. False on error
-	 *
-	 * @since   1.6
-	 */
-	public static function addClientInfo($client)
-	{
-		if (is_array($client))
-		{
-			$client = (object) $client;
-		}
-
-		if (!is_object($client))
-		{
-			return false;
-		}
-
-		$info = self::getClientInfo();
-
-		if (!isset($client->id))
-		{
-			$client->id = count($info);
-		}
-
-		self::$_clients[$client->id] = clone $client;
-
-		return true;
 	}
 
 	/**
@@ -140,8 +107,8 @@ class JApplicationHelper
 	 * This method will return a client information array if called
 	 * with no arguments which can be used to add custom application information.
 	 *
-	 * @param   integer $id     A client identifier
-	 * @param   boolean $byName If True, find the client by its name
+	 * @param   integer  $id      A client identifier
+	 * @param   boolean  $byName  If True, find the client by its name
 	 *
 	 * @return  mixed  Object describing the client or false if not known
 	 *
@@ -155,21 +122,21 @@ class JApplicationHelper
 			$obj = new stdClass;
 
 			// Site Client
-			$obj->id           = 0;
-			$obj->name         = 'site';
-			$obj->path         = JPATH_SITE;
+			$obj->id = 0;
+			$obj->name = 'site';
+			$obj->path = JPATH_SITE;
 			self::$_clients[0] = clone $obj;
 
 			// Administrator Client
-			$obj->id           = 1;
-			$obj->name         = 'administrator';
-			$obj->path         = JPATH_ADMINISTRATOR;
+			$obj->id = 1;
+			$obj->name = 'administrator';
+			$obj->path = JPATH_ADMINISTRATOR;
 			self::$_clients[1] = clone $obj;
 
 			// Installation Client
-			$obj->id           = 2;
-			$obj->name         = 'installation';
-			$obj->path         = JPATH_INSTALLATION;
+			$obj->id = 2;
+			$obj->name = 'installation';
+			$obj->path = JPATH_INSTALLATION;
 			self::$_clients[2] = clone $obj;
 		}
 
@@ -202,11 +169,44 @@ class JApplicationHelper
 	}
 
 	/**
+	 * Adds information for a client.
+	 *
+	 * @param   mixed  $client  A client identifier either an array or object
+	 *
+	 * @return  boolean  True if the information is added. False on error
+	 *
+	 * @since   1.6
+	 */
+	public static function addClientInfo($client)
+	{
+		if (is_array($client))
+		{
+			$client = (object) $client;
+		}
+
+		if (!is_object($client))
+		{
+			return false;
+		}
+
+		$info = self::getClientInfo();
+
+		if (!isset($client->id))
+		{
+			$client->id = count($info);
+		}
+
+		self::$_clients[$client->id] = clone $client;
+
+		return true;
+	}
+
+	/**
 	 * Parse a XML install manifest file.
 	 *
 	 * XML Root tag should be 'install' except for languages which use meta file.
 	 *
-	 * @param   string $path Full path to XML file.
+	 * @param   string  $path  Full path to XML file.
 	 *
 	 * @return  array  XML metadata.
 	 *
@@ -225,7 +225,7 @@ class JApplicationHelper
 	 *
 	 * XML Root tag  for languages which is meta file.
 	 *
-	 * @param   string $path Full path to XML file.
+	 * @param   string  $path  Full path to XML file.
 	 *
 	 * @return  array  XML metadata.
 	 *
@@ -268,14 +268,14 @@ class JApplicationHelper
 		$data['type'] = $xml->attributes()->type;
 
 		$data['creationDate'] = ((string) $xml->creationDate) ? (string) $xml->creationDate : JText::_('JLIB_UNKNOWN');
-		$data['author']       = ((string) $xml->author) ? (string) $xml->author : JText::_('JLIB_UNKNOWN');
+		$data['author'] = ((string) $xml->author) ? (string) $xml->author : JText::_('JLIB_UNKNOWN');
 
-		$data['copyright']   = (string) $xml->copyright;
+		$data['copyright'] = (string) $xml->copyright;
 		$data['authorEmail'] = (string) $xml->authorEmail;
-		$data['authorUrl']   = (string) $xml->authorUrl;
-		$data['version']     = (string) $xml->version;
+		$data['authorUrl'] = (string) $xml->authorUrl;
+		$data['version'] = (string) $xml->version;
 		$data['description'] = (string) $xml->description;
-		$data['group']       = (string) $xml->group;
+		$data['group'] = (string) $xml->group;
 
 		return $data;
 	}

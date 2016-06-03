@@ -19,11 +19,11 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to edit a page.
 	 *
-	 * @param   string $title        Page title.
-	 * @param   int    $section      Section number.
-	 * @param   string $sectiontitle The title for a new section.
-	 * @param   string $text         Page content.
-	 * @param   string $summary      Title of the page you want to delete.
+	 * @param   string  $title         Page title.
+	 * @param   int     $section       Section number.
+	 * @param   string  $sectiontitle  The title for a new section.
+	 * @param   string  $text          Page content.
+	 * @param   string  $summary       Title of the page you want to delete.
 	 *
 	 * @return  object
 	 *
@@ -39,12 +39,12 @@ class JMediawikiPages extends JMediawikiObject
 
 		// Build the request data.
 		$data = array(
-			'title'        => $title,
-			'token'        => $token,
-			'section'      => $section,
+			'title' => $title,
+			'token' => $token,
+			'section' => $section,
 			'sectiontitle' => $section,
-			'text'         => $text,
-			'summary'      => $summary
+			'text' => $text,
+			'summary' => $summary
 		);
 
 		// Send the request.
@@ -54,33 +54,12 @@ class JMediawikiPages extends JMediawikiObject
 	}
 
 	/**
-	 * Method to get access token.
-	 *
-	 * @param   string $user    The User to get token.
-	 * @param   string $intoken The type of token.
-	 *
-	 * @return  object
-	 *
-	 * @since   12.1
-	 */
-	public function getToken($user, $intoken)
-	{
-		// Build the request path.
-		$path = '?action=query&prop=info&intoken=' . $intoken . '&titles=User:' . $user;
-
-		// Send the request.
-		$response = $this->client->post($this->fetchUrl($path), null);
-
-		return (string) $this->validateResponse($response)->query->pages->page[$intoken . 'token'];
-	}
-
-	/**
 	 * Method to delete a page.
 	 *
-	 * @param   string $title     Title of the page you want to delete.
-	 * @param   string $reason    Reason for the deletion.
-	 * @param   string $watchlist Unconditionally add or remove the page from your watchlis.
-	 * @param   string $oldimage  The name of the old image to delete.
+	 * @param   string  $title      Title of the page you want to delete.
+	 * @param   string  $reason     Reason for the deletion.
+	 * @param   string  $watchlist  Unconditionally add or remove the page from your watchlis.
+	 * @param   string  $oldimage   The name of the old image to delete.
 	 *
 	 * @return  object
 	 *
@@ -96,11 +75,11 @@ class JMediawikiPages extends JMediawikiObject
 
 		// Build the request data.
 		$data = array(
-			'title'     => $title,
-			'token'     => $token,
-			'reason'    => $reason,
+			'title' => $title,
+			'token' => $token,
+			'reason' => $reason,
 			'watchlist' => $watchlist,
-			'oldimage'  => $oldimage
+			'oldimage' => $oldimage
 		);
 
 		// Send the request.
@@ -112,16 +91,16 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to delete a page.
 	 *
-	 * @param   string $pageid    Page ID of the page you want to delete.
-	 * @param   string $reason    Reason for the deletion.
-	 * @param   string $watchlist Unconditionally add or remove the page from your watchlis.
-	 * @param   string $oldimage  The name of the old image to delete.
+	 * @param   string  $pageid     Page ID of the page you want to delete.
+	 * @param   string  $reason     Reason for the deletion.
+	 * @param   string  $watchlist  Unconditionally add or remove the page from your watchlis.
+	 * @param   string  $oldimage   The name of the old image to delete.
 	 *
 	 * @return  object
 	 *
 	 * @since   12.3
 	 */
-	public function deletePageById($pageid, $reason = null, $watchlist = null, $oldimage = null)
+	public function deletePageById($pageid,  $reason = null, $watchlist = null, $oldimage = null)
 	{
 		// Get the token.
 		$token = $this->getToken($pageid, 'delete');
@@ -131,11 +110,11 @@ class JMediawikiPages extends JMediawikiObject
 
 		// Build the request data.
 		$data = array(
-			'pageid'    => $pageid,
-			'token'     => $token,
-			'reason'    => $reason,
+			'pageid' => $pageid,
+			'token' => $token,
+			'reason' => $reason,
 			'watchlist' => $watchlist,
-			'oldimage'  => $oldimage
+			'oldimage' => $oldimage
 		);
 
 		// Send the request.
@@ -147,10 +126,10 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to restore certain revisions of a deleted page.
 	 *
-	 * @param   string $title     Title of the page you want to restore.
-	 * @param   string $reason    Reason for restoring (optional).
-	 * @param   string $timestamp Timestamps of the revisions to restore.
-	 * @param   string $watchlist Unconditionally add or remove the page from your watchlist.
+	 * @param   string  $title      Title of the page you want to restore.
+	 * @param   string  $reason     Reason for restoring (optional).
+	 * @param   string  $timestamp  Timestamps of the revisions to restore.
+	 * @param   string  $watchlist  Unconditionally add or remove the page from your watchlist.
 	 *
 	 * @return  object
 	 *
@@ -166,9 +145,9 @@ class JMediawikiPages extends JMediawikiObject
 
 		// Build the request data.
 		$data = array(
-			'title'     => $title,
-			'token'     => $token,
-			'reason'    => $reason,
+			'title' => $title,
+			'token' => $token,
+			'reason' => $reason,
 			'timestamp' => $timestamp,
 			'watchlist' => $watchlist,
 		);
@@ -182,21 +161,21 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to move a page.
 	 *
-	 * @param   string  $from           Title of the page you want to move.
-	 * @param   string  $to             Title you want to rename the page to.
-	 * @param   string  $reason         Reason for the move (optional).
-	 * @param   string  $movetalk       Move the talk page, if it exists.
-	 * @param   string  $movesubpages   Move subpages, if applicable.
-	 * @param   boolean $noredirect     Don't create a redirect.
-	 * @param   string  $watchlist      Unconditionally add or remove the page from your watchlist.
-	 * @param   boolean $ignorewarnings Ignore any warnings.
+	 * @param   string   $from            Title of the page you want to move.
+	 * @param   string   $to              Title you want to rename the page to.
+	 * @param   string   $reason          Reason for the move (optional).
+	 * @param   string   $movetalk        Move the talk page, if it exists.
+	 * @param   string   $movesubpages    Move subpages, if applicable.
+	 * @param   boolean  $noredirect      Don't create a redirect.
+	 * @param   string   $watchlist       Unconditionally add or remove the page from your watchlist.
+	 * @param   boolean  $ignorewarnings  Ignore any warnings.
 	 *
 	 * @return  object
 	 *
 	 * @since   12.3
 	 */
 	public function movePageByName($from, $to, $reason = null, $movetalk = null, $movesubpages = null, $noredirect = null,
-	                               $watchlist = null, $ignorewarnings = null)
+		$watchlist =null, $ignorewarnings = null)
 	{
 		// Get the token.
 		$token = $this->getToken($from, 'move');
@@ -206,14 +185,14 @@ class JMediawikiPages extends JMediawikiObject
 
 		// Build the request data.
 		$data = array(
-			'from'           => $from,
-			'to'             => $reason,
-			'token'          => $token,
-			'reason'         => $reason,
-			'movetalk'       => $movetalk,
-			'movesubpages'   => $movesubpages,
-			'noredirect'     => $noredirect,
-			'watchlist'      => $watchlist,
+			'from' => $from,
+			'to' => $reason,
+			'token' => $token,
+			'reason' => $reason,
+			'movetalk' => $movetalk,
+			'movesubpages' => $movesubpages,
+			'noredirect' => $noredirect,
+			'watchlist' => $watchlist,
 			'ignorewarnings' => $ignorewarnings
 		);
 
@@ -226,21 +205,21 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to move a page.
 	 *
-	 * @param   int     $fromid         Page ID of the page you want to move.
-	 * @param   string  $to             Title you want to rename the page to.
-	 * @param   string  $reason         Reason for the move (optional).
-	 * @param   string  $movetalk       Move the talk page, if it exists.
-	 * @param   string  $movesubpages   Move subpages, if applicable.
-	 * @param   boolean $noredirect     Don't create a redirect.
-	 * @param   string  $watchlist      Unconditionally add or remove the page from your watchlist.
-	 * @param   boolean $ignorewarnings Ignore any warnings.
+	 * @param   int      $fromid          Page ID of the page you want to move.
+	 * @param   string   $to              Title you want to rename the page to.
+	 * @param   string   $reason          Reason for the move (optional).
+	 * @param   string   $movetalk        Move the talk page, if it exists.
+	 * @param   string   $movesubpages    Move subpages, if applicable.
+	 * @param   boolean  $noredirect      Don't create a redirect.
+	 * @param   string   $watchlist       Unconditionally add or remove the page from your watchlist.
+	 * @param   boolean  $ignorewarnings  Ignore any warnings.
 	 *
 	 * @return  object
 	 *
 	 * @since   12.3
 	 */
 	public function movePageById($fromid, $to, $reason = null, $movetalk = null, $movesubpages = null, $noredirect = null,
-	                             $watchlist = null, $ignorewarnings = null)
+		$watchlist =null, $ignorewarnings = null)
 	{
 		// Get the token.
 		$token = $this->getToken($fromid, 'move');
@@ -250,14 +229,14 @@ class JMediawikiPages extends JMediawikiObject
 
 		// Build the request data.
 		$data = array(
-			'fromid'         => $fromid,
-			'to'             => $reason,
-			'token'          => $token,
-			'reason'         => $reason,
-			'movetalk'       => $movetalk,
-			'movesubpages'   => $movesubpages,
-			'noredirect'     => $noredirect,
-			'watchlist'      => $watchlist,
+			'fromid' => $fromid,
+			'to' => $reason,
+			'token' => $token,
+			'reason' => $reason,
+			'movetalk' => $movetalk,
+			'movesubpages' => $movesubpages,
+			'noredirect' => $noredirect,
+			'watchlist' => $watchlist,
 			'ignorewarnings' => $ignorewarnings
 		);
 
@@ -270,11 +249,11 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to undo the last edit to the page.
 	 *
-	 * @param   string $title     Title of the page you want to rollback.
-	 * @param   string $user      Name of the user whose edits are to be rolled back.
-	 * @param   string $summary   Custom edit summary. If not set, default summary will be used.
-	 * @param   string $markbot   Mark the reverted edits and the revert as bot edits.
-	 * @param   string $watchlist Unconditionally add or remove the page from your watchlist.
+	 * @param   string  $title      Title of the page you want to rollback.
+	 * @param   string  $user       Name of the user whose edits are to be rolled back.
+	 * @param   string  $summary    Custom edit summary. If not set, default summary will be used.
+	 * @param   string  $markbot    Mark the reverted edits and the revert as bot edits.
+	 * @param   string  $watchlist  Unconditionally add or remove the page from your watchlist.
 	 *
 	 * @return  object
 	 *
@@ -290,11 +269,11 @@ class JMediawikiPages extends JMediawikiObject
 
 		// Build the request data.
 		$data = array(
-			'title'     => $title,
-			'token'     => $token,
-			'user'      => $user,
-			'expiry'    => $summary,
-			'markbot'   => $markbot,
+			'title' => $title,
+			'token' => $token,
+			'user' => $user,
+			'expiry' => $summary,
+			'markbot' => $markbot,
 			'watchlist' => $watchlist
 		);
 
@@ -307,12 +286,12 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to change the protection level of a page.
 	 *
-	 * @param   string $title       Title of the page you want to (un)protect.
-	 * @param   string $protections Pipe-separated list of protection levels.
-	 * @param   string $expiry      Expiry timestamps.
-	 * @param   string $reason      Reason for (un)protecting (optional).
-	 * @param   string $cascade     Enable cascading protection.
-	 * @param   string $watchlist   Unconditionally add or remove the page from your watchlist.
+	 * @param   string  $title        Title of the page you want to (un)protect.
+	 * @param   string  $protections  Pipe-separated list of protection levels.
+	 * @param   string  $expiry       Expiry timestamps.
+	 * @param   string  $reason       Reason for (un)protecting (optional).
+	 * @param   string  $cascade      Enable cascading protection.
+	 * @param   string  $watchlist    Unconditionally add or remove the page from your watchlist.
 	 *
 	 * @return  object
 	 *
@@ -328,13 +307,13 @@ class JMediawikiPages extends JMediawikiObject
 
 		// Build the request data.
 		$data = array(
-			'title'       => $title,
-			'token'       => $token,
+			'title' => $title,
+			'token' => $token,
 			'protections' => $protections,
-			'expiry'      => $expiry,
-			'reason'      => $reason,
-			'cascade'     => $cascade,
-			'watchlist'   => $watchlist
+			'expiry' => $expiry,
+			'reason' => $reason,
+			'cascade' => $cascade,
+			'watchlist' => $watchlist
 		);
 
 		// Send the request.
@@ -346,10 +325,10 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to get basic page information.
 	 *
-	 * @param   array   $titles     Page titles to retrieve info.
-	 * @param   array   $inprop     Which additional properties to get.
-	 * @param   array   $intoken    Request a token to perform a data-modifying action on a page
-	 * @param   boolean $incontinue When more results are available, use this to continue.
+	 * @param   array    $titles      Page titles to retrieve info.
+	 * @param   array    $inprop      Which additional properties to get.
+	 * @param   array    $intoken     Request a token to perform a data-modifying action on a page
+	 * @param   boolean  $incontinue  When more results are available, use this to continue.
 	 *
 	 * @return  object
 	 *
@@ -387,9 +366,9 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to get various properties defined in the page content.
 	 *
-	 * @param   array   $titles     Page titles to retrieve properties.
-	 * @param   boolean $ppcontinue When more results are available, use this to continue.
-	 * @param   string  $ppprop     Page prop to look on the page for.
+	 * @param   array    $titles      Page titles to retrieve properties.
+	 * @param   boolean  $ppcontinue  When more results are available, use this to continue.
+	 * @param   string   $ppprop      Page prop to look on the page for.
 	 *
 	 * @return  object
 	 *
@@ -422,10 +401,10 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to get a list of revisions.
 	 *
-	 * @param   array   $titles  Page titles to retrieve revisions.
-	 * @param   array   $rvprop  Which properties to get for each revision.
-	 * @param   boolean $rvparse Parse revision content.
-	 * @param   int     $rvlimit Limit how many revisions will be returned.
+	 * @param   array    $titles   Page titles to retrieve revisions.
+	 * @param   array    $rvprop   Which properties to get for each revision.
+	 * @param   boolean  $rvparse  Parse revision content.
+	 * @param   int      $rvlimit  Limit how many revisions will be returned.
 	 *
 	 * @return  object
 	 *
@@ -463,12 +442,12 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to get all page templates from the given page.
 	 *
-	 * @param   array   $titles      Page titles to retrieve templates.
-	 * @param   array   $tlnamespace Show templates in this namespace(s) only.
-	 * @param   integer $tllimit     How many templates to return.
-	 * @param   boolean $tlcontinue  When more results are available, use this to continue.
-	 * @param   string  $tltemplates Only list these templates.
-	 * @param   string  $tldir       The direction in which to list.
+	 * @param   array    $titles       Page titles to retrieve templates.
+	 * @param   array    $tlnamespace  Show templates in this namespace(s) only.
+	 * @param   integer  $tllimit      How many templates to return.
+	 * @param   boolean  $tlcontinue   When more results are available, use this to continue.
+	 * @param   string   $tltemplates  Only list these templates.
+	 * @param   string   $tldir        The direction in which to list.
 	 *
 	 * @return  object
 	 *
@@ -516,20 +495,20 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to get all pages that link to the given page.
 	 *
-	 * @param   string  $bltitle          Title to search.
-	 * @param   integer $blpageid         Pageid to search.
-	 * @param   boolean $blcontinue       When more results are available, use this to continue.
-	 * @param   array   $blnamespace      The namespace to enumerate.
-	 * @param   string  $blfilterredirect How to filter for redirects..
-	 * @param   integer $bllimit          How many total pages to return.
-	 * @param   boolean $blredirect       If linking page is a redirect, find all pages that link to that redirect as well.
+	 * @param   string   $bltitle           Title to search.
+	 * @param   integer  $blpageid          Pageid to search.
+	 * @param   boolean  $blcontinue        When more results are available, use this to continue.
+	 * @param   array    $blnamespace       The namespace to enumerate.
+	 * @param   string   $blfilterredirect  How to filter for redirects..
+	 * @param   integer  $bllimit           How many total pages to return.
+	 * @param   boolean  $blredirect        If linking page is a redirect, find all pages that link to that redirect as well.
 	 *
 	 * @return  object
 	 *
 	 * @since   12.3
 	 */
 	public function getBackLinks($bltitle, $blpageid = null, $blcontinue = null, array $blnamespace = null, $blfilterredirect = null,
-	                             $bllimit = null, $blredirect = null)
+		$bllimit = null, $blredirect = null)
 	{
 		// Build the request.
 		$path = '?action=query&list=backlinks';
@@ -578,11 +557,11 @@ class JMediawikiPages extends JMediawikiObject
 	/**
 	 * Method to get all pages that link to the given interwiki link.
 	 *
-	 * @param   string  $iwbltitle    Interwiki link to search for. Must be used with iwblprefix.
-	 * @param   string  $iwblprefix   Prefix for the interwiki.
-	 * @param   boolean $iwblcontinue When more results are available, use this to continue.
-	 * @param   integer $iwbllimit    How many total pages to return.
-	 * @param   array   $iwblprop     Which properties to get.
+	 * @param   string   $iwbltitle     Interwiki link to search for. Must be used with iwblprefix.
+	 * @param   string   $iwblprefix    Prefix for the interwiki.
+	 * @param   boolean  $iwblcontinue  When more results are available, use this to continue.
+	 * @param   integer  $iwbllimit     How many total pages to return.
+	 * @param   array    $iwblprop      Which properties to get.
 	 *
 	 * @return  object
 	 *
@@ -622,5 +601,26 @@ class JMediawikiPages extends JMediawikiObject
 		$response = $this->client->get($this->fetchUrl($path));
 
 		return $this->validateResponse($response);
+	}
+
+	/**
+	 * Method to get access token.
+	 *
+	 * @param   string  $user     The User to get token.
+	 * @param   string  $intoken  The type of token.
+	 *
+	 * @return  object
+	 *
+	 * @since   12.1
+	 */
+	public function getToken($user, $intoken)
+	{
+		// Build the request path.
+		$path = '?action=query&prop=info&intoken=' . $intoken . '&titles=User:' . $user;
+
+		// Send the request.
+		$response = $this->client->post($this->fetchUrl($path), null);
+
+		return (string) $this->validateResponse($response)->query->pages->page[$intoken . 'token'];
 	}
 }

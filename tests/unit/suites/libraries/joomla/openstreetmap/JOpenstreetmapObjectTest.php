@@ -38,36 +38,6 @@ class JOpenstreetmapObjectTest extends TestCase
 	protected $object;
 
 	/**
-	 * Tests the setOption method
-	 *
-	 * @return void
-	 *
-	 * @since 13.1
-	 */
-	public function testSetOption()
-	{
-		$this->object->setOption('api.url', 'https://example.com/settest');
-
-		$this->assertThat(
-			$this->options->get('api.url'),
-			$this->equalTo('https://example.com/settest')
-		);
-	}
-
-	/**
-	 * Tests the getSendRequest method
-	 *
-	 * @return  void
-	 *
-	 * @since   13.1
-	 */
-	public function testSendRequest()
-	{
-		// Method tested via requesting classes
-		$this->markTestSkipped('This method is tested via requesting classes.');
-	}
-
-	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
@@ -78,7 +48,7 @@ class JOpenstreetmapObjectTest extends TestCase
 	protected function setUp()
 	{
 		$this->options = new JRegistry;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
 
 		$this->object = new JOpenstreetmapObjectMock($this->options, $this->client);
 	}
@@ -93,5 +63,35 @@ class JOpenstreetmapObjectTest extends TestCase
 	 */
 	protected function tearDown()
 	{
+	}
+
+	/**
+	 * Tests the setOption method
+	 *
+	 * @return void
+	 *
+	 * @since 13.1
+	 */
+	public function testSetOption()
+	{
+		$this->object->setOption('api.url', 'https://example.com/settest');
+
+		$this->assertThat(
+				$this->options->get('api.url'),
+				$this->equalTo('https://example.com/settest')
+		);
+	}
+
+	/**
+	 * Tests the getSendRequest method
+	 *
+	 * @return  void
+	 *
+	 * @since   13.1
+	 */
+	public function testSendRequest()
+	{
+		// Method tested via requesting classes
+		$this->markTestSkipped('This method is tested via requesting classes.');
 	}
 }

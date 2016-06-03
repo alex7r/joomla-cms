@@ -23,10 +23,10 @@ class JGithubPackageActivityNotifications extends JGithubPackage
 	 *
 	 * List all notifications for the current user, grouped by repository.
 	 *
-	 * @param   boolean $all             True to show notifications marked as read.
-	 * @param   boolean $participating   True to show only notifications in which the user is directly participating or
+	 * @param   boolean  $all            True to show notifications marked as read.
+	 * @param   boolean  $participating  True to show only notifications in which the user is directly participating or
 	 *                                   mentioned.
-	 * @param   JDate   $since           filters out any notifications updated before the given time. The time should be passed in
+	 * @param   JDate    $since          filters out any notifications updated before the given time. The time should be passed in
 	 *                                   as UTC in the ISO 8601 format.
 	 *
 	 * @since 3.3 (CMS)
@@ -52,12 +52,12 @@ class JGithubPackageActivityNotifications extends JGithubPackage
 	 *
 	 * List all notifications for the current user.
 	 *
-	 * @param   string  $owner           Repository owner.
-	 * @param   string  $repo            Repository name.
-	 * @param   boolean $all             True to show notifications marked as read.
-	 * @param   boolean $participating   True to show only notifications in which the user is directly participating or
+	 * @param   string   $owner          Repository owner.
+	 * @param   string   $repo           Repository name.
+	 * @param   boolean  $all            True to show notifications marked as read.
+	 * @param   boolean  $participating  True to show only notifications in which the user is directly participating or
 	 *                                   mentioned.
-	 * @param   JDate   $since           filters out any notifications updated before the given time. The time should be passed in
+	 * @param   JDate    $since          filters out any notifications updated before the given time. The time should be passed in
 	 *                                   as UTC in the ISO 8601 format.
 	 *
 	 * @since 3.3 (CMS)
@@ -83,9 +83,9 @@ class JGithubPackageActivityNotifications extends JGithubPackage
 	 *
 	 * Marking a notification as “read” removes it from the default view on GitHub.com.
 	 *
-	 * @param   boolean $unread         Changes the unread status of the threads.
-	 * @param   boolean $read           Inverse of “unread”.
-	 * @param   JDate   $last_read_at   Describes the last point that notifications were checked.
+	 * @param   boolean  $unread        Changes the unread status of the threads.
+	 * @param   boolean  $read          Inverse of “unread”.
+	 * @param   JDate    $last_read_at  Describes the last point that notifications were checked.
 	 *                                  Anything updated since this time will not be updated. Default: Now. Expected in ISO 8601 format.
 	 *
 	 * @since 3.3 (CMS)
@@ -118,11 +118,11 @@ class JGithubPackageActivityNotifications extends JGithubPackage
 	 *
 	 * Marking all notifications in a repository as “read” removes them from the default view on GitHub.com.
 	 *
-	 * @param   string  $owner          Repository owner.
-	 * @param   string  $repo           Repository name.
-	 * @param   boolean $unread         Changes the unread status of the threads.
-	 * @param   boolean $read           Inverse of “unread”.
-	 * @param   JDate   $last_read_at   Describes the last point that notifications were checked.
+	 * @param   string   $owner         Repository owner.
+	 * @param   string   $repo          Repository name.
+	 * @param   boolean  $unread        Changes the unread status of the threads.
+	 * @param   boolean  $read          Inverse of “unread”.
+	 * @param   JDate    $last_read_at  Describes the last point that notifications were checked.
 	 *                                  Anything updated since this time will not be updated. Default: Now. Expected in ISO 8601 format.
 	 *
 	 * @since 3.3 (CMS)
@@ -153,7 +153,7 @@ class JGithubPackageActivityNotifications extends JGithubPackage
 	/**
 	 * View a single thread.
 	 *
-	 * @param   integer $id The thread id.
+	 * @param   integer  $id  The thread id.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -172,9 +172,9 @@ class JGithubPackageActivityNotifications extends JGithubPackage
 	/**
 	 * Mark a thread as read.
 	 *
-	 * @param   integer $id     The thread id.
-	 * @param   boolean $unread Changes the unread status of the threads.
-	 * @param   boolean $read   Inverse of “unread”.
+	 * @param   integer  $id      The thread id.
+	 * @param   boolean  $unread  Changes the unread status of the threads.
+	 * @param   boolean  $read    Inverse of “unread”.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -202,7 +202,7 @@ class JGithubPackageActivityNotifications extends JGithubPackage
 	 * This checks to see if the current user is subscribed to a thread.
 	 * You can also get a Repository subscription.
 	 *
-	 * @param   integer $id The thread id.
+	 * @param   integer  $id  The thread id.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -225,9 +225,9 @@ class JGithubPackageActivityNotifications extends JGithubPackage
 	 * if the user is already subscribed to the repository. Ignoring a thread will mute all
 	 * future notifications (until you comment or get @mentioned).
 	 *
-	 * @param   integer $id         The thread id.
-	 * @param   boolean $subscribed Determines if notifications should be received from this thread.
-	 * @param   boolean $ignored    Determines if all notifications should be blocked from this thread.
+	 * @param   integer  $id          The thread id.
+	 * @param   boolean  $subscribed  Determines if notifications should be received from this thread.
+	 * @param   boolean  $ignored     Determines if all notifications should be blocked from this thread.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -251,7 +251,7 @@ class JGithubPackageActivityNotifications extends JGithubPackage
 	/**
 	 * Delete a Thread Subscription.
 	 *
-	 * @param   integer $id The thread id.
+	 * @param   integer  $id  The thread id.
 	 *
 	 * @since 3.3 (CMS)
 	 *

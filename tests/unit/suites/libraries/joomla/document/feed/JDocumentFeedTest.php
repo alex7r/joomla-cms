@@ -18,14 +18,6 @@ class JDocumentFeedTest extends TestCase
 	protected $object;
 
 	/**
-	 * @testdox  Test that addItem returns an instance of $this
-	 */
-	public function testEnsureAddItemReturnsThisObject()
-	{
-		$this->assertSame($this->object, $this->object->addItem(new JFeedItem));
-	}
-
-	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
@@ -49,5 +41,13 @@ class JDocumentFeedTest extends TestCase
 		$this->restoreFactoryState();
 
 		parent::tearDown();
+	}
+
+	/**
+	 * @testdox  Test that addItem returns an instance of $this
+	 */
+	public function testEnsureAddItemReturnsThisObject()
+	{
+		$this->assertSame($this->object, $this->object->addItem(new JFeedItem));
 	}
 }

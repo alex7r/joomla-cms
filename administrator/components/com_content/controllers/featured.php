@@ -64,24 +64,6 @@ class ContentControllerFeatured extends ContentControllerArticles
 	}
 
 	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param   string $name   The model name. Optional.
-	 * @param   string $prefix The class prefix. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  object  The model.
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'Feature', $prefix = 'ContentModel', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
-	}
-
-	/**
 	 * Method to publish a list of articles.
 	 *
 	 * @return  void
@@ -93,5 +75,23 @@ class ContentControllerFeatured extends ContentControllerArticles
 		parent::publish();
 
 		$this->setRedirect('index.php?option=com_content&view=featured');
+	}
+
+	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  object  The model.
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'Feature', $prefix = 'ContentModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 }

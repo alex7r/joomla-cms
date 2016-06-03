@@ -21,8 +21,8 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry    $options Google options object
-	 * @param   JGoogleAuth $auth    Google data http client object
+	 * @param   Registry     $options  Google options object
+	 * @param   JGoogleAuth  $auth     Google data http client object
 	 *
 	 * @since   12.3
 	 */
@@ -39,7 +39,7 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to remove a calendar from a user's calendar list
 	 *
-	 * @param   string $calendarID ID of calendar to delete
+	 * @param   string  $calendarID  ID of calendar to delete
 	 *
 	 * @return  boolean  Success or failure
 	 *
@@ -68,7 +68,7 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to get a calendar's settings from Google
 	 *
-	 * @param   string $calendarID ID of calendar to get.
+	 * @param   string  $calendarID  ID of calendar to get.
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -99,8 +99,8 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to add a calendar to a user's Google Calendar list
 	 *
-	 * @param   string $calendarID New calendar ID
-	 * @param   array  $options    New calendar settings
+	 * @param   string  $calendarID  New calendar ID
+	 * @param   array   $options     New calendar settings
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -112,8 +112,8 @@ class JGoogleDataCalendar extends JGoogleData
 		if ($this->isAuthenticated())
 		{
 			$options['id'] = $calendarID;
-			$url           = 'https://www.googleapis.com/calendar/v3/users/me/calendarList';
-			$jdata         = $this->query($url, json_encode($options), array('Content-type' => 'application/json'), 'post');
+			$url = 'https://www.googleapis.com/calendar/v3/users/me/calendarList';
+			$jdata = $this->query($url, json_encode($options), array('Content-type' => 'application/json'), 'post');
 
 			if ($data = json_decode($jdata->body, true))
 			{
@@ -133,8 +133,8 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to retrieve calendar list from Google
 	 *
-	 * @param   array $options  Search settings
-	 * @param   int   $maxpages Maximum number of pages of calendars to return
+	 * @param   array  $options   Search settings
+	 * @param   int    $maxpages  Maximum number of pages of calendars to return
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -160,8 +160,8 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to edit a Google Calendar's settings
 	 *
-	 * @param   string $calendarID Calendar ID
-	 * @param   array  $options    Calendar settings
+	 * @param   string  $calendarID  Calendar ID
+	 * @param   array   $options     Calendar settings
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -172,7 +172,7 @@ class JGoogleDataCalendar extends JGoogleData
 	{
 		if ($this->isAuthenticated())
 		{
-			$url   = 'https://www.googleapis.com/calendar/v3/users/me/calendarList/' . urlencode($calendarID);
+			$url = 'https://www.googleapis.com/calendar/v3/users/me/calendarList/' . urlencode($calendarID);
 			$jdata = $this->query($url, json_encode($options), array('Content-type' => 'application/json'), 'put');
 
 			if ($data = json_decode($jdata->body, true))
@@ -193,7 +193,7 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to clear a Google Calendar
 	 *
-	 * @param   string $calendarID ID of calendar to clear
+	 * @param   string  $calendarID  ID of calendar to clear
 	 *
 	 * @return  boolean  Success or failure
 	 *
@@ -222,7 +222,7 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to delete a calendar from Google
 	 *
-	 * @param   string $calendarID ID of calendar to delete.
+	 * @param   string  $calendarID  ID of calendar to delete.
 	 *
 	 * @return  boolean  Success or failure
 	 *
@@ -251,8 +251,8 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to create a Google Calendar
 	 *
-	 * @param   string $title   New calendar title
-	 * @param   array  $options New calendar settings
+	 * @param   string  $title    New calendar title
+	 * @param   array   $options  New calendar settings
 	 *
 	 * @return  mixed  Data from Google.
 	 *
@@ -264,8 +264,8 @@ class JGoogleDataCalendar extends JGoogleData
 		if ($this->isAuthenticated())
 		{
 			$options['summary'] = $title;
-			$url                = 'https://www.googleapis.com/calendar/v3/calendars';
-			$jdata              = $this->query($url, json_encode($options), array('Content-type' => 'application/json'), 'post');
+			$url = 'https://www.googleapis.com/calendar/v3/calendars';
+			$jdata = $this->query($url, json_encode($options), array('Content-type' => 'application/json'), 'post');
 
 			if ($data = json_decode($jdata->body, true))
 			{
@@ -285,8 +285,8 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to edit a Google Calendar
 	 *
-	 * @param   string $calendarID Calendar ID.
-	 * @param   array  $options    Calendar settings.
+	 * @param   string  $calendarID  Calendar ID.
+	 * @param   array   $options     Calendar settings.
 	 *
 	 * @return  mixed  Data from Google.
 	 *
@@ -297,9 +297,9 @@ class JGoogleDataCalendar extends JGoogleData
 	{
 		if ($this->isAuthenticated())
 		{
-			$url   = 'https://www.googleapis.com/calendar/v3/users/me/calendars/' . urlencode($calendarID);
+			$url = 'https://www.googleapis.com/calendar/v3/users/me/calendars/' . urlencode($calendarID);
 			$jdata = $this->query($url, json_encode($options), array('Content-type' => 'application/json'), 'put');
-			$data  = json_decode($jdata->body, true);
+			$data = json_decode($jdata->body, true);
 
 			if ($data && array_key_exists('items', $data))
 			{
@@ -319,8 +319,8 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to delete an event from a Google Calendar
 	 *
-	 * @param   string $calendarID ID of calendar to delete from
-	 * @param   string $eventID    ID of event to delete.
+	 * @param   string  $calendarID  ID of calendar to delete from
+	 * @param   string  $eventID     ID of event to delete.
 	 *
 	 * @return  boolean  Success or failure.
 	 *
@@ -331,7 +331,7 @@ class JGoogleDataCalendar extends JGoogleData
 	{
 		if ($this->isAuthenticated())
 		{
-			$url  = 'https://www.googleapis.com/calendar/v3/users/me/calendars/' . urlencode($calendarID) . '/events/' . urlencode($eventID);
+			$url = 'https://www.googleapis.com/calendar/v3/users/me/calendars/' . urlencode($calendarID) . '/events/' . urlencode($eventID);
 			$data = $this->query($url, null, null, 'delete');
 
 			if ($data->body != '')
@@ -350,9 +350,9 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to get an event from a Google Calendar
 	 *
-	 * @param   string $calendarID ID of calendar
-	 * @param   string $eventID    ID of event to get
-	 * @param   array  $options    Options to send to Google
+	 * @param   string  $calendarID  ID of calendar
+	 * @param   string  $eventID     ID of event to get
+	 * @param   array   $options     Options to send to Google
 	 *
 	 * @return  mixed  Data from Google.
 	 *
@@ -385,13 +385,13 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to create a Google Calendar event
 	 *
-	 * @param   string  $calendarID ID of calendar
-	 * @param   mixed   $start      Event start time
-	 * @param   mixed   $end        Event end time
-	 * @param   array   $options    New event settings
-	 * @param   mixed   $timezone   Timezone for event
-	 * @param   boolean $allday     Treat event as an all-day event
-	 * @param   boolean $notify     Notify participants
+	 * @param   string   $calendarID  ID of calendar
+	 * @param   mixed    $start       Event start time
+	 * @param   mixed    $end         Event end time
+	 * @param   array    $options     New event settings
+	 * @param   mixed    $timezone    Timezone for event
+	 * @param   boolean  $allday      Treat event as an all-day event
+	 * @param   boolean  $notify      Notify participants
 	 *
 	 * @return  mixed  Data from Google.
 	 *
@@ -450,31 +450,31 @@ class JGoogleDataCalendar extends JGoogleData
 			if ($allday)
 			{
 				$options['start'] = array('date' => $startobj->format('Y-m-d'));
-				$options['end']   = array('date' => $endobj->format('Y-m-d'));
+				$options['end'] = array('date' => $endobj->format('Y-m-d'));
 			}
 			else
 			{
 				$options['start'] = array('dateTime' => $startobj->format(DateTime::RFC3339));
-				$options['end']   = array('dateTime' => $endobj->format(DateTime::RFC3339));
+				$options['end'] = array('dateTime' => $endobj->format(DateTime::RFC3339));
 			}
 
 			if ($timezone === true)
 			{
 				$options['start']['timeZone'] = $startobj->getTimezone()->getName();
-				$options['end']['timeZone']   = $endobj->getTimezone()->getName();
+				$options['end']['timeZone'] = $endobj->getTimezone()->getName();
 			}
 			elseif (is_a($timezone, 'DateTimeZone'))
 			{
 				$options['start']['timeZone'] = $timezone->getName();
-				$options['end']['timeZone']   = $timezone->getName();
+				$options['end']['timeZone'] = $timezone->getName();
 			}
 			elseif (is_string($timezone))
 			{
 				$options['start']['timeZone'] = $timezone;
-				$options['end']['timeZone']   = $timezone;
+				$options['end']['timeZone'] = $timezone;
 			}
 
-			$url   = 'https://www.googleapis.com/calendar/v3/calendars/' . urlencode($calendarID) . '/events' . ($notify ? '?sendNotifications=true' : '');
+			$url = 'https://www.googleapis.com/calendar/v3/calendars/' . urlencode($calendarID) . '/events' . ($notify ? '?sendNotifications=true' : '');
 			$jdata = $this->query($url, json_encode($options), array('Content-type' => 'application/json'), 'post');
 
 			if ($data = json_decode($jdata->body, true))
@@ -495,10 +495,10 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to retrieve a list of events on a Google calendar
 	 *
-	 * @param   string $calendarID Calendar ID
-	 * @param   string $eventID    ID of the event to change
-	 * @param   array  $options    Search settings
-	 * @param   int    $maxpages   Minimum number of events to retrieve (more may be retrieved depending on page size)
+	 * @param   string  $calendarID  Calendar ID
+	 * @param   string  $eventID     ID of the event to change
+	 * @param   array   $options     Search settings
+	 * @param   int     $maxpages    Minimum number of events to retrieve (more may be retrieved depending on page size)
 	 *
 	 * @return  mixed  Data from Google.
 	 *
@@ -525,9 +525,9 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to retrieve a list of events on a Google calendar
 	 *
-	 * @param   string $calendarID Calendar ID
-	 * @param   array  $options    Calendar settings
-	 * @param   int    $maxpages   Cycle through pages of data to generate a complete list
+	 * @param   string  $calendarID  Calendar ID
+	 * @param   array   $options     Calendar settings
+	 * @param   int     $maxpages    Cycle through pages of data to generate a complete list
 	 *
 	 * @return  mixed  Data from Google.
 	 *
@@ -553,10 +553,10 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to move an event from one calendar to another
 	 *
-	 * @param   string  $calendarID Calendar ID
-	 * @param   string  $eventID    ID of the event to change
-	 * @param   string  $destID     Calendar ID
-	 * @param   boolean $notify     Notify participants of changes
+	 * @param   string   $calendarID  Calendar ID
+	 * @param   string   $eventID     ID of the event to change
+	 * @param   string   $destID      Calendar ID
+	 * @param   boolean  $notify      Notify participants of changes
 	 *
 	 * @return  mixed  Data from Google.
 	 *
@@ -589,10 +589,10 @@ class JGoogleDataCalendar extends JGoogleData
 	/**
 	 * Method to edit a Google Calendar event
 	 *
-	 * @param   string  $calendarID Calendar ID
-	 * @param   string  $eventID    ID of the event to change
-	 * @param   array   $options    Event settings
-	 * @param   boolean $notify     Notify participants of changes
+	 * @param   string   $calendarID  Calendar ID
+	 * @param   string   $eventID     ID of the event to change
+	 * @param   array    $options     Event settings
+	 * @param   boolean  $notify      Notify participants of changes
 	 *
 	 * @return  mixed  Data from Google.
 	 *

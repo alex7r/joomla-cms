@@ -66,7 +66,7 @@ class ContactModelFeatured extends JModelList
 	/**
 	 * The category that applies.
 	 *
-	 * @access       protected
+	 * @access      protected
 	 * @var         object
 	 * @deprecated   4.0  Variable not used ever
 	 */
@@ -75,7 +75,7 @@ class ContactModelFeatured extends JModelList
 	/**
 	 * The list of other contact categories.
 	 *
-	 * @access       protected
+	 * @access    protected
 	 * @var       array
 	 * @deprecated   4.0  Variable not used ever
 	 */
@@ -84,7 +84,7 @@ class ContactModelFeatured extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @since   1.6
 	 */
@@ -119,7 +119,7 @@ class ContactModelFeatured extends JModelList
 		// Convert the params field into an object, saving original in _params
 		for ($i = 0, $n = count($items); $i < $n; $i++)
 		{
-			$item = &$items[$i];
+			$item = & $items[$i];
 			if (!isset($this->_params))
 			{
 				$params = new Registry;
@@ -140,11 +140,11 @@ class ContactModelFeatured extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		$user   = JFactory::getUser();
+		$user = JFactory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		// Create a new query object.
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select required fields from the categories.
@@ -184,8 +184,8 @@ class ContactModelFeatured extends JModelList
 
 			// Filter by start and end dates.
 			$nullDate = $db->quote($db->getNullDate());
-			$date     = JFactory::getDate();
-			$nowDate  = $db->quote($date->toSql());
+			$date = JFactory::getDate();
+			$nowDate = $db->quote($date->toSql());
 			$query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')')
 				->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')')
 				->where($publishedWhere . ' = ' . (int) $state);
@@ -208,8 +208,8 @@ class ContactModelFeatured extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -217,7 +217,7 @@ class ContactModelFeatured extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app    = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$params = JComponentHelper::getParams('com_contact');
 
 		// List state information

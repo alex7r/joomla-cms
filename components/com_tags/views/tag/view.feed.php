@@ -19,7 +19,7 @@ class TagsViewTag extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -41,7 +41,7 @@ class TagsViewTag extends JViewLegacy
 		}
 
 		// Get some data from the model
-		$items = $this->get('Items');
+		$items    = $this->get('Items');
 
 		if ($items !== false)
 		{

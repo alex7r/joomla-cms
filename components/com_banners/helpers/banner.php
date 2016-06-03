@@ -19,7 +19,7 @@ abstract class BannerHelper
 	/**
 	 * Checks if a URL is an image
 	 *
-	 * @param   string $url The URL path to the potential image
+	 * @param   string  $url  The URL path to the potential image
 	 *
 	 * @return  boolean  True if an image of type bmp, gif, jp(e)g or png, false otherwise
 	 *
@@ -33,7 +33,7 @@ abstract class BannerHelper
 	/**
 	 * Checks if a URL is a Flash file
 	 *
-	 * @param   string $url The URL path to the potential flash file
+	 * @param   string  $url  The URL path to the potential flash file
 	 *
 	 * @return  boolean  True if an image of type bmp, gif, jp(e)g or png, false otherwise
 	 *

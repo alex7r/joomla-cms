@@ -24,9 +24,9 @@ class OutputFilter
 	 * Object parameters that are non-string, array, object or start with underscore
 	 * will be converted
 	 *
-	 * @param   object  &$mixed       An object to be parsed
-	 * @param   integer $quote_style  The optional quote style for the htmlspecialchars function
-	 * @param   mixed   $exclude_keys An optional string single field name or array of field names not to be parsed (eg, for a textarea)
+	 * @param   object   &$mixed        An object to be parsed
+	 * @param   integer  $quote_style   The optional quote style for the htmlspecialchars function
+	 * @param   mixed    $exclude_keys  An optional string single field name or array of field names not to be parsed (eg, for a textarea)
 	 *
 	 * @return  void
 	 *
@@ -60,7 +60,7 @@ class OutputFilter
 	/**
 	 * This method processes a string and replaces all instances of & with &amp; in links only.
 	 *
-	 * @param   string $input String to process
+	 * @param   string  $input  String to process
 	 *
 	 * @return  string  Processed string
 	 *
@@ -72,7 +72,7 @@ class OutputFilter
 
 		return preg_replace_callback(
 			"#$regex#i",
-			function ($m)
+			function($m)
 			{
 				return preg_replace('#&(?!amp;)#', '&amp;', $m[0]);
 			},
@@ -84,7 +84,7 @@ class OutputFilter
 	 * This method processes a string and replaces all accented UTF-8 characters by unaccented
 	 * ASCII-7 "equivalents", whitespaces are replaced by hyphens and the string is lowercase.
 	 *
-	 * @param   string $string String to process
+	 * @param   string  $string  String to process
 	 *
 	 * @return  string  Processed string
 	 *
@@ -112,7 +112,7 @@ class OutputFilter
 	/**
 	 * This method implements unicode slugs instead of transliteration.
 	 *
-	 * @param   string $string String to process
+	 * @param   string  $string  String to process
 	 *
 	 * @return  string  Processed string
 	 *
@@ -146,7 +146,7 @@ class OutputFilter
 	/**
 	 * Replaces &amp; with & for XHTML compliance
 	 *
-	 * @param   string $text Text to process
+	 * @param   string  $text  Text to process
 	 *
 	 * @return  string  Processed string.
 	 *
@@ -168,7 +168,7 @@ class OutputFilter
 	/**
 	 * Cleans text of all formatting and scripting code
 	 *
-	 * @param   string &$text Text to clean
+	 * @param   string  &$text  Text to clean
 	 *
 	 * @return  string  Cleaned text.
 	 *
@@ -192,7 +192,7 @@ class OutputFilter
 	/**
 	 * Strip img-tags from string
 	 *
-	 * @param   string $string Sting to be cleaned.
+	 * @param   string  $string  Sting to be cleaned.
 	 *
 	 * @return  string  Cleaned string
 	 *
@@ -206,7 +206,7 @@ class OutputFilter
 	/**
 	 * Strip iframe-tags from string
 	 *
-	 * @param   string $string Sting to be cleaned.
+	 * @param   string  $string  Sting to be cleaned.
 	 *
 	 * @return  string  Cleaned string
 	 *

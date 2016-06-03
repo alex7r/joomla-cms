@@ -58,24 +58,6 @@ class RedirectControllerLinks extends JControllerAdmin
 	}
 
 	/**
-	 * Proxy for getModel.
-	 *
-	 * @param   string $name   The name of the model.
-	 * @param   string $prefix The prefix of the model.
-	 * @param   array  $config An array of settings.
-	 *
-	 * @return  JModel instance
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'Link', $prefix = 'RedirectModel', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
-	}
-
-	/**
 	 * Method to duplicate URLs in records.
 	 *
 	 * @return  void.
@@ -114,6 +96,24 @@ class RedirectControllerLinks extends JControllerAdmin
 		}
 
 		$this->setRedirect('index.php?option=com_redirect&view=links');
+	}
+
+	/**
+	 * Proxy for getModel.
+	 *
+	 * @param   string  $name    The name of the model.
+	 * @param   string  $prefix  The prefix of the model.
+	 * @param   array   $config  An array of settings.
+	 *
+	 * @return  JModel instance
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'Link', $prefix = 'RedirectModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 
 	/**

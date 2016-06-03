@@ -52,7 +52,7 @@ class JTableAsset extends JTableNested
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver $db Database driver object.
+	 * @param   JDatabaseDriver  $db  Database driver object.
 	 *
 	 * @since   11.1
 	 */
@@ -64,7 +64,7 @@ class JTableAsset extends JTableNested
 	/**
 	 * Method to load an asset by its name.
 	 *
-	 * @param   string $name The name of the asset.
+	 * @param   string  $name  The name of the asset.
 	 *
 	 * @return  integer
 	 *
@@ -132,10 +132,10 @@ class JTableAsset extends JTableNested
 	/**
 	 * Method to recursively rebuild the whole nested set tree.
 	 *
-	 * @param   integer $parentId The root of the tree to rebuild.
-	 * @param   integer $leftId   The left id to start with in building the tree.
-	 * @param   integer $level    The level to assign to the current nodes.
-	 * @param   string  $path     The path to the current nodes.
+	 * @param   integer  $parentId  The root of the tree to rebuild.
+	 * @param   integer  $leftId    The left id to start with in building the tree.
+	 * @param   integer  $level     The level to assign to the current nodes.
+	 * @param   string   $path      The path to the current nodes.
 	 *
 	 * @return  integer  1 + value of root rgt on success, false on failure
 	 *

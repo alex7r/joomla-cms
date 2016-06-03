@@ -64,7 +64,7 @@ class JViewLegacyTest extends TestCase
 	{
 		$this->class->test = 'pass';
 
-		$test2       = new ModelMockupJView;
+		$test2 = new ModelMockupJView;
 		$test2->name = 'test2';
 
 		TestReflection::setValue($this->class, '_models', array('test1' => new ModelMockupJView, 'test2' => $test2));
@@ -101,14 +101,14 @@ class JViewLegacyTest extends TestCase
 	public function testGetModel()
 	{
 		// Prepare variable to compare against and a bunch of models
-		$models                = array();
-		$model1                = new ModelMockupJView;
-		$models['model']       = $model1;
-		$model2                = new ModelMockupJView;
-		$model2->name          = 'test';
-		$models['test']        = $model2;
-		$model3                = new ModelMockupJView;
-		$model3->name          = 'defaulttest';
+		$models = array();
+		$model1 = new ModelMockupJView;
+		$models['model'] = $model1;
+		$model2 = new ModelMockupJView;
+		$model2->name = 'test';
+		$models['test'] = $model2;
+		$model3 = new ModelMockupJView;
+		$model3->name = 'defaulttest';
 		$models['defaulttest'] = $model3;
 
 		// Prepare JView object
@@ -221,11 +221,11 @@ class JViewLegacyTest extends TestCase
 	public function testSetModel()
 	{
 		// Prepare variable to compare against and a bunch of models
-		$models       = array();
-		$model1       = new ModelMockupJView;
-		$model2       = new ModelMockupJView;
+		$models = array();
+		$model1 = new ModelMockupJView;
+		$model2 = new ModelMockupJView;
 		$model2->name = 'test';
-		$model3       = new ModelMockupJView;
+		$model3 = new ModelMockupJView;
 		$model3->name = 'defaulttest';
 
 		// Assert that initial state is empty
@@ -409,7 +409,7 @@ class JViewLegacyTest extends TestCase
 
 		$this->assertAttributeEquals(
 			array(
-				'helper'   => array(realpath(JPATH_ROOT . $ds . 'tests') . $ds),
+				'helper' => array(realpath(JPATH_ROOT . $ds . 'tests') . $ds),
 				'template' => array(realpath(JPATH_ROOT . $ds . 'tests') . $ds, realpath(JPATH_ROOT . $ds . 'libraries') . $ds)
 			),
 			'_path',
@@ -420,7 +420,7 @@ class JViewLegacyTest extends TestCase
 
 		$this->assertAttributeEquals(
 			array(
-				'helper'   => array(realpath(JPATH_ROOT . $ds . 'libraries') . $ds, realpath(JPATH_ROOT . $ds . 'tests') . $ds),
+				'helper' => array(realpath(JPATH_ROOT . $ds . 'libraries') . $ds, realpath(JPATH_ROOT . $ds . 'tests') . $ds),
 				'template' => array(realpath(JPATH_ROOT . $ds . 'tests') . $ds, realpath(JPATH_ROOT . $ds . 'libraries') . $ds)
 			),
 			'_path',
@@ -443,7 +443,7 @@ class JViewLegacyTest extends TestCase
 
 		$this->saveFactoryState();
 
-		JFactory::$application        = TestMockApplication::create($this);
+		JFactory::$application = TestMockApplication::create($this);
 		JFactory::$application->input = new JInput(array());
 
 		defined('JPATH_COMPONENT') or define('JPATH_COMPONENT', JPATH_BASE . '/components/com_foobar');

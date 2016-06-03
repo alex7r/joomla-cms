@@ -49,7 +49,7 @@ class JLogInspector extends JLog
 	/**
 	 * Test...
 	 *
-	 * @param   JLogEntry $entry The entry to add.
+	 * @param   JLogEntry  $entry  The entry to add.
 	 *
 	 * @return void
 	 */
@@ -63,8 +63,8 @@ class JLogInspector extends JLog
 	/**
 	 * Test...
 	 *
-	 * @param   int    $priority Priority.
-	 * @param   string $category Category.
+	 * @param   int     $priority  Priority.
+	 * @param   string  $category  Category.
 	 *
 	 * @return void
 	 */

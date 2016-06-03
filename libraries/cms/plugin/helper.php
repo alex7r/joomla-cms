@@ -27,9 +27,9 @@ abstract class JPluginHelper
 	/**
 	 * Get the path to a layout from a Plugin
 	 *
-	 * @param   string $type   Plugin type
-	 * @param   string $name   Plugin name
-	 * @param   string $layout Layout name
+	 * @param   string  $type    Plugin type
+	 * @param   string  $name    Plugin name
+	 * @param   string  $layout  Layout name
 	 *
 	 * @return  string  Layout path
 	 *
@@ -37,15 +37,15 @@ abstract class JPluginHelper
 	 */
 	public static function getLayoutPath($type, $name, $layout = 'default')
 	{
-		$template      = JFactory::getApplication()->getTemplate();
+		$template = JFactory::getApplication()->getTemplate();
 		$defaultLayout = $layout;
 
 		if (strpos($layout, ':') !== false)
 		{
 			// Get the template and file name from the string
-			$temp          = explode(':', $layout);
-			$template      = ($temp[0] == '_') ? $template : $temp[0];
-			$layout        = $temp[1];
+			$temp = explode(':', $layout);
+			$template = ($temp[0] == '_') ? $template : $temp[0];
+			$layout = $temp[1];
 			$defaultLayout = ($temp[1]) ? $temp[1] : 'default';
 		}
 
@@ -70,28 +70,11 @@ abstract class JPluginHelper
 	}
 
 	/**
-	 * Checks if a plugin is enabled.
-	 *
-	 * @param   string $type   The plugin type, relates to the sub-directory in the plugins directory.
-	 * @param   string $plugin The plugin name.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   1.5
-	 */
-	public static function isEnabled($type, $plugin = null)
-	{
-		$result = static::getPlugin($type, $plugin);
-
-		return (!empty($result));
-	}
-
-	/**
 	 * Get the plugin data of a specific type if no specific plugin is specified
 	 * otherwise only the specific plugin data is returned.
 	 *
-	 * @param   string $type   The plugin type, relates to the sub-directory in the plugins directory.
-	 * @param   string $plugin The plugin name.
+	 * @param   string  $type    The plugin type, relates to the sub-directory in the plugins directory.
+	 * @param   string  $plugin  The plugin name.
 	 *
 	 * @return  mixed  An array of plugin data objects, or a plugin data object.
 	 *
@@ -99,7 +82,7 @@ abstract class JPluginHelper
 	 */
 	public static function getPlugin($type, $plugin = null)
 	{
-		$result  = array();
+		$result = array();
 		$plugins = static::load();
 
 		// Find the correct plugin(s) to return.
@@ -131,52 +114,30 @@ abstract class JPluginHelper
 	}
 
 	/**
-	 * Loads the published plugins.
+	 * Checks if a plugin is enabled.
 	 *
-	 * @return  array  An array of published plugins
+	 * @param   string  $type    The plugin type, relates to the sub-directory in the plugins directory.
+	 * @param   string  $plugin  The plugin name.
 	 *
-	 * @since   3.2
+	 * @return  boolean
+	 *
+	 * @since   1.5
 	 */
-	protected static function load()
+	public static function isEnabled($type, $plugin = null)
 	{
-		if (static::$plugins !== null)
-		{
-			return static::$plugins;
-		}
+		$result = static::getPlugin($type, $plugin);
 
-		$user  = JFactory::getUser();
-		$cache = JFactory::getCache('com_plugins', '');
-
-		$levels = implode(',', $user->getAuthorisedViewLevels());
-
-		if (!(static::$plugins = $cache->get($levels)))
-		{
-			$db    = JFactory::getDbo();
-			$query = $db->getQuery(true)
-				->select('folder AS type, element AS name, params')
-				->from('#__extensions')
-				->where('enabled = 1')
-				->where('type =' . $db->quote('plugin'))
-				->where('state IN (0,1)')
-				->where('access IN (' . $levels . ')')
-				->order('ordering');
-
-			static::$plugins = $db->setQuery($query)->loadObjectList();
-
-			$cache->store(static::$plugins, $levels);
-		}
-
-		return static::$plugins;
+		return (!empty($result));
 	}
 
 	/**
 	 * Loads all the plugin files for a particular type if no specific plugin is specified
 	 * otherwise only the specific plugin is loaded.
 	 *
-	 * @param   string           $type       The plugin type, relates to the sub-directory in the plugins directory.
-	 * @param   string           $plugin     The plugin name.
-	 * @param   boolean          $autocreate Autocreate the plugin.
-	 * @param   JEventDispatcher $dispatcher Optionally allows the plugin to use a different dispatcher.
+	 * @param   string            $type        The plugin type, relates to the sub-directory in the plugins directory.
+	 * @param   string            $plugin      The plugin name.
+	 * @param   boolean           $autocreate  Autocreate the plugin.
+	 * @param   JEventDispatcher  $dispatcher  Optionally allows the plugin to use a different dispatcher.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -226,9 +187,26 @@ abstract class JPluginHelper
 	/**
 	 * Loads the plugin file.
 	 *
-	 * @param   object           $plugin     The plugin.
-	 * @param   boolean          $autocreate True to autocreate.
-	 * @param   JEventDispatcher $dispatcher Optionally allows the plugin to use a different dispatcher.
+	 * @param   object            $plugin      The plugin.
+	 * @param   boolean           $autocreate  True to autocreate.
+	 * @param   JEventDispatcher  $dispatcher  Optionally allows the plugin to use a different dispatcher.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.5
+	 * @deprecated  4.0  Use JPluginHelper::import() instead
+	 */
+	protected static function _import($plugin, $autocreate = true, JEventDispatcher $dispatcher = null)
+	{
+		static::import($plugin, $autocreate, $dispatcher);
+	}
+
+	/**
+	 * Loads the plugin file.
+	 *
+	 * @param   object            $plugin      The plugin.
+	 * @param   boolean           $autocreate  True to autocreate.
+	 * @param   JEventDispatcher  $dispatcher  Optionally allows the plugin to use a different dispatcher.
 	 *
 	 * @return  void
 	 *
@@ -286,20 +264,16 @@ abstract class JPluginHelper
 	}
 
 	/**
-	 * Loads the plugin file.
+	 * Loads the published plugins.
 	 *
-	 * @param   object           $plugin     The plugin.
-	 * @param   boolean          $autocreate True to autocreate.
-	 * @param   JEventDispatcher $dispatcher Optionally allows the plugin to use a different dispatcher.
+	 * @return  array  An array of published plugins
 	 *
-	 * @return  void
-	 *
-	 * @since       1.5
-	 * @deprecated  4.0  Use JPluginHelper::import() instead
+	 * @since   1.5
+	 * @deprecated  4.0  Use JPluginHelper::load() instead
 	 */
-	protected static function _import($plugin, $autocreate = true, JEventDispatcher $dispatcher = null)
+	protected static function _load()
 	{
-		static::import($plugin, $autocreate, $dispatcher);
+		return static::load();
 	}
 
 	/**
@@ -307,11 +281,37 @@ abstract class JPluginHelper
 	 *
 	 * @return  array  An array of published plugins
 	 *
-	 * @since       1.5
-	 * @deprecated  4.0  Use JPluginHelper::load() instead
+	 * @since   3.2
 	 */
-	protected static function _load()
+	protected static function load()
 	{
-		return static::load();
+		if (static::$plugins !== null)
+		{
+			return static::$plugins;
+		}
+
+		$user = JFactory::getUser();
+		$cache = JFactory::getCache('com_plugins', '');
+
+		$levels = implode(',', $user->getAuthorisedViewLevels());
+
+		if (!(static::$plugins = $cache->get($levels)))
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true)
+				->select('folder AS type, element AS name, params')
+				->from('#__extensions')
+				->where('enabled = 1')
+				->where('type =' . $db->quote('plugin'))
+				->where('state IN (0,1)')
+				->where('access IN (' . $levels . ')')
+				->order('ordering');
+
+			static::$plugins = $db->setQuery($query)->loadObjectList();
+
+			$cache->store(static::$plugins, $levels);
+		}
+
+		return static::$plugins;
 	}
 }

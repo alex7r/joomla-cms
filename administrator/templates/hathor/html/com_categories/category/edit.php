@@ -33,9 +33,7 @@ $assoc = JLanguageAssociations::isEnabled();
 ?>
 
 <div class="category-edit">
-	<form
-		action="<?php echo JRoute::_('index.php?option=com_categories&extension=' . $input->getCmd('extension', 'com_content') . '&layout=edit&id=' . (int) $this->item->id); ?>"
-		method="post" name="adminForm" id="item-form" class="form-validate">
+	<form action="<?php echo JRoute::_('index.php?option=com_categories&extension=' . $input->getCmd('extension', 'com_content') . '&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
 		<div class="col main-section">
 			<fieldset class="adminform">
 				<legend><?php echo JText::_('COM_CATEGORIES_FIELDSET_DETAILS'); ?></legend>
@@ -87,7 +85,7 @@ $assoc = JLanguageAssociations::isEnabled();
 					</li>
 					<?php if ($saveHistory) : ?>
 						<li><?php echo $this->form->getLabel('version_note'); ?>
-							<?php echo $this->form->getInput('version_note'); ?></li>
+						<?php echo $this->form->getInput('version_note'); ?></li>
 					<?php endif; ?>
 					<li>
 						<?php echo $this->form->getLabel('id'); ?>
@@ -145,7 +143,7 @@ $assoc = JLanguageAssociations::isEnabled();
 			<?php endforeach; ?>
 
 			<?php if ($assoc) : ?>
-				<?php echo JHtml::_('sliders.panel', JText::_('COM_CATEGORIES_ITEM_ASSOCIATIONS_FIELDSET_LABEL'), '-options'); ?>
+				<?php echo JHtml::_('sliders.panel', JText::_('COM_CATEGORIES_ITEM_ASSOCIATIONS_FIELDSET_LABEL'), '-options');?>
 				<?php echo $this->loadTemplate('associations'); ?>
 			<?php endif; ?>
 
@@ -169,7 +167,7 @@ $assoc = JLanguageAssociations::isEnabled();
 			</div>
 		<?php endif; ?>
 		<div>
-			<input type="hidden" name="task" value=""/>
+			<input type="hidden" name="task" value="" />
 			<?php echo JHtml::_('form.token'); ?>
 		</div>
 	</form>

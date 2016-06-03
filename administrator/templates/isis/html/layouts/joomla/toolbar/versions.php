@@ -13,10 +13,10 @@ defined('_JEXEC') or die;
  * Layout variables
  * ---------------------
  *
- * @var  string $itemId    The item id number
- * @var  string $typeId    The type id number
- * @var  string $title     The link text
- * @var  string $typeAlias The component type
+ * @var  string   $itemId The item id number
+ * @var  string   $typeId The type id number
+ * @var  string   $title The link text
+ * @var  string   $typeAlias The component type
  */
 extract($displayData);
 
@@ -37,8 +37,7 @@ echo JHtml::_(
 	)
 );
 ?>
-<button onclick="jQuery('#versionsModal').modal('show')" class="btn btn-small" data-toggle="modal"
-        title="<?php echo $title; ?>">
+<button onclick="jQuery('#versionsModal').modal('show')" class="btn btn-small" data-toggle="modal" title="<?php echo $title; ?>">
 	<span class="icon-archive"></span><?php echo $title; ?>
 </button>
 

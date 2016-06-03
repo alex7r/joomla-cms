@@ -23,6 +23,23 @@ class UsersControllerLevel extends JControllerForm
 	protected $text_prefix = 'COM_USERS_LEVEL';
 
 	/**
+	 * Method to check if you can save a new or existing record.
+	 *
+	 * Overrides JControllerForm::allowSave to check the core.admin permission.
+	 *
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   1.6
+	 */
+	protected function allowSave($data, $key = 'id')
+	{
+		return (JFactory::getUser()->authorise('core.admin', $this->option) && parent::allowSave($data, $key));
+	}
+
+	/**
 	 * Removes an item.
 	 *
 	 * Overrides JControllerAdmin::delete to check the core.admin permission.
@@ -66,22 +83,5 @@ class UsersControllerLevel extends JControllerForm
 		}
 
 		$this->setRedirect('index.php?option=com_users&view=levels');
-	}
-
-	/**
-	 * Method to check if you can save a new or existing record.
-	 *
-	 * Overrides JControllerForm::allowSave to check the core.admin permission.
-	 *
-	 * @param   array  $data An array of input data.
-	 * @param   string $key  The name of the key for the primary key.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   1.6
-	 */
-	protected function allowSave($data, $key = 'id')
-	{
-		return (JFactory::getUser()->authorise('core.admin', $this->option) && parent::allowSave($data, $key));
 	}
 }

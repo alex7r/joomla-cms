@@ -21,7 +21,7 @@ class ModSearchHelper
 	/**
 	 * Display the search button as an image.
 	 *
-	 * @param   string $button_text The alt text for the button.
+	 * @param   string  $button_text  The alt text for the button.
 	 *
 	 * @return  string  The HTML for the image.
 	 *

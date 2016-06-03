@@ -10,10 +10,10 @@
 defined('_JEXEC') or die;
 ?>
 
-<div class="breadcrumbs<?php echo $moduleclass_sfx; ?>">
-	<?php if ($params->get('showHere', 1))
+<div class = "breadcrumbs<?php echo $moduleclass_sfx; ?>">
+<?php if ($params->get('showHere', 1))
 	{
-		echo '<span class="showHere">' . JText::_('MOD_BREADCRUMBS_HERE') . '</span>';
+		echo '<span class="showHere">' .JText::_('MOD_BREADCRUMBS_HERE').'</span>';
 	}
 
 	// Get rid of duplicated entries on trail including home page when using multilanguage
@@ -33,30 +33,30 @@ defined('_JEXEC') or die;
 
 	// Generate the trail
 	foreach ($list as $key => $item) :
-		// Make a link if not the last item in the breadcrumbs
-		$show_last = $params->get('showLast', 1);
-		if ($key != $last_item_key)
+	// Make a link if not the last item in the breadcrumbs
+	$show_last = $params->get('showLast', 1);
+	if ($key != $last_item_key)
+	{
+		// Render all but last item - along with separator
+		if (!empty($item->link))
 		{
-			// Render all but last item - along with separator
-			if (!empty($item->link))
-			{
-				echo '<a href="' . $item->link . '" class="pathway">' . $item->name . '</a>';
-			}
-			else
-			{
-				echo '<span>' . $item->name . '</span>';
-			}
-
-			if (($key != $penult_item_key) || $show_last)
-			{
-				echo ' ' . $separator . ' ';
-			}
-
+			echo '<a href="' . $item->link . '" class="pathway">' . $item->name . '</a>';
 		}
-		elseif ($show_last)
+		else
 		{
-			// Render last item if reqd.
 			echo '<span>' . $item->name . '</span>';
 		}
+
+		if (($key != $penult_item_key) || $show_last)
+		{
+			echo ' '.$separator.' ';
+		}
+
+	}
+	elseif ($show_last)
+	{
+		// Render last item if reqd.
+		echo '<span>' . $item->name . '</span>';
+	}
 	endforeach; ?>
 </div>

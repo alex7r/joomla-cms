@@ -24,10 +24,10 @@ class PlgContentLoadmodule extends JPlugin
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   string  $context  The context of the content being passed to the plugin.
-	 * @param   object  &$article The article object.  Note $article->text is also available
-	 * @param   mixed   &$params  The article params
-	 * @param   integer $page     The 'page' number
+	 * @param   string   $context   The context of the content being passed to the plugin.
+	 * @param   object   &$article  The article object.  Note $article->text is also available
+	 * @param   mixed    &$params   The article params
+	 * @param   integer  $page      The 'page' number
 	 *
 	 * @return  mixed   true if there is an error. Void otherwise.
 	 *
@@ -79,7 +79,7 @@ class PlgContentLoadmodule extends JPlugin
 
 				// We should replace only first occurrence in order to allow positions with the same name to regenerate their content:
 				$article->text = preg_replace("|$match[0]|", addcslashes($output, '\\$'), $article->text, 1);
-				$style         = $this->params->def('style', 'none');
+				$style = $this->params->def('style', 'none');
 			}
 		}
 
@@ -105,16 +105,16 @@ class PlgContentLoadmodule extends JPlugin
 					$matchesmodlist[2] = $stylemod;
 				}
 
-				$module   = trim($matchesmodlist[0]);
-				$name     = htmlspecialchars_decode(trim($matchesmodlist[1]));
-				$stylemod = trim($matchesmodlist[2]);
+				$module = trim($matchesmodlist[0]);
+				$name   = htmlspecialchars_decode(trim($matchesmodlist[1]));
+				$stylemod  = trim($matchesmodlist[2]);
 
 				// $match[0] is full pattern match, $match[1] is the module,$match[2] is the title
 				$output = $this->_loadmod($module, $name, $stylemod);
 
 				// We should replace only first occurrence in order to allow positions with the same name to regenerate their content:
 				$article->text = preg_replace("|$matchmod[0]|", addcslashes($output, '\\$'), $article->text, 1);
-				$stylemod      = $this->params->def('style', 'none');
+				$stylemod = $this->params->def('style', 'none');
 			}
 		}
 	}
@@ -122,8 +122,8 @@ class PlgContentLoadmodule extends JPlugin
 	/**
 	 * Loads and renders the module
 	 *
-	 * @param   string $position The position assigned to the module
-	 * @param   string $style    The style assigned to the module
+	 * @param   string  $position  The position assigned to the module
+	 * @param   string  $style     The style assigned to the module
 	 *
 	 * @return  mixed
 	 *
@@ -132,10 +132,10 @@ class PlgContentLoadmodule extends JPlugin
 	protected function _load($position, $style = 'none')
 	{
 		self::$modules[$position] = '';
-		$document                 = JFactory::getDocument();
-		$renderer                 = $document->loadRenderer('module');
-		$modules                  = JModuleHelper::getModules($position);
-		$params                   = array('style' => $style);
+		$document = JFactory::getDocument();
+		$renderer = $document->loadRenderer('module');
+		$modules  = JModuleHelper::getModules($position);
+		$params   = array('style' => $style);
 		ob_start();
 
 		foreach ($modules as $module)
@@ -152,9 +152,9 @@ class PlgContentLoadmodule extends JPlugin
 	 * This is always going to get the first instance of the module type unless
 	 * there is a title.
 	 *
-	 * @param   string $module The module title
-	 * @param   string $title  The title of the module
-	 * @param   string $style  The style of the module
+	 * @param   string  $module  The module title
+	 * @param   string  $title   The title of the module
+	 * @param   string  $style   The style of the module
 	 *
 	 * @return  mixed
 	 *
@@ -163,9 +163,9 @@ class PlgContentLoadmodule extends JPlugin
 	protected function _loadmod($module, $title, $style = 'none')
 	{
 		self::$mods[$module] = '';
-		$document            = JFactory::getDocument();
-		$renderer            = $document->loadRenderer('module');
-		$mod                 = JModuleHelper::getModule($module, $title);
+		$document = JFactory::getDocument();
+		$renderer = $document->loadRenderer('module');
+		$mod      = JModuleHelper::getModule($module, $title);
 
 		// If the module without the mod_ isn't found, try it with mod_.
 		// This allows people to enter it either way in the content

@@ -61,12 +61,54 @@ class JLinkedinCompaniesTest extends TestCase
 	protected $errorString = '{"errorCode":401, "message": "Generic error"}';
 
 	/**
-	 * Provides test data for request format detection.
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
 	 *
-	 * @return array
-	 *
-	 * @since 13.1
+	 * @return void
 	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$key = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/linkedin_test.php";
+
+		$this->options = new JRegistry;
+		$this->input = new JInput;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth = new JLinkedinOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
+
+		$this->object = new JLinkedinCompanies($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+	}
+
+	/**
+	* Provides test data for request format detection.
+	*
+	* @return array
+	*
+	* @since 13.1
+	*/
 	public function seedGetCompanies()
 	{
 		// Company id, company name, email-domain
@@ -76,20 +118,20 @@ class JLinkedinCompaniesTest extends TestCase
 			array(null, 'example', null),
 			array(null, null, 'example.com'),
 			array(null, null, null)
-		);
+			);
 	}
 
 	/**
 	 * Tests the getCompanies method
 	 *
-	 * @param   integer $id     The unique internal numeric company identifier.
-	 * @param   string  $name   The unique string identifier for a company.
-	 * @param   string  $domain Company email domains.
+	 * @param   integer  $id      The unique internal numeric company identifier.
+	 * @param   string   $name    The unique string identifier for a company.
+	 * @param   string   $domain  Company email domains.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedGetCompanies
-	 * @since        13.1
+	 * @since   13.1
 	 */
 	public function testGetCompanies($id, $name, $domain)
 	{
@@ -126,7 +168,7 @@ class JLinkedinCompaniesTest extends TestCase
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -153,18 +195,18 @@ class JLinkedinCompaniesTest extends TestCase
 	 */
 	public function testGetCompaniesFailure()
 	{
-		$id     = 12345;
-		$name   = 'example';
+		$id = 12345;
+		$name = 'example';
 		$domain = 'example.com';
 		$fields = '(id,name,ticker,description)';
 
 		// Set request parameters.
-		$data['format']       = 'json';
+		$data['format'] = 'json';
 		$data['email-domain'] = $domain;
 
 		$path = '/v1/companies::(' . $id . ',universal-name=' . $name . '):' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -187,20 +229,20 @@ class JLinkedinCompaniesTest extends TestCase
 	 */
 	public function testGetUpdates()
 	{
-		$id    = 12345;
-		$type  = 'new-hire';
+		$id = 12345;
+		$type = 'new-hire';
 		$count = 10;
 		$start = 1;
 
 		// Set request parameters.
-		$data['format']     = 'json';
+		$data['format'] = 'json';
 		$data['event-type'] = $type;
-		$data['count']      = $count;
-		$data['start']      = $start;
+		$data['count'] = $count;
+		$data['start'] = $start;
 
 		$path = '/v1/companies/' . $id . '/updates';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -227,20 +269,20 @@ class JLinkedinCompaniesTest extends TestCase
 	 */
 	public function testGetUpdatesFailure()
 	{
-		$id    = 12345;
-		$type  = 'new-hire';
+		$id = 12345;
+		$type = 'new-hire';
 		$count = 10;
 		$start = 1;
 
 		// Set request parameters.
-		$data['format']     = 'json';
+		$data['format'] = 'json';
 		$data['event-type'] = $type;
-		$data['count']      = $count;
-		$data['start']      = $start;
+		$data['count'] = $count;
+		$data['start'] = $start;
 
 		$path = '/v1/companies/' . $id . '/updates';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -263,37 +305,37 @@ class JLinkedinCompaniesTest extends TestCase
 	 */
 	public function testSearch()
 	{
-		$fields   = '(facets)';
+		$fields = '(facets)';
 		$keywords = 'linkedin';
-		$hq       = true;
-		$facets   = 'location,industry,network,company-size,num-followers-range,fortune';
-		$facet    = array('us-84', 47, 'F', 'B', 100, 100);
-		$start    = 1;
-		$count    = 50;
-		$sort     = 'relevance';
+		$hq = true;
+		$facets = 'location,industry,network,company-size,num-followers-range,fortune';
+		$facet = array('us-84', 47, 'F', 'B', 100, 100);
+		$start = 1;
+		$count = 50;
+		$sort = 'relevance';
 
 		// Set request parameters.
-		$data['format']   = 'json';
+		$data['format'] = 'json';
 		$data['keywords'] = $keywords;
-		$data['hq-only']  = $hq;
-		$data['facets']   = $facets;
-		$data['facet']    = array();
-		$data['facet'][]  = 'location,' . $facet[0];
-		$data['facet'][]  = 'industry,' . $facet[1];
-		$data['facet'][]  = 'network,' . $facet[2];
-		$data['facet'][]  = 'company-size,' . $facet[3];
-		$data['facet'][]  = 'num-followers-range,' . $facet[4];
-		$data['facet'][]  = 'fortune,' . $facet[5];
+		$data['hq-only'] = $hq;
+		$data['facets'] = $facets;
+		$data['facet'] = array();
+		$data['facet'][] = 'location,' . $facet[0];
+		$data['facet'][] = 'industry,' . $facet[1];
+		$data['facet'][] = 'network,' . $facet[2];
+		$data['facet'][] = 'company-size,' . $facet[3];
+		$data['facet'][] = 'num-followers-range,' . $facet[4];
+		$data['facet'][] = 'fortune,' . $facet[5];
 
 		$data['start'] = $start;
 		$data['count'] = $count;
-		$data['sort']  = $sort;
+		$data['sort'] = $sort;
 
 		$path = '/v1/company-search';
 
 		$path .= ':' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -320,35 +362,35 @@ class JLinkedinCompaniesTest extends TestCase
 	 */
 	public function testSearchFailure()
 	{
-		$fields   = '(facets)';
+		$fields = '(facets)';
 		$keywords = 'linkedin';
-		$hq       = true;
-		$facets   = 'location,industry,network,company-size,num-followers-range,fortune';
-		$facet    = array('us-84', 47, 'F', 'B', 100, 100);
-		$start    = 1;
-		$count    = 50;
-		$sort     = 'relevance';
+		$hq = true;
+		$facets = 'location,industry,network,company-size,num-followers-range,fortune';
+		$facet = array('us-84', 47, 'F', 'B', 100, 100);
+		$start = 1;
+		$count = 50;
+		$sort = 'relevance';
 
 		// Set request parameters.
-		$data['format']   = 'json';
+		$data['format'] = 'json';
 		$data['keywords'] = $keywords;
-		$data['hq-only']  = $hq;
-		$data['facets']   = $facets;
-		$data['facet']    = array();
-		$data['facet'][]  = 'location,' . $facet[0];
-		$data['facet'][]  = 'industry,' . $facet[1];
-		$data['facet'][]  = 'network,' . $facet[2];
-		$data['facet'][]  = 'company-size,' . $facet[3];
-		$data['facet'][]  = 'num-followers-range,' . $facet[4];
-		$data['facet'][]  = 'fortune,' . $facet[5];
+		$data['hq-only'] = $hq;
+		$data['facets'] = $facets;
+		$data['facet'] = array();
+		$data['facet'][] = 'location,' . $facet[0];
+		$data['facet'][] = 'industry,' . $facet[1];
+		$data['facet'][] = 'network,' . $facet[2];
+		$data['facet'][] = 'company-size,' . $facet[3];
+		$data['facet'][] = 'num-followers-range,' . $facet[4];
+		$data['facet'][] = 'fortune,' . $facet[5];
 
 		$data['start'] = $start;
 		$data['count'] = $count;
-		$data['sort']  = $sort;
+		$data['sort'] = $sort;
 
 		$path = '/v1/company-search:' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -378,7 +420,7 @@ class JLinkedinCompaniesTest extends TestCase
 
 		$path = '/v1/people/~/following/companies:' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -412,7 +454,7 @@ class JLinkedinCompaniesTest extends TestCase
 
 		$path = '/v1/people/~/following/companies:' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -443,7 +485,7 @@ class JLinkedinCompaniesTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
@@ -476,7 +518,7 @@ class JLinkedinCompaniesTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -501,7 +543,7 @@ class JLinkedinCompaniesTest extends TestCase
 
 		$path = '/v1/people/~/following/companies/id=' . $id;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -530,7 +572,7 @@ class JLinkedinCompaniesTest extends TestCase
 
 		$path = '/v1/people/~/following/companies/id=' . $id;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -552,17 +594,17 @@ class JLinkedinCompaniesTest extends TestCase
 	public function testGetSuggested()
 	{
 		$fields = '(id,name,email-domains)';
-		$start  = 1;
-		$count  = 10;
+		$start = 1;
+		$count = 10;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['start']  = $start;
-		$data['count']  = $count;
+		$data['start'] = $start;
+		$data['count'] = $count;
 
 		$path = '/v1/people/~/suggestions/to-follow/companies:' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -590,17 +632,17 @@ class JLinkedinCompaniesTest extends TestCase
 	public function testGetSuggestedFailure()
 	{
 		$fields = '(id,name,email-domains)';
-		$start  = 1;
-		$count  = 10;
+		$start = 1;
+		$count = 10;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['start']  = $start;
-		$data['count']  = $count;
+		$data['start'] = $start;
+		$data['count'] = $count;
 
 		$path = '/v1/people/~/suggestions/to-follow/companies:' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -623,19 +665,19 @@ class JLinkedinCompaniesTest extends TestCase
 	 */
 	public function testGetProducts()
 	{
-		$id     = 12345;
+		$id = 12345;
 		$fields = '(id,name,type,creation-timestamp)';
-		$start  = 1;
-		$count  = 10;
+		$start = 1;
+		$count = 10;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['start']  = $start;
-		$data['count']  = $count;
+		$data['start'] = $start;
+		$data['count'] = $count;
 
 		$path = '/v1/companies/' . $id . '/products:' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -662,19 +704,19 @@ class JLinkedinCompaniesTest extends TestCase
 	 */
 	public function testGetProductsFailure()
 	{
-		$id     = 12345;
+		$id = 12345;
 		$fields = '(id,name,type,creation-timestamp)';
-		$start  = 1;
-		$count  = 10;
+		$start = 1;
+		$count = 10;
 
 		// Set request parameters.
 		$data['format'] = 'json';
-		$data['start']  = $start;
-		$data['count']  = $count;
+		$data['start'] = $start;
+		$data['count'] = $count;
 
 		$path = '/v1/companies/' . $id . '/products:' . $fields;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -686,47 +728,5 @@ class JLinkedinCompaniesTest extends TestCase
 			->will($this->returnValue($returnData));
 
 		$this->object->getProducts($id, $fields, $start, $count);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$key    = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/linkedin_test.php";
-
-		$this->options = new JRegistry;
-		$this->input   = new JInput;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth   = new JLinkedinOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
-
-		$this->object = new JLinkedinCompanies($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
 	}
 }

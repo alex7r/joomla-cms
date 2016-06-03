@@ -19,7 +19,7 @@ class BannersHelper extends JHelperContent
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string $vName The name of the active view.
+	 * @param   string  $vName  The name of the active view.
 	 *
 	 * @return  void
 	 *
@@ -101,7 +101,7 @@ class BannersHelper extends JHelperContent
 
 			if ($purchase_type < 0)
 			{
-				$params        = JComponentHelper::getParams('com_banners');
+				$params = JComponentHelper::getParams('com_banners');
 				$purchase_type = $params->get('purchase_type');
 			}
 
@@ -111,19 +111,19 @@ class BannersHelper extends JHelperContent
 					$reset = $nullDate;
 					break;
 				case 2:
-					$date  = JFactory::getDate('+1 year ' . date('Y-m-d', strtotime('now')));
+					$date = JFactory::getDate('+1 year ' . date('Y-m-d', strtotime('now')));
 					$reset = $db->quote($date->toSql());
 					break;
 				case 3:
-					$date  = JFactory::getDate('+1 month ' . date('Y-m-d', strtotime('now')));
+					$date = JFactory::getDate('+1 month ' . date('Y-m-d', strtotime('now')));
 					$reset = $db->quote($date->toSql());
 					break;
 				case 4:
-					$date  = JFactory::getDate('+7 day ' . date('Y-m-d', strtotime('now')));
+					$date = JFactory::getDate('+7 day ' . date('Y-m-d', strtotime('now')));
 					$reset = $db->quote($date->toSql());
 					break;
 				case 5:
-					$date  = JFactory::getDate('+1 day ' . date('Y-m-d', strtotime('now')));
+					$date = JFactory::getDate('+1 day ' . date('Y-m-d', strtotime('now')));
 					$reset = $db->quote($date->toSql());
 					break;
 			}
@@ -161,7 +161,7 @@ class BannersHelper extends JHelperContent
 	{
 		$options = array();
 
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('id AS value, name AS text')
 			->from('#__banner_clients AS a')
@@ -188,7 +188,7 @@ class BannersHelper extends JHelperContent
 	/**
 	 * Adds Count Items for Category Manager.
 	 *
-	 * @param   stdClass[] &$items The banner category objects
+	 * @param   stdClass[]  &$items  The banner category objects
 	 *
 	 * @return  stdClass[]
 	 *
@@ -200,11 +200,11 @@ class BannersHelper extends JHelperContent
 
 		foreach ($items as $item)
 		{
-			$item->count_trashed     = 0;
-			$item->count_archived    = 0;
+			$item->count_trashed = 0;
+			$item->count_archived = 0;
 			$item->count_unpublished = 0;
-			$item->count_published   = 0;
-			$query                   = $db->getQuery(true);
+			$item->count_published = 0;
+			$query = $db->getQuery(true);
 			$query->select('state, count(*) AS count')
 				->from($db->qn('#__banners'))
 				->where('catid = ' . (int) $item->id)

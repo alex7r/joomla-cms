@@ -28,7 +28,7 @@ class ContenthistoryModelPreview extends JModelItem
 	public function getItem()
 	{
 		/** @var JTableContenthistory $table */
-		$table     = JTable::getInstance('Contenthistory');
+		$table = JTable::getInstance('Contenthistory');
 		$versionId = JFactory::getApplication()->input->getInt('version_id');
 
 		if (!$table->load($versionId))
@@ -55,10 +55,10 @@ class ContenthistoryModelPreview extends JModelItem
 		}
 
 		// Good to go, finish processing the data
-		$result               = new stdClass;
-		$result->save_date    = $table->save_date;
+		$result = new stdClass;
+		$result->save_date = $table->save_date;
 		$result->version_note = $table->version_note;
-		$result->data         = ContenthistoryHelper::prepareData($table);
+		$result->data = ContenthistoryHelper::prepareData($table);
 
 		return $result;
 	}

@@ -8,12 +8,12 @@
  */
 
 /**
- * Test class for JMicrodata
- *
- * @package     Joomla.UnitTest
- * @subpackage  Microdata
- * @since       3.2
- */
+* Test class for JMicrodata
+*
+* @package     Joomla.UnitTest
+* @subpackage  Microdata
+* @since       3.2
+*/
 class JMicrodataTest extends PHPUnit_Framework_TestCase
 {
 	/**
@@ -48,7 +48,7 @@ class JMicrodataTest extends PHPUnit_Framework_TestCase
 	 * Test the default settings
 	 *
 	 * @return  void
-	 *
+	 * 
 	 * @since   3.2
 	 */
 	public function testDefaults()
@@ -212,7 +212,7 @@ class JMicrodataTest extends PHPUnit_Framework_TestCase
 		);
 
 		// Test for a 'meta' display with $content
-		$content  = '01 January 2011';
+		$content = '01 January 2011';
 		$response = $this->handler
 			->property('datePublished')
 			->content($content)
@@ -225,7 +225,7 @@ class JMicrodataTest extends PHPUnit_Framework_TestCase
 
 		// Test for a 'meta' display with human $content and $machineContent
 		$machineContent = "2011-01-01T00:00:00+00:00";
-		$response       = $this->handler
+		$response = $this->handler
 			->property('datePublished')
 			->content($content, $machineContent)
 			->display();
@@ -489,7 +489,7 @@ class JMicrodataTest extends PHPUnit_Framework_TestCase
 	{
 		// Setup
 		$type = 'Article';
-		$obj  = new JMicrodata;
+		$obj = new JMicrodata;
 
 		// Test if Display Type is 'normal'
 		$this->assertEquals(

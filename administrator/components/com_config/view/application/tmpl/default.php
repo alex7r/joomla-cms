@@ -28,8 +28,7 @@ JFactory::getDocument()->addScriptDeclaration('
 ');
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" id="application-form" method="post"
-      name="adminForm" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" id="application-form" method="post" name="adminForm" class="form-validate">
 	<div class="row-fluid">
 		<!-- Begin Sidebar -->
 		<div id="sidebar" class="span2">
@@ -55,13 +54,10 @@ JFactory::getDocument()->addScriptDeclaration('
 				<li class="active"><a href="#page-site" data-toggle="tab"><?php echo JText::_('JSITE'); ?></a></li>
 				<li><a href="#page-system" data-toggle="tab"><?php echo JText::_('COM_CONFIG_SYSTEM'); ?></a></li>
 				<li><a href="#page-server" data-toggle="tab"><?php echo JText::_('COM_CONFIG_SERVER'); ?></a></li>
-				<li><a href="#page-permissions" data-toggle="tab"><?php echo JText::_('COM_CONFIG_PERMISSIONS'); ?></a>
-				</li>
-				<li><a href="#page-filters" data-toggle="tab"><?php echo JText::_('COM_CONFIG_TEXT_FILTERS'); ?></a>
-				</li>
+				<li><a href="#page-permissions" data-toggle="tab"><?php echo JText::_('COM_CONFIG_PERMISSIONS'); ?></a></li>
+				<li><a href="#page-filters" data-toggle="tab"><?php echo JText::_('COM_CONFIG_TEXT_FILTERS'); ?></a></li>
 				<?php if ($this->ftp) : ?>
-					<li><a href="#page-ftp" data-toggle="tab"><?php echo JText::_('COM_CONFIG_FTP_SETTINGS'); ?></a>
-					</li>
+					<li><a href="#page-ftp" data-toggle="tab"><?php echo JText::_('COM_CONFIG_FTP_SETTINGS'); ?></a></li>
 				<?php endif; ?>
 			</ul>
 			<div id="config-document" class="tab-content">
@@ -116,7 +112,7 @@ JFactory::getDocument()->addScriptDeclaration('
 						<?php echo $this->loadTemplate('ftplogin'); ?>
 					</div>
 				<?php endif; ?>
-				<input type="hidden" name="task" value=""/>
+				<input type="hidden" name="task" value="" />
 				<?php echo JHtml::_('form.token'); ?>
 			</div>
 		</div>

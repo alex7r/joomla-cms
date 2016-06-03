@@ -26,8 +26,7 @@ JFactory::getDocument()->addScriptDeclaration("
 ");
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_templates&layout=edit&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="style-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_templates&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="style-form" class="form-validate">
 
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
@@ -42,8 +41,7 @@ JFactory::getDocument()->addScriptDeclaration("
 					<?php echo JText::_($this->item->template); ?>
 				</h3>
 				<div class="info-labels">
-					<span class="label hasTooltip"
-					      title="<?php echo JHtml::tooltipText('COM_TEMPLATES_FIELD_CLIENT_LABEL'); ?>">
+					<span class="label hasTooltip" title="<?php echo JHtml::tooltipText('COM_TEMPLATES_FIELD_CLIENT_LABEL'); ?>">
 						<?php echo $this->item->client_id == 0 ? JText::_('JSITE') : JText::_('JADMINISTRATOR'); ?>
 					</span>
 				</div>
@@ -51,7 +49,7 @@ JFactory::getDocument()->addScriptDeclaration("
 					<p><?php echo JText::_($this->item->xml->description); ?></p>
 					<?php
 					$this->fieldset = 'description';
-					$description    = JLayoutHelper::render('joomla.edit.fieldset', $this);
+					$description = JLayoutHelper::render('joomla.edit.fieldset', $this);
 					?>
 					<?php if ($description) : ?>
 						<p class="readmore">
@@ -63,7 +61,7 @@ JFactory::getDocument()->addScriptDeclaration("
 				</div>
 				<?php
 				$this->fieldset = 'basic';
-				$html           = JLayoutHelper::render('joomla.edit.fieldset', $this);
+				$html = JLayoutHelper::render('joomla.edit.fieldset', $this);
 				echo $html ? '<hr />' . $html : '';
 				?>
 			</div>
@@ -88,7 +86,7 @@ JFactory::getDocument()->addScriptDeclaration("
 		<?php endif; ?>
 
 		<?php
-		$this->fieldsets        = array();
+		$this->fieldsets = array();
 		$this->ignore_fieldsets = array('basic', 'description');
 		echo JLayoutHelper::render('joomla.edit.params', $this);
 		?>
@@ -101,7 +99,7 @@ JFactory::getDocument()->addScriptDeclaration("
 
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 
-		<input type="hidden" name="task" value=""/>
+		<input type="hidden" name="task" value="" />
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>

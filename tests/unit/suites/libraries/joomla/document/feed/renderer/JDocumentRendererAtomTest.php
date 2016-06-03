@@ -23,6 +23,70 @@ class JDocumentRendererAtomTest extends TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @TODO Once the coupling has been loosed, revisit and build a test harness we can use
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->markTestSkipped("Too tightly coupled to internals to be testable now");
+
+		require_once JPATH_PLATFORM . '/joomla/application/router.php';
+		require_once JPATH_PLATFORM . '/joomla/environment/request.php';
+		require_once JPATH_PLATFORM . '/joomla/document/feed/feed.php';
+		require_once JPATH_PLATFORM . '/joomla/environment/response.php';
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMock(
+			'JApplication',
+			array(
+				'get',
+				'getCfg',
+				'getRouter',
+			)
+		);
+
+		JFactory::$application
+			->expects($this->any())
+			->method('getRouter')
+			->will(
+			$this->returnValue(new JRouter)
+		);
+
+		JFactory::$config = $this->getMock(
+			'JConfig',
+			array('get')
+		);
+
+		$_SERVER['REQUEST_METHOD'] = 'get';
+		$input = JFactory::getApplication()->input;
+		$input->set('type', 'atom');
+		$this->object = new JDocumentFeed;
+		$_SERVER['HTTP_HOST'] = 'localhost';
+		$_SERVER['REQUEST_URI'] = '/index.php?format=feed&amp;type=atom';
+
+		// $_SERVER['SCRIPT_NAME'] = '/index.php';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+	}
+
+	/**
 	 * testRender method
 	 *
 	 * @return void
@@ -31,16 +95,16 @@ class JDocumentRendererAtomTest extends TestCase
 	{
 		$item = new JFeedItem(
 			array(
-				'title'       => 'Joomla!',
-				'link'        => 'https://www.joomla.org',
+				'title' => 'Joomla!',
+				'link' => 'https://www.joomla.org',
 				'description' => 'Joomla main site',
-				'author'      => 'Joomla',
+				'author' => 'Joomla',
 				'authorEmail' => 'joomla@joomla.org',
-				'category'    => 'CMS',
-				'comments'    => 'No comment',
-				'guid'        => 'joomla',
-				'date'        => 'Mon, 20 Jan 03 18:05:41 +0400',
-				'source'      => 'https://www.joomla.org'
+				'category' => 'CMS',
+				'comments' => 'No comment',
+				'guid' => 'joomla',
+				'date' => 'Mon, 20 Jan 03 18:05:41 +0400',
+				'source' => 'https://www.joomla.org'
 			)
 		);
 		$this->object->addItem($item);
@@ -73,69 +137,5 @@ class JDocumentRendererAtomTest extends TestCase
 '),
 			'Line:' . __LINE__ . ' The feed does not generate properly.'
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @TODO   Once the coupling has been loosed, revisit and build a test harness we can use
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->markTestSkipped("Too tightly coupled to internals to be testable now");
-
-		require_once JPATH_PLATFORM . '/joomla/application/router.php';
-		require_once JPATH_PLATFORM . '/joomla/environment/request.php';
-		require_once JPATH_PLATFORM . '/joomla/document/feed/feed.php';
-		require_once JPATH_PLATFORM . '/joomla/environment/response.php';
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMock(
-			'JApplication',
-			array(
-				'get',
-				'getCfg',
-				'getRouter',
-			)
-		);
-
-		JFactory::$application
-			->expects($this->any())
-			->method('getRouter')
-			->will(
-				$this->returnValue(new JRouter)
-			);
-
-		JFactory::$config = $this->getMock(
-			'JConfig',
-			array('get')
-		);
-
-		$_SERVER['REQUEST_METHOD'] = 'get';
-		$input                     = JFactory::getApplication()->input;
-		$input->set('type', 'atom');
-		$this->object           = new JDocumentFeed;
-		$_SERVER['HTTP_HOST']   = 'localhost';
-		$_SERVER['REQUEST_URI'] = '/index.php?format=feed&amp;type=atom';
-
-		// $_SERVER['SCRIPT_NAME'] = '/index.php';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
 	}
 }

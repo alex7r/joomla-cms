@@ -15,7 +15,7 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.combobox');
 JHtml::_('formbehavior.chosen', 'select', null, array('disable_search_threshold' => 0));
 
-$hasContent          = empty($this->item->module) || isset($this->item->xml->customContent);
+$hasContent = empty($this->item->module) ||  isset($this->item->xml->customContent);
 $hasContentFieldName = "content";
 
 // For a later improvement
@@ -155,9 +155,7 @@ $layout  = $isModal ? 'modal' : 'edit';
 $tmpl    = $isModal ? '&tmpl=component' : '';
 ?>
 
-<form
-	action="<?php echo JRoute::_('index.php?option=com_modules&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
-	method="post" name="adminForm" id="module-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_modules&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="module-form" class="form-validate">
 
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
@@ -183,25 +181,21 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 							?>
 						</h3>
 						<div class="info-labels">
-							<span class="label hasTooltip"
-							      title="<?php echo JHtml::tooltipText('COM_MODULES_FIELD_CLIENT_ID_LABEL'); ?>">
+							<span class="label hasTooltip" title="<?php echo JHtml::tooltipText('COM_MODULES_FIELD_CLIENT_ID_LABEL'); ?>">
 								<?php echo $this->item->client_id == 0 ? JText::_('JSITE') : JText::_('JADMINISTRATOR'); ?>
 							</span>
 						</div>
 						<div>
 							<?php
 							$short_description = JText::_($this->item->xml->description);
-							$this->fieldset    = 'description';
-							$long_description  = JLayoutHelper::render('joomla.edit.fieldset', $this);
-							if (!$long_description)
-							{
+							$this->fieldset = 'description';
+							$long_description = JLayoutHelper::render('joomla.edit.fieldset', $this);
+							if(!$long_description) {
 								$truncated = JHtmlString::truncate($short_description, 550, true, false);
-								if (strlen($truncated) > 500)
-								{
-									$long_description  = $short_description;
+								if(strlen($truncated) > 500) {
+									$long_description = $short_description;
 									$short_description = JHtmlString::truncate($truncated, 250);
-									if ($short_description == $long_description)
-									{
+									if($short_description == $long_description) {
 										$long_description = '';
 									}
 								}
@@ -226,7 +220,7 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 					echo $this->form->getInput($hasContentFieldName);
 				}
 				$this->fieldset = 'basic';
-				$html           = JLayoutHelper::render('joomla.edit.fieldset', $this);
+				$html = JLayoutHelper::render('joomla.edit.fieldset', $this);
 				echo $html ? '<hr />' . $html : '';
 				?>
 			</div>
@@ -279,14 +273,14 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 		<?php endif; ?>
 
 		<?php
-		$this->fieldsets        = array();
+		$this->fieldsets = array();
 		$this->ignore_fieldsets = array('basic', 'description');
 		echo JLayoutHelper::render('joomla.edit.params', $this);
 		?>
 
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 
-		<input type="hidden" name="task" value=""/>
+		<input type="hidden" name="task" value="" />
 		<?php echo JHtml::_('form.token'); ?>
 		<?php echo $this->form->getInput('module'); ?>
 		<?php echo $this->form->getInput('client_id'); ?>

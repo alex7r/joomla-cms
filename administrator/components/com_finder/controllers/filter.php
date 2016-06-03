@@ -21,8 +21,8 @@ class FinderControllerFilter extends JControllerForm
 	/**
 	 * Method to save a record.
 	 *
-	 * @param   string $key    The name of the primary key of the URL variable.
-	 * @param   string $urlVar The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return  boolean  True if successful, false otherwise.
 	 *
@@ -33,15 +33,15 @@ class FinderControllerFilter extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$app     = JFactory::getApplication();
-		$input   = $app->input;
-		$lang    = JFactory::getLanguage();
-		$model   = $this->getModel();
-		$table   = $model->getTable();
-		$data    = $input->post->get('jform', array(), 'array');
+		$app = JFactory::getApplication();
+		$input = $app->input;
+		$lang = JFactory::getLanguage();
+		$model = $this->getModel();
+		$table = $model->getTable();
+		$data = $input->post->get('jform', array(), 'array');
 		$checkin = property_exists($table, 'checked_out');
 		$context = "$this->option.edit.$this->context";
-		$task    = $this->getTask();
+		$task = $this->getTask();
 
 		// Determine the name of the primary key for the data.
 		if (empty($key))
@@ -86,7 +86,7 @@ class FinderControllerFilter extends JControllerForm
 
 			// Reset the ID and then treat the request as for Apply.
 			$data[$key] = 0;
-			$task       = 'apply';
+			$task = 'apply';
 		}
 
 		// Access check.
@@ -187,7 +187,7 @@ class FinderControllerFilter extends JControllerForm
 		$this->setMessage(
 			JText::_(
 				($lang->hasKey($this->text_prefix . ($recordId == 0 && $app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS')
-					? $this->text_prefix : 'JLIB_APPLICATION') . ($recordId == 0 && $app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS'
+				? $this->text_prefix : 'JLIB_APPLICATION') . ($recordId == 0 && $app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS'
 			)
 		);
 

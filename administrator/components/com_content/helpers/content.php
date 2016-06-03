@@ -21,7 +21,7 @@ class ContentHelper extends JHelperContent
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string $vName The name of the active view.
+	 * @param   string  $vName  The name of the active view.
 	 *
 	 * @return  void
 	 *
@@ -48,7 +48,7 @@ class ContentHelper extends JHelperContent
 	/**
 	 * Applies the content tag filters to arbitrary text as per settings for current user group
 	 *
-	 * @param   text $text The string to filter
+	 * @param   text  $text  The string to filter
 	 *
 	 * @return  string  The filtered string
 	 *
@@ -64,7 +64,7 @@ class ContentHelper extends JHelperContent
 	/**
 	 * Adds Count Items for Category Manager.
 	 *
-	 * @param   stdClass[] &$items The banner category objects
+	 * @param   stdClass[]  &$items  The banner category objects
 	 *
 	 * @return  stdClass[]
 	 *
@@ -76,11 +76,11 @@ class ContentHelper extends JHelperContent
 
 		foreach ($items as $item)
 		{
-			$item->count_trashed     = 0;
-			$item->count_archived    = 0;
+			$item->count_trashed = 0;
+			$item->count_archived = 0;
 			$item->count_unpublished = 0;
-			$item->count_published   = 0;
-			$query                   = $db->getQuery(true);
+			$item->count_published = 0;
+			$query = $db->getQuery(true);
 			$query->select('state, count(*) AS count')
 				->from($db->qn('#__content'))
 				->where('catid = ' . (int) $item->id)

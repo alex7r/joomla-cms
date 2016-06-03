@@ -29,7 +29,7 @@ class RedirectViewLinks extends JViewLegacy
 	/**
 	 * Display the view.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  False if unsuccessful, otherwise void.
 	 *
@@ -108,7 +108,7 @@ class RedirectViewLinks extends JViewLegacy
 				JToolbarHelper::unpublish('links.unpublish', 'JTOOLBAR_DISABLE', true);
 			}
 
-			if ($state->get('filter.state') != -1)
+			if ($state->get('filter.state') != -1 )
 			{
 				JToolbarHelper::divider();
 

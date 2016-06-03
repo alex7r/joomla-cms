@@ -27,15 +27,31 @@ class PlgSearchCategories extends JPlugin
 	protected $autoloadLanguage = true;
 
 	/**
+	 * Determine areas searchable by this plugin.
+	 *
+	 * @return  array  An array of search areas.
+	 *
+	 * @since   1.6
+	 */
+	public function onContentSearchAreas()
+	{
+		static $areas = array(
+			'categories' => 'PLG_SEARCH_CATEGORIES_CATEGORIES'
+		);
+
+		return $areas;
+	}
+
+	/**
 	 * Search content (categories).
 	 *
 	 * The SQL must return the following fields that are used in a common display
 	 * routine: href, title, section, created, text, browsernav.
 	 *
-	 * @param   string $text     Target search string.
-	 * @param   string $phrase   Matching option (possible values: exact|any|all).  Default is "any".
-	 * @param   string $ordering Ordering option (possible values: newest|oldest|popular|alpha|category).  Default is "newest".
-	 * @param   mixed  $areas    An array if the search is to be restricted to areas or null to search all areas.
+	 * @param   string  $text      Target search string.
+	 * @param   string  $phrase    Matching option (possible values: exact|any|all).  Default is "any".
+	 * @param   string  $ordering  Ordering option (possible values: newest|oldest|popular|alpha|category).  Default is "newest".
+	 * @param   mixed   $areas     An array if the search is to be restricted to areas or null to search all areas.
 	 *
 	 * @return  array  Search results.
 	 *
@@ -43,10 +59,10 @@ class PlgSearchCategories extends JPlugin
 	 */
 	public function onContentSearch($text, $phrase = '', $ordering = '', $areas = null)
 	{
-		$db         = JFactory::getDbo();
-		$user       = JFactory::getUser();
-		$app        = JFactory::getApplication();
-		$groups     = implode(',', $user->getAuthorisedViewLevels());
+		$db = JFactory::getDbo();
+		$user = JFactory::getUser();
+		$app = JFactory::getApplication();
+		$groups = implode(',', $user->getAuthorisedViewLevels());
 		$searchText = $text;
 
 		if (is_array($areas))
@@ -57,10 +73,10 @@ class PlgSearchCategories extends JPlugin
 			}
 		}
 
-		$sContent  = $this->params->get('search_content', 1);
+		$sContent = $this->params->get('search_content', 1);
 		$sArchived = $this->params->get('search_archived', 1);
-		$limit     = $this->params->def('search_limit', 50);
-		$state     = array();
+		$limit = $this->params->def('search_limit', 50);
+		$state = array();
 
 		if ($sContent)
 		{
@@ -127,7 +143,7 @@ class PlgSearchCategories extends JPlugin
 				$order = 'a.title DESC';
 		}
 
-		$text  = $db->quote('%' . $db->escape($text, true) . '%', false);
+		$text = $db->quote('%' . $db->escape($text, true) . '%', false);
 		$query = $db->getQuery(true);
 
 		// SQLSRV changes.
@@ -172,7 +188,7 @@ class PlgSearchCategories extends JPlugin
 
 			for ($i = 0; $i < $count; $i++)
 			{
-				$rows[$i]->href    = ContentHelperRoute::getCategoryRoute($rows[$i]->slug);
+				$rows[$i]->href = ContentHelperRoute::getCategoryRoute($rows[$i]->slug);
 				$rows[$i]->section = JText::_('JCATEGORY');
 			}
 
@@ -186,21 +202,5 @@ class PlgSearchCategories extends JPlugin
 		}
 
 		return $return;
-	}
-
-	/**
-	 * Determine areas searchable by this plugin.
-	 *
-	 * @return  array  An array of search areas.
-	 *
-	 * @since   1.6
-	 */
-	public function onContentSearchAreas()
-	{
-		static $areas = array(
-			'categories' => 'PLG_SEARCH_CATEGORIES_CATEGORIES'
-		);
-
-		return $areas;
 	}
 }

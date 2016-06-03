@@ -104,7 +104,7 @@ class AdminModelSysInfo extends JModelLegacy
 			'User/Group',
 			'open_basedir',
 		),
-		'other'        => array(
+		'other' => array(
 			'db',
 			'dbprefix',
 			'fromname',
@@ -154,6 +154,71 @@ class AdminModelSysInfo extends JModelLegacy
 	 * @since  1.6
 	 */
 	protected $editor = null;
+
+	/**
+	 * Remove sections of data marked as private in the privateSettings
+	 *
+	 * @param   array   $dataArray  Array with data tha may contain private informati
+	 * @param   string  $dataType   Type of data to search for an specific section in the privateSettings array
+	 *
+	 * @return  array
+	 *
+	 * @since   3.5
+	 */
+	protected function cleanPrivateData($dataArray, $dataType = 'other')
+	{
+		$dataType = isset($this->privateSettings[$dataType]) ? $dataType : 'other';
+
+		$privateSettings = $this->privateSettings[$dataType];
+
+		if (!$privateSettings)
+		{
+			return $dataArray;
+		}
+
+		foreach ($dataArray as $section => $values)
+		{
+			if (is_array($values))
+			{
+				$dataArray[$section] = $this->cleanPrivateData($values, $dataType);
+			}
+
+			if (in_array($section, $privateSettings, true))
+			{
+				$dataArray[$section] = $this->cleanSectionPrivateData($values);
+			}
+		}
+
+		return $dataArray;
+	}
+
+	/**
+	 * Offuscate section values
+	 *
+	 * @param   mixed  $sectionValues  Section data
+	 *
+	 * @return  mixed
+	 *
+	 * @since   3.5
+	 */
+	protected function cleanSectionPrivateData($sectionValues)
+	{
+		if (!is_array($sectionValues))
+		{
+			if (strstr($sectionValues, JPATH_ROOT))
+			{
+				$sectionValues = 'xxxxxx';
+			}
+			return strlen($sectionValues) ? 'xxxxxx' : '';
+		}
+
+		foreach ($sectionValues as $setting => $value)
+		{
+			$sectionValues[$setting] = strlen($value) ? 'xxxxxx' : '';
+		}
+
+		return $sectionValues;
+	}
 
 	/**
 	 * Method to get the PHP settings
@@ -207,9 +272,9 @@ class AdminModelSysInfo extends JModelLegacy
 			return $this->config;
 		}
 
-		$registry     = new Registry(new JConfig);
+		$registry = new Registry(new JConfig);
 		$this->config = $registry->toArray();
-		$hidden       = array('host', 'user', 'password', 'ftp_user', 'ftp_pass', 'smtpuser', 'smtppass',);
+		$hidden = array('host', 'user', 'password', 'ftp_user', 'ftp_pass', 'smtpuser', 'smtppass',);
 
 		foreach ($hidden as $key)
 		{
@@ -254,10 +319,22 @@ class AdminModelSysInfo extends JModelLegacy
 	}
 
 	/**
+	 * Check if the phpinfo function is enabled
+	 *
+	 * @return  boolean True if enabled
+	 *
+	 * @since   3.4.1
+	 */
+	public function phpinfoEnabled()
+	{
+		return !in_array('phpinfo', explode(',', ini_get('disable_functions')));
+	}
+
+	/**
 	 * Method to get filter data from the model
 	 *
-	 * @param   string $dataType Type of data to get safely
-	 * @param   bool   $public   If true no sensitive information will be removed
+	 * @param   string  $dataType  Type of data to get safely
+	 * @param   bool    $public    If true no sensitive information will be removed
 	 *
 	 * @return  array
 	 *
@@ -282,94 +359,6 @@ class AdminModelSysInfo extends JModelLegacy
 		$this->safeData[$dataType] = $this->cleanPrivateData($data, $dataType);
 
 		return $this->safeData[$dataType];
-	}
-
-	/**
-	 * Remove sections of data marked as private in the privateSettings
-	 *
-	 * @param   array  $dataArray Array with data tha may contain private informati
-	 * @param   string $dataType  Type of data to search for an specific section in the privateSettings array
-	 *
-	 * @return  array
-	 *
-	 * @since   3.5
-	 */
-	protected function cleanPrivateData($dataArray, $dataType = 'other')
-	{
-		$dataType = isset($this->privateSettings[$dataType]) ? $dataType : 'other';
-
-		$privateSettings = $this->privateSettings[$dataType];
-
-		if (!$privateSettings)
-		{
-			return $dataArray;
-		}
-
-		foreach ($dataArray as $section => $values)
-		{
-			if (is_array($values))
-			{
-				$dataArray[$section] = $this->cleanPrivateData($values, $dataType);
-			}
-
-			if (in_array($section, $privateSettings, true))
-			{
-				$dataArray[$section] = $this->cleanSectionPrivateData($values);
-			}
-		}
-
-		return $dataArray;
-	}
-
-	/**
-	 * Offuscate section values
-	 *
-	 * @param   mixed $sectionValues Section data
-	 *
-	 * @return  mixed
-	 *
-	 * @since   3.5
-	 */
-	protected function cleanSectionPrivateData($sectionValues)
-	{
-		if (!is_array($sectionValues))
-		{
-			if (strstr($sectionValues, JPATH_ROOT))
-			{
-				$sectionValues = 'xxxxxx';
-			}
-
-			return strlen($sectionValues) ? 'xxxxxx' : '';
-		}
-
-		foreach ($sectionValues as $setting => $value)
-		{
-			$sectionValues[$setting] = strlen($value) ? 'xxxxxx' : '';
-		}
-
-		return $sectionValues;
-	}
-
-	/**
-	 * Get phpinfo() output as array
-	 *
-	 * @return  array
-	 *
-	 * @since   3.5
-	 */
-	public function getPhpInfoArray()
-	{
-		// Already cached
-		if (null !== $this->phpInfoArray)
-		{
-			return $this->phpInfoArray;
-		}
-
-		$phpInfo = $this->getPhpInfo();
-
-		$this->phpInfoArray = $this->parsePhpInfo($phpInfo);
-
-		return $this->phpInfoArray;
 	}
 
 	/**
@@ -399,76 +388,38 @@ class AdminModelSysInfo extends JModelLegacy
 		$phpInfo = ob_get_contents();
 		ob_end_clean();
 		preg_match_all('#<body[^>]*>(.*)</body>#siU', $phpInfo, $output);
-		$output         = preg_replace('#<table[^>]*>#', '<table class="table table-striped adminlist">', $output[1][0]);
-		$output         = preg_replace('#(\w),(\w)#', '\1, \2', $output);
-		$output         = preg_replace('#<hr />#', '', $output);
-		$output         = str_replace('<div class="center">', '', $output);
-		$output         = preg_replace('#<tr class="h">(.*)<\/tr>#', '<thead><tr class="h">$1</tr></thead><tbody>', $output);
-		$output         = str_replace('</table>', '</tbody></table>', $output);
-		$output         = str_replace('</div>', '', $output);
+		$output = preg_replace('#<table[^>]*>#', '<table class="table table-striped adminlist">', $output[1][0]);
+		$output = preg_replace('#(\w),(\w)#', '\1, \2', $output);
+		$output = preg_replace('#<hr />#', '', $output);
+		$output = str_replace('<div class="center">', '', $output);
+		$output = preg_replace('#<tr class="h">(.*)<\/tr>#', '<thead><tr class="h">$1</tr></thead><tbody>', $output);
+		$output = str_replace('</table>', '</tbody></table>', $output);
+		$output = str_replace('</div>', '', $output);
 		$this->php_info = $output;
 
 		return $this->php_info;
 	}
 
 	/**
-	 * Check if the phpinfo function is enabled
-	 *
-	 * @return  boolean True if enabled
-	 *
-	 * @since   3.4.1
-	 */
-	public function phpinfoEnabled()
-	{
-		return !in_array('phpinfo', explode(',', ini_get('disable_functions')));
-	}
-
-	/**
-	 * Parse phpinfo output into an array
-	 * Source https://gist.github.com/sbmzhcn/6255314
-	 *
-	 * @param   string $html Output of phpinfo()
+	 * Get phpinfo() output as array
 	 *
 	 * @return  array
 	 *
 	 * @since   3.5
 	 */
-	protected function parsePhpInfo($html)
+	public function getPhpInfoArray()
 	{
-		$html  = strip_tags($html, '<h2><th><td>');
-		$html  = preg_replace('/<th[^>]*>([^<]+)<\/th>/', '<info>\1</info>', $html);
-		$html  = preg_replace('/<td[^>]*>([^<]+)<\/td>/', '<info>\1</info>', $html);
-		$t     = preg_split('/(<h2[^>]*>[^<]+<\/h2>)/', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
-		$r     = array();
-		$count = count($t);
-		$p1    = '<info>([^<]+)<\/info>';
-		$p2    = '/' . $p1 . '\s*' . $p1 . '\s*' . $p1 . '/';
-		$p3    = '/' . $p1 . '\s*' . $p1 . '/';
-
-		for ($i = 1; $i < $count; $i++)
+		// Already cached
+		if (null !== $this->phpInfoArray)
 		{
-			if (preg_match('/<h2[^>]*>([^<]+)<\/h2>/', $t[$i], $matchs))
-			{
-				$name = trim($matchs[1]);
-				$vals = explode("\n", $t[$i + 1]);
-
-				foreach ($vals AS $val)
-				{
-					// 3cols
-					if (preg_match($p2, $val, $matchs))
-					{
-						$r[$name][trim($matchs[1])] = array(trim($matchs[2]), trim($matchs[3]),);
-					}
-					// 2cols
-					elseif (preg_match($p3, $val, $matchs))
-					{
-						$r[$name][trim($matchs[1])] = trim($matchs[2]);
-					}
-				}
-			}
+			return $this->phpInfoArray;
 		}
 
-		return $r;
+		$phpInfo = $this->getPhpInfo();
+
+		$this->phpInfoArray = $this->parsePhpInfo($phpInfo);
+
+		return $this->phpInfoArray;
 	}
 
 	/**
@@ -481,8 +432,8 @@ class AdminModelSysInfo extends JModelLegacy
 	public function getExtensions()
 	{
 		$installed = array();
-		$db        = JFactory::getDbo();
-		$query     = $db->getQuery(true)
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
 			->select('*')
 			->from($db->qn('#__extensions'));
 		$db->setQuery($query);
@@ -543,7 +494,7 @@ class AdminModelSysInfo extends JModelLegacy
 	/**
 	 * Method to get the directory states
 	 *
-	 * @param   bool $public If true no information is going to be removed
+	 * @param   bool  $public  If true no information is going to be removed
 	 *
 	 * @return  array States of directories
 	 *
@@ -700,9 +651,9 @@ class AdminModelSysInfo extends JModelLegacy
 	/**
 	 * Method to add a directory
 	 *
-	 * @param   string $name    Directory Name
-	 * @param   string $path    Directory path
-	 * @param   string $message Message
+	 * @param   string  $name     Directory Name
+	 * @param   string  $path     Directory path
+	 * @param   string  $message  Message
 	 *
 	 * @return  void
 	 *
@@ -731,5 +682,53 @@ class AdminModelSysInfo extends JModelLegacy
 		$this->editor = JFactory::getConfig()->get('editor');
 
 		return $this->editor;
+	}
+
+	/**
+	 * Parse phpinfo output into an array
+	 * Source https://gist.github.com/sbmzhcn/6255314
+	 *
+	 * @param   string  $html  Output of phpinfo()
+	 *
+	 * @return  array
+	 *
+	 * @since   3.5
+	 */
+	protected function parsePhpInfo($html)
+	{
+		$html = strip_tags($html, '<h2><th><td>');
+		$html = preg_replace('/<th[^>]*>([^<]+)<\/th>/', '<info>\1</info>', $html);
+		$html = preg_replace('/<td[^>]*>([^<]+)<\/td>/', '<info>\1</info>', $html);
+		$t = preg_split('/(<h2[^>]*>[^<]+<\/h2>)/', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$r = array();
+		$count = count($t);
+		$p1 = '<info>([^<]+)<\/info>';
+		$p2 = '/' . $p1 . '\s*' . $p1 . '\s*' . $p1 . '/';
+		$p3 = '/' . $p1 . '\s*' . $p1 . '/';
+
+		for ($i = 1; $i < $count; $i++)
+		{
+			if (preg_match('/<h2[^>]*>([^<]+)<\/h2>/', $t[$i], $matchs))
+			{
+				$name = trim($matchs[1]);
+				$vals = explode("\n", $t[$i + 1]);
+
+				foreach ($vals AS $val)
+				{
+					// 3cols
+					if (preg_match($p2, $val, $matchs))
+					{
+						$r[$name][trim($matchs[1])] = array(trim($matchs[2]), trim($matchs[3]),);
+					}
+					// 2cols
+					elseif (preg_match($p3, $val, $matchs))
+					{
+						$r[$name][trim($matchs[1])] = trim($matchs[2]);
+					}
+				}
+			}
+		}
+
+		return $r;
 	}
 }

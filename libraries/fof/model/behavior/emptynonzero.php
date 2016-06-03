@@ -20,8 +20,8 @@ class FOFModelBehaviorEmptynonzero extends FOFModelBehavior
 	 * This event runs when we are building the query used to fetch a record
 	 * list in a model
 	 *
-	 * @param   FOFModel       &$model The model which calls this event
-	 * @param   JDatabaseQuery &$query The query being built
+	 * @param   FOFModel        &$model  The model which calls this event
+	 * @param   JDatabaseQuery  &$query  The query being built
 	 *
 	 * @return  void
 	 */

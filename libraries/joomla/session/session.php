@@ -22,13 +22,6 @@ defined('JPATH_PLATFORM') or die;
 class JSession implements IteratorAggregate
 {
 	/**
-	 * JSession instances container.
-	 *
-	 * @var    JSession
-	 * @since  11.3
-	 */
-	protected static $instance;
-	/**
 	 * Internal state.
 	 * One of 'inactive'|'active'|'expired'|'destroyed'|'error'
 	 *
@@ -37,6 +30,7 @@ class JSession implements IteratorAggregate
 	 * @since  11.1
 	 */
 	protected $_state = 'inactive';
+
 	/**
 	 * Maximum age of unused session in seconds
 	 *
@@ -44,6 +38,7 @@ class JSession implements IteratorAggregate
 	 * @since  11.1
 	 */
 	protected $_expire = 900;
+
 	/**
 	 * The session store object.
 	 *
@@ -51,6 +46,7 @@ class JSession implements IteratorAggregate
 	 * @since  11.1
 	 */
 	protected $_store = null;
+
 	/**
 	 * Security policy.
 	 * List of checks that will be done.
@@ -63,6 +59,15 @@ class JSession implements IteratorAggregate
 	 * @since  11.1
 	 */
 	protected $_security = array('fix_browser');
+
+	/**
+	 * JSession instances container.
+	 *
+	 * @var    JSession
+	 * @since  11.3
+	 */
+	protected static $instance;
+
 	/**
 	 * The type of storage for the session.
 	 *
@@ -70,19 +75,7 @@ class JSession implements IteratorAggregate
 	 * @since  12.2
 	 */
 	protected $storeName;
-	/**
-	 * Holds the event dispatcher object
-	 *
-	 * @var    JSessionHandlerInterface
-	 * @since  3.5
-	 */
-	protected $_handler = null;
-	/**
-	 * Internal data store for the session data
-	 *
-	 * @var  \Joomla\Registry\Registry
-	 */
-	protected $data;
+
 	/**
 	 * Holds the JInput object
 	 *
@@ -90,6 +83,7 @@ class JSession implements IteratorAggregate
 	 * @since  12.2
 	 */
 	private $_input = null;
+
 	/**
 	 * Holds the event dispatcher object
 	 *
@@ -99,11 +93,26 @@ class JSession implements IteratorAggregate
 	private $_dispatcher = null;
 
 	/**
+	 * Holds the event dispatcher object
+	 *
+	 * @var    JSessionHandlerInterface
+	 * @since  3.5
+	 */
+	protected $_handler = null;
+
+	/**
+	 * Internal data store for the session data
+	 *
+	 * @var  \Joomla\Registry\Registry
+	 */
+	protected $data;
+
+	/**
 	 * Constructor
 	 *
-	 * @param   string                   $store            The type of storage for the session.
-	 * @param   array                    $options          Optional parameters
-	 * @param   JSessionHandlerInterface $handlerInterface The session handler
+	 * @param   string                    $store             The type of storage for the session.
+	 * @param   array                     $options           Optional parameters
+	 * @param   JSessionHandlerInterface  $handlerInterface  The session handler
 	 *
 	 * @since   11.1
 	 */
@@ -132,52 +141,35 @@ class JSession implements IteratorAggregate
 	}
 
 	/**
-	 * Set additional session options
+	 * Magic method to get read-only access to properties.
 	 *
-	 * @param   array $options List of parameter
+	 * @param   string  $name  Name of property to retrieve
 	 *
-	 * @return  boolean  True on success
+	 * @return  mixed   The value of the property
 	 *
-	 * @since   11.1
+	 * @since   12.2
 	 */
-	protected function _setOptions(array $options)
+	public function __get($name)
 	{
-		// Set name
-		if (isset($options['name']))
+		if ($name === 'storeName')
 		{
-			$this->_handler->setName(md5($options['name']));
+			return $this->$name;
 		}
 
-		// Set id
-		if (isset($options['id']))
+		if ($name === 'state' || $name === 'expire')
 		{
-			$this->_handler->setId($options['id']);
+			$property = '_' . $name;
+
+			return $this->$property;
 		}
-
-		// Set expire time
-		if (isset($options['expire']))
-		{
-			$this->_expire = $options['expire'];
-		}
-
-		// Get security options
-		if (isset($options['security']))
-		{
-			$this->_security = explode(',', $options['security']);
-		}
-
-		// Sync the session maxlifetime
-		ini_set('session.gc_maxlifetime', $this->_expire);
-
-		return true;
 	}
 
 	/**
 	 * Returns the global Session object, only creating it if it doesn't already exist.
 	 *
-	 * @param   string                   $store            The type of storage for the session.
-	 * @param   array                    $options          An array of configuration options.
-	 * @param   JSessionHandlerInterface $handlerInterface The session handler
+	 * @param   string                    $store             The type of storage for the session.
+	 * @param   array                     $options           An array of configuration options.
+	 * @param   JSessionHandlerInterface  $handlerInterface  The session handler
 	 *
 	 * @return  JSession  The Session object.
 	 *
@@ -194,11 +186,121 @@ class JSession implements IteratorAggregate
 	}
 
 	/**
+	 * Get current state of session
+	 *
+	 * @return  string  The session state
+	 *
+	 * @since   11.1
+	 */
+	public function getState()
+	{
+		return $this->_state;
+	}
+
+	/**
+	 * Get expiration time in seconds
+	 *
+	 * @return  integer  The session expiration time in seconds
+	 *
+	 * @since   11.1
+	 */
+	public function getExpire()
+	{
+		return $this->_expire;
+	}
+
+	/**
+	 * Get a session token, if a token isn't set yet one will be generated.
+	 *
+	 * Tokens are used to secure forms from spamming attacks. Once a token
+	 * has been generated the system will check the post request to see if
+	 * it is present, if not it will invalidate the session.
+	 *
+	 * @param   boolean  $forceNew  If true, force a new token to be created
+	 *
+	 * @return  string  The session token
+	 *
+	 * @since   11.1
+	 */
+	public function getToken($forceNew = false)
+	{
+		$token = $this->get('session.token');
+
+		// Create a token
+		if ($token === null || $forceNew)
+		{
+			$token = $this->_createToken();
+			$this->set('session.token', $token);
+		}
+
+		return $token;
+	}
+
+	/**
+	 * Method to determine if a token exists in the session. If not the
+	 * session will be set to expired
+	 *
+	 * @param   string   $tCheck       Hashed token to be verified
+	 * @param   boolean  $forceExpire  If true, expires the session
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 */
+	public function hasToken($tCheck, $forceExpire = true)
+	{
+		// Check if a token exists in the session
+		$tStored = $this->get('session.token');
+
+		// Check token
+		if (($tStored !== $tCheck))
+		{
+			if ($forceExpire)
+			{
+				$this->_state = 'expired';
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Method to determine a hash for anti-spoofing variable names
+	 *
+	 * @param   boolean  $forceNew  If true, force a new token to be created
+	 *
+	 * @return  string  Hashed var name
+	 *
+	 * @since   11.1
+	 */
+	public static function getFormToken($forceNew = false)
+	{
+		$user    = JFactory::getUser();
+		$session = JFactory::getSession();
+
+		return JApplicationHelper::getHash($user->get('id', 0) . $session->getToken($forceNew));
+	}
+
+	/**
+	 * Retrieve an external iterator.
+	 *
+	 * @return  ArrayIterator
+	 *
+	 * @since   12.2
+	 */
+	public function getIterator()
+	{
+		return new ArrayIterator($this->getData());
+	}
+
+	/**
 	 * Checks for a form token in the request.
 	 *
 	 * Use in conjunction with JHtml::_('form.token') or JSession::getFormToken.
 	 *
-	 * @param   string $method The request method in which to look for the token key.
+	 * @param   string  $method  The request method in which to look for the token key.
 	 *
 	 * @return  boolean  True if found and valid, false otherwise.
 	 *
@@ -207,7 +309,7 @@ class JSession implements IteratorAggregate
 	public static function checkToken($method = 'post')
 	{
 		$token = self::getFormToken();
-		$app   = JFactory::getApplication();
+		$app = JFactory::getApplication();
 
 		if (!$app->input->$method->get($token, '', 'alnum'))
 		{
@@ -233,103 +335,49 @@ class JSession implements IteratorAggregate
 	}
 
 	/**
-	 * Method to determine a hash for anti-spoofing variable names
+	 * Get session name
 	 *
-	 * @param   boolean $forceNew If true, force a new token to be created
-	 *
-	 * @return  string  Hashed var name
+	 * @return  string  The session name
 	 *
 	 * @since   11.1
 	 */
-	public static function getFormToken($forceNew = false)
+	public function getName()
 	{
-		$user    = JFactory::getUser();
-		$session = JFactory::getSession();
-
-		return JApplicationHelper::getHash($user->get('id', 0) . $session->getToken($forceNew));
-	}
-
-	/**
-	 * Get a session token, if a token isn't set yet one will be generated.
-	 *
-	 * Tokens are used to secure forms from spamming attacks. Once a token
-	 * has been generated the system will check the post request to see if
-	 * it is present, if not it will invalidate the session.
-	 *
-	 * @param   boolean $forceNew If true, force a new token to be created
-	 *
-	 * @return  string  The session token
-	 *
-	 * @since   11.1
-	 */
-	public function getToken($forceNew = false)
-	{
-		$token = $this->get('session.token');
-
-		// Create a token
-		if ($token === null || $forceNew)
+		if ($this->_state === 'destroyed')
 		{
-			$token = $this->_createToken();
-			$this->set('session.token', $token);
-		}
-
-		return $token;
-	}
-
-	/**
-	 * Create a token-string
-	 *
-	 * @param   integer $length Length of string
-	 *
-	 * @return  string  Generated token
-	 *
-	 * @since   11.1
-	 */
-	protected function _createToken($length = 32)
-	{
-		return JUserHelper::genRandomPassword($length);
-	}
-
-	/**
-	 * Set data into the session store.
-	 *
-	 * @param   string $name      Name of a variable.
-	 * @param   mixed  $value     Value of a variable.
-	 * @param   string $namespace Namespace to use, default to 'default'.
-	 *
-	 * @return  mixed  Old value of a variable.
-	 *
-	 * @since   11.1
-	 */
-	public function set($name, $value = null, $namespace = 'default')
-	{
-		// Add prefix to namespace to avoid collisions
-		$namespace = '__' . $namespace;
-
-		if ($this->_state !== 'active')
-		{
-			// @TODO :: generated error here
+			// @TODO : raise error
 			return null;
 		}
 
-		$prev = $this->data->get($namespace . '.' . $name, null);
-		$this->data->set($namespace . '.' . $name, $value);
-
-		return $prev;
+		return $this->_handler->getName();
 	}
 
 	/**
-	 * Check whether this session is currently created
+	 * Get session id
 	 *
-	 * @return  boolean  True on success.
+	 * @return  string  The session name
 	 *
 	 * @since   11.1
 	 */
-	public function isNew()
+	public function getId()
 	{
-		$counter = $this->get('session.counter');
+		if ($this->_state === 'destroyed')
+		{
+			// @TODO : raise error
+			return null;
+		}
 
-		return (bool) ($counter === 1);
+		return $this->_handler->getId();
+	}
+
+	/**
+	 * Returns a clone of the internal data pointer
+	 *
+	 * @return  \Joomla\Registry\Registry
+	 */
+	public function getData()
+	{
+		return clone $this->data;
 	}
 
 	/**
@@ -378,89 +426,62 @@ class JSession implements IteratorAggregate
 	}
 
 	/**
-	 * Magic method to get read-only access to properties.
-	 *
-	 * @param   string $name Name of property to retrieve
-	 *
-	 * @return  mixed   The value of the property
-	 *
-	 * @since   12.2
-	 */
-	public function __get($name)
-	{
-		if ($name === 'storeName')
-		{
-			return $this->$name;
-		}
-
-		if ($name === 'state' || $name === 'expire')
-		{
-			$property = '_' . $name;
-
-			return $this->$property;
-		}
-	}
-
-	/**
-	 * Get current state of session
-	 *
-	 * @return  string  The session state
-	 *
-	 * @since   11.1
-	 */
-	public function getState()
-	{
-		return $this->_state;
-	}
-
-	/**
-	 * Get expiration time in seconds
-	 *
-	 * @return  integer  The session expiration time in seconds
-	 *
-	 * @since   11.1
-	 */
-	public function getExpire()
-	{
-		return $this->_expire;
-	}
-
-	/**
-	 * Method to determine if a token exists in the session. If not the
-	 * session will be set to expired
-	 *
-	 * @param   string  $tCheck      Hashed token to be verified
-	 * @param   boolean $forceExpire If true, expires the session
+	 * Shorthand to check if the session is active
 	 *
 	 * @return  boolean
 	 *
+	 * @since   12.2
+	 */
+	public function isActive()
+	{
+		return (bool) ($this->_state == 'active');
+	}
+
+	/**
+	 * Check whether this session is currently created
+	 *
+	 * @return  boolean  True on success.
+	 *
 	 * @since   11.1
 	 */
-	public function hasToken($tCheck, $forceExpire = true)
+	public function isNew()
 	{
-		// Check if a token exists in the session
-		$tStored = $this->get('session.token');
+		$counter = $this->get('session.counter');
 
-		// Check token
-		if (($tStored !== $tCheck))
+		return (bool) ($counter === 1);
+	}
+
+	/**
+	 * Check whether this session is currently created
+	 *
+	 * @param   JInput            $input       JInput object for the session to use.
+	 * @param   JEventDispatcher  $dispatcher  Dispatcher object for the session to use.
+	 *
+	 * @return  void.
+	 *
+	 * @since   12.2
+	 */
+	public function initialise(JInput $input, JEventDispatcher $dispatcher = null)
+	{
+		// With the introduction of the handler class this variable is no longer required
+		// however we keep setting it for b/c
+		$this->_input      = $input;
+
+		// Nasty workaround to deal in a b/c way with JInput being required in the 3.4+ Handler class.
+		if ($this->_handler instanceof JSessionHandlerJoomla)
 		{
-			if ($forceExpire)
-			{
-				$this->_state = 'expired';
-			}
-
-			return false;
+			$this->_handler->input = $input;
 		}
 
-		return true;
+		$this->_dispatcher = $dispatcher;
 	}
 
 	/**
 	 * Get data from the session store
 	 *
-	 * @param   string $name      Name of a variable
-	 * @param   mixed  $default   Default value of a variable if not set
-	 * @param   string $namespace Namespace to use, default to 'default'
+	 * @param   string  $name       Name of a variable
+	 * @param   mixed   $default    Default value of a variable if not set
+	 * @param   string  $namespace  Namespace to use, default to 'default'
 	 *
 	 * @return  mixed  Value of a variable
 	 *
@@ -483,105 +504,62 @@ class JSession implements IteratorAggregate
 	}
 
 	/**
-	 * Retrieve an external iterator.
+	 * Set data into the session store.
 	 *
-	 * @return  ArrayIterator
+	 * @param   string  $name       Name of a variable.
+	 * @param   mixed   $value      Value of a variable.
+	 * @param   string  $namespace  Namespace to use, default to 'default'.
 	 *
-	 * @since   12.2
-	 */
-	public function getIterator()
-	{
-		return new ArrayIterator($this->getData());
-	}
-
-	/**
-	 * Returns a clone of the internal data pointer
-	 *
-	 * @return  \Joomla\Registry\Registry
-	 */
-	public function getData()
-	{
-		return clone $this->data;
-	}
-
-	/**
-	 * Get session name
-	 *
-	 * @return  string  The session name
+	 * @return  mixed  Old value of a variable.
 	 *
 	 * @since   11.1
 	 */
-	public function getName()
+	public function set($name, $value = null, $namespace = 'default')
 	{
-		if ($this->_state === 'destroyed')
+		// Add prefix to namespace to avoid collisions
+		$namespace = '__' . $namespace;
+
+		if ($this->_state !== 'active')
 		{
-			// @TODO : raise error
+			// @TODO :: generated error here
 			return null;
 		}
 
-		return $this->_handler->getName();
+		$prev = $this->data->get($namespace . '.' . $name, null);
+		$this->data->set($namespace . '.' . $name, $value);
+
+		return $prev;
 	}
 
 	/**
-	 * Get session id
+	 * Check whether data exists in the session store
 	 *
-	 * @return  string  The session name
+	 * @param   string  $name       Name of variable
+	 * @param   string  $namespace  Namespace to use, default to 'default'
+	 *
+	 * @return  boolean  True if the variable exists
 	 *
 	 * @since   11.1
 	 */
-	public function getId()
+	public function has($name, $namespace = 'default')
 	{
-		if ($this->_state === 'destroyed')
+		// Add prefix to namespace to avoid collisions.
+		$namespace = '__' . $namespace;
+
+		if ($this->_state !== 'active')
 		{
-			// @TODO : raise error
+			// @TODO :: generated error here
 			return null;
 		}
 
-		return $this->_handler->getId();
-	}
-
-	/**
-	 * Shorthand to check if the session is active
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.2
-	 */
-	public function isActive()
-	{
-		return (bool) ($this->_state == 'active');
-	}
-
-	/**
-	 * Check whether this session is currently created
-	 *
-	 * @param   JInput           $input      JInput object for the session to use.
-	 * @param   JEventDispatcher $dispatcher Dispatcher object for the session to use.
-	 *
-	 * @return  void.
-	 *
-	 * @since   12.2
-	 */
-	public function initialise(JInput $input, JEventDispatcher $dispatcher = null)
-	{
-		// With the introduction of the handler class this variable is no longer required
-		// however we keep setting it for b/c
-		$this->_input = $input;
-
-		// Nasty workaround to deal in a b/c way with JInput being required in the 3.4+ Handler class.
-		if ($this->_handler instanceof JSessionHandlerJoomla)
-		{
-			$this->_handler->input = $input;
-		}
-
-		$this->_dispatcher = $dispatcher;
+		return !is_null($this->data->get($namespace . '.' . $name, null));
 	}
 
 	/**
 	 * Unset data from the session store
 	 *
-	 * @param   string $name      Name of variable
-	 * @param   string $namespace Namespace to use, default to 'default'
+	 * @param   string  $name       Name of variable
+	 * @param   string  $namespace  Namespace to use, default to 'default'
 	 *
 	 * @return  mixed   The value from session or NULL if not set
 	 *
@@ -700,138 +678,32 @@ class JSession implements IteratorAggregate
 	}
 
 	/**
-	 * Set counter of session usage
+	 * Frees all session variables and destroys all data registered to a session
+	 *
+	 * This method resets the data pointer and destroys all of the data associated
+	 * with the current session in its storage. It forces a new session to be
+	 * started after this method is called. It does not unset the session cookie.
 	 *
 	 * @return  boolean  True on success
 	 *
+	 * @see     session_destroy()
+	 * @see     session_unset()
 	 * @since   11.1
 	 */
-	protected function _setCounter()
+	public function destroy()
 	{
-		$counter = $this->get('session.counter', 0);
-		++$counter;
-
-		$this->set('session.counter', $counter);
-
-		return true;
-	}
-
-	/**
-	 * Set the session timers
-	 *
-	 * @return  boolean  True on success
-	 *
-	 * @since   11.1
-	 */
-	protected function _setTimers()
-	{
-		if (!$this->has('session.timer.start'))
+		// Session was already destroyed
+		if ($this->_state === 'destroyed')
 		{
-			$start = time();
-
-			$this->set('session.timer.start', $start);
-			$this->set('session.timer.last', $start);
-			$this->set('session.timer.now', $start);
+			return true;
 		}
 
-		$this->set('session.timer.last', $this->get('session.timer.now'));
-		$this->set('session.timer.now', time());
+		$this->_handler->clear();
 
-		return true;
-	}
+		// Create new data storage
+		$this->data = new \Joomla\Registry\Registry;
 
-	/**
-	 * Check whether data exists in the session store
-	 *
-	 * @param   string $name      Name of variable
-	 * @param   string $namespace Namespace to use, default to 'default'
-	 *
-	 * @return  boolean  True if the variable exists
-	 *
-	 * @since   11.1
-	 */
-	public function has($name, $namespace = 'default')
-	{
-		// Add prefix to namespace to avoid collisions.
-		$namespace = '__' . $namespace;
-
-		if ($this->_state !== 'active')
-		{
-			// @TODO :: generated error here
-			return null;
-		}
-
-		return !is_null($this->data->get($namespace . '.' . $name, null));
-	}
-
-	/**
-	 * Do some checks for security reason
-	 *
-	 * - timeout check (expire)
-	 * - ip-fixiation
-	 * - browser-fixiation
-	 *
-	 * If one check failed, session data has to be cleaned.
-	 *
-	 * @param   boolean $restart Reactivate session
-	 *
-	 * @return  boolean  True on success
-	 *
-	 * @see     http://shiflett.org/articles/the-truth-about-sessions
-	 * @since   11.1
-	 */
-	protected function _validate($restart = false)
-	{
-		// Allow to restart a session
-		if ($restart)
-		{
-			$this->_state = 'active';
-
-			$this->set('session.client.address', null);
-			$this->set('session.client.forwarded', null);
-			$this->set('session.client.browser', null);
-			$this->set('session.token', null);
-		}
-
-		// Check if session has expired
-		if ($this->_expire)
-		{
-			$curTime = $this->get('session.timer.now', 0);
-			$maxTime = $this->get('session.timer.last', 0) + $this->_expire;
-
-			// Empty session variables
-			if ($maxTime < $curTime)
-			{
-				$this->_state = 'expired';
-
-				return false;
-			}
-		}
-
-		// Check for client address
-		if (in_array('fix_adress', $this->_security) && isset($_SERVER['REMOTE_ADDR'])
-			&& filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) !== false
-		)
-		{
-			$ip = $this->get('session.client.address');
-
-			if ($ip === null)
-			{
-				$this->set('session.client.address', $_SERVER['REMOTE_ADDR']);
-			}
-			elseif ($_SERVER['REMOTE_ADDR'] !== $ip)
-			{
-				$this->_state = 'error';
-
-				return false;
-			}
-		}
-
-		// Record proxy forwarded for in the session in case we need it later
-		if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP) !== false)
-		{
-			$this->set('session.client.forwarded', $_SERVER['HTTP_X_FORWARDED_FOR']);
-		}
+		$this->_state = 'destroyed';
 
 		return true;
 	}
@@ -874,37 +746,6 @@ class JSession implements IteratorAggregate
 		}
 
 		$this->_setCounter();
-
-		return true;
-	}
-
-	/**
-	 * Frees all session variables and destroys all data registered to a session
-	 *
-	 * This method resets the data pointer and destroys all of the data associated
-	 * with the current session in its storage. It forces a new session to be
-	 * started after this method is called. It does not unset the session cookie.
-	 *
-	 * @return  boolean  True on success
-	 *
-	 * @see     session_destroy()
-	 * @see     session_unset()
-	 * @since   11.1
-	 */
-	public function destroy()
-	{
-		// Session was already destroyed
-		if ($this->_state === 'destroyed')
-		{
-			return true;
-		}
-
-		$this->_handler->clear();
-
-		// Create new data storage
-		$this->data = new \Joomla\Registry\Registry;
-
-		$this->_state = 'destroyed';
 
 		return true;
 	}
@@ -966,12 +807,179 @@ class JSession implements IteratorAggregate
 	/**
 	 * Set the session handler
 	 *
-	 * @param   JSessionHandlerInterface $handler The session handler
+	 * @param   JSessionHandlerInterface  $handler  The session handler
 	 *
 	 * @return  void
 	 */
 	public function setHandler(JSessionHandlerInterface $handler)
 	{
 		$this->_handler = $handler;
+	}
+
+	/**
+	 * Create a token-string
+	 *
+	 * @param   integer  $length  Length of string
+	 *
+	 * @return  string  Generated token
+	 *
+	 * @since   11.1
+	 */
+	protected function _createToken($length = 32)
+	{
+		return JUserHelper::genRandomPassword($length);
+	}
+
+	/**
+	 * Set counter of session usage
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   11.1
+	 */
+	protected function _setCounter()
+	{
+		$counter = $this->get('session.counter', 0);
+		++$counter;
+
+		$this->set('session.counter', $counter);
+
+		return true;
+	}
+
+	/**
+	 * Set the session timers
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   11.1
+	 */
+	protected function _setTimers()
+	{
+		if (!$this->has('session.timer.start'))
+		{
+			$start = time();
+
+			$this->set('session.timer.start', $start);
+			$this->set('session.timer.last', $start);
+			$this->set('session.timer.now', $start);
+		}
+
+		$this->set('session.timer.last', $this->get('session.timer.now'));
+		$this->set('session.timer.now', time());
+
+		return true;
+	}
+
+	/**
+	 * Set additional session options
+	 *
+	 * @param   array  $options  List of parameter
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   11.1
+	 */
+	protected function _setOptions(array $options)
+	{
+		// Set name
+		if (isset($options['name']))
+		{
+			$this->_handler->setName(md5($options['name']));
+		}
+
+		// Set id
+		if (isset($options['id']))
+		{
+			$this->_handler->setId($options['id']);
+		}
+
+		// Set expire time
+		if (isset($options['expire']))
+		{
+			$this->_expire = $options['expire'];
+		}
+
+		// Get security options
+		if (isset($options['security']))
+		{
+			$this->_security = explode(',', $options['security']);
+		}
+
+		// Sync the session maxlifetime
+		ini_set('session.gc_maxlifetime', $this->_expire);
+
+		return true;
+	}
+
+	/**
+	 * Do some checks for security reason
+	 *
+	 * - timeout check (expire)
+	 * - ip-fixiation
+	 * - browser-fixiation
+	 *
+	 * If one check failed, session data has to be cleaned.
+	 *
+	 * @param   boolean  $restart  Reactivate session
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @see     http://shiflett.org/articles/the-truth-about-sessions
+	 * @since   11.1
+	 */
+	protected function _validate($restart = false)
+	{
+		// Allow to restart a session
+		if ($restart)
+		{
+			$this->_state = 'active';
+
+			$this->set('session.client.address', null);
+			$this->set('session.client.forwarded', null);
+			$this->set('session.client.browser', null);
+			$this->set('session.token', null);
+		}
+
+		// Check if session has expired
+		if ($this->_expire)
+		{
+			$curTime = $this->get('session.timer.now', 0);
+			$maxTime = $this->get('session.timer.last', 0) + $this->_expire;
+
+			// Empty session variables
+			if ($maxTime < $curTime)
+			{
+				$this->_state = 'expired';
+
+				return false;
+			}
+		}
+
+		// Check for client address
+		if (in_array('fix_adress', $this->_security) && isset($_SERVER['REMOTE_ADDR'])
+			&& filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) !== false)
+		{
+			$ip = $this->get('session.client.address');
+
+			if ($ip === null)
+			{
+				$this->set('session.client.address', $_SERVER['REMOTE_ADDR']);
+			}
+			elseif ($_SERVER['REMOTE_ADDR'] !== $ip)
+			{
+				$this->_state = 'error';
+
+				return false;
+			}
+		}
+
+		// Record proxy forwarded for in the session in case we need it later
+		if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP) !== false)
+		{
+			$this->set('session.client.forwarded', $_SERVER['HTTP_X_FORWARDED_FOR']);
+		}
+
+		return true;
 	}
 }

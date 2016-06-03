@@ -19,7 +19,7 @@ class JHtmlUsers
 	/**
 	 * Display an image.
 	 *
-	 * @param   string $src The source of the image
+	 * @param   string  $src  The source of the image
 	 *
 	 * @return  string  A <img> element if the specified file exists, otherwise, a null string
 	 *
@@ -27,7 +27,7 @@ class JHtmlUsers
 	 */
 	public static function image($src)
 	{
-		$src  = preg_replace('#[^A-Z0-9\-_\./]#i', '', $src);
+		$src = preg_replace('#[^A-Z0-9\-_\./]#i', '', $src);
 		$file = JPATH_SITE . '/' . $src;
 
 		jimport('joomla.filesystem.path');
@@ -44,7 +44,7 @@ class JHtmlUsers
 	/**
 	 * Displays an icon to add a note for this user.
 	 *
-	 * @param   integer $userId The user ID
+	 * @param   integer  $userId  The user ID
 	 *
 	 * @return  string  A link to add a note
 	 *
@@ -55,14 +55,14 @@ class JHtmlUsers
 		$title = JText::_('COM_USERS_ADD_NOTE');
 
 		return '<a href="' . JRoute::_('index.php?option=com_users&task=note.add&u_id=' . (int) $userId) . '" class="hasTooltip btn btn-mini" title="'
-		. $title . '"><span class="icon-vcard"></span><span class="hidden-phone">' . $title . '</span></a>';
+			. $title . '"><span class="icon-vcard"></span><span class="hidden-phone">' . $title . '</span></a>';
 	}
 
 	/**
 	 * Displays an icon to filter the notes list on this user.
 	 *
-	 * @param   integer $count  The number of notes for the user
-	 * @param   integer $userId The user ID
+	 * @param   integer  $count   The number of notes for the user
+	 * @param   integer  $userId  The user ID
 	 *
 	 * @return  string  A link to apply a filter
 	 *
@@ -78,14 +78,14 @@ class JHtmlUsers
 		$title = JText::_('COM_USERS_FILTER_NOTES');
 
 		return '<a href="' . JRoute::_('index.php?option=com_users&view=notes&filter[search]=uid:' . (int) $userId)
-		. '" class="hasTooltip btn btn-mini" title="' . $title . '"><span class="icon-filter"></span></a>';
+			. '" class="hasTooltip btn btn-mini" title="' . $title . '"><span class="icon-filter"></span></a>';
 	}
 
 	/**
 	 * Displays a note icon.
 	 *
-	 * @param   integer $count  The number of notes for the user
-	 * @param   integer $userId The user ID
+	 * @param   integer  $count   The number of notes for the user
+	 * @param   integer  $userId  The user ID
 	 *
 	 * @return  string  A link to a modal window with the user notes
 	 *
@@ -101,19 +101,19 @@ class JHtmlUsers
 		$title = JText::plural('COM_USERS_N_USER_NOTES', $count);
 
 		return '<a href="#userModal_' . (int) $userId . '" id="modal-' . (int) $userId . '" data-toggle="modal" class="hasTooltip btn btn-mini" title="'
-		. $title . '"><span class="icon-drawer-2"></span><span class="hidden-phone">' . $title . '</span></a>';
+			. $title . '"><span class="icon-drawer-2"></span><span class="hidden-phone">' . $title . '</span></a>';
 	}
 
 	/**
 	 * Renders the modal html.
 	 *
-	 * @param   integer $count  The number of notes for the user
-	 * @param   integer $userId The user ID
+	 * @param   integer  $count   The number of notes for the user
+	 * @param   integer  $userId  The user ID
 	 *
 	 * @return  string   The html for the rendered modal
 	 *
 	 * @since   3.4.1
-	 */
+	*/
 	public static function notesModal($count, $userId)
 	{
 		if (empty($count))
@@ -121,7 +121,7 @@ class JHtmlUsers
 			return '';
 		}
 
-		$title  = JText::plural('COM_USERS_N_USER_NOTES', $count);
+		$title = JText::plural('COM_USERS_N_USER_NOTES', $count);
 		$footer = '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">'
 			. JText::_('JTOOLBAR_CLOSE') . '</button>';
 
@@ -129,14 +129,14 @@ class JHtmlUsers
 			'bootstrap.renderModal',
 			'userModal_' . (int) $userId,
 			array(
-				'title'       => $title,
-				'backdrop'    => 'static',
-				'keyboard'    => true,
+				'title' => $title,
+				'backdrop' => 'static',
+				'keyboard' => true,
 				'closeButton' => true,
-				'footer'      => $footer,
-				'url'         => JRoute::_('index.php?option=com_users&view=notes&tmpl=component&layout=modal&filter[user_id]=' . (int) $userId),
-				'height'      => '300px',
-				'width'       => '800px'
+				'footer' => $footer,
+				'url' => JRoute::_('index.php?option=com_users&view=notes&tmpl=component&layout=modal&filter[user_id]=' . (int) $userId),
+				'height' => '300px',
+				'width' => '800px'
 			)
 		);
 
@@ -147,13 +147,13 @@ class JHtmlUsers
 	 * State options will be different for any user
 	 * and for currently logged in user
 	 *
-	 * @param   boolean $self True if state array is for currently logged in user
+	 * @param   boolean  $self  True if state array is for currently logged in user
 	 *
 	 * @return  array  a list of possible states to display
 	 *
 	 * @since  3.0
 	 */
-	public static function blockStates($self = false)
+	public static function blockStates( $self = false)
 	{
 		if ($self)
 		{

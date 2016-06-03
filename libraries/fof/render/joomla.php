@@ -20,27 +20,27 @@ class FOFRenderJoomla extends FOFRenderAbstract
 	 */
 	public function __construct()
 	{
-		$this->priority = 50;
-		$this->enabled  = true;
+		$this->priority	 = 50;
+		$this->enabled	 = true;
 	}
 
 	/**
 	 * Echoes any HTML to show before the view template
 	 *
-	 * @param   string   $view   The current view
-	 * @param   string   $task   The current task
-	 * @param   FOFInput $input  The input array (request parameters)
-	 * @param   array    $config The view configuration array
+	 * @param   string    $view    The current view
+	 * @param   string    $task    The current task
+	 * @param   FOFInput  $input   The input array (request parameters)
+	 * @param   array     $config  The view configuration array
 	 *
 	 * @return  void
 	 */
 	public function preRender($view, $task, $input, $config = array())
 	{
-		$format = $input->getCmd('format', 'html');
+		$format	 = $input->getCmd('format', 'html');
 
 		if (empty($format))
 		{
-			$format = 'html';
+			$format	 = 'html';
 		}
 
 		if ($format != 'html')
@@ -66,18 +66,18 @@ class FOFRenderJoomla extends FOFRenderAbstract
 		}
 
 		// Wrap output in various classes
-		$version      = new JVersion;
+		$version = new JVersion;
 		$versionParts = explode('.', $version->RELEASE);
 		$minorVersion = str_replace('.', '', $version->RELEASE);
 		$majorVersion = array_shift($versionParts);
 
 		if ($platform->isBackend())
 		{
-			$area   = $platform->isBackend() ? 'admin' : 'site';
+			$area = $platform->isBackend() ? 'admin' : 'site';
 			$option = $input->getCmd('option', '');
-			$view   = $input->getCmd('view', '');
+			$view = $input->getCmd('view', '');
 			$layout = $input->getCmd('layout', '');
-			$task   = $input->getCmd('task', '');
+			$task = $input->getCmd('task', '');
 
 			$classes = array(
 				'joomla-version-' . $majorVersion,
@@ -109,114 +109,22 @@ class FOFRenderJoomla extends FOFRenderAbstract
 	}
 
 	/**
-	 * Renders the toolbar buttons
-	 *
-	 * @param   string   $view   The active view name
-	 * @param   string   $task   The current task
-	 * @param   FOFInput $input  The input object
-	 * @param   array    $config Extra configuration variables for the toolbar
-	 *
-	 * @return  void
-	 */
-	protected function renderButtons($view, $task, $input, $config = array())
-	{
-		// On command line don't do anything
-
-		if (FOFPlatform::getInstance()->isCli())
-		{
-			return;
-		}
-
-		// Do not render buttons unless we are in the the frontend area and we are asked to do so
-		$toolbar               = FOFToolbar::getAnInstance($input->getCmd('option', 'com_foobar'), $config);
-		$renderFrontendButtons = $toolbar->getRenderFrontendButtons();
-
-		if (FOFPlatform::getInstance()->isBackend() || !$renderFrontendButtons)
-		{
-			return;
-		}
-
-		// Load main backend language, in order to display toolbar strings
-		// (JTOOLBAR_BACK, JTOOLBAR_PUBLISH etc etc)
-		FOFPlatform::getInstance()->loadTranslations('joomla');
-
-		$title = JFactory::getApplication()->get('JComponentTitle');
-		$bar   = JToolBar::getInstance('toolbar');
-
-		// Delete faux links, since if SEF is on, Joomla will follow the link instead of submitting the form
-		$bar_content = str_replace('href="#"', '', $bar->render());
-
-		echo '<div id="FOFHeaderHolder">', $bar_content, $title, '<div style="clear:both"></div>', '</div>';
-	}
-
-	/**
-	 * Renders the submenu (link bar)
-	 *
-	 * @param   string   $view   The active view name
-	 * @param   string   $task   The current task
-	 * @param   FOFInput $input  The input object
-	 * @param   array    $config Extra configuration variables for the toolbar
-	 *
-	 * @return  void
-	 */
-	protected function renderLinkbar($view, $task, $input, $config = array())
-	{
-		// On command line don't do anything
-
-		if (FOFPlatform::getInstance()->isCli())
-		{
-			return;
-		}
-
-		// Do not render a submenu unless we are in the the admin area
-		$toolbar               = FOFToolbar::getAnInstance($input->getCmd('option', 'com_foobar'), $config);
-		$renderFrontendSubmenu = $toolbar->getRenderFrontendSubmenu();
-
-		if (!FOFPlatform::getInstance()->isBackend() && !$renderFrontendSubmenu)
-		{
-			return;
-		}
-
-		$this->renderLinkbarItems($toolbar);
-	}
-
-	/**
-	 * do the rendering job for the linkbar
-	 *
-	 * @param   FOFToolbar $toolbar A toolbar object
-	 *
-	 * @return  void
-	 */
-	protected function renderLinkbarItems($toolbar)
-	{
-		$links = $toolbar->getLinks();
-
-		if (!empty($links))
-		{
-			foreach ($links as $link)
-			{
-				JSubMenuHelper::addEntry($link['name'], $link['link'], $link['active']);
-			}
-		}
-	}
-
-	/**
 	 * Echoes any HTML to show after the view template
 	 *
-	 * @param   string   $view   The current view
-	 * @param   string   $task   The current task
-	 * @param   FOFInput $input  The input array (request parameters)
-	 * @param   array    $config The view configuration array
+	 * @param   string    $view    The current view
+	 * @param   string    $task    The current task
+	 * @param   FOFInput  $input   The input array (request parameters)
+	 * @param   array     $config  The view configuration array
 	 *
 	 * @return  void
 	 */
 	public function postRender($view, $task, $input, $config = array())
 	{
-		$format = $input->getCmd('format', 'html');
+		$format	 = $input->getCmd('format', 'html');
 
 		if (empty($format))
 		{
-			$format = 'html';
+			$format	 = 'html';
 		}
 
 		if ($format != 'html')
@@ -236,9 +144,9 @@ class FOFRenderJoomla extends FOFRenderAbstract
 	/**
 	 * Renders a FOFForm for a Browse view and returns the corresponding HTML
 	 *
-	 * @param   FOFForm  &$form The form to render
-	 * @param   FOFModel $model The model providing our data
-	 * @param   FOFInput $input The input object
+	 * @param   FOFForm   &$form  The form to render
+	 * @param   FOFModel  $model  The model providing our data
+	 * @param   FOFInput  $input  The input object
 	 *
 	 * @return  string    The HTML rendering of the form
 	 */
@@ -250,15 +158,15 @@ class FOFRenderJoomla extends FOFRenderAbstract
 		$headerFields = $form->getHeaderset();
 
 		// Start the form
-		$html             = '';
-		$filter_order     = $form->getView()->getLists()->order;
-		$filter_order_Dir = $form->getView()->getLists()->order_Dir;
-		$actionUrl        = FOFPlatform::getInstance()->isBackend() ? 'index.php' : JUri::root() . 'index.php';
+		$html				 = '';
+		$filter_order		 = $form->getView()->getLists()->order;
+		$filter_order_Dir	 = $form->getView()->getLists()->order_Dir;
+        $actionUrl           = FOFPlatform::getInstance()->isBackend() ? 'index.php' : JUri::root().'index.php';
 
 		if (FOFPlatform::getInstance()->isFrontend() && ($input->getCmd('Itemid', 0) != 0))
 		{
 			$itemid = $input->getCmd('Itemid', 0);
-			$uri    = new JUri($actionUrl);
+			$uri = new JUri($actionUrl);
 
 			if ($itemid)
 			{
@@ -268,7 +176,7 @@ class FOFRenderJoomla extends FOFRenderAbstract
 			$actionUrl = JRoute::_($uri->toString());
 		}
 
-		$html .= '<form action="' . $actionUrl . '" method="post" name="adminForm" id="adminForm">' . PHP_EOL;
+		$html .= '<form action="'.$actionUrl.'" method="post" name="adminForm" id="adminForm">' . PHP_EOL;
 		$html .= "\t" . '<input type="hidden" name="option" value="' . $input->getCmd('option') . '" />' . PHP_EOL;
 		$html .= "\t" . '<input type="hidden" name="view" value="' . FOFInflector::pluralize($input->getCmd('view')) . '" />' . PHP_EOL;
 		$html .= "\t" . '<input type="hidden" name="task" value="" />' . PHP_EOL;
@@ -284,10 +192,10 @@ class FOFRenderJoomla extends FOFRenderAbstract
 		$html .= "\t\t" . '<table class="adminlist" id="adminList">' . PHP_EOL;
 
 		// Get form parameters
-		$show_header        = $form->getAttribute('show_header', 1);
-		$show_filters       = $form->getAttribute('show_filters', 1);
-		$show_pagination    = $form->getAttribute('show_pagination', 1);
-		$norows_placeholder = $form->getAttribute('norows_placeholder', '');
+		$show_header		 = $form->getAttribute('show_header', 1);
+		$show_filters		 = $form->getAttribute('show_filters', 1);
+		$show_pagination	 = $form->getAttribute('show_pagination', 1);
+		$norows_placeholder	 = $form->getAttribute('norows_placeholder', '');
 
 		// Open the table header region if required
 		if ($show_header || $show_filters)
@@ -327,7 +235,7 @@ class FOFRenderJoomla extends FOFRenderAbstract
 				$header_html .= "\t\t\t\t\t\t" . $tmpHeader;
 				$header_html .= "\t\t\t\t\t</th>" . PHP_EOL;
 
-				$filter  = $header->filter;
+				$filter	 = $header->filter;
 				$buttons = $header->buttons;
 				$options = $header->options;
 
@@ -344,13 +252,13 @@ class FOFRenderJoomla extends FOFRenderAbstract
 				}
 				elseif (!empty($options))
 				{
-					$label       = $header->label;
+					$label		 = $header->label;
 					$emptyOption = JHtml::_('select.option', '', '- ' . JText::_($label) . ' -');
 					array_unshift($options, $emptyOption);
-					$attribs = array(
+					$attribs	 = array(
 						'onchange' => 'document.adminForm.submit();'
 					);
-					$filter  = JHtml::_('select.genericlist', $options, $header->name, $attribs, 'value', 'text', $header->value, false, true);
+					$filter		 = JHtml::_('select.genericlist', $options, $header->name, $attribs, 'value', 'text', $header->value, false, true);
 					$filter_html .= "\t\t\t\t\t\t$filter" . PHP_EOL;
 				}
 
@@ -382,9 +290,9 @@ class FOFRenderJoomla extends FOFRenderAbstract
 
 		// Loop through rows and fields, or show placeholder for no rows
 		$html .= "\t\t\t<tbody>" . PHP_EOL;
-		$fields      = $form->getFieldset('items');
+		$fields		 = $form->getFieldset('items');
 		$num_columns = count($fields);
-		$items       = $form->getModel()->getItemList();
+		$items		 = $form->getModel()->getItemList();
 
 		if ($count = count($items))
 		{
@@ -398,8 +306,8 @@ class FOFRenderJoomla extends FOFRenderAbstract
 
 				$form->bind($item);
 
-				$m     = 1 - $m;
-				$class = 'row' . $m;
+				$m		 = 1 - $m;
+				$class	 = 'row' . $m;
 
 				$html .= "\t\t\t\t<tr class=\"$class\">" . PHP_EOL;
 
@@ -407,10 +315,10 @@ class FOFRenderJoomla extends FOFRenderAbstract
 
 				foreach ($fields as $field)
 				{
-					$field->rowid = $i;
-					$field->item  = $table_item;
-					$labelClass   = $field->labelClass ? $field->labelClass : $field->labelclass; // Joomla! 2.5/3.x use different case for the same name
-					$class        = $labelClass ? 'class ="' . $labelClass . '"' : '';
+					$field->rowid	 = $i;
+					$field->item	 = $table_item;
+					$labelClass = $field->labelClass ? $field->labelClass : $field->labelclass; // Joomla! 2.5/3.x use different case for the same name
+					$class			 = $labelClass ? 'class ="' . $labelClass . '"' : '';
 					$html .= "\t\t\t\t\t<td $class>" . $field->getRepeatable() . '</td>' . PHP_EOL;
 				}
 
@@ -455,9 +363,9 @@ class FOFRenderJoomla extends FOFRenderAbstract
 	/**
 	 * Renders a FOFForm for a Read view and returns the corresponding HTML
 	 *
-	 * @param   FOFForm  &$form The form to render
-	 * @param   FOFModel $model The model providing our data
-	 * @param   FOFInput $input The input object
+	 * @param   FOFForm   &$form  The form to render
+	 * @param   FOFModel  $model  The model providing our data
+	 * @param   FOFInput  $input  The input object
 	 *
 	 * @return  string    The HTML rendering of the form
 	 */
@@ -469,12 +377,109 @@ class FOFRenderJoomla extends FOFRenderAbstract
 	}
 
 	/**
+	 * Renders a FOFForm for an Edit view and returns the corresponding HTML
+	 *
+	 * @param   FOFForm   &$form  The form to render
+	 * @param   FOFModel  $model  The model providing our data
+	 * @param   FOFInput  $input  The input object
+	 *
+	 * @return  string    The HTML rendering of the form
+	 */
+	protected function renderFormEdit(FOFForm &$form, FOFModel $model, FOFInput $input)
+	{
+		// Get the key for this model's table
+		$key		 = $model->getTable()->getKeyName();
+		$keyValue	 = $model->getId();
+
+		JHTML::_('behavior.tooltip');
+
+		$html = '';
+
+		$validate	 = strtolower($form->getAttribute('validate'));
+		$class		 = '';
+
+		if (in_array($validate, array('true', 'yes', '1', 'on')))
+		{
+			JHtml::_('behavior.formvalidation');
+			$class = 'form-validate ';
+			$this->loadValidationScript($form);
+		}
+
+		// Check form enctype. Use enctype="multipart/form-data" to upload binary files in your form.
+		$template_form_enctype = $form->getAttribute('enctype');
+
+		if (!empty($template_form_enctype))
+		{
+			$enctype = ' enctype="' . $form->getAttribute('enctype') . '" ';
+		}
+		else
+		{
+			$enctype = '';
+		}
+
+		// Check form name. Use name="yourformname" to modify the name of your form.
+		$formname = $form->getAttribute('name');
+
+		if (empty($formname))
+		{
+			$formname = 'adminForm';
+		}
+
+		// Check form ID. Use id="yourformname" to modify the id of your form.
+		$formid = $form->getAttribute('name');
+
+		if (empty($formid))
+		{
+			$formid = 'adminForm';
+		}
+
+		// Check if we have a custom task
+		$customTask = $form->getAttribute('customTask');
+
+		if (empty($customTask))
+		{
+			$customTask = '';
+		}
+
+		// Get the form action URL
+        $actionUrl = FOFPlatform::getInstance()->isBackend() ? 'index.php' : JUri::root().'index.php';
+
+		if (FOFPlatform::getInstance()->isFrontend() && ($input->getCmd('Itemid', 0) != 0))
+		{
+			$itemid = $input->getCmd('Itemid', 0);
+			$uri = new JUri($actionUrl);
+
+			if ($itemid)
+			{
+				$uri->setVar('Itemid', $itemid);
+			}
+
+			$actionUrl = JRoute::_($uri->toString());
+		}
+
+		$html .= '<form action="'.$actionUrl.'" method="post" name="' . $formname .
+			'" id="' . $formid . '"' . $enctype . ' class="' . $class .
+			'">' . PHP_EOL;
+		$html .= "\t" . '<input type="hidden" name="option" value="' . $input->getCmd('option') . '" />' . PHP_EOL;
+		$html .= "\t" . '<input type="hidden" name="view" value="' . $input->getCmd('view', 'edit') . '" />' . PHP_EOL;
+		$html .= "\t" . '<input type="hidden" name="task" value="' . $customTask . '" />' . PHP_EOL;
+		$html .= "\t" . '<input type="hidden" name="' . $key . '" value="' . $keyValue . '" />' . PHP_EOL;
+
+		$html .= "\t" . '<input type="hidden" name="' . JFactory::getSession()->getFormToken() . '" value="1" />' . PHP_EOL;
+
+		$html .= $this->renderFormRaw($form, $model, $input, 'edit');
+		$html .= '</form>';
+
+		return $html;
+	}
+
+	/**
 	 * Renders a raw FOFForm and returns the corresponding HTML
 	 *
-	 * @param   FOFForm  &$form    The form to render
-	 * @param   FOFModel $model    The model providing our data
-	 * @param   FOFInput $input    The input object
-	 * @param   string   $formType The form type e.g. 'edit' or 'read'
+	 * @param   FOFForm   &$form     The form to render
+	 * @param   FOFModel  $model     The model providing our data
+	 * @param   FOFInput  $input     The input object
+	 * @param   string    $formType  The form type e.g. 'edit' or 'read'
 	 *
 	 * @return  string    The HTML rendering of the form
 	 */
@@ -493,12 +498,12 @@ class FOFRenderJoomla extends FOFRenderAbstract
 	/**
 	 * Renders a raw fieldset of a FOFForm and returns the corresponding HTML
 	 *
-	 * @param   stdClass &$fieldset  The fieldset to render
-	 * @param   FOFForm  &$form      The form to render
-	 * @param   FOFModel $model      The model providing our data
-	 * @param   FOFInput $input      The input object
-	 * @param   string   $formType   The form type e.g. 'edit' or 'read'
-	 * @param   boolean  $showHeader Should I render the fieldset's header?
+	 * @param   stdClass  &$fieldset   The fieldset to render
+	 * @param   FOFForm   &$form       The form to render
+	 * @param   FOFModel  $model       The model providing our data
+	 * @param   FOFInput  $input       The input object
+	 * @param   string    $formType    The form type e.g. 'edit' or 'read'
+	 * @param   boolean   $showHeader  Should I render the fieldset's header?
 	 *
 	 * @return  string    The HTML rendering of the fieldset
 	 */
@@ -529,12 +534,12 @@ class FOFRenderJoomla extends FOFRenderAbstract
 
 		foreach ($fields as $field)
 		{
-			$groupClass = $form->getFieldAttribute($field->fieldname, 'groupclass', '', $field->group);
+			$groupClass	 = $form->getFieldAttribute($field->fieldname, 'groupclass', '', $field->group);
 
 			// Auto-generate label and description if needed
 			// Field label
-			$title      = $form->getFieldAttribute($field->fieldname, 'label', '', $field->group);
-			$emptylabel = $form->getFieldAttribute($field->fieldname, 'emptylabel', false, $field->group);
+			$title 		 = $form->getFieldAttribute($field->fieldname, 'label', '', $field->group);
+			$emptylabel  = $form->getFieldAttribute($field->fieldname, 'emptylabel', false, $field->group);
 
 			if (empty($title) && !$emptylabel)
 			{
@@ -601,18 +606,18 @@ class FOFRenderJoomla extends FOFRenderAbstract
 	/**
 	 * Renders a label for a fieldset.
 	 *
-	 * @param   object  $field The field of the label to render
-	 * @param   FOFForm &$form The form to render
-	 * @param    string $title The title of the label
+	 * @param   object  	$field  	The field of the label to render
+	 * @param   FOFForm   	&$form      The form to render
+	 * @param 	string		$title		The title of the label
 	 *
-	 * @return    string        The rendered label
+	 * @return 	string		The rendered label
 	 */
 	protected function renderFieldsetLabel($field, FOFForm &$form, $title)
 	{
 		$html = '';
 
-		$labelClass = $field->labelClass ? $field->labelClass : $field->labelclass; // Joomla! 2.5/3.x use different case for the same name
-		$required   = $field->required;
+		$labelClass	 = $field->labelClass ? $field->labelClass : $field->labelclass; // Joomla! 2.5/3.x use different case for the same name
+		$required	 = $field->required;
 
 		if ($required)
 		{
@@ -649,106 +654,9 @@ class FOFRenderJoomla extends FOFRenderAbstract
 	}
 
 	/**
-	 * Renders a FOFForm for an Edit view and returns the corresponding HTML
-	 *
-	 * @param   FOFForm  &$form The form to render
-	 * @param   FOFModel $model The model providing our data
-	 * @param   FOFInput $input The input object
-	 *
-	 * @return  string    The HTML rendering of the form
-	 */
-	protected function renderFormEdit(FOFForm &$form, FOFModel $model, FOFInput $input)
-	{
-		// Get the key for this model's table
-		$key      = $model->getTable()->getKeyName();
-		$keyValue = $model->getId();
-
-		JHTML::_('behavior.tooltip');
-
-		$html = '';
-
-		$validate = strtolower($form->getAttribute('validate'));
-		$class    = '';
-
-		if (in_array($validate, array('true', 'yes', '1', 'on')))
-		{
-			JHtml::_('behavior.formvalidation');
-			$class = 'form-validate ';
-			$this->loadValidationScript($form);
-		}
-
-		// Check form enctype. Use enctype="multipart/form-data" to upload binary files in your form.
-		$template_form_enctype = $form->getAttribute('enctype');
-
-		if (!empty($template_form_enctype))
-		{
-			$enctype = ' enctype="' . $form->getAttribute('enctype') . '" ';
-		}
-		else
-		{
-			$enctype = '';
-		}
-
-		// Check form name. Use name="yourformname" to modify the name of your form.
-		$formname = $form->getAttribute('name');
-
-		if (empty($formname))
-		{
-			$formname = 'adminForm';
-		}
-
-		// Check form ID. Use id="yourformname" to modify the id of your form.
-		$formid = $form->getAttribute('name');
-
-		if (empty($formid))
-		{
-			$formid = 'adminForm';
-		}
-
-		// Check if we have a custom task
-		$customTask = $form->getAttribute('customTask');
-
-		if (empty($customTask))
-		{
-			$customTask = '';
-		}
-
-		// Get the form action URL
-		$actionUrl = FOFPlatform::getInstance()->isBackend() ? 'index.php' : JUri::root() . 'index.php';
-
-		if (FOFPlatform::getInstance()->isFrontend() && ($input->getCmd('Itemid', 0) != 0))
-		{
-			$itemid = $input->getCmd('Itemid', 0);
-			$uri    = new JUri($actionUrl);
-
-			if ($itemid)
-			{
-				$uri->setVar('Itemid', $itemid);
-			}
-
-			$actionUrl = JRoute::_($uri->toString());
-		}
-
-		$html .= '<form action="' . $actionUrl . '" method="post" name="' . $formname .
-			'" id="' . $formid . '"' . $enctype . ' class="' . $class .
-			'">' . PHP_EOL;
-		$html .= "\t" . '<input type="hidden" name="option" value="' . $input->getCmd('option') . '" />' . PHP_EOL;
-		$html .= "\t" . '<input type="hidden" name="view" value="' . $input->getCmd('view', 'edit') . '" />' . PHP_EOL;
-		$html .= "\t" . '<input type="hidden" name="task" value="' . $customTask . '" />' . PHP_EOL;
-		$html .= "\t" . '<input type="hidden" name="' . $key . '" value="' . $keyValue . '" />' . PHP_EOL;
-
-		$html .= "\t" . '<input type="hidden" name="' . JFactory::getSession()->getFormToken() . '" value="1" />' . PHP_EOL;
-
-		$html .= $this->renderFormRaw($form, $model, $input, 'edit');
-		$html .= '</form>';
-
-		return $html;
-	}
-
-	/**
 	 * Loads the validation script for an edit form
 	 *
-	 * @param   FOFForm &$form The form we are rendering
+	 * @param   FOFForm  &$form  The form we are rendering
 	 *
 	 * @return  void
 	 */
@@ -775,5 +683,97 @@ JS;
 		{
 			$document->addScriptDeclaration($js);
 		}
+	}
+
+	/**
+	 * Renders the submenu (link bar)
+	 *
+	 * @param   string    $view    The active view name
+	 * @param   string    $task    The current task
+	 * @param   FOFInput  $input   The input object
+	 * @param   array     $config  Extra configuration variables for the toolbar
+	 *
+	 * @return  void
+	 */
+	protected function renderLinkbar($view, $task, $input, $config = array())
+	{
+		// On command line don't do anything
+
+		if (FOFPlatform::getInstance()->isCli())
+		{
+			return;
+		}
+
+		// Do not render a submenu unless we are in the the admin area
+		$toolbar				 = FOFToolbar::getAnInstance($input->getCmd('option', 'com_foobar'), $config);
+		$renderFrontendSubmenu	 = $toolbar->getRenderFrontendSubmenu();
+
+		if (!FOFPlatform::getInstance()->isBackend() && !$renderFrontendSubmenu)
+		{
+			return;
+		}
+
+		$this->renderLinkbarItems($toolbar);
+	}
+
+	/**
+	 * do the rendering job for the linkbar
+	 *
+	 * @param   FOFToolbar  $toolbar  A toolbar object
+	 *
+	 * @return  void
+	 */
+	protected function renderLinkbarItems($toolbar)
+	{
+		$links = $toolbar->getLinks();
+
+		if (!empty($links))
+		{
+			foreach ($links as $link)
+			{
+				JSubMenuHelper::addEntry($link['name'], $link['link'], $link['active']);
+			}
+		}
+	}
+
+	/**
+	 * Renders the toolbar buttons
+	 *
+	 * @param   string    $view    The active view name
+	 * @param   string    $task    The current task
+	 * @param   FOFInput  $input   The input object
+	 * @param   array     $config  Extra configuration variables for the toolbar
+	 *
+	 * @return  void
+	 */
+	protected function renderButtons($view, $task, $input, $config = array())
+	{
+		// On command line don't do anything
+
+		if (FOFPlatform::getInstance()->isCli())
+		{
+			return;
+		}
+
+		// Do not render buttons unless we are in the the frontend area and we are asked to do so
+		$toolbar				 = FOFToolbar::getAnInstance($input->getCmd('option', 'com_foobar'), $config);
+		$renderFrontendButtons	 = $toolbar->getRenderFrontendButtons();
+
+		if (FOFPlatform::getInstance()->isBackend() || !$renderFrontendButtons)
+		{
+			return;
+		}
+
+		// Load main backend language, in order to display toolbar strings
+		// (JTOOLBAR_BACK, JTOOLBAR_PUBLISH etc etc)
+		FOFPlatform::getInstance()->loadTranslations('joomla');
+
+		$title	 = JFactory::getApplication()->get('JComponentTitle');
+		$bar	 = JToolBar::getInstance('toolbar');
+
+		// Delete faux links, since if SEF is on, Joomla will follow the link instead of submitting the form
+		$bar_content = str_replace('href="#"', '', $bar->render());
+
+		echo '<div id="FOFHeaderHolder">', $bar_content, $title, '<div style="clear:both"></div>', '</div>';
 	}
 }

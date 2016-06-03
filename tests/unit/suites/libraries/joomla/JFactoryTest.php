@@ -59,7 +59,7 @@ class JFactoryTest extends TestCaseDatabase
 	public function testGetConfig()
 	{
 		// Temporarily override the config cache in JFactory.
-		$temp             = JFactory::$config;
+		$temp = JFactory::$config;
 		JFactory::$config = null;
 
 		$this->assertInstanceOf(
@@ -81,7 +81,7 @@ class JFactoryTest extends TestCaseDatabase
 	public function testGetLanguage()
 	{
 		// Temporarily override the language cache in JFactory.
-		$temp               = JFactory::$language;
+		$temp = JFactory::$language;
 		JFactory::$language = null;
 
 		$this->assertInstanceOf(
@@ -246,7 +246,7 @@ class JFactoryTest extends TestCaseDatabase
 	{
 		JFactory::$language = $this->getMockLanguage();
 
-		$tz   = 'Etc/GMT+0';
+		$tz = 'Etc/GMT+0';
 		$date = JFactory::getDate('2001-01-01 01:01:01', $tz);
 
 		$this->assertThat(
@@ -267,7 +267,7 @@ class JFactoryTest extends TestCaseDatabase
 	{
 		JFactory::$language = $this->getMockLanguage();
 
-		$tz   = new DateTimeZone('Etc/GMT+0');
+		$tz = new DateTimeZone('Etc/GMT+0');
 		$date = JFactory::getDate('2001-01-01 01:01:01', $tz);
 
 		$this->assertThat(

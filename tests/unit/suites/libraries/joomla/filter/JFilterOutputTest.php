@@ -30,7 +30,7 @@ class FilterTestObject
 		$this->string1 = "<script>alert();</script>";
 		$this->string2 = "This is a test.";
 		$this->string3 = "<script>alert(3);</script>";
-		$this->array1  = array(1, 2, 3);
+		$this->array1 = array(1, 2, 3);
 	}
 }
 
@@ -54,26 +54,18 @@ class JFilterOutputTest extends PHPUnit_Framework_TestCase
 	protected $safeObject;
 
 	/**
-	 * dataSet for Clean text
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
 	 *
-	 * @return array
+	 * @return void
 	 */
-	public static function dataSet()
+	protected function setUp()
 	{
-		$cases = array(
-			'case_1'   => array(
-				'',
-				''
-			),
-			'script_0' => array(
-				'<script>alert(\'hi!\');</script>',
-				''
-			),
+		parent::setUp();
 
-		);
-		$tests = $cases;
-
-		return $tests;
+		$this->object = new JFilterOutput;
+		$this->safeObject = new FilterTestObject;
+		$this->safeObjectArrayTest = new FilterTestObject;
 	}
 
 	/**
@@ -162,13 +154,36 @@ class JFilterOutputTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * dataSet for Clean text
+	 *
+	 * @return array
+	 */
+	public static function dataSet()
+	{
+		$cases = array(
+			'case_1' => array(
+				'',
+				''
+			),
+			'script_0' => array(
+				'<script>alert(\'hi!\');</script>',
+				''
+			),
+
+		);
+		$tests = $cases;
+
+		return $tests;
+	}
+
+	/**
 	 * Execute a cleanText test case.
 	 *
 	 * The test framework calls this function once for each element in the array
 	 * returned by the named data provider.
 	 *
-	 * @param   string $data   The original output
-	 * @param   string $expect The expected result for this test.
+	 * @param   string  $data    The original output
+	 * @param   string  $expect  The expected result for this test.
 	 *
 	 * @dataProvider dataSet
 	 * @return void
@@ -207,22 +222,7 @@ class JFilterOutputTest extends PHPUnit_Framework_TestCase
 			'Hello  I am waving at you.',
 			$this->object->stripIframes('Hello <iframe src="http://player.vimeo.com/video/37576499" width="500"' .
 				' height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe> I am waving at you.'),
-			'Should remove iFrame tags'
+				'Should remove iFrame tags'
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object              = new JFilterOutput;
-		$this->safeObject          = new FilterTestObject;
-		$this->safeObjectArrayTest = new FilterTestObject;
 	}
 }

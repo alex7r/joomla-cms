@@ -57,10 +57,10 @@ interface FOFDownloadInterface
 	 * If this class' supportsChunkDownload returns false you should assume
 	 * that the $from and $to parameters will be ignored.
 	 *
-	 * @param   string  $url    The remote file's URL
-	 * @param   integer $from   Byte range to start downloading from. Use null for start of file.
-	 * @param   integer $to     Byte range to stop downloading. Use null to download the entire file ($from is ignored)
-	 * @param   array   $params Additional params that will be added before performing the download
+	 * @param   string   $url     The remote file's URL
+	 * @param   integer  $from    Byte range to start downloading from. Use null for start of file.
+	 * @param   integer  $to      Byte range to stop downloading. Use null to download the entire file ($from is ignored)
+	 * @param   array    $params  Additional params that will be added before performing the download
 	 *
 	 * @return  string  The raw file data retrieved from the remote URL.
 	 *
@@ -71,7 +71,7 @@ interface FOFDownloadInterface
 	/**
 	 * Get the size of a remote file in bytes
 	 *
-	 * @param   string $url The remote file's URL
+	 * @param   string  $url  The remote file's URL
 	 *
 	 * @return  integer  The file size, or -1 if the remote server doesn't support this feature
 	 */

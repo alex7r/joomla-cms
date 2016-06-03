@@ -41,6 +41,25 @@ class JGithubPackageGitignoreTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @since   ¿
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options  = new JRegistry;
+		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackageGitignore($this->options, $this->client);
+	}
+
+	/**
 	 * Tests the getList method.
 	 *
 	 * @return  void
@@ -160,25 +179,6 @@ class JGithubPackageGitignoreTest extends PHPUnit_Framework_TestCase
 			$this->object->get('X'),
 			$this->equalTo(json_decode($this->response->body))
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @since   ¿
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options  = new JRegistry;
-		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackageGitignore($this->options, $this->client);
 	}
 
 }

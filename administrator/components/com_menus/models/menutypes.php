@@ -11,7 +11,6 @@ defined('_JEXEC') or die;
 
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.path');
-
 /**
  * Menu Item Types Model for Menus.
  *
@@ -58,7 +57,7 @@ class MenusModelMenutypes extends JModelLegacy
 		$list = array();
 
 		// Get the list of components.
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select('name, element AS ' . $db->quoteName('option'))
 			->from('#__extensions')
@@ -85,7 +84,7 @@ class MenusModelMenutypes extends JModelLegacy
 						{
 							$componentLanguageFolder = JPATH_ADMINISTRATOR . '/components/' . $option->request['option'];
 							$lang->load($option->request['option'] . '.sys', JPATH_ADMINISTRATOR, null, false, true)
-							|| $lang->load($option->request['option'] . '.sys', $componentLanguageFolder, null, false, true);
+								||	$lang->load($option->request['option'] . '.sys', $componentLanguageFolder, null, false, true);
 						}
 					}
 				}
@@ -99,9 +98,24 @@ class MenusModelMenutypes extends JModelLegacy
 	}
 
 	/**
+	 * Method to create the reverse lookup for link-to-name.
+	 * (can be used from onAfterGetMenuTypeOptions handlers)
+	 *
+	 * @param   JObject  $option  with request array or string and title public variables
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	public function addReverseLookupUrl($option)
+	{
+		$this->rlu[MenusHelper::getLinkKey($option->request)] = $option->get('title');
+	}
+
+	/**
 	 * Get menu types by component.
 	 *
-	 * @param   string $component Component URL option.
+	 * @param   string  $component  Component URL option.
 	 *
 	 * @return  array
 	 *
@@ -129,8 +143,8 @@ class MenusModelMenutypes extends JModelLegacy
 	/**
 	 * Get the menu types from an XML file
 	 *
-	 * @param   string $file      File path
-	 * @param   string $component Component option as in URL
+	 * @param   string  $file       File path
+	 * @param   string  $component  Component option as in URL
 	 *
 	 * @return  array
 	 *
@@ -160,7 +174,7 @@ class MenusModelMenutypes extends JModelLegacy
 		if (!empty($menu['options']) && $menu['options'] == 'none')
 		{
 			// Create the menu option for the component.
-			$o              = new JObject;
+			$o = new JObject;
 			$o->title       = (string) $menu['name'];
 			$o->description = (string) $menu['msg'];
 			$o->request     = array('option' => $component);
@@ -193,7 +207,7 @@ class MenusModelMenutypes extends JModelLegacy
 				if ($child->getName() == 'option')
 				{
 					// Create the menu option for the component.
-					$o              = new JObject;
+					$o = new JObject;
 					$o->title       = (string) $child['name'];
 					$o->description = (string) $child['msg'];
 					$o->request     = array('option' => $component, (string) $optionsNode['var'] => (string) $child['value']);
@@ -203,7 +217,7 @@ class MenusModelMenutypes extends JModelLegacy
 				elseif ($child->getName() == 'default')
 				{
 					// Create the menu option for the component.
-					$o              = new JObject;
+					$o = new JObject;
 					$o->title       = (string) $child['name'];
 					$o->description = (string) $child['msg'];
 					$o->request     = array('option' => $component);
@@ -219,7 +233,7 @@ class MenusModelMenutypes extends JModelLegacy
 	/**
 	 * Get menu types from MVC
 	 *
-	 * @param   string $component Component option like in URLs
+	 * @param   string  $component  Component option like in URLs
 	 *
 	 * @return  array
 	 *
@@ -291,7 +305,7 @@ class MenusModelMenutypes extends JModelLegacy
 										if ($child->getName() == 'option')
 										{
 											// Create the menu option for the component.
-											$o              = new JObject;
+											$o = new JObject;
 											$o->title       = (string) $child['name'];
 											$o->description = (string) $child['msg'];
 											$o->request     = array('option' => $component, 'view' => $view, (string) $optionsNode['var'] => (string) $child['value']);
@@ -301,7 +315,7 @@ class MenusModelMenutypes extends JModelLegacy
 										elseif ($child->getName() == 'default')
 										{
 											// Create the menu option for the component.
-											$o              = new JObject;
+											$o = new JObject;
 											$o->title       = (string) $child['name'];
 											$o->description = (string) $child['msg'];
 											$o->request     = array('option' => $component, 'view' => $view);
@@ -333,8 +347,8 @@ class MenusModelMenutypes extends JModelLegacy
 	/**
 	 * Get the menu types from component layouts
 	 *
-	 * @param   string $component Component option as in URLs
-	 * @param   string $view      Name of the view
+	 * @param   string  $component  Component option as in URLs
+	 * @param   string  $view       Name of the view
 	 *
 	 * @return  array
 	 *
@@ -425,7 +439,7 @@ class MenusModelMenutypes extends JModelLegacy
 				$layout = basename($layout, '.xml');
 
 				// Create the menu option for the layout.
-				$o              = new JObject;
+				$o = new JObject;
 				$o->title       = ucfirst($layout);
 				$o->description = '';
 				$o->request     = array('option' => $component, 'view' => $view);
@@ -476,20 +490,5 @@ class MenusModelMenutypes extends JModelLegacy
 		}
 
 		return $options;
-	}
-
-	/**
-	 * Method to create the reverse lookup for link-to-name.
-	 * (can be used from onAfterGetMenuTypeOptions handlers)
-	 *
-	 * @param   JObject $option with request array or string and title public variables
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function addReverseLookupUrl($option)
-	{
-		$this->rlu[MenusHelper::getLinkKey($option->request)] = $option->get('title');
 	}
 }

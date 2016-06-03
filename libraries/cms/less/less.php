@@ -21,8 +21,8 @@ class JLess extends lessc
 	/**
 	 * Constructor
 	 *
-	 * @param   string $fname     Filename to process
-	 * @param   mided  $formatter Formatter object
+	 * @param   string  $fname      Filename to process
+	 * @param   mided   $formatter  Formatter object
 	 *
 	 * @since   3.4
 	 */
@@ -42,11 +42,11 @@ class JLess extends lessc
 	 * Override compile to reset $this->allParsedFiles array to allow
 	 * parsing multiple files/strings using same imports.
 	 * PR: https://github.com/leafo/lessphp/pull/607
-	 *
+	 * 
 	 * For documentation on this please see /vendor/leafo/lessc.inc.php
 	 *
-	 * @param   string $string LESS string to parse.
-	 * @param   string $name   The sourceName used for error messages.
+	 * @param   string  $string  LESS string to parse.
+	 * @param   string  $name    The sourceName used for error messages.
 	 *
 	 * @return  string  $out     The compiled css output.
 	 */

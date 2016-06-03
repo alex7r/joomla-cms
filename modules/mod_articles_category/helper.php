@@ -27,7 +27,7 @@ abstract class ModArticlesCategoryHelper
 	/**
 	 * Get a list of articles from a specific category
 	 *
-	 * @param   \Joomla\Registry\Registry &$params object holding the models parameters
+	 * @param   \Joomla\Registry\Registry  &$params  object holding the models parameters
 	 *
 	 * @return  mixed
 	 *
@@ -298,7 +298,7 @@ abstract class ModArticlesCategoryHelper
 	/**
 	 * Strips unnecessary tags from the introtext
 	 *
-	 * @param   string $introtext introtext to sanitize
+	 * @param   string  $introtext  introtext to sanitize
 	 *
 	 * @return mixed|string
 	 *
@@ -320,8 +320,8 @@ abstract class ModArticlesCategoryHelper
 	 * The goal is to get the proper length plain text string with as much of
 	 * the html intact as possible with all tags properly closed.
 	 *
-	 * @param   string  $html      The content of the introtext to be truncated
-	 * @param   integer $maxLength The maximum number of charactes to render
+	 * @param   string   $html       The content of the introtext to be truncated
+	 * @param   integer  $maxLength  The maximum number of charactes to render
 	 *
 	 * @return  string  The truncated string
 	 *
@@ -366,10 +366,10 @@ abstract class ModArticlesCategoryHelper
 	/**
 	 * Groups items by field
 	 *
-	 * @param   array  $list                       list of items
-	 * @param   string $fieldName                  name of field that is used for grouping
-	 * @param   string $article_grouping_direction ordering direction
-	 * @param   null   $fieldNameToKeep            field name to keep
+	 * @param   array   $list                        list of items
+	 * @param   string  $fieldName                   name of field that is used for grouping
+	 * @param   string  $article_grouping_direction  ordering direction
+	 * @param   null    $fieldNameToKeep             field name to keep
 	 *
 	 * @return  array
 	 *
@@ -416,10 +416,10 @@ abstract class ModArticlesCategoryHelper
 	/**
 	 * Groups items by date
 	 *
-	 * @param   array  $list                       list of items
-	 * @param   string $type                       type of grouping
-	 * @param   string $article_grouping_direction ordering direction
-	 * @param   string $month_year_format          date format to use
+	 * @param   array   $list                        list of items
+	 * @param   string  $type                        type of grouping
+	 * @param   string  $article_grouping_direction  ordering direction
+	 * @param   string  $month_year_format           date format to use
 	 *
 	 * @return  array
 	 *

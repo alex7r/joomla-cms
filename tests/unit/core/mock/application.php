@@ -17,7 +17,7 @@ class TestMockApplication
 	/**
 	 * Creates and instance of the mock JApplication object.
 	 *
-	 * @param   object $test A test object.
+	 * @param   object  $test  A test object.
 	 *
 	 * @return  object
 	 *
@@ -50,13 +50,13 @@ class TestMockApplication
 
 		$menu = TestMockMenu::create($test);
 		$mockObject->expects($test->any())
-			->method('getMenu')
-			->will($test->returnValue($menu));
+				->method('getMenu')
+				->will($test->returnValue($menu));
 
 		$language = TestMockLanguage::create($test);
 		$mockObject->expects($test->any())
-			->method('getLanguage')
-			->will($test->returnValue($language));
+				->method('getLanguage')
+				->will($test->returnValue($language));
 
 		$mockObject->input = new JInput;
 

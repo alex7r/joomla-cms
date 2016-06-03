@@ -26,40 +26,52 @@ class JCacheTest extends TestCase
 	private $defaultOptions;
 
 	/**
-	 * Test Cases for getInstance
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
 	 *
-	 * @return array
+	 * @return void
 	 */
-	public function casesGetInstance()
+	protected function setUp()
 	{
-		$this->setDefaultOptions();
+		parent::setUp();
 
-		return array(
-			'simple'          => array(
-				'output',
-				array('storage' => 'file'),
-				'JCacheControllerOutput',
-			),
-			'complexOutput'   => array(
-				'output',
-				$this->defaultOptions,
-				'JCacheControllerOutput',
-			),
-			'complexPage'     => array(
-				'page',
-				$this->defaultOptions,
-				'JCacheControllerPage',
-			),
-			'complexView'     => array(
-				'view',
-				$this->defaultOptions,
-				'JCacheControllerView',
-			),
-			'complexCallback' => array(
-				'callback',
-				$this->defaultOptions,
-				'JCacheControllerCallback',
-			),
+		$this->checkAvailability();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+	}
+
+	/**
+	 * Tears down the fixture, for example, close a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Check availability of all cache handlers
+	 *
+	 * @return void
+	 */
+	private function checkAvailability()
+	{
+		$this->available = array(
+			'apc'       => JCacheStorageApc::isSupported(),
+			'apcu'      => JCacheStorageApcu::isSupported(),
+			'cachelite' => JCacheStorageCachelite::isSupported(),
+			'file'      => true,
+			'memcache'  => JCacheStorageMemcache::isSupported(),
+			'memcached' => JCacheStorageMemcached::isSupported(),
+			'redis'     => JCacheStorageRedis::isSupported(),
+			'wincache'  => JCacheStorageWincache::isSupported(),
+			'xcache'    => JCacheStorageXcache::isSupported(),
 		);
 	}
 
@@ -74,11 +86,49 @@ class JCacheTest extends TestCase
 	}
 
 	/**
+	 * Test Cases for getInstance
+	 *
+	 * @return array
+	 */
+	public function casesGetInstance()
+	{
+		$this->setDefaultOptions();
+
+		return array(
+			'simple' => array(
+				'output',
+				array('storage' => 'file'),
+				'JCacheControllerOutput',
+			),
+			'complexOutput' => array(
+				'output',
+				$this->defaultOptions,
+				'JCacheControllerOutput',
+			),
+			'complexPage' => array(
+				'page',
+				$this->defaultOptions,
+				'JCacheControllerPage',
+			),
+			'complexView' => array(
+				'view',
+				$this->defaultOptions,
+				'JCacheControllerView',
+			),
+			'complexCallback' => array(
+				'callback',
+				$this->defaultOptions,
+				'JCacheControllerCallback',
+			),
+		);
+	}
+
+	/**
 	 * Testing getInstance
 	 *
-	 * @param   string $handler  cache handler
-	 * @param   array  $options  options for cache handler
-	 * @param   string $expClass name of expected cache class
+	 * @param   string  $handler   cache handler
+	 * @param   array   $options   options for cache handler
+	 * @param   string  $expClass  name of expected cache class
 	 *
 	 * @return void
 	 *
@@ -103,19 +153,19 @@ class JCacheTest extends TestCase
 		$this->setDefaultOptions();
 
 		return array(
-			'simple'          => array(
+			'simple' => array(
 				'output',
 				array('storage' => 'file'),
 			),
-			'complexOutput'   => array(
+			'complexOutput' => array(
 				'output',
 				$this->defaultOptions,
 			),
-			'complexPage'     => array(
+			'complexPage' => array(
 				'page',
 				$this->defaultOptions,
 			),
-			'complexView'     => array(
+			'complexView' => array(
 				'view',
 				$this->defaultOptions,
 			),
@@ -129,8 +179,8 @@ class JCacheTest extends TestCase
 	/**
 	 * Testing setCaching
 	 *
-	 * @param   string $handler cache handler
-	 * @param   array  $options options for cache handler
+	 * @param   string  $handler  cache handler
+	 * @param   array   $options  options for cache handler
 	 *
 	 * @return void
 	 *
@@ -159,22 +209,22 @@ class JCacheTest extends TestCase
 		$this->setDefaultOptions();
 
 		return array(
-			'simple'          => array(
+			'simple' => array(
 				'output',
 				array('storage' => 'file'),
 				900,
 			),
-			'complexOutput'   => array(
+			'complexOutput' => array(
 				'output',
 				$this->defaultOptions,
 				15 * 60,
 			),
-			'complexPage'     => array(
+			'complexPage' => array(
 				'page',
 				$this->defaultOptions,
 				15 * 60,
 			),
-			'complexView'     => array(
+			'complexView' => array(
 				'view',
 				$this->defaultOptions,
 				15 * 60,
@@ -190,9 +240,9 @@ class JCacheTest extends TestCase
 	/**
 	 * Testing setLifeTime
 	 *
-	 * @param   string  $handler  cache handler
-	 * @param   array   $options  options for cache handler
-	 * @param   integer $lifetime lifetime of cache to be set
+	 * @param   string   $handler   cache handler
+	 * @param   array    $options   options for cache handler
+	 * @param   integer  $lifetime  lifetime of cache to be set
 	 *
 	 * @return void
 	 *
@@ -218,22 +268,22 @@ class JCacheTest extends TestCase
 		$this->setDefaultOptions();
 
 		return array(
-			'simple'          => array(
+			'simple' => array(
 				'output',
 				array('storage' => 'file'),
 				'file',
 			),
-			'complexOutput'   => array(
+			'complexOutput' => array(
 				'output',
 				$this->defaultOptions,
 				'file',
 			),
-			'complexPage'     => array(
+			'complexPage' => array(
 				'page',
 				$this->defaultOptions,
 				'file',
 			),
-			'complexView'     => array(
+			'complexView' => array(
 				'view',
 				$this->defaultOptions,
 				'file',
@@ -249,9 +299,9 @@ class JCacheTest extends TestCase
 	/**
 	 * Testing getStores
 	 *
-	 * @param   string $handler  cache handler
-	 * @param   array  $options  options for cache handler
-	 * @param   string $expected returned stores
+	 * @param   string  $handler   cache handler
+	 * @param   array   $options   options for cache handler
+	 * @param   string  $expected  returned stores
 	 *
 	 * @return void
 	 *
@@ -276,7 +326,7 @@ class JCacheTest extends TestCase
 		$this->setDefaultOptions();
 
 		return array(
-			'simple'        => array(
+			'simple' => array(
 				'output',
 				array('lifetime' => 600, 'storage' => 'file'),
 				42,
@@ -298,12 +348,12 @@ class JCacheTest extends TestCase
 	/**
 	 * Testing store() and get()
 	 *
-	 * @param   string $handler  cache handler
-	 * @param   array  $options  options for cache handler
-	 * @param   string $id       cache element ID
-	 * @param   string $group    cache group
-	 * @param   string $data     data to be cached
-	 * @param   string $expected expected return
+	 * @param   string  $handler   cache handler
+	 * @param   array   $options   options for cache handler
+	 * @param   string  $id        cache element ID
+	 * @param   string  $group     cache group
+	 * @param   string  $data      data to be cached
+	 * @param   string  $expected  expected return
 	 *
 	 * @return void
 	 *
@@ -331,7 +381,7 @@ class JCacheTest extends TestCase
 	 */
 	public function testRemove()
 	{
-		$options      = array('storage' => 'file');
+		$options = array('storage' => 'file');
 		$this->object = JCache::getInstance('output', $options);
 		$this->object->setCaching(true);
 
@@ -361,7 +411,7 @@ class JCacheTest extends TestCase
 	 */
 	public function testClean()
 	{
-		$options      = array('storage' => 'file');
+		$options = array('storage' => 'file');
 		$this->object = JCache::getInstance('output', $options);
 		$this->object->setCaching(true);
 
@@ -419,24 +469,24 @@ class JCacheTest extends TestCase
 		$this->setDefaultOptions();
 
 		$storages = array(
-			'apc'       => 'JCacheStorageApc',
-			'apcu'      => 'JCacheStorageApcu',
-			'cachelite' => 'JCacheStorageCachelite',
-			'file'      => 'JCacheStorageFile',
-			'memcache'  => 'JCacheStorageMemcache',
-			'memcached' => 'JCacheStorageMemcached',
-			'redis'     => 'JCacheStorageRedis',
-			'wincache'  => 'JCacheStorageWincache',
-			'xcache'    => 'JCacheStorageXcache',
+			'apc'          => 'JCacheStorageApc',
+			'apcu'         => 'JCacheStorageApcu',
+			'cachelite'    => 'JCacheStorageCachelite',
+			'file'         => 'JCacheStorageFile',
+			'memcache'     => 'JCacheStorageMemcache',
+			'memcached'    => 'JCacheStorageMemcached',
+			'redis'        => 'JCacheStorageRedis',
+			'wincache'     => 'JCacheStorageWincache',
+			'xcache'       => 'JCacheStorageXcache',
 		);
 
 		$cases = array();
 
 		foreach ($storages as $key => $class)
 		{
-			$options            = $this->defaultOptions;
+			$options = $this->defaultOptions;
 			$options['storage'] = $key;
-			$cases[$key]        = array('output', $options, $class);
+			$cases[$key] = array('output', $options, $class);
 		}
 
 		return $cases;
@@ -445,9 +495,9 @@ class JCacheTest extends TestCase
 	/**
 	 * Testing getStorage
 	 *
-	 * @param   string $handler  cache handler
-	 * @param   array  $options  options for cache handler
-	 * @param   string $expected expected storage class
+	 * @param   string  $handler   cache handler
+	 * @param   array   $options   options for cache handler
+	 * @param   string  $expected  expected storage class
 	 *
 	 * @return void
 	 *
@@ -466,55 +516,5 @@ class JCacheTest extends TestCase
 			$this->object->cache->_getStorage(),
 			$this->isInstanceOf($expected)
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->checkAvailability();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-	}
-
-	/**
-	 * Check availability of all cache handlers
-	 *
-	 * @return void
-	 */
-	private function checkAvailability()
-	{
-		$this->available = array(
-			'apc'       => JCacheStorageApc::isSupported(),
-			'apcu'      => JCacheStorageApcu::isSupported(),
-			'cachelite' => JCacheStorageCachelite::isSupported(),
-			'file'      => true,
-			'memcache'  => JCacheStorageMemcache::isSupported(),
-			'memcached' => JCacheStorageMemcached::isSupported(),
-			'redis'     => JCacheStorageRedis::isSupported(),
-			'wincache'  => JCacheStorageWincache::isSupported(),
-			'xcache'    => JCacheStorageXcache::isSupported(),
-		);
-	}
-
-	/**
-	 * Tears down the fixture, for example, close a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 }

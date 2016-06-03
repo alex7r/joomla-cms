@@ -28,19 +28,19 @@ class JApplicationWebRouterRest extends JApplicationWebRouterBase
 	 * @since  12.2
 	 */
 	protected $suffixMap = array(
-		'GET'     => 'Get',
-		'POST'    => 'Create',
-		'PUT'     => 'Update',
-		'PATCH'   => 'Update',
-		'DELETE'  => 'Delete',
-		'HEAD'    => 'Head',
+		'GET' => 'Get',
+		'POST' => 'Create',
+		'PUT' => 'Update',
+		'PATCH' => 'Update',
+		'DELETE' => 'Delete',
+		'HEAD' => 'Head',
 		'OPTIONS' => 'Options'
 	);
 
 	/**
 	 * Find and execute the appropriate controller based on a given route.
 	 *
-	 * @param   string $route The route string for which to find and execute a controller.
+	 * @param   string  $route  The route string for which to find and execute a controller.
 	 *
 	 * @return  void
 	 *
@@ -64,6 +64,49 @@ class JApplicationWebRouterRest extends JApplicationWebRouterBase
 	}
 
 	/**
+	 * Set a controller class suffix for a given HTTP method.
+	 *
+	 * @param   string  $method  The HTTP method for which to set the class suffix.
+	 * @param   string  $suffix  The class suffix to use when fetching the controller name for a given request.
+	 *
+	 * @return  JApplicationWebRouter  This object for method chaining.
+	 *
+	 * @since   12.2
+	 */
+	public function setHttpMethodSuffix($method, $suffix)
+	{
+		$this->suffixMap[strtoupper((string) $method)] = (string) $suffix;
+
+		return $this;
+	}
+
+	/**
+	 * Set to allow or not method in POST request
+	 *
+	 * @param   boolean  $value  A boolean to allow or not method in POST request
+	 *
+	 * @return  void
+	 *
+	 * @since   12.2
+	 */
+	public function setMethodInPostRequest($value)
+	{
+		$this->methodInPostRequest = $value;
+	}
+
+	/**
+	 * Get the property to allow or not method in POST request
+	 *
+	 * @return  boolean
+	 *
+	 * @since   12.2
+	 */
+	public function isMethodInPostRequest()
+	{
+		return $this->methodInPostRequest;
+	}
+
+	/**
 	 * Get the controller class suffix string.
 	 *
 	 * @return  string
@@ -80,7 +123,7 @@ class JApplicationWebRouterRest extends JApplicationWebRouterBase
 		}
 
 		// Check if request method is POST
-		if ($this->methodInPostRequest == true && strcmp(strtoupper($this->input->server->getMethod()), 'POST') === 0)
+		if ( $this->methodInPostRequest == true && strcmp(strtoupper($this->input->server->getMethod()), 'POST') === 0)
 		{
 			// Get the method from input
 			$postMethod = $this->input->get->getWord('_method');
@@ -93,48 +136,5 @@ class JApplicationWebRouterRest extends JApplicationWebRouterBase
 		}
 
 		return ucfirst($this->suffixMap[$this->input->getMethod()]);
-	}
-
-	/**
-	 * Set a controller class suffix for a given HTTP method.
-	 *
-	 * @param   string $method The HTTP method for which to set the class suffix.
-	 * @param   string $suffix The class suffix to use when fetching the controller name for a given request.
-	 *
-	 * @return  JApplicationWebRouter  This object for method chaining.
-	 *
-	 * @since   12.2
-	 */
-	public function setHttpMethodSuffix($method, $suffix)
-	{
-		$this->suffixMap[strtoupper((string) $method)] = (string) $suffix;
-
-		return $this;
-	}
-
-	/**
-	 * Get the property to allow or not method in POST request
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.2
-	 */
-	public function isMethodInPostRequest()
-	{
-		return $this->methodInPostRequest;
-	}
-
-	/**
-	 * Set to allow or not method in POST request
-	 *
-	 * @param   boolean $value A boolean to allow or not method in POST request
-	 *
-	 * @return  void
-	 *
-	 * @since   12.2
-	 */
-	public function setMethodInPostRequest($value)
-	{
-		$this->methodInPostRequest = $value;
 	}
 }

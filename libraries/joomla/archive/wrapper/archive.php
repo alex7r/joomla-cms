@@ -21,8 +21,8 @@ class JArchiveWrapperArchive
 	/**
 	 * Helper wrapper method for extract
 	 *
-	 * @param   string $archivename The name of the archive file
-	 * @param   string $extractdir  Directory to unpack into
+	 * @param   string  $archivename  The name of the archive file
+	 * @param   string  $extractdir   Directory to unpack into
 	 *
 	 * @return  boolean  True for success
 	 *
@@ -38,7 +38,7 @@ class JArchiveWrapperArchive
 	/**
 	 * Helper wrapper method for getAdapter
 	 *
-	 * @param   string $type The type of adapter (bzip2|gzip|tar|zip).
+	 * @param   string  $type  The type of adapter (bzip2|gzip|tar|zip).
 	 *
 	 * @return  JArchiveExtractable  Adapter for the requested type
 	 *

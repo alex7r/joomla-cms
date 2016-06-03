@@ -19,17 +19,20 @@ JFormHelper::loadFieldClass('calendar');
  */
 class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 {
+	protected $static;
+
+	protected $repeatable;
+
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
 	public $item;
+
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
-	protected $static;
-	protected $repeatable;
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string $name The property name for which to the the value.
+	 * @param   string  $name  The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -78,11 +81,24 @@ class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 	}
 
 	/**
+	 * Get the rendering of this field type for a repeatable (grid) display,
+	 * e.g. in a view listing many item (typically a "browse" task)
+	 *
+	 * @since 2.0
+	 *
+	 * @return  string  The field HTML
+	 */
+	public function getRepeatable()
+	{
+		return $this->getCalendar('repeatable');
+	}
+
+	/**
 	 * Method to get the calendar input markup.
 	 *
-	 * @param   string $display The display to render ('static' or 'repeatable')
+	 * @param   string  $display  The display to render ('static' or 'repeatable')
 	 *
-	 * @return  string    The field input markup.
+	 * @return  string	The field input markup.
 	 *
 	 * @since   2.1.rc4
 	 */
@@ -111,7 +127,7 @@ class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 		// Format date if exists
 		if (!empty($this->value))
 		{
-			$date = FOFPlatform::getInstance()->getDate($this->value, 'UTC');
+			$date   = FOFPlatform::getInstance()->getDate($this->value, 'UTC');
 
 			// If a known filter is given use it.
 			switch (strtoupper((string) $this->element['filter']))
@@ -179,7 +195,7 @@ class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 
 			if ($this->required)
 			{
-				$attributes['required']      = 'required';
+				$attributes['required'] = 'required';
 				$attributes['aria-required'] = 'true';
 			}
 
@@ -191,18 +207,5 @@ class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 			htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') .
 			'</span>';
 		}
-	}
-
-	/**
-	 * Get the rendering of this field type for a repeatable (grid) display,
-	 * e.g. in a view listing many item (typically a "browse" task)
-	 *
-	 * @since 2.0
-	 *
-	 * @return  string  The field HTML
-	 */
-	public function getRepeatable()
-	{
-		return $this->getCalendar('repeatable');
 	}
 }

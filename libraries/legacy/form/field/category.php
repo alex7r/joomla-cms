@@ -39,7 +39,7 @@ class JFormFieldCategory extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$options   = array();
+		$options = array();
 		$extension = $this->element['extension'] ? (string) $this->element['extension'] : (string) $this->element['scope'];
 		$published = (string) $this->element['published'];
 		$language  = (string) $this->element['language'];
@@ -73,7 +73,7 @@ class JFormFieldCategory extends JFormFieldList
 			foreach ($options as $option)
 			{
 				// Create a new query object.
-				$db    = JFactory::getDbo();
+				$db = JFactory::getDbo();
 				$query = $db->getQuery(true)
 					->select($db->quoteName('language'))
 					->where($db->quoteName('id') . '=' . (int) $option->value)

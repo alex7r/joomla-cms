@@ -1,9 +1,9 @@
 <?php
 /**
- * @package     FrameworkOnFramework
- * @subpackage  form
+ * @package    FrameworkOnFramework
+ * @subpackage form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -19,17 +19,20 @@ JFormHelper::loadFieldClass('text');
  */
 class FOFFormFieldText extends JFormFieldText implements FOFFormField
 {
+	protected $static;
+
+	protected $repeatable;
+
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
 	public $item;
+
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
-	protected $static;
-	protected $repeatable;
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string $name The property name for which to the the value.
+	 * @param   string  $name  The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -72,7 +75,7 @@ class FOFFormFieldText extends JFormFieldText implements FOFFormField
 	 */
 	public function getStatic()
 	{
-		$class             = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
+		$class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
 		$empty_replacement = '';
 
 		if ($this->element['empty_replacement'])
@@ -86,8 +89,8 @@ class FOFFormFieldText extends JFormFieldText implements FOFFormField
 		}
 
 		return '<span id="' . $this->id . '" ' . $class . '>' .
-		htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') .
-		'</span>';
+			htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') .
+			'</span>';
 	}
 
 	/**
@@ -101,13 +104,13 @@ class FOFFormFieldText extends JFormFieldText implements FOFFormField
 	public function getRepeatable()
 	{
 		// Initialise
-		$class               = $this->id;
-		$format_string       = '';
-		$format_if_not_empty = false;
-		$parse_value         = false;
-		$show_link           = false;
-		$link_url            = '';
-		$empty_replacement   = '';
+		$class					= $this->id;
+		$format_string			= '';
+		$format_if_not_empty	= false;
+		$parse_value			= false;
+		$show_link				= false;
+		$link_url				= '';
+		$empty_replacement		= '';
 
 		// Get field parameters
 		if ($this->element['class'])
@@ -174,7 +177,7 @@ class FOFFormFieldText extends JFormFieldText implements FOFFormField
 		if (!empty($format_string) && (!$format_if_not_empty || ($format_if_not_empty && !empty($this->value))))
 		{
 			$format_string = $this->parseFieldTags($format_string);
-			$value         = sprintf($format_string, $value);
+			$value = sprintf($format_string, $value);
 		}
 		else
 		{
@@ -204,7 +207,7 @@ class FOFFormFieldText extends JFormFieldText implements FOFFormField
 	/**
 	 * Replace string with tags that reference fields
 	 *
-	 * @param   string $text Text to process
+	 * @param   string  $text  Text to process
 	 *
 	 * @return  string         Text with tags replace
 	 */
@@ -216,7 +219,7 @@ class FOFFormFieldText extends JFormFieldText implements FOFFormField
 		// the auto-incrementing numeric ID)
 		$keyfield = $this->item->getKeyName();
 		$replace  = $this->item->$keyfield;
-		$ret      = str_replace('[ITEM:ID]', $replace, $ret);
+		$ret = str_replace('[ITEM:ID]', $replace, $ret);
 
 		// Replace the [ITEMID] in the URL with the current Itemid parameter
 		$ret = str_replace('[ITEMID]', JFactory::getApplication()->input->getInt('Itemid', 0), $ret);
@@ -233,9 +236,9 @@ class FOFFormFieldText extends JFormFieldText implements FOFFormField
 				$fieldname = $fielddata->column_name;
 			}
 
-			$search  = '[ITEM:' . strtoupper($fieldname) . ']';
-			$replace = $this->item->$fieldname;
-			$ret     = str_replace($search, $replace, $ret);
+			$search    = '[ITEM:' . strtoupper($fieldname) . ']';
+			$replace   = $this->item->$fieldname;
+			$ret  = str_replace($search, $replace, $ret);
 		}
 
 		return $ret;

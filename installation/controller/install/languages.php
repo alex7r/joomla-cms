@@ -66,7 +66,7 @@ class InstallationControllerInstallLanguages extends JControllerBase
 		}
 
 		// Redirect to the page.
-		$r       = new stdClass;
+		$r = new stdClass;
 		$r->view = 'defaultlanguage';
 		$app->sendJsonResponse($r);
 	}

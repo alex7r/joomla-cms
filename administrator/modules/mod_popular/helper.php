@@ -21,7 +21,7 @@ abstract class ModPopularHelper
 	/**
 	 * Get a list of the most popular articles
 	 *
-	 * @param   JObject &$params The module parameters.
+	 * @param   JObject  &$params  The module parameters.
 	 *
 	 * @return  array
 	 */
@@ -34,7 +34,7 @@ abstract class ModPopularHelper
 
 		// Set List SELECT
 		$model->setState('list.select', 'a.id, a.title, a.checked_out, a.checked_out_time, ' .
-			' a.created, a.hits');
+				' a.created, a.hits');
 
 		// Set Ordering filter
 		$model->setState('list.ordering', 'a.hits');
@@ -95,9 +95,9 @@ abstract class ModPopularHelper
 	/**
 	 * Get the alternate title for the module
 	 *
-	 * @param   JObject $params The module parameters.
+	 * @param   JObject  $params  The module parameters.
 	 *
-	 * @return  string    The alternate title for the module.
+	 * @return  string	The alternate title for the module.
 	 */
 	public static function getTitle($params)
 	{

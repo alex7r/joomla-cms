@@ -21,7 +21,7 @@ class JFilesystemHelper
 	/**
 	 * Remote file size function for streams that don't support it
 	 *
-	 * @param   string $url TODO Add text
+	 * @param   string  $url  TODO Add text
 	 *
 	 * @return  mixed
 	 *
@@ -52,10 +52,10 @@ class JFilesystemHelper
 		if (($sch == 'ftp') || ($sch == 'ftps'))
 		{
 			$server = parse_url($url, PHP_URL_HOST);
-			$port   = parse_url($url, PHP_URL_PORT);
-			$path   = parse_url($url, PHP_URL_PATH);
-			$user   = parse_url($url, PHP_URL_USER);
-			$pass   = parse_url($url, PHP_URL_PASS);
+			$port = parse_url($url, PHP_URL_PORT);
+			$path = parse_url($url, PHP_URL_PATH);
+			$user = parse_url($url, PHP_URL_USER);
+			$pass = parse_url($url, PHP_URL_PASS);
 
 			if ((!$server) || (!$path))
 			{
@@ -115,8 +115,8 @@ class JFilesystemHelper
 	/**
 	 * Quick FTP chmod
 	 *
-	 * @param   string  $url  Link identifier
-	 * @param   integer $mode The new permissions, given as an octal value.
+	 * @param   string   $url   Link identifier
+	 * @param   integer  $mode  The new permissions, given as an octal value.
 	 *
 	 * @return  mixed
 	 *
@@ -133,10 +133,10 @@ class JFilesystemHelper
 		}
 
 		$server = parse_url($url, PHP_URL_HOST);
-		$port   = parse_url($url, PHP_URL_PORT);
-		$path   = parse_url($url, PHP_URL_PATH);
-		$user   = parse_url($url, PHP_URL_USER);
-		$pass   = parse_url($url, PHP_URL_PASS);
+		$port = parse_url($url, PHP_URL_PORT);
+		$path = parse_url($url, PHP_URL_PATH);
+		$user = parse_url($url, PHP_URL_USER);
+		$pass = parse_url($url, PHP_URL_PASS);
 
 		if ((!$server) || (!$path))
 		{
@@ -223,6 +223,33 @@ class JFilesystemHelper
 	}
 
 	/**
+	 * Returns a list of transports
+	 *
+	 * @return  array
+	 *
+	 * @since   11.1
+	 */
+	public static function getTransports()
+	{
+		// Is this overkill?
+		return stream_get_transports();
+	}
+
+	/**
+	 * Returns a list of filters
+	 *
+	 * @return  array
+	 *
+	 * @since   11.1
+	 */
+	public static function getFilters()
+	{
+		// Note: This will look like the getSupported() function with J! filters.
+		// TODO: add user space filter loading like user space stream loading
+		return stream_get_filters();
+	}
+
+	/**
 	 * Returns a list of J! streams
 	 *
 	 * @return  array
@@ -254,36 +281,9 @@ class JFilesystemHelper
 	}
 
 	/**
-	 * Returns a list of transports
-	 *
-	 * @return  array
-	 *
-	 * @since   11.1
-	 */
-	public static function getTransports()
-	{
-		// Is this overkill?
-		return stream_get_transports();
-	}
-
-	/**
-	 * Returns a list of filters
-	 *
-	 * @return  array
-	 *
-	 * @since   11.1
-	 */
-	public static function getFilters()
-	{
-		// Note: This will look like the getSupported() function with J! filters.
-		// TODO: add user space filter loading like user space stream loading
-		return stream_get_filters();
-	}
-
-	/**
 	 * Determine if a stream is a Joomla stream.
 	 *
-	 * @param   string $streamname The name of a stream
+	 * @param   string  $streamname  The name of a stream
 	 *
 	 * @return  boolean  True for a Joomla Stream
 	 *
@@ -299,7 +299,7 @@ class JFilesystemHelper
 	 *
 	 * Call it with JFilesystemHelper::fileUploadMaxSize();
 	 *
-	 * @param   bool $unit_output This parameter determines whether the return value should be a string with a unit
+	 * @param   bool  $unit_output  This parameter determines whether the return value should be a string with a unit
 	 *
 	 * @return  float|string The maximum upload size of files with the appropriate unit or in bytes
 	 *
@@ -334,7 +334,7 @@ class JFilesystemHelper
 	/**
 	 * Returns the size in bytes without the unit for the comparison
 	 *
-	 * @param   string $size The size which is received from the PHP settings
+	 * @param   string  $size  The size which is received from the PHP settings
 	 *
 	 * @return  float The size in bytes without the unit
 	 *
@@ -358,7 +358,7 @@ class JFilesystemHelper
 	/**
 	 * Creates the rounded size of the size with the appropriate unit
 	 *
-	 * @param   float $max_size The maximum size which is allowed for the uploads
+	 * @param   float  $max_size  The maximum size which is allowed for the uploads
 	 *
 	 * @return  string String with the size and the appropriate unit
 	 *

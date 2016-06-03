@@ -18,14 +18,6 @@ class JDocumentRawTest extends TestCase
 	protected $object;
 
 	/**
-	 * @testdox  Test the default return for render
-	 */
-	public function testTheDefaultReturnForRender()
-	{
-		$this->assertEmpty($this->object->render());
-	}
-
-	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
@@ -49,5 +41,13 @@ class JDocumentRawTest extends TestCase
 		$this->restoreFactoryState();
 
 		parent::tearDown();
+	}
+
+	/**
+	 * @testdox  Test the default return for render
+	 */
+	public function testTheDefaultReturnForRender()
+	{
+		$this->assertEmpty($this->object->render());
 	}
 }

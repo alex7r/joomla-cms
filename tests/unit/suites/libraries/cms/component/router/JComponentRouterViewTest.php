@@ -29,6 +29,38 @@ class JComponentRouterViewTest extends TestCaseDatabase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.4
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$app = $this->getMockCmsApp();
+		$this->object = new JComponentRouterViewInspector($app, $app->getMenu());
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   3.2
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_categories', JPATH_TEST_DATABASE . '/jos_categories.csv');
+
+		return $dataSet;
+	}
+
+	/**
 	 * Tests the registerView() method
 	 *
 	 * @return  void
@@ -46,32 +78,6 @@ class JComponentRouterViewTest extends TestCaseDatabase
 		}
 
 		$this->assertEquals($views, $this->object->get('views'));
-	}
-
-	/**
-	 * As view testdata, use the view configuration of com_content
-	 *
-	 * @return array|JComponentRouterViewconfiguration
-	 */
-	protected function getComContentViews()
-	{
-		$categories = new JComponentRouterViewconfiguration('categories');
-		$category   = new JComponentRouterViewconfiguration('category');
-		$category->setKey('id')->setParent($categories)->setNestable()->addLayout('blog');
-		$article = new JComponentRouterViewconfiguration('article');
-		$article->setKey('id')->setParent($category, 'catid');
-		$archive  = new JComponentRouterViewconfiguration('archive');
-		$featured = new JComponentRouterViewconfiguration('featured');
-		$form     = new JComponentRouterViewconfiguration('form');
-
-		return array(
-			'categories' => $categories,
-			'category'   => $category,
-			'article'    => $article,
-			'archive'    => $archive,
-			'featured'   => $featured,
-			'form'       => $form
-		);
 	}
 
 	/**
@@ -135,16 +141,16 @@ class JComponentRouterViewTest extends TestCaseDatabase
 		//View with parent, no children
 		$query = array('view' => 'article', 'id' => '42:question-for-everything', 'catid' => '9');
 		$this->assertEquals(array(
-			'article'    => array('42:question-for-everything'),
-			'category'   => array('9:uncategorised'),
+			'article' => array('42:question-for-everything'),
+			'category' => array('9:uncategorised'),
 			'categories' => true),
 			$this->object->getPath($query));
 
 		//View with parent, no children and nested view
 		$query = array('view' => 'article', 'id' => '42:question-for-everything', 'catid' => '20');
 		$this->assertEquals(array(
-			'article'    => array('42:question-for-everything'),
-			'category'   => array('20:extensions',
+			'article' => array('42:question-for-everything'),
+			'category' => array('20:extensions',
 				'19:joomla',
 				'14:sample-data-articles'
 			),
@@ -303,34 +309,28 @@ class JComponentRouterViewTest extends TestCaseDatabase
 	}
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
+	 * As view testdata, use the view configuration of com_content
 	 *
-	 * @return  void
-	 *
-	 * @since   3.4
+	 * @return array|JComponentRouterViewconfiguration
 	 */
-	protected function setUp()
+	protected function getComContentViews()
 	{
-		parent::setUp();
+		$categories = new JComponentRouterViewconfiguration('categories');
+		$category = new JComponentRouterViewconfiguration('category');
+		$category->setKey('id')->setParent($categories)->setNestable()->addLayout('blog');
+		$article = new JComponentRouterViewconfiguration('article');
+		$article->setKey('id')->setParent($category, 'catid');
+		$archive = new JComponentRouterViewconfiguration('archive');
+		$featured = new JComponentRouterViewconfiguration('featured');
+		$form = new JComponentRouterViewconfiguration('form');
 
-		$app          = $this->getMockCmsApp();
-		$this->object = new JComponentRouterViewInspector($app, $app->getMenu());
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   3.2
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_categories', JPATH_TEST_DATABASE . '/jos_categories.csv');
-
-		return $dataSet;
+		return array(
+			'categories' => $categories,
+			'category' => $category,
+			'article' => $article,
+			'archive' => $archive,
+			'featured' => $featured,
+			'form' => $form
+		);
 	}
 }

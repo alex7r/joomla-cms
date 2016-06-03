@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- *    * Redistributions of source code must retain the above copyright notice, this list of
- *      conditions and the following disclaimer.
+ * 	* Redistributions of source code must retain the above copyright notice, this list of
+ * 	  conditions and the following disclaimer.
  *
- *    * Redistributions in binary form must reproduce the above copyright notice, this list
- *      of conditions and the following disclaimer in the documentation and/or other materials
- *      provided with the distribution.
+ * 	* Redistributions in binary form must reproduce the above copyright notice, this list
+ * 	  of conditions and the following disclaimer in the documentation and/or other materials
+ * 	  provided with the distribution.
  *
- *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
- *      to endorse or promote products derived from this software without specific prior
- *      written permission.
+ * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
+ * 	  to endorse or promote products derived from this software without specific prior
+ * 	  written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,21 +32,21 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package   SimplePie
- * @version   1.3.1
+ * @package SimplePie
+ * @version 1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author    Ryan Parman
- * @author    Geoffrey Sneddon
- * @author    Ryan McCue
- * @link      http://simplepie.org/ SimplePie
- * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author Ryan Parman
+ * @author Geoffrey Sneddon
+ * @author Ryan McCue
+ * @link http://simplepie.org/ SimplePie
+ * @license http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 
 /**
  * HTTP Response Parser
  *
- * @package    SimplePie
+ * @package SimplePie
  * @subpackage HTTP
  */
 class SimplePie_HTTP_Parser
@@ -135,7 +135,7 @@ class SimplePie_HTTP_Parser
 	 */
 	public function __construct($data)
 	{
-		$this->data        = $data;
+		$this->data = $data;
 		$this->data_length = strlen($this->data);
 	}
 
@@ -159,11 +159,10 @@ class SimplePie_HTTP_Parser
 		else
 		{
 			$this->http_version = '';
-			$this->status_code  = '';
-			$this->reason       = '';
-			$this->headers      = array();
-			$this->body         = '';
-
+			$this->status_code = '';
+			$this->reason = '';
+			$this->headers = array();
+			$this->body = '';
 			return false;
 		}
 	}
@@ -179,13 +178,27 @@ class SimplePie_HTTP_Parser
 	}
 
 	/**
+	 * See if the next character is LWS
+	 *
+	 * @return bool true if the next character is LWS, false if not
+	 */
+	protected function is_linear_whitespace()
+	{
+		return (bool) ($this->data[$this->position] === "\x09"
+			|| $this->data[$this->position] === "\x20"
+			|| ($this->data[$this->position] === "\x0A"
+				&& isset($this->data[$this->position + 1])
+				&& ($this->data[$this->position + 1] === "\x09" || $this->data[$this->position + 1] === "\x20")));
+	}
+
+	/**
 	 * Parse the HTTP version
 	 */
 	protected function http_version()
 	{
 		if (strpos($this->data, "\x0A") !== false && strtoupper(substr($this->data, 0, 5)) === 'HTTP/')
 		{
-			$len                = strspn($this->data, '0123456789.', 5);
+			$len = strspn($this->data, '0123456789.', 5);
 			$this->http_version = substr($this->data, 5, $len);
 			$this->position += 5 + $len;
 			if (substr_count($this->http_version, '.') <= 1)
@@ -227,7 +240,7 @@ class SimplePie_HTTP_Parser
 	 */
 	protected function reason()
 	{
-		$len          = strcspn($this->data, "\x0A", $this->position);
+		$len = strcspn($this->data, "\x0A", $this->position);
 		$this->reason = trim(substr($this->data, $this->position, $len), "\x09\x0D\x20");
 		$this->position += $len + 1;
 		$this->state = 'new_line';
@@ -252,7 +265,7 @@ class SimplePie_HTTP_Parser
 				$this->headers[$this->name] = $this->value;
 			}
 		}
-		$this->name  = '';
+		$this->name = '';
 		$this->value = '';
 		if (substr($this->data[$this->position], 0, 2) === "\x0D\x0A")
 		{
@@ -297,6 +310,26 @@ class SimplePie_HTTP_Parser
 	}
 
 	/**
+	 * Parse LWS, replacing consecutive LWS characters with a single space
+	 */
+	protected function linear_whitespace()
+	{
+		do
+		{
+			if (substr($this->data, $this->position, 2) === "\x0D\x0A")
+			{
+				$this->position += 2;
+			}
+			elseif ($this->data[$this->position] === "\x0A")
+			{
+				$this->position++;
+			}
+			$this->position += strspn($this->data, "\x09\x20", $this->position);
+		} while ($this->has_data() && $this->is_linear_whitespace());
+		$this->value .= "\x20";
+	}
+
+	/**
 	 * See what state to move to while within non-quoted header values
 	 */
 	protected function value()
@@ -333,40 +366,6 @@ class SimplePie_HTTP_Parser
 					break;
 			}
 		}
-	}
-
-	/**
-	 * See if the next character is LWS
-	 *
-	 * @return bool true if the next character is LWS, false if not
-	 */
-	protected function is_linear_whitespace()
-	{
-		return (bool) ($this->data[$this->position] === "\x09"
-			|| $this->data[$this->position] === "\x20"
-			|| ($this->data[$this->position] === "\x0A"
-				&& isset($this->data[$this->position + 1])
-				&& ($this->data[$this->position + 1] === "\x09" || $this->data[$this->position + 1] === "\x20")));
-	}
-
-	/**
-	 * Parse LWS, replacing consecutive LWS characters with a single space
-	 */
-	protected function linear_whitespace()
-	{
-		do
-		{
-			if (substr($this->data, $this->position, 2) === "\x0D\x0A")
-			{
-				$this->position += 2;
-			}
-			elseif ($this->data[$this->position] === "\x0A")
-			{
-				$this->position++;
-			}
-			$this->position += strspn($this->data, "\x09\x20", $this->position);
-		} while ($this->has_data() && $this->is_linear_whitespace());
-		$this->value .= "\x20";
 	}
 
 	/**
@@ -461,7 +460,6 @@ class SimplePie_HTTP_Parser
 		if (!preg_match('/^([0-9a-f]+)[^\r\n]*\r\n/i', trim($this->body)))
 		{
 			$this->state = 'emit';
-
 			return;
 		}
 
@@ -470,12 +468,11 @@ class SimplePie_HTTP_Parser
 
 		while (true)
 		{
-			$is_chunked = (bool) preg_match('/^([0-9a-f]+)[^\r\n]*\r\n/i', $encoded, $matches);
+			$is_chunked = (bool) preg_match( '/^([0-9a-f]+)[^\r\n]*\r\n/i', $encoded, $matches );
 			if (!$is_chunked)
 			{
 				// Looks like it's not chunked after all
 				$this->state = 'emit';
-
 				return;
 			}
 
@@ -484,8 +481,7 @@ class SimplePie_HTTP_Parser
 			{
 				// Ignore trailer headers
 				$this->state = 'emit';
-				$this->body  = $decoded;
-
+				$this->body = $decoded;
 				return;
 			}
 
@@ -496,8 +492,7 @@ class SimplePie_HTTP_Parser
 			if (trim($encoded) === '0' || empty($encoded))
 			{
 				$this->state = 'emit';
-				$this->body  = $decoded;
-
+				$this->body = $decoded;
 				return;
 			}
 		}

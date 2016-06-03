@@ -24,6 +24,19 @@ class JBrowserTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->object = new JBrowser;
+	}
+
+	/**
 	 * Test...
 	 *
 	 * @covers JBrowser::isSSLConnection
@@ -45,18 +58,5 @@ class JBrowserTest extends PHPUnit_Framework_TestCase
 			$this->object->isSSLConnection(),
 			$this->equalTo(true)
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object = new JBrowser;
 	}
 }

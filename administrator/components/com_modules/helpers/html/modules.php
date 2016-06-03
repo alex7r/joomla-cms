@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 
-/**
+/** 
  * JHtml module helper class.
  *
  * @since  1.6
@@ -19,8 +19,8 @@ abstract class JHtmlModules
 	/**
 	 * Builds an array of template options
 	 *
-	 * @param   integer $clientId The client id.
-	 * @param   string  $state    The state of the template.
+	 * @param   integer  $clientId  The client id.
+	 * @param   string   $state     The state of the template.
 	 *
 	 * @return  array
 	 */
@@ -44,7 +44,7 @@ abstract class JHtmlModules
 	 */
 	public static function types()
 	{
-		$options   = array();
+		$options = array();
 		$options[] = JHtml::_('select.option', 'user', 'COM_MODULES_OPTION_POSITION_USER_DEFINED');
 		$options[] = JHtml::_('select.option', 'template', 'COM_MODULES_OPTION_POSITION_TEMPLATE_DEFINED');
 
@@ -58,7 +58,7 @@ abstract class JHtmlModules
 	 */
 	public static function templateStates()
 	{
-		$options   = array();
+		$options = array();
 		$options[] = JHtml::_('select.option', '1', 'JENABLED');
 		$options[] = JHtml::_('select.option', '0', 'JDISABLED');
 
@@ -68,10 +68,10 @@ abstract class JHtmlModules
 	/**
 	 * Returns a published state on a grid
 	 *
-	 * @param   integer $value    The state value.
-	 * @param   integer $i        The row index
-	 * @param   boolean $enabled  An optional setting for access control on the action.
-	 * @param   string  $checkbox An optional prefix for checkboxes.
+	 * @param   integer  $value     The state value.
+	 * @param   integer  $i         The row index
+	 * @param   boolean  $enabled   An optional setting for access control on the action.
+	 * @param   string   $checkbox  An optional prefix for checkboxes.
 	 *
 	 * @return  string        The Html code
 	 *
@@ -81,7 +81,7 @@ abstract class JHtmlModules
 	public static function state($value, $i, $enabled = true, $checkbox = 'cb')
 	{
 		$states = array(
-			1  => array(
+			1 => array(
 				'unpublish',
 				'COM_MODULES_EXTENSION_PUBLISHED_ENABLED',
 				'COM_MODULES_HTML_UNPUBLISH_ENABLED',
@@ -90,7 +90,7 @@ abstract class JHtmlModules
 				'publish',
 				'publish',
 			),
-			0  => array(
+			0 => array(
 				'publish',
 				'COM_MODULES_EXTENSION_UNPUBLISHED_ENABLED',
 				'COM_MODULES_HTML_PUBLISH_ENABLED',
@@ -125,9 +125,9 @@ abstract class JHtmlModules
 	/**
 	 * Display a batch widget for the module position selector.
 	 *
-	 * @param   integer $clientId         The client ID.
-	 * @param   integer $state            The state of the module (enabled, unenabled, trashed).
-	 * @param   string  $selectedPosition The currently selected position for the module.
+	 * @param   integer  $clientId          The client ID.
+	 * @param   integer  $state             The state of the module (enabled, unenabled, trashed).
+	 * @param   string   $selectedPosition  The currently selected position for the module.
 	 *
 	 * @return  string   The necessary positions for the widget.
 	 *
@@ -141,7 +141,7 @@ abstract class JHtmlModules
 		$templateGroups = array();
 
 		// Add an empty value to be able to deselect a module position
-		$option             = ModulesHelper::createOption();
+		$option = ModulesHelper::createOption();
 		$templateGroups[''] = ModulesHelper::createOptionGroup('', array($option));
 
 		// Add positions from templates
@@ -157,7 +157,7 @@ abstract class JHtmlModules
 			{
 				foreach ($positions as $position)
 				{
-					$text      = ModulesHelper::getTranslatedModulePosition($clientId, $template, $position) . ' [' . $position . ']';
+					$text = ModulesHelper::getTranslatedModulePosition($clientId, $template, $position) . ' [' . $position . ']';
 					$options[] = ModulesHelper::createOption($position, $text);
 
 					if (!$isTemplatePosition && $selectedPosition === $position)
@@ -175,8 +175,8 @@ abstract class JHtmlModules
 		// Add custom position to options
 		$customGroupText = JText::_('COM_MODULES_CUSTOM_POSITION');
 
-		$editPositions                    = true;
-		$customPositions                  = ModulesHelper::getPositions($clientId, $editPositions);
+		$editPositions = true;
+		$customPositions = ModulesHelper::getPositions($clientId, $editPositions);
 		$templateGroups[$customGroupText] = ModulesHelper::createOptionGroup($customGroupText, $customPositions);
 
 		return $templateGroups;
@@ -201,7 +201,7 @@ abstract class JHtmlModules
 	/**
 	 * Method to get the field options.
 	 *
-	 * @param   integer $clientId The client ID
+	 * @param   integer  $clientId  The client ID
 	 *
 	 * @return  array  The field option objects.
 	 *

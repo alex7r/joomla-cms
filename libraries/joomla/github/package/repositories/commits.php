@@ -26,13 +26,13 @@ class JGithubPackageRepositoriesCommits extends JGithubPackage
 	 * Please follow the link headers as outlined in the pagination overview instead of constructing
 	 * page links yourself.
 	 *
-	 * @param   string $user   The name of the owner of the GitHub repository.
-	 * @param   string $repo   The name of the GitHub repository.
-	 * @param   string $sha    Sha or branch to start listing commits from.
-	 * @param   string $path   Only commits containing this file path will be returned.
-	 * @param   string $author GitHub login, name, or email by which to filter by commit author.
-	 * @param   JDate  $since  ISO 8601 Date - Only commits after this date will be returned.
-	 * @param   JDate  $until  ISO 8601 Date - Only commits before this date will be returned.
+	 * @param   string  $user    The name of the owner of the GitHub repository.
+	 * @param   string  $repo    The name of the GitHub repository.
+	 * @param   string  $sha     Sha or branch to start listing commits from.
+	 * @param   string  $path    Only commits containing this file path will be returned.
+	 * @param   string  $author  GitHub login, name, or email by which to filter by commit author.
+	 * @param   JDate   $since   ISO 8601 Date - Only commits after this date will be returned.
+	 * @param   JDate   $until   ISO 8601 Date - Only commits before this date will be returned.
 	 *
 	 * @throws DomainException
 	 * @since    12.1
@@ -67,9 +67,9 @@ class JGithubPackageRepositoriesCommits extends JGithubPackage
 	/**
 	 * Method to get a single commit for a repository.
 	 *
-	 * @param   string $user The name of the owner of the GitHub repository.
-	 * @param   string $repo The name of the GitHub repository.
-	 * @param   string $sha  The SHA of the commit to retrieve.
+	 * @param   string  $user  The name of the owner of the GitHub repository.
+	 * @param   string  $repo  The name of the GitHub repository.
+	 * @param   string  $sha   The SHA of the commit to retrieve.
 	 *
 	 * @throws DomainException
 	 * @since   12.1
@@ -98,10 +98,10 @@ class JGithubPackageRepositoriesCommits extends JGithubPackage
 	/**
 	 * Method to get a diff for two commits.
 	 *
-	 * @param   string $user The name of the owner of the GitHub repository.
-	 * @param   string $repo The name of the GitHub repository.
-	 * @param   string $base The base of the diff, either a commit SHA or branch.
-	 * @param   string $head The head of the diff, either a commit SHA or branch.
+	 * @param   string  $user  The name of the owner of the GitHub repository.
+	 * @param   string  $repo  The name of the GitHub repository.
+	 * @param   string  $base  The base of the diff, either a commit SHA or branch.
+	 * @param   string  $head  The head of the diff, either a commit SHA or branch.
 	 *
 	 * @return  array
 	 *

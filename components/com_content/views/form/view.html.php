@@ -27,7 +27,7 @@ class ContentViewForm extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -69,11 +69,11 @@ class ContentViewForm extends JViewLegacy
 		if (!empty($this->item) && isset($this->item->id))
 		{
 			$this->item->images = json_decode($this->item->images);
-			$this->item->urls   = json_decode($this->item->urls);
+			$this->item->urls = json_decode($this->item->urls);
 
-			$tmp         = new stdClass;
+			$tmp = new stdClass;
 			$tmp->images = $this->item->images;
-			$tmp->urls   = $this->item->urls;
+			$tmp->urls = $this->item->urls;
 			$this->form->bind($tmp);
 		}
 
@@ -95,7 +95,7 @@ class ContentViewForm extends JViewLegacy
 
 		// Override global params with article specific params
 		$this->params->merge($this->item->params);
-		$this->user = $user;
+		$this->user   = $user;
 
 		if ($params->get('enable_category') == 1)
 		{

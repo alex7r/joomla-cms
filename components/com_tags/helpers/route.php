@@ -21,12 +21,12 @@ class TagsHelperRoute extends JHelperRoute
 	/**
 	 * Tries to load the router for the component and calls it. Otherwise uses getTagRoute.
 	 *
-	 * @param   integer $contentItemId    Component item id
-	 * @param   string  $contentItemAlias Component item alias
-	 * @param   integer $contentCatId     Component item category id
-	 * @param   string  $language         Component item language
-	 * @param   string  $typeAlias        Component type alias
-	 * @param   string  $routerName       Component router
+	 * @param   integer  $contentItemId     Component item id
+	 * @param   string   $contentItemAlias  Component item alias
+	 * @param   integer  $contentCatId      Component item category id
+	 * @param   string   $language          Component item language
+	 * @param   string   $typeAlias         Component type alias
+	 * @param   string   $routerName        Component router
 	 *
 	 * @return  string  URL link to pass to JRoute
 	 *
@@ -34,14 +34,14 @@ class TagsHelperRoute extends JHelperRoute
 	 */
 	public static function getItemRoute($contentItemId, $contentItemAlias, $contentCatId, $language, $typeAlias, $routerName)
 	{
-		$link           = '';
-		$explodedAlias  = explode('.', $typeAlias);
+		$link = '';
+		$explodedAlias = explode('.', $typeAlias);
 		$explodedRouter = explode('::', $routerName);
 
 		if (file_exists($routerFile = JPATH_BASE . '/components/' . $explodedAlias[0] . '/helpers/route.php'))
 		{
 			JLoader::register($explodedRouter[0], $routerFile);
-			$routerClass  = $explodedRouter[0];
+			$routerClass = $explodedRouter[0];
 			$routerMethod = $explodedRouter[1];
 
 			if (class_exists($routerClass) && method_exists($routerClass, $routerMethod))
@@ -61,7 +61,7 @@ class TagsHelperRoute extends JHelperRoute
 		{
 			// Create a fallback link in case we can't find the component router
 			$router = new JHelperRoute;
-			$link   = $router->getRoute($contentItemId, $typeAlias, $link, $language, $contentCatId);
+			$link = $router->getRoute($contentItemId, $typeAlias, $link, $language, $contentCatId);
 		}
 
 		return $link;
@@ -70,7 +70,7 @@ class TagsHelperRoute extends JHelperRoute
 	/**
 	 * Tries to load the router for the component and calls it. Otherwise calls getRoute.
 	 *
-	 * @param   integer $id The ID of the tag
+	 * @param   integer  $id  The ID of the tag
 	 *
 	 * @return  string  URL link to pass to JRoute
 	 *
@@ -79,7 +79,7 @@ class TagsHelperRoute extends JHelperRoute
 	public static function getTagRoute($id)
 	{
 		$needles = array(
-			'tag' => array((int) $id)
+			'tag'  => array((int) $id)
 		);
 
 		if ($id < 1)
@@ -102,7 +102,7 @@ class TagsHelperRoute extends JHelperRoute
 	/**
 	 * Find Item static function
 	 *
-	 * @param   array $needles Array used to get the language value
+	 * @param   array  $needles  Array used to get the language value
 	 *
 	 * @return null
 	 *

@@ -28,7 +28,7 @@ class FOFViewJson extends FOFViewHtml
 	/**
 	 * Public constructor
 	 *
-	 * @param   array $config The component's configuration array
+	 * @param   array  $config  The component's configuration array
 	 */
 	public function __construct($config = array())
 	{
@@ -43,7 +43,7 @@ class FOFViewJson extends FOFViewHtml
 	/**
 	 * The event which runs when we are displaying the record list JSON view
 	 *
-	 * @param   string $tpl The view sub-template to use
+	 * @param   string  $tpl  The view sub-template to use
 	 *
 	 * @return  boolean  True to allow display of the view
 	 */
@@ -52,7 +52,7 @@ class FOFViewJson extends FOFViewHtml
 		// Load the model
 		$model = $this->getModel();
 
-		$items       = $model->getItemList();
+		$items = $model->getItemList();
 		$this->items = $items;
 
 		$document = FOFPlatform::getInstance()->getDocument();
@@ -98,7 +98,7 @@ class FOFViewJson extends FOFViewHtml
 			if ($this->useHypermedia)
 			{
 				$haldocument = $this->_createDocumentWithHypermedia($items, $model);
-				$json        = $haldocument->render('json');
+				$json = $haldocument->render('json');
 			}
 			else
 			{
@@ -115,8 +115,98 @@ class FOFViewJson extends FOFViewHtml
 			else
 			{
 				$defaultName = $this->input->getCmd('view', 'joomla');
-				$filename    = $this->input->getCmd('basename', $defaultName);
+				$filename = $this->input->getCmd('basename', $defaultName);
 
+				$document->setName($filename);
+				echo $json;
+			}
+
+			return false;
+		}
+		else
+		{
+			echo $result;
+
+			return false;
+		}
+	}
+
+	/**
+	 * The event which runs when we are displaying a single item JSON view
+	 *
+	 * @param   string  $tpl  The view sub-template to use
+	 *
+	 * @return  boolean  True to allow display of the view
+	 */
+	protected function onRead($tpl = null)
+	{
+		$model = $this->getModel();
+
+		$item = $model->getItem();
+		$this->item = $item;
+
+		$document = FOFPlatform::getInstance()->getDocument();
+
+		if ($document instanceof JDocument)
+		{
+			if ($this->useHypermedia)
+			{
+				$document->setMimeEncoding('application/hal+json');
+			}
+			else
+			{
+				$document->setMimeEncoding('application/json');
+			}
+		}
+
+		if (is_null($tpl))
+		{
+			$tpl = 'json';
+		}
+
+    	FOFPlatform::getInstance()->setErrorHandling(E_ALL, 'ignore');
+
+		$hasFailed = false;
+
+		try
+		{
+			$result = $this->loadTemplate($tpl, true);
+
+            if ($result instanceof Exception)
+            {
+                $hasFailed = true;
+            }
+		}
+		catch (Exception $e)
+		{
+			$hasFailed = true;
+		}
+
+		if ($hasFailed)
+		{
+			// Default JSON behaviour in case the template isn't there!
+
+			if ($this->useHypermedia)
+			{
+				$haldocument = $this->_createDocumentWithHypermedia($item, $model);
+				$json = $haldocument->render('json');
+			}
+			else
+			{
+				$json = json_encode($item);
+			}
+
+			// JSONP support
+			$callback = $this->input->get('callback', null);
+
+			if (!empty($callback))
+			{
+				echo $callback . '(' . $json . ')';
+			}
+			else
+			{
+				$defaultName = $this->input->getCmd('view', 'joomla');
+				$filename = $this->input->getCmd('basename', $defaultName);
 				$document->setName($filename);
 				echo $json;
 			}
@@ -134,8 +224,8 @@ class FOFViewJson extends FOFViewHtml
 	/**
 	 * Creates a FOFHalDocument using the provided data
 	 *
-	 * @param   array    $data  The data to put in the document
-	 * @param   FOFModel $model The model of this view
+	 * @param   array     $data   The data to put in the document
+	 * @param   FOFModel  $model  The model of this view
 	 *
 	 * @return  FOFHalDocument  A HAL-enabled document
 	 */
@@ -191,9 +281,9 @@ class FOFViewJson extends FOFViewHtml
 
 				if ($pagination->get('pages.current') > 1)
 				{
-					$prevPage   = $pagination->get('pages.current') - 1;
+					$prevPage = $pagination->get('pages.current') - 1;
 					$limitstart = ($prevPage - 1) * $pagination->limit;
-					$uri        = clone $protoUri;
+					$uri = clone $protoUri;
 					$uri->setVar('limitstart', $limitstart);
 					$uri = JRoute::_((string) $uri);
 
@@ -204,9 +294,9 @@ class FOFViewJson extends FOFViewHtml
 
 				if ($pagination->get('pages.current') < $pagination->get('pages.total'))
 				{
-					$nextPage   = $pagination->get('pages.current') + 1;
+					$nextPage = $pagination->get('pages.current') + 1;
 					$limitstart = ($nextPage - 1) * $pagination->limit;
-					$uri        = clone $protoUri;
+					$uri = clone $protoUri;
 					$uri->setVar('limitstart', $limitstart);
 					$uri = JRoute::_((string) $uri);
 
@@ -214,9 +304,9 @@ class FOFViewJson extends FOFViewHtml
 				}
 
 				// The "last" link?
-				$lastPage   = $pagination->get('pages.total');
+				$lastPage = $pagination->get('pages.total');
 				$limitstart = ($lastPage - 1) * $pagination->limit;
-				$uri        = clone $protoUri;
+				$uri = clone $protoUri;
 				$uri->setVar('limitstart', $limitstart);
 				$uri = JRoute::_((string) $uri);
 
@@ -230,7 +320,7 @@ class FOFViewJson extends FOFViewHtml
 	/**
 	 * Convert an absolute URI to a relative one
 	 *
-	 * @param   string $uri The URI to convert
+	 * @param   string  $uri  The URI to convert
 	 *
 	 * @return  string  The relative URL
 	 */
@@ -240,7 +330,7 @@ class FOFViewJson extends FOFViewHtml
 
 		if (is_null($root))
 		{
-			$root    = rtrim(FOFPlatform::getInstance()->URIbase(), '/');
+			$root = rtrim(FOFPlatform::getInstance()->URIbase(), '/');
 			$rootlen = strlen($root);
 		}
 
@@ -266,95 +356,5 @@ class FOFViewJson extends FOFViewHtml
 		$protoUri->delVar('base_path');
 
 		return $protoUri;
-	}
-
-	/**
-	 * The event which runs when we are displaying a single item JSON view
-	 *
-	 * @param   string $tpl The view sub-template to use
-	 *
-	 * @return  boolean  True to allow display of the view
-	 */
-	protected function onRead($tpl = null)
-	{
-		$model = $this->getModel();
-
-		$item       = $model->getItem();
-		$this->item = $item;
-
-		$document = FOFPlatform::getInstance()->getDocument();
-
-		if ($document instanceof JDocument)
-		{
-			if ($this->useHypermedia)
-			{
-				$document->setMimeEncoding('application/hal+json');
-			}
-			else
-			{
-				$document->setMimeEncoding('application/json');
-			}
-		}
-
-		if (is_null($tpl))
-		{
-			$tpl = 'json';
-		}
-
-		FOFPlatform::getInstance()->setErrorHandling(E_ALL, 'ignore');
-
-		$hasFailed = false;
-
-		try
-		{
-			$result = $this->loadTemplate($tpl, true);
-
-			if ($result instanceof Exception)
-			{
-				$hasFailed = true;
-			}
-		}
-		catch (Exception $e)
-		{
-			$hasFailed = true;
-		}
-
-		if ($hasFailed)
-		{
-			// Default JSON behaviour in case the template isn't there!
-
-			if ($this->useHypermedia)
-			{
-				$haldocument = $this->_createDocumentWithHypermedia($item, $model);
-				$json        = $haldocument->render('json');
-			}
-			else
-			{
-				$json = json_encode($item);
-			}
-
-			// JSONP support
-			$callback = $this->input->get('callback', null);
-
-			if (!empty($callback))
-			{
-				echo $callback . '(' . $json . ')';
-			}
-			else
-			{
-				$defaultName = $this->input->getCmd('view', 'joomla');
-				$filename    = $this->input->getCmd('basename', $defaultName);
-				$document->setName($filename);
-				echo $json;
-			}
-
-			return false;
-		}
-		else
-		{
-			echo $result;
-
-			return false;
-		}
 	}
 }

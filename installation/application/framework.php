@@ -22,8 +22,7 @@ const JDEBUG = false;
 
 if (file_exists(JPATH_CONFIGURATION . '/configuration.php')
 	&& (filesize(JPATH_CONFIGURATION . '/configuration.php') > 10)
-	&& !file_exists(JPATH_INSTALLATION . '/index.php')
-)
+	&& !file_exists(JPATH_INSTALLATION . '/index.php'))
 {
 	header('Location: ../index.php');
 	exit();

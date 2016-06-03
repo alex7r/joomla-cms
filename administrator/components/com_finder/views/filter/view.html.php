@@ -19,7 +19,7 @@ class FinderViewFilter extends JViewLegacy
 	/**
 	 * Method to display the view.
 	 *
-	 * @param   string $tpl A template file to load. [optional]
+	 * @param   string  $tpl  A template file to load. [optional]
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -29,10 +29,10 @@ class FinderViewFilter extends JViewLegacy
 	{
 		// Load the view data.
 		$this->filter = $this->get('Filter');
-		$this->item   = $this->get('Item');
-		$this->form   = $this->get('Form');
-		$this->state  = $this->get('State');
-		$this->total  = $this->get('Total');
+		$this->item = $this->get('Item');
+		$this->form = $this->get('Form');
+		$this->state = $this->get('State');
+		$this->total = $this->get('Total');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -62,11 +62,11 @@ class FinderViewFilter extends JViewLegacy
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 
-		$user       = JFactory::getUser();
-		$userId     = $user->get('id');
-		$isNew      = ($this->item->filter_id == 0);
+		$user = JFactory::getUser();
+		$userId = $user->get('id');
+		$isNew = ($this->item->filter_id == 0);
 		$checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
-		$canDo      = JHelperContent::getActions('com_finder');
+		$canDo = JHelperContent::getActions('com_finder');
 
 		// Configure the toolbar.
 		JToolbarHelper::title(

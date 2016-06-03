@@ -1,10 +1,10 @@
 <?php
 /**
- * @package        Joomla.UnitTest
- * @subpackage     Layout
+ * @package	    Joomla.UnitTest
+ * @subpackage  Layout
  *
- * @copyright      Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
- * @license        GNU General Public License version 2 or later; see LICENSE
+ * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license	    GNU General Public License version 2 or later; see LICENSE
  */
 
 /**
@@ -18,9 +18,17 @@ class JLayoutBaseTest extends PHPUnit_Framework_TestCase
 	protected $layoutBase;
 
 	/**
+	 * Sets up the test by instantiating JLayoutBase
+	 */
+	protected function setUp()
+	{
+		$this->layoutBase = new JLayoutBase;
+	}
+
+	/**
 	 * @testdox  JLayoutbase->setOptions() returns a JLayoutbase instance with empty parameter.
 	 *
-	 * @since    3.3.7
+	 * @since   3.3.7
 	 */
 	public function testJlayoutbaseSetOptionsReturnsAJlayoutbaseInstanceWithEmptyParameter()
 	{
@@ -30,7 +38,7 @@ class JLayoutBaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  JLayoutbase->setOptions() returns a JLayoutbase instance with JRegistry parameter.
 	 *
-	 * @since    3.3.7
+	 * @since   3.3.7
 	 */
 	public function testJlayoutbaseSetOptionsReturnsAJlayoutbaseInstanceWithJregistryParameter()
 	{
@@ -40,7 +48,7 @@ class JLayoutBaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  JLayoutbase->setOptions() returns a JLayoutbase instance with an array parameter.
 	 *
-	 * @since    3.3.7
+	 * @since   3.3.7
 	 */
 	public function testJlayoutbaseSetOptionsReturnsAJlayoutbaseInstanceWithAnArrayParameter()
 	{
@@ -50,7 +58,7 @@ class JLayoutBaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  JLayoutbase->getOptions() returns a JRegistry object when options parameter is empty.
 	 *
-	 * @since    3.3.7
+	 * @since   3.3.7
 	 */
 	public function testJlayoutbaseGetOptionsReturnsAJregistryObjectWhenOptionsParamaterIsEmpty()
 	{
@@ -63,7 +71,7 @@ class JLayoutBaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  JLayoutbase->getOptions() returns a JRegistry object when options parameter is an array.
 	 *
-	 * @since    3.3.7
+	 * @since   3.3.7
 	 */
 	public function testJlayoutbaseGetOptionsReturnsAJregistryObjectWhenOptionsParamaterIsAnArray()
 	{
@@ -77,7 +85,7 @@ class JLayoutBaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  JLayoutbase->getOptions() returns a JRegistry object when options parameter is a JRegistry object.
 	 *
-	 * @since    3.3.7
+	 * @since   3.3.7
 	 */
 	public function testJlayoutbaseGetOptionsReturnsAJregistryObjectWhenOptionsParameterIsAJregistryObject()
 	{
@@ -91,7 +99,7 @@ class JLayoutBaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  JLayoutbase->getOptions() returns a JRegistry object value using an array.
 	 *
-	 * @since    3.3.7
+	 * @since   3.3.7
 	 */
 	public function testJlayoutbaseGetOptionsReturnsAJregistryObjectValueUsingAnArray()
 	{
@@ -104,7 +112,7 @@ class JLayoutBaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  JLayoutbase->getOptions() returns a JRegistry object value using JRegistry.
 	 *
-	 * @since    3.3.7
+	 * @since   3.3.7
 	 */
 	public function testJlayoutbaseGetOptionsReturnsAJregistryObjectValueUsingJregistry()
 	{
@@ -118,7 +126,7 @@ class JLayoutBaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  JLayoutbase->resetOptions() and check options is empty.
 	 *
-	 * @since    3.3.7
+	 * @since   3.3.7
 	 */
 	public function testJlayoutbaseResetOptionsAndCheckOptionsIsEmpty()
 	{
@@ -176,7 +184,7 @@ class JLayoutBaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  JLayoutBase->getDebugMessages() retrieves a list of debug messages in an array.
 	 *
-	 * @since    3.3.7
+	 * @since   3.3.7
 	 */
 	public function testRetrievingTheListOfDebugMessagesIsAnArray()
 	{
@@ -186,7 +194,7 @@ class JLayoutBaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  JLayoutBase->renderDebugMessages() returns string of messages separated by newline character.
 	 *
-	 * @since    3.3.7
+	 * @since   3.3.7
 	 */
 	public function testRenderDebugMessageReturnsStringOfMessagesSeparatedByNewlineCharacter()
 	{
@@ -199,18 +207,10 @@ class JLayoutBaseTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  JLayoutBase->render() returns an empty string.
 	 *
-	 * @since    3.3.7
+	 * @since   3.3.7
 	 */
 	public function testRenderReturnsAnEmptyString()
 	{
 		$this->assertEquals('', $this->layoutBase->render('Data'), 'JLayoutBase::render does not render an output');
-	}
-
-	/**
-	 * Sets up the test by instantiating JLayoutBase
-	 */
-	protected function setUp()
-	{
-		$this->layoutBase = new JLayoutBase;
 	}
 }

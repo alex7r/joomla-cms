@@ -26,7 +26,7 @@ class JPath
 	/**
 	 * Checks if a path's permissions can be changed.
 	 *
-	 * @param   string $path Path to check.
+	 * @param   string  $path  Path to check.
 	 *
 	 * @return  boolean  True if path can have mode changed.
 	 *
@@ -52,9 +52,9 @@ class JPath
 	/**
 	 * Chmods files and directories recursively to given permissions.
 	 *
-	 * @param   string $path       Root path to begin changing mode [without trailing slash].
-	 * @param   string $filemode   Octal representation of the value to change file mode to [null = no change].
-	 * @param   string $foldermode Octal representation of the value to change folder mode to [null = no change].
+	 * @param   string  $path        Root path to begin changing mode [without trailing slash].
+	 * @param   string  $filemode    Octal representation of the value to change file mode to [null = no change].
+	 * @param   string  $foldermode  Octal representation of the value to change folder mode to [null = no change].
 	 *
 	 * @return  boolean  True if successful [one fail means the whole operation failed].
 	 *
@@ -119,7 +119,7 @@ class JPath
 	/**
 	 * Get the permissions of the file/folder at a given path.
 	 *
-	 * @param   string $path The path of a file/folder.
+	 * @param   string  $path  The path of a file/folder.
 	 *
 	 * @return  string  Filesystem permissions.
 	 *
@@ -153,10 +153,38 @@ class JPath
 	}
 
 	/**
+	 * Checks for snooping outside of the file system root.
+	 *
+	 * @param   string  $path  A file system path to check.
+	 *
+	 * @return  string  A cleaned version of the path or exit on error.
+	 *
+	 * @since   11.1
+	 * @throws  Exception
+	 */
+	public static function check($path)
+	{
+		if (strpos($path, '..') !== false)
+		{
+			// Don't translate
+			throw new Exception('JPath::check Use of relative paths not permitted', 20);
+		}
+
+		$path = self::clean($path);
+
+		if ((JPATH_ROOT != '') && strpos($path, self::clean(JPATH_ROOT)) !== 0)
+		{
+			throw new Exception('JPath::check Snooping out of bounds @ ' . $path, 20);
+		}
+
+		return $path;
+	}
+
+	/**
 	 * Function to strip additional / or \ in a path name.
 	 *
-	 * @param   string $path The path to clean.
-	 * @param   string $ds   Directory separator (optional).
+	 * @param   string  $path  The path to clean.
+	 * @param   string  $ds    Directory separator (optional).
 	 *
 	 * @return  string  The cleaned path.
 	 *
@@ -191,37 +219,9 @@ class JPath
 	}
 
 	/**
-	 * Checks for snooping outside of the file system root.
-	 *
-	 * @param   string $path A file system path to check.
-	 *
-	 * @return  string  A cleaned version of the path or exit on error.
-	 *
-	 * @since   11.1
-	 * @throws  Exception
-	 */
-	public static function check($path)
-	{
-		if (strpos($path, '..') !== false)
-		{
-			// Don't translate
-			throw new Exception('JPath::check Use of relative paths not permitted', 20);
-		}
-
-		$path = self::clean($path);
-
-		if ((JPATH_ROOT != '') && strpos($path, self::clean(JPATH_ROOT)) !== 0)
-		{
-			throw new Exception('JPath::check Snooping out of bounds @ ' . $path, 20);
-		}
-
-		return $path;
-	}
-
-	/**
 	 * Method to determine if script owns the path.
 	 *
-	 * @param   string $path Path to check ownership.
+	 * @param   string  $path  Path to check ownership.
 	 *
 	 * @return  boolean  True if the php script owns the path passed.
 	 *
@@ -272,8 +272,8 @@ class JPath
 	/**
 	 * Searches the directory paths for a given file.
 	 *
-	 * @param   mixed  $paths An path string or array of path strings to search in
-	 * @param   string $file  The file name to look for.
+	 * @param   mixed   $paths  An path string or array of path strings to search in
+	 * @param   string  $file   The file name to look for.
 	 *
 	 * @return  mixed   The full path and file name for the target file, or boolean false if the file is not found in any of the paths.
 	 *
@@ -300,7 +300,7 @@ class JPath
 				// traversal attempts on the local file system.
 
 				// Needed for substr() later
-				$path     = realpath($path);
+				$path = realpath($path);
 				$fullname = realpath($fullname);
 			}
 

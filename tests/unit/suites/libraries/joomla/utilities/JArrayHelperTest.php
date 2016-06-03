@@ -31,7 +31,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	public function getTestArrayUniqueData()
 	{
 		return array(
-			'Case 1'                                  => array(
+			'Case 1' => array(
 				// Input
 				array(
 					array(1, 2, 3, array(4)),
@@ -67,7 +67,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 		$common = array('integer' => 12, 'float' => 1.29999, 'string' => 'A Test String');
 
 		return array(
-			'Invalid input'                                                  => array(
+			'Invalid input' => array(
 				// Array    The array being input
 				null,
 				// Boolean  Recurse through multiple dimensions
@@ -79,14 +79,14 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				// Boolean  Use function defaults (true) or full argument list
 				true
 			),
-			'To single dimension array'                                      => array(
+			'To single dimension array' => array(
 				(object) $common,
 				null,
 				null,
 				$common,
 				true
 			),
-			'Object with nested arrays and object.'                          => array(
+			'Object with nested arrays and object.' => array(
 				(object) array(
 					'foo' => $common,
 					'bar' => (object) array(
@@ -103,14 +103,14 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				),
 				true
 			),
-			'To single dimension array with recursion'                       => array(
+			'To single dimension array with recursion' => array(
 				(object) $common,
 				true,
 				null,
 				$common,
 				false
 			),
-			'To single dimension array using regex on keys'                  => array(
+			'To single dimension array using regex on keys' => array(
 				(object) $common,
 				true,
 				// Only get the 'integer' and 'float' keys.
@@ -120,91 +120,91 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				),
 				false
 			),
-			'Nested objects to single dimension array'                       => array(
+			'Nested objects to single dimension array' => array(
 				(object) array(
-					'first'  => (object) $common,
+					'first' => (object) $common,
 					'second' => (object) $common,
-					'third'  => (object) $common,
+					'third' => (object) $common,
 				),
 				null,
 				null,
 				array(
-					'first'  => (object) $common,
+					'first' => (object) $common,
 					'second' => (object) $common,
-					'third'  => (object) $common,
+					'third' => (object) $common,
 				),
 				false
 			),
-			'Nested objects into multiple dimension array'                   => array(
+			'Nested objects into multiple dimension array' => array(
 				(object) array(
-					'first'  => (object) $common,
+					'first' => (object) $common,
 					'second' => (object) $common,
-					'third'  => (object) $common,
+					'third' => (object) $common,
 				),
 				null,
 				null,
 				array(
-					'first'  => $common,
+					'first' => $common,
 					'second' => $common,
-					'third'  => $common,
+					'third' => $common,
 				),
 				true
 			),
-			'Nested objects into multiple dimension array 2'                 => array(
+			'Nested objects into multiple dimension array 2' => array(
 				(object) array(
-					'first'  => (object) $common,
+					'first' => (object) $common,
 					'second' => (object) $common,
-					'third'  => (object) $common,
+					'third' => (object) $common,
 				),
 				true,
 				null,
 				array(
-					'first'  => $common,
+					'first' => $common,
 					'second' => $common,
-					'third'  => $common,
+					'third' => $common,
 				),
 				true
 			),
-			'Nested objects into multiple dimension array 3'                 => array(
+			'Nested objects into multiple dimension array 3' => array(
 				(object) array(
-					'first'  => (object) $common,
+					'first' => (object) $common,
 					'second' => (object) $common,
-					'third'  => (object) $common,
+					'third' => (object) $common,
 				),
 				false,
 				null,
 				array(
-					'first'  => (object) $common,
+					'first' => (object) $common,
 					'second' => (object) $common,
-					'third'  => (object) $common,
+					'third' => (object) $common,
 				),
 				false
 			),
-			'multiple 4'                                                     => array(
+			'multiple 4' => array(
 				(object) array(
-					'first'  => 'Me',
+					'first' => 'Me',
 					'second' => (object) $common,
-					'third'  => (object) $common,
+					'third' => (object) $common,
 				),
 				false,
 				null,
 				array(
-					'first'  => 'Me',
+					'first' => 'Me',
 					'second' => (object) $common,
-					'third'  => (object) $common,
+					'third' => (object) $common,
 				),
 				false
 			),
 			'Nested objects into multiple dimension array of int and string' => array(
 				(object) array(
-					'first'  => (object) $common,
+					'first' => (object) $common,
 					'second' => (object) $common,
-					'third'  => (object) $common,
+					'third' => (object) $common,
 				),
 				true,
 				'/(first|second|integer|string)/',
 				array(
-					'first'     => array(
+					'first' => array(
 						'integer' => 12, 'string' => 'A Test String'
 					), 'second' => array(
 					'integer' => 12, 'string' => 'A Test String'
@@ -212,24 +212,24 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				),
 				false
 			),
-			'multiple 6'                                                     => array(
+			'multiple 6' => array(
 				(object) array(
-					'first'  => array(
+					'first' => array(
 						'integer' => 12,
-						'float'   => 1.29999,
-						'string'  => 'A Test String',
-						'third'   => (object) $common,
+						'float' => 1.29999,
+						'string' => 'A Test String',
+						'third' => (object) $common,
 					),
 					'second' => $common,
 				),
 				null,
 				null,
 				array(
-					'first'  => array(
+					'first' => array(
 						'integer' => 12,
-						'float'   => 1.29999,
-						'string'  => 'A Test String',
-						'third'   => $common,
+						'float' => 1.29999,
+						'string' => 'A Test String',
+						'third' => $common,
 					),
 					'second' => $common,
 				),
@@ -248,7 +248,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	public function getTestGetColumnData()
 	{
 		return array(
-			'generic array'     => array(
+			'generic array' => array(
 				array(
 					array(
 						1, 2, 3, 4, 5
@@ -287,7 +287,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				),
 				'Should get column \'four\''
 			),
-			'object array'      => array(
+			'object array' => array(
 				array(
 					(object) array(
 						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
@@ -321,53 +321,53 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	public function getTestGetValueData()
 	{
 		$input = array(
-			'one'       => 1,
-			'two'       => 2,
-			'three'     => 3,
-			'four'      => 4,
-			'five'      => 5,
-			'six'       => 6,
-			'seven'     => 7,
-			'eight'     => 8,
-			'nine'      => 'It\'s nine',
-			'ten'       => 10,
-			'eleven'    => 11,
-			'twelve'    => 12,
-			'thirteen'  => 13,
-			'fourteen'  => 14,
-			'fifteen'   => 15,
-			'sixteen'   => 16,
+			'one' => 1,
+			'two' => 2,
+			'three' => 3,
+			'four' => 4,
+			'five' => 5,
+			'six' => 6,
+			'seven' => 7,
+			'eight' => 8,
+			'nine' => 'It\'s nine',
+			'ten' => 10,
+			'eleven' => 11,
+			'twelve' => 12,
+			'thirteen' => 13,
+			'fourteen' => 14,
+			'fifteen' => 15,
+			'sixteen' => 16,
 			'seventeen' => 17,
 			'eightteen' => 'eighteen ninety-five',
-			'nineteen'  => 19,
-			'twenty'    => 20
+			'nineteen' => 19,
+			'twenty' => 20
 		);
 
 		return array(
-			'defaults'              => array(
+			'defaults' => array(
 				$input, 'five', null, null, 5, 'Should get 5', true
 			),
-			'get non-value'         => array(
+			'get non-value' => array(
 				$input, 'fiveio', 198, null, 198, 'Should get the default value', false
 			),
-			'get int 5'             => array(
+			'get int 5' => array(
 				$input, 'five', 198, 'int', (int) 5, 'Should get an int', false
 			),
-			'get float six'         => array(
+			'get float six' => array(
 				$input, 'six', 198, 'float', (float) 6, 'Should get a float', false
 			),
 			'get get boolean seven' => array(
 				$input, 'seven', 198, 'bool', (bool) 7, 'Should get a boolean', false
 			),
-			'get array eight'       => array(
+			'get array eight' => array(
 				$input, 'eight', 198, 'array', array(
 					8
 				), 'Should get an array', false
 			),
-			'get string nine'       => array(
+			'get string nine' => array(
 				$input, 'nine', 198, 'string', 'It\'s nine', 'Should get string', false
 			),
-			'get word'              => array(
+			'get word' => array(
 				$input, 'eightteen', 198, 'word', 'eighteenninetyfive', 'Should get it as a single word', false
 			),
 		);
@@ -387,7 +387,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 			'Case 1' => array(
 				// Input
 				array(
-					'New'  => array('1000', '1500', '1750'),
+					'New' => array('1000', '1500', '1750'),
 					'Used' => array('3000', '4000', '5000', '6000')
 				),
 				// Expected
@@ -404,8 +404,8 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 			'Case 2' => array(
 				// Input
 				array(
-					'New'         => array(1000, 1500, 1750),
-					'Used'        => array(2750, 3000, 4000, 5000, 6000),
+					'New' => array(1000, 1500, 1750),
+					'Used' => array(2750, 3000, 4000, 5000, 6000),
 					'Refurbished' => array(2000, 2500),
 					'Unspecified' => array()
 				),
@@ -436,7 +436,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	public function getTestPivotData()
 	{
 		return array(
-			'A scalar array'                 => array(
+			'A scalar array' => array(
 				// Source
 				array(
 					1 => 'a',
@@ -480,7 +480,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 					43 => array('id' => 43, 'title' => 'boo'),
 				)
 			),
-			'An array of objects'            => array(
+			'An array of objects' => array(
 				// Source
 				array(
 					1 => (object) array('id' => 41, 'title' => 'boo'),
@@ -607,7 +607,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 		}
 
 		return array(
-			'by int defaults'                                      => array(
+			'by int defaults' => array(
 				$input1,
 				'integer',
 				null,
@@ -642,7 +642,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				'Should be sorted by the integer field in ascending order',
 				true
 			),
-			'by int ascending'                                     => array(
+			'by int ascending' => array(
 				$input1,
 				'integer',
 				1,
@@ -677,7 +677,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				'Should be sorted by the integer field in ascending order full argument list',
 				false
 			),
-			'by int descending'                                    => array(
+			'by int descending' => array(
 				$input1,
 				'integer',
 				-1,
@@ -712,7 +712,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				'Should be sorted by the integer field in descending order',
 				false
 			),
-			'by string ascending'                                  => array(
+			'by string ascending' => array(
 				$input1,
 				'string',
 				1,
@@ -748,7 +748,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				false,
 				array(1, 2)
 			),
-			'by string descending'                                 => array(
+			'by string descending' => array(
 				$input1,
 				'string',
 				-1,
@@ -784,7 +784,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				false,
 				array(5, 6)
 			),
-			'by casesensitive string ascending'                    => array(
+			'by casesensitive string ascending' => array(
 				$input2,
 				'string',
 				1,
@@ -820,7 +820,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				false,
 				array(1, 2)
 			),
-			'by casesensitive string descending'                   => array(
+			'by casesensitive string descending' => array(
 				$input2,
 				'string',
 				-1,
@@ -856,7 +856,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				false,
 				array(5, 6)
 			),
-			'by casesensitive string,integer ascending'            => array(
+			'by casesensitive string,integer ascending' => array(
 				$input2,
 				array(
 					'string', 'integer'
@@ -893,7 +893,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				'Should be sorted by the string,integer field in descending order with casesensitive comparisons',
 				false
 			),
-			'by casesensitive string,integer descending'           => array(
+			'by casesensitive string,integer descending' => array(
 				$input2,
 				array(
 					'string', 'integer'
@@ -1008,7 +1008,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				'Should be sorted by the string,integer field in descending,ascending order with casesensitive comparisons',
 				false
 			),
-			'by casesensitive string ascending'                    => array(
+			'by casesensitive string ascending' => array(
 				$input3,
 				'string',
 				1,
@@ -1051,7 +1051,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				'Should be sorted by the string field in ascending order with casesensitive comparisons and fr_FR locale',
 				false
 			),
-			'by caseinsensitive string, integer ascending'         => array(
+			'by caseinsensitive string, integer ascending' => array(
 				$input3,
 				array(
 					'string', 'integer'
@@ -1109,14 +1109,14 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	public function getTestToIntegerData()
 	{
 		return array(
-			'floating with single argument'  => array(
+			'floating with single argument' => array(
 				array(
 					0.9, 3.2, 4.9999999, 7.5
 				), null, array(
 					0, 3, 4, 7
 				), 'Should truncate numbers in array'
 			),
-			'floating with default array'    => array(
+			'floating with default array' => array(
 				array(
 					0.9, 3.2, 4.9999999, 7.5
 				), array(
@@ -1128,14 +1128,14 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 			'non-array with single argument' => array(
 				12, null, array(), 'Should replace non-array input with empty array'
 			),
-			'non-array with default array'   => array(
+			'non-array with default array' => array(
 				12, array(
 					1.5, 2.6, 3
 				), array(
 					1, 2, 3
 				), 'Should replace non-array input with array of truncated numbers'
 			),
-			'non-array with default single'  => array(
+			'non-array with default single' => array(
 				12, 3.5, array(
 					3
 				), 'Should replace non-array with single-element array of truncated number'
@@ -1153,7 +1153,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	public function getTestToObjectData()
 	{
 		return array(
-			'single object'               => array(
+			'single object' => array(
 				array(
 					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 				),
@@ -1163,33 +1163,33 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				),
 				'Should turn array into single object'
 			),
-			'multiple objects'            => array(
+			'multiple objects' => array(
 				array(
-					'first'  => array(
+					'first' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 					'second' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
-					'third'  => array(
+					'third' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 				),
 				null,
 				(object) array(
-					'first'  => (object) array(
+					'first' => (object) array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 					'second' => (object) array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
-					'third'  => (object) array(
+					'third' => (object) array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 				),
 				'Should turn multiple dimension array into nested objects'
 			),
-			'single object with class'    => array(
+			'single object with class' => array(
 				array(
 					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 				),
@@ -1201,25 +1201,25 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 			),
 			'multiple objects with class' => array(
 				array(
-					'first'  => array(
+					'first' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 					'second' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
-					'third'  => array(
+					'third' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 				),
 				'stdClass',
 				(object) array(
-					'first'  => (object) array(
+					'first' => (object) array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 					'second' => (object) array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
-					'third'  => (object) array(
+					'third' => (object) array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 				),
@@ -1238,7 +1238,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	public function getTestToStringData()
 	{
 		return array(
-			'single dimension 1'    => array(
+			'single dimension 1' => array(
 				array(
 					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 				),
@@ -1249,7 +1249,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				'Should turn array into single string with defaults',
 				true
 			),
-			'single dimension 2'    => array(
+			'single dimension 2' => array(
 				array(
 					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 				),
@@ -1260,7 +1260,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				'Should turn array into single string with " = " and no spaces',
 				false
 			),
-			'single dimension 3'    => array(
+			'single dimension 3' => array(
 				array(
 					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 				),
@@ -1273,13 +1273,13 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 			),
 			'multiple dimensions 1' => array(
 				array(
-					'first'  => array(
+					'first' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 					'second' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
-					'third'  => array(
+					'third' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 				),
@@ -1287,19 +1287,19 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				null,
 				false,
 				'integer="12" float="1.29999" string="A Test String" ' . 'integer="12" float="1.29999" string="A Test String" '
-				. 'integer="12" float="1.29999" string="A Test String"',
+					. 'integer="12" float="1.29999" string="A Test String"',
 				'Should turn multiple dimension array into single string',
 				true
 			),
 			'multiple dimensions 2' => array(
 				array(
-					'first'  => array(
+					'first' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 					'second' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
-					'third'  => array(
+					'third' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 				),
@@ -1307,19 +1307,19 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				null,
 				false,
 				'integer = "12"float = "1.29999"string = "A Test String"' . 'integer = "12"float = "1.29999"string = "A Test String"'
-				. 'integer = "12"float = "1.29999"string = "A Test String"',
+					. 'integer = "12"float = "1.29999"string = "A Test String"',
 				'Should turn multiple dimension array into single string with " = " and no spaces',
 				false
 			),
 			'multiple dimensions 3' => array(
 				array(
-					'first'  => array(
+					'first' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 					'second' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
-					'third'  => array(
+					'third' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 				),
@@ -1327,19 +1327,19 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				' ',
 				false,
 				'integer = "12" float = "1.29999" string = "A Test String" ' . 'integer = "12" float = "1.29999" string = "A Test String" '
-				. 'integer = "12" float = "1.29999" string = "A Test String"',
+					. 'integer = "12" float = "1.29999" string = "A Test String"',
 				'Should turn multiple dimension array into single string with " = " and a space',
 				false
 			),
 			'multiple dimensions 4' => array(
 				array(
-					'first'  => array(
+					'first' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 					'second' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
-					'third'  => array(
+					'third' => array(
 						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
 					),
 				),
@@ -1347,7 +1347,7 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 				null,
 				true,
 				'firstinteger = "12"float = "1.29999"string = "A Test String"' . 'secondinteger = "12"float = "1.29999"string = "A Test String"'
-				. 'thirdinteger = "12"float = "1.29999"string = "A Test String"',
+					. 'thirdinteger = "12"float = "1.29999"string = "A Test String"',
 				'Should turn multiple dimension array into single string with " = " and no spaces with outer key',
 				false
 			),
@@ -1357,14 +1357,14 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the JArrayHelper::arrayUnique method.
 	 *
-	 * @param   array  $input    The array being input.
-	 * @param   string $expected The expected return value.
+	 * @param   array   $input     The array being input.
+	 * @param   string  $expected  The expected return value.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  getTestArrayUniqueData
-	 * @covers        JArrayHelper::arrayUnique
-	 * @since         11.3
+	 * @covers  JArrayHelper::arrayUnique
+	 * @since   11.3
 	 */
 	public function testArrayUnique($input, $expected)
 	{
@@ -1377,17 +1377,17 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests conversion of object to string.
 	 *
-	 * @param   array   $input    The array being input
-	 * @param   boolean $recurse  Recurse through multiple dimensions?
-	 * @param   string  $regex    Regex to select only some attributes
-	 * @param   string  $expect   The expected return value
-	 * @param   boolean $defaults Use function defaults (true) or full argument list
+	 * @param   array    $input     The array being input
+	 * @param   boolean  $recurse   Recurse through multiple dimensions?
+	 * @param   string   $regex     Regex to select only some attributes
+	 * @param   string   $expect    The expected return value
+	 * @param   boolean  $defaults  Use function defaults (true) or full argument list
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  getTestFromObjectData
-	 * @covers        JArrayHelper::fromObject
-	 * @since         11.1
+	 * @covers  JArrayHelper::fromObject
+	 * @since   11.1
 	 */
 	public function testFromObject($input, $recurse, $regex, $expect, $defaults)
 	{
@@ -1406,16 +1406,16 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Test pulling data from a single column (by index or association).
 	 *
-	 * @param   array  $input   Input array
-	 * @param   mixed  $index   Column to pull, either by association or number
-	 * @param   array  $expect  The expected results
-	 * @param   string $message The failure message
+	 * @param   array   $input    Input array
+	 * @param   mixed   $index    Column to pull, either by association or number
+	 * @param   array   $expect   The expected results
+	 * @param   string  $message  The failure message
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getTestGetColumnData
-	 * @covers       JArrayHelper::getColumn
-	 * @since        11.1
+	 * @covers  JArrayHelper::getColumn
+	 * @since   11.1
 	 */
 	public function testGetColumn($input, $index, $expect, $message)
 	{
@@ -1425,19 +1425,19 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Test get value from an array.
 	 *
-	 * @param   array  $input    Input array
-	 * @param   mixed  $index    Element to pull, either by association or number
-	 * @param   mixed  $default  The defualt value, if element not present
-	 * @param   string $type     The type of value returned
-	 * @param   array  $expect   The expected results
-	 * @param   string $message  The failure message
-	 * @param   bool   $defaults Use the defaults (true) or full argument list
+	 * @param   array   $input     Input array
+	 * @param   mixed   $index     Element to pull, either by association or number
+	 * @param   mixed   $default   The defualt value, if element not present
+	 * @param   string  $type      The type of value returned
+	 * @param   array   $expect    The expected results
+	 * @param   string  $message   The failure message
+	 * @param   bool    $defaults  Use the defaults (true) or full argument list
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getTestGetValueData
-	 * @covers       JArrayHelper::getValue
-	 * @since        11.1
+	 * @covers  JArrayHelper::getValue
+	 * @since   11.1
 	 */
 	public function testGetValue($input, $index, $default, $type, $expect, $message, $defaults)
 	{
@@ -1456,13 +1456,13 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the JArrayHelper::invert method.
 	 *
-	 * @param   array  $input    The array being input.
-	 * @param   string $expected The expected return value.
+	 * @param   array   $input     The array being input.
+	 * @param   string  $expected  The expected return value.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  getTestInvertData
-	 * @since         12.3
+	 * @since   12.3
 	 */
 	public function testInvert($input, $expected)
 	{
@@ -1516,15 +1516,15 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the JArrayHelper::pivot method.
 	 *
-	 * @param   array  $source   The source array.
-	 * @param   string $key      Where the elements of the source array are objects or arrays, the key to pivot on.
-	 * @param   array  $expected The expected result.
+	 * @param   array   $source    The source array.
+	 * @param   string  $key       Where the elements of the source array are objects or arrays, the key to pivot on.
+	 * @param   array   $expected  The expected result.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getTestPivotData
-	 * @covers       JArrayHelper::pivot
-	 * @since        11.3
+	 * @covers  JArrayHelper::pivot
+	 * @since   11.3
 	 */
 	public function testPivot($source, $key, $expected)
 	{
@@ -1537,21 +1537,21 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Test sorting an array of objects.
 	 *
-	 * @param   array   $input         Input array of objects
-	 * @param   mixed   $key           Key to sort on
-	 * @param   mixed   $direction     Ascending (1) or Descending(-1)
-	 * @param   string  $casesensitive @todo
-	 * @param   string  $locale        @todo
-	 * @param   array   $expect        The expected results
-	 * @param   string  $message       The failure message
-	 * @param   boolean $defaults      Use the defaults (true) or full argument list
-	 * @param   array   $swappableKeys Array of keys to swap the order of
+	 * @param   array    $input          Input array of objects
+	 * @param   mixed    $key            Key to sort on
+	 * @param   mixed    $direction      Ascending (1) or Descending(-1)
+	 * @param   string   $casesensitive  @todo
+	 * @param   string   $locale         @todo
+	 * @param   array    $expect         The expected results
+	 * @param   string   $message        The failure message
+	 * @param   boolean  $defaults       Use the defaults (true) or full argument list
+	 * @param   array    $swappableKeys  Array of keys to swap the order of
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getTestSortObjectData
-	 * @covers       JArrayHelper::sortObjects
-	 * @since        11.1
+	 * @covers  JArrayHelper::sortObjects
+	 * @since   11.1
 	 */
 	public function testSortObjects($input, $key, $direction, $casesensitive, $locale, $expect, $message, $defaults, $swappableKeys = array())
 	{
@@ -1588,8 +1588,8 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 		if ($expect != $output && $swappableKeys)
 		{
 			list($k1, $k2) = $swappableKeys;
-			$e1          = $output[$k1];
-			$e2          = $output[$k2];
+			$e1 = $output[$k1];
+			$e2 = $output[$k2];
 			$output[$k1] = $e2;
 			$output[$k2] = $e1;
 		}
@@ -1600,16 +1600,16 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Test convert an array to all integers.
 	 *
-	 * @param   string $input   The array being input
-	 * @param   string $default The default value
-	 * @param   string $expect  The expected return value
-	 * @param   string $message The failure message
+	 * @param   string  $input    The array being input
+	 * @param   string  $default  The default value
+	 * @param   string  $expect   The expected return value
+	 * @param   string  $message  The failure message
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getTestToIntegerData
-	 * @covers       JArrayHelper::toInteger
-	 * @since        11.1
+	 * @covers  JArrayHelper::toInteger
+	 * @since   11.1
 	 */
 	public function testToInteger($input, $default, $expect, $message)
 	{
@@ -1624,16 +1624,16 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Test convert array to object.
 	 *
-	 * @param   string $input     The array being input
-	 * @param   string $className The class name to build
-	 * @param   string $expect    The expected return value
-	 * @param   string $message   The failure message
+	 * @param   string  $input      The array being input
+	 * @param   string  $className  The class name to build
+	 * @param   string  $expect     The expected return value
+	 * @param   string  $message    The failure message
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getTestToObjectData
-	 * @covers       JArrayHelper::toObject
-	 * @since        11.1
+	 * @covers  JArrayHelper::toObject
+	 * @since   11.1
 	 */
 	public function testToObject($input, $className, $expect, $message)
 	{
@@ -1647,19 +1647,19 @@ class JArrayHelperTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests converting array to string.
 	 *
-	 * @param   array   $input    The array being input
-	 * @param   string  $inner    The inner glue
-	 * @param   string  $outer    The outer glue
-	 * @param   boolean $keepKey  Keep the outer key
-	 * @param   string  $expect   The expected return value
-	 * @param   string  $message  The failure message
-	 * @param   boolean $defaults Use function defaults (true) or full argument list
+	 * @param   array    $input     The array being input
+	 * @param   string   $inner     The inner glue
+	 * @param   string   $outer     The outer glue
+	 * @param   boolean  $keepKey   Keep the outer key
+	 * @param   string   $expect    The expected return value
+	 * @param   string   $message   The failure message
+	 * @param   boolean  $defaults  Use function defaults (true) or full argument list
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getTestToStringData
-	 * @covers       JArrayHelper::toString
-	 * @since        11.1
+	 * @covers  JArrayHelper::toString
+	 * @since   11.1
 	 */
 	public function testToString($input, $inner, $outer, $keepKey, $expect, $message, $defaults)
 	{

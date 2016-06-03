@@ -26,9 +26,9 @@ class JToolbarButtonCustom extends JToolbarButton
 	/**
 	 * Fetch the HTML for the button
 	 *
-	 * @param   string $type Button type, unused string.
-	 * @param   string $html HTML strng for the button
-	 * @param   string $id   CSS id for the button
+	 * @param   string  $type  Button type, unused string.
+	 * @param   string  $html  HTML strng for the button
+	 * @param   string  $id    CSS id for the button
 	 *
 	 * @return  string   HTML string for the button
 	 *
@@ -42,9 +42,9 @@ class JToolbarButtonCustom extends JToolbarButton
 	/**
 	 * Get the button CSS Id
 	 *
-	 * @param   string $type Not used.
-	 * @param   string $html Not used.
-	 * @param   string $id   The id prefix for the button.
+	 * @param   string  $type  Not used.
+	 * @param   string  $html  Not used.
+	 * @param   string  $id    The id prefix for the button.
 	 *
 	 * @return  string  Button CSS Id
 	 *

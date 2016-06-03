@@ -39,7 +39,7 @@ class MenusViewItems extends JViewLegacy
 	/**
 	 * Display the view
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 *
@@ -47,8 +47,8 @@ class MenusViewItems extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$user                = JFactory::getUser();
-		$lang                = JFactory::getLanguage();
+		$user = JFactory::getUser();
+		$lang = JFactory::getLanguage();
 		$this->items         = $this->get('Items');
 		$this->pagination    = $this->get('Pagination');
 		$this->state         = $this->get('State');
@@ -94,7 +94,7 @@ class MenusViewItems extends JViewLegacy
 				case 'component':
 				default:
 					// Load language
-					$lang->load($item->componentname . '.sys', JPATH_ADMINISTRATOR, null, false, true)
+						$lang->load($item->componentname . '.sys', JPATH_ADMINISTRATOR, null, false, true)
 					|| $lang->load($item->componentname . '.sys', JPATH_ADMINISTRATOR . '/components/' . $item->componentname, null, false, true);
 
 					if (!empty($item->componentname))
@@ -146,7 +146,7 @@ class MenusViewItems extends JViewLegacy
 
 								// Load template language file
 								$lang->load('tpl_' . $temp[0] . '.sys', JPATH_SITE, null, false, true)
-								|| $lang->load('tpl_' . $temp[0] . '.sys', JPATH_SITE . '/templates/' . $temp[0], null, false, true);
+								||	$lang->load('tpl_' . $temp[0] . '.sys', JPATH_SITE . '/templates/' . $temp[0], null, false, true);
 							}
 							else
 							{
@@ -291,8 +291,7 @@ class MenusViewItems extends JViewLegacy
 		// Add a batch button
 		if ($user->authorise('core.create', 'com_menus')
 			&& $user->authorise('core.edit', 'com_menus')
-			&& $user->authorise('core.edit.state', 'com_menus')
-		)
+			&& $user->authorise('core.edit.state', 'com_menus'))
 		{
 			$title = JText::_('JTOOLBAR_BATCH');
 

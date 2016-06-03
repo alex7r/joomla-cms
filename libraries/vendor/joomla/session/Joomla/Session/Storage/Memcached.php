@@ -22,7 +22,7 @@ class Memcached extends Storage
 	 * Container for server data
 	 *
 	 * @var    array
-	 * @since       1.0
+	 * @since  1.0
 	 * @deprecated  2.0
 	 */
 	protected $_servers = array();
@@ -30,9 +30,9 @@ class Memcached extends Storage
 	/**
 	 * Constructor
 	 *
-	 * @param   array $options Optional parameters.
+	 * @param   array  $options  Optional parameters.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @throws  \RuntimeException
 	 * @deprecated  2.0
 	 */
@@ -57,11 +57,25 @@ class Memcached extends Storage
 	}
 
 	/**
+	 * Register the functions of this class with PHP's session handler
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0
+	 * @deprecated  2.0
+	 */
+	public function register()
+	{
+		ini_set('session.save_path', $this->_servers[0]['host'] . ':' . $this->_servers[0]['port']);
+		ini_set('session.save_handler', 'memcached');
+	}
+
+	/**
 	 * Test to see if the SessionHandler is available.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
-	 * @since       1.0
+	 * @since   1.0
 	 * @deprecated  2.0
 	 */
 	static public function isSupported()
@@ -71,19 +85,5 @@ class Memcached extends Storage
 		 * If the class is there, we can assume it works.
 		 */
 		return (class_exists('Memcached'));
-	}
-
-	/**
-	 * Register the functions of this class with PHP's session handler
-	 *
-	 * @return  void
-	 *
-	 * @since       1.0
-	 * @deprecated  2.0
-	 */
-	public function register()
-	{
-		ini_set('session.save_path', $this->_servers[0]['host'] . ':' . $this->_servers[0]['port']);
-		ini_set('session.save_handler', 'memcached');
 	}
 }

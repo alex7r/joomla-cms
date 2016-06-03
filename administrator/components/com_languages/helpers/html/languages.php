@@ -19,9 +19,9 @@ abstract class JHtmlLanguages
 	/**
 	 * Method to generate an information about the default language.
 	 *
-	 * @param   boolean $published True if the language is the default.
+	 * @param   boolean  $published  True if the language is the default.
 	 *
-	 * @return  string    HTML code.
+	 * @return  string	HTML code.
 	 */
 	public static function published($published)
 	{
@@ -36,21 +36,21 @@ abstract class JHtmlLanguages
 	/**
 	 * Method to generate an input radio button.
 	 *
-	 * @param   integer $rowNum   The row number.
-	 * @param   string  $language Language tag.
+	 * @param   integer  $rowNum    The row number.
+	 * @param   string   $language  Language tag.
 	 *
-	 * @return  string    HTML code.
+	 * @return  string	HTML code.
 	 */
 	public static function id($rowNum, $language)
 	{
 		return '<input'
-		. ' type="radio"'
-		. ' id="cb' . $rowNum . '"'
-		. ' name="cid"'
-		. ' value="' . htmlspecialchars($language, ENT_COMPAT, 'UTF-8') . '"'
-		. ' onclick="Joomla.isChecked(this.checked);"'
-		. ' title="' . ($rowNum + 1) . '"'
-		. '/>';
+			. ' type="radio"'
+			. ' id="cb' . $rowNum . '"'
+			. ' name="cid"'
+			. ' value="' . htmlspecialchars($language, ENT_COMPAT, 'UTF-8') . '"'
+			. ' onclick="Joomla.isChecked(this.checked);"'
+			. ' title="' . ($rowNum + 1) . '"'
+			. '/>';
 	}
 
 	/**
@@ -69,7 +69,7 @@ abstract class JHtmlLanguages
 	/**
 	 * Returns an array of published state filter options.
 	 *
-	 * @return  string    The HTML code for the select tag.
+	 * @return  string  	The HTML code for the select tag.
 	 *
 	 * @since   1.6
 	 */

@@ -52,13 +52,31 @@ class JGithubForksTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JGithubForks($this->options, $this->client);
+	}
+
+	/**
 	 * Tests the create method
 	 *
 	 * @return void
 	 */
 	public function testCreate()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 202;
 		$returnData->body = $this->sampleString;
 
@@ -89,7 +107,7 @@ class JGithubForksTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreateFailure()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 501;
 		$returnData->body = $this->errorString;
 
@@ -113,7 +131,7 @@ class JGithubForksTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetList()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -137,7 +155,7 @@ class JGithubForksTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetListFailure()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -147,23 +165,5 @@ class JGithubForksTest extends PHPUnit_Framework_TestCase
 			->will($this->returnValue($returnData));
 
 		$this->object->getList('joomla', 'joomla-platform');
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options = new JRegistry;
-		$this->client  = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JGithubForks($this->options, $this->client);
 	}
 }

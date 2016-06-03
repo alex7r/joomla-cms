@@ -22,7 +22,7 @@ final class JApplicationSite extends JApplicationCms
 	 * Option to filter by language
 	 *
 	 * @var    boolean
-	 * @since       3.2
+	 * @since  3.2
 	 * @deprecated  4.0  Will be renamed $language_filter
 	 */
 	protected $_language_filter = false;
@@ -31,7 +31,7 @@ final class JApplicationSite extends JApplicationCms
 	 * Option to detect language by the browser
 	 *
 	 * @var    boolean
-	 * @since       3.2
+	 * @since  3.2
 	 * @deprecated  4.0  Will be renamed $detect_browser
 	 */
 	protected $_detect_browser = false;
@@ -39,13 +39,13 @@ final class JApplicationSite extends JApplicationCms
 	/**
 	 * Class constructor.
 	 *
-	 * @param   JInput                $input    An optional argument to provide dependency injection for the application's
+	 * @param   JInput                 $input   An optional argument to provide dependency injection for the application's
 	 *                                          input object.  If the argument is a JInput object that object will become
 	 *                                          the application's input object, otherwise a default input object is created.
-	 * @param   Registry              $config   An optional argument to provide dependency injection for the application's
+	 * @param   Registry               $config  An optional argument to provide dependency injection for the application's
 	 *                                          config object.  If the argument is a Registry object that object will become
 	 *                                          the application's config object, otherwise a default config object is created.
-	 * @param   JApplicationWebClient $client   An optional argument to provide dependency injection for the application's
+	 * @param   JApplicationWebClient  $client  An optional argument to provide dependency injection for the application's
 	 *                                          client object.  If the argument is a JApplicationWebClient object that object will become
 	 *                                          the application's client object, otherwise a default client object is created.
 	 *
@@ -64,316 +64,9 @@ final class JApplicationSite extends JApplicationCms
 	}
 
 	/**
-	 * Return the current state of the detect browser option.
-	 *
-	 * @return    boolean
-	 *
-	 * @since    3.2
-	 */
-	public function getDetectBrowser()
-	{
-		return $this->_detect_browser;
-	}
-
-	/**
-	 * Set the current state of the detect browser option.
-	 *
-	 * @param   boolean $state The new state of the detect browser option
-	 *
-	 * @return    boolean     The previous state
-	 *
-	 * @since    3.2
-	 */
-	public function setDetectBrowser($state = false)
-	{
-		$old                   = $this->_detect_browser;
-		$this->_detect_browser = $state;
-
-		return $old;
-	}
-
-	/**
-	 * Return the current state of the language filter.
-	 *
-	 * @return    boolean
-	 *
-	 * @since    3.2
-	 */
-	public function getLanguageFilter()
-	{
-		return $this->_language_filter;
-	}
-
-	/**
-	 * Set the current state of the language filter.
-	 *
-	 * @param   boolean $state The new state of the language filter
-	 *
-	 * @return    boolean     The previous state
-	 *
-	 * @since    3.2
-	 */
-	public function setLanguageFilter($state = false)
-	{
-		$old                    = $this->_language_filter;
-		$this->_language_filter = $state;
-
-		return $old;
-	}
-
-	/**
-	 * Get the application parameters
-	 *
-	 * @param   string $option The component option
-	 *
-	 * @return  Registry  The parameters object
-	 *
-	 * @since       3.2
-	 * @deprecated  4.0  Use getParams() instead
-	 */
-	public function getPageParameters($option = null)
-	{
-		return $this->getParams($option);
-	}
-
-	/**
-	 * Return a reference to the JPathway object.
-	 *
-	 * @param   string $name    The name of the application.
-	 * @param   array  $options An optional associative array of configuration settings.
-	 *
-	 * @return  JPathway  A JPathway object
-	 *
-	 * @since   3.2
-	 */
-	public function getPathway($name = 'site', $options = array())
-	{
-		return parent::getPathway($name, $options);
-	}
-
-	/**
-	 * Login authentication function
-	 *
-	 * @param   array $credentials Array('username' => string, 'password' => string)
-	 * @param   array $options     Array('remember' => boolean)
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   3.2
-	 */
-	public function login($credentials, $options = array())
-	{
-		// Set the application login entry point
-		if (!array_key_exists('entry_url', $options))
-		{
-			$options['entry_url'] = JUri::base() . 'index.php?option=com_users&task=user.login';
-		}
-
-		// Set the access control action to check.
-		$options['action'] = 'core.login.site';
-
-		return parent::login($credentials, $options);
-	}
-
-	/**
-	 * Overrides the default template that would be used
-	 *
-	 * @param   string $template    The template name
-	 * @param   mixed  $styleParams The template style parameters
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	public function setTemplate($template, $styleParams = null)
-	{
-		if (is_dir(JPATH_THEMES . '/' . $template))
-		{
-			$this->template           = new stdClass;
-			$this->template->template = $template;
-
-			if ($styleParams instanceof Registry)
-			{
-				$this->template->params = $styleParams;
-			}
-			else
-			{
-				$this->template->params = new Registry($styleParams);
-			}
-
-			// Store the template and its params to the config
-			$this->set('theme', $this->template->template);
-			$this->set('themeParams', $this->template->params);
-		}
-	}
-
-	/**
-	 * Method to run the Web application routines.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function doExecute()
-	{
-		// Initialise the application
-		$this->initialiseApp();
-
-		// Mark afterInitialise in the profiler.
-		JDEBUG ? $this->profiler->mark('afterInitialise') : null;
-
-		// Route the application
-		$this->route();
-
-		// Mark afterRoute in the profiler.
-		JDEBUG ? $this->profiler->mark('afterRoute') : null;
-
-		/*
-		 * Check if the user is required to reset their password
-		 *
-		 * Before $this->route(); "option" and "view" can't be safely read using:
-		 * $this->input->getCmd('option'); or $this->input->getCmd('view');
-		 * ex: due of the sef urls
-		 */
-		$this->checkUserRequireReset('com_users', 'profile', 'edit', 'com_users/profile.save,com_users/profile.apply,com_users/user.logout');
-
-		// Dispatch the application
-		$this->dispatch();
-
-		// Mark afterDispatch in the profiler.
-		JDEBUG ? $this->profiler->mark('afterDispatch') : null;
-	}
-
-	/**
-	 * Initialise the application.
-	 *
-	 * @param   array $options An optional associative array of configuration settings.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function initialiseApp($options = array())
-	{
-		$user = JFactory::getUser();
-
-		// If the user is a guest we populate it with the guest user group.
-		if ($user->guest)
-		{
-			$guestUsergroup = JComponentHelper::getParams('com_users')->get('guest_usergroup', 1);
-			$user->groups   = array($guestUsergroup);
-		}
-
-		// If a language was specified it has priority, otherwise use user or default language settings
-		JPluginHelper::importPlugin('system', 'languagefilter');
-
-		if (empty($options['language']))
-		{
-			// Detect the specified language
-			$lang = $this->input->getString('language', null);
-
-			// Make sure that the user's language exists
-			if ($lang && JLanguage::exists($lang))
-			{
-				$options['language'] = $lang;
-			}
-		}
-
-		if ($this->_language_filter && empty($options['language']))
-		{
-			// Detect cookie language
-			$lang = $this->input->cookie->get(md5($this->get('secret') . 'language'), null, 'string');
-
-			// Make sure that the user's language exists
-			if ($lang && JLanguage::exists($lang))
-			{
-				$options['language'] = $lang;
-			}
-		}
-
-		if (empty($options['language']))
-		{
-			// Detect user language
-			$lang = $user->getParam('language');
-
-			// Make sure that the user's language exists
-			if ($lang && JLanguage::exists($lang))
-			{
-				$options['language'] = $lang;
-			}
-		}
-
-		if ($this->_detect_browser && empty($options['language']))
-		{
-			// Detect browser language
-			$lang = JLanguageHelper::detectLanguage();
-
-			// Make sure that the user's language exists
-			if ($lang && JLanguage::exists($lang))
-			{
-				$options['language'] = $lang;
-			}
-		}
-
-		if (empty($options['language']))
-		{
-			// Detect default language
-			$params              = JComponentHelper::getParams('com_languages');
-			$options['language'] = $params->get('site', $this->get('language', 'en-GB'));
-		}
-
-		// One last check to make sure we have something
-		if (!JLanguage::exists($options['language']))
-		{
-			$lang = $this->config->get('language', 'en-GB');
-
-			if (JLanguage::exists($lang))
-			{
-				$options['language'] = $lang;
-			}
-			else
-			{
-				// As a last ditch fail to english
-				$options['language'] = 'en-GB';
-			}
-		}
-
-		// Finish initialisation
-		parent::initialiseApp($options);
-
-		/*
-		 * Try the lib_joomla file in the current language (without allowing the loading of the file in the default language)
-		 * Fallback to the default language if necessary
-		 */
-		$this->getLanguage()->load('lib_joomla', JPATH_SITE, null, false, true)
-		|| $this->getLanguage()->load('lib_joomla', JPATH_ADMINISTRATOR, null, false, true);
-	}
-
-	/**
-	 * Route the application.
-	 *
-	 * Routing is the process of examining the request environment to determine which
-	 * component should receive the request. The component optional parameters
-	 * are then set in the request object to be processed when the application is being
-	 * dispatched.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function route()
-	{
-		// Execute the parent method
-		parent::route();
-
-		$Itemid = $this->input->getInt('Itemid', null);
-		$this->authorise($Itemid);
-	}
-
-	/**
 	 * Check if the user can access the application
 	 *
-	 * @param   integer $itemid The item ID to check authorisation for
+	 * @param   integer  $itemid  The item ID to check authorisation for
 	 *
 	 * @return  void
 	 *
@@ -384,7 +77,7 @@ final class JApplicationSite extends JApplicationCms
 	protected function authorise($itemid)
 	{
 		$menus = $this->getMenu();
-		$user  = JFactory::getUser();
+		$user = JFactory::getUser();
 
 		if (!$menus->authorise($itemid))
 		{
@@ -417,26 +110,9 @@ final class JApplicationSite extends JApplicationCms
 	}
 
 	/**
-	 * Return a reference to the JMenu object.
-	 *
-	 * @param   string $name    The name of the application/client.
-	 * @param   array  $options An optional associative array of configuration settings.
-	 *
-	 * @return  JMenu  JMenu object.
-	 *
-	 * @since   3.2
-	 */
-	public function getMenu($name = 'site', $options = array())
-	{
-		$menu = parent::getMenu($name, $options);
-
-		return $menu;
-	}
-
-	/**
 	 * Dispatch the application
 	 *
-	 * @param   string $component The component which is being rendered.
+	 * @param   string  $component  The component which is being rendered.
 	 *
 	 * @return  void
 	 *
@@ -521,27 +197,102 @@ final class JApplicationSite extends JApplicationCms
 	}
 
 	/**
-	 * Return a reference to the JRouter object.
+	 * Method to run the Web application routines.
 	 *
-	 * @param   string $name    The name of the application.
-	 * @param   array  $options An optional associative array of configuration settings.
+	 * @return  void
 	 *
-	 * @return    JRouter
-	 *
-	 * @since    3.2
+	 * @since   3.2
 	 */
-	public static function getRouter($name = 'site', array $options = array())
+	protected function doExecute()
 	{
-		$config          = JFactory::getConfig();
-		$options['mode'] = $config->get('sef');
+		// Initialise the application
+		$this->initialiseApp();
 
-		return parent::getRouter($name, $options);
+		// Mark afterInitialise in the profiler.
+		JDEBUG ? $this->profiler->mark('afterInitialise') : null;
+
+		// Route the application
+		$this->route();
+
+		// Mark afterRoute in the profiler.
+		JDEBUG ? $this->profiler->mark('afterRoute') : null;
+
+		/*
+		 * Check if the user is required to reset their password
+		 *
+		 * Before $this->route(); "option" and "view" can't be safely read using:
+		 * $this->input->getCmd('option'); or $this->input->getCmd('view');
+		 * ex: due of the sef urls
+		 */
+		$this->checkUserRequireReset('com_users', 'profile', 'edit', 'com_users/profile.save,com_users/profile.apply,com_users/user.logout');
+
+		// Dispatch the application
+		$this->dispatch();
+
+		// Mark afterDispatch in the profiler.
+		JDEBUG ? $this->profiler->mark('afterDispatch') : null;
+	}
+
+	/**
+	 * Return the current state of the detect browser option.
+	 *
+	 * @return	boolean
+	 *
+	 * @since	3.2
+	 */
+	public function getDetectBrowser()
+	{
+		return $this->_detect_browser;
+	}
+
+	/**
+	 * Return the current state of the language filter.
+	 *
+	 * @return	boolean
+	 *
+	 * @since	3.2
+	 */
+	public function getLanguageFilter()
+	{
+		return $this->_language_filter;
+	}
+
+	/**
+	 * Return a reference to the JMenu object.
+	 *
+	 * @param   string  $name     The name of the application/client.
+	 * @param   array   $options  An optional associative array of configuration settings.
+	 *
+	 * @return  JMenu  JMenu object.
+	 *
+	 * @since   3.2
+	 */
+	public function getMenu($name = 'site', $options = array())
+	{
+		$menu = parent::getMenu($name, $options);
+
+		return $menu;
 	}
 
 	/**
 	 * Get the application parameters
 	 *
-	 * @param   string $option The component option
+	 * @param   string  $option  The component option
+	 *
+	 * @return  Registry  The parameters object
+	 *
+	 * @since   3.2
+	 * @deprecated  4.0  Use getParams() instead
+	 */
+	public function getPageParameters($option = null)
+	{
+		return $this->getParams($option);
+	}
+
+	/**
+	 * Get the application parameters
+	 *
+	 * @param   string  $option  The component option
 	 *
 	 * @return  Registry  The parameters object
 	 *
@@ -624,9 +375,42 @@ final class JApplicationSite extends JApplicationCms
 	}
 
 	/**
+	 * Return a reference to the JPathway object.
+	 *
+	 * @param   string  $name     The name of the application.
+	 * @param   array   $options  An optional associative array of configuration settings.
+	 *
+	 * @return  JPathway  A JPathway object
+	 *
+	 * @since   3.2
+	 */
+	public function getPathway($name = 'site', $options = array())
+	{
+		return parent::getPathway($name, $options);
+	}
+
+	/**
+	 * Return a reference to the JRouter object.
+	 *
+	 * @param   string  $name     The name of the application.
+	 * @param   array   $options  An optional associative array of configuration settings.
+	 *
+	 * @return	JRouter
+	 *
+	 * @since	3.2
+	 */
+	public static function getRouter($name = 'site', array $options = array())
+	{
+		$config = JFactory::getConfig();
+		$options['mode'] = $config->get('sef');
+
+		return parent::getRouter($name, $options);
+	}
+
+	/**
 	 * Gets the name of the current template.
 	 *
-	 * @param   boolean $params True to return the template parameters
+	 * @param   boolean  $params  True to return the template parameters
 	 *
 	 * @return  string  The name of the template.
 	 *
@@ -688,7 +472,7 @@ final class JApplicationSite extends JApplicationCms
 		if (!$templates = $cache->get('templates0' . $tag))
 		{
 			// Load styles
-			$db    = JFactory::getDbo();
+			$db = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select('id, home, template, s.params')
 				->from('#__template_styles as s')
@@ -782,6 +566,135 @@ final class JApplicationSite extends JApplicationCms
 	}
 
 	/**
+	 * Initialise the application.
+	 *
+	 * @param   array  $options  An optional associative array of configuration settings.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function initialiseApp($options = array())
+	{
+		$user = JFactory::getUser();
+
+		// If the user is a guest we populate it with the guest user group.
+		if ($user->guest)
+		{
+			$guestUsergroup = JComponentHelper::getParams('com_users')->get('guest_usergroup', 1);
+			$user->groups = array($guestUsergroup);
+		}
+
+		// If a language was specified it has priority, otherwise use user or default language settings
+		JPluginHelper::importPlugin('system', 'languagefilter');
+
+		if (empty($options['language']))
+		{
+			// Detect the specified language
+			$lang = $this->input->getString('language', null);
+
+			// Make sure that the user's language exists
+			if ($lang && JLanguage::exists($lang))
+			{
+				$options['language'] = $lang;
+			}
+		}
+
+		if ($this->_language_filter && empty($options['language']))
+		{
+			// Detect cookie language
+			$lang = $this->input->cookie->get(md5($this->get('secret') . 'language'), null, 'string');
+
+			// Make sure that the user's language exists
+			if ($lang && JLanguage::exists($lang))
+			{
+				$options['language'] = $lang;
+			}
+		}
+
+		if (empty($options['language']))
+		{
+			// Detect user language
+			$lang = $user->getParam('language');
+
+			// Make sure that the user's language exists
+			if ($lang && JLanguage::exists($lang))
+			{
+				$options['language'] = $lang;
+			}
+		}
+
+		if ($this->_detect_browser && empty($options['language']))
+		{
+			// Detect browser language
+			$lang = JLanguageHelper::detectLanguage();
+
+			// Make sure that the user's language exists
+			if ($lang && JLanguage::exists($lang))
+			{
+				$options['language'] = $lang;
+			}
+		}
+
+		if (empty($options['language']))
+		{
+			// Detect default language
+			$params = JComponentHelper::getParams('com_languages');
+			$options['language'] = $params->get('site', $this->get('language', 'en-GB'));
+		}
+
+		// One last check to make sure we have something
+		if (!JLanguage::exists($options['language']))
+		{
+			$lang = $this->config->get('language', 'en-GB');
+
+			if (JLanguage::exists($lang))
+			{
+				$options['language'] = $lang;
+			}
+			else
+			{
+				// As a last ditch fail to english
+				$options['language'] = 'en-GB';
+			}
+		}
+
+		// Finish initialisation
+		parent::initialiseApp($options);
+
+		/*
+		 * Try the lib_joomla file in the current language (without allowing the loading of the file in the default language)
+		 * Fallback to the default language if necessary
+		 */
+		$this->getLanguage()->load('lib_joomla', JPATH_SITE, null, false, true)
+			|| $this->getLanguage()->load('lib_joomla', JPATH_ADMINISTRATOR, null, false, true);
+	}
+
+	/**
+	 * Login authentication function
+	 *
+	 * @param   array  $credentials  Array('username' => string, 'password' => string)
+	 * @param   array  $options      Array('remember' => boolean)
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   3.2
+	 */
+	public function login($credentials, $options = array())
+	{
+		// Set the application login entry point
+		if (!array_key_exists('entry_url', $options))
+		{
+			$options['entry_url'] = JUri::base() . 'index.php?option=com_users&task=user.login';
+		}
+
+		// Set the access control action to check.
+		$options['action'] = 'core.login.site';
+
+		return parent::login($credentials, $options);
+	}
+
+	/**
 	 * Rendering is the process of pushing the document buffers into the template
 	 * placeholders, retrieving data from the document and pushing it into
 	 * the application response buffer.
@@ -830,5 +743,92 @@ final class JApplicationSite extends JApplicationCms
 		}
 
 		parent::render();
+	}
+
+	/**
+	 * Route the application.
+	 *
+	 * Routing is the process of examining the request environment to determine which
+	 * component should receive the request. The component optional parameters
+	 * are then set in the request object to be processed when the application is being
+	 * dispatched.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function route()
+	{
+		// Execute the parent method
+		parent::route();
+
+		$Itemid = $this->input->getInt('Itemid', null);
+		$this->authorise($Itemid);
+	}
+
+	/**
+	 * Set the current state of the detect browser option.
+	 *
+	 * @param   boolean  $state  The new state of the detect browser option
+	 *
+	 * @return	boolean	 The previous state
+	 *
+	 * @since	3.2
+	 */
+	public function setDetectBrowser($state = false)
+	{
+		$old = $this->_detect_browser;
+		$this->_detect_browser = $state;
+
+		return $old;
+	}
+
+	/**
+	 * Set the current state of the language filter.
+	 *
+	 * @param   boolean  $state  The new state of the language filter
+	 *
+	 * @return	boolean	 The previous state
+	 *
+	 * @since	3.2
+	 */
+	public function setLanguageFilter($state = false)
+	{
+		$old = $this->_language_filter;
+		$this->_language_filter = $state;
+
+		return $old;
+	}
+
+	/**
+	 * Overrides the default template that would be used
+	 *
+	 * @param   string  $template     The template name
+	 * @param   mixed   $styleParams  The template style parameters
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function setTemplate($template, $styleParams = null)
+	{
+		if (is_dir(JPATH_THEMES . '/' . $template))
+		{
+			$this->template = new stdClass;
+			$this->template->template = $template;
+
+			if ($styleParams instanceof Registry)
+			{
+				$this->template->params = $styleParams;
+			}
+			else
+			{
+				$this->template->params = new Registry($styleParams);
+			}
+
+			// Store the template and its params to the config
+			$this->set('theme', $this->template->template);
+			$this->set('themeParams', $this->template->params);
+		}
 	}
 }

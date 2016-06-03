@@ -11,8 +11,7 @@ defined('_JEXEC') or die;
 
 JHtml::_('bootstrap.tooltip');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_admin&amp;view=help'); ?>" method="post" name="adminForm"
-      id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_admin&amp;view=help'); ?>" method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid">
 		<div id="sidebar" class="span3">
 			<div class="clearfix"></div>
@@ -22,7 +21,7 @@ JHtml::_('bootstrap.tooltip');
 					<li><?php echo JHtml::_('link', $this->latest_version_check, JText::_('COM_ADMIN_LATEST_VERSION_CHECK'), array('target' => 'helpFrame')) ?></li>
 					<li><?php echo JHtml::_('link', 'http://www.gnu.org/licenses/gpl-2.0.html', JText::_('COM_ADMIN_LICENSE'), array('target' => 'helpFrame')) ?></li>
 					<li><?php echo JHtml::_('link', JHelp::createUrl('JHELP_GLOSSARY'), JText::_('COM_ADMIN_GLOSSARY'), array('target' => 'helpFrame')) ?></li>
-					<hr class="hr-condensed"/>
+					<hr class="hr-condensed" />
 					<li class="nav-header"><?php echo JText::_('COM_ADMIN_ALPHABETICAL_INDEX'); ?></li>
 					<?php foreach ($this->toc as $k => $v): ?>
 						<li>
@@ -34,9 +33,8 @@ JHtml::_('bootstrap.tooltip');
 			</div>
 		</div>
 		<div class="span9">
-			<iframe name="helpFrame" height="2100px" src="<?php echo $this->page; ?>"
-			        class="helpFrame table table-bordered"></iframe>
+			<iframe name="helpFrame" height="2100px" src="<?php echo $this->page; ?>" class="helpFrame table table-bordered"></iframe>
 		</div>
 	</div>
-	<input class="textarea" type="hidden" name="option" value="com_admin"/>
+	<input class="textarea" type="hidden" name="option" value="com_admin" />
 </form>

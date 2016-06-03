@@ -33,7 +33,7 @@ class JFormFieldPlugin_Status extends JFormFieldPredefinedList
 	 * @since  3.5
 	 */
 	protected $predefinedOptions = array(
-		'0' => 'JDISABLED',
-		'1' => 'JENABLED'
+		'0'  => 'JDISABLED',
+		'1'  => 'JENABLED'
 	);
 }

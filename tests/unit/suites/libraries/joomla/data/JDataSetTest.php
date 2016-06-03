@@ -41,7 +41,7 @@ class JDataSetTest extends TestCase
 		$input = array(
 			'key' => new JData(array('foo' => 'bar'))
 		);
-		$new   = new JDataSet($input);
+		$new = new JDataSet($input);
 
 		$this->assertEquals($input, TestReflection::getValue($new, '_objects'), 'Check initialised object list.');
 	}
@@ -198,7 +198,7 @@ class JDataSetTest extends TestCase
 				new stdClass,
 				(object) array(
 					'mission' => 'Vostok 1',
-					'pilot'   => 'Yuri Gagarin',
+					'pilot' => 'Yuri Gagarin',
 				),
 			),
 			$this->_instance->dump()
@@ -219,7 +219,7 @@ class JDataSetTest extends TestCase
 				new stdClass,
 				(object) array(
 					'mission' => 'Vostok 1',
-					'pilot'   => 'Yuri Gagarin',
+					'pilot' => 'Yuri Gagarin',
 				),
 			),
 			$this->_instance->jsonSerialize()
@@ -247,7 +247,7 @@ class JDataSetTest extends TestCase
 	 */
 	public function testKeys()
 	{
-		$instance         = new JDataSet;
+		$instance = new JDataSet;
 		$instance['key1'] = new JData;
 		$instance['key2'] = new JData;
 
@@ -428,7 +428,7 @@ class JDataSetTest extends TestCase
 		// Tests single item list.
 		$this->_instance->clear();
 		$this->_instance['1'] = new JData;
-		$runs                 = 0;
+		$runs = 0;
 
 		foreach ($this->_instance as $key => $object)
 		{

@@ -19,7 +19,7 @@ class JFormFieldOrdering extends JFormField
 	/**
 	 * The form field type.
 	 *
-	 * @var        string
+	 * @var		string
 	 * @since   3.2
 	 */
 	protected $type = 'Ordering';
@@ -27,7 +27,7 @@ class JFormFieldOrdering extends JFormField
 	/**
 	 * The form field content type.
 	 *
-	 * @var        string
+	 * @var		string
 	 * @since   3.2
 	 */
 	protected $contentType;
@@ -35,7 +35,7 @@ class JFormFieldOrdering extends JFormField
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string $name The property name for which to the the value.
+	 * @param   string  $name  The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -55,8 +55,8 @@ class JFormFieldOrdering extends JFormField
 	/**
 	 * Method to set certain otherwise inaccessible properties of the form field object.
 	 *
-	 * @param   string $name  The property name for which to the the value.
-	 * @param   mixed  $value The value of the property.
+	 * @param   string  $name   The property name for which to the the value.
+	 * @param   mixed   $value  The value of the property.
 	 *
 	 * @return  void
 	 *
@@ -78,9 +78,9 @@ class JFormFieldOrdering extends JFormField
 	/**
 	 * Method to attach a JForm object to the field.
 	 *
-	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
-	 * @param   mixed            $value     The form field value to validate.
-	 * @param   string           $group     The field name group control value. This acts as as an array container for the field.
+	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed             $value    The form field value to validate.
+	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
 	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
 	 *
@@ -104,7 +104,7 @@ class JFormFieldOrdering extends JFormField
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @return  string    The field input markup.
+	 * @return  string	The field input markup.
 	 *
 	 * @since   3.2
 	 */
@@ -141,18 +141,6 @@ class JFormFieldOrdering extends JFormField
 	}
 
 	/**
-	 * Retrieves the current Item's Id.
-	 *
-	 * @return  integer  The current item ID
-	 *
-	 * @since   3.2
-	 */
-	protected function getItemId()
-	{
-		return (int) $this->form->getValue('id');
-	}
-
-	/**
 	 * Builds the query for the ordering list.
 	 *
 	 * @return  JDatabaseQuery  The query for the ordering form field
@@ -185,5 +173,17 @@ class JFormFieldOrdering extends JFormField
 			->order('ordering');
 
 		return $query;
+	}
+
+	/**
+	 * Retrieves the current Item's Id.
+	 *
+	 * @return  integer  The current item ID
+	 *
+	 * @since   3.2
+	 */
+	protected function getItemId()
+	{
+		return (int) $this->form->getValue('id');
 	}
 }

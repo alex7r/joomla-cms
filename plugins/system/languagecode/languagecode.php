@@ -37,7 +37,7 @@ class PlgSystemLanguagecode extends JPlugin
 			$code = JFactory::getDocument()->getLanguage();
 
 			// Get the new code.
-			$new_code = $this->params->get($code);
+			$new_code  = $this->params->get($code);
 
 			// Replace the old code by the new code in the <html /> tag.
 			if ($new_code)
@@ -47,7 +47,7 @@ class PlgSystemLanguagecode extends JPlugin
 					chr(1) . '(<html.*\s+xml:lang=")(' . $code . ')(".*>)' . chr(1) . 'i',
 					chr(1) . '(<html.*\s+lang=")(' . $code . ')(".*>)' . chr(1) . 'i',
 				);
-				$replace  = array(
+				$replace = array(
 					'${1}' . strtolower($new_code) . '${3}',
 					'${1}' . strtolower($new_code) . '${3}'
 				);
@@ -68,7 +68,7 @@ class PlgSystemLanguagecode extends JPlugin
 				if ($new_code)
 				{
 					$patterns[] = chr(1) . '(<link.*\s+hreflang=")(' . $match . ')(".*\s+rel="alternate".*/>)' . chr(1) . 'i';
-					$replace[]  = '${1}' . $new_code . '${3}';
+					$replace[] = '${1}' . $new_code . '${3}';
 				}
 			}
 
@@ -81,7 +81,7 @@ class PlgSystemLanguagecode extends JPlugin
 				if ($new_code)
 				{
 					$patterns[] = chr(1) . '(<link.*\s+rel="alternate".*\s+hreflang=")(' . $match . ')(".*/>)' . chr(1) . 'i';
-					$replace[]  = '${1}' . $new_code . '${3}';
+					$replace[] = '${1}' . $new_code . '${3}';
 				}
 			}
 
@@ -95,7 +95,7 @@ class PlgSystemLanguagecode extends JPlugin
 				if ($new_code)
 				{
 					$patterns[] = chr(1) . '(<meta.*\s+itemprop="inLanguage".*\s+content=")(' . $match . ')(".*/>)' . chr(1) . 'i';
-					$replace[]  = '${1}' . $new_code . '${3}';
+					$replace[] = '${1}' . $new_code . '${3}';
 				}
 			}
 
@@ -106,12 +106,12 @@ class PlgSystemLanguagecode extends JPlugin
 	/**
 	 * Prepare form.
 	 *
-	 * @param   JForm $form The form to be altered.
-	 * @param   mixed $data The associated data for the form.
+	 * @param   JForm  $form  The form to be altered.
+	 * @param   mixed  $data  The associated data for the form.
 	 *
 	 * @return  boolean
 	 *
-	 * @since    2.5
+	 * @since	2.5
 	 */
 	public function onContentPrepareForm($form, $data)
 	{

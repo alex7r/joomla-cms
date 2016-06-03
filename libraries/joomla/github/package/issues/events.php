@@ -25,11 +25,11 @@ class JGithubPackageIssuesEvents extends JGithubPackage
 	/**
 	 * List events for an issue.
 	 *
-	 * @param   string  $owner        The name of the owner of the GitHub repository.
-	 * @param   string  $repo         The name of the GitHub repository.
-	 * @param   integer $issue_number The issue number.
-	 * @param   integer $page         The page number from which to get items.
-	 * @param   integer $limit        The number of items on a page.
+	 * @param   string   $owner         The name of the owner of the GitHub repository.
+	 * @param   string   $repo          The name of the GitHub repository.
+	 * @param   integer  $issue_number  The issue number.
+	 * @param   integer  $page          The page number from which to get items.
+	 * @param   integer  $limit         The number of items on a page.
 	 *
 	 * @return object
 	 */
@@ -47,11 +47,11 @@ class JGithubPackageIssuesEvents extends JGithubPackage
 	/**
 	 * List events for a repository.
 	 *
-	 * @param   string  $owner   The name of the owner of the GitHub repository.
-	 * @param   string  $repo    The name of the GitHub repository.
-	 * @param   integer $issueId The issue number.
-	 * @param   integer $page    The page number from which to get items.
-	 * @param   integer $limit   The number of items on a page.
+	 * @param   string   $owner    The name of the owner of the GitHub repository.
+	 * @param   string   $repo     The name of the GitHub repository.
+	 * @param   integer  $issueId  The issue number.
+	 * @param   integer  $page     The page number from which to get items.
+	 * @param   integer  $limit    The number of items on a page.
 	 *
 	 * @return object
 	 */
@@ -69,9 +69,9 @@ class JGithubPackageIssuesEvents extends JGithubPackage
 	/**
 	 * Get a single event.
 	 *
-	 * @param   string  $owner The name of the owner of the GitHub repository.
-	 * @param   string  $repo  The name of the GitHub repository.
-	 * @param   integer $id    The event number.
+	 * @param   string   $owner  The name of the owner of the GitHub repository.
+	 * @param   string   $repo   The name of the GitHub repository.
+	 * @param   integer  $id     The event number.
 	 *
 	 * @return object
 	 */

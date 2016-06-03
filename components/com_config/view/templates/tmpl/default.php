@@ -24,16 +24,14 @@ JFactory::getDocument()->addScriptDeclaration("
 ");
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" method="post" name="adminForm"
-      id="templates-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" method="post" name="adminForm" id="templates-form" class="form-validate">
 
 	<div class="row-fluid">
 		<!-- Begin Content -->
 
 		<div class="btn-toolbar">
 			<div class="btn-group">
-				<button type="button" class="btn btn-primary"
-				        onclick="Joomla.submitbutton('config.save.templates.apply')">
+				<button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('config.save.templates.apply')">
 					<span class="icon-ok"></span> <?php echo JText::_('JSAVE') ?>
 				</button>
 			</div>
@@ -44,7 +42,7 @@ JFactory::getDocument()->addScriptDeclaration("
 			</div>
 		</div>
 
-		<hr class="hr-condensed"/>
+		<hr class="hr-condensed" />
 
 		<div id="page-site" class="tab-pane active">
 			<div class="row-fluid">
@@ -53,7 +51,7 @@ JFactory::getDocument()->addScriptDeclaration("
 			</div>
 		</div>
 
-		<input type="hidden" name="task" value=""/>
+		<input type="hidden" name="task" value="" />
 		<?php echo JHtml::_('form.token'); ?>
 
 		<!-- End Content -->

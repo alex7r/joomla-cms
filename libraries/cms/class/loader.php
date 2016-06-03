@@ -32,7 +32,7 @@ class JClassLoader
 	/**
 	 * Constructor
 	 *
-	 * @param   ClassLoader $loader Composer autoloader
+	 * @param   ClassLoader  $loader  Composer autoloader
 	 *
 	 * @since   3.4
 	 */
@@ -44,7 +44,7 @@ class JClassLoader
 	/**
 	 * Loads the given class or interface.
 	 *
-	 * @param   string $class The name of the class
+	 * @param   string  $class  The name of the class
 	 *
 	 * @return  boolean|null  True if loaded, null otherwise
 	 *

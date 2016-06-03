@@ -21,8 +21,8 @@ class JClientWrapperHelper
 	/**
 	 * Helper wrapper method for getCredentials
 	 *
-	 * @param   string  $client Client name, currently only 'ftp' is supported
-	 * @param   boolean $force  Forces re-creation of the login credentials. Set this to
+	 * @param   string   $client  Client name, currently only 'ftp' is supported
+	 * @param   boolean  $force   Forces re-creation of the login credentials. Set this to
 	 *
 	 * @return  array    Client layer configuration options, consisting of at least
 	 *
@@ -37,9 +37,9 @@ class JClientWrapperHelper
 	/**
 	 * Helper wrapper method for setCredentials
 	 *
-	 * @param   string $client Client name, currently only 'ftp' is supported
-	 * @param   string $user   Username
-	 * @param   string $pass   Password
+	 * @param   string  $client  Client name, currently only 'ftp' is supported
+	 * @param   string  $user    Username
+	 * @param   string  $pass    Password
 	 *
 	 * @return boolean  True if the given login credentials have been set and are valid
 	 *
@@ -54,7 +54,7 @@ class JClientWrapperHelper
 	/**
 	 * Helper wrapper method for hasCredentials
 	 *
-	 * @param   string $client Client name, currently only 'ftp' is supported
+	 * @param   string  $client  Client name, currently only 'ftp' is supported
 	 *
 	 * @return boolean  True if login credentials are available
 	 *
@@ -69,7 +69,7 @@ class JClientWrapperHelper
 	/**
 	 * Helper wrapper method for setCredentialsFromRequest
 	 *
-	 * @param   string $client The name of the client.
+	 * @param   string  $client  The name of the client.
 	 *
 	 * @return  mixed  True, if FTP settings; JError if using legacy tree
 	 *

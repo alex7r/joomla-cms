@@ -103,7 +103,7 @@ class JFormFieldEditor extends JFormFieldTextarea
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string $name The property name for which to the the value.
+	 * @param   string  $name  The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -130,8 +130,8 @@ class JFormFieldEditor extends JFormFieldTextarea
 	/**
 	 * Method to set certain otherwise inaccessible properties of the form field object.
 	 *
-	 * @param   string $name  The property name for which to the the value.
-	 * @param   mixed  $value The value of the property.
+	 * @param   string  $name   The property name for which to the the value.
+	 * @param   mixed   $value  The value of the property.
 	 *
 	 * @return  void
 	 *
@@ -167,13 +167,13 @@ class JFormFieldEditor extends JFormFieldTextarea
 				break;
 
 			case 'hide':
-				$value      = (string) $value;
+				$value = (string) $value;
 				$this->hide = $value ? explode(',', $value) : array();
 				break;
 
 			case 'editorType':
 				// Can be in the form of: editor="desired|alternative".
-				$this->editorType = explode('|', trim((string) $value));
+				$this->editorType  = explode('|', trim((string) $value));
 				break;
 
 			default:
@@ -184,9 +184,9 @@ class JFormFieldEditor extends JFormFieldTextarea
 	/**
 	 * Method to attach a JForm object to the field.
 	 *
-	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
-	 * @param   mixed            $value     The form field value to validate.
-	 * @param   string           $group     The field name group control value. This acts as as an array container for the field.
+	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed             $value    The form field value to validate.
+	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
 	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
 	 *
@@ -224,23 +224,11 @@ class JFormFieldEditor extends JFormFieldTextarea
 				$this->buttons = !empty($hide) ? explode(',', $buttons) : array();
 			}
 
-			$this->hide       = !empty($hide) ? explode(',', (string) $this->element['hide']) : array();
-			$this->editorType = !empty($editorType) ? explode('|', trim($editorType)) : array();
+			$this->hide        = !empty($hide) ? explode(',', (string) $this->element['hide']) : array();
+			$this->editorType  = !empty($editorType) ? explode('|', trim($editorType)) : array();
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Method to get the JEditor output for an onSave event.
-	 *
-	 * @return  string  The JEditor object output.
-	 *
-	 * @since   1.6
-	 */
-	public function save()
-	{
-		return $this->getEditor()->save($this->id);
 	}
 
 	/**
@@ -310,7 +298,7 @@ class JFormFieldEditor extends JFormFieldTextarea
 			// Create the JEditor instance based on the given editor.
 			if (is_null($editor))
 			{
-				$conf   = JFactory::getConfig();
+				$conf = JFactory::getConfig();
 				$editor = $conf->get('editor');
 			}
 
@@ -318,5 +306,17 @@ class JFormFieldEditor extends JFormFieldTextarea
 		}
 
 		return $this->editor;
+	}
+
+	/**
+	 * Method to get the JEditor output for an onSave event.
+	 *
+	 * @return  string  The JEditor object output.
+	 *
+	 * @since   1.6
+	 */
+	public function save()
+	{
+		return $this->getEditor()->save($this->id);
 	}
 }

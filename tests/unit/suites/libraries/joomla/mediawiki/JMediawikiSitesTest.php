@@ -52,13 +52,29 @@ class JMediawikiSitesTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '<message>Generic Error</message>';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JMediawikiSites($this->options, $this->client);
+	}
+
+	/**
 	 * Tests the getSiteInfo method
 	 *
 	 * @return void
 	 */
 	public function testGetSiteInfo()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -80,7 +96,7 @@ class JMediawikiSitesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetEvents()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -102,7 +118,7 @@ class JMediawikiSitesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetRecentChanges()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -124,7 +140,7 @@ class JMediawikiSitesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetProtectedTitles()
 	{
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -137,21 +153,5 @@ class JMediawikiSitesTest extends PHPUnit_Framework_TestCase
 			$this->object->getProtectedTitles(),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->options = new JRegistry;
-		$this->client  = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JMediawikiSites($this->options, $this->client);
 	}
 }

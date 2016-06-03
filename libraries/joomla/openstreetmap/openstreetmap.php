@@ -85,15 +85,15 @@ class JOpenstreetmap
 	/**
 	 * Constructor.
 	 *
-	 * @param   JOpenstreetmapOauth $oauth   Openstreetmap oauth client
-	 * @param   Registry            $options Openstreetmap options object
-	 * @param   JHttp               $client  The HTTP client object
+	 * @param   JOpenstreetmapOauth  $oauth    Openstreetmap oauth client
+	 * @param   Registry             $options  Openstreetmap options object
+	 * @param   JHttp                $client   The HTTP client object
 	 *
 	 * @since   13.1
 	 */
 	public function __construct(JOpenstreetmapOauth $oauth = null, Registry $options = null, JHttp $client = null)
 	{
-		$this->oauth   = $oauth;
+		$this->oauth = $oauth;
 		$this->options = isset($options) ? $options : new Registry;
 		$this->client  = isset($client) ? $client : new JHttp($this->options);
 
@@ -106,7 +106,7 @@ class JOpenstreetmap
 	/**
 	 * Method to get object instances
 	 *
-	 * @param   string $name Name of property to retrieve
+	 * @param   string  $name  Name of property to retrieve
 	 *
 	 * @return  JOpenstreetmapObject  Openstreetmap API object
 	 *
@@ -133,7 +133,7 @@ class JOpenstreetmap
 	/**
 	 * Get an option from the JOpenstreetmap instance.
 	 *
-	 * @param   string $key The name of the option to get.
+	 * @param   string  $key  The name of the option to get.
 	 *
 	 * @return  mixed  The option value.
 	 *
@@ -147,8 +147,8 @@ class JOpenstreetmap
 	/**
 	 * Set an option for the Openstreetmap instance.
 	 *
-	 * @param   string $key   The name of the option to set.
-	 * @param   mixed  $value The option value to set.
+	 * @param   string  $key    The name of the option to set.
+	 * @param   mixed   $value  The option value to set.
 	 *
 	 * @return  JOpenstreetmap  This object for method chaining.
 	 *

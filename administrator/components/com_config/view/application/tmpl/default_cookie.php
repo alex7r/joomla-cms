@@ -9,6 +9,6 @@
 
 defined('_JEXEC') or die;
 
-$this->name       = JText::_('COM_CONFIG_COOKIE_SETTINGS');
+$this->name = JText::_('COM_CONFIG_COOKIE_SETTINGS');
 $this->fieldsname = 'cookie';
 echo JLayoutHelper::render('joomla.content.options_default', $this);

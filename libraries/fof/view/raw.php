@@ -26,7 +26,7 @@ class FOFViewRaw extends FOFView
 	/**
 	 * Class constructor
 	 *
-	 * @param   array $config Configuration parameters
+	 * @param   array  $config  Configuration parameters
 	 */
 	public function __construct($config = array())
 	{
@@ -76,12 +76,12 @@ class FOFViewRaw extends FOFView
 		if (!FOFPlatform::getInstance()->isCli())
 		{
 			$platform = FOFPlatform::getInstance();
-			$perms    = (object) array(
-				'create'    => $platform->authorise('core.create', $this->input->getCmd('option', 'com_foobar')),
-				'edit'      => $platform->authorise('core.edit', $this->input->getCmd('option', 'com_foobar')),
-				'editown'   => $platform->authorise('core.edit.own', $this->input->getCmd('option', 'com_foobar')),
-				'editstate' => $platform->authorise('core.edit.state', $this->input->getCmd('option', 'com_foobar')),
-				'delete'    => $platform->authorise('core.delete', $this->input->getCmd('option', 'com_foobar')),
+			$perms = (object) array(
+					'create'	 => $platform->authorise('core.create'     , $this->input->getCmd('option', 'com_foobar')),
+					'edit'		 => $platform->authorise('core.edit'       , $this->input->getCmd('option', 'com_foobar')),
+					'editown'	 => $platform->authorise('core.edit.own'   , $this->input->getCmd('option', 'com_foobar')),
+					'editstate'	 => $platform->authorise('core.edit.state' , $this->input->getCmd('option', 'com_foobar')),
+					'delete'	 => $platform->authorise('core.delete'     , $this->input->getCmd('option', 'com_foobar')),
 			);
 
 			$this->aclperms = $perms;
@@ -92,7 +92,7 @@ class FOFViewRaw extends FOFView
 	/**
 	 * Displays the view
 	 *
-	 * @param   string $tpl The template to use
+	 * @param   string  $tpl  The template to use
 	 *
 	 * @return  boolean|null False if we can't render anything
 	 */
@@ -100,7 +100,7 @@ class FOFViewRaw extends FOFView
 	{
 		// Get the task set in the model
 		$model = $this->getModel();
-		$task  = $model->getState('task', 'browse');
+		$task = $model->getState('task', 'browse');
 
 		// Call the relevant method
 		$method_name = 'on' . ucfirst($task);
@@ -134,10 +134,44 @@ class FOFViewRaw extends FOFView
 	}
 
 	/**
+	 * Last chance to output something before rendering the view template
+	 *
+	 * @return  void
+	 */
+	protected function preRender()
+	{
+	}
+
+	/**
+	 * Last chance to output something after rendering the view template and
+	 * before returning to the caller
+	 *
+	 * @return  void
+	 */
+	protected function postRender()
+	{
+	}
+
+	/**
+	 * Executes before rendering the page for the Browse task.
+	 *
+	 * @param   string  $tpl  Subtemplate to use
+	 *
+	 * @return  boolean  Return true to allow rendering of the page
+	 */
+	protected function onBrowse($tpl = null)
+	{
+		// When in interactive browsing mode, save the state to the session
+		$this->getModel()->savestate(1);
+
+		return $this->onDisplay($tpl);
+	}
+
+	/**
 	 * Executes before rendering a generic page, default to actions necessary
 	 * for the Browse task.
 	 *
-	 * @param   string $tpl Subtemplate to use
+	 * @param   string  $tpl  Subtemplate to use
 	 *
 	 * @return  boolean  Return true to allow rendering of the page
 	 */
@@ -164,7 +198,7 @@ class FOFViewRaw extends FOFView
 		// Pass page params on frontend only
 		if (FOFPlatform::getInstance()->isFrontend())
 		{
-			$params       = JFactory::getApplication()->getParams();
+			$params = JFactory::getApplication()->getParams();
 			$this->params = $params;
 		}
 
@@ -172,22 +206,74 @@ class FOFViewRaw extends FOFView
 	}
 
 	/**
-	 * Last chance to output something before rendering the view template
+	 * Executes before rendering the page for the Add task.
 	 *
-	 * @return  void
+	 * @param   string  $tpl  Subtemplate to use
+	 *
+	 * @return  boolean  Return true to allow rendering of the page
 	 */
-	protected function preRender()
+	protected function onAdd($tpl = null)
 	{
+		JRequest::setVar('hidemainmenu', true);
+		$model = $this->getModel();
+		$this->item = $model->getItem();
+
+		return true;
 	}
 
 	/**
-	 * Last chance to output something after rendering the view template and
-	 * before returning to the caller
+	 * Executes before rendering the page for the Edit task.
 	 *
-	 * @return  void
+	 * @param   string  $tpl  Subtemplate to use
+	 *
+	 * @return  boolean  Return true to allow rendering of the page
 	 */
-	protected function postRender()
+	protected function onEdit($tpl = null)
 	{
+        // This perms are used only for hestetic reasons (ie showing toolbar buttons), "real" checks
+        // are made by the controller
+        // It seems that I can't edit records, maybe I can edit only this one due asset tracking?
+		if (!$this->perms->edit || !$this->perms->editown)
+        {
+            $model = $this->getModel();
+
+            if($model)
+            {
+                $table = $model->getTable();
+
+                // Ok, record is tracked, let's see if I can this record
+                if($table->isAssetsTracked())
+                {
+                    $platform = FOFPlatform::getInstance();
+
+                    if(!$this->perms->edit)
+                    {
+                        $this->perms->edit = $platform->authorise('core.edit', $table->getAssetName());
+                    }
+
+                    if(!$this->perms->editown)
+                    {
+                        $this->perms->editown = $platform->authorise('core.edit.own', $table->getAssetName());
+                    }
+                }
+            }
+        }
+
+		return $this->onAdd($tpl);
+	}
+
+	/**
+	 * Executes before rendering the page for the Read task.
+	 *
+	 * @param   string  $tpl  Subtemplate to use
+	 *
+	 * @return  boolean  Return true to allow rendering of the page
+	 */
+	protected function onRead($tpl = null)
+	{
+		// All I need is to read the record
+
+		return $this->onAdd($tpl);
 	}
 
 	/**
@@ -222,7 +308,7 @@ class FOFViewRaw extends FOFView
 		}
 
 		$orderingColumn = $table->getColumnAlias('ordering');
-		$fields         = $table->getTableFields();
+		$fields = $table->getTableFields();
 
 		if (!is_array($fields) || !array_key_exists($orderingColumn, $fields))
 		{
@@ -230,7 +316,7 @@ class FOFViewRaw extends FOFView
 		}
 
 		$listOrder = $this->escape($model->getState('filter_order', null, 'cmd'));
-		$listDirn  = $this->escape($model->getState('filter_order_Dir', 'ASC', 'cmd'));
+		$listDirn = $this->escape($model->getState('filter_order_Dir', 'ASC', 'cmd'));
 		$saveOrder = $listOrder == $orderingColumn;
 
 		if ($saveOrder)
@@ -240,7 +326,7 @@ class FOFViewRaw extends FOFView
 		}
 
 		return array(
-			'saveOrder'      => $saveOrder,
+			'saveOrder'		 => $saveOrder,
 			'orderingColumn' => $orderingColumn
 		);
 	}
@@ -266,91 +352,5 @@ class FOFViewRaw extends FOFView
 	public function getPerms()
 	{
 		return $this->perms;
-	}
-
-	/**
-	 * Executes before rendering the page for the Browse task.
-	 *
-	 * @param   string $tpl Subtemplate to use
-	 *
-	 * @return  boolean  Return true to allow rendering of the page
-	 */
-	protected function onBrowse($tpl = null)
-	{
-		// When in interactive browsing mode, save the state to the session
-		$this->getModel()->savestate(1);
-
-		return $this->onDisplay($tpl);
-	}
-
-	/**
-	 * Executes before rendering the page for the Edit task.
-	 *
-	 * @param   string $tpl Subtemplate to use
-	 *
-	 * @return  boolean  Return true to allow rendering of the page
-	 */
-	protected function onEdit($tpl = null)
-	{
-		// This perms are used only for hestetic reasons (ie showing toolbar buttons), "real" checks
-		// are made by the controller
-		// It seems that I can't edit records, maybe I can edit only this one due asset tracking?
-		if (!$this->perms->edit || !$this->perms->editown)
-		{
-			$model = $this->getModel();
-
-			if ($model)
-			{
-				$table = $model->getTable();
-
-				// Ok, record is tracked, let's see if I can this record
-				if ($table->isAssetsTracked())
-				{
-					$platform = FOFPlatform::getInstance();
-
-					if (!$this->perms->edit)
-					{
-						$this->perms->edit = $platform->authorise('core.edit', $table->getAssetName());
-					}
-
-					if (!$this->perms->editown)
-					{
-						$this->perms->editown = $platform->authorise('core.edit.own', $table->getAssetName());
-					}
-				}
-			}
-		}
-
-		return $this->onAdd($tpl);
-	}
-
-	/**
-	 * Executes before rendering the page for the Add task.
-	 *
-	 * @param   string $tpl Subtemplate to use
-	 *
-	 * @return  boolean  Return true to allow rendering of the page
-	 */
-	protected function onAdd($tpl = null)
-	{
-		JRequest::setVar('hidemainmenu', true);
-		$model      = $this->getModel();
-		$this->item = $model->getItem();
-
-		return true;
-	}
-
-	/**
-	 * Executes before rendering the page for the Read task.
-	 *
-	 * @param   string $tpl Subtemplate to use
-	 *
-	 * @return  boolean  Return true to allow rendering of the page
-	 */
-	protected function onRead($tpl = null)
-	{
-		// All I need is to read the record
-
-		return $this->onAdd($tpl);
 	}
 }

@@ -22,8 +22,8 @@ class ModFinderHelper
 	 * Method to get hidden input fields for a get form so that control variables
 	 * are not lost upon form submission.
 	 *
-	 * @param   string  $route     The route to the page. [optional]
-	 * @param   integer $paramItem The menu item ID. (@since 3.1) [optional]
+	 * @param   string   $route      The route to the page. [optional]
+	 * @param   integer  $paramItem  The menu item ID. (@since 3.1) [optional]
 	 *
 	 * @return  string  A string of hidden input form fields
 	 *
@@ -35,7 +35,7 @@ class ModFinderHelper
 		$needId = !JUri::getInstance($route)->getVar('Itemid');
 
 		$fields = array();
-		$uri    = JUri::getInstance(JRoute::_($route));
+		$uri = JUri::getInstance(JRoute::_($route));
 		$uri->delVar('q');
 
 		// Create hidden input elements for each part of the URI.
@@ -57,7 +57,7 @@ class ModFinderHelper
 	/**
 	 * Get Smart Search query object.
 	 *
-	 * @param   \Joomla\Registry\Registry $params Module parameters.
+	 * @param   \Joomla\Registry\Registry  $params  Module parameters.
 	 *
 	 * @return  FinderIndexerQuery object
 	 *
@@ -71,7 +71,7 @@ class ModFinderHelper
 		$filter  = JFilterInput::getInstance();
 
 		// Get the static taxonomy filters.
-		$options           = array();
+		$options = array();
 		$options['filter'] = ($request->get('f', 0, 'int') != 0) ? $request->get('f', '', 'int') : $params->get('searchfilter');
 		$options['filter'] = $filter->clean($options['filter'], 'int');
 

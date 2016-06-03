@@ -157,7 +157,7 @@ class JLogLoggerCallbackTest extends PHPUnit_Framework_TestCase
 	public function testConstructor06()
 	{
 		// Use a defined object method
-		$obj      = new JLogLoggerCallbackTestHelper;
+		$obj = new JLogLoggerCallbackTestHelper;
 		$callback = array($obj, 'callback02');
 
 		// Setup the basic configuration.
@@ -205,7 +205,7 @@ class JLogLoggerCallbackTest extends PHPUnit_Framework_TestCase
 			'callback' => $callback
 		);
 		$logger = new JLogLoggerCallbackInspector($config);
-		$entry  = new JLogEntry('Testing Entry');
+		$entry = new JLogEntry('Testing Entry');
 
 		$logger->addEntry($entry);
 		$this->assertEquals(JLogLoggerCallbackTestHelper::$lastEntry, $entry, 'Line: ' . __LINE__);

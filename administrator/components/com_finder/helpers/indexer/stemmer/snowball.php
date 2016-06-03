@@ -21,8 +21,8 @@ class FinderIndexerStemmerSnowball extends FinderIndexerStemmer
 	/**
 	 * Method to stem a token and return the root.
 	 *
-	 * @param   string $token The token to stem.
-	 * @param   string $lang  The language of the token.
+	 * @param   string  $token  The token to stem.
+	 * @param   string  $lang   The language of the token.
 	 *
 	 * @return  string  The root token.
 	 *
@@ -36,9 +36,9 @@ class FinderIndexerStemmerSnowball extends FinderIndexerStemmer
 		// If language is All then try to get site default language.
 		if ($lang == '*' && $defaultLang == '')
 		{
-			$languages   = JLanguageHelper::getLanguages();
+			$languages = JLanguageHelper::getLanguages();
 			$defaultLang = isset($languages[0]->sef) ? $languages[0]->sef : '*';
-			$lang        = $defaultLang;
+			$lang = $defaultLang;
 		}
 
 		// Stem the token if it is not in the cache.

@@ -16,7 +16,7 @@ class JModelMock
 	/**
 	 * Creates and instance of the mock JModel object.
 	 *
-	 * @param   object $test A test object.
+	 * @param   object  $test  A test object.
 	 *
 	 * @return  object
 	 *

@@ -24,7 +24,7 @@ class MenusHelper
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string $vName The name of the active view.
+	 * @param   string  $vName  The name of the active view.
 	 *
 	 * @return  void
 	 *
@@ -47,11 +47,11 @@ class MenusHelper
 	/**
 	 * Gets a list of the actions that can be performed.
 	 *
-	 * @param   integer $parentId The menu ID.
+	 * @param   integer  $parentId  The menu ID.
 	 *
 	 * @return  JObject
 	 *
-	 * @since       1.6
+	 * @since   1.6
 	 * @deprecated  3.2  Use JHelperContent::getActions() instead
 	 */
 	public static function getActions($parentId = 0)
@@ -68,7 +68,7 @@ class MenusHelper
 	/**
 	 * Gets a standard form of a link for lookups.
 	 *
-	 * @param   mixed $request A link string or array of request variables.
+	 * @param   mixed  $request  A link string or array of request variables.
 	 *
 	 * @return  mixed  A link in standard option-view-layout form, or false if the supplied response is invalid.
 	 *
@@ -122,7 +122,7 @@ class MenusHelper
 	 */
 	public static function getMenuTypes()
 	{
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('a.menutype')
 			->from('#__menu_types AS a');
@@ -134,11 +134,11 @@ class MenusHelper
 	/**
 	 * Get a list of menu links for one or all menus.
 	 *
-	 * @param   string  $menuType  An option menu to filter the list on, otherwise all menu links are returned as a grouped array.
-	 * @param   integer $parentId  An optional parent ID to pivot results around.
-	 * @param   integer $mode      An optional mode. If parent ID is set and mode=2, the parent and children are excluded from the list.
-	 * @param   array   $published An optional array of states
-	 * @param   array   $languages Optional array of specify which languages we want to filter
+	 * @param   string   $menuType   An option menu to filter the list on, otherwise all menu links are returned as a grouped array.
+	 * @param   integer  $parentId   An optional parent ID to pivot results around.
+	 * @param   integer  $mode       An optional mode. If parent ID is set and mode=2, the parent and children are excluded from the list.
+	 * @param   array    $published  An optional array of states
+	 * @param   array    $languages  Optional array of specify which languages we want to filter
 	 *
 	 * @return  array
 	 *
@@ -146,7 +146,7 @@ class MenusHelper
 	 */
 	public static function getMenuLinks($menuType = null, $parentId = 0, $mode = 0, $published = array(), $languages = array())
 	{
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('DISTINCT(a.id) AS value,
 					  a.title AS text,
@@ -247,8 +247,8 @@ class MenusHelper
 
 			foreach ($menuTypes as &$type)
 			{
-				$rlu[$type->menutype] = &$type;
-				$type->links          = array();
+				$rlu[$type->menutype] = & $type;
+				$type->links = array();
 			}
 
 			// Loop through the list of menu links.
@@ -256,7 +256,7 @@ class MenusHelper
 			{
 				if (isset($rlu[$link->menutype]))
 				{
-					$rlu[$link->menutype]->links[] = &$link;
+					$rlu[$link->menutype]->links[] = & $link;
 
 					// Cleanup garbage.
 					unset($link->menutype);
@@ -274,7 +274,7 @@ class MenusHelper
 	/**
 	 * Get the items associations
 	 *
-	 * @param   integer $pk Menu item id
+	 * @param   integer  $pk  Menu item id
 	 *
 	 * @return  array
 	 *
@@ -283,7 +283,7 @@ class MenusHelper
 	public static function getAssociations($pk)
 	{
 		$langAssociations = JLanguageAssociations::getAssociations('com_menus', '#__menu', 'com_menus.item', $pk, 'id', '', '');
-		$associations     = array();
+		$associations = array();
 
 		foreach ($langAssociations as $langAssociation)
 		{

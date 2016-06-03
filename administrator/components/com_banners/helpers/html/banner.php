@@ -32,8 +32,8 @@ abstract class JHtmlBanner
 			"\n",
 			array(
 				'<label id="batch-client-lbl" for="batch-client" class="hasTooltip" title="'
-				. JHtml::_('tooltipText', 'COM_BANNERS_BATCH_CLIENT_LABEL', 'COM_BANNERS_BATCH_CLIENT_LABEL_DESC')
-				. '">',
+					. JHtml::_('tooltipText', 'COM_BANNERS_BATCH_CLIENT_LABEL', 'COM_BANNERS_BATCH_CLIENT_LABEL_DESC')
+					. '">',
 				JText::_('COM_BANNERS_BATCH_CLIENT_LABEL'),
 				'</label>',
 				'<select name="batch[client_id]" id="batch-client-id">',
@@ -54,7 +54,7 @@ abstract class JHtmlBanner
 	 */
 	public static function clientlist()
 	{
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('id As value, name As text')
 			->from('#__banner_clients AS a')
@@ -78,10 +78,10 @@ abstract class JHtmlBanner
 	/**
 	 * Returns a pinned state on a grid
 	 *
-	 * @param   integer $value    The state value.
-	 * @param   integer $i        The row index
-	 * @param   boolean $enabled  An optional setting for access control on the action.
-	 * @param   string  $checkbox An optional prefix for checkboxes.
+	 * @param   integer  $value     The state value.
+	 * @param   integer  $i         The row index
+	 * @param   boolean  $enabled   An optional setting for access control on the action.
+	 * @param   string   $checkbox  An optional prefix for checkboxes.
 	 *
 	 * @return  string   The Html code
 	 *

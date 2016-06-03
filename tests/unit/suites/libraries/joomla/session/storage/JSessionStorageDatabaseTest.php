@@ -23,6 +23,19 @@ class JSessionStorageDatabaseTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->object = JSessionStorage::getInstance('Database');
+	}
+
+	/**
 	 * Test...
 	 *
 	 * @todo Implement testRead().
@@ -80,19 +93,6 @@ class JSessionStorageDatabaseTest extends PHPUnit_Framework_TestCase
 		$this->markTestIncomplete(
 			'This test has not been implemented yet.'
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object = JSessionStorage::getInstance('Database');
 	}
 
 }

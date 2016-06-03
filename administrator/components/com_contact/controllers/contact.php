@@ -19,32 +19,9 @@ use Joomla\Utilities\ArrayHelper;
 class ContactControllerContact extends JControllerForm
 {
 	/**
-	 * Method to run batch operations.
-	 *
-	 * @param   object $model The model.
-	 *
-	 * @return  boolean   True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	public function batch($model = null)
-	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-		// Set the model
-		/** @var ContactModelContact $model */
-		$model = $this->getModel('Contact', '', array());
-
-		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_contact&view=contacts' . $this->getRedirectToListAppend(), false));
-
-		return parent::batch($model);
-	}
-
-	/**
 	 * Method override to check if you can add a new record.
 	 *
-	 * @param   array $data An array of input data.
+	 * @param   array  $data  An array of input data.
 	 *
 	 * @return  boolean
 	 *
@@ -53,7 +30,7 @@ class ContactControllerContact extends JControllerForm
 	protected function allowAdd($data = array())
 	{
 		$categoryId = ArrayHelper::getValue($data, 'catid', $this->input->getInt('filter_category_id'), 'int');
-		$allow      = null;
+		$allow = null;
 
 		if ($categoryId)
 		{
@@ -73,8 +50,8 @@ class ContactControllerContact extends JControllerForm
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param   array  $data An array of input data.
-	 * @param   string $key  The name of the key for the primary key.
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *
@@ -82,7 +59,7 @@ class ContactControllerContact extends JControllerForm
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		$recordId   = (int) isset($data[$key]) ? $data[$key] : 0;
+		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
 		$categoryId = 0;
 
 		if ($recordId)
@@ -98,5 +75,28 @@ class ContactControllerContact extends JControllerForm
 
 		// Since there is no asset tracking, revert to the component permissions.
 		return parent::allowEdit($data, $key);
+	}
+
+	/**
+	 * Method to run batch operations.
+	 *
+	 * @param   object  $model  The model.
+	 *
+	 * @return  boolean   True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
+	 */
+	public function batch($model = null)
+	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		// Set the model
+		/** @var ContactModelContact $model */
+		$model = $this->getModel('Contact', '', array());
+
+		// Preset the redirect
+		$this->setRedirect(JRoute::_('index.php?option=com_contact&view=contacts' . $this->getRedirectToListAppend(), false));
+
+		return parent::batch($model);
 	}
 }

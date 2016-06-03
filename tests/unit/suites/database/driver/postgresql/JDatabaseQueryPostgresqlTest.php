@@ -72,11 +72,11 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	{
 		return array(
 			// $type, $conditions
-			array('', 'b ON b.id = a.id'),
-			array('INNER', 'b ON b.id = a.id'),
-			array('OUTER', 'b ON b.id = a.id'),
-			array('LEFT', 'b ON b.id = a.id'),
-			array('RIGHT', 'b ON b.id = a.id'),
+			array('', 		'b ON b.id = a.id'),
+			array('INNER',	'b ON b.id = a.id'),
+			array('OUTER',	'b ON b.id = a.id'),
+			array('LEFT',	'b ON b.id = a.id'),
+			array('RIGHT',	'b ON b.id = a.id'),
 		);
 	}
 
@@ -86,7 +86,7 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	 * We use this method to ensure that JDatabaseQuery's quoteName method uses the
 	 * the database object's quoteName method.
 	 *
-	 * @param   string $text The input text.
+	 * @param   string  $text  The input text.
 	 *
 	 * @return  string
 	 *
@@ -100,7 +100,7 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	/**
 	 * Callback for the dbo getQuery method.
 	 *
-	 * @param   boolean $new True to get a new query, false to get the last query.
+	 * @param   boolean  $new  True to get a new query, false to get the last query.
 	 *
 	 * @return  JDatabaseQueryPostgresql
 	 *
@@ -119,6 +119,21 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	}
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->dbo = $this->getMockDatabase('Postgresql', array(), '1970-01-01 00:00:00', 'Y-m-d H:i:s');
+
+		$this->_instance = new JDatabaseQueryPostgresql($this->dbo);
+	}
+
+	/**
 	 * Test for the JDatabaseQueryPostgresql::__string method for a 'select' case.
 	 *
 	 * @return  void
@@ -134,7 +149,7 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 			->innerJoin('b ON b.id = a.id')
 			->where('b.id = 1')
 			->group('a.id')
-			->having('COUNT(a.id) > 3')
+				->having('COUNT(a.id) > 3')
 			->order('a.id');
 
 		$this->assertEquals(
@@ -298,7 +313,7 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	 */
 	public function test__toStringInsert_subquery()
 	{
-		$q    = new JDatabaseQueryPostgresql($this->dbo);
+		$q = new JDatabaseQueryPostgresql($this->dbo);
 		$subq = new JDatabaseQueryPostgresql($this->dbo);
 		$subq->select('col2')->where('a=1');
 
@@ -642,8 +657,8 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	 */
 	public function testInnerJoin()
 	{
-		$q         = new JDatabaseQueryPostgresql($this->dbo);
-		$q2        = new JDatabaseQueryPostgresql($this->dbo);
+		$q  = new JDatabaseQueryPostgresql($this->dbo);
+		$q2 = new JDatabaseQueryPostgresql($this->dbo);
 		$condition = 'foo ON foo.id = bar.id';
 
 		$this->assertSame($q, $q->innerJoin($condition));
@@ -659,12 +674,12 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	/**
 	 * Test for JOIN clause using dataprovider to test all types of join.
 	 *
-	 * @param   string $type       Type of JOIN, could be INNER, OUTER, LEFT, RIGHT
-	 * @param   string $conditions Join condition
+	 * @param   string  $type        Type of JOIN, could be INNER, OUTER, LEFT, RIGHT
+	 * @param   string  $conditions  Join condition
 	 *
 	 * @return  void
 	 *
-	 * @since         11.3
+	 * @since   11.3
 	 * @dataProvider  dataTestJoin
 	 */
 	public function testJoin($type, $conditions)
@@ -687,8 +702,8 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	 */
 	public function testLeftJoin()
 	{
-		$q         = new JDatabaseQueryPostgresql($this->dbo);
-		$q2        = new JDatabaseQueryPostgresql($this->dbo);
+		$q  = new JDatabaseQueryPostgresql($this->dbo);
+		$q2 = new JDatabaseQueryPostgresql($this->dbo);
 		$condition = 'foo ON foo.id = bar.id';
 
 		$this->assertSame($q, $q->leftJoin($condition));
@@ -704,12 +719,12 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	/**
 	 * Tests the quoteName method.
 	 *
-	 * @param   boolean $quoted   The value of the quoted argument.
-	 * @param   string  $expected The expected result.
+	 * @param   boolean  $quoted    The value of the quoted argument.
+	 * @param   string   $expected  The expected result.
 	 *
 	 * @return  void
 	 *
-	 * @since         11.3
+	 * @since   11.3
 	 * @dataProvider  dataTestNullDate
 	 */
 	public function testNullDate($quoted, $expected)
@@ -752,8 +767,8 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	 */
 	public function testOuterJoin()
 	{
-		$q         = new JDatabaseQueryPostgresql($this->dbo);
-		$q2        = new JDatabaseQueryPostgresql($this->dbo);
+		$q  = new JDatabaseQueryPostgresql($this->dbo);
+		$q2 = new JDatabaseQueryPostgresql($this->dbo);
 		$condition = 'foo ON foo.id = bar.id';
 
 		$this->assertSame($q, $q->outerJoin($condition));
@@ -769,13 +784,13 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	/**
 	 * Tests the quoteName method.
 	 *
-	 * @param   boolean $text     The value to be quoted.
-	 * @param   boolean $escape   True to escape the string, false to leave it unchanged.
-	 * @param   string  $expected The expected result.
+	 * @param   boolean  $text      The value to be quoted.
+	 * @param   boolean  $escape    True to escape the string, false to leave it unchanged.
+	 * @param   string   $expected  The expected result.
 	 *
 	 * @return  void
 	 *
-	 * @since         11.3
+	 * @since   11.3
 	 * @dataProvider  dataTestQuote
 	 */
 	public function testQuote($text, $escape, $expected)
@@ -814,8 +829,8 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	 */
 	public function testRightJoin()
 	{
-		$q         = new JDatabaseQueryPostgresql($this->dbo);
-		$q2        = new JDatabaseQueryPostgresql($this->dbo);
+		$q  = new JDatabaseQueryPostgresql($this->dbo);
+		$q2 = new JDatabaseQueryPostgresql($this->dbo);
 		$condition = 'foo ON foo.id = bar.id';
 
 		$this->assertSame($q, $q->rightJoin($condition));
@@ -1027,24 +1042,24 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	{
 		return array(
 			// date, interval, datepart, expected
-			'Add date'      => array('2008-12-31', '1', 'day', "timestamp '2008-12-31' + interval '1 day'"),
-			'Subtract date' => array('2008-12-31', '-1', 'day', "timestamp '2008-12-31' - interval '1 day'"),
-			'Add datetime'  => array('2008-12-31 23:59:59', '1', 'day', "timestamp '2008-12-31 23:59:59' + interval '1 day'"),
+			'Add date'		=> array('2008-12-31', '1', 'day', "timestamp '2008-12-31' + interval '1 day'"),
+			'Subtract date'	=> array('2008-12-31', '-1', 'day', "timestamp '2008-12-31' - interval '1 day'"),
+			'Add datetime'	=> array('2008-12-31 23:59:59', '1', 'day', "timestamp '2008-12-31 23:59:59' + interval '1 day'"),
 		);
 	}
 
 	/**
 	 * Tests the JDatabasePostgresqlQuery::DateAdd method
 	 *
-	 * @param   datetime $date     The date or datetime to add to.
-	 * @param   string   $interval The maximum length of the text.
-	 * @param   string   $datePart The part of the date to be added to (such as day or micosecond).
-	 * @param   string   $expected The expected result.
+	 * @param   datetime  $date      The date or datetime to add to.
+	 * @param   string    $interval  The maximum length of the text.
+	 * @param   string    $datePart  The part of the date to be added to (such as day or micosecond).
+	 * @param   string    $expected  The expected result.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedDateAdd
-	 * @since         13.1
+	 * @since   13.1
 	 */
 	public function testDateAdd($date, $interval, $datePart, $expected)
 	{
@@ -1052,20 +1067,5 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 			$expected,
 			$this->_instance->dateAdd($date, $interval, $datePart)
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->dbo = $this->getMockDatabase('Postgresql', array(), '1970-01-01 00:00:00', 'Y-m-d H:i:s');
-
-		$this->_instance = new JDatabaseQueryPostgresql($this->dbo);
 	}
 }

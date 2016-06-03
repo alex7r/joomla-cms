@@ -28,7 +28,7 @@ class ModWhosonlineHelper
 		$db = JFactory::getDbo();
 
 		// Calculate number of guests and users
-		$result      = array();
+		$result	     = array();
 		$user_array  = 0;
 		$guest_array = 0;
 
@@ -55,13 +55,13 @@ class ModWhosonlineHelper
 				// If guest increase guest count by 1
 				if ($session->guest == 1)
 				{
-					$guest_array++;
+					$guest_array ++;
 				}
 
 				// If member increase member count by 1
 				if ($session->guest == 0)
 				{
-					$user_array++;
+					$user_array ++;
 				}
 			}
 		}
@@ -75,7 +75,7 @@ class ModWhosonlineHelper
 	/**
 	 * Show online member names
 	 *
-	 * @param   mixed $params The parameters
+	 * @param   mixed  $params  The parameters
 	 *
 	 * @return  array   (array) $db->loadObjectList()  The names of the online users.
 	 *

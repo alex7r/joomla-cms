@@ -27,6 +27,45 @@ class JFormFieldSpacerTest extends TestCase
 	protected $backupServer;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Test the getInput method.
 	 *
 	 * @return void
@@ -54,16 +93,6 @@ class JFormFieldSpacerTest extends TestCase
 			$this->greaterThan(0),
 			'Line:' . __LINE__ . ' The getInput method should return something without error.'
 		);
-	}
-
-	/**
-	 * Test the getTitle method.
-	 *
-	 * @return void
-	 */
-	public function testGetTitle()
-	{
-		$this->testGetLabel();
 	}
 
 	/**
@@ -170,41 +199,12 @@ class JFormFieldSpacerTest extends TestCase
 	}
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
+	 * Test the getTitle method.
 	 *
-	 * @return  void
-	 *
-	 * @since   3.1
+	 * @return void
 	 */
-	protected function setUp()
+	public function testGetTitle()
 	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST']   = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
+		$this->testGetLabel();
 	}
 }

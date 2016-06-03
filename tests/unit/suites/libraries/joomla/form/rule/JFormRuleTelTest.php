@@ -24,7 +24,7 @@ class JFormRuleTelTest extends TestCase
 	public function testTel()
 	{
 		$rule = new JFormRuleTel;
-		$xml  = simplexml_load_string('<form><field name="tel1" plan="NANP" />
+		$xml = simplexml_load_string('<form><field name="tel1" plan="NANP" />
 			<field name="tel2" plan="ITU-T" /><field name="tel3" plan="EPP" />
 			<field name="tel4" /></form>');
 

@@ -19,10 +19,10 @@ class MenusControllerMenu extends JControllerForm
 	/**
 	 * Dummy method to redirect back to standard controller
 	 *
-	 * @param   boolean $cachable  If true, the view output will be cached.
-	 * @param   array   $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean  $cachable   If true, the view output will be cached.
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
-	 * @return  JController        This object to support chaining.
+	 * @return  JController		This object to support chaining.
 	 *
 	 * @since   1.5
 	 */
@@ -34,8 +34,8 @@ class MenusControllerMenu extends JControllerForm
 	/**
 	 * Method to save a menu item.
 	 *
-	 * @param   string $key    The name of the primary key of the URL variable.
-	 * @param   string $urlVar The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return  boolean  True if successful, false otherwise.
 	 *

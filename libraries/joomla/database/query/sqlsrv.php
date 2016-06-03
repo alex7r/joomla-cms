@@ -51,7 +51,7 @@ class JDatabaseQuerySqlsrv extends JDatabaseQuery implements JDatabaseQueryLimit
 	/**
 	 * Magic function to convert the query to a string.
 	 *
-	 * @return  string    The completed query.
+	 * @return  string	The completed query.
 	 *
 	 * @since   11.1
 	 */
@@ -117,7 +117,7 @@ class JDatabaseQuerySqlsrv extends JDatabaseQuery implements JDatabaseQueryLimit
 						$query .= (string) $this->columns;
 					}
 
-					$elements  = $this->insert->getElements();
+					$elements = $this->insert->getElements();
 					$tableName = array_shift($elements);
 
 					$query .= 'VALUES ';
@@ -200,7 +200,7 @@ class JDatabaseQuerySqlsrv extends JDatabaseQuery implements JDatabaseQueryLimit
 	 *
 	 * Ensure that the value is properly quoted before passing to the method.
 	 *
-	 * @param   string $value The value to cast as a char.
+	 * @param   string  $value  The value to cast as a char.
 	 *
 	 * @return  string  Returns the cast value.
 	 *
@@ -214,9 +214,9 @@ class JDatabaseQuerySqlsrv extends JDatabaseQuery implements JDatabaseQueryLimit
 	/**
 	 * Gets the function to determine the length of a character string.
 	 *
-	 * @param   string $field     A value.
-	 * @param   string $operator  Comparison operator between charLength integer value and $condition
-	 * @param   string $condition Integer value to compare charLength with.
+	 * @param   string  $field      A value.
+	 * @param   string  $operator   Comparison operator between charLength integer value and $condition
+	 * @param   string  $condition  Integer value to compare charLength with.
 	 *
 	 * @return  string  The required char length call.
 	 *
@@ -230,8 +230,8 @@ class JDatabaseQuerySqlsrv extends JDatabaseQuery implements JDatabaseQueryLimit
 	/**
 	 * Concatenates an array of column names or values.
 	 *
-	 * @param   array  $values    An array of values to concatenate.
-	 * @param   string $separator As separator to place between each value.
+	 * @param   array   $values     An array of values to concatenate.
+	 * @param   string  $separator  As separator to place between each value.
 	 *
 	 * @return  string  The concatenated values.
 	 *
@@ -264,7 +264,7 @@ class JDatabaseQuerySqlsrv extends JDatabaseQuery implements JDatabaseQueryLimit
 	/**
 	 * Get the length of a string in bytes.
 	 *
-	 * @param   string $value The string to measure.
+	 * @param   string  $value  The string to measure.
 	 *
 	 * @return  integer
 	 *
@@ -281,9 +281,9 @@ class JDatabaseQuerySqlsrv extends JDatabaseQuery implements JDatabaseQueryLimit
 	 * $query->select($query->dateAdd());
 	 * Prefixing the interval with a - (negative sign) will cause subtraction to be used.
 	 *
-	 * @param   datetime $date     The date to add to; type may be time or datetime.
-	 * @param   string   $interval The string representation of the appropriate number of units
-	 * @param   string   $datePart The part of the date to perform the addition on
+	 * @param   datetime  $date      The date to add to; type may be time or datetime.
+	 * @param   string    $interval  The string representation of the appropriate number of units
+	 * @param   string    $datePart  The part of the date to perform the addition on
 	 *
 	 * @return  string  The string with the appropriate sql for addition of dates
 	 *
@@ -301,9 +301,9 @@ class JDatabaseQuerySqlsrv extends JDatabaseQuery implements JDatabaseQueryLimit
 	 * additions to make the query limited to a particular number of
 	 * results, or start at a particular offset.
 	 *
-	 * @param   string  $query  The query in string format
-	 * @param   integer $limit  The limit for the result set
-	 * @param   integer $offset The offset for the result set
+	 * @param   string   $query   The query in string format
+	 * @param   integer  $limit   The limit for the result set
+	 * @param   integer  $offset  The offset for the result set
 	 *
 	 * @return  string
 	 *
@@ -343,8 +343,8 @@ class JDatabaseQuerySqlsrv extends JDatabaseQuery implements JDatabaseQueryLimit
 	 * $query->setLimit(100, 0); (retrieve 100 rows, starting at first record)
 	 * $query->setLimit(50, 50); (retrieve 50 rows, starting at 50th record)
 	 *
-	 * @param   integer $limit  The limit for the result set
-	 * @param   integer $offset The offset for the result set
+	 * @param   integer  $limit   The limit for the result set
+	 * @param   integer  $offset  The offset for the result set
 	 *
 	 * @return  JDatabaseQuery  Returns this object to allow chaining.
 	 *
@@ -364,7 +364,7 @@ class JDatabaseQuerySqlsrv extends JDatabaseQuery implements JDatabaseQueryLimit
 	 * Usage:
 	 * $query->group('id');
 	 *
-	 * @param   mixed $columns A string or array of ordering columns.
+	 * @param   mixed  $columns  A string or array of ordering columns.
 	 *
 	 * @return  JDatabaseQuery  Returns this object to allow chaining.
 	 *
@@ -376,13 +376,13 @@ class JDatabaseQuerySqlsrv extends JDatabaseQuery implements JDatabaseQueryLimit
 		is_string($columns) && $columns = explode(',', str_replace(" ", "", $columns));
 
 		// Get the _formatted_ FROM string and remove everything except `table AS alias`
-		$fromStr = str_replace(array("[", "]"), "", str_replace("#__", $this->db->getPrefix(), str_replace("FROM ", "", (string) $this->from)));
+		$fromStr = str_replace(array("[","]"), "", str_replace("#__", $this->db->getPrefix(), str_replace("FROM ", "", (string) $this->from)));
 
 		// Start setting up an array of alias => table
 		list($table, $alias) = preg_split("/\sAS\s/i", $fromStr);
 
 		$tmpCols = $this->db->getTableColumns(trim($table));
-		$cols    = array();
+		$cols = array();
 
 		foreach ($tmpCols as $name => $type)
 		{
@@ -435,7 +435,7 @@ class JDatabaseQuerySqlsrv extends JDatabaseQuery implements JDatabaseQueryLimit
 
 				// Get the table name
 				$tableColumns = preg_grep("/{$aliasStar}\.+/", $cols);
-				$columns      = array_merge($columns, $tableColumns);
+				$columns = array_merge($columns, $tableColumns);
 			}
 		}
 

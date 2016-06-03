@@ -57,7 +57,7 @@ class InstallationControllerInstallEmail extends JControllerBase
 		$subject = JText::sprintf(JText::_('INSTL_EMAIL_SUBJECT'), $options['site_name']);
 
 		// Prepare email body
-		$body   = array();
+		$body = array();
 		$body[] = JText::sprintf(JText::_('INSTL_EMAIL_HEADING'), $options['site_name']);
 		$body[] = '';
 		$body[] = array(JText::_('INSTL_SITE_NAME_LABEL'), $options['site_name']);
@@ -91,7 +91,7 @@ class InstallationControllerInstallEmail extends JControllerBase
 
 			if ($options['summary_email_passwords'])
 			{
-				$body[] = array(JText::_('INSTL_FTP_PASSWORD_LABEL'), $options['ftp_pass']);
+				$body[] = array( JText::_('INSTL_FTP_PASSWORD_LABEL'), $options['ftp_pass']);
 			}
 
 			$body[] = array(JText::_('INSTL_FTP_HOST_LABEL'), $options['ftp_host']);
@@ -127,7 +127,7 @@ class InstallationControllerInstallEmail extends JControllerBase
 		$mail->setSubject($subject);
 		$mail->setBody($body);
 
-		$r       = new stdClass;
+		$r = new stdClass;
 		$r->view = 'complete';
 
 		try
@@ -145,7 +145,7 @@ class InstallationControllerInstallEmail extends JControllerBase
 	/**
 	 * Prepares a title line for the e-mail
 	 *
-	 * @param   string $title The title pre-formatting
+	 * @param   string  $title  The title pre-formatting
 	 *
 	 * @return  string
 	 *

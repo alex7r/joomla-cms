@@ -19,7 +19,7 @@ class UsersModelLevels extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -39,17 +39,108 @@ class UsersModelLevels extends JModelList
 	}
 
 	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState($ordering = 'a.ordering', $direction = 'asc')
+	{
+		// Load the filter state.
+		$this->setState('filter.search', $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search'));
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_users');
+		$this->setState('params', $params);
+
+		// List state information.
+		parent::populateState($ordering, $direction);
+	}
+
+	/**
+	 * Method to get a store id based on model configuration state.
+	 *
+	 * This is necessary because the model is used by the component and
+	 * different modules that might need different sets of data or different
+	 * ordering requirements.
+	 *
+	 * @param   string  $id  A prefix for the store id.
+	 *
+	 * @return  string  A store id.
+	 */
+	protected function getStoreId($id = '')
+	{
+		// Compile the store id.
+		$id .= ':' . $this->getState('filter.search');
+
+		return parent::getStoreId($id);
+	}
+
+	/**
+	 * Build an SQL query to load the list data.
+	 *
+	 * @return  JDatabaseQuery
+	 */
+	protected function getListQuery()
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		// Select the required fields from the table.
+		$query->select(
+			$this->getState(
+				'list.select',
+				'a.*'
+			)
+		);
+		$query->from($db->quoteName('#__viewlevels') . ' AS a');
+
+		// Add the level in the tree.
+		$query->group('a.id, a.title, a.ordering, a.rules');
+
+		// Filter the items over the search string if set.
+		$search = $this->getState('filter.search');
+
+		if (!empty($search))
+		{
+			if (stripos($search, 'id:') === 0)
+			{
+				$query->where('a.id = ' . (int) substr($search, 3));
+			}
+			else
+			{
+				$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+				$query->where('a.title LIKE ' . $search);
+			}
+		}
+
+		$query->group('a.id');
+
+		// Add the list ordering clause.
+		$query->order($db->escape($this->getState('list.ordering', 'a.ordering')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+
+		return $query;
+	}
+
+	/**
 	 * Method to adjust the ordering of a row.
 	 *
-	 * @param   integer $pk        The ID of the primary key to move.
-	 * @param   integer $direction Increment, usually +1 or -1
+	 * @param   integer  $pk         The ID of the primary key to move.
+	 * @param   integer  $direction  Increment, usually +1 or -1
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 */
 	public function reorder($pk, $direction = 0)
 	{
 		// Sanitize the id and adjustment.
-		$pk   = (!empty($pk)) ? $pk : (int) $this->getState('level.id');
+		$pk = (!empty($pk)) ? $pk : (int) $this->getState('level.id');
 		$user = JFactory::getUser();
 
 		// Get an instance of the record's table.
@@ -83,15 +174,15 @@ class UsersModelLevels extends JModelList
 	/**
 	 * Saves the manually set order of records.
 	 *
-	 * @param   array   $pks   An array of primary key ids.
-	 * @param   integer $order Order position
+	 * @param   array    $pks    An array of primary key ids.
+	 * @param   integer  $order  Order position
 	 *
 	 * @return   boolean
 	 */
 	public function saveorder($pks, $order)
 	{
-		$table      = JTable::getInstance('viewlevel');
-		$user       = JFactory::getUser();
+		$table = JTable::getInstance('viewlevel');
+		$user = JFactory::getUser();
 		$conditions = array();
 
 		if (empty($pks))
@@ -134,96 +225,5 @@ class UsersModelLevels extends JModelList
 		}
 
 		return true;
-	}
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState($ordering = 'a.ordering', $direction = 'asc')
-	{
-		// Load the filter state.
-		$this->setState('filter.search', $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search'));
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_users');
-		$this->setState('params', $params);
-
-		// List state information.
-		parent::populateState($ordering, $direction);
-	}
-
-	/**
-	 * Method to get a store id based on model configuration state.
-	 *
-	 * This is necessary because the model is used by the component and
-	 * different modules that might need different sets of data or different
-	 * ordering requirements.
-	 *
-	 * @param   string $id A prefix for the store id.
-	 *
-	 * @return  string  A store id.
-	 */
-	protected function getStoreId($id = '')
-	{
-		// Compile the store id.
-		$id .= ':' . $this->getState('filter.search');
-
-		return parent::getStoreId($id);
-	}
-
-	/**
-	 * Build an SQL query to load the list data.
-	 *
-	 * @return  JDatabaseQuery
-	 */
-	protected function getListQuery()
-	{
-		// Create a new query object.
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		// Select the required fields from the table.
-		$query->select(
-			$this->getState(
-				'list.select',
-				'a.*'
-			)
-		);
-		$query->from($db->quoteName('#__viewlevels') . ' AS a');
-
-		// Add the level in the tree.
-		$query->group('a.id, a.title, a.ordering, a.rules');
-
-		// Filter the items over the search string if set.
-		$search = $this->getState('filter.search');
-
-		if (!empty($search))
-		{
-			if (stripos($search, 'id:') === 0)
-			{
-				$query->where('a.id = ' . (int) substr($search, 3));
-			}
-			else
-			{
-				$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-				$query->where('a.title LIKE ' . $search);
-			}
-		}
-
-		$query->group('a.id');
-
-		// Add the list ordering clause.
-		$query->order($db->escape($this->getState('list.ordering', 'a.ordering')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
-
-		return $query;
 	}
 }

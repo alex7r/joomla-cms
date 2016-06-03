@@ -21,8 +21,8 @@ class AdminModelProfile extends UsersModelUser
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array   $data     An optional array of data for the form to interogate.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      An optional array of data for the form to interogate.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  JForm    A JForm object on success, false on failure
 	 *
@@ -43,7 +43,7 @@ class AdminModelProfile extends UsersModelUser
 
 		if ($this->loadFormData()->username)
 		{
-			$username            = $this->loadFormData()->username;
+			$username = $this->loadFormData()->username;
 			$isUsernameCompliant = !(preg_match('#[<>"\'%;()&\\\\]|\\.\\./#', $username) || strlen(utf8_decode($username)) < 2
 				|| trim($username) != $username);
 		}
@@ -101,7 +101,7 @@ class AdminModelProfile extends UsersModelUser
 	/**
 	 * Method to get a single record.
 	 *
-	 * @param   integer $pk The id of the primary key.
+	 * @param   integer  $pk  The id of the primary key.
 	 *
 	 * @return  mixed  Object on success, false on failure.
 	 *
@@ -115,7 +115,7 @@ class AdminModelProfile extends UsersModelUser
 	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success.
 	 *

@@ -20,8 +20,8 @@ class JLanguageTransliterate
 	/**
 	 * Returns strings transliterated from UTF-8 to Latin
 	 *
-	 * @param   string  $string String to transliterate
-	 * @param   integer $case   Optionally specify upper or lower case. Default to null.
+	 * @param   string   $string  String to transliterate
+	 * @param   integer  $case    Optionally specify upper or lower case. Default to null.
 	 *
 	 * @return  string  Transliterated string
 	 *

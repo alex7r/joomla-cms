@@ -21,9 +21,9 @@ class JObserverWrapperMapper
 	/**
 	 * Helper wrapper method for addObserverClassToClass
 	 *
-	 * @param   string        $observerClass   The name of the observer class (implementing JObserverInterface).
-	 * @param   string        $observableClass The name of the observable class (implementing JObservableInterface).
-	 * @param   array|boolean $params          The params to give to the JObserverInterface::createObserver() function, or false to remove mapping.
+	 * @param   string         $observerClass    The name of the observer class (implementing JObserverInterface).
+	 * @param   string         $observableClass  The name of the observable class (implementing JObservableInterface).
+	 * @param   array|boolean  $params           The params to give to the JObserverInterface::createObserver() function, or false to remove mapping.
 	 *
 	 * @return void
 	 *
@@ -38,7 +38,7 @@ class JObserverWrapperMapper
 	/**
 	 * Helper wrapper method for attachAllObservers
 	 *
-	 * @param   JObservableInterface $observableObject The observable subject object.
+	 * @param   JObservableInterface  $observableObject  The observable subject object.
 	 *
 	 * @return void
 	 *

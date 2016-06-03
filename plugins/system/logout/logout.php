@@ -27,8 +27,8 @@ class PlgSystemLogout extends JPlugin
 	/**
 	 * Constructor.
 	 *
-	 * @param   object &$subject The object to observe -- event dispatcher.
-	 * @param   object $config   An optional associative array of configuration settings.
+	 * @param   object  &$subject  The object to observe -- event dispatcher.
+	 * @param   object  $config    An optional associative array of configuration settings.
 	 *
 	 * @since   1.6
 	 */
@@ -42,7 +42,7 @@ class PlgSystemLogout extends JPlugin
 		if (JFactory::getApplication()->isSite() && $input->cookie->getString($hash))
 		{
 			// Destroy the cookie.
-			$conf          = JFactory::getConfig();
+			$conf = JFactory::getConfig();
 			$cookie_domain = $conf->get('cookie_domain', '');
 			$cookie_path   = $conf->get('cookie_path', '/');
 			setcookie($hash, false, time() - 86400, $cookie_path, $cookie_domain);
@@ -53,9 +53,34 @@ class PlgSystemLogout extends JPlugin
 	}
 
 	/**
+	 * Method to handle any logout logic and report back to the subject.
+	 *
+	 * @param   array  $user     Holds the user data.
+	 * @param   array  $options  Array holding options (client, ...).
+	 *
+	 * @return  boolean  Always returns true.
+	 *
+	 * @since   1.6
+	 */
+	public function onUserLogout($user, $options = array())
+	{
+		if (JFactory::getApplication()->isSite())
+		{
+			// Create the cookie.
+			$hash = JApplicationHelper::getHash('PlgSystemLogout');
+			$conf = JFactory::getConfig();
+			$cookie_domain = $conf->get('cookie_domain', '');
+			$cookie_path   = $conf->get('cookie_path', '/');
+			setcookie($hash, true, time() + 86400, $cookie_path, $cookie_domain);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Method to handle an error condition.
 	 *
-	 * @param   Exception &$error The Exception object to be handled.
+	 * @param   Exception  &$error  The Exception object to be handled.
 	 *
 	 * @return  void
 	 *
@@ -78,30 +103,5 @@ class PlgSystemLogout extends JPlugin
 			// Render the custom error page.
 			JError::customErrorPage($error);
 		}
-	}
-
-	/**
-	 * Method to handle any logout logic and report back to the subject.
-	 *
-	 * @param   array $user    Holds the user data.
-	 * @param   array $options Array holding options (client, ...).
-	 *
-	 * @return  boolean  Always returns true.
-	 *
-	 * @since   1.6
-	 */
-	public function onUserLogout($user, $options = array())
-	{
-		if (JFactory::getApplication()->isSite())
-		{
-			// Create the cookie.
-			$hash          = JApplicationHelper::getHash('PlgSystemLogout');
-			$conf          = JFactory::getConfig();
-			$cookie_domain = $conf->get('cookie_domain', '');
-			$cookie_path   = $conf->get('cookie_path', '/');
-			setcookie($hash, true, time() + 86400, $cookie_path, $cookie_domain);
-		}
-
-		return true;
 	}
 }

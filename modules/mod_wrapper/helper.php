@@ -21,7 +21,7 @@ class ModWrapperHelper
 	/**
 	 * Gets the parameters for the wrapper
 	 *
-	 * @param   mixed &$params The parameters set in the administrator section
+	 * @param   mixed  &$params  The parameters set in the administrator section
 	 *
 	 * @return  mixed  &params  The modified parameters
 	 *

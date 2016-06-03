@@ -41,6 +41,25 @@ class JGithubPackageRepositoriesKeysTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @since   ¿
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackageRepositoriesKeys($this->options, $this->client);
+	}
+
+	/**
 	 * @covers JGithubPackageRepositoriesKeys::getList
 	 *
 	 * GET /repos/:owner/:repo/keys
@@ -66,14 +85,16 @@ class JGithubPackageRepositoriesKeysTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/repos/joomla/joomla-platform/keys')
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/repos/joomla/joomla-platform/keys')
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->getList('joomla', 'joomla-platform'),
 			$this->equalTo(json_decode($this->sampleString))
-		);
+		)
+		;
 	}
 
 	/**
@@ -100,14 +121,16 @@ class JGithubPackageRepositoriesKeysTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with('/repos/joomla/joomla-platform/keys/1')
-			->will($this->returnValue($this->response));
+		             ->method('get')
+		             ->with('/repos/joomla/joomla-platform/keys/1')
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->get('joomla', 'joomla-platform', 1),
 			$this->equalTo(json_decode($this->sampleString))
-		);
+		)
+		;
 	}
 
 	/**
@@ -142,14 +165,16 @@ class JGithubPackageRepositoriesKeysTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with('/repos/joomla/joomla-platform/keys')
-			->will($this->returnValue($this->response));
+		             ->method('post')
+		             ->with('/repos/joomla/joomla-platform/keys')
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->create('joomla', 'joomla-platform', 'email@example.com', '123abc'),
 			$this->equalTo(json_decode($this->sampleString))
-		);
+		)
+		;
 	}
 
 	/**
@@ -183,14 +208,16 @@ class JGithubPackageRepositoriesKeysTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('patch')
-			->with('/repos/joomla/joomla-platform/keys/1')
-			->will($this->returnValue($this->response));
+		             ->method('patch')
+		             ->with('/repos/joomla/joomla-platform/keys/1')
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->edit('joomla', 'joomla-platform', 1, 'email@example.com', '123abc'),
 			$this->equalTo(json_decode($this->sampleString))
-		);
+		)
+		;
 	}
 
 	/**
@@ -210,32 +237,15 @@ class JGithubPackageRepositoriesKeysTest extends PHPUnit_Framework_TestCase
 		$this->response->body = true;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with('/repos/joomla/joomla-platform/keys/1')
-			->will($this->returnValue($this->response));
+		             ->method('delete')
+		             ->with('/repos/joomla/joomla-platform/keys/1')
+		             ->will($this->returnValue($this->response))
+		;
 
 		$this->assertThat(
 			$this->object->delete('joomla', 'joomla-platform', 1),
 			$this->equalTo($this->response->body)
-		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @since   ¿
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options  = new JRegistry;
-		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackageRepositoriesKeys($this->options, $this->client);
+		)
+		;
 	}
 }

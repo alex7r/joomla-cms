@@ -21,7 +21,7 @@ class TagsTableTag extends JTableNested
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver $db A database connector object
+	 * @param   JDatabaseDriver  $db  A database connector object
 	 */
 	public function __construct($db)
 	{
@@ -33,9 +33,9 @@ class TagsTableTag extends JTableNested
 	/**
 	 * Overloaded bind function
 	 *
-	 * @param   array $array  Named array
-	 * @param   mixed $ignore An optional array or space separated list of properties
-	 *                        to ignore while binding.
+	 * @param   array  $array   Named array
+	 * @param   mixed  $ignore  An optional array or space separated list of properties
+	 * to ignore while binding.
 	 *
 	 * @return  mixed  Null if operation was satisfactory, otherwise returns an error string
 	 *
@@ -121,7 +121,7 @@ class TagsTableTag extends JTableNested
 			$after_clean = JString::str_ireplace($bad_characters, "", $this->metakey);
 
 			// Create array using commas as delimiter
-			$keys       = explode(',', $after_clean);
+			$keys = explode(',', $after_clean);
 			$clean_keys = array();
 
 			foreach ($keys as $key)
@@ -208,7 +208,7 @@ class TagsTableTag extends JTableNested
 	/**
 	 * Overriden JTable::store to set modified data and user id.
 	 *
-	 * @param   boolean $updateNulls True to update fields even if they are null.
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -257,8 +257,8 @@ class TagsTableTag extends JTableNested
 	/**
 	 * Method to delete a node and, optionally, its child nodes from the table.
 	 *
-	 * @param   integer $pk       The primary key of the node to delete.
-	 * @param   boolean $children True to delete child nodes, false to move them up a level.
+	 * @param   integer  $pk        The primary key of the node to delete.
+	 * @param   boolean  $children  True to delete child nodes, false to move them up a level.
 	 *
 	 * @return  boolean  True on success.
 	 *

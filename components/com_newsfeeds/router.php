@@ -19,7 +19,7 @@ class NewsfeedsRouter extends JComponentRouterBase
 	/**
 	 * Build the route for the com_newsfeeds component
 	 *
-	 * @param   array &$query An array of URL arguments
+	 * @param   array  &$query  An array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *
@@ -30,7 +30,7 @@ class NewsfeedsRouter extends JComponentRouterBase
 		$segments = array();
 
 		// Get a menu item based on Itemid or currently active
-		$params   = JComponentHelper::getParams('com_newsfeeds');
+		$params = JComponentHelper::getParams('com_newsfeeds');
 		$advanced = $params->get('sef_advanced_link', 0);
 
 		if (empty($query['Itemid']))
@@ -80,9 +80,9 @@ class NewsfeedsRouter extends JComponentRouterBase
 					$catid = $query['id'];
 				}
 
-				$menuCatid  = $mId;
+				$menuCatid = $mId;
 				$categories = JCategories::getInstance('Newsfeeds');
-				$category   = $categories->get($catid);
+				$category = $categories->get($catid);
 
 				if ($category)
 				{
@@ -159,7 +159,7 @@ class NewsfeedsRouter extends JComponentRouterBase
 	/**
 	 * Parse the segments of a URL.
 	 *
-	 * @param   array &$segments The segments of the URL to parse.
+	 * @param   array  &$segments  The segments of the URL to parse.
 	 *
 	 * @return  array  The URL attributes to be used by the application.
 	 *
@@ -252,7 +252,7 @@ class NewsfeedsRouter extends JComponentRouterBase
  * These functions are proxys for the new router interface
  * for old SEF extensions.
  *
- * @param   array &$query The segments of the URL to parse.
+ * @param   array  &$query  The segments of the URL to parse.
  *
  * @return array
  *
@@ -268,7 +268,7 @@ function newsfeedsBuildRoute(&$query)
 /**
  * newsfeedsParseRoute
  *
- * @param   array $segments The segments of the URL to parse.
+ * @param   array  $segments  The segments of the URL to parse.
  *
  * @return array
  *

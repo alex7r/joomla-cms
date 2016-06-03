@@ -33,6 +33,21 @@ class FinderModelFilter extends JModelAdmin
 	protected $context = 'com_finder.filter';
 
 	/**
+	 * Custom clean cache method.
+	 *
+	 * @param   string   $group      The component name. [optional]
+	 * @param   integer  $client_id  The client ID. [optional]
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	protected function cleanCache($group = 'com_finder', $client_id = 1)
+	{
+		parent::cleanCache($group, $client_id);
+	}
+
+	/**
 	 * Method to get the filter data.
 	 *
 	 * @return  mixed  The filter data.
@@ -79,26 +94,10 @@ class FinderModelFilter extends JModelAdmin
 	}
 
 	/**
-	 * Returns a JTable object, always creating it.
-	 *
-	 * @param   string $type   The table type to instantiate. [optional]
-	 * @param   string $prefix A prefix for the table class name. [optional]
-	 * @param   array  $config Configuration array for model. [optional]
-	 *
-	 * @return  JTable  A database object
-	 *
-	 * @since   2.5
-	 */
-	public function getTable($type = 'Filter', $prefix = 'FinderTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
-
-	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array   $data     Data for the form. [optional]
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not. [optional]
+	 * @param   array    $data      Data for the form. [optional]
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not. [optional]
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
@@ -118,37 +117,19 @@ class FinderModelFilter extends JModelAdmin
 	}
 
 	/**
-	 * Method to get the total indexed items
+	 * Returns a JTable object, always creating it.
 	 *
-	 * @return  number the number of indexed items
+	 * @param   string  $type    The table type to instantiate. [optional]
+	 * @param   string  $prefix  A prefix for the table class name. [optional]
+	 * @param   array   $config  Configuration array for model. [optional]
 	 *
-	 * @since  3.5
-	 */
-	public function getTotal()
-	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true)
-			->select('MAX(link_id)')
-			->from('#__finder_links');
-		$db->setQuery($query);
-		$total = $db->loadResult();
-
-		return $total;
-	}
-
-	/**
-	 * Custom clean cache method.
-	 *
-	 * @param   string  $group     The component name. [optional]
-	 * @param   integer $client_id The client ID. [optional]
-	 *
-	 * @return  void
+	 * @return  JTable  A database object
 	 *
 	 * @since   2.5
 	 */
-	protected function cleanCache($group = 'com_finder', $client_id = 1)
+	public function getTable($type = 'Filter', $prefix = 'FinderTable', $config = array())
 	{
-		parent::cleanCache($group, $client_id);
+		return JTable::getInstance($type, $prefix, $config);
 	}
 
 	/**
@@ -171,5 +152,24 @@ class FinderModelFilter extends JModelAdmin
 		$this->preprocessData('com_finder.filter', $data);
 
 		return $data;
+	}
+
+	/**
+	 * Method to get the total indexed items
+	 *
+	 * @return  number the number of indexed items
+	 *
+	 * @since  3.5
+	 */
+	public function getTotal()
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('MAX(link_id)')
+			->from('#__finder_links');
+		$db->setQuery($query);
+		$total = $db->loadResult();
+
+		return $total;
 	}
 }

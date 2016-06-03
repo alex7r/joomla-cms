@@ -16,7 +16,7 @@ defined('JPATH_PLATFORM') or die;
  *
  * @documentation  http://developer.github.com/v3/activity/
  *
- * @property-read  JGithubPackageActivityEvents $events  GitHub API object for markdown.
+ * @property-read  JGithubPackageActivityEvents  $events  GitHub API object for markdown.
  */
 class JGithubPackageActivity extends JGithubPackage
 {

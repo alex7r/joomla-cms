@@ -43,8 +43,8 @@ abstract class JApplicationWebRouter
 	/**
 	 * Constructor.
 	 *
-	 * @param   JApplicationWeb $app     The web application on whose behalf we are routing the request.
-	 * @param   JInput          $input   An optional input object from which to derive the route.  If none
+	 * @param   JApplicationWeb  $app    The web application on whose behalf we are routing the request.
+	 * @param   JInput           $input  An optional input object from which to derive the route.  If none
 	 *                                   is given than the input from the application object will be used.
 	 *
 	 * @since   12.2
@@ -58,7 +58,7 @@ abstract class JApplicationWebRouter
 	/**
 	 * Find and execute the appropriate controller based on a given route.
 	 *
-	 * @param   string $route The route string for which to find and execute a controller.
+	 * @param   string  $route  The route string for which to find and execute a controller.
 	 *
 	 * @return  mixed   The return value of the controller executed
 	 *
@@ -79,9 +79,41 @@ abstract class JApplicationWebRouter
 	}
 
 	/**
+	 * Set the controller name prefix.
+	 *
+	 * @param   string  $prefix  Controller class name prefix for creating controller objects by name.
+	 *
+	 * @return  JApplicationWebRouter  This object for method chaining.
+	 *
+	 * @since   12.2
+	 */
+	public function setControllerPrefix($prefix)
+	{
+		$this->controllerPrefix	= (string) $prefix;
+
+		return $this;
+	}
+
+	/**
+	 * Set the default controller name.
+	 *
+	 * @param   string  $name  The default page controller name for an empty route.
+	 *
+	 * @return  JApplicationWebRouter  This object for method chaining.
+	 *
+	 * @since   12.2
+	 */
+	public function setDefaultController($name)
+	{
+		$this->default = (string) $name;
+
+		return $this;
+	}
+
+	/**
 	 * Parse the given route and return the name of a controller mapped to the given route.
 	 *
-	 * @param   string $route The route string for which to find and execute a controller.
+	 * @param   string  $route  The route string for which to find and execute a controller.
 	 *
 	 * @return  string  The controller name for the given route excluding prefix.
 	 *
@@ -93,7 +125,7 @@ abstract class JApplicationWebRouter
 	/**
 	 * Get a JController object for a given name.
 	 *
-	 * @param   string $name The controller name (excluding prefix) for which to fetch and instance.
+	 * @param   string  $name  The controller name (excluding prefix) for which to fetch and instance.
 	 *
 	 * @return  JController
 	 *
@@ -115,37 +147,5 @@ abstract class JApplicationWebRouter
 		$controller = new $class($this->input, $this->app);
 
 		return $controller;
-	}
-
-	/**
-	 * Set the controller name prefix.
-	 *
-	 * @param   string $prefix Controller class name prefix for creating controller objects by name.
-	 *
-	 * @return  JApplicationWebRouter  This object for method chaining.
-	 *
-	 * @since   12.2
-	 */
-	public function setControllerPrefix($prefix)
-	{
-		$this->controllerPrefix = (string) $prefix;
-
-		return $this;
-	}
-
-	/**
-	 * Set the default controller name.
-	 *
-	 * @param   string $name The default page controller name for an empty route.
-	 *
-	 * @return  JApplicationWebRouter  This object for method chaining.
-	 *
-	 * @since   12.2
-	 */
-	public function setDefaultController($name)
-	{
-		$this->default = (string) $name;
-
-		return $this;
 	}
 }

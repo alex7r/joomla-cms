@@ -80,7 +80,7 @@ class JFormFieldComponentlayout extends JFormField
 			|| $lang->load($extension . '.sys', JPATH_ADMINISTRATOR . '/components/' . $extension, null, false, true);
 
 			// Get the database object and a new query object.
-			$db    = JFactory::getDbo();
+			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
 			// Build the query.
@@ -124,9 +124,9 @@ class JFormFieldComponentlayout extends JFormField
 			if (is_dir($component_path) && ($component_layouts = JFolder::files($component_path, '^[^_]*\.xml$', false, true)))
 			{
 				// Create the group for the component
-				$groups['_']          = array();
-				$groups['_']['id']    = $this->id . '__';
-				$groups['_']['text']  = JText::sprintf('JOPTION_FROM_COMPONENT');
+				$groups['_'] = array();
+				$groups['_']['id'] = $this->id . '__';
+				$groups['_']['text'] = JText::sprintf('JOPTION_FROM_COMPONENT');
 				$groups['_']['items'] = array();
 
 				foreach ($component_layouts as $i => $file)
@@ -150,9 +150,9 @@ class JFormFieldComponentlayout extends JFormField
 					$menu = $menu[0];
 
 					// Add an option to the component group
-					$value                  = basename($file, '.xml');
-					$component_layouts[$i]  = $value;
-					$text                   = isset($menu['option']) ? JText::_($menu['option']) : (isset($menu['title']) ? JText::_($menu['title']) : $value);
+					$value = basename($file, '.xml');
+					$component_layouts[$i] = $value;
+					$text = isset($menu['option']) ? JText::_($menu['option']) : (isset($menu['title']) ? JText::_($menu['title']) : $value);
 					$groups['_']['items'][] = JHtml::_('select.option', '_:' . $value, $text);
 				}
 			}
@@ -164,7 +164,7 @@ class JFormFieldComponentlayout extends JFormField
 				{
 					// Load language file
 					$lang->load('tpl_' . $template->element . '.sys', $client->path, null, false, true)
-					|| $lang->load('tpl_' . $template->element . '.sys', $client->path . '/templates/' . $template->element, null, false, true);
+						|| $lang->load('tpl_' . $template->element . '.sys', $client->path . '/templates/' . $template->element, null, false, true);
 
 					$template_path = JPath::clean(
 						$client->path
@@ -192,8 +192,7 @@ class JFormFieldComponentlayout extends JFormField
 						{
 							// Remove layout files that exist in the component folder or that have XML files
 							if ((in_array(basename($file, '.php'), $component_layouts))
-								|| (in_array(basename($file, '.php'), $xml_files))
-							)
+								|| (in_array(basename($file, '.php'), $xml_files)))
 							{
 								unset($files[$i]);
 							}
@@ -202,16 +201,16 @@ class JFormFieldComponentlayout extends JFormField
 						if (count($files))
 						{
 							// Create the group for the template
-							$groups[$template->name]          = array();
-							$groups[$template->name]['id']    = $this->id . '_' . $template->element;
-							$groups[$template->name]['text']  = JText::sprintf('JOPTION_FROM_TEMPLATE', $template->name);
+							$groups[$template->name] = array();
+							$groups[$template->name]['id'] = $this->id . '_' . $template->element;
+							$groups[$template->name]['text'] = JText::sprintf('JOPTION_FROM_TEMPLATE', $template->name);
 							$groups[$template->name]['items'] = array();
 
 							foreach ($files as $file)
 							{
 								// Add an option to the template group
-								$value                              = basename($file, '.php');
-								$text                               = $lang
+								$value = basename($file, '.php');
+								$text = $lang
 									->hasKey(
 										$key = strtoupper(
 											'TPL_'

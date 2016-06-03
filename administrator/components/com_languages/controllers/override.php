@@ -19,8 +19,8 @@ class LanguagesControllerOverride extends JControllerForm
 	/**
 	 * Method to edit an existing override.
 	 *
-	 * @param   string $key    The name of the primary key of the URL variable (not used here).
-	 * @param   string $urlVar The name of the URL variable if different from the primary key (not used here).
+	 * @param   string  $key     The name of the primary key of the URL variable (not used here).
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (not used here).
 	 *
 	 * @return  void
 	 *
@@ -52,8 +52,8 @@ class LanguagesControllerOverride extends JControllerForm
 	/**
 	 * Method to save an override.
 	 *
-	 * @param   string $key    The name of the primary key of the URL variable (not used here).
-	 * @param   string $urlVar The name of the URL variable if different from the primary key (not used here).
+	 * @param   string  $key     The name of the primary key of the URL variable (not used here).
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (not used here).
 	 *
 	 * @return  void
 	 *
@@ -70,7 +70,7 @@ class LanguagesControllerOverride extends JControllerForm
 		$context = "$this->option.edit.$this->context";
 		$task    = $this->getTask();
 
-		$recordId   = $this->input->get('id');
+		$recordId = $this->input->get('id');
 		$data['id'] = $recordId;
 
 		// Access check.
@@ -184,7 +184,7 @@ class LanguagesControllerOverride extends JControllerForm
 	/**
 	 * Method to cancel an edit.
 	 *
-	 * @param   string $key The name of the primary key of the URL variable (not used here).
+	 * @param   string  $key  The name of the primary key of the URL variable (not used here).
 	 *
 	 * @return  void
 	 *

@@ -21,7 +21,7 @@ class BannersTableClient extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver &$db Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 *
 	 * @since   1.5
 	 */
@@ -38,9 +38,9 @@ class BannersTableClient extends JTable
 	 * table.  The method respects checked out rows by other users and will attempt
 	 * to checkin rows that it can after adjustments are made.
 	 *
-	 * @param   mixed   $pks    An optional array of primary key values to update.  If not set the instance property value is used.
-	 * @param   integer $state  The publishing state. eg. [0 = unpublished, 1 = published, 2=archived, -2=trashed]
-	 * @param   integer $userId The user id of the user performing the operation.
+	 * @param   mixed    $pks     An optional array of primary key values to update.  If not set the instance property value is used.
+	 * @param   integer  $state   The publishing state. eg. [0 = unpublished, 1 = published, 2=archived, -2=trashed]
+	 * @param   integer  $userId  The user id of the user performing the operation.
 	 *
 	 * @return  boolean  True on success.
 	 *

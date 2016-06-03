@@ -35,8 +35,8 @@ abstract class JComponentRouterBase implements JComponentRouterInterface
 	/**
 	 * Class constructor.
 	 *
-	 * @param   JApplicationCms $app  Application-object that the router should use
-	 * @param   JMenu           $menu Menu-object that the router should use
+	 * @param   JApplicationCms  $app   Application-object that the router should use
+	 * @param   JMenu            $menu  Menu-object that the router should use
 	 *
 	 * @since   3.4
 	 */
@@ -64,7 +64,7 @@ abstract class JComponentRouterBase implements JComponentRouterInterface
 	/**
 	 * Generic method to preprocess a URL
 	 *
-	 * @param   array $query An associative array of URL arguments
+	 * @param   array  $query  An associative array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *

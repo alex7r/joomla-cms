@@ -18,17 +18,17 @@ defined('_JEXEC') or die;
 		<p class="tab-description"><?php echo JText::sprintf('COM_FINDER_STATISTICS_STATS_DESCRIPTION', number_format($this->data->term_count, 0, JText::_('DECIMALS_SEPARATOR'), JText::_('THOUSANDS_SEPARATOR')), number_format($this->data->link_count, 0, JText::_('DECIMALS_SEPARATOR'), JText::_('THOUSANDS_SEPARATOR')), number_format($this->data->taxonomy_node_count, 0, JText::_('DECIMALS_SEPARATOR'), JText::_('THOUSANDS_SEPARATOR')), number_format($this->data->taxonomy_branch_count, 0, JText::_('DECIMALS_SEPARATOR'), JText::_('THOUSANDS_SEPARATOR'))); ?></p>
 		<table class="table table-striped table-condensed">
 			<thead>
-			<tr>
-				<th>
-					<?php echo JText::_('COM_FINDER_STATISTICS_LINK_TYPE_HEADING'); ?>
-				</th>
-				<th>
-					<?php echo JText::_('COM_FINDER_STATISTICS_LINK_TYPE_COUNT'); ?>
-				</th>
-			</tr>
+				<tr>
+					<th>
+						<?php echo JText::_('COM_FINDER_STATISTICS_LINK_TYPE_HEADING');?>
+					</th>
+					<th>
+						<?php echo JText::_('COM_FINDER_STATISTICS_LINK_TYPE_COUNT');?>
+					</th>
+				</tr>
 			</thead>
 			<tbody>
-			<?php foreach ($this->data->type_list as $type) : ?>
+				<?php foreach ($this->data->type_list as $type) :?>
 				<tr>
 					<td>
 						<?php
@@ -38,20 +38,18 @@ defined('_JEXEC') or die;
 						?>
 					</td>
 					<td>
-						<span
-							class="badge badge-info"><?php echo number_format($type->link_count, 0, JText::_('DECIMALS_SEPARATOR'), JText::_('THOUSANDS_SEPARATOR')); ?></span>
+						<span class="badge badge-info"><?php echo number_format($type->link_count, 0, JText::_('DECIMALS_SEPARATOR'), JText::_('THOUSANDS_SEPARATOR'));?></span>
 					</td>
 				</tr>
-			<?php endforeach; ?>
-			<tr>
-				<td>
-					<strong><?php echo JText::_('COM_FINDER_STATISTICS_LINK_TYPE_TOTAL'); ?></strong>
-				</td>
-				<td>
-					<span
-						class="badge badge-info"><?php echo number_format($this->data->link_count, 0, JText::_('DECIMALS_SEPARATOR'), JText::_('THOUSANDS_SEPARATOR')); ?></span>
-				</td>
-			</tr>
+				<?php endforeach; ?>
+				<tr>
+					<td>
+						<strong><?php echo JText::_('COM_FINDER_STATISTICS_LINK_TYPE_TOTAL'); ?></strong>
+					</td>
+					<td>
+						<span class="badge badge-info"><?php echo number_format($this->data->link_count, 0, JText::_('DECIMALS_SEPARATOR'), JText::_('THOUSANDS_SEPARATOR')); ?></span>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

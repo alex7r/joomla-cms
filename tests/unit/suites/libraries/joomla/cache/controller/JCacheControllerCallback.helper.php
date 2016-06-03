@@ -21,12 +21,12 @@ class TestCallbackController
 	/**
 	 * Test...
 	 *
-	 * @param   mixed $arg1 Nr. 1
-	 * @param   mixed $arg2 Nr. 2
+	 * @param   mixed  $arg1  Nr. 1
+	 * @param   mixed  $arg2  Nr. 2
 	 *
 	 * @return mixed
 	 */
-	public static function staticCallback($arg1, $arg2)
+	public function instanceCallback($arg1, $arg2)
 	{
 		echo $arg1;
 
@@ -36,12 +36,12 @@ class TestCallbackController
 	/**
 	 * Test...
 	 *
-	 * @param   mixed $arg1 Nr. 1
-	 * @param   mixed $arg2 Nr. 2
+	 * @param   mixed  $arg1  Nr. 1
+	 * @param   mixed  $arg2  Nr. 2
 	 *
 	 * @return mixed
 	 */
-	public function instanceCallback($arg1, $arg2)
+	public static function staticCallback($arg1, $arg2)
 	{
 		echo $arg1;
 
@@ -53,8 +53,8 @@ class TestCallbackController
 /**
  * Test...
  *
- * @param   mixed $arg1 Nr. 1
- * @param   mixed $arg2 Nr. 2
+ * @param   mixed  $arg1  Nr. 1
+ * @param   mixed  $arg2  Nr. 2
  *
  * @return mixed
  */

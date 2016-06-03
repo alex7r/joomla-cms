@@ -19,7 +19,7 @@ class ContentRouter extends JComponentRouterBase
 	/**
 	 * Build the route for the com_content component
 	 *
-	 * @param   array &$query An array of URL arguments
+	 * @param   array  &$query  An array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *
@@ -30,7 +30,7 @@ class ContentRouter extends JComponentRouterBase
 		$segments = array();
 
 		// Get a menu item based on Itemid or currently active
-		$params   = JComponentHelper::getParams('com_content');
+		$params = JComponentHelper::getParams('com_content');
 		$advanced = $params->get('sef_advanced_link', 0);
 
 		// Unset limitstart=0 since it's pointless
@@ -42,12 +42,12 @@ class ContentRouter extends JComponentRouterBase
 		// We need a menu item.  Either the one specified in the query, or the current active one if none specified
 		if (empty($query['Itemid']))
 		{
-			$menuItem      = $this->menu->getActive();
+			$menuItem = $this->menu->getActive();
 			$menuItemGiven = false;
 		}
 		else
 		{
-			$menuItem      = $this->menu->getItem($query['Itemid']);
+			$menuItem = $this->menu->getItem($query['Itemid']);
 			$menuItemGiven = true;
 		}
 
@@ -72,8 +72,7 @@ class ContentRouter extends JComponentRouterBase
 		if (($menuItem instanceof stdClass)
 			&& $menuItem->query['view'] == $query['view']
 			&& isset($query['id'])
-			&& $menuItem->query['id'] == (int) $query['id']
-		)
+			&& $menuItem->query['id'] == (int) $query['id'])
 		{
 			unset($query['view']);
 
@@ -110,13 +109,13 @@ class ContentRouter extends JComponentRouterBase
 					// Make sure we have the id and the alias
 					if (strpos($query['id'], ':') === false)
 					{
-						$db      = JFactory::getDbo();
+						$db = JFactory::getDbo();
 						$dbQuery = $db->getQuery(true)
 							->select('alias')
 							->from('#__content')
 							->where('id=' . (int) $query['id']);
 						$db->setQuery($dbQuery);
-						$alias       = $db->loadResult();
+						$alias = $db->loadResult();
 						$query['id'] = $query['id'] . ':' . $alias;
 					}
 				}
@@ -149,7 +148,7 @@ class ContentRouter extends JComponentRouterBase
 			}
 
 			$categories = JCategories::getInstance('Content');
-			$category   = $categories->get($catid);
+			$category = $categories->get($catid);
 
 			if (!$category)
 			{
@@ -273,7 +272,7 @@ class ContentRouter extends JComponentRouterBase
 	/**
 	 * Parse the segments of a URL.
 	 *
-	 * @param   array &$segments The segments of the URL to parse.
+	 * @param   array  &$segments  The segments of the URL to parse.
 	 *
 	 * @return  array  The URL attributes to be used by the application.
 	 *
@@ -282,7 +281,7 @@ class ContentRouter extends JComponentRouterBase
 	public function parse(&$segments)
 	{
 		$total = count($segments);
-		$vars  = array();
+		$vars = array();
 
 		for ($i = 0; $i < $total; $i++)
 		{
@@ -290,10 +289,10 @@ class ContentRouter extends JComponentRouterBase
 		}
 
 		// Get the active menu item.
-		$item     = $this->menu->getActive();
-		$params   = JComponentHelper::getParams('com_content');
+		$item = $this->menu->getActive();
+		$params = JComponentHelper::getParams('com_content');
 		$advanced = $params->get('sef_advanced_link', 0);
-		$db       = JFactory::getDbo();
+		$db = JFactory::getDbo();
 
 		// Count route segments
 		$count = count($segments);
@@ -331,7 +330,7 @@ class ContentRouter extends JComponentRouterBase
 			if (strpos($segments[0], ':') === false)
 			{
 				$vars['view'] = 'article';
-				$vars['id']   = (int) $segments[0];
+				$vars['id'] = (int) $segments[0];
 
 				return $vars;
 			}
@@ -344,7 +343,7 @@ class ContentRouter extends JComponentRouterBase
 			if ($category && $category->alias == $alias)
 			{
 				$vars['view'] = 'category';
-				$vars['id']   = $id;
+				$vars['id'] = $id;
 
 				return $vars;
 			}
@@ -361,9 +360,9 @@ class ContentRouter extends JComponentRouterBase
 				{
 					if ($article->alias == $alias)
 					{
-						$vars['view']  = 'article';
+						$vars['view'] = 'article';
 						$vars['catid'] = (int) $article->catid;
-						$vars['id']    = (int) $id;
+						$vars['id'] = (int) $id;
 
 						return $vars;
 					}
@@ -384,21 +383,21 @@ class ContentRouter extends JComponentRouterBase
 
 			if ($article_id > 0)
 			{
-				$vars['view']  = 'article';
+				$vars['view'] = 'article';
 				$vars['catid'] = $cat_id;
-				$vars['id']    = $article_id;
+				$vars['id'] = $article_id;
 			}
 			else
 			{
 				$vars['view'] = 'category';
-				$vars['id']   = $cat_id;
+				$vars['id'] = $cat_id;
 			}
 
 			return $vars;
 		}
 
 		// We get the category id from the menu item and search from there
-		$id       = $item->query['id'];
+		$id = $item->query['id'];
 		$category = JCategories::getInstance('Content')->get($id);
 
 		if (!$category)
@@ -408,10 +407,10 @@ class ContentRouter extends JComponentRouterBase
 			return $vars;
 		}
 
-		$categories    = $category->getChildren();
+		$categories = $category->getChildren();
 		$vars['catid'] = $id;
-		$vars['id']    = $id;
-		$found         = 0;
+		$vars['id'] = $id;
+		$found = 0;
 
 		foreach ($segments as $segment)
 		{
@@ -421,11 +420,11 @@ class ContentRouter extends JComponentRouterBase
 			{
 				if ($category->alias == $segment)
 				{
-					$vars['id']    = $category->id;
+					$vars['id'] = $category->id;
 					$vars['catid'] = $category->id;
-					$vars['view']  = 'category';
-					$categories    = $category->getChildren();
-					$found         = 1;
+					$vars['view'] = 'category';
+					$categories = $category->getChildren();
+					$found = 1;
 					break;
 				}
 			}
@@ -434,7 +433,7 @@ class ContentRouter extends JComponentRouterBase
 			{
 				if ($advanced)
 				{
-					$db    = JFactory::getDbo();
+					$db = JFactory::getDbo();
 					$query = $db->getQuery(true)
 						->select($db->quoteName('id'))
 						->from('#__content')
@@ -448,7 +447,7 @@ class ContentRouter extends JComponentRouterBase
 					$cid = $segment;
 				}
 
-				$vars['id']   = $cid;
+				$vars['id'] = $cid;
 				$vars['view'] = 'article';
 			}
 
@@ -465,7 +464,7 @@ class ContentRouter extends JComponentRouterBase
  * These functions are proxys for the new router interface
  * for old SEF extensions.
  *
- * @param   array &$query An array of URL arguments
+ * @param   array  &$query  An array of URL arguments
  *
  * @return  array  The URL arguments to use to assemble the subsequent URL.
  *
@@ -484,11 +483,11 @@ function contentBuildRoute(&$query)
  * This function is a proxy for the new router interface
  * for old SEF extensions.
  *
- * @param   array $segments The segments of the URL to parse.
+ * @param   array  $segments  The segments of the URL to parse.
  *
  * @return  array  The URL attributes to be used by the application.
  *
- * @since       3.3
+ * @since   3.3
  * @deprecated  4.0  Use Class based routers instead
  */
 function contentParseRoute($segments)

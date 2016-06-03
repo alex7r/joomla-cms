@@ -19,7 +19,7 @@ class JViewCategoryfeed extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 *
@@ -30,24 +30,24 @@ class JViewCategoryfeed extends JViewLegacy
 		$app      = JFactory::getApplication();
 		$document = JFactory::getDocument();
 
-		$extension   = $app->input->getString('option');
+		$extension      = $app->input->getString('option');
 		$contentType = $extension . '.' . $this->viewName;
 
-		$ucmType      = new JUcmType;
-		$ucmRow       = $ucmType->getTypeByAlias($contentType);
+		$ucmType = new JUcmType;
+		$ucmRow = $ucmType->getTypeByAlias($contentType);
 		$ucmMapCommon = json_decode($ucmRow->field_mappings)->common;
 		$createdField = null;
-		$titleField   = null;
+		$titleField = null;
 
 		if (is_object($ucmMapCommon))
 		{
 			$createdField = $ucmMapCommon->core_created_time;
-			$titleField   = $ucmMapCommon->core_title;
+			$titleField = $ucmMapCommon->core_title;
 		}
 		elseif (is_array($ucmMapCommon))
 		{
 			$createdField = $ucmMapCommon[0]->core_created_time;
-			$titleField   = $ucmMapCommon[0]->core_title;
+			$titleField = $ucmMapCommon[0]->core_title;
 		}
 
 		$document->link = JRoute::_(JHelperRoute::getCategoryRoute($app->input->getInt('id'), $language = 0, $extension));
@@ -127,7 +127,7 @@ class JViewCategoryfeed extends JViewLegacy
 	 * Method to reconcile non standard names from components to usage in this class.
 	 * Typically overriden in the component feed view class.
 	 *
-	 * @param   object $item The item for a feed, an element of the $items array.
+	 * @param   object  $item  The item for a feed, an element of the $items array.
 	 *
 	 * @return  void
 	 *

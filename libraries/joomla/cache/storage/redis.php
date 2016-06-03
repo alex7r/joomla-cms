@@ -35,7 +35,7 @@ class JCacheStorageRedis extends JCacheStorage
 	/**
 	 * Constructor
 	 *
-	 * @param   array $options Optional parameters.
+	 * @param   array  $options  Optional parameters.
 	 *
 	 * @since   3.4
 	 */
@@ -158,23 +158,11 @@ class JCacheStorageRedis extends JCacheStorage
 	}
 
 	/**
-	 * Test to see if the storage handler is available.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.4
-	 */
-	public static function isSupported()
-	{
-		return class_exists('Redis');
-	}
-
-	/**
 	 * Get cached data by ID and group
 	 *
-	 * @param   string  $id        The cache data ID
-	 * @param   string  $group     The cache data group
-	 * @param   boolean $checkTime True to verify cache time expiration threshold
+	 * @param   string   $id         The cache data ID
+	 * @param   string   $group      The cache data group
+	 * @param   boolean  $checkTime  True to verify cache time expiration threshold
 	 *
 	 * @return  mixed  Boolean false on failure or a cached data object
 	 *
@@ -188,18 +176,6 @@ class JCacheStorageRedis extends JCacheStorage
 		}
 
 		return static::$_redis->get($this->_getCacheId($id, $group));
-	}
-
-	/**
-	 * Test to see if the Redis connection is available.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.4
-	 */
-	public static function isConnected()
-	{
-		return static::$_redis instanceof Redis;
 	}
 
 	/**
@@ -239,7 +215,7 @@ class JCacheStorageRedis extends JCacheStorage
 						$item = $data[$group];
 					}
 
-					$item->updateSize(strlen($key) * 8 / 1024);
+					$item->updateSize(strlen($key)*8/1024);
 					$data[$group] = $item;
 				}
 			}
@@ -251,9 +227,9 @@ class JCacheStorageRedis extends JCacheStorage
 	/**
 	 * Store the data to cache by ID and group
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
-	 * @param   string $data  The data to store in cache
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
+	 * @param   string  $data   The data to store in cache
 	 *
 	 * @return  boolean
 	 *
@@ -274,8 +250,8 @@ class JCacheStorageRedis extends JCacheStorage
 	/**
 	 * Remove a cached data entry by ID and group
 	 *
-	 * @param   string $id    The cache data ID
-	 * @param   string $group The cache data group
+	 * @param   string  $id     The cache data ID
+	 * @param   string  $group  The cache data group
 	 *
 	 * @return  boolean
 	 *
@@ -297,8 +273,8 @@ class JCacheStorageRedis extends JCacheStorage
 	 * group mode    : cleans all cache in the group
 	 * notgroup mode : cleans all cache not in the group
 	 *
-	 * @param   string $group The cache data group
-	 * @param   string $mode  The mode for cleaning cache [group|notgroup]
+	 * @param   string  $group  The cache data group
+	 * @param   string  $mode   The mode for cleaning cache [group|notgroup]
 	 *
 	 * @return  boolean
 	 *
@@ -334,5 +310,29 @@ class JCacheStorageRedis extends JCacheStorage
 		}
 
 		return true;
+	}
+
+	/**
+	 * Test to see if the storage handler is available.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.4
+	 */
+	public static function isSupported()
+	{
+		return class_exists('Redis');
+	}
+
+	/**
+	 * Test to see if the Redis connection is available.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.4
+	 */
+	public static function isConnected()
+	{
+		return static::$_redis instanceof Redis;
 	}
 }

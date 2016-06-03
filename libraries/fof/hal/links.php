@@ -24,50 +24,13 @@ class FOFHalLinks
 	private $_links = array();
 
 	/**
-	 * Add multiple links to the links collection
-	 *
-	 * @param   string  $rel         The relation of the links to the document. See RFC 5988.
-	 * @param   array   $links       An array of FOFHalLink objects
-	 * @param   boolean $overwrite   When false and a link of $rel relation exists, an array
-	 *                               of links is created. Otherwise the existing link is
-	 *                               overwriten with the new one
-	 *
-	 * @return  boolean  True if the link was added to the collection
-	 */
-	public function addLinks($rel, array $links, $overwrite = true)
-	{
-		if (empty($links))
-		{
-			return false;
-		}
-
-		$localOverwrite = $overwrite;
-
-		foreach ($links as $link)
-		{
-			if ($link instanceof FOFHalLink)
-			{
-				$this->addLink($rel, $link, $localOverwrite);
-			}
-
-			// After the first time we call this with overwrite on we have to
-			// turn it off so that the other links are added to the set instead
-			// of overwriting the first item that's already added.
-			if ($localOverwrite)
-			{
-				$localOverwrite = false;
-			}
-		}
-	}
-
-	/**
 	 * Add a single link to the links collection
 	 *
-	 * @param   string     $rel         The relation of the link to the document. See RFC 5988
+	 * @param   string      $rel        The relation of the link to the document. See RFC 5988
 	 *                                  http://tools.ietf.org/html/rfc5988#section-6.2.2 A document
 	 *                                  MUST always have a "self" link.
-	 * @param   FOFHalLink $link        The actual link object
-	 * @param   boolean    $overwrite   When false and a link of $rel relation exists, an array of
+	 * @param   FOFHalLink  $link       The actual link object
+	 * @param   boolean     $overwrite  When false and a link of $rel relation exists, an array of
 	 *                                  links is created. Otherwise the existing link is overwriten
 	 *                                  with the new one
 	 *
@@ -100,9 +63,46 @@ class FOFHalLinks
 	}
 
 	/**
+	 * Add multiple links to the links collection
+	 *
+	 * @param   string   $rel        The relation of the links to the document. See RFC 5988.
+	 * @param   array    $links      An array of FOFHalLink objects
+	 * @param   boolean  $overwrite  When false and a link of $rel relation exists, an array
+	 *                               of links is created. Otherwise the existing link is
+	 *                               overwriten with the new one
+	 *
+	 * @return  boolean  True if the link was added to the collection
+	 */
+	public function addLinks($rel, array $links, $overwrite = true)
+	{
+		if (empty($links))
+		{
+			return false;
+		}
+
+		$localOverwrite = $overwrite;
+
+		foreach ($links as $link)
+		{
+			if ($link instanceof FOFHalLink)
+			{
+				$this->addLink($rel, $link, $localOverwrite);
+			}
+
+			// After the first time we call this with overwrite on we have to
+			// turn it off so that the other links are added to the set instead
+			// of overwriting the first item that's already added.
+			if ($localOverwrite)
+			{
+				$localOverwrite = false;
+			}
+		}
+	}
+
+	/**
 	 * Returns the collection of links
 	 *
-	 * @param   string $rel Optional; the relation to return the links for
+	 * @param   string  $rel  Optional; the relation to return the links for
 	 *
 	 * @return  array|FOFHalLink
 	 */

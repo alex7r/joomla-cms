@@ -13,7 +13,7 @@ $cparams = JComponentHelper::getParams('com_media');
 
 jimport('joomla.html.html.bootstrap');
 ?>
-<div class="contact<?php echo $this->pageclass_sfx ?>" itemscope itemtype="https://schema.org/Person">
+<div class="contact<?php echo $this->pageclass_sfx?>" itemscope itemtype="https://schema.org/Person">
 	<?php if ($this->params->get('show_page_heading')) : ?>
 		<h1>
 			<?php echo $this->escape($this->params->get('page_heading')); ?>
@@ -51,7 +51,7 @@ jimport('joomla.html.html.bootstrap');
 	<?php if ($this->params->get('show_contact_list') && count($this->contacts) > 1) : ?>
 		<form action="#" method="get" name="selectForm" id="selectForm">
 			<?php echo JText::_('COM_CONTACT_SELECT_CONTACT'); ?>
-			<?php echo JHtml::_('select.genericlist', $this->contacts, 'id', 'class="inputbox" onchange="document.location.href = this.value"', 'link', 'name', $this->contact->link); ?>
+			<?php echo JHtml::_('select.genericlist', $this->contacts, 'id', 'class="inputbox" onchange="document.location.href = this.value"', 'link', 'name', $this->contact->link);?>
 		</form>
 	<?php endif; ?>
 
@@ -62,7 +62,7 @@ jimport('joomla.html.html.bootstrap');
 
 	<?php echo $this->item->event->beforeDisplayContent; ?>
 
-	<?php if ($this->params->get('presentation_style') == 'sliders') : ?>
+ 	<?php if ($this->params->get('presentation_style') == 'sliders') : ?>
 		<?php echo JHtml::_('bootstrap.startAccordion', 'slide-contact', array('active' => 'basic-details')); ?>
 	<?php endif; ?>
 
@@ -78,8 +78,8 @@ jimport('joomla.html.html.bootstrap');
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'basic-details', JText::_('COM_CONTACT_DETAILS')); ?>
 	<?php endif; ?>
 
-	<?php if ($this->params->get('presentation_style') == 'plain'): ?>
-		<?php echo '<h3>' . JText::_('COM_CONTACT_DETAILS') . '</h3>'; ?>
+	<?php if ($this->params->get('presentation_style') == 'plain'):?>
+		<?php  echo '<h3>' . JText::_('COM_CONTACT_DETAILS') . '</h3>';  ?>
 	<?php endif; ?>
 
 	<?php if ($this->contact->image && $this->params->get('show_image')) : ?>
@@ -98,10 +98,10 @@ jimport('joomla.html.html.bootstrap');
 
 	<?php echo $this->loadTemplate('address'); ?>
 
-	<?php if ($this->params->get('allow_vcard')) : ?>
-		<?php echo JText::_('COM_CONTACT_DOWNLOAD_INFORMATION_AS'); ?>
+	<?php if ($this->params->get('allow_vcard')) :	?>
+		<?php echo JText::_('COM_CONTACT_DOWNLOAD_INFORMATION_AS');?>
 		<a href="<?php echo JRoute::_('index.php?option=com_contact&amp;view=contact&amp;id=' . $this->contact->id . '&amp;format=vcf'); ?>">
-			<?php echo JText::_('COM_CONTACT_VCARD'); ?></a>
+		<?php echo JText::_('COM_CONTACT_VCARD');?></a>
 	<?php endif; ?>
 
 	<?php if ($this->params->get('presentation_style') == 'sliders') : ?>
@@ -122,10 +122,10 @@ jimport('joomla.html.html.bootstrap');
 		<?php endif; ?>
 
 		<?php if ($this->params->get('presentation_style') == 'plain'): ?>
-			<?php echo '<h3>' . JText::_('COM_CONTACT_EMAIL_FORM') . '</h3>'; ?>
+			<?php echo '<h3>' . JText::_('COM_CONTACT_EMAIL_FORM') . '</h3>';  ?>
 		<?php endif; ?>
 
-		<?php echo $this->loadTemplate('form'); ?>
+		<?php  echo $this->loadTemplate('form');  ?>
 
 		<?php if ($this->params->get('presentation_style') == 'sliders') : ?>
 			<?php echo JHtml::_('bootstrap.endSlide'); ?>
@@ -150,8 +150,8 @@ jimport('joomla.html.html.bootstrap');
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'display-articles', JText::_('JGLOBAL_ARTICLES')); ?>
 		<?php endif; ?>
 
-		<?php if ($this->params->get('presentation_style') == 'plain'): ?>
-			<?php echo '<h3>' . JText::_('JGLOBAL_ARTICLES') . '</h3>'; ?>
+		<?php if ($this->params->get('presentation_style') == 'plain'):?>
+			<?php echo '<h3>' . JText::_('JGLOBAL_ARTICLES') . '</h3>';  ?>
 		<?php endif; ?>
 
 		<?php echo $this->loadTemplate('articles'); ?>
@@ -173,8 +173,8 @@ jimport('joomla.html.html.bootstrap');
 		<?php if ($this->params->get('presentation_style') == 'tabs') : ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'display-profile', JText::_('COM_CONTACT_PROFILE', true)); ?>
 		<?php endif; ?>
-		<?php if ($this->params->get('presentation_style') == 'plain'): ?>
-			<?php echo '<h3>' . JText::_('COM_CONTACT_PROFILE') . '</h3>'; ?>
+		<?php if ($this->params->get('presentation_style') == 'plain'):?>
+			<?php echo '<h3>' . JText::_('COM_CONTACT_PROFILE') . '</h3>';  ?>
 		<?php endif; ?>
 
 		<?php echo $this->loadTemplate('profile'); ?>
@@ -194,8 +194,8 @@ jimport('joomla.html.html.bootstrap');
 		<?php if ($this->params->get('presentation_style') == 'tabs') : ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'display-misc', JText::_('COM_CONTACT_OTHER_INFORMATION')); ?>
 		<?php endif; ?>
-		<?php if ($this->params->get('presentation_style') == 'plain'): ?>
-			<?php echo '<h3>' . JText::_('COM_CONTACT_OTHER_INFORMATION') . '</h3>'; ?>
+		<?php if ($this->params->get('presentation_style') == 'plain'):?>
+			<?php echo '<h3>' . JText::_('COM_CONTACT_OTHER_INFORMATION') . '</h3>';  ?>
 		<?php endif; ?>
 
 		<div class="contact-miscinfo">

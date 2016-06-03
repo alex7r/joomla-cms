@@ -24,6 +24,19 @@ class JArchiveZipTest extends JArchiveTestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->object = new JArchiveZip;
+	}
+
+	/**
 	 * Tests the extractNative Method.
 	 *
 	 * @return  void
@@ -119,18 +132,5 @@ class JArchiveZipTest extends JArchiveTestCase
 	{
 		$dataZip = file_get_contents(__DIR__ . '/logo.zip');
 		$this->assertTrue($this->object->checkZipData($dataZip));
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object = new JArchiveZip;
 	}
 }

@@ -1,9 +1,9 @@
 <?php
 /**
- * @package     FrameworkOnFramework
- * @subpackage  autoloader
+ *  @package     FrameworkOnFramework
+ *  @subpackage  autoloader
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license     GNU General Public License version 2, or later
+ *  @license     GNU General Public License version 2, or later
  */
 
 defined('FOF_INCLUDED') or die();
@@ -32,16 +32,6 @@ class FOFAutoloaderFof
 	public static $fofPath = null;
 
 	/**
-	 * Public constructor. Registers the autoloader with PHP.
-	 */
-	public function __construct()
-	{
-		self::$fofPath = realpath(__DIR__ . '/../');
-
-		spl_autoload_register(array($this, 'autoload_fof_core'));
-	}
-
-	/**
 	 * Initialise this autoloader
 	 *
 	 * @return  FOFAutoloaderFof
@@ -57,9 +47,19 @@ class FOFAutoloaderFof
 	}
 
 	/**
+	 * Public constructor. Registers the autoloader with PHP.
+	 */
+	public function __construct()
+	{
+		self::$fofPath = realpath(__DIR__ . '/../');
+
+		spl_autoload_register(array($this,'autoload_fof_core'));
+	}
+
+	/**
 	 * The actual autoloader
 	 *
-	 * @param   string $class_name The name of the class to load
+	 * @param   string  $class_name  The name of the class to load
 	 *
 	 * @return  void
 	 */
@@ -93,7 +93,7 @@ class FOFAutoloaderFof
 		{
 			reset($class);
 			$lastPart = end($class);
-			$path     = self::$fofPath . '/' . implode('/', $class) . '/' . $lastPart . '.php';
+			$path = self::$fofPath . '/' . implode('/', $class) . '/' . $lastPart . '.php';
 
 			if (@file_exists($path))
 			{

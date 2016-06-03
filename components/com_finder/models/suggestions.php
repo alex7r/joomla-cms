@@ -58,7 +58,7 @@ class FinderModelSuggestions extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select required fields
@@ -80,7 +80,7 @@ class FinderModelSuggestions extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id An identifier string to generate the store id. [optional]
+	 * @param   string  $id  An identifier string to generate the store id. [optional]
 	 *
 	 * @return  string  A store id.
 	 *
@@ -102,8 +102,8 @@ class FinderModelSuggestions extends JModelList
 	/**
 	 * Method to auto-populate the model state.  Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering  An optional ordering field.
-	 * @param   string $direction An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -112,10 +112,10 @@ class FinderModelSuggestions extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Get the configuration options.
-		$app    = JFactory::getApplication();
-		$input  = $app->input;
+		$app = JFactory::getApplication();
+		$input = $app->input;
 		$params = JComponentHelper::getParams('com_finder');
-		$user   = JFactory::getUser();
+		$user = JFactory::getUser();
 
 		// Get the query input.
 		$this->setState('input', $input->request->get('q', '', 'string'));

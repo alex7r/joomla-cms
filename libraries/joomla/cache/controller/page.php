@@ -43,8 +43,8 @@ class JCacheControllerPage extends JCacheController
 	/**
 	 * Get the cached page data
 	 *
-	 * @param   boolean $id    The cache data ID
-	 * @param   string  $group The cache data group
+	 * @param   boolean  $id     The cache data ID
+	 * @param   string   $group  The cache data group
 	 *
 	 * @return  mixed  Boolean false on no result, cached object otherwise
 	 *
@@ -115,55 +115,12 @@ class JCacheControllerPage extends JCacheController
 	}
 
 	/**
-	 * Generate a page cache id
-	 *
-	 * @return  string  MD5 Hash
-	 *
-	 * @since   11.1
-	 * @todo    Discuss whether this should be coupled to a data hash or a request hash ... perhaps hashed with a serialized request
-	 */
-	protected function _makeId()
-	{
-		return JCache::makeId();
-	}
-
-	/**
-	 * There is no change in page data so send an unmodified header and die gracefully
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function _noChange()
-	{
-		$app = JFactory::getApplication();
-
-		// Send not modified header and exit gracefully
-		header('HTTP/1.x 304 Not Modified', true);
-		$app->close();
-	}
-
-	/**
-	 * Set the ETag header in the response
-	 *
-	 * @param   string $etag The entity tag (etag) to set
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function _setEtag($etag)
-	{
-		JFactory::getApplication()->setHeader('ETag', $etag, true);
-	}
-
-	/**
 	 * Stop the cache buffer and store the cached data
 	 *
-	 * @param   mixed   $data       The data to store
-	 * @param   string  $id         The cache data ID
-	 * @param   string  $group      The cache data group
-	 * @param   boolean $wrkarounds True to use wrkarounds
+	 * @param   mixed    $data        The data to store
+	 * @param   string   $id          The cache data ID
+	 * @param   string   $group       The cache data group
+	 * @param   boolean  $wrkarounds  True to use wrkarounds
 	 *
 	 * @return  boolean
 	 *
@@ -220,5 +177,48 @@ class JCacheControllerPage extends JCacheController
 		}
 
 		return false;
+	}
+
+	/**
+	 * Generate a page cache id
+	 *
+	 * @return  string  MD5 Hash
+	 *
+	 * @since   11.1
+	 * @todo    Discuss whether this should be coupled to a data hash or a request hash ... perhaps hashed with a serialized request
+	 */
+	protected function _makeId()
+	{
+		return JCache::makeId();
+	}
+
+	/**
+	 * There is no change in page data so send an unmodified header and die gracefully
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function _noChange()
+	{
+		$app = JFactory::getApplication();
+
+		// Send not modified header and exit gracefully
+		header('HTTP/1.x 304 Not Modified', true);
+		$app->close();
+	}
+
+	/**
+	 * Set the ETag header in the response
+	 *
+	 * @param   string  $etag  The entity tag (etag) to set
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function _setEtag($etag)
+	{
+		JFactory::getApplication()->setHeader('ETag', $etag, true);
 	}
 }

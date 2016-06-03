@@ -19,10 +19,10 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method to create a node
 	 *
-	 * @param   integer $changeset Changeset id
-	 * @param   float   $latitude  Latitude of the node
-	 * @param   float   $longitude Longitude of the node
-	 * @param   arary   $tags      Array of tags for a node
+	 * @param   integer  $changeset  Changeset id
+	 * @param   float    $latitude   Latitude of the node
+	 * @param   float    $longitude  Longitude of the node
+	 * @param   arary    $tags       Array of tags for a node
 	 *
 	 * @return  array  The XML response
 	 *
@@ -57,8 +57,8 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 		$xml = '<?xml version="1.0" encoding="UTF-8"?>
 				<osm version="0.6" generator="JOpenstreetmap">
 				<node changeset="' . $changeset . '" lat="' . $latitude . '" lon="' . $longitude . '">'
-			. $tag_list .
-			'</node>
+				. $tag_list .
+				'</node>
 				</osm>';
 
 		$header['Content-Type'] = 'text/xml';
@@ -72,9 +72,9 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method to create a way
 	 *
-	 * @param   integer $changeset Changeset id
-	 * @param   array   $tags      Array of tags for a way
-	 * @param   array   $nds       Node ids to refer
+	 * @param   integer  $changeset  Changeset id
+	 * @param   array    $tags       Array of tags for a way
+	 * @param   array    $nds        Node ids to refer
 	 *
 	 * @return  array   The XML response
 	 *
@@ -119,9 +119,9 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 		$xml = '<?xml version="1.0" encoding="UTF-8"?>
 				<osm version="0.6" generator="JOpenstreetmap">
 				<way changeset="' . $changeset . '">'
-			. $tag_list
-			. $nd_list .
-			'</way>
+					. $tag_list
+					. $nd_list .
+				'</way>
 			</osm>';
 
 		$header['Content-Type'] = 'text/xml';
@@ -135,9 +135,9 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method to create a relation
 	 *
-	 * @param   integer $changeset   Changeset id
-	 * @param   array   $tags        Array of tags for a relation
-	 * @param   array   $members     Array of members for a relation
+	 * @param   integer  $changeset  Changeset id
+	 * @param   array    $tags       Array of tags for a relation
+	 * @param   array    $members    Array of members for a relation
 	 *                               eg: $members = array(array("type"=>"node", "role"=>"stop", "ref"=>"123"), array("type"=>"way", "ref"=>"123"))
 	 *
 	 * @return  array  The XML response
@@ -191,9 +191,9 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 		$xml = '<?xml version="1.0" encoding="UTF-8"?>
 				<osm version="0.6" generator="JOpenstreetmap">
 				<relation relation="' . $changeset . '" >'
-			. $tag_list
-			. $member_list .
-			'</relation>
+					. $tag_list
+					. $member_list .
+				'</relation>
 			</osm>';
 
 		$header['Content-Type'] = 'text/xml';
@@ -207,8 +207,8 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method to read an element [node|way|relation]
 	 *
-	 * @param   string  $element [node|way|relation]
-	 * @param   integer $id      Element identifier
+	 * @param   string   $element  [node|way|relation]
+	 * @param   integer  $id       Element identifier
 	 *
 	 * @return  array  The XML response
 	 *
@@ -237,9 +237,9 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method to update an Element [node|way|relation]
 	 *
-	 * @param   string  $element [node|way|relation]
-	 * @param   string  $xml     Full reperentation of the element with a version number
-	 * @param   integer $id      Element identifier
+	 * @param   string   $element  [node|way|relation]
+	 * @param   string   $xml      Full reperentation of the element with a version number
+	 * @param   integer  $id       Element identifier
 	 *
 	 * @return  array   The xml response
 	 *
@@ -277,12 +277,12 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method to delete an element [node|way|relation]
 	 *
-	 * @param   string  $element   [node|way|relation]
-	 * @param   integer $id        Element identifier
-	 * @param   integer $version   Element version
-	 * @param   integer $changeset Changeset identifier
-	 * @param   float   $latitude  Latitude of the element
-	 * @param   float   $longitude Longitude of the element
+	 * @param   string   $element    [node|way|relation]
+	 * @param   integer  $id         Element identifier
+	 * @param   integer  $version    Element version
+	 * @param   integer  $changeset  Changeset identifier
+	 * @param   float    $latitude   Latitude of the element
+	 * @param   float    $longitude  Longitude of the element
 	 *
 	 * @return  array   The XML response
 	 *
@@ -332,8 +332,8 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method to get history of an element [node|way|relation]
 	 *
-	 * @param   string  $element [node|way|relation]
-	 * @param   integer $id      Element identifier
+	 * @param   string   $element  [node|way|relation]
+	 * @param   integer  $id       Element identifier
 	 *
 	 * @return  array   The XML response
 	 *
@@ -362,16 +362,16 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method to get details about a version of an element [node|way|relation]
 	 *
-	 * @param   string  $element [node|way|relation]
-	 * @param   integer $id      Element identifier
-	 * @param   integer $version Element version
+	 * @param   string   $element  [node|way|relation]
+	 * @param   integer  $id       Element identifier
+	 * @param   integer  $version  Element version
 	 *
 	 * @return  array    The XML response
 	 *
 	 * @since   13.1
 	 * @throws  DomainException
 	 */
-	public function versionOfElement($element, $id, $version)
+	public function versionOfElement($element, $id ,$version)
 	{
 		if ($element != 'node' && $element != 'way' && $element != 'relation')
 		{
@@ -393,8 +393,8 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method to get data about multiple ids of an element [node|way|relation]
 	 *
-	 * @param   string $element [nodes|ways|relations] - use plural word
-	 * @param   string $params  Comma separated list of ids belonging to type $element
+	 * @param   string  $element  [nodes|ways|relations] - use plural word
+	 * @param   string  $params   Comma separated list of ids belonging to type $element
 	 *
 	 * @return  array   The XML response
 	 *
@@ -426,8 +426,8 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method to get relations for an Element [node|way|relation]
 	 *
-	 * @param   string  $element [node|way|relation]
-	 * @param   integer $id      Element identifier
+	 * @param   string   $element  [node|way|relation]
+	 * @param   integer  $id       Element identifier
 	 *
 	 * @return  array   The XML response
 	 *
@@ -456,7 +456,7 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method to get ways for a Node element
 	 *
-	 * @param   integer $id Node identifier
+	 * @param   integer  $id  Node identifier
 	 *
 	 * @return  array  The XML response
 	 *
@@ -479,8 +479,8 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method to get full information about an element [way|relation]
 	 *
-	 * @param   string  $element [way|relation]
-	 * @param   integer $id      Identifier
+	 * @param   string   $element  [way|relation]
+	 * @param   integer  $id       Identifier
 	 *
 	 * @return  array  The XML response
 	 *
@@ -509,10 +509,10 @@ class JOpenstreetmapElements extends JOpenstreetmapObject
 	/**
 	 * Method used by the DWG to hide old versions of elements containing data privacy or copyright infringements
 	 *
-	 * @param   string  $element      [node|way|relation]
-	 * @param   integer $id           Element identifier
-	 * @param   integer $version      Element version
-	 * @param   integer $redaction_id Redaction id
+	 * @param   string   $element       [node|way|relation]
+	 * @param   integer  $id            Element identifier
+	 * @param   integer  $version       Element version
+	 * @param   integer  $redaction_id  Redaction id
 	 *
 	 * @return  array   The xml response
 	 *

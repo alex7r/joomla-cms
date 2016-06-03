@@ -67,7 +67,7 @@ class InstallationControllerRemovefolder extends JControllerBase
 			$ftp->login($options->ftp_user, $options->ftp_pass);
 
 			// Translate path for the FTP account.
-			$file   = JPath::clean(str_replace(JPATH_CONFIGURATION, $options->ftp_root, $path), '/');
+			$file = JPath::clean(str_replace(JPATH_CONFIGURATION, $options->ftp_root, $path), '/');
 			$return = $ftp->delete($file);
 
 			// Delete the extra XML file while we're at it.
@@ -85,7 +85,7 @@ class InstallationControllerRemovefolder extends JControllerBase
 			if ($return)
 			{
 				$robotsFile = JPath::clean($options->ftp_root . '/robots.txt');
-				$distFile   = JPath::clean($options->ftp_root . '/robots.txt.dist');
+				$distFile = JPath::clean($options->ftp_root . '/robots.txt.dist');
 
 				if (!file_exists($robotsFile) && file_exists($distFile))
 				{
@@ -121,7 +121,7 @@ class InstallationControllerRemovefolder extends JControllerBase
 		}
 
 		// Create a response body.
-		$r       = new stdClass;
+		$r = new stdClass;
 		$r->text = JText::_('INSTL_COMPLETE_FOLDER_REMOVED');
 
 		/*
@@ -136,7 +136,7 @@ class InstallationControllerRemovefolder extends JControllerBase
 	 * can be an Exception object for when an error has occurred or
 	 * a stdClass for a good response.
 	 *
-	 * @param   mixed $response stdClass on success, Exception on failure.
+	 * @param   mixed  $response  stdClass on success, Exception on failure.
 	 *
 	 * @return  void
 	 *
@@ -172,7 +172,7 @@ class InstallationResponseJson
 	/**
 	 * Constructor for the JSON response
 	 *
-	 * @param   mixed $data Exception if there is an error, otherwise, the session data
+	 * @param   mixed  $data  Exception if there is an error, otherwise, the session data
 	 *
 	 * @since   3.1
 	 */

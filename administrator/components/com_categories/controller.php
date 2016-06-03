@@ -27,7 +27,7 @@ class CategoriesController extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JControllerLegacy
 	 * @since   1.6
@@ -46,8 +46,8 @@ class CategoriesController extends JControllerLegacy
 	/**
 	 * Method to display a view.
 	 *
-	 * @param   boolean $cachable  If true, the view output will be cached
-	 * @param   array   $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean  $cachable   If true, the view output will be cached
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  CategoriesController  This object to support chaining.
 	 *

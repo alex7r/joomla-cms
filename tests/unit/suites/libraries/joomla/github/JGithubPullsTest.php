@@ -54,6 +54,41 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackagePulls($this->options, $this->client);
+	}
+
+	/**
+	 * Test...
+	 *
+	 * @param   string  $name  The method name.
+	 *
+	 * @return string
+	 */
+	protected function getMethod($name)
+	{
+		$class = new ReflectionClass('JGithubPulls');
+		$method = $class->getMethod($name);
+		$method->setAccessible(true);
+
+		return $method;
+	}
+
+	/**
 	 * Tests the create method
 	 *
 	 * @return void
@@ -63,11 +98,11 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 201;
 		$this->response->body = $this->sampleString;
 
-		$pull        = new stdClass;
+		$pull = new stdClass;
 		$pull->title = 'My Pull Request';
-		$pull->base  = 'staging';
-		$pull->head  = 'joomla-jenkins:mychanges';
-		$pull->body  = 'These are my changes - please review them';
+		$pull->base = 'staging';
+		$pull->head = 'joomla-jenkins:mychanges';
+		$pull->body = 'These are my changes - please review them';
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -93,11 +128,11 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 501;
 		$this->response->body = $this->errorString;
 
-		$pull        = new stdClass;
+		$pull = new stdClass;
 		$pull->title = 'My Pull Request';
-		$pull->base  = 'staging';
-		$pull->head  = 'joomla-jenkins:mychanges';
-		$pull->body  = 'These are my changes - please review them';
+		$pull->base = 'staging';
+		$pull->head = 'joomla-jenkins:mychanges';
+		$pull->body = 'These are my changes - please review them';
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -118,11 +153,11 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 201;
 		$this->response->body = $this->sampleString;
 
-		$pull            = new stdClass;
-		$pull->body      = 'My Insightful Comment';
+		$pull = new stdClass;
+		$pull->body = 'My Insightful Comment';
 		$pull->commit_id = 'abcde12345';
-		$pull->path      = '/path/to/file';
-		$pull->position  = 254;
+		$pull->path = '/path/to/file';
+		$pull->position = 254;
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -147,11 +182,11 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 501;
 		$this->response->body = $this->errorString;
 
-		$pull            = new stdClass;
-		$pull->body      = 'My Insightful Comment';
+		$pull = new stdClass;
+		$pull->body = 'My Insightful Comment';
 		$pull->commit_id = 'abcde12345';
-		$pull->path      = '/path/to/file';
-		$pull->position  = 254;
+		$pull->path = '/path/to/file';
+		$pull->position = 254;
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -171,8 +206,8 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 201;
 		$this->response->body = $this->sampleString;
 
-		$pull              = new stdClass;
-		$pull->body        = 'My Insightful Comment';
+		$pull = new stdClass;
+		$pull->body = 'My Insightful Comment';
 		$pull->in_reply_to = 434;
 
 		$this->client->expects($this->once())
@@ -198,8 +233,8 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 501;
 		$this->response->body = $this->errorString;
 
-		$pull              = new stdClass;
-		$pull->body        = 'My Insightful Comment';
+		$pull = new stdClass;
+		$pull->body = 'My Insightful Comment';
 		$pull->in_reply_to = 434;
 
 		$this->client->expects($this->once())
@@ -220,10 +255,10 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 201;
 		$this->response->body = $this->sampleString;
 
-		$pull        = new stdClass;
+		$pull = new stdClass;
 		$pull->issue = 254;
-		$pull->base  = 'staging';
-		$pull->head  = 'joomla-jenkins:mychanges';
+		$pull->base = 'staging';
+		$pull->head = 'joomla-jenkins:mychanges';
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -248,10 +283,10 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 501;
 		$this->response->body = $this->errorString;
 
-		$pull        = new stdClass;
+		$pull = new stdClass;
 		$pull->issue = 254;
-		$pull->base  = 'staging';
-		$pull->head  = 'joomla-jenkins:mychanges';
+		$pull->base = 'staging';
+		$pull->head = 'joomla-jenkins:mychanges';
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -309,9 +344,9 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 200;
 		$this->response->body = $this->sampleString;
 
-		$pull        = new stdClass;
+		$pull = new stdClass;
 		$pull->title = 'My Pull Request';
-		$pull->body  = 'These are my changes - please review them';
+		$pull->body = 'These are my changes - please review them';
 		$pull->state = 'Closed';
 
 		$this->client->expects($this->once())
@@ -337,9 +372,9 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 500;
 		$this->response->body = $this->errorString;
 
-		$pull        = new stdClass;
+		$pull = new stdClass;
 		$pull->title = 'My Pull Request';
-		$pull->body  = 'These are my changes - please review them';
+		$pull->body = 'These are my changes - please review them';
 
 		$this->client->expects($this->once())
 			->method('patch')
@@ -359,7 +394,7 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 200;
 		$this->response->body = $this->sampleString;
 
-		$pull       = new stdClass;
+		$pull = new stdClass;
 		$pull->body = 'This comment is now even more insightful';
 
 		$this->client->expects($this->once())
@@ -385,7 +420,7 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 500;
 		$this->response->body = $this->errorString;
 
-		$pull       = new stdClass;
+		$pull = new stdClass;
 		$pull->body = 'This comment is now even more insightful';
 
 		$this->client->expects($this->once())
@@ -743,40 +778,5 @@ class JGithubPullsTest extends PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->object->merge('joomla', 'joomla-platform', 523);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options  = new JRegistry;
-		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackagePulls($this->options, $this->client);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @param   string $name The method name.
-	 *
-	 * @return string
-	 */
-	protected function getMethod($name)
-	{
-		$class  = new ReflectionClass('JGithubPulls');
-		$method = $class->getMethod($name);
-		$method->setAccessible(true);
-
-		return $method;
 	}
 }

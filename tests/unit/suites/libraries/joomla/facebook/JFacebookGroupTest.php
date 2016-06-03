@@ -61,6 +61,45 @@ class JFacebookGroupTest extends TestCase
 	protected $sampleUrl = '"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/372662_10575676585_830678637_q.jpg"';
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   13.1
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$app_id = "app_id";
+		$app_secret = "app_secret";
+		$my_url = "http://localhost/gsoc/joomla-platform/facebook_test.php";
+		$access_token = array(
+			'access_token' => 'token',
+			'expires' => '51837673', 'created' => '2443672521');
+
+		$this->options = new Registry;
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->input = new JInput;
+		$this->oauth = new JFacebookOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JFacebookGroup($this->options, $this->client, $this->oauth);
+
+		$this->options->set('clientid', $app_id);
+		$this->options->set('clientsecret', $app_secret);
+		$this->options->set('redirecturi', $my_url);
+		$this->options->set('sendheaders', true);
+		$this->options->set('authmethod', 'get');
+
+		parent::setUp();
+	}
+
+	/**
 	 * Tests the getGroup method
 	 *
 	 * @return  void
@@ -72,14 +111,14 @@ class JFacebookGroupTest extends TestCase
 		$token = $this->oauth->getToken();
 		$group = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($group . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($group . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getGroup($group),
@@ -100,14 +139,14 @@ class JFacebookGroupTest extends TestCase
 		$token = $this->oauth->getToken();
 		$group = '124346363456';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($group . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($group . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->getGroup($group);
 	}
@@ -124,14 +163,14 @@ class JFacebookGroupTest extends TestCase
 		$token = $this->oauth->getToken();
 		$group = '156174391080008';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($group . '/feed?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($group . '/feed?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getFeed($group),
@@ -152,14 +191,14 @@ class JFacebookGroupTest extends TestCase
 		$token = $this->oauth->getToken();
 		$group = '156174391080008';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($group . '/feed?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($group . '/feed?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->getFeed($group);
 	}
@@ -176,14 +215,14 @@ class JFacebookGroupTest extends TestCase
 		$token = $this->oauth->getToken();
 		$group = '156174391080008';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($group . '/members?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($group . '/members?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getMembers($group),
@@ -204,14 +243,14 @@ class JFacebookGroupTest extends TestCase
 		$token = $this->oauth->getToken();
 		$group = '156174391080008';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($group . '/members?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($group . '/members?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->getMembers($group);
 	}
@@ -228,14 +267,14 @@ class JFacebookGroupTest extends TestCase
 		$token = $this->oauth->getToken();
 		$group = '156174391080008';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($group . '/docs?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($group . '/docs?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getDocs($group),
@@ -256,14 +295,14 @@ class JFacebookGroupTest extends TestCase
 		$token = $this->oauth->getToken();
 		$group = '156174391080008';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($group . '/docs?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($group . '/docs?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->getDocs($group);
 	}
@@ -279,16 +318,16 @@ class JFacebookGroupTest extends TestCase
 	{
 		$token = $this->oauth->getToken();
 		$group = '156174391080008';
-		$type  = 'large';
+		$type = 'large';
 
-		$returnData                      = new JHttpResponse;
-		$returnData->code                = 302;
+		$returnData = new JHttpResponse;
+		$returnData->code = 302;
 		$returnData->headers['Location'] = $this->sampleUrl;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($group . '/picture?type=' . $type . '&access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($group . '/picture?type=' . $type . '&access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getPicture($group, $type),
@@ -308,16 +347,16 @@ class JFacebookGroupTest extends TestCase
 	{
 		$token = $this->oauth->getToken();
 		$group = '156174391080008';
-		$type  = 'large';
+		$type = 'large';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('get')
-			->with($group . '/picture?type=' . $type . '&access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('get')
+		->with($group . '/picture?type=' . $type . '&access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->getPicture($group, $type);
 	}
@@ -331,24 +370,24 @@ class JFacebookGroupTest extends TestCase
 	 */
 	public function testCreateLink()
 	{
-		$token   = $this->oauth->getToken();
-		$group   = '156174391080008';
-		$link    = 'www.example.com';
+		$token = $this->oauth->getToken();
+		$group = '156174391080008';
+		$link = 'www.example.com';
 		$message = 'This is a message';
 
 		// Set POST request parameters.
-		$data            = array();
-		$data['link']    = $link;
+		$data = array();
+		$data['link'] = $link;
 		$data['message'] = $message;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($group . '/feed' . '?access_token=' . $token['access_token'], $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($group . '/feed' . '?access_token=' . $token['access_token'], $data)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createLink($group, $link, $message),
@@ -366,24 +405,24 @@ class JFacebookGroupTest extends TestCase
 	 */
 	public function testCreateLinkFailure()
 	{
-		$token   = $this->oauth->getToken();
-		$group   = '156174391080008';
-		$link    = 'www.example.com';
+		$token = $this->oauth->getToken();
+		$group = '156174391080008';
+		$link = 'www.example.com';
 		$message = 'This is a message';
 
 		// Set POST request parameters.
-		$data            = array();
-		$data['link']    = $link;
+		$data = array();
+		$data['link'] = $link;
 		$data['message'] = $message;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($group . '/feed' . '?access_token=' . $token['access_token'], $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($group . '/feed' . '?access_token=' . $token['access_token'], $data)
+		->will($this->returnValue($returnData));
 
 		$this->object->createLink($group, $link, $message);
 	}
@@ -398,16 +437,16 @@ class JFacebookGroupTest extends TestCase
 	public function testDeleteLink()
 	{
 		$token = $this->oauth->getToken();
-		$link  = '156174391080008_235345346';
+		$link = '156174391080008_235345346';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = true;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($link . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($link . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteLink($link),
@@ -426,16 +465,16 @@ class JFacebookGroupTest extends TestCase
 	public function testDeleteLinkFailure()
 	{
 		$token = $this->oauth->getToken();
-		$link  = '156174391080008_235345346';
+		$link = '156174391080008_235345346';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($link . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($link . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->deleteLink($link);
 	}
@@ -449,40 +488,40 @@ class JFacebookGroupTest extends TestCase
 	 */
 	public function testCreatePost()
 	{
-		$token       = $this->oauth->getToken();
-		$group       = '134534252';
-		$message     = 'message';
-		$link        = 'www.example.com';
-		$picture     = 'thumbnail.example.com';
-		$name        = 'name';
-		$caption     = 'caption';
+		$token = $this->oauth->getToken();
+		$group = '134534252';
+		$message = 'message';
+		$link = 'www.example.com';
+		$picture = 'thumbnail.example.com';
+		$name = 'name';
+		$caption = 'caption';
 		$description = 'description';
-		$actions     = array('{"name":"Share","link":"http://networkedblogs.com/hGWk3?a=share"}');
+		$actions = array('{"name":"Share","link":"http://networkedblogs.com/hGWk3?a=share"}');
 
 		// Set POST request parameters.
-		$data                = array();
-		$data['message']     = $message;
-		$data['link']        = $link;
-		$data['name']        = $name;
-		$data['caption']     = $caption;
+		$data = array();
+		$data['message'] = $message;
+		$data['link'] = $link;
+		$data['name'] = $name;
+		$data['caption'] = $caption;
 		$data['description'] = $description;
-		$data['actions']     = $actions;
-		$data['picture']     = $picture;
+		$data['actions'] = $actions;
+		$data['picture'] = $picture;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($group . '/feed' . '?access_token=' . $token['access_token'], $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($group . '/feed' . '?access_token=' . $token['access_token'], $data)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createPost(
 				$group, $message, $link, $picture, $name,
 				$caption, $description, $actions
-			),
+				),
 			$this->equalTo(json_decode($this->sampleString))
 		);
 	}
@@ -497,39 +536,39 @@ class JFacebookGroupTest extends TestCase
 	 */
 	public function testCreatePostFailure()
 	{
-		$token       = $this->oauth->getToken();
-		$group       = '134534252';
-		$message     = 'message';
-		$link        = 'www.example.com';
-		$picture     = 'thumbnail.example.com';
-		$name        = 'name';
-		$caption     = 'caption';
+		$token = $this->oauth->getToken();
+		$group = '134534252';
+		$message = 'message';
+		$link = 'www.example.com';
+		$picture = 'thumbnail.example.com';
+		$name = 'name';
+		$caption = 'caption';
 		$description = 'description';
-		$actions     = array('{"name":"Share","link":"http://networkedblogs.com/hGWk3?a=share"}');
+		$actions = array('{"name":"Share","link":"http://networkedblogs.com/hGWk3?a=share"}');
 
 		// Set POST request parameters.
-		$data                = array();
-		$data['message']     = $message;
-		$data['link']        = $link;
-		$data['name']        = $name;
-		$data['caption']     = $caption;
+		$data = array();
+		$data['message'] = $message;
+		$data['link'] = $link;
+		$data['name'] = $name;
+		$data['caption'] = $caption;
 		$data['description'] = $description;
-		$data['actions']     = $actions;
-		$data['picture']     = $picture;
+		$data['actions'] = $actions;
+		$data['picture'] = $picture;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($group . '/feed' . '?access_token=' . $token['access_token'], $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($group . '/feed' . '?access_token=' . $token['access_token'], $data)
+		->will($this->returnValue($returnData));
 
 		$this->object->createPost(
 			$group, $message, $link, $picture, $name,
 			$caption, $description, $actions
-		);
+			);
 	}
 
 	/**
@@ -542,16 +581,16 @@ class JFacebookGroupTest extends TestCase
 	public function testDeletePost()
 	{
 		$token = $this->oauth->getToken();
-		$post  = '5148941614_234324';
+		$post = '5148941614_234324';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = true;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($post . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($post . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deletePost($post),
@@ -570,16 +609,16 @@ class JFacebookGroupTest extends TestCase
 	public function testDeletePostFailure()
 	{
 		$token = $this->oauth->getToken();
-		$post  = '5148941614_234324';
+		$post = '5148941614_234324';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($post . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($post . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->deletePost($post);
 	}
@@ -593,22 +632,22 @@ class JFacebookGroupTest extends TestCase
 	 */
 	public function testCreateStatus()
 	{
-		$token   = $this->oauth->getToken();
-		$group   = '134534252457';
+		$token = $this->oauth->getToken();
+		$group = '134534252457';
 		$message = 'This is a message';
 
 		// Set POST request parameters.
-		$data            = array();
+		$data = array();
 		$data['message'] = $message;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($group . '/feed' . '?access_token=' . $token['access_token'], $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($group . '/feed' . '?access_token=' . $token['access_token'], $data)
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createStatus($group, $message),
@@ -626,22 +665,22 @@ class JFacebookGroupTest extends TestCase
 	 */
 	public function testCreateStatusFailure()
 	{
-		$token   = $this->oauth->getToken();
-		$group   = '134534252457';
+		$token = $this->oauth->getToken();
+		$group = '134534252457';
 		$message = 'This is a message';
 
 		// Set POST request parameters.
-		$data            = array();
+		$data = array();
 		$data['message'] = $message;
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('post')
-			->with($group . '/feed' . '?access_token=' . $token['access_token'], $data)
-			->will($this->returnValue($returnData));
+		->method('post')
+		->with($group . '/feed' . '?access_token=' . $token['access_token'], $data)
+		->will($this->returnValue($returnData));
 
 		$this->object->createStatus($group, $message);
 	}
@@ -655,17 +694,17 @@ class JFacebookGroupTest extends TestCase
 	 */
 	public function testDeleteStatus()
 	{
-		$token  = $this->oauth->getToken();
+		$token = $this->oauth->getToken();
 		$status = '2457344632_5148941614';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = true;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($status . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($status . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteStatus($status),
@@ -683,57 +722,18 @@ class JFacebookGroupTest extends TestCase
 	 */
 	public function testDeleteStatusFailure()
 	{
-		$token  = $this->oauth->getToken();
+		$token = $this->oauth->getToken();
 		$status = '2457344632_5148941614';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-			->method('delete')
-			->with($status . '?access_token=' . $token['access_token'])
-			->will($this->returnValue($returnData));
+		->method('delete')
+		->with($status . '?access_token=' . $token['access_token'])
+		->will($this->returnValue($returnData));
 
 		$this->object->deleteStatus($status);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   13.1
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$app_id       = "app_id";
-		$app_secret   = "app_secret";
-		$my_url       = "http://localhost/gsoc/joomla-platform/facebook_test.php";
-		$access_token = array(
-			'access_token' => 'token',
-			'expires'      => '51837673', 'created' => '2443672521');
-
-		$this->options = new Registry;
-		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->input   = new JInput;
-		$this->oauth   = new JFacebookOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JFacebookGroup($this->options, $this->client, $this->oauth);
-
-		$this->options->set('clientid', $app_id);
-		$this->options->set('clientsecret', $app_secret);
-		$this->options->set('redirecturi', $my_url);
-		$this->options->set('sendheaders', true);
-		$this->options->set('authmethod', 'get');
-
-		parent::setUp();
 	}
 }

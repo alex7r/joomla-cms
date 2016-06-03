@@ -25,26 +25,6 @@ class PlgSystemSef extends JPlugin
 	protected $app;
 
 	/**
-	 * Replace the matched tags.
-	 *
-	 * @param   array &$matches An array of matches (see preg_match_all).
-	 *
-	 * @return  string
-	 *
-	 * @deprecated  4.0  No replacement.
-	 */
-	protected static function route(&$matches)
-	{
-		JLog::add(__METHOD__ . ' is deprecated, no replacement.', JLog::WARNING, 'deprecated');
-
-		$url   = $matches[1];
-		$url   = str_replace('&amp;', '&', $url);
-		$route = JRoute::_('index.php?' . $url);
-
-		return 'href="' . $route;
-	}
-
-	/**
 	 * Add the canonical uri to the head.
 	 *
 	 * @return  void
@@ -200,7 +180,7 @@ class PlgSystemSef extends JPlugin
 	/**
 	 * Check the buffer.
 	 *
-	 * @param   string $buffer Buffer to be checked.
+	 * @param   string  $buffer  Buffer to be checked.
 	 *
 	 * @return  void
 	 */
@@ -225,5 +205,25 @@ class PlgSystemSef extends JPlugin
 
 			throw new RuntimeException($message);
 		}
+	}
+
+	/**
+	 * Replace the matched tags.
+	 *
+	 * @param   array  &$matches  An array of matches (see preg_match_all).
+	 *
+	 * @return  string
+	 *
+	 * @deprecated  4.0  No replacement.
+	 */
+	protected static function route(&$matches)
+	{
+		JLog::add(__METHOD__ . ' is deprecated, no replacement.', JLog::WARNING, 'deprecated');
+
+		$url   = $matches[1];
+		$url   = str_replace('&amp;', '&', $url);
+		$route = JRoute::_('index.php?' . $url);
+
+		return 'href="' . $route;
 	}
 }

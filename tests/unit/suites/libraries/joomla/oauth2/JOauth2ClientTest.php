@@ -19,44 +19,64 @@ use Joomla\Registry\Registry;
 class JOAuth2ClientTest extends TestCase
 {
 	/**
-	 * Code that the app closes with.
-	 *
-	 * @var  int
-	 */
-	private static $closed = null;
-	/**
 	 * @var    Registry  Options for the JOAuth2Client object.
 	 */
 	protected $options;
+
 	/**
 	 * @var    JHttp  Mock client object.
 	 */
 	protected $client;
+
 	/**
 	 * @var    JInput  The input object to use in retrieving GET/POST data.
 	 */
 	protected $input;
+
 	/**
 	 * @var    JApplicationWeb  The application object to send HTTP headers for redirects.
 	 */
 	protected $application;
+
 	/**
 	 * @var    JOAuth2Client  Object under test.
 	 */
 	protected $object;
 
 	/**
-	 * @param   integer $code The exit code (optional; default is 0).
+	 * Code that the app closes with.
+	 *
+	 * @var  int
 	 */
-	public static function mockClose($code = 0)
+	private static $closed = null;
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
 	{
-		self::$closed = $code;
+		parent::setUp();
+
+		$_SERVER['HTTP_HOST'] = 'mydomain.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$this->options = new Registry;
+		$this->http = $this->getMock('JHttp', array('head', 'get', 'delete', 'trace', 'post', 'put', 'patch'), array($this->options));
+		$array = array();
+		$this->input = new JInput($array);
+		$this->application = $this->getMockWeb();
+		$this->object = new JOAuth2Client($this->options, $this->http, $this->input, $this->application);
 	}
 
 	/**
 	 * Tests the auth method
 	 *
-	 * @group    JOAuth2
+	 * @group	JOAuth2
 	 * @return void
 	 */
 	public function testAuth()
@@ -86,7 +106,7 @@ class JOAuth2ClientTest extends TestCase
 	/**
 	 * Tests the auth method with JSON data
 	 *
-	 * @group    JOAuth2
+	 * @group	JOAuth2
 	 * @return void
 	 */
 	public function testAuthJson()
@@ -106,22 +126,22 @@ class JOAuth2ClientTest extends TestCase
 	/**
 	 * Tests the isauth method
 	 *
-	 * @group    JOAuth2
+	 * @group	JOAuth2
 	 * @return void
 	 */
 	public function testIsAuth()
 	{
 		$this->assertEquals(false, $this->object->isAuthenticated());
 
-		$token['access_token']  = 'accessvalue';
+		$token['access_token'] = 'accessvalue';
 		$token['refresh_token'] = 'refreshvalue';
-		$token['created']       = time();
-		$token['expires_in']    = 3600;
+		$token['created'] = time();
+		$token['expires_in'] = 3600;
 		$this->object->setToken($token);
 
 		$this->assertTrue($this->object->isAuthenticated());
 
-		$token['created']    = time() - 4000;
+		$token['created'] = time() - 4000;
 		$token['expires_in'] = 3600;
 		$this->object->setToken($token);
 
@@ -131,7 +151,7 @@ class JOAuth2ClientTest extends TestCase
 	/**
 	 * Tests the auth method
 	 *
-	 * @group    JOAuth2
+	 * @group	JOAuth2
 	 * @return void
 	 */
 	public function testCreateUrl()
@@ -143,7 +163,7 @@ class JOAuth2ClientTest extends TestCase
 		$this->object->setOption('redirecturi', 'http://localhost/oauth');
 		$this->object->setOption('requestparams', array('access_type' => 'offline', 'approval_prompt' => 'auto'));
 
-		$url      = $this->object->createUrl();
+		$url = $this->object->createUrl();
 		$expected = 'https://accounts.google.com/o/oauth2/auth?response_type=code';
 		$expected .= '&client_id=01234567891011.apps.googleusercontent.com';
 		$expected .= '&redirect_uri=http%3A%2F%2Flocalhost%2Foauth';
@@ -156,15 +176,15 @@ class JOAuth2ClientTest extends TestCase
 	/**
 	 * Tests the auth method
 	 *
-	 * @group    JOAuth2
+	 * @group	JOAuth2
 	 * @return void
 	 */
 	public function testQuery()
 	{
-		$token['access_token']  = 'accessvalue';
+		$token['access_token'] = 'accessvalue';
 		$token['refresh_token'] = 'refreshvalue';
-		$token['created']       = time() - 1800;
-		$token['expires_in']    = 600;
+		$token['created'] = time() - 1800;
+		$token['expires_in'] = 600;
 		$this->object->setToken($token);
 
 		$result = $this->object->query('https://www.googleapis.com/auth/calendar', array('param' => 'value'), array(), 'get');
@@ -188,7 +208,7 @@ class JOAuth2ClientTest extends TestCase
 	/**
 	 * Tests the setOption method
 	 *
-	 * @group    JOAuth2
+	 * @group	JOAuth2
 	 * @return void
 	 */
 	public function testSetOption()
@@ -204,7 +224,7 @@ class JOAuth2ClientTest extends TestCase
 	/**
 	 * Tests the getOption method
 	 *
-	 * @group    JOAuth2
+	 * @group	JOAuth2
 	 * @return void
 	 */
 	public function testGetOption()
@@ -220,7 +240,7 @@ class JOAuth2ClientTest extends TestCase
 	/**
 	 * Tests the setToken method
 	 *
-	 * @group    JOAuth2
+	 * @group	JOAuth2
 	 * @return void
 	 */
 	public function testSetToken()
@@ -250,7 +270,7 @@ class JOAuth2ClientTest extends TestCase
 	/**
 	 * Tests the getToken method
 	 *
-	 * @group    JOAuth2
+	 * @group	JOAuth2
 	 * @return void
 	 */
 	public function testGetToken()
@@ -266,7 +286,7 @@ class JOAuth2ClientTest extends TestCase
 	/**
 	 * Tests the refreshToken method
 	 *
-	 * @group    JOAuth2
+	 * @group	JOAuth2
 	 * @return void
 	 */
 	public function testRefreshToken()
@@ -289,7 +309,7 @@ class JOAuth2ClientTest extends TestCase
 	/**
 	 * Tests the refreshToken method with JSON
 	 *
-	 * @group    JOAuth2
+	 * @group	JOAuth2
 	 * @return void
 	 */
 	public function testRefreshTokenJson()
@@ -310,36 +330,21 @@ class JOAuth2ClientTest extends TestCase
 	}
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
+	 * @param   integer  $code  The exit code (optional; default is 0).
 	 */
-	protected function setUp()
+	public static function mockClose($code = 0)
 	{
-		parent::setUp();
-
-		$_SERVER['HTTP_HOST']       = 'mydomain.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$this->options     = new Registry;
-		$this->http        = $this->getMock('JHttp', array('head', 'get', 'delete', 'trace', 'post', 'put', 'patch'), array($this->options));
-		$array             = array();
-		$this->input       = new JInput($array);
-		$this->application = $this->getMockWeb();
-		$this->object      = new JOAuth2Client($this->options, $this->http, $this->input, $this->application);
+		self::$closed = $code;
 	}
 }
 
 /**
  * Dummy
  *
- * @param   string  $url     Path to the resource.
- * @param   mixed   $data    Either an associative array or a string to be sent with the request.
- * @param   array   $headers An array of name-value pairs to include in the header of the request
- * @param   integer $timeout Read timeout in seconds.
+ * @param   string   $url      Path to the resource.
+ * @param   mixed    $data     Either an associative array or a string to be sent with the request.
+ * @param   array    $headers  An array of name-value pairs to include in the header of the request
+ * @param   integer  $timeout  Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -349,9 +354,9 @@ function encodedGrantOauthCallback($url, $data, array $headers = null, $timeout 
 {
 	$response = new stdClass;
 
-	$response->code    = 200;
+	$response->code = 200;
 	$response->headers = array('Content-Type' => 'x-www-form-urlencoded');
-	$response->body    = 'access_token=accessvalue&refresh_token=refreshvalue&expires_in=3600';
+	$response->body = 'access_token=accessvalue&refresh_token=refreshvalue&expires_in=3600';
 
 	return $response;
 }
@@ -359,10 +364,10 @@ function encodedGrantOauthCallback($url, $data, array $headers = null, $timeout 
 /**
  * Dummy
  *
- * @param   string  $url     Path to the resource.
- * @param   mixed   $data    Either an associative array or a string to be sent with the request.
- * @param   array   $headers An array of name-value pairs to include in the header of the request
- * @param   integer $timeout Read timeout in seconds.
+ * @param   string   $url      Path to the resource.
+ * @param   mixed    $data     Either an associative array or a string to be sent with the request.
+ * @param   array    $headers  An array of name-value pairs to include in the header of the request
+ * @param   integer  $timeout  Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -373,9 +378,9 @@ function jsonGrantOauthCallback($url, $data, array $headers = null, $timeout = n
 
 	$response = new stdClass;
 
-	$response->code    = 200;
+	$response->code = 200;
 	$response->headers = array('Content-Type' => 'application/json');
-	$response->body    = '{"access_token":"accessvalue","refresh_token":"refreshvalue","expires_in":3600}';
+	$response->body = '{"access_token":"accessvalue","refresh_token":"refreshvalue","expires_in":3600}';
 
 	return $response;
 }
@@ -383,10 +388,10 @@ function jsonGrantOauthCallback($url, $data, array $headers = null, $timeout = n
 /**
  * Dummy
  *
- * @param   string  $url     Path to the resource.
- * @param   mixed   $data    Either an associative array or a string to be sent with the request.
- * @param   array   $headers An array of name-value pairs to include in the header of the request
- * @param   integer $timeout Read timeout in seconds.
+ * @param   string   $url      Path to the resource.
+ * @param   mixed    $data     Either an associative array or a string to be sent with the request.
+ * @param   array    $headers  An array of name-value pairs to include in the header of the request
+ * @param   integer  $timeout  Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -396,9 +401,9 @@ function queryOauthCallback($url, $data, array $headers = null, $timeout = null)
 {
 	$response = new stdClass;
 
-	$response->code    = 200;
+	$response->code = 200;
 	$response->headers = array('Content-Type' => 'text/html');
-	$response->body    = 'Lorem ipsum dolor sit amet.';
+	$response->body = 'Lorem ipsum dolor sit amet.';
 
 	return $response;
 }
@@ -406,9 +411,9 @@ function queryOauthCallback($url, $data, array $headers = null, $timeout = null)
 /**
  * Dummy
  *
- * @param   string  $url     Path to the resource.
- * @param   array   $headers An array of name-value pairs to include in the header of the request.
- * @param   integer $timeout Read timeout in seconds.
+ * @param   string   $url      Path to the resource.
+ * @param   array    $headers  An array of name-value pairs to include in the header of the request.
+ * @param   integer  $timeout  Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -418,9 +423,9 @@ function getOauthCallback($url, array $headers = null, $timeout = null)
 {
 	$response = new stdClass;
 
-	$response->code    = 200;
+	$response->code = 200;
 	$response->headers = array('Content-Type' => 'text/html');
-	$response->body    = 'Lorem ipsum dolor sit amet.';
+	$response->body = 'Lorem ipsum dolor sit amet.';
 
 	return $response;
 }

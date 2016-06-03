@@ -21,34 +21,22 @@ class JCacheStorageMock extends JCacheStorage
 	/**
 	 * Constructor
 	 *
-	 * @param   array $options optional parameters
+	 * @param   array  $options  optional parameters
 	 */
 	public function __construct($options = array())
 	{
 		parent::__construct($options);
 
-		$config      = JFactory::getConfig();
+		$config = JFactory::getConfig();
 		$this->_hash = $config->get('secret');
-	}
-
-	/**
-	 * Test to see if the storage handler is available.
-	 *
-	 * @return   boolean  True on success, false otherwise
-	 *
-	 * @since    12.1
-	 */
-	public static function isSupported()
-	{
-		return true;
 	}
 
 	/**
 	 * Get cached data by id and group
 	 *
-	 * @param   string  $id        The cache data id
-	 * @param   string  $group     The cache data group
-	 * @param   boolean $checkTime True to verify cache time expiration threshold
+	 * @param   string   $id         The cache data id
+	 * @param   string   $group      The cache data group
+	 * @param   boolean  $checkTime  True to verify cache time expiration threshold
 	 *
 	 * @return  mixed  Boolean  false on failure or a cached data object
 	 *
@@ -67,28 +55,11 @@ class JCacheStorageMock extends JCacheStorage
 	}
 
 	/**
-	 * Get a cache_id string from an id/group pair
-	 *
-	 * @param   string $id    The cache data id
-	 * @param   string $group The cache data group
-	 *
-	 * @return  string   The cache_id string
-	 *
-	 * @since   11.1
-	 */
-	protected function _getCacheId($id, $group)
-	{
-		$name = md5($this->_application . '-' . $id . '-' . $this->_hash . '-' . $this->_language);
-
-		return 'cache_' . $group . '-' . $name;
-	}
-
-	/**
 	 * Store the data to cache by id and group
 	 *
-	 * @param   string $id    The cache data id
-	 * @param   string $group The cache data group
-	 * @param   string $data  The data to store in cache
+	 * @param   string  $id     The cache data id
+	 * @param   string  $group  The cache data group
+	 * @param   string  $data   The data to store in cache
 	 *
 	 * @return  boolean  True on success, false otherwise
 	 *
@@ -104,8 +75,8 @@ class JCacheStorageMock extends JCacheStorage
 	/**
 	 * Remove a cached data entry by id and group
 	 *
-	 * @param   string $id    The cache data id
-	 * @param   string $group The cache data group
+	 * @param   string  $id     The cache data id
+	 * @param   string  $group  The cache data group
 	 *
 	 * @return  boolean  True on success, false otherwise
 	 *
@@ -120,8 +91,8 @@ class JCacheStorageMock extends JCacheStorage
 	/**
 	 * Clean cache for a group given a mode.
 	 *
-	 * @param   string $group   The cache data group
-	 * @param   string $mode    The mode for cleaning cache [group|notgroup]
+	 * @param   string  $group  The cache data group
+	 * @param   string  $mode   The mode for cleaning cache [group|notgroup]
 	 *                          group mode     : cleans all cache in the group
 	 *                          notgroup mode  : cleans all cache not in the group
 	 *
@@ -132,5 +103,34 @@ class JCacheStorageMock extends JCacheStorage
 	public function clean($group, $mode = null)
 	{
 		return ($this->_storage = array());
+	}
+
+	/**
+	 * Test to see if the storage handler is available.
+	 *
+	 * @return   boolean  True on success, false otherwise
+	 *
+	 * @since    12.1
+	 */
+	public static function isSupported()
+	{
+		return true;
+	}
+
+	/**
+	 * Get a cache_id string from an id/group pair
+	 *
+	 * @param   string  $id     The cache data id
+	 * @param   string  $group  The cache data group
+	 *
+	 * @return  string   The cache_id string
+	 *
+	 * @since   11.1
+	 */
+	protected function _getCacheId($id, $group)
+	{
+		$name = md5($this->_application . '-' . $id . '-' . $this->_hash . '-' . $this->_language);
+
+		return 'cache_' . $group . '-' . $name;
 	}
 }

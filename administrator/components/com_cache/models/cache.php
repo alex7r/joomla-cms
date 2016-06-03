@@ -42,7 +42,7 @@ class CacheModelCache extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @since   3.5
 	 */
@@ -62,45 +62,50 @@ class CacheModelCache extends JModelList
 	}
 
 	/**
-	 * Method to get client data.
+	 * Method to auto-populate the model state.
 	 *
-	 * @return array
+	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @deprecated  4.0  No replacement.
+	 * @param   string  $ordering   Field for ordering.
+	 * @param   string  $direction  Direction of ordering.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
 	 */
-	public function getClient()
+	protected function populateState($ordering = 'group', $direction = 'asc')
 	{
-		return JApplicationHelper::getClientInfo($this->getState('client_id', 0));
+		// Load the filter state.
+		$this->setState('filter.search', $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
+
+		// Special case for client id.
+		$clientId = (int) $this->getUserStateFromRequest($this->context . '.client_id', 'client_id', 0, 'int');
+		$clientId = (!in_array($clientId, array (0, 1))) ? 0 : $clientId;
+		$this->setState('client_id', $clientId);
+
+		parent::populateState($ordering, $direction);
 	}
 
 	/**
-	 * Method to get a pagination object for the cache.
+	 * Method to get a store id based on model configuration state.
 	 *
-	 * @return  integer
-	 */
-	public function getPagination()
-	{
-		if (empty($this->_pagination))
-		{
-			$this->_pagination = new JPagination($this->getTotal(), $this->getState('list.start'), $this->getState('list.limit'));
-		}
-
-		return $this->_pagination;
-	}
-
-	/**
-	 * Get the number of current Cache Groups.
+	 * This is necessary because the model is used by the component and
+	 * different modules that might need different sets of data or different
+	 * ordering requirements.
 	 *
-	 * @return  int
+	 * @param   string  $id  A prefix for the store id.
+	 *
+	 * @return  string  A store id.
+	 *
+	 * @since   3.5
 	 */
-	public function getTotal()
+	protected function getStoreId($id = '')
 	{
-		if (empty($this->_total))
-		{
-			$this->_total = count($this->getData());
-		}
+		// Compile the store id.
+		$id	.= ':' . $this->getState('client_id');
+		$id	.= ':' . $this->getState('filter.search');
 
-		return $this->_total;
+		return parent::getStoreId($id);
 	}
 
 	/**
@@ -177,9 +182,64 @@ class CacheModelCache extends JModelList
 	}
 
 	/**
+	 * Method to get client data.
+	 *
+	 * @return array
+	 *
+	 * @deprecated  4.0  No replacement.
+	 */
+	public function getClient()
+	{
+		return JApplicationHelper::getClientInfo($this->getState('client_id', 0));
+	}
+
+	/**
+	 * Get the number of current Cache Groups.
+	 *
+	 * @return  int
+	 */
+	public function getTotal()
+	{
+		if (empty($this->_total))
+		{
+			$this->_total = count($this->getData());
+		}
+
+		return $this->_total;
+	}
+
+	/**
+	 * Method to get a pagination object for the cache.
+	 *
+	 * @return  integer
+	 */
+	public function getPagination()
+	{
+		if (empty($this->_pagination))
+		{
+			$this->_pagination = new JPagination($this->getTotal(), $this->getState('list.start'), $this->getState('list.limit'));
+		}
+
+		return $this->_pagination;
+	}
+
+	/**
+	 * Clean out a cache group as named by param.
+	 * If no param is passed clean all cache groups.
+	 *
+	 * @param   string  $group  Cache group name.
+	 *
+	 * @return  boolean  True on success, false otherwise
+	 */
+	public function clean($group = '')
+	{
+		return $this->getCache()->clean($group);
+	}
+
+	/**
 	 * Purge an array of cache groups.
 	 *
-	 * @param   array $array Array of cache group names.
+	 * @param   array  $array  Array of cache group names.
 	 *
 	 * @return  array  Array with errors, if they exist.
 	 */
@@ -199,19 +259,6 @@ class CacheModelCache extends JModelList
 	}
 
 	/**
-	 * Clean out a cache group as named by param.
-	 * If no param is passed clean all cache groups.
-	 *
-	 * @param   string $group Cache group name.
-	 *
-	 * @return  boolean  True on success, false otherwise
-	 */
-	public function clean($group = '')
-	{
-		return $this->getCache()->clean($group);
-	}
-
-	/**
 	 * Purge all cache items.
 	 *
 	 * @return  boolean  True if successful; false otherwise.
@@ -219,52 +266,5 @@ class CacheModelCache extends JModelList
 	public function purge()
 	{
 		return JFactory::getCache('')->gc();
-	}
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @param   string $ordering  Field for ordering.
-	 * @param   string $direction Direction of ordering.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState($ordering = 'group', $direction = 'asc')
-	{
-		// Load the filter state.
-		$this->setState('filter.search', $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-
-		// Special case for client id.
-		$clientId = (int) $this->getUserStateFromRequest($this->context . '.client_id', 'client_id', 0, 'int');
-		$clientId = (!in_array($clientId, array(0, 1))) ? 0 : $clientId;
-		$this->setState('client_id', $clientId);
-
-		parent::populateState($ordering, $direction);
-	}
-
-	/**
-	 * Method to get a store id based on model configuration state.
-	 *
-	 * This is necessary because the model is used by the component and
-	 * different modules that might need different sets of data or different
-	 * ordering requirements.
-	 *
-	 * @param   string $id A prefix for the store id.
-	 *
-	 * @return  string  A store id.
-	 *
-	 * @since   3.5
-	 */
-	protected function getStoreId($id = '')
-	{
-		// Compile the store id.
-		$id .= ':' . $this->getState('client_id');
-		$id .= ':' . $this->getState('filter.search');
-
-		return parent::getStoreId($id);
 	}
 }

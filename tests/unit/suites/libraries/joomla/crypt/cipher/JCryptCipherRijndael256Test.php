@@ -23,6 +23,45 @@ class JCryptCipherRijndael256Test extends TestCase
 	private $_cipher;
 
 	/**
+	 * Prepares the environment before running a test.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		// Only run the test if mcrypt is loaded.
+		if (!extension_loaded('mcrypt'))
+		{
+			$this->markTestSkipped('The mcrypt extension must be available for this test to run.');
+		}
+
+		$this->_cipher = new JCryptCipherRijndael256;
+
+		// Build the key for testing.
+		$this->key = new JCryptKey('rijndael256');
+		$this->key->private = file_get_contents(__DIR__ . '/stubs/encrypted/rijndael256/key.priv');
+		$this->key->public = file_get_contents(__DIR__ . '/stubs/encrypted/rijndael256/key.pub');
+	}
+
+	/**
+	 * Cleans up the environment after running a test.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	protected function tearDown()
+	{
+		$this->_cipher = null;
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Test...
 	 *
 	 * @return array
@@ -36,13 +75,13 @@ class JCryptCipherRijndael256Test extends TestCase
 			array(
 				'2.txt',
 				'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
-				'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ' .
-				'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt ' .
-				'in culpa qui officia deserunt mollit anim id est laborum.'),
+					'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ' .
+					'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt ' .
+					'in culpa qui officia deserunt mollit anim id est laborum.'),
 			array('3.txt', 'لا أحد يحب الألم بذاته، يسعى ورائه أو يبتغيه، ببساطة لأنه الألم...'),
 			array('4.txt',
 				'Широкая электрификация южных губерний даст мощный ' .
-				'толчок подъёму сельского хозяйства'),
+					'толчок подъёму сельского хозяйства'),
 			array('5.txt', 'The quick brown fox jumps over the lazy dog.')
 		);
 	}
@@ -50,13 +89,13 @@ class JCryptCipherRijndael256Test extends TestCase
 	/**
 	 * Tests JCryptCipherRijndael256Test->decrypt()
 	 *
-	 * @param   string $file @todo
-	 * @param   string $data @todo
+	 * @param   string  $file  @todo
+	 * @param   string  $data  @todo
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider data
-	 * @since        12.1
+	 * @since   12.1
 	 */
 	public function testDecrypt($file, $data)
 	{
@@ -70,13 +109,13 @@ class JCryptCipherRijndael256Test extends TestCase
 	/**
 	 * Tests JCryptCipherRijndael256Test->encrypt()
 	 *
-	 * @param   string $file @todo
-	 * @param   string $data @todo
+	 * @param   string  $file  @todo
+	 * @param   string  $data  @todo
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider data
-	 * @since        12.1
+	 * @since   12.1
 	 */
 	public function testEncrypt($file, $data)
 	{
@@ -108,44 +147,5 @@ class JCryptCipherRijndael256Test extends TestCase
 
 		// Assert the key is of the correct type.
 		$this->assertAttributeEquals('rijndael256', 'type', $key);
-	}
-
-	/**
-	 * Prepares the environment before running a test.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		// Only run the test if mcrypt is loaded.
-		if (!extension_loaded('mcrypt'))
-		{
-			$this->markTestSkipped('The mcrypt extension must be available for this test to run.');
-		}
-
-		$this->_cipher = new JCryptCipherRijndael256;
-
-		// Build the key for testing.
-		$this->key          = new JCryptKey('rijndael256');
-		$this->key->private = file_get_contents(__DIR__ . '/stubs/encrypted/rijndael256/key.priv');
-		$this->key->public  = file_get_contents(__DIR__ . '/stubs/encrypted/rijndael256/key.pub');
-	}
-
-	/**
-	 * Cleans up the environment after running a test.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	protected function tearDown()
-	{
-		$this->_cipher = null;
-
-		parent::tearDown();
 	}
 }

@@ -7,7 +7,10 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 use SeleniumClient\By;
+use SeleniumClient\SelectElement;
 use SeleniumClient\WebDriver;
+use SeleniumClient\WebDriverWait;
+use SeleniumClient\DesiredCapabilities;
 use SeleniumClient\WebElement;
 
 /**
@@ -46,15 +49,14 @@ abstract class AdminEditPage extends AdminPage
 
 	/**
 	 * Array of expected id values for toolbar div elements
-	 *
 	 * @var array
 	 */
-	public $toolbar = array(
-		'Save'         => 'toolbar-apply',
-		'Save & Close' => 'toolbar-save',
-		'Save & New'   => 'toolbar-save-new',
-		'Cancel'       => 'toolbar-cancel',
-		'Help'         => 'toolbar-help',
+	public $toolbar = array (
+			'Save' => 'toolbar-apply',
+			'Save & Close' => 'toolbar-save',
+			'Save & New' => 'toolbar-save-new',
+			'Cancel' => 'toolbar-cancel',
+			'Help' => 'toolbar-help',
 	);
 
 	public $inputFields = array();
@@ -62,9 +64,9 @@ abstract class AdminEditPage extends AdminPage
 	public function __construct(Webdriver $driver, $test, $url = null)
 	{
 		$this->driver = $driver;
-		$this->test   = $test;
-		$cfg          = new SeleniumConfig();
-		$this->cfg    = $cfg; // save current configuration
+		$this->test = $test;
+		$cfg = new SeleniumConfig();
+		$this->cfg = $cfg; // save current configuration
 		if ($url)
 		{
 			$this->driver->get($url);
@@ -108,27 +110,24 @@ abstract class AdminEditPage extends AdminPage
 		else
 		{
 			$labels = $this->driver->findElements(By::xPath("//fieldset/div[@class='control-group']/div/label"));
-			$tabId  = 'header';
+			$tabId = 'header';
 			foreach ($labels as $label)
 			{
 				$return[] = $this->getInputField($tabId, $label);
 			}
 		}
-
 		return $return;
 	}
 
 	protected function getInputFieldsForTab($tabId, $groupLabel = null)
 	{
 		$labels = $this->driver->findElements(By::xPath("//div[@id='" . $tabId . "']//div/label"));
-
 		return $this->getInputFieldObjects($labels, $tabId, $groupLabel);
 	}
 
 	protected function getInputFieldsForHeader()
 	{
 		$labels = $this->driver->findElements(By::xPath("//div[contains(@class, 'form-inline')]//div/label"));
-
 		return $this->getInputFieldObjects($labels, 'header');
 	}
 
@@ -146,16 +145,15 @@ abstract class AdminEditPage extends AdminPage
 				$return[] = $object;
 			}
 		}
-
 		return $return;
 	}
 
 	protected function expandAccordionGroup($groupLabel)
 	{
-		$toggleSelector    = "//a[@class='accordion-toggle'][contains(text(),'" . $groupLabel . "')]";
+		$toggleSelector = "//a[@class='accordion-toggle'][contains(text(),'" . $groupLabel . "')]";
 		$containerSelector = $toggleSelector . "/../../..//div[contains(@class, 'accordion-body')]";
-		$toggleElement     = $this->driver->findElement(By::xPath($toggleSelector));
-		$containerElement  = $this->driver->findElement(By::xPath($containerSelector));
+		$toggleElement = $this->driver->findElement(By::xPath($toggleSelector));
+		$containerElement = $this->driver->findElement(By::xPath($containerSelector));
 		if ($containerElement->getAttribute('class') == 'accordion-body collapse')
 		{
 			try
@@ -176,8 +174,8 @@ abstract class AdminEditPage extends AdminPage
 
 	protected function getInputField($tabId, $label)
 	{
-		$object            = new stdClass();
-		$object->tab       = $tabId;
+		$object = new stdClass();
+		$object->tab = $tabId;
 		$object->labelText = $label->getText();
 
 		// Skip non-visible fields (affects permissions)
@@ -185,7 +183,7 @@ abstract class AdminEditPage extends AdminPage
 		{
 			return false;
 		}
-		$inputId   = $label->getAttribute('for');
+		$inputId = $label->getAttribute('for');
 		$testInput = $this->driver->findElements(By::id($inputId));
 		// If not found, check for user name field
 		if (count($testInput) == 0)
@@ -199,13 +197,12 @@ abstract class AdminEditPage extends AdminPage
 		}
 		if (count($testInput) == 1)
 		{
-			$input           = $testInput[0];
-			$object->tag     = $input->getTagName();
-			$object->id      = $inputId;
+			$input = $testInput[0];
+			$object->tag = $input->getTagName();
+			$object->id = $inputId;
 			$object->labelId = $label->getAttribute('id');
-			$object->type    = $input->getAttribute('type');
+			$object->type = $input->getAttribute('type');
 			$object->element = $input;
-
 			return $object;
 		}
 		else
@@ -219,7 +216,7 @@ abstract class AdminEditPage extends AdminPage
 		if (($i = $this->getRowNumber($label)) !== false)
 		{
 			$fieldArray = $this->inputFields[$i];
-			$fieldType  = $fieldArray['type'];
+			$fieldType = $fieldArray['type'];
 			switch ($fieldType)
 			{
 				case 'select' :
@@ -243,25 +240,22 @@ abstract class AdminEditPage extends AdminPage
 	public function getOptionText(WebElement $el)
 	{
 		$optionText = array();
-		$options    = $el->findElements(By::tagName('li'));
-		$i          = 0;
+		$options = $el->findElements(By::tagName('li'));
+		$i = 0;
 		foreach ($options as $option)
 		{
 			$optionText[] = $option->getText();
-			if ($i++ > 5)
-			{
+			if ($i++ > 5)			{
 				$optionText[] = '...';
 				break;
 			}
 		}
-
 		return $optionText;
 	}
 
 	protected function getRadioValues(array $values)
 	{
 		$this->selectTab($values['tab']);
-
 		return $this->driver->findElement(By::xPath("//" . $values['type'] . "[@id='" . $values['id'] . "']/label[contains(@class, 'active')]"))->getText();
 	}
 
@@ -272,11 +266,10 @@ abstract class AdminEditPage extends AdminPage
 		{
 			if (strtolower($this->inputFields[$i]['label']) == strtolower($label)) return $i;
 		}
-
 		return false;
 	}
 
-	protected function getSelectValues(array $values)
+	protected function getSelectValues (array $values)
 	{
 		$this->selectTab($values['tab']);
 		// Need to determine whether we are using Chosen JS for this select field
@@ -284,7 +277,6 @@ abstract class AdminEditPage extends AdminPage
 		if (count($checkArray) == 1)
 		{
 			$container = $checkArray[0];
-
 			return $this->driver->findElement(By::xPath("//div[@id='" . $values['id'] . "_chzn']/a/span"))->getText();
 		}
 		else
@@ -295,20 +287,18 @@ abstract class AdminEditPage extends AdminPage
 
 	public function getTabIds()
 	{
-		$tabs   = $this->driver->findElements(By::xPath("//div[@class='tab-content']/div"));
+		$tabs = $this->driver->findElements(By::xPath("//div[@class='tab-content']/div"));
 		$return = array();
 		foreach ($tabs as $tab)
 		{
 			$return[] = $tab->getAttribute('id');
 		}
-
 		return $return;
 	}
 
 	protected function getTextValues(array $values)
 	{
 		$this->selectTab($values['tab']);
-
 		return $this->driver->findElement(By::id($values['id']))->getAttribute('value');
 	}
 
@@ -320,12 +310,11 @@ abstract class AdminEditPage extends AdminPage
 	public function getToolTip($tabText, $id)
 	{
 		$this->selectTab($tabText);
-		$el   = $this->driver->findElement(By::id($id));
+		$el = $this->driver->findElement(By::id($id));
 		$test = $this->driver->executeScript("document.getElementById(arguments[0]).fireEvent('mouseenter');", array($id));
 		sleep(1);
-		$tip     = $el->findElement(By::xPath("//div[@class='tip-text']"));
+		$tip = $el->findElement(By::xPath("//div[@class='tip-text']"));
 		$tipText = $tip->getText();
-
 		return str_replace("\n", " ", $tipText);
 	}
 
@@ -335,7 +324,7 @@ abstract class AdminEditPage extends AdminPage
 		{
 			$field->labelText = (substr($field->labelText, -2) == ' *') ? substr($field->labelText, 0, -2) : $field->labelText;
 			echo "array('label' => '" . $field->labelText . "', 'id' => '" . $field->id . "', 'type' => '" . $field->tag . "', 'tab' => '"
-				. $field->tab . "'),\n";
+			. $field->tab . "'),\n";
 		}
 	}
 
@@ -360,10 +349,10 @@ abstract class AdminEditPage extends AdminPage
 	{
 		if (($i = $this->getRowNumber($label)) !== false)
 		{
-			$fieldArray          = $this->inputFields[$i];
+			$fieldArray = $this->inputFields[$i];
 			$fieldArray['value'] = $value;
-			$fieldType           = $fieldArray['type'];
-			$group               = isset($fieldArray['group']) ? $fieldArray['group'] : null;
+			$fieldType = $fieldArray['type'];
+			$group = isset($fieldArray['group']) ? $fieldArray['group'] : null;
 			$this->selectTab($fieldArray['tab'], $group);
 			switch ($fieldType)
 			{
@@ -392,7 +381,6 @@ abstract class AdminEditPage extends AdminPage
 		{
 			$this->setFieldValue($label, $value);
 		}
-
 		return $this;
 	}
 
@@ -401,7 +389,7 @@ abstract class AdminEditPage extends AdminPage
 		$this->driver->findElement(By::xPath("//" . $values['type'] . "[@id='" . $values['id'] . "']/label[contains(text(), '" . $values['value'] . "')]"))->click();
 	}
 
-	protected function setSelectValues(array $values)
+	protected function setSelectValues (array $values)
 	{
 		// Need to determine whether we are using Chosen JS for this select field
 		$checkArray = $this->driver->findElements(By::xPath("//div[@id='" . $values['id'] . "_chzn']"));
@@ -488,8 +476,8 @@ abstract class AdminEditPage extends AdminPage
 	public function toWikiHelp()
 	{
 		$inputFields = $this->getAllInputFields($this->getTabIds());
-		$tabs        = $this->tabs;
-		$helpText    = array();
+		$tabs = $this->tabs;
+		$helpText = array();
 		foreach ($inputFields as $el)
 		{
 			$this->selectTab($el->tab);
@@ -510,14 +498,13 @@ abstract class AdminEditPage extends AdminPage
 
 		foreach ($tabs as $tab)
 		{
-			$tabText  = $this->driver->findElement(By::xPath("//a[@href='#" . $tab . "']"))->getText();
+			$tabText = $this->driver->findElement(By::xPath("//a[@href='#" . $tab . "']"))->getText();
 			$result[] = '===' . $tabText . "===\n";
 			if (isset($helpText[$tabText]))
 			{
 				$result = array_merge($result, $helpText[$tabText]);
 			}
 		}
-
 		return implode("", $result);
 
 	}
@@ -529,13 +516,12 @@ abstract class AdminEditPage extends AdminPage
 	public function toWikiHelpRadio(stdClass $object)
 	{
 		$optionText = array();
-		$options    = $object->element->findElements(By::tagName('label'));
+		$options = $object->element->findElements(By::tagName('label'));
 		foreach ($options as $option)
 		{
 			$optionText[] = $option->getText();
 		}
-
-		return "*'''" . $object->labelText . ":''' (" . implode('/', $optionText) . "). " . $this->getToolTip($object->tab, $object->id . '-lbl') . "\n";
+		return "*'''" . $object->labelText . ":''' (" . implode('/', $optionText) . "). " . $this->getToolTip($object->tab, $object->id . '-lbl'). "\n";
 	}
 
 	/**
@@ -548,7 +534,6 @@ abstract class AdminEditPage extends AdminPage
 		$optionContainer->click();
 		$optionList = $optionContainer->findElement(By::tagName('ul'));
 		$optionText = $this->getOptionText($optionList);
-
-		return "*'''" . $object->labelText . ":''' (" . implode('/', $optionText) . "). " . $this->getToolTip($object->tab, $object->id) . "\n";
+		return "*'''" . $object->labelText . ":''' (" . implode('/', $optionText) . "). " . $this->getToolTip($object->tab, $object->id). "\n";
 	}
 }

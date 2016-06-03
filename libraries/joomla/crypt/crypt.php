@@ -32,8 +32,8 @@ class JCrypt
 	 * Object Constructor takes an optional key to be used for encryption/decryption. If no key is given then the
 	 * secret word from the configuration object is used.
 	 *
-	 * @param   JCryptCipher $cipher The encryption cipher object.
-	 * @param   JCryptKey    $key    The encryption key[/pair)].
+	 * @param   JCryptCipher  $cipher  The encryption cipher object.
+	 * @param   JCryptKey     $key     The encryption key[/pair)].
 	 *
 	 * @since   12.1
 	 */
@@ -47,9 +47,75 @@ class JCrypt
 	}
 
 	/**
+	 * Method to decrypt a data string.
+	 *
+	 * @param   string  $data  The encrypted string to decrypt.
+	 *
+	 * @return  string  The decrypted data string.
+	 *
+	 * @since   12.1
+	 * @throws  InvalidArgumentException
+	 */
+	public function decrypt($data)
+	{
+		try
+		{
+			return $this->_cipher->decrypt($data, $this->_key);
+		}
+		catch (InvalidArgumentException $e)
+		{
+			return false;
+		}
+	}
+
+	/**
+	 * Method to encrypt a data string.
+	 *
+	 * @param   string  $data  The data string to encrypt.
+	 *
+	 * @return  string  The encrypted data string.
+	 *
+	 * @since   12.1
+	 */
+	public function encrypt($data)
+	{
+		return $this->_cipher->encrypt($data, $this->_key);
+	}
+
+	/**
+	 * Method to generate a new encryption key[/pair] object.
+	 *
+	 * @param   array  $options  Key generation options.
+	 *
+	 * @return  JCryptKey
+	 *
+	 * @since   12.1
+	 */
+	public function generateKey(array $options = array())
+	{
+		return $this->_cipher->generateKey($options);
+	}
+
+	/**
+	 * Method to set the encryption key[/pair] object.
+	 *
+	 * @param   JCryptKey  $key  The key object to set.
+	 *
+	 * @return  JCrypt
+	 *
+	 * @since   12.1
+	 */
+	public function setKey(JCryptKey $key)
+	{
+		$this->_key = $key;
+
+		return $this;
+	}
+
+	/**
 	 * Generate random bytes.
 	 *
-	 * @param   integer $length Length of the random data to generate
+	 * @param   integer  $length  Length of the random data to generate
 	 *
 	 * @return  string  Random binary data
 	 *
@@ -67,8 +133,8 @@ class JCrypt
 	 *
 	 * NOTE: Length will leak.
 	 *
-	 * @param   string $known   A known string to check against.
-	 * @param   string $unknown An unknown string to check.
+	 * @param   string  $known    A known string to check against.
+	 * @param   string  $unknown  An unknown string to check.
 	 *
 	 * @return  boolean  True if the two strings are exactly the same.
 	 *
@@ -86,9 +152,9 @@ class JCrypt
 	 *
 	 * @return  boolean  Always returns true since 3.3
 	 *
-	 * @note        To be removed when PHP 5.3.7 or higher is the minimum supported version.
-	 * @see         https://github.com/ircmaxell/password_compat/blob/master/version-test.php
-	 * @since       3.2
+	 * @note    To be removed when PHP 5.3.7 or higher is the minimum supported version.
+	 * @see     https://github.com/ircmaxell/password_compat/blob/master/version-test.php
+	 * @since   3.2
 	 * @deprecated  4.0
 	 */
 	public static function hasStrongPasswordSupport()
@@ -106,13 +172,51 @@ class JCrypt
 	}
 
 	/**
+	 * Safely detect a string's length
+	 *
+	 * This method is derived from \ParagonIE\Halite\Util::safeStrlen()
+	 *
+	 * @param   string  $str  String to check the length of
+	 *
+	 * @return  integer
+	 *
+	 * @since   3.5
+	 * @ref     mbstring.func_overload
+	 * @throws  RuntimeException
+	 */
+	public static function safeStrlen($str)
+	{
+		static $exists = null;
+
+		if ($exists === null)
+		{
+			$exists = function_exists('mb_strlen');
+		}
+
+		if ($exists)
+		{
+			$length = mb_strlen($str, '8bit');
+
+			if ($length === false)
+			{
+				throw new RuntimeException('mb_strlen() failed unexpectedly');
+			}
+
+			return $length;
+		}
+
+		// If we reached here, we can rely on strlen to count bytes:
+		return \strlen($str);
+	}
+
+	/**
 	 * Safely extract a substring
 	 *
 	 * This method is derived from \ParagonIE\Halite\Util::safeSubstr()
 	 *
-	 * @param   string  $str    The string to extract the substring from
-	 * @param   integer $start  The starting position to extract from
-	 * @param   integer $length The length of the string to return
+	 * @param   string   $str     The string to extract the substring from
+	 * @param   integer  $start   The starting position to extract from
+	 * @param   integer  $length  The length of the string to return
 	 *
 	 * @return  string
 	 *
@@ -152,109 +256,5 @@ class JCrypt
 		}
 
 		return substr($str, $start);
-	}
-
-	/**
-	 * Safely detect a string's length
-	 *
-	 * This method is derived from \ParagonIE\Halite\Util::safeStrlen()
-	 *
-	 * @param   string $str String to check the length of
-	 *
-	 * @return  integer
-	 *
-	 * @since   3.5
-	 * @ref     mbstring.func_overload
-	 * @throws  RuntimeException
-	 */
-	public static function safeStrlen($str)
-	{
-		static $exists = null;
-
-		if ($exists === null)
-		{
-			$exists = function_exists('mb_strlen');
-		}
-
-		if ($exists)
-		{
-			$length = mb_strlen($str, '8bit');
-
-			if ($length === false)
-			{
-				throw new RuntimeException('mb_strlen() failed unexpectedly');
-			}
-
-			return $length;
-		}
-
-		// If we reached here, we can rely on strlen to count bytes:
-		return \strlen($str);
-	}
-
-	/**
-	 * Method to decrypt a data string.
-	 *
-	 * @param   string $data The encrypted string to decrypt.
-	 *
-	 * @return  string  The decrypted data string.
-	 *
-	 * @since   12.1
-	 * @throws  InvalidArgumentException
-	 */
-	public function decrypt($data)
-	{
-		try
-		{
-			return $this->_cipher->decrypt($data, $this->_key);
-		}
-		catch (InvalidArgumentException $e)
-		{
-			return false;
-		}
-	}
-
-	/**
-	 * Method to encrypt a data string.
-	 *
-	 * @param   string $data The data string to encrypt.
-	 *
-	 * @return  string  The encrypted data string.
-	 *
-	 * @since   12.1
-	 */
-	public function encrypt($data)
-	{
-		return $this->_cipher->encrypt($data, $this->_key);
-	}
-
-	/**
-	 * Method to generate a new encryption key[/pair] object.
-	 *
-	 * @param   array $options Key generation options.
-	 *
-	 * @return  JCryptKey
-	 *
-	 * @since   12.1
-	 */
-	public function generateKey(array $options = array())
-	{
-		return $this->_cipher->generateKey($options);
-	}
-
-	/**
-	 * Method to set the encryption key[/pair] object.
-	 *
-	 * @param   JCryptKey $key The key object to set.
-	 *
-	 * @return  JCrypt
-	 *
-	 * @since   12.1
-	 */
-	public function setKey(JCryptKey $key)
-	{
-		$this->_key = $key;
-
-		return $this;
 	}
 }

@@ -41,8 +41,7 @@ $script = "
 JFactory::getDocument()->addScriptDeclaration($script);
 ?>
 <div class="control-group">
-	<label id="jform_menus-lbl" class="control-label"
-	       for="jform_menus"><?php echo JText::_('COM_MODULES_MODULE_ASSIGN'); ?></label>
+	<label id="jform_menus-lbl" class="control-label" for="jform_menus"><?php echo JText::_('COM_MODULES_MODULE_ASSIGN'); ?></label>
 
 	<div id="jform_menus" class="controls">
 		<select name="jform[assignment]" id="jform_assignment">
@@ -51,77 +50,66 @@ JFactory::getDocument()->addScriptDeclaration($script);
 	</div>
 </div>
 <div id="menuselect-group" class="control-group">
-	<label id="jform_menuselect-lbl" class="control-label"
-	       for="jform_menuselect"><?php echo JText::_('JGLOBAL_MENU_SELECTION'); ?></label>
+	<label id="jform_menuselect-lbl" class="control-label" for="jform_menuselect"><?php echo JText::_('JGLOBAL_MENU_SELECTION'); ?></label>
 
 	<div id="jform_menuselect" class="controls">
 		<?php if (!empty($menuTypes)) : ?>
-			<?php $id = 'jform_menuselect'; ?>
+		<?php $id = 'jform_menuselect'; ?>
 
-			<div class="well well-small">
-				<div class="form-inline">
+		<div class="well well-small">
+			<div class="form-inline">
 				<span class="small"><?php echo JText::_('JSELECT'); ?>:
 					<a id="treeCheckAll" href="javascript://"><?php echo JText::_('JALL'); ?></a>,
 					<a id="treeUncheckAll" href="javascript://"><?php echo JText::_('JNONE'); ?></a>
 				</span>
-					<span class="width-20">|</span>
+				<span class="width-20">|</span>
 				<span class="small"><?php echo JText::_('COM_MODULES_EXPAND'); ?>:
 					<a id="treeExpandAll" href="javascript://"><?php echo JText::_('JALL'); ?></a>,
 					<a id="treeCollapseAll" href="javascript://"><?php echo JText::_('JNONE'); ?></a>
 				</span>
-					<input type="text" id="treeselectfilter" name="treeselectfilter"
-					       class="input-medium search-query pull-right" size="16"
-					       autocomplete="off" placeholder="<?php echo JText::_('JSEARCH_FILTER'); ?>"
-					       aria-invalid="false" tabindex="-1">
-				</div>
+				<input type="text" id="treeselectfilter" name="treeselectfilter" class="input-medium search-query pull-right" size="16"
+					autocomplete="off" placeholder="<?php echo JText::_('JSEARCH_FILTER'); ?>" aria-invalid="false" tabindex="-1">
+			</div>
 
-				<div class="clearfix"></div>
+			<div class="clearfix"></div>
 
-				<hr class="hr-condensed"/>
+			<hr class="hr-condensed" />
 
-				<ul class="treeselect">
-					<?php foreach ($menuTypes as &$type) : ?>
-						<?php if (count($type->links)) : ?>
-							<?php $prevlevel = 0; ?>
+			<ul class="treeselect">
+				<?php foreach ($menuTypes as &$type) : ?>
+				<?php if (count($type->links)) : ?>
+					<?php $prevlevel = 0; ?>
+					<li>
+						<div class="treeselect-item pull-left">
+							<label class="pull-left nav-header"><?php echo $type->title; ?></label></div>
+					<?php foreach ($type->links as $i => $link) : ?>
+						<?php
+						if ($prevlevel < $link->level)
+						{
+							echo '<ul class="treeselect-sub">';
+						} elseif ($prevlevel > $link->level)
+						{
+							echo str_repeat('</li></ul>', $prevlevel - $link->level);
+						} else {
+							echo '</li>';
+						}
+						$selected = 0;
+						if ($this->item->assignment == 0)
+						{
+							$selected = 1;
+						} elseif ($this->item->assignment < 0)
+						{
+							$selected = in_array(-$link->value, $this->item->assigned);
+						} elseif ($this->item->assignment > 0)
+						{
+							$selected = in_array($link->value, $this->item->assigned);
+						}
+						?>
 							<li>
-							<div class="treeselect-item pull-left">
-								<label class="pull-left nav-header"><?php echo $type->title; ?></label></div>
-							<?php foreach ($type->links as $i => $link) : ?>
-								<?php
-								if ($prevlevel < $link->level)
-								{
-									echo '<ul class="treeselect-sub">';
-								}
-								elseif ($prevlevel > $link->level)
-								{
-									echo str_repeat('</li></ul>', $prevlevel - $link->level);
-								}
-								else
-								{
-									echo '</li>';
-								}
-								$selected = 0;
-								if ($this->item->assignment == 0)
-								{
-									$selected = 1;
-								}
-								elseif ($this->item->assignment < 0)
-								{
-									$selected = in_array(-$link->value, $this->item->assigned);
-								}
-								elseif ($this->item->assignment > 0)
-								{
-									$selected = in_array($link->value, $this->item->assigned);
-								}
-								?>
-								<li>
 								<div class="treeselect-item pull-left">
-									<input type="checkbox" class="pull-left novalidate" name="jform[assigned][]"
-									       id="<?php echo $id . $link->value; ?>"
-									       value="<?php echo (int) $link->value; ?>"<?php echo $selected ? ' checked="checked"' : ''; ?> />
+									<input type="checkbox" class="pull-left novalidate" name="jform[assigned][]" id="<?php echo $id . $link->value; ?>" value="<?php echo (int) $link->value; ?>"<?php echo $selected ? ' checked="checked"' : ''; ?> />
 									<label for="<?php echo $id . $link->value; ?>" class="pull-left">
-										<?php echo $link->text; ?> <span
-											class="small"><?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($link->alias)); ?></span>
+										<?php echo $link->text; ?> <span class="small"><?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($link->alias));?></span>
 										<?php if (JLanguageMultilang::isEnabled() && $link->language != '' && $link->language != '*')
 										{
 											echo JHtml::_('image', 'mod_languages/' . $link->language_image . '.gif', $link->language_title, array('title' => $link->language_title), true);
@@ -133,52 +121,45 @@ JFactory::getDocument()->addScriptDeclaration($script);
 										?>
 									</label>
 								</div>
-								<?php
+						<?php
 
-								if (!isset($type->links[$i + 1]))
-								{
-									echo str_repeat('</li></ul>', $link->level);
-								}
-								$prevlevel = $link->level;
-								?>
-							<?php endforeach; ?>
+						if (!isset($type->links[$i + 1]))
+						{
+							echo str_repeat('</li></ul>', $link->level);
+						}
+						$prevlevel = $link->level;
+						?>
+						<?php endforeach; ?>
+					</li>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			</ul>
+			<div id="noresultsfound" style="display:none;" class="alert alert-no-items">
+				<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+			</div>
+			<div style="display:none;" id="treeselectmenu">
+				<div class="pull-left nav-hover treeselect-menu">
+					<div class="btn-group">
+						<a href="#" data-toggle="dropdown" class="dropdown-toggle btn btn-micro">
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li class="nav-header"><?php echo JText::_('COM_MODULES_SUBITEMS'); ?></li>
+							<li class="divider"></li>
+							<li class=""><a class="checkall" href="javascript://"><span class="icon-checkbox"></span> <?php echo JText::_('JSELECT'); ?></a>
 							</li>
-						<?php endif; ?>
-					<?php endforeach; ?>
-				</ul>
-				<div id="noresultsfound" style="display:none;" class="alert alert-no-items">
-					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
-				</div>
-				<div style="display:none;" id="treeselectmenu">
-					<div class="pull-left nav-hover treeselect-menu">
-						<div class="btn-group">
-							<a href="#" data-toggle="dropdown" class="dropdown-toggle btn btn-micro">
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li class="nav-header"><?php echo JText::_('COM_MODULES_SUBITEMS'); ?></li>
-								<li class="divider"></li>
-								<li class=""><a class="checkall" href="javascript://"><span
-											class="icon-checkbox"></span> <?php echo JText::_('JSELECT'); ?></a>
-								</li>
-								<li><a class="uncheckall" href="javascript://"><span
-											class="icon-checkbox-unchecked"></span> <?php echo JText::_('COM_MODULES_DESELECT'); ?>
-									</a>
-								</li>
-								<div class="treeselect-menu-expand">
-									<li class="divider"></li>
-									<li><a class="expandall" href="javascript://"><span
-												class="icon-plus"></span> <?php echo JText::_('COM_MODULES_EXPAND'); ?>
-										</a></li>
-									<li><a class="collapseall" href="javascript://"><span
-												class="icon-minus"></span> <?php echo JText::_('COM_MODULES_COLLAPSE'); ?>
-										</a></li>
-								</div>
-							</ul>
-						</div>
+							<li><a class="uncheckall" href="javascript://"><span class="icon-checkbox-unchecked"></span> <?php echo JText::_('COM_MODULES_DESELECT'); ?></a>
+							</li>
+							<div class="treeselect-menu-expand">
+							<li class="divider"></li>
+							<li><a class="expandall" href="javascript://"><span class="icon-plus"></span> <?php echo JText::_('COM_MODULES_EXPAND'); ?></a></li>
+							<li><a class="collapseall" href="javascript://"><span class="icon-minus"></span> <?php echo JText::_('COM_MODULES_COLLAPSE'); ?></a></li>
+							</div>
+						</ul>
 					</div>
 				</div>
 			</div>
+		</div>
 		<?php endif; ?>
 	</div>
 </div>

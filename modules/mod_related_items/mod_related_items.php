@@ -12,12 +12,12 @@ defined('_JEXEC') or die;
 // Include the related items functions only once
 require_once __DIR__ . '/helper.php';
 
-$cacheparams               = new stdClass;
-$cacheparams->cachemode    = 'safeuri';
-$cacheparams->class        = 'ModRelatedItemsHelper';
-$cacheparams->method       = 'getList';
+$cacheparams = new stdClass;
+$cacheparams->cachemode = 'safeuri';
+$cacheparams->class = 'ModRelatedItemsHelper';
+$cacheparams->method = 'getList';
 $cacheparams->methodparams = $params;
-$cacheparams->modeparams   = array('id' => 'int', 'Itemid' => 'int');
+$cacheparams->modeparams = array('id' => 'int', 'Itemid' => 'int');
 
 $list = JModuleHelper::moduleCache($module, $params, $cacheparams);
 

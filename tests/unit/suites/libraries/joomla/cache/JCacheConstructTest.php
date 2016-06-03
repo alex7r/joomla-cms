@@ -35,7 +35,7 @@ class JCacheTest_Construct extends PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @param   string $type @todo
+	 * @param   string  $type  @todo
 	 *
 	 * @dataProvider provider
 	 *

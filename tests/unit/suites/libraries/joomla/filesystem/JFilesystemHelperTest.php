@@ -22,6 +22,19 @@ class JFilesystemHelperTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->object = new JFilesystemHelper;
+	}
+
+	/**
 	 * Test...
 	 *
 	 * @covers  JFilesystemHelper::getJStreams
@@ -54,18 +67,5 @@ class JFilesystemHelperTest extends PHPUnit_Framework_TestCase
 		$this->assertFalse(
 			JFilesystemHelper::isJoomlaStream('unknown')
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object = new JFilesystemHelper;
 	}
 }

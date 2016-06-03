@@ -13,7 +13,7 @@ defined('JPATH_BASE') or die;
  * Layout variables
  * ---------------------
  *
- * @var  boolean $noUser Inject an option for no user?
+ * @var  boolean   $noUser Inject an option for no user?
  */
 
 extract($displayData);

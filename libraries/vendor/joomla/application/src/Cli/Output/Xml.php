@@ -20,8 +20,8 @@ class Xml extends CliOutput
 	/**
 	 * Write a string to standard output.
 	 *
-	 * @param   string  $text The text to display.
-	 * @param   boolean $nl   True (default) to append a new line at the end of the output string.
+	 * @param   string   $text  The text to display.
+	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
 	 *
 	 * @return  void
 	 *

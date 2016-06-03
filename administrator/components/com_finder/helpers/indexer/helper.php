@@ -26,16 +26,16 @@ class FinderIndexerHelper
 	 * The token stemmer object. The stemmer is set by whatever class
 	 * wishes to use it but it must be an instance of FinderIndexerStemmer.
 	 *
-	 * @var        FinderIndexerStemmer
-	 * @since    2.5
+	 * @var		FinderIndexerStemmer
+	 * @since	2.5
 	 */
 	public static $stemmer;
 
 	/**
 	 * Method to parse input into plain text.
 	 *
-	 * @param   string $input  The raw input.
-	 * @param   string $format The format of the input. [optional]
+	 * @param   string  $input   The raw input.
+	 * @param   string  $format  The format of the input. [optional]
 	 *
 	 * @return  string  The parsed input.
 	 *
@@ -51,9 +51,9 @@ class FinderIndexerHelper
 	/**
 	 * Method to tokenize a text string.
 	 *
-	 * @param   string  $input  The input to tokenize.
-	 * @param   string  $lang   The language of the input.
-	 * @param   boolean $phrase Flag to indicate whether input could be a phrase. [optional]
+	 * @param   string   $input   The input to tokenize.
+	 * @param   string   $lang    The language of the input.
+	 * @param   boolean  $phrase  Flag to indicate whether input could be a phrase. [optional]
 	 *
 	 * @return  array  An array of FinderIndexerToken objects.
 	 *
@@ -115,7 +115,7 @@ class FinderIndexerHelper
 			for ($i = 0, $n = count($terms); $i < $n; $i++)
 			{
 				$charMatches = array();
-				$charCount   = preg_match_all('#[\p{Han}]#mui', $terms[$i], $charMatches);
+				$charCount = preg_match_all('#[\p{Han}]#mui', $terms[$i], $charMatches);
 
 				// Split apart any groups of Chinese characters.
 				for ($j = 0; $j < $charCount; $j++)
@@ -168,7 +168,7 @@ class FinderIndexerHelper
 				if ($i2 < $n && isset($tokens[$i2]))
 				{
 					// Tokenize the two word phrase.
-					$token          = new FinderIndexerToken(array($tokens[$i]->term, $tokens[$i2]->term), $lang, $lang === 'zh' ? '' : ' ');
+					$token = new FinderIndexerToken(array($tokens[$i]->term, $tokens[$i2]->term), $lang, $lang === 'zh' ? '' : ' ');
 					$token->derived = true;
 
 					// Add the token to the stack.
@@ -179,7 +179,7 @@ class FinderIndexerHelper
 				if ($i3 < $n && isset($tokens[$i3]))
 				{
 					// Tokenize the three word phrase.
-					$token          = new FinderIndexerToken(array($tokens[$i]->term, $tokens[$i2]->term, $tokens[$i3]->term), $lang, $lang === 'zh' ? '' : ' ');
+					$token = new FinderIndexerToken(array($tokens[$i]->term, $tokens[$i2]->term, $tokens[$i3]->term), $lang, $lang === 'zh' ? '' : ' ');
 					$token->derived = true;
 
 					// Add the token to the stack.
@@ -201,43 +201,12 @@ class FinderIndexerHelper
 	}
 
 	/**
-	 * Method to parse a language/locale key and return a simple language string.
-	 *
-	 * @param   string $lang The language/locale key. For example: en-GB
-	 *
-	 * @return  string  The simple language string. For example: en
-	 *
-	 * @since   2.5
-	 */
-	public static function getPrimaryLanguage($lang)
-	{
-		static $data;
-
-		// Only parse the identifier if necessary.
-		if (!isset($data[$lang]))
-		{
-			if (is_callable(array('Locale', 'getPrimaryLanguage')))
-			{
-				// Get the language key using the Locale package.
-				$data[$lang] = Locale::getPrimaryLanguage($lang);
-			}
-			else
-			{
-				// Get the language key using string position.
-				$data[$lang] = JString::substr($lang, 0, JString::strpos($lang, '-'));
-			}
-		}
-
-		return $data[$lang];
-	}
-
-	/**
 	 * Method to get the base word of a token. This method uses the public
 	 * {@link FinderIndexerHelper::$stemmer} object if it is set. If no stemmer is set,
 	 * the original token is returned.
 	 *
-	 * @param   string $token The token to stem.
-	 * @param   string $lang  The language of the token.
+	 * @param   string  $token  The token to stem.
+	 * @param   string  $lang   The language of the token.
 	 *
 	 * @return  string  The root token.
 	 *
@@ -268,8 +237,8 @@ class FinderIndexerHelper
 	/**
 	 * Method to add a content type to the database.
 	 *
-	 * @param   string $title The type of content. For example: PDF
-	 * @param   string $mime  The mime type of the content. For example: PDF [optional]
+	 * @param   string  $title  The type of content. For example: PDF
+	 * @param   string  $mime   The mime type of the content. For example: PDF [optional]
 	 *
 	 * @return  integer  The id of the content type.
 	 *
@@ -280,7 +249,7 @@ class FinderIndexerHelper
 	{
 		static $types;
 
-		$db    = JFactory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
 		// Check if the types are loaded.
@@ -316,8 +285,8 @@ class FinderIndexerHelper
 	/**
 	 * Method to check if a token is common in a language.
 	 *
-	 * @param   string $token The token to test.
-	 * @param   string $lang  The language to reference.
+	 * @param   string  $token  The token to test.
+	 * @param   string  $lang   The language to reference.
 	 *
 	 * @return  boolean  True if common, false otherwise.
 	 *
@@ -347,7 +316,7 @@ class FinderIndexerHelper
 	/**
 	 * Method to get an array of common terms for a language.
 	 *
-	 * @param   string $lang The language to use.
+	 * @param   string  $lang  The language to use.
 	 *
 	 * @return  array  Array of common terms.
 	 *
@@ -392,9 +361,40 @@ class FinderIndexerHelper
 	}
 
 	/**
+	 * Method to parse a language/locale key and return a simple language string.
+	 *
+	 * @param   string  $lang  The language/locale key. For example: en-GB
+	 *
+	 * @return  string  The simple language string. For example: en
+	 *
+	 * @since   2.5
+	 */
+	public static function getPrimaryLanguage($lang)
+	{
+		static $data;
+
+		// Only parse the identifier if necessary.
+		if (!isset($data[$lang]))
+		{
+			if (is_callable(array('Locale', 'getPrimaryLanguage')))
+			{
+				// Get the language key using the Locale package.
+				$data[$lang] = Locale::getPrimaryLanguage($lang);
+			}
+			else
+			{
+				// Get the language key using string position.
+				$data[$lang] = JString::substr($lang, 0, JString::strpos($lang, '-'));
+			}
+		}
+
+		return $data[$lang];
+	}
+
+	/**
 	 * Method to get the path (SEF route) for a content item.
 	 *
-	 * @param   string $url The non-SEF route to the content item.
+	 * @param   string  $url  The non-SEF route to the content item.
 	 *
 	 * @return  string  The path for the content item.
 	 *
@@ -414,7 +414,7 @@ class FinderIndexerHelper
 		}
 
 		// Build the relative route.
-		$uri   = $router->build($url);
+		$uri = $router->build($url);
 		$route = $uri->toString(array('path', 'query', 'fragment'));
 		$route = str_replace(JUri::base(true) . '/', '', $route);
 
@@ -425,7 +425,7 @@ class FinderIndexerHelper
 	 * Method to get extra data for a content before being indexed. This is how
 	 * we add Comments, Tags, Labels, etc. that should be available to Finder.
 	 *
-	 * @param   FinderIndexerResult &$item The item to index as an FinderIndexerResult object.
+	 * @param   FinderIndexerResult  &$item  The item to index as an FinderIndexerResult object.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *
@@ -464,8 +464,8 @@ class FinderIndexerHelper
 	/**
 	 * Method to process content text using the onContentPrepare event trigger.
 	 *
-	 * @param   string   $text   The content to process.
-	 * @param   Registry $params The parameters object. [optional]
+	 * @param   string    $text    The content to process.
+	 * @param   Registry  $params  The parameters object. [optional]
 	 *
 	 * @return  string  The processed content.
 	 *
@@ -494,7 +494,7 @@ class FinderIndexerHelper
 		}
 
 		// Create a mock content object.
-		$content       = JTable::getInstance('Content');
+		$content = JTable::getInstance('Content');
 		$content->text = $text;
 
 		// Fire the onContentPrepare event.

@@ -39,31 +39,36 @@ class JFilesystemPatcher
 	 * Regular expression for splitting lines
 	 */
 	const SPLIT = '/(\r\n)|(\r)|(\n)/';
-	/**
-	 * @var    array  instance of this class
-	 * @since  12.1
-	 */
-	protected static $instance;
+
 	/**
 	 * @var    array  sources files
 	 * @since  12.1
 	 */
 	protected $sources = array();
+
 	/**
 	 * @var    array  destination files
 	 * @since  12.1
 	 */
 	protected $destinations = array();
+
 	/**
 	 * @var    array  removal files
 	 * @since  12.1
 	 */
 	protected $removals = array();
+
 	/**
 	 * @var    array  patches
 	 * @since  12.1
 	 */
 	protected $patches = array();
+
+	/**
+	 * @var    array  instance of this class
+	 * @since  12.1
+	 */
+	protected static $instance;
 
 	/**
 	 * Constructor
@@ -102,10 +107,10 @@ class JFilesystemPatcher
 	 */
 	public function reset()
 	{
-		$this->sources      = array();
+		$this->sources = array();
 		$this->destinations = array();
-		$this->removals     = array();
-		$this->patches      = array();
+		$this->removals = array();
+		$this->patches = array();
 
 		return $this;
 	}
@@ -202,9 +207,47 @@ class JFilesystemPatcher
 	}
 
 	/**
+	 * Add a unified diff file to the patcher
+	 *
+	 * @param   string  $filename  Path to the unified diff file
+	 * @param   string  $root      The files root path
+	 * @param   string  $strip     The number of '/' to strip
+	 *
+	 * @return	JFilesystemPatch $this for chaining
+	 *
+	 * @since   12.1
+	 */
+	public function addFile($filename, $root = JPATH_BASE, $strip = 0)
+	{
+		return $this->add(file_get_contents($filename), $root, $strip);
+	}
+
+	/**
+	 * Add a unified diff string to the patcher
+	 *
+	 * @param   string  $udiff  Unified diff input string
+	 * @param   string  $root   The files root path
+	 * @param   string  $strip  The number of '/' to strip
+	 *
+	 * @return	JFilesystemPatch $this for chaining
+	 *
+	 * @since   12.1
+	 */
+	public function add($udiff, $root = JPATH_BASE, $strip = 0)
+	{
+		$this->patches[] = array(
+			'udiff' => $udiff,
+			'root' => isset($root) ? rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR : '',
+			'strip' => $strip
+		);
+
+		return $this;
+	}
+
+	/**
 	 * Separate CR or CRLF lines
 	 *
-	 * @param   string $data Input string
+	 * @param   string  $data  Input string
 	 *
 	 * @return  array  The lines of the inputdestination file
 	 *
@@ -220,9 +263,9 @@ class JFilesystemPatcher
 	 *
 	 * The internal array pointer of $lines is on the next line after the finding
 	 *
-	 * @param   array  &$lines The udiff array of lines
-	 * @param   string &$src   The source file
-	 * @param   string &$dst   The destination file
+	 * @param   array   &$lines  The udiff array of lines
+	 * @param   string  &$src    The source file
+	 * @param   string  &$dst    The destination file
 	 *
 	 * @return  boolean  TRUE in case of success, FALSE in case of failure
 	 *
@@ -280,11 +323,11 @@ class JFilesystemPatcher
 	 *
 	 * The internal array pointer of $lines is on the next line after the finding
 	 *
-	 * @param   array  &$lines    The udiff array of lines
-	 * @param   string &$src_line The beginning of the patch for the source file
-	 * @param   string &$src_size The size of the patch for the source file
-	 * @param   string &$dst_line The beginning of the patch for the destination file
-	 * @param   string &$dst_size The size of the patch for the destination file
+	 * @param   array   &$lines     The udiff array of lines
+	 * @param   string  &$src_line  The beginning of the patch for the source file
+	 * @param   string  &$src_size  The size of the patch for the source file
+	 * @param   string  &$dst_line  The beginning of the patch for the destination file
+	 * @param   string  &$dst_size  The size of the patch for the destination file
 	 *
 	 * @return  boolean  TRUE in case of success, false in case of failure
 	 *
@@ -327,13 +370,13 @@ class JFilesystemPatcher
 	/**
 	 * Apply the patch
 	 *
-	 * @param   array  &$lines   The udiff array of lines
-	 * @param   string $src      The source file
-	 * @param   string $dst      The destination file
-	 * @param   string $src_line The beginning of the patch for the source file
-	 * @param   string $src_size The size of the patch for the source file
-	 * @param   string $dst_line The beginning of the patch for the destination file
-	 * @param   string $dst_size The size of the patch for the destination file
+	 * @param   array   &$lines    The udiff array of lines
+	 * @param   string  $src       The source file
+	 * @param   string  $dst       The destination file
+	 * @param   string  $src_line  The beginning of the patch for the source file
+	 * @param   string  $src_size  The size of the patch for the source file
+	 * @param   string  $dst_line  The beginning of the patch for the destination file
+	 * @param   string  $dst_size  The size of the patch for the destination file
 	 *
 	 * @return  void
 	 *
@@ -350,7 +393,7 @@ class JFilesystemPatcher
 		$source = array();
 
 		// New lines (new file)
-		$destin   = array();
+		$destin = array();
 		$src_left = $src_size;
 		$dst_left = $dst_size;
 
@@ -385,7 +428,7 @@ class JFilesystemPatcher
 			}
 			elseif ($line != '\\ No newline at end of file')
 			{
-				$line     = substr($line, 1);
+				$line = substr($line, 1);
 				$source[] = $line;
 				$destin[] = $line;
 				$src_left--;
@@ -397,7 +440,7 @@ class JFilesystemPatcher
 				// Now apply the patch, finally!
 				if ($src_size > 0)
 				{
-					$src_lines = &$this->getSource($src);
+					$src_lines = & $this->getSource($src);
 
 					if (!isset($src_lines))
 					{
@@ -409,10 +452,10 @@ class JFilesystemPatcher
 				{
 					if ($src_size > 0)
 					{
-						$dst_lines  = &$this->getDestination($dst, $src);
+						$dst_lines = & $this->getDestination($dst, $src);
 						$src_bottom = $src_line + count($source);
 
-						for ($l = $src_line; $l < $src_bottom; $l++)
+						for ($l = $src_line;$l < $src_bottom;$l++)
 						{
 							if ($src_lines[$l] != $source[$l - $src_line])
 							{
@@ -438,14 +481,16 @@ class JFilesystemPatcher
 			}
 
 			$line = next($lines);
-		} while ($line !== false);
+		}
+
+		while ($line !== false);
 		throw new RuntimeException('Unexpected EOF');
 	}
 
 	/**
 	 * Get the lines of a source file
 	 *
-	 * @param   string $src The path of a file
+	 * @param   string  $src  The path of a file
 	 *
 	 * @return  array  The lines of the source file
 	 *
@@ -468,8 +513,8 @@ class JFilesystemPatcher
 	/**
 	 * Get the lines of a destination file
 	 *
-	 * @param   string $dst The path of a destination file
-	 * @param   string $src The path of a source file
+	 * @param   string  $dst  The path of a destination file
+	 * @param   string  $src  The path of a source file
 	 *
 	 * @return  array  The lines of the destination file
 	 *
@@ -483,43 +528,5 @@ class JFilesystemPatcher
 		}
 
 		return $this->destinations[$dst];
-	}
-
-	/**
-	 * Add a unified diff file to the patcher
-	 *
-	 * @param   string $filename Path to the unified diff file
-	 * @param   string $root     The files root path
-	 * @param   string $strip    The number of '/' to strip
-	 *
-	 * @return    JFilesystemPatch $this for chaining
-	 *
-	 * @since   12.1
-	 */
-	public function addFile($filename, $root = JPATH_BASE, $strip = 0)
-	{
-		return $this->add(file_get_contents($filename), $root, $strip);
-	}
-
-	/**
-	 * Add a unified diff string to the patcher
-	 *
-	 * @param   string $udiff Unified diff input string
-	 * @param   string $root  The files root path
-	 * @param   string $strip The number of '/' to strip
-	 *
-	 * @return    JFilesystemPatch $this for chaining
-	 *
-	 * @since   12.1
-	 */
-	public function add($udiff, $root = JPATH_BASE, $strip = 0)
-	{
-		$this->patches[] = array(
-			'udiff' => $udiff,
-			'root'  => isset($root) ? rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR : '',
-			'strip' => $strip
-		);
-
-		return $this;
 	}
 }

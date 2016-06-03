@@ -35,66 +35,26 @@ class JUcmBase implements JUcm
 	/**
 	 * Instantiate the UcmBase.
 	 *
-	 * @param   string   $alias The alias string
-	 * @param   JUcmType $type  The type object
+	 * @param   string    $alias  The alias string
+	 * @param   JUcmType  $type   The type object
 	 *
 	 * @since   3.1
 	 */
 	public function __construct($alias = null, JUcmType $type = null)
 	{
 		// Setup dependencies.
-		$input       = JFactory::getApplication()->input;
+		$input = JFactory::getApplication()->input;
 		$this->alias = isset($alias) ? $alias : $input->get('option') . '.' . $input->get('view');
 
 		$this->type = isset($type) ? $type : $this->getType();
 	}
 
 	/**
-	 * Get the UCM Content type.
-	 *
-	 * @return  JUcmType  The UCM content type
-	 *
-	 * @since   3.1
-	 */
-	public function getType()
-	{
-		if (!$this->type)
-		{
-			$this->type = new JUcmType($this->alias);
-		}
-
-		return $this->type;
-	}
-
-	/**
-	 * Method to map the base ucm fields
-	 *
-	 * @param   array    $original Data array
-	 * @param   JUcmType $type     UCM Content Type
-	 *
-	 * @return  array  Data array of UCM mappings
-	 *
-	 * @since   3.1
-	 */
-	public function mapBase($original, JUcmType $type = null)
-	{
-		$type = $type ? $type : $this->type;
-
-		$data = array(
-			'ucm_type_id'     => $type->id,
-			'ucm_item_id'     => $original[$type->primary_key],
-			'ucm_language_id' => JHelperContent::getLanguageId($original['language'])
-		);
-
-		return $data;
-	}
-
-	/**
 	 * Store data to the appropriate table
 	 *
-	 * @param   array           $data       Data to be stored
-	 * @param   JTableInterface $table      JTable Object
-	 * @param   string          $primaryKey The primary key name
+	 * @param   array            $data        Data to be stored
+	 * @param   JTableInterface  $table       JTable Object
+	 * @param   string           $primaryKey  The primary key name
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -135,5 +95,45 @@ class JUcmBase implements JUcm
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get the UCM Content type.
+	 *
+	 * @return  JUcmType  The UCM content type
+	 *
+	 * @since   3.1
+	 */
+	public function getType()
+	{
+		if (!$this->type)
+		{
+			$this->type = new JUcmType($this->alias);
+		}
+
+		return $this->type;
+	}
+
+	/**
+	 * Method to map the base ucm fields
+	 *
+	 * @param   array     $original  Data array
+	 * @param   JUcmType  $type      UCM Content Type
+	 *
+	 * @return  array  Data array of UCM mappings
+	 *
+	 * @since   3.1
+	 */
+	public function mapBase($original, JUcmType $type = null)
+	{
+		$type = $type ? $type : $this->type;
+
+		$data = array(
+			'ucm_type_id' => $type->id,
+			'ucm_item_id' => $original[$type->primary_key],
+			'ucm_language_id' => JHelperContent::getLanguageId($original['language'])
+		);
+
+		return $data;
 	}
 }

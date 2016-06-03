@@ -45,19 +45,19 @@ class JOAuth2Client
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry        $options     JOAuth2Client options object
-	 * @param   JHttp           $http        The HTTP client object
-	 * @param   JInput          $input       The input object
-	 * @param   JApplicationWeb $application The application object
+	 * @param   Registry         $options      JOAuth2Client options object
+	 * @param   JHttp            $http         The HTTP client object
+	 * @param   JInput           $input        The input object
+	 * @param   JApplicationWeb  $application  The application object
 	 *
 	 * @since   12.3
 	 */
 	public function __construct(Registry $options = null, JHttp $http = null, JInput $input = null, JApplicationWeb $application = null)
 	{
-		$this->options     = isset($options) ? $options : new Registry;
-		$this->http        = isset($http) ? $http : new JHttp($this->options);
+		$this->options = isset($options) ? $options : new Registry;
+		$this->http = isset($http) ? $http : new JHttp($this->options);
 		$this->application = isset($application) ? $application : new JApplicationWeb;
-		$this->input       = isset($input) ? $input : $this->application->input;
+		$this->input = isset($input) ? $input : $this->application->input;
 	}
 
 	/**
@@ -72,11 +72,11 @@ class JOAuth2Client
 	{
 		if ($data['code'] = $this->input->get('code', false, 'raw'))
 		{
-			$data['grant_type']    = 'authorization_code';
-			$data['redirect_uri']  = $this->getOption('redirecturi');
-			$data['client_id']     = $this->getOption('clientid');
+			$data['grant_type'] = 'authorization_code';
+			$data['redirect_uri'] = $this->getOption('redirecturi');
+			$data['client_id'] = $this->getOption('clientid');
 			$data['client_secret'] = $this->getOption('clientsecret');
-			$response              = $this->http->post($this->getOption('tokenurl'), $data);
+			$response = $this->http->post($this->getOption('tokenurl'), $data);
 
 			if ($response->code >= 200 && $response->code < 400)
 			{
@@ -109,56 +109,28 @@ class JOAuth2Client
 	}
 
 	/**
-	 * Get an option from the JOAuth2Client instance.
+	 * Verify if the client has been authenticated
 	 *
-	 * @param   string $key The name of the option to get
-	 *
-	 * @return  mixed  The option value
+	 * @return  boolean  Is authenticated
 	 *
 	 * @since   12.3
 	 */
-	public function getOption($key)
+	public function isAuthenticated()
 	{
-		return $this->options->get($key);
-	}
+		$token = $this->getToken();
 
-	/**
-	 * Set an option for the JOAuth2Client instance.
-	 *
-	 * @param   array $value The access token
-	 *
-	 * @return  JOAuth2Client  This object for method chaining
-	 *
-	 * @since   12.3
-	 */
-	public function setToken($value)
-	{
-		if (is_array($value) && !array_key_exists('expires_in', $value) && array_key_exists('expires', $value))
+		if (!$token || !array_key_exists('access_token', $token))
 		{
-			$value['expires_in'] = $value['expires'];
-			unset($value['expires']);
+			return false;
 		}
-
-		$this->setOption('accesstoken', $value);
-
-		return $this;
-	}
-
-	/**
-	 * Set an option for the JOAuth2Client instance.
-	 *
-	 * @param   string $key   The name of the option to set
-	 * @param   mixed  $value The option value to set
-	 *
-	 * @return  JOAuth2Client  This object for method chaining
-	 *
-	 * @since   12.3
-	 */
-	public function setOption($key, $value)
-	{
-		$this->options->set($key, $value);
-
-		return $this;
+		elseif (array_key_exists('expires_in', $token) && $token['created'] + $token['expires_in'] < time() + 20)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	/**
@@ -218,50 +190,13 @@ class JOAuth2Client
 	}
 
 	/**
-	 * Verify if the client has been authenticated
-	 *
-	 * @return  boolean  Is authenticated
-	 *
-	 * @since   12.3
-	 */
-	public function isAuthenticated()
-	{
-		$token = $this->getToken();
-
-		if (!$token || !array_key_exists('access_token', $token))
-		{
-			return false;
-		}
-		elseif (array_key_exists('expires_in', $token) && $token['created'] + $token['expires_in'] < time() + 20)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-
-	/**
-	 * Get the access token from the JOAuth2Client instance.
-	 *
-	 * @return  array  The access token
-	 *
-	 * @since   12.3
-	 */
-	public function getToken()
-	{
-		return $this->getOption('accesstoken');
-	}
-
-	/**
 	 * Send a signed Oauth request.
 	 *
-	 * @param   string $url     The URL forf the request.
-	 * @param   mixed  $data    The data to include in the request
-	 * @param   array  $headers The headers to send with the request
-	 * @param   string $method  The method with which to send the request
-	 * @param   int    $timeout The timeout for the request
+	 * @param   string  $url      The URL forf the request.
+	 * @param   mixed   $data     The data to include in the request
+	 * @param   array   $headers  The headers to send with the request
+	 * @param   string  $method   The method with which to send the request
+	 * @param   int     $timeout  The timeout for the request
 	 *
 	 * @return  string  The URL.
 	 *
@@ -308,15 +243,15 @@ class JOAuth2Client
 			case 'get':
 			case 'delete':
 			case 'trace':
-				$response = $this->http->$method($url, $headers, $timeout);
-				break;
+			$response = $this->http->$method($url, $headers, $timeout);
+			break;
 			case 'post':
 			case 'put':
 			case 'patch':
-				$response = $this->http->$method($url, $data, $headers, $timeout);
-				break;
+			$response = $this->http->$method($url, $data, $headers, $timeout);
+			break;
 			default:
-				throw new InvalidArgumentException('Unknown HTTP request method: ' . $method . '.');
+			throw new InvalidArgumentException('Unknown HTTP request method: ' . $method . '.');
 		}
 
 		if ($response->code < 200 || $response->code >= 400)
@@ -328,9 +263,74 @@ class JOAuth2Client
 	}
 
 	/**
+	 * Get an option from the JOAuth2Client instance.
+	 *
+	 * @param   string  $key  The name of the option to get
+	 *
+	 * @return  mixed  The option value
+	 *
+	 * @since   12.3
+	 */
+	public function getOption($key)
+	{
+		return $this->options->get($key);
+	}
+
+	/**
+	 * Set an option for the JOAuth2Client instance.
+	 *
+	 * @param   string  $key    The name of the option to set
+	 * @param   mixed   $value  The option value to set
+	 *
+	 * @return  JOAuth2Client  This object for method chaining
+	 *
+	 * @since   12.3
+	 */
+	public function setOption($key, $value)
+	{
+		$this->options->set($key, $value);
+
+		return $this;
+	}
+
+	/**
+	 * Get the access token from the JOAuth2Client instance.
+	 *
+	 * @return  array  The access token
+	 *
+	 * @since   12.3
+	 */
+	public function getToken()
+	{
+		return $this->getOption('accesstoken');
+	}
+
+	/**
+	 * Set an option for the JOAuth2Client instance.
+	 *
+	 * @param   array  $value  The access token
+	 *
+	 * @return  JOAuth2Client  This object for method chaining
+	 *
+	 * @since   12.3
+	 */
+	public function setToken($value)
+	{
+		if (is_array($value) && !array_key_exists('expires_in', $value) && array_key_exists('expires', $value))
+		{
+			$value['expires_in'] = $value['expires'];
+			unset($value['expires']);
+		}
+
+		$this->setOption('accesstoken', $value);
+
+		return $this;
+	}
+
+	/**
 	 * Refresh the access token instance.
 	 *
-	 * @param   string $token The refresh token
+	 * @param   string  $token  The refresh token
 	 *
 	 * @return  array  The new access token
 	 *
@@ -357,11 +357,11 @@ class JOAuth2Client
 			$token = $token['refresh_token'];
 		}
 
-		$data['grant_type']    = 'refresh_token';
+		$data['grant_type'] = 'refresh_token';
 		$data['refresh_token'] = $token;
-		$data['client_id']     = $this->getOption('clientid');
+		$data['client_id'] = $this->getOption('clientid');
 		$data['client_secret'] = $this->getOption('clientsecret');
-		$response              = $this->http->post($this->getOption('tokenurl'), $data);
+		$response = $this->http->post($this->getOption('tokenurl'), $data);
 
 		if ($response->code >= 200 || $response->code < 400)
 		{

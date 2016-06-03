@@ -25,6 +25,50 @@ class JHtmlBootstrapTest extends TestCase
 	protected $backupServer;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		// Ensure the loaded states are reset
+		JHtmlBootstrapInspector::resetLoaded();
+		JHtmlJqueryInspector::resetLoaded();
+
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+		JFactory::$document = $this->getMockDocument();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Tests the affix method.
 	 *
 	 * @return  void
@@ -248,7 +292,7 @@ class JHtmlBootstrapTest extends TestCase
 			'attributes' => array('class' => 'modal hide fade'),
 			'child'      => array(
 				'attributes' => array('class' => 'modal-header'),
-				'tag'        => 'div'
+				'tag' => 'div'
 			),
 			'children'   => array('count' => 2)
 		);
@@ -569,7 +613,7 @@ class JHtmlBootstrapTest extends TestCase
 			'Verify that the alert method initialises Bootstrap as well'
 		);
 
-		$li     = "<li class=\\\"\\\"><a href=\\\"#myTabItem\\\" data-toggle=\\\"tab\\\">myTitle<\/a><\/li>";
+		$li = "<li class=\\\"\\\"><a href=\\\"#myTabItem\\\" data-toggle=\\\"tab\\\">myTitle<\/a><\/li>";
 		$script = 'jQuery(function($){ $("#myTab a").click(function (e) {e.preventDefault();$(this).tab("show");});});';
 		$script .= chr(13);
 		$script .= 'jQuery(function($){ $("#myTabTabs").append($("' . $li . '")); });';
@@ -665,49 +709,5 @@ class JHtmlBootstrapTest extends TestCase
 			$document->_styleSheets,
 			'Verify that the RTL Bootstrap CSS is loaded'
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		// Ensure the loaded states are reset
-		JHtmlBootstrapInspector::resetLoaded();
-		JHtmlJqueryInspector::resetLoaded();
-
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$document    = $this->getMockDocument();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST']   = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 }

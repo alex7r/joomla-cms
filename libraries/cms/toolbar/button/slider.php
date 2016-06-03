@@ -26,13 +26,13 @@ class JToolbarButtonSlider extends JToolbarButton
 	/**
 	 * Fetch the HTML for the button
 	 *
-	 * @param   string  $type    Unused string, formerly button type.
-	 * @param   string  $name    Button name
-	 * @param   string  $text    The link text
-	 * @param   string  $url     URL for popup
-	 * @param   integer $width   Width of popup
-	 * @param   integer $height  Height of popup
-	 * @param   string  $onClose JavaScript for the onClose event.
+	 * @param   string   $type     Unused string, formerly button type.
+	 * @param   string   $name     Button name
+	 * @param   string   $text     The link text
+	 * @param   string   $url      URL for popup
+	 * @param   integer  $width    Width of popup
+	 * @param   integer  $height   Height of popup
+	 * @param   string   $onClose  JavaScript for the onClose event.
 	 *
 	 * @return  string  HTML string for the button
 	 *
@@ -43,13 +43,13 @@ class JToolbarButtonSlider extends JToolbarButton
 		JHtml::_('script', 'jui/cms.js', false, true);
 
 		// Store all data to the options array for use with JLayout
-		$options            = array();
-		$options['text']    = JText::_($text);
-		$options['name']    = $name;
-		$options['class']   = $this->fetchIconClass($name);
+		$options = array();
+		$options['text'] = JText::_($text);
+		$options['name'] = $name;
+		$options['class'] = $this->fetchIconClass($name);
 		$options['onClose'] = '';
 
-		$doTask            = $this->_getCommand($url);
+		$doTask = $this->_getCommand($url);
 		$options['doTask'] = 'Joomla.setcollapse(\'' . $doTask . '\', \'' . $name . '\', \'' . $height . '\');';
 
 		if ($onClose)
@@ -64,9 +64,24 @@ class JToolbarButtonSlider extends JToolbarButton
 	}
 
 	/**
+	 * Get the button id
+	 *
+	 * @param   string  $type  Button type
+	 * @param   string  $name  Button name
+	 *
+	 * @return  string	Button CSS Id
+	 *
+	 * @since   3.0
+	 */
+	public function fetchId($type, $name)
+	{
+		return $this->_parent->getName() . '-slider-' . $name;
+	}
+
+	/**
 	 * Get the JavaScript command for the button
 	 *
-	 * @param   string $url URL for popup
+	 * @param   string  $url  URL for popup
 	 *
 	 * @return  string  JavaScript command string
 	 *
@@ -80,20 +95,5 @@ class JToolbarButtonSlider extends JToolbarButton
 		}
 
 		return $url;
-	}
-
-	/**
-	 * Get the button id
-	 *
-	 * @param   string $type Button type
-	 * @param   string $name Button name
-	 *
-	 * @return  string    Button CSS Id
-	 *
-	 * @since   3.0
-	 */
-	public function fetchId($type, $name)
-	{
-		return $this->_parent->getName() . '-slider-' . $name;
 	}
 }

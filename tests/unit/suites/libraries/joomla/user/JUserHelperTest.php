@@ -14,7 +14,7 @@
  * @package     Joomla.UnitTest
  * @subpackage  User
  * @since       12.1
- */
+*/
 class JUserHelperTest extends TestCaseDatabase
 {
 	/**
@@ -22,6 +22,57 @@ class JUserHelperTest extends TestCaseDatabase
 	 * @since  12.1
 	 */
 	protected $object;
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		// Set the session object for JUserHelper::addUserToGroup()
+		JFactory::$session = $this->getMockSession();
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.4
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+		TestReflection::setValue('JPluginHelper', 'plugins', null);
+		parent::tearDown();
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   12.2
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_users', JPATH_TEST_DATABASE . '/jos_users.csv');
+		$dataSet->addTable('jos_user_usergroup_map', JPATH_TEST_DATABASE . '/jos_user_usergroup_map.csv');
+		$dataSet->addTable('jos_usergroups', JPATH_TEST_DATABASE . '/jos_usergroups.csv');
+
+		return $dataSet;
+	}
 
 	/**
 	 * Test cases for userGroups
@@ -47,15 +98,15 @@ class JUserHelperTest extends TestCaseDatabase
 				array(),
 				array(
 					'code' => 'SOME_ERROR_CODE',
-					'msg'  => 'JLIB_USER_ERROR_UNABLE_TO_LOAD_USER',
+					'msg' => 'JLIB_USER_ERROR_UNABLE_TO_LOAD_USER',
 					'info' => ''),
 			),
-			'publisher'   => array(
+			'publisher' => array(
 				43,
 				array(5 => 5),
 				array(),
 			),
-			'manager'     => array(
+			'manager' => array(
 				44,
 				array(6 => 6),
 				array(),
@@ -66,12 +117,12 @@ class JUserHelperTest extends TestCaseDatabase
 	/**
 	 * TestingGetUserGroups().
 	 *
-	 * @param   integer $userid   User ID
-	 * @param   mixed   $expected User object or empty array if unknown
-	 * @param   array   $error    Expected error info
+	 * @param   integer  $userid    User ID
+	 * @param   mixed    $expected  User object or empty array if unknown
+	 * @param   array    $error     Expected error info
 	 *
 	 * @dataProvider casesGetUserGroups
-	 * @covers       JUserHelper::getUserGroups
+	 * @covers  JUserHelper::getUserGroups
 	 * @return  void
 	 */
 	public function testGetUserGroups($userid, $expected, $error)
@@ -90,7 +141,7 @@ class JUserHelperTest extends TestCaseDatabase
 	public function casesGetUserId()
 	{
 		return array(
-			'admin'   => array(
+			'admin' => array(
 				'admin',
 				42,
 				array(),
@@ -106,16 +157,16 @@ class JUserHelperTest extends TestCaseDatabase
 	/**
 	 * TestingGetUserId().
 	 *
-	 * @param   string  $username User name
-	 * @param   integer $expected Expected user id
-	 * @param   array   $error    Expected error info
+	 * @param   string   $username  User name
+	 * @param   integer  $expected  Expected user id
+	 * @param   array    $error     Expected error info
 	 *
 	 * @dataProvider casesGetUserId
-	 * @covers       JUserHelper::getUserId
+	 * @covers  JUserHelper::getUserId
 	 *
 	 * @return  void
 	 *
-	 * @since        12.2
+	 * @since   12.2
 	 */
 	public function testGetUserId($username, $expected, $error)
 	{
@@ -140,26 +191,25 @@ class JUserHelperTest extends TestCaseDatabase
 				6,
 				true
 			),
-			'manager'   => array(
+			'manager' => array(
 				44,
 				6,
 				true
 			),
 		);
 	}
-
 	/**
 	 * Testing addUserToGroup().
 	 *
-	 * @param   string  $userId   User id
-	 * @param   integer $groupId  Group to add user to
-	 * @param   boolean $expected Expected params
+	 * @param   string   $userId    User id
+	 * @param   integer  $groupId   Group to add user to
+	 * @param   boolean  $expected  Expected params
 	 *
 	 * @dataProvider casesAddUsertoGroup
-	 * @covers       JUserHelper::addUsertoGroup
+	 * @covers  JUserHelper::addUsertoGroup
 	 * @return  void
 	 *
-	 * @since        12.3
+	 * @since   12.3
 	 */
 	public function testAddUserToGroup($userId, $groupId, $expected)
 	{
@@ -196,7 +246,7 @@ class JUserHelperTest extends TestCaseDatabase
 				8,
 				true
 			),
-			'manager'   => array(
+			'manager' => array(
 				44,
 				6,
 				true
@@ -207,12 +257,12 @@ class JUserHelperTest extends TestCaseDatabase
 	/**
 	 * Testing removeUserFromGroup().
 	 *
-	 * @param   string  $userId   User id
-	 * @param   integer $groupId  Group to remove user from
-	 * @param   boolean $expected Expected params
+	 * @param   string   $userId    User id
+	 * @param   integer  $groupId   Group to remove user from
+	 * @param   boolean  $expected  Expected params
 	 *
 	 * @dataProvider casesRemoveUserFromGroup
-	 * @covers       JUserHelper::removeUserFromGroup
+	 * @covers  JUserHelper::removeUserFromGroup
 	 * @return  void
 	 */
 	public function testRemoveUserFromGroup($userId, $groupId, $expected)
@@ -232,7 +282,7 @@ class JUserHelperTest extends TestCaseDatabase
 	public function casesActivateUser()
 	{
 		return array(
-			'Valid User'   => array(
+			'Valid User' => array(
 				'30cc6de70fb18231196a28dd83363d57',
 				true),
 			'Invalid User' => array(
@@ -244,14 +294,14 @@ class JUserHelperTest extends TestCaseDatabase
 	/**
 	 * Testing activateUser().
 	 *
-	 * @param   string  $activation Activation string
-	 * @param   boolean $expected   Expected params
+	 * @param   string   $activation  Activation string
+	 * @param   boolean  $expected    Expected params
 	 *
 	 * @dataProvider casesActivateUser
-	 * @covers       JUserHelper::activateUser
+	 * @covers  JUserHelper::activateUser
 	 * @return  void
 	 *
-	 * @since        12.3
+	 * @since   12.3
 	 */
 	public function testActivateUser($activation, $expected)
 	{
@@ -462,8 +512,7 @@ class JUserHelperTest extends TestCaseDatabase
 	 */
 	public function testGetCryptedPasswordWithMhash()
 	{
-		if (!function_exists('mhash'))
-		{
+		if (!function_exists('mhash')) {
 			$this->markTestSkipped('The mhash function is not available');
 		}
 
@@ -524,56 +573,5 @@ class JUserHelperTest extends TestCaseDatabase
 			JUserHelper::getCryptedPassword('mySuperSecretPassword', '{SMD5}oY4N5uFk6w54Ni3eKYQxIlBhc3Nzd29yZEhhc1NhbHQ=', 'smd5', true),
 			'Password is hashed to SMD5 with salt with encryption prefix'
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		// Set the session object for JUserHelper::addUserToGroup()
-		JFactory::$session = $this->getMockSession();
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-		TestReflection::setValue('JPluginHelper', 'plugins', null);
-		parent::tearDown();
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   12.2
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_users', JPATH_TEST_DATABASE . '/jos_users.csv');
-		$dataSet->addTable('jos_user_usergroup_map', JPATH_TEST_DATABASE . '/jos_user_usergroup_map.csv');
-		$dataSet->addTable('jos_usergroups', JPATH_TEST_DATABASE . '/jos_usergroups.csv');
-
-		return $dataSet;
 	}
 }

@@ -21,9 +21,9 @@ class PlgContentFinder extends JPlugin
 	 * Content is passed by reference, but after the save, so no changes will be saved.
 	 * Method is called right after the content is saved.
 	 *
-	 * @param   string $context The context of the content passed to the plugin (added in 1.6)
-	 * @param   object $article A JTableContent object
-	 * @param   bool   $isNew   If the content has just been created
+	 * @param   string  $context  The context of the content passed to the plugin (added in 1.6)
+	 * @param   object  $article  A JTableContent object
+	 * @param   bool    $isNew    If the content has just been created
 	 *
 	 * @return  void
 	 *
@@ -42,9 +42,9 @@ class PlgContentFinder extends JPlugin
 	 * Smart Search before save content method.
 	 * Content is passed by reference. Method is called before the content is saved.
 	 *
-	 * @param   string $context The context of the content passed to the plugin (added in 1.6).
-	 * @param   object $article A JTableContent object.
-	 * @param   bool   $isNew   If the content is just about to be created.
+	 * @param   string  $context  The context of the content passed to the plugin (added in 1.6).
+	 * @param   object  $article  A JTableContent object.
+	 * @param   bool    $isNew    If the content is just about to be created.
 	 *
 	 * @return  void
 	 *
@@ -63,8 +63,8 @@ class PlgContentFinder extends JPlugin
 	 * Smart Search after delete content method.
 	 * Content is passed by reference, but after the deletion.
 	 *
-	 * @param   string $context The context of the content passed to the plugin (added in 1.6).
-	 * @param   object $article A JTableContent object.
+	 * @param   string  $context  The context of the content passed to the plugin (added in 1.6).
+	 * @param   object  $article  A JTableContent object.
 	 *
 	 * @return  void
 	 *
@@ -85,9 +85,9 @@ class PlgContentFinder extends JPlugin
 	 * from outside the edit screen. This is fired when the item is published,
 	 * unpublished, archived, or unarchived from the list view.
 	 *
-	 * @param   string  $context The context for the content passed to the plugin.
-	 * @param   array   $pks     A list of primary key ids of the content that has changed state.
-	 * @param   integer $value   The value of the state that the content has been changed to.
+	 * @param   string   $context  The context for the content passed to the plugin.
+	 * @param   array    $pks      A list of primary key ids of the content that has changed state.
+	 * @param   integer  $value    The value of the state that the content has been changed to.
 	 *
 	 * @return  void
 	 *
@@ -107,9 +107,9 @@ class PlgContentFinder extends JPlugin
 	 * Method is called when the state of the category to which the
 	 * content item belongs is changed.
 	 *
-	 * @param   string  $extension The extension whose category has been updated.
-	 * @param   array   $pks       A list of primary key ids of the content that has changed state.
-	 * @param   integer $value     The value of the state that the content has been changed to.
+	 * @param   string   $extension  The extension whose category has been updated.
+	 * @param   array    $pks        A list of primary key ids of the content that has changed state.
+	 * @param   integer  $value      The value of the state that the content has been changed to.
 	 *
 	 * @return  void
 	 *

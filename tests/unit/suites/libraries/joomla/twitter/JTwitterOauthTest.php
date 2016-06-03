@@ -59,38 +59,77 @@ class JTwitterOauthTest extends TestCase
 	protected $errorString = '{"errorCode":401, "message": "Generic error"}';
 
 	/**
-	 * Provides test data for request format detection.
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
 	 *
-	 * @return array
-	 *
-	 * @since 12.3
+	 * @return void
 	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI'] = '/index.php';
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+
+		$key = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/twitter_test.php";
+
+		$this->options = new JRegistry;
+		$this->input = $this->getMockInput();
+		$this->application = $this->getMockWeb();
+		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+		$this->oauth = new JTwitterOauth($this->options, $this->client, $this->input, $this->application);
+		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+	}
+
+	/**
+	* Provides test data for request format detection.
+	*
+	* @return array
+	*
+	* @since 12.3
+	*/
 	public function seedVerifyCredentials()
 	{
 		// Code, body, expected
 		return array(
 			array(200, $this->sampleString, true),
 			array(401, $this->errorString, false)
-		);
+			);
 	}
 
 	/**
 	 * Tests the verifyCredentials method
 	 *
-	 * @param   integer $code     The return code.
-	 * @param   string  $body     The JSON string.
-	 * @param   boolean $expected Expected return value.
+	 * @param   integer  $code      The return code.
+	 * @param   string   $body      The JSON string.
+	 * @param   boolean  $expected  Expected return value.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedVerifyCredentials
-	 * @since        12.3
+	 * @since   12.3
 	 */
 	public function testVerifyCredentials($code, $body, $expected)
 	{
 		$path = 'https://api.twitter.com/1.1/account/verify_credentials.json';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = $code;
 		$returnData->body = $body;
 
@@ -116,7 +155,7 @@ class JTwitterOauthTest extends TestCase
 	{
 		$path = 'https://api.twitter.com/1.1/account/end_session.json';
 
-		$returnData       = new stdClass;
+		$returnData = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -129,44 +168,5 @@ class JTwitterOauthTest extends TestCase
 			$this->oauth->endSession(),
 			$this->equalTo(json_decode($this->sampleString))
 		);
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST']       = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI']     = '/index.php';
-		$_SERVER['SCRIPT_NAME']     = '/index.php';
-
-		$key    = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/twitter_test.php";
-
-		$this->options     = new JRegistry;
-		$this->input       = $this->getMockInput();
-		$this->application = $this->getMockWeb();
-		$this->client      = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-		$this->oauth = new JTwitterOauth($this->options, $this->client, $this->input, $this->application);
-		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
 	}
 }

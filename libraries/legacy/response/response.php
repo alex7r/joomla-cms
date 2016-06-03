@@ -24,21 +24,21 @@ class JResponse
 {
 	/**
 	 * @var    array  Body
-	 * @since       11.1
+	 * @since  11.1
 	 * @deprecated  4.0
 	 */
 	protected static $body = array();
 
 	/**
 	 * @var    boolean  Cachable
-	 * @since       11.1
+	 * @since  11.1
 	 * @deprecated  4.0
 	 */
 	protected static $cachable = false;
 
 	/**
 	 * @var    array  Headers
-	 * @since       11.1
+	 * @since  11.1
 	 * @deprecated  4.0
 	 */
 	protected static $headers = array();
@@ -48,11 +48,11 @@ class JResponse
 	 *
 	 * If $allow is set, sets the cachable state of the response.  Always returns current state.
 	 *
-	 * @param   boolean $allow True to allow browser caching.
+	 * @param   boolean  $allow  True to allow browser caching.
 	 *
 	 * @return  boolean  True if browser caching should be allowed
 	 *
-	 * @since       11.1
+	 * @since   11.1
 	 * @deprecated  4.0  Use JApplicationWeb::allowCache() instead
 	 */
 	public static function allowCache($allow = null)
@@ -61,11 +61,30 @@ class JResponse
 	}
 
 	/**
+	 * Set a header.
+	 *
+	 * If $replace is true, replaces any headers already defined with that $name.
+	 *
+	 * @param   string   $name     The name of the header to set.
+	 * @param   string   $value    The value of the header to set.
+	 * @param   boolean  $replace  True to replace any existing headers by name.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 * @deprecated  4.0  Use JApplicationWeb::setHeader() instead
+	 */
+	public static function setHeader($name, $value, $replace = false)
+	{
+		JFactory::getApplication()->setHeader($name, $value, $replace);
+	}
+
+	/**
 	 * Return array of headers.
 	 *
 	 * @return  array
 	 *
-	 * @since       11.1
+	 * @since   11.1
 	 * @deprecated  4.0  Use JApplicationWeb::getHeaders() instead
 	 */
 	public static function getHeaders()
@@ -78,7 +97,7 @@ class JResponse
 	 *
 	 * @return  void
 	 *
-	 * @since       11.1
+	 * @since   11.1
 	 * @deprecated  4.0  Use JApplicationWeb::clearHeaders() instead
 	 */
 	public static function clearHeaders()
@@ -91,7 +110,7 @@ class JResponse
 	 *
 	 * @return  void
 	 *
-	 * @since       11.1
+	 * @since   11.1
 	 * @deprecated  4.0  Use JApplicationWeb::sendHeaders() instead
 	 */
 	public static function sendHeaders()
@@ -100,13 +119,30 @@ class JResponse
 	}
 
 	/**
-	 * Prepend content to the body content
+	 * Set body content.
 	 *
-	 * @param   string $content The content to prepend to the response body.
+	 * If body content already defined, this will replace it.
+	 *
+	 * @param   string  $content  The content to set to the response body.
 	 *
 	 * @return  void
 	 *
-	 * @since       11.1
+	 * @since   11.1
+	 * @deprecated  4.0  Use JApplicationWeb::setBody() instead
+	 */
+	public static function setBody($content)
+	{
+		JFactory::getApplication()->setBody($content);
+	}
+
+	/**
+	 * Prepend content to the body content
+	 *
+	 * @param   string  $content  The content to prepend to the response body.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
 	 * @deprecated  4.0  Use JApplicationWeb::prependBody() instead
 	 */
 	public static function prependBody($content)
@@ -117,11 +153,11 @@ class JResponse
 	/**
 	 * Append content to the body content
 	 *
-	 * @param   string $content The content to append to the response body.
+	 * @param   string  $content  The content to append to the response body.
 	 *
 	 * @return  void
 	 *
-	 * @since       11.1
+	 * @since   11.1
 	 * @deprecated  4.0  Use JApplicationWeb::appendBody() instead
 	 */
 	public static function appendBody($content)
@@ -132,11 +168,11 @@ class JResponse
 	/**
 	 * Return the body content
 	 *
-	 * @param   boolean $toArray Whether or not to return the body content as an array of strings or as a single string; defaults to false.
+	 * @param   boolean  $toArray  Whether or not to return the body content as an array of strings or as a single string; defaults to false.
 	 *
 	 * @return  string  array
 	 *
-	 * @since       11.1
+	 * @since   11.1
 	 * @deprecated  4.0  Use JApplicationWeb::getBody() instead
 	 */
 	public static function getBody($toArray = false)
@@ -145,30 +181,13 @@ class JResponse
 	}
 
 	/**
-	 * Set body content.
-	 *
-	 * If body content already defined, this will replace it.
-	 *
-	 * @param   string $content The content to set to the response body.
-	 *
-	 * @return  void
-	 *
-	 * @since       11.1
-	 * @deprecated  4.0  Use JApplicationWeb::setBody() instead
-	 */
-	public static function setBody($content)
-	{
-		JFactory::getApplication()->setBody($content);
-	}
-
-	/**
 	 * Sends all headers prior to returning the string
 	 *
-	 * @param   boolean $compress If true, compress the data
+	 * @param   boolean  $compress  If true, compress the data
 	 *
 	 * @return  string
 	 *
-	 * @since       11.1
+	 * @since   11.1
 	 * @deprecated  4.0  Use JApplicationCms::toString() instead
 	 */
 	public static function toString($compress = false)
@@ -182,12 +201,12 @@ class JResponse
 	 * Checks the accept encoding of the browser and compresses the data before
 	 * sending it to the client.
 	 *
-	 * @param   string $data Content to compress for output.
+	 * @param   string  $data  Content to compress for output.
 	 *
 	 * @return  string  compressed data
 	 *
-	 * @note        Replaces _compress method in 11.1
-	 * @since       11.1
+	 * @note    Replaces _compress method in 11.1
+	 * @since   11.1
 	 * @deprecated  4.0  Use JApplicationWeb::compress() instead
 	 */
 	protected static function compress($data)
@@ -244,8 +263,8 @@ class JResponse
 	 *
 	 * @return  boolean
 	 *
-	 * @since       11.1
-	 * @note        Replaces _clientEncoding method from 11.1
+	 * @since   11.1
+	 * @note    Replaces _clientEncoding method from 11.1
 	 * @deprecated  4.0  Use JApplicationWebClient instead
 	 */
 	protected static function clientEncoding()
@@ -268,24 +287,5 @@ class JResponse
 		}
 
 		return $encoding;
-	}
-
-	/**
-	 * Set a header.
-	 *
-	 * If $replace is true, replaces any headers already defined with that $name.
-	 *
-	 * @param   string  $name    The name of the header to set.
-	 * @param   string  $value   The value of the header to set.
-	 * @param   boolean $replace True to replace any existing headers by name.
-	 *
-	 * @return  void
-	 *
-	 * @since       11.1
-	 * @deprecated  4.0  Use JApplicationWeb::setHeader() instead
-	 */
-	public static function setHeader($name, $value, $replace = false)
-	{
-		JFactory::getApplication()->setHeader($name, $value, $replace);
 	}
 }

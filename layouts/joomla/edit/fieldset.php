@@ -9,10 +9,10 @@
 
 defined('JPATH_BASE') or die;
 
-$app  = JFactory::getApplication();
+$app = JFactory::getApplication();
 $form = $displayData->getForm();
 
-$name     = $displayData->get('fieldset');
+$name = $displayData->get('fieldset');
 $fieldSet = $form->getFieldset($name);
 
 if (empty($fieldSet))
@@ -20,8 +20,8 @@ if (empty($fieldSet))
 	return;
 }
 
-$ignoreFields = $displayData->get('ignore_fields') ?: array();
-$extraFields  = $displayData->get('extra_fields') ?: array();
+$ignoreFields = $displayData->get('ignore_fields') ? : array();
+$extraFields = $displayData->get('extra_fields') ? : array();
 
 if ($displayData->get('show_options', 1))
 {
@@ -51,7 +51,7 @@ if ($displayData->get('show_options', 1))
 }
 else
 {
-	$html   = array();
+	$html = array();
 	$html[] = '<div style="display:none;">';
 	foreach ($fieldSet as $field)
 	{

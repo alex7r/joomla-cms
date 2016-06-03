@@ -17,6 +17,22 @@
 class JHtmlListTest extends TestCaseDatabase
 {
 	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   3.1
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_users', JPATH_TEST_DATABASE . '/jos_users.csv');
+
+		return $dataSet;
+	}
+
+	/**
 	 * Tests the JHtmlList::users method.
 	 *
 	 * @return  void
@@ -91,21 +107,5 @@ class JHtmlListTest extends TestCaseDatabase
 			$result,
 			'Expected a <select> element with id "user-list" containing a child <option value="left">Left</option>'
 		);
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   3.1
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_users', JPATH_TEST_DATABASE . '/jos_users.csv');
-
-		return $dataSet;
 	}
 }

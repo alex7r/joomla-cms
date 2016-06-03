@@ -29,7 +29,6 @@ $modules = JModuleHelper::getModules('login');
 foreach ($modules as $module)
 // Render the login modules
 
-	if ($module->module != 'mod_login')
-	{
-		echo JModuleHelper::renderModule($module, array('style' => 'rounded', 'id' => 'section-box'));
-	}
+if ($module->module != 'mod_login'){
+	echo JModuleHelper::renderModule($module, array('style' => 'rounded', 'id' => 'section-box'));
+}

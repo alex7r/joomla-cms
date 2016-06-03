@@ -39,8 +39,7 @@ $twofactormethods = ModLoginHelper::getTwoFactorMethods();
 							<?php echo JText::_('JGLOBAL_USERNAME'); ?>
 						</label>
 					</span>
-					<input name="username" tabindex="1" id="mod-login-username" type="text" class="input-medium"
-					       placeholder="<?php echo JText::_('JGLOBAL_USERNAME'); ?>" size="15" autofocus="true"/>
+					<input name="username" tabindex="1" id="mod-login-username" type="text" class="input-medium" placeholder="<?php echo JText::_('JGLOBAL_USERNAME'); ?>" size="15" autofocus="true" />
 				</div>
 			</div>
 		</div>
@@ -53,8 +52,7 @@ $twofactormethods = ModLoginHelper::getTwoFactorMethods();
 							<?php echo JText::_('JGLOBAL_PASSWORD'); ?>
 						</label>
 					</span>
-					<input name="passwd" tabindex="2" id="mod-login-password" type="password" class="input-medium"
-					       placeholder="<?php echo JText::_('JGLOBAL_PASSWORD'); ?>" size="15"/>
+					<input name="passwd" tabindex="2" id="mod-login-password" type="password" class="input-medium" placeholder="<?php echo JText::_('JGLOBAL_PASSWORD'); ?>" size="15"/>
 				</div>
 			</div>
 		</div>
@@ -63,17 +61,13 @@ $twofactormethods = ModLoginHelper::getTwoFactorMethods();
 				<div class="controls">
 					<div class="input-prepend input-append">
 						<span class="add-on">
-							<span class="icon-star hasTooltip"
-							      title="<?php echo JText::_('JGLOBAL_SECRETKEY'); ?>"></span>
+							<span class="icon-star hasTooltip" title="<?php echo JText::_('JGLOBAL_SECRETKEY'); ?>"></span>
 							<label for="mod-login-secretkey" class="element-invisible">
 								<?php echo JText::_('JGLOBAL_SECRETKEY'); ?>
 							</label>
 						</span>
-						<input name="secretkey" autocomplete="off" tabindex="3" id="mod-login-secretkey" type="text"
-						       class="input-medium" placeholder="<?php echo JText::_('JGLOBAL_SECRETKEY'); ?>"
-						       size="15"/>
-						<span class="btn width-auto hasTooltip"
-						      title="<?php echo JText::_('JGLOBAL_SECRETKEY_HELP'); ?>">
+						<input name="secretkey" autocomplete="off" tabindex="3" id="mod-login-secretkey" type="text" class="input-medium" placeholder="<?php echo JText::_('JGLOBAL_SECRETKEY'); ?>" size="15"/>
+						<span class="btn width-auto hasTooltip" title="<?php echo JText::_('JGLOBAL_SECRETKEY_HELP'); ?>">
 							<span class="icon-help"></span>
 						</span>
 					</div>
@@ -89,8 +83,7 @@ $twofactormethods = ModLoginHelper::getTwoFactorMethods();
 				</div>
 				<div class="btn-group">
 					<button tabindex="5" class="btn btn-primary">
-						<span
-							class="icon-play icon-white"></span> <?php echo JText::_('COM_INSTALLER_INSTALL_BUTTON'); ?>
+						<span class="icon-play icon-white"></span> <?php echo JText::_('COM_INSTALLER_INSTALL_BUTTON'); ?>
 					</button>
 				</div>
 			</div>

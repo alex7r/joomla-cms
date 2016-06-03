@@ -14,35 +14,10 @@ defined('JPATH_PLATFORM') or die;
  *
  * @since  12.1
  *
- * @property-read  JDatabaseDriverPostgresql $db  The database connector to use for exporting structure and/or data.
+ * @property-read  JDatabaseDriverPostgresql  $db  The database connector to use for exporting structure and/or data.
  */
 class JDatabaseExporterPostgresql extends JDatabaseExporter
 {
-	/**
-	 * Checks if all data and options are in order prior to exporting.
-	 *
-	 * @return  JDatabaseExporterPostgresql  Method supports chaining.
-	 *
-	 * @since   12.1
-	 * @throws  Exception if an error is encountered.
-	 */
-	public function check()
-	{
-		// Check if the db connector has been set.
-		if (!($this->db instanceof JDatabaseDriverPostgresql))
-		{
-			throw new Exception('JPLATFORM_ERROR_DATABASE_CONNECTOR_WRONG_TYPE');
-		}
-
-		// Check if the tables have been specified.
-		if (empty($this->from))
-		{
-			throw new Exception('JPLATFORM_ERROR_NO_TABLES_SPECIFIED');
-		}
-
-		return $this;
-	}
-
 	/**
 	 * Builds the XML data for the tables to export.
 	 *
@@ -85,8 +60,8 @@ class JDatabaseExporterPostgresql extends JDatabaseExporter
 			$table = $this->getGenericTableName($table);
 
 			// Get the details columns information.
-			$fields    = $this->db->getTableColumns($table, false);
-			$keys      = $this->db->getTableKeys($table);
+			$fields = $this->db->getTableColumns($table, false);
+			$keys = $this->db->getTableKeys($table);
 			$sequences = $this->db->getTableSequences($table);
 
 			$buffer[] = '  <table_structure name="' . $table . '">';
@@ -109,7 +84,7 @@ class JDatabaseExporterPostgresql extends JDatabaseExporter
 			foreach ($fields as $field)
 			{
 				$buffer[] = '   <field Field="' . $field->column_name . '"' . ' Type="' . $field->type . '"' . ' Null="' . $field->null . '"' .
-					(isset($field->default) ? ' Default="' . $field->default . '"' : '') . ' Comments="' . $field->comments . '"' .
+							(isset($field->default) ? ' Default="' . $field->default . '"' : '') . ' Comments="' . $field->comments . '"' .
 					' />';
 			}
 
@@ -123,5 +98,30 @@ class JDatabaseExporterPostgresql extends JDatabaseExporter
 		}
 
 		return $buffer;
+	}
+
+	/**
+	 * Checks if all data and options are in order prior to exporting.
+	 *
+	 * @return  JDatabaseExporterPostgresql  Method supports chaining.
+	 *
+	 * @since   12.1
+	 * @throws  Exception if an error is encountered.
+	 */
+	public function check()
+	{
+		// Check if the db connector has been set.
+		if (!($this->db instanceof JDatabaseDriverPostgresql))
+		{
+			throw new Exception('JPLATFORM_ERROR_DATABASE_CONNECTOR_WRONG_TYPE');
+		}
+
+		// Check if the tables have been specified.
+		if (empty($this->from))
+		{
+			throw new Exception('JPLATFORM_ERROR_NO_TABLES_SPECIFIED');
+		}
+
+		return $this;
 	}
 }

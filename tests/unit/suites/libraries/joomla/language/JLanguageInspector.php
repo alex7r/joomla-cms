@@ -20,7 +20,7 @@ class JLanguageInspector extends JLanguage
 	/**
 	 * Method for inspecting protected variables.
 	 *
-	 * @param   string $name Property name.
+	 * @param   string  $name  Property name.
 	 *
 	 * @return mixed The value of the class variable.
 	 */
@@ -41,8 +41,8 @@ class JLanguageInspector extends JLanguage
 	/**
 	 * Sets any property from the class.
 	 *
-	 * @param   string $property The name of the class property.
-	 * @param   string $value    The value of the class property.
+	 * @param   string  $property  The name of the class property.
+	 * @param   string  $value     The value of the class property.
 	 *
 	 * @return void
 	 */
@@ -54,8 +54,8 @@ class JLanguageInspector extends JLanguage
 	/**
 	 * Calls any inaccessible method from the class.
 	 *
-	 * @param   string     $name       Name of the method to invoke
-	 * @param   array|bool $parameters Parameters to be handed over to the original method
+	 * @param   string      $name        Name of the method to invoke
+	 * @param   array|bool  $parameters  Parameters to be handed over to the original method
 	 *
 	 * @return mixed The return value of the method
 	 */
@@ -67,7 +67,7 @@ class JLanguageInspector extends JLanguage
 	/**
 	 * Allows the internal singleton to be set and mocked.
 	 *
-	 * @param   JLanguage $instance A language object.
+	 * @param   JLanguage  $instance  A language object.
 	 *
 	 * @return  void
 	 *

@@ -21,7 +21,7 @@ class JTableCorecontent extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver $db A database connector object
+	 * @param   JDatabaseDriver  $db  A database connector object
 	 *
 	 * @since   3.1
 	 */
@@ -33,8 +33,8 @@ class JTableCorecontent extends JTable
 	/**
 	 * Overloaded bind function
 	 *
-	 * @param   array $array    Named array
-	 * @param   mixed $ignore   An optional array or space separated list of properties
+	 * @param   array  $array   Named array
+	 * @param   mixed  $ignore  An optional array or space separated list of properties
 	 *                          to ignore while binding.
 	 *
 	 * @return  mixed  Null if operation was satisfactory, otherwise returns an error string
@@ -123,8 +123,8 @@ class JTableCorecontent extends JTable
 		if ($this->core_publish_down > $this->_db->getNullDate() && $this->core_publish_down < $this->core_publish_up)
 		{
 			// Swap the dates.
-			$temp                    = $this->core_publish_up;
-			$this->core_publish_up   = $this->core_publish_down;
+			$temp = $this->core_publish_up;
+			$this->core_publish_up = $this->core_publish_down;
 			$this->core_publish_down = $temp;
 		}
 
@@ -161,10 +161,27 @@ class JTableCorecontent extends JTable
 	}
 
 	/**
+	 * Override JTable delete method to include deleting corresponding row from #__ucm_base.
+	 *
+	 * @param   integer  $pk  primary key value to delete. Must be set or throws an exception.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   3.1
+	 * @throws  UnexpectedValueException
+	 */
+	public function delete($pk = null)
+	{
+		$baseTable = JTable::getInstance('Ucm');
+
+		return parent::delete($pk) && $baseTable->delete($pk);
+	}
+
+	/**
 	 * Method to delete a row from the #__ucm_content table by content_item_id.
 	 *
-	 * @param   integer $contentItemId value of the core_content_item_id to delete. Corresponds to the primary key of the content table.
-	 * @param   string  $typeAlias     Alias for the content type
+	 * @param   integer  $contentItemId  value of the core_content_item_id to delete. Corresponds to the primary key of the content table.
+	 * @param   string   $typeAlias      Alias for the content type
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -183,7 +200,7 @@ class JTableCorecontent extends JTable
 			throw new UnexpectedValueException('Null type alias not allowed.');
 		}
 
-		$db    = $this->getDbo();
+		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName('core_content_id'))
 			->from($db->quoteName('#__ucm_content'))
@@ -202,26 +219,9 @@ class JTableCorecontent extends JTable
 	}
 
 	/**
-	 * Override JTable delete method to include deleting corresponding row from #__ucm_base.
-	 *
-	 * @param   integer $pk primary key value to delete. Must be set or throws an exception.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   3.1
-	 * @throws  UnexpectedValueException
-	 */
-	public function delete($pk = null)
-	{
-		$baseTable = JTable::getInstance('Ucm');
-
-		return parent::delete($pk) && $baseTable->delete($pk);
-	}
-
-	/**
 	 * Overrides JTable::store to set modified data and user id.
 	 *
-	 * @param   boolean $updateNulls True to update fields even if they are null.
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -235,9 +235,9 @@ class JTableCorecontent extends JTable
 		if ($this->core_content_id)
 		{
 			// Existing item
-			$this->core_modified_time    = $date->toSql();
+			$this->core_modified_time = $date->toSql();
 			$this->core_modified_user_id = $user->get('id');
-			$isNew                       = false;
+			$isNew = false;
 		}
 		else
 		{
@@ -271,8 +271,8 @@ class JTableCorecontent extends JTable
 	/**
 	 * Insert or update row in ucm_base table
 	 *
-	 * @param   boolean $updateNulls True to update fields even if they are null.
-	 * @param   boolean $isNew       if true, need to insert. Otherwise update.
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 * @param   boolean  $isNew        if true, need to insert. Otherwise update.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -281,8 +281,8 @@ class JTableCorecontent extends JTable
 	protected function storeUcmBase($updateNulls = false, $isNew = false)
 	{
 		// Store the ucm_base row
-		$db         = $this->getDbo();
-		$query      = $db->getQuery(true);
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
 		$languageId = JHelperContent::getLanguageId($this->core_language);
 
 		// Selecting "all languages" doesn't give a language id - we can't store a blank string in non mysql databases, so save 0 (the default value)
@@ -300,7 +300,7 @@ class JTableCorecontent extends JTable
 					. $db->quote($this->core_content_item_id) . ', '
 					. $db->quote($this->core_type_id) . ', '
 					. $db->quote($languageId)
-				);
+			);
 		}
 		else
 		{
@@ -321,9 +321,9 @@ class JTableCorecontent extends JTable
 	 * table. The method respects checked out rows by other users and will attempt
 	 * to checkin rows that it can after adjustments are made.
 	 *
-	 * @param   mixed   $pks    An optional array of primary key values to update.  If not set the instance property value is used.
-	 * @param   integer $state  The publishing state. eg. [0 = unpublished, 1 = published]
-	 * @param   integer $userId The user id of the user performing the operation.
+	 * @param   mixed    $pks     An optional array of primary key values to update.  If not set the instance property value is used.
+	 * @param   integer  $state   The publishing state. eg. [0 = unpublished, 1 = published]
+	 * @param   integer  $userId  The user id of the user performing the operation.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -336,7 +336,7 @@ class JTableCorecontent extends JTable
 		// Sanitize input.
 		JArrayHelper::toInteger($pks);
 		$userId = (int) $userId;
-		$state  = (int) $state;
+		$state = (int) $state;
 
 		// If there are no primary keys set check to see if the instance key is set.
 		if (empty($pks))

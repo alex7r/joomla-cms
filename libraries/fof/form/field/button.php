@@ -1,9 +1,9 @@
 <?php
 /**
- * @package     FrameworkOnFramework
- * @subpackage  form
+ * @package    FrameworkOnFramework
+ * @subpackage form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -26,7 +26,7 @@ class FOFFormFieldButton extends FOFFormFieldText implements FOFFormField
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string $name The property name for which to the the value.
+	 * @param   string  $name  The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -73,6 +73,19 @@ class FOFFormFieldButton extends FOFFormFieldText implements FOFFormField
 	}
 
 	/**
+	 * Get the rendering of this field type for a repeatable (grid) display,
+	 * e.g. in a view listing many item (typically a "browse" task)
+	 *
+	 * @since 2.0
+	 *
+	 * @return  string  The field HTML
+	 */
+	public function getRepeatable()
+	{
+		return $this->getInput();
+	}
+
+	/**
 	 * Get the rendering of this field type for static display, e.g. in a single
 	 * item view (typically a "read" task).
 	 *
@@ -106,23 +119,10 @@ class FOFFormFieldButton extends FOFFormFieldText implements FOFFormField
 		}
 
 		return '<' . $type . ' id="' . $this->id . '" class="btn ' . $class . '" ' .
-		$onclick . $url . $title . '>' .
-		$icon .
-		htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') .
-		'</' . $type . '>';
-	}
-
-	/**
-	 * Get the rendering of this field type for a repeatable (grid) display,
-	 * e.g. in a view listing many item (typically a "browse" task)
-	 *
-	 * @since 2.0
-	 *
-	 * @return  string  The field HTML
-	 */
-	public function getRepeatable()
-	{
-		return $this->getInput();
+			$onclick . $url . $title . '>' .
+			$icon .
+			htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') .
+			'</' . $type . '>';
 	}
 
 	/**

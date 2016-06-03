@@ -46,7 +46,7 @@ class Joomla_Sniffs_WhiteSpace_ConcatenationSpacingSniff implements PHP_CodeSnif
 	 * Processes this test, when one of its tokens is encountered.
 	 *
 	 * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
-	 * @param integer              $stackPtr  The position of the current token in the
+	 * @param integer $stackPtr The position of the current token in the
 	 *                                        stack passed in $tokens.
 	 *
 	 * @return void
@@ -81,8 +81,7 @@ class Joomla_Sniffs_WhiteSpace_ConcatenationSpacingSniff implements PHP_CodeSnif
 		else
 		{
 			if (strpos($tokens[($stackPtr - 2)]['content'], $phpcsFile->eolChar) !== false
-				|| strpos($tokens[($stackPtr - 1)]['content'], $phpcsFile->eolChar) !== false
-			)
+			|| strpos($tokens[($stackPtr - 1)]['content'], $phpcsFile->eolChar) !== false)
 			{
 				// the dot is on a new line
 				return;

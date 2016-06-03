@@ -18,19 +18,19 @@ defined('JPATH_PLATFORM') or die;
  *    to its class
  *
  * 2) Implement a constructor, that can look like this:
- *    public function __construct(JObservableInterface $observableObject)
- *    {
- *        $observableObject->attachObserver($this);
- *    $this->observableObject = $observableObject;
- *    }
+ * 	public function __construct(JObservableInterface $observableObject)
+ * 	{
+ * 	    $observableObject->attachObserver($this);
+ *  	$this->observableObject = $observableObject;
+ * 	}
  *
  * 3) and must implement the instanciator function createObserver() below, e.g. as follows:
- *    public static function createObserver(JObservableInterface $observableObject, $params = array())
- *    {
- *        $observer = new self($observableObject);
+ * 	public static function createObserver(JObservableInterface $observableObject, $params = array())
+ * 	{
+ * 	    $observer = new self($observableObject);
  *      $observer->... = $params['...']; ...
- *        return $observer;
- *    }
+ * 	    return $observer;
+ * 	}
  *
  * 4) Then add functions corresponding to the events to be observed,
  *    E.g. to respond to event: $this->_observers->update('onBeforeLoad', array($keys, $reset));
@@ -49,8 +49,8 @@ interface JObserverInterface
 	/**
 	 * Creates the associated observer instance and attaches it to the $observableObject
 	 *
-	 * @param   JObservableInterface $observableObject The observable subject object
-	 * @param   array                $params           Params for this observer
+	 * @param   JObservableInterface  $observableObject  The observable subject object
+	 * @param   array                 $params            Params for this observer
 	 *
 	 * @return  JObserverInterface
 	 *

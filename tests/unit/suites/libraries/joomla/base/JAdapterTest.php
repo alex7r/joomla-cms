@@ -20,6 +20,40 @@ jimport('joomla.base.adapterinstance');
 class JAdapterTest extends TestCase
 {
 	/**
+	 * Sets up the fixture.
+	 *
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$database = $this->getMockDatabase();
+	}
+
+	/**
+	 * Tears down the fixture.
+	 *
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Tests the JAdapter::getDbo method.
 	 *
 	 * @return  void
@@ -102,39 +136,5 @@ class JAdapterTest extends TestCase
 			$this->object->getAdapter('Testadapter4'),
 			$this->isInstanceOf('TestTestadapter4')
 		);
-	}
-
-	/**
-	 * Sets up the fixture.
-	 *
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$database = $this->getMockDatabase();
-	}
-
-	/**
-	 * Tears down the fixture.
-	 *
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 }

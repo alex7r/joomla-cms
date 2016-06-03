@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- *    * Redistributions of source code must retain the above copyright notice, this list of
- *      conditions and the following disclaimer.
+ * 	* Redistributions of source code must retain the above copyright notice, this list of
+ * 	  conditions and the following disclaimer.
  *
- *    * Redistributions in binary form must reproduce the above copyright notice, this list
- *      of conditions and the following disclaimer in the documentation and/or other materials
- *      provided with the distribution.
+ * 	* Redistributions in binary form must reproduce the above copyright notice, this list
+ * 	  of conditions and the following disclaimer in the documentation and/or other materials
+ * 	  provided with the distribution.
  *
- *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
- *      to endorse or promote products derived from this software without specific prior
- *      written permission.
+ * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
+ * 	  to endorse or promote products derived from this software without specific prior
+ * 	  written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,14 +32,14 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package   SimplePie
- * @version   1.3.1
+ * @package SimplePie
+ * @version 1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author    Ryan Parman
- * @author    Geoffrey Sneddon
- * @author    Ryan McCue
- * @link      http://simplepie.org/ SimplePie
- * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author Ryan Parman
+ * @author Geoffrey Sneddon
+ * @author Ryan McCue
+ * @link http://simplepie.org/ SimplePie
+ * @license http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 /**
@@ -59,25 +59,25 @@ class SimplePie_Registry
 	 * @var array
 	 */
 	protected $default = array(
-		'Cache'                  => 'SimplePie_Cache',
-		'Locator'                => 'SimplePie_Locator',
-		'Parser'                 => 'SimplePie_Parser',
-		'File'                   => 'SimplePie_File',
-		'Sanitize'               => 'SimplePie_Sanitize',
-		'Item'                   => 'SimplePie_Item',
-		'Author'                 => 'SimplePie_Author',
-		'Category'               => 'SimplePie_Category',
-		'Enclosure'              => 'SimplePie_Enclosure',
-		'Caption'                => 'SimplePie_Caption',
-		'Copyright'              => 'SimplePie_Copyright',
-		'Credit'                 => 'SimplePie_Credit',
-		'Rating'                 => 'SimplePie_Rating',
-		'Restriction'            => 'SimplePie_Restriction',
-		'Content_Type_Sniffer'   => 'SimplePie_Content_Type_Sniffer',
-		'Source'                 => 'SimplePie_Source',
-		'Misc'                   => 'SimplePie_Misc',
+		'Cache' => 'SimplePie_Cache',
+		'Locator' => 'SimplePie_Locator',
+		'Parser' => 'SimplePie_Parser',
+		'File' => 'SimplePie_File',
+		'Sanitize' => 'SimplePie_Sanitize',
+		'Item' => 'SimplePie_Item',
+		'Author' => 'SimplePie_Author',
+		'Category' => 'SimplePie_Category',
+		'Enclosure' => 'SimplePie_Enclosure',
+		'Caption' => 'SimplePie_Caption',
+		'Copyright' => 'SimplePie_Copyright',
+		'Credit' => 'SimplePie_Credit',
+		'Rating' => 'SimplePie_Rating',
+		'Restriction' => 'SimplePie_Restriction',
+		'Content_Type_Sniffer' => 'SimplePie_Content_Type_Sniffer',
+		'Source' => 'SimplePie_Source',
+		'Misc' => 'SimplePie_Misc',
 		'XML_Declaration_Parser' => 'SimplePie_XML_Declaration_Parser',
-		'Parse_Date'             => 'SimplePie_Parse_Date',
+		'Parse_Date' => 'SimplePie_Parse_Date',
 	);
 
 	/**
@@ -101,17 +101,14 @@ class SimplePie_Registry
 	 *
 	 * No-op
 	 */
-	public function __construct()
-	{
-	}
+	public function __construct() { }
 
 	/**
 	 * Register a class
 	 *
-	 * @param string $type   See {@see $default} for names
-	 * @param string $class  Class name, must subclass the corresponding default
-	 * @param bool   $legacy Whether to enable legacy support for this class
-	 *
+	 * @param string $type See {@see $default} for names
+	 * @param string $class Class name, must subclass the corresponding default
+	 * @param bool $legacy Whether to enable legacy support for this class
 	 * @return bool Successfulness
 	 */
 	public function register($type, $class, $legacy = false)
@@ -132,11 +129,32 @@ class SimplePie_Registry
 	}
 
 	/**
+	 * Get the class registered for a type
+	 *
+	 * Where possible, use {@see create()} or {@see call()} instead
+	 *
+	 * @param string $type
+	 * @return string|null
+	 */
+	public function get_class($type)
+	{
+		if (!empty($this->classes[$type]))
+		{
+			return $this->classes[$type];
+		}
+		if (!empty($this->default[$type]))
+		{
+			return $this->default[$type];
+		}
+
+		return null;
+	}
+
+	/**
 	 * Create a new instance of a given type
 	 *
 	 * @param string $type
-	 * @param array  $parameters Parameters to pass to the constructor
-	 *
+	 * @param array $parameters Parameters to pass to the constructor
 	 * @return object Instance of class
 	 */
 	public function &create($type, $parameters = array())
@@ -163,38 +181,14 @@ class SimplePie_Registry
 		else
 		{
 			$reflector = new ReflectionClass($class);
-			$instance  = $reflector->newInstanceArgs($parameters);
+			$instance = $reflector->newInstanceArgs($parameters);
 		}
 
 		if (method_exists($instance, 'set_registry'))
 		{
 			$instance->set_registry($this);
 		}
-
 		return $instance;
-	}
-
-	/**
-	 * Get the class registered for a type
-	 *
-	 * Where possible, use {@see create()} or {@see call()} instead
-	 *
-	 * @param string $type
-	 *
-	 * @return string|null
-	 */
-	public function get_class($type)
-	{
-		if (!empty($this->classes[$type]))
-		{
-			return $this->classes[$type];
-		}
-		if (!empty($this->default[$type]))
-		{
-			return $this->default[$type];
-		}
-
-		return null;
 	}
 
 	/**
@@ -202,8 +196,7 @@ class SimplePie_Registry
 	 *
 	 * @param string $type
 	 * @param string $method
-	 * @param array  $parameters
-	 *
+	 * @param array $parameters
 	 * @return mixed
 	 */
 	public function &call($type, $method, $parameters = array())
@@ -220,7 +213,6 @@ class SimplePie_Registry
 					if ($method === 'get_handler')
 					{
 						$result = @call_user_func_array(array($class, 'create'), $parameters);
-
 						return $result;
 					}
 					break;
@@ -228,7 +220,6 @@ class SimplePie_Registry
 		}
 
 		$result = call_user_func_array(array($class, $method), $parameters);
-
 		return $result;
 	}
 }

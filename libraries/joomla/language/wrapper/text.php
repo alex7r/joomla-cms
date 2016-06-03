@@ -21,10 +21,10 @@ class JLanguageWrapperText
 	/**
 	 * Helper wrapper method for _
 	 *
-	 * @param   string  $string               The string to translate.
-	 * @param   mixed   $jsSafe               Boolean: Make the result javascript safe.
-	 * @param   boolean $interpretBackSlashes To interpret backslashes (\\=\, \n=carriage return, \t=tabulation).
-	 * @param   boolean $script               To indicate that the string will be push in the javascript language store.
+	 * @param   string   $string                The string to translate.
+	 * @param   mixed    $jsSafe                Boolean: Make the result javascript safe.
+	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation).
+	 * @param   boolean  $script                To indicate that the string will be push in the javascript language store.
 	 *
 	 * @return  string  The translated string or the key is $script is true.
 	 *
@@ -39,11 +39,11 @@ class JLanguageWrapperText
 	/**
 	 * Helper wrapper method for alt
 	 *
-	 * @param   string  $string               The string to translate.
-	 * @param   string  $alt                  The alternate option for global string.
-	 * @param   mixed   $jsSafe               Boolean: Make the result javascript safe.
-	 * @param   boolean $interpretBackSlashes To interpret backslashes (\\=\, \n=carriage return, \t=tabulation).
-	 * @param   boolean $script               To indicate that the string will be pushed in the javascript language store.
+	 * @param   string   $string                The string to translate.
+	 * @param   string   $alt                   The alternate option for global string.
+	 * @param   mixed    $jsSafe                Boolean: Make the result javascript safe.
+	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation).
+	 * @param   boolean  $script                To indicate that the string will be pushed in the javascript language store.
 	 *
 	 * @return  string  The translated string or the key if $script is true.
 	 *
@@ -58,8 +58,8 @@ class JLanguageWrapperText
 	/**
 	 * Helper wrapper method for plural
 	 *
-	 * @param   string  $string The format string.
-	 * @param   integer $n      The number of items.
+	 * @param   string   $string  The format string.
+	 * @param   integer  $n       The number of items.
 	 *
 	 * @return  string  The translated strings or the key if 'script' is true in the array of options.
 	 *
@@ -74,7 +74,7 @@ class JLanguageWrapperText
 	/**
 	 * Helper wrapper method for sprintf
 	 *
-	 * @param   string $string The format string.
+	 * @param   string  $string  The format string.
 	 *
 	 * @return  string  The translated strings or the key if 'script' is true in the array of options.
 	 *
@@ -89,7 +89,7 @@ class JLanguageWrapperText
 	/**
 	 * Helper wrapper method for printf
 	 *
-	 * @param   format $string The format string.
+	 * @param   format  $string  The format string.
 	 *
 	 * @return  mixed
 	 *
@@ -104,9 +104,9 @@ class JLanguageWrapperText
 	/**
 	 * Helper wrapper method for script
 	 *
-	 * @param   string  $string               The JText key.
-	 * @param   boolean $jsSafe               Ensure the output is JavaScript safe.
-	 * @param   boolean $interpretBackSlashes Interpret \t and \n.
+	 * @param   string   $string                The JText key.
+	 * @param   boolean  $jsSafe                Ensure the output is JavaScript safe.
+	 * @param   boolean  $interpretBackSlashes  Interpret \t and \n.
 	 *
 	 * @return  string
 	 *

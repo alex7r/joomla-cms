@@ -19,31 +19,6 @@ defined('JPATH_PLATFORM') or die;
 class JDatabaseExporterPdomysql extends JDatabaseExporter
 {
 	/**
-	 * Checks if all data and options are in order prior to exporting.
-	 *
-	 * @return  JDatabaseExporterPdomysql  Method supports chaining.
-	 *
-	 * @since   3.4
-	 * @throws  Exception if an error is encountered.
-	 */
-	public function check()
-	{
-		// Check if the db connector has been set.
-		if (!($this->db instanceof JDatabaseDriverPdomysql))
-		{
-			throw new Exception('JPLATFORM_ERROR_DATABASE_CONNECTOR_WRONG_TYPE');
-		}
-
-		// Check if the tables have been specified.
-		if (empty($this->from))
-		{
-			throw new Exception('JPLATFORM_ERROR_NO_TABLES_SPECIFIED');
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Builds the XML data for the tables to export.
 	 *
 	 * @return  string  An XML string
@@ -53,13 +28,13 @@ class JDatabaseExporterPdomysql extends JDatabaseExporter
 	 */
 	protected function buildXml()
 	{
-		$buffer = array();
+		$buffer   = array();
 
 		$buffer[] = '<?xml version="1.0"?>';
 		$buffer[] = '<mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
 		$buffer[] = ' <database name="">';
 
-		$buffer = array_merge($buffer, $this->buildXmlStructure());
+		$buffer   = array_merge($buffer, $this->buildXmlStructure());
 
 		$buffer[] = ' </database>';
 		$buffer[] = '</mysqldump>';
@@ -109,5 +84,30 @@ class JDatabaseExporterPdomysql extends JDatabaseExporter
 		}
 
 		return $buffer;
+	}
+
+	/**
+	 * Checks if all data and options are in order prior to exporting.
+	 *
+	 * @return  JDatabaseExporterPdomysql  Method supports chaining.
+	 *
+	 * @since   3.4
+	 * @throws  Exception if an error is encountered.
+	 */
+	public function check()
+	{
+		// Check if the db connector has been set.
+		if (!($this->db instanceof JDatabaseDriverPdomysql))
+		{
+			throw new Exception('JPLATFORM_ERROR_DATABASE_CONNECTOR_WRONG_TYPE');
+		}
+
+		// Check if the tables have been specified.
+		if (empty($this->from))
+		{
+			throw new Exception('JPLATFORM_ERROR_NO_TABLES_SPECIFIED');
+		}
+
+		return $this;
 	}
 }

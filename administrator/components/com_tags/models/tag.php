@@ -19,21 +19,162 @@ use Joomla\Registry\Registry;
 class TagsModelTag extends JModelAdmin
 {
 	/**
-	 * @var    string  The type alias for this content type.
-	 * @since  3.2
-	 */
-	public $typeAlias = 'com_tags.tag';
-	/**
 	 * @var    string  The prefix to use with controller messages.
 	 * @since  3.1
 	 */
 	protected $text_prefix = 'COM_TAGS';
 
 	/**
+	 * @var    string  The type alias for this content type.
+	 * @since  3.2
+	 */
+	public $typeAlias = 'com_tags.tag';
+
+	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
+	 *
+	 * @since   3.1
+	 */
+	protected function canDelete($record)
+	{
+		if (!empty($record->id))
+		{
+			if ($record->published != -2)
+			{
+				return;
+			}
+
+			return parent::canDelete($record);
+		}
+	}
+
+	/**
+	 * Method to test whether a record can have its state changed.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
+	 *
+	 * @since   3.1
+	 */
+	protected function canEditState($record)
+	{
+		return parent::canEditState($record);
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $type    The table name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
+	 *
+	 * @since   3.1
+	 */
+	public function getTable($type = 'Tag', $prefix = 'TagsTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
+	 * Auto-populate the model state.
+	 *
+	 * @note Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('administrator');
+
+		$parentId = $app->input->getInt('parent_id');
+		$this->setState('tag.parent_id', $parentId);
+
+		// Load the User state.
+		$pk = $app->input->getInt('id');
+		$this->setState($this->getName() . '.id', $pk);
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_tags');
+		$this->setState('params', $params);
+	}
+
+	/**
+	 * Method to get a tag.
+	 *
+	 * @param   integer  $pk  An optional id of the object to get, otherwise the id from the model state is used.
+	 *
+	 * @return  mixed  Tag data object on success, false on failure.
+	 *
+	 * @since   3.1
+	 */
+	public function getItem($pk = null)
+	{
+		if ($result = parent::getItem($pk))
+		{
+			// Prime required properties.
+			if (empty($result->id))
+			{
+				$result->parent_id = $this->getState('tag.parent_id');
+			}
+
+			// Convert the metadata field to an array.
+			$registry = new Registry;
+			$registry->loadString($result->metadata);
+			$result->metadata = $registry->toArray();
+
+			// Convert the images field to an array.
+			$registry = new Registry;
+			$registry->loadString($result->images);
+			$result->images = $registry->toArray();
+
+			// Convert the urls field to an array.
+			$registry = new Registry;
+			$registry->loadString($result->urls);
+			$result->urls = $registry->toArray();
+
+			// Convert the created and modified dates to local user time for display in the form.
+			$tz = new DateTimeZone(JFactory::getApplication()->get('offset'));
+
+			if ((int) $result->created_time)
+			{
+				$date = new JDate($result->created_time);
+				$date->setTimezone($tz);
+				$result->created_time = $date->toSql(true);
+			}
+			else
+			{
+				$result->created_time = null;
+			}
+
+			if ((int) $result->modified_time)
+			{
+				$date = new JDate($result->modified_time);
+				$date->setTimezone($tz);
+				$result->modified_time = $date->toSql(true);
+			}
+			else
+			{
+				$result->modified_time = null;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Method to get the row form.
 	 *
-	 * @param   array   $data     Data for the form.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
@@ -69,9 +210,50 @@ class TagsModelTag extends JModelAdmin
 	}
 
 	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   3.1
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_tags.edit.tag.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+
+		$this->preprocessData('com_tags.tag', $data);
+
+		return $data;
+	}
+
+	/**
+	 * Method to preprocess the form.
+	 *
+	 * @param   JForm   $form   A JForm object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  The name of the plugin group to import.
+	 *
+	 * @return  void
+	 *
+	 * @see     JFormField
+	 * @since   3.1
+	 * @throws  Exception if there is an error in the form event.
+	 */
+	protected function preprocessForm(JForm $form, $data, $group = 'content')
+	{
+		// Trigger the default form events.
+		parent::preprocessForm($form, $data, $group);
+	}
+
+	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -120,8 +302,8 @@ class TagsModelTag extends JModelAdmin
 		if ($input->get('task') == 'save2copy')
 		{
 			list($title, $alias) = $this->generateNewTitle($data['parent_id'], $data['alias'], $data['title']);
-			$data['title'] = $title;
-			$data['alias'] = $alias;
+			$data['title']       = $title;
+			$data['alias']       = $alias;
 		}
 
 		// Bind the data.
@@ -193,47 +375,6 @@ class TagsModelTag extends JModelAdmin
 	}
 
 	/**
-	 * Method to get a table object, load it if necessary.
-	 *
-	 * @param   string $type   The table name. Optional.
-	 * @param   string $prefix The class prefix. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A JTable object
-	 *
-	 * @since   3.1
-	 */
-	public function getTable($type = 'Tag', $prefix = 'TagsTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
-
-	/**
-	 * Method to change the title & alias.
-	 *
-	 * @param   integer $parent_id The id of the parent.
-	 * @param   string  $alias     The alias.
-	 * @param   string  $title     The title.
-	 *
-	 * @return  array  Contains the modified title and alias.
-	 *
-	 * @since   3.1
-	 */
-	protected function generateNewTitle($parent_id, $alias, $title)
-	{
-		// Alter the title & alias
-		$table = $this->getTable();
-
-		while ($table->load(array('alias' => $alias, 'parent_id' => $parent_id)))
-		{
-			$title = ($table->title != $title) ? $title : JString::increment($title);
-			$alias = JString::increment($alias, 'dash');
-		}
-
-		return array($title, $alias);
-	}
-
-	/**
 	 * Method rebuild the entire nested set tree.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
@@ -263,8 +404,8 @@ class TagsModelTag extends JModelAdmin
 	 * First we save the new order values in the lft values of the changed ids.
 	 * Then we invoke the table rebuild to implement the new ordering.
 	 *
-	 * @param   array   $idArray   An array of primary key ids.
-	 * @param   integer $lft_array The lft value
+	 * @param   array    $idArray    An array of primary key ids.
+	 * @param   integer  $lft_array  The lft value
 	 *
 	 * @return  boolean  False on failure or error, True otherwise
 	 *
@@ -289,167 +430,27 @@ class TagsModelTag extends JModelAdmin
 	}
 
 	/**
-	 * Method to test whether a record can be deleted.
+	 * Method to change the title & alias.
 	 *
-	 * @param   object $record A record object.
+	 * @param   integer  $parent_id  The id of the parent.
+	 * @param   string   $alias      The alias.
+	 * @param   string   $title      The title.
 	 *
-	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
+	 * @return  array  Contains the modified title and alias.
 	 *
 	 * @since   3.1
 	 */
-	protected function canDelete($record)
+	protected function generateNewTitle($parent_id, $alias, $title)
 	{
-		if (!empty($record->id))
+		// Alter the title & alias
+		$table = $this->getTable();
+
+		while ($table->load(array('alias' => $alias, 'parent_id' => $parent_id)))
 		{
-			if ($record->published != -2)
-			{
-				return;
-			}
-
-			return parent::canDelete($record);
-		}
-	}
-
-	/**
-	 * Method to test whether a record can have its state changed.
-	 *
-	 * @param   object $record A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
-	 *
-	 * @since   3.1
-	 */
-	protected function canEditState($record)
-	{
-		return parent::canEditState($record);
-	}
-
-	/**
-	 * Auto-populate the model state.
-	 *
-	 * @note    Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication('administrator');
-
-		$parentId = $app->input->getInt('parent_id');
-		$this->setState('tag.parent_id', $parentId);
-
-		// Load the User state.
-		$pk = $app->input->getInt('id');
-		$this->setState($this->getName() . '.id', $pk);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_tags');
-		$this->setState('params', $params);
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   3.1
-	 */
-	protected function loadFormData()
-	{
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_tags.edit.tag.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
+			$title = ($table->title != $title) ? $title : JString::increment($title);
+			$alias = JString::increment($alias, 'dash');
 		}
 
-		$this->preprocessData('com_tags.tag', $data);
-
-		return $data;
-	}
-
-	/**
-	 * Method to get a tag.
-	 *
-	 * @param   integer $pk An optional id of the object to get, otherwise the id from the model state is used.
-	 *
-	 * @return  mixed  Tag data object on success, false on failure.
-	 *
-	 * @since   3.1
-	 */
-	public function getItem($pk = null)
-	{
-		if ($result = parent::getItem($pk))
-		{
-			// Prime required properties.
-			if (empty($result->id))
-			{
-				$result->parent_id = $this->getState('tag.parent_id');
-			}
-
-			// Convert the metadata field to an array.
-			$registry = new Registry;
-			$registry->loadString($result->metadata);
-			$result->metadata = $registry->toArray();
-
-			// Convert the images field to an array.
-			$registry = new Registry;
-			$registry->loadString($result->images);
-			$result->images = $registry->toArray();
-
-			// Convert the urls field to an array.
-			$registry = new Registry;
-			$registry->loadString($result->urls);
-			$result->urls = $registry->toArray();
-
-			// Convert the created and modified dates to local user time for display in the form.
-			$tz = new DateTimeZone(JFactory::getApplication()->get('offset'));
-
-			if ((int) $result->created_time)
-			{
-				$date = new JDate($result->created_time);
-				$date->setTimezone($tz);
-				$result->created_time = $date->toSql(true);
-			}
-			else
-			{
-				$result->created_time = null;
-			}
-
-			if ((int) $result->modified_time)
-			{
-				$date = new JDate($result->modified_time);
-				$date->setTimezone($tz);
-				$result->modified_time = $date->toSql(true);
-			}
-			else
-			{
-				$result->modified_time = null;
-			}
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Method to preprocess the form.
-	 *
-	 * @param   JForm  $form  A JForm object.
-	 * @param   mixed  $data  The data expected for the form.
-	 * @param   string $group The name of the plugin group to import.
-	 *
-	 * @return  void
-	 *
-	 * @see     JFormField
-	 * @since   3.1
-	 * @throws  Exception if there is an error in the form event.
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
-	{
-		// Trigger the default form events.
-		parent::preprocessForm($form, $data, $group);
+		return array($title, $alias);
 	}
 }

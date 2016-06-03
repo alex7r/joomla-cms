@@ -37,8 +37,8 @@ abstract class JViewHtml extends JViewBase
 	/**
 	 * Method to instantiate the view.
 	 *
-	 * @param   JModel           $model The model object.
-	 * @param   SplPriorityQueue $paths The paths queue.
+	 * @param   JModel            $model  The model object.
+	 * @param   SplPriorityQueue  $paths  The paths queue.
 	 *
 	 * @since   12.1
 	 */
@@ -51,18 +51,6 @@ abstract class JViewHtml extends JViewBase
 	}
 
 	/**
-	 * Method to load the paths queue.
-	 *
-	 * @return  SplPriorityQueue  The paths queue.
-	 *
-	 * @since   12.1
-	 */
-	protected function loadPaths()
-	{
-		return new SplPriorityQueue;
-	}
-
-	/**
 	 * Magic toString method that is a proxy for the render method.
 	 *
 	 * @return  string
@@ -72,6 +60,66 @@ abstract class JViewHtml extends JViewBase
 	public function __toString()
 	{
 		return $this->render();
+	}
+
+	/**
+	 * Method to escape output.
+	 *
+	 * @param   string  $output  The output to escape.
+	 *
+	 * @return  string  The escaped output.
+	 *
+	 * @see     JView::escape()
+	 * @since   12.1
+	 */
+	public function escape($output)
+	{
+		// Escape the output.
+		return htmlspecialchars($output, ENT_COMPAT, 'UTF-8');
+	}
+
+	/**
+	 * Method to get the view layout.
+	 *
+	 * @return  string  The layout name.
+	 *
+	 * @since   12.1
+	 */
+	public function getLayout()
+	{
+		return $this->layout;
+	}
+
+	/**
+	 * Method to get the layout path.
+	 *
+	 * @param   string  $layout  The layout name.
+	 *
+	 * @return  mixed  The layout file name if found, false otherwise.
+	 *
+	 * @since   12.1
+	 */
+	public function getPath($layout)
+	{
+		// Get the layout file name.
+		$file = JPath::clean($layout . '.php');
+
+		// Find the layout file path.
+		$path = JPath::find(clone $this->paths, $file);
+
+		return $path;
+	}
+
+	/**
+	 * Method to get the view paths.
+	 *
+	 * @return  SplPriorityQueue  The paths queue.
+	 *
+	 * @since   12.1
+	 */
+	public function getPaths()
+	{
+		return $this->paths;
 	}
 
 	/**
@@ -106,41 +154,9 @@ abstract class JViewHtml extends JViewBase
 	}
 
 	/**
-	 * Method to get the layout path.
-	 *
-	 * @param   string $layout The layout name.
-	 *
-	 * @return  mixed  The layout file name if found, false otherwise.
-	 *
-	 * @since   12.1
-	 */
-	public function getPath($layout)
-	{
-		// Get the layout file name.
-		$file = JPath::clean($layout . '.php');
-
-		// Find the layout file path.
-		$path = JPath::find(clone $this->paths, $file);
-
-		return $path;
-	}
-
-	/**
-	 * Method to get the view layout.
-	 *
-	 * @return  string  The layout name.
-	 *
-	 * @since   12.1
-	 */
-	public function getLayout()
-	{
-		return $this->layout;
-	}
-
-	/**
 	 * Method to set the view layout.
 	 *
-	 * @param   string $layout The layout name.
+	 * @param   string  $layout  The layout name.
 	 *
 	 * @return  JViewHtml  Method supports chaining.
 	 *
@@ -154,37 +170,9 @@ abstract class JViewHtml extends JViewBase
 	}
 
 	/**
-	 * Method to escape output.
-	 *
-	 * @param   string $output The output to escape.
-	 *
-	 * @return  string  The escaped output.
-	 *
-	 * @see     JView::escape()
-	 * @since   12.1
-	 */
-	public function escape($output)
-	{
-		// Escape the output.
-		return htmlspecialchars($output, ENT_COMPAT, 'UTF-8');
-	}
-
-	/**
-	 * Method to get the view paths.
-	 *
-	 * @return  SplPriorityQueue  The paths queue.
-	 *
-	 * @since   12.1
-	 */
-	public function getPaths()
-	{
-		return $this->paths;
-	}
-
-	/**
 	 * Method to set the view paths.
 	 *
-	 * @param   SplPriorityQueue $paths The paths queue.
+	 * @param   SplPriorityQueue  $paths  The paths queue.
 	 *
 	 * @return  JViewHtml  Method supports chaining.
 	 *
@@ -195,5 +183,17 @@ abstract class JViewHtml extends JViewBase
 		$this->paths = $paths;
 
 		return $this;
+	}
+
+	/**
+	 * Method to load the paths queue.
+	 *
+	 * @return  SplPriorityQueue  The paths queue.
+	 *
+	 * @since   12.1
+	 */
+	protected function loadPaths()
+	{
+		return new SplPriorityQueue;
 	}
 }

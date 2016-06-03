@@ -32,12 +32,12 @@ abstract class JString extends StringHelper
 	 * "ThisIsA_NASAAstronaut"   becomes  array("This", "Is", "A_NASA", "Astronaut")),
 	 * "JohnFitzgerald_Kennedy"  becomes  array("John", "Fitzgerald_Kennedy")),
 	 *
-	 * @param   string $string The source string.
+	 * @param   string  $string  The source string.
 	 *
 	 * @return  array   The splitted string.
 	 *
 	 * @deprecated  12.3 (Platform) & 4.0 (CMS) - Use JStringNormalise::fromCamelCase()
-	 * @since       11.3
+	 * @since   11.3
 	 */
 	public static function splitCamelCase($string)
 	{
@@ -49,12 +49,12 @@ abstract class JString extends StringHelper
 	/**
 	 * Does a UTF-8 safe version of PHP parse_url function
 	 *
-	 * @param   string $url URL to parse
+	 * @param   string  $url  URL to parse
 	 *
 	 * @return  mixed  Associative array or false if badly formed URL.
 	 *
-	 * @see         http://us3.php.net/manual/en/function.parse-url.php
-	 * @since       11.1
+	 * @see     http://us3.php.net/manual/en/function.parse-url.php
+	 * @since   11.1
 	 * @deprecated  4.0 (CMS) - Use {@link \Joomla\Uri\UriHelper::parse_url()} instead.
 	 */
 	public static function parse_url($url)

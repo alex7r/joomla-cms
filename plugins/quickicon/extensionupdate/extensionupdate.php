@@ -28,7 +28,7 @@ class PlgQuickiconExtensionupdate extends JPlugin
 	 * Returns an icon definition for an icon which looks for extensions updates
 	 * via AJAX and displays a notification when such updates are found.
 	 *
-	 * @param   string $context The calling context
+	 * @param   string  $context  The calling context
 	 *
 	 * @return  array  A list of icon definition associative arrays, consisting of the
 	 *                 keys link, image, text and access.

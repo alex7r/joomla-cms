@@ -19,7 +19,7 @@ class JErrorPage
 	/**
 	 * Render the error page based on an exception.
 	 *
-	 * @param   Exception|Throwable $error An Exception or Throwable (PHP 7+) object for which to render the error page.
+	 * @param   Exception|Throwable  $error  An Exception or Throwable (PHP 7+) object for which to render the error page.
 	 *
 	 * @return  void
 	 *

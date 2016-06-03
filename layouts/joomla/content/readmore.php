@@ -10,7 +10,7 @@
 defined('JPATH_BASE') or die;
 
 $params = $displayData['params'];
-$item   = $displayData['item'];
+$item = $displayData['item'];
 ?>
 
 <p class="readmore">

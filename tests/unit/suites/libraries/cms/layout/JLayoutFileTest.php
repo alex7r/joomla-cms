@@ -1,10 +1,10 @@
 <?php
 /**
- * @package        Joomla.UnitTest
- * @subpackage     Layout
+ * @package	    Joomla.UnitTest
+ * @subpackage  Layout
  *
- * @copyright      Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
- * @license        GNU General Public License version 2 or later; see LICENSE
+ * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license	    GNU General Public License version 2 or later; see LICENSE
  */
 
 /**
@@ -16,21 +16,6 @@ class JLayoutFileTest extends TestCase
 	 * @var JLayoutFile
 	 */
 	protected $object;
-
-	/**
-	 * Tests the escape method
-	 *
-	 * @return  void
-	 *
-	 * @since   3.0
-	 */
-	public function testEscape()
-	{
-		$this->assertThat(
-			$this->object->escape('This is cool & fun to use!'),
-			$this->equalTo('This is cool &amp; fun to use!')
-		);
-	}
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -56,5 +41,20 @@ class JLayoutFileTest extends TestCase
 		$this->restoreFactoryState();
 
 		parent::tearDown();
+	}
+
+	/**
+	 * Tests the escape method
+	 *
+	 * @return  void
+	 *
+	 * @since   3.0
+	 */
+	public function testEscape()
+	{
+		$this->assertThat(
+			$this->object->escape('This is cool & fun to use!'),
+			$this->equalTo('This is cool &amp; fun to use!')
+		);
 	}
 }

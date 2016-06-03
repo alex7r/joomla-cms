@@ -24,7 +24,7 @@ abstract class JHtmlFilter
 	 * Method to generate filters using the slider widget and decorated
 	 * with the FinderFilter JavaScript behaviors.
 	 *
-	 * @param   array $options An array of configuration options. [optional]
+	 * @param   array  $options  An array of configuration options. [optional]
 	 *
 	 * @return  mixed  A rendered HTML widget on success, null otherwise.
 	 *
@@ -158,7 +158,7 @@ abstract class JHtmlFilter
 				}
 				else
 				{
-					$key   = FinderHelperLanguage::branchPlural($nv->title);
+					$key = FinderHelperLanguage::branchPlural($nv->title);
 					$title = $lang->hasKey($key) ? JText::_($key) : $nv->title;
 				}
 				$nodes[$nk]->title = $title;
@@ -206,8 +206,8 @@ abstract class JHtmlFilter
 	/**
 	 * Method to generate filters using select box drop down controls.
 	 *
-	 * @param   FinderIndexerQuery $idxQuery A FinderIndexerQuery object.
-	 * @param   array              $options  An array of options.
+	 * @param   FinderIndexerQuery  $idxQuery  A FinderIndexerQuery object.
+	 * @param   array               $options   An array of options.
 	 *
 	 * @return  mixed  A rendered HTML widget on success, null otherwise.
 	 *
@@ -348,7 +348,7 @@ abstract class JHtmlFilter
 					}
 					else
 					{
-						$key   = FinderHelperLanguage::branchPlural($node->title);
+						$key = FinderHelperLanguage::branchPlural($node->title);
 						$title = $language->hasKey($key) ? JText::_($key) : $node->title;
 					}
 					$branches[$bk]->nodes[$node_id]->title = $title;
@@ -385,7 +385,7 @@ abstract class JHtmlFilter
 			if (array_key_exists($bv->title, $idxQuery->filters))
 			{
 				// Get the request filters.
-				$temp = JFactory::getApplication()->input->request->get('t', array(), 'array');
+				$temp   = JFactory::getApplication()->input->request->get('t', array(), 'array');
 
 				// Search for active nodes in the branch and get the active node.
 				$active = array_intersect($temp, $idxQuery->filters[$bv->title]);
@@ -414,8 +414,8 @@ abstract class JHtmlFilter
 	/**
 	 * Method to generate fields for filtering dates
 	 *
-	 * @param   FinderIndexerQuery $idxQuery A FinderIndexerQuery object.
-	 * @param   array              $options  An array of options.
+	 * @param   FinderIndexerQuery  $idxQuery  A FinderIndexerQuery object.
+	 * @param   array               $options   An array of options.
 	 *
 	 * @return  mixed  A rendered HTML widget on success, null otherwise.
 	 *

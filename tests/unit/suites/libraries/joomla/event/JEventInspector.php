@@ -19,8 +19,8 @@ class JEventInspector extends JEvent
 	/**
 	 * Mock Event Method
 	 *
-	 * @param   null $var1 Var 1
-	 * @param   null $var2 Var 2
+	 * @param   null  $var1  Var 1
+	 * @param   null  $var2  Var 2
 	 *
 	 * @return mixed A value to test against
 	 */
@@ -47,7 +47,6 @@ class JEventInspector extends JEvent
 		return $return;
 	}
 }
-
 //@codingStandardsIgnoreStart
 /**
  * Mock function to test event system in JEventDispatcher

@@ -62,7 +62,8 @@ class JFeedParserTest extends TestCase
 		do
 		{
 			$this->_reader->read();
-		} while ($this->_reader->name != 'tag1');
+		}
+		while ($this->_reader->name != 'tag1');
 
 		$parser->parse();
 	}
@@ -112,20 +113,20 @@ class JFeedParserTest extends TestCase
 
 		// Process element has a few dependencies that we need to pass: a JFeed object, an element, and namespaces.
 		$feed = $this->getMockBuilder('JFeed')
-			->disableOriginalConstructor()
-			->getMock();
+					->disableOriginalConstructor()
+					->getMock();
 
 		$mock = $this->getMockBuilder('JFeedParserProcessElementMock')
-			->disableOriginalConstructor()
-			->setMethods(array('processFeedEntry', 'handleElement1'))
-			->getMock();
+					->disableOriginalConstructor()
+					->setMethods(array('processFeedEntry', 'handleElement1'))
+					->getMock();
 
 		$mock->expects($this->once())
 			->method('handleElement1')
 			->with($feed, $el);
 
 		$namespace = $this->getMockBuilder('JFeedParserNamespace')
-			->getMock();
+						->getMock();
 
 		$namespace->expects($this->once())
 			->method('processElementForFeed')
@@ -147,24 +148,24 @@ class JFeedParserTest extends TestCase
 
 		// Process element has a few dependencies that we need to pass: a JFeed object, an element, and namespaces
 		$feed = $this->getMockBuilder('JFeed')
-			->disableOriginalConstructor()
-			->getMock();
+					->disableOriginalConstructor()
+					->getMock();
 
 		$feed->expects($this->once())
 			->method('addEntry')
 			->with($this->isInstanceOf('JFeedEntry'));
 
 		$mock = $this->getMockBuilder('JFeedParserProcessElementMock')
-			->disableOriginalConstructor()
-			->setMethods(array('processFeedEntry'))
-			->getMock();
+					->disableOriginalConstructor()
+					->setMethods(array('processFeedEntry'))
+					->getMock();
 
 		$mock->expects($this->once())
 			->method('processFeedEntry')
 			->with($this->isInstanceOf('JFeedEntry'), $el);
 
 		$namespace = $this->getMockBuilder('JFeedParserNamespace')
-			->getMock();
+						->getMock();
 
 		$namespace->expects($this->once())
 			->method('processElementForFeedEntry')
@@ -183,7 +184,7 @@ class JFeedParserTest extends TestCase
 	public function testFetchNamespace()
 	{
 		// Set a mock namespace into the namespaces for the parser object.
-		$mock       = $this->getMock('JFeedParserNamespace');
+		$mock = $this->getMock('JFeedParserNamespace');
 		$namespaces = array('mock' => $mock);
 		TestReflection::setValue($this->_instance, 'namespaces', $namespaces);
 
@@ -294,7 +295,8 @@ class JFeedParserTest extends TestCase
 		do
 		{
 			$this->_reader->read();
-		} while ($this->_reader->name != 'node');
+		}
+		while ($this->_reader->name != 'node');
 
 		// Ensure that the current node is <node test="first">.
 		$this->assertEquals(XMLReader::ELEMENT, $this->_reader->nodeType);
@@ -310,7 +312,8 @@ class JFeedParserTest extends TestCase
 		do
 		{
 			$this->_reader->read();
-		} while ($this->_reader->nodeType != XMLReader::ELEMENT);
+		}
+		while ($this->_reader->nodeType != XMLReader::ELEMENT);
 
 		// Ensure that the current node is <node test="first">.
 		$this->assertEquals(XMLReader::ELEMENT, $this->_reader->nodeType);
@@ -339,7 +342,8 @@ class JFeedParserTest extends TestCase
 		do
 		{
 			$this->_reader->read();
-		} while ($this->_reader->name != 'node');
+		}
+		while ($this->_reader->name != 'node');
 
 		// Ensure that the current node is <node test="first">.
 		$this->assertEquals(XMLReader::ELEMENT, $this->_reader->nodeType);
@@ -355,7 +359,8 @@ class JFeedParserTest extends TestCase
 		do
 		{
 			$this->_reader->read();
-		} while ($this->_reader->nodeType != XMLReader::ELEMENT);
+		}
+		while ($this->_reader->nodeType != XMLReader::ELEMENT);
 
 		// Ensure that the current node is <node test="first">.
 		$this->assertEquals(XMLReader::ELEMENT, $this->_reader->nodeType);

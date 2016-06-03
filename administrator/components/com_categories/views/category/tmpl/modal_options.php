@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 echo JHtml::_('bootstrap.startAccordion', 'categoryOptions', array('active' => 'collapse0'));
 $fieldSets = $this->form->getFieldsets('params');
-$i         = 0;
+$i = 0;
 ?>
 <?php foreach ($fieldSets as $name => $fieldSet) : ?>
 	<?php

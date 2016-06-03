@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 
 $notice_homes     = $this->homes == 2 || $this->homes == 1 || $this->homes - 1 != count($this->contentlangs) && ($this->language_filter || $this->switchers != 0);
-$notice_disabled  = !$this->language_filter && ($this->homes > 1 || $this->switchers != 0);
+$notice_disabled  = !$this->language_filter	&& ($this->homes > 1 || $this->switchers != 0);
 $notice_switchers = !$this->switchers && ($this->homes > 1 || $this->language_filter);
 ?>
 <div class="mod-multilangstatus">
@@ -21,81 +21,81 @@ $notice_switchers = !$this->switchers && ($this->homes > 1 || $this->language_fi
 			<div class="alert alert-info"><?php echo JText::_('COM_LANGUAGES_MULTILANGSTATUS_USELESS_HOMES'); ?></div>
 		<?php endif; ?>
 	<?php else: ?>
-		<table class="table table-striped table-condensed">
-			<tbody>
-			<?php if ($notice_homes) : ?>
+	<table class="table table-striped table-condensed">
+		<tbody>
+		<?php if ($notice_homes) : ?>
+			<tr class="warning">
+				<td>
+					<span class="icon-pending"></span>
+				</td>
+				<td>
+					<?php echo JText::_('COM_LANGUAGES_MULTILANGSTATUS_HOMES_MISSING'); ?>
+				</td>
+			</tr>
+		<?php endif; ?>
+		<?php if ($notice_disabled) : ?>
+			<tr class="warning">
+				<td>
+					<span class="icon-pending"></span>
+				</td>
+				<td>
+					<?php echo JText::_('COM_LANGUAGES_MULTILANGSTATUS_LANGUAGEFILTER_DISABLED'); ?>
+				</td>
+			</tr>
+		<?php endif; ?>
+		<?php if ($notice_switchers) : ?>
+			<tr class="warning">
+				<td>
+					<span class="icon-pending"></span>
+				</td>
+				<td>
+					<?php echo JText::_('COM_LANGUAGES_MULTILANGSTATUS_LANGSWITCHER_UNPUBLISHED'); ?>
+				</td>
+			</tr>
+		<?php endif; ?>
+		<?php foreach ($this->contentlangs as $contentlang) : ?>
+			<?php if (array_key_exists($contentlang->lang_code, $this->homepages) && (!array_key_exists($contentlang->lang_code, $this->site_langs) || !$contentlang->published)) : ?>
 				<tr class="warning">
 					<td>
 						<span class="icon-pending"></span>
 					</td>
 					<td>
-						<?php echo JText::_('COM_LANGUAGES_MULTILANGSTATUS_HOMES_MISSING'); ?>
+						<?php echo JText::sprintf('COM_LANGUAGES_MULTILANGSTATUS_ERROR_CONTENT_LANGUAGE', $contentlang->lang_code); ?>
 					</td>
 				</tr>
 			<?php endif; ?>
-			<?php if ($notice_disabled) : ?>
+			<?php if (!array_key_exists($contentlang->lang_code, $this->site_langs)) : ?>
 				<tr class="warning">
 					<td>
 						<span class="icon-pending"></span>
 					</td>
 					<td>
-						<?php echo JText::_('COM_LANGUAGES_MULTILANGSTATUS_LANGUAGEFILTER_DISABLED'); ?>
+						<?php echo JText::sprintf('COM_LANGUAGES_MULTILANGSTATUS_ERROR_LANGUAGE_TAG', $contentlang->lang_code); ?>
 					</td>
 				</tr>
 			<?php endif; ?>
-			<?php if ($notice_switchers) : ?>
-				<tr class="warning">
-					<td>
-						<span class="icon-pending"></span>
-					</td>
-					<td>
-						<?php echo JText::_('COM_LANGUAGES_MULTILANGSTATUS_LANGSWITCHER_UNPUBLISHED'); ?>
-					</td>
-				</tr>
-			<?php endif; ?>
-			<?php foreach ($this->contentlangs as $contentlang) : ?>
-				<?php if (array_key_exists($contentlang->lang_code, $this->homepages) && (!array_key_exists($contentlang->lang_code, $this->site_langs) || !$contentlang->published)) : ?>
-					<tr class="warning">
-						<td>
-							<span class="icon-pending"></span>
-						</td>
-						<td>
-							<?php echo JText::sprintf('COM_LANGUAGES_MULTILANGSTATUS_ERROR_CONTENT_LANGUAGE', $contentlang->lang_code); ?>
-						</td>
-					</tr>
-				<?php endif; ?>
-				<?php if (!array_key_exists($contentlang->lang_code, $this->site_langs)) : ?>
-					<tr class="warning">
-						<td>
-							<span class="icon-pending"></span>
-						</td>
-						<td>
-							<?php echo JText::sprintf('COM_LANGUAGES_MULTILANGSTATUS_ERROR_LANGUAGE_TAG', $contentlang->lang_code); ?>
-						</td>
-					</tr>
-				<?php endif; ?>
-			<?php endforeach; ?>
-			<?php if ($this->listUsersError) : ?>
-				<tr class="info">
-					<td>
-						<span class="icon-help"></span>
-					</td>
-					<td>
-						<?php echo JText::_('COM_LANGUAGES_MULTILANGSTATUS_CONTACTS_ERROR_TIP'); ?>
-						<ul>
-							<?php foreach ($this->listUsersError as $user) : ?>
-								<li>
-									<?php echo JText::sprintf('COM_LANGUAGES_MULTILANGSTATUS_CONTACTS_ERROR', $user->name); ?>
-								</li>
-							<?php endforeach; ?>
-						</ul>
-					</td>
-				</tr>
-			<?php endif; ?>
-			</tbody>
-		</table>
-		<table class="table table-striped table-condensed" style="border-top: 1px solid #CCCCCC;">
-			<thead>
+		<?php endforeach; ?>
+		<?php if ($this->listUsersError) : ?>
+			<tr class="info">
+				<td>
+					<span class="icon-help"></span>
+				</td>
+				<td>
+					<?php echo JText::_('COM_LANGUAGES_MULTILANGSTATUS_CONTACTS_ERROR_TIP'); ?>
+					<ul>
+					<?php foreach ($this->listUsersError as $user) : ?>
+						<li>
+						<?php echo JText::sprintf('COM_LANGUAGES_MULTILANGSTATUS_CONTACTS_ERROR', $user->name); ?>
+						</li>
+					<?php endforeach; ?>
+					</ul>
+				</td>
+			</tr>
+		<?php endif; ?>
+		</tbody>
+	</table>
+	<table class="table table-striped table-condensed" style="border-top: 1px solid #CCCCCC;">
+		<thead>
 			<tr>
 				<th>
 					<?php echo JText::_('JDETAILS'); ?>
@@ -104,8 +104,8 @@ $notice_switchers = !$this->switchers && ($this->homes > 1 || $this->language_fi
 					<?php echo JText::_('JSTATUS'); ?>
 				</th>
 			</tr>
-			</thead>
-			<tbody>
+		</thead>
+		<tbody>
 			<tr>
 				<th scope="row">
 					<?php echo JText::_('COM_LANGUAGES_MULTILANGSTATUS_LANGUAGEFILTER'); ?>
@@ -147,10 +147,10 @@ $notice_switchers = !$this->switchers && ($this->homes > 1 || $this->language_fi
 					<?php endif; ?>
 				</td>
 			</tr>
-			</tbody>
-		</table>
-		<table class="table table-striped table-condensed" style="border-top: 1px solid #CCCCCC;">
-			<thead>
+		</tbody>
+	</table>
+	<table class="table table-striped table-condensed" style="border-top: 1px solid #CCCCCC;">
+		<thead>
 			<tr>
 				<th>
 					<?php echo JText::_('JGRID_HEADING_LANGUAGE'); ?>
@@ -165,76 +165,76 @@ $notice_switchers = !$this->switchers && ($this->homes > 1 || $this->language_fi
 					<?php echo JText::_('COM_LANGUAGES_MULTILANGSTATUS_HOMES_PUBLISHED'); ?>
 				</th>
 			</tr>
-			</thead>
-			<tbody>
+		</thead>
+		<tbody>
 			<?php foreach ($this->statuses as $status) : ?>
 				<?php if ($status->element) : ?>
 					<tr>
-					<td>
-						<?php echo $status->element; ?>
-					</td>
+						<td>
+							<?php echo $status->element; ?>
+						</td>
 				<?php endif; ?>
 				<?php // Published Site languages ?>
 				<?php if ($status->element) : ?>
-					<td class="center">
-						<span class="icon-ok"></span>
-					</td>
+						<td class="center">
+							<span class="icon-ok"></span>
+						</td>
 				<?php else : ?>
-					<td class="center">
-						<?php echo JText::_('JNO'); ?>
-					</td>
+						<td class="center">
+							<?php echo JText::_('JNO'); ?>
+						</td>
 				<?php endif; ?>
 				<?php // Published Content languages ?>
 				<?php if ($status->lang_code && $status->published) : ?>
-					<td class="center">
-						<span class="icon-ok"></span>
-					</td>
+						<td class="center">
+							<span class="icon-ok"></span>
+						</td>
 				<?php else : ?>
-					<td class="center">
-						<span class="icon-pending"></span>
-					</td>
+						<td class="center">
+							<span class="icon-pending"></span>
+						</td>
 				<?php endif; ?>
 				<?php // Published Home pages ?>
 				<?php if ($status->home_language) : ?>
-					<td class="center">
-						<span class="icon-ok"></span>
-					</td>
+						<td class="center">
+							<span class="icon-ok"></span>
+						</td>
 				<?php else : ?>
-					<td class="center">
-						<span class="icon-not-ok"></span>
-					</td>
+						<td class="center">
+							<span class="icon-not-ok"></span>
+						</td>
 				<?php endif; ?>
 				</tr>
 			<?php endforeach; ?>
 			<?php foreach ($this->contentlangs as $contentlang) : ?>
-			<?php if (!array_key_exists($contentlang->lang_code, $this->site_langs)) : ?>
-			<tr>
-				<td>
-					<?php echo $contentlang->lang_code; ?>
-				</td>
-				<td class="center">
-					<span class="icon-pending"></span>
-				</td>
-				<td class="center">
-					<?php if ($contentlang->published) : ?>
-						<span class="icon-ok"></span>
-					<?php elseif (!$contentlang->published && array_key_exists($contentlang->lang_code, $this->homepages)) : ?>
-						<span class="icon-not-ok"></span>
-					<?php elseif (!$contentlang->published) : ?>
-						<span class="icon-pending"></span>
-					<?php endif; ?>
-				</td>
-				<td class="center">
-					<?php if (!array_key_exists($contentlang->lang_code, $this->homepages)) : ?>
-						<span class="icon-pending"></span>
-					<?php else : ?>
-						<span class="icon-ok"></span>
-					<?php endif; ?>
-				</td>
+				<?php if (!array_key_exists($contentlang->lang_code, $this->site_langs)) : ?>
+					<tr>
+						<td>
+							<?php echo $contentlang->lang_code; ?>
+						</td>
+						<td class="center">
+							<span class="icon-pending"></span>
+						</td>
+						<td class="center">
+							<?php if ($contentlang->published) : ?>
+								<span class="icon-ok"></span>
+							<?php elseif (!$contentlang->published && array_key_exists($contentlang->lang_code, $this->homepages)) : ?>
+								<span class="icon-not-ok"></span>
+							<?php elseif (!$contentlang->published) : ?>
+								<span class="icon-pending"></span>
+							<?php endif; ?>
+						</td>
+						<td class="center">
+							<?php if (!array_key_exists($contentlang->lang_code, $this->homepages)) : ?>
+								<span class="icon-pending"></span>
+							<?php else : ?>
+								<span class="icon-ok"></span>
+							<?php endif; ?>
+						</td>
 				<?php endif; ?>
-				<?php endforeach; ?>
+			<?php endforeach; ?>
 			</tr>
-			</tbody>
-		</table>
+		</tbody>
+	</table>
 	<?php endif; ?>
 </div>

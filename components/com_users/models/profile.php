@@ -19,7 +19,7 @@ use Joomla\Registry\Registry;
 class UsersModelProfile extends JModelForm
 {
 	/**
-	 * @var        object    The user profile data.
+	 * @var		object	The user profile data.
 	 * @since   1.6
 	 */
 	protected $data;
@@ -27,7 +27,7 @@ class UsersModelProfile extends JModelForm
 	/**
 	 * Constructor
 	 *
-	 * @param   array $config An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 *
 	 * @since   3.2
 	 *
@@ -51,7 +51,7 @@ class UsersModelProfile extends JModelForm
 	/**
 	 * Method to check in a user.
 	 *
-	 * @param   integer $userId The id of the row to check out.
+	 * @param   integer  $userId  The id of the row to check out.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *
@@ -82,7 +82,7 @@ class UsersModelProfile extends JModelForm
 	/**
 	 * Method to check out a user for editing.
 	 *
-	 * @param   integer $userId The id of the row to check out.
+	 * @param   integer  $userId  The id of the row to check out.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *
@@ -114,90 +114,12 @@ class UsersModelProfile extends JModelForm
 	}
 
 	/**
-	 * Method to get the profile form.
-	 *
-	 * The base form is loaded from XML and then an event is fired
-	 * for users plugins to extend the form with extra fields.
-	 *
-	 * @param   array   $data     An optional array of data for the form to interogate.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  JForm  A JForm object on success, false on failure
-	 *
-	 * @since   1.6
-	 */
-	public function getForm($data = array(), $loadData = true)
-	{
-		// Get the form.
-		$form = $this->loadForm('com_users.profile', 'profile', array('control' => 'jform', 'load_data' => $loadData));
-
-		if (empty($form))
-		{
-			return false;
-		}
-
-		// Check for username compliance and parameter set
-		$isUsernameCompliant = true;
-
-		if ($this->loadFormData()->username)
-		{
-			$username            = $this->loadFormData()->username;
-			$isUsernameCompliant = !(preg_match('#[<>"\'%;()&\\\\]|\\.\\./#', $username) || strlen(utf8_decode($username)) < 2
-				|| trim($username) != $username);
-		}
-
-		$this->setState('user.username.compliant', $isUsernameCompliant);
-
-		if (!JComponentHelper::getParams('com_users')->get('change_login_name') && $isUsernameCompliant)
-		{
-			$form->setFieldAttribute('username', 'class', '');
-			$form->setFieldAttribute('username', 'filter', '');
-			$form->setFieldAttribute('username', 'description', 'COM_USERS_PROFILE_NOCHANGE_USERNAME_DESC');
-			$form->setFieldAttribute('username', 'validate', '');
-			$form->setFieldAttribute('username', 'message', '');
-			$form->setFieldAttribute('username', 'readonly', 'true');
-			$form->setFieldAttribute('username', 'required', 'false');
-		}
-
-		// When multilanguage is set, a user's default site language should also be a Content Language
-		if (JLanguageMultilang::isEnabled())
-		{
-			$form->setFieldAttribute('language', 'type', 'frontend_language', 'params');
-		}
-
-		// If the user needs to change their password, mark the password fields as required
-		if (JFactory::getUser()->requireReset)
-		{
-			$form->setFieldAttribute('password1', 'required', 'true');
-			$form->setFieldAttribute('password2', 'required', 'true');
-		}
-
-		return $form;
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		$data = $this->getData();
-
-		$this->preprocessData('com_users.profile', $data);
-
-		return $data;
-	}
-
-	/**
 	 * Method to get the profile form data.
 	 *
 	 * The base form data is loaded and then an event is fired
 	 * for users plugins to extend the data.
 	 *
-	 * @return  mixed    Data object on success, false on failure.
+	 * @return  mixed  	Data object on success, false on failure.
 	 *
 	 * @since   1.6
 	 */
@@ -248,9 +170,140 @@ class UsersModelProfile extends JModelForm
 	}
 
 	/**
+	 * Method to get the profile form.
+	 *
+	 * The base form is loaded from XML and then an event is fired
+	 * for users plugins to extend the form with extra fields.
+	 *
+	 * @param   array    $data      An optional array of data for the form to interogate.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return  JForm  A JForm object on success, false on failure
+	 *
+	 * @since   1.6
+	 */
+	public function getForm($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_users.profile', 'profile', array('control' => 'jform', 'load_data' => $loadData));
+
+		if (empty($form))
+		{
+			return false;
+		}
+
+		// Check for username compliance and parameter set
+		$isUsernameCompliant = true;
+
+		if ($this->loadFormData()->username)
+		{
+			$username = $this->loadFormData()->username;
+			$isUsernameCompliant  = !(preg_match('#[<>"\'%;()&\\\\]|\\.\\./#', $username) || strlen(utf8_decode($username)) < 2
+				|| trim($username) != $username);
+		}
+
+		$this->setState('user.username.compliant', $isUsernameCompliant);
+
+		if (!JComponentHelper::getParams('com_users')->get('change_login_name') && $isUsernameCompliant)
+		{
+			$form->setFieldAttribute('username', 'class', '');
+			$form->setFieldAttribute('username', 'filter', '');
+			$form->setFieldAttribute('username', 'description', 'COM_USERS_PROFILE_NOCHANGE_USERNAME_DESC');
+			$form->setFieldAttribute('username', 'validate', '');
+			$form->setFieldAttribute('username', 'message', '');
+			$form->setFieldAttribute('username', 'readonly', 'true');
+			$form->setFieldAttribute('username', 'required', 'false');
+		}
+
+		// When multilanguage is set, a user's default site language should also be a Content Language
+		if (JLanguageMultilang::isEnabled())
+		{
+			$form->setFieldAttribute('language', 'type', 'frontend_language', 'params');
+		}
+
+		// If the user needs to change their password, mark the password fields as required
+		if (JFactory::getUser()->requireReset)
+		{
+			$form->setFieldAttribute('password1', 'required', 'true');
+			$form->setFieldAttribute('password2', 'required', 'true');
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		$data = $this->getData();
+
+		$this->preprocessData('com_users.profile', $data);
+
+		return $data;
+	}
+
+	/**
+	 * Override preprocessForm to load the user plugin group instead of content.
+	 *
+	 * @param   JForm   $form   A JForm object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
+	 *
+	 * @return  void
+	 *
+	 * @throws	Exception if there is an error in the form event.
+	 *
+	 * @since   1.6
+	 */
+	protected function preprocessForm(JForm $form, $data, $group = 'user')
+	{
+		if (JComponentHelper::getParams('com_users')->get('frontend_userparams'))
+		{
+			$form->loadFile('frontend', false);
+
+			if (JFactory::getUser()->authorise('core.login.admin'))
+			{
+				$form->loadFile('frontend_admin', false);
+			}
+		}
+
+		parent::preprocessForm($form, $data, $group);
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		// Get the application object.
+		$params = JFactory::getApplication()->getParams('com_users');
+
+		// Get the user id.
+		$userId = JFactory::getApplication()->getUserState('com_users.edit.profile.id');
+		$userId = !empty($userId) ? $userId : (int) JFactory::getUser()->get('id');
+
+		// Set the user id.
+		$this->setState('user.id', $userId);
+
+		// Load the parameters.
+		$this->setState('params', $params);
+	}
+
+	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  mixed  The user id on success, false on failure.
 	 *
@@ -367,7 +420,7 @@ class UsersModelProfile extends JModelForm
 	 * Gets the configuration forms for all two-factor authentication methods
 	 * in an array.
 	 *
-	 * @param   integer $user_id The user ID to load the forms for (optional)
+	 * @param   integer  $user_id  The user ID to load the forms for (optional)
 	 *
 	 * @return  array
 	 *
@@ -390,7 +443,7 @@ class UsersModelProfile extends JModelForm
 	 * Returns the one time password (OTP) – a.k.a. two factor authentication –
 	 * configuration for a particular user.
 	 *
-	 * @param   integer $user_id The numeric ID of the user
+	 * @param   integer  $user_id  The numeric ID of the user
 	 *
 	 * @return  stdClass  An object holding the OTP configuration for this user
 	 *
@@ -403,58 +456,5 @@ class UsersModelProfile extends JModelForm
 		$model = new UsersModelUser;
 
 		return $model->getOtpConfig($user_id);
-	}
-
-	/**
-	 * Override preprocessForm to load the user plugin group instead of content.
-	 *
-	 * @param   JForm  $form  A JForm object.
-	 * @param   mixed  $data  The data expected for the form.
-	 * @param   string $group The name of the plugin group to import (defaults to "content").
-	 *
-	 * @return  void
-	 *
-	 * @throws    Exception if there is an error in the form event.
-	 *
-	 * @since   1.6
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'user')
-	{
-		if (JComponentHelper::getParams('com_users')->get('frontend_userparams'))
-		{
-			$form->loadFile('frontend', false);
-
-			if (JFactory::getUser()->authorise('core.login.admin'))
-			{
-				$form->loadFile('frontend_admin', false);
-			}
-		}
-
-		parent::preprocessForm($form, $data, $group);
-	}
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState()
-	{
-		// Get the application object.
-		$params = JFactory::getApplication()->getParams('com_users');
-
-		// Get the user id.
-		$userId = JFactory::getApplication()->getUserState('com_users.edit.profile.id');
-		$userId = !empty($userId) ? $userId : (int) JFactory::getUser()->get('id');
-
-		// Set the user id.
-		$this->setState('user.id', $userId);
-
-		// Load the parameters.
-		$this->setState('params', $params);
 	}
 }

@@ -42,10 +42,25 @@ class JPaginationTest extends TestCase
 		// Whilst we inject the application into this class we still need the language
 		// property to be set for JText and the application for inclusion of scripts (such as bootstrap for the tooltips)
 		$this->saveFactoryState();
-		JFactory::$language    = $this->getMockLanguage();
+		JFactory::$language = $this->getMockLanguage();
 		JFactory::$application = $app;
 
 		$this->app = $app;
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDown()
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 
 	/**
@@ -60,61 +75,61 @@ class JPaginationTest extends TestCase
 		return array(
 			array(100, 0, 20,
 				array(
-					'total'         => 100,
-					'limitstart'    => 0,
-					'limit'         => 20,
-					'pages.total'   => 5,
+					'total' => 100,
+					'limitstart' => 0,
+					'limit' => 20,
+					'pages.total' => 5,
 					'pages.current' => 1,
-					'pages.start'   => 1,
-					'pages.stop'    => 5
+					'pages.start' => 1,
+					'pages.stop' => 5
 				)
 			),
 
 			array(100, 101, 20,
 				array(
-					'total'         => 100,
-					'limitstart'    => 80,
-					'limit'         => 20,
-					'pages.total'   => 5,
+					'total' => 100,
+					'limitstart' => 80,
+					'limit' => 20,
+					'pages.total' => 5,
 					'pages.current' => 5,
-					'pages.start'   => 1,
-					'pages.stop'    => 5
+					'pages.start' => 1,
+					'pages.stop' => 5
 				)
 			),
 
 			array(100, 201, 20,
 				array(
-					'total'         => 100,
-					'limitstart'    => 80,
-					'limit'         => 20,
-					'pages.total'   => 5,
+					'total' => 100,
+					'limitstart' => 80,
+					'limit' => 20,
+					'pages.total' => 5,
 					'pages.current' => 5,
-					'pages.start'   => 1,
-					'pages.stop'    => 5
+					'pages.start' => 1,
+					'pages.stop' => 5
 				)
 			),
 
 			array(10, 20, 20,
 				array(
-					'total'         => 10,
-					'limitstart'    => 0,
-					'limit'         => 20,
-					'pages.total'   => 1,
+					'total' => 10,
+					'limitstart' => 0,
+					'limit' => 20,
+					'pages.total' => 1,
 					'pages.current' => 1,
-					'pages.start'   => 1,
-					'pages.stop'    => 1
+					'pages.start' => 1,
+					'pages.stop' => 1
 				)
 			),
 
 			array(10, 0, null,
 				array(
-					'total'         => 10,
-					'limitstart'    => 0,
-					'limit'         => 10,
-					'pages.total'   => 1,
+					'total' => 10,
+					'limitstart' => 0,
+					'limit' => 10,
+					'pages.total' => 1,
 					'pages.current' => 1,
-					'pages.start'   => 1,
-					'pages.stop'    => 1
+					'pages.start' => 1,
+					'pages.stop' => 1
 				)
 			),
 		);
@@ -126,10 +141,10 @@ class JPaginationTest extends TestCase
 	 * This is a basic data driven test. It takes the data passed, runs the constructor
 	 * and make sure the appropriate values get setup.
 	 *
-	 * @param   integer $total      The total number of items.
-	 * @param   integer $limitstart The offset of the item to start at.
-	 * @param   integer $limit      The number of items to display per page.
-	 * @param   array   $expected   The expected results for the JPagination object
+	 * @param   integer  $total       The total number of items.
+	 * @param   integer  $limitstart  The offset of the item to start at.
+	 * @param   integer  $limit       The number of items to display per page.
+	 * @param   array    $expected    The expected results for the JPagination object
 	 *
 	 * @return  void
 	 *
@@ -187,8 +202,8 @@ class JPaginationTest extends TestCase
 	public function testGetAdditionalUrlParam()
 	{
 		$pagination = new JPagination(100, 50, 20, '', $this->app);
-		$value      = '//www.joomla.org';
-		$key        = 'Joomla';
+		$value = '//www.joomla.org';
+		$key = 'Joomla';
 
 		TestReflection::setValue($pagination, 'additionalUrlParams', array($key => $value));
 
@@ -200,9 +215,9 @@ class JPaginationTest extends TestCase
 	/**
 	 * This method tests the getRowOffset function.
 	 *
-	 * @param   integer $index      The row index
-	 * @param   integer $limitstart The offset of the item to start at.
-	 * @param   integer $value      The expected rationalised offset for a row with a given index.
+	 * @param   integer  $index       The row index
+	 * @param   integer  $limitstart  The offset of the item to start at.
+	 * @param   integer  $value       The expected rationalised offset for a row with a given index.
 	 *
 	 * @return  void
 	 *
@@ -252,44 +267,44 @@ class JPaginationTest extends TestCase
 			array(100, 40, 20, 3,
 				array(
 					array(
-						'text'   => 'JLIB_HTML_VIEW_ALL',
-						'base'   => '0',
-						'link'   => 'index.php',
+						'text' => 'JLIB_HTML_VIEW_ALL',
+						'base' => '0',
+						'link' => 'index.php',
 						'prefix' => '',
 						'active' => '',
 					),
 					array(
-						'text'   => 'JLIB_HTML_START',
-						'base'   => '0',
-						'link'   => 'index.php?limitstart=0',
+						'text' => 'JLIB_HTML_START',
+						'base' => '0',
+						'link' => 'index.php?limitstart=0',
 						'prefix' => '',
 						'active' => '',
 					),
 					array(
-						'text'   => 'JPREV',
-						'base'   => '20',
-						'link'   => 'index.php?limitstart=20',
+						'text' => 'JPREV',
+						'base' => '20',
+						'link' => 'index.php?limitstart=20',
 						'prefix' => '',
 						'active' => '',
 					),
 					array(
-						'text'   => 'JNEXT',
-						'base'   => '60',
-						'link'   => 'index.php?limitstart=60',
+						'text' => 'JNEXT',
+						'base' => '60',
+						'link' => 'index.php?limitstart=60',
 						'prefix' => '',
 						'active' => '',
 					),
 					array(
-						'text'   => 'JLIB_HTML_END',
-						'base'   => '80',
-						'link'   => 'index.php?limitstart=80',
+						'text' => 'JLIB_HTML_END',
+						'base' => '80',
+						'link' => 'index.php?limitstart=80',
 						'prefix' => '',
 						'active' => '',
 					),
 					array(
-						'text'   => '3',
-						'base'   => '',
-						'link'   => null,
+						'text' => '3',
+						'base' => '',
+						'link' => null,
 						'prefix' => '',
 						'active' => true,
 					),
@@ -301,11 +316,11 @@ class JPaginationTest extends TestCase
 	/**
 	 * This method tests the getData method.
 	 *
-	 * @param   integer $total      The total number of items.
-	 * @param   integer $limitstart The offset of the item to start at.
-	 * @param   integer $limit      The number of items to display per page.
-	 * @param   integer $active     The page number which contains the active pagination.
-	 * @param   array   $expected   The expected results for the JPagination object
+	 * @param   integer  $total       The total number of items.
+	 * @param   integer  $limitstart  The offset of the item to start at.
+	 * @param   integer  $limit       The number of items to display per page.
+	 * @param   integer  $active      The page number which contains the active pagination.
+	 * @param   array    $expected    The expected results for the JPagination object
 	 *
 	 * @return  void
 	 *
@@ -350,9 +365,9 @@ class JPaginationTest extends TestCase
 	 */
 	public function testGetDataWithMultipleInstances()
 	{
-		$p1    = new JPagination(10, 0, 5, 'pref1');
+		$p1 = new JPagination(10, 0, 5, 'pref1');
 		$data1 = $p1->getData();
-		$p2    = new JPagination(20, 0, 10, 'pref2');
+		$p2 = new JPagination(20, 0, 10, 'pref2');
 		$data2 = $p2->getData();
 
 		$this->assertEquals(5, $data1->next->base, 'Assert the base value for the next page for object 1 is correct.');
@@ -377,16 +392,17 @@ class JPaginationTest extends TestCase
 	/**
 	 * Tests the getPagesCounter method.
 	 *
-	 * @param   integer $total      The total number of items.
-	 * @param   integer $limitstart The offset of the item to start at.
-	 * @param   integer $limit      The number of items to display per page.
-	 * @param   array   $expected   The expected results for the JPagination object
+	 * @param   integer  $total       The total number of items.
+	 * @param   integer  $limitstart  The offset of the item to start at.
+	 * @param   integer  $limit       The number of items to display per page.
+	 * @param   array    $expected    The expected results for the JPagination object
 	 *
 	 * @return  void
 	 *
 	 * @covers        JPagination::getPagesCounter
 	 * @dataProvider  dataTestGetPagesCounter
-	 * @since         3.2
+
+	 * @since  3.2
 	 */
 	public function testGetPagesCounter($total, $limitstart, $limit, $expected)
 	{
@@ -414,10 +430,10 @@ class JPaginationTest extends TestCase
 	/**
 	 * This method tests the getPagesLinks method.
 	 *
-	 * @param   integer $total      The total number of items.
-	 * @param   integer $limitstart The offset of the item to start at.
-	 * @param   integer $limit      The number of items to display per page.
-	 * @param   array   $expected   The expected results for the JPagination object
+	 * @param   integer  $total       The total number of items.
+	 * @param   integer  $limitstart  The offset of the item to start at.
+	 * @param   integer  $limit       The number of items to display per page.
+	 * @param   array    $expected    The expected results for the JPagination object
 	 *
 	 * @return  void
 	 *
@@ -478,11 +494,11 @@ class JPaginationTest extends TestCase
 	/**
 	 * This method tests the getLimitBox function.
 	 *
-	 * @param   integer $total      The total number of items.
-	 * @param   integer $limitstart The offset of the item to start at.
-	 * @param   integer $limit      The number of items to display per page.
-	 * @param   boolean $admin      Are we in the administrator area
-	 * @param   string  $expected   The expected results for the JPagination object
+	 * @param   integer  $total       The total number of items.
+	 * @param   integer  $limitstart  The offset of the item to start at.
+	 * @param   integer  $limit       The number of items to display per page.
+	 * @param   boolean  $admin       Are we in the administrator area
+	 * @param   string   $expected    The expected results for the JPagination object
 	 *
 	 * @return  void
 	 *
@@ -522,13 +538,13 @@ class JPaginationTest extends TestCase
 	/**
 	 * Test the html string for the orderUpIcon function.
 	 *
-	 * @param   integer $i         The row index.
-	 * @param   string  $expected  The expected html string
-	 * @param   boolean $condition True to show the icon.
-	 * @param   string  $task      The task to fire.
-	 * @param   string  $alt       The image alternative text string.
-	 * @param   boolean $enabled   An optional setting for access control on the action.
-	 * @param   string  $checkbox  An optional prefix for checkboxes.
+	 * @param   integer  $i          The row index.
+	 * @param   string   $expected   The expected html string
+	 * @param   boolean  $condition  True to show the icon.
+	 * @param   string   $task       The task to fire.
+	 * @param   string   $alt        The image alternative text string.
+	 * @param   boolean  $enabled    An optional setting for access control on the action.
+	 * @param   string   $checkbox   An optional prefix for checkboxes.
 	 *
 	 * @return  void
 	 *
@@ -539,7 +555,7 @@ class JPaginationTest extends TestCase
 	public function testOrderUpIcon($i, $expected, $condition = true, $task = 'orderup', $alt = 'JLIB_HTML_MOVE_UP', $enabled = true, $checkbox = 'cb')
 	{
 		$pagination = new JPagination(100, 50, 20, '', $this->app);
-		$string     = $pagination->orderUpIcon($i, $condition, $task, $alt, $enabled, $checkbox);
+		$string = $pagination->orderUpIcon($i, $condition, $task, $alt, $enabled, $checkbox);
 
 		$this->assertEquals($string, $expected, 'This is not the expected order up html');
 	}
@@ -563,14 +579,14 @@ class JPaginationTest extends TestCase
 	/**
 	 * Test the html string for the orderDownIcon function.
 	 *
-	 * @param   integer $i         The row index.
-	 * @param   integer $n         The number of items in the list.
-	 * @param   string  $expected  The expected html string
-	 * @param   boolean $condition True to show the icon.
-	 * @param   string  $task      The task to fire.
-	 * @param   string  $alt       The image alternative text string.
-	 * @param   boolean $enabled   An optional setting for access control on the action.
-	 * @param   string  $checkbox  An optional prefix for checkboxes.
+	 * @param   integer  $i          The row index.
+	 * @param   integer  $n          The number of items in the list.
+	 * @param   string   $expected   The expected html string
+	 * @param   boolean  $condition  True to show the icon.
+	 * @param   string   $task       The task to fire.
+	 * @param   string   $alt        The image alternative text string.
+	 * @param   boolean  $enabled    An optional setting for access control on the action.
+	 * @param   string   $checkbox   An optional prefix for checkboxes.
 	 *
 	 * @return  void
 	 *
@@ -581,7 +597,7 @@ class JPaginationTest extends TestCase
 	public function testOrderDownIcon($i, $n, $expected, $condition = true, $task = 'orderdown', $alt = 'JLIB_HTML_MOVE_DOWN', $enabled = true, $checkbox = 'cb')
 	{
 		$pagination = new JPagination($n, 50, 20, '', $this->app);
-		$string     = $pagination->orderDownIcon($i, $n, $condition, $task, $alt, $enabled, $checkbox);
+		$string = $pagination->orderDownIcon($i, $n, $condition, $task, $alt, $enabled, $checkbox);
 
 		$this->assertEquals($string, $expected, 'This is not the expected order up html');
 	}
@@ -598,11 +614,11 @@ class JPaginationTest extends TestCase
 		return array(
 			array(
 				array(
-					'start'    => array('data' => '<a title="JLIB_HTML_START" href="" class="hasTooltip pagenav">JLIB_HTML_START</a>'),
+					'start' => array('data' => '<a title="JLIB_HTML_START" href="" class="hasTooltip pagenav">JLIB_HTML_START</a>'),
 					'previous' => array('data' => '<a title="JPREV" href="" class="hasTooltip pagenav">JPREV</a>'),
-					'next'     => array('data' => '<a title="JNEXT" href="" class="hasTooltip pagenav">JNEXT</a>'),
-					'end'      => array('data' => '<a title="JLIB_HTML_END" href="" class="hasTooltip pagenav">JLIB_HTML_END</a>'),
-					'pages'    => array(
+					'next' => array('data' => '<a title="JNEXT" href="" class="hasTooltip pagenav">JNEXT</a>'),
+					'end' => array('data' => '<a title="JLIB_HTML_END" href="" class="hasTooltip pagenav">JLIB_HTML_END</a>'),
+					'pages' => array(
 						'1' => array('data' => '<a href="" class="pagenav">1</a>'),
 						'2' => array('data' => '<span class="pagenav">2</span>'),
 						'3' => array('data' => '<a href="" class="pagenav">3</a>'),
@@ -617,11 +633,11 @@ class JPaginationTest extends TestCase
 	/**
 	 * This method tests the _list_render method.
 	 *
-	 * @param   array   $list       The list array needed for the function _list_render.
-	 * @param   integer $total      The total number of items.
-	 * @param   integer $limitstart The offset of the item to start at.
-	 * @param   integer $limit      The number of items to display per page.
-	 * @param   string  $expected   The expected results for the JPagination object
+	 * @param   array    $list        The list array needed for the function _list_render.
+	 * @param   integer  $total       The total number of items.
+	 * @param   integer  $limitstart  The offset of the item to start at.
+	 * @param   integer  $limit       The number of items to display per page.
+	 * @param   string   $expected    The expected results for the JPagination object
 	 *
 	 * @return  void
 	 *
@@ -629,7 +645,7 @@ class JPaginationTest extends TestCase
 	 * @dataProvider  dataTestListRender
 	 * @since         3.2
 	 */
-	public function testListRender($list, $total, $limitstart, $limit, $expected)
+	public function testListRender($list, $total, $limitstart, $limit ,$expected)
 	{
 		$pagination = new JPagination($total, $limitstart, $limit, '', $this->app);
 
@@ -659,12 +675,12 @@ class JPaginationTest extends TestCase
 	/**
 	 * This method tests the _item_active method.
 	 *
-	 * @param   string  $text       The link text.
-	 * @param   integer $total      The total number of items.
-	 * @param   integer $limitstart The offset of the item to start at.
-	 * @param   integer $limit      The number of items to display per page.
-	 * @param   boolean $admin      Are we in the administrator area
-	 * @param   string  $expected   The expected results for the JPagination object
+	 * @param   string   $text        The link text.
+	 * @param   integer  $total       The total number of items.
+	 * @param   integer  $limitstart  The offset of the item to start at.
+	 * @param   integer  $limit       The number of items to display per page.
+	 * @param   boolean  $admin       Are we in the administrator area
+	 * @param   string   $expected    The expected results for the JPagination object
 	 *
 	 * @return  void
 	 *
@@ -678,7 +694,7 @@ class JPaginationTest extends TestCase
 		$app = $this->app;
 		$app->expects($this->any())->method('isAdmin')->willReturn($admin);
 
-		$pagination       = new JPagination($total, $limitstart, $limit, '', $app);
+		$pagination = new JPagination($total, $limitstart, $limit, '', $app);
 		$paginationObject = new JPaginationObject($text, 0);
 
 		$string = TestReflection::invoke($pagination, '_item_active', $paginationObject);
@@ -706,12 +722,12 @@ class JPaginationTest extends TestCase
 	/**
 	 * This method tests the _item_active method.
 	 *
-	 * @param   string  $text       The link text.
-	 * @param   integer $total      The total number of items.
-	 * @param   integer $limitstart The offset of the item to start at.
-	 * @param   integer $limit      The number of items to display per page.
-	 * @param   boolean $admin      Are we in the administrator area
-	 * @param   string  $expected   The expected results for the JPagination object
+	 * @param   string   $text        The link text.
+	 * @param   integer  $total       The total number of items.
+	 * @param   integer  $limitstart  The offset of the item to start at.
+	 * @param   integer  $limit       The number of items to display per page.
+	 * @param   boolean  $admin       Are we in the administrator area
+	 * @param   string   $expected    The expected results for the JPagination object
 	 *
 	 * @return  void
 	 *
@@ -725,7 +741,7 @@ class JPaginationTest extends TestCase
 		$app = $this->app;
 		$app->expects($this->any())->method('isAdmin')->willReturn($admin);
 
-		$pagination       = new JPagination($total, $limitstart, $limit, '', $app);
+		$pagination = new JPagination($total, $limitstart, $limit, '', $app);
 		$paginationObject = new JPaginationObject($text, 0);
 
 		$string = TestReflection::invoke($pagination, '_item_inactive', $paginationObject);
@@ -738,11 +754,11 @@ class JPaginationTest extends TestCase
 	/**
 	 * This method tests the _buildDataObject method.
 	 *
-	 * @param   integer $total      The total number of items.
-	 * @param   integer $limitstart The offset of the item to start at.
-	 * @param   integer $limit      The number of items to display per page.
-	 * @param   integer $active     The page number which contains the active pagination.
-	 * @param   array   $expected   The expected results for the JPagination object
+	 * @param   integer  $total       The total number of items.
+	 * @param   integer  $limitstart  The offset of the item to start at.
+	 * @param   integer  $limit       The number of items to display per page.
+	 * @param   integer  $active      The page number which contains the active pagination.
+	 * @param   array    $expected    The expected results for the JPagination object
 	 *
 	 * @return  void
 	 *
@@ -796,9 +812,9 @@ class JPaginationTest extends TestCase
 	/**
 	 * This method tests the set method.
 	 *
-	 * @param   integer $property The property to set
-	 * @param   string  $value    The value of the property to set
-	 * @param   array   $expected The expected results for the JPagination object
+	 * @param   integer  $property  The property to set
+	 * @param   string   $value     The value of the property to set
+	 * @param   array    $expected  The expected results for the JPagination object
 	 *
 	 * @return  void
 	 *
@@ -816,12 +832,12 @@ class JPaginationTest extends TestCase
 		{
 			$result = TestReflection::getValue($pagination, $property);
 		}
-		elseif (strpos($property, '.'))
+		elseif(strpos($property, '.'))
 		{
-			$prop     = explode('.', $property);
-			$prop[1]  = ucfirst($prop[1]);
+			$prop = explode('.', $property);
+			$prop[1] = ucfirst($prop[1]);
 			$property = implode($prop);
-			$result   = $pagination->$property;
+			$result = $pagination->$property;
 		}
 		else
 		{
@@ -853,9 +869,9 @@ class JPaginationTest extends TestCase
 	/**
 	 * This method tests the get method.
 	 *
-	 * @param   integer $property The property to get.
-	 * @param   string  $default  The default value if the property doesn't exist
-	 * @param   array   $expected The expected results for the JPagination object
+	 * @param   integer  $property  The property to get.
+	 * @param   string   $default   The default value if the property doesn't exist
+	 * @param   array    $expected  The expected results for the JPagination object
 	 *
 	 * @return  void
 	 *
@@ -871,20 +887,5 @@ class JPaginationTest extends TestCase
 		$this->assertEquals($result, $expected, 'The expected output of the property is incorrect');
 
 		unset($pagination);
-	}
-
-	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDown()
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 }

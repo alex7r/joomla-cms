@@ -20,8 +20,8 @@ class JCryptCipherSimple implements JCryptCipher
 	/**
 	 * Method to decrypt a data string.
 	 *
-	 * @param   string    $data The encrypted string to decrypt.
-	 * @param   JCryptKey $key  The key[/pair] object to use for decryption.
+	 * @param   string     $data  The encrypted string to decrypt.
+	 * @param   JCryptKey  $key   The key[/pair] object to use for decryption.
 	 *
 	 * @return  string  The decrypted data string.
 	 *
@@ -37,10 +37,10 @@ class JCryptCipherSimple implements JCryptCipher
 		}
 
 		$decrypted = '';
-		$tmp       = $key->public;
+		$tmp = $key->public;
 
 		// Convert the HEX input into an array of integers and get the number of characters.
-		$chars     = $this->_hexToIntArray($data);
+		$chars = $this->_hexToIntArray($data);
 		$charCount = count($chars);
 
 		// Repeat the key as many times as necessary to ensure that the key is at least as long as the input.
@@ -59,33 +59,72 @@ class JCryptCipherSimple implements JCryptCipher
 	}
 
 	/**
-	 * Convert hex to an array of integers
+	 * Method to encrypt a data string.
 	 *
-	 * @param   string $hex The hex string to convert to an integer array.
+	 * @param   string     $data  The data string to encrypt.
+	 * @param   JCryptKey  $key   The key[/pair] object to use for encryption.
 	 *
-	 * @return  array  An array of integers.
+	 * @return  string  The encrypted data string.
 	 *
-	 * @since   11.1
+	 * @since   12.1
+	 * @throws  InvalidArgumentException
 	 */
-	private function _hexToIntArray($hex)
+	public function encrypt($data, JCryptKey $key)
 	{
-		$array = array();
-
-		$j = (int) strlen($hex) / 2;
-
-		for ($i = 0; $i < $j; $i++)
+		// Validate key.
+		if ($key->type != 'simple')
 		{
-			$array[$i] = (int) $this->_hexToInt($hex, $i);
+			throw new InvalidArgumentException('Invalid key of type: ' . $key->type . '.  Expected simple.');
 		}
 
-		return $array;
+		$encrypted = '';
+		$tmp = $key->private;
+
+		// Split up the input into a character array and get the number of characters.
+		$chars = preg_split('//', $data, -1, PREG_SPLIT_NO_EMPTY);
+		$charCount = count($chars);
+
+		// Repeat the key as many times as necessary to ensure that the key is at least as long as the input.
+		for ($i = 0; $i < $charCount; $i = strlen($tmp))
+		{
+			$tmp = $tmp . $tmp;
+		}
+
+		// Get the XOR values between the ASCII values of the input and key characters for all input offsets.
+		for ($i = 0; $i < $charCount; $i++)
+		{
+			$encrypted .= $this->_intToHex(ord($tmp[$i]) ^ ord($chars[$i]));
+		}
+
+		return $encrypted;
+	}
+
+	/**
+	 * Method to generate a new encryption key[/pair] object.
+	 *
+	 * @param   array  $options  Key generation options.
+	 *
+	 * @return  JCryptKey
+	 *
+	 * @since   12.1
+	 */
+	public function generateKey(array $options = array())
+	{
+		// Create the new encryption key[/pair] object.
+		$key = new JCryptKey('simple');
+
+		// Just a random key of a given length.
+		$key->private = JCrypt::genRandomBytes(256);
+		$key->public  = $key->private;
+
+		return $key;
 	}
 
 	/**
 	 * Convert hex to an integer
 	 *
-	 * @param   string  $s The hex string to convert.
-	 * @param   integer $i The offset?
+	 * @param   string   $s  The hex string to convert.
+	 * @param   integer  $i  The offset?
 	 *
 	 * @return  integer
 	 *
@@ -93,8 +132,8 @@ class JCryptCipherSimple implements JCryptCipher
 	 */
 	private function _hexToInt($s, $i)
 	{
-		$j  = (int) $i * 2;
-		$k  = 0;
+		$j = (int) $i * 2;
+		$k = 0;
 		$s1 = (string) $s;
 
 		// Get the character at position $j.
@@ -163,50 +202,32 @@ class JCryptCipherSimple implements JCryptCipher
 	}
 
 	/**
-	 * Method to encrypt a data string.
+	 * Convert hex to an array of integers
 	 *
-	 * @param   string    $data The data string to encrypt.
-	 * @param   JCryptKey $key  The key[/pair] object to use for encryption.
+	 * @param   string  $hex  The hex string to convert to an integer array.
 	 *
-	 * @return  string  The encrypted data string.
+	 * @return  array  An array of integers.
 	 *
-	 * @since   12.1
-	 * @throws  InvalidArgumentException
+	 * @since   11.1
 	 */
-	public function encrypt($data, JCryptKey $key)
+	private function _hexToIntArray($hex)
 	{
-		// Validate key.
-		if ($key->type != 'simple')
+		$array = array();
+
+		$j = (int) strlen($hex) / 2;
+
+		for ($i = 0; $i < $j; $i++)
 		{
-			throw new InvalidArgumentException('Invalid key of type: ' . $key->type . '.  Expected simple.');
+			$array[$i] = (int) $this->_hexToInt($hex, $i);
 		}
 
-		$encrypted = '';
-		$tmp       = $key->private;
-
-		// Split up the input into a character array and get the number of characters.
-		$chars     = preg_split('//', $data, -1, PREG_SPLIT_NO_EMPTY);
-		$charCount = count($chars);
-
-		// Repeat the key as many times as necessary to ensure that the key is at least as long as the input.
-		for ($i = 0; $i < $charCount; $i = strlen($tmp))
-		{
-			$tmp = $tmp . $tmp;
-		}
-
-		// Get the XOR values between the ASCII values of the input and key characters for all input offsets.
-		for ($i = 0; $i < $charCount; $i++)
-		{
-			$encrypted .= $this->_intToHex(ord($tmp[$i]) ^ ord($chars[$i]));
-		}
-
-		return $encrypted;
+		return $array;
 	}
 
 	/**
 	 * Convert an integer to a hexadecimal string.
 	 *
-	 * @param   integer $i An integer value to convert to a hex string.
+	 * @param   integer  $i  An integer value to convert to a hex string.
 	 *
 	 * @return  string
 	 *
@@ -234,26 +255,5 @@ class JCryptCipherSimple implements JCryptCipher
 		$s = $s . strtoupper(dechex($k));
 
 		return $s;
-	}
-
-	/**
-	 * Method to generate a new encryption key[/pair] object.
-	 *
-	 * @param   array $options Key generation options.
-	 *
-	 * @return  JCryptKey
-	 *
-	 * @since   12.1
-	 */
-	public function generateKey(array $options = array())
-	{
-		// Create the new encryption key[/pair] object.
-		$key = new JCryptKey('simple');
-
-		// Just a random key of a given length.
-		$key->private = JCrypt::genRandomBytes(256);
-		$key->public  = $key->private;
-
-		return $key;
 	}
 }

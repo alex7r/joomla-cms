@@ -19,7 +19,7 @@ abstract class ModulesHelper
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string $vName The name of the active view.
+	 * @param   string  $vName  The name of the active view.
 	 *
 	 * @return  void
 	 */
@@ -31,7 +31,7 @@ abstract class ModulesHelper
 	/**
 	 * Gets a list of the actions that can be performed.
 	 *
-	 * @param   integer $moduleId The module ID.
+	 * @param   integer  $moduleId  The module ID.
 	 *
 	 * @return  JObject
 	 *
@@ -90,8 +90,8 @@ abstract class ModulesHelper
 	/**
 	 * Get a list of modules positions
 	 *
-	 * @param   integer $clientId      Client ID
-	 * @param   boolean $editPositions Allow to edit the positions
+	 * @param   integer  $clientId       Client ID
+	 * @param   boolean  $editPositions  Allow to edit the positions
 	 *
 	 * @return  array  A list of positions
 	 */
@@ -139,9 +139,9 @@ abstract class ModulesHelper
 	/**
 	 * Return a list of templates
 	 *
-	 * @param   integer $clientId Client ID
-	 * @param   string  $state    State
-	 * @param   string  $template Template name
+	 * @param   integer  $clientId  Client ID
+	 * @param   string   $state     State
+	 * @param   string   $template  Template name
 	 *
 	 * @return  array  List of templates
 	 */
@@ -178,7 +178,7 @@ abstract class ModulesHelper
 	/**
 	 * Get a list of the unique modules installed in the client application.
 	 *
-	 * @param   int $clientId The client id.
+	 * @param   int  $clientId  The client id.
 	 *
 	 * @return  array  Array of unique modules
 	 */
@@ -196,15 +196,15 @@ abstract class ModulesHelper
 
 		$db->setQuery($query);
 		$modules = $db->loadObjectList();
-		$lang    = JFactory::getLanguage();
+		$lang = JFactory::getLanguage();
 
 		foreach ($modules as $i => $module)
 		{
 			$extension = $module->value;
-			$path      = $clientId ? JPATH_ADMINISTRATOR : JPATH_SITE;
-			$source    = $path . "/modules/$extension";
-			$lang->load("$extension.sys", $path, null, false, true)
-			|| $lang->load("$extension.sys", $source, null, false, true);
+			$path = $clientId ? JPATH_ADMINISTRATOR : JPATH_SITE;
+			$source = $path . "/modules/$extension";
+				$lang->load("$extension.sys", $path, null, false, true)
+			||	$lang->load("$extension.sys", $source, null, false, true);
 			$modules[$i]->text = JText::_($module->text);
 		}
 
@@ -216,13 +216,13 @@ abstract class ModulesHelper
 	/**
 	 * Get a list of the assignment options for modules to menus.
 	 *
-	 * @param   int $clientId The client id.
+	 * @param   int  $clientId  The client id.
 	 *
 	 * @return  array
 	 */
 	public static function getAssignmentOptions($clientId)
 	{
-		$options   = array();
+		$options = array();
 		$options[] = JHtml::_('select.option', '0', 'COM_MODULES_OPTION_MENU_ALL');
 		$options[] = JHtml::_('select.option', '-', 'COM_MODULES_OPTION_MENU_NONE');
 
@@ -238,9 +238,9 @@ abstract class ModulesHelper
 	/**
 	 * Return a translated module position name
 	 *
-	 * @param   integer $clientId Application client id 0: site | 1: admin
-	 * @param   string  $template Template name
-	 * @param   string  $position Position name
+	 * @param   integer  $clientId  Application client id 0: site | 1: admin
+	 * @param   string   $template  Template name
+	 * @param   string   $position  Position name
 	 *
 	 * @return  string  Return a translated position name
 	 *
@@ -258,20 +258,20 @@ abstract class ModulesHelper
 		if (!$loaded)
 		{
 			$lang->load('tpl_' . $template . '.sys', $path, null, false, false)
-			|| $lang->load('tpl_' . $template . '.sys', $path . '/templates/' . $template, null, false, false)
-			|| $lang->load('tpl_' . $template . '.sys', $path, $lang->getDefault(), false, false)
-			|| $lang->load('tpl_' . $template . '.sys', $path . '/templates/' . $template, $lang->getDefault(), false, false);
+			||	$lang->load('tpl_' . $template . '.sys', $path . '/templates/' . $template, null, false, false)
+			||	$lang->load('tpl_' . $template . '.sys', $path, $lang->getDefault(), false, false)
+			||	$lang->load('tpl_' . $template . '.sys', $path . '/templates/' . $template, $lang->getDefault(), false, false);
 		}
 
 		$langKey = strtoupper('TPL_' . $template . '_POSITION_' . $position);
-		$text    = JText::_($langKey);
+		$text = JText::_($langKey);
 
 		// Avoid untranslated strings
 		if (!self::isTranslatedText($langKey, $text))
 		{
 			// Modules component translation
 			$langKey = strtoupper('COM_MODULES_POSITION_' . $position);
-			$text    = JText::_($langKey);
+			$text = JText::_($langKey);
 
 			// Avoid untranslated strings
 			if (!self::isTranslatedText($langKey, $text))
@@ -288,8 +288,8 @@ abstract class ModulesHelper
 	/**
 	 * Check if the string was translated
 	 *
-	 * @param   string $langKey Language file text key
-	 * @param   string $text    The "translated" text to be checked
+	 * @param   string  $langKey  Language file text key
+	 * @param   string  $text     The "translated" text to be checked
 	 *
 	 * @return  boolean  Return true for translated text
 	 *
@@ -303,8 +303,8 @@ abstract class ModulesHelper
 	/**
 	 * Create and return a new Option
 	 *
-	 * @param   string $value The option value [optional]
-	 * @param   string $text  The option text [optional]
+	 * @param   string  $value  The option value [optional]
+	 * @param   string  $text   The option text [optional]
 	 *
 	 * @return  object  The option as an object (stdClass instance)
 	 *
@@ -317,7 +317,7 @@ abstract class ModulesHelper
 			$text = $value;
 		}
 
-		$option        = new stdClass;
+		$option = new stdClass;
 		$option->value = $value;
 		$option->text  = $text;
 
@@ -327,8 +327,8 @@ abstract class ModulesHelper
 	/**
 	 * Create and return a new Option Group
 	 *
-	 * @param   string $label   Value and label for group [optional]
-	 * @param   array  $options Array of options to insert into group [optional]
+	 * @param   string  $label    Value and label for group [optional]
+	 * @param   array   $options  Array of options to insert into group [optional]
 	 *
 	 * @return  array  Return the new group as an array
 	 *
@@ -336,7 +336,7 @@ abstract class ModulesHelper
 	 */
 	public static function createOptionGroup($label = '', $options = array())
 	{
-		$group          = array();
+		$group = array();
 		$group['value'] = $label;
 		$group['text']  = $label;
 		$group['items'] = $options;

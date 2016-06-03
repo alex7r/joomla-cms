@@ -46,7 +46,7 @@ abstract class StringHelper
 	 * @since  1.3.0
 	 */
 	protected static $incrementStyles = array(
-		'dash'    => array(
+		'dash' => array(
 			'#-(\d+)$#',
 			'-%d'
 		),
@@ -64,9 +64,9 @@ abstract class StringHelper
 	 * default: "Label" becomes "Label (2)"
 	 * dash:    "Label" becomes "Label-2"
 	 *
-	 * @param   string  $string The source string.
-	 * @param   string  $style  The the style (default|dash).
-	 * @param   integer $n      If supplied, this number is used for the copy, otherwise it is the 'next' number.
+	 * @param   string   $string  The source string.
+	 * @param   string   $style   The the style (default|dash).
+	 * @param   integer  $n       If supplied, this number is used for the copy, otherwise it is the 'next' number.
 	 *
 	 * @return  string  The incremented string.
 	 *
@@ -79,7 +79,7 @@ abstract class StringHelper
 		// Regular expression search and replace patterns.
 		if (is_array($styleSpec[0]))
 		{
-			$rxSearch  = $styleSpec[0][0];
+			$rxSearch = $styleSpec[0][0];
 			$rxReplace = $styleSpec[0][1];
 		}
 		else
@@ -101,7 +101,7 @@ abstract class StringHelper
 		// Check if we are incrementing an existing pattern, or appending a new one.
 		if (preg_match($rxSearch, $string, $matches))
 		{
-			$n      = empty($n) ? ($matches[1] + 1) : $n;
+			$n = empty($n) ? ($matches[1] + 1) : $n;
 			$string = preg_replace($rxReplace, sprintf($oldFormat, $n), $string);
 		}
 		else
@@ -131,7 +131,7 @@ abstract class StringHelper
 	 * }
 	 * </code>
 	 *
-	 * @param   string $str The string to test.
+	 * @param   string  $str  The string to test.
 	 *
 	 * @return  boolean True if the string is all ASCII
 	 *
@@ -147,7 +147,7 @@ abstract class StringHelper
 	 *
 	 * Returns the unicode ordinal for a character.
 	 *
-	 * @param   string $chr UTF-8 encoded character
+	 * @param   string  $chr  UTF-8 encoded character
 	 *
 	 * @return  integer Unicode ordinal for the character
 	 *
@@ -164,9 +164,9 @@ abstract class StringHelper
 	 *
 	 * Find position of first occurrence of a string.
 	 *
-	 * @param   string  $str    String being examined
-	 * @param   string  $search String being searched for
-	 * @param   integer $offset Optional, specifies the position from which the search should be performed
+	 * @param   string   $str     String being examined
+	 * @param   string   $search  String being searched for
+	 * @param   integer  $offset  Optional, specifies the position from which the search should be performed
 	 *
 	 * @return  mixed  Number of characters before the first match or FALSE on failure
 	 *
@@ -188,9 +188,9 @@ abstract class StringHelper
 	 *
 	 * Finds position of last occurrence of a string.
 	 *
-	 * @param   string  $str    String being examined.
-	 * @param   string  $search String being searched for.
-	 * @param   integer $offset Offset from the left of the string.
+	 * @param   string   $str     String being examined.
+	 * @param   string   $search  String being searched for.
+	 * @param   integer  $offset  Offset from the left of the string.
 	 *
 	 * @return  mixed  Number of characters before the last match or false on failure
 	 *
@@ -207,9 +207,9 @@ abstract class StringHelper
 	 *
 	 * Return part of a string given character offset (and optionally length).
 	 *
-	 * @param   string  $str    String being processed
-	 * @param   integer $offset Number of UTF-8 characters offset (from left)
-	 * @param   integer $length Optional length in UTF-8 characters from offset
+	 * @param   string   $str     String being processed
+	 * @param   integer  $offset  Number of UTF-8 characters offset (from left)
+	 * @param   integer  $length  Optional length in UTF-8 characters from offset
 	 *
 	 * @return  mixed string or FALSE if failure
 	 *
@@ -234,11 +234,11 @@ abstract class StringHelper
 	 * Note: The concept of a characters "case" only exists is some alphabets such as Latin, Greek, Cyrillic, Armenian and archaic Georgian - it does
 	 * not exist in the Chinese alphabet, for example. See Unicode Standard Annex #21: Case Mappings
 	 *
-	 * @param   string $str String being processed
+	 * @param   string  $str  String being processed
 	 *
 	 * @return  mixed  Either string in lowercase or FALSE is UTF-8 invalid
 	 *
-	 * @see     http://www.php.net/strtolower
+	 * @see http://www.php.net/strtolower
 	 * @since   1.3.0
 	 */
 	public static function strtolower($str)
@@ -254,7 +254,7 @@ abstract class StringHelper
 	 * Note: The concept of a characters "case" only exists is some alphabets such as Latin, Greek, Cyrillic, Armenian and archaic Georgian - it does
 	 * not exist in the Chinese alphabet, for example. See Unicode Standard Annex #21: Case Mappings
 	 *
-	 * @param   string $str String being processed
+	 * @param   string  $str  String being processed
 	 *
 	 * @return  mixed  Either string in uppercase or FALSE is UTF-8 invalid
 	 *
@@ -271,7 +271,7 @@ abstract class StringHelper
 	 *
 	 * Returns the number of characters in the string (NOT THE NUMBER OF BYTES).
 	 *
-	 * @param   string $str UTF-8 string.
+	 * @param   string  $str  UTF-8 string.
 	 *
 	 * @return  integer  Number of UTF-8 characters in string.
 	 *
@@ -288,10 +288,10 @@ abstract class StringHelper
 	 *
 	 * Case-insensitive version of str_replace()
 	 *
-	 * @param   string  $search  String to search
-	 * @param   string  $replace Existing string to replace
-	 * @param   string  $str     New string to replace with
-	 * @param   integer $count   Optional count value to be passed by referene
+	 * @param   string   $search   String to search
+	 * @param   string   $replace  Existing string to replace
+	 * @param   string   $str      New string to replace with
+	 * @param   integer  $count    Optional count value to be passed by referene
 	 *
 	 * @return  string  UTF-8 String
 	 *
@@ -314,10 +314,10 @@ abstract class StringHelper
 	 * Pad a string to a certain length with another string.
 	 * $padStr may contain multi-byte characters.
 	 *
-	 * @param   string  $input  The input string.
-	 * @param   integer $length If the value is negative, less than, or equal to the length of the input string, no padding takes place.
-	 * @param   string  $padStr The string may be truncated if the number of padding characters can't be evenly divided by the string's length.
-	 * @param   integer $type   The type of padding to apply
+	 * @param   string   $input   The input string.
+	 * @param   integer  $length  If the value is negative, less than, or equal to the length of the input string, no padding takes place.
+	 * @param   string   $padStr  The string may be truncated if the number of padding characters can't be evenly divided by the string's length.
+	 * @param   integer  $type    The type of padding to apply
 	 *
 	 * @return  string
 	 *
@@ -334,8 +334,8 @@ abstract class StringHelper
 	 *
 	 * Convert a string to an array.
 	 *
-	 * @param   string  $str       UTF-8 encoded string to process
-	 * @param   integer $split_len Number to characters to split string by
+	 * @param   string   $str        UTF-8 encoded string to process
+	 * @param   integer  $split_len  Number to characters to split string by
 	 *
 	 * @return  array
 	 *
@@ -352,9 +352,9 @@ abstract class StringHelper
 	 *
 	 * A case insensitive string comparison.
 	 *
-	 * @param   string $str1   string 1 to compare
-	 * @param   string $str2   string 2 to compare
-	 * @param   mixed  $locale The locale used by strcoll or false to use classical comparison
+	 * @param   string  $str1    string 1 to compare
+	 * @param   string  $str2    string 2 to compare
+	 * @param   mixed   $locale  The locale used by strcoll or false to use classical comparison
 	 *
 	 * @return  integer   < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
 	 *
@@ -405,44 +405,13 @@ abstract class StringHelper
 	}
 
 	/**
-	 * Transcode a string.
-	 *
-	 * @param   string $source        The string to transcode.
-	 * @param   string $from_encoding The source encoding.
-	 * @param   string $to_encoding   The target encoding.
-	 *
-	 * @return  mixed  The transcoded string, or null if the source was not a string.
-	 *
-	 * @link    https://bugs.php.net/bug.php?id=48147
-	 *
-	 * @since   1.3.0
-	 */
-	public static function transcode($source, $from_encoding, $to_encoding)
-	{
-		if (is_string($source))
-		{
-			switch (ICONV_IMPL)
-			{
-				case 'glibc':
-					return @iconv($from_encoding, $to_encoding . '//TRANSLIT,IGNORE', $source);
-
-				case 'libiconv':
-				default:
-					return iconv($from_encoding, $to_encoding . '//IGNORE//TRANSLIT', $source);
-			}
-		}
-
-		return null;
-	}
-
-	/**
 	 * UTF-8/LOCALE aware alternative to strcmp()
 	 *
 	 * A case sensitive string comparison.
 	 *
-	 * @param   string $str1   string 1 to compare
-	 * @param   string $str2   string 2 to compare
-	 * @param   mixed  $locale The locale used by strcoll or false to use classical comparison
+	 * @param   string  $str1    string 1 to compare
+	 * @param   string  $str2    string 2 to compare
+	 * @param   mixed   $locale  The locale used by strcoll or false to use classical comparison
 	 *
 	 * @return  integer  < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
 	 *
@@ -494,10 +463,10 @@ abstract class StringHelper
 	 *
 	 * Find length of initial segment not matching mask.
 	 *
-	 * @param   string  $str    The string to process
-	 * @param   string  $mask   The mask
-	 * @param   integer $start  Optional starting character position (in characters)
-	 * @param   integer $length Optional length
+	 * @param   string   $str     The string to process
+	 * @param   string   $mask    The mask
+	 * @param   integer  $start   Optional starting character position (in characters)
+	 * @param   integer  $length  Optional length
 	 *
 	 * @return  integer  The length of the initial segment of str1 which does not contain any of the characters in str2
 	 *
@@ -525,8 +494,8 @@ abstract class StringHelper
 	 * Returns all of haystack from the first occurrence of needle to the end. Needle and haystack are examined in a case-insensitive manner to
 	 * find the first occurrence of a string using case insensitive comparison.
 	 *
-	 * @param   string $str    The haystack
-	 * @param   string $search The needle
+	 * @param   string  $str     The haystack
+	 * @param   string  $search  The needle
 	 *
 	 * @return string the sub string
 	 *
@@ -543,7 +512,7 @@ abstract class StringHelper
 	 *
 	 * Reverse a string.
 	 *
-	 * @param   string $str String to be reversed
+	 * @param   string  $str  String to be reversed
 	 *
 	 * @return  string   The string in reverse character order
 	 *
@@ -560,10 +529,10 @@ abstract class StringHelper
 	 *
 	 * Find length of initial segment matching mask.
 	 *
-	 * @param   string  $str    The haystack
-	 * @param   string  $mask   The mask
-	 * @param   integer $start  Start optional
-	 * @param   integer $length Length optional
+	 * @param   string   $str     The haystack
+	 * @param   string   $mask    The mask
+	 * @param   integer  $start   Start optional
+	 * @param   integer  $length  Length optional
 	 *
 	 * @return  integer
 	 *
@@ -590,10 +559,10 @@ abstract class StringHelper
 	 *
 	 * Replace text within a portion of a string.
 	 *
-	 * @param   string  $str    The haystack
-	 * @param   string  $repl   The replacement string
-	 * @param   integer $start  Start
-	 * @param   integer $length Length (optional)
+	 * @param   string   $str     The haystack
+	 * @param   string   $repl    The replacement string
+	 * @param   integer  $start   Start
+	 * @param   integer  $length  Length (optional)
 	 *
 	 * @return  string
 	 *
@@ -617,8 +586,8 @@ abstract class StringHelper
 	 * Strip whitespace (or other characters) from the beginning of a string. You only need to use this if you are supplying the charlist
 	 * optional arg and it contains UTF-8 characters. Otherwise ltrim will work normally on a UTF-8 string.
 	 *
-	 * @param   string $str      The string to be trimmed
-	 * @param   string $charlist The optional charlist of additional characters to trim
+	 * @param   string  $str       The string to be trimmed
+	 * @param   string  $charlist  The optional charlist of additional characters to trim
 	 *
 	 * @return  string  The trimmed string
 	 *
@@ -646,8 +615,8 @@ abstract class StringHelper
 	 * Strip whitespace (or other characters) from the end of a string. You only need to use this if you are supplying the charlist
 	 * optional arg and it contains UTF-8 characters. Otherwise rtrim will work normally on a UTF-8 string.
 	 *
-	 * @param   string $str      The string to be trimmed
-	 * @param   string $charlist The optional charlist of additional characters to trim
+	 * @param   string  $str       The string to be trimmed
+	 * @param   string  $charlist  The optional charlist of additional characters to trim
 	 *
 	 * @return  string  The trimmed string
 	 *
@@ -675,8 +644,8 @@ abstract class StringHelper
 	 * Strip whitespace (or other characters) from the beginning and end of a string. You only need to use this if you are supplying the charlist
 	 * optional arg and it contains UTF-8 characters. Otherwise trim will work normally on a UTF-8 string
 	 *
-	 * @param   string $str      The string to be trimmed
-	 * @param   string $charlist The optional charlist of additional characters to trim
+	 * @param   string  $str       The string to be trimmed
+	 * @param   string  $charlist  The optional charlist of additional characters to trim
 	 *
 	 * @return  string  The trimmed string
 	 *
@@ -703,9 +672,9 @@ abstract class StringHelper
 	 *
 	 * Make a string's first character uppercase or all words' first character uppercase.
 	 *
-	 * @param   string $str          String to be processed
-	 * @param   string $delimiter    The words delimiter (null means do not split the string)
-	 * @param   string $newDelimiter The new words delimiter (null means equal to $delimiter)
+	 * @param   string  $str           String to be processed
+	 * @param   string  $delimiter     The words delimiter (null means do not split the string)
+	 * @param   string  $newDelimiter  The new words delimiter (null means equal to $delimiter)
 	 *
 	 * @return  string  If $delimiter is null, return the string with first character as upper case (if applicable)
 	 *                  else consider the string of words separated by the delimiter, apply the ucfirst to each words
@@ -734,7 +703,7 @@ abstract class StringHelper
 	 *
 	 * Uppercase the first character of each word in a string.
 	 *
-	 * @param   string $str String to be processed
+	 * @param   string  $str  String to be processed
 	 *
 	 * @return  string  String with first char of each word uppercase
 	 *
@@ -747,11 +716,42 @@ abstract class StringHelper
 	}
 
 	/**
+	 * Transcode a string.
+	 *
+	 * @param   string  $source         The string to transcode.
+	 * @param   string  $from_encoding  The source encoding.
+	 * @param   string  $to_encoding    The target encoding.
+	 *
+	 * @return  mixed  The transcoded string, or null if the source was not a string.
+	 *
+	 * @link    https://bugs.php.net/bug.php?id=48147
+	 *
+	 * @since   1.3.0
+	 */
+	public static function transcode($source, $from_encoding, $to_encoding)
+	{
+		if (is_string($source))
+		{
+			switch (ICONV_IMPL)
+			{
+				case 'glibc':
+					return @iconv($from_encoding, $to_encoding . '//TRANSLIT,IGNORE', $source);
+
+				case 'libiconv':
+				default:
+					return iconv($from_encoding, $to_encoding . '//IGNORE//TRANSLIT', $source);
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Tests a string as to whether it's valid UTF-8 and supported by the Unicode standard.
 	 *
 	 * Note: this function has been modified to simple return true or false.
 	 *
-	 * @param   string $str UTF-8 encoded string.
+	 * @param   string  $str  UTF-8 encoded string.
 	 *
 	 * @return  boolean  true if valid
 	 *
@@ -773,7 +773,7 @@ abstract class StringHelper
 	 * validate user input, you place yourself at the risk that attackers will be able to inject 5 and 6 byte sequences (which may or may not be a
 	 * significant risk, depending on what you are are doing).
 	 *
-	 * @param   string $str UTF-8 string to check
+	 * @param   string  $str  UTF-8 string to check
 	 *
 	 * @return  boolean  TRUE if string is valid UTF-8
 	 *
@@ -789,7 +789,7 @@ abstract class StringHelper
 	/**
 	 * Converts Unicode sequences to UTF-8 string.
 	 *
-	 * @param   string $str Unicode string to convert
+	 * @param   string  $str  Unicode string to convert
 	 *
 	 * @return  string  UTF-8 string
 	 *
@@ -815,7 +815,7 @@ abstract class StringHelper
 	/**
 	 * Converts Unicode sequences to UTF-16 string.
 	 *
-	 * @param   string $str Unicode string to convert
+	 * @param   string  $str  Unicode string to convert
 	 *
 	 * @return  string  UTF-16 string
 	 *

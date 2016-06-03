@@ -17,25 +17,25 @@ defined('_JEXEC') or die;
 class TemplatesViewTemplates extends JViewLegacy
 {
 	/**
-	 * @var        array
+	 * @var		array
 	 * @since   1.6
 	 */
 	protected $items;
 
 	/**
-	 * @var        object
+	 * @var		object
 	 * @since   1.6
 	 */
 	protected $pagination;
 
 	/**
-	 * @var        object
+	 * @var		object
 	 * @since   1.6
 	 */
 	protected $state;
 
 	/**
-	 * @var        string
+	 * @var		string
 	 * @since   3.2
 	 */
 	protected $file;
@@ -43,7 +43,7 @@ class TemplatesViewTemplates extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 *

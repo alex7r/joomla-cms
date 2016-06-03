@@ -28,9 +28,9 @@ class PlgCaptchaRecaptcha extends JPlugin
 	/**
 	 * Initialise the captcha
 	 *
-	 * @param   string $id The id of the field.
+	 * @param   string  $id  The id of the field.
 	 *
-	 * @return  Boolean    True on success, false otherwise
+	 * @return  Boolean	True on success, false otherwise
 	 *
 	 * @throws  Exception
 	 *
@@ -49,8 +49,8 @@ class PlgCaptchaRecaptcha extends JPlugin
 		{
 			JHtml::_('jquery.framework');
 
-			$theme = $this->params->get('theme', 'clean');
-			$file  = 'https://www.google.com/recaptcha/api/js/recaptcha_ajax.js';
+			$theme	= $this->params->get('theme', 'clean');
+			$file	= 'https://www.google.com/recaptcha/api/js/recaptcha_ajax.js';
 
 			JHtml::_('script', $file);
 			JFactory::getDocument()->addScriptDeclaration('jQuery( document ).ready(function()
@@ -69,54 +69,11 @@ class PlgCaptchaRecaptcha extends JPlugin
 	}
 
 	/**
-	 * Get the language tag or a custom translation
-	 *
-	 * @return  string
-	 *
-	 * @since  2.5
-	 */
-	private function _getLanguage()
-	{
-		$language = JFactory::getLanguage();
-
-		$tag       = explode('-', $language->getTag());
-		$tag       = $tag[0];
-		$available = array('en', 'pt', 'fr', 'de', 'nl', 'ru', 'es', 'tr');
-
-		if (in_array($tag, $available))
-		{
-			return "lang : '" . $tag . "',";
-		}
-
-		// If the default language is not available, let's search for a custom translation
-		if ($language->hasKey('PLG_RECAPTCHA_CUSTOM_LANG'))
-		{
-			$custom[] = 'custom_translations : {';
-			$custom[] = "\t" . 'instructions_visual : "' . JText::_('PLG_RECAPTCHA_INSTRUCTIONS_VISUAL') . '",';
-			$custom[] = "\t" . 'instructions_audio : "' . JText::_('PLG_RECAPTCHA_INSTRUCTIONS_AUDIO') . '",';
-			$custom[] = "\t" . 'play_again : "' . JText::_('PLG_RECAPTCHA_PLAY_AGAIN') . '",';
-			$custom[] = "\t" . 'cant_hear_this : "' . JText::_('PLG_RECAPTCHA_CANT_HEAR_THIS') . '",';
-			$custom[] = "\t" . 'visual_challenge : "' . JText::_('PLG_RECAPTCHA_VISUAL_CHALLENGE') . '",';
-			$custom[] = "\t" . 'audio_challenge : "' . JText::_('PLG_RECAPTCHA_AUDIO_CHALLENGE') . '",';
-			$custom[] = "\t" . 'refresh_btn : "' . JText::_('PLG_RECAPTCHA_REFRESH_BTN') . '",';
-			$custom[] = "\t" . 'help_btn : "' . JText::_('PLG_RECAPTCHA_HELP_BTN') . '",';
-			$custom[] = "\t" . 'incorrect_try_again : "' . JText::_('PLG_RECAPTCHA_INCORRECT_TRY_AGAIN') . '",';
-			$custom[] = '},';
-			$custom[] = "lang : '" . $tag . "',";
-
-			return implode("\n", $custom);
-		}
-
-		// If nothing helps fall back to english
-		return '';
-	}
-
-	/**
 	 * Gets the challenge HTML
 	 *
-	 * @param   string $name    The name of the field. Not Used.
-	 * @param   string $id      The id of the field.
-	 * @param   string $class   The class of the field. This should be passed as
+	 * @param   string  $name   The name of the field. Not Used.
+	 * @param   string  $id     The id of the field.
+	 * @param   string  $class  The class of the field. This should be passed as
 	 *                          e.g. 'class="required"'.
 	 *
 	 * @return  string  The HTML to be embedded in the form.
@@ -132,17 +89,17 @@ class PlgCaptchaRecaptcha extends JPlugin
 		else
 		{
 			return '<div id="' . $id . '" ' . str_replace('class="', 'class="g-recaptcha ', $class)
-			. ' data-sitekey="' . $this->params->get('public_key', '')
-			. '" data-theme="' . $this->params->get('theme2', 'light')
-			. '" data-size="' . $this->params->get('size', 'normal')
-			. '"></div>';
+					. ' data-sitekey="' . $this->params->get('public_key', '')
+					. '" data-theme="' . $this->params->get('theme2', 'light')
+					. '" data-size="' . $this->params->get('size', 'normal')
+					. '"></div>';
 		}
 	}
 
 	/**
 	 * Calls an HTTP POST function to verify if the user's guess was correct
 	 *
-	 * @param   string $code Answer provided by user. Not needed for the Recaptcha implementation
+	 * @param   string  $code  Answer provided by user. Not needed for the Recaptcha implementation
 	 *
 	 * @return  True if the answer is correct, false otherwise
 	 *
@@ -200,10 +157,10 @@ class PlgCaptchaRecaptcha extends JPlugin
 	/**
 	 * Get the reCaptcha response.
 	 *
-	 * @param   string $privatekey The private key for authentication.
-	 * @param   string $remoteip   The remote IP of the visitor.
-	 * @param   string $response   The response received from Google.
-	 * @param   string $challenge  The challenge field from the reCaptcha. Only for 1.0.
+	 * @param   string  $privatekey  The private key for authentication.
+	 * @param   string  $remoteip    The remote IP of the visitor.
+	 * @param   string  $response    The response received from Google.
+	 * @param   string  $challenge   The challenge field from the reCaptcha. Only for 1.0.
 	 *
 	 * @return bool True if response is good | False if response is bad.
 	 *
@@ -242,7 +199,7 @@ class PlgCaptchaRecaptcha extends JPlugin
 				$reCaptcha = new JReCaptcha($privatekey);
 				$response  = $reCaptcha->verifyResponse($remoteip, $response);
 
-				if (!isset($response->success) || !$response->success)
+				if ( !isset($response->success) || !$response->success)
 				{
 					// @todo use exceptions here
 					foreach ($response->errorCodes as $error)
@@ -259,12 +216,36 @@ class PlgCaptchaRecaptcha extends JPlugin
 	}
 
 	/**
+	 * Encodes the given data into a query string format.
+	 *
+	 * @param   array  $data  Array of string elements to be encoded
+	 *
+	 * @return  string  Encoded request
+	 *
+	 * @since  2.5
+	 */
+	private function _recaptcha_qsencode($data)
+	{
+		$req = "";
+
+		foreach ($data as $key => $value)
+		{
+			$req .= $key . '=' . urlencode(stripslashes($value)) . '&';
+		}
+
+		// Cut the last '&'
+		$req = rtrim($req, '&');
+
+		return $req;
+	}
+
+	/**
 	 * Submits an HTTP POST to a reCAPTCHA server.
 	 *
-	 * @param   string $host Host name to POST to.
-	 * @param   string $path Path on host to POST to.
-	 * @param   array  $data Data to be POSTed.
-	 * @param   int    $port Optional port number on host.
+	 * @param   string  $host  Host name to POST to.
+	 * @param   string  $path  Path on host to POST to.
+	 * @param   array   $data  Data to be POSTed.
+	 * @param   int     $port  Optional port number on host.
 	 *
 	 * @return  array   Response
 	 *
@@ -274,7 +255,7 @@ class PlgCaptchaRecaptcha extends JPlugin
 	{
 		$req = $this->_recaptcha_qsencode($data);
 
-		$http_request = "POST $path HTTP/1.0\r\n";
+		$http_request  = "POST $path HTTP/1.0\r\n";
 		$http_request .= "Host: $host\r\n";
 		$http_request .= "Content-Type: application/x-www-form-urlencoded;\r\n";
 		$http_request .= "Content-Length: " . strlen($req) . "\r\n";
@@ -284,7 +265,7 @@ class PlgCaptchaRecaptcha extends JPlugin
 
 		$response = '';
 
-		if (($fs = @fsockopen($host, $port, $errno, $errstr, 10)) == false)
+		if (($fs = @fsockopen($host, $port, $errno, $errstr, 10)) == false )
 		{
 			die('Could not open socket');
 		}
@@ -304,26 +285,45 @@ class PlgCaptchaRecaptcha extends JPlugin
 	}
 
 	/**
-	 * Encodes the given data into a query string format.
+	 * Get the language tag or a custom translation
 	 *
-	 * @param   array $data Array of string elements to be encoded
-	 *
-	 * @return  string  Encoded request
+	 * @return  string
 	 *
 	 * @since  2.5
 	 */
-	private function _recaptcha_qsencode($data)
+	private function _getLanguage()
 	{
-		$req = "";
+		$language = JFactory::getLanguage();
 
-		foreach ($data as $key => $value)
+		$tag = explode('-', $language->getTag());
+		$tag = $tag[0];
+		$available = array('en', 'pt', 'fr', 'de', 'nl', 'ru', 'es', 'tr');
+
+		if (in_array($tag, $available))
 		{
-			$req .= $key . '=' . urlencode(stripslashes($value)) . '&';
+			return "lang : '" . $tag . "',";
 		}
 
-		// Cut the last '&'
-		$req = rtrim($req, '&');
+		// If the default language is not available, let's search for a custom translation
+		if ($language->hasKey('PLG_RECAPTCHA_CUSTOM_LANG'))
+		{
+			$custom[] = 'custom_translations : {';
+			$custom[] = "\t" . 'instructions_visual : "' . JText::_('PLG_RECAPTCHA_INSTRUCTIONS_VISUAL') . '",';
+			$custom[] = "\t" . 'instructions_audio : "' . JText::_('PLG_RECAPTCHA_INSTRUCTIONS_AUDIO') . '",';
+			$custom[] = "\t" . 'play_again : "' . JText::_('PLG_RECAPTCHA_PLAY_AGAIN') . '",';
+			$custom[] = "\t" . 'cant_hear_this : "' . JText::_('PLG_RECAPTCHA_CANT_HEAR_THIS') . '",';
+			$custom[] = "\t" . 'visual_challenge : "' . JText::_('PLG_RECAPTCHA_VISUAL_CHALLENGE') . '",';
+			$custom[] = "\t" . 'audio_challenge : "' . JText::_('PLG_RECAPTCHA_AUDIO_CHALLENGE') . '",';
+			$custom[] = "\t" . 'refresh_btn : "' . JText::_('PLG_RECAPTCHA_REFRESH_BTN') . '",';
+			$custom[] = "\t" . 'help_btn : "' . JText::_('PLG_RECAPTCHA_HELP_BTN') . '",';
+			$custom[] = "\t" . 'incorrect_try_again : "' . JText::_('PLG_RECAPTCHA_INCORRECT_TRY_AGAIN') . '",';
+			$custom[] = '},';
+			$custom[] = "lang : '" . $tag . "',";
 
-		return $req;
+			return implode("\n", $custom);
+		}
+
+		// If nothing helps fall back to english
+		return '';
 	}
 }

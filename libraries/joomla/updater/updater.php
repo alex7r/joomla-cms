@@ -100,13 +100,13 @@ class JUpdater extends JAdapter
 	/**
 	 * Finds the update for an extension. Any discovered updates are stored in the #__updates table.
 	 *
-	 * @param   int|array $eid                 Extension Identifier or list of Extension Identifiers; if zero use all
+	 * @param   int|array  $eid                Extension Identifier or list of Extension Identifiers; if zero use all
 	 *                                         sites
-	 * @param   integer   $cacheTimeout        How many seconds to cache update information; if zero, force reload the
+	 * @param   integer    $cacheTimeout       How many seconds to cache update information; if zero, force reload the
 	 *                                         update information
-	 * @param   integer   $minimum_stability   Minimum stability for the updates; 0=dev, 1=alpha, 2=beta, 3=rc,
+	 * @param   integer    $minimum_stability  Minimum stability for the updates; 0=dev, 1=alpha, 2=beta, 3=rc,
 	 *                                         4=stable
-	 * @param   boolean   $includeCurrent      Should I include the current version in the results?
+	 * @param   boolean    $includeCurrent     Should I include the current version in the results?
 	 *
 	 * @return  boolean True if there are updates
 	 *
@@ -141,8 +141,7 @@ class JUpdater extends JAdapter
 			 */
 			if (($cacheTimeout > 0)
 				&& isset($result['last_check_timestamp'])
-				&& ($result['last_check_timestamp'] >= $earliestTime)
-			)
+				&& ($result['last_check_timestamp'] >= $earliestTime))
 			{
 				$retval = $retval || in_array($result['update_site_id'], $sitesWithUpdates);
 
@@ -170,10 +169,33 @@ class JUpdater extends JAdapter
 	}
 
 	/**
+	 * Finds an update for an extension
+	 *
+	 * @param   integer  $id  Id of the extension
+	 *
+	 * @return  mixed
+	 *
+	 * @since   3.6.0
+	 */
+	public function update($id)
+	{
+		$updaterow = JTable::getInstance('update');
+		$updaterow->load($id);
+		$update = new JUpdate;
+
+		if ($update->loadFromXml($updaterow->detailsurl))
+		{
+			return $update->install();
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns the update site records for an extension with ID $eid. If $eid is zero all enabled update sites records
 	 * will be returned.
 	 *
-	 * @param   int $eid The extension ID to fetch.
+	 * @param   int  $eid  The extension ID to fetch.
 	 *
 	 * @return  array
 	 *
@@ -215,50 +237,11 @@ class JUpdater extends JAdapter
 	}
 
 	/**
-	 * Returns the IDs of the update sites with cached updates
-	 *
-	 * @param   int $timestamp   Optional. If set, only update sites checked before $timestamp will be taken into
-	 *                           account.
-	 *
-	 * @return  array  The IDs of the update sites with cached updates
-	 *
-	 * @since   3.6.0
-	 */
-	private function getSitesWithUpdates($timestamp = 0)
-	{
-		$db = JFactory::getDbo();
-
-		$query = $db->getQuery(true)
-			->select('DISTINCT update_site_id')
-			->from('#__updates');
-
-		if ($timestamp)
-		{
-			$subQuery = $db->getQuery(true)
-				->select('update_site_id')
-				->from('#__update_sites')
-				->where($db->qn('last_check_timestamp') . ' IS NULL', 'OR')
-				->where($db->qn('last_check_timestamp') . ' <= ' . $db->q($timestamp), 'OR');
-
-			$query->where($db->qn('update_site_id') . ' IN (' . $subQuery . ')');
-		}
-
-		$retVal = $db->setQuery($query)->loadColumn(0);
-
-		if (empty($retVal))
-		{
-			return array();
-		}
-
-		return $retVal;
-	}
-
-	/**
 	 * Loads the contents of an update site record $updateSite and returns the update objects
 	 *
-	 * @param   array $updateSite        The update site record to process
-	 * @param   int   $minimum_stability Minimum stability for the returned update records
-	 * @param   bool  $includeCurrent    Should I also include the current version?
+	 * @param   array  $updateSite         The update site record to process
+	 * @param   int    $minimum_stability  Minimum stability for the returned update records
+	 * @param   bool   $includeCurrent     Should I also include the current version?
 	 *
 	 * @return  array  The update records. Empty array if no updates are found.
 	 *
@@ -280,7 +263,7 @@ class JUpdater extends JAdapter
 
 		// Get the update information from the remote update XML document
 		/** @var JUpdateAdapter $adapter */
-		$adapter       = $this->_adapters[$updateSite['type']];
+		$adapter       = $this->_adapters[ $updateSite['type']];
 		$update_result = $adapter->findUpdate($updateSite);
 
 		// Version comparison operator.
@@ -359,7 +342,7 @@ class JUpdater extends JAdapter
 							if (version_compare($current_update->version, $data['version'], $operator) == 1)
 							{
 								$current_update->extension_id = $eid;
-								$retVal[]                     = $current_update;
+								$retVal[] = $current_update;
 							}
 						}
 						else
@@ -386,9 +369,48 @@ class JUpdater extends JAdapter
 	}
 
 	/**
+	 * Returns the IDs of the update sites with cached updates
+	 *
+	 * @param   int  $timestamp  Optional. If set, only update sites checked before $timestamp will be taken into
+	 *                           account.
+	 *
+	 * @return  array  The IDs of the update sites with cached updates
+	 *
+	 * @since   3.6.0
+	 */
+	private function getSitesWithUpdates($timestamp = 0)
+	{
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true)
+			->select('DISTINCT update_site_id')
+			->from('#__updates');
+
+		if ($timestamp)
+		{
+			$subQuery = $db->getQuery(true)
+				->select('update_site_id')
+				->from('#__update_sites')
+				->where($db->qn('last_check_timestamp') . ' IS NULL', 'OR')
+				->where($db->qn('last_check_timestamp') . ' <= ' . $db->q($timestamp), 'OR');
+
+			$query->where($db->qn('update_site_id') . ' IN (' . $subQuery . ')');
+		}
+
+		$retVal = $db->setQuery($query)->loadColumn(0);
+
+		if (empty($retVal))
+		{
+			return array();
+		}
+
+		return $retVal;
+	}
+
+	/**
 	 * Update the last check timestamp of an update site
 	 *
-	 * @param   int $updateSiteId The update site ID to mark as just checked
+	 * @param   int  $updateSiteId  The update site ID to mark as just checked
 	 *
 	 * @return  void
 	 *
@@ -405,28 +427,5 @@ class JUpdater extends JAdapter
 			->where($db->quoteName('update_site_id') . ' = ' . $db->quote($updateSiteId));
 		$db->setQuery($query);
 		$db->execute();
-	}
-
-	/**
-	 * Finds an update for an extension
-	 *
-	 * @param   integer $id Id of the extension
-	 *
-	 * @return  mixed
-	 *
-	 * @since   3.6.0
-	 */
-	public function update($id)
-	{
-		$updaterow = JTable::getInstance('update');
-		$updaterow->load($id);
-		$update = new JUpdate;
-
-		if ($update->loadFromXml($updaterow->detailsurl))
-		{
-			return $update->install();
-		}
-
-		return false;
 	}
 }

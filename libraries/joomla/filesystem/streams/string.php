@@ -50,7 +50,6 @@ class JStreamString
 	/**
 	 *
 	 * Enter description here ...
-	 *
 	 * @var   string
 	 *
 	 * @since  12.1
@@ -60,7 +59,6 @@ class JStreamString
 	/**
 	 *
 	 * Enter description here ...
-	 *
 	 * @var   string
 	 *
 	 * @since  12.1
@@ -97,10 +95,10 @@ class JStreamString
 	/**
 	 * Method to open a file or URL.
 	 *
-	 * @param   string  $path         The stream path.
-	 * @param   string  $mode         Not used.
-	 * @param   integer $options      Not used.
-	 * @param   string  &$opened_path Not used.
+	 * @param   string   $path          The stream path.
+	 * @param   string   $mode          Not used.
+	 * @param   integer  $options       Not used.
+	 * @param   string   &$opened_path  Not used.
 	 *
 	 * @return  boolean
 	 *
@@ -112,8 +110,8 @@ class JStreamString
 
 		if ($this->currentString)
 		{
-			$this->len  = strlen($this->currentString);
-			$this->pos  = 0;
+			$this->len = strlen($this->currentString);
+			$this->pos = 0;
 			$this->stat = $this->url_stat($path, 0);
 
 			return true;
@@ -122,39 +120,6 @@ class JStreamString
 		{
 			return false;
 		}
-	}
-
-	/**
-	 * Method to retrieve information about a file.
-	 *
-	 * @param   string  $path  File path or URL to stat
-	 * @param   integer $flags Additional flags set by the streams API
-	 *
-	 * @return  array
-	 *
-	 * @see     http://php.net/manual/en/streamwrapper.url-stat.php
-	 * @since   11.1
-	 */
-	public function url_stat($path, $flags = 0)
-	{
-		$now    = time();
-		$string = &JStringController::getRef(str_replace('string://', '', $path));
-		$stat   = array(
-			'dev'     => 0,
-			'ino'     => 0,
-			'mode'    => 0,
-			'nlink'   => 1,
-			'uid'     => 0,
-			'gid'     => 0,
-			'rdev'    => 0,
-			'size'    => strlen($string),
-			'atime'   => $now,
-			'mtime'   => $now,
-			'ctime'   => $now,
-			'blksize' => '512',
-			'blocks'  => ceil(strlen($string) / 512));
-
-		return $stat;
 	}
 
 	/**
@@ -171,11 +136,44 @@ class JStreamString
 	}
 
 	/**
+	 * Method to retrieve information about a file.
+	 *
+	 * @param   string   $path   File path or URL to stat
+	 * @param   integer  $flags  Additional flags set by the streams API
+	 *
+	 * @return  array
+	 *
+	 * @see     http://php.net/manual/en/streamwrapper.url-stat.php
+	 * @since   11.1
+	 */
+	public function url_stat($path, $flags = 0)
+	{
+		$now = time();
+		$string = &JStringController::getRef(str_replace('string://', '', $path));
+		$stat = array(
+			'dev' => 0,
+			'ino' => 0,
+			'mode' => 0,
+			'nlink' => 1,
+			'uid' => 0,
+			'gid' => 0,
+			'rdev' => 0,
+			'size' => strlen($string),
+			'atime' => $now,
+			'mtime' => $now,
+			'ctime' => $now,
+			'blksize' => '512',
+			'blocks' => ceil(strlen($string) / 512));
+
+		return $stat;
+	}
+
+	/**
 	 * Method to read a given number of bytes starting at the current position
 	 * and moving to the end of the string defined by the current position plus the
 	 * given number.
 	 *
-	 * @param   integer $count Bytes of data from the current position should be returned.
+	 * @param   integer  $count  Bytes of data from the current position should be returned.
 	 *
 	 * @return  void
 	 *
@@ -194,7 +192,7 @@ class JStreamString
 	/**
 	 * Stream write, always returning false.
 	 *
-	 * @param   string $data The data to write.
+	 * @param   string  $data  The data to write.
 	 *
 	 * @return  boolean
 	 *
@@ -239,8 +237,8 @@ class JStreamString
 	/**
 	 * Stream offset
 	 *
-	 * @param   integer $offset The starting offset.
-	 * @param   integer $whence SEEK_SET, SEEK_CUR, SEEK_END
+	 * @param   integer  $offset  The starting offset.
+	 * @param   integer  $whence  SEEK_SET, SEEK_CUR, SEEK_END
 	 *
 	 * @return  boolean  True on success.
 	 *

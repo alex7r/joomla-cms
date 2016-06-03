@@ -20,19 +20,21 @@ use Joomla\Utilities\ArrayHelper;
 class CategoriesModelCategory extends JModelAdmin
 {
 	/**
-	 * The type alias for this content type. Used for content version history.
-	 *
-	 * @var      string
-	 * @since    3.2
-	 */
-	public $typeAlias = null;
-	/**
 	 * The prefix to use with controller messages.
 	 *
 	 * @var    string
 	 * @since  1.6
 	 */
 	protected $text_prefix = 'COM_CATEGORIES';
+
+	/**
+	 * The type alias for this content type. Used for content version history.
+	 *
+	 * @var      string
+	 * @since    3.2
+	 */
+	public $typeAlias = null;
+
 	/**
 	 * The context used for the associations table
 	 *
@@ -44,7 +46,7 @@ class CategoriesModelCategory extends JModelAdmin
 	/**
 	 * Override parent constructor.
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see     JModelLegacy
 	 * @since   3.2
@@ -52,15 +54,191 @@ class CategoriesModelCategory extends JModelAdmin
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
-		$extension       = JFactory::getApplication()->input->get('extension', 'com_content');
+		$extension = JFactory::getApplication()->input->get('extension', 'com_content');
 		$this->typeAlias = $extension . '.category';
+	}
+
+	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
+	 *
+	 * @since   1.6
+	 */
+	protected function canDelete($record)
+	{
+		if (!empty($record->id))
+		{
+			if ($record->published != -2)
+			{
+				return;
+			}
+
+			return JFactory::getUser()->authorise('core.delete', $record->extension . '.category.' . (int) $record->id);
+		}
+	}
+
+	/**
+	 * Method to test whether a record can have its state changed.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
+	 *
+	 * @since   1.6
+	 */
+	protected function canEditState($record)
+	{
+		$user = JFactory::getUser();
+
+		// Check for existing category.
+		if (!empty($record->id))
+		{
+			return $user->authorise('core.edit.state', $record->extension . '.category.' . (int) $record->id);
+		}
+
+		// New category, so check against the parent.
+		if (!empty($record->parent_id))
+		{
+			return $user->authorise('core.edit.state', $record->extension . '.category.' . (int) $record->parent_id);
+		}
+
+		// Default to component settings if neither category nor parent known.
+		return $user->authorise('core.edit.state', $record->extension);
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $type    The table name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
+	 *
+	 * @since   1.6
+	 */
+	public function getTable($type = 'Category', $prefix = 'CategoriesTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
+	 * Auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('administrator');
+
+		$parentId = $app->input->getInt('parent_id');
+		$this->setState('category.parent_id', $parentId);
+
+		// Load the User state.
+		$pk = $app->input->getInt('id');
+		$this->setState($this->getName() . '.id', $pk);
+
+		$extension = $app->input->get('extension', 'com_content');
+		$this->setState('category.extension', $extension);
+		$parts = explode('.', $extension);
+
+		// Extract the component name
+		$this->setState('category.component', $parts[0]);
+
+		// Extract the optional section name
+		$this->setState('category.section', (count($parts) > 1) ? $parts[1] : null);
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_categories');
+		$this->setState('params', $params);
+	}
+
+	/**
+	 * Method to get a category.
+	 *
+	 * @param   integer  $pk  An optional id of the object to get, otherwise the id from the model state is used.
+	 *
+	 * @return  mixed    Category data object on success, false on failure.
+	 *
+	 * @since   1.6
+	 */
+	public function getItem($pk = null)
+	{
+		if ($result = parent::getItem($pk))
+		{
+			// Prime required properties.
+			if (empty($result->id))
+			{
+				$result->parent_id = $this->getState('category.parent_id');
+				$result->extension = $this->getState('category.extension');
+			}
+
+			// Convert the metadata field to an array.
+			$registry = new Registry;
+			$registry->loadString($result->metadata);
+			$result->metadata = $registry->toArray();
+
+			// Convert the created and modified dates to local user time for display in the form.
+			$tz = new DateTimeZone(JFactory::getApplication()->get('offset'));
+
+			if ((int) $result->created_time)
+			{
+				$date = new JDate($result->created_time);
+				$date->setTimezone($tz);
+				$result->created_time = $date->toSql(true);
+			}
+			else
+			{
+				$result->created_time = null;
+			}
+
+			if ((int) $result->modified_time)
+			{
+				$date = new JDate($result->modified_time);
+				$date->setTimezone($tz);
+				$result->modified_time = $date->toSql(true);
+			}
+			else
+			{
+				$result->modified_time = null;
+			}
+
+			if (!empty($result->id))
+			{
+				$result->tags = new JHelperTags;
+				$result->tags->getTagIds($result->id, $result->extension . '.category');
+			}
+		}
+
+		$assoc = $this->getAssoc();
+
+		if ($assoc)
+		{
+			if ($result->id != null)
+			{
+				$result->associations = ArrayHelper::toInteger(CategoriesHelper::getAssociations($result->id, $result->extension));
+			}
+			else
+			{
+				$result->associations = array();
+			}
+		}
+
+		return $result;
 	}
 
 	/**
 	 * Method to get the row form.
 	 *
-	 * @param   array   $data     Data for the form.
-	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  JForm|boolean  A JForm object on success, false on failure
 	 *
@@ -69,13 +247,13 @@ class CategoriesModelCategory extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		$extension = $this->getState('category.extension');
-		$jinput    = JFactory::getApplication()->input;
+		$jinput = JFactory::getApplication()->input;
 
 		// A workaround to get the extension into the model for save requests.
 		if (empty($extension) && isset($data['extension']))
 		{
 			$extension = $data['extension'];
-			$parts     = explode('.', $extension);
+			$parts = explode('.', $extension);
 
 			$this->setState('category.extension', $extension);
 			$this->setState('category.component', $parts[0]);
@@ -114,9 +292,182 @@ class CategoriesModelCategory extends JModelAdmin
 	}
 
 	/**
+	 * A protected method to get the where clause for the reorder
+	 * This ensures that the row will be moved relative to a row with the same extension
+	 *
+	 * @param   JTableCategory  $table  Current table instance
+	 *
+	 * @return  array           An array of conditions to add to add to ordering queries.
+	 *
+	 * @since   1.6
+	 */
+	protected function getReorderConditions($table)
+	{
+		return 'extension = ' . $this->_db->quote($table->extension);
+	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$app = JFactory::getApplication();
+		$data = $app->getUserState('com_categories.edit.' . $this->getName() . '.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+
+			// Pre-select some filters (Status, Language, Access) in edit form if those have been selected in Category Manager
+			if (!$data->id)
+			{
+				// Check for which extension the Category Manager is used and get selected fields
+				$extension = substr($app->getUserState('com_categories.categories.filter.extension'), 4);
+				$filters = (array) $app->getUserState('com_categories.categories.' . $extension . '.filter');
+
+				$data->set(
+					'published',
+					$app->input->getInt(
+						'published',
+						((isset($filters['published']) && $filters['published'] !== '') ? $filters['published'] : null)
+					)
+				);
+				$data->set('language', $app->input->getString('language', (!empty($filters['language']) ? $filters['language'] : null)));
+				$data->set('access', $app->input->getInt('access', (!empty($filters['access']) ? $filters['access'] : JFactory::getConfig()->get('access'))));
+			}
+		}
+
+		$this->preprocessData('com_categories.category', $data);
+
+		return $data;
+	}
+
+	/**
+	 * Method to preprocess the form.
+	 *
+	 * @param   JForm   $form   A JForm object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  The name of the plugin group to import.
+	 *
+	 * @return  void
+	 *
+	 * @see     JFormField
+	 * @since   1.6
+	 * @throws  Exception if there is an error in the form event.
+	 */
+	protected function preprocessForm(JForm $form, $data, $group = 'content')
+	{
+		jimport('joomla.filesystem.path');
+
+		$lang = JFactory::getLanguage();
+		$component = $this->getState('category.component');
+		$section = $this->getState('category.section');
+		$extension = JFactory::getApplication()->input->get('extension', null);
+
+		// Get the component form if it exists
+		$name = 'category' . ($section ? ('.' . $section) : '');
+
+		// Looking first in the component models/forms folder
+		$path = JPath::clean(JPATH_ADMINISTRATOR . "/components/$component/models/forms/$name.xml");
+
+		// Old way: looking in the component folder
+		if (!file_exists($path))
+		{
+			$path = JPath::clean(JPATH_ADMINISTRATOR . "/components/$component/$name.xml");
+		}
+
+		if (file_exists($path))
+		{
+			$lang->load($component, JPATH_BASE, null, false, true);
+			$lang->load($component, JPATH_BASE . '/components/' . $component, null, false, true);
+
+			if (!$form->loadFile($path, false))
+			{
+				throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
+			}
+		}
+
+		// Try to find the component helper.
+		$eName = str_replace('com_', '', $component);
+		$path = JPath::clean(JPATH_ADMINISTRATOR . "/components/$component/helpers/category.php");
+
+		if (file_exists($path))
+		{
+			require_once $path;
+			$cName = ucfirst($eName) . ucfirst($section) . 'HelperCategory';
+
+			if (class_exists($cName) && is_callable(array($cName, 'onPrepareForm')))
+			{
+				$lang->load($component, JPATH_BASE, null, false, false)
+					|| $lang->load($component, JPATH_BASE . '/components/' . $component, null, false, false)
+					|| $lang->load($component, JPATH_BASE, $lang->getDefault(), false, false)
+					|| $lang->load($component, JPATH_BASE . '/components/' . $component, $lang->getDefault(), false, false);
+				call_user_func_array(array($cName, 'onPrepareForm'), array(&$form));
+
+				// Check for an error.
+				if ($form instanceof Exception)
+				{
+					$this->setError($form->getMessage());
+
+					return false;
+				}
+			}
+		}
+
+		// Set the access control rules field component value.
+		$form->setFieldAttribute('rules', 'component', $component);
+		$form->setFieldAttribute('rules', 'section', $name);
+
+		// Association category items
+		$assoc = $this->getAssoc();
+
+		if ($assoc)
+		{
+			$languages = JLanguageHelper::getLanguages('lang_code');
+			$addform = new SimpleXMLElement('<form />');
+			$fields = $addform->addChild('fields');
+			$fields->addAttribute('name', 'associations');
+			$fieldset = $fields->addChild('fieldset');
+			$fieldset->addAttribute('name', 'item_associations');
+			$fieldset->addAttribute('description', 'COM_CATEGORIES_ITEM_ASSOCIATIONS_FIELDSET_DESC');
+			$add = false;
+
+			foreach ($languages as $tag => $language)
+			{
+				if (empty($data->language) || $tag != $data->language)
+				{
+					$add = true;
+					$field = $fieldset->addChild('field');
+					$field->addAttribute('name', $tag);
+					$field->addAttribute('type', 'modal_category');
+					$field->addAttribute('language', $tag);
+					$field->addAttribute('label', $language->title);
+					$field->addAttribute('translate_label', 'false');
+					$field->addAttribute('extension', $extension);
+					$field->addAttribute('edit', 'true');
+					$field->addAttribute('clear', 'true');
+				}
+			}
+
+			if ($add)
+			{
+				$form->load($addform, false);
+			}
+		}
+
+		// Trigger the default form events.
+		parent::preprocessForm($form, $data, $group);
+	}
+
+	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array $data The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -245,7 +596,7 @@ class CategoriesModelCategory extends JModelAdmin
 			$associations[$table->language] = $table->id;
 
 			// Deleting old association for these items
-			$db    = $this->getDbo();
+			$db = $this->getDbo();
 			$query = $db->getQuery(true)
 				->delete('#__associations')
 				->where($db->quoteName('context') . ' = ' . $db->quote($this->associationsContext))
@@ -318,82 +669,10 @@ class CategoriesModelCategory extends JModelAdmin
 	}
 
 	/**
-	 * Method to get a table object, load it if necessary.
-	 *
-	 * @param   string $type   The table name. Optional.
-	 * @param   string $prefix The class prefix. Optional.
-	 * @param   array  $config Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A JTable object
-	 *
-	 * @since   1.6
-	 */
-	public function getTable($type = 'Category', $prefix = 'CategoriesTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
-
-	/**
-	 * Method to change the title & alias.
-	 *
-	 * @param   integer $parent_id The id of the parent.
-	 * @param   string  $alias     The alias.
-	 * @param   string  $title     The title.
-	 *
-	 * @return  array    Contains the modified title and alias.
-	 *
-	 * @since   1.7
-	 */
-	protected function generateNewTitle($parent_id, $alias, $title)
-	{
-		// Alter the title & alias
-		$table = $this->getTable();
-
-		while ($table->load(array('alias' => $alias, 'parent_id' => $parent_id)))
-		{
-			$title = JString::increment($title);
-			$alias = JString::increment($alias, 'dash');
-		}
-
-		return array($title, $alias);
-	}
-
-	/**
-	 * Custom clean the cache of com_content and content modules
-	 *
-	 * @param   string  $group     Cache group name.
-	 * @param   integer $client_id Application client id.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
-	{
-		$extension = JFactory::getApplication()->input->get('extension');
-
-		switch ($extension)
-		{
-			case 'com_content':
-				parent::cleanCache('com_content');
-				parent::cleanCache('mod_articles_archive');
-				parent::cleanCache('mod_articles_categories');
-				parent::cleanCache('mod_articles_category');
-				parent::cleanCache('mod_articles_latest');
-				parent::cleanCache('mod_articles_news');
-				parent::cleanCache('mod_articles_popular');
-				break;
-			default:
-				parent::cleanCache($extension);
-				break;
-		}
-	}
-
-	/**
 	 * Method to change the published state of one or more records.
 	 *
-	 * @param   array   &$pks  A list of the primary keys to change.
-	 * @param   integer $value The value of the published state.
+	 * @param   array    &$pks   A list of the primary keys to change.
+	 * @param   integer  $value  The value of the published state.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -404,7 +683,7 @@ class CategoriesModelCategory extends JModelAdmin
 		if (parent::publish($pks, $value))
 		{
 			$dispatcher = JEventDispatcher::getInstance();
-			$extension  = JFactory::getApplication()->input->get('extension');
+			$extension = JFactory::getApplication()->input->get('extension');
 
 			// Include the content plugins for the change of category state event.
 			JPluginHelper::importPlugin('content');
@@ -446,8 +725,8 @@ class CategoriesModelCategory extends JModelAdmin
 	 * First we save the new order values in the lft values of the changed ids.
 	 * Then we invoke the table rebuild to implement the new ordering.
 	 *
-	 * @param   array   $idArray   An array of primary key ids.
-	 * @param   integer $lft_array The lft value
+	 * @param   array    $idArray    An array of primary key ids.
+	 * @param   integer  $lft_array  The lft value
 	 *
 	 * @return  boolean  False on failure or error, True otherwise
 	 *
@@ -472,387 +751,18 @@ class CategoriesModelCategory extends JModelAdmin
 	}
 
 	/**
-	 * Method to test whether a record can be deleted.
-	 *
-	 * @param   object $record A record object.
-	 *
-	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
-	 */
-	protected function canDelete($record)
-	{
-		if (!empty($record->id))
-		{
-			if ($record->published != -2)
-			{
-				return;
-			}
-
-			return JFactory::getUser()->authorise('core.delete', $record->extension . '.category.' . (int) $record->id);
-		}
-	}
-
-	/**
-	 * Method to test whether a record can have its state changed.
-	 *
-	 * @param   object $record A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
-	 */
-	protected function canEditState($record)
-	{
-		$user = JFactory::getUser();
-
-		// Check for existing category.
-		if (!empty($record->id))
-		{
-			return $user->authorise('core.edit.state', $record->extension . '.category.' . (int) $record->id);
-		}
-
-		// New category, so check against the parent.
-		if (!empty($record->parent_id))
-		{
-			return $user->authorise('core.edit.state', $record->extension . '.category.' . (int) $record->parent_id);
-		}
-
-		// Default to component settings if neither category nor parent known.
-		return $user->authorise('core.edit.state', $record->extension);
-	}
-
-	/**
-	 * Auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication('administrator');
-
-		$parentId = $app->input->getInt('parent_id');
-		$this->setState('category.parent_id', $parentId);
-
-		// Load the User state.
-		$pk = $app->input->getInt('id');
-		$this->setState($this->getName() . '.id', $pk);
-
-		$extension = $app->input->get('extension', 'com_content');
-		$this->setState('category.extension', $extension);
-		$parts = explode('.', $extension);
-
-		// Extract the component name
-		$this->setState('category.component', $parts[0]);
-
-		// Extract the optional section name
-		$this->setState('category.section', (count($parts) > 1) ? $parts[1] : null);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_categories');
-		$this->setState('params', $params);
-	}
-
-	/**
-	 * A protected method to get the where clause for the reorder
-	 * This ensures that the row will be moved relative to a row with the same extension
-	 *
-	 * @param   JTableCategory $table Current table instance
-	 *
-	 * @return  array           An array of conditions to add to add to ordering queries.
-	 *
-	 * @since   1.6
-	 */
-	protected function getReorderConditions($table)
-	{
-		return 'extension = ' . $this->_db->quote($table->extension);
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		// Check the session for previously entered form data.
-		$app  = JFactory::getApplication();
-		$data = $app->getUserState('com_categories.edit.' . $this->getName() . '.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
-
-			// Pre-select some filters (Status, Language, Access) in edit form if those have been selected in Category Manager
-			if (!$data->id)
-			{
-				// Check for which extension the Category Manager is used and get selected fields
-				$extension = substr($app->getUserState('com_categories.categories.filter.extension'), 4);
-				$filters   = (array) $app->getUserState('com_categories.categories.' . $extension . '.filter');
-
-				$data->set(
-					'published',
-					$app->input->getInt(
-						'published',
-						((isset($filters['published']) && $filters['published'] !== '') ? $filters['published'] : null)
-					)
-				);
-				$data->set('language', $app->input->getString('language', (!empty($filters['language']) ? $filters['language'] : null)));
-				$data->set('access', $app->input->getInt('access', (!empty($filters['access']) ? $filters['access'] : JFactory::getConfig()->get('access'))));
-			}
-		}
-
-		$this->preprocessData('com_categories.category', $data);
-
-		return $data;
-	}
-
-	/**
-	 * Method to get a category.
-	 *
-	 * @param   integer $pk An optional id of the object to get, otherwise the id from the model state is used.
-	 *
-	 * @return  mixed    Category data object on success, false on failure.
-	 *
-	 * @since   1.6
-	 */
-	public function getItem($pk = null)
-	{
-		if ($result = parent::getItem($pk))
-		{
-			// Prime required properties.
-			if (empty($result->id))
-			{
-				$result->parent_id = $this->getState('category.parent_id');
-				$result->extension = $this->getState('category.extension');
-			}
-
-			// Convert the metadata field to an array.
-			$registry = new Registry;
-			$registry->loadString($result->metadata);
-			$result->metadata = $registry->toArray();
-
-			// Convert the created and modified dates to local user time for display in the form.
-			$tz = new DateTimeZone(JFactory::getApplication()->get('offset'));
-
-			if ((int) $result->created_time)
-			{
-				$date = new JDate($result->created_time);
-				$date->setTimezone($tz);
-				$result->created_time = $date->toSql(true);
-			}
-			else
-			{
-				$result->created_time = null;
-			}
-
-			if ((int) $result->modified_time)
-			{
-				$date = new JDate($result->modified_time);
-				$date->setTimezone($tz);
-				$result->modified_time = $date->toSql(true);
-			}
-			else
-			{
-				$result->modified_time = null;
-			}
-
-			if (!empty($result->id))
-			{
-				$result->tags = new JHelperTags;
-				$result->tags->getTagIds($result->id, $result->extension . '.category');
-			}
-		}
-
-		$assoc = $this->getAssoc();
-
-		if ($assoc)
-		{
-			if ($result->id != null)
-			{
-				$result->associations = ArrayHelper::toInteger(CategoriesHelper::getAssociations($result->id, $result->extension));
-			}
-			else
-			{
-				$result->associations = array();
-			}
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Method to determine if a category association is available.
-	 *
-	 * @return  boolean True if a category association is available; false otherwise.
-	 */
-	public function getAssoc()
-	{
-		static $assoc = null;
-
-		if (!is_null($assoc))
-		{
-			return $assoc;
-		}
-
-		$extension = $this->getState('category.extension');
-
-		$assoc     = JLanguageAssociations::isEnabled();
-		$extension = explode('.', $extension);
-		$component = array_shift($extension);
-		$cname     = str_replace('com_', '', $component);
-
-		if (!$assoc || !$component || !$cname)
-		{
-			$assoc = false;
-		}
-		else
-		{
-			$hname = $cname . 'HelperAssociation';
-			JLoader::register($hname, JPATH_SITE . '/components/' . $component . '/helpers/association.php');
-
-			$assoc = class_exists($hname) && !empty($hname::$category_association);
-		}
-
-		return $assoc;
-	}
-
-	/**
-	 * Method to preprocess the form.
-	 *
-	 * @param   JForm  $form  A JForm object.
-	 * @param   mixed  $data  The data expected for the form.
-	 * @param   string $group The name of the plugin group to import.
-	 *
-	 * @return  void
-	 *
-	 * @see     JFormField
-	 * @since   1.6
-	 * @throws  Exception if there is an error in the form event.
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
-	{
-		jimport('joomla.filesystem.path');
-
-		$lang      = JFactory::getLanguage();
-		$component = $this->getState('category.component');
-		$section   = $this->getState('category.section');
-		$extension = JFactory::getApplication()->input->get('extension', null);
-
-		// Get the component form if it exists
-		$name = 'category' . ($section ? ('.' . $section) : '');
-
-		// Looking first in the component models/forms folder
-		$path = JPath::clean(JPATH_ADMINISTRATOR . "/components/$component/models/forms/$name.xml");
-
-		// Old way: looking in the component folder
-		if (!file_exists($path))
-		{
-			$path = JPath::clean(JPATH_ADMINISTRATOR . "/components/$component/$name.xml");
-		}
-
-		if (file_exists($path))
-		{
-			$lang->load($component, JPATH_BASE, null, false, true);
-			$lang->load($component, JPATH_BASE . '/components/' . $component, null, false, true);
-
-			if (!$form->loadFile($path, false))
-			{
-				throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
-			}
-		}
-
-		// Try to find the component helper.
-		$eName = str_replace('com_', '', $component);
-		$path  = JPath::clean(JPATH_ADMINISTRATOR . "/components/$component/helpers/category.php");
-
-		if (file_exists($path))
-		{
-			require_once $path;
-			$cName = ucfirst($eName) . ucfirst($section) . 'HelperCategory';
-
-			if (class_exists($cName) && is_callable(array($cName, 'onPrepareForm')))
-			{
-				$lang->load($component, JPATH_BASE, null, false, false)
-				|| $lang->load($component, JPATH_BASE . '/components/' . $component, null, false, false)
-				|| $lang->load($component, JPATH_BASE, $lang->getDefault(), false, false)
-				|| $lang->load($component, JPATH_BASE . '/components/' . $component, $lang->getDefault(), false, false);
-				call_user_func_array(array($cName, 'onPrepareForm'), array(&$form));
-
-				// Check for an error.
-				if ($form instanceof Exception)
-				{
-					$this->setError($form->getMessage());
-
-					return false;
-				}
-			}
-		}
-
-		// Set the access control rules field component value.
-		$form->setFieldAttribute('rules', 'component', $component);
-		$form->setFieldAttribute('rules', 'section', $name);
-
-		// Association category items
-		$assoc = $this->getAssoc();
-
-		if ($assoc)
-		{
-			$languages = JLanguageHelper::getLanguages('lang_code');
-			$addform   = new SimpleXMLElement('<form />');
-			$fields    = $addform->addChild('fields');
-			$fields->addAttribute('name', 'associations');
-			$fieldset = $fields->addChild('fieldset');
-			$fieldset->addAttribute('name', 'item_associations');
-			$fieldset->addAttribute('description', 'COM_CATEGORIES_ITEM_ASSOCIATIONS_FIELDSET_DESC');
-			$add = false;
-
-			foreach ($languages as $tag => $language)
-			{
-				if (empty($data->language) || $tag != $data->language)
-				{
-					$add   = true;
-					$field = $fieldset->addChild('field');
-					$field->addAttribute('name', $tag);
-					$field->addAttribute('type', 'modal_category');
-					$field->addAttribute('language', $tag);
-					$field->addAttribute('label', $language->title);
-					$field->addAttribute('translate_label', 'false');
-					$field->addAttribute('extension', $extension);
-					$field->addAttribute('edit', 'true');
-					$field->addAttribute('clear', 'true');
-				}
-			}
-
-			if ($add)
-			{
-				$form->load($addform, false);
-			}
-		}
-
-		// Trigger the default form events.
-		parent::preprocessForm($form, $data, $group);
-	}
-
-	/**
 	 * Batch tag a list of categories.
 	 *
-	 * @param   integer $value    The value of the new tag.
-	 * @param   array   $pks      An array of row IDs.
-	 * @param   array   $contexts An array of item contexts.
+	 * @param   integer  $value     The value of the new tag.
+	 * @param   array    $pks       An array of row IDs.
+	 * @param   array    $contexts  An array of item contexts.
 	 *
 	 * @return  boolean true if successful; false otherwise.
 	 */
 	protected function batchTag($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user  = JFactory::getUser();
+		$user = JFactory::getUser();
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -863,9 +773,9 @@ class CategoriesModelCategory extends JModelAdmin
 				$table->load($pk);
 				$tags = array($value);
 
-				/** @var  JTableObserverTags $tagsObserver */
+				/** @var  JTableObserverTags  $tagsObserver */
 				$tagsObserver = $table->getObserverOfClass('JTableObserverTags');
-				$result       = $tagsObserver->setNewTags($tags, false);
+				$result = $tagsObserver->setNewTags($tags, false);
 
 				if (!$result)
 				{
@@ -891,9 +801,9 @@ class CategoriesModelCategory extends JModelAdmin
 	/**
 	 * Batch copy categories to a new category.
 	 *
-	 * @param   integer $value    The new category.
-	 * @param   array   $pks      An array of row IDs.
-	 * @param   array   $contexts An array of item contexts.
+	 * @param   integer  $value     The new category.
+	 * @param   array    $pks       An array of row IDs.
+	 * @param   array    $contexts  An array of item contexts.
 	 *
 	 * @return  mixed    An array of new IDs on success, boolean false on failure.
 	 *
@@ -901,16 +811,16 @@ class CategoriesModelCategory extends JModelAdmin
 	 */
 	protected function batchCopy($value, $pks, $contexts)
 	{
-		$type       = new JUcmType;
+		$type = new JUcmType;
 		$this->type = $type->getTypeByAlias($this->typeAlias);
 
 		// $value comes as {parent_id}.{extension}
-		$parts    = explode('.', $value);
+		$parts = explode('.', $value);
 		$parentId = (int) ArrayHelper::getValue($parts, 0, 1);
 
-		$db        = $this->getDbo();
+		$db = $this->getDbo();
 		$extension = JFactory::getApplication()->input->get('extension', '', 'word');
-		$newIds    = array();
+		$newIds = array();
 
 		// Check that the parent exists
 		if ($parentId)
@@ -1034,7 +944,7 @@ class CategoriesModelCategory extends JModelAdmin
 			}
 
 			// Make a copy of the old ID and Parent ID
-			$oldId       = $this->table->id;
+			$oldId = $this->table->id;
 			$oldParentId = $this->table->parent_id;
 
 			// Reset the id because we are making a copy.
@@ -1049,15 +959,15 @@ class CategoriesModelCategory extends JModelAdmin
 
 			// @TODO: Deal with ordering?
 			// $this->table->ordering = 1;
-			$this->table->level    = null;
+			$this->table->level = null;
 			$this->table->asset_id = null;
-			$this->table->lft      = null;
-			$this->table->rgt      = null;
+			$this->table->lft = null;
+			$this->table->rgt = null;
 
 			// Alter the title & alias
 			list($title, $alias) = $this->generateNewTitle($this->table->parent_id, $this->table->alias, $this->table->title);
-			$this->table->title = $title;
-			$this->table->alias = $alias;
+			$this->table->title  = $title;
+			$this->table->alias  = $alias;
 
 			// Unpublish because we are making a copy
 			$this->table->published = 0;
@@ -1105,9 +1015,9 @@ class CategoriesModelCategory extends JModelAdmin
 	/**
 	 * Batch move categories to a new category.
 	 *
-	 * @param   integer $value    The new category ID.
-	 * @param   array   $pks      An array of row IDs.
-	 * @param   array   $contexts An array of item contexts.
+	 * @param   integer  $value     The new category ID.
+	 * @param   array    $pks       An array of row IDs.
+	 * @param   array    $contexts  An array of item contexts.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -1115,12 +1025,12 @@ class CategoriesModelCategory extends JModelAdmin
 	 */
 	protected function batchMove($value, $pks, $contexts)
 	{
-		$parentId   = (int) $value;
-		$type       = new JUcmType;
+		$parentId = (int) $value;
+		$type = new JUcmType;
 		$this->type = $type->getTypeByAlias($this->typeAlias);
 
-		$db        = $this->getDbo();
-		$query     = $db->getQuery(true);
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
 		$extension = JFactory::getApplication()->input->get('extension', '', 'word');
 
 		// Check that the parent exists.
@@ -1252,5 +1162,97 @@ class CategoriesModelCategory extends JModelAdmin
 		}
 
 		return true;
+	}
+
+	/**
+	 * Custom clean the cache of com_content and content modules
+	 *
+	 * @param   string   $group      Cache group name.
+	 * @param   integer  $client_id  Application client id.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		$extension = JFactory::getApplication()->input->get('extension');
+
+		switch ($extension)
+		{
+			case 'com_content':
+				parent::cleanCache('com_content');
+				parent::cleanCache('mod_articles_archive');
+				parent::cleanCache('mod_articles_categories');
+				parent::cleanCache('mod_articles_category');
+				parent::cleanCache('mod_articles_latest');
+				parent::cleanCache('mod_articles_news');
+				parent::cleanCache('mod_articles_popular');
+				break;
+			default:
+				parent::cleanCache($extension);
+				break;
+		}
+	}
+
+	/**
+	 * Method to change the title & alias.
+	 *
+	 * @param   integer  $parent_id  The id of the parent.
+	 * @param   string   $alias      The alias.
+	 * @param   string   $title      The title.
+	 *
+	 * @return  array    Contains the modified title and alias.
+	 *
+	 * @since   1.7
+	 */
+	protected function generateNewTitle($parent_id, $alias, $title)
+	{
+		// Alter the title & alias
+		$table = $this->getTable();
+
+		while ($table->load(array('alias' => $alias, 'parent_id' => $parent_id)))
+		{
+			$title = JString::increment($title);
+			$alias = JString::increment($alias, 'dash');
+		}
+
+		return array($title, $alias);
+	}
+
+	/**
+	 * Method to determine if a category association is available.
+	 *
+	 * @return  boolean True if a category association is available; false otherwise.
+	 */
+	public function getAssoc()
+	{
+		static $assoc = null;
+
+		if (!is_null($assoc))
+		{
+			return $assoc;
+		}
+
+		$extension = $this->getState('category.extension');
+
+		$assoc = JLanguageAssociations::isEnabled();
+		$extension = explode('.', $extension);
+		$component = array_shift($extension);
+		$cname = str_replace('com_', '', $component);
+
+		if (!$assoc || !$component || !$cname)
+		{
+			$assoc = false;
+		}
+		else
+		{
+			$hname = $cname . 'HelperAssociation';
+			JLoader::register($hname, JPATH_SITE . '/components/' . $component . '/helpers/association.php');
+
+			$assoc = class_exists($hname) && !empty($hname::$category_association);
+		}
+
+		return $assoc;
 	}
 }
