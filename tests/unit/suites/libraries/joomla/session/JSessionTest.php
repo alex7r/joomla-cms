@@ -11,9 +11,9 @@ include_once __DIR__ . '/handler/array.php';
 /**
  * Test class for JSession.
  *
- * @package     Joomla.UnitTest
- * @subpackage  Session
- * @since       3.4
+ * @package             Joomla.UnitTest
+ * @subpackage          Session
+ * @since               3.4
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
@@ -26,52 +26,6 @@ class JSessionTest extends TestCase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		$handler = new JSessionHandlerArray(md5('PHPSESSID'));
-		$config = array(
-			'expire' => 20,
-			'force_ssl' => true,
-			'name' => 'PHPSESSID',
-			'security' => 'security'
-		);
-
-		$this->object = JSession::getInstance('none', $config, $handler);
-
-		$this->input = new JInput;
-		$this->input->cookie = $this->getMock('JInputCookie', array('set', 'get'));
-		$this->object->initialise($this->input);
-
-		$this->input->cookie->expects($this->any())
-			->method('set');
-		$this->input->cookie->expects($this->any())
-			->method('get')
-			->will($this->returnValue(null));
-
-		$this->object->start();
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-	}
-
-	/**
 	 * Test cases for getInstance
 	 * string    handler of type JSessionStorage: none or database
 	 * array    arguments for $options in form of associative array
@@ -82,7 +36,7 @@ class JSessionTest extends TestCase
 	Public function casesGetInstance()
 	{
 		return array(
-			'first_instance' => array(
+			'first_instance'  => array(
 				'none',
 				array('expire' => 99),
 				'Line: ' . __LINE__ . ': ' . 'Should not be a different instance and options should not change'
@@ -98,18 +52,18 @@ class JSessionTest extends TestCase
 	/**
 	 * Test getInstance
 	 *
-	 * @param   string  $store    @todo
-	 * @param   array   $options  @todo
+	 * @param   string $store   @todo
+	 * @param   array  $options @todo
 	 *
 	 * @dataProvider casesGetInstance
-	 * @covers  JSession::getInstance
+	 * @covers       JSession::getInstance
 	 *
 	 * @return void
 	 */
 	public function testGetInstance($store, $options)
 	{
 		$oldSession = $this->object;
-		$handler = new JSessionHandlerArray;
+		$handler    = new JSessionHandlerArray;
 		$newSession = JSession::getInstance($store, $options, $handler);
 
 		// The properties and values should be identical to each other.
@@ -393,6 +347,52 @@ class JSessionTest extends TestCase
 		$this->markTestIncomplete(
 			'This test has not been implemented yet.'
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		$handler = new JSessionHandlerArray(md5('PHPSESSID'));
+		$config  = array(
+			'expire'    => 20,
+			'force_ssl' => true,
+			'name'      => 'PHPSESSID',
+			'security'  => 'security'
+		);
+
+		$this->object = JSession::getInstance('none', $config, $handler);
+
+		$this->input         = new JInput;
+		$this->input->cookie = $this->getMock('JInputCookie', array('set', 'get'));
+		$this->object->initialise($this->input);
+
+		$this->input->cookie->expects($this->any())
+			->method('set');
+		$this->input->cookie->expects($this->any())
+			->method('get')
+			->will($this->returnValue(null));
+
+		$this->object->start();
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
 	}
 
 }

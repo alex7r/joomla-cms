@@ -29,8 +29,8 @@ abstract class JModelDatabase extends JModelBase
 	/**
 	 * Instantiate the model.
 	 *
-	 * @param   Registry         $state  The model state.
-	 * @param   JDatabaseDriver  $db     The database adpater.
+	 * @param   Registry        $state The model state.
+	 * @param   JDatabaseDriver $db    The database adpater.
 	 *
 	 * @since   12.1
 	 */
@@ -40,6 +40,18 @@ abstract class JModelDatabase extends JModelBase
 
 		// Setup the model.
 		$this->db = isset($db) ? $db : $this->loadDb();
+	}
+
+	/**
+	 * Load the database driver.
+	 *
+	 * @return  JDatabaseDriver  The database driver.
+	 *
+	 * @since   12.1
+	 */
+	protected function loadDb()
+	{
+		return JFactory::getDbo();
 	}
 
 	/**
@@ -57,7 +69,7 @@ abstract class JModelDatabase extends JModelBase
 	/**
 	 * Set the database driver.
 	 *
-	 * @param   JDatabaseDriver  $db  The database driver.
+	 * @param   JDatabaseDriver $db The database driver.
 	 *
 	 * @return  void
 	 *
@@ -66,17 +78,5 @@ abstract class JModelDatabase extends JModelBase
 	public function setDb(JDatabaseDriver $db)
 	{
 		$this->db = $db;
-	}
-
-	/**
-	 * Load the database driver.
-	 *
-	 * @return  JDatabaseDriver  The database driver.
-	 *
-	 * @since   12.1
-	 */
-	protected function loadDb()
-	{
-		return JFactory::getDbo();
 	}
 }

@@ -19,6 +19,7 @@ class JAuthentication extends JObject
 	// Shared success status
 	/**
 	 * This is the status code returned when the authentication is success (permit login)
+	 *
 	 * @const  STATUS_SUCCESS successful response
 	 * @since  11.2
 	 */
@@ -27,6 +28,7 @@ class JAuthentication extends JObject
 	// These are for authentication purposes (username and password is valid)
 	/**
 	 * Status to indicate cancellation of authentication (unused)
+	 *
 	 * @const  STATUS_CANCEL cancelled request (unused)
 	 * @since  11.2
 	 */
@@ -34,6 +36,7 @@ class JAuthentication extends JObject
 
 	/**
 	 * This is the status code returned when the authentication failed (prevent login if no success)
+	 *
 	 * @const  STATUS_FAILURE failed request
 	 * @since  11.2
 	 */
@@ -42,6 +45,7 @@ class JAuthentication extends JObject
 	// These are for authorisation purposes (can the user login)
 	/**
 	 * This is the status code returned when the account has expired (prevent login)
+	 *
 	 * @const  STATUS_EXPIRED an expired account (will prevent login)
 	 * @since  11.2
 	 */
@@ -49,6 +53,7 @@ class JAuthentication extends JObject
 
 	/**
 	 * This is the status code returned when the account has been denied (prevent login)
+	 *
 	 * @const  STATUS_DENIED denied request (will prevent login)
 	 * @since  11.2
 	 */
@@ -56,11 +61,16 @@ class JAuthentication extends JObject
 
 	/**
 	 * This is the status code returned when the account doesn't exist (not an error)
+	 *
 	 * @const  STATUS_UNKNOWN unknown account (won't permit or prevent login)
 	 * @since  11.2
 	 */
 	const STATUS_UNKNOWN = 32;
-
+	/**
+	 * @var    JAuthentication  JAuthentication instances container.
+	 * @since  11.3
+	 */
+	protected static $instance;
 	/**
 	 * An array of Observer objects to notify
 	 *
@@ -68,7 +78,6 @@ class JAuthentication extends JObject
 	 * @since  12.1
 	 */
 	protected $observers = array();
-
 	/**
 	 * The state of the observable object
 	 *
@@ -76,7 +85,6 @@ class JAuthentication extends JObject
 	 * @since  12.1
 	 */
 	protected $state = null;
-
 	/**
 	 * A multi dimensional array of [function][] = key for observers
 	 *
@@ -84,12 +92,6 @@ class JAuthentication extends JObject
 	 * @since  12.1
 	 */
 	protected $methods = array();
-
-	/**
-	 * @var    JAuthentication  JAuthentication instances container.
-	 * @since  11.3
-	 */
-	protected static $instance;
 
 	/**
 	 * Constructor
@@ -125,6 +127,28 @@ class JAuthentication extends JObject
 	}
 
 	/**
+	 * Authorises that a particular user should be able to login
+	 *
+	 * @param   JAuthenticationResponse $response response including username of the user to authorise
+	 * @param   array                   $options  list of options
+	 *
+	 * @return  array[JAuthenticationResponse]  results of authorisation
+	 *
+	 * @since  11.2
+	 */
+	public static function authorise($response, $options = array())
+	{
+		// Get plugins in case they haven't been imported already
+		JPluginHelper::importPlugin('user');
+
+		JPluginHelper::importPlugin('authentication');
+		$dispatcher = JEventDispatcher::getInstance();
+		$results    = $dispatcher->trigger('onUserAuthorisation', array($response, $options));
+
+		return $results;
+	}
+
+	/**
 	 * Get the state of the JAuthentication object
 	 *
 	 * @return  mixed    The state of the object.
@@ -139,7 +163,7 @@ class JAuthentication extends JObject
 	/**
 	 * Attach an observer object
 	 *
-	 * @param   object  $observer  An observer object to attach
+	 * @param   object $observer An observer object to attach
 	 *
 	 * @return  void
 	 *
@@ -186,7 +210,7 @@ class JAuthentication extends JObject
 			}
 
 			$this->observers[] = $observer;
-			$methods = array_diff(get_class_methods($observer), get_class_methods('JPlugin'));
+			$methods           = array_diff(get_class_methods($observer), get_class_methods('JPlugin'));
 		}
 
 		$key = key($this->observers);
@@ -207,7 +231,7 @@ class JAuthentication extends JObject
 	/**
 	 * Detach an observer object
 	 *
-	 * @param   object  $observer  An observer object to detach.
+	 * @param   object $observer An observer object to detach.
 	 *
 	 * @return  boolean  True if the observer object was detached.
 	 *
@@ -242,8 +266,8 @@ class JAuthentication extends JObject
 	 * Finds out if a set of login credentials are valid by asking all observing
 	 * objects to run their respective authentication routines.
 	 *
-	 * @param   array  $credentials  Array holding the user credentials.
-	 * @param   array  $options      Array holding user options.
+	 * @param   array $credentials Array holding the user credentials.
+	 * @param   array $options     Array holding user options.
 	 *
 	 * @return  JAuthenticationResponse  Response object with status variable filled in for last plugin or first successful plugin.
 	 *
@@ -311,28 +335,6 @@ class JAuthentication extends JObject
 		}
 
 		return $response;
-	}
-
-	/**
-	 * Authorises that a particular user should be able to login
-	 *
-	 * @param   JAuthenticationResponse  $response  response including username of the user to authorise
-	 * @param   array                    $options   list of options
-	 *
-	 * @return  array[JAuthenticationResponse]  results of authorisation
-	 *
-	 * @since  11.2
-	 */
-	public static function authorise($response, $options = array())
-	{
-		// Get plugins in case they haven't been imported already
-		JPluginHelper::importPlugin('user');
-
-		JPluginHelper::importPlugin('authentication');
-		$dispatcher = JEventDispatcher::getInstance();
-		$results = $dispatcher->trigger('onUserAuthorisation', array($response, $options));
-
-		return $results;
 	}
 }
 

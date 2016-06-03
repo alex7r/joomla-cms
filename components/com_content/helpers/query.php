@@ -19,7 +19,7 @@ class ContentHelperQuery
 	/**
 	 * Translate an order code to a field for primary category ordering.
 	 *
-	 * @param   string  $orderby  The ordering code.
+	 * @param   string $orderby The ordering code.
 	 *
 	 * @return  string  The SQL field(s) to order by.
 	 *
@@ -52,8 +52,8 @@ class ContentHelperQuery
 	/**
 	 * Translate an order code to a field for secondary category ordering.
 	 *
-	 * @param   string  $orderby    The ordering code.
-	 * @param   string  $orderDate  The ordering code for the date.
+	 * @param   string $orderby   The ordering code.
+	 * @param   string $orderDate The ordering code for the date.
 	 *
 	 * @return  string  The SQL field(s) to order by.
 	 *
@@ -120,7 +120,7 @@ class ContentHelperQuery
 	/**
 	 * Translate an order code to a field for primary category ordering.
 	 *
-	 * @param   string  $orderDate  The ordering code.
+	 * @param   string $orderDate The ordering code.
 	 *
 	 * @return  string  The SQL field(s) to order by.
 	 *
@@ -153,10 +153,10 @@ class ContentHelperQuery
 	/**
 	 * Get join information for the voting query.
 	 *
-	 * @param   \Joomla\Registry\Registry  $params  An options object for the article.
+	 * @param   \Joomla\Registry\Registry $params An options object for the article.
 	 *
 	 * @return  array  A named array with "select" and "join" keys.
-	 * 
+	 *
 	 * @since   1.5
 	 */
 	public static function buildVotingQuery($params = null)
@@ -172,15 +172,15 @@ class ContentHelperQuery
 		{
 			// Calculate voting count
 			$select = ' , ROUND(v.rating_sum / v.rating_count) AS rating, v.rating_count';
-			$join = ' LEFT JOIN #__content_rating AS v ON a.id = v.content_id';
+			$join   = ' LEFT JOIN #__content_rating AS v ON a.id = v.content_id';
 		}
 		else
 		{
 			$select = '';
-			$join = '';
+			$join   = '';
 		}
 
-		$results = array ('select' => $select, 'join' => $join);
+		$results = array('select' => $select, 'join' => $join);
 
 		return $results;
 	}
@@ -193,8 +193,8 @@ class ContentHelperQuery
 	 * across columns in the layout, the result is that the
 	 * desired article ordering is achieved down the columns.
 	 *
-	 * @param   array    &$articles   Array of intro text articles
-	 * @param   integer  $numColumns  Number of columns in the layout
+	 * @param   array   &$articles  Array of intro text articles
+	 * @param   integer $numColumns Number of columns in the layout
 	 *
 	 * @return  array  Reordered array to achieve desired ordering down columns
 	 *
@@ -215,10 +215,10 @@ class ContentHelperQuery
 			// We need to preserve the original array keys
 			$keys = array_keys($articles);
 
-			$maxRows = ceil($count / $numColumns);
+			$maxRows  = ceil($count / $numColumns);
 			$numCells = $maxRows * $numColumns;
 			$numEmpty = $numCells - $count;
-			$index = array();
+			$index    = array();
 
 			// Calculate number of empty cells in the array
 
@@ -250,7 +250,7 @@ class ContentHelperQuery
 			{
 				for ($row = 1; ($row <= $maxRows) && ($i < $count); $row++)
 				{
-					if ($index[$row][$col] != - 1)
+					if ($index[$row][$col] != -1)
 					{
 						$index[$row][$col] = $keys[$i];
 						$i++;
@@ -261,7 +261,7 @@ class ContentHelperQuery
 			// Now read the $index back row by row to get articles in right row/col
 			// so that they will actually be ordered down the columns (when read by row in the layout)
 			$return = array();
-			$i = 0;
+			$i      = 0;
 
 			for ($row = 1; ($row <= $maxRows) && ($i < $count); $row++)
 			{

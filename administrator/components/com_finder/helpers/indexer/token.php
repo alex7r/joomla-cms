@@ -88,9 +88,9 @@ class FinderIndexerToken
 	/**
 	 * Method to construct the token object.
 	 *
-	 * @param   mixed   $term    The term as a string for words or an array for phrases.
-	 * @param   string  $lang    The simple language identifier.
-	 * @param   string  $spacer  The space separator for phrases. [optional]
+	 * @param   mixed  $term   The term as a string for words or an array for phrases.
+	 * @param   string $lang   The simple language identifier.
+	 * @param   string $spacer The space separator for phrases. [optional]
 	 *
 	 * @since   2.5
 	 */
@@ -102,12 +102,12 @@ class FinderIndexerToken
 		if (is_array($term))
 		{
 			// Populate the token instance.
-			$this->term = implode($spacer, $term);
-			$this->stem = implode($spacer, array_map(array('FinderIndexerHelper', 'stem'), $term, array($lang)));
+			$this->term    = implode($spacer, $term);
+			$this->stem    = implode($spacer, array_map(array('FinderIndexerHelper', 'stem'), $term, array($lang)));
 			$this->numeric = false;
-			$this->common = false;
-			$this->phrase = true;
-			$this->length = JString::strlen($this->term);
+			$this->common  = false;
+			$this->phrase  = true;
+			$this->length  = JString::strlen($this->term);
 
 			/*
 			 * Calculate the weight of the token.
@@ -121,12 +121,12 @@ class FinderIndexerToken
 		else
 		{
 			// Populate the token instance.
-			$this->term = $term;
-			$this->stem = FinderIndexerHelper::stem($this->term, $lang);
+			$this->term    = $term;
+			$this->stem    = FinderIndexerHelper::stem($this->term, $lang);
 			$this->numeric = (is_numeric($this->term) || (bool) preg_match('#^[0-9,.\-\+]+$#', $this->term));
-			$this->common = $this->numeric ? false : FinderIndexerHelper::isCommon($this->term, $lang);
-			$this->phrase = false;
-			$this->length = JString::strlen($this->term);
+			$this->common  = $this->numeric ? false : FinderIndexerHelper::isCommon($this->term, $lang);
+			$this->phrase  = false;
+			$this->length  = JString::strlen($this->term);
 
 			/*
 			 * Calculate the weight of the token.

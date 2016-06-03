@@ -17,7 +17,7 @@ class TestMockRules
 	/**
 	 * Creates an instance of the mock JAccessRules object.
 	 *
-	 * @param   PHPUnit_Framework_TestCase  $test  A test object.
+	 * @param   PHPUnit_Framework_TestCase $test A test object.
 	 *
 	 * @return  PHPUnit_Framework_MockObject_MockObject
 	 *
@@ -55,8 +55,8 @@ class TestMockRules
 	/**
 	 * Mocking the allow method.
 	 *
-	 * @param   string   $action    The action.
-	 * @param   integer  $identity  The identity ID.
+	 * @param   string  $action   The action.
+	 * @param   integer $identity The identity ID.
 	 *
 	 * @return  mixed  Boolean or null.
 	 *

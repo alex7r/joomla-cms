@@ -19,7 +19,7 @@ class ConfigControllerConfigDisplay extends ConfigControllerDisplay
 	/**
 	 * Method to display global configuration.
 	 *
-	 * @return  boolean	True on success, false on failure.
+	 * @return  boolean    True on success, false on failure.
 	 *
 	 * @since   3.2
 	 */
@@ -29,11 +29,11 @@ class ConfigControllerConfigDisplay extends ConfigControllerDisplay
 		$app = $this->getApplication();
 
 		// Get the document object.
-		$document     = JFactory::getDocument();
+		$document = JFactory::getDocument();
 
-		$viewName     = $this->input->getWord('view', 'config');
-		$viewFormat   = $document->getType();
-		$layoutName   = $this->input->getWord('layout', 'default');
+		$viewName   = $this->input->getWord('view', 'config');
+		$viewFormat = $document->getType();
+		$layoutName = $this->input->getWord('layout', 'default');
 
 		// Access back-end com_config
 		JLoader::registerPrefix(ucfirst($viewName), JPATH_ADMINISTRATOR . '/components/com_config');

@@ -34,36 +34,36 @@ class Inflector
 	 * @since  1.0
 	 */
 	private $rules = array(
-		'singular' => array(
-			'/(matr)ices$/i' => '\1ix',
-			'/(vert|ind)ices$/i' => '\1ex',
+		'singular'  => array(
+			'/(matr)ices$/i'                                                          => '\1ix',
+			'/(vert|ind)ices$/i'                                                      => '\1ex',
 			'/(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|viri?)i$/i' => '\1us',
-			'/([ftw]ax)es/i' => '\1',
-			'/(cris|ax|test)es$/i' => '\1is',
-			'/(shoe|slave)s$/i' => '\1',
-			'/(o)es$/i' => '\1',
-			'/([^aeiouy]|qu)ies$/i' => '\1y',
-			'/$1ses$/i' => '\s',
-			'/ses$/i' => '\s',
-			'/eaus$/' => 'eau',
-			'/^(.*us)$/' => '\\1',
-			'/s$/i' => '',
+			'/([ftw]ax)es/i'                                                          => '\1',
+			'/(cris|ax|test)es$/i'                                                    => '\1is',
+			'/(shoe|slave)s$/i'                                                       => '\1',
+			'/(o)es$/i'                                                               => '\1',
+			'/([^aeiouy]|qu)ies$/i'                                                   => '\1y',
+			'/$1ses$/i'                                                               => '\s',
+			'/ses$/i'                                                                 => '\s',
+			'/eaus$/'                                                                 => 'eau',
+			'/^(.*us)$/'                                                              => '\\1',
+			'/s$/i'                                                                   => '',
 		),
-		'plural' => array(
-			'/([m|l])ouse$/i' => '\1ice',
-			'/(matr|vert|ind)(ix|ex)$/i'  => '\1ices',
-			'/(x|ch|ss|sh)$/i' => '\1es',
-			'/([^aeiouy]|qu)y$/i' => '\1ies',
-			'/([^aeiouy]|qu)ies$/i' => '\1y',
-			'/(?:([^f])fe|([lr])f)$/i' => '\1\2ves',
-			'/sis$/i' => 'ses',
-			'/([ti])um$/i' => '\1a',
-			'/(buffal|tomat)o$/i' => '\1\2oes',
+		'plural'    => array(
+			'/([m|l])ouse$/i'                                                        => '\1ice',
+			'/(matr|vert|ind)(ix|ex)$/i'                                             => '\1ices',
+			'/(x|ch|ss|sh)$/i'                                                       => '\1es',
+			'/([^aeiouy]|qu)y$/i'                                                    => '\1ies',
+			'/([^aeiouy]|qu)ies$/i'                                                  => '\1y',
+			'/(?:([^f])fe|([lr])f)$/i'                                               => '\1\2ves',
+			'/sis$/i'                                                                => 'ses',
+			'/([ti])um$/i'                                                           => '\1a',
+			'/(buffal|tomat)o$/i'                                                    => '\1\2oes',
 			'/(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|vir)us$/i' => '\1i',
-			'/us$/i' => 'uses',
-			'/(ax|cris|test)is$/i' => '\1es',
-			'/s$/i' => 's',
-			'/$/' => 's',
+			'/us$/i'                                                                 => 'uses',
+			'/(ax|cris|test)is$/i'                                                   => '\1es',
+			'/s$/i'                                                                  => 's',
+			'/$/'                                                                    => 's',
 		),
 		'countable' => array(
 			'id',
@@ -100,7 +100,6 @@ class Inflector
 			->addWord('trout')
 			->addWord('fish')
 			->addWord('swine')
-
 			->addWord('alias', 'aliases')
 			->addWord('bus', 'buses')
 			->addWord('foot', 'feet')
@@ -119,8 +118,8 @@ class Inflector
 	/**
 	 * Adds inflection regex rules to the inflector.
 	 *
-	 * @param   mixed   $data      A string or an array of strings or regex rules to add.
-	 * @param   string  $ruleType  The rule type: singular | plural | countable
+	 * @param   mixed  $data     A string or an array of strings or regex rules to add.
+	 * @param   string $ruleType The rule type: singular | plural | countable
 	 *
 	 * @return  void
 	 *
@@ -149,7 +148,7 @@ class Inflector
 	/**
 	 * Gets an inflected word from the cache where the singular form is supplied.
 	 *
-	 * @param   string  $singular  A singular form of a word.
+	 * @param   string $singular A singular form of a word.
 	 *
 	 * @return  mixed  The cached inflection or false if none found.
 	 *
@@ -171,7 +170,7 @@ class Inflector
 	/**
 	 * Gets an inflected word from the cache where the plural form is supplied.
 	 *
-	 * @param   string  $plural  A plural form of a word.
+	 * @param   string $plural A plural form of a word.
 	 *
 	 * @return  mixed  The cached inflection or false if none found.
 	 *
@@ -190,8 +189,8 @@ class Inflector
 	 * The 'plural' rule type expects a singular word.
 	 * The 'singular' rule type expects a plural word.
 	 *
-	 * @param   string  $word      The string input.
-	 * @param   string  $ruleType  String (eg, singular|plural)
+	 * @param   string $word     The string input.
+	 * @param   string $ruleType String (eg, singular|plural)
 	 *
 	 * @return  mixed  An inflected string, or false if no rule could be applied.
 	 *
@@ -202,7 +201,7 @@ class Inflector
 		// Cycle through the regex rules.
 		foreach ($this->rules[$ruleType] as $regex => $replacement)
 		{
-			$matches = 0;
+			$matches     = 0;
 			$matchedWord = preg_replace($regex, $replacement, $word, -1, $matches);
 
 			if ($matches > 0)
@@ -217,8 +216,8 @@ class Inflector
 	/**
 	 * Sets an inflected word in the cache.
 	 *
-	 * @param   string  $singular  The singular form of the word.
-	 * @param   string  $plural    The plural form of the word. If omitted, it is assumed the singular and plural are identical.
+	 * @param   string $singular The singular form of the word.
+	 * @param   string $plural   The plural form of the word. If omitted, it is assumed the singular and plural are identical.
 	 *
 	 * @return  void
 	 *
@@ -243,7 +242,7 @@ class Inflector
 	/**
 	 * Adds a countable word.
 	 *
-	 * @param   mixed  $data  A string or an array of strings to add.
+	 * @param   mixed $data A string or an array of strings to add.
 	 *
 	 * @return  Inflector  Returns this object to support chaining.
 	 *
@@ -259,14 +258,14 @@ class Inflector
 	/**
 	 * Adds a specific singular-plural pair for a word.
 	 *
-	 * @param   string  $singular  The singular form of the word.
-	 * @param   string  $plural    The plural form of the word. If omitted, it is assumed the singular and plural are identical.
+	 * @param   string $singular The singular form of the word.
+	 * @param   string $plural   The plural form of the word. If omitted, it is assumed the singular and plural are identical.
 	 *
 	 * @return  Inflector  Returns this object to support chaining.
 	 *
 	 * @since   1.0
 	 */
-	public function addWord($singular, $plural =null)
+	public function addWord($singular, $plural = null)
 	{
 		$this->setCache($singular, $plural);
 
@@ -276,7 +275,7 @@ class Inflector
 	/**
 	 * Adds a pluralisation rule.
 	 *
-	 * @param   mixed  $data  A string or an array of regex rules to add.
+	 * @param   mixed $data A string or an array of regex rules to add.
 	 *
 	 * @return  Inflector  Returns this object to support chaining.
 	 *
@@ -292,7 +291,7 @@ class Inflector
 	/**
 	 * Adds a singularisation rule.
 	 *
-	 * @param   mixed  $data  A string or an array of regex rules to add.
+	 * @param   mixed $data A string or an array of regex rules to add.
 	 *
 	 * @return  Inflector  Returns this object to support chaining.
 	 *
@@ -308,7 +307,7 @@ class Inflector
 	/**
 	 * Gets an instance of the JStringInflector singleton.
 	 *
-	 * @param   boolean  $new  If true (default is false), returns a new instance regardless if one exists.
+	 * @param   boolean $new   If true (default is false), returns a new instance regardless if one exists.
 	 *                         This argument is mainly used for testing.
 	 *
 	 * @return  Inflector
@@ -332,7 +331,7 @@ class Inflector
 	/**
 	 * Checks if a word is countable.
 	 *
-	 * @param   string  $word  The string input.
+	 * @param   string $word The string input.
 	 *
 	 * @return  boolean  True if word is countable, false otherwise.
 	 *
@@ -346,7 +345,7 @@ class Inflector
 	/**
 	 * Checks if a word is in a plural form.
 	 *
-	 * @param   string  $word  The string input.
+	 * @param   string $word The string input.
 	 *
 	 * @return  boolean  True if word is plural, false if not.
 	 *
@@ -376,7 +375,7 @@ class Inflector
 	/**
 	 * Checks if a word is in a singular form.
 	 *
-	 * @param   string  $word  The string input.
+	 * @param   string $word The string input.
 	 *
 	 * @return  boolean  True if word is singular, false if not.
 	 *
@@ -406,7 +405,7 @@ class Inflector
 	/**
 	 * Converts a word into its plural form.
 	 *
-	 * @param   string  $word  The singular word to pluralise.
+	 * @param   string $word The singular word to pluralise.
 	 *
 	 * @return  mixed  An inflected string, or false if no rule could be applied.
 	 *
@@ -445,7 +444,7 @@ class Inflector
 	/**
 	 * Converts a word into its singular form.
 	 *
-	 * @param   string  $word  The plural word to singularise.
+	 * @param   string $word The plural word to singularise.
 	 *
 	 * @return  mixed  An inflected string, or false if no rule could be applied.
 	 *

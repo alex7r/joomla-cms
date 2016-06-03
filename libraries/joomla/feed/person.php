@@ -51,18 +51,18 @@ class JFeedPerson
 	/**
 	 * Constructor.
 	 *
-	 * @param   string  $name   The full name of the person.
-	 * @param   string  $email  The email address of the person.
-	 * @param   string  $uri    The URI for the person.
-	 * @param   string  $type   The type of person.
+	 * @param   string $name  The full name of the person.
+	 * @param   string $email The email address of the person.
+	 * @param   string $uri   The URI for the person.
+	 * @param   string $type  The type of person.
 	 *
 	 * @since   12.3
 	 */
 	public function __construct($name = null, $email = null, $uri = null, $type = null)
 	{
-		$this->name = $name;
+		$this->name  = $name;
 		$this->email = $email;
-		$this->uri = $uri;
-		$this->type = $type;
+		$this->uri   = $uri;
+		$this->type  = $type;
 	}
 }

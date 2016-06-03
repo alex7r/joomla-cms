@@ -19,23 +19,6 @@ require_once __DIR__ . '/stubs/log/inspector.php';
 class JLogTest extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDown()
-	 * @since   11.1
-	 */
-	protected function tearDown()
-	{
-		// Clear out the log instance.
-		$log = new JLogInspector;
-		JLog::setInstance($log);
-
-		parent::tearDown();
-	}
-
-	/**
 	 * Test the JLog::addLogEntry method to verify that if called directly it will route the entry to the
 	 * appropriate loggers.  We use the echo logger here for easy testing using the PHP output buffer.
 	 *
@@ -550,5 +533,22 @@ class JLogTest extends PHPUnit_Framework_TestCase
 			$expectedLoggers,
 			$log->loggers
 		);
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDown()
+	 * @since   11.1
+	 */
+	protected function tearDown()
+	{
+		// Clear out the log instance.
+		$log = new JLogInspector;
+		JLog::setInstance($log);
+
+		parent::tearDown();
 	}
 }

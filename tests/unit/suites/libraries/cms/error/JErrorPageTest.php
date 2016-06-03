@@ -13,31 +13,6 @@
 class JErrorPageTest extends TestCaseDatabase
 {
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		TestReflection::setValue('JDocument', 'instances', array());
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
 	 * @covers  JErrorPage::render
 	 */
 	public function testEnsureTheErrorPageIsCorrectlyRendered()
@@ -69,7 +44,7 @@ class JErrorPageTest extends TestCaseDatabase
 	}
 
 	/**
-	 * @covers  JErrorPage::render
+	 * @covers    JErrorPage::render
 	 *
 	 * @requires  PHP 7.0
 	 */
@@ -115,5 +90,30 @@ class JErrorPageTest extends TestCaseDatabase
 		$output = ob_get_clean();
 
 		$this->assertEquals('Error displaying the error page', $output);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 */
+	protected function tearDown()
+	{
+		TestReflection::setValue('JDocument', 'instances', array());
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 }

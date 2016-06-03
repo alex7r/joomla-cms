@@ -49,7 +49,7 @@ class JGithubPackageUsersEmails extends JGithubPackage
 	/**
 	 * Add email address(es).
 	 *
-	 * @param   string|array  $email  The email address(es).
+	 * @param   string|array $email The email address(es).
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -69,7 +69,7 @@ class JGithubPackageUsersEmails extends JGithubPackage
 	/**
 	 * Delete email address(es).
 	 *
-	 * @param   string|array  $email  The email address(es).
+	 * @param   string|array $email The email address(es).
 	 *
 	 * @since 3.3 (CMS)
 	 *

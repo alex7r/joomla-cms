@@ -84,7 +84,7 @@ class JFormFieldUser extends JFormField
 		elseif (strtoupper($this->value) == 'CURRENT')
 		{
 			// 'CURRENT' is not a reasonable value to be placed in the html
-			$this->value = JFactory::getUser()->id;
+			$this->value   = JFactory::getUser()->id;
 			$data['value'] = $this->value;
 			$table->load($this->value);
 		}
@@ -94,9 +94,9 @@ class JFormFieldUser extends JFormField
 		}
 
 		$extraData = array(
-				'userName'  => $table->name,
-				'groups'    => $this->getGroups(),
-				'excluded'  => $this->getExcluded()
+			'userName' => $table->name,
+			'groups'   => $this->getGroups(),
+			'excluded' => $this->getExcluded()
 		);
 
 		return array_merge($data, $extraData);

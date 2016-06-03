@@ -25,8 +25,8 @@ class JApplicationResponseJsonMock
 	/**
 	 * Enqueue a system message.
 	 *
-	 * @param   string  $msg   The message to enqueue.
-	 * @param   string  $type  The message type. Default is message.
+	 * @param   string $msg  The message to enqueue.
+	 * @param   string $type The message type. Default is message.
 	 *
 	 * @return  void
 	 *

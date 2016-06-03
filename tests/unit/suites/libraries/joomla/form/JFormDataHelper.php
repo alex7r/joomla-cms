@@ -596,7 +596,7 @@ class JFormDataHelper
 	/**
 	 * Test...
 	 *
-	 * @param   mixed  $value  Test
+	 * @param   mixed $value Test
 	 *
 	 * @return void
 	 */
@@ -609,7 +609,7 @@ class JFormDataHelper
 /**
  * Test...
  *
- * @param   mixed  $value  Test
+ * @param   mixed $value Test
  *
  * @package        Joomla.UnitTest
  * @subpackage     Form

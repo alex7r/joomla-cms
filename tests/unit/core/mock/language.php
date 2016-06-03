@@ -17,7 +17,7 @@ class TestMockLanguage
 	/**
 	 * Creates and instance of the mock JLanguage object.
 	 *
-	 * @param   PHPUnit_Framework_TestCase  $test  A test object.
+	 * @param   PHPUnit_Framework_TestCase $test A test object.
 	 *
 	 * @return  PHPUnit_Framework_MockObject_MockObject
 	 *
@@ -49,9 +49,9 @@ class TestMockLanguage
 		$test->assignMockReturns(
 			$mockObject, array(
 				'getInstance' => $mockObject,
-				'getTag' => 'en-GB',
+				'getTag'      => 'en-GB',
 				// An additional 'test' method for confirming this object is successfully mocked.
-				'test' => 'ok',
+				'test'        => 'ok',
 			)
 		);
 
@@ -68,9 +68,9 @@ class TestMockLanguage
 	/**
 	 * Callback for the mock JLanguage::_ method.
 	 *
-	 * @param   string   $string                The string to translate
-	 * @param   boolean  $jsSafe                Make the result javascript safe
-	 * @param   boolean  $interpretBackSlashes  Interpret \t and \n
+	 * @param   string  $string               The string to translate
+	 * @param   boolean $jsSafe               Make the result javascript safe
+	 * @param   boolean $interpretBackSlashes Interpret \t and \n
 	 *
 	 * @return void
 	 *

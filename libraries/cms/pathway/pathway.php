@@ -19,31 +19,29 @@ defined('JPATH_PLATFORM') or die;
 class JPathway
 {
 	/**
-	 * @var    array  Array to hold the pathway item objects
-	 * @since  1.5
-	 * @deprecated  4.0  Will convert to $pathway
-	 */
-	protected $_pathway = array();
-
-	/**
-	 * @var    integer  Integer number of items in the pathway
-	 * @since  1.5
-	 * @deprecated  4.0  Will convert to $count
-	 */
-	protected $_count = 0;
-
-	/**
 	 * JPathway instances container.
 	 *
 	 * @var    JPathway[]
 	 * @since  1.7
 	 */
 	protected static $instances = array();
+	/**
+	 * @var    array  Array to hold the pathway item objects
+	 * @since       1.5
+	 * @deprecated  4.0  Will convert to $pathway
+	 */
+	protected $_pathway = array();
+	/**
+	 * @var    integer  Integer number of items in the pathway
+	 * @since       1.5
+	 * @deprecated  4.0  Will convert to $count
+	 */
+	protected $_count = 0;
 
 	/**
 	 * Class constructor
 	 *
-	 * @param   array  $options  The class options.
+	 * @param   array $options The class options.
 	 *
 	 * @since   1.5
 	 */
@@ -54,8 +52,8 @@ class JPathway
 	/**
 	 * Returns a JPathway object
 	 *
-	 * @param   string  $client   The name of the client
-	 * @param   array   $options  An associative array of options
+	 * @param   string $client  The name of the client
+	 * @param   array  $options An associative array of options
 	 *
 	 * @return  JPathway  A JPathway object.
 	 *
@@ -118,7 +116,7 @@ class JPathway
 	/**
 	 * Set the JPathway items array.
 	 *
-	 * @param   array  $pathway  An array of pathway objects.
+	 * @param   array $pathway An array of pathway objects.
 	 *
 	 * @return  array  The previous pathway data.
 	 *
@@ -158,8 +156,8 @@ class JPathway
 	/**
 	 * Create and add an item to the pathway.
 	 *
-	 * @param   string  $name  The name of the item.
-	 * @param   string  $link  The link to the item.
+	 * @param   string $name The name of the item.
+	 * @param   string $link The link to the item.
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -179,10 +177,29 @@ class JPathway
 	}
 
 	/**
+	 * Create and return a new pathway object.
+	 *
+	 * @param   string $name Name of the item
+	 * @param   string $link Link to the item
+	 *
+	 * @return  JPathway  Pathway item object
+	 *
+	 * @since   3.1
+	 */
+	protected function makeItem($name, $link)
+	{
+		$item       = new stdClass;
+		$item->name = html_entity_decode($name, ENT_COMPAT, 'UTF-8');
+		$item->link = $link;
+
+		return $item;
+	}
+
+	/**
 	 * Set item name.
 	 *
-	 * @param   integer  $id    The id of the item on which to set the name.
-	 * @param   string   $name  The name to set.
+	 * @param   integer $id   The id of the item on which to set the name.
+	 * @param   string  $name The name to set.
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -195,7 +212,7 @@ class JPathway
 		if (isset($this->_pathway[$id]))
 		{
 			$this->_pathway[$id]->name = $name;
-			$ret = true;
+			$ret                       = true;
 		}
 
 		return $ret;
@@ -204,36 +221,17 @@ class JPathway
 	/**
 	 * Create and return a new pathway object.
 	 *
-	 * @param   string  $name  Name of the item
-	 * @param   string  $link  Link to the item
+	 * @param   string $name Name of the item
+	 * @param   string $link Link to the item
 	 *
 	 * @return  JPathway  Pathway item object
 	 *
-	 * @since   1.5
+	 * @since       1.5
 	 * @deprecated  4.0  Use makeItem() instead
 	 * @codeCoverageIgnore
 	 */
 	protected function _makeItem($name, $link)
 	{
 		return $this->makeItem($name, $link);
-	}
-
-	/**
-	 * Create and return a new pathway object.
-	 *
-	 * @param   string  $name  Name of the item
-	 * @param   string  $link  Link to the item
-	 *
-	 * @return  JPathway  Pathway item object
-	 *
-	 * @since   3.1
-	 */
-	protected function makeItem($name, $link)
-	{
-		$item = new stdClass;
-		$item->name = html_entity_decode($name, ENT_COMPAT, 'UTF-8');
-		$item->link = $link;
-
-		return $item;
 	}
 }

@@ -31,52 +31,23 @@ abstract class JMediawikiObject
 	protected $client;
 
 	/**
-     * Constructor.
-     *
-     * @param   Registry        $options  Mediawiki options object.
-     * @param   JMediawikiHttp  $client   The HTTP client object.
-     *
-     * @since   12.3
-     */
-	public function __construct(Registry $options = null, JMediawikiHttp $client = null)
-	{
-		$this->options = isset($options) ? $options : new Registry;
-		$this->client = isset($client) ? $client : new JMediawikiHttp($this->options);
-	}
-
-	/**
-	 * Method to build and return a full request URL for the request.
+	 * Constructor.
 	 *
-	 * @param   string  $path  URL to inflect
-	 *
-	 * @return  string   The request URL.
+	 * @param   Registry       $options Mediawiki options object.
+	 * @param   JMediawikiHttp $client  The HTTP client object.
 	 *
 	 * @since   12.3
 	 */
-	protected function fetchUrl($path)
+	public function __construct(Registry $options = null, JMediawikiHttp $client = null)
 	{
-		// Append the path with output format
-		$path .= '&format=xml';
-
-		$uri = new JUri($this->options->get('api.url') . '/api.php' . $path);
-
-		if ($this->options->get('api.username', false))
-		{
-			$uri->setUser($this->options->get('api.username'));
-		}
-
-		if ($this->options->get('api.password', false))
-		{
-			$uri->setPass($this->options->get('api.password'));
-		}
-
-		return (string) $uri;
+		$this->options = isset($options) ? $options : new Registry;
+		$this->client  = isset($client) ? $client : new JMediawikiHttp($this->options);
 	}
 
 	/**
 	 * Method to build request parameters from a string array.
 	 *
-	 * @param   array  $params  string array that contains the parameters
+	 * @param   array $params string array that contains the parameters
 	 *
 	 * @return  string   request parameter
 	 *
@@ -102,7 +73,7 @@ abstract class JMediawikiObject
 	/**
 	 * Method to validate response for errors
 	 *
-	 * @param   JHttpresponse  $response  reponse from the mediawiki server
+	 * @param   JHttpresponse $response reponse from the mediawiki server
 	 *
 	 * @return  Object
 	 *
@@ -125,5 +96,34 @@ abstract class JMediawikiObject
 		}
 
 		return $xml;
+	}
+
+	/**
+	 * Method to build and return a full request URL for the request.
+	 *
+	 * @param   string $path URL to inflect
+	 *
+	 * @return  string   The request URL.
+	 *
+	 * @since   12.3
+	 */
+	protected function fetchUrl($path)
+	{
+		// Append the path with output format
+		$path .= '&format=xml';
+
+		$uri = new JUri($this->options->get('api.url') . '/api.php' . $path);
+
+		if ($this->options->get('api.username', false))
+		{
+			$uri->setUser($this->options->get('api.username'));
+		}
+
+		if ($this->options->get('api.password', false))
+		{
+			$uri->setPass($this->options->get('api.password'));
+		}
+
+		return (string) $uri;
 	}
 }

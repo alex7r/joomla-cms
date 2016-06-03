@@ -29,8 +29,8 @@ class JApplicationMock
 	/**
 	 * Enqueue a system message.
 	 *
-	 * @param   string  $msg   The message to enqueue.
-	 * @param   string  $type  The message type.
+	 * @param   string $msg  The message to enqueue.
+	 * @param   string $type The message type.
 	 *
 	 * @return  void
 	 *

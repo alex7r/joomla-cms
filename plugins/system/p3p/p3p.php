@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 /**
  * Joomla! P3P Header Plugin.
  *
- * @since  1.6
+ * @since      1.6
  * @deprecate  4.0  Obsolete
  */
 class PlgSystemP3p extends JPlugin
@@ -22,7 +22,7 @@ class PlgSystemP3p extends JPlugin
 	 *
 	 * @return  void
 	 *
-	 * @since   1.6
+	 * @since      1.6
 	 * @deprecate  4.0  Obsolete
 	 */
 	public function onAfterInitialise()
@@ -32,7 +32,7 @@ class PlgSystemP3p extends JPlugin
 		$header = trim($header);
 
 		// Bail out on empty header (why would anyone do that?!).
-		if ( empty($header) )
+		if (empty($header))
 		{
 			return;
 		}

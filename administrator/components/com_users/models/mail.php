@@ -19,10 +19,10 @@ class UsersModelMail extends JModelAdmin
 	/**
 	 * Method to get the row form.
 	 *
-	 * @param   array    $data      An optional array of data for the form to interogate.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data     An optional array of data for the form to interogate.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return  JForm	A JForm object on success, false on failure
+	 * @return  JForm    A JForm object on success, false on failure
 	 *
 	 * @since   1.6
 	 */
@@ -37,40 +37,6 @@ class UsersModelMail extends JModelAdmin
 		}
 
 		return $form;
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_users.display.mail.data', array());
-
-		$this->preprocessData('com_users.mail', $data);
-
-		return $data;
-	}
-
-	/**
-	 * Method to preprocess the form
-	 *
-	 * @param   JForm   $form   A form object.
-	 * @param   mixed   $data   The data expected for the form.
-	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 * @throws  Exception if there is an error loading the form.
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'user')
-	{
-		parent::preprocessForm($form, $data, $group);
 	}
 
 	/**
@@ -212,5 +178,39 @@ class UsersModelMail extends JModelAdmin
 
 			return true;
 		}
+	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_users.display.mail.data', array());
+
+		$this->preprocessData('com_users.mail', $data);
+
+		return $data;
+	}
+
+	/**
+	 * Method to preprocess the form
+	 *
+	 * @param   JForm  $form  A form object.
+	 * @param   mixed  $data  The data expected for the form.
+	 * @param   string $group The name of the plugin group to import (defaults to "content").
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 * @throws  Exception if there is an error loading the form.
+	 */
+	protected function preprocessForm(JForm $form, $data, $group = 'user')
+	{
+		parent::preprocessForm($form, $data, $group);
 	}
 }

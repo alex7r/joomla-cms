@@ -19,7 +19,7 @@ class TableDbTestComposite extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  $db  Database driver object.
+	 * @param   JDatabaseDriver $db Database driver object.
 	 *
 	 * @since   12.1
 	 */

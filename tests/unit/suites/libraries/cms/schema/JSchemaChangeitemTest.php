@@ -30,14 +30,14 @@ class JSchemaChangeitemTest extends TestCase
 	}
 
 	/**
-	 * @testdox  getInstance() returns the correct object
+	 * @testdox       getInstance() returns the correct object
 	 *
-	 * @param   string  $dbDriver      The database driver to be mocked
-	 * @param   string  $itemSubclass  The subclass of JSchemaChangeitem that is expected
-	 * @param   string  $dbFolder      The name of the folder where the stubs are located
+	 * @param   string $dbDriver     The database driver to be mocked
+	 * @param   string $itemSubclass The subclass of JSchemaChangeitem that is expected
+	 * @param   string $dbFolder     The name of the folder where the stubs are located
 	 *
-	 * @covers  JSchemaChangeitem::__construct
-	 * @covers  JSchemaChangeitem::getInstance
+	 * @covers        JSchemaChangeitem::__construct
+	 * @covers        JSchemaChangeitem::getInstance
 	 *
 	 * @dataProvider  dataGetInstance
 	 */

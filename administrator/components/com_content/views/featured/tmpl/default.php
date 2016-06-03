@@ -29,15 +29,16 @@ if ($saveOrder)
 }
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_content&view=featured'); ?>" method="post" name="adminForm" id="adminForm">
-	<?php if (!empty( $this->sidebar)) : ?>
+<form action="<?php echo JRoute::_('index.php?option=com_content&view=featured'); ?>" method="post" name="adminForm"
+      id="adminForm">
+	<?php if (!empty($this->sidebar)) : ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
 	</div>
 	<div id="j-main-container" class="span10">
 		<?php else : ?>
 		<div id="j-main-container">
-			<?php endif;?>
+			<?php endif; ?>
 			<?php
 			// Search tools bar
 			echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
@@ -93,12 +94,12 @@ if ($saveOrder)
 					<?php $count = count($this->items); ?>
 					<?php foreach ($this->items as $i => $item) :
 						$item->max_ordering = 0;
-						$ordering   = ($listOrder == 'fp.ordering');
-						$assetId    = 'com_content.article.' . $item->id;
-						$canCreate  = $user->authorise('core.create', 'com_content.category.' . $item->catid);
-						$canEdit    = $user->authorise('core.edit', 'com_content.article.' . $item->id);
+						$ordering = ($listOrder == 'fp.ordering');
+						$assetId = 'com_content.article.' . $item->id;
+						$canCreate = $user->authorise('core.create', 'com_content.category.' . $item->catid);
+						$canEdit = $user->authorise('core.edit', 'com_content.article.' . $item->id);
 						$canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $userId || $item->checked_out == 0;
-						$canChange  = $user->authorise('core.edit.state', 'com_content.article.' . $item->id) && $canCheckin;
+						$canChange = $user->authorise('core.edit.state', 'com_content.article.' . $item->id) && $canCheckin;
 						?>
 						<tr class="row<?php echo $i % 2; ?>">
 							<td class="order nowrap center hidden-phone">
@@ -118,7 +119,8 @@ if ($saveOrder)
 								<span class="icon-menu"></span>
 							</span>
 								<?php if ($canChange && $saveOrder) : ?>
-									<input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering; ?>" class="width-20 text-area-order " />
+									<input type="text" style="display:none" name="order[]" size="5"
+									       value="<?php echo $item->ordering; ?>" class="width-20 text-area-order "/>
 								<?php endif; ?>
 							</td>
 							<td class="center">
@@ -149,10 +151,12 @@ if ($saveOrder)
 										<?php $language = $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
 									<?php endif; ?>
 									<?php if ($canEdit) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_content&task=article.edit&return=featured&id=' . $item->id);?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
+										<a href="<?php echo JRoute::_('index.php?option=com_content&task=article.edit&return=featured&id=' . $item->id); ?>"
+										   title="<?php echo JText::_('JACTION_EDIT'); ?>">
 											<?php echo $this->escape($item->title); ?></a>
 									<?php else : ?>
-										<span title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->alias)); ?>"><?php echo $this->escape($item->title); ?></span>
+										<span
+											title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->alias)); ?>"><?php echo $this->escape($item->title); ?></span>
 									<?php endif; ?>
 									<span class="small break-word">
 									<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
@@ -174,11 +178,11 @@ if ($saveOrder)
 								<?php endif; ?>
 							</td>
 							<td class="small hidden-phone">
-								<?php if ($item->language == '*'):?>
+								<?php if ($item->language == '*'): ?>
 									<?php echo JText::alt('JALL', 'language'); ?>
-								<?php else:?>
+								<?php else: ?>
 									<?php echo $item->language_title ? JHtml::_('image', 'mod_languages/' . $item->language_image . '.gif', $item->language_title, array('title' => $item->language_title), true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
-								<?php endif;?>
+								<?php endif; ?>
 							</td>
 							<td class="nowrap small hidden-phone">
 								<?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
@@ -195,9 +199,9 @@ if ($saveOrder)
 				</table>
 			<?php endif; ?>
 
-			<input type="hidden" name="task" value="" />
-			<input type="hidden" name="featured" value="1" />
-			<input type="hidden" name="boxchecked" value="0" />
+			<input type="hidden" name="task" value=""/>
+			<input type="hidden" name="featured" value="1"/>
+			<input type="hidden" name="boxchecked" value="0"/>
 			<?php echo JHtml::_('form.token'); ?>
 		</div>
 </form>

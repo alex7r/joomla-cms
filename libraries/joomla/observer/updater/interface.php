@@ -20,7 +20,7 @@ interface JObserverUpdaterInterface
 	/**
 	 * Constructor
 	 *
-	 * @param   JObservableInterface  $observable  The observable subject object
+	 * @param   JObservableInterface $observable The observable subject object
 	 *
 	 * @since   3.1.2
 	 */
@@ -30,7 +30,7 @@ interface JObserverUpdaterInterface
 	 * Adds an observer to the JObservableInterface instance updated by this
 	 * This method can be called fron JObservableInterface::attachObserver
 	 *
-	 * @param   JObserverInterface  $observer  The observer object
+	 * @param   JObserverInterface $observer The observer object
 	 *
 	 * @return  void
 	 *
@@ -41,8 +41,8 @@ interface JObserverUpdaterInterface
 	/**
 	 * Call all observers for $event with $params
 	 *
-	 * @param   string  $event   Event name (function name in observer)
-	 * @param   array   $params  Params of event (params in observer function)
+	 * @param   string $event  Event name (function name in observer)
+	 * @param   array  $params Params of event (params in observer function)
 	 *
 	 * @return  void
 	 *
@@ -53,7 +53,7 @@ interface JObserverUpdaterInterface
 	/**
 	 * Enable/Disable calling of observers (this is useful when calling parent:: function
 	 *
-	 * @param   boolean  $enabled  Enable (true) or Disable (false) the observer events
+	 * @param   boolean $enabled Enable (true) or Disable (false) the observer events
 	 *
 	 * @return  boolean  Returns old state
 	 *

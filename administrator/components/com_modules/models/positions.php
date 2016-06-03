@@ -19,7 +19,7 @@ class ModulesModelPositions extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -38,43 +38,20 @@ class ModulesModelPositions extends JModelList
 	}
 
 	/**
-	 * Method to auto-populate the model state.
+	 * Method to get the total number of items.
 	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
-	 * @return  void
+	 * @return  int    The total number of items.
 	 *
 	 * @since   1.6
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	public function getTotal()
 	{
-		$app = JFactory::getApplication('administrator');
+		if (!isset($this->total))
+		{
+			$this->getItems();
+		}
 
-		// Load the filter state.
-		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
-		$state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'string');
-		$this->setState('filter.state', $state);
-
-		$clientId = $app->input->getInt('client_id', 0);
-		$this->setState('filter.client_id', $clientId);
-
-		$template = $this->getUserStateFromRequest($this->context . '.filter.template', 'filter_template', '', 'string');
-		$this->setState('filter.template', $template);
-
-		$type = $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string');
-		$this->setState('filter.type', $type);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_modules');
-		$this->setState('params', $params);
-
-		// List state information.
-		parent::populateState('value', 'asc');
+		return $this->total;
 	}
 
 	/**
@@ -158,8 +135,8 @@ class ModulesModelPositions extends JModelList
 
 							if (!$value)
 							{
-								$value = $label;
-								$label = preg_replace('/[^a-zA-Z0-9_\-]/', '_', 'TPL_' . $template->element . '_POSITION_' . $value);
+								$value    = $label;
+								$label    = preg_replace('/[^a-zA-Z0-9_\-]/', '_', 'TPL_' . $template->element . '_POSITION_' . $value);
 								$altlabel = preg_replace('/[^a-zA-Z0-9_\-]/', '_', 'COM_MODULES_POSITION_' . $value);
 
 								if (!$lang->hasKey($label) && $lang->hasKey($altlabel))
@@ -224,19 +201,42 @@ class ModulesModelPositions extends JModelList
 	}
 
 	/**
-	 * Method to get the total number of items.
+	 * Method to auto-populate the model state.
 	 *
-	 * @return  int	The total number of items.
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
+	 *
+	 * @return  void
 	 *
 	 * @since   1.6
 	 */
-	public function getTotal()
+	protected function populateState($ordering = null, $direction = null)
 	{
-		if (!isset($this->total))
-		{
-			$this->getItems();
-		}
+		$app = JFactory::getApplication('administrator');
 
-		return $this->total;
+		// Load the filter state.
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		$state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'string');
+		$this->setState('filter.state', $state);
+
+		$clientId = $app->input->getInt('client_id', 0);
+		$this->setState('filter.client_id', $clientId);
+
+		$template = $this->getUserStateFromRequest($this->context . '.filter.template', 'filter_template', '', 'string');
+		$this->setState('filter.template', $template);
+
+		$type = $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string');
+		$this->setState('filter.type', $type);
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_modules');
+		$this->setState('params', $params);
+
+		// List state information.
+		parent::populateState('value', 'asc');
 	}
 }

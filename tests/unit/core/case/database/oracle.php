@@ -73,9 +73,9 @@ abstract class TestCaseDatabaseOracle extends TestCaseDatabase
 					self::$_options['charset'] = $v;
 					break;
 				case 'dbname':
-					$components = parse_url($v);
-					self::$_options['host'] = $components['host'];
-					self::$_options['port'] = $components['port'];
+					$components                 = parse_url($v);
+					self::$_options['host']     = $components['host'];
+					self::$_options['port']     = $components['port'];
 					self::$_options['database'] = ltrim($components['path'], '/');
 					break;
 				case 'user':
@@ -95,7 +95,7 @@ abstract class TestCaseDatabaseOracle extends TestCaseDatabase
 
 		// Ensure some defaults.
 		self::$_options['charset'] = isset(self::$_options['charset']) ? self::$_options['charset'] : 'AL32UTF8';
-		self::$_options['port'] = isset(self::$_options['port']) ? self::$_options['port'] : 1521;
+		self::$_options['port']    = isset(self::$_options['port']) ? self::$_options['port'] : 1521;
 
 		try
 		{
@@ -114,7 +114,7 @@ abstract class TestCaseDatabaseOracle extends TestCaseDatabase
 		}
 
 		// Setup the factory pointer for the driver and stash the old one.
-		self::$_stash = JFactory::$database;
+		self::$_stash       = JFactory::$database;
 		JFactory::$database = self::$driver;
 	}
 
@@ -128,7 +128,7 @@ abstract class TestCaseDatabaseOracle extends TestCaseDatabase
 	public static function tearDownAfterClass()
 	{
 		JFactory::$database = self::$_stash;
-		self::$driver = null;
+		self::$driver       = null;
 	}
 
 	/**

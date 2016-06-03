@@ -25,17 +25,17 @@ class JCryptPasswordSimpleTest extends PHPUnit_Framework_TestCase
 	{
 		// Password, type, salt, expected cost
 		return array(
-			'Blowfish' => array('password', JCryptPassword::BLOWFISH, 'ABCDEFGHIJKLMNOPQRSTUV',
+			'Blowfish'   => array('password', JCryptPassword::BLOWFISH, 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$10$ABCDEFGHIJKLMNOPQRSTUOiAi7OcdE4zRCh6NcGWusEcNPtq6/w8.'),
-			'Blowfish2' => array('password', '$2a$', 'ABCDEFGHIJKLMNOPQRSTUV',
+			'Blowfish2'  => array('password', '$2a$', 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$10$ABCDEFGHIJKLMNOPQRSTUOiAi7OcdE4zRCh6NcGWusEcNPtq6/w8.'),
-			'MD5' => array('password', JCryptPassword::MD5, 'ABCDEFGHIJKL',
+			'MD5'        => array('password', JCryptPassword::MD5, 'ABCDEFGHIJKL',
 				'$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1'),
-			'Joomla' => array('password', JCryptPassword::JOOMLA, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456',
+			'Joomla'     => array('password', JCryptPassword::JOOMLA, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456',
 				'883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456'),
 			'Blowfish_5' => array('password', JCryptPassword::BLOWFISH, 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$05$ABCDEFGHIJKLMNOPQRSTUOvv7EU5o68GAoLxyfugvULZR70IIMZqW', 5),
-			'default' => array('password', null, 'ABCDEFGHIJKLMNOPQRSTUV',
+			'default'    => array('password', null, 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$05$ABCDEFGHIJKLMNOPQRSTUOvv7EU5o68GAoLxyfugvULZR70IIMZqW', 5)
 		);
 	}
@@ -57,11 +57,11 @@ class JCryptPasswordSimpleTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests create method for expected exception
 	 *
-	 * @param   string   $password  The password to create
-	 * @param   string   $type      The type of hash
-	 * @param   string   $salt      The salt to be used
-	 * @param   string   $expected  The expected result
-	 * @param   integer  $cost      The cost value
+	 * @param   string  $password The password to create
+	 * @param   string  $type     The type of hash
+	 * @param   string  $salt     The salt to be used
+	 * @param   string  $expected The expected result
+	 * @param   integer $cost     The cost value
 	 *
 	 * @expectedException  InvalidArgumentException
 	 *
@@ -69,7 +69,7 @@ class JCryptPasswordSimpleTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider  createExceptionData
 	 *
-	 * @since    12.3
+	 * @since         12.3
 	 */
 	public function testCreateException($password, $type, $salt, $expected, $cost)
 	{
@@ -90,17 +90,17 @@ class JCryptPasswordSimpleTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the JCryptPasswordSimple::Create method.
 	 *
-	 * @param   string   $password  The password to create
-	 * @param   string   $type      The type of hash
-	 * @param   string   $salt      The salt to be used
-	 * @param   string   $expected  The expected result
-	 * @param   integer  $cost      The cost value
+	 * @param   string  $password The password to create
+	 * @param   string  $type     The type of hash
+	 * @param   string  $salt     The salt to be used
+	 * @param   string  $expected The expected result
+	 * @param   integer $cost     The cost value
 	 *
 	 * @return        void
 	 *
 	 * @dataProvider  createData
 	 *
-	 * @since   11.3
+	 * @since         11.3
 	 */
 	public function testCreate($password, $type, $salt, $expected, $cost = 10)
 	{
@@ -128,21 +128,21 @@ class JCryptPasswordSimpleTest extends PHPUnit_Framework_TestCase
 	{
 		// Password, hash, expected
 		return array(
-			'Blowfish Valid:' => array('password', '$2y$10$ABCDEFGHIJKLMNOPQRSTUOiAi7OcdE4zRCh6NcGWusEcNPtq6/w8.', true),
+			'Blowfish Valid:'   => array('password', '$2y$10$ABCDEFGHIJKLMNOPQRSTUOiAi7OcdE4zRCh6NcGWusEcNPtq6/w8.', true),
 			'Blowfish Invalid:' => array('wrong password', '$2y$10$ABCDEFGHIJKLMNOPQRSTUOiAi7OcdE4zRCh6NcGWusEcNPtq6/w8.', false),
-			'MD5 Valid' => array('password', '$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1', true),
-			'MD5 Invalid' => array('passw0rd', '$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1', false),
-			'Joomla Valid' => array('password', '883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456', true),
-			'Joomla Invalid' => array('passw0rd', '883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456', false)
+			'MD5 Valid'         => array('password', '$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1', true),
+			'MD5 Invalid'       => array('passw0rd', '$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1', false),
+			'Joomla Valid'      => array('password', '883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456', true),
+			'Joomla Invalid'    => array('passw0rd', '883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456', false)
 		);
 	}
 
 	/**
 	 * Tests the verify method.
 	 *
-	 * @param   string  $password     The password to verify
-	 * @param   string  $hash         The hash
-	 * @param   string  $expectation  The expected result
+	 * @param   string $password    The password to verify
+	 * @param   string $hash        The hash
+	 * @param   string $expectation The expected result
 	 *
 	 * @dataProvider  verifyData
 	 *
@@ -166,22 +166,22 @@ class JCryptPasswordSimpleTest extends PHPUnit_Framework_TestCase
 	{
 		// Type, expectation
 		return array(
-			'Joomla' => array('Joomla','Joomla'),
-			'Null' => array('','$2y$'),
+			'Joomla' => array('Joomla', 'Joomla'),
+			'Null'   => array('', '$2y$'),
 		);
 	}
 
 	/**
 	 * Tests the setDefaultType method.
 	 *
-	 * @param   string  $type         The proposed default type
-	 * @param   string  $expectation  The expected value of $this->defaultType
+	 * @param   string $type        The proposed default type
+	 * @param   string $expectation The expected value of $this->defaultType
 	 *
 	 * @dataProvider  defaultTypeData
 	 *
 	 * @return void
 	 *
-	 * @since   12.3
+	 * @since         12.3
 	 */
 	public function testSetDefaultType($type, $expectation)
 	{
@@ -196,14 +196,14 @@ class JCryptPasswordSimpleTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the getDefaultType method.
 	 *
-	 * @param   string  $type         The proposed default type
-	 * @param   string  $expectation  The expected value of $this->defaultType
+	 * @param   string $type        The proposed default type
+	 * @param   string $expectation The expected value of $this->defaultType
 	 *
 	 * @dataProvider  defaultTypeData
 	 *
 	 * @return void
 	 *
-	 * @since   12.3
+	 * @since         12.3
 	 */
 	public function testGetDefaultType($type, $expectation)
 	{

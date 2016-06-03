@@ -24,11 +24,11 @@ class JGithubPackageIssuesComments extends JGithubPackage
 	/**
 	 * Method to get the list of comments on an issue.
 	 *
-	 * @param   string   $owner    The name of the owner of the GitHub repository.
-	 * @param   string   $repo     The name of the GitHub repository.
-	 * @param   integer  $issueId  The issue number.
-	 * @param   integer  $page     The page number from which to get items.
-	 * @param   integer  $limit    The number of items on a page.
+	 * @param   string  $owner   The name of the owner of the GitHub repository.
+	 * @param   string  $repo    The name of the GitHub repository.
+	 * @param   integer $issueId The issue number.
+	 * @param   integer $page    The page number from which to get items.
+	 * @param   integer $limit   The number of items on a page.
 	 *
 	 * @throws DomainException
 	 * @since   11.3
@@ -49,11 +49,11 @@ class JGithubPackageIssuesComments extends JGithubPackage
 	/**
 	 * Method to get the list of comments in a repository.
 	 *
-	 * @param   string  $owner      The name of the owner of the GitHub repository.
-	 * @param   string  $repo       The name of the GitHub repository.
-	 * @param   string  $sort       The sort field - created or updated.
-	 * @param   string  $direction  The sort order- asc or desc. Ignored without sort parameter.
-	 * @param   JDate   $since      A timestamp in ISO 8601 format.
+	 * @param   string $owner     The name of the owner of the GitHub repository.
+	 * @param   string $repo      The name of the GitHub repository.
+	 * @param   string $sort      The sort field - created or updated.
+	 * @param   string $direction The sort order- asc or desc. Ignored without sort parameter.
+	 * @param   JDate  $since     A timestamp in ISO 8601 format.
 	 *
 	 * @throws UnexpectedValueException
 	 * @throws DomainException
@@ -99,9 +99,9 @@ class JGithubPackageIssuesComments extends JGithubPackage
 	/**
 	 * Method to get a single comment.
 	 *
-	 * @param   string   $owner  The name of the owner of the GitHub repository.
-	 * @param   string   $repo   The name of the GitHub repository.
-	 * @param   integer  $id     The comment id.
+	 * @param   string  $owner The name of the owner of the GitHub repository.
+	 * @param   string  $repo  The name of the GitHub repository.
+	 * @param   integer $id    The comment id.
 	 *
 	 * @return mixed
 	 */
@@ -119,10 +119,10 @@ class JGithubPackageIssuesComments extends JGithubPackage
 	/**
 	 * Method to update a comment on an issue.
 	 *
-	 * @param   string   $user       The name of the owner of the GitHub repository.
-	 * @param   string   $repo       The name of the GitHub repository.
-	 * @param   integer  $commentId  The id of the comment to update.
-	 * @param   string   $body       The new body text for the comment.
+	 * @param   string  $user      The name of the owner of the GitHub repository.
+	 * @param   string  $repo      The name of the GitHub repository.
+	 * @param   integer $commentId The id of the comment to update.
+	 * @param   string  $body      The new body text for the comment.
 	 *
 	 * @since   11.3
 	 * @throws DomainException
@@ -150,10 +150,10 @@ class JGithubPackageIssuesComments extends JGithubPackage
 	/**
 	 * Method to create a comment on an issue.
 	 *
-	 * @param   string   $user     The name of the owner of the GitHub repository.
-	 * @param   string   $repo     The name of the GitHub repository.
-	 * @param   integer  $issueId  The issue number.
-	 * @param   string   $body     The comment body text.
+	 * @param   string  $user    The name of the owner of the GitHub repository.
+	 * @param   string  $repo    The name of the GitHub repository.
+	 * @param   integer $issueId The issue number.
+	 * @param   string  $body    The comment body text.
 	 *
 	 * @throws DomainException
 	 * @since   11.3
@@ -182,9 +182,9 @@ class JGithubPackageIssuesComments extends JGithubPackage
 	/**
 	 * Method to delete a comment on an issue.
 	 *
-	 * @param   string   $user       The name of the owner of the GitHub repository.
-	 * @param   string   $repo       The name of the GitHub repository.
-	 * @param   integer  $commentId  The id of the comment to delete.
+	 * @param   string  $user      The name of the owner of the GitHub repository.
+	 * @param   string  $repo      The name of the GitHub repository.
+	 * @param   integer $commentId The id of the comment to delete.
 	 *
 	 * @throws DomainException
 	 * @since   11.3

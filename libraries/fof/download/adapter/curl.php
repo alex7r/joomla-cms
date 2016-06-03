@@ -17,11 +17,11 @@ class FOFDownloadAdapterCurl extends FOFDownloadAdapterAbstract implements FOFDo
 
 	public function __construct()
 	{
-		$this->priority = 110;
-		$this->supportsFileSize = true;
+		$this->priority              = 110;
+		$this->supportsFileSize      = true;
 		$this->supportsChunkDownload = true;
-		$this->name = 'curl';
-		$this->isSupported = function_exists('curl_init') && function_exists('curl_exec') && function_exists('curl_close');
+		$this->name                  = 'curl';
+		$this->isSupported           = function_exists('curl_init') && function_exists('curl_exec') && function_exists('curl_close');
 	}
 
 	/**
@@ -34,10 +34,10 @@ class FOFDownloadAdapterCurl extends FOFDownloadAdapterAbstract implements FOFDo
 	 * If this class' supportsChunkDownload returns false you should assume
 	 * that the $from and $to parameters will be ignored.
 	 *
-	 * @param   string   $url     The remote file's URL
-	 * @param   integer  $from    Byte range to start downloading from. Use null for start of file.
-	 * @param   integer  $to      Byte range to stop downloading. Use null to download the entire file ($from is ignored)
-	 * @param   array    $params  Additional params that will be added before performing the download
+	 * @param   string  $url    The remote file's URL
+	 * @param   integer $from   Byte range to start downloading from. Use null for start of file.
+	 * @param   integer $to     Byte range to stop downloading. Use null to download the entire file ($from is ignored)
+	 * @param   array   $params Additional params that will be added before performing the download
 	 *
 	 * @return  string  The raw file data retrieved from the remote URL.
 	 *
@@ -68,17 +68,17 @@ class FOFDownloadAdapterCurl extends FOFDownloadAdapterAbstract implements FOFDo
 
 		// Default cURL options
 		$options = array(
-			CURLOPT_AUTOREFERER     => 1,
-			CURLOPT_SSL_VERIFYPEER  => 1,
-			CURLOPT_SSL_VERIFYHOST  => 2,
-			CURLOPT_SSLVERSION      => 0,
-			CURLOPT_AUTOREFERER     => 1,
-			CURLOPT_URL             => $url,
-			CURLOPT_BINARYTRANSFER  => 1,
-			CURLOPT_RETURNTRANSFER  => 1,
-			CURLOPT_FOLLOWLOCATION  => 1,
-			CURLOPT_CAINFO          => JPATH_LIBRARIES . 'joomla/http/transport/cacert.pem',
-			CURLOPT_HEADERFUNCTION  => array($this, 'reponseHeaderCallback')
+			CURLOPT_AUTOREFERER    => 1,
+			CURLOPT_SSL_VERIFYPEER => 1,
+			CURLOPT_SSL_VERIFYHOST => 2,
+			CURLOPT_SSLVERSION     => 0,
+			CURLOPT_AUTOREFERER    => 1,
+			CURLOPT_URL            => $url,
+			CURLOPT_BINARYTRANSFER => 1,
+			CURLOPT_RETURNTRANSFER => 1,
+			CURLOPT_FOLLOWLOCATION => 1,
+			CURLOPT_CAINFO         => JPATH_LIBRARIES . 'joomla/http/transport/cacert.pem',
+			CURLOPT_HEADERFUNCTION => array($this, 'reponseHeaderCallback')
 		);
 
 		if (!(empty($from) && empty($to)))
@@ -111,8 +111,8 @@ class FOFDownloadAdapterCurl extends FOFDownloadAdapterAbstract implements FOFDo
 		elseif ($http_status > 399)
 		{
 			$result = false;
-			$errno = $http_status;
-			$error = JText::sprintf('LIB_FOF_DOWNLOAD_ERR_HTTPERROR', $http_status);
+			$errno  = $http_status;
+			$error  = JText::sprintf('LIB_FOF_DOWNLOAD_ERR_HTTPERROR', $http_status);
 		}
 
 		curl_close($ch);
@@ -130,7 +130,7 @@ class FOFDownloadAdapterCurl extends FOFDownloadAdapterAbstract implements FOFDo
 	/**
 	 * Get the size of a remote file in bytes
 	 *
-	 * @param   string  $url  The remote file's URL
+	 * @param   string $url The remote file's URL
 	 *
 	 * @return  integer  The file size, or -1 if the remote server doesn't support this feature
 	 */
@@ -146,10 +146,10 @@ class FOFDownloadAdapterCurl extends FOFDownloadAdapterAbstract implements FOFDo
 		curl_setopt($ch, CURLOPT_SSLVERSION, 0);
 
 		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_NOBODY, true );
-		curl_setopt($ch, CURLOPT_HEADER, true );
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
-		@curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true );
+		curl_setopt($ch, CURLOPT_NOBODY, true);
+		curl_setopt($ch, CURLOPT_HEADER, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		@curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		@curl_setopt($ch, CURLOPT_CAINFO, JPATH_LIBRARIES . 'joomla/http/transport/cacert.pem');
 
 		$data = curl_exec($ch);
@@ -158,22 +158,22 @@ class FOFDownloadAdapterCurl extends FOFDownloadAdapterAbstract implements FOFDo
 		if ($data)
 		{
 			$content_length = "unknown";
-			$status = "unknown";
-			$redirection = null;
+			$status         = "unknown";
+			$redirection    = null;
 
-			if (preg_match( "/^HTTP\/1\.[01] (\d\d\d)/", $data, $matches))
+			if (preg_match("/^HTTP\/1\.[01] (\d\d\d)/", $data, $matches))
 			{
-				$status = (int)$matches[1];
+				$status = (int) $matches[1];
 			}
 
-			if (preg_match( "/Content-Length: (\d+)/", $data, $matches))
+			if (preg_match("/Content-Length: (\d+)/", $data, $matches))
 			{
-				$content_length = (int)$matches[1];
+				$content_length = (int) $matches[1];
 			}
 
-			if (preg_match( "/Location: (.*)/", $data, $matches))
+			if (preg_match("/Location: (.*)/", $data, $matches))
 			{
-				$redirection = (int)$matches[1];
+				$redirection = (int) $matches[1];
 			}
 
 			if ($status == 200)
@@ -198,8 +198,8 @@ class FOFDownloadAdapterCurl extends FOFDownloadAdapterAbstract implements FOFDo
 	/**
 	 * Handles the HTTP headers returned by cURL
 	 *
-	 * @param   resource  $ch    cURL resource handle (unused)
-	 * @param   string    $data  Each header line, as returned by the server
+	 * @param   resource $ch   cURL resource handle (unused)
+	 * @param   string   $data Each header line, as returned by the server
 	 *
 	 * @return  int  The length of the $data string
 	 */

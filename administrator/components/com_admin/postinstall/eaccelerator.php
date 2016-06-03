@@ -28,7 +28,7 @@ use Joomla\Utilities\ArrayHelper;
  */
 function admin_postinstall_eaccelerator_condition()
 {
-	$app = JFactory::getApplication();
+	$app          = JFactory::getApplication();
 	$cacheHandler = $app->get('cacheHandler', '');
 
 	return (ucfirst($cacheHandler) == 'Eaccelerator');

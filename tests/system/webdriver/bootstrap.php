@@ -1,6 +1,7 @@
 <?php
 
-class SeleniumClientAutoLoader {
+class SeleniumClientAutoLoader
+{
 
 	// Array of page class files
 	private $pageClassFiles = array();
@@ -9,8 +10,8 @@ class SeleniumClientAutoLoader {
 	{
 		spl_autoload_register(array($this, 'seleniumClientLoader'));
 		$iterator = new RecursiveIteratorIterator(
-				new RecursiveDirectoryIterator('../Pages/'),
-				RecursiveIteratorIterator::SELF_FIRST
+			new RecursiveDirectoryIterator('../Pages/'),
+			RecursiveIteratorIterator::SELF_FIRST
 		);
 		foreach ($iterator as $file)
 		{

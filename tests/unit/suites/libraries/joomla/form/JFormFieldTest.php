@@ -29,49 +29,6 @@ class JFormFieldTest extends TestCaseDatabase
 	protected $backupServer;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		require_once JPATH_PLATFORM . '/joomla/form/fields/text.php';
-		require_once JPATH_PLATFORM . '/joomla/form/fields/hidden.php';
-		require_once JPATH_PLATFORM . '/joomla/form/fields/checkboxes.php';
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
 	 * Test...
 	 *
 	 * @return  array
@@ -159,8 +116,8 @@ class JFormFieldTest extends TestCaseDatabase
 
 		// Standard usage.
 
-		$xml = $form->getXml();
-		$data = $xml->xpath('fields/fields[@name="params"]/field[@name="colours"]');
+		$xml     = $form->getXml();
+		$data    = $xml->xpath('fields/fields[@name="params"]/field[@name="colours"]');
 		$colours = array_pop($data);
 
 		$this->assertThat(
@@ -170,7 +127,7 @@ class JFormFieldTest extends TestCaseDatabase
 		);
 
 		$this->assertThat(
-			// Use original 'id' and 'name' here (from XML definition of the form field)
+		// Use original 'id' and 'name' here (from XML definition of the form field)
 			$field->getId((string) $colours['id'], (string) $colours['name']),
 			$this->equalTo('jform_params_colours'),
 			'Line:' . __LINE__ . ' The property should be computed from the XML.'
@@ -196,8 +153,8 @@ class JFormFieldTest extends TestCaseDatabase
 
 		// Standard usage.
 
-		$xml = $form->getXml();
-		$data = $xml->xpath('fields/field[@name="title"]');
+		$xml   = $form->getXml();
+		$data  = $xml->xpath('fields/field[@name="title"]');
 		$title = array_pop($data);
 
 		$this->assertThat(
@@ -207,20 +164,20 @@ class JFormFieldTest extends TestCaseDatabase
 		);
 
 		$matcher = array(
-				'id'         => 'title_id-lbl',
-				'tag'        => 'label',
-				'attributes' => array(
-						'for'   => 'title_id',
-						'class' => 'hasTooltip required',
-						'title' => '<strong>Title</strong><br />The title.'
-					),
-				'content'    => 'regexp:/Title.*\*/',
-				'child'      => array(
-						'tag'        => 'span',
-						'attributes' => array('class' => 'star'),
-						'content'    => 'regexp:/\*/'
-					)
-			);
+			'id'         => 'title_id-lbl',
+			'tag'        => 'label',
+			'attributes' => array(
+				'for'   => 'title_id',
+				'class' => 'hasTooltip required',
+				'title' => '<strong>Title</strong><br />The title.'
+			),
+			'content'    => 'regexp:/Title.*\*/',
+			'child'      => array(
+				'tag'        => 'span',
+				'attributes' => array('class' => 'star'),
+				'content'    => 'regexp:/\*/'
+			)
+		);
 
 		$this->assertTag(
 			$matcher,
@@ -229,7 +186,7 @@ class JFormFieldTest extends TestCaseDatabase
 		);
 
 		// Not required
-		$data = $xml->xpath('fields/fields[@name="params"]/field[@name="colours"]');
+		$data    = $xml->xpath('fields/fields[@name="params"]/field[@name="colours"]');
 		$colours = array_pop($data);
 
 		$this->assertThat(
@@ -239,14 +196,14 @@ class JFormFieldTest extends TestCaseDatabase
 		);
 
 		$matcher = array(
-				'id'         => 'colours-lbl',
-				'tag'        => 'label',
-				'attributes' => array(
-						'for'   => 'colours',
-						'class' => ''
-					),
-				'content'    => 'colours'
-			);
+			'id'         => 'colours-lbl',
+			'tag'        => 'label',
+			'attributes' => array(
+				'for'   => 'colours',
+				'class' => ''
+			),
+			'content'    => 'colours'
+		);
 
 		$this->assertTag(
 			$matcher,
@@ -256,7 +213,7 @@ class JFormFieldTest extends TestCaseDatabase
 
 		// Hidden field
 		$data = $xml->xpath('fields/field[@name="id"]');
-		$id = array_pop($data);
+		$id   = array_pop($data);
 
 		$this->assertThat(
 			$field->setup($id, 'id'),
@@ -289,8 +246,8 @@ class JFormFieldTest extends TestCaseDatabase
 
 		// Standard usage.
 
-		$xml = $form->getXml();
-		$data = $xml->xpath('fields/field[@name="title"]');
+		$xml   = $form->getXml();
+		$data  = $xml->xpath('fields/field[@name="title"]');
 		$title = array_pop($data);
 
 		$this->assertThat(
@@ -307,7 +264,7 @@ class JFormFieldTest extends TestCaseDatabase
 
 		// Hidden field
 		$data = $xml->xpath('fields/field[@name="id"]');
-		$id = array_pop($data);
+		$id   = array_pop($data);
 
 		$this->assertThat(
 			$field->setup($id, 'id'),
@@ -345,18 +302,18 @@ class JFormFieldTest extends TestCaseDatabase
 	/**
 	 * Tests the name, value, id, title, lalbel property setup by JFormField::setup method
 	 *
-	 * @param   array   $expected  @todo
-	 * @param   string  $element   @todo
-	 * @param   string  $value     @todo
-	 * @param   string  $group     @todo
+	 * @param   array  $expected @todo
+	 * @param   string $element  @todo
+	 * @param   string $value    @todo
+	 * @param   string $group    @todo
 	 *
 	 * @return void
 	 *
 	 * @dataProvider  getSetupData
 	 */
-	public function testSetup($expected, $element, $value, $group=null)
+	public function testSetup($expected, $element, $value, $group = null)
 	{
-		$field = new JFormFieldText;
+		$field   = new JFormFieldText;
 		$element = simplexml_load_string($element);
 
 		$this->assertThat(
@@ -367,15 +324,15 @@ class JFormFieldTest extends TestCaseDatabase
 
 		// Matcher for the 'label' attribute
 		$matcher = array(
-				'id'         => 'myId-lbl',
-				'tag'        => 'label',
-				'attributes' => array(
-						'for'   => 'myId',
-						'class' => 'hasTooltip',
-						'title' => '<strong>My Title</strong><br />The description.'
-					),
-				'content'    => 'regexp:/My Title/'
-			);
+			'id'         => 'myId-lbl',
+			'tag'        => 'label',
+			'attributes' => array(
+				'for'   => 'myId',
+				'class' => 'hasTooltip',
+				'title' => '<strong>My Title</strong><br />The description.'
+			),
+			'content'    => 'regexp:/My Title/'
+		);
 
 		foreach ($expected as $attr => $value)
 		{
@@ -409,7 +366,7 @@ class JFormFieldTest extends TestCaseDatabase
 	 */
 	public function testSetupHiddenFieldType()
 	{
-		$field = new JFormFieldHidden;
+		$field   = new JFormFieldHidden;
 		$element = simplexml_load_string(
 			'<field name="myName" type="hidden" />');
 
@@ -436,7 +393,7 @@ class JFormFieldTest extends TestCaseDatabase
 	 */
 	public function testSetupForceMultiple()
 	{
-		$field = new JFormFieldCheckboxes;
+		$field   = new JFormFieldCheckboxes;
 		$element = simplexml_load_string('
 			<field type="checkboxes" name="myName">
 				<option value="red">Red</option>
@@ -463,5 +420,48 @@ class JFormFieldTest extends TestCaseDatabase
 			$this->equalTo('myName[]'),
 			'Line:' . __LINE__ . ' The property should be computed from the XML.'
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		require_once JPATH_PLATFORM . '/joomla/form/fields/text.php';
+		require_once JPATH_PLATFORM . '/joomla/form/fields/hidden.php';
+		require_once JPATH_PLATFORM . '/joomla/form/fields/checkboxes.php';
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 }

@@ -40,17 +40,17 @@ class JFormFieldNote extends JFormField
 			return '';
 		}
 
-		$title = $this->element['label'] ? (string) $this->element['label'] : ($this->element['title'] ? (string) $this->element['title'] : '');
-		$heading = $this->element['heading'] ? (string) $this->element['heading'] : 'h4';
+		$title       = $this->element['label'] ? (string) $this->element['label'] : ($this->element['title'] ? (string) $this->element['title'] : '');
+		$heading     = $this->element['heading'] ? (string) $this->element['heading'] : 'h4';
 		$description = (string) $this->element['description'];
-		$class = !empty($this->class) ? ' class="' . $this->class . '"' : '';
-		$close = (string) $this->element['close'];
+		$class       = !empty($this->class) ? ' class="' . $this->class . '"' : '';
+		$close       = (string) $this->element['close'];
 
 		$html = array();
 
 		if ($close)
 		{
-			$close = $close == 'true' ? 'alert' : $close;
+			$close  = $close == 'true' ? 'alert' : $close;
 			$html[] = '<button type="button" class="close" data-dismiss="' . $close . '">&times;</button>';
 		}
 

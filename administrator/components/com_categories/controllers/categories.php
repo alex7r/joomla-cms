@@ -19,22 +19,6 @@ use Joomla\Utilities\ArrayHelper;
 class CategoriesControllerCategories extends JControllerAdmin
 {
 	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  The array of possible config values. Optional.
-	 *
-	 * @return  JModelLegacy  The model.
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'Category', $prefix = 'CategoriesModel', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
-	}
-
-	/**
 	 * Rebuild the nested set tree.
 	 *
 	 * @return  bool  False on failure or error, true on success.
@@ -66,6 +50,22 @@ class CategoriesControllerCategories extends JControllerAdmin
 	}
 
 	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config The array of possible config values. Optional.
+	 *
+	 * @return  JModelLegacy  The model.
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'Category', $prefix = 'CategoriesModel', $config = array('ignore_request' => true))
+	{
+		return parent::getModel($name, $prefix, $config);
+	}
+
+	/**
 	 * Save the manual order inputs from the categories list page.
 	 *
 	 * @return      void
@@ -81,7 +81,7 @@ class CategoriesControllerCategories extends JControllerAdmin
 		JLog::add('CategoriesControllerCategories::saveorder() is deprecated. Function will be removed in 4.0', JLog::WARNING, 'deprecated');
 
 		// Get the arrays from the Request
-		$order = $this->input->post->get('order', null, 'array');
+		$order         = $this->input->post->get('order', null, 'array');
 		$originalOrder = explode(',', $this->input->getString('original_order_values'));
 
 		// Make sure something has changed
@@ -110,7 +110,7 @@ class CategoriesControllerCategories extends JControllerAdmin
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
-		$cid = $this->input->get('cid', array(), 'array');
+		$cid       = $this->input->get('cid', array(), 'array');
 		$extension = $this->input->getCmd('extension', null);
 
 		if (!is_array($cid) || count($cid) < 1)

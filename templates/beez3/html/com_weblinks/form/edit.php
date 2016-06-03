@@ -17,10 +17,8 @@ $params = $this->state->get('params');
 ?>
 
 <script type="text/javascript">
-	Joomla.submitbutton = function(task)
-	{
-		if (task == 'weblink.cancel' || document.formvalidator.isValid(document.getElementById('adminForm')))
-		{
+	Joomla.submitbutton = function (task) {
+		if (task == 'weblink.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
 			<?php echo $this->form->getField('description')->save(); ?>
 			Joomla.submitform(task);
 		}
@@ -28,11 +26,12 @@ $params = $this->state->get('params');
 </script>
 <div class="edit<?php echo $this->pageclass_sfx; ?>">
 	<?php if ($this->params->get('show_page_heading')) : ?>
-	<h1>
-		<?php echo $this->escape($this->params->get('page_heading')); ?>
-	</h1>
+		<h1>
+			<?php echo $this->escape($this->params->get('page_heading')); ?>
+		</h1>
 	<?php endif; ?>
-	<form action="<?php echo JRoute::_('index.php?option=com_weblinks&view=form&w_id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm" class="form-validate form-vertical">
+	<form action="<?php echo JRoute::_('index.php?option=com_weblinks&view=form&w_id=' . (int) $this->item->id); ?>"
+	      method="post" name="adminForm" id="adminForm" class="form-validate form-vertical">
 		<div class="btn-toolbar">
 			<div class="btn-group">
 				<button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('weblink.save')">
@@ -46,7 +45,7 @@ $params = $this->state->get('params');
 			</div>
 		</div>
 
-		<hr class="hr-condensed" />
+		<hr class="hr-condensed"/>
 		<div class="control-group">
 			<div class="control-label">
 				<?php echo $this->form->getLabel('title'); ?>
@@ -114,8 +113,8 @@ $params = $this->state->get('params');
 			</div>
 		</div>
 
-		<input type="hidden" name="return" value="<?php echo $this->return_page;?>" />
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
+		<input type="hidden" name="task" value=""/>
 		<?php echo JHtml::_('form.token'); ?>
 	</form>
 </div>

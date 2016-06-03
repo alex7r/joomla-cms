@@ -104,7 +104,7 @@ abstract class TestCaseDatabaseMysql extends TestCaseDatabase
 		}
 
 		// Setup the factory pointer for the driver and stash the old one.
-		self::$_stash = JFactory::$database;
+		self::$_stash       = JFactory::$database;
 		JFactory::$database = static::$driver;
 	}
 
@@ -118,7 +118,7 @@ abstract class TestCaseDatabaseMysql extends TestCaseDatabase
 	public static function tearDownAfterClass()
 	{
 		JFactory::$database = self::$_stash;
-		static::$driver = null;
+		static::$driver     = null;
 	}
 
 	/**

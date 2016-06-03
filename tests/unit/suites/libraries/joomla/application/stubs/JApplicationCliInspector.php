@@ -28,7 +28,7 @@ class JApplicationCliInspector extends JApplicationCli
 	/**
 	 * Mimic exiting the application.
 	 *
-	 * @param   integer  $code  The exit code (optional; default is 0).
+	 * @param   integer $code The exit code (optional; default is 0).
 	 *
 	 * @return  void
 	 *

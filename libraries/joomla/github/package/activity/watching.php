@@ -21,8 +21,8 @@ class JGithubPackageActivityWatching extends JGithubPackage
 	/**
 	 * List watchers
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -43,7 +43,7 @@ class JGithubPackageActivityWatching extends JGithubPackage
 	 *
 	 * List repositories being watched by a user.
 	 *
-	 * @param   string  $user  User name.
+	 * @param   string $user User name.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -64,8 +64,8 @@ class JGithubPackageActivityWatching extends JGithubPackage
 	/**
 	 * Get a Repository Subscription.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -84,10 +84,10 @@ class JGithubPackageActivityWatching extends JGithubPackage
 	/**
 	 * Set a Repository Subscription.
 	 *
-	 * @param   string   $owner       Repository owner.
-	 * @param   string   $repo        Repository name.
-	 * @param   boolean  $subscribed  Determines if notifications should be received from this thread.
-	 * @param   boolean  $ignored     Determines if all notifications should be blocked from this thread.
+	 * @param   string  $owner      Repository owner.
+	 * @param   string  $repo       Repository name.
+	 * @param   boolean $subscribed Determines if notifications should be received from this thread.
+	 * @param   boolean $ignored    Determines if all notifications should be blocked from this thread.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -111,8 +111,8 @@ class JGithubPackageActivityWatching extends JGithubPackage
 	/**
 	 * Delete a Repository Subscription.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -134,8 +134,8 @@ class JGithubPackageActivityWatching extends JGithubPackage
 	 *
 	 * Requires for the user to be authenticated.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @throws UnexpectedValueException
 	 * @since 3.3 (CMS)
@@ -170,8 +170,8 @@ class JGithubPackageActivityWatching extends JGithubPackage
 	 *
 	 * Requires for the user to be authenticated.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -193,8 +193,8 @@ class JGithubPackageActivityWatching extends JGithubPackage
 	 *
 	 * Requires for the user to be authenticated.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @since 3.3 (CMS)
 	 *

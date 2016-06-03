@@ -25,7 +25,7 @@ class ModulesViewModule extends JViewLegacy
 	/**
 	 * Display the view
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -110,7 +110,7 @@ class ModulesViewModule extends JViewLegacy
 		if ($lang->hasKey($help->url))
 		{
 			$debug = $lang->setDebug(false);
-			$url = JText::_($help->url);
+			$url   = JText::_($help->url);
 			$lang->setDebug($debug);
 		}
 		else

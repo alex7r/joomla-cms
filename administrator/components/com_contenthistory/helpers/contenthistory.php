@@ -17,38 +17,31 @@ defined('_JEXEC') or die;
 class ContenthistoryHelper
 {
 	/**
-	 * Method to put all field names, including nested ones, in a single array for easy lookup.
+	 * Method to prepare the object for the preview and compare views.
 	 *
-	 * @param   stdClass  $object  Standard class object that may contain one level of nested objects.
+	 * @param   JTableContenthistory $table Table object loaded with data.
 	 *
-	 * @return  array  Associative array of all field names, including ones in a nested object.
+	 * @return  stdClass  Object ready for the views.
 	 *
 	 * @since   3.2
 	 */
-	public static function createObjectArray($object)
+	public static function prepareData(JTableContenthistory $table)
 	{
-		$result = array();
+		$object     = static::decodeFields($table->version_data);
+		$typesTable = JTable::getInstance('Contenttype');
+		$typesTable->load(array('type_id' => $table->ucm_type_id));
+		$formValues = static::getFormValues($object, $typesTable);
+		$object     = static::mergeLabels($object, $formValues);
+		$object     = static::hideFields($object, $typesTable);
+		$object     = static::processLookupFields($object, $typesTable);
 
-		foreach ($object as $name => $value)
-		{
-			$result[$name] = $value;
-
-			if (is_object($value))
-			{
-				foreach ($value as $subName => $subValue)
-				{
-					$result[$subName] = $subValue;
-				}
-			}
-		}
-
-		return $result;
+		return $object;
 	}
 
 	/**
 	 * Method to decode JSON-encoded fields in a standard object. Used to unpack JSON strings in the content history data column.
 	 *
-	 * @param   stdClass  $jsonString  Standard class object that may contain one or more JSON-encoded fields.
+	 * @param   stdClass $jsonString Standard class object that may contain one or more JSON-encoded fields.
 	 *
 	 * @return  stdClass  Object with any JSON-encoded fields unpacked.
 	 *
@@ -77,8 +70,8 @@ class ContenthistoryHelper
 	 * First we see if we can find translatable labels for the fields in the object.
 	 * We translate any we can find and return an array in the format object->name => label.
 	 *
-	 * @param   stdClass           $object      Standard class object in the format name->value.
-	 * @param   JTableContenttype  $typesTable  Table object with content history options.
+	 * @param   stdClass          $object     Standard class object in the format name->value.
+	 * @param   JTableContenttype $typesTable Table object with content history options.
 	 *
 	 * @return  stdClass  Contains two associative arrays.
 	 *                    $formValues->labels in the format name => label (for example, 'id' => 'Article ID').
@@ -89,8 +82,8 @@ class ContenthistoryHelper
 	 */
 	public static function getFormValues($object, JTableContenttype $typesTable)
 	{
-		$labels = array();
-		$values = array();
+		$labels              = array();
+		$values              = array();
 		$expandedObjectArray = static::createObjectArray($object);
 		static::loadLanguageFiles($typesTable->type_alias);
 
@@ -119,15 +112,15 @@ class ContenthistoryHelper
 
 					if (isset($expandedObjectArray[$name]))
 					{
-						$optionFieldArray = $field->xpath('option[@value="' . $expandedObjectArray[$name] . '"]');
-						$valueText = trim((string) $optionFieldArray[0]);
+						$optionFieldArray                            = $field->xpath('option[@value="' . $expandedObjectArray[$name] . '"]');
+						$valueText                                   = trim((string) $optionFieldArray[0]);
 						$values[(string) $field->attributes()->name] = JText::_($valueText);
 					}
 				}
 			}
 		}
 
-		$result = new stdClass;
+		$result         = new stdClass;
 		$result->labels = $labels;
 		$result->values = $values;
 
@@ -135,9 +128,68 @@ class ContenthistoryHelper
 	}
 
 	/**
+	 * Method to put all field names, including nested ones, in a single array for easy lookup.
+	 *
+	 * @param   stdClass $object Standard class object that may contain one level of nested objects.
+	 *
+	 * @return  array  Associative array of all field names, including ones in a nested object.
+	 *
+	 * @since   3.2
+	 */
+	public static function createObjectArray($object)
+	{
+		$result = array();
+
+		foreach ($object as $name => $value)
+		{
+			$result[$name] = $value;
+
+			if (is_object($value))
+			{
+				foreach ($value as $subName => $subValue)
+				{
+					$result[$subName] = $subValue;
+				}
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Method to load the language files for the component whose history is being viewed.
+	 *
+	 * @param   string $typeAlias The type alias, for example 'com_content.article'.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public static function loadLanguageFiles($typeAlias)
+	{
+		$aliasArray = explode('.', $typeAlias);
+
+		if (is_array($aliasArray) && count($aliasArray) == 2)
+		{
+			$component = ($aliasArray[1] == 'category') ? 'com_categories' : $aliasArray[0];
+			$lang      = JFactory::getLanguage();
+
+			/**
+			 * Loading language file from the administrator/language directory then
+			 * loading language file from the administrator/components/extension/language directory
+			 */
+			$lang->load($component, JPATH_ADMINISTRATOR, null, false, true)
+			|| $lang->load($component, JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component), null, false, true);
+
+			// Force loading of back-end global language file
+			$lang->load('joomla', JPath::clean(JPATH_ADMINISTRATOR), null, false, true);
+		}
+	}
+
+	/**
 	 * Method to get the XML form file for this component. Used to get translated field names for history preview.
 	 *
-	 * @param   JTableContenttype  $typesTable  Table object with content history options.
+	 * @param   JTableContenttype $typesTable Table object with content history options.
 	 *
 	 * @return  mixed  JModel object if successful, false if no model found.
 	 *
@@ -163,9 +215,9 @@ class ContenthistoryHelper
 			if (count($aliasArray) == 2)
 			{
 				$component = ($aliasArray[1] == 'category') ? 'com_categories' : $aliasArray[0];
-				$path  = JFolder::makeSafe(JPATH_ADMINISTRATOR . '/components/' . $component . '/models/forms/');
-				$file = JFile::makeSafe($aliasArray[1] . '.xml');
-				$result = JFile::exists($path . $file) ? $path . $file : false;
+				$path      = JFolder::makeSafe(JPATH_ADMINISTRATOR . '/components/' . $component . '/models/forms/');
+				$file      = JFile::makeSafe($aliasArray[1] . '.xml');
+				$result    = JFile::exists($path . $file) ? $path . $file : false;
 			}
 		}
 
@@ -173,36 +225,44 @@ class ContenthistoryHelper
 	}
 
 	/**
-	 * Method to query the database using values from lookup objects.
+	 * Method to create object to pass to the layout. Format is as follows:
+	 * field is std object with name, value.
 	 *
-	 * @param   stdClass  $lookup  The std object with the values needed to do the query.
-	 * @param   mixed     $value   The value used to find the matching title or name. Typically the id.
+	 * Value can be a std object with name, value pairs.
 	 *
-	 * @return  mixed  Value from database (for example, name or title) on success, false on failure.
+	 * @param   stdClass $object     The std object from the JSON string. Can be nested 1 level deep.
+	 * @param   stdClass $formValues Standard class of label and value in an associative array.
+	 *
+	 * @return  stdClass  Object with translated labels where available
 	 *
 	 * @since   3.2
 	 */
-	public static function getLookupValue($lookup, $value)
+	public static function mergeLabels($object, $formValues)
 	{
-		$result = false;
+		$result = new stdClass;
 
-		if (isset($lookup->sourceColumn) && isset($lookup->targetTable) && isset($lookup->targetColumn)&& isset($lookup->displayColumn))
+		$labelsArray = $formValues->labels;
+		$valuesArray = $formValues->values;
+
+		foreach ($object as $name => $value)
 		{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$query->select($db->quoteName($lookup->displayColumn))
-				->from($db->quoteName($lookup->targetTable))
-				->where($db->quoteName($lookup->targetColumn) . ' = ' . $db->quote($value));
-			$db->setQuery($query);
+			$result->$name        = new stdClass;
+			$result->$name->name  = $name;
+			$result->$name->value = isset($valuesArray[$name]) ? $valuesArray[$name] : $value;
+			$result->$name->label = isset($labelsArray[$name]) ? $labelsArray[$name] : $name;
 
-			try
+			if (is_object($value))
 			{
-				$result = $db->loadResult();
-			}
-			catch (Exception $e)
-			{
-				// Ignore any errors and just return false
-				return false;
+				$subObject = new stdClass;
+
+				foreach ($value as $subName => $subValue)
+				{
+					$subObject->$subName        = new stdClass;
+					$subObject->$subName->name  = $subName;
+					$subObject->$subName->value = isset($valuesArray[$subName]) ? $valuesArray[$subName] : $subValue;
+					$subObject->$subName->label = isset($labelsArray[$subName]) ? $labelsArray[$subName] : $subName;
+					$result->$name->value       = $subObject;
+				}
 			}
 		}
 
@@ -212,8 +272,8 @@ class ContenthistoryHelper
 	/**
 	 * Method to remove fields from the object based on values entered in the #__content_types table.
 	 *
-	 * @param   stdClass           $object     Object to be passed to view layout file.
-	 * @param   JTableContenttype  $typeTable  Table object with content history options.
+	 * @param   stdClass          $object    Object to be passed to view layout file.
+	 * @param   JTableContenttype $typeTable Table object with content history options.
 	 *
 	 * @return  stdClass  object with hidden fields removed.
 	 *
@@ -236,108 +296,11 @@ class ContenthistoryHelper
 	}
 
 	/**
-	 * Method to load the language files for the component whose history is being viewed.
-	 *
-	 * @param   string  $typeAlias  The type alias, for example 'com_content.article'.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	public static function loadLanguageFiles($typeAlias)
-	{
-		$aliasArray = explode('.', $typeAlias);
-
-		if (is_array($aliasArray) && count($aliasArray) == 2)
-		{
-			$component = ($aliasArray[1] == 'category') ? 'com_categories' : $aliasArray[0];
-			$lang = JFactory::getLanguage();
-
-			/**
-			 * Loading language file from the administrator/language directory then
-			 * loading language file from the administrator/components/extension/language directory
-			 */
-			$lang->load($component, JPATH_ADMINISTRATOR, null, false, true)
-			|| $lang->load($component, JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component), null, false, true);
-
-			// Force loading of back-end global language file
-			$lang->load('joomla', JPath::clean(JPATH_ADMINISTRATOR), null, false, true);
-		}
-	}
-
-	/**
-	 * Method to create object to pass to the layout. Format is as follows:
-	 * field is std object with name, value.
-	 *
-	 * Value can be a std object with name, value pairs.
-	 *
-	 * @param   stdClass  $object      The std object from the JSON string. Can be nested 1 level deep.
-	 * @param   stdClass  $formValues  Standard class of label and value in an associative array.
-	 *
-	 * @return  stdClass  Object with translated labels where available
-	 *
-	 * @since   3.2
-	 */
-	public static function mergeLabels($object, $formValues)
-	{
-		$result = new stdClass;
-
-		$labelsArray = $formValues->labels;
-		$valuesArray = $formValues->values;
-
-		foreach ($object as $name => $value)
-		{
-			$result->$name = new stdClass;
-			$result->$name->name = $name;
-			$result->$name->value = isset($valuesArray[$name]) ? $valuesArray[$name] : $value;
-			$result->$name->label = isset($labelsArray[$name]) ? $labelsArray[$name] : $name;
-
-			if (is_object($value))
-			{
-				$subObject = new stdClass;
-
-				foreach ($value as $subName => $subValue)
-				{
-					$subObject->$subName = new stdClass;
-					$subObject->$subName->name = $subName;
-					$subObject->$subName->value = isset($valuesArray[$subName]) ? $valuesArray[$subName] : $subValue;
-					$subObject->$subName->label = isset($labelsArray[$subName]) ? $labelsArray[$subName] : $subName;
-					$result->$name->value = $subObject;
-				}
-			}
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Method to prepare the object for the preview and compare views.
-	 *
-	 * @param   JTableContenthistory  $table  Table object loaded with data.
-	 *
-	 * @return  stdClass  Object ready for the views.
-	 *
-	 * @since   3.2
-	 */
-	public static function prepareData(JTableContenthistory $table)
-	{
-		$object = static::decodeFields($table->version_data);
-		$typesTable = JTable::getInstance('Contenttype');
-		$typesTable->load(array('type_id' => $table->ucm_type_id));
-		$formValues = static::getFormValues($object, $typesTable);
-		$object = static::mergeLabels($object, $formValues);
-		$object = static::hideFields($object, $typesTable);
-		$object = static::processLookupFields($object, $typesTable);
-
-		return $object;
-	}
-
-	/**
 	 * Method to process any lookup values found in the content_history_options column for this table.
 	 * This allows category title and user name to be displayed instead of the id column.
 	 *
-	 * @param   stdClass           $object      The std object from the JSON string. Can be nested 1 level deep.
-	 * @param   JTableContenttype  $typesTable  Table object loaded with data.
+	 * @param   stdClass          $object     The std object from the JSON string. Can be nested 1 level deep.
+	 * @param   JTableContenttype $typesTable Table object loaded with data.
 	 *
 	 * @return  stdClass  Object with lookup values inserted.
 	 *
@@ -352,7 +315,7 @@ class ContenthistoryHelper
 				foreach ($options->displayLookup as $lookup)
 				{
 					$sourceColumn = isset($lookup->sourceColumn) ? $lookup->sourceColumn : false;
-					$sourceValue = isset($object->$sourceColumn->value) ? $object->$sourceColumn->value : false;
+					$sourceValue  = isset($object->$sourceColumn->value) ? $object->$sourceColumn->value : false;
 
 					if ($sourceColumn && $sourceValue && ($lookupValue = static::getLookupValue($lookup, $sourceValue)))
 					{
@@ -363,5 +326,42 @@ class ContenthistoryHelper
 		}
 
 		return $object;
+	}
+
+	/**
+	 * Method to query the database using values from lookup objects.
+	 *
+	 * @param   stdClass $lookup The std object with the values needed to do the query.
+	 * @param   mixed    $value  The value used to find the matching title or name. Typically the id.
+	 *
+	 * @return  mixed  Value from database (for example, name or title) on success, false on failure.
+	 *
+	 * @since   3.2
+	 */
+	public static function getLookupValue($lookup, $value)
+	{
+		$result = false;
+
+		if (isset($lookup->sourceColumn) && isset($lookup->targetTable) && isset($lookup->targetColumn) && isset($lookup->displayColumn))
+		{
+			$db    = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName($lookup->displayColumn))
+				->from($db->quoteName($lookup->targetTable))
+				->where($db->quoteName($lookup->targetColumn) . ' = ' . $db->quote($value));
+			$db->setQuery($query);
+
+			try
+			{
+				$result = $db->loadResult();
+			}
+			catch (Exception $e)
+			{
+				// Ignore any errors and just return false
+				return false;
+			}
+		}
+
+		return $result;
 	}
 }

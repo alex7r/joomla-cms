@@ -27,10 +27,28 @@ class JLibraryHelper
 	protected static $libraries = array();
 
 	/**
+	 * Gets the parameter object for the library
+	 *
+	 * @param   string  $element Element of the library in the extensions table.
+	 * @param   boolean $strict  If set and the library does not exist, false will be returned
+	 *
+	 * @return  Registry  A Registry object.
+	 *
+	 * @see     Registry
+	 * @since   3.2
+	 */
+	public static function getParams($element, $strict = false)
+	{
+		$library = static::getLibrary($element, $strict);
+
+		return $library->params;
+	}
+
+	/**
 	 * Get the library information.
 	 *
-	 * @param   string   $element  Element of the library in the extensions table.
-	 * @param   boolean  $strict   If set and the library does not exist, the enabled attribute will be set to false.
+	 * @param   string  $element Element of the library in the extensions table.
+	 * @param   boolean $strict  If set and the library does not exist, the enabled attribute will be set to false.
 	 *
 	 * @return  stdClass   An object with the library's information.
 	 *
@@ -50,90 +68,18 @@ class JLibraryHelper
 		}
 		else
 		{
-			$result = new stdClass;
+			$result          = new stdClass;
 			$result->enabled = $strict ? false : true;
-			$result->params = new Registry;
+			$result->params  = new Registry;
 		}
 
 		return $result;
 	}
 
 	/**
-	 * Checks if a library is enabled
-	 *
-	 * @param   string  $element  Element of the library in the extensions table.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.2
-	 */
-	public static function isEnabled($element)
-	{
-		$result = static::getLibrary($element, true);
-
-		return $result->enabled;
-	}
-
-	/**
-	 * Gets the parameter object for the library
-	 *
-	 * @param   string   $element  Element of the library in the extensions table.
-	 * @param   boolean  $strict   If set and the library does not exist, false will be returned
-	 *
-	 * @return  Registry  A Registry object.
-	 *
-	 * @see     Registry
-	 * @since   3.2
-	 */
-	public static function getParams($element, $strict = false)
-	{
-		$library = static::getLibrary($element, $strict);
-
-		return $library->params;
-	}
-
-	/**
-	 * Save the parameters object for the library
-	 *
-	 * @param   string    $element  Element of the library in the extensions table.
-	 * @param   Registry  $params   Params to save
-	 *
-	 * @return  Registry  A Registry object.
-	 *
-	 * @see     Registry
-	 * @since   3.2
-	 */
-	public static function saveParams($element, $params)
-	{
-		if (static::isEnabled($element))
-		{
-			// Save params in DB
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true)
-				->update($db->quoteName('#__extensions'))
-				->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-				->where($db->quoteName('type') . ' = ' . $db->quote('library'))
-				->where($db->quoteName('element') . ' = ' . $db->quote($element));
-			$db->setQuery($query);
-
-			$result = $db->execute();
-
-			// Update params in libraries cache
-			if ($result && isset(static::$libraries[$element]))
-			{
-				static::$libraries[$element]->params = $params;
-			}
-
-			return $result;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Load the installed libraryes into the libraries property.
 	 *
-	 * @param   string  $element  The element value for the extension
+	 * @param   string $element The element value for the extension
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -141,7 +87,7 @@ class JLibraryHelper
 	 */
 	protected static function _load($element)
 	{
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('extension_id AS id, element AS "option", params, enabled')
 			->from('#__extensions')
@@ -181,5 +127,59 @@ class JLibraryHelper
 		}
 
 		return true;
+	}
+
+	/**
+	 * Save the parameters object for the library
+	 *
+	 * @param   string   $element Element of the library in the extensions table.
+	 * @param   Registry $params  Params to save
+	 *
+	 * @return  Registry  A Registry object.
+	 *
+	 * @see     Registry
+	 * @since   3.2
+	 */
+	public static function saveParams($element, $params)
+	{
+		if (static::isEnabled($element))
+		{
+			// Save params in DB
+			$db    = JFactory::getDbo();
+			$query = $db->getQuery(true)
+				->update($db->quoteName('#__extensions'))
+				->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+				->where($db->quoteName('type') . ' = ' . $db->quote('library'))
+				->where($db->quoteName('element') . ' = ' . $db->quote($element));
+			$db->setQuery($query);
+
+			$result = $db->execute();
+
+			// Update params in libraries cache
+			if ($result && isset(static::$libraries[$element]))
+			{
+				static::$libraries[$element]->params = $params;
+			}
+
+			return $result;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if a library is enabled
+	 *
+	 * @param   string $element Element of the library in the extensions table.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.2
+	 */
+	public static function isEnabled($element)
+	{
+		$result = static::getLibrary($element, true);
+
+		return $result->enabled;
 	}
 }

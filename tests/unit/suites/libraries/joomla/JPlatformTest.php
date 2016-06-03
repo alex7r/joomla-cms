@@ -69,22 +69,22 @@ class JPlatformTest extends PHPUnit_Framework_TestCase
 	public function casesCompatibility()
 	{
 		return array(
-			'wrong'         => array(
+			'wrong'          => array(
 				'0.3',
 				false,
 				'Should not be compatible with 0.3',
 			),
-			'empty'         => array(
+			'empty'          => array(
 				'',
 				false,
 				'Should not be compatible with empty string',
 			),
-			'null'          => array(
+			'null'           => array(
 				null,
 				false,
 				'Should not be compatible with null',
 			),
-			'itself'        => array(
+			'itself'         => array(
 				JPlatform::RELEASE . '.' . JPlatform::MAINTENANCE,
 				true,
 				'Should be compatible with itself',
@@ -94,7 +94,7 @@ class JPlatformTest extends PHPUnit_Framework_TestCase
 				false,
 				'Should not be compatible with 1.5.22',
 			),
-			'version 1.7.0' => array(
+			'version 1.7.0'  => array(
 				'1.7.0',
 				false,
 				'Should not be compatible with 1.7.0',

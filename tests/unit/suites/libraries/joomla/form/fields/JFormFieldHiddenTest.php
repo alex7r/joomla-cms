@@ -19,34 +19,6 @@ JFormHelper::loadFieldClass('hidden');
 class JFormFieldHiddenTest extends TestCaseDatabase
 {
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		parent::teardown();
-	}
-
-	/**
 	 * Test the getInput method.
 	 *
 	 * @return void
@@ -90,19 +62,47 @@ class JFormFieldHiddenTest extends TestCaseDatabase
 		);
 
 		$matcher = array(
-				'id'         => 'hidden-lbl',
-				'tag'        => 'label',
-				'attributes' => array(
-						'for'   => 'hidden',
-						'class' => ''
-					),
-				'content'    => 'regexp:/foo/'
-			);
+			'id'         => 'hidden-lbl',
+			'tag'        => 'label',
+			'attributes' => array(
+				'for'   => 'hidden',
+				'class' => ''
+			),
+			'content'    => 'regexp:/foo/'
+		);
 
 		$this->assertTag(
 			$matcher,
 			$form->getLabel('hidden'),
 			'Line:' . __LINE__ . ' The label of a non-hidden element should be some HTML.'
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		parent::teardown();
 	}
 }

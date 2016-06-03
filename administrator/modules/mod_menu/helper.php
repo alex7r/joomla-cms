@@ -25,7 +25,7 @@ abstract class ModMenuHelper
 	 */
 	public static function getMenus()
 	{
-		$db     = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('a.*, SUM(b.home) AS home')
 			->from('#__menu_types AS a')
@@ -58,7 +58,7 @@ abstract class ModMenuHelper
 	/**
 	 * Get a list of the authorised, non-special components to display in the components menu.
 	 *
-	 * @param   boolean  $authCheck	  An optional switch to turn off the auth check (to support custom layouts 'grey out' behaviour).
+	 * @param   boolean $authCheck An optional switch to turn off the auth check (to support custom layouts 'grey out' behaviour).
 	 *
 	 * @return  array  A nest array of component objects and submenus
 	 *
@@ -128,7 +128,7 @@ abstract class ModMenuHelper
 						// Load the core file then
 						// Load extension-local file.
 						$lang->load($component->element . '.sys', JPATH_BASE, null, false, true)
-					||	$lang->load($component->element . '.sys', JPATH_ADMINISTRATOR . '/components/' . $component->element, null, false, true);
+						|| $lang->load($component->element . '.sys', JPATH_ADMINISTRATOR . '/components/' . $component->element, null, false, true);
 					}
 
 					$component->text = $lang->hasKey($component->title) ? JText::_($component->title) : $component->alias;

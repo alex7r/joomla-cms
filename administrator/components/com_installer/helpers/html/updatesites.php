@@ -19,10 +19,10 @@ abstract class InstallerHtmlUpdatesites
 	/**
 	 * Returns a published state on a grid.
 	 *
-	 * @param   integer  $value     The state value.
-	 * @param   integer  $i         The row index.
-	 * @param   boolean  $enabled   An optional setting for access control on the action.
-	 * @param   string   $checkbox  An optional prefix for checkboxes.
+	 * @param   integer $value    The state value.
+	 * @param   integer $i        The row index.
+	 * @param   boolean $enabled  An optional setting for access control on the action.
+	 * @param   string  $checkbox An optional prefix for checkboxes.
 	 *
 	 * @return  string   The HTML code
 	 *
@@ -31,7 +31,7 @@ abstract class InstallerHtmlUpdatesites
 	 */
 	public static function state($value, $i, $enabled = true, $checkbox = 'cb')
 	{
-		$states	= array(
+		$states = array(
 			1 => array(
 				'unpublish',
 				'COM_INSTALLER_UPDATESITE_ENABLED',

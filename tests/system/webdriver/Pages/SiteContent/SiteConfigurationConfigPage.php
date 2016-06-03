@@ -8,11 +8,6 @@
  */
 
 use SeleniumClient\By;
-use SeleniumClient\SelectElement;
-use SeleniumClient\WebDriver;
-use SeleniumClient\WebDriverWait;
-use SeleniumClient\DesiredCapabilities;
-use SeleniumClient\WebElement;
 
 /**
  * @package     Joomla.Test
@@ -50,7 +45,7 @@ class SiteConfigurationConfigPage extends SitePage
 	/**
 	 * Function which changes the sitename saving the changes
 	 *
-	 * @param   string  $siteName  stores the name of the site
+	 * @param   string $siteName stores the name of the site
 	 *
 	 * @return void
 	 */
@@ -80,7 +75,7 @@ class SiteConfigurationConfigPage extends SitePage
 	/**
 	 * Function which changes the meta description saving the changes
 	 *
-	 * @param   string  $metaDescription  store the value of metadescription
+	 * @param   string $metaDescription store the value of metadescription
 	 *
 	 * @return  null
 	 */

@@ -38,7 +38,7 @@ class JControllerBaseTest extends TestCase
 		$this->assertAttributeEquals('default', 'input', $this->_instance, 'Checks the input came from the application.');
 
 		// New controller with dependencies
-		$app = TestMockApplicationWeb::create($this);
+		$app       = TestMockApplicationWeb::create($this);
 		$app->test = 'ok';
 
 		$class = new BaseController(new JInputCookie, $app);
@@ -153,7 +153,7 @@ class JControllerBaseTest extends TestCase
 
 		$this->saveFactoryState();
 
-		$app = TestMockApplicationWeb::create($this);
+		$app        = TestMockApplicationWeb::create($this);
 		$app->input = 'default';
 
 		JFactory::$application = $app;

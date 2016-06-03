@@ -57,13 +57,13 @@ class PlgSystemUpdatenotification extends JPlugin
 		// If I have the time of the last run, I can update, otherwise insert
 		$this->params->set('lastrun', $now);
 
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
-					->update($db->qn('#__extensions'))
-					->set($db->qn('params') . ' = ' . $db->q($this->params->toString('JSON')))
-					->where($db->qn('type') . ' = ' . $db->q('plugin'))
-					->where($db->qn('folder') . ' = ' . $db->q('system'))
-					->where($db->qn('element') . ' = ' . $db->q('updatenotification'));
+			->update($db->qn('#__extensions'))
+			->set($db->qn('params') . ' = ' . $db->q($this->params->toString('JSON')))
+			->where($db->qn('type') . ' = ' . $db->q('plugin'))
+			->where($db->qn('folder') . ' = ' . $db->q('system'))
+			->where($db->qn('element') . ' = ' . $db->q('updatenotification'));
 
 		try
 		{
@@ -144,11 +144,11 @@ class PlgSystemUpdatenotification extends JPlugin
 		}
 
 		// If we're here, we have updates. First, get a link to the Joomla! Update component.
-		$baseURL  = JUri::base();
-		$baseURL  = rtrim($baseURL, '/');
+		$baseURL = JUri::base();
+		$baseURL = rtrim($baseURL, '/');
 		$baseURL .= (substr($baseURL, -13) != 'administrator') ? '/administrator/' : '/';
 		$baseURL .= 'index.php?option=com_joomlaupdate';
-		$uri      = new JUri($baseURL);
+		$uri = new JUri($baseURL);
 
 		/**
 		 * Some third party security solutions require a secret query parameter to allow log in to the administrator
@@ -245,11 +245,48 @@ class PlgSystemUpdatenotification extends JPlugin
 	}
 
 	/**
+	 * Clears cache groups. We use it to clear the plugins cache after we update the last run timestamp.
+	 *
+	 * @param   array $clearGroups  The cache groups to clean
+	 * @param   array $cacheClients The cache clients (site, admin) to clean
+	 *
+	 * @return  void
+	 *
+	 * @since   3.5
+	 */
+	private function clearCacheGroups(array $clearGroups, array $cacheClients = array(0, 1))
+	{
+		$conf = JFactory::getConfig();
+
+		foreach ($clearGroups as $group)
+		{
+			foreach ($cacheClients as $client_id)
+			{
+				try
+				{
+					$options = array(
+						'defaultgroup' => $group,
+						'cachebase'    => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' :
+							$conf->get('cache_path', JPATH_SITE . '/cache')
+					);
+
+					$cache = JCache::getInstance('callback', $options);
+					$cache->clean();
+				}
+				catch (Exception $e)
+				{
+					// Ignore it
+				}
+			}
+		}
+	}
+
+	/**
 	 * Returns the Super Users email information. If you provide a comma separated $email list
 	 * we will check that these emails do belong to Super Users and that they have not blocked
 	 * system emails.
 	 *
-	 * @param   null|string  $email  A list of Super Users to email
+	 * @param   null|string $email A list of Super Users to email
 	 *
 	 * @return  array  The list of Super User emails
 	 *
@@ -285,9 +322,9 @@ class PlgSystemUpdatenotification extends JPlugin
 		try
 		{
 			$query = $db->getQuery(true)
-						->select($db->qn('rules'))
-						->from($db->qn('#__assets'))
-						->where($db->qn('parent_id') . ' = ' . $db->q(0));
+				->select($db->qn('rules'))
+				->from($db->qn('#__assets'))
+				->where($db->qn('parent_id') . ' = ' . $db->q(0));
 			$db->setQuery($query, 0, 1);
 			$rulesJSON = $db->loadResult();
 			$rules     = json_decode($rulesJSON, true);
@@ -322,9 +359,9 @@ class PlgSystemUpdatenotification extends JPlugin
 		try
 		{
 			$query = $db->getQuery(true)
-						->select($db->qn('user_id'))
-						->from($db->qn('#__user_usergroup_map'))
-						->where($db->qn('group_id') . ' IN(' . implode(',', $groups) . ')');
+				->select($db->qn('user_id'))
+				->from($db->qn('#__user_usergroup_map'))
+				->where($db->qn('group_id') . ' IN(' . implode(',', $groups) . ')');
 			$db->setQuery($query);
 			$rawUserIDs = $db->loadColumn(0);
 
@@ -349,15 +386,15 @@ class PlgSystemUpdatenotification extends JPlugin
 		try
 		{
 			$query = $db->getQuery(true)
-						->select(
-							array(
-								$db->qn('id'),
-								$db->qn('username'),
-								$db->qn('email'),
-							)
-						)->from($db->qn('#__users'))
-						->where($db->qn('id') . ' IN(' . implode(',', $userIDs) . ')')
-						->where($db->qn('sendEmail') . ' = ' . $db->q('1'));
+				->select(
+					array(
+						$db->qn('id'),
+						$db->qn('username'),
+						$db->qn('email'),
+					)
+				)->from($db->qn('#__users'))
+				->where($db->qn('id') . ' IN(' . implode(',', $userIDs) . ')')
+				->where($db->qn('sendEmail') . ' = ' . $db->q('1'));
 
 			if (!empty($emails))
 			{
@@ -373,42 +410,5 @@ class PlgSystemUpdatenotification extends JPlugin
 		}
 
 		return $ret;
-	}
-
-	/**
-	 * Clears cache groups. We use it to clear the plugins cache after we update the last run timestamp.
-	 *
-	 * @param   array  $clearGroups   The cache groups to clean
-	 * @param   array  $cacheClients  The cache clients (site, admin) to clean
-	 *
-	 * @return  void
-	 *
-	 * @since   3.5
-	 */
-	private function clearCacheGroups(array $clearGroups, array $cacheClients = array(0, 1))
-	{
-		$conf = JFactory::getConfig();
-
-		foreach ($clearGroups as $group)
-		{
-			foreach ($cacheClients as $client_id)
-			{
-				try
-				{
-					$options = array(
-						'defaultgroup' => $group,
-						'cachebase'    => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' :
-							$conf->get('cache_path', JPATH_SITE . '/cache')
-					);
-
-					$cache = JCache::getInstance('callback', $options);
-					$cache->clean();
-				}
-				catch (Exception $e)
-				{
-					// Ignore it
-				}
-			}
-		}
 	}
 }

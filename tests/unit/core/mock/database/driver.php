@@ -25,11 +25,11 @@ class TestMockDatabaseDriver
 	/**
 	 * Creates and instance of the mock JDatabaseDriver object.
 	 *
-	 * @param   PHPUnit_Framework_TestCase  $test          A test object.
-	 * @param   string                      $driver        Optional driver to create a sub-class of JDatabaseDriver.
-	 * @param   array                       $extraMethods  An array of additional methods to add to the mock.
-	 * @param   string                      $nullDate      A null date string for the driver.
-	 * @param   string                      $dateFormat    A date format for the driver.
+	 * @param   PHPUnit_Framework_TestCase $test         A test object.
+	 * @param   string                     $driver       Optional driver to create a sub-class of JDatabaseDriver.
+	 * @param   array                      $extraMethods An array of additional methods to add to the mock.
+	 * @param   string                     $nullDate     A null date string for the driver.
+	 * @param   string                     $dateFormat   A date format for the driver.
 	 *
 	 * @return  PHPUnit_Framework_MockObject_MockObject
 	 *
@@ -112,7 +112,7 @@ class TestMockDatabaseDriver
 		// Mock selected methods.
 		$test->assignMockReturns(
 			$mockObject, array(
-				'getNullDate' => $nullDate,
+				'getNullDate'   => $nullDate,
 				'getDateFormat' => $dateFormat
 			)
 		);
@@ -120,11 +120,11 @@ class TestMockDatabaseDriver
 		$test->assignMockCallbacks(
 			$mockObject,
 			array(
-				'escape' => array((is_callable(array($test, 'mockEscape')) ? $test : __CLASS__), 'mockEscape'),
-				'getQuery' => array((is_callable(array($test, 'mockGetQuery')) ? $test : __CLASS__), 'mockGetQuery'),
-				'quote' => array((is_callable(array($test, 'mockQuote')) ? $test : __CLASS__), 'mockQuote'),
+				'escape'    => array((is_callable(array($test, 'mockEscape')) ? $test : __CLASS__), 'mockEscape'),
+				'getQuery'  => array((is_callable(array($test, 'mockGetQuery')) ? $test : __CLASS__), 'mockGetQuery'),
+				'quote'     => array((is_callable(array($test, 'mockQuote')) ? $test : __CLASS__), 'mockQuote'),
 				'quoteName' => array((is_callable(array($test, 'mockQuoteName')) ? $test : __CLASS__), 'mockQuoteName'),
-				'setQuery' => array((is_callable(array($test, 'mockSetQuery')) ? $test : __CLASS__), 'mockSetQuery'),
+				'setQuery'  => array((is_callable(array($test, 'mockSetQuery')) ? $test : __CLASS__), 'mockSetQuery'),
 			)
 		);
 
@@ -132,23 +132,9 @@ class TestMockDatabaseDriver
 	}
 
 	/**
-	 * Callback for the dbo escape method.
-	 *
-	 * @param   string  $text  The input text.
-	 *
-	 * @return  string
-	 *
-	 * @since   11.3
-	 */
-	public static function mockEscape($text)
-	{
-		return "_{$text}_";
-	}
-
-	/**
 	 * Callback for the dbo setQuery method.
 	 *
-	 * @param   boolean  $new  True to get a new query, false to get the last query.
+	 * @param   boolean $new True to get a new query, false to get the last query.
 	 *
 	 * @return  JDatabaseQuery
 	 *
@@ -169,8 +155,8 @@ class TestMockDatabaseDriver
 	/**
 	 * Mocking the quote method.
 	 *
-	 * @param   string   $value   The value to be quoted.
-	 * @param   boolean  $escape  Optional parameter to provide extra escaping.
+	 * @param   string  $value  The value to be quoted.
+	 * @param   boolean $escape Optional parameter to provide extra escaping.
 	 *
 	 * @return  string  The value passed wrapped in MySQL quotes.
 	 *
@@ -192,9 +178,23 @@ class TestMockDatabaseDriver
 	}
 
 	/**
+	 * Callback for the dbo escape method.
+	 *
+	 * @param   string $text The input text.
+	 *
+	 * @return  string
+	 *
+	 * @since   11.3
+	 */
+	public static function mockEscape($text)
+	{
+		return "_{$text}_";
+	}
+
+	/**
 	 * Mock quoteName method.
 	 *
-	 * @param   string  $value  The value to be quoted.
+	 * @param   string $value The value to be quoted.
 	 *
 	 * @return  string  The value passed wrapped in MySQL quotes.
 	 *
@@ -208,7 +208,7 @@ class TestMockDatabaseDriver
 	/**
 	 * Callback for the dbo setQuery method.
 	 *
-	 * @param   string  $query  The query.
+	 * @param   string $query The query.
 	 *
 	 * @return  void
 	 *

@@ -13,6 +13,6 @@ $html = JHtml::_('links.linksgroups', ModQuickIconHelper::groupButtons($buttons)
 ?>
 <?php if (!empty($html)) : ?>
 	<div class="sidebar-nav quick-icons">
-		<?php echo $html;?>
+		<?php echo $html; ?>
 	</div>
-<?php endif;?>
+<?php endif; ?>

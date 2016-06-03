@@ -55,47 +55,6 @@ class JFacebookAlbumTest extends TestCase
 	protected $errorString = '{"error": {"message": "Generic Error."}}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   13.1
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$app_id = "app_id";
-		$app_secret = "app_secret";
-		$my_url = "http://localhost/gsoc/joomla-platform/facebook_test.php";
-		$access_token = array(
-			'access_token' => 'token',
-			'expires' => '51837673',
-			'created' => '2443672521'
-		);
-
-		$this->options = new Registry;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->input = new JInput;
-		$this->oauth = new JFacebookOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JFacebookAlbum($this->options, $this->client, $this->oauth);
-
-		$this->options->set('clientid', $app_id);
-		$this->options->set('clientsecret', $app_secret);
-		$this->options->set('redirecturi', $my_url);
-		$this->options->set('sendheaders', true);
-		$this->options->set('authmethod', 'get');
-
-		parent::setUp();
-	}
-
-	/**
 	 * Tests the getAlbum method
 	 *
 	 * @return  void
@@ -106,16 +65,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($album . '?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($album . '?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getAlbum($album),
@@ -135,16 +94,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($album . '?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($album . '?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->getAlbum($album);
 	}
@@ -160,16 +119,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($album . '/photos?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($album . '/photos?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getPhotos($album),
@@ -189,16 +148,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($album . '/photos?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($album . '/photos?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->getPhotos($album);
 	}
@@ -212,28 +171,28 @@ class JFacebookAlbumTest extends TestCase
 	 */
 	public function testCreatePhoto()
 	{
-		$album = '124346363456';
-		$source = 'path/to/source';
+		$album   = '124346363456';
+		$source  = 'path/to/source';
 		$message = 'message';
 
 		// Set POST request parameters.
-		$data = array();
+		$data                    = array();
 		$data[basename($source)] = '@' . realpath($source);
-		$data['message'] = $message;
+		$data['message']         = $message;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with(
-			$album . '/photos?access_token=' . $token['access_token'], $data,
-			array('Content-Type' => 'multipart/form-data')
+			->method('post')
+			->with(
+				$album . '/photos?access_token=' . $token['access_token'], $data,
+				array('Content-Type' => 'multipart/form-data')
 			)
-		->will($this->returnValue($returnData));
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createPhoto($album, $source, $message),
@@ -251,28 +210,28 @@ class JFacebookAlbumTest extends TestCase
 	 */
 	public function testCreatePhotoFailure()
 	{
-		$album = '124346363456';
-		$source = '/path/to/source';
+		$album   = '124346363456';
+		$source  = '/path/to/source';
 		$message = 'message';
 
 		// Set POST request parameters.
-		$data = array();
+		$data                    = array();
 		$data[basename($source)] = '@' . realpath($source);
-		$data['message'] = $message;
+		$data['message']         = $message;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with(
-			$album . '/photos?access_token=' . $token['access_token'], $data,
-			array('Content-Type' => 'multipart/form-data')
+			->method('post')
+			->with(
+				$album . '/photos?access_token=' . $token['access_token'], $data,
+				array('Content-Type' => 'multipart/form-data')
 			)
-		->will($this->returnValue($returnData));
+			->will($this->returnValue($returnData));
 
 		$this->object->createPhoto($album, $source, $message);
 	}
@@ -288,16 +247,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($album . '/comments?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($album . '/comments?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getComments($album),
@@ -317,16 +276,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($album . '/comments?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($album . '/comments?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->getComments($album);
 	}
@@ -340,23 +299,23 @@ class JFacebookAlbumTest extends TestCase
 	 */
 	public function testCreateComment()
 	{
-		$album = '124346363456';
+		$album   = '124346363456';
 		$message = 'test message';
 
 		// Set POST request parameters.
-		$data = array();
+		$data            = array();
 		$data['message'] = $message;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($album . '/comments?access_token=' . $token['access_token'], $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($album . '/comments?access_token=' . $token['access_token'], $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createComment($album, $message),
@@ -374,23 +333,23 @@ class JFacebookAlbumTest extends TestCase
 	 */
 	public function testCreateCommentFailure()
 	{
-		$album = '124346363456';
+		$album   = '124346363456';
 		$message = 'test message';
 
 		// Set POST request parameters.
-		$data = array();
+		$data            = array();
 		$data['message'] = $message;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($album . '/comments?access_token=' . $token['access_token'], $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($album . '/comments?access_token=' . $token['access_token'], $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->createComment($album, $message);
 	}
@@ -406,16 +365,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$comment = '5148941614_12343468';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = true;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('delete')
-		->with($comment . '?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('delete')
+			->with($comment . '?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteComment($comment),
@@ -435,16 +394,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$comment = '5148941614_12343468';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('delete')
-		->with($comment . '?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('delete')
+			->with($comment . '?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->deleteComment($comment);
 	}
@@ -460,16 +419,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($album . '/likes?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($album . '/likes?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getLikes($album),
@@ -489,16 +448,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($album . '/likes?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($album . '/likes?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->getLikes($album);
 	}
@@ -514,16 +473,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($album . '/likes?access_token=' . $token['access_token'], '')
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($album . '/likes?access_token=' . $token['access_token'], '')
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createLike($album),
@@ -543,16 +502,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($album . '/likes?access_token=' . $token['access_token'], '')
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($album . '/likes?access_token=' . $token['access_token'], '')
+			->will($this->returnValue($returnData));
 
 		$this->object->createLike($album);
 	}
@@ -568,16 +527,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = true;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('delete')
-		->with($album . '/likes?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('delete')
+			->with($album . '/likes?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteLike($album),
@@ -597,16 +556,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('delete')
-		->with($album . '/likes?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('delete')
+			->with($album . '/likes?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->deleteLike($album);
 	}
@@ -622,16 +581,16 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($album . '/picture?redirect=false&access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($album . '/picture?redirect=false&access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getPicture($album, false),
@@ -651,17 +610,58 @@ class JFacebookAlbumTest extends TestCase
 	{
 		$album = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$token = $this->oauth->getToken();
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($album . '/picture?redirect=false&access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($album . '/picture?redirect=false&access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->getPicture($album, false);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   13.1
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$app_id       = "app_id";
+		$app_secret   = "app_secret";
+		$my_url       = "http://localhost/gsoc/joomla-platform/facebook_test.php";
+		$access_token = array(
+			'access_token' => 'token',
+			'expires'      => '51837673',
+			'created'      => '2443672521'
+		);
+
+		$this->options = new Registry;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->input   = new JInput;
+		$this->oauth   = new JFacebookOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JFacebookAlbum($this->options, $this->client, $this->oauth);
+
+		$this->options->set('clientid', $app_id);
+		$this->options->set('clientsecret', $app_secret);
+		$this->options->set('redirecturi', $my_url);
+		$this->options->set('sendheaders', true);
+		$this->options->set('authmethod', 'get');
+
+		parent::setUp();
 	}
 }

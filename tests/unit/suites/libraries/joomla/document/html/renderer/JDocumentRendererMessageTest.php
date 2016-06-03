@@ -21,6 +21,14 @@ class JDocumentRendererMessageTest extends TestCaseDatabase
 	private $instance;
 
 	/**
+	 * @testdox  Test the default return for render
+	 */
+	public function testTheDefaultReturnForRender()
+	{
+		$this->assertContains('<div id="system-message-container"', $this->instance->render('unused'));
+	}
+
+	/**
 	 * Sets up the fixture.
 	 *
 	 * This method is called before a test is executed.
@@ -32,8 +40,8 @@ class JDocumentRendererMessageTest extends TestCaseDatabase
 		$this->saveFactoryState();
 
 		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$document = $this->getMockDocument();
-		JFactory::$session = $this->getMockSession();
+		JFactory::$document    = $this->getMockDocument();
+		JFactory::$session     = $this->getMockSession();
 
 		$this->instance = new JDocumentRendererMessage(JFactory::getDocument());
 	}
@@ -47,13 +55,5 @@ class JDocumentRendererMessageTest extends TestCaseDatabase
 		$this->restoreFactoryState();
 
 		parent::tearDown();
-	}
-
-	/**
-	 * @testdox  Test the default return for render
-	 */
-	public function testTheDefaultReturnForRender()
-	{
-		$this->assertContains('<div id="system-message-container"', $this->instance->render('unused'));
 	}
 }

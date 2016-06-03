@@ -25,6 +25,32 @@ class JDatabaseFactory
 	private static $_instance = null;
 
 	/**
+	 * Gets an instance of the factory object.
+	 *
+	 * @return  JDatabaseFactory
+	 *
+	 * @since   12.1
+	 */
+	public static function getInstance()
+	{
+		return self::$_instance ? self::$_instance : new JDatabaseFactory;
+	}
+
+	/**
+	 * Gets an instance of a factory object to return on subsequent calls of getInstance.
+	 *
+	 * @param   JDatabaseFactory $instance A JDatabaseFactory object.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	public static function setInstance(JDatabaseFactory $instance = null)
+	{
+		self::$_instance = $instance;
+	}
+
+	/**
 	 * Method to return a JDatabaseDriver instance based on the given options. There are three global options and then
 	 * the rest are specific to the database driver. The 'database' option determines which database is to
 	 * be used for the connection. The 'select' option determines whether the connector should automatically select
@@ -33,8 +59,8 @@ class JDatabaseFactory
 	 * Instances are unique to the given options and new objects are only created when a unique options array is
 	 * passed into the method.  This ensures that we don't end up with unnecessary database connection resources.
 	 *
-	 * @param   string  $name     Name of the database driver you'd like to instantiate
-	 * @param   array   $options  Parameters to be passed to the database driver.
+	 * @param   string $name    Name of the database driver you'd like to instantiate
+	 * @param   array  $options Parameters to be passed to the database driver.
 	 *
 	 * @return  JDatabaseDriver  A database driver object.
 	 *
@@ -73,8 +99,8 @@ class JDatabaseFactory
 	/**
 	 * Gets an exporter class object.
 	 *
-	 * @param   string           $name  Name of the driver you want an exporter for.
-	 * @param   JDatabaseDriver  $db    Optional JDatabaseDriver instance
+	 * @param   string          $name Name of the driver you want an exporter for.
+	 * @param   JDatabaseDriver $db   Optional JDatabaseDriver instance
 	 *
 	 * @return  JDatabaseExporter  An exporter object.
 	 *
@@ -106,8 +132,8 @@ class JDatabaseFactory
 	/**
 	 * Gets an importer class object.
 	 *
-	 * @param   string           $name  Name of the driver you want an importer for.
-	 * @param   JDatabaseDriver  $db    Optional JDatabaseDriver instance
+	 * @param   string          $name Name of the driver you want an importer for.
+	 * @param   JDatabaseDriver $db   Optional JDatabaseDriver instance
 	 *
 	 * @return  JDatabaseImporter  An importer object.
 	 *
@@ -137,22 +163,10 @@ class JDatabaseFactory
 	}
 
 	/**
-	 * Gets an instance of the factory object.
-	 *
-	 * @return  JDatabaseFactory
-	 *
-	 * @since   12.1
-	 */
-	public static function getInstance()
-	{
-		return self::$_instance ? self::$_instance : new JDatabaseFactory;
-	}
-
-	/**
 	 * Get the current query object or a new JDatabaseQuery object.
 	 *
-	 * @param   string           $name  Name of the driver you want an query object for.
-	 * @param   JDatabaseDriver  $db    Optional JDatabaseDriver instance
+	 * @param   string          $name Name of the driver you want an query object for.
+	 * @param   JDatabaseDriver $db   Optional JDatabaseDriver instance
 	 *
 	 * @return  JDatabaseQuery  The current query object or a new object extending the JDatabaseQuery class.
 	 *
@@ -172,19 +186,5 @@ class JDatabaseFactory
 		}
 
 		return new $class($db);
-	}
-
-	/**
-	 * Gets an instance of a factory object to return on subsequent calls of getInstance.
-	 *
-	 * @param   JDatabaseFactory  $instance  A JDatabaseFactory object.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	public static function setInstance(JDatabaseFactory $instance = null)
-	{
-		self::$_instance = $instance;
 	}
 }

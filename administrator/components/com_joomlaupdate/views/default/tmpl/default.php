@@ -50,20 +50,20 @@ jQuery(document).ready(function($) {
 			<?php echo $this->loadTemplate('update'); ?>
 		<?php endif; ?>
 
-		<input type="hidden" name="task" value="update.download" />
-		<input type="hidden" name="option" value="com_joomlaupdate" />
+		<input type="hidden" name="task" value="update.download"/>
+		<input type="hidden" name="option" value="com_joomlaupdate"/>
 
 		<?php echo JHtml::_('form.token'); ?>
 	</form>
 
-		<?php // Only Super Users have access to the Update & Install for obvious security reasons ?>
-		<?php if ($this->showUploadAndUpdate) : ?>
-			<?php echo JHtml::_('bootstrap.endTab'); ?>
-			<?php echo JHtml::_('bootstrap.addTab', 'joomlaupdate-tabs', 'upload-update', JText::_('COM_JOOMLAUPDATE_VIEW_DEFAULT_TAB_UPLOAD')); ?>
-			<?php echo $this->loadTemplate('upload'); ?>
-			<?php echo JHtml::_('bootstrap.endTab'); ?>
-			<?php echo JHtml::_('bootstrap.endTabSet'); ?>
-		<?php endif; ?>
+	<?php // Only Super Users have access to the Update & Install for obvious security reasons ?>
+	<?php if ($this->showUploadAndUpdate) : ?>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
+		<?php echo JHtml::_('bootstrap.addTab', 'joomlaupdate-tabs', 'upload-update', JText::_('COM_JOOMLAUPDATE_VIEW_DEFAULT_TAB_UPLOAD')); ?>
+		<?php echo $this->loadTemplate('upload'); ?>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
+		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
+	<?php endif; ?>
 
 	<div class="download_message" style="display: none">
 		<p></p>

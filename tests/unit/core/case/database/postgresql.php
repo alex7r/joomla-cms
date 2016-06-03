@@ -102,7 +102,7 @@ abstract class TestCaseDatabasePostgresql extends TestCaseDatabase
 		}
 
 		// Setup the factory pointer for the driver and stash the old one.
-		self::$_stash = JFactory::$database;
+		self::$_stash       = JFactory::$database;
 		JFactory::$database = static::$driver;
 	}
 
@@ -116,7 +116,7 @@ abstract class TestCaseDatabasePostgresql extends TestCaseDatabase
 	public static function tearDownAfterClass()
 	{
 		JFactory::$database = self::$_stash;
-		static::$driver = null;
+		static::$driver     = null;
 	}
 
 	/**
@@ -133,12 +133,12 @@ abstract class TestCaseDatabasePostgresql extends TestCaseDatabase
 
 		if (!empty(self::$_options['host']))
 		{
-		        $dsn .= 'host=' . self::$_options['host'] . ' ';
+			$dsn .= 'host=' . self::$_options['host'] . ' ';
 		}
 
 		if (!empty(self::$_options['port']))
 		{
-		        $dsn .= 'port=' . self::$_options['port'] . ' ';
+			$dsn .= 'port=' . self::$_options['port'] . ' ';
 		}
 
 		$dsn .= 'dbname=' . self::$_options['database'];

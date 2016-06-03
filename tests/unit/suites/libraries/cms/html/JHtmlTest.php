@@ -41,46 +41,6 @@ class JHtmlTest extends TestCase
 	protected $backupServer;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST'] = self::TEST_HTTP_HOST;
-		$_SERVER['SCRIPT_NAME'] = self::TEST_REQUEST_URI;
-		$_SERVER['REQUEST_URI'] = self::TEST_REQUEST_URI;
-		$_SERVER['HTTP_USER_AGENT'] = 'Test Browser';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
 	 * Test the _ method.
 	 *
 	 * @return  void
@@ -277,10 +237,10 @@ class JHtmlTest extends TestCase
 	/**
 	 * Tests the link method.
 	 *
-	 * @param   string $url       The href for the anchor tag.
-	 * @param   string $text      The text for the anchor tag.
-	 * @param   mixed  $attribs   A string or array of link attributes.
-	 * @param   string $expected  The expected result.
+	 * @param   string $url      The href for the anchor tag.
+	 * @param   string $text     The text for the anchor tag.
+	 * @param   mixed  $attribs  A string or array of link attributes.
+	 * @param   string $expected The expected result.
 	 *
 	 * @return  void
 	 *
@@ -305,7 +265,7 @@ class JHtmlTest extends TestCase
 	public function testImage()
 	{
 		// These are some paths to pass to JHtml for testing purposes.
-		$urlpath = 'test1/';
+		$urlpath     = 'test1/';
 		$urlfilename = 'image1.jpg';
 
 		// We generate a random template name so that we don't collide or hit anything.
@@ -398,9 +358,9 @@ class JHtmlTest extends TestCase
 			'JHtml::image failed when we should get it from the media directory in path only mode'
 		);
 
-		$extension = 'testextension';
-		$element = 'element';
-		$urlpath = 'path1/';
+		$extension   = 'testextension';
+		$element     = 'element';
+		$urlpath     = 'path1/';
 		$urlfilename = 'image1.jpg';
 
 		mkdir(JPATH_ROOT . '/media/' . $extension . '/' . $element . '/images/' . $urlpath, 0777, true);
@@ -481,7 +441,7 @@ class JHtmlTest extends TestCase
 		$this->assertEquals(
 			JHtml::image(
 				'http://www.example.com/test/image.jpg', 'My Alt Text', array(
-					'width' => 150,
+					'width'  => 150,
 					'height' => 150
 				)
 			),
@@ -540,11 +500,11 @@ class JHtmlTest extends TestCase
 	/**
 	 * Tests the iframe method.
 	 *
-	 * @param   string $url       iframe URL
-	 * @param   string $name      URL name
-	 * @param   string $attribs   iframe attribs
-	 * @param   string $noFrames  replacement for no frames
-	 * @param   string $expected  expected value
+	 * @param   string $url      iframe URL
+	 * @param   string $name     URL name
+	 * @param   string $attribs  iframe attribs
+	 * @param   string $noFrames replacement for no frames
+	 * @param   string $expected expected value
 	 *
 	 * @return  void
 	 *
@@ -570,7 +530,7 @@ class JHtmlTest extends TestCase
 	public function testScript()
 	{
 		// These are some paths to pass to JHtml for testing purposes.
-		$urlpath = 'test1/';
+		$urlpath     = 'test1/';
 		$urlfilename = 'script1.js';
 
 		// We generate a random template name so that we don't collide or hit anything.
@@ -673,9 +633,9 @@ class JHtmlTest extends TestCase
 			'Line:' . __LINE__ . ' JHtml::script failed in URL only mode when it should come from the media directory'
 		);
 
-		$extension = 'testextension';
-		$element = 'element';
-		$urlpath = 'path1/';
+		$extension   = 'testextension';
+		$element     = 'element';
+		$urlpath     = 'path1/';
 		$urlfilename = 'script1.js';
 
 		mkdir(JPATH_ROOT . '/media/' . $extension . '/' . $element . '/js/' . $urlpath, 0777, true);
@@ -919,7 +879,7 @@ class JHtmlTest extends TestCase
 	public function testStylesheet()
 	{
 		// These are some paths to pass to JHtml for testing purposes.
-		$urlpath = 'test1/';
+		$urlpath     = 'test1/';
 		$urlfilename = 'style1.css';
 
 		// We generate a random template name so that we don't collide or hit anything.
@@ -1020,9 +980,9 @@ class JHtmlTest extends TestCase
 			'Line:' . __LINE__ . ' JHtml::script failed in URL only mode when it should come from the media directory'
 		);
 
-		$extension = 'testextension';
-		$element = 'element';
-		$urlpath = 'path1/';
+		$extension   = 'testextension';
+		$element     = 'element';
+		$urlpath     = 'path1/';
 		$urlfilename = 'style1.css';
 
 		mkdir(JPATH_ROOT . '/media/' . $extension . '/' . $element . '/css/' . $urlpath, 0777, true);
@@ -1336,7 +1296,7 @@ class JHtmlTest extends TestCase
 
 		$this->assertEquals(
 			JHtml::tooltip('Content', 'Title', 'tooltip.png', null, null, 'MyAlt', 'hasTooltip2'),
-			'<span class="hasTooltip2" title="'.
+			'<span class="hasTooltip2" title="' .
 			'&lt;strong&gt;Title&lt;/strong&gt;&lt;br /&gt;Content' .
 			'"><img src="' . JUri::base(true) .
 			'/media/system/images/tooltip.png" alt="MyAlt" /></span>',
@@ -1409,7 +1369,7 @@ class JHtmlTest extends TestCase
 			->willReturnMap($map);
 
 		JFactory::$session = $this->getMockSession();
-		JFactory::$config = $cfg;
+		JFactory::$config  = $cfg;
 
 		JFactory::$application->expects($this->any())
 			->method('getTemplate')
@@ -1417,8 +1377,8 @@ class JHtmlTest extends TestCase
 
 		// Two sets of test data
 		$test_data = array(
-			'date' => '2010-05-28 00:00:00', 'friendly_date' => 'Friday, 28 May 2010',
-			'name' => 'cal1_name', 'id' => 'cal1_id', 'format' => '%Y-%m-%d',
+			'date'    => '2010-05-28 00:00:00', 'friendly_date' => 'Friday, 28 May 2010',
+			'name'    => 'cal1_name', 'id' => 'cal1_id', 'format' => '%Y-%m-%d',
 			'attribs' => array(), 'formattedDate' => '2010-05-28'
 		);
 
@@ -1446,19 +1406,19 @@ class JHtmlTest extends TestCase
 			$this->assertEquals(
 				$data['friendly_date'],
 				(string) $xml->div->input['title'],
-				'Line:'.__LINE__.' The calendar input should have `title == "' . $data['friendly_date'] . '"`'
+				'Line:' . __LINE__ . ' The calendar input should have `title == "' . $data['friendly_date'] . '"`'
 			);
 
 			$this->assertEquals(
 				$data['name'],
 				(string) $xml->div->input['name'],
-				'Line:'.__LINE__.' The calendar input should have `name == "' . $data['name'] . '"`'
+				'Line:' . __LINE__ . ' The calendar input should have `name == "' . $data['name'] . '"`'
 			);
 
 			$this->assertEquals(
 				$data['id'],
 				(string) $xml->div->input['id'],
-				'Line:'.__LINE__.' The calendar input should have `id == "' . $data['id'] . '"`'
+				'Line:' . __LINE__ . ' The calendar input should have `id == "' . $data['id'] . '"`'
 			);
 
 			$this->assertEquals(
@@ -1519,13 +1479,13 @@ class JHtmlTest extends TestCase
 				$this->assertArrayHasKey(
 					'/media/system/js/calendar.js',
 					JFactory::getDocument()->_scripts,
-					'Line:'.__LINE__.' JS file "calendar.js" should be loaded'
+					'Line:' . __LINE__ . ' JS file "calendar.js" should be loaded'
 				);
 
 				$this->assertArrayHasKey(
 					'/media/system/js/calendar-setup.js',
 					JFactory::getDocument()->_scripts,
-					'Line:'.__LINE__.' JS file "calendar-setup.js" should be loaded'
+					'Line:' . __LINE__ . ' JS file "calendar-setup.js" should be loaded'
 				);
 
 				$this->assertContains(
@@ -1579,7 +1539,7 @@ class JHtmlTest extends TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   3.1
+	 * @since        3.1
 	 * @dataProvider dataTestTooltipText
 	 */
 	public function testTooltipText($title, $content, $expected, $failureText)
@@ -1589,5 +1549,45 @@ class JHtmlTest extends TestCase
 			$expected,
 			$failureText
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST']       = self::TEST_HTTP_HOST;
+		$_SERVER['SCRIPT_NAME']     = self::TEST_REQUEST_URI;
+		$_SERVER['REQUEST_URI']     = self::TEST_REQUEST_URI;
+		$_SERVER['HTTP_USER_AGENT'] = 'Test Browser';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 }

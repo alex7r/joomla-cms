@@ -19,7 +19,7 @@ class FinderHelperLanguage
 	/**
 	 * Method to return a plural language code for a taxonomy branch.
 	 *
-	 * @param   string  $branchName  Branch title.
+	 * @param   string $branchName Branch title.
 	 *
 	 * @return  string  Language key code.
 	 *
@@ -42,7 +42,7 @@ class FinderHelperLanguage
 	/**
 	 * Method to return a singular language code for a taxonomy branch.
 	 *
-	 * @param   string  $branchName  Branch name.
+	 * @param   string $branchName Branch name.
 	 *
 	 * @return  string  Language key code.
 	 *
@@ -58,7 +58,7 @@ class FinderHelperLanguage
 	/**
 	 * Method to return the language name for a language taxonomy branch.
 	 *
-	 * @param   string  $branchName  Language branch name.
+	 * @param   string $branchName Language branch name.
 	 *
 	 * @return  string  The language title.
 	 *
@@ -117,7 +117,7 @@ class FinderHelperLanguage
 		$loaded = true;
 
 		// Get array of all the enabled Smart Search plug-in names.
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('name')
 			->from($db->quoteName('#__extensions'))

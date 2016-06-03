@@ -27,7 +27,7 @@ class JDocumentError extends JDocument
 	/**
 	 * Class constructor
 	 *
-	 * @param   array  $options  Associative array of attributes
+	 * @param   array $options Associative array of attributes
 	 *
 	 * @since   11.1
 	 */
@@ -45,7 +45,7 @@ class JDocumentError extends JDocument
 	/**
 	 * Set error object
 	 *
-	 * @param   object  $error  Error object to set
+	 * @param   object $error Error object to set
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -57,7 +57,7 @@ class JDocumentError extends JDocument
 
 		if ($error instanceof $expectedClass)
 		{
-			$this->_error = & $error;
+			$this->_error = &$error;
 
 			return true;
 		}
@@ -68,8 +68,8 @@ class JDocumentError extends JDocument
 	/**
 	 * Render the document
 	 *
-	 * @param   boolean  $cache   If true, cache the output
-	 * @param   array    $params  Associative array of attributes
+	 * @param   boolean $cache  If true, cache the output
+	 * @param   array   $params Associative array of attributes
 	 *
 	 * @return  string   The rendered data
 	 *
@@ -91,12 +91,12 @@ class JDocumentError extends JDocument
 			$status = 500;
 		}
 
-		JFactory::getApplication()->setHeader('status',  $status . ' ' . str_replace("\n", ' ', $this->_error->getMessage()));
+		JFactory::getApplication()->setHeader('status', $status . ' ' . str_replace("\n", ' ', $this->_error->getMessage()));
 		$file = 'error.php';
 
 		// Check template
 		$directory = isset($params['directory']) ? $params['directory'] : 'templates';
-		$template = isset($params['template']) ? JFilterInput::getInstance()->clean($params['template'], 'cmd') : 'system';
+		$template  = isset($params['template']) ? JFilterInput::getInstance()->clean($params['template'], 'cmd') : 'system';
 
 		if (!file_exists($directory . '/' . $template . '/' . $file))
 		{
@@ -104,10 +104,10 @@ class JDocumentError extends JDocument
 		}
 
 		// Set variables
-		$this->baseurl = JUri::base(true);
+		$this->baseurl  = JUri::base(true);
 		$this->template = $template;
-		$this->debug = isset($params['debug']) ? $params['debug'] : false;
-		$this->error = $this->_error;
+		$this->debug    = isset($params['debug']) ? $params['debug'] : false;
+		$this->error    = $this->_error;
 
 		// Load
 		$data = $this->_loadTemplate($directory . '/' . $template, $file);
@@ -120,8 +120,8 @@ class JDocumentError extends JDocument
 	/**
 	 * Load a template file
 	 *
-	 * @param   string  $directory  The name of the template
-	 * @param   string  $filename   The actual filename
+	 * @param   string $directory The name of the template
+	 * @param   string $filename  The actual filename
 	 *
 	 * @return  string  The contents of the template
 	 *
@@ -162,7 +162,7 @@ class JDocumentError extends JDocument
 			return;
 		}
 
-		$contents = null;
+		$contents  = null;
 		$backtrace = $this->_error->getTrace();
 
 		if (is_array($backtrace))

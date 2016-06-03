@@ -21,9 +21,9 @@ class JRouteWrapperRoute
 	/**
 	 * Helper wrapper method for _
 	 *
-	 * @param   string   $url    Absolute or Relative URI to Joomla resource.
-	 * @param   boolean  $xhtml  Replace & by &amp; for XML compliance.
-	 * @param   integer  $ssl    Secure state for the resolved URI.
+	 * @param   string  $url   Absolute or Relative URI to Joomla resource.
+	 * @param   boolean $xhtml Replace & by &amp; for XML compliance.
+	 * @param   integer $ssl   Secure state for the resolved URI.
 	 *
 	 * @return  string The translated humanly readable URL.
 	 *

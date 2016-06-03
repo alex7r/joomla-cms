@@ -46,43 +46,9 @@ class JGoogleDataPicasaTest extends TestCase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$_SERVER['HTTP_HOST'] = 'mydomain.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$this->options = new JRegistry;
-		$this->http = $this->getMock('JHttp', array('head', 'get', 'delete', 'trace', 'post', 'put', 'patch'), array($this->options));
-		$this->input = new JInput;
-		$this->oauth = new JOAuth2Client($this->options, $this->http, $this->input);
-		$this->auth = new JGoogleAuthOauth2($this->options, $this->oauth);
-		$this->object = new JGoogleDataPicasa($this->options, $this->auth);
-
-		$this->object->setOption('clientid', '01234567891011.apps.googleusercontent.com');
-		$this->object->setOption('clientsecret', 'jeDs8rKw_jDJW8MMf-ff8ejs');
-		$this->object->setOption('redirecturi', 'http://localhost/oauth');
-
-		$token['access_token'] = 'accessvalue';
-		$token['refresh_token'] = 'refreshvalue';
-		$token['created'] = time() - 1800;
-		$token['expires_in'] = 3600;
-		$this->oauth->setToken($token);
-	}
-
-	/**
 	 * Tests the auth method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testAuth()
@@ -93,7 +59,7 @@ class JGoogleDataPicasaTest extends TestCase
 	/**
 	 * Tests the isauth method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testIsAuth()
@@ -104,7 +70,7 @@ class JGoogleDataPicasaTest extends TestCase
 	/**
 	 * Tests the listAlbums method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testListAlbums()
@@ -126,7 +92,7 @@ class JGoogleDataPicasaTest extends TestCase
 	/**
 	 * Tests the listAlbums method with wrong XML
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @expectedException UnexpectedValueException
 	 * @return void
 	 */
@@ -139,7 +105,7 @@ class JGoogleDataPicasaTest extends TestCase
 	/**
 	 * Tests the createAlbum method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testCreateAlbum()
@@ -153,7 +119,7 @@ class JGoogleDataPicasaTest extends TestCase
 	/**
 	 * Tests the getAlbum method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetAlbum()
@@ -167,7 +133,7 @@ class JGoogleDataPicasaTest extends TestCase
 	/**
 	 * Tests the setOption method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetOption()
@@ -183,7 +149,7 @@ class JGoogleDataPicasaTest extends TestCase
 	/**
 	 * Tests the getOption method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetOption()
@@ -199,16 +165,16 @@ class JGoogleDataPicasaTest extends TestCase
 	/**
 	 * Tests that all functions properly return false
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testFalse()
 	{
 		$this->oauth->setToken(false);
 
-		$functions['listAlbums'] = array('userID');
+		$functions['listAlbums']  = array('userID');
 		$functions['createAlbum'] = array('userID', 'New Title', 'private');
-		$functions['getAlbum'] = array('https://picasaweb.google.com/data/entry/api/user/12345678901234567890/albumid/0123456789012345678');
+		$functions['getAlbum']    = array('https://picasaweb.google.com/data/entry/api/user/12345678901234567890/albumid/0123456789012345678');
 
 		foreach ($functions as $function => $params)
 		{
@@ -219,7 +185,7 @@ class JGoogleDataPicasaTest extends TestCase
 	/**
 	 * Tests that all functions properly return Exceptions
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testExceptions()
@@ -227,9 +193,9 @@ class JGoogleDataPicasaTest extends TestCase
 		$this->http->expects($this->atLeastOnce())->method('get')->will($this->returnCallback('picasaExceptionCallback'));
 		$this->http->expects($this->atLeastOnce())->method('post')->will($this->returnCallback('picasaDataExceptionCallback'));
 
-		$functions['listAlbums'] = array('userID');
+		$functions['listAlbums']  = array('userID');
 		$functions['createAlbum'] = array('userID', 'New Title', 'private');
-		$functions['getAlbum'] = array('https://picasaweb.google.com/data/entry/api/user/12345678901234567890/albumid/0123456789012345678');
+		$functions['getAlbum']    = array('https://picasaweb.google.com/data/entry/api/user/12345678901234567890/albumid/0123456789012345678');
 
 		foreach ($functions as $function => $params)
 		{
@@ -247,14 +213,48 @@ class JGoogleDataPicasaTest extends TestCase
 			$this->assertTrue($exception);
 		}
 	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$_SERVER['HTTP_HOST']       = 'mydomain.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$this->options = new JRegistry;
+		$this->http    = $this->getMock('JHttp', array('head', 'get', 'delete', 'trace', 'post', 'put', 'patch'), array($this->options));
+		$this->input   = new JInput;
+		$this->oauth   = new JOAuth2Client($this->options, $this->http, $this->input);
+		$this->auth    = new JGoogleAuthOauth2($this->options, $this->oauth);
+		$this->object  = new JGoogleDataPicasa($this->options, $this->auth);
+
+		$this->object->setOption('clientid', '01234567891011.apps.googleusercontent.com');
+		$this->object->setOption('clientsecret', 'jeDs8rKw_jDJW8MMf-ff8ejs');
+		$this->object->setOption('redirecturi', 'http://localhost/oauth');
+
+		$token['access_token']  = 'accessvalue';
+		$token['refresh_token'] = 'refreshvalue';
+		$token['created']       = time() - 1800;
+		$token['expires_in']    = 3600;
+		$this->oauth->setToken($token);
+	}
 }
 
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -264,9 +264,9 @@ function picasaAlbumCallback($url, array $headers = null, $timeout = null)
 {
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'text/html');
-	$response->body = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'album.txt');
+	$response->body    = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'album.txt');
 
 	return $response;
 }
@@ -274,10 +274,10 @@ function picasaAlbumCallback($url, array $headers = null, $timeout = null)
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   mixed    $data     Either an associative array or a string to be sent with the request.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   mixed   $data    Either an associative array or a string to be sent with the request.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -289,9 +289,9 @@ function dataPicasaAlbumCallback($url, $data, array $headers = null, $timeout = 
 
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'application/atom+xml');
-	$response->body = $data;
+	$response->body    = $data;
 
 	return $response;
 }
@@ -299,9 +299,9 @@ function dataPicasaAlbumCallback($url, $data, array $headers = null, $timeout = 
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -311,9 +311,9 @@ function picasaAlbumlistCallback($url, array $headers = null, $timeout = null)
 {
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'application/atom+xml');
-	$response->body = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'albumlist.txt');
+	$response->body    = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'albumlist.txt');
 
 	return $response;
 }
@@ -321,9 +321,9 @@ function picasaAlbumlistCallback($url, array $headers = null, $timeout = null)
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -333,9 +333,9 @@ function picasaExceptionCallback($url, array $headers = null, $timeout = null)
 {
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'application/atom+xml');
-	$response->body = 'BADDATA';
+	$response->body    = 'BADDATA';
 
 	return $response;
 }
@@ -343,10 +343,10 @@ function picasaExceptionCallback($url, array $headers = null, $timeout = null)
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   mixed    $data     Either an associative array or a string to be sent with the request.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   mixed   $data    Either an associative array or a string to be sent with the request.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -356,9 +356,9 @@ function picasaDataExceptionCallback($url, $data, array $headers = null, $timeou
 {
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'application/atom+xml');
-	$response->body = 'BADDATA';
+	$response->body    = 'BADDATA';
 
 	return $response;
 }
@@ -366,9 +366,9 @@ function picasaDataExceptionCallback($url, $data, array $headers = null, $timeou
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -378,9 +378,9 @@ function picasaBadXmlCallback($url, array $headers = null, $timeout = null)
 {
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'application/atom+xml');
-	$response->body = '<feed />';
+	$response->body    = '<feed />';
 
 	return $response;
 }

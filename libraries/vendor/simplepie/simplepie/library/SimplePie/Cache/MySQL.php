@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- * 	* Redistributions of source code must retain the above copyright notice, this list of
- * 	  conditions and the following disclaimer.
+ *    * Redistributions of source code must retain the above copyright notice, this list of
+ *      conditions and the following disclaimer.
  *
- * 	* Redistributions in binary form must reproduce the above copyright notice, this list
- * 	  of conditions and the following disclaimer in the documentation and/or other materials
- * 	  provided with the distribution.
+ *    * Redistributions in binary form must reproduce the above copyright notice, this list
+ *      of conditions and the following disclaimer in the documentation and/or other materials
+ *      provided with the distribution.
  *
- * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
- * 	  to endorse or promote products derived from this software without specific prior
- * 	  written permission.
+ *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
+ *      to endorse or promote products derived from this software without specific prior
+ *      written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,14 +32,14 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package SimplePie
- * @version 1.3.1
+ * @package   SimplePie
+ * @version   1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author Ryan Parman
- * @author Geoffrey Sneddon
- * @author Ryan McCue
- * @link http://simplepie.org/ SimplePie
- * @license http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author    Ryan Parman
+ * @author    Geoffrey Sneddon
+ * @author    Ryan McCue
+ * @link      http://simplepie.org/ SimplePie
+ * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 /**
@@ -51,7 +51,7 @@
  * connect to the `mydb` database on `localhost` on port 3306, with the user
  * `root` and the password `password`. All tables will be prefixed with `sp_`
  *
- * @package SimplePie
+ * @package    SimplePie
  * @subpackage Caching
  */
 class SimplePie_Cache_MySQL extends SimplePie_Cache_DB
@@ -81,17 +81,17 @@ class SimplePie_Cache_MySQL extends SimplePie_Cache_DB
 	 * Create a new cache object
 	 *
 	 * @param string $location Location string (from SimplePie::$cache_location)
-	 * @param string $name Unique ID for the cache
-	 * @param string $type Either TYPE_FEED for SimplePie data, or TYPE_IMAGE for image data
+	 * @param string $name     Unique ID for the cache
+	 * @param string $type     Either TYPE_FEED for SimplePie data, or TYPE_IMAGE for image data
 	 */
 	public function __construct($location, $name, $type)
 	{
 		$this->options = array(
-			'user' => null,
-			'pass' => null,
-			'host' => '127.0.0.1',
-			'port' => '3306',
-			'path' => '',
+			'user'   => null,
+			'pass'   => null,
+			'host'   => '127.0.0.1',
+			'port'   => '3306',
+			'path'   => '',
 			'extras' => array(
 				'prefix' => '',
 			),
@@ -108,6 +108,7 @@ class SimplePie_Cache_MySQL extends SimplePie_Cache_DB
 		catch (PDOException $e)
 		{
 			$this->mysql = null;
+
 			return;
 		}
 
@@ -116,6 +117,7 @@ class SimplePie_Cache_MySQL extends SimplePie_Cache_DB
 		if (!$query = $this->mysql->query('SHOW TABLES'))
 		{
 			$this->mysql = null;
+
 			return;
 		}
 
@@ -148,6 +150,7 @@ class SimplePie_Cache_MySQL extends SimplePie_Cache_DB
 	 * Save data to the cache
 	 *
 	 * @param array|SimplePie $data Data to store in the cache. If passed a SimplePie object, only cache the $data property
+	 *
 	 * @return bool Successfulness
 	 */
 	public function save($data)
@@ -172,13 +175,13 @@ class SimplePie_Cache_MySQL extends SimplePie_Cache_DB
 					$items = count($prepared[1]);
 					if ($items)
 					{
-						$sql = 'UPDATE `' . $this->options['extras']['prefix'] . 'cache_data` SET `items` = :items, `data` = :data, `mtime` = :time WHERE `id` = :feed';
+						$sql   = 'UPDATE `' . $this->options['extras']['prefix'] . 'cache_data` SET `items` = :items, `data` = :data, `mtime` = :time WHERE `id` = :feed';
 						$query = $this->mysql->prepare($sql);
 						$query->bindValue(':items', $items);
 					}
 					else
 					{
-						$sql = 'UPDATE `' . $this->options['extras']['prefix'] . 'cache_data` SET `data` = :data, `mtime` = :time WHERE `id` = :feed';
+						$sql   = 'UPDATE `' . $this->options['extras']['prefix'] . 'cache_data` SET `data` = :data, `mtime` = :time WHERE `id` = :feed';
 						$query = $this->mysql->prepare($sql);
 					}
 
@@ -241,6 +244,7 @@ class SimplePie_Cache_MySQL extends SimplePie_Cache_DB
 								return false;
 							}
 						}
+
 						return true;
 					}
 				}
@@ -280,6 +284,7 @@ class SimplePie_Cache_MySQL extends SimplePie_Cache_DB
 				}
 			}
 		}
+
 		return false;
 	}
 
@@ -356,8 +361,10 @@ class SimplePie_Cache_MySQL extends SimplePie_Cache_DB
 					}
 				}
 			}
+
 			return $data;
 		}
+
 		return false;
 	}
 

@@ -26,8 +26,27 @@ class JApplicationWebRouterBase extends JApplicationWebRouter
 	/**
 	 * Add a route map to the router.  If the pattern already exists it will be overwritten.
 	 *
-	 * @param   string  $pattern     The route pattern to use for matching.
-	 * @param   string  $controller  The controller name to map to the given pattern.
+	 * @param   array $maps A list of route maps to add to the router as $pattern => $controller.
+	 *
+	 * @return  JApplicationWebRouter  This object for method chaining.
+	 *
+	 * @since   12.2
+	 */
+	public function addMaps($maps)
+	{
+		foreach ($maps as $pattern => $controller)
+		{
+			$this->addMap($pattern, $controller);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Add a route map to the router.  If the pattern already exists it will be overwritten.
+	 *
+	 * @param   string $pattern    The route pattern to use for matching.
+	 * @param   string $controller The controller name to map to the given pattern.
 	 *
 	 * @return  JApplicationWebRouter  This object for method chaining.
 	 *
@@ -55,7 +74,7 @@ class JApplicationWebRouterBase extends JApplicationWebRouter
 			// Match a splat and capture the data to a named variable.
 			elseif ($segment[0] == '*')
 			{
-				$vars[] = substr($segment, 1);
+				$vars[]  = substr($segment, 1);
 				$regex[] = '(.*)';
 			}
 			// Match an escaped splat segment.
@@ -71,7 +90,7 @@ class JApplicationWebRouterBase extends JApplicationWebRouter
 			// Match a named variable and capture the data.
 			elseif ($segment[0] == ':')
 			{
-				$vars[] = substr($segment, 1);
+				$vars[]  = substr($segment, 1);
 				$regex[] = '([^/]*)';
 			}
 			// Match a segment with an escaped variable character prefix.
@@ -87,8 +106,8 @@ class JApplicationWebRouterBase extends JApplicationWebRouter
 		}
 
 		$this->maps[] = array(
-			'regex' => chr(1) . '^' . implode('/', $regex) . '$' . chr(1),
-			'vars' => $vars,
+			'regex'      => chr(1) . '^' . implode('/', $regex) . '$' . chr(1),
+			'vars'       => $vars,
 			'controller' => (string) $controller
 		);
 
@@ -96,28 +115,9 @@ class JApplicationWebRouterBase extends JApplicationWebRouter
 	}
 
 	/**
-	 * Add a route map to the router.  If the pattern already exists it will be overwritten.
-	 *
-	 * @param   array  $maps  A list of route maps to add to the router as $pattern => $controller.
-	 *
-	 * @return  JApplicationWebRouter  This object for method chaining.
-	 *
-	 * @since   12.2
-	 */
-	public function addMaps($maps)
-	{
-		foreach ($maps as $pattern => $controller)
-		{
-			$this->addMap($pattern, $controller);
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Parse the given route and return the name of a controller mapped to the given route.
 	 *
-	 * @param   string  $route  The route string for which to find and execute a controller.
+	 * @param   string $route The route string for which to find and execute a controller.
 	 *
 	 * @return  string  The controller name for the given route excluding prefix.
 	 *

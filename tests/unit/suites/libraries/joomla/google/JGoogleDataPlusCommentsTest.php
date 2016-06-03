@@ -58,43 +58,9 @@ class JGoogleDataPlusCommentsTest extends TestCase
 	protected $errorString = '{"error": {"message": "Generic Error."}}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$_SERVER['HTTP_HOST'] = 'mydomain.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$this->options = new JRegistry;
-		$this->http = $this->getMock('JHttp', array('head', 'get', 'delete', 'trace', 'post', 'put', 'patch'), array($this->options));
-		$this->input = new JInput;
-		$this->oauth = new JOAuth2Client($this->options, $this->http, $this->input);
-		$this->auth = new JGoogleAuthOauth2($this->options, $this->oauth);
-		$this->object = new JGoogleDataPlusComments($this->options, $this->auth);
-
-		$this->object->setOption('clientid', '01234567891011.apps.googleusercontent.com');
-		$this->object->setOption('clientsecret', 'jeDs8rKw_jDJW8MMf-ff8ejs');
-		$this->object->setOption('redirecturi', 'http://localhost/oauth');
-
-		$token['access_token'] = 'accessvalue';
-		$token['refresh_token'] = 'refreshvalue';
-		$token['created'] = time() - 1800;
-		$token['expires_in'] = 3600;
-		$this->oauth->setToken($token);
-	}
-
-	/**
 	 * Tests the auth method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testAuth()
@@ -105,7 +71,7 @@ class JGoogleDataPlusCommentsTest extends TestCase
 	/**
 	 * Tests the isauth method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testIsAuth()
@@ -122,19 +88,19 @@ class JGoogleDataPlusCommentsTest extends TestCase
 	 */
 	public function testGetComment()
 	{
-		$id = '124346363456';
+		$id     = '124346363456';
 		$fields = 'id,actor';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$url = 'comments/' . $id . '?fields=' . $fields;
 
 		$this->http->expects($this->once())
-		->method('get')
-		->with($url)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($url)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getComment($id, $fields),
@@ -159,13 +125,13 @@ class JGoogleDataPlusCommentsTest extends TestCase
 	public function testListComments()
 	{
 		$activityId = 'z12ezrmamsvydrgsy221ypew2qrkt1ja404';
-		$fields = 'aboutMe,birthday';
-		$max = 5;
-		$order = 'ascending';
-		$token = 'EAoaAA';
-		$alt = 'json';
+		$fields     = 'aboutMe,birthday';
+		$max        = 5;
+		$order      = 'ascending';
+		$token      = 'EAoaAA';
+		$alt        = 'json';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -173,9 +139,9 @@ class JGoogleDataPlusCommentsTest extends TestCase
 			'&orderBy=' . $order . '&pageToken=' . $token . '&alt=' . $alt;
 
 		$this->http->expects($this->once())
-		->method('get')
-		->with($url)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($url)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->listComments($activityId, $fields, $max, $order, $token, $alt),
@@ -188,5 +154,39 @@ class JGoogleDataPlusCommentsTest extends TestCase
 			$this->object->listComments($activityId),
 			$this->equalTo(false)
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$_SERVER['HTTP_HOST']       = 'mydomain.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$this->options = new JRegistry;
+		$this->http    = $this->getMock('JHttp', array('head', 'get', 'delete', 'trace', 'post', 'put', 'patch'), array($this->options));
+		$this->input   = new JInput;
+		$this->oauth   = new JOAuth2Client($this->options, $this->http, $this->input);
+		$this->auth    = new JGoogleAuthOauth2($this->options, $this->oauth);
+		$this->object  = new JGoogleDataPlusComments($this->options, $this->auth);
+
+		$this->object->setOption('clientid', '01234567891011.apps.googleusercontent.com');
+		$this->object->setOption('clientsecret', 'jeDs8rKw_jDJW8MMf-ff8ejs');
+		$this->object->setOption('redirecturi', 'http://localhost/oauth');
+
+		$token['access_token']  = 'accessvalue';
+		$token['refresh_token'] = 'refreshvalue';
+		$token['created']       = time() - 1800;
+		$token['expires_in']    = 3600;
+		$this->oauth->setToken($token);
 	}
 }

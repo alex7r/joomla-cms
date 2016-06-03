@@ -74,7 +74,7 @@ class GetJoomlaCli extends AbstractCliApplication
 
 			$this->out('Downloading Joomla...');
 			$repository = 'https://github.com/joomla/joomla-cms.git';
-			$branch = 'staging';
+			$branch     = 'staging';
 
 			$command = "git clone -b ${branch} --single-branch --depth 1 ${repository} ${folder}";
 			$this->out($command);

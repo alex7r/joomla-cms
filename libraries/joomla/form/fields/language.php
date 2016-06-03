@@ -82,11 +82,11 @@ class JFormFieldLanguage extends JFormFieldList
 					break;
 				case 'active':
 				case 'auto':
-					$lang = JFactory::getLanguage();
+					$lang        = JFactory::getLanguage();
 					$this->value = $lang->getTag();
 					break;
 				default:
-				break;
+					break;
 			}
 		}
 

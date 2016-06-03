@@ -28,14 +28,43 @@ class JText
 	 * Translates a string into the current language.
 	 *
 	 * Examples:
+	 * `<?php echo JText::alt('JALL', 'language'); ?>` will generate a 'All' string in English but a "Toutes" string in French
+	 * `<?php echo JText::alt('JALL', 'module'); ?>` will generate a 'All' string in English but a "Tous" string in French
+	 *
+	 * @param   string  $string               The string to translate.
+	 * @param   string  $alt                  The alternate option for global string
+	 * @param   mixed   $jsSafe               Boolean: Make the result javascript safe.
+	 * @param   boolean $interpretBackSlashes To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
+	 * @param   boolean $script               To indicate that the string will be pushed in the javascript language store
+	 *
+	 * @return  string  The translated string or the key if $script is true
+	 *
+	 * @since   11.1
+	 */
+	public static function alt($string, $alt, $jsSafe = false, $interpretBackSlashes = true, $script = false)
+	{
+		$lang = JFactory::getLanguage();
+
+		if ($lang->hasKey($string . '_' . $alt))
+		{
+			$string .= '_' . $alt;
+		}
+
+		return self::_($string, $jsSafe, $interpretBackSlashes, $script);
+	}
+
+	/**
+	 * Translates a string into the current language.
+	 *
+	 * Examples:
 	 * `<script>alert(Joomla.JText._('<?php echo JText::_("JDEFAULT", array("script"=>true)); ?>'));</script>`
 	 * will generate an alert message containing 'Default'
 	 * `<?php echo JText::_("JDEFAULT"); ?>` will generate a 'Default' string
 	 *
-	 * @param   string   $string                The string to translate.
-	 * @param   mixed    $jsSafe                Boolean: Make the result javascript safe.
-	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
-	 * @param   boolean  $script                To indicate that the string will be push in the javascript language store
+	 * @param   string  $string               The string to translate.
+	 * @param   mixed   $jsSafe               Boolean: Make the result javascript safe.
+	 * @param   boolean $interpretBackSlashes To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
+	 * @param   boolean $script               To indicate that the string will be push in the javascript language store
 	 *
 	 * @return  string  The translated string or the key is $script is true
 	 *
@@ -78,10 +107,10 @@ class JText
 	/**
 	 * Checks the string if it should be interpreted as sprintf and runs sprintf over it.
 	 *
-	 * @param   string   &$string               The string to translate.
-	 * @param   mixed    $jsSafe                Boolean: Make the result javascript safe.
-	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
-	 * @param   boolean  $script                To indicate that the string will be push in the javascript language store
+	 * @param   string  &$string              The string to translate.
+	 * @param   mixed   $jsSafe               Boolean: Make the result javascript safe.
+	 * @param   boolean $interpretBackSlashes To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
+	 * @param   boolean $script               To indicate that the string will be push in the javascript language store
 	 *
 	 * @return  boolean  Whether the string be interpreted as sprintf
 	 *
@@ -95,7 +124,7 @@ class JText
 			return false;
 		}
 
-		$lang = JFactory::getLanguage();
+		$lang         = JFactory::getLanguage();
 		$string_parts = explode(',', $string);
 
 		// Pass all parts through the JText translator
@@ -137,35 +166,6 @@ class JText
 	}
 
 	/**
-	 * Translates a string into the current language.
-	 *
-	 * Examples:
-	 * `<?php echo JText::alt('JALL', 'language'); ?>` will generate a 'All' string in English but a "Toutes" string in French
-	 * `<?php echo JText::alt('JALL', 'module'); ?>` will generate a 'All' string in English but a "Tous" string in French
-	 *
-	 * @param   string   $string                The string to translate.
-	 * @param   string   $alt                   The alternate option for global string
-	 * @param   mixed    $jsSafe                Boolean: Make the result javascript safe.
-	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
-	 * @param   boolean  $script                To indicate that the string will be pushed in the javascript language store
-	 *
-	 * @return  string  The translated string or the key if $script is true
-	 *
-	 * @since   11.1
-	 */
-	public static function alt($string, $alt, $jsSafe = false, $interpretBackSlashes = true, $script = false)
-	{
-		$lang = JFactory::getLanguage();
-
-		if ($lang->hasKey($string . '_' . $alt))
-		{
-			$string .= '_' . $alt;
-		}
-
-		return self::_($string, $jsSafe, $interpretBackSlashes, $script);
-	}
-
-	/**
 	 * Like JText::sprintf but tries to pluralise the string.
 	 *
 	 * Note that this method can take a mixed number of arguments as for the sprintf function.
@@ -185,8 +185,8 @@ class JText
 	 * will generate an alert message containing '1 plugin successfully disabled'
 	 * `<?php echo JText::plural('COM_PLUGINS_N_ITEMS_UNPUBLISHED', 1); ?>` will generate a '1 plugin successfully disabled' string
 	 *
-	 * @param   string   $string  The format string.
-	 * @param   integer  $n       The number of items
+	 * @param   string  $string The format string.
+	 * @param   integer $n      The number of items
 	 *
 	 * @return  string  The translated strings or the key if 'script' is true in the array of options
 	 *
@@ -194,8 +194,8 @@ class JText
 	 */
 	public static function plural($string, $n)
 	{
-		$lang = JFactory::getLanguage();
-		$args = func_get_args();
+		$lang  = JFactory::getLanguage();
+		$args  = func_get_args();
 		$count = count($args);
 
 		if ($count < 1)
@@ -212,7 +212,7 @@ class JText
 		}
 
 		// Try the key from the language plural potential suffixes
-		$found = false;
+		$found    = false;
 		$suffixes = $lang->getPluralSuffixes((int) $n);
 		array_unshift($suffixes, (int) $n);
 
@@ -270,7 +270,7 @@ class JText
 	 * interpretBackSlashes is a boolean to interpret backslashes \\->\, \n->new line, \t->tabulation.
 	 * script is a boolean to indicate that the string will be push in the javascript language store.
 	 *
-	 * @param   string  $string  The format string.
+	 * @param   string $string The format string.
 	 *
 	 * @return  string  The translated strings or the key if 'script' is true in the array of options.
 	 *
@@ -278,8 +278,8 @@ class JText
 	 */
 	public static function sprintf($string)
 	{
-		$lang = JFactory::getLanguage();
-		$args = func_get_args();
+		$lang  = JFactory::getLanguage();
+		$args  = func_get_args();
 		$count = count($args);
 
 		if ($count < 1)
@@ -317,7 +317,7 @@ class JText
 	 *
 	 * Note that this method can take a mixed number of arguments as for the sprintf function.
 	 *
-	 * @param   format  $string  The format string.
+	 * @param   format $string The format string.
 	 *
 	 * @return  mixed
 	 *
@@ -325,8 +325,8 @@ class JText
 	 */
 	public static function printf($string)
 	{
-		$lang = JFactory::getLanguage();
-		$args = func_get_args();
+		$lang  = JFactory::getLanguage();
+		$args  = func_get_args();
 		$count = count($args);
 
 		if ($count < 1)
@@ -352,9 +352,9 @@ class JText
 	/**
 	 * Translate a string into the current language and stores it in the JavaScript language store.
 	 *
-	 * @param   string   $string                The JText key.
-	 * @param   boolean  $jsSafe                Ensure the output is JavaScript safe.
-	 * @param   boolean  $interpretBackSlashes  Interpret \t and \n.
+	 * @param   string  $string               The JText key.
+	 * @param   boolean $jsSafe               Ensure the output is JavaScript safe.
+	 * @param   boolean $interpretBackSlashes Interpret \t and \n.
 	 *
 	 * @return  string
 	 *

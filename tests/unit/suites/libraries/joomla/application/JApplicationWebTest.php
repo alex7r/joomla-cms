@@ -112,38 +112,13 @@ class JApplicationWebTest extends TestCase
 
 		$this->backupServer = $_SERVER;
 
-		$_SERVER['HTTP_HOST'] = self::TEST_HTTP_HOST;
+		$_SERVER['HTTP_HOST']       = self::TEST_HTTP_HOST;
 		$_SERVER['HTTP_USER_AGENT'] = self::TEST_USER_AGENT;
-		$_SERVER['REQUEST_URI'] = self::TEST_REQUEST_URI;
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
+		$_SERVER['REQUEST_URI']     = self::TEST_REQUEST_URI;
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
 
 		// Get a new JApplicationWebInspector instance.
 		$this->class = new JApplicationWebInspector;
-	}
-
-	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDown()
-	 * @since   11.1
-	 */
-	protected function tearDown()
-	{
-		// Reset the dispatcher and session instances.
-		TestReflection::setValue('JEventDispatcher', 'instance', null);
-		TestReflection::setValue('JSession', 'instance', null);
-
-		// Reset some web inspector static settings.
-		JApplicationWebInspector::$headersSent = false;
-		JApplicationWebInspector::$connectionAlive = true;
-
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 
 	/**
@@ -253,8 +228,8 @@ class JApplicationWebTest extends TestCase
 			'response',
 			(object) array(
 				'cachable' => null,
-				'headers' => array('foo'),
-				'body' => array(),
+				'headers'  => array('foo'),
+				'body'     => array(),
 			)
 		);
 
@@ -296,8 +271,8 @@ class JApplicationWebTest extends TestCase
 			'response',
 			(object) array(
 				'cachable' => null,
-				'headers' => null,
-				'body' => array('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+				'headers'  => null,
+				'body'     => array('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
 					eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
 					veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
@@ -344,8 +319,8 @@ class JApplicationWebTest extends TestCase
 			'response',
 			(object) array(
 				'cachable' => null,
-				'headers' => null,
-				'body' => array('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+				'headers'  => null,
+				'body'     => array('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
 					eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
 					veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
@@ -400,8 +375,8 @@ class JApplicationWebTest extends TestCase
 			'response',
 			(object) array(
 				'cachable' => null,
-				'headers' => null,
-				'body' => array(str_replace("\r\n", "\n", $string)),
+				'headers'  => null,
+				'body'     => array(str_replace("\r\n", "\n", $string)),
 			)
 		);
 
@@ -446,8 +421,8 @@ class JApplicationWebTest extends TestCase
 			'response',
 			(object) array(
 				'cachable' => null,
-				'headers' => null,
-				'body' => array(str_replace("\r\n", "\n", $string)),
+				'headers'  => null,
+				'body'     => array(str_replace("\r\n", "\n", $string)),
 			)
 		);
 
@@ -498,8 +473,8 @@ class JApplicationWebTest extends TestCase
 			'response',
 			(object) array(
 				'cachable' => null,
-				'headers' => null,
-				'body' => array(str_replace("\r\n", "\n", $string)),
+				'headers'  => null,
+				'body'     => array(str_replace("\r\n", "\n", $string)),
 			)
 		);
 
@@ -524,18 +499,18 @@ class JApplicationWebTest extends TestCase
 	/**
 	 * Tests the JApplicationWeb::detectRequestUri method.
 	 *
-	 * @param   string  $https        @todo
-	 * @param   string  $phpSelf      @todo
-	 * @param   string  $requestUri   @todo
-	 * @param   string  $httpHost     @todo
-	 * @param   string  $scriptName   @todo
-	 * @param   string  $queryString  @todo
-	 * @param   string  $expects      @todo
+	 * @param   string $https       @todo
+	 * @param   string $phpSelf     @todo
+	 * @param   string $requestUri  @todo
+	 * @param   string $httpHost    @todo
+	 * @param   string $scriptName  @todo
+	 * @param   string $queryString @todo
+	 * @param   string $expects     @todo
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getDetectRequestUriData
-	 * @since   11.3
+	 * @since        11.3
 	 */
 	public function testDetectRequestUri($https, $phpSelf, $requestUri, $httpHost, $scriptName, $queryString, $expects)
 	{
@@ -544,10 +519,10 @@ class JApplicationWebTest extends TestCase
 			$_SERVER['HTTPS'] = $https;
 		}
 
-		$_SERVER['PHP_SELF'] = $phpSelf;
-		$_SERVER['REQUEST_URI'] = $requestUri;
-		$_SERVER['HTTP_HOST'] = $httpHost;
-		$_SERVER['SCRIPT_NAME'] = $scriptName;
+		$_SERVER['PHP_SELF']     = $phpSelf;
+		$_SERVER['REQUEST_URI']  = $requestUri;
+		$_SERVER['HTTP_HOST']    = $httpHost;
+		$_SERVER['SCRIPT_NAME']  = $scriptName;
 		$_SERVER['QUERY_STRING'] = $queryString;
 
 		$this->assertEquals($expects, TestReflection::invoke($this->class, 'detectRequestUri'));
@@ -596,7 +571,7 @@ class JApplicationWebTest extends TestCase
 	public function testExecuteWithDocument()
 	{
 		$dispatcher = $this->getMockDispatcher();
-		$document = $this->getMockDocument();
+		$document   = $this->getMockDocument();
 
 		$this->assignMockReturns($document, array('render' => 'JWeb Body'));
 
@@ -648,23 +623,23 @@ class JApplicationWebTest extends TestCase
 		return array(
 			// Note: file, class, expectsClass, (expected result array), whether there should be an exception
 			'Default configuration class' => array(JPATH_TEST_STUBS . '/configuration.php', null, 'JConfig', 'ConfigEval'),
-			'Custom file, invalid class' => array(JPATH_TEST_STUBS . '/config.wrongclass.php', 'noclass', false, array(), true),
+			'Custom file, invalid class'  => array(JPATH_TEST_STUBS . '/config.wrongclass.php', 'noclass', false, array(), true),
 		);
 	}
 
 	/**
 	 * Tests the JCli::fetchConfigurationData method.
 	 *
-	 * @param   string   $file               The name of the configuration file.
-	 * @param   string   $class              The name of the class.
-	 * @param   boolean  $expectsClass       The result is expected to be a class.
-	 * @param   array    $expects            The expected result as an array.
-	 * @param   bool     $expectedException  The expected exception.
+	 * @param   string  $file              The name of the configuration file.
+	 * @param   string  $class             The name of the class.
+	 * @param   boolean $expectsClass      The result is expected to be a class.
+	 * @param   array   $expects           The expected result as an array.
+	 * @param   bool    $expectedException The expected exception.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getFetchConfigurationData
-	 * @since    11.3
+	 * @since        11.3
 	 */
 	public function testFetchConfigurationData($file, $class, $expectsClass, $expects, $expectedException = false)
 	{
@@ -732,8 +707,8 @@ class JApplicationWebTest extends TestCase
 			'response',
 			(object) array(
 				'cachable' => null,
-				'headers' => null,
-				'body' => array('foo', 'bar'),
+				'headers'  => null,
+				'body'     => array('foo', 'bar'),
 			)
 		);
 
@@ -757,8 +732,8 @@ class JApplicationWebTest extends TestCase
 			'response',
 			(object) array(
 				'cachable' => null,
-				'headers' => array('ok'),
-				'body' => null,
+				'headers'  => array('ok'),
+				'body'     => null,
 			)
 		);
 
@@ -1029,7 +1004,7 @@ class JApplicationWebTest extends TestCase
 	public function testRedirect()
 	{
 		$base = 'http://mydomain.com/';
-		$url = 'index.php';
+		$url  = 'index.php';
 
 		// Inject the client information.
 		TestReflection::setValue(
@@ -1068,7 +1043,7 @@ class JApplicationWebTest extends TestCase
 	public function testRedirectWithHeadersSent()
 	{
 		$base = 'http://mydomain.com/';
-		$url = 'index.php';
+		$url  = 'index.php';
 
 		// Emulate headers already sent.
 		JApplicationWebInspector::$headersSent = true;
@@ -1153,15 +1128,15 @@ class JApplicationWebTest extends TestCase
 	/**
 	 * Tests the JApplicationWeb::redirect method with assorted URL's.
 	 *
-	 * @param   string  $url       @todo
-	 * @param   string  $base      @todo
-	 * @param   string  $request   @todo
-	 * @param   string  $expected  @todo
+	 * @param   string $url      @todo
+	 * @param   string $base     @todo
+	 * @param   string $request  @todo
+	 * @param   string $expected @todo
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  getRedirectData
-	 * @since   11.3
+	 * @since         11.3
 	 */
 	public function testRedirectWithUrl($url, $base, $request, $expected)
 	{
@@ -1304,10 +1279,10 @@ class JApplicationWebTest extends TestCase
 			'response',
 			(object) array(
 				'cachable' => null,
-				'headers' => array(
+				'headers'  => array(
 					array('name' => 'foo', 'value' => 'bar'),
 				),
-				'body' => null,
+				'body'     => null,
 			)
 		);
 
@@ -1347,5 +1322,30 @@ class JApplicationWebTest extends TestCase
 		$_SERVER['HTTPS'] = 'on';
 
 		$this->assertTrue($this->class->isSSLConnection());
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDown()
+	 * @since   11.1
+	 */
+	protected function tearDown()
+	{
+		// Reset the dispatcher and session instances.
+		TestReflection::setValue('JEventDispatcher', 'instance', null);
+		TestReflection::setValue('JSession', 'instance', null);
+
+		// Reset some web inspector static settings.
+		JApplicationWebInspector::$headersSent     = false;
+		JApplicationWebInspector::$connectionAlive = true;
+
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 }

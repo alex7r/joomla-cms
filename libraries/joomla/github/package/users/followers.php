@@ -21,7 +21,7 @@ class JGithubPackageUsersFollowers extends JGithubPackage
 	/**
 	 * List followers of a user.
 	 *
-	 * @param   string  $user  The name of the user. If not set the current authenticated user will be used.
+	 * @param   string $user The name of the user. If not set the current authenticated user will be used.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -42,7 +42,7 @@ class JGithubPackageUsersFollowers extends JGithubPackage
 	/**
 	 * List users followed by another user.
 	 *
-	 * @param   string  $user  The name of the user. If not set the current authenticated user will be used.
+	 * @param   string $user The name of the user. If not set the current authenticated user will be used.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -63,7 +63,7 @@ class JGithubPackageUsersFollowers extends JGithubPackage
 	/**
 	 * Check if you are following a user.
 	 *
-	 * @param   string  $user  The name of the user.
+	 * @param   string $user The name of the user.
 	 *
 	 * @throws UnexpectedValueException
 	 * @since 3.3 (CMS)
@@ -101,7 +101,7 @@ class JGithubPackageUsersFollowers extends JGithubPackage
 	 * Following a user requires the user to be logged in and authenticated with
 	 * basic auth or OAuth with the user:follow scope.
 	 *
-	 * @param   string  $user  The name of the user.
+	 * @param   string $user The name of the user.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -124,7 +124,7 @@ class JGithubPackageUsersFollowers extends JGithubPackage
 	 * Unfollowing a user requires the user to be logged in and authenticated with
 	 * basic auth or OAuth with the user:follow scope.
 	 *
-	 * @param   string  $user  The name of the user.
+	 * @param   string $user The name of the user.
 	 *
 	 * @since 3.3 (CMS)
 	 *

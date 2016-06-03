@@ -18,35 +18,35 @@ defined('JPATH_PLATFORM') or die;
 class JProfiler
 {
 	/**
+	 * @var    array  JProfiler instances container.
+	 * @since  11.3
+	 */
+	protected static $instances = array();
+	/**
 	 * @var    integer  The start time.
 	 * @since  12.1
 	 */
 	protected $start = 0;
-
 	/**
 	 * @var    string  The prefix to use in the output
 	 * @since  12.1
 	 */
 	protected $prefix = '';
-
 	/**
 	 * @var    array  The buffer of profiling messages.
 	 * @since  12.1
 	 */
 	protected $buffer = null;
-
 	/**
 	 * @var    array  The profiling messages.
 	 * @since  12.1
 	 */
 	protected $marks = null;
-
 	/**
 	 * @var    float  The previous time marker
 	 * @since  12.1
 	 */
 	protected $previousTime = 0.0;
-
 	/**
 	 * @var    float  The previous memory marker
 	 * @since  12.1
@@ -54,23 +54,17 @@ class JProfiler
 	protected $previousMem = 0.0;
 
 	/**
-	 * @var    array  JProfiler instances container.
-	 * @since  11.3
-	 */
-	protected static $instances = array();
-
-	/**
 	 * Constructor
 	 *
-	 * @param   string  $prefix  Prefix for mark messages
+	 * @param   string $prefix Prefix for mark messages
 	 *
 	 * @since   11.1
 	 */
 	public function __construct($prefix = '')
 	{
-		$this->start = microtime(1);
+		$this->start  = microtime(1);
 		$this->prefix = $prefix;
-		$this->marks = array();
+		$this->marks  = array();
 		$this->buffer = array();
 	}
 
@@ -78,7 +72,7 @@ class JProfiler
 	 * Returns the global Profiler object, only creating it
 	 * if it doesn't already exist.
 	 *
-	 * @param   string  $prefix  Prefix used to distinguish profiler objects.
+	 * @param   string $prefix Prefix used to distinguish profiler objects.
 	 *
 	 * @return  JProfiler  The Profiler object.
 	 *
@@ -95,9 +89,24 @@ class JProfiler
 	}
 
 	/**
+	 * Get the current time.
+	 *
+	 * @return  float The current time
+	 *
+	 * @since       11.1
+	 * @deprecated  12.3 (Platform) & 4.0 (CMS) - Use PHP's microtime(1)
+	 */
+	public static function getmicrotime()
+	{
+		list ($usec, $sec) = explode(' ', microtime());
+
+		return ((float) $usec + (float) $sec);
+	}
+
+	/**
 	 * Output a time mark
 	 *
-	 * @param   string  $label  A label for the time mark
+	 * @param   string $label A label for the time mark
 	 *
 	 * @return  string
 	 *
@@ -105,20 +114,20 @@ class JProfiler
 	 */
 	public function mark($label)
 	{
-		$current = microtime(1) - $this->start;
+		$current    = microtime(1) - $this->start;
 		$currentMem = memory_get_usage() / 1048576;
 
-		$m = (object) array(
-			'prefix' => $this->prefix,
-			'time' => ($current > $this->previousTime ? '+' : '-') . (($current - $this->previousTime) * 1000),
-			'totalTime' => ($current * 1000),
-			'memory' => ($currentMem > $this->previousMem ? '+' : '-') . ($currentMem - $this->previousMem),
+		$m             = (object) array(
+			'prefix'      => $this->prefix,
+			'time'        => ($current > $this->previousTime ? '+' : '-') . (($current - $this->previousTime) * 1000),
+			'totalTime'   => ($current * 1000),
+			'memory'      => ($currentMem > $this->previousMem ? '+' : '-') . ($currentMem - $this->previousMem),
 			'totalMemory' => $currentMem,
-			'label' => $label
+			'label'       => $label
 		);
 		$this->marks[] = $m;
 
-		$mark = sprintf(
+		$mark           = sprintf(
 			'%s %.3f seconds (%.3f); %0.2f MB (%0.3f) - %s',
 			$m->prefix,
 			$m->totalTime / 1000,
@@ -130,24 +139,9 @@ class JProfiler
 		$this->buffer[] = $mark;
 
 		$this->previousTime = $current;
-		$this->previousMem = $currentMem;
+		$this->previousMem  = $currentMem;
 
 		return $mark;
-	}
-
-	/**
-	 * Get the current time.
-	 *
-	 * @return  float The current time
-	 *
-	 * @since   11.1
-	 * @deprecated  12.3 (Platform) & 4.0 (CMS) - Use PHP's microtime(1)
-	 */
-	public static function getmicrotime()
-	{
-		list ($usec, $sec) = explode(' ', microtime());
-
-		return ((float) $usec + (float) $sec);
 	}
 
 	/**
@@ -155,8 +149,8 @@ class JProfiler
 	 *
 	 * @return  integer  The memory usage
 	 *
-	 * @link    PHP_MANUAL#memory_get_usage
-	 * @since   11.1
+	 * @link        PHP_MANUAL#memory_get_usage
+	 * @since       11.1
 	 * @deprecated  12.3 (Platform) & 4.0 (CMS) - Use PHP's native memory_get_usage()
 	 */
 	public function getMemory()
@@ -197,8 +191,8 @@ class JProfiler
 	/**
 	 * Sets the start time.
 	 *
-	 * @param   double  $startTime  Unix timestamp in microseconds for setting the Profiler start time.
-	 * @param   int     $startMem   Memory amount in bytes for setting the Profiler start memory.
+	 * @param   double $startTime Unix timestamp in microseconds for setting the Profiler start time.
+	 * @param   int    $startMem  Memory amount in bytes for setting the Profiler start memory.
 	 *
 	 * @return  $this   For chaining
 	 *

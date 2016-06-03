@@ -35,39 +35,39 @@ class JDatabaseQueryElementTest extends PHPUnit_Framework_TestCase
 	public function dataTestAppend()
 	{
 		return array(
-			'array-element' => array(
+			'array-element'     => array(
 				array(
-					'name' => 'SELECT',
+					'name'     => 'SELECT',
 					'elements' => array(),
-					'glue' => ','
+					'glue'     => ','
 				),
 				array(
-					'name' => 'FROM',
+					'name'     => 'FROM',
 					'elements' => array('my_table_name'),
-					'glue' => ','
+					'glue'     => ','
 				),
 				array(
-					'name' => 'FROM',
+					'name'     => 'FROM',
 					'elements' => array('my_table_name'),
-					'glue' => ','
+					'glue'     => ','
 				),
 				PHP_EOL . 'SELECT ' . PHP_EOL . 'FROM my_table_name',
 			),
 			'non-array-element' => array(
 				array(
-					'name' => 'SELECT',
+					'name'     => 'SELECT',
 					'elements' => array(),
-					'glue' => ','
+					'glue'     => ','
 				),
 				array(
-					'name' => 'FROM',
+					'name'     => 'FROM',
 					'elements' => array('my_table_name'),
-					'glue' => ','
+					'glue'     => ','
 				),
 				array(
-					'name' => 'FROM',
+					'name'     => 'FROM',
 					'elements' => array('my_table_name'),
-					'glue' => ','
+					'glue'     => ','
 				),
 				PHP_EOL . 'SELECT ' . PHP_EOL . 'FROM my_table_name',
 			)
@@ -89,28 +89,28 @@ class JDatabaseQueryElementTest extends PHPUnit_Framework_TestCase
 	public function dataTestConstruct()
 	{
 		return array(
-			'array-element' => array(
+			'array-element'     => array(
 				array(
-					'name' => 'FROM',
+					'name'     => 'FROM',
 					'elements' => array('field1', 'field2'),
-					'glue' => ','
+					'glue'     => ','
 				),
 				array(
-					'name' => 'FROM',
+					'name'     => 'FROM',
 					'elements' => array('field1', 'field2'),
-					'glue' => ','
+					'glue'     => ','
 				)
 			),
 			'non-array-element' => array(
 				array(
-					'name' => 'TABLE',
+					'name'     => 'TABLE',
 					'elements' => 'my_table_name',
-					'glue' => ','
+					'glue'     => ','
 				),
 				array(
-					'name' => 'TABLE',
+					'name'     => 'TABLE',
 					'elements' => array('my_table_name'),
-					'glue' => ','
+					'glue'     => ','
 				)
 			)
 		);
@@ -157,12 +157,12 @@ class JDatabaseQueryElementTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Test the class constructor.
 	 *
-	 * @param   array  $element   values for base element
-	 * @param   array  $expected  values for expected fields
+	 * @param   array $element  values for base element
+	 * @param   array $expected values for expected fields
 	 *
 	 * @return  void
 	 *
-	 * @since   11.1
+	 * @since         11.1
 	 * @dataProvider  dataTestConstruct
 	 */
 	public function test__Construct($element, $expected)
@@ -185,14 +185,14 @@ class JDatabaseQueryElementTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Test the __toString magic method.
 	 *
-	 * @param   string  $name      The name of the element.
-	 * @param   mixed   $elements  String or array.
-	 * @param   string  $glue      The glue for elements.
-	 * @param   string  $expected  The expected value.
+	 * @param   string $name     The name of the element.
+	 * @param   mixed  $elements String or array.
+	 * @param   string $glue     The glue for elements.
+	 * @param   string $expected The expected value.
 	 *
 	 * @return  void
 	 *
-	 * @since   11.1
+	 * @since         11.1
 	 * @dataProvider  dataTestToString
 	 */
 	public function test__toString($name, $elements, $glue, $expected)
@@ -208,20 +208,20 @@ class JDatabaseQueryElementTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Test the append method.
 	 *
-	 * @param   array   $element   base element values
-	 * @param   array   $append    append element values
-	 * @param   array   $expected  expected element values for elements field after append
-	 * @param   string  $string    expected value of toString (not used in this test)
+	 * @param   array  $element  base element values
+	 * @param   array  $append   append element values
+	 * @param   array  $expected expected element values for elements field after append
+	 * @param   string $string   expected value of toString (not used in this test)
 	 *
 	 * @return  void
 	 *
-	 * @since   11.1
+	 * @since        11.1
 	 * @dataProvider dataTestAppend
 	 */
 	public function testAppend($element, $append, $expected, $string)
 	{
-		$baseElement = new JDatabaseQueryElement($element['name'], $element['elements'], $element['glue']);
-		$appendElement = new JDatabaseQueryElement($append['name'], $append['elements'], $append['glue']);
+		$baseElement     = new JDatabaseQueryElement($element['name'], $element['elements'], $element['glue']);
+		$appendElement   = new JDatabaseQueryElement($append['name'], $append['elements'], $append['glue']);
 		$expectedElement = new JDatabaseQueryElement($expected['name'], $expected['elements'], $expected['glue']);
 		$baseElement->append($appendElement);
 		$this->assertAttributeEquals(array($expectedElement), 'elements', $baseElement);

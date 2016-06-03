@@ -52,24 +52,6 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options = new JRegistry;
-		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JGithubCommits($this->options, $this->client);
-	}
-
-	/**
 	 * Tests the create method
 	 *
 	 * @return  void
@@ -78,13 +60,13 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreate()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
-		$pull = new stdClass;
+		$pull          = new stdClass;
 		$pull->message = 'My latest commit';
-		$pull->tree = 'abc1234';
+		$pull->tree    = 'abc1234';
 		$pull->parents = array('def5678');
 
 		$this->client->expects($this->once())
@@ -109,13 +91,13 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$pull = new stdClass;
+		$pull          = new stdClass;
 		$pull->message = 'My latest commit';
-		$pull->tree = 'abc1234';
+		$pull->tree    = 'abc1234';
 		$pull->parents = array('def5678');
 
 		$this->client->expects($this->once())
@@ -148,17 +130,17 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreateCommitComment()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
 		// The comment data
-		$comment = new stdClass;
-		$comment->body = 'My Insightful Comment';
+		$comment            = new stdClass;
+		$comment->body      = 'My Insightful Comment';
 		$comment->commit_id = 'abc1234';
-		$comment->line = 1;
-		$comment->path = 'path/to/file';
-		$comment->position = 254;
+		$comment->line      = 1;
+		$comment->path      = 'path/to/file';
+		$comment->position  = 254;
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -182,17 +164,17 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// The comment data
-		$comment = new stdClass;
-		$comment->body = 'My Insightful Comment';
+		$comment            = new stdClass;
+		$comment->body      = 'My Insightful Comment';
 		$comment->commit_id = 'abc1234';
-		$comment->line = 1;
-		$comment->path = 'path/to/file';
-		$comment->position = 254;
+		$comment->line      = 1;
+		$comment->path      = 'path/to/file';
+		$comment->position  = 254;
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -224,7 +206,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testDeleteCommitComment()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
@@ -250,7 +232,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -284,12 +266,12 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEditCommitComment()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// The comment data
-		$comment = new stdClass;
+		$comment       = new stdClass;
 		$comment->body = 'My Insightful Comment';
 
 		$this->client->expects($this->once())
@@ -314,12 +296,12 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	{
 		$exception = false;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// The comment data
-		$comment = new stdClass;
+		$comment       = new stdClass;
 		$comment->body = 'My Insightful Comment';
 
 		$this->client->expects($this->once())
@@ -352,7 +334,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetCommit()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -378,7 +360,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetCommitFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -399,7 +381,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetCommitComment()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -425,7 +407,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetCommitCommentFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -446,7 +428,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetCommitComments()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -472,7 +454,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetCommitCommentsFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -493,7 +475,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetDiff()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -519,7 +501,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetDiffFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -540,7 +522,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetList()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -566,7 +548,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetListFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -587,7 +569,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetListComments()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -613,7 +595,7 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetListCommentsFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -623,5 +605,23 @@ class JGitHubCommitsTest extends PHPUnit_Framework_TestCase
 			->will($this->returnValue($returnData));
 
 		$this->object->getListComments('joomla', 'joomla-platform');
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client  = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JGithubCommits($this->options, $this->client);
 	}
 }

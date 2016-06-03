@@ -35,14 +35,14 @@ class JCacheController
 	/**
 	 * Constructor
 	 *
-	 * @param   array  $options  Array of options
+	 * @param   array $options Array of options
 	 *
 	 * @since   11.1
 	 */
 	public function __construct($options)
 	{
-		$this->cache = new JCache($options);
-		$this->options = & $this->cache->_options;
+		$this->cache   = new JCache($options);
+		$this->options = &$this->cache->_options;
 
 		// Overwrite default options with given options
 		foreach ($options as $option => $value)
@@ -55,27 +55,10 @@ class JCacheController
 	}
 
 	/**
-	 * Magic method to proxy JCacheController method calls to JCache
-	 *
-	 * @param   string  $name       Name of the function
-	 * @param   array   $arguments  Array of arguments for the function
-	 *
-	 * @return  mixed
-	 *
-	 * @since   11.1
-	 */
-	public function __call($name, $arguments)
-	{
-		$nazaj = call_user_func_array(array($this->cache, $name), $arguments);
-
-		return $nazaj;
-	}
-
-	/**
 	 * Returns a reference to a cache adapter object, always creating it
 	 *
-	 * @param   string  $type     The cache object type to instantiate; default is output.
-	 * @param   array   $options  Array of options
+	 * @param   string $type    The cache object type to instantiate; default is output.
+	 * @param   array  $options Array of options
 	 *
 	 * @return  JCacheController
 	 *
@@ -115,37 +98,9 @@ class JCacheController
 	}
 
 	/**
-	 * Set caching enabled state
-	 *
-	 * @param   boolean  $enabled  True to enable caching
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	public function setCaching($enabled)
-	{
-		$this->cache->setCaching($enabled);
-	}
-
-	/**
-	 * Set cache lifetime
-	 *
-	 * @param   integer  $lt  Cache lifetime
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	public function setLifeTime($lt)
-	{
-		$this->cache->setLifeTime($lt);
-	}
-
-	/**
 	 * Add a directory where JCache should search for controllers. You may either pass a string or an array of directories.
 	 *
-	 * @param   array|string  $path  A path to search.
+	 * @param   array|string $path A path to search.
 	 *
 	 * @return  array  An array with directory elements
 	 *
@@ -170,10 +125,55 @@ class JCacheController
 	}
 
 	/**
+	 * Magic method to proxy JCacheController method calls to JCache
+	 *
+	 * @param   string $name      Name of the function
+	 * @param   array  $arguments Array of arguments for the function
+	 *
+	 * @return  mixed
+	 *
+	 * @since   11.1
+	 */
+	public function __call($name, $arguments)
+	{
+		$nazaj = call_user_func_array(array($this->cache, $name), $arguments);
+
+		return $nazaj;
+	}
+
+	/**
+	 * Set caching enabled state
+	 *
+	 * @param   boolean $enabled True to enable caching
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public function setCaching($enabled)
+	{
+		$this->cache->setCaching($enabled);
+	}
+
+	/**
+	 * Set cache lifetime
+	 *
+	 * @param   integer $lt Cache lifetime
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public function setLifeTime($lt)
+	{
+		$this->cache->setLifeTime($lt);
+	}
+
+	/**
 	 * Get stored cached data by ID and group
 	 *
-	 * @param   string  $id     The cache data ID
-	 * @param   string  $group  The cache data group
+	 * @param   string $id    The cache data ID
+	 * @param   string $group The cache data group
 	 *
 	 * @return  mixed  Boolean false on no result, cached object otherwise
 	 *
@@ -211,10 +211,10 @@ class JCacheController
 	/**
 	 * Store data to cache by ID and group
 	 *
-	 * @param   mixed    $data        The data to store
-	 * @param   string   $id          The cache data ID
-	 * @param   string   $group       The cache data group
-	 * @param   boolean  $wrkarounds  True to use wrkarounds
+	 * @param   mixed   $data       The data to store
+	 * @param   string  $id         The cache data ID
+	 * @param   string  $group      The cache data group
+	 * @param   boolean $wrkarounds True to use wrkarounds
 	 *
 	 * @return  boolean  True if cache stored
 	 *

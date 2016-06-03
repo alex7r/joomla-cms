@@ -20,15 +20,6 @@ class FinderIndexerStemmerFrTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		$this->object = new FinderIndexerStemmerFr;
-	}
-
-	/**
 	 * Tests the stem method of the French language stemmer
 	 *
 	 * @return  void
@@ -71,5 +62,14 @@ class FinderIndexerStemmerFrTest extends PHPUnit_Framework_TestCase
 			'maisons',
 			$this->object->stem('maisons', 'en')
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		$this->object = new FinderIndexerStemmerFr;
 	}
 }

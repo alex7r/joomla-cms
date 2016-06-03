@@ -21,10 +21,10 @@ class JLanguageWrapperHelper
 	/**
 	 * Helper wrapper method for createLanguageList
 	 *
-	 * @param   string   $actualLanguage  Client key for the area.
-	 * @param   string   $basePath        Base path to use.
-	 * @param   boolean  $caching         True if caching is used.
-	 * @param   boolean  $installed       Get only installed languages.
+	 * @param   string  $actualLanguage Client key for the area.
+	 * @param   string  $basePath       Base path to use.
+	 * @param   boolean $caching        True if caching is used.
+	 * @param   boolean $installed      Get only installed languages.
 	 *
 	 * @return  array  List of system languages.
 	 *
@@ -52,7 +52,7 @@ class JLanguageWrapperHelper
 	/**
 	 * Helper wrapper method for getLanguages
 	 *
-	 * @param   string  $key  Array key
+	 * @param   string $key Array key
 	 *
 	 * @return  array  An array of published languages.
 	 *

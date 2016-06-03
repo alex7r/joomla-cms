@@ -47,6 +47,46 @@ class JOpenstreetmapOauthTest extends TestCase
 	protected $sampleString = 'Test String';
 
 	/**
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 13.1
+	 */
+	public function seedVerifyCredentials()
+	{
+		// Code, body, expected
+		return array(
+			array(200, $this->sampleString, true)
+		);
+	}
+
+	/**
+	 * Tests the verifyCredentials method
+	 *
+	 * @param   integer $code     The return code.
+	 * @param   string  $body     The JSON string.
+	 * @param   boolean $expected Expected return value.
+	 *
+	 * @return  void
+	 *
+	 * @dataProvider seedVerifyCredentials
+	 * @since        13.1
+	 */
+	public function testVerifyCredentials($code, $body, $expected)
+	{
+
+		$returnData       = new stdClass;
+		$returnData->code = $code;
+		$returnData->body = $body;
+
+		$this->assertThat(
+			$this->oauth->verifyCredentials(),
+			$this->equalTo($expected)
+		);
+	}
+
+	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
@@ -54,18 +94,18 @@ class JOpenstreetmapOauthTest extends TestCase
 	 */
 	protected function setUp()
 	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_HOST']       = 'example.com';
 		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
 
-		$key = "app_key";
+		$key    = "app_key";
 		$secret = "app_secret";
 		$my_url = "http://127.0.0.1/eclipse/joomla-platform/osm_test.php";
 
 		$this->options = new JRegistry;
-		$this->input = new JInput;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->input   = new JInput;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
 
 		$this->options->set('consumer_key', $key);
 		$this->options->set('consumer_secret', $secret);
@@ -82,45 +122,5 @@ class JOpenstreetmapOauthTest extends TestCase
 	 */
 	protected function tearDown()
 	{
-	}
-
-	/**
-	 * Provides test data for request format detection.
-	 *
-	 * @return array
-	 *
-	 * @since 13.1
-	 */
-	public function seedVerifyCredentials()
-	{
-		// Code, body, expected
-		return array(
-				array(200, $this->sampleString, true)
-		);
-	}
-
-	/**
-	 * Tests the verifyCredentials method
-	 *
-	 * @param   integer  $code      The return code.
-	 * @param   string   $body      The JSON string.
-	 * @param   boolean  $expected  Expected return value.
-	 *
-	 * @return  void
-	 *
-	 * @dataProvider seedVerifyCredentials
-	 * @since   13.1
-	 */
-	public function testVerifyCredentials($code, $body, $expected)
-	{
-
-		$returnData = new stdClass;
-		$returnData->code = $code;
-		$returnData->body = $body;
-
-		$this->assertThat(
-				$this->oauth->verifyCredentials(),
-				$this->equalTo($expected)
-		);
 	}
 }

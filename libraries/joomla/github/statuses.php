@@ -19,18 +19,18 @@ class JGithubStatuses extends JGithubObject
 	/**
 	 * Method to create a status.
 	 *
-	 * @param   string  $user         The name of the owner of the GitHub repository.
-	 * @param   string  $repo         The name of the GitHub repository.
-	 * @param   string  $sha          The SHA1 value for which to set the status.
-	 * @param   string  $state        The state (pending, success, error or failure).
-	 * @param   string  $targetUrl    Optional target URL.
-	 * @param   string  $description  Optional description for the status.
+	 * @param   string $user        The name of the owner of the GitHub repository.
+	 * @param   string $repo        The name of the GitHub repository.
+	 * @param   string $sha         The SHA1 value for which to set the status.
+	 * @param   string $state       The state (pending, success, error or failure).
+	 * @param   string $targetUrl   Optional target URL.
+	 * @param   string $description Optional description for the status.
 	 *
 	 * @deprecated  use repositories->statuses->create()
 	 *
 	 * @return  object
 	 *
-	 * @since   12.3
+	 * @since       12.3
 	 */
 	public function create($user, $repo, $sha, $state, $targetUrl = null, $description = null)
 	{
@@ -74,15 +74,15 @@ class JGithubStatuses extends JGithubObject
 	/**
 	 * Method to list statuses for an SHA.
 	 *
-	 * @param   string  $user  The name of the owner of the GitHub repository.
-	 * @param   string  $repo  The name of the GitHub repository.
-	 * @param   string  $sha   SHA1 for which to get the statuses.
+	 * @param   string $user The name of the owner of the GitHub repository.
+	 * @param   string $repo The name of the GitHub repository.
+	 * @param   string $sha  SHA1 for which to get the statuses.
 	 *
 	 * @deprecated  use repositories->statuses->getList()
 	 *
 	 * @return  array
 	 *
-	 * @since   12.3
+	 * @since       12.3
 	 */
 	public function getList($user, $repo, $sha)
 	{

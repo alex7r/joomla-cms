@@ -22,7 +22,7 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests the constructor creates default object instances
 	 *
-	 * @covers  JApplicationBase::__construct
+	 * @covers   JApplicationBase::__construct
 	 */
 	public function test__constructDefaultBehaviour()
 	{
@@ -35,7 +35,7 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests the correct objects are stored when injected
 	 *
-	 * @covers  JApplicationBase::__construct
+	 * @covers   JApplicationBase::__construct
 	 */
 	public function test__constructDependencyInjection()
 	{
@@ -50,7 +50,7 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that close() exits the application with the given code
 	 *
-	 * @covers  JApplicationBase::close
+	 * @covers   JApplicationBase::close
 	 */
 	public function testClose()
 	{
@@ -65,8 +65,8 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that the application is executed successfully.
 	 *
-	 * @covers  JApplicationBase::doExecute
-	 * @covers  JApplicationBase::execute
+	 * @covers   JApplicationBase::doExecute
+	 * @covers   JApplicationBase::execute
 	 */
 	public function testExecute()
 	{
@@ -77,8 +77,8 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that data is read from the application configuration successfully.
 	 *
-	 * @covers  JApplicationBase::get
-	 * @uses    JApplicationBase::setConfiguration
+	 * @covers   JApplicationBase::get
+	 * @uses     JApplicationBase::setConfiguration
 	 */
 	public function testGet()
 	{
@@ -94,7 +94,7 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that getIdentity() by default returns null.
 	 *
-	 * @covers  JApplicationBase::getIdentity
+	 * @covers   JApplicationBase::getIdentity
 	 */
 	public function testGetIdentity()
 	{
@@ -104,7 +104,7 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that a default PSR-3 LoggerInterface object is returned.
 	 *
-	 * @covers  JApplicationBase::getLogger
+	 * @covers   JApplicationBase::getLogger
 	 */
 	public function testGetLogger()
 	{
@@ -114,8 +114,8 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that the global dispatcher is loaded by loadDispatcher() when no object is injected.
 	 *
-	 * @covers  JApplicationBase::loadDispatcher
-	 * @uses    JEventDispatcher
+	 * @covers   JApplicationBase::loadDispatcher
+	 * @uses     JEventDispatcher
 	 */
 	public function testLoadDispatcherWithNoInjection()
 	{
@@ -130,7 +130,7 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that the injected dispatcher is stored to the application.
 	 *
-	 * @covers  JApplicationBase::loadDispatcher
+	 * @covers   JApplicationBase::loadDispatcher
 	 */
 	public function testLoadDispatcherWithInjection()
 	{
@@ -144,9 +144,9 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that a JUser object is loaded into the application from the global factory.
 	 *
-	 * @covers  JApplicationBase::loadIdentity
-	 * @uses    JFactory::getUser
-	 * @uses    JUser
+	 * @covers   JApplicationBase::loadIdentity
+	 * @uses     JFactory::getUser
+	 * @uses     JUser
 	 */
 	public function testLoadIdentity()
 	{
@@ -171,7 +171,7 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that a JUser object is injected into the application.
 	 *
-	 * @covers  JApplicationBase::loadIdentity
+	 * @covers   JApplicationBase::loadIdentity
 	 */
 	public function testLoadIdentityWithInjectedUser()
 	{
@@ -186,8 +186,8 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that an event is registered with the application dispatcher.
 	 *
-	 * @covers  JApplicationBase::registerEvent
-	 * @uses    JApplicationBase::loadDispatcher
+	 * @covers   JApplicationBase::registerEvent
+	 * @uses     JApplicationBase::loadDispatcher
 	 */
 	public function testRegisterEvent()
 	{
@@ -204,9 +204,9 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that data is set to the application configuration successfully.
 	 *
-	 * @covers  JApplicationBase::set
-	 * @uses    JApplicationBase::get
-	 * @uses    JApplicationBase::setConfiguration
+	 * @covers   JApplicationBase::set
+	 * @uses     JApplicationBase::get
+	 * @uses     JApplicationBase::setConfiguration
 	 */
 	public function testSet()
 	{
@@ -221,7 +221,7 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that the application configuration is overwritten successfully.
 	 *
-	 * @covers  JApplicationBase::setConfiguration
+	 * @covers   JApplicationBase::setConfiguration
 	 */
 	public function testSetConfiguration()
 	{
@@ -235,7 +235,7 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that a PSR-3 LoggerInterface object is correctly set to the application.
 	 *
-	 * @covers  JApplicationBase::setLogger
+	 * @covers   JApplicationBase::setLogger
 	 */
 	public function testSetLogger()
 	{
@@ -249,9 +249,9 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that an event is triggered with the application dispatcher.
 	 *
-	 * @covers  JApplicationBase::triggerEvent
-	 * @uses    JApplicationBase::loadDispatcher
-	 * @uses    JApplicationBase::registerEvent
+	 * @covers   JApplicationBase::triggerEvent
+	 * @uses     JApplicationBase::loadDispatcher
+	 * @uses     JApplicationBase::registerEvent
 	 */
 	public function testTriggerEvent()
 	{
@@ -268,7 +268,7 @@ class JApplicationBaseTest extends TestCase
 	/**
 	 * @testdox  Tests that no event is triggered when the application does not have a dispatcher.
 	 *
-	 * @covers  JApplicationBase::triggerEvent
+	 * @covers   JApplicationBase::triggerEvent
 	 */
 	public function testTriggerEventWithNoDispatcher()
 	{

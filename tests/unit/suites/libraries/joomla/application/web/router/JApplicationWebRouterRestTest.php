@@ -109,18 +109,18 @@ class JApplicationWebRouterRestTest extends TestCase
 	/**
 	 * Tests the fetchControllerSuffix method.
 	 *
-	 * @param   string   $input        Input string to test.
-	 * @param   string   $expected     Expected fetched string.
-	 * @param   mixed    $method       Method to override POST request
-	 * @param   boolean  $exception    True if an RuntimeException is expected based on invalid input
-	 * @param   boolean  $allowMethod  Allow or not to pass method in post request as parameter
+	 * @param   string  $input       Input string to test.
+	 * @param   string  $expected    Expected fetched string.
+	 * @param   mixed   $method      Method to override POST request
+	 * @param   boolean $exception   True if an RuntimeException is expected based on invalid input
+	 * @param   boolean $allowMethod Allow or not to pass method in post request as parameter
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedFetchControllerSuffixData
 	 * @since         12.3
 	 */
-	public function testFetchControllerSuffix($input, $expected, $method, $exception, $allowMethod=false)
+	public function testFetchControllerSuffix($input, $expected, $method, $exception, $allowMethod = false)
 	{
 		TestReflection::invoke($this->_instance, 'setMethodInPostRequest', $allowMethod);
 
@@ -176,7 +176,7 @@ class JApplicationWebRouterRestTest extends TestCase
 		parent::setUp();
 
 		$this->_instance = new JApplicationWebRouterRest($this->getMockWeb());
-		$this->_method = @$_SERVER['REQUEST_METHOD'];
+		$this->_method   = @$_SERVER['REQUEST_METHOD'];
 	}
 
 	/**
@@ -188,7 +188,7 @@ class JApplicationWebRouterRestTest extends TestCase
 	 */
 	protected function tearDown()
 	{
-		$this->_instance = null;
+		$this->_instance           = null;
 		$_SERVER['REQUEST_METHOD'] = $this->_method;
 
 		parent::tearDown();

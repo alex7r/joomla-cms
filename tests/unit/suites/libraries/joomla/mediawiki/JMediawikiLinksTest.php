@@ -52,29 +52,13 @@ class JMediawikiLinksTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '<message>Generic Error</message>';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->options = new JRegistry;
-		$this->client = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JMediawikiLinks($this->options, $this->client);
-	}
-
-	/**
 	 * Tests the getCategories method
 	 *
 	 * @return void
 	 */
 	public function testGetLinks()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -96,7 +80,7 @@ class JMediawikiLinksTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetLinksUsed()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -118,7 +102,7 @@ class JMediawikiLinksTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetIWLinks()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -140,7 +124,7 @@ class JMediawikiLinksTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetLangLinks()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -162,7 +146,7 @@ class JMediawikiLinksTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetExtLinks()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -184,7 +168,7 @@ class JMediawikiLinksTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEnumerateLinks()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -197,5 +181,21 @@ class JMediawikiLinksTest extends PHPUnit_Framework_TestCase
 			$this->object->enumerateLinks(array('Main Page')),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$this->options = new JRegistry;
+		$this->client  = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JMediawikiLinks($this->options, $this->client);
 	}
 }

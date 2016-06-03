@@ -19,7 +19,7 @@ class NewsfeedsModelNewsfeeds extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @since   1.6
 	 */
@@ -63,8 +63,8 @@ class NewsfeedsModelNewsfeeds extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -118,7 +118,7 @@ class NewsfeedsModelNewsfeeds extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string  $id  A prefix for the store id.
+	 * @param   string $id A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 */
@@ -144,18 +144,18 @@ class NewsfeedsModelNewsfeeds extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user = JFactory::getUser();
-		$app = JFactory::getApplication();
+		$user  = JFactory::getUser();
+		$app   = JFactory::getApplication();
 
 		// Select the required fields from the table.
 		$query->select(
 			$this->getState(
 				'list.select',
 				'a.id, a.name, a.alias, a.checked_out, a.checked_out_time, a.catid,' .
-					' a.numarticles, a.cache_time,' .
-					' a.published, a.access, a.ordering, a.language, a.publish_up, a.publish_down'
+				' a.numarticles, a.cache_time,' .
+				' a.published, a.access, a.ordering, a.language, a.publish_up, a.publish_down'
 			)
 		);
 		$query->from($db->quoteName('#__newsfeeds', 'a'));
@@ -262,7 +262,7 @@ class NewsfeedsModelNewsfeeds extends JModelList
 		}
 
 		// Add the list ordering clause.
-		$orderCol = $this->state->get('list.ordering', 'a.name');
+		$orderCol  = $this->state->get('list.ordering', 'a.name');
 		$orderDirn = $this->state->get('list.direction', 'ASC');
 
 		if ($orderCol == 'a.ordering' || $orderCol == 'category_title')

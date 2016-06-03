@@ -23,30 +23,6 @@ class JMailTest extends TestCase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object = new JMail;
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-
-	}
-
-	/**
 	 * Provides test data for request format detection.
 	 *
 	 * @return array
@@ -90,12 +66,12 @@ class JMailTest extends TestCase
 	/**
 	 * Tests the add method
 	 *
-	 * @param   mixed   $recipient  Either a string or array of strings [email address(es)]
-	 * @param   mixed   $name       Either a string or array of strings [name(s)]
-	 * @param   string  $method     The parent method's name.
-	 * @param   array   $expected   The expected array.
+	 * @param   mixed  $recipient Either a string or array of strings [email address(es)]
+	 * @param   mixed  $name      Either a string or array of strings [name(s)]
+	 * @param   string $method    The parent method's name.
+	 * @param   array  $expected  The expected array.
 	 *
-	 * @covers  JMail::add
+	 * @covers        JMail::add
 	 * @dataProvider  seedTestAdd
 	 *
 	 * @return void
@@ -133,8 +109,8 @@ class JMailTest extends TestCase
 	public function testAddRecipient()
 	{
 		$recipient = 'test@example.com';
-		$name = 'test_name';
-		$expected = array(array('test@example.com', 'test_name'));
+		$name      = 'test_name';
+		$expected  = array(array('test@example.com', 'test_name'));
 
 		$this->object->addRecipient($recipient, $name);
 		$this->assertThat($expected, $this->equalTo(TestReflection::getValue($this->object, 'to')));
@@ -150,8 +126,8 @@ class JMailTest extends TestCase
 	public function testAddCc()
 	{
 		$recipient = 'test@example.com';
-		$name = 'test_name';
-		$expected = array(array('test@example.com', 'test_name'));
+		$name      = 'test_name';
+		$expected  = array(array('test@example.com', 'test_name'));
 
 		$this->object->addCc($recipient, $name);
 		$this->assertThat($expected, $this->equalTo(TestReflection::getValue($this->object, 'cc')));
@@ -167,8 +143,8 @@ class JMailTest extends TestCase
 	public function testAddBcc()
 	{
 		$recipient = 'test@example.com';
-		$name = 'test_name';
-		$expected = array(array('test@example.com', 'test_name'));
+		$name      = 'test_name';
+		$expected  = array(array('test@example.com', 'test_name'));
 
 		$this->object->addBcc($recipient, $name);
 		$this->assertThat($expected, $this->equalTo(TestReflection::getValue($this->object, 'bcc')));
@@ -182,14 +158,14 @@ class JMailTest extends TestCase
 	public function testAddAttachment()
 	{
 		$attachments = array(JPATH_PLATFORM . '/joomla/mail/mail.php');
-		$names = array('mail.php');
+		$names       = array('mail.php');
 
 		$mail = new JMail;
 		$mail->addAttachment($attachments, $names);
 
-		$actual = $mail->GetAttachments();
+		$actual             = $mail->GetAttachments();
 		$actual_attachments = array();
-		$actual_names = array();
+		$actual_names       = array();
 
 		foreach ($actual as $attach)
 		{
@@ -211,8 +187,8 @@ class JMailTest extends TestCase
 	public function testAddReplyTo()
 	{
 		$recipient = 'test@example.com';
-		$name = 'test_name';
-		$expected = array('test@example.com' => array('test@example.com', 'test_name'));
+		$name      = 'test_name';
+		$expected  = array('test@example.com' => array('test@example.com', 'test_name'));
 
 		$this->object->addReplyTo($recipient, $name);
 		$this->assertThat($expected, $this->equalTo(TestReflection::getValue($this->object, 'ReplyTo')));
@@ -260,17 +236,17 @@ class JMailTest extends TestCase
 	/**
 	 * Test for the JMail::useSMTP method.
 	 *
-	 * @param   string   $auth      SMTP Authentication
-	 * @param   string   $host      SMTP Host
-	 * @param   string   $user      SMTP Username
-	 * @param   string   $pass      SMTP Password
-	 * @param   string   $secure    Use secure methods
-	 * @param   integer  $port      The SMTP port
-	 * @param   string   $expected  The expected result
+	 * @param   string  $auth     SMTP Authentication
+	 * @param   string  $host     SMTP Host
+	 * @param   string  $user     SMTP Username
+	 * @param   string  $pass     SMTP Password
+	 * @param   string  $secure   Use secure methods
+	 * @param   integer $port     The SMTP port
+	 * @param   string  $expected The expected result
 	 *
 	 * @return  void
 	 *
-	 * @since   12.1
+	 * @since         12.1
 	 *
 	 * @dataProvider  dataUseSMTP
 	 */
@@ -287,5 +263,29 @@ class JMailTest extends TestCase
 			$mail->useSmtp($auth, $host, $user, $pass, $secure, $port),
 			$this->equalTo($expected['return'])
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->object = new JMail;
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+
 	}
 }

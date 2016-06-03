@@ -43,15 +43,15 @@ class JTree extends JObject
 	{
 		JLog::add('JTree::__construct() is deprecated.', JLog::WARNING, 'deprecated');
 
-		$this->_root = new JNode('ROOT');
-		$this->_current = & $this->_root;
+		$this->_root    = new JNode('ROOT');
+		$this->_current = &$this->_root;
 	}
 
 	/**
 	 * Method to add a child
 	 *
-	 * @param   array    &$node       The node to process
-	 * @param   boolean  $setCurrent  True to set as current working node
+	 * @param   array   &$node      The node to process
+	 * @param   boolean $setCurrent True to set as current working node
 	 *
 	 * @return  mixed
 	 *

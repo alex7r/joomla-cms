@@ -19,22 +19,6 @@ JFormHelper::loadFieldClass('sql');
 class JFormFieldSQLTest extends TestCaseDatabase
 {
 	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   12.1
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_categories', JPATH_TEST_DATABASE . '/jos_categories.csv');
-
-		return $dataSet;
-	}
-
-	/**
 	 * Tests folder attribute setup by JFormFieldPlugins::setup method
 	 *
 	 * @covers JFormField::setup
@@ -44,7 +28,7 @@ class JFormFieldSQLTest extends TestCaseDatabase
 	 */
 	public function testSetup()
 	{
-		$field = new JFormFieldSQL;
+		$field   = new JFormFieldSQL;
 		$element = simplexml_load_string(
 			'<field name="sql" type="sql" value_field="title" key_field="id" query="SELECT * FROM `jos_categories`">' .
 			'<option value="*">None</option></field>');
@@ -99,7 +83,7 @@ class JFormFieldSQLTest extends TestCaseDatabase
 		TestReflection::setValue(
 			$formField, 'element',
 			simplexml_load_string('<field name="sql" type="sql" value_field="title" key_field="id" query="SELECT * FROM `jos_categories`">' .
-			'<option value="*">None</option></field>')
+				'<option value="*">None</option></field>')
 		);
 
 		if (!is_null(self::$driver))
@@ -114,5 +98,21 @@ class JFormFieldSQLTest extends TestCaseDatabase
 		{
 			$this->markTestSkipped();
 		}
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   12.1
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_categories', JPATH_TEST_DATABASE . '/jos_categories.csv');
+
+		return $dataSet;
 	}
 }

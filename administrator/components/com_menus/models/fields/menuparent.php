@@ -37,7 +37,7 @@ class JFormFieldMenuParent extends JFormFieldList
 	{
 		$options = array();
 
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('a.id AS value, a.title AS text, a.level')
 			->from('#__menu AS a')

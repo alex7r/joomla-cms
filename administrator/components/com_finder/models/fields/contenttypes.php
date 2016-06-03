@@ -63,7 +63,7 @@ class JFormFieldContentTypes extends JFormFieldList
 		// Translate.
 		foreach ($contentTypes as $contentType)
 		{
-			$key = FinderHelperLanguage::branchSingular($contentType->text);
+			$key                         = FinderHelperLanguage::branchSingular($contentType->text);
 			$contentType->translatedText = $lang->hasKey($key) ? JText::_($key) : $contentType->text;
 		}
 

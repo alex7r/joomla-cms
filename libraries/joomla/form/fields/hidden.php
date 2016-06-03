@@ -36,13 +36,13 @@ class JFormFieldHidden extends JFormField
 	protected function getInput()
 	{
 		// Initialize some field attributes.
-		$class = !empty($this->class) ? ' class="' . $this->class . '"' : '';
+		$class    = !empty($this->class) ? ' class="' . $this->class . '"' : '';
 		$disabled = $this->disabled ? ' disabled' : '';
 
 		// Initialize JavaScript field attributes.
 		$onchange = $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
 
 		return '<input type="hidden" name="' . $this->name . '" id="' . $this->id . '" value="'
-			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $class . $disabled . $onchange . ' />';
+		. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $class . $disabled . $onchange . ' />';
 	}
 }

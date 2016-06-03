@@ -35,7 +35,7 @@ class TagsModelTag extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   3.1
@@ -88,7 +88,7 @@ class TagsModelTag extends JModelList
 			foreach ($items as $item)
 			{
 				$explodedTypeAlias = explode('.', $item->type_alias);
-				$item->link = 'index.php?option=' . $explodedTypeAlias[0] . '&view=' . $explodedTypeAlias[1] . '&id='
+				$item->link        = 'index.php?option=' . $explodedTypeAlias[0] . '&view=' . $explodedTypeAlias[1] . '&id='
 					. $item->content_item_id . ':' . $item->core_alias;
 
 				// Get display date
@@ -118,6 +118,93 @@ class TagsModelTag extends JModelList
 	}
 
 	/**
+	 * Method to get tag data for the current tag or tags
+	 *
+	 * @param   integer $pk An optional ID
+	 *
+	 * @return  object
+	 *
+	 * @since   3.1
+	 */
+	public function getItem($pk = null)
+	{
+		if (!isset($this->item) || $this->item === null)
+		{
+			$this->item = false;
+
+			if (empty($id))
+			{
+				$id = $this->getState('tag.id');
+			}
+
+			// Get a level row instance.
+			$table = JTable::getInstance('Tag', 'TagsTable');
+
+			$idsArray = explode(',', $id);
+
+			// Attempt to load the rows into an array.
+			foreach ($idsArray as $id)
+			{
+				try
+				{
+					$table->load($id);
+
+					// Check published state.
+					if ($published = $this->getState('filter.published'))
+					{
+						if ($table->published != $published)
+						{
+							return $this->item;
+						}
+					}
+
+					// Convert the JTable to a clean JObject.
+					$properties   = $table->getProperties(1);
+					$this->item[] = JArrayHelper::toObject($properties, 'JObject');
+				}
+				catch (RuntimeException $e)
+				{
+					$this->setError($e->getMessage());
+
+					return false;
+				}
+			}
+		}
+
+		return $this->item;
+	}
+
+	/**
+	 * Increment the hit counter.
+	 *
+	 * @param   integer $pk Optional primary key of the article to increment.
+	 *
+	 * @return  boolean  True if successful; false otherwise and internal error set.
+	 *
+	 * @since   3.2
+	 */
+	public function hit($pk = 0)
+	{
+		$input    = JFactory::getApplication()->input;
+		$hitcount = $input->getInt('hitcount', 1);
+
+		if ($hitcount)
+		{
+			$pk    = (!empty($pk)) ? $pk : (int) $this->getState('tag.id');
+			$table = JTable::getInstance('Tag', 'TagsTable');
+			$table->load($pk);
+			$table->hit($pk);
+
+			if (!$table->hasPrimaryKey())
+			{
+				JError::raiseError(404, JText::_('COM_TAGS_TAG_NOT_FOUND'));
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Method to build an SQL query to load the list data of all items with a given tag.
 	 *
 	 * @return  string  An SQL query
@@ -126,15 +213,15 @@ class TagsModelTag extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		$tagId  = $this->getState('tag.id') ? : '';
+		$tagId = $this->getState('tag.id') ?: '';
 
-		$typesr = $this->getState('tag.typesr');
-		$orderByOption = $this->getState('list.ordering', 'c.core_title');
+		$typesr          = $this->getState('tag.typesr');
+		$orderByOption   = $this->getState('list.ordering', 'c.core_title');
 		$includeChildren = $this->state->params->get('include_children', 0);
-		$orderDir = $this->getState('list.direction', 'ASC');
-		$matchAll = $this->getState('params')->get('return_any_or_all', 1);
-		$language = $this->getState('tag.language');
-		$stateFilter = $this->getState('tag.state');
+		$orderDir        = $this->getState('list.direction', 'ASC');
+		$matchAll        = $this->getState('params')->get('return_any_or_all', 1);
+		$language        = $this->getState('tag.language');
+		$stateFilter     = $this->getState('tag.state');
 
 		// Optionally filter on language
 		if (empty($language))
@@ -143,7 +230,7 @@ class TagsModelTag extends JModelList
 		}
 
 		$tagsHelper = new JHelperTags;
-		$query = $tagsHelper->getTagItemsQuery($tagId, $typesr, $includeChildren, $orderByOption, $orderDir, $matchAll, $language, $stateFilter);
+		$query      = $tagsHelper->getTagItemsQuery($tagId, $typesr, $includeChildren, $orderByOption, $orderDir, $matchAll, $language, $stateFilter);
 
 		if ($this->state->get('list.filter'))
 		{
@@ -158,8 +245,8 @@ class TagsModelTag extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -219,7 +306,7 @@ class TagsModelTag extends JModelList
 		$offset = $app->input->get('limitstart', 0, 'uint');
 		$this->setState('list.start', $offset);
 
-		$itemid = $pkString . ':' . $app->input->get('Itemid', 0, 'int');
+		$itemid   = $pkString . ':' . $app->input->get('Itemid', 0, 'int');
 		$orderCol = $app->getUserStateFromRequest('com_tags.tag.list.' . $itemid . '.filter_order', 'filter_order', '', 'string');
 		$orderCol = !$orderCol ? $this->state->params->get('tag_list_orderby', 'c.core_title') : $orderCol;
 
@@ -245,92 +332,5 @@ class TagsModelTag extends JModelList
 		// Optional filter text
 		$filterSearch = $app->getUserStateFromRequest('com_tags.tag.list.' . $itemid . '.filter_search', 'filter-search', '', 'string');
 		$this->setState('list.filter', $filterSearch);
-	}
-
-	/**
-	 * Method to get tag data for the current tag or tags
-	 *
-	 * @param   integer  $pk  An optional ID
-	 *
-	 * @return  object
-	 *
-	 * @since   3.1
-	 */
-	public function getItem($pk = null)
-	{
-		if (!isset($this->item) ||$this->item === null)
-		{
-			$this->item = false;
-
-			if (empty($id))
-			{
-				$id = $this->getState('tag.id');
-			}
-
-			// Get a level row instance.
-			$table = JTable::getInstance('Tag', 'TagsTable');
-
-			$idsArray = explode(',', $id);
-
-			// Attempt to load the rows into an array.
-			foreach ($idsArray as $id)
-			{
-				try
-				{
-					$table->load($id);
-
-					// Check published state.
-					if ($published = $this->getState('filter.published'))
-					{
-						if ($table->published != $published)
-						{
-							return $this->item;
-						}
-					}
-
-					// Convert the JTable to a clean JObject.
-					$properties = $table->getProperties(1);
-					$this->item[] = JArrayHelper::toObject($properties, 'JObject');
-				}
-				catch (RuntimeException $e)
-				{
-					$this->setError($e->getMessage());
-
-					return false;
-				}
-			}
-		}
-
-		return $this->item;
-	}
-
-	/**
-	 * Increment the hit counter.
-	 *
-	 * @param   integer  $pk  Optional primary key of the article to increment.
-	 *
-	 * @return  boolean  True if successful; false otherwise and internal error set.
-	 *
-	 * @since   3.2
-	 */
-	public function hit($pk = 0)
-	{
-		$input    = JFactory::getApplication()->input;
-		$hitcount = $input->getInt('hitcount', 1);
-
-		if ($hitcount)
-		{
-			$pk    = (!empty($pk)) ? $pk : (int) $this->getState('tag.id');
-			$table = JTable::getInstance('Tag', 'TagsTable');
-			$table->load($pk);
-			$table->hit($pk);
-
-			if (!$table->hasPrimaryKey())
-			{
-				JError::raiseError(404, JText::_('COM_TAGS_TAG_NOT_FOUND'));
-			}
-		}
-
-		return true;
 	}
 }

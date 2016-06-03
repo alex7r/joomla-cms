@@ -29,22 +29,22 @@ class JPathTest extends TestCase
 	{
 		return array(
 			// Input Path, Directory Separator, Expected Output
-			'Nothing to do.' => array('/var/www/foo/bar/baz', '/', '/var/www/foo/bar/baz'),
-			'One backslash.' => array('/var/www/foo\\bar/baz', '/', '/var/www/foo/bar/baz'),
-			'Two and one backslashes.' => array('/var/www\\\\foo\\bar/baz', '/', '/var/www/foo/bar/baz'),
+			'Nothing to do.'                                => array('/var/www/foo/bar/baz', '/', '/var/www/foo/bar/baz'),
+			'One backslash.'                                => array('/var/www/foo\\bar/baz', '/', '/var/www/foo/bar/baz'),
+			'Two and one backslashes.'                      => array('/var/www\\\\foo\\bar/baz', '/', '/var/www/foo/bar/baz'),
 			'Mixed backslashes and double forward slashes.' => array('/var\\/www//foo\\bar/baz', '/', '/var/www/foo/bar/baz'),
-			'UNC path.' => array('\\\\www\\docroot', '\\', '\\\\www\\docroot'),
-			'UNC path with forward slash.' => array('\\\\www/docroot', '\\', '\\\\www\\docroot'),
-			'UNC path with UNIX directory separator.' => array('\\\\www/docroot', '/', '/www/docroot'),
+			'UNC path.'                                     => array('\\\\www\\docroot', '\\', '\\\\www\\docroot'),
+			'UNC path with forward slash.'                  => array('\\\\www/docroot', '\\', '\\\\www\\docroot'),
+			'UNC path with UNIX directory separator.'       => array('\\\\www/docroot', '/', '/www/docroot'),
 		);
 	}
 
 	/**
 	 * Tests the clean method.
 	 *
-	 * @param   string  $input
-	 * @param   string  $ds
-	 * @param   string  $expected
+	 * @param   string $input
+	 * @param   string $ds
+	 * @param   string $expected
 	 *
 	 * @return  void
 	 *
@@ -69,6 +69,6 @@ class JPathTest extends TestCase
 	 */
 	public function testCleanArrayPath()
 	{
-		JPath::clean(array('/path/to/folder') );
+		JPath::clean(array('/path/to/folder'));
 	}
 }

@@ -33,11 +33,11 @@ class JDatabaseImporterPdomysqlTest extends PHPUnit_Framework_TestCase
 	 * @since  3.4
 	 */
 	protected $sample = array(
-		'xml-id-field' =>
+		'xml-id-field'    =>
 			'<field Field="id" Type="int(11) unsigned" Null="NO" Key="PRI" Default="" Extra="auto_increment" />',
 		'xml-title-field' =>
 			'<field Field="title" Type="varchar(50)" Null="NO" Key="" Default="" Extra="" />',
-		'xml-body-field' =>
+		'xml-body-field'  =>
 			'<field Field="body" Type="mediumtext" Null="NO" Key="" Default="" Extra="" />',
 		'xml-primary-key' =>
 			'<key Table="#__test" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />',
@@ -77,108 +77,108 @@ class JDatabaseImporterPdomysqlTest extends PHPUnit_Framework_TestCase
 		)
 			->method('getPrefix')
 			->will(
-			$this->returnValue(
-				'jos_'
-			)
-		);
+				$this->returnValue(
+					'jos_'
+				)
+			);
 
 		$this->dbo->expects(
 			$this->any()
 		)
 			->method('getTableColumns')
 			->will(
-			$this->returnValue(
-				array(
-					'id' => (object) array(
-						'Field' => 'id',
-						'Type' => 'int(11) unsigned',
-						'Collation' => null,
-						'Null' => 'NO',
-						'Key' => 'PRI',
-						'Default' => '',
-						'Extra' => 'auto_increment',
-						'Privileges' => 'select,insert,update,references',
-						'Comment' => '',
-					),
-					'title' => (object) array(
-						'Field' => 'title',
-						'Type' => 'varchar(255)',
-						'Collation' => 'utf8_general_ci',
-						'Null' => 'NO',
-						'Key' => '',
-						'Default' => '',
-						'Extra' => '',
-						'Privileges' => 'select,insert,update,references',
-						'Comment' => '',
-					),
+				$this->returnValue(
+					array(
+						'id'    => (object) array(
+							'Field'      => 'id',
+							'Type'       => 'int(11) unsigned',
+							'Collation'  => null,
+							'Null'       => 'NO',
+							'Key'        => 'PRI',
+							'Default'    => '',
+							'Extra'      => 'auto_increment',
+							'Privileges' => 'select,insert,update,references',
+							'Comment'    => '',
+						),
+						'title' => (object) array(
+							'Field'      => 'title',
+							'Type'       => 'varchar(255)',
+							'Collation'  => 'utf8_general_ci',
+							'Null'       => 'NO',
+							'Key'        => '',
+							'Default'    => '',
+							'Extra'      => '',
+							'Privileges' => 'select,insert,update,references',
+							'Comment'    => '',
+						),
+					)
 				)
-			)
-		);
+			);
 
 		$this->dbo->expects(
 			$this->any()
 		)
 			->method('getTableKeys')
 			->will(
-			$this->returnValue(
-				array(
-					(object) array(
-						'Table' => 'jos_test',
-						'Non_unique' => '0',
-						'Key_name' => 'PRIMARY',
-						'Seq_in_index' => '1',
-						'Column_name' => 'id',
-						'Collation' => 'A',
-						'Cardinality' => '2695',
-						'Sub_part' => '',
-						'Packed' => '',
-						'Null' => '',
-						'Index_type' => 'BTREE',
-						'Comment' => '',
+				$this->returnValue(
+					array(
+						(object) array(
+							'Table'        => 'jos_test',
+							'Non_unique'   => '0',
+							'Key_name'     => 'PRIMARY',
+							'Seq_in_index' => '1',
+							'Column_name'  => 'id',
+							'Collation'    => 'A',
+							'Cardinality'  => '2695',
+							'Sub_part'     => '',
+							'Packed'       => '',
+							'Null'         => '',
+							'Index_type'   => 'BTREE',
+							'Comment'      => '',
+						)
 					)
 				)
-			)
-		);
+			);
 
 		$this->dbo->expects(
 			$this->any()
 		)
 			->method('quoteName')
 			->will(
-			$this->returnCallback(
-				array($this, 'callbackQuoteName')
-			)
-		);
+				$this->returnCallback(
+					array($this, 'callbackQuoteName')
+				)
+			);
 
 		$this->dbo->expects(
 			$this->any()
 		)
 			->method('quote')
 			->will(
-			$this->returnCallback(
-				array($this, 'callbackQuote')
-			)
-		);
+				$this->returnCallback(
+					array($this, 'callbackQuote')
+				)
+			);
 
 		$this->dbo->expects(
 			$this->any()
 		)
 			->method('setQuery')
 			->will(
-			$this->returnCallback(
-				array($this, 'callbackSetQuery')
-			)
-		);
+				$this->returnCallback(
+					array($this, 'callbackSetQuery')
+				)
+			);
 
 		$this->dbo->expects(
 			$this->any()
 		)
 			->method('loadObjectList')
 			->will(
-			$this->returnCallback(
-				array($this, 'callbackLoadObjectList')
-			)
-		);
+				$this->returnCallback(
+					array($this, 'callbackLoadObjectList')
+				)
+			);
 	}
 
 	/**
@@ -196,7 +196,7 @@ class JDatabaseImporterPdomysqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Callback for the dbo quote method.
 	 *
-	 * @param   string  $value  The value to be quoted.
+	 * @param   string $value The value to be quoted.
 	 *
 	 * @return string  The value passed wrapped in MySQL quotes.
 	 *
@@ -210,7 +210,7 @@ class JDatabaseImporterPdomysqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Callback for the dbo quoteName method.
 	 *
-	 * @param   string  $value  The value to be quoted.
+	 * @param   string $value The value to be quoted.
 	 *
 	 * @return string  The value passed wrapped in MySQL quotes.
 	 *
@@ -224,7 +224,7 @@ class JDatabaseImporterPdomysqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Callback for the dbo setQuery method.
 	 *
-	 * @param   string  $query  The query.
+	 * @param   string $query The query.
 	 *
 	 * @return void
 	 *
@@ -541,13 +541,13 @@ class JDatabaseImporterPdomysqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the getAlterTableSQL method.
 	 *
-	 * @param   string  $structure  @todo
-	 * @param   string  $expected   @todo
-	 * @param   string  $message    @todo
+	 * @param   string $structure @todo
+	 * @param   string $expected  @todo
+	 * @param   string $message   @todo
 	 *
 	 * @return  void
 	 *
-	 * @since   3.4
+	 * @since        3.4
 	 *
 	 * @dataProvider dataGetAlterTableSQL
 	 */
@@ -591,14 +591,14 @@ class JDatabaseImporterPdomysqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the getColumnSQL method.
 	 *
-	 * @param   string  $field     @todo
-	 * @param   string  $expected  The expected result from the getColumnSQL method.
-	 * @param   string  $message   The error message to display if the result does not match the expected value.
+	 * @param   string $field    @todo
+	 * @param   string $expected The expected result from the getColumnSQL method.
+	 * @param   string $message  The error message to display if the result does not match the expected value.
 	 *
-	 * @internal param \SimpleXmlElement $xml The database field as an object.
+	 * @internal     param \SimpleXmlElement $xml The database field as an object.
 	 * @return  void
 	 *
-	 * @since    3.4
+	 * @since        3.4
 	 *
 	 * @dataProvider dataGetColumnSQL
 	 */
@@ -696,7 +696,7 @@ class JDatabaseImporterPdomysqlTest extends PHPUnit_Framework_TestCase
 			TestReflection::invoke($instance, 'getKeyLookup', array($o1, $o2, $o3)),
 			$this->equalTo(
 				array(
-					'id' => array($o1, $o2),
+					'id'    => array($o1, $o2),
 					'title' => array($o3)
 				)
 			),
@@ -711,7 +711,7 @@ class JDatabaseImporterPdomysqlTest extends PHPUnit_Framework_TestCase
 			TestReflection::invoke($instance, 'getKeyLookup', array($o1, $o2, $o3)),
 			$this->equalTo(
 				array(
-					'id' => array($o1, $o2),
+					'id'    => array($o1, $o2),
 					'title' => array($o3)
 				)
 			),
@@ -722,14 +722,14 @@ class JDatabaseImporterPdomysqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the getKeySQL method.
 	 *
-	 * @param   string  $field     @todo
-	 * @param   string  $expected  The expected result from the getKeySQL method.
-	 * @param   string  $message   The error message to display if the result does not match the expected value.
+	 * @param   string $field    @todo
+	 * @param   string $expected The expected result from the getKeySQL method.
+	 * @param   string $message  The error message to display if the result does not match the expected value.
 	 *
-	 * @internal param \SimpleXmlElement $xml The database key as an object.
+	 * @internal     param \SimpleXmlElement $xml The database key as an object.
 	 * @return  void
 	 *
-	 * @since    3.4
+	 * @since        3.4
 	 *
 	 * @dataProvider dataGetKeySQL
 	 */
@@ -806,7 +806,7 @@ class JDatabaseImporterPdomysqlTest extends PHPUnit_Framework_TestCase
 	{
 		$instance = new JDatabaseImporterPdomysql;
 
-		$result   = $instance->withStructure();
+		$result = $instance->withStructure();
 
 		$this->assertThat(
 			$result,

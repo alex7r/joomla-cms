@@ -1,9 +1,9 @@
 <?php
 /**
- *  @package     FrameworkOnFramework
- *  @subpackage  config
+ * @package     FrameworkOnFramework
+ * @subpackage  config
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- *  @license     GNU General Public License version 2, or later
+ * @license     GNU General Public License version 2, or later
  */
 
 defined('FOF_INCLUDED') or die();
@@ -19,8 +19,8 @@ class FOFConfigDomainViews implements FOFConfigDomainInterface
 	/**
 	 * Parse the XML data, adding them to the $ret array
 	 *
-	 * @param   SimpleXMLElement  $xml   The XML data of the component's configuration area
-	 * @param   array             &$ret  The parsed data, in the form of a hash array
+	 * @param   SimpleXMLElement $xml  The XML data of the component's configuration area
+	 * @param   array            &$ret The parsed data, in the form of a hash array
 	 *
 	 * @return  void
 	 */
@@ -45,46 +45,46 @@ class FOFConfigDomainViews implements FOFConfigDomainInterface
 
 			// Parse ACL options
 			$ret['views'][$key]['acl'] = array();
-			$aclData = $aView->xpath('acl/task');
+			$aclData                   = $aView->xpath('acl/task');
 
 			if (!empty($aclData))
 			{
 				foreach ($aclData as $acl)
 				{
-					$k = (string) $acl['name'];
+					$k                             = (string) $acl['name'];
 					$ret['views'][$key]['acl'][$k] = (string) $acl;
 				}
 			}
 
 			// Parse taskmap
 			$ret['views'][$key]['taskmap'] = array();
-			$taskmapData = $aView->xpath('taskmap/task');
+			$taskmapData                   = $aView->xpath('taskmap/task');
 
 			if (!empty($taskmapData))
 			{
 				foreach ($taskmapData as $map)
 				{
-					$k = (string) $map['name'];
+					$k                                 = (string) $map['name'];
 					$ret['views'][$key]['taskmap'][$k] = (string) $map;
 				}
 			}
 
 			// Parse controller configuration
 			$ret['views'][$key]['config'] = array();
-			$optionData = $aView->xpath('config/option');
+			$optionData                   = $aView->xpath('config/option');
 
 			if (!empty($optionData))
 			{
 				foreach ($optionData as $option)
 				{
-					$k = (string) $option['name'];
+					$k                                = (string) $option['name'];
 					$ret['views'][$key]['config'][$k] = (string) $option;
 				}
 			}
 
 			// Parse the toolbar
 			$ret['views'][$key]['toolbar'] = array();
-			$toolBars = $aView->xpath('toolbar');
+			$toolBars                      = $aView->xpath('toolbar');
 
 			if (!empty($toolBars))
 			{
@@ -107,8 +107,8 @@ class FOFConfigDomainViews implements FOFConfigDomainInterface
 					{
 						foreach ($toolbarData as $button)
 						{
-							$k = (string) $button['type'];
-							$ret['views'][$key]['toolbar'][$taskName][$k] = current($button->attributes());
+							$k                                                     = (string) $button['type'];
+							$ret['views'][$key]['toolbar'][$taskName][$k]          = current($button->attributes());
 							$ret['views'][$key]['toolbar'][$taskName][$k]['value'] = (string) $button;
 						}
 					}
@@ -120,9 +120,9 @@ class FOFConfigDomainViews implements FOFConfigDomainInterface
 	/**
 	 * Return a configuration variable
 	 *
-	 * @param   string  &$configuration  Configuration variables (hashed array)
-	 * @param   string  $var             The variable we want to fetch
-	 * @param   mixed   $default         Default value
+	 * @param   string &$configuration Configuration variables (hashed array)
+	 * @param   string $var            The variable we want to fetch
+	 * @param   mixed  $default        Default value
 	 *
 	 * @return  mixed  The variable's value
 	 */
@@ -130,7 +130,7 @@ class FOFConfigDomainViews implements FOFConfigDomainInterface
 	{
 		$parts = explode('.', $var);
 
-		$view = $parts[0];
+		$view   = $parts[0];
 		$method = 'get' . ucfirst($parts[1]);
 
 		if (!method_exists($this, $method))
@@ -149,10 +149,10 @@ class FOFConfigDomainViews implements FOFConfigDomainInterface
 	/**
 	 * Internal function to return the task map for a view
 	 *
-	 * @param   string  $view            The view for which we will be fetching a task map
-	 * @param   array   &$configuration  The configuration parameters hash array
-	 * @param   array   $params          Extra options (not used)
-	 * @param   array   $default         ßDefault task map; empty array if not provided
+	 * @param   string $view           The view for which we will be fetching a task map
+	 * @param   array  &$configuration The configuration parameters hash array
+	 * @param   array  $params         Extra options (not used)
+	 * @param   array  $default        ßDefault task map; empty array if not provided
 	 *
 	 * @return  array  The task map as a hash array in the format task => method
 	 */
@@ -182,10 +182,10 @@ class FOFConfigDomainViews implements FOFConfigDomainInterface
 	 * Internal method to return the ACL mapping (privilege required to access
 	 * a specific task) for the given view's tasks
 	 *
-	 * @param   string  $view            The view for which we will be fetching a task map
-	 * @param   array   &$configuration  The configuration parameters hash array
-	 * @param   array   $params          Extra options; key 0 defines the task we want to fetch
-	 * @param   string  $default         Default ACL option; empty (no ACL check) if not defined
+	 * @param   string $view           The view for which we will be fetching a task map
+	 * @param   array  &$configuration The configuration parameters hash array
+	 * @param   array  $params         Extra options; key 0 defines the task we want to fetch
+	 * @param   string $default        Default ACL option; empty (no ACL check) if not defined
 	 *
 	 * @return  string  The privilege required to access this view
 	 */
@@ -222,10 +222,10 @@ class FOFConfigDomainViews implements FOFConfigDomainInterface
 	 * Internal method to return the a configuration option for the view. These
 	 * are equivalent to $config array options passed to the Controller
 	 *
-	 * @param   string  $view            The view for which we will be fetching a task map
-	 * @param   array   &$configuration  The configuration parameters hash array
-	 * @param   array   $params          Extra options; key 0 defines the option variable we want to fetch
-	 * @param   mixed   $default         Default option; null if not defined
+	 * @param   string $view           The view for which we will be fetching a task map
+	 * @param   array  &$configuration The configuration parameters hash array
+	 * @param   array  $params         Extra options; key 0 defines the option variable we want to fetch
+	 * @param   mixed  $default        Default option; null if not defined
 	 *
 	 * @return  string  The setting for the requested option
 	 */
@@ -235,14 +235,16 @@ class FOFConfigDomainViews implements FOFConfigDomainInterface
 
 		if (isset($configuration['views']['*'])
 			&& isset($configuration['views']['*']['config'])
-			&& isset($configuration['views']['*']['config'][$params[0]]))
+			&& isset($configuration['views']['*']['config'][$params[0]])
+		)
 		{
 			$ret = $configuration['views']['*']['config'][$params[0]];
 		}
 
 		if (isset($configuration['views'][$view])
 			&& isset($configuration['views'][$view]['config'])
-			&& isset($configuration['views'][$view]['config'][$params[0]]))
+			&& isset($configuration['views'][$view]['config'][$params[0]])
+		)
 		{
 			$ret = $configuration['views'][$view]['config'][$params[0]];
 		}
@@ -253,10 +255,10 @@ class FOFConfigDomainViews implements FOFConfigDomainInterface
 	/**
 	 * Internal method to return the toolbar infos.
 	 *
-	 * @param   string  $view            The view for which we will be fetching buttons
-	 * @param   array   &$configuration  The configuration parameters hash array
-	 * @param   array   $params          Extra options
-	 * @param   string  $default         Default option
+	 * @param   string $view           The view for which we will be fetching buttons
+	 * @param   array  &$configuration The configuration parameters hash array
+	 * @param   array  $params         Extra options
+	 * @param   string $default        Default option
 	 *
 	 * @return  string  The toolbar data for this view
 	 */
@@ -266,28 +268,32 @@ class FOFConfigDomainViews implements FOFConfigDomainInterface
 
 		if (isset($configuration['views']['*'])
 			&& isset($configuration['views']['*']['toolbar'])
-			&& isset($configuration['views']['*']['toolbar']['*']))
+			&& isset($configuration['views']['*']['toolbar']['*'])
+		)
 		{
 			$toolbar = $configuration['views']['*']['toolbar']['*'];
 		}
 
 		if (isset($configuration['views']['*'])
 			&& isset($configuration['views']['*']['toolbar'])
-			&& isset($configuration['views']['*']['toolbar'][$params[0]]))
+			&& isset($configuration['views']['*']['toolbar'][$params[0]])
+		)
 		{
 			$toolbar = array_merge($toolbar, $configuration['views']['*']['toolbar'][$params[0]]);
 		}
 
 		if (isset($configuration['views'][$view])
 			&& isset($configuration['views'][$view]['toolbar'])
-			&& isset($configuration['views'][$view]['toolbar']['*']))
+			&& isset($configuration['views'][$view]['toolbar']['*'])
+		)
 		{
 			$toolbar = array_merge($toolbar, $configuration['views'][$view]['toolbar']['*']);
 		}
 
 		if (isset($configuration['views'][$view])
 			&& isset($configuration['views'][$view]['toolbar'])
-			&& isset($configuration['views'][$view]['toolbar'][$params[0]]))
+			&& isset($configuration['views'][$view]['toolbar'][$params[0]])
+		)
 		{
 			$toolbar = array_merge($toolbar, $configuration['views'][$view]['toolbar'][$params[0]]);
 		}

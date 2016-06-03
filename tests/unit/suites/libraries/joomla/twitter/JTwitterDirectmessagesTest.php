@@ -76,41 +76,6 @@ class JTwitterDirectmessagesTest extends TestCase
 			}}}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$key = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input = new JInput;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth = new JTwitterOAuth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JTwitterDirectmessages($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-		$this->options->set('sendheaders', true);
-	}
-
-	/**
 	 * Tests the getDirectMessages method
 	 *
 	 * @return  void
@@ -119,40 +84,40 @@ class JTwitterDirectmessagesTest extends TestCase
 	 */
 	public function testGetDirectMessages()
 	{
-		$since_id = 12345;
-		$max_id = 54321;
-		$count = 10;
-		$entities = true;
+		$since_id    = 12345;
+		$max_id      = 54321;
+		$count       = 10;
+		$entities    = true;
 		$skip_status = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "direct_messages"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request parameters.
-		$data['since_id'] = $since_id;
-		$data['max_id'] = $max_id;
-		$data['count'] = $count;
+		$data['since_id']         = $since_id;
+		$data['max_id']           = $max_id;
+		$data['count']            = $count;
 		$data['include_entities'] = $entities;
-		$data['skip_status'] = $skip_status;
+		$data['skip_status']      = $skip_status;
 
 		$path = $this->object->fetchUrl('/direct_messages.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getDirectMessages($since_id, $max_id, $count, $entities, $skip_status),
@@ -171,38 +136,38 @@ class JTwitterDirectmessagesTest extends TestCase
 	public function testGetDirectMessagesFailure()
 	{
 		$since_id = 12345;
-		$max_id = 54321;
-		$count = 10;
-		$page = 1;
+		$max_id   = 54321;
+		$count    = 10;
+		$page     = 1;
 		$entities = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "direct_messages"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set request parameters.
-		$data['since_id'] = $since_id;
-		$data['max_id'] = $max_id;
-		$data['count'] = $count;
+		$data['since_id']         = $since_id;
+		$data['max_id']           = $max_id;
+		$data['count']            = $count;
 		$data['include_entities'] = $entities;
 
 		$path = $this->object->fetchUrl('/direct_messages.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getDirectMessages($since_id, $max_id, $count, $entities);
 	}
@@ -217,39 +182,39 @@ class JTwitterDirectmessagesTest extends TestCase
 	public function testGetSentDirectMessages()
 	{
 		$since_id = 12345;
-		$max_id = 54321;
-		$count = 10;
-		$page = 1;
+		$max_id   = 54321;
+		$count    = 10;
+		$page     = 1;
 		$entities = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "direct_messages"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request parameters.
-		$data['since_id'] = $since_id;
-		$data['max_id'] = $max_id;
-		$data['count'] = $count;
-		$data['page'] = $page;
+		$data['since_id']         = $since_id;
+		$data['max_id']           = $max_id;
+		$data['count']            = $count;
+		$data['page']             = $page;
 		$data['include_entities'] = $entities;
 
 		$path = $this->object->fetchUrl('/direct_messages/sent.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getSentDirectMessages($since_id, $max_id, $count, $page, $entities),
@@ -268,50 +233,50 @@ class JTwitterDirectmessagesTest extends TestCase
 	public function testGetSentDirectMessagesFailure()
 	{
 		$since_id = 12345;
-		$max_id = 54321;
-		$count = 10;
-		$page = 1;
+		$max_id   = 54321;
+		$count    = 10;
+		$page     = 1;
 		$entities = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "direct_messages"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set request parameters.
-		$data['since_id'] = $since_id;
-		$data['max_id'] = $max_id;
-		$data['count'] = $count;
-		$data['page'] = $page;
+		$data['since_id']         = $since_id;
+		$data['max_id']           = $max_id;
+		$data['count']            = $count;
+		$data['page']             = $page;
 		$data['include_entities'] = $entities;
 
 		$path = $this->object->fetchUrl('/direct_messages/sent.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getSentDirectMessages($since_id, $max_id, $count, $page, $entities);
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 12.3
+	 */
 	public function seedUser()
 	{
 		// User ID or screen name
@@ -319,24 +284,24 @@ class JTwitterDirectmessagesTest extends TestCase
 			array(234654235457),
 			array('testUser'),
 			array(null)
-			);
+		);
 	}
 
 	/**
 	 * Tests the sendDirectMessages method
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
-	 * @since   12.3
+	 * @since         12.3
 	 */
 	public function testSendDirectMessages($user)
 	{
 		$text = 'This is a test.';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -359,9 +324,9 @@ class JTwitterDirectmessagesTest extends TestCase
 		$path = $this->object->fetchUrl('/direct_messages/new.json');
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->sendDirectMessages($user, $text),
@@ -372,19 +337,19 @@ class JTwitterDirectmessagesTest extends TestCase
 	/**
 	 * Tests the sendDirectMessages method - failure
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
 	 * @expectedException DomainException
-	 * @since   12.3
+	 * @since         12.3
 	 */
 	public function testSendDirectMessagesFailure($user)
 	{
 		$text = 'This is a test.';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -407,9 +372,9 @@ class JTwitterDirectmessagesTest extends TestCase
 		$path = $this->object->fetchUrl('/direct_messages/new.json');
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->sendDirectMessages($user, $text);
 	}
@@ -425,18 +390,18 @@ class JTwitterDirectmessagesTest extends TestCase
 	{
 		$id = 12345;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "direct_messages"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -445,9 +410,9 @@ class JTwitterDirectmessagesTest extends TestCase
 		$path = $this->object->fetchUrl('/direct_messages/show.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getDirectMessagesById($id),
@@ -467,18 +432,18 @@ class JTwitterDirectmessagesTest extends TestCase
 	{
 		$id = 12345;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "direct_messages"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->twitterErrorString;
 
@@ -487,9 +452,9 @@ class JTwitterDirectmessagesTest extends TestCase
 		$path = $this->object->fetchUrl('/direct_messages/show.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getDirectMessagesById($id);
 	}
@@ -503,23 +468,23 @@ class JTwitterDirectmessagesTest extends TestCase
 	 */
 	public function testDeleteDirectMessages()
 	{
-		$id = 12345;
+		$id       = 12345;
 		$entities = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request parameters.
-		$data['id'] = $id;
+		$data['id']               = $id;
 		$data['include_entities'] = $entities;
 
 		$path = $this->object->fetchUrl('/direct_messages/destroy.json');
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteDirectMessages($id, $entities),
@@ -537,24 +502,59 @@ class JTwitterDirectmessagesTest extends TestCase
 	 */
 	public function testDeleteDirectMessagesFailure()
 	{
-		$id = 12345;
+		$id       = 12345;
 		$entities = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set request parameters.
-		$data['id'] = $id;
+		$data['id']               = $id;
 		$data['include_entities'] = $entities;
 
 		$path = $this->object->fetchUrl('/direct_messages/destroy.json');
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->deleteDirectMessages($id, $entities);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$key    = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input   = new JInput;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth   = new JTwitterOAuth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JTwitterDirectmessages($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+		$this->options->set('sendheaders', true);
 	}
 }

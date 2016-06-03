@@ -48,25 +48,6 @@ class JGithubPackageUsersTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options  = new JRegistry;
-		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackageUsers($this->options, $this->client);
-	}
-
-	/**
 	 * Tests the getUser method
 	 *
 	 * @return void
@@ -357,5 +338,24 @@ class JGithubPackageUsersTest extends PHPUnit_Framework_TestCase
 			$this->object->edit($name, $email, $blog, $company, $location, $hireable, $bio),
 			$this->equalTo(json_decode($this->response->body))
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options  = new JRegistry;
+		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackageUsers($this->options, $this->client);
 	}
 }

@@ -40,7 +40,7 @@ class JFormFieldRepeatable extends JFormField
 
 		// Initialize variables.
 		$subForm = new JForm($this->name, array('control' => 'jform'));
-		$xml = $this->element->children()->asXml();
+		$xml     = $this->element->children()->asXml();
 		$subForm->load($xml);
 
 		// Needed for repeating modals in gmaps
@@ -79,12 +79,12 @@ class JFormFieldRepeatable extends JFormField
 
 		// Put all table parts together
 		$table = '<table id="' . $this->id . '_table" class="adminlist ' . $this->element['class'] . ' table table-striped">'
-					. '<thead><tr>' . implode("\n", $head_row_str) . '</tr></thead>'
-					. '<tbody><tr>' . implode("\n", $body_row_str) . '</tr></tbody>'
-				. '</table>';
+			. '<thead><tr>' . implode("\n", $head_row_str) . '</tr></thead>'
+			. '<tbody><tr>' . implode("\n", $body_row_str) . '</tr></tbody>'
+			. '</table>';
 
 		// And finaly build a main container
-		$str = array();
+		$str   = array();
 		$str[] = '<div id="' . $this->id . '_container">';
 
 		// Add the table to modal
@@ -103,8 +103,8 @@ class JFormFieldRepeatable extends JFormField
 
 		// Button for display the modal window
 		$select = (string) $this->element['select'] ? JText::_((string) $this->element['select']) : JText::_('JLIB_FORM_BUTTON_SELECT');
-		$icon = $this->element['icon'] ? '<span class="icon-' . $this->element['icon'] . '"></span> ' : '';
-		$str[] = '<button class="open-modal btn" id="' . $this->id . '_button" >' . $icon . $select . '</button>';
+		$icon   = $this->element['icon'] ? '<span class="icon-' . $this->element['icon'] . '"></span> ' : '';
+		$str[]  = '<button class="open-modal btn" id="' . $this->id . '_button" >' . $icon . $select . '</button>';
 
 		if (is_array($this->value))
 		{
@@ -112,7 +112,7 @@ class JFormFieldRepeatable extends JFormField
 		}
 
 		// Script params
-		$data = array();
+		$data   = array();
 		$data[] = 'data-container="#' . $this->id . '_container"';
 		$data[] = 'data-modal-element="#' . $this->id . '_modal"';
 		$data[] = 'data-repeatable-element="table tbody tr"';
@@ -127,7 +127,7 @@ class JFormFieldRepeatable extends JFormField
 		// Hidden input, where the main value is
 		$value = htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8');
 		$str[] = '<input type="hidden" name="' . $this->name . '" id="' . $this->id . '" value="' . $value
-				. '"  class="form-field-repeatable" ' . implode(' ', $data) . ' />';
+			. '"  class="form-field-repeatable" ' . implode(' ', $data) . ' />';
 
 		// Add scripts
 		JHtml::_('bootstrap.framework');

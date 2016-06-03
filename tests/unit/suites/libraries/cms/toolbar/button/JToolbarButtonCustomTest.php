@@ -1,10 +1,10 @@
 <?php
 /**
- * @package	    Joomla.UnitTest
- * @subpackage  Toolbar
+ * @package        Joomla.UnitTest
+ * @subpackage     Toolbar
  *
- * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
- * @license	    GNU General Public License version 2 or later; see LICENSE
+ * @copyright      Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license        GNU General Public License version 2 or later; see LICENSE
  */
 
 /**
@@ -31,22 +31,6 @@ class JToolbarButtonCustomTest extends PHPUnit_Framework_TestCase
 	 * @since  3.0
 	 */
 	protected $object;
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.0
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->toolbar = JToolbar::getInstance();
-		$this->object  = $this->toolbar->loadButtonType('custom');
-	}
 
 	/**
 	 * Tests the fetchButton method
@@ -78,5 +62,21 @@ class JToolbarButtonCustomTest extends PHPUnit_Framework_TestCase
 			$this->object->fetchId('custom', '', 'test'),
 			$this->equalTo('toolbar-test')
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.0
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->toolbar = JToolbar::getInstance();
+		$this->object  = $this->toolbar->loadButtonType('custom');
 	}
 }

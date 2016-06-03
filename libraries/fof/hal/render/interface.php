@@ -18,7 +18,7 @@ interface FOFHalRenderInterface
 	/**
 	 * Render a HAL document into a representation suitable for consumption.
 	 *
-	 * @param   array  $options  Renderer-specific options
+	 * @param   array $options Renderer-specific options
 	 *
 	 * @return  void
 	 */

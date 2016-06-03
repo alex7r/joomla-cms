@@ -31,10 +31,10 @@ class PlgUserContactCreator extends JPlugin
 	 *
 	 * This method creates a contact for the saved user
 	 *
-	 * @param   array    $user     Holds the new user data.
-	 * @param   boolean  $isnew    True if a new user is stored.
-	 * @param   boolean  $success  True if user was succesfully stored in the database.
-	 * @param   string   $msg      Message.
+	 * @param   array   $user    Holds the new user data.
+	 * @param   boolean $isnew   True if a new user is stored.
+	 * @param   boolean $success True if user was succesfully stored in the database.
+	 * @param   string  $msg     Message.
 	 *
 	 * @return  void
 	 *
@@ -126,11 +126,25 @@ class PlgUserContactCreator extends JPlugin
 	}
 
 	/**
+	 * Get an instance of the contact table
+	 *
+	 * @return  ContactTableContact
+	 *
+	 * @since   3.2.3
+	 */
+	protected function getContactTable()
+	{
+		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_contact/tables');
+
+		return JTable::getInstance('contact', 'ContactTable');
+	}
+
+	/**
 	 * Method to change the name & alias if alias is already in use
 	 *
-	 * @param   string   $alias       The alias.
-	 * @param   string   $name        The name.
-	 * @param   integer  $categoryId  Category identifier
+	 * @param   string  $alias      The alias.
+	 * @param   string  $name       The name.
+	 * @param   integer $categoryId Category identifier
 	 *
 	 * @return  array  Contains the modified title and alias.
 	 *
@@ -151,19 +165,5 @@ class PlgUserContactCreator extends JPlugin
 		}
 
 		return array($name, $alias);
-	}
-
-	/**
-	 * Get an instance of the contact table
-	 *
-	 * @return  ContactTableContact
-	 *
-	 * @since   3.2.3
-	 */
-	protected function getContactTable()
-	{
-		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_contact/tables');
-
-		return JTable::getInstance('contact', 'ContactTable');
 	}
 }

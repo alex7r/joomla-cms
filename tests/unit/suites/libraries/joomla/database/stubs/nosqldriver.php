@@ -17,13 +17,17 @@
 class JDatabaseDriverNosql extends JDatabaseDriver
 {
 	/**
+	 * @var    string  The minimum supported database version.
+	 * @since  12.1
+	 */
+	protected static $dbMinimum = '12.1';
+	/**
 	 * The name of the database driver.
 	 *
 	 * @var    string
 	 * @since  11.4
 	 */
 	public $name = 'nosql';
-
 	/**
 	 * The character(s) used to quote SQL statement names such as table names or field names,
 	 * etc. The child classes should define this as necessary.  If a single character string the
@@ -34,7 +38,6 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	 * @since  11.4
 	 */
 	protected $nameQuote = '[]';
-
 	/**
 	 * The null or zero representation of a timestamp for the database driver.  This should be
 	 * defined in child classes to hold the appropriate value for the engine.
@@ -45,10 +48,16 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	protected $nullDate = '1BC';
 
 	/**
-	 * @var    string  The minimum supported database version.
-	 * @since  12.1
+	 * Test to see if the connector is available.
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   11.2
 	 */
-	protected static $dbMinimum = '12.1';
+	public static function isSupported()
+	{
+		return true;
+	}
 
 	/**
 	 * Connects to the database if needed.
@@ -90,8 +99,8 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	/**
 	 * Drops a table from the database.
 	 *
-	 * @param   string   $table     The name of the database table to drop.
-	 * @param   boolean  $ifExists  Optionally specify that the table must exist before it is dropped.
+	 * @param   string  $table    The name of the database table to drop.
+	 * @param   boolean $ifExists Optionally specify that the table must exist before it is dropped.
 	 *
 	 * @return  JDatabase  Returns this object to support chaining.
 	 *
@@ -106,8 +115,8 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	/**
 	 * Method to escape a string for usage in an SQL statement.
 	 *
-	 * @param   string   $text   The string to be escaped.
-	 * @param   boolean  $extra  Optional parameter to provide extra escaping.
+	 * @param   string  $text  The string to be escaped.
+	 * @param   boolean $extra Optional parameter to provide extra escaping.
 	 *
 	 * @return  string   The escaped string.
 	 *
@@ -116,63 +125,6 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	public function escape($text, $extra = false)
 	{
 		return $extra ? "/$text//" : "-$text-";
-	}
-
-	/**
-	 * Method to fetch a row from the result set cursor as an array.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
-	 *
-	 * @since   11.4
-	 */
-	protected function fetchArray($cursor = null)
-	{
-		return array();
-	}
-
-	/**
-	 * Method to fetch a row from the result set cursor as an associative array.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
-	 *
-	 * @since   11.4
-	 */
-	protected function fetchAssoc($cursor = null)
-	{
-		return array();
-	}
-
-	/**
-	 * Method to fetch a row from the result set cursor as an object.
-	 *
-	 * @param   mixed   $cursor  The optional result set cursor from which to fetch the row.
-	 * @param   string  $class   The class name to use for the returned row object.
-	 *
-	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
-	 *
-	 * @since   11.4
-	 */
-	protected function fetchObject($cursor = null, $class = 'stdClass')
-	{
-		return new $class;
-	}
-
-	/**
-	 * Method to free up the memory used for the result set.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.4
-	 */
-	protected function freeResult($cursor = null)
-	{
-		return null;
 	}
 
 	/**
@@ -213,7 +165,7 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	/**
 	 * Get the number of returned rows for the previous executed SQL statement.
 	 *
-	 * @param   resource  $cursor  An optional database cursor resource to extract the row count from.
+	 * @param   resource $cursor An optional database cursor resource to extract the row count from.
 	 *
 	 * @return  integer   The number of returned rows.
 	 *
@@ -227,7 +179,7 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	/**
 	 * Get the current query object or a new JDatabaseQuery object.
 	 *
-	 * @param   boolean  $new  False to return the current query object, True to return a new JDatabaseQuery object.
+	 * @param   boolean $new False to return the current query object, True to return a new JDatabaseQuery object.
 	 *
 	 * @return  JDatabaseQuery  The current query object or a new object extending the JDatabaseQuery class.
 	 *
@@ -242,8 +194,8 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	/**
 	 * Retrieves field information about the given tables.
 	 *
-	 * @param   string   $table     The name of the database table.
-	 * @param   boolean  $typeOnly  True (default) to only return field types.
+	 * @param   string  $table    The name of the database table.
+	 * @param   boolean $typeOnly True (default) to only return field types.
 	 *
 	 * @return  array  An array of fields by table.
 	 *
@@ -258,7 +210,7 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	/**
 	 * Shows the table CREATE statement that creates the given tables.
 	 *
-	 * @param   mixed  $tables  A table name or a list of table names.
+	 * @param   mixed $tables A table name or a list of table names.
 	 *
 	 * @return  array  A list of the create SQL for the tables.
 	 *
@@ -273,7 +225,7 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	/**
 	 * Retrieves field information about the given tables.
 	 *
-	 * @param   mixed  $tables  A table name or a list of table names.
+	 * @param   mixed $tables A table name or a list of table names.
 	 *
 	 * @return  array  An array of keys for the table(s).
 	 *
@@ -325,7 +277,7 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	/**
 	 * Locks a table in the database.
 	 *
-	 * @param   string  $tableName  The name of the table to unlock.
+	 * @param   string $tableName The name of the table to unlock.
 	 *
 	 * @return  JDatabase  Returns this object to support chaining.
 	 *
@@ -353,10 +305,10 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	/**
 	 * Renames a table in the database.
 	 *
-	 * @param   string  $oldTable  The name of the table to be renamed
-	 * @param   string  $newTable  The new name for the table.
-	 * @param   string  $backup    Table prefix
-	 * @param   string  $prefix    For the table - used to rename constraints in non-mysql databases
+	 * @param   string $oldTable The name of the table to be renamed
+	 * @param   string $newTable The new name for the table.
+	 * @param   string $backup   Table prefix
+	 * @param   string $prefix   For the table - used to rename constraints in non-mysql databases
 	 *
 	 * @return  JDatabase  Returns this object to support chaining.
 	 *
@@ -371,7 +323,7 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	/**
 	 * Select a database for use.
 	 *
-	 * @param   string  $database  The name of the database to select for use.
+	 * @param   string $database The name of the database to select for use.
 	 *
 	 * @return  boolean  True if the database was successfully selected.
 	 *
@@ -384,33 +336,21 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	}
 
 	/**
-	* Set the connection to use UTF-8 character encoding.
-	*
-	* @return  boolean  True on success.
-	*
-	* @since   11.4
-	*/
+	 * Set the connection to use UTF-8 character encoding.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   11.4
+	 */
 	public function setUtf()
 	{
 		return false;
 	}
 
 	/**
-	 * Test to see if the connector is available.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since   11.2
-	 */
-	public static function isSupported()
-	{
-		return true;
-	}
-
-	/**
 	 * Method to commit a transaction.
 	 *
-	 * @param   boolean  $toSavepoint  If true roll back to savepoint
+	 * @param   boolean $toSavepoint If true roll back to savepoint
 	 *
 	 * @return  void
 	 *
@@ -424,7 +364,7 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	/**
 	 * Method to roll back a transaction.
 	 *
-	 * @param   boolean  $toSavepoint  If true roll back to savepoint
+	 * @param   boolean $toSavepoint If true roll back to savepoint
 	 *
 	 * @return  void
 	 *
@@ -438,7 +378,7 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	/**
 	 * Method to initialize a transaction.
 	 *
-	 * @param   boolean  $asSavepoint  If true start as savepoint
+	 * @param   boolean $asSavepoint If true start as savepoint
 	 *
 	 * @return  void
 	 *
@@ -460,5 +400,62 @@ class JDatabaseDriverNosql extends JDatabaseDriver
 	public function unlockTables()
 	{
 		return $this;
+	}
+
+	/**
+	 * Method to fetch a row from the result set cursor as an array.
+	 *
+	 * @param   mixed $cursor The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
+	 *
+	 * @since   11.4
+	 */
+	protected function fetchArray($cursor = null)
+	{
+		return array();
+	}
+
+	/**
+	 * Method to fetch a row from the result set cursor as an associative array.
+	 *
+	 * @param   mixed $cursor The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
+	 *
+	 * @since   11.4
+	 */
+	protected function fetchAssoc($cursor = null)
+	{
+		return array();
+	}
+
+	/**
+	 * Method to fetch a row from the result set cursor as an object.
+	 *
+	 * @param   mixed  $cursor The optional result set cursor from which to fetch the row.
+	 * @param   string $class  The class name to use for the returned row object.
+	 *
+	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
+	 *
+	 * @since   11.4
+	 */
+	protected function fetchObject($cursor = null, $class = 'stdClass')
+	{
+		return new $class;
+	}
+
+	/**
+	 * Method to free up the memory used for the result set.
+	 *
+	 * @param   mixed $cursor The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.4
+	 */
+	protected function freeResult($cursor = null)
+	{
+		return null;
 	}
 }

@@ -21,7 +21,7 @@ class JFormFieldLastvisitDateRange extends JFormFieldPredefinedList
 	/**
 	 * Method to instantiate the form field object.
 	 *
-	 * @param   JForm  $form  The form to attach to the form field object.
+	 * @param   JForm $form The form to attach to the form field object.
 	 *
 	 * @since   11.1
 	 */

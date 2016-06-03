@@ -21,7 +21,7 @@ class NestedTable extends JTableNested
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  $db  Database driver object.
+	 * @param   JDatabaseDriver $db Database driver object.
 	 *
 	 * @since   12.1
 	 */
@@ -39,7 +39,7 @@ class NestedTable extends JTableNested
 	{
 		self::$unlocked = true;
 	}
-	
+
 	/**
 	 * Method to reset the root_id
 	 *

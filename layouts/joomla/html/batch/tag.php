@@ -18,7 +18,7 @@ defined('JPATH_BASE') or die;
 ?>
 <label id="batch-tag-lbl" for="batch-tag-id" class="modalTooltip" title="<?php
 echo JHtml::_('tooltipText', 'JLIB_HTML_BATCH_TAG_LABEL', 'JLIB_HTML_BATCH_TAG_LABEL_DESC'); ?>">
-<?php echo JText::_('JLIB_HTML_BATCH_TAG_LABEL'); ?>
+	<?php echo JText::_('JLIB_HTML_BATCH_TAG_LABEL'); ?>
 </label>
 <select name="batch[tag]" class="inputbox" id="batch-tag-id">
 	<option value=""><?php echo JText::_('JLIB_HTML_BATCH_TAG_NOCHANGE'); ?></option>

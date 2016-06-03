@@ -21,6 +21,14 @@ class JDocumentRendererComponentTest extends TestCase
 	private $instance;
 
 	/**
+	 * @testdox  Test the default return for render
+	 */
+	public function testTheDefaultReturnForRender()
+	{
+		$this->assertNull($this->instance->render());
+	}
+
+	/**
 	 * Sets up the fixture.
 	 *
 	 * This method is called before a test is executed.
@@ -45,13 +53,5 @@ class JDocumentRendererComponentTest extends TestCase
 		$this->restoreFactoryState();
 
 		parent::tearDown();
-	}
-
-	/**
-	 * @testdox  Test the default return for render
-	 */
-	public function testTheDefaultReturnForRender()
-	{
-		$this->assertNull($this->instance->render());
 	}
 }

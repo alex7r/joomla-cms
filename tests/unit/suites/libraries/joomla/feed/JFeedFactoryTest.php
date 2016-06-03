@@ -24,26 +24,6 @@ class JFeedFactoryTest extends TestCase
 	private $_instance;
 
 	/**
-	 * Setup the tests.
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		$this->_instance = new JFeedFactory;
-	}
-
-	/**
-	 * Method to tear down whatever was set up before the test.
-	 *
-	 * @return  void
-	 */
-	protected function tearDown()
-	{
-		unset($this->_instance);
-	}
-
-	/**
 	 * Tests JFeedFactory::getFeed() with a bad feed.
 	 *
 	 * @return  void
@@ -188,5 +168,25 @@ class JFeedFactoryTest extends TestCase
 	public function test_fetchFeedParserWithInvalidTag()
 	{
 		TestReflection::invoke($this->_instance, '_fetchFeedParser', 'foobar', new XMLReader);
+	}
+
+	/**
+	 * Setup the tests.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		$this->_instance = new JFeedFactory;
+	}
+
+	/**
+	 * Method to tear down whatever was set up before the test.
+	 *
+	 * @return  void
+	 */
+	protected function tearDown()
+	{
+		unset($this->_instance);
 	}
 }

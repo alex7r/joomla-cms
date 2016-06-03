@@ -29,7 +29,7 @@ class JEventTest extends PHPUnit_Framework_TestCase
 	public function test__construct()
 	{
 		$dispatcher = new JEventDispatcher;
-		$event = new JEventInspector($dispatcher);
+		$event      = new JEventInspector($dispatcher);
 
 		$this->assertThat(
 			TestReflection::getValue($event, '_subject'),
@@ -47,7 +47,7 @@ class JEventTest extends PHPUnit_Framework_TestCase
 	public function testUpdate()
 	{
 		$dispatcher = new JEventDispatcher;
-		$event = new JEventInspector($dispatcher);
+		$event      = new JEventInspector($dispatcher);
 
 		$args = array('event' => 'onTestEvent');
 
@@ -158,7 +158,7 @@ class JEventTest extends PHPUnit_Framework_TestCase
 		$object->calls = array();
 
 		// We setup the arguments to pass to update and call it.
-		$args = array('myFirstArgument');
+		$args          = array('myFirstArgument');
 		$args['event'] = 'myEvent';
 
 		// We call update and assert that it returns true (the value from the stub)
@@ -208,7 +208,7 @@ class JEventTest extends PHPUnit_Framework_TestCase
 		$object->calls = array();
 
 		// We setup the arguments to pass to update and call it.
-		$args = array('myFirstArgument', 5);
+		$args          = array('myFirstArgument', 5);
 		$args['event'] = 'myEvent';
 
 		// We call update and assert that it returns true (the value from the stub)
@@ -258,7 +258,7 @@ class JEventTest extends PHPUnit_Framework_TestCase
 		$object->calls = array();
 
 		// We setup the arguments to pass to update and call it.
-		$args = array('myFirstArgument');
+		$args          = array('myFirstArgument');
 		$args['event'] = 'myNonExistentEvent';
 
 		// We call update and assert that it returns null (the value from the stub)

@@ -25,9 +25,9 @@ class PlgAuthenticationFake
 	/**
 	 * Test...
 	 *
-	 * @param   array                   $credentials  @todo
-	 * @param   array                   $options      @todo
-	 * @param   JAuthenicationResponse  &$response    @todo
+	 * @param   array                  $credentials @todo
+	 * @param   array                  $options     @todo
+	 * @param   JAuthenicationResponse &$response   @todo
 	 *
 	 * @return  void
 	 *

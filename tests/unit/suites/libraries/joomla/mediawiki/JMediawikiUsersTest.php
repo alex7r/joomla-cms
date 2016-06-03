@@ -45,20 +45,6 @@ class JMediawikiUsersTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '<message>Generic Error</message>';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->options = new JRegistry;
-		$this->client = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JMediawikiUsers($this->options, $this->client);
-	}
-
-	/**
 	 * Tests the getUserInfo method
 	 */
 	public function testGetUserInfo()
@@ -75,6 +61,18 @@ class JMediawikiUsersTest extends PHPUnit_Framework_TestCase
 			simplexml_load_string($this->sampleString),
 			$this->object->getUserInfo(array('Joomla'))
 		);
+	}
+
+	/**
+	 * @return stdClass
+	 */
+	private function getReturnData()
+	{
+		$returnData       = new stdClass;
+		$returnData->code = 200;
+		$returnData->body = $this->sampleString;
+
+		return $returnData;
 	}
 
 	/**
@@ -114,14 +112,16 @@ class JMediawikiUsersTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @return stdClass
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
 	 */
-	private function getReturnData()
+	protected function setUp()
 	{
-		$returnData = new stdClass;
-		$returnData->code = 200;
-		$returnData->body = $this->sampleString;
+		$this->options = new JRegistry;
+		$this->client  = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
 
-		return $returnData;
+		$this->object = new JMediawikiUsers($this->options, $this->client);
 	}
 }

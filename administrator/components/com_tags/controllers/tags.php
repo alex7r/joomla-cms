@@ -17,24 +17,6 @@ defined('_JEXEC') or die;
 class TagsControllerTags extends JControllerAdmin
 {
 	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  An optional associative array of configuration settings.
-	 *
-	 * @return  JModelLegacy  The model.
-	 *
-	 * @since   3.1
-	 */
-	public function getModel($name = 'Tag', $prefix = 'TagsModel', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
-	}
-
-	/**
 	 * Rebuild the nested set tree.
 	 *
 	 * @return  boolean  False on failure or error, true on success.
@@ -63,5 +45,23 @@ class TagsControllerTags extends JControllerAdmin
 
 			return false;
 		}
+	}
+
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config An optional associative array of configuration settings.
+	 *
+	 * @return  JModelLegacy  The model.
+	 *
+	 * @since   3.1
+	 */
+	public function getModel($name = 'Tag', $prefix = 'TagsModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 }

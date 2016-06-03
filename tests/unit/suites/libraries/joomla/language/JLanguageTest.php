@@ -30,40 +30,6 @@ class JLanguageTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$path = JPATH_TESTS . '/tmp/language';
-
-		if (is_dir($path))
-		{
-			JFolder::delete($path);
-		}
-
-		JFolder::copy(__DIR__ . '/data/language', $path);
-
-		$this->object = new JLanguage;
-		$this->inspector = new JLanguageInspector('', true);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-		JFolder::delete(JPATH_TESTS . '/tmp/language');
-	}
-
-	/**
 	 * Test...
 	 *
 	 * @return void
@@ -228,7 +194,7 @@ class JLanguageTest extends PHPUnit_Framework_TestCase
 	{
 		$function1 = 'phpinfo';
 		$function2 = 'print';
-		$lang = new JLanguage('');
+		$lang      = new JLanguage('');
 
 		// Note: set -> $funtion1: set returns NULL and get returns $function1
 		$this->assertNull(
@@ -318,7 +284,7 @@ class JLanguageTest extends PHPUnit_Framework_TestCase
 	{
 		$function1 = 'phpinfo';
 		$function2 = 'print';
-		$lang = new JLanguage('');
+		$lang      = new JLanguage('');
 
 		$this->assertTrue(
 			is_callable($lang->getPluralSuffixesCallback())
@@ -407,7 +373,7 @@ class JLanguageTest extends PHPUnit_Framework_TestCase
 	{
 		$function1 = 'phpinfo';
 		$function2 = 'print';
-		$lang = new JLanguage('');
+		$lang      = new JLanguage('');
 
 		$this->assertTrue(
 			is_callable($lang->getIgnoredSearchWordsCallback())
@@ -497,7 +463,7 @@ class JLanguageTest extends PHPUnit_Framework_TestCase
 	{
 		$function1 = 'phpinfo';
 		$function2 = 'print';
-		$lang = new JLanguage('');
+		$lang      = new JLanguage('');
 
 		$this->assertTrue(
 			is_callable($lang->getLowerLimitSearchWordCallback())
@@ -587,7 +553,7 @@ class JLanguageTest extends PHPUnit_Framework_TestCase
 	{
 		$function1 = 'phpinfo';
 		$function2 = 'print';
-		$lang = new JLanguage('');
+		$lang      = new JLanguage('');
 
 		$this->assertTrue(
 			is_callable($lang->getUpperLimitSearchWordCallback())
@@ -677,7 +643,7 @@ class JLanguageTest extends PHPUnit_Framework_TestCase
 	{
 		$function1 = 'phpinfo';
 		$function2 = 'print';
-		$lang = new JLanguage('');
+		$lang      = new JLanguage('');
 
 		$this->assertTrue(
 			is_callable($lang->getSearchDisplayedCharactersNumberCallback())
@@ -1006,12 +972,12 @@ class JLanguageTest extends PHPUnit_Framework_TestCase
 		// In this case, returns array with default language
 		// - same operation of get method with metadata property
 		$options = array(
-			'name' => 'English (en-GB)',
-			'tag' => 'en-GB',
-			'rtl' => '0',
-			'locale' => $localeString,
+			'name'     => 'English (en-GB)',
+			'tag'      => 'en-GB',
+			'rtl'      => '0',
+			'locale'   => $localeString,
 			'firstDay' => '0',
-			'weekEnd' => '0,6'
+			'weekEnd'  => '0,6'
 		);
 
 		// Language exists, returns array with values
@@ -1037,12 +1003,12 @@ class JLanguageTest extends PHPUnit_Framework_TestCase
 		$weekEnd = '0,6';
 
 		$option1 = array(
-			'name' => 'English (United Kingdom)',
-			'tag' => 'en-GB',
-			'rtl' => '0',
-			'locale' => $localeString,
+			'name'     => 'English (United Kingdom)',
+			'tag'      => 'en-GB',
+			'rtl'      => '0',
+			'locale'   => $localeString,
 			'firstDay' => '0',
-			'weekEnd' => $weekEnd
+			'weekEnd'  => $weekEnd
 		);
 
 		$listCompareEqual1 = array(
@@ -1115,15 +1081,15 @@ class JLanguageTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testParseLanguageFiles()
 	{
-		$dir = __DIR__ . '/data/language';
+		$dir    = __DIR__ . '/data/language';
 		$option = array(
-			'name' => 'English (United Kingdom)',
-			'tag' => 'en-GB',
-			'rtl' => '0',
-			'locale' => 'en_GB.utf8, en_GB.UTF-8, en_GB, eng_GB, en, english, english-uk, uk, gbr, britain, england,' .
+			'name'     => 'English (United Kingdom)',
+			'tag'      => 'en-GB',
+			'rtl'      => '0',
+			'locale'   => 'en_GB.utf8, en_GB.UTF-8, en_GB, eng_GB, en, english, english-uk, uk, gbr, britain, england,' .
 				' great britain, uk, united kingdom, united-kingdom',
 			'firstDay' => '0',
-			'weekEnd' => '0,6'
+			'weekEnd'  => '0,6'
 		);
 
 		$expected = array(
@@ -1147,13 +1113,13 @@ class JLanguageTest extends PHPUnit_Framework_TestCase
 	public function testParseXMLLanguageFile()
 	{
 		$option = array(
-			'name' => 'English (United Kingdom)',
-			'tag' => 'en-GB',
-			'rtl' => '0',
-			'locale' => 'en_GB.utf8, en_GB.UTF-8, en_GB, eng_GB, en, english, english-uk, uk, gbr, britain, england, great britain,' .
+			'name'     => 'English (United Kingdom)',
+			'tag'      => 'en-GB',
+			'rtl'      => '0',
+			'locale'   => 'en_GB.utf8, en_GB.UTF-8, en_GB, eng_GB, en, english, english-uk, uk, gbr, britain, england, great britain,' .
 				' uk, united kingdom, united-kingdom',
 			'firstDay' => '0',
-			'weekEnd' => '0,6'
+			'weekEnd'  => '0,6'
 		);
 
 		$path = __DIR__ . '/data/language/en-GB/en-GB.xml';
@@ -1184,5 +1150,39 @@ class JLanguageTest extends PHPUnit_Framework_TestCase
 		$path = __DIR__ . '/data/language/es-ES/es-ES.xml';
 
 		JLanguage::parseXMLLanguageFile($path);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$path = JPATH_TESTS . '/tmp/language';
+
+		if (is_dir($path))
+		{
+			JFolder::delete($path);
+		}
+
+		JFolder::copy(__DIR__ . '/data/language', $path);
+
+		$this->object    = new JLanguage;
+		$this->inspector = new JLanguageInspector('', true);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+		JFolder::delete(JPATH_TESTS . '/tmp/language');
 	}
 }

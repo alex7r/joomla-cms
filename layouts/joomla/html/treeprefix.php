@@ -13,7 +13,7 @@ defined('JPATH_BASE') or die;
  * Layout variables
  * ---------------------
  *
- * @var  integer  $level  The level of the item in the tree like structure.
+ * @var  integer $level The level of the item in the tree like structure.
  *
  * @since  3.6.0
  */

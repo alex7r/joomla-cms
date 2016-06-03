@@ -15,6 +15,10 @@
  */
 class JDatabaseExporterMysqlTest extends TestCase
 {
+	/**
+	 * @var    JDatabaseDriverMysql  The mocked database object for use by test methods.
+	 */
+	protected $dbo = null;
 	private $xmlDump = '<?xml version="1.0"?>
 <mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
  <database name="">
@@ -27,11 +31,6 @@ class JDatabaseExporterMysqlTest extends TestCase
 </mysqldump>';
 
 	/**
-	 * @var    JDatabaseDriverMysql  The mocked database object for use by test methods.
-	 */
-	protected $dbo = null;
-
-	/**
 	 * This method is called before the first test of this test class is run.
 	 *
 	 * @return  void
@@ -42,81 +41,6 @@ class JDatabaseExporterMysqlTest extends TestCase
 		{
 			self::markTestSkipped('ext/mysql is unsupported on PHP 7.');
 		}
-	}
-
-	/**
-	 * Sets up the fixture, for example, open a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		$this->dbo = $this->getMockDatabase('Mysql');
-
-		$this->dbo
-			->expects($this->any())
-			->method('getPrefix')
-			->willReturn('jos_');
-
-		$this->dbo
-			->expects($this->any())
-			->method('getTableColumns')
-			->willReturn(
-				array(
-					'id' => (object) array(
-						'Field' => 'id',
-						'Type' => 'int(11) unsigned',
-						'Collation' => null,
-						'Null' => 'NO',
-						'Key' => 'PRI',
-						'Default' => '',
-						'Extra' => 'auto_increment',
-						'Privileges' => 'select,insert,update,references',
-						'Comment' => '',
-					),
-					'title' => (object) array(
-						'Field' => 'title',
-						'Type' => 'varchar(255)',
-						'Collation' => 'utf8_general_ci',
-						'Null' => 'NO',
-						'Key' => '',
-						'Default' => '',
-						'Extra' => '',
-						'Privileges' => 'select,insert,update,references',
-						'Comment' => '',
-					),
-				)
-			);
-
-		$this->dbo
-			->expects($this->any())
-			->method('getTableKeys')
-			->willReturn(
-				array(
-				(object) array(
-					'Table' => 'jos_test',
-					'Non_unique' => '0',
-					'Key_name' => 'PRIMARY',
-					'Seq_in_index' => '1',
-					'Column_name' => 'id',
-					'Collation' => 'A',
-					'Cardinality' => '2695',
-					'Sub_part' => '',
-					'Packed' => '',
-					'Null' => '',
-					'Index_type' => 'BTREE',
-					'Comment' => '',
-				)
-				)
-			);
-
-		$this->dbo
-			->expects($this->any())
-			->method('loadObjectList')
-			->willReturnCallback(array($this, 'callbackLoadObjectList'));
-
-		parent::setUp();
 	}
 
 	/**
@@ -342,5 +266,80 @@ class JDatabaseExporterMysqlTest extends TestCase
 		$this->assertFalse(
 			TestReflection::getValue($instance, 'options')->withStructure
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, open a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		$this->dbo = $this->getMockDatabase('Mysql');
+
+		$this->dbo
+			->expects($this->any())
+			->method('getPrefix')
+			->willReturn('jos_');
+
+		$this->dbo
+			->expects($this->any())
+			->method('getTableColumns')
+			->willReturn(
+				array(
+					'id'    => (object) array(
+						'Field'      => 'id',
+						'Type'       => 'int(11) unsigned',
+						'Collation'  => null,
+						'Null'       => 'NO',
+						'Key'        => 'PRI',
+						'Default'    => '',
+						'Extra'      => 'auto_increment',
+						'Privileges' => 'select,insert,update,references',
+						'Comment'    => '',
+					),
+					'title' => (object) array(
+						'Field'      => 'title',
+						'Type'       => 'varchar(255)',
+						'Collation'  => 'utf8_general_ci',
+						'Null'       => 'NO',
+						'Key'        => '',
+						'Default'    => '',
+						'Extra'      => '',
+						'Privileges' => 'select,insert,update,references',
+						'Comment'    => '',
+					),
+				)
+			);
+
+		$this->dbo
+			->expects($this->any())
+			->method('getTableKeys')
+			->willReturn(
+				array(
+					(object) array(
+						'Table'        => 'jos_test',
+						'Non_unique'   => '0',
+						'Key_name'     => 'PRIMARY',
+						'Seq_in_index' => '1',
+						'Column_name'  => 'id',
+						'Collation'    => 'A',
+						'Cardinality'  => '2695',
+						'Sub_part'     => '',
+						'Packed'       => '',
+						'Null'         => '',
+						'Index_type'   => 'BTREE',
+						'Comment'      => '',
+					)
+				)
+			);
+
+		$this->dbo
+			->expects($this->any())
+			->method('loadObjectList')
+			->willReturnCallback(array($this, 'callbackLoadObjectList'));
+
+		parent::setUp();
 	}
 }

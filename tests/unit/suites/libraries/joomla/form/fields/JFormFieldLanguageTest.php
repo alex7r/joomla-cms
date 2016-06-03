@@ -19,22 +19,6 @@ JFormHelper::loadFieldClass('language');
 class JFormFieldLanguageTest extends TestCaseDatabase
 {
 	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   12.1
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_languages', JPATH_TEST_DATABASE . '/jos_languages.csv');
-
-		return $dataSet;
-	}
-
-	/**
 	 * Test the getInput method.
 	 *
 	 * @return  void
@@ -66,5 +50,21 @@ class JFormFieldLanguageTest extends TestCaseDatabase
 		);
 
 		// TODO: Should check all the attributes have come in properly.
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   12.1
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_languages', JPATH_TEST_DATABASE . '/jos_languages.csv');
+
+		return $dataSet;
 	}
 }

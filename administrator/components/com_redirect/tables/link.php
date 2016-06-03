@@ -19,7 +19,7 @@ class RedirectTableLink extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  $db  Database object.
+	 * @param   JDatabaseDriver $db Database object.
 	 *
 	 * @since   1.6
 	 */
@@ -103,7 +103,7 @@ class RedirectTableLink extends JTable
 	/**
 	 * Overriden store method to set dates.
 	 *
-	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 * @param   boolean $updateNulls True to update fields even if they are null.
 	 *
 	 * @return  boolean  True on success.
 	 *

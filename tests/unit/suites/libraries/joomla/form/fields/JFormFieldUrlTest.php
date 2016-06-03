@@ -28,6 +28,47 @@ class JFormFieldUrlTest extends TestCaseDatabase
 	protected $backupServer;
 
 	/**
+	 * Test...
+	 *
+	 * @return  array
+	 *
+	 * @since   3.1
+	 */
+	public function getInputData()
+	{
+		return JHtmlFieldUrlTest_DataSet::$getInputTest;
+	}
+
+	/**
+	 * Test the getInput method where there is no value from the element
+	 * and no checked attribute.
+	 *
+	 * @param   array  $data     @todo
+	 * @param   string $expected @todo
+	 *
+	 * @return  void
+	 *
+	 * @since         12.2
+	 *
+	 * @dataProvider  getInputData
+	 */
+	public function testGetInput($data, $expected)
+	{
+		$formField = new JFormFieldUrl;
+
+		foreach ($data as $attr => $value)
+		{
+			TestReflection::setValue($formField, $attr, $value);
+		}
+
+		$this->assertEquals(
+			$expected,
+			TestReflection::invoke($formField, 'getInput'),
+			'Line:' . __LINE__ . ' The field did not produce the right html'
+		);
+	}
+
+	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
@@ -45,7 +86,7 @@ class JFormFieldUrlTest extends TestCaseDatabase
 
 		$this->backupServer = $_SERVER;
 
-		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['SCRIPT_NAME'] = '';
 	}
 
@@ -64,46 +105,5 @@ class JFormFieldUrlTest extends TestCaseDatabase
 		$this->restoreFactoryState();
 
 		parent::tearDown();
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @return  array
-	 *
-	 * @since   3.1
-	 */
-	public function getInputData()
-	{
-		return JHtmlFieldUrlTest_DataSet::$getInputTest;
-	}
-
-	/**
-	 * Test the getInput method where there is no value from the element
-	 * and no checked attribute.
-	 *
-	 * @param   array   $data  	   @todo
-	 * @param   string  $expected  @todo
-	 *
-	 * @return  void
-	 *
-	 * @since   12.2
-	 *
-	 * @dataProvider  getInputData
-	 */
-	public function testGetInput($data, $expected)
-	{
-		$formField = new JFormFieldUrl;
-
-		foreach ($data as $attr => $value)
-		{
-			TestReflection::setValue($formField, $attr, $value);
-		}
-
-		$this->assertEquals(
-			$expected,
-			TestReflection::invoke($formField, 'getInput'),
-			'Line:' . __LINE__ . ' The field did not produce the right html'
-		);
 	}
 }

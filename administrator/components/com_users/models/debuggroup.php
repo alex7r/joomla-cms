@@ -21,7 +21,7 @@ class UsersModelDebuggroup extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   3.6.0
@@ -40,20 +40,6 @@ class UsersModelDebuggroup extends JModelList
 		}
 
 		parent::__construct($config);
-	}
-
-	/**
-	 * Get a list of the actions.
-	 *
-	 * @return  array
-	 *
-	 * @since   1.6
-	 */
-	public function getDebugActions()
-	{
-		$component = $this->getState('filter.component');
-
-		return UsersHelperDebug::getDebugActions($component);
 	}
 
 	/**
@@ -77,7 +63,7 @@ class UsersModelDebuggroup extends JModelList
 
 				foreach ($actions as $action)
 				{
-					$name = $action[0];
+					$name  = $action[0];
 					$level = $action[1];
 
 					// Check that we check this action for the level of the asset.
@@ -99,12 +85,59 @@ class UsersModelDebuggroup extends JModelList
 	}
 
 	/**
+	 * Get a list of the actions.
+	 *
+	 * @return  array
+	 *
+	 * @since   1.6
+	 */
+	public function getDebugActions()
+	{
+		$component = $this->getState('filter.component');
+
+		return UsersHelperDebug::getDebugActions($component);
+	}
+
+	/**
+	 * Get the group being debugged.
+	 *
+	 * @return  JObject
+	 *
+	 * @since   1.6
+	 */
+	public function getGroup()
+	{
+		$groupId = (int) $this->getState('group_id');
+
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true)
+			->select('id, title')
+			->from('#__usergroups')
+			->where('id = ' . $groupId);
+
+		$db->setQuery($query);
+
+		try
+		{
+			$group = $db->loadObject();
+		}
+		catch (RuntimeException $e)
+		{
+			$this->setError($e->getMessage());
+
+			return false;
+		}
+
+		return $group;
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -155,7 +188,7 @@ class UsersModelDebuggroup extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string  $id  A prefix for the store id.
+	 * @param   string $id A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 */
@@ -172,39 +205,6 @@ class UsersModelDebuggroup extends JModelList
 	}
 
 	/**
-	 * Get the group being debugged.
-	 *
-	 * @return  JObject
-	 *
-	 * @since   1.6
-	 */
-	public function getGroup()
-	{
-		$groupId = (int) $this->getState('group_id');
-
-		$db = $this->getDbo();
-		$query = $db->getQuery(true)
-			->select('id, title')
-			->from('#__usergroups')
-			->where('id = ' . $groupId);
-
-		$db->setQuery($query);
-
-		try
-		{
-			$group = $db->loadObject();
-		}
-		catch (RuntimeException $e)
-		{
-			$this->setError($e->getMessage());
-
-			return false;
-		}
-
-		return $group;
-	}
-
-	/**
 	 * Build an SQL query to load the list data.
 	 *
 	 * @return  JDatabaseQuery
@@ -214,7 +214,7 @@ class UsersModelDebuggroup extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the required fields from the table.
@@ -233,7 +233,7 @@ class UsersModelDebuggroup extends JModelList
 			$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($this->getState('filter.search')), true) . '%'));
 
 			// Compile the different search clauses.
-			$searches = array();
+			$searches   = array();
 			$searches[] = 'a.name LIKE ' . $search;
 			$searches[] = 'a.title LIKE ' . $search;
 
@@ -243,7 +243,7 @@ class UsersModelDebuggroup extends JModelList
 
 		// Filter on the start and end levels.
 		$levelStart = (int) $this->getState('filter.level_start');
-		$levelEnd = (int) $this->getState('filter.level_end');
+		$levelEnd   = (int) $this->getState('filter.level_end');
 
 		if ($levelEnd > 0 && $levelEnd < $levelStart)
 		{

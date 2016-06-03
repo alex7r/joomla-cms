@@ -21,8 +21,8 @@ class JStringWrapperNormalise
 	/**
 	 * Helper wrapper method for fromCamelCase
 	 *
-	 * @param   string   $input    The string input (ASCII only).
-	 * @param   boolean  $grouped  Optionally allows splitting on groups of uppercase characters.
+	 * @param   string  $input   The string input (ASCII only).
+	 * @param   boolean $grouped Optionally allows splitting on groups of uppercase characters.
 	 *
 	 * @return mixed  The space separated string or an array of substrings if grouped is true.
 	 *
@@ -37,7 +37,7 @@ class JStringWrapperNormalise
 	/**
 	 * Helper wrapper method for toCamelCase
 	 *
-	 * @param   string  $input  The string input (ASCII only).
+	 * @param   string $input The string input (ASCII only).
 	 *
 	 * @return string  The camel case string.
 	 *
@@ -52,7 +52,7 @@ class JStringWrapperNormalise
 	/**
 	 * Helper wrapper method for toDashSeparated
 	 *
-	 * @param   string  $input  The string input (ASCII only).
+	 * @param   string $input The string input (ASCII only).
 	 *
 	 * @return string  The dash separated string.
 	 *
@@ -67,7 +67,7 @@ class JStringWrapperNormalise
 	/**
 	 * Helper wrapper method for toSpaceSeparated
 	 *
-	 * @param   string  $input  The string input (ASCII only).
+	 * @param   string $input The string input (ASCII only).
 	 *
 	 * @return string  The space separated string.
 	 *
@@ -82,7 +82,7 @@ class JStringWrapperNormalise
 	/**
 	 * Helper wrapper method for toUnderscoreSeparated
 	 *
-	 * @param   string  $input  The string input (ASCII only).
+	 * @param   string $input The string input (ASCII only).
 	 *
 	 * @return string  The underscore separated string.
 	 *
@@ -97,7 +97,7 @@ class JStringWrapperNormalise
 	/**
 	 * Helper wrapper method for toVariable
 	 *
-	 * @param   string  $input  The string input (ASCII only).
+	 * @param   string $input The string input (ASCII only).
 	 *
 	 * @return string  The variable string.
 	 *
@@ -112,7 +112,7 @@ class JStringWrapperNormalise
 	/**
 	 * Helper wrapper method for toKey
 	 *
-	 * @param   string  $input  The string input (ASCII only).
+	 * @param   string $input The string input (ASCII only).
 	 *
 	 * @return string  The key string.
 	 *

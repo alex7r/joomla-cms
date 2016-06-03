@@ -19,7 +19,7 @@ class JSessionStorageWincache extends JSessionStorage
 	/**
 	 * Constructor
 	 *
-	 * @param   array  $options  Optional parameters.
+	 * @param   array $options Optional parameters.
 	 *
 	 * @since   11.1
 	 * @throws  RuntimeException
@@ -35,18 +35,6 @@ class JSessionStorageWincache extends JSessionStorage
 	}
 
 	/**
-	 * Register the functions of this class with PHP's session handler
-	 *
-	 * @return  void
-	 *
-	 * @since   12.2
-	 */
-	public function register()
-	{
-		ini_set('session.save_handler', 'wincache');
-	}
-
-	/**
 	 * Test to see if the SessionHandler is available.
 	 *
 	 * @return boolean  True on success, false otherwise.
@@ -56,5 +44,17 @@ class JSessionStorageWincache extends JSessionStorage
 	public static function isSupported()
 	{
 		return (extension_loaded('wincache') && function_exists('wincache_ucache_get') && !strcmp(ini_get('wincache.ucenabled'), "1"));
+	}
+
+	/**
+	 * Register the functions of this class with PHP's session handler
+	 *
+	 * @return  void
+	 *
+	 * @since   12.2
+	 */
+	public function register()
+	{
+		ini_set('session.save_handler', 'wincache');
 	}
 }

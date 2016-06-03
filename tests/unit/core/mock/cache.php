@@ -25,8 +25,8 @@ class TestMockCache
 	/**
 	 * Creates and instance of the mock JApplication object.
 	 *
-	 * @param   TestCase  $test  A test object.
-	 * @param   array     $data  Data to prime the cache with.
+	 * @param   TestCase $test A test object.
+	 * @param   array    $data Data to prime the cache with.
 	 *
 	 * @return  object
 	 *
@@ -57,7 +57,7 @@ class TestMockCache
 		$test->assignMockCallbacks(
 			$mockObject,
 			array(
-				'get' => array(get_called_class(), 'mockGet'),
+				'get'   => array(get_called_class(), 'mockGet'),
 				'store' => array(get_called_class(), 'mockStore'),
 			)
 		);
@@ -68,7 +68,7 @@ class TestMockCache
 	/**
 	 * Callback for the cache get method.
 	 *
-	 * @param   string  $id  The name of the cache key to retrieve.
+	 * @param   string $id The name of the cache key to retrieve.
 	 *
 	 * @return  mixed  The value of the key or null if it does not exist.
 	 *
@@ -82,8 +82,8 @@ class TestMockCache
 	/**
 	 * Callback for the cache get method.
 	 *
-	 * @param   string  $value  The value to store.
-	 * @param   string  $id     The name of the cache key.
+	 * @param   string $value The value to store.
+	 * @param   string $id    The name of the cache key.
 	 *
 	 * @return  mixed  The value of the key or null if it does not exist.
 	 *

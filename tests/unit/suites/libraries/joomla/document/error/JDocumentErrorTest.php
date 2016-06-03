@@ -18,32 +18,6 @@ class JDocumentErrorTest extends TestCase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockWeb();
-
-		$this->object = new JDocumentError;
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
 	 * @testdox  Test that setError returns false with a non-Exception object
 	 */
 	public function testEnsureSetErrorReturnsFalseWithNonException()
@@ -81,5 +55,31 @@ class JDocumentErrorTest extends TestCase
 	public function testEnsureRenderBacktraceReturnsNullIfNoErrorObjectIsSet()
 	{
 		$this->assertNull($this->object->renderBacktrace());
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockWeb();
+
+		$this->object = new JDocumentError;
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 }

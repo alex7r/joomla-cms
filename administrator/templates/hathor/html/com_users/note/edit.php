@@ -23,7 +23,8 @@ jQuery(document).ready(function() {
 	}
 });');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_users&view=note&id=' . (int) $this->item->id);?>" method="post" name="adminForm" id="note-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_users&view=note&id=' . (int) $this->item->id); ?>"
+      method="post" name="adminForm" id="note-form" class="form-validate">
 	<div class="col main-section">
 		<fieldset class="adminform">
 			<legend><?php echo empty($this->item->id) ? JText::_('COM_USERS_NEW_NOTE') : JText::sprintf('COM_USERS_EDIT_NOTE', $this->item->id); ?></legend>
@@ -61,7 +62,7 @@ jQuery(document).ready(function() {
 				<?php echo $this->form->getInput('body'); ?>
 			</div>
 
-			<input type="hidden" name="task" value="" />
+			<input type="hidden" name="task" value=""/>
 			<?php echo JHtml::_('form.token'); ?>
 		</fieldset>
 </form>

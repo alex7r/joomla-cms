@@ -31,18 +31,18 @@ abstract class FOFRenderAbstract
 	public function getInformation()
 	{
 		return (object) array(
-				'priority'	 => $this->priority,
-				'enabled'	 => $this->enabled,
+			'priority' => $this->priority,
+			'enabled'  => $this->enabled,
 		);
 	}
 
 	/**
 	 * Echoes any HTML to show before the view template
 	 *
-	 * @param   string    $view    The current view
-	 * @param   string    $task    The current task
-	 * @param   FOFInput  $input   The input array (request parameters)
-	 * @param   array     $config  The view configuration array
+	 * @param   string   $view   The current view
+	 * @param   string   $task   The current task
+	 * @param   FOFInput $input  The input array (request parameters)
+	 * @param   array    $config The view configuration array
 	 *
 	 * @return  void
 	 */
@@ -51,10 +51,10 @@ abstract class FOFRenderAbstract
 	/**
 	 * Echoes any HTML to show after the view template
 	 *
-	 * @param   string    $view    The current view
-	 * @param   string    $task    The current task
-	 * @param   FOFInput  $input   The input array (request parameters)
-	 * @param   array     $config  The view configuration array
+	 * @param   string   $view   The current view
+	 * @param   string   $task   The current task
+	 * @param   FOFInput $input  The input array (request parameters)
+	 * @param   array    $config The view configuration array
 	 *
 	 * @return  void
 	 */
@@ -63,11 +63,11 @@ abstract class FOFRenderAbstract
 	/**
 	 * Renders a FOFForm and returns the corresponding HTML
 	 *
-	 * @param   FOFForm   &$form     The form to render
-	 * @param   FOFModel  $model     The model providing our data
-	 * @param   FOFInput  $input     The input object
-	 * @param   string    $formType  The form type: edit, browse or read
-	 * @param   boolean   $raw       If true, the raw form fields rendering (without the surrounding form tag) is returned.
+	 * @param   FOFForm  &$form    The form to render
+	 * @param   FOFModel $model    The model providing our data
+	 * @param   FOFInput $input    The input object
+	 * @param   string   $formType The form type: edit, browse or read
+	 * @param   boolean  $raw      If true, the raw form fields rendering (without the surrounding form tag) is returned.
 	 *
 	 * @return  string    The HTML rendering of the form
 	 */
@@ -114,42 +114,87 @@ abstract class FOFRenderAbstract
 	}
 
 	/**
+	 * Renders a FOFForm for a Browse view and returns the corresponding HTML
+	 *
+	 * @param   FOFForm  &$form The form to render
+	 * @param   FOFModel $model The model providing our data
+	 * @param   FOFInput $input The input object
+	 *
+	 * @return  string    The HTML rendering of the form
+	 */
+	abstract protected function renderFormBrowse(FOFForm &$form, FOFModel $model, FOFInput $input);
+
+	/**
+	 * Renders a raw FOFForm and returns the corresponding HTML
+	 *
+	 * @param   FOFForm  &$form    The form to render
+	 * @param   FOFModel $model    The model providing our data
+	 * @param   FOFInput $input    The input object
+	 * @param   string   $formType The form type e.g. 'edit' or 'read'
+	 *
+	 * @return  string    The HTML rendering of the form
+	 */
+	abstract protected function renderFormRaw(FOFForm &$form, FOFModel $model, FOFInput $input, $formType);
+
+	/**
+	 * Renders a FOFForm for a Read view and returns the corresponding HTML
+	 *
+	 * @param   FOFForm  &$form The form to render
+	 * @param   FOFModel $model The model providing our data
+	 * @param   FOFInput $input The input object
+	 *
+	 * @return  string    The HTML rendering of the form
+	 */
+	abstract protected function renderFormRead(FOFForm &$form, FOFModel $model, FOFInput $input);
+
+	/**
+	 * Renders a FOFForm for an Edit view and returns the corresponding HTML
+	 *
+	 * @param   FOFForm  &$form The form to render
+	 * @param   FOFModel $model The model providing our data
+	 * @param   FOFInput $input The input object
+	 *
+	 * @return  string    The HTML rendering of the form
+	 */
+	abstract protected function renderFormEdit(FOFForm &$form, FOFModel $model, FOFInput $input);
+
+	/**
 	 * Renders the submenu (link bar) for a category view when it is used in a
 	 * extension
 	 *
 	 * Note: this function has to be called from the addSubmenu function in
-	 * 		 the ExtensionNameHelper class located in
-	 * 		 administrator/components/com_ExtensionName/helpers/Extensionname.php
+	 *         the ExtensionNameHelper class located in
+	 *         administrator/components/com_ExtensionName/helpers/Extensionname.php
 	 *
 	 * Example Code:
 	 *
-	 *	class ExtensionNameHelper
-	 *	{
-	 * 		public static function addSubmenu($vName)
-	 *		{
-	 *			// Load FOF
-	 *			include_once JPATH_LIBRARIES . '/fof/include.php';
+	 *    class ExtensionNameHelper
+	 *    {
+	 *        public static function addSubmenu($vName)
+	 *        {
+	 *            // Load FOF
+	 *            include_once JPATH_LIBRARIES . '/fof/include.php';
 	 *
-	 *			if (!defined('FOF_INCLUDED'))
-	 *			{
-	 *				JError::raiseError('500', 'FOF is not installed');
-	 *			}
+	 *            if (!defined('FOF_INCLUDED'))
+	 *            {
+	 *                JError::raiseError('500', 'FOF is not installed');
+	 *            }
 	 *
-	 *			if (version_compare(JVERSION, '3.0', 'ge'))
-	 *			{
-	 *				$strapper = new FOFRenderJoomla3;
-	 *			}
-	 *			else
-	 *			{
-	 *				$strapper = new FOFRenderJoomla;
-	 *			}
+	 *            if (version_compare(JVERSION, '3.0', 'ge'))
+	 *            {
+	 *                $strapper = new FOFRenderJoomla3;
+	 *            }
+	 *            else
+	 *            {
+	 *                $strapper = new FOFRenderJoomla;
+	 *            }
 	 *
-	 *			$strapper->renderCategoryLinkbar('com_babioonevent');
-	 *		}
-	 *	}
+	 *            $strapper->renderCategoryLinkbar('com_babioonevent');
+	 *        }
+	 *    }
 	 *
-	 * @param   string  $extension  The name of the extension
-	 * @param   array   $config     Extra configuration variables for the toolbar
+	 * @param   string $extension The name of the extension
+	 * @param   array  $config    Extra configuration variables for the toolbar
 	 *
 	 * @return  void
 	 */
@@ -174,61 +219,16 @@ abstract class FOFRenderAbstract
 	}
 
 	/**
-	 * Renders a FOFForm for a Browse view and returns the corresponding HTML
-	 *
-	 * @param   FOFForm   &$form  The form to render
-	 * @param   FOFModel  $model  The model providing our data
-	 * @param   FOFInput  $input  The input object
-	 *
-	 * @return  string    The HTML rendering of the form
-	 */
-	abstract protected function renderFormBrowse(FOFForm &$form, FOFModel $model, FOFInput $input);
-
-	/**
-	 * Renders a FOFForm for a Read view and returns the corresponding HTML
-	 *
-	 * @param   FOFForm   &$form  The form to render
-	 * @param   FOFModel  $model  The model providing our data
-	 * @param   FOFInput  $input  The input object
-	 *
-	 * @return  string    The HTML rendering of the form
-	 */
-	abstract protected function renderFormRead(FOFForm &$form, FOFModel $model, FOFInput $input);
-
-	/**
-	 * Renders a FOFForm for an Edit view and returns the corresponding HTML
-	 *
-	 * @param   FOFForm   &$form  The form to render
-	 * @param   FOFModel  $model  The model providing our data
-	 * @param   FOFInput  $input  The input object
-	 *
-	 * @return  string    The HTML rendering of the form
-	 */
-	abstract protected function renderFormEdit(FOFForm &$form, FOFModel $model, FOFInput $input);
-
-	/**
-	 * Renders a raw FOFForm and returns the corresponding HTML
-	 *
-	 * @param   FOFForm   &$form     The form to render
-	 * @param   FOFModel  $model     The model providing our data
-	 * @param   FOFInput  $input     The input object
-	 * @param   string    $formType  The form type e.g. 'edit' or 'read'
-	 *
-	 * @return  string    The HTML rendering of the form
-	 */
-	abstract protected function renderFormRaw(FOFForm &$form, FOFModel $model, FOFInput $input, $formType);
-
-	/**
 	 * Renders a raw fieldset of a FOFForm and returns the corresponding HTML
 	 *
 	 * @TODO: Convert to an abstract method or interface at FOF3
 	 *
-	 * @param   stdClass  &$fieldset   The fieldset to render
-	 * @param   FOFForm   &$form       The form to render
-	 * @param   FOFModel  $model       The model providing our data
-	 * @param   FOFInput  $input       The input object
-	 * @param   string    $formType    The form type e.g. 'edit' or 'read'
-	 * @param   boolean   $showHeader  Should I render the fieldset's header?
+	 * @param   stdClass &$fieldset  The fieldset to render
+	 * @param   FOFForm  &$form      The form to render
+	 * @param   FOFModel $model      The model providing our data
+	 * @param   FOFInput $input      The input object
+	 * @param   string   $formType   The form type e.g. 'edit' or 'read'
+	 * @param   boolean  $showHeader Should I render the fieldset's header?
 	 *
 	 * @return  string    The HTML rendering of the fieldset
 	 */
@@ -242,11 +242,11 @@ abstract class FOFRenderAbstract
 	 *
 	 * @TODO: Convert to an abstract method or interface at FOF3
 	 *
-	 * @param   object  	$field  	The field of the label to render
-	 * @param   FOFForm   	&$form      The form to render
-	 * @param 	string		$title		The title of the label
+	 * @param   object  $field The field of the label to render
+	 * @param   FOFForm &$form The form to render
+	 * @param    string $title The title of the label
 	 *
-	 * @return 	string		The rendered label
+	 * @return    string        The rendered label
 	 */
 	protected function renderFieldsetLabel($field, FOFForm &$form, $title)
 	{
@@ -256,7 +256,7 @@ abstract class FOFRenderAbstract
 	/**
 	 * Checks if the fieldset defines a tab pane
 	 *
-	 * @param   SimpleXMLElement  $fieldset
+	 * @param   SimpleXMLElement $fieldset
 	 *
 	 * @return  boolean
 	 */
@@ -267,7 +267,7 @@ abstract class FOFRenderAbstract
 			return false;
 		}
 
-		$class = $fieldset->class;
+		$class   = $fieldset->class;
 		$classes = explode(' ', $class);
 
 		if (!in_array('tab-pane', $classes))

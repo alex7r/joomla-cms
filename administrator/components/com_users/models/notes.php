@@ -19,7 +19,7 @@ class UsersModelNotes extends JModelList
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @since  2.5
 	 */
@@ -47,6 +47,28 @@ class UsersModelNotes extends JModelList
 	}
 
 	/**
+	 * Gets a user object if the user filter is set.
+	 *
+	 * @return  JUser  The JUser object
+	 *
+	 * @since   2.5
+	 */
+	public function getUser()
+	{
+		$user = new JUser;
+
+		// Filter by search in title
+		$search = (int) $this->getState('filter.user_id');
+
+		if ($search != 0)
+		{
+			$user->load((int) $search);
+		}
+
+		return $user;
+	}
+
+	/**
 	 * Build an SQL query to load the list data.
 	 *
 	 * @return  JDatabaseQuery  A JDatabaseQuery object to retrieve the data set.
@@ -55,7 +77,7 @@ class UsersModelNotes extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the required fields from the table.
@@ -149,7 +171,7 @@ class UsersModelNotes extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string  $id  A prefix for the store id.
+	 * @param   string $id A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -168,34 +190,12 @@ class UsersModelNotes extends JModelList
 	}
 
 	/**
-	 * Gets a user object if the user filter is set.
-	 *
-	 * @return  JUser  The JUser object
-	 *
-	 * @since   2.5
-	 */
-	public function getUser()
-	{
-		$user = new JUser;
-
-		// Filter by search in title
-		$search = (int) $this->getState('filter.user_id');
-
-		if ($search != 0)
-		{
-			$user->load((int) $search);
-		}
-
-		return $user;
-	}
-
-	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *

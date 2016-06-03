@@ -23,6 +23,135 @@ class JTableCorecontentTest extends TestCaseDatabase
 	protected $object;
 
 	/**
+	 * Tests JTableCorecontent::check with an empty dataset
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	public function testCheckFailsWithAnEmptyDataSet()
+	{
+		$this->assertFalse($this->object->check());
+	}
+
+	/**
+	 * Tests JTableCorecontent::check
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	public function testCheckSucceedsWithMinimumData()
+	{
+		$this->object->core_title = 'Test Title';
+		$this->assertTrue($this->object->check());
+	}
+
+	/**
+	 * Tests JTableCorecontent::check
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	public function testCheckCorrectlyCreatesTheItemAlias()
+	{
+		$this->object->core_title = 'Test Title';
+		$this->object->check();
+		$this->assertSame('test-title', $this->object->core_alias);
+	}
+
+	/**
+	 * Tests JTableCorecontent::check
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	public function testCheckCorrectlyValidatesInjectedData()
+	{
+		$this->object->core_title        = 'Test Title';
+		$this->object->core_body         = 'The intro text object.';
+		$this->object->core_publish_down = '2001-01-01 00:00:00';
+		$this->object->core_publish_up   = JFactory::getDate();
+
+		$this->assertTrue($this->object->check());
+		$this->assertEquals(
+			'2001-01-01 00:00:00',
+			$this->object->core_publish_up,
+			'The check function should swap the dates if a later date is injected into publish_down than that in publish_up'
+		);
+	}
+
+	/**
+	 * Tests JTableCorecontent::store
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	public function testStoreCorrectlyUpdatesAnExistingRecord()
+	{
+		// Handle updating an existing article
+		$this->object->load('3');
+		$originalAlias            = $this->object->core_alias;
+		$this->object->core_title = 'New Title';
+		$this->object->core_alias = 'article-categories-module';
+		$this->assertTrue($this->object->store());
+		$this->object->reset();
+		$this->object->load('3');
+		$this->assertEquals('New Title', $this->object->core_title);
+		$this->assertEquals($originalAlias, $this->object->core_alias);
+	}
+
+	/**
+	 * Tests JTableCorecontent::store
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	public function testStoreCorrectlyCreatesANewRecord()
+	{
+		$this->object->load('8');
+		$this->object->core_content_id      = null;
+		$this->object->core_title           = 'Beginners (Copy)';
+		$this->object->core_alias           = 'beginners-copy';
+		$this->object->core_created_time    = null;
+		$this->object->core_created_user_id = null;
+		$this->assertTrue($this->object->store());
+	}
+
+	/**
+	 * Tests JTableCorecontent::publish
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	public function testPublishWithMultipleKeys()
+	{
+		$pks = array('18', '31');
+		$this->assertTrue($this->object->publish($pks, '0'));
+		$this->object->load('18');
+		$this->assertEquals('0', $this->object->core_state);
+	}
+
+	/**
+	 * Tests JTableCorecontent::publish
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	public function testPublishWithSingleKey()
+	{
+		$this->assertTrue($this->object->publish(array('32'), '1'));
+		$this->object->load('32');
+		$this->assertEquals('1', $this->object->core_state);
+	}
+
+	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
@@ -73,134 +202,5 @@ class JTableCorecontentTest extends TestCaseDatabase
 		$dataSet->addTable('jos_ucm_content', JPATH_TEST_DATABASE . '/jos_ucm_content.csv');
 
 		return $dataSet;
-	}
-
-	/**
-	 * Tests JTableCorecontent::check with an empty dataset
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function testCheckFailsWithAnEmptyDataSet()
-	{
-		$this->assertFalse($this->object->check());
-	}
-
-	/**
-	 * Tests JTableCorecontent::check
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function testCheckSucceedsWithMinimumData()
-	{
-		$this->object->core_title = 'Test Title';
-		$this->assertTrue($this->object->check());
-	}
-
-	/**
-	 * Tests JTableCorecontent::check
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function testCheckCorrectlyCreatesTheItemAlias()
-	{
-		$this->object->core_title = 'Test Title';
-		$this->object->check();
-		$this->assertSame('test-title', $this->object->core_alias);
-	}
-
-	/**
-	 * Tests JTableCorecontent::check
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function testCheckCorrectlyValidatesInjectedData()
-	{
-		$this->object->core_title = 'Test Title';
-		$this->object->core_body = 'The intro text object.';
-		$this->object->core_publish_down = '2001-01-01 00:00:00';
-		$this->object->core_publish_up = JFactory::getDate();
-
-		$this->assertTrue($this->object->check());
-		$this->assertEquals(
-			'2001-01-01 00:00:00',
-			$this->object->core_publish_up,
-			'The check function should swap the dates if a later date is injected into publish_down than that in publish_up'
-		);
-	}
-
-	/**
-	 * Tests JTableCorecontent::store
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function testStoreCorrectlyUpdatesAnExistingRecord()
-	{
-		// Handle updating an existing article
-		$this->object->load('3');
-		$originalAlias            = $this->object->core_alias;
-		$this->object->core_title = 'New Title';
-		$this->object->core_alias = 'article-categories-module';
-		$this->assertTrue($this->object->store());
-		$this->object->reset();
-		$this->object->load('3');
-		$this->assertEquals('New Title', $this->object->core_title);
-		$this->assertEquals($originalAlias, $this->object->core_alias);
-	}
-
-	/**
-	 * Tests JTableCorecontent::store
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function testStoreCorrectlyCreatesANewRecord()
-	{
-		$this->object->load('8');
-		$this->object->core_content_id = null;
-		$this->object->core_title = 'Beginners (Copy)';
-		$this->object->core_alias = 'beginners-copy';
-		$this->object->core_created_time = null;
-		$this->object->core_created_user_id = null;
-		$this->assertTrue($this->object->store());
-	}
-
-	/**
-	 * Tests JTableCorecontent::publish
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function testPublishWithMultipleKeys()
-	{
-		$pks = array('18', '31');
-		$this->assertTrue($this->object->publish($pks, '0'));
-		$this->object->load('18');
-		$this->assertEquals('0', $this->object->core_state);
-	}
-
-	/**
-	 * Tests JTableCorecontent::publish
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function testPublishWithSingleKey()
-	{
-		$this->assertTrue($this->object->publish(array('32'), '1'));
-		$this->object->load('32');
-		$this->assertEquals('1', $this->object->core_state);
 	}
 }

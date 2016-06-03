@@ -19,19 +19,19 @@ class JOpenstreetmapChangesets extends JOpenstreetmapObject
 	/**
 	 * Method to create a changeset
 	 *
-	 * @param   array  $changesets  Array which contains changeset data
+	 * @param   array $changesets Array which contains changeset data
 	 *
 	 * @return  array  The XML response
 	 *
 	 * @since   13.1
 	 */
-	public function createChangeset($changesets=array())
+	public function createChangeset($changesets = array())
 	{
 		$token = $this->oauth->getToken();
 
 		// Set parameters.
 		$parameters = array(
-			'oauth_token' => $token['key'],
+			'oauth_token'        => $token['key'],
 			'oauth_token_secret' => $token['secret']
 		);
 
@@ -77,7 +77,7 @@ class JOpenstreetmapChangesets extends JOpenstreetmapObject
 	/**
 	 * Method to read a changeset
 	 *
-	 * @param   integer  $id  identifier of the changeset
+	 * @param   integer $id identifier of the changeset
 	 *
 	 * @return  array  The XML response about a changeset
 	 *
@@ -100,8 +100,8 @@ class JOpenstreetmapChangesets extends JOpenstreetmapObject
 	/**
 	 * Method to update a changeset
 	 *
-	 * @param   integer  $id    Identifier of the changeset
-	 * @param   array    $tags  Array of tags to update
+	 * @param   integer $id   Identifier of the changeset
+	 * @param   array   $tags Array of tags to update
 	 *
 	 * @return  array  The XML response of updated changeset
 	 *
@@ -136,8 +136,8 @@ class JOpenstreetmapChangesets extends JOpenstreetmapObject
 		$xml = '<?xml version="1.0" encoding="UTF-8"?>
 				<osm version="0.6" generator="JOpenstreetmap">
 				<changeset>'
-				. $tag_list .
-				'</changeset>
+			. $tag_list .
+			'</changeset>
 				</osm>';
 
 		$header['Content-Type'] = 'text/xml';
@@ -153,7 +153,7 @@ class JOpenstreetmapChangesets extends JOpenstreetmapObject
 	/**
 	 * Method to close a changeset
 	 *
-	 * @param   integer  $id  identifier of the changeset
+	 * @param   integer $id identifier of the changeset
 	 *
 	 * @return  void
 	 *
@@ -183,7 +183,7 @@ class JOpenstreetmapChangesets extends JOpenstreetmapObject
 	/**
 	 * Method to download a changeset
 	 *
-	 * @param   integer  $id  Identifier of the changeset
+	 * @param   integer $id Identifier of the changeset
 	 *
 	 * @return  array  The XML response of requested changeset
 	 *
@@ -206,8 +206,8 @@ class JOpenstreetmapChangesets extends JOpenstreetmapObject
 	/**
 	 * Method to expand the bounding box of a changeset
 	 *
-	 * @param   integer  $id     Identifier of the changeset
-	 * @param   array    $nodes  List of lat lon about nodes
+	 * @param   integer $id    Identifier of the changeset
+	 * @param   array   $nodes List of lat lon about nodes
 	 *
 	 * @return  array  The XML response of changed changeset
 	 *
@@ -242,8 +242,8 @@ class JOpenstreetmapChangesets extends JOpenstreetmapObject
 		$xml = '<?xml version="1.0" encoding="UTF-8"?>
 				<osm version="0.6" generator="JOpenstreetmap">
 				<changeset>'
-				. $node_list .
-				'</changeset>
+			. $node_list .
+			'</changeset>
 			</osm>';
 
 		$header['Content-Type'] = 'text/xml';
@@ -259,7 +259,7 @@ class JOpenstreetmapChangesets extends JOpenstreetmapObject
 	/**
 	 * Method to query on changesets
 	 *
-	 * @param   string  $param  Parameters for query
+	 * @param   string $param Parameters for query
 	 *
 	 * @return  array  The XML response
 	 *
@@ -282,8 +282,8 @@ class JOpenstreetmapChangesets extends JOpenstreetmapObject
 	/**
 	 * Method to upload a diff to a changeset
 	 *
-	 * @param   string   $xml  Diff data to upload
-	 * @param   integer  $id   Identifier of the changeset
+	 * @param   string  $xml Diff data to upload
+	 * @param   integer $id  Identifier of the changeset
 	 *
 	 * @return  array  The XML response of result
 	 *

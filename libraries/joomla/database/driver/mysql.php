@@ -29,7 +29,7 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $options  Array of database options with keys: host, user, password, database, select.
+	 * @param   array $options Array of database options with keys: host, user, password, database, select.
 	 *
 	 * @since   12.1
 	 */
@@ -44,11 +44,11 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 		}
 
 		// Get some basic values from the options.
-		$options['host'] = (isset($options['host'])) ? $options['host'] : 'localhost';
-		$options['user'] = (isset($options['user'])) ? $options['user'] : 'root';
+		$options['host']     = (isset($options['host'])) ? $options['host'] : 'localhost';
+		$options['user']     = (isset($options['user'])) ? $options['user'] : 'root';
 		$options['password'] = (isset($options['password'])) ? $options['password'] : '';
 		$options['database'] = (isset($options['database'])) ? $options['database'] : '';
-		$options['select'] = (isset($options['select'])) ? (bool) $options['select'] : true;
+		$options['select']   = (isset($options['select'])) ? (bool) $options['select'] : true;
 
 		// Finalize initialisation.
 		parent::__construct($options);
@@ -62,6 +62,53 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 	public function __destruct()
 	{
 		$this->disconnect();
+	}
+
+	/**
+	 * Disconnects the database.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	public function disconnect()
+	{
+		// Close the connection.
+		if (is_resource($this->connection))
+		{
+			foreach ($this->disconnectHandlers as $h)
+			{
+				call_user_func_array($h, array(&$this));
+			}
+
+			mysql_close($this->connection);
+		}
+
+		$this->connection = null;
+	}
+
+	/**
+	 * Method to escape a string for usage in an SQL statement.
+	 *
+	 * @param   string  $text  The string to be escaped.
+	 * @param   boolean $extra Optional parameter to provide extra escaping.
+	 *
+	 * @return  string  The escaped string.
+	 *
+	 * @since   12.1
+	 */
+	public function escape($text, $extra = false)
+	{
+		$this->connect();
+
+		$result = mysql_real_escape_string($text, $this->getConnection());
+
+		if ($extra)
+		{
+			$result = addcslashes($result, '%_');
+		}
+
+		return $result;
 	}
 
 	/**
@@ -114,53 +161,6 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 	}
 
 	/**
-	 * Disconnects the database.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	public function disconnect()
-	{
-		// Close the connection.
-		if (is_resource($this->connection))
-		{
-			foreach ($this->disconnectHandlers as $h)
-			{
-				call_user_func_array($h, array( &$this));
-			}
-
-			mysql_close($this->connection);
-		}
-
-		$this->connection = null;
-	}
-
-	/**
-	 * Method to escape a string for usage in an SQL statement.
-	 *
-	 * @param   string   $text   The string to be escaped.
-	 * @param   boolean  $extra  Optional parameter to provide extra escaping.
-	 *
-	 * @return  string  The escaped string.
-	 *
-	 * @since   12.1
-	 */
-	public function escape($text, $extra = false)
-	{
-		$this->connect();
-
-		$result = mysql_real_escape_string($text, $this->getConnection());
-
-		if ($extra)
-		{
-			$result = addcslashes($result, '%_');
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Test to see if the MySQL connector is available.
 	 *
 	 * @return  boolean  True on success, false otherwise.
@@ -173,20 +173,138 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 	}
 
 	/**
-	 * Determines if the connection to the server is active.
+	 * Select a database for use.
 	 *
-	 * @return  boolean  True if connected to the database engine.
+	 * @param   string $database The name of the database to select for use.
+	 *
+	 * @return  boolean  True if the database was successfully selected.
+	 *
+	 * @since   12.1
+	 * @throws  RuntimeException
+	 */
+	public function select($database)
+	{
+		$this->connect();
+
+		if (!$database)
+		{
+			return false;
+		}
+
+		if (!mysql_select_db($database, $this->connection))
+		{
+			throw new JDatabaseExceptionConnecting('Could not connect to database');
+		}
+
+		return true;
+	}
+
+	/**
+	 * Does the database server claim to have support for UTF-8 Multibyte (utf8mb4) collation?
+	 *
+	 * libmysql supports utf8mb4 since 5.5.3 (same version as the MySQL server). mysqlnd supports utf8mb4 since 5.0.9.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   CMS 3.5.0
+	 */
+	private function serverClaimsUtf8mb4Support()
+	{
+		$client_version = mysql_get_client_info();
+		$server_version = $this->getVersion();
+
+		if (version_compare($server_version, '5.5.3', '<'))
+		{
+			return false;
+		}
+		else
+		{
+			if (strpos($client_version, 'mysqlnd') !== false)
+			{
+				$client_version = preg_replace('/^\D+([\d.]+).*/', '$1', $client_version);
+
+				return version_compare($client_version, '5.0.9', '>=');
+			}
+			else
+			{
+				return version_compare($client_version, '5.5.3', '>=');
+			}
+		}
+	}
+
+	/**
+	 * Get the version of the database connector.
+	 *
+	 * @return  string  The database connector version.
 	 *
 	 * @since   12.1
 	 */
-	public function connected()
+	public function getVersion()
 	{
-		if (is_resource($this->connection))
+		$this->connect();
+
+		return mysql_get_server_info($this->connection);
+	}
+
+	/**
+	 * Set the connection to use UTF-8 character encoding.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   12.1
+	 */
+	public function setUtf()
+	{
+		// If UTF is not supported return false immediately
+		if (!$this->utf)
 		{
-			return @mysql_ping($this->connection);
+			return false;
 		}
 
-		return false;
+		// Make sure we're connected to the server
+		$this->connect();
+
+		// Which charset should I use, plain utf8 or multibyte utf8mb4?
+		$charset = $this->utf8mb4 ? 'utf8mb4' : 'utf8';
+
+		$result = @mysql_set_charset($charset, $this->connection);
+
+		/**
+		 * If I could not set the utf8mb4 charset then the server doesn't support utf8mb4 despite claiming otherwise.
+		 * This happens on old MySQL server versions (less than 5.5.3) using the mysqlnd PHP driver. Since mysqlnd
+		 * masks the server version and reports only its own we can not be sure if the server actually does support
+		 * UTF-8 Multibyte (i.e. it's MySQL 5.5.3 or later). Since the utf8mb4 charset is undefined in this case we
+		 * catch the error and determine that utf8mb4 is not supported!
+		 */
+		if (!$result && $this->utf8mb4)
+		{
+			$this->utf8mb4 = false;
+			$result        = @mysql_set_charset('utf8', $this->connection);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Internal function to check if profiling is available
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.1.3
+	 */
+	private function hasProfiling()
+	{
+		try
+		{
+			$res = mysql_query("SHOW VARIABLES LIKE 'have_profiling'", $this->connection);
+			$row = mysql_fetch_assoc($res);
+
+			return isset($row);
+		}
+		catch (Exception $e)
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -208,7 +326,7 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 	 * This command is only valid for statements like SELECT or SHOW that return an actual result set.
 	 * To retrieve the number of rows affected by an INSERT, UPDATE, REPLACE or DELETE query, use getAffectedRows().
 	 *
-	 * @param   resource  $cursor  An optional database cursor resource to extract the row count from.
+	 * @param   resource $cursor An optional database cursor resource to extract the row count from.
 	 *
 	 * @return  integer   The number of returned rows.
 	 *
@@ -219,20 +337,6 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 		$this->connect();
 
 		return mysql_num_rows($cursor ? $cursor : $this->cursor);
-	}
-
-	/**
-	 * Get the version of the database connector.
-	 *
-	 * @return  string  The database connector version.
-	 *
-	 * @since   12.1
-	 */
-	public function getVersion()
-	{
-		$this->connect();
-
-		return mysql_get_server_info($this->connection);
 	}
 
 	/**
@@ -326,7 +430,7 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 					$this->connection = null;
 					$this->connect();
 				}
-				// If connect fails, ignore that exception and throw the normal exception.
+					// If connect fails, ignore that exception and throw the normal exception.
 				catch (RuntimeException $e)
 				{
 					// Get the error number and message.
@@ -356,184 +460,6 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 	}
 
 	/**
-	 * Select a database for use.
-	 *
-	 * @param   string  $database  The name of the database to select for use.
-	 *
-	 * @return  boolean  True if the database was successfully selected.
-	 *
-	 * @since   12.1
-	 * @throws  RuntimeException
-	 */
-	public function select($database)
-	{
-		$this->connect();
-
-		if (!$database)
-		{
-			return false;
-		}
-
-		if (!mysql_select_db($database, $this->connection))
-		{
-			throw new JDatabaseExceptionConnecting('Could not connect to database');
-		}
-
-		return true;
-	}
-
-	/**
-	 * Set the connection to use UTF-8 character encoding.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   12.1
-	 */
-	public function setUtf()
-	{
-		// If UTF is not supported return false immediately
-		if (!$this->utf)
-		{
-			return false;
-		}
-
-		// Make sure we're connected to the server
-		$this->connect();
-
-		// Which charset should I use, plain utf8 or multibyte utf8mb4?
-		$charset = $this->utf8mb4 ? 'utf8mb4' : 'utf8';
-
-		$result = @mysql_set_charset($charset, $this->connection);
-
-		/**
-		 * If I could not set the utf8mb4 charset then the server doesn't support utf8mb4 despite claiming otherwise.
-		 * This happens on old MySQL server versions (less than 5.5.3) using the mysqlnd PHP driver. Since mysqlnd
-		 * masks the server version and reports only its own we can not be sure if the server actually does support
-		 * UTF-8 Multibyte (i.e. it's MySQL 5.5.3 or later). Since the utf8mb4 charset is undefined in this case we
-		 * catch the error and determine that utf8mb4 is not supported!
-		 */
-		if (!$result && $this->utf8mb4)
-		{
-			$this->utf8mb4 = false;
-			$result = @mysql_set_charset('utf8', $this->connection);
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Method to fetch a row from the result set cursor as an array.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
-	 *
-	 * @since   12.1
-	 */
-	protected function fetchArray($cursor = null)
-	{
-		return mysql_fetch_row($cursor ? $cursor : $this->cursor);
-	}
-
-	/**
-	 * Method to fetch a row from the result set cursor as an associative array.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
-	 *
-	 * @since   12.1
-	 */
-	protected function fetchAssoc($cursor = null)
-	{
-		return mysql_fetch_assoc($cursor ? $cursor : $this->cursor);
-	}
-
-	/**
-	 * Method to fetch a row from the result set cursor as an object.
-	 *
-	 * @param   mixed   $cursor  The optional result set cursor from which to fetch the row.
-	 * @param   string  $class   The class name to use for the returned row object.
-	 *
-	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
-	 *
-	 * @since   12.1
-	 */
-	protected function fetchObject($cursor = null, $class = 'stdClass')
-	{
-		return mysql_fetch_object($cursor ? $cursor : $this->cursor, $class);
-	}
-
-	/**
-	 * Method to free up the memory used for the result set.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	protected function freeResult($cursor = null)
-	{
-		mysql_free_result($cursor ? $cursor : $this->cursor);
-	}
-
-	/**
-	 * Internal function to check if profiling is available
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.1.3
-	 */
-	private function hasProfiling()
-	{
-		try
-		{
-			$res = mysql_query("SHOW VARIABLES LIKE 'have_profiling'", $this->connection);
-			$row = mysql_fetch_assoc($res);
-
-			return isset($row);
-		}
-		catch (Exception $e)
-		{
-			return false;
-		}
-	}
-
-	/**
-	 * Does the database server claim to have support for UTF-8 Multibyte (utf8mb4) collation?
-	 *
-	 * libmysql supports utf8mb4 since 5.5.3 (same version as the MySQL server). mysqlnd supports utf8mb4 since 5.0.9.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   CMS 3.5.0
-	 */
-	private function serverClaimsUtf8mb4Support()
-	{
-		$client_version = mysql_get_client_info();
-		$server_version = $this->getVersion();
-
-		if (version_compare($server_version, '5.5.3', '<'))
-		{
-			return false;
-		}
-		else
-		{
-			if (strpos($client_version, 'mysqlnd') !== false)
-			{
-				$client_version = preg_replace('/^\D+([\d.]+).*/', '$1', $client_version);
-
-				return version_compare($client_version, '5.0.9', '>=');
-			}
-			else
-			{
-				return version_compare($client_version, '5.5.3', '>=');
-			}
-		}
-	}
-
-	/**
 	 * Return the actual SQL Error number
 	 *
 	 * @return  integer  The SQL Error number
@@ -548,7 +474,7 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 	/**
 	 * Return the actual SQL Error message
 	 *
-	 * @param   string  $query  The SQL Query that fails
+	 * @param   string $query The SQL Query that fails
 	 *
 	 * @return  string  The SQL Error message
 	 *
@@ -566,5 +492,79 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 		}
 
 		return $errorMessage . ' SQL=' . $query;
+	}
+
+	/**
+	 * Determines if the connection to the server is active.
+	 *
+	 * @return  boolean  True if connected to the database engine.
+	 *
+	 * @since   12.1
+	 */
+	public function connected()
+	{
+		if (is_resource($this->connection))
+		{
+			return @mysql_ping($this->connection);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Method to fetch a row from the result set cursor as an array.
+	 *
+	 * @param   mixed $cursor The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
+	 *
+	 * @since   12.1
+	 */
+	protected function fetchArray($cursor = null)
+	{
+		return mysql_fetch_row($cursor ? $cursor : $this->cursor);
+	}
+
+	/**
+	 * Method to fetch a row from the result set cursor as an associative array.
+	 *
+	 * @param   mixed $cursor The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
+	 *
+	 * @since   12.1
+	 */
+	protected function fetchAssoc($cursor = null)
+	{
+		return mysql_fetch_assoc($cursor ? $cursor : $this->cursor);
+	}
+
+	/**
+	 * Method to fetch a row from the result set cursor as an object.
+	 *
+	 * @param   mixed  $cursor The optional result set cursor from which to fetch the row.
+	 * @param   string $class  The class name to use for the returned row object.
+	 *
+	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
+	 *
+	 * @since   12.1
+	 */
+	protected function fetchObject($cursor = null, $class = 'stdClass')
+	{
+		return mysql_fetch_object($cursor ? $cursor : $this->cursor, $class);
+	}
+
+	/**
+	 * Method to free up the memory used for the result set.
+	 *
+	 * @param   mixed $cursor The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	protected function freeResult($cursor = null)
+	{
+		mysql_free_result($cursor ? $cursor : $this->cursor);
 	}
 }

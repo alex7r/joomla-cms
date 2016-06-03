@@ -47,7 +47,7 @@ class UsersControllerUser extends UsersController
 			if (JLanguageMultilang::isEnabled())
 			{
 
-				$db = JFactory::getDbo();
+				$db    = JFactory::getDbo();
 				$query = $db->getQuery(true)
 					->select('language')
 					->from($db->quoteName('#__menu'))
@@ -100,12 +100,12 @@ class UsersControllerUser extends UsersController
 		$app->setUserState('users.login.form.return', $data['return']);
 
 		// Get the log in options.
-		$options = array();
+		$options             = array();
 		$options['remember'] = $this->input->getBool('remember', false);
 		$options['return']   = $data['return'];
 
 		// Get the log in credentials.
-		$credentials = array();
+		$credentials              = array();
 		$credentials['username']  = $data['username'];
 		$credentials['password']  = $data['password'];
 		$credentials['secretkey'] = $data['secretkey'];
@@ -115,9 +115,9 @@ class UsersControllerUser extends UsersController
 		{
 			// Login failed !
 			// Clear user name, password and secret key before sending the login form back to the user.
-			$data['remember'] = (int) $options['remember'];
-			$data['username'] = '';
-			$data['password'] = '';
+			$data['remember']  = (int) $options['remember'];
+			$data['username']  = '';
+			$data['password']  = '';
 			$data['secretkey'] = '';
 			$app->setUserState('users.login.form.data', $data);
 			$app->redirect(JRoute::_('index.php?option=com_users&view=login', false));
@@ -167,7 +167,7 @@ class UsersControllerUser extends UsersController
 			if (JLanguageMultilang::isEnabled())
 			{
 
-				$db = JFactory::getDbo();
+				$db    = JFactory::getDbo();
 				$query = $db->getQuery(true)
 					->select('language')
 					->from($db->quoteName('#__menu'))
@@ -232,7 +232,7 @@ class UsersControllerUser extends UsersController
 		{
 			if ($itemid)
 			{
-				$db = JFactory::getDbo();
+				$db    = JFactory::getDbo();
 				$query = $db->getQuery(true)
 					->select('language')
 					->from($db->quoteName('#__menu'))
@@ -301,7 +301,7 @@ class UsersControllerUser extends UsersController
 		$data = $this->input->post->get('user', array(), 'array');
 
 		// Get the model and validate the data.
-		$model  = $this->getModel('Registration', 'UsersModel');
+		$model = $this->getModel('Registration', 'UsersModel');
 
 		$form = $model->getForm();
 
@@ -421,7 +421,7 @@ class UsersControllerUser extends UsersController
 		// Get the route to the next page.
 		$itemid = UsersHelperRoute::getLoginRoute();
 		$itemid = $itemid !== null ? '&Itemid=' . $itemid : '';
-		$route	= 'index.php?option=com_users&view=login' . $itemid;
+		$route  = 'index.php?option=com_users&view=login' . $itemid;
 
 		// Proceed to the login form.
 		$message = JText::_('COM_USERS_REMIND_REQUEST_SUCCESS');

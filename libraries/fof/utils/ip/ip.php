@@ -17,66 +17,10 @@ abstract class FOFUtilsIp
 	protected static $ip = null;
 
 	/**
-	 * Get the current visitor's IP address
-	 *
-	 * @return string
-	 */
-	public static function getIp()
-	{
-		if (is_null(static::$ip))
-		{
-			$ip = self::detectAndCleanIP();
-
-			if (!empty($ip) && ($ip != '0.0.0.0') && function_exists('inet_pton') && function_exists('inet_ntop'))
-			{
-				$myIP = @inet_pton($ip);
-
-				if ($myIP !== false)
-				{
-					$ip = inet_ntop($myIP);
-				}
-			}
-
-			static::setIp($ip);
-		}
-
-		return static::$ip;
-	}
-
-	/**
-	 * Set the IP address of the current visitor
-	 *
-	 * @param   string  $ip
-	 *
-	 * @return  void
-	 */
-	public static function setIp($ip)
-	{
-		static::$ip = $ip;
-	}
-
-	/**
-	 * Is it an IPv6 IP address?
-	 *
-	 * @param   string   $ip  An IPv4 or IPv6 address
-	 *
-	 * @return  boolean  True if it's IPv6
-	 */
-	public static function isIPv6($ip)
-	{
-		if (strstr($ip, ':'))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Checks if an IP is contained in a list of IPs or IP expressions
 	 *
-	 * @param   string        $ip       The IPv4/IPv6 address to check
-	 * @param   array|string  $ipTable  An IP expression (or a comma-separated or array list of IP expressions) to check against
+	 * @param   string       $ip      The IPv4/IPv6 address to check
+	 * @param   array|string $ipTable An IP expression (or a comma-separated or array list of IP expressions) to check against
 	 *
 	 * @return  null|boolean  True if it's in the list
 	 */
@@ -94,7 +38,10 @@ abstract class FOFUtilsIp
 			if (strpos($ipTable, ',') !== false)
 			{
 				$ipTable = explode(',', $ipTable);
-				$ipTable = array_map(function($x) { return trim($x); }, $ipTable);
+				$ipTable = array_map(function ($x)
+				{
+					return trim($x);
+				}, $ipTable);
 			}
 			else
 			{
@@ -153,7 +100,7 @@ abstract class FOFUtilsIp
 				}
 
 				$from = @inet_pton(trim($from));
-				$to = @inet_pton(trim($to));
+				$to   = @inet_pton(trim($to));
 
 				// Sanity check
 				if (($from === false) || ($to === false))
@@ -202,8 +149,8 @@ abstract class FOFUtilsIp
 				elseif (!$ipv6 && strstr($maskbits, '.'))
 				{
 					// Convert IPv4 netmask to CIDR
-					$long = ip2long($maskbits);
-					$base = ip2long('255.255.255.255');
+					$long     = ip2long($maskbits);
+					$base     = ip2long('255.255.255.255');
 					$maskbits = 32 - log(($long ^ $base) + 1, 2);
 				}
 
@@ -217,13 +164,13 @@ abstract class FOFUtilsIp
 				}
 
 				// Get the network's binary representation
-				$binarynet = self::inet_to_bits($net);
+				$binarynet            = self::inet_to_bits($net);
 				$expectedNumberOfBits = $ipv6 ? 128 : 24;
-				$binarynet = str_pad($binarynet, $expectedNumberOfBits, '0', STR_PAD_RIGHT);
+				$binarynet            = str_pad($binarynet, $expectedNumberOfBits, '0', STR_PAD_RIGHT);
 
 				// Check the corresponding bits of the IP and the network
 				$ip_net_bits = substr($binaryip, 0, $maskbits);
-				$net_bits = substr($binarynet, 0, $maskbits);
+				$net_bits    = substr($binarynet, 0, $maskbits);
 
 				if ($ip_net_bits == $net_bits)
 				{
@@ -293,8 +240,8 @@ abstract class FOFUtilsIp
 							$binaryip = self::inet_to_bits($myIP);
 
 							// Convert netmask to CIDR
-							$long = ip2long($netmask);
-							$base = ip2long('255.255.255.255');
+							$long     = ip2long($netmask);
+							$base     = ip2long('255.255.255.255');
 							$maskbits = 32 - log(($long ^ $base) + 1, 2);
 
 							$net = @inet_pton($ipExpression);
@@ -306,13 +253,13 @@ abstract class FOFUtilsIp
 							}
 
 							// Get the network's binary representation
-							$binarynet = self::inet_to_bits($net);
+							$binarynet            = self::inet_to_bits($net);
 							$expectedNumberOfBits = $ipv6 ? 128 : 24;
-							$binarynet = str_pad($binarynet, $expectedNumberOfBits, '0', STR_PAD_RIGHT);
+							$binarynet            = str_pad($binarynet, $expectedNumberOfBits, '0', STR_PAD_RIGHT);
 
 							// Check the corresponding bits of the IP and the network
 							$ip_net_bits = substr($binaryip, 0, $maskbits);
-							$net_bits = substr($binarynet, 0, $maskbits);
+							$net_bits    = substr($binarynet, 0, $maskbits);
 
 							if ($ip_net_bits == $net_bits)
 							{
@@ -333,6 +280,74 @@ abstract class FOFUtilsIp
 		}
 
 		return false;
+	}
+
+	/**
+	 * Is it an IPv6 IP address?
+	 *
+	 * @param   string $ip An IPv4 or IPv6 address
+	 *
+	 * @return  boolean  True if it's IPv6
+	 */
+	public static function isIPv6($ip)
+	{
+		if (strstr($ip, ':'))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Converts inet_pton output to bits string
+	 *
+	 * @param   string $inet The in_addr representation of an IPv4 or IPv6 address
+	 *
+	 * @return  string
+	 */
+	protected static function inet_to_bits($inet)
+	{
+		if (strlen($inet) == 4)
+		{
+			$unpacked = unpack('A4', $inet);
+		}
+		else
+		{
+			$unpacked = unpack('A16', $inet);
+		}
+		$unpacked = str_split($unpacked[1]);
+		$binaryip = '';
+
+		foreach ($unpacked as $char)
+		{
+			$binaryip .= str_pad(decbin(ord($char)), 8, '0', STR_PAD_LEFT);
+		}
+
+		return $binaryip;
+	}
+
+	/**
+	 * Checks if an IPv6 address $ip is part of the IPv6 CIDR block $cidrnet
+	 *
+	 * @param   string $ip      The IPv6 address to check, e.g. 21DA:00D3:0000:2F3B:02AC:00FF:FE28:9C5A
+	 * @param   string $cidrnet The IPv6 CIDR block, e.g. 21DA:00D3:0000:2F3B::/64
+	 *
+	 * @return  bool
+	 */
+	protected static function checkIPv6CIDR($ip, $cidrnet)
+	{
+		$ip       = inet_pton($ip);
+		$binaryip = self::inet_to_bits($ip);
+
+		list($net, $maskbits) = explode('/', $cidrnet);
+		$net       = inet_pton($net);
+		$binarynet = self::inet_to_bits($net);
+
+		$ip_net_bits = substr($binaryip, 0, $maskbits);
+		$net_bits    = substr($binarynet, 0, $maskbits);
+
+		return $ip_net_bits === $net_bits;
 	}
 
 	/**
@@ -363,6 +378,45 @@ abstract class FOFUtilsIp
 	}
 
 	/**
+	 * Get the current visitor's IP address
+	 *
+	 * @return string
+	 */
+	public static function getIp()
+	{
+		if (is_null(static::$ip))
+		{
+			$ip = self::detectAndCleanIP();
+
+			if (!empty($ip) && ($ip != '0.0.0.0') && function_exists('inet_pton') && function_exists('inet_ntop'))
+			{
+				$myIP = @inet_pton($ip);
+
+				if ($myIP !== false)
+				{
+					$ip = inet_ntop($myIP);
+				}
+			}
+
+			static::setIp($ip);
+		}
+
+		return static::$ip;
+	}
+
+	/**
+	 * Set the IP address of the current visitor
+	 *
+	 * @param   string $ip
+	 *
+	 * @return  void
+	 */
+	public static function setIp($ip)
+	{
+		static::$ip = $ip;
+	}
+
+	/**
 	 * Gets the visitor's IP address. Automatically handles reverse proxies
 	 * reporting the IPs of intermediate devices, like load balancers. Examples:
 	 * https://www.akeebabackup.com/support/admin-tools/13743-double-ip-adresses-in-security-exception-log-warnings.html
@@ -377,10 +431,10 @@ abstract class FOFUtilsIp
 
 		if ((strstr($ip, ',') !== false) || (strstr($ip, ' ') !== false))
 		{
-			$ip = str_replace(' ', ',', $ip);
-			$ip = str_replace(',,', ',', $ip);
+			$ip  = str_replace(' ', ',', $ip);
+			$ip  = str_replace(',,', ',', $ip);
 			$ips = explode(',', $ip);
-			$ip = '';
+			$ip  = '';
 			while (empty($ip) && !empty($ips))
 			{
 				$ip = array_pop($ips);
@@ -449,56 +503,5 @@ abstract class FOFUtilsIp
 
 		// Catch-all case for broken servers, apparently
 		return '';
-	}
-
-	/**
-	 * Converts inet_pton output to bits string
-	 *
-	 * @param   string $inet The in_addr representation of an IPv4 or IPv6 address
-	 *
-	 * @return  string
-	 */
-	protected static function inet_to_bits($inet)
-	{
-		if (strlen($inet) == 4)
-		{
-			$unpacked = unpack('A4', $inet);
-		}
-		else
-		{
-			$unpacked = unpack('A16', $inet);
-		}
-		$unpacked = str_split($unpacked[1]);
-		$binaryip = '';
-
-		foreach ($unpacked as $char)
-		{
-			$binaryip .= str_pad(decbin(ord($char)), 8, '0', STR_PAD_LEFT);
-		}
-
-		return $binaryip;
-	}
-
-	/**
-	 * Checks if an IPv6 address $ip is part of the IPv6 CIDR block $cidrnet
-	 *
-	 * @param   string  $ip       The IPv6 address to check, e.g. 21DA:00D3:0000:2F3B:02AC:00FF:FE28:9C5A
-	 * @param   string  $cidrnet  The IPv6 CIDR block, e.g. 21DA:00D3:0000:2F3B::/64
-	 *
-	 * @return  bool
-	 */
-	protected static function checkIPv6CIDR($ip, $cidrnet)
-	{
-		$ip = inet_pton($ip);
-		$binaryip=self::inet_to_bits($ip);
-
-		list($net,$maskbits)=explode('/',$cidrnet);
-		$net=inet_pton($net);
-		$binarynet=self::inet_to_bits($net);
-
-		$ip_net_bits=substr($binaryip,0,$maskbits);
-		$net_bits   =substr($binarynet,0,$maskbits);
-
-		return $ip_net_bits === $net_bits;
 	}
 }

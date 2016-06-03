@@ -37,14 +37,14 @@ abstract class AbstractCliApplication extends AbstractApplication
 	/**
 	 * Class constructor.
 	 *
-	 * @param   Input\Cli      $input     An optional argument to provide dependency injection for the application's
+	 * @param   Input\Cli     $input      An optional argument to provide dependency injection for the application's
 	 *                                    input object.  If the argument is an InputCli object that object will become
 	 *                                    the application's input object, otherwise a default input object is created.
-	 * @param   Registry       $config    An optional argument to provide dependency injection for the application's
+	 * @param   Registry      $config     An optional argument to provide dependency injection for the application's
 	 *                                    config object.  If the argument is a Registry object that object will become
 	 *                                    the application's config object, otherwise a default config object is created.
-	 * @param   Cli\CliOutput  $output    The output handler.
-	 * @param   Cli\CliInput   $cliInput  The CLI input handler.
+	 * @param   Cli\CliOutput $output     The output handler.
+	 * @param   Cli\CliInput  $cliInput   The CLI input handler.
 	 *
 	 * @since   1.0
 	 */
@@ -72,34 +72,10 @@ abstract class AbstractCliApplication extends AbstractApplication
 	}
 
 	/**
-	 * Get an output object.
-	 *
-	 * @return  Cli\CliOutput
-	 *
-	 * @since   1.0
-	 */
-	public function getOutput()
-	{
-		return $this->output;
-	}
-
-	/**
-	 * Get a CLI input object.
-	 *
-	 * @return  Cli\CliInput
-	 *
-	 * @since   1.6.0
-	 */
-	public function getCliInput()
-	{
-		return $this->cliInput;
-	}
-
-	/**
 	 * Write a string to standard output.
 	 *
-	 * @param   string   $text  The text to display.
-	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
+	 * @param   string  $text The text to display.
+	 * @param   boolean $nl   True (default) to append a new line at the end of the output string.
 	 *
 	 * @return  AbstractCliApplication  Instance of $this to allow chaining.
 	 *
@@ -113,6 +89,18 @@ abstract class AbstractCliApplication extends AbstractApplication
 	}
 
 	/**
+	 * Get an output object.
+	 *
+	 * @return  Cli\CliOutput
+	 *
+	 * @since   1.0
+	 */
+	public function getOutput()
+	{
+		return $this->output;
+	}
+
+	/**
 	 * Get a value from standard input.
 	 *
 	 * @return  string  The input string from standard input.
@@ -123,5 +111,17 @@ abstract class AbstractCliApplication extends AbstractApplication
 	public function in()
 	{
 		return $this->getCliInput()->in();
+	}
+
+	/**
+	 * Get a CLI input object.
+	 *
+	 * @return  Cli\CliInput
+	 *
+	 * @since   1.6.0
+	 */
+	public function getCliInput()
+	{
+		return $this->cliInput;
 	}
 }

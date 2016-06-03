@@ -21,7 +21,7 @@ class JMailWrapperHelper
 	/**
 	 * Helper wrapper method for cleanLine
 	 *
-	 * @param   string  $value  String to be cleaned.
+	 * @param   string $value String to be cleaned.
 	 *
 	 * @return  string  Cleaned string.
 	 *
@@ -36,7 +36,7 @@ class JMailWrapperHelper
 	/**
 	 * Helper wrapper method for cleanText
 	 *
-	 * @param   string  $value  Multi-line string to be cleaned.
+	 * @param   string $value Multi-line string to be cleaned.
 	 *
 	 * @return  string  Cleaned multi-line string.
 	 *
@@ -51,7 +51,7 @@ class JMailWrapperHelper
 	/**
 	 * Helper wrapper method for cleanBody
 	 *
-	 * @param   string  $body  email body string.
+	 * @param   string $body email body string.
 	 *
 	 * @return  string  Cleaned email body string.
 	 *
@@ -66,7 +66,7 @@ class JMailWrapperHelper
 	/**
 	 * Helper wrapper method for cleanSubject
 	 *
-	 * @param   string  $subject  email subject string.
+	 * @param   string $subject email subject string.
 	 *
 	 * @return  string  Cleaned email subject string.
 	 *
@@ -81,7 +81,7 @@ class JMailWrapperHelper
 	/**
 	 * Helper wrapper method for cleanAddress
 	 *
-	 * @param   string  $address  email address.
+	 * @param   string $address email address.
 	 *
 	 * @return  mixed   email address string or boolean false if injected headers are present
 	 *
@@ -96,7 +96,7 @@ class JMailWrapperHelper
 	/**
 	 * Helper wrapper method for isEmailAddress
 	 *
-	 * @param   string  $email  String to be verified.
+	 * @param   string $email String to be verified.
 	 *
 	 * @return boolean  True if string has the correct format; false otherwise.
 	 *

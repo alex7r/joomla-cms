@@ -12,9 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Query Element Class.
  *
- * @property-read    string  $name      The name of the element.
- * @property-read    array   $elements  An array of elements.
- * @property-read    string  $glue      Glue piece.
+ * @property-read    string $name      The name of the element.
+ * @property-read    array  $elements  An array of elements.
+ * @property-read    string $glue      Glue piece.
  *
  * @since  11.1
  */
@@ -41,19 +41,40 @@ class JDatabaseQueryElement
 	/**
 	 * Constructor.
 	 *
-	 * @param   string  $name      The name of the element.
-	 * @param   mixed   $elements  String or array.
-	 * @param   string  $glue      The glue for elements.
+	 * @param   string $name     The name of the element.
+	 * @param   mixed  $elements String or array.
+	 * @param   string $glue     The glue for elements.
 	 *
 	 * @since   11.1
 	 */
 	public function __construct($name, $elements, $glue = ',')
 	{
 		$this->elements = array();
-		$this->name = $name;
-		$this->glue = $glue;
+		$this->name     = $name;
+		$this->glue     = $glue;
 
 		$this->append($elements);
+	}
+
+	/**
+	 * Appends element parts to the internal list.
+	 *
+	 * @param   mixed $elements String or array.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public function append($elements)
+	{
+		if (is_array($elements))
+		{
+			$this->elements = array_merge($this->elements, $elements);
+		}
+		else
+		{
+			$this->elements = array_merge($this->elements, array($elements));
+		}
 	}
 
 	/**
@@ -76,27 +97,6 @@ class JDatabaseQueryElement
 	}
 
 	/**
-	 * Appends element parts to the internal list.
-	 *
-	 * @param   mixed  $elements  String or array.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	public function append($elements)
-	{
-		if (is_array($elements))
-		{
-			$this->elements = array_merge($this->elements, $elements);
-		}
-		else
-		{
-			$this->elements = array_merge($this->elements, array($elements));
-		}
-	}
-
-	/**
 	 * Gets the elements of this element.
 	 *
 	 * @return  array
@@ -111,7 +111,7 @@ class JDatabaseQueryElement
 	/**
 	 * Sets the name of this element.
 	 *
-	 * @param   string  $name  Name of the element.
+	 * @param   string $name Name of the element.
 	 *
 	 * @return  JDatabaseQueryElement  Returns this object to allow chaining.
 	 *

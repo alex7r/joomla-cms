@@ -25,7 +25,7 @@ class JLogEntryTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testDefaultValues()
 	{
-		$tmp = new JLogEntry('Lorem ipsum dolor sit amet');
+		$tmp  = new JLogEntry('Lorem ipsum dolor sit amet');
 		$date = JFactory::getDate('now');
 
 		// Message.

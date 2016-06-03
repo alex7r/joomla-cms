@@ -20,22 +20,6 @@ require_once JPATH_PLATFORM . '/joomla/table/user.php';
 class JTableUserTest extends TestCaseDatabase
 {
 	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   11.1
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_users', JPATH_TEST_DATABASE . '/jos_users.csv');
-
-		return $dataSet;
-	}
-
-	/**
 	 * Test...
 	 *
 	 * @covers JTableUser::store
@@ -46,11 +30,11 @@ class JTableUserTest extends TestCaseDatabase
 	{
 		$user = new JTableUser(self::$driver);
 
-		$user->name = 'Neil Armstrong';
+		$user->name     = 'Neil Armstrong';
 		$user->username = 'neil.armstrong';
-		$user->email = 'neil.armstrong@example.com';
-		$user->groups = array(
-			'Astronauts' => 1,
+		$user->email    = 'neil.armstrong@example.com';
+		$user->groups   = array(
+			'Astronauts'   => 1,
 			'Moon walkers' => 2,
 		);
 
@@ -87,5 +71,21 @@ class JTableUserTest extends TestCaseDatabase
 			$this->equalTo(array(1, 2)),
 			'Checks that the user group mapping was stored correctly.'
 		);
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   11.1
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_users', JPATH_TEST_DATABASE . '/jos_users.csv');
+
+		return $dataSet;
 	}
 }

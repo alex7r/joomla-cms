@@ -21,13 +21,13 @@ class JFormRuleRules extends JFormRule
 	/**
 	 * Method to test the value.
 	 *
-	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
-	 * @param   mixed             $value    The form field value to validate.
-	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
+	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed            $value     The form field value to validate.
+	 * @param   string           $group     The field name group control value. This acts as as an array container for the field.
 	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
-	 * @param   Registry          $input    An optional Registry object with the entire data set to validate against the entire form.
-	 * @param   JForm             $form     The form object for which the field is being tested.
+	 * @param   Registry         $input     An optional Registry object with the entire data set to validate against the entire form.
+	 * @param   JForm            $form      The form object for which the field is being tested.
 	 *
 	 * @return  boolean  True if the value is valid, false otherwise.
 	 *
@@ -52,31 +52,9 @@ class JFormRuleRules extends JFormRule
 	}
 
 	/**
-	 * Method to get the list of permission action names from the form field value.
-	 *
-	 * @param   mixed  $value  The form field value to validate.
-	 *
-	 * @return  array  A list of permission action names from the form field value.
-	 *
-	 * @since   11.1
-	 */
-	protected function getValueActions($value)
-	{
-		$actions = array();
-
-		// Iterate over the asset actions and add to the actions.
-		foreach ((array) $value as $name => $rules)
-		{
-			$actions[] = $name;
-		}
-
-		return $actions;
-	}
-
-	/**
 	 * Method to get the list of possible permission action names for the form field.
 	 *
-	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   SimpleXMLElement $element The SimpleXMLElement object representing the `<field>` tag for the form field object.
 	 *
 	 * @return  array  A list of permission action names from the form field element definition.
 	 *
@@ -87,7 +65,7 @@ class JFormRuleRules extends JFormRule
 		$actions = array();
 
 		// Initialise some field attributes.
-		$section = $element['section'] ? (string) $element['section'] : '';
+		$section   = $element['section'] ? (string) $element['section'] : '';
 		$component = $element['component'] ? (string) $element['component'] : '';
 
 		// Get the asset actions for the element.
@@ -106,6 +84,28 @@ class JFormRuleRules extends JFormRule
 			{
 				$actions[] = (string) $el['name'];
 			}
+		}
+
+		return $actions;
+	}
+
+	/**
+	 * Method to get the list of permission action names from the form field value.
+	 *
+	 * @param   mixed $value The form field value to validate.
+	 *
+	 * @return  array  A list of permission action names from the form field value.
+	 *
+	 * @since   11.1
+	 */
+	protected function getValueActions($value)
+	{
+		$actions = array();
+
+		// Iterate over the asset actions and add to the actions.
+		foreach ((array) $value as $name => $rules)
+		{
+			$actions[] = $name;
 		}
 
 		return $actions;

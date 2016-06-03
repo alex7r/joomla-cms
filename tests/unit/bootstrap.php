@@ -15,7 +15,7 @@
 /**
  * Mock for the global application exit.
  *
- * @param   mixed  $message  Exit code or string. Defaults to zero.
+ * @param   mixed $message Exit code or string. Defaults to zero.
  *
  * @return  void
  */

@@ -27,7 +27,7 @@ class JFormFieldImpTotal extends JFormField
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @return  string	The field input markup.
+	 * @return  string    The field input markup.
 	 *
 	 * @since   1.6
 	 */
@@ -42,8 +42,8 @@ class JFormFieldImpTotal extends JFormField
 		$checked  = empty($this->value) ? ' checked="checked"' : '';
 
 		return '<input type="text" name="' . $this->name . '" id="' . $this->id . '" size="9" value="' . htmlspecialchars($value, ENT_COMPAT, 'UTF-8')
-			. '" ' . $class . $onchange . ' />'
-			. '<fieldset class="checkboxes impunlimited"><input id="' . $this->id . '_unlimited" type="checkbox"' . $checked . $onclick . ' />'
-			. '<label for="' . $this->id . '_unlimited" id="jform-imp" type="text">' . JText::_('COM_BANNERS_UNLIMITED') . '</label></fieldset>';
+		. '" ' . $class . $onchange . ' />'
+		. '<fieldset class="checkboxes impunlimited"><input id="' . $this->id . '_unlimited" type="checkbox"' . $checked . $onclick . ' />'
+		. '<label for="' . $this->id . '_unlimited" id="jform-imp" type="text">' . JText::_('COM_BANNERS_UNLIMITED') . '</label></fieldset>';
 	}
 }

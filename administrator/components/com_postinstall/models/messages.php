@@ -19,7 +19,7 @@ class PostinstallModelMessages extends FOFModel
 	/**
 	 * Builds the SELECT query
 	 *
-	 * @param   boolean  $overrideLimits  Are we requested to override the set limits?
+	 * @param   boolean $overrideLimits Are we requested to override the set limits?
 	 *
 	 * @return  JDatabaseQuery
 	 *
@@ -43,9 +43,66 @@ class PostinstallModelMessages extends FOFModel
 	}
 
 	/**
+	 * Resets all messages for an extension
+	 *
+	 * @param   integer $eid The extension ID whose messages we'll reset
+	 *
+	 * @return  mixed  False if we fail, a db cursor otherwise
+	 *
+	 * @since   3.2
+	 */
+	public function resetMessages($eid)
+	{
+		$db = $this->getDbo();
+
+		$query = $db->getQuery(true)
+			->update($db->qn('#__postinstall_messages'))
+			->set($db->qn('enabled') . ' = ' . $db->q(1))
+			->where($db->qn('extension_id') . ' = ' . $db->q($eid));
+		$db->setQuery($query);
+
+		return $db->execute();
+	}
+
+	/**
+	 * Get the drop-down options for the list of component with post-installation messages
+	 *
+	 * @since 3.4
+	 *
+	 * @return  array  Compatible with JHtmlSelect::genericList
+	 */
+	public function getComponentOptions()
+	{
+		$db = $this->getDbo();
+
+		$query = $db->getQuery(true)
+			->select('extension_id')
+			->from($db->qn('#__postinstall_messages'))
+			->group(array($db->qn('extension_id')));
+		$db->setQuery($query);
+		$extension_ids = $db->loadColumn();
+
+		$options = array();
+
+		foreach ($extension_ids as $eid)
+		{
+			$extension_name = $this->getExtensionName($eid);
+
+			if ($extension_name == 'files_joomla')
+			{
+				$extension_name = JText::_('COM_POSTINSTALL_TITLE_JOOMLA');
+			}
+
+			$options[] = JHtml::_('select.option', $eid, $extension_name);
+		}
+
+		return $options;
+	}
+
+	/**
 	 * Returns the name of an extension, as registered in the #__extensions table
 	 *
-	 * @param   integer  $eid  The extension ID
+	 * @param   integer $eid The extension ID
 	 *
 	 * @return  string  The extension name
 	 *
@@ -86,129 +143,6 @@ class PostinstallModelMessages extends FOFModel
 	}
 
 	/**
-	 * Resets all messages for an extension
-	 *
-	 * @param   integer  $eid  The extension ID whose messages we'll reset
-	 *
-	 * @return  mixed  False if we fail, a db cursor otherwise
-	 *
-	 * @since   3.2
-	 */
-	public function resetMessages($eid)
-	{
-		$db = $this->getDbo();
-
-		$query = $db->getQuery(true)
-			->update($db->qn('#__postinstall_messages'))
-			->set($db->qn('enabled') . ' = ' . $db->q(1))
-			->where($db->qn('extension_id') . ' = ' . $db->q($eid));
-		$db->setQuery($query);
-
-		return $db->execute();
-	}
-
-	/**
-	 * List post-processing. This is used to run the programmatic display
-	 * conditions against each list item and decide if we have to show it or
-	 * not.
-	 *
-	 * Do note that this a core method of the RAD Layer which operates directly
-	 * on the list it's being fed. A little touch of modern magic.
-	 *
-	 * @param   array  &$resultArray  A list of items to process
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function onProcessList(&$resultArray)
-	{
-		$unset_keys          = array();
-		$language_extensions = array();
-
-		// Order the results DESC so the newest is on the top.
-		$resultArray = array_reverse($resultArray);
-
-		foreach ($resultArray as $key => $item)
-		{
-			// Filter out messages based on dynamically loaded programmatic conditions.
-			if (!empty($item->condition_file) && !empty($item->condition_method))
-			{
-				jimport('joomla.filesystem.file');
-
-				$file = FOFTemplateUtils::parsePath($item->condition_file, true);
-
-				if (JFile::exists($file))
-				{
-					require_once $file;
-
-					$result = call_user_func($item->condition_method);
-
-					if ($result === false)
-					{
-						$unset_keys[] = $key;
-					}
-				}
-			}
-
-			// Load the necessary language files.
-			if (!empty($item->language_extension))
-			{
-				$hash = $item->language_client_id . '-' . $item->language_extension;
-
-				if (!in_array($hash, $language_extensions))
-				{
-					$language_extensions[] = $hash;
-					JFactory::getLanguage()->load($item->language_extension, $item->language_client_id == 0 ? JPATH_SITE : JPATH_ADMINISTRATOR);
-				}
-			}
-		}
-
-		if (!empty($unset_keys))
-		{
-			foreach ($unset_keys as $key)
-			{
-				unset($resultArray[$key]);
-			}
-		}
-	}
-
-	/**
-	 * Get the drop-down options for the list of component with post-installation messages
-	 *
-	 * @since 3.4
-	 *
-	 * @return  array  Compatible with JHtmlSelect::genericList
-	 */
-	public function getComponentOptions()
-	{
-		$db = $this->getDbo();
-
-		$query = $db->getQuery(true)
-			->select('extension_id')
-			->from($db->qn('#__postinstall_messages'))
-			->group(array($db->qn('extension_id')));
-		$db->setQuery($query);
-		$extension_ids = $db->loadColumn();
-
-		$options = array();
-
-		foreach ($extension_ids as $eid)
-		{
-			$extension_name = $this->getExtensionName($eid);
-
-			if ($extension_name == 'files_joomla')
-			{
-				$extension_name = JText::_('COM_POSTINSTALL_TITLE_JOOMLA');
-			}
-
-			$options[] = JHtml::_('select.option', $eid, $extension_name);
-		}
-
-		return $options;
-	}
-
-	/**
 	 * Adds or updates a post-installation message (PIM) definition. You can use this in your post-installation script using this code:
 	 *
 	 * require_once JPATH_LIBRARIES . '/fof/include.php';
@@ -230,8 +164,8 @@ class PostinstallModelMessages extends FOFModel
 	 * description_key     The JText language key for the main body (description) of this PIM
 	 *                     Example: COM_FOOBAR_POSTINSTALL_MESSAGEONE_DESCRIPTION
 	 *
-	 * action_key		   The JText language key for the action button. Ignored and not required when type=message
-	 * 					   Example: COM_FOOBAR_POSTINSTALL_MESSAGEONE_ACTION
+	 * action_key           The JText language key for the action button. Ignored and not required when type=message
+	 *                       Example: COM_FOOBAR_POSTINSTALL_MESSAGEONE_ACTION
 	 *
 	 * language_extension  The extension name which holds the language keys used above.
 	 *                     For example, com_foobar, mod_something, plg_system_whatever, tpl_mytemplate
@@ -270,7 +204,7 @@ class PostinstallModelMessages extends FOFModel
 	 *              (not a class method, static method etc) which returns no result.
 	 *              Example: com_foobar_postinstall_messageone_action
 	 *
-	 * @param   array  $options  See description
+	 * @param   array $options See description
 	 *
 	 * @return  $this
 	 *
@@ -466,5 +400,71 @@ class PostinstallModelMessages extends FOFModel
 		$db->insertObject($tableName, $options);
 
 		return $this;
+	}
+
+	/**
+	 * List post-processing. This is used to run the programmatic display
+	 * conditions against each list item and decide if we have to show it or
+	 * not.
+	 *
+	 * Do note that this a core method of the RAD Layer which operates directly
+	 * on the list it's being fed. A little touch of modern magic.
+	 *
+	 * @param   array &$resultArray A list of items to process
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function onProcessList(&$resultArray)
+	{
+		$unset_keys          = array();
+		$language_extensions = array();
+
+		// Order the results DESC so the newest is on the top.
+		$resultArray = array_reverse($resultArray);
+
+		foreach ($resultArray as $key => $item)
+		{
+			// Filter out messages based on dynamically loaded programmatic conditions.
+			if (!empty($item->condition_file) && !empty($item->condition_method))
+			{
+				jimport('joomla.filesystem.file');
+
+				$file = FOFTemplateUtils::parsePath($item->condition_file, true);
+
+				if (JFile::exists($file))
+				{
+					require_once $file;
+
+					$result = call_user_func($item->condition_method);
+
+					if ($result === false)
+					{
+						$unset_keys[] = $key;
+					}
+				}
+			}
+
+			// Load the necessary language files.
+			if (!empty($item->language_extension))
+			{
+				$hash = $item->language_client_id . '-' . $item->language_extension;
+
+				if (!in_array($hash, $language_extensions))
+				{
+					$language_extensions[] = $hash;
+					JFactory::getLanguage()->load($item->language_extension, $item->language_client_id == 0 ? JPATH_SITE : JPATH_ADMINISTRATOR);
+				}
+			}
+		}
+
+		if (!empty($unset_keys))
+		{
+			foreach ($unset_keys as $key)
+			{
+				unset($resultArray[$key]);
+			}
+		}
 	}
 }

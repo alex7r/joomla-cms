@@ -118,10 +118,10 @@ class JHtmlNumberTest extends TestCase
 	/**
 	 * Tests the JHtmlNumber::bytes method.
 	 *
-	 * @param   string   $result     @todo
-	 * @param   integer  $bytes      @todo
-	 * @param   string   $unit       @todo
-	 * @param   integer  $precision  @todo
+	 * @param   string  $result    @todo
+	 * @param   integer $bytes     @todo
+	 * @param   string  $unit      @todo
+	 * @param   integer $precision @todo
 	 *
 	 * @return  void
 	 *

@@ -14,12 +14,16 @@ defined('_JEXEC') or die;
 <form action="index.php" method="post" id="adminForm" class="form-validate form-horizontal">
 	<div class="btn-toolbar">
 		<div class="btn-group pull-right">
-			<a class="btn" href="#" onclick="return Install.goToPage('database');" rel="prev" title="<?php echo JText::_('JPREVIOUS'); ?>"><span class="icon-arrow-left"></span> <?php echo JText::_('JPREVIOUS'); ?></a>
-			<a class="btn btn-primary" href="#" onclick="Install.submitform();" rel="next" title="<?php echo JText::_('JNEXT'); ?>"><span class="icon-arrow-right icon-white"></span> <?php echo JText::_('JNEXT'); ?></a>
+			<a class="btn" href="#" onclick="return Install.goToPage('database');" rel="prev"
+			   title="<?php echo JText::_('JPREVIOUS'); ?>"><span
+					class="icon-arrow-left"></span> <?php echo JText::_('JPREVIOUS'); ?></a>
+			<a class="btn btn-primary" href="#" onclick="Install.submitform();" rel="next"
+			   title="<?php echo JText::_('JNEXT'); ?>"><span
+					class="icon-arrow-right icon-white"></span> <?php echo JText::_('JNEXT'); ?></a>
 		</div>
 	</div>
 	<h3><?php echo JText::_('INSTL_FTP'); ?></h3>
-	<hr class="hr-condensed" />
+	<hr class="hr-condensed"/>
 	<div class="control-group">
 		<div class="control-label">
 			<?php echo $this->form->getLabel('ftp_enable'); ?>
@@ -54,7 +58,8 @@ defined('_JEXEC') or die;
 		<div class="control-label">
 		</div>
 		<div class="controls">
-			<button id="verifybutton" class="btn btn-success" onclick="Install.verifyFtpSettings(this);"><span class="icon-ok icon-white"></span> <?php echo JText::_('INSTL_VERIFY_FTP_SETTINGS'); ?></button>
+			<button id="verifybutton" class="btn btn-success" onclick="Install.verifyFtpSettings(this);"><span
+					class="icon-ok icon-white"></span> <?php echo JText::_('INSTL_VERIFY_FTP_SETTINGS'); ?></button>
 		</div>
 	</div>
 	<div class="control-group">
@@ -63,7 +68,9 @@ defined('_JEXEC') or die;
 		</div>
 		<div class="controls">
 			<div class="input-append">
-				<?php echo $this->form->getInput('ftp_host'); ?><button id="findbutton" class="btn" onclick="Install.detectFtpRoot(this);"><span class="icon-folder-open"></span> <?php echo JText::_('INSTL_AUTOFIND_FTP_PATH'); ?></button>
+				<?php echo $this->form->getInput('ftp_host'); ?>
+				<button id="findbutton" class="btn" onclick="Install.detectFtpRoot(this);"><span
+						class="icon-folder-open"></span> <?php echo JText::_('INSTL_AUTOFIND_FTP_PATH'); ?></button>
 			</div>
 		</div>
 	</div>
@@ -86,12 +93,16 @@ defined('_JEXEC') or die;
 	<div class="row-fluid">
 		<div class="btn-toolbar">
 			<div class="btn-group pull-right">
-				<a class="btn" href="#" onclick="return Install.goToPage('database');" rel="prev" title="<?php echo JText::_('JPREVIOUS'); ?>"><span class="icon-arrow-left"></span> <?php echo JText::_('JPREVIOUS'); ?></a>
-				<a class="btn btn-primary" href="#" onclick="Install.submitform();" rel="next" title="<?php echo JText::_('JNEXT'); ?>"><span class="icon-arrow-right icon-white"></span> <?php echo JText::_('JNEXT'); ?></a>
+				<a class="btn" href="#" onclick="return Install.goToPage('database');" rel="prev"
+				   title="<?php echo JText::_('JPREVIOUS'); ?>"><span
+						class="icon-arrow-left"></span> <?php echo JText::_('JPREVIOUS'); ?></a>
+				<a class="btn btn-primary" href="#" onclick="Install.submitform();" rel="next"
+				   title="<?php echo JText::_('JNEXT'); ?>"><span
+						class="icon-arrow-right icon-white"></span> <?php echo JText::_('JNEXT'); ?></a>
 			</div>
 		</div>
 	</div>
 
-	<input type="hidden" name="task" value="ftp" />
+	<input type="hidden" name="task" value="ftp"/>
 	<?php echo JHtml::_('form.token'); ?>
 </form>

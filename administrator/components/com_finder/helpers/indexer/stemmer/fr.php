@@ -32,8 +32,8 @@ class FinderIndexerStemmerFr extends FinderIndexerStemmer
 	/**
 	 * Method to stem a token and return the root.
 	 *
-	 * @param   string  $token  The token to stem.
-	 * @param   string  $lang   The language of the token.
+	 * @param   string $token The token to stem.
+	 * @param   string $lang  The language of the token.
 	 *
 	 * @return  string  The root token.
 	 *
@@ -64,6 +64,66 @@ class FinderIndexerStemmerFr extends FinderIndexerStemmer
 		}
 
 		return $this->cache[$lang][$token];
+	}
+
+	/**
+	 * Paice/Husk stemmer which returns a stem for the given $input
+	 *
+	 * @param   string $input The word for which we want the stem in UTF-8
+	 *
+	 * @return  string  The stem
+	 *
+	 * @since   3.0
+	 */
+	private static function _getStem($input)
+	{
+		$vars = static::getStemRules();
+
+		$intact         = true;
+		$reversed_input = strrev(utf8_decode($input));
+		$rule_number    = 0;
+
+		// This loop goes through the rules' array until it finds an ending one (ending by '.') or the last one ('end0.')
+		while (true)
+		{
+			$rule_number = static::_getFirstRule($reversed_input, $rule_number);
+
+			if ($rule_number == -1)
+			{
+				// No other rule can be applied => the stem has been found
+				break;
+			}
+
+			$rule = $vars['rules'][$rule_number];
+			preg_match($vars['rule_pattern'], $rule, $matches);
+
+			if (($matches[2] != '*') || ($intact))
+			{
+				$reversed_stem = utf8_decode($matches[4]) . substr($reversed_input, $matches[3], strlen($reversed_input) - $matches[3]);
+
+				if (self::_check($reversed_stem))
+				{
+					$reversed_input = $reversed_stem;
+
+					if ($matches[5] == '.')
+					{
+						break;
+					}
+				}
+				else
+				{
+					// Go to another rule
+					$rule_number++;
+				}
+			}
+			else
+			{
+				// Go to another rule
+				$rule_number++;
+			}
+		}
+
+		return utf8_encode(strrev($reversed_input));
 	}
 
 	/**
@@ -144,8 +204,8 @@ class FinderIndexerStemmerFr extends FinderIndexerStemmer
 	 * that can be applied to the given reversed input.
 	 * returns -1 if no rule can be applied, ie the stem has been found
 	 *
-	 * @param   string   $reversed_input  The input to check in reversed order
-	 * @param   integer  $rule_number     The rule number to check
+	 * @param   string  $reversed_input The input to check in reversed order
+	 * @param   integer $rule_number    The rule number to check
 	 *
 	 * @return  integer  Number of the first rule
 	 *
@@ -175,7 +235,7 @@ class FinderIndexerStemmerFr extends FinderIndexerStemmer
 	/**
 	 * Check the acceptability of a stem for French language
 	 *
-	 * @param   string  $reversed_stem  The stem to check in reverse form
+	 * @param   string $reversed_stem The stem to check in reverse form
 	 *
 	 * @return  boolean  True if stem is acceptable
 	 *
@@ -201,65 +261,5 @@ class FinderIndexerStemmerFr extends FinderIndexerStemmer
 			// And at least one of these must be a vowel or "y"
 			return (preg_match('/[' . $vars['vowels'] . ']/', utf8_encode($reversed_stem)));
 		}
-	}
-
-	/**
-	 * Paice/Husk stemmer which returns a stem for the given $input
-	 *
-	 * @param   string  $input  The word for which we want the stem in UTF-8
-	 *
-	 * @return  string  The stem
-	 *
-	 * @since   3.0
-	 */
-	private static function _getStem($input)
-	{
-		$vars = static::getStemRules();
-
-		$intact = true;
-		$reversed_input = strrev(utf8_decode($input));
-		$rule_number = 0;
-
-		// This loop goes through the rules' array until it finds an ending one (ending by '.') or the last one ('end0.')
-		while (true)
-		{
-			$rule_number = static::_getFirstRule($reversed_input, $rule_number);
-
-			if ($rule_number == -1)
-			{
-				// No other rule can be applied => the stem has been found
-				break;
-			}
-
-			$rule = $vars['rules'][$rule_number];
-			preg_match($vars['rule_pattern'], $rule, $matches);
-
-			if (($matches[2] != '*') || ($intact))
-			{
-				$reversed_stem = utf8_decode($matches[4]) . substr($reversed_input, $matches[3], strlen($reversed_input) - $matches[3]);
-
-				if (self::_check($reversed_stem))
-				{
-					$reversed_input = $reversed_stem;
-
-					if ($matches[5] == '.')
-					{
-						break;
-					}
-				}
-				else
-				{
-					// Go to another rule
-					$rule_number++;
-				}
-			}
-			else
-			{
-				// Go to another rule
-				$rule_number++;
-			}
-		}
-
-		return utf8_encode(strrev($reversed_input));
 	}
 }

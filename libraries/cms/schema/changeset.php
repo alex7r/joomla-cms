@@ -22,13 +22,19 @@ jimport('joomla.filesystem.folder');
 class JSchemaChangeset
 {
 	/**
+	 * The singleton instance of this object
+	 *
+	 * @var    JSchemaChangeset
+	 * @since  3.5.1
+	 */
+	protected static $instance;
+	/**
 	 * Array of JSchemaChangeitem objects
 	 *
 	 * @var    JSchemaChangeitem[]
 	 * @since  2.5
 	 */
 	protected $changeItems = array();
-
 	/**
 	 * JDatabaseDriver object
 	 *
@@ -36,7 +42,6 @@ class JSchemaChangeset
 	 * @since  2.5
 	 */
 	protected $db = null;
-
 	/**
 	 * Folder where SQL update files will be found
 	 *
@@ -46,27 +51,19 @@ class JSchemaChangeset
 	protected $folder = null;
 
 	/**
-	 * The singleton instance of this object
-	 *
-	 * @var    JSchemaChangeset
-	 * @since  3.5.1
-	 */
-	protected static $instance;
-
-	/**
 	 * Constructor: builds array of $changeItems by processing the .sql files in a folder.
 	 * The folder for the Joomla core updates is `administrator/components/com_admin/sql/updates/<database>`.
 	 *
-	 * @param   JDatabaseDriver  $db      The current database object
-	 * @param   string           $folder  The full path to the folder containing the update queries
+	 * @param   JDatabaseDriver $db     The current database object
+	 * @param   string          $folder The full path to the folder containing the update queries
 	 *
 	 * @since   2.5
 	 */
 	public function __construct($db, $folder = null)
 	{
-		$this->db = $db;
-		$this->folder = $folder;
-		$updateFiles = $this->getUpdateFiles();
+		$this->db      = $db;
+		$this->folder  = $folder;
+		$updateFiles   = $this->getUpdateFiles();
 		$updateQueries = $this->getUpdateQueries($updateFiles);
 
 		foreach ($updateQueries as $obj)
@@ -110,12 +107,12 @@ class JSchemaChangeset
 			// Set the check query
 			if ($this->db->hasUTF8mb4Support())
 			{
-				$converted = 2;
+				$converted                      = 2;
 				$tmpSchemaChangeItem->queryType = 'UTF8_CONVERSION_UTF8MB4';
 			}
 			else
 			{
-				$converted = 1;
+				$converted                      = 1;
 				$tmpSchemaChangeItem->queryType = 'UTF8_CONVERSION_UTF8';
 			}
 
@@ -134,10 +131,77 @@ class JSchemaChangeset
 	}
 
 	/**
+	 * Get list of SQL update files for this database
+	 *
+	 * @return  array  list of sql update full-path names
+	 *
+	 * @since   2.5
+	 */
+	private function getUpdateFiles()
+	{
+		// Get the folder from the database name
+		$sqlFolder = $this->db->name;
+
+		if ($sqlFolder == 'mysqli' || $sqlFolder == 'pdomysql')
+		{
+			$sqlFolder = 'mysql';
+		}
+		elseif ($sqlFolder == 'sqlsrv')
+		{
+			$sqlFolder = 'sqlazure';
+		}
+
+		// Default folder to core com_admin
+		if (!$this->folder)
+		{
+			$this->folder = JPATH_ADMINISTRATOR . '/components/com_admin/sql/updates/';
+		}
+
+		return JFolder::files(
+			$this->folder . '/' . $sqlFolder, '\.sql$', 1, true, array('.svn', 'CVS', '.DS_Store', '__MACOSX'), array('^\..*', '.*~'), true
+		);
+	}
+
+	/**
+	 * Get array of SQL queries
+	 *
+	 * @param   array $sqlfiles Array of .sql update filenames.
+	 *
+	 * @return  array  Array of stdClass objects where:
+	 *                    file=filename,
+	 *                    update_query = text of SQL update query
+	 *
+	 * @since   2.5
+	 */
+	private function getUpdateQueries(array $sqlfiles)
+	{
+		// Hold results as array of objects
+		$result = array();
+
+		foreach ($sqlfiles as $file)
+		{
+			$buffer = file_get_contents($file);
+
+			// Create an array of queries from the sql file
+			$queries = JDatabaseDriver::splitSql($buffer);
+
+			foreach ($queries as $query)
+			{
+				$fileQueries              = new stdClass;
+				$fileQueries->file        = $file;
+				$fileQueries->updateQuery = $query;
+				$result[]                 = $fileQueries;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Returns a reference to the JSchemaChangeset object, only creating it if it doesn't already exist.
 	 *
-	 * @param   JDatabaseDriver  $db      The current database object
-	 * @param   string           $folder  The full path to the folder containing the update queries
+	 * @param   JDatabaseDriver $db     The current database object
+	 * @param   string          $folder The full path to the folder containing the update queries
 	 *
 	 * @return  JSchemaChangeset
 	 *
@@ -151,6 +215,23 @@ class JSchemaChangeset
 		}
 
 		return static::$instance;
+	}
+
+	/**
+	 * Runs the update query to apply the change to the database
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	public function fix()
+	{
+		$this->check();
+
+		foreach ($this->changeItems as $item)
+		{
+			$item->fix();
+		}
 	}
 
 	/**
@@ -176,23 +257,6 @@ class JSchemaChangeset
 		}
 
 		return $errors;
-	}
-
-	/**
-	 * Runs the update query to apply the change to the database
-	 *
-	 * @return  void
-	 *
-	 * @since   2.5
-	 */
-	public function fix()
-	{
-		$this->check();
-
-		foreach ($this->changeItems as $item)
-		{
-			$item->fix();
-		}
 	}
 
 	/**
@@ -241,75 +305,8 @@ class JSchemaChangeset
 	public function getSchema()
 	{
 		$updateFiles = $this->getUpdateFiles();
-		$result = new SplFileInfo(array_pop($updateFiles));
+		$result      = new SplFileInfo(array_pop($updateFiles));
 
 		return $result->getBasename('.sql');
-	}
-
-	/**
-	 * Get list of SQL update files for this database
-	 *
-	 * @return  array  list of sql update full-path names
-	 *
-	 * @since   2.5
-	 */
-	private function getUpdateFiles()
-	{
-		// Get the folder from the database name
-		$sqlFolder = $this->db->name;
-
-		if ($sqlFolder == 'mysqli' || $sqlFolder == 'pdomysql')
-		{
-			$sqlFolder = 'mysql';
-		}
-		elseif ($sqlFolder == 'sqlsrv')
-		{
-			$sqlFolder = 'sqlazure';
-		}
-
-		// Default folder to core com_admin
-		if (!$this->folder)
-		{
-			$this->folder = JPATH_ADMINISTRATOR . '/components/com_admin/sql/updates/';
-		}
-
-		return JFolder::files(
-			$this->folder . '/' . $sqlFolder, '\.sql$', 1, true, array('.svn', 'CVS', '.DS_Store', '__MACOSX'), array('^\..*', '.*~'), true
-		);
-	}
-
-	/**
-	 * Get array of SQL queries
-	 *
-	 * @param   array  $sqlfiles  Array of .sql update filenames.
-	 *
-	 * @return  array  Array of stdClass objects where:
-	 *                    file=filename,
-	 *                    update_query = text of SQL update query
-	 *
-	 * @since   2.5
-	 */
-	private function getUpdateQueries(array $sqlfiles)
-	{
-		// Hold results as array of objects
-		$result = array();
-
-		foreach ($sqlfiles as $file)
-		{
-			$buffer = file_get_contents($file);
-
-			// Create an array of queries from the sql file
-			$queries = JDatabaseDriver::splitSql($buffer);
-
-			foreach ($queries as $query)
-			{
-				$fileQueries = new stdClass;
-				$fileQueries->file = $file;
-				$fileQueries->updateQuery = $query;
-				$result[] = $fileQueries;
-			}
-		}
-
-		return $result;
 	}
 }

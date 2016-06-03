@@ -37,7 +37,7 @@ abstract class JHtmlBatch
 	/**
 	 * Displays a batch widget for moving or copying items.
 	 *
-	 * @param   string  $extension  The extension that owns the category.
+	 * @param   string $extension The extension that owns the category.
 	 *
 	 * @return  string  The necessary HTML for the widget.
 	 *
@@ -73,7 +73,7 @@ abstract class JHtmlBatch
 	/**
 	 * Display a batch widget for the user selector.
 	 *
-	 * @param   boolean  $noUser  Choose to display a "no user" option
+	 * @param   boolean $noUser Choose to display a "no user" option
 	 *
 	 * @return  string  The necessary HTML for the widget.
 	 *

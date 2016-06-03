@@ -37,34 +37,10 @@ class JFacebookOauthTest extends TestCase
 	protected $input;
 
 	/**
-	* @var    JFacebookOauth  Object under test.
-	* @since  13.1
-	*/
-	protected $object;
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   13.1
+	 * @var    JFacebookOauth  Object under test.
+	 * @since  13.1
 	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$this->options = new Registry;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->input = new JInput;
-
-		$this->object = new JFacebookOauth($this->options, $this->client, $this->input);
-
-		parent::setUp();
-	}
+	protected $object;
 
 	/**
 	 * Tests the setScope method
@@ -98,5 +74,29 @@ class JFacebookOauthTest extends TestCase
 			$this->object->getScope(),
 			$this->equalTo('read_stream')
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   13.1
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$this->options = new Registry;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->input   = new JInput;
+
+		$this->object = new JFacebookOauth($this->options, $this->client, $this->input);
+
+		parent::setUp();
 	}
 }

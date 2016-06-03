@@ -19,7 +19,7 @@ class JTableUsergroup extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  $db  Database driver object.
+	 * @param   JDatabaseDriver $db Database driver object.
 	 *
 	 * @since   11.1
 	 */
@@ -47,7 +47,7 @@ class JTableUsergroup extends JTable
 
 		// Check for a duplicate parent_id, title.
 		// There is a unique index on the (parent_id, title) field in the table.
-		$db = $this->_db;
+		$db    = $this->_db;
 		$query = $db->getQuery(true)
 			->select('COUNT(title)')
 			->from($this->_tbl)
@@ -67,10 +67,30 @@ class JTableUsergroup extends JTable
 	}
 
 	/**
+	 * Inserts a new row if id is zero or updates an existing row in the database table
+	 *
+	 * @param   boolean $updateNulls If false, null object variables are not updated
+	 *
+	 * @return  boolean  True if successful, false otherwise and an internal error message is set
+	 *
+	 * @since   11.1
+	 */
+	public function store($updateNulls = false)
+	{
+		if ($result = parent::store($updateNulls))
+		{
+			// Rebuild the nested set tree.
+			$this->rebuild();
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Method to recursively rebuild the nested set tree.
 	 *
-	 * @param   integer  $parent_id  The root of the tree to rebuild.
-	 * @param   integer  $left       The left id to start with in building the tree.
+	 * @param   integer $parent_id The root of the tree to rebuild.
+	 * @param   integer $left      The left id to start with in building the tree.
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -116,29 +136,9 @@ class JTableUsergroup extends JTable
 	}
 
 	/**
-	 * Inserts a new row if id is zero or updates an existing row in the database table
-	 *
-	 * @param   boolean  $updateNulls  If false, null object variables are not updated
-	 *
-	 * @return  boolean  True if successful, false otherwise and an internal error message is set
-	 *
-	 * @since   11.1
-	 */
-	public function store($updateNulls = false)
-	{
-		if ($result = parent::store($updateNulls))
-		{
-			// Rebuild the nested set tree.
-			$this->rebuild();
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Delete this object and its dependencies
 	 *
-	 * @param   integer  $oid  The primary key of the user group to delete.
+	 * @param   integer $oid The primary key of the user group to delete.
 	 *
 	 * @return  mixed  Boolean or Exception.
 	 *

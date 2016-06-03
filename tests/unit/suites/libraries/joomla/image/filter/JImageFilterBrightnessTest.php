@@ -17,24 +17,6 @@
 class JImageFilterBrightnessTest extends TestCase
 {
 	/**
-	 * Setup for testing.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.4
-	 */
-	protected function setUp()
-	{
-		// Verify that GD support for PHP is available.
-		if (!extension_loaded('gd'))
-		{
-			$this->markTestSkipped('No GD support so skipping JImage tests.');
-		}
-
-		parent::setUp();
-	}
-
-	/**
 	 * Tests the JImageFilterBrightness::execute method.
 	 *
 	 * This tests to make sure we can brighten the image.
@@ -89,5 +71,23 @@ class JImageFilterBrightnessTest extends TestCase
 		$filter = new JImageFilterBrightness($imageHandle);
 
 		$filter->execute(array());
+	}
+
+	/**
+	 * Setup for testing.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.4
+	 */
+	protected function setUp()
+	{
+		// Verify that GD support for PHP is available.
+		if (!extension_loaded('gd'))
+		{
+			$this->markTestSkipped('No GD support so skipping JImage tests.');
+		}
+
+		parent::setUp();
 	}
 }

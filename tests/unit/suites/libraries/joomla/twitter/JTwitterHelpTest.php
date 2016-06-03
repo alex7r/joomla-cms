@@ -63,41 +63,6 @@ class JTwitterHelpTest extends TestCase
 			}}}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$key = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input = new JInput;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth = new JTwitterOAuth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JTwitterHelp($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-		$this->options->set('sendheaders', true);
-	}
-
-	/**
 	 * Tests the getLanguages method
 	 *
 	 * @return  void
@@ -106,27 +71,27 @@ class JTwitterHelpTest extends TestCase
 	 */
 	public function testGetLanguages()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "help"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$path = $this->object->fetchUrl('/help/languages.json');
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getLanguages(),
@@ -144,27 +109,27 @@ class JTwitterHelpTest extends TestCase
 	 */
 	public function testGetLanguagesFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "help"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = $this->object->fetchUrl('/help/languages.json');
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getLanguages();
 	}
@@ -178,27 +143,27 @@ class JTwitterHelpTest extends TestCase
 	 */
 	public function testGetConfiguration()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "help"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$path = $this->object->fetchUrl('/help/configuration.json');
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getConfiguration(),
@@ -216,28 +181,63 @@ class JTwitterHelpTest extends TestCase
 	 */
 	public function testGetConfigurationFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "help"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = $this->object->fetchUrl('/help/configuration.json');
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getConfiguration();
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$key    = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input   = new JInput;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth   = new JTwitterOAuth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JTwitterHelp($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+		$this->options->set('sendheaders', true);
 	}
 }

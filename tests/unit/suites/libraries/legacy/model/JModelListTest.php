@@ -45,17 +45,6 @@ class JModelListTest extends TestCaseDatabase
 	}
 
 	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
 	 * Tests the __construct method.
 	 *
 	 * @since   3.4
@@ -217,19 +206,19 @@ class JModelListTest extends TestCaseDatabase
 	/**
 	 * Tests the getStart method.
 	 *
-	 * @param   int     $start          start int
-	 * @param   int     $limit          limit int
-	 * @param   int     $total          total int
-	 * @param   string  $totalCacheKey  cache key
-	 * @param   int     $expected       expected result
+	 * @param   int    $start         start int
+	 * @param   int    $limit         limit int
+	 * @param   int    $total         total int
+	 * @param   string $totalCacheKey cache key
+	 * @param   int    $expected      expected result
 	 *
-	 * @since   3.4
+	 * @since        3.4
 	 *
 	 * @dataProvider getStartDataProvider
 	 *
 	 * @return  void
 	 *
-	 * @testdox getStart() makes correct calculations
+	 * @testdox      getStart() makes correct calculations
 	 */
 	public function testGetStartCalculatesCorrectly($start, $limit, $total, $totalCacheKey, $expected)
 	{
@@ -583,12 +572,12 @@ class JModelListTest extends TestCaseDatabase
 		$this->object->setState('list.start', 0);
 
 		$expected = (object) array(
-			"foo" => "bar",
+			"foo"  => "bar",
 			"list" => array(
 				'direction' => 'ASC',
-				'limit' => 30,
-				'ordering' => 'enabled',
-				'start' => 0
+				'limit'     => 30,
+				'ordering'  => 'enabled',
+				'start'     => 0
 			)
 		);
 
@@ -859,11 +848,11 @@ class JModelListTest extends TestCaseDatabase
 		$method->setAccessible(true);
 
 		$data = array(
-			"ordering" => "listcol",
+			"ordering"  => "listcol",
 			"direction" => "DESC",
-			"limit" => "100",
-			"foo" => "bar",
-			"select" => "foo"
+			"limit"     => "100",
+			"foo"       => "bar",
+			"select"    => "foo"
 		);
 
 		// Set up a quite complex mock object that checks if the correct calls are made and simulates the user output
@@ -1013,7 +1002,7 @@ class JModelListTest extends TestCaseDatabase
 
 		// Pass the invalid values
 		$data = array(
-			"ordering" => "invalidcol",
+			"ordering"  => "invalidcol",
 			"direction" => "invaliddir"
 		);
 
@@ -1095,7 +1084,7 @@ class JModelListTest extends TestCaseDatabase
 			);
 
 		$applicationMock->input = new JInput(array());
-		JFactory::$application = $applicationMock;
+		JFactory::$application  = $applicationMock;
 
 		$this->assertEquals('defaultValue', $this->object->getUserStateFromRequest('state.key', '', 'defaultValue'));
 	}
@@ -1175,11 +1164,22 @@ class JModelListTest extends TestCaseDatabase
 	public function getStartDataProvider()
 	{
 		return array(
-			array(0, 30, 87,  '30e29215b4fac06b4ea59894161c5b70F', 0),
+			array(0, 30, 87, '30e29215b4fac06b4ea59894161c5b70F', 0),
 			array(30, 30, 87, '7b2ec67b92bf302ff8c5a4ab575baf7f', 30),
 			array(60, 30, 87, 'a061a820ad5a502c73bb4577849dc090', 60),
 			array(67, 30, 87, '1d1114ae603b8e6ed4f536c7f1d0c827', 60),
 			array(88, 30, 87, '9ea5981186b1bb5899d8bf4fc4d5e444', 60)
 		);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 }

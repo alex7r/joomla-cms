@@ -25,21 +25,6 @@ class JComponentRouterViewconfigurationTest extends TestCase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object = new JComponentRouterViewconfiguration('test');
-	}
-
-	/**
 	 * Test JComponentRouterViewconfiguration::__construct
 	 *
 	 * @return  void
@@ -200,6 +185,21 @@ class JComponentRouterViewconfigurationTest extends TestCase
 		$this->assertEquals(array(1 => 'form'), $this->object->layouts);
 		$this->object->removeLayout('form');
 		$this->assertEquals(array(), $this->object->layouts);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.4
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->object = new JComponentRouterViewconfiguration('test');
 	}
 
 }

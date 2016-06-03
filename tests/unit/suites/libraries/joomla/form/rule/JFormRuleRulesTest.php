@@ -71,6 +71,158 @@ class JFormRuleRulesTest extends TestCase
 	}
 
 	/**
+	 * Method to get an XML form field element for a specific permission action group.
+	 *
+	 * @param   string $type The name of the action group for which to get the element.
+	 *
+	 * @return  array  The form field element.
+	 *
+	 * @since   11.1
+	 */
+	public function getFieldElement($type = 'item')
+	{
+		$form = array();
+
+		switch ($type)
+		{
+			case 'global':
+				$form[] = '<form>';
+				$form[] = '<field name="rules">';
+				$form[] = '<action name="core.login.site" />';
+				$form[] = '<action name="core.login.admin" />';
+				$form[] = '<action name="core.admin" />';
+				$form[] = '<action name="core.manage" />';
+				$form[] = '<action name="core.create" />';
+				$form[] = '<action name="core.delete" />';
+				$form[] = '<action name="core.edit" />';
+				$form[] = '<action name="core.edit.state" />';
+				$form[] = '<action name="core.edit.own" />';
+				$form[] = '</field>';
+				$form[] = '</form>';
+				break;
+
+			case 'component':
+				$form[] = '<form>';
+				$form[] = '<field name="rules">';
+				$form[] = '<action name="core.admin" />';
+				$form[] = '<action name="core.manage" />';
+				$form[] = '<action name="core.create" />';
+				$form[] = '<action name="core.delete" />';
+				$form[] = '<action name="core.edit" />';
+				$form[] = '<action name="core.edit.state" />';
+				$form[] = '<action name="core.edit.own" />';
+				$form[] = '</field>';
+				$form[] = '</form>';
+				break;
+
+			case 'container':
+				$form[] = '<form>';
+				$form[] = '<field name="rules">';
+				$form[] = '<action name="core.create" />';
+				$form[] = '<action name="core.delete" />';
+				$form[] = '<action name="core.edit" />';
+				$form[] = '<action name="core.edit.state" />';
+				$form[] = '<action name="core.edit.own" />';
+				$form[] = '</field>';
+				$form[] = '</form>';
+				break;
+
+			default:
+			case 'item':
+				$form[] = '<form>';
+				$form[] = '<field name="rules">';
+				$form[] = '<action name="core.delete" />';
+				$form[] = '<action name="core.edit" />';
+				$form[] = '<action name="core.edit.state" />';
+				$form[] = '</field>';
+				$form[] = '</form>';
+				break;
+		}
+
+		// Build an XML element out of the form data array.
+		$xml = simplexml_load_string(implode($form));
+
+		return $xml;
+	}
+
+	/**
+	 * Method to get an example data object representing a specific permission action group.
+	 *
+	 * @param   string $type The name of the action group for which to get a data object.
+	 *
+	 * @return  array  The data object.
+	 *
+	 * @since   11.1
+	 */
+	public function getRuleData($type = 'item')
+	{
+		switch ($type)
+		{
+			case '3pd':
+				$data = (object) array(
+					'com_foo.bar'      => array(),
+					'core.login.site'  => array(),
+					'core.login.admin' => array(),
+					'core.admin'       => array(),
+					'core.manage'      => array(),
+					'core.create'      => array(),
+					'core.delete'      => array(),
+					'core.edit'        => array(),
+					'core.edit.state'  => array(),
+					'core.edit.own'    => array()
+				);
+				break;
+
+			case 'global':
+				$data = (object) array(
+					'core.login.site'  => array(),
+					'core.login.admin' => array(),
+					'core.admin'       => array(),
+					'core.manage'      => array(),
+					'core.create'      => array(),
+					'core.delete'      => array(),
+					'core.edit'        => array(),
+					'core.edit.state'  => array(),
+					'core.edit.own'    => array()
+				);
+				break;
+
+			case 'component':
+				$data = (object) array(
+					'core.admin'      => array(),
+					'core.manage'     => array(),
+					'core.create'     => array(),
+					'core.delete'     => array(),
+					'core.edit'       => array(),
+					'core.edit.state' => array(),
+					'core.edit.own'   => array()
+				);
+				break;
+
+			case 'container':
+				$data = (object) array(
+					'core.create'     => array(),
+					'core.delete'     => array(),
+					'core.edit'       => array(),
+					'core.edit.state' => array(),
+					'core.edit.own'   => array()
+				);
+				break;
+
+			default:
+			case 'item':
+				$data = (object) array(
+					'core.delete'     => array(),
+					'core.edit'       => array(),
+					'core.edit.state' => array(),
+				);
+				break;
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Test the JFormRuleRules::test method.
 	 *
 	 * @return void
@@ -240,157 +392,5 @@ class JFormRuleRulesTest extends TestCase
 			$this->isTrue(),
 			'Line:' . __LINE__ . ' The rule should pass and return true.'
 		);
-	}
-
-	/**
-	 * Method to get an XML form field element for a specific permission action group.
-	 *
-	 * @param   string  $type  The name of the action group for which to get the element.
-	 *
-	 * @return  array  The form field element.
-	 *
-	 * @since   11.1
-	 */
-	public function getFieldElement($type = 'item')
-	{
-		$form = array();
-
-		switch ($type)
-		{
-			case 'global':
-				$form[] = '<form>';
-				$form[] = '<field name="rules">';
-				$form[] = '<action name="core.login.site" />';
-				$form[] = '<action name="core.login.admin" />';
-				$form[] = '<action name="core.admin" />';
-				$form[] = '<action name="core.manage" />';
-				$form[] = '<action name="core.create" />';
-				$form[] = '<action name="core.delete" />';
-				$form[] = '<action name="core.edit" />';
-				$form[] = '<action name="core.edit.state" />';
-				$form[] = '<action name="core.edit.own" />';
-				$form[] = '</field>';
-				$form[] = '</form>';
-				break;
-
-			case 'component':
-				$form[] = '<form>';
-				$form[] = '<field name="rules">';
-				$form[] = '<action name="core.admin" />';
-				$form[] = '<action name="core.manage" />';
-				$form[] = '<action name="core.create" />';
-				$form[] = '<action name="core.delete" />';
-				$form[] = '<action name="core.edit" />';
-				$form[] = '<action name="core.edit.state" />';
-				$form[] = '<action name="core.edit.own" />';
-				$form[] = '</field>';
-				$form[] = '</form>';
-				break;
-
-			case 'container':
-				$form[] = '<form>';
-				$form[] = '<field name="rules">';
-				$form[] = '<action name="core.create" />';
-				$form[] = '<action name="core.delete" />';
-				$form[] = '<action name="core.edit" />';
-				$form[] = '<action name="core.edit.state" />';
-				$form[] = '<action name="core.edit.own" />';
-				$form[] = '</field>';
-				$form[] = '</form>';
-				break;
-
-			default:
-			case 'item':
-				$form[] = '<form>';
-				$form[] = '<field name="rules">';
-				$form[] = '<action name="core.delete" />';
-				$form[] = '<action name="core.edit" />';
-				$form[] = '<action name="core.edit.state" />';
-				$form[] = '</field>';
-				$form[] = '</form>';
-				break;
-		}
-
-		// Build an XML element out of the form data array.
-		$xml = simplexml_load_string(implode($form));
-
-		return $xml;
-	}
-
-	/**
-	 * Method to get an example data object representing a specific permission action group.
-	 *
-	 * @param   string  $type  The name of the action group for which to get a data object.
-	 *
-	 * @return  array  The data object.
-	 *
-	 * @since   11.1
-	 */
-	public function getRuleData($type = 'item')
-	{
-		switch ($type)
-		{
-			case '3pd':
-				$data = (object) array(
-					'com_foo.bar' => array(),
-					'core.login.site' => array(),
-					'core.login.admin' => array(),
-					'core.admin' => array(),
-					'core.manage' => array(),
-					'core.create' => array(),
-					'core.delete' => array(),
-					'core.edit' => array(),
-					'core.edit.state' => array(),
-					'core.edit.own' => array()
-				);
-				break;
-
-			case 'global':
-				$data = (object) array(
-					'core.login.site' => array(),
-					'core.login.admin' => array(),
-					'core.admin' => array(),
-					'core.manage' => array(),
-					'core.create' => array(),
-					'core.delete' => array(),
-					'core.edit' => array(),
-					'core.edit.state' => array(),
-					'core.edit.own' => array()
-				);
-				break;
-
-			case 'component':
-				$data = (object) array(
-					'core.admin' => array(),
-					'core.manage' => array(),
-					'core.create' => array(),
-					'core.delete' => array(),
-					'core.edit' => array(),
-					'core.edit.state' => array(),
-					'core.edit.own' => array()
-				);
-				break;
-
-			case 'container':
-				$data = (object) array(
-					'core.create' => array(),
-					'core.delete' => array(),
-					'core.edit' => array(),
-					'core.edit.state' => array(),
-					'core.edit.own' => array()
-				);
-				break;
-
-			default:
-			case 'item':
-				$data = (object) array(
-					'core.delete' => array(),
-					'core.edit' => array(),
-					'core.edit.state' => array(),
-				);
-				break;
-		}
-
-		return $data;
 	}
 }

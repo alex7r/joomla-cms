@@ -57,23 +57,6 @@ class AdminModelHelp extends JModelLegacy
 	protected $latest_version_check = null;
 
 	/**
-	 * Method to get the help search string
-	 *
-	 * @return  string  Help search string
-	 *
-	 * @since   1.6
-	 */
-	public function &getHelpSearch()
-	{
-		if (is_null($this->help_search))
-		{
-			$this->help_search = JFactory::getApplication()->input->getString('helpsearch');
-		}
-
-		return $this->help_search;
-	}
-
-	/**
 	 * Method to get the page
 	 *
 	 * @return  string  The page
@@ -88,29 +71,6 @@ class AdminModelHelp extends JModelLegacy
 		}
 
 		return $this->page;
-	}
-
-	/**
-	 * Method to get the lang tag
-	 *
-	 * @return  string  lang iso tag
-	 *
-	 * @since  1.6
-	 */
-	public function getLangTag()
-	{
-		if (is_null($this->lang_tag))
-		{
-			$this->lang_tag = JFactory::getLanguage()->getTag();
-
-			if (!is_dir(JPATH_BASE . '/help/' . $this->lang_tag))
-			{
-				// Use English as fallback
-				$this->lang_tag = 'en-GB';
-			}
-		}
-
-		return $this->lang_tag;
 	}
 
 	/**
@@ -148,7 +108,7 @@ class AdminModelHelp extends JModelLegacy
 
 		// Get Help files
 		jimport('joomla.filesystem.folder');
-		$files = JFolder::files(JPATH_BASE . '/help/' . $lang_tag, '\.xml$|\.html$');
+		$files     = JFolder::files(JPATH_BASE . '/help/' . $lang_tag, '\.xml$|\.html$');
 		$this->toc = array();
 
 		foreach ($files as $file)
@@ -174,7 +134,8 @@ class AdminModelHelp extends JModelLegacy
 			$file = preg_replace('#\.xml$|\.html$#', '', $file);
 
 			if ($help_search
-				&& JString::strpos(JString::strtolower(strip_tags($buffer)), JString::strtolower($help_search)) === false)
+				&& JString::strpos(JString::strtolower(strip_tags($buffer)), JString::strtolower($help_search)) === false
+			)
 			{
 				continue;
 			}
@@ -190,6 +151,46 @@ class AdminModelHelp extends JModelLegacy
 	}
 
 	/**
+	 * Method to get the lang tag
+	 *
+	 * @return  string  lang iso tag
+	 *
+	 * @since  1.6
+	 */
+	public function getLangTag()
+	{
+		if (is_null($this->lang_tag))
+		{
+			$this->lang_tag = JFactory::getLanguage()->getTag();
+
+			if (!is_dir(JPATH_BASE . '/help/' . $this->lang_tag))
+			{
+				// Use English as fallback
+				$this->lang_tag = 'en-GB';
+			}
+		}
+
+		return $this->lang_tag;
+	}
+
+	/**
+	 * Method to get the help search string
+	 *
+	 * @return  string  Help search string
+	 *
+	 * @since   1.6
+	 */
+	public function &getHelpSearch()
+	{
+		if (is_null($this->help_search))
+		{
+			$this->help_search = JFactory::getApplication()->input->getString('helpsearch');
+		}
+
+		return $this->help_search;
+	}
+
+	/**
 	 * Method to get the latest version check
 	 *
 	 * @return  string  Latest Version Check URL
@@ -198,7 +199,7 @@ class AdminModelHelp extends JModelLegacy
 	{
 		if (!$this->latest_version_check)
 		{
-			$override = 'https://help.joomla.org/proxy/index.php?option=com_help&amp;keyref=Help{major}{minor}:'
+			$override                   = 'https://help.joomla.org/proxy/index.php?option=com_help&amp;keyref=Help{major}{minor}:'
 				. 'Joomla_Version_{major}_{minor}_{maintenance}/{langcode}&amp;lang={langcode}';
 			$this->latest_version_check = JHelp::createUrl('JVERSION', false, $override);
 		}

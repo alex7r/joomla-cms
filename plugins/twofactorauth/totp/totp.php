@@ -35,8 +35,8 @@ class PlgTwofactorauthTotp extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An optional associative array of configuration settings.
+	 * @param   object &$subject   The object to observe
+	 * @param   array  $config     An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 *
@@ -99,8 +99,8 @@ class PlgTwofactorauthTotp extends JPlugin
 	/**
 	 * Shows the configuration page for this two factor authentication method.
 	 *
-	 * @param   object   $otpConfig  The two factor auth configuration object
-	 * @param   integer  $user_id    The numeric user ID of the user whose form we'll display
+	 * @param   object  $otpConfig The two factor auth configuration object
+	 * @param   integer $user_id   The numeric user ID of the user whose form we'll display
 	 *
 	 * @return  boolean|string  False if the method is not ours, the HTML of the configuration page otherwise
 	 *
@@ -164,7 +164,7 @@ class PlgTwofactorauthTotp extends JPlugin
 	 * The save handler of the two factor configuration method's configuration
 	 * page.
 	 *
-	 * @param   string  $method  The two factor auth method for which we'll show the config page
+	 * @param   string $method The two factor auth method for which we'll show the config page
 	 *
 	 * @return  boolean|stdClass  False if the method doesn't match or we have an error, OTP config object if it succeeds
 	 *
@@ -212,7 +212,7 @@ class PlgTwofactorauthTotp extends JPlugin
 		$totp = new FOFEncryptTotp(30, 6, 10);
 
 		// Check the security code entered by the user (exact time slot match)
-		$code = $totp->getCode($data['key']);
+		$code  = $totp->getCode($data['key']);
 		$check = $code == $data['securitycode'];
 
 		/*
@@ -222,8 +222,8 @@ class PlgTwofactorauthTotp extends JPlugin
 		 */
 		if (!$check)
 		{
-			$time = time() - 30;
-			$code = $totp->getCode($data['key'], $time);
+			$time  = time() - 30;
+			$code  = $totp->getCode($data['key'], $time);
 			$check = $code == $data['securitycode'];
 		}
 
@@ -233,8 +233,8 @@ class PlgTwofactorauthTotp extends JPlugin
 		 */
 		if (!$check)
 		{
-			$time = time() + 30;
-			$code = $totp->getCode($data['key'], $time);
+			$time  = time() + 30;
+			$code  = $totp->getCode($data['key'], $time);
 			$check = $code == $data['securitycode'];
 		}
 
@@ -246,11 +246,11 @@ class PlgTwofactorauthTotp extends JPlugin
 
 		// Check succeedeed; return an OTP configuration object
 		$otpConfig = (object) array(
-			'method'   => 'totp',
-			'config'   => array(
+			'method' => 'totp',
+			'config' => array(
 				'code' => $data['key']
 			),
-			'otep'     => array()
+			'otep'   => array()
 		);
 
 		return $otpConfig;
@@ -260,8 +260,8 @@ class PlgTwofactorauthTotp extends JPlugin
 	 * This method should handle any two factor authentication and report back
 	 * to the subject.
 	 *
-	 * @param   array  $credentials  Array holding the user credentials
-	 * @param   array  $options      Array of extra options
+	 * @param   array $credentials Array holding the user credentials
+	 * @param   array $options     Array of extra options
 	 *
 	 * @return  boolean  True if the user is authorised with this two-factor authentication method
 	 *
@@ -294,7 +294,7 @@ class PlgTwofactorauthTotp extends JPlugin
 		$totp = new FOFEncryptTotp(30, 6, 10);
 
 		// Check the code
-		$code = $totp->getCode($otpConfig->config['code']);
+		$code  = $totp->getCode($otpConfig->config['code']);
 		$check = $code == $credentials['secretkey'];
 
 		/*
@@ -304,8 +304,8 @@ class PlgTwofactorauthTotp extends JPlugin
 		 */
 		if (!$check)
 		{
-			$time = time() - 30;
-			$code = $totp->getCode($otpConfig->config['code'], $time);
+			$time  = time() - 30;
+			$code  = $totp->getCode($otpConfig->config['code'], $time);
 			$check = $code == $credentials['secretkey'];
 		}
 
@@ -315,8 +315,8 @@ class PlgTwofactorauthTotp extends JPlugin
 		 */
 		if (!$check)
 		{
-			$time = time() + 30;
-			$code = $totp->getCode($otpConfig->config['code'], $time);
+			$time  = time() + 30;
+			$code  = $totp->getCode($otpConfig->config['code'], $time);
 			$check = $code == $credentials['secretkey'];
 		}
 

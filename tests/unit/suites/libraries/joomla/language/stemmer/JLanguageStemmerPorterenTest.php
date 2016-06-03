@@ -20,17 +20,6 @@ class JLanguageStemmerPorterenTest extends PHPUnit_Framework_TestCase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->object = new JLanguageStemmerPorteren;
-	}
-
-	/**
 	 * Data provider for testStem()
 	 *
 	 * @return array
@@ -72,5 +61,16 @@ class JLanguageStemmerPorterenTest extends PHPUnit_Framework_TestCase
 			$result,
 			$this->object->stem($token, $lang)
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$this->object = new JLanguageStemmerPorteren;
 	}
 }

@@ -19,7 +19,7 @@ class TagsRouter extends JComponentRouterBase
 	/**
 	 * Build the route for the com_tags component
 	 *
-	 * @param   array  &$query  An array of URL arguments
+	 * @param   array &$query An array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *
@@ -79,7 +79,7 @@ class TagsRouter extends JComponentRouterBase
 			if ($notActiveTag || $mView != $view)
 			{
 				// ID in com_tags can be either an integer, a string or an array of IDs
-				$id = is_array($query['id']) ? implode(',', $query['id']) : $query['id'];
+				$id         = is_array($query['id']) ? implode(',', $query['id']) : $query['id'];
 				$segments[] = $id;
 			}
 
@@ -89,8 +89,9 @@ class TagsRouter extends JComponentRouterBase
 		if (isset($query['layout']))
 		{
 			if ((!empty($query['Itemid']) && isset($menuItem->query['layout'])
-				&& $query['layout'] == $menuItem->query['layout'])
-				|| $query['layout'] == 'default')
+					&& $query['layout'] == $menuItem->query['layout'])
+				|| $query['layout'] == 'default'
+			)
 			{
 				unset($query['layout']);
 			}
@@ -109,7 +110,7 @@ class TagsRouter extends JComponentRouterBase
 	/**
 	 * Parse the segments of a URL.
 	 *
-	 * @param   array  &$segments  The segments of the URL to parse.
+	 * @param   array &$segments The segments of the URL to parse.
 	 *
 	 * @return  array  The URL attributes to be used by the application.
 	 *
@@ -118,7 +119,7 @@ class TagsRouter extends JComponentRouterBase
 	public function parse(&$segments)
 	{
 		$total = count($segments);
-		$vars = array();
+		$vars  = array();
 
 		for ($i = 0; $i < $total; $i++)
 		{
@@ -143,7 +144,7 @@ class TagsRouter extends JComponentRouterBase
 		// From the tags view, we can only jump to a tag.
 		$id = (isset($item->query['id']) && $item->query['id'] > 1) ? $item->query['id'] : 'root';
 
-		$vars['id'] = $segments[0];
+		$vars['id']   = $segments[0];
 		$vars['view'] = 'tag';
 
 		return $vars;
@@ -153,7 +154,7 @@ class TagsRouter extends JComponentRouterBase
 /**
  * Tags router functions. These functions are proxys for the new router interface or old SEF extensions.
  *
- * @param   array  &$query  An array of URL arguments.
+ * @param   array &$query An array of URL arguments.
  *
  * @return array
  *
@@ -169,7 +170,7 @@ function tagsBuildRoute(&$query)
 /**
  * Parse the segments of a URL. These functions are proxys for the new router interface or old SEF extensions.
  *
- * @param   array  $segments  The segments of the URL to parse.
+ * @param   array $segments The segments of the URL to parse.
  *
  * @return  array  The URL attributes to be used by the application.
  *

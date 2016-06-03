@@ -28,18 +28,30 @@ class JArchiveBzip2 implements JArchiveExtractable
 	private $_data = null;
 
 	/**
+	 * Tests whether this adapter can unpack files on this computer.
+	 *
+	 * @return  boolean  True if supported
+	 *
+	 * @since   11.3
+	 */
+	public static function isSupported()
+	{
+		return extension_loaded('bz2');
+	}
+
+	/**
 	 * Extract a Bzip2 compressed file to a given path
 	 *
-	 * @param   string  $archive      Path to Bzip2 archive to extract
-	 * @param   string  $destination  Path to extract archive to
-	 * @param   array   $options      Extraction options [unused]
+	 * @param   string $archive     Path to Bzip2 archive to extract
+	 * @param   string $destination Path to extract archive to
+	 * @param   array  $options     Extraction options [unused]
 	 *
 	 * @return  boolean  True if successful
 	 *
 	 * @since   11.1
 	 * @throws  RuntimeException
 	 */
-	public function extract($archive, $destination, array $options = array ())
+	public function extract($archive, $destination, array $options = array())
 	{
 		$this->_data = null;
 
@@ -78,15 +90,34 @@ class JArchiveBzip2 implements JArchiveExtractable
 	}
 
 	/**
+	 * Temporary private method to isolate JError from the extract method
+	 * This code should be removed when JError is removed.
+	 *
+	 * @param   int    $code The application-internal error code for this error
+	 * @param   string $msg  The error message, which may also be shown the user if need be.
+	 *
+	 * @return mixed JError object or Runtime Exception
+	 */
+	private function raiseWarning($code, $msg)
+	{
+		if (class_exists('JError'))
+		{
+			return JError::raiseWarning($code, $msg);
+		}
+
+		throw new RuntimeException($msg);
+	}
+
+	/**
 	 * Method to extract archive using stream objects
 	 *
-	 * @param   string  $archive      Path to Bzip2 archive to extract
-	 * @param   string  $destination  Path to extract archive to
-	 * @param   array   $options      Extraction options [unused]
+	 * @param   string $archive     Path to Bzip2 archive to extract
+	 * @param   string $destination Path to extract archive to
+	 * @param   array  $options     Extraction options [unused]
 	 *
 	 * @return  boolean  True if successful
 	 */
-	protected function extractStream($archive, $destination, $options = array ())
+	protected function extractStream($archive, $destination, $options = array())
 	{
 		// New style! streams!
 		$input = JFactory::getStream();
@@ -120,44 +151,11 @@ class JArchiveBzip2 implements JArchiveExtractable
 
 				return $this->raiseWarning(100, 'Unable to write archive (bz2)');
 			}
-		}
-
-		while ($this->_data);
+		} while ($this->_data);
 
 		$output->close();
 		$input->close();
 
 		return true;
-	}
-
-	/**
-	 * Temporary private method to isolate JError from the extract method
-	 * This code should be removed when JError is removed.
-	 *
-	 * @param   int     $code  The application-internal error code for this error
-	 * @param   string  $msg   The error message, which may also be shown the user if need be.
-	 *
-	 * @return mixed JError object or Runtime Exception
-	 */
-	private function raiseWarning($code, $msg)
-	{
-		if (class_exists('JError'))
-		{
-			return JError::raiseWarning($code, $msg);
-		}
-
-		throw new RuntimeException($msg);
-	}
-
-	/**
-	 * Tests whether this adapter can unpack files on this computer.
-	 *
-	 * @return  boolean  True if supported
-	 *
-	 * @since   11.3
-	 */
-	public static function isSupported()
-	{
-		return extension_loaded('bz2');
 	}
 }

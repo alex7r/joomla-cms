@@ -21,7 +21,7 @@ abstract class JHtmlContentAdministrator
 	/**
 	 * Render the list of associated items
 	 *
-	 * @param   int  $articleid  The article item id
+	 * @param   int $articleid The article item id
 	 *
 	 * @return  string  The language HTML
 	 */
@@ -39,7 +39,7 @@ abstract class JHtmlContentAdministrator
 			}
 
 			// Get the associated menu items
-			$db = JFactory::getDbo();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select('c.*')
 				->select('l.sef as lang_sef')
@@ -65,8 +65,8 @@ abstract class JHtmlContentAdministrator
 			{
 				foreach ($items as &$item)
 				{
-					$text = strtoupper($item->lang_sef);
-					$url = JRoute::_('index.php?option=com_content&task=article.edit&id=' . (int) $item->id);
+					$text         = strtoupper($item->lang_sef);
+					$url          = JRoute::_('index.php?option=com_content&task=article.edit&id=' . (int) $item->id);
 					$tooltipParts = array(
 						JHtml::_('image', 'mod_languages/' . $item->image . '.gif',
 							$item->language_title,
@@ -99,9 +99,9 @@ abstract class JHtmlContentAdministrator
 	/**
 	 * Show the feature/unfeature links
 	 *
-	 * @param   int      $value      The state value
-	 * @param   int      $i          Row number
-	 * @param   boolean  $canChange  Is user allowed to change?
+	 * @param   int     $value     The state value
+	 * @param   int     $i         Row number
+	 * @param   boolean $canChange Is user allowed to change?
 	 *
 	 * @return  string       HTML code
 	 */
@@ -114,8 +114,8 @@ abstract class JHtmlContentAdministrator
 			0 => array('unfeatured', 'articles.featured', 'COM_CONTENT_UNFEATURED', 'JGLOBAL_TOGGLE_FEATURED'),
 			1 => array('featured', 'articles.unfeatured', 'COM_CONTENT_FEATURED', 'JGLOBAL_TOGGLE_FEATURED'),
 		);
-		$state = JArrayHelper::getValue($states, (int) $value, $states[1]);
-		$icon  = $state[0];
+		$state  = JArrayHelper::getValue($states, (int) $value, $states[1]);
+		$icon   = $state[0];
 
 		if ($canChange)
 		{

@@ -286,12 +286,12 @@ class JDatabaseQueryTest extends TestCase
 			(string) $this->_instance,
 			$this->equalTo(
 				PHP_EOL . "SELECT a.id" .
-					PHP_EOL . "FROM a" .
-					PHP_EOL . "INNER JOIN b ON b.id = a.id" .
-					PHP_EOL . "WHERE b.id = 1" .
-					PHP_EOL . "GROUP BY a.id" .
-					PHP_EOL . "HAVING COUNT(a.id) > 3" .
-					PHP_EOL . "ORDER BY a.id"
+				PHP_EOL . "FROM a" .
+				PHP_EOL . "INNER JOIN b ON b.id = a.id" .
+				PHP_EOL . "WHERE b.id = 1" .
+				PHP_EOL . "GROUP BY a.id" .
+				PHP_EOL . "HAVING COUNT(a.id) > 3" .
+				PHP_EOL . "ORDER BY a.id"
 			),
 			'Tests for correct rendering.'
 		);
@@ -315,9 +315,9 @@ class JDatabaseQueryTest extends TestCase
 			(string) $this->_instance,
 			$this->equalTo(
 				PHP_EOL . "UPDATE #__foo AS a" .
-					PHP_EOL . "INNER JOIN b ON b.id = a.id" .
-					PHP_EOL . "SET a.id = 2" .
-					PHP_EOL . "WHERE b.id = 1"
+				PHP_EOL . "INNER JOIN b ON b.id = a.id" .
+				PHP_EOL . "SET a.id = 2" .
+				PHP_EOL . "WHERE b.id = 1"
 			),
 			'Tests for correct rendering.'
 		);
@@ -919,8 +919,8 @@ class JDatabaseQueryTest extends TestCase
 	 */
 	public function testInnerJoin()
 	{
-		$q1 = new JDatabaseQueryInspector($this->dbo);
-		$q2 = new JDatabaseQueryInspector($this->dbo);
+		$q1        = new JDatabaseQueryInspector($this->dbo);
+		$q2        = new JDatabaseQueryInspector($this->dbo);
 		$condition = 'foo ON foo.id = bar.id';
 
 		$this->assertThat(
@@ -1008,8 +1008,8 @@ class JDatabaseQueryTest extends TestCase
 	 */
 	public function testLeftJoin()
 	{
-		$q1 = new JDatabaseQueryInspector($this->dbo);
-		$q2 = new JDatabaseQueryInspector($this->dbo);
+		$q1        = new JDatabaseQueryInspector($this->dbo);
+		$q2        = new JDatabaseQueryInspector($this->dbo);
 		$condition = 'foo ON foo.id = bar.id';
 
 		$this->assertThat(
@@ -1046,8 +1046,8 @@ class JDatabaseQueryTest extends TestCase
 	/**
 	 * Tests the quoteName method.
 	 *
-	 * @param   boolean  $quoted    The value of the quoted argument.
-	 * @param   string   $expected  The expected result.
+	 * @param   boolean $quoted   The value of the quoted argument.
+	 * @param   string  $expected The expected result.
 	 *
 	 * @return  void
 	 *
@@ -1127,8 +1127,8 @@ class JDatabaseQueryTest extends TestCase
 	 */
 	public function testOuterJoin()
 	{
-		$q1 = new JDatabaseQueryInspector($this->dbo);
-		$q2 = new JDatabaseQueryInspector($this->dbo);
+		$q1        = new JDatabaseQueryInspector($this->dbo);
+		$q2        = new JDatabaseQueryInspector($this->dbo);
 		$condition = 'foo ON foo.id = bar.id';
 
 		$this->assertThat(
@@ -1149,9 +1149,9 @@ class JDatabaseQueryTest extends TestCase
 	/**
 	 * Tests the quote method.
 	 *
-	 * @param   boolean  $text      The value to be quoted.
-	 * @param   boolean  $escape    True to escape the string, false to leave it unchanged.
-	 * @param   string   $expected  The expected result.
+	 * @param   boolean $text     The value to be quoted.
+	 * @param   boolean $escape   True to escape the string, false to leave it unchanged.
+	 * @param   string  $expected The expected result.
 	 *
 	 * @return  void
 	 *
@@ -1222,8 +1222,8 @@ class JDatabaseQueryTest extends TestCase
 	 */
 	public function testRightJoin()
 	{
-		$q1 = new JDatabaseQueryInspector($this->dbo);
-		$q2 = new JDatabaseQueryInspector($this->dbo);
+		$q1        = new JDatabaseQueryInspector($this->dbo);
+		$q2        = new JDatabaseQueryInspector($this->dbo);
 		$condition = 'foo ON foo.id = bar.id';
 
 		$this->assertThat(
@@ -1947,7 +1947,7 @@ class JDatabaseQueryTest extends TestCase
 	 */
 	public function testFormat()
 	{
-		$result = $this->_instance->format('SELECT %n FROM %n WHERE %n = %a', 'foo', '#__bar', 'id', 10);
+		$result   = $this->_instance->format('SELECT %n FROM %n WHERE %n = %a', 'foo', '#__bar', 'id', 10);
 		$expected = 'SELECT ' . $this->_instance->qn('foo') . ' FROM ' . $this->_instance->qn('#__bar') .
 			' WHERE ' . $this->_instance->qn('id') . ' = 10';
 		$this->assertThat(
@@ -1956,7 +1956,7 @@ class JDatabaseQueryTest extends TestCase
 			'Line: ' . __LINE__ . '.'
 		);
 
-		$result = $this->_instance->format('SELECT %n FROM %n WHERE %n = %t OR %3$n = %Z', 'id', '#__foo', 'date');
+		$result   = $this->_instance->format('SELECT %n FROM %n WHERE %n = %t OR %3$n = %Z', 'id', '#__foo', 'date');
 		$expected = 'SELECT ' . $this->_instance->qn('id') . ' FROM ' . $this->_instance->qn('#__foo') .
 			' WHERE ' . $this->_instance->qn('date') . ' = ' . $this->_instance->currentTimestamp() .
 			' OR ' . $this->_instance->qn('date') . ' = ' . $this->_instance->nullDate(true);
@@ -1966,24 +1966,6 @@ class JDatabaseQueryTest extends TestCase
 			'Line: ' . __LINE__ . '.'
 		);
 
-	}
-
-	/**
-	 * Sets up the fixture.
-	 *
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->dbo = $this->getMockDatabase();
-
-		$this->_instance = new JDatabaseQueryInspector($this->dbo);
 	}
 
 	/**
@@ -1997,24 +1979,24 @@ class JDatabaseQueryTest extends TestCase
 	{
 		return array(
 			// date, interval, datepart, expected
-			'Add date'		=> array('2008-12-31', '1', 'DAY', "DATE_ADD('2008-12-31', INTERVAL 1 DAY)"),
-			'Subtract date'	=> array('2008-12-31', '-1', 'DAY', "DATE_ADD('2008-12-31', INTERVAL -1 DAY)"),
-			'Add datetime'	=> array('2008-12-31 23:59:59', '1', 'DAY', "DATE_ADD('2008-12-31 23:59:59', INTERVAL 1 DAY)"),
+			'Add date'      => array('2008-12-31', '1', 'DAY', "DATE_ADD('2008-12-31', INTERVAL 1 DAY)"),
+			'Subtract date' => array('2008-12-31', '-1', 'DAY', "DATE_ADD('2008-12-31', INTERVAL -1 DAY)"),
+			'Add datetime'  => array('2008-12-31 23:59:59', '1', 'DAY', "DATE_ADD('2008-12-31 23:59:59', INTERVAL 1 DAY)"),
 		);
 	}
 
 	/**
 	 * Tests the JDatabaseQuery::DateAdd method
 	 *
-	 * @param   datetime  $date      The date or datetime to add to.
-	 * @param   string    $interval  The maximum length of the text.
-	 * @param   string    $datePart  The part of the date to be added to (such as day or micosecond)
-	 * @param   string    $expected  The expected result.
+	 * @param   datetime $date     The date or datetime to add to.
+	 * @param   string   $interval The maximum length of the text.
+	 * @param   string   $datePart The part of the date to be added to (such as day or micosecond)
+	 * @param   string   $expected The expected result.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedDateAdd
-	 * @since   13.1
+	 * @since         13.1
 	 */
 	public function testDateAdd($date, $interval, $datePart, $expected)
 	{
@@ -2081,5 +2063,23 @@ class JDatabaseQueryTest extends TestCase
 			$this->equalTo(PHP_EOL . "UNION ALL (SELECT name FROM foo)" . PHP_EOL . "UNION ALL (SELECT name FROM bar)"),
 			'Tests rendered query with two union alls sequentially.'
 		);
+	}
+
+	/**
+	 * Sets up the fixture.
+	 *
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->dbo = $this->getMockDatabase();
+
+		$this->_instance = new JDatabaseQueryInspector($this->dbo);
 	}
 }

@@ -27,7 +27,7 @@ class NewsfeedsTableNewsfeed extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  &$db  A database connector object
+	 * @param   JDatabaseDriver &$db A database connector object
 	 */
 	public function __construct(&$db)
 	{
@@ -48,6 +48,7 @@ class NewsfeedsTableNewsfeed extends JTable
 		if (trim($this->name) == '')
 		{
 			$this->setError(JText::_('COM_NEWSFEEDS_WARNING_PROVIDE_VALID_NAME'));
+
 			return false;
 		}
 
@@ -82,7 +83,7 @@ class NewsfeedsTableNewsfeed extends JTable
 			$after_clean = JString::str_ireplace($bad_characters, "", $this->metakey);
 
 			// Create array using commas as delimiter
-			$keys = explode(',', $after_clean);
+			$keys       = explode(',', $after_clean);
 			$clean_keys = array();
 
 			foreach ($keys as $key)
@@ -112,7 +113,7 @@ class NewsfeedsTableNewsfeed extends JTable
 	/**
 	 * Overriden JTable::store to set modified data.
 	 *
-	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 * @param   boolean $updateNulls True to update fields even if they are null.
 	 *
 	 * @return  boolean  True on success.
 	 *

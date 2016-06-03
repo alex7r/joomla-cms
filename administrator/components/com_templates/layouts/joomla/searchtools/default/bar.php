@@ -15,11 +15,11 @@ if ($data['view'] instanceof TemplatesViewStyles || $data['view'] instanceof Tem
 {
 	// Add the client selector before the form filters.
 	$clientIdField = $data['view']->filterForm->getField('client_id');
-?>
+	?>
 	<div class="js-stools-field-filter js-stools-client_id">
 		<?php echo $clientIdField->input; ?>
 	</div>
-<?php
+	<?php
 }
 
 // Display the main joomla layout.

@@ -21,7 +21,7 @@ class InstallerControllerUpdatesites extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   3.4
@@ -31,9 +31,9 @@ class InstallerControllerUpdatesites extends JControllerLegacy
 		parent::__construct($config);
 
 		$this->registerTask('unpublish', 'publish');
-		$this->registerTask('publish',   'publish');
-		$this->registerTask('delete',    'delete');
-		$this->registerTask('rebuild',   'rebuild');
+		$this->registerTask('publish', 'publish');
+		$this->registerTask('delete', 'delete');
+		$this->registerTask('rebuild', 'rebuild');
 	}
 
 	/**

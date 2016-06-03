@@ -27,8 +27,8 @@ class JAccessRuleTest extends PHPUnit_Framework_TestCase
 	{
 		$array = array(
 			-42 => 1,
-			2 => 1,
-			3 => 0
+			2   => 1,
+			3   => 0
 		);
 
 		// Get the string representation.
@@ -51,12 +51,12 @@ class JAccessRuleTest extends PHPUnit_Framework_TestCase
 
 		$array_A = array(
 			-44 => 1,
-			2 => 1,
-			3 => 0
+			2   => 1,
+			3   => 0
 		);
 
 		$string_A = json_encode($array_A);
-		$rule_A = new JAccessRule($string_A);
+		$rule_A   = new JAccessRule($string_A);
 		$this->assertNotEquals(
 			$string,
 			(string) $rule_A
@@ -74,8 +74,8 @@ class JAccessRuleTest extends PHPUnit_Framework_TestCase
 	{
 		$array = array(
 			-42 => 1,
-			2 => 1,
-			3 => 0
+			2   => 1,
+			3   => 0
 		);
 
 		$rule = new JAccessRule($array);
@@ -131,8 +131,8 @@ class JAccessRuleTest extends PHPUnit_Framework_TestCase
 	{
 		$array = array(
 			-42 => 1,
-			2 => 1,
-			3 => 0
+			2   => 1,
+			3   => 0
 		);
 
 		// Construct an rule with no identities.
@@ -163,17 +163,17 @@ class JAccessRuleTest extends PHPUnit_Framework_TestCase
 		// Merge a new set, flipping some bits.
 		$array = array(
 			-42 => 0,
-			2 => 1,
-			3 => 1,
-			4 => 1
+			2   => 1,
+			3   => 1,
+			4   => 1
 		);
 
 		// Ident 3 should remain false, 4 should be added.
 		$result = array(
 			-42 => 0,
-			2 => 1,
-			3 => 0,
-			4 => 1
+			2   => 1,
+			3   => 0,
+			4   => 1
 		);
 		$rule->mergeIdentities($array);
 		$this->assertEquals(
@@ -194,9 +194,9 @@ class JAccessRuleTest extends PHPUnit_Framework_TestCase
 		// Simple allow and deny test.
 		$array = array(
 			-42 => 0,
-			2 => 1
+			2   => 1
 		);
-		$rule = new JAccessRule($array);
+		$rule  = new JAccessRule($array);
 
 		// This one should be denied.
 		$this->assertFalse(

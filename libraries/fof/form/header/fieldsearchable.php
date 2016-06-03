@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -52,7 +52,7 @@ class FOFFormHeaderFieldsearchable extends FOFFormHeaderField
 		}
 
 		return '<input type="text" name="' . $name . '" id="' . $this->id . '"' . ' value="'
-			. htmlspecialchars($searchvalue, ENT_COMPAT, 'UTF-8') . '"' . $filterclass . $size . $placeholder . $onchange . $maxLength . '/>';
+		. htmlspecialchars($searchvalue, ENT_COMPAT, 'UTF-8') . '"' . $filterclass . $size . $placeholder . $onchange . $maxLength . '/>';
 	}
 
 	/**
@@ -62,7 +62,7 @@ class FOFFormHeaderFieldsearchable extends FOFFormHeaderField
 	 */
 	protected function getButtons()
 	{
-		$buttonclass = $this->element['buttonclass'] ? (string) $this->element['buttonclass'] : 'btn hasTip hasTooltip';
+		$buttonclass  = $this->element['buttonclass'] ? (string) $this->element['buttonclass'] : 'btn hasTip hasTooltip';
 		$buttonsState = strtolower($this->element['buttons']);
 		$show_buttons = !in_array($buttonsState, array('no', 'false', '0'));
 

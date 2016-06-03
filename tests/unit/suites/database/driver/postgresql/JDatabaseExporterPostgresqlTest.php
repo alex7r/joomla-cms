@@ -31,114 +31,9 @@ class JDatabaseExporterPostgresqlTest extends TestCase
 	private $_ver9dot1 = true;
 
 	/**
-	 * Sets up the testing conditions
-	 *
-	 * @return  void
-	 */
-	protected function setup()
-	{
-		// Set up the database object mock.
-		$this->dbo = $this->getMockDatabase('Postgresql', array('getTableSequences'), '1970-01-01 00:00:00', 'Y-m-d H:i:s');
-
-		$this->dbo->expects($this->any())
-			->method('getPrefix')
-			->willReturn('jos_');
-
-		$this->dbo->expects($this->any())
-			->method('getTableColumns')
-			->willReturn(
-				array(
-					(object) array(
-						'column_name' => 'id',
-						'type' => 'integer',
-						'null' => 'NO',
-						'default' => 'nextval(\'jos_dbtest_id_seq\'::regclass)',
-						'comments' => '',
-					),
-					(object) array(
-						'column_name' => 'title',
-						'type' => 'character varying(50)',
-						'null' => 'NO',
-						'default' => 'NULL',
-						'comments' => '',
-					),
-					(object) array(
-						'column_name' => 'start_date',
-						'type' => 'timestamp without time zone',
-						'null' => 'NO',
-						'default' => 'NULL',
-						'comments' => '',
-					),
-					(object) array(
-						'column_name' => 'description',
-						'type' => 'text',
-						'null' => 'NO',
-						'default' => 'NULL',
-						'comments' => '',
-					)
-				)
-			);
-
-		$this->dbo->expects($this->any())
-			->method('getTableKeys')
-			->willReturn(array(
-				(object) array(
-					'idxName' => 'jos_dbtest_pkey',
-					'isPrimary' => 'TRUE',
-					'isUnique' => 'TRUE',
-					'Query' => 'ALTER TABLE "jos_dbtest" ADD PRIMARY KEY (id)',
-				)
-			));
-
-		// Check if database is at least 9.1.0
-		$this->dbo->expects($this->any())
-			->method('getVersion')
-			->willReturn('9.1.2');
-
-		if (version_compare($this->dbo->getVersion(), '9.1.0') >= 0)
-		{
-			$this->_ver9dot1 = true;
-			$start_val = '1';
-		}
-		else
-		{
-			/* Older version */
-			$this->_ver9dot1 = false;
-			$start_val = null;
-		}
-
-		$this->dbo->expects($this->any())
-			->method('getTableSequences')
-			->willReturn(
-				array(
-					(object) array(
-						'sequence' => 'jos_dbtest_id_seq',
-						'schema' => 'public',
-						'table' => 'jos_dbtest',
-						'column' => 'id',
-						'data_type' => 'bigint',
-						'start_value' => $start_val,
-						'minimum_value' => '1',
-						'maximum_value' => '9223372036854775807',
-						'increment' => '1',
-						'cycle_option' => 'NO',
-					)
-				)
-			);
-
-		$this->dbo->expects($this->any())
-			->method('loadObjectList')
-			->willReturn(array());
-
-		$this->dbo->expects($this->any())
-			->method('getTableList')
-			->willReturn(array('jos_dbtest'));
-	}
-
-	/**
 	 * Mock quoteName method.
 	 *
-	 * @param   string  $value  The value to be quoted.
+	 * @param   string $value The value to be quoted.
 	 *
 	 * @return  string  The value passed wrapped in MySQL quotes.
 	 */
@@ -150,7 +45,7 @@ class JDatabaseExporterPostgresqlTest extends TestCase
 	/**
 	 * Callback for the dbo getQuery method.
 	 *
-	 * @param   boolean  $new  True to get a new query, false to get the last query.
+	 * @param   boolean $new True to get a new query, false to get the last query.
 	 *
 	 * @return  JDatabaseQueryPostgresql
 	 */
@@ -330,7 +225,7 @@ class JDatabaseExporterPostgresqlTest extends TestCase
 	 */
 	public function testCheckWithNoTables()
 	{
-		$instance	= new JDatabaseExporterPostgresql;
+		$instance = new JDatabaseExporterPostgresql;
 		$instance->setDbo($this->dbo);
 
 		$instance->check();
@@ -341,7 +236,7 @@ class JDatabaseExporterPostgresqlTest extends TestCase
 	 */
 	public function testCheckWithGoodInput()
 	{
-		$instance	= new JDatabaseExporterPostgresql;
+		$instance = new JDatabaseExporterPostgresql;
 		$instance->setDbo($this->dbo);
 		$instance->from('foobar');
 
@@ -458,5 +353,110 @@ class JDatabaseExporterPostgresqlTest extends TestCase
 			$options->withStructure,
 			'The explicit use of withStructure with false should result in false.'
 		);
+	}
+
+	/**
+	 * Sets up the testing conditions
+	 *
+	 * @return  void
+	 */
+	protected function setup()
+	{
+		// Set up the database object mock.
+		$this->dbo = $this->getMockDatabase('Postgresql', array('getTableSequences'), '1970-01-01 00:00:00', 'Y-m-d H:i:s');
+
+		$this->dbo->expects($this->any())
+			->method('getPrefix')
+			->willReturn('jos_');
+
+		$this->dbo->expects($this->any())
+			->method('getTableColumns')
+			->willReturn(
+				array(
+					(object) array(
+						'column_name' => 'id',
+						'type'        => 'integer',
+						'null'        => 'NO',
+						'default'     => 'nextval(\'jos_dbtest_id_seq\'::regclass)',
+						'comments'    => '',
+					),
+					(object) array(
+						'column_name' => 'title',
+						'type'        => 'character varying(50)',
+						'null'        => 'NO',
+						'default'     => 'NULL',
+						'comments'    => '',
+					),
+					(object) array(
+						'column_name' => 'start_date',
+						'type'        => 'timestamp without time zone',
+						'null'        => 'NO',
+						'default'     => 'NULL',
+						'comments'    => '',
+					),
+					(object) array(
+						'column_name' => 'description',
+						'type'        => 'text',
+						'null'        => 'NO',
+						'default'     => 'NULL',
+						'comments'    => '',
+					)
+				)
+			);
+
+		$this->dbo->expects($this->any())
+			->method('getTableKeys')
+			->willReturn(array(
+				(object) array(
+					'idxName'   => 'jos_dbtest_pkey',
+					'isPrimary' => 'TRUE',
+					'isUnique'  => 'TRUE',
+					'Query'     => 'ALTER TABLE "jos_dbtest" ADD PRIMARY KEY (id)',
+				)
+			));
+
+		// Check if database is at least 9.1.0
+		$this->dbo->expects($this->any())
+			->method('getVersion')
+			->willReturn('9.1.2');
+
+		if (version_compare($this->dbo->getVersion(), '9.1.0') >= 0)
+		{
+			$this->_ver9dot1 = true;
+			$start_val       = '1';
+		}
+		else
+		{
+			/* Older version */
+			$this->_ver9dot1 = false;
+			$start_val       = null;
+		}
+
+		$this->dbo->expects($this->any())
+			->method('getTableSequences')
+			->willReturn(
+				array(
+					(object) array(
+						'sequence'      => 'jos_dbtest_id_seq',
+						'schema'        => 'public',
+						'table'         => 'jos_dbtest',
+						'column'        => 'id',
+						'data_type'     => 'bigint',
+						'start_value'   => $start_val,
+						'minimum_value' => '1',
+						'maximum_value' => '9223372036854775807',
+						'increment'     => '1',
+						'cycle_option'  => 'NO',
+					)
+				)
+			);
+
+		$this->dbo->expects($this->any())
+			->method('loadObjectList')
+			->willReturn(array());
+
+		$this->dbo->expects($this->any())
+			->method('getTableList')
+			->willReturn(array('jos_dbtest'));
 	}
 }

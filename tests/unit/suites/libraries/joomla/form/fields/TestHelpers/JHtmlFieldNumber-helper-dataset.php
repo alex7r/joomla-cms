@@ -19,7 +19,7 @@ class JHtmlFieldNumberTest_DataSet
 	public static $getInputTest = array(
 		'NoValue' => array(
 			array(
-				'id' => 'myTestId',
+				'id'   => 'myTestId',
 				'name' => 'myTestName',
 			),
 			'<input type="number" name="myTestName" id="myTestId" value="" />',
@@ -27,8 +27,8 @@ class JHtmlFieldNumberTest_DataSet
 
 		'Value' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'    => 'myTestId',
+				'name'  => 'myTestName',
 				'value' => 2,
 			),
 			'<input type="number" name="myTestName" id="myTestId" value="2" />',
@@ -36,25 +36,25 @@ class JHtmlFieldNumberTest_DataSet
 
 		'Min' => array(
 			array(
-				'id' => 'myTestId',
+				'id'   => 'myTestId',
 				'name' => 'myTestName',
-				'min' => 2,
+				'min'  => 2,
 			),
 			'<input type="number" name="myTestName" id="myTestId" value="2" min="2" />',
 		),
 
 		'Max' => array(
 			array(
-				'id' => 'myTestId',
+				'id'   => 'myTestId',
 				'name' => 'myTestName',
-				'max' => 200,
+				'max'  => 200,
 			),
 			'<input type="number" name="myTestName" id="myTestId" value="" max="200" />',
 		),
 
 		'Step' => array(
 			array(
-				'id' => 'myTestId',
+				'id'   => 'myTestId',
 				'name' => 'myTestName',
 				'step' => 5,
 			),
@@ -63,8 +63,8 @@ class JHtmlFieldNumberTest_DataSet
 
 		'Class' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'    => 'myTestId',
+				'name'  => 'myTestName',
 				'class' => 'foo bar',
 			),
 			'<input type="number" name="myTestName" id="myTestId" value="" class="foo bar" />',
@@ -72,8 +72,8 @@ class JHtmlFieldNumberTest_DataSet
 
 		'Disabled' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'       => 'myTestId',
+				'name'     => 'myTestName',
 				'disabled' => true,
 			),
 			'<input type="number" name="myTestName" id="myTestId" value="" disabled />',
@@ -81,8 +81,8 @@ class JHtmlFieldNumberTest_DataSet
 
 		'Readonly' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'       => 'myTestId',
+				'name'     => 'myTestName',
 				'readonly' => true,
 			),
 			'<input type="number" name="myTestName" id="myTestId" value="" readonly />',
@@ -90,8 +90,8 @@ class JHtmlFieldNumberTest_DataSet
 
 		'Autofocus' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'        => 'myTestId',
+				'name'      => 'myTestName',
 				'autofocus' => true,
 			),
 			'<input type="number" name="myTestName" id="myTestId" value="" autofocus />',
@@ -99,8 +99,8 @@ class JHtmlFieldNumberTest_DataSet
 
 		'Onchange' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'       => 'myTestId',
+				'name'     => 'myTestName',
 				'onchange' => 'foobar();',
 			),
 			'<input type="number" name="myTestName" id="myTestId" value="" onchange="foobar();" />',

@@ -19,7 +19,7 @@ class JPathwaySite extends JPathway
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $options  The class options.
+	 * @param   array $options The class options.
 	 *
 	 * @since   1.5
 	 */
@@ -42,7 +42,7 @@ class JPathwaySite extends JPathway
 			}
 			else
 			{
-				$home  = $menu->getDefault();
+				$home = $menu->getDefault();
 			}
 
 			if (is_object($home) && ($item->id != $home->id))

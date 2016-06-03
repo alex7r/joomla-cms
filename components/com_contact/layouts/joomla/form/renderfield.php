@@ -14,9 +14,9 @@ extract($displayData);
 /**
  * Layout variables
  * ---------------------
- * 	$options         : (array)  Optional parameters
- * 	$label           : (string) The html code for the label (not required if $options['hiddenLabel'] is true)
- * 	$input           : (string) The input field html code
+ *    $options         : (array)  Optional parameters
+ *    $label           : (string) The html code for the label (not required if $options['hiddenLabel'] is true)
+ *    $input           : (string) The input field html code
  */
 
 if (!empty($options['showonEnabled']))
@@ -40,8 +40,8 @@ $rel   = empty($options['rel']) ? '' : ' ' . $options['rel'];
  */
 preg_match('/class=\"([^\"]+)\"/i', $input, $match);
 
-$required      = (strpos($input, 'aria-required="true"') !== false || (!empty($match[1]) && strpos($match[1], 'required') !== false));
-$typeOfSpacer  = (strpos($label, 'spacer-lbl') !== false);
+$required     = (strpos($input, 'aria-required="true"') !== false || (!empty($match[1]) && strpos($match[1], 'required') !== false));
+$typeOfSpacer = (strpos($label, 'spacer-lbl') !== false);
 
 ?>
 <div class="control-group<?php echo $class; ?>"<?php echo $rel; ?>>

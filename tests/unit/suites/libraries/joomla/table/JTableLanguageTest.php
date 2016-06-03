@@ -25,6 +25,58 @@ class JTableLanguageTest extends TestCaseDatabase
 	protected $object;
 
 	/**
+	 * Tests JTableLanguage::check
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	public function testCheck()
+	{
+		$table = $this->object;
+
+		$this->assertThat(
+			$table->check(),
+			$this->isFalse(),
+			'Line: ' . __LINE__ . ' Checking an empty table should fail.'
+		);
+
+		$table->title = 'English (UK)';
+		$this->assertThat(
+			$table->check(),
+			$this->isTrue(),
+			'Line: ' . __LINE__ . ' The check function should complete without issue.'
+		);
+	}
+
+	/**
+	 * Tests JTableLanguage::store
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	public function testStore()
+	{
+		$table = $this->object;
+
+		// Store a new language
+		$table->lang_id      = null;
+		$table->title        = 'English (US)';
+		$table->title_native = 'English (US)';
+		$table->sef          = 'en';
+		$this->assertFalse($table->store(), 'Line: ' . __LINE__ . ' Table store should fail due to a duplicated sef field.');
+		$table->sef   = 'us';
+		$table->image = 'en';
+		$this->assertFalse($table->store(), 'Line: ' . __LINE__ . ' Table store should fail due to a duplicated image field.');
+		$table->image     = 'us';
+		$table->lang_code = 'en-GB';
+		$this->assertFalse($table->store(), 'Line: ' . __LINE__ . ' Table store should fail due to a duplicated lang_code field.');
+		$table->lang_code = 'en-US';
+		$this->assertTrue($table->store(), 'Line: ' . __LINE__ . ' Table store should successfully insert a record for English (US).');
+	}
+
+	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
@@ -69,58 +121,6 @@ class JTableLanguageTest extends TestCaseDatabase
 		$dataSet->addTable('jos_languages', JPATH_TEST_DATABASE . '/jos_languages.csv');
 
 		return $dataSet;
-	}
-
-	/**
-	 * Tests JTableLanguage::check
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	public function testCheck()
-	{
-		$table = $this->object;
-
-		$this->assertThat(
-			$table->check(),
-			$this->isFalse(),
-			'Line: ' . __LINE__ . ' Checking an empty table should fail.'
-		);
-
-		$table->title = 'English (UK)';
-		$this->assertThat(
-			$table->check(),
-			$this->isTrue(),
-			'Line: ' . __LINE__ . ' The check function should complete without issue.'
-		);
-	}
-
-	/**
-	 * Tests JTableLanguage::store
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	public function testStore()
-	{
-		$table = $this->object;
-
-		// Store a new language
-		$table->lang_id = null;
-		$table->title = 'English (US)';
-		$table->title_native = 'English (US)';
-		$table->sef = 'en';
-		$this->assertFalse($table->store(), 'Line: ' . __LINE__ . ' Table store should fail due to a duplicated sef field.');
-		$table->sef = 'us';
-		$table->image = 'en';
-		$this->assertFalse($table->store(), 'Line: ' . __LINE__ . ' Table store should fail due to a duplicated image field.');
-		$table->image = 'us';
-		$table->lang_code = 'en-GB';
-		$this->assertFalse($table->store(), 'Line: ' . __LINE__ . ' Table store should fail due to a duplicated lang_code field.');
-		$table->lang_code = 'en-US';
-		$this->assertTrue($table->store(), 'Line: ' . __LINE__ . ' Table store should successfully insert a record for English (US).');
 	}
 
 }

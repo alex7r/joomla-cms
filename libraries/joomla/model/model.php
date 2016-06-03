@@ -30,7 +30,7 @@ interface JModel
 	/**
 	 * Set the model state.
 	 *
-	 * @param   Registry  $state  The state object.
+	 * @param   Registry $state The state object.
 	 *
 	 * @return  void
 	 *

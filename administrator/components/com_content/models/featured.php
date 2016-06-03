@@ -21,7 +21,7 @@ class ContentModelFeatured extends ContentModelArticles
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -63,7 +63,7 @@ class ContentModelFeatured extends ContentModelArticles
 	/**
 	 * Build an SQL query to load the list data.
 	 *
-	 * @param   boolean  $resolveFKs  True to join selected foreign information
+	 * @param   boolean $resolveFKs True to join selected foreign information
 	 *
 	 * @return  string
 	 *
@@ -72,7 +72,7 @@ class ContentModelFeatured extends ContentModelArticles
 	protected function getListQuery($resolveFKs = true)
 	{
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the required fields from the table.
@@ -80,7 +80,7 @@ class ContentModelFeatured extends ContentModelArticles
 			$this->getState(
 				'list.select',
 				'a.id, a.title, a.alias, a.checked_out, a.checked_out_time, a.catid, a.state, a.access, a.created, a.hits,' .
-					'a.featured, a.language, a.created_by_alias, a.publish_up, a.publish_down'
+				'a.featured, a.language, a.created_by_alias, a.publish_up, a.publish_down'
 			)
 		);
 		$query->from('#__content AS a');
@@ -128,15 +128,15 @@ class ContentModelFeatured extends ContentModelArticles
 		}
 
 		// Filter by a single or group of categories.
-		$baselevel = 1;
+		$baselevel  = 1;
 		$categoryId = $this->getState('filter.category_id');
 
 		if (is_numeric($categoryId))
 		{
 			$cat_tbl = JTable::getInstance('Category', 'JTable');
 			$cat_tbl->load($categoryId);
-			$rgt = $cat_tbl->rgt;
-			$lft = $cat_tbl->lft;
+			$rgt       = $cat_tbl->rgt;
+			$lft       = $cat_tbl->lft;
 			$baselevel = (int) $cat_tbl->level;
 			$query->where('c.lft >= ' . (int) $lft)
 				->where('c.rgt <= ' . (int) $rgt);
@@ -213,8 +213,8 @@ class ContentModelFeatured extends ContentModelArticles
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *

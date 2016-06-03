@@ -9,7 +9,7 @@
 
 defined('JPATH_BASE') or die;
 
-$app = JFactory::getApplication();
+$app  = JFactory::getApplication();
 $form = $displayData->getForm();
 
 $fields = $displayData->get('fields') ?: array(

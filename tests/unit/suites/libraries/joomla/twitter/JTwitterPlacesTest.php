@@ -72,41 +72,6 @@ class JTwitterPlacesTest extends TestCase
 			}}}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$key = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0./twitter_test.php";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input = new JInput;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth = new JTwitterOAuth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JTwitterPlaces($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-		$this->options->set('sendheaders', true);
-	}
-
-	/**
 	 * Tests the getPlace method
 	 *
 	 * @return  void
@@ -117,27 +82,27 @@ class JTwitterPlacesTest extends TestCase
 	{
 		$id = '1a2b3c4d';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "geo"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$path = $this->object->fetchUrl('/geo/id/' . $id . '.json');
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getPlace($id),
@@ -157,27 +122,27 @@ class JTwitterPlacesTest extends TestCase
 	{
 		$id = '1a2b3c4d';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "geo"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = $this->object->fetchUrl('/geo/id/' . $id . '.json');
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getPlace($id);
 	}
@@ -191,42 +156,42 @@ class JTwitterPlacesTest extends TestCase
 	 */
 	public function testGetGeocode()
 	{
-		$lat = 45;
-		$long = 45;
-		$accuracy = '5ft';
+		$lat         = 45;
+		$long        = 45;
+		$accuracy    = '5ft';
 		$granularity = 'city';
 		$max_results = 10;
-		$callback = 'callback';
+		$callback    = 'callback';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "geo"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request data.
-		$data['lat'] = $lat;
-		$data['long'] = $long;
-		$data['accuracy'] = $accuracy;
+		$data['lat']         = $lat;
+		$data['long']        = $long;
+		$data['accuracy']    = $accuracy;
 		$data['granularity'] = $granularity;
 		$data['max_results'] = $max_results;
-		$data['callback'] = $callback;
+		$data['callback']    = $callback;
 
 		$path = $this->object->fetchUrl('/geo/reverse_geocode.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getGeocode($lat, $long, $accuracy, $granularity, $max_results, $callback),
@@ -244,96 +209,96 @@ class JTwitterPlacesTest extends TestCase
 	 */
 	public function testGetGeocodeFailure()
 	{
-		$lat = 45;
-		$long = 45;
-		$accuracy = '5ft';
+		$lat         = 45;
+		$long        = 45;
+		$accuracy    = '5ft';
 		$granularity = 'city';
 		$max_results = 10;
-		$callback = 'callback';
+		$callback    = 'callback';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "geo"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set request data.
-		$data['lat'] = $lat;
-		$data['long'] = $long;
-		$data['accuracy'] = $accuracy;
+		$data['lat']         = $lat;
+		$data['long']        = $long;
+		$data['accuracy']    = $accuracy;
 		$data['granularity'] = $granularity;
 		$data['max_results'] = $max_results;
-		$data['callback'] = $callback;
+		$data['callback']    = $callback;
 
 		$path = $this->object->fetchUrl('/geo/reverse_geocode.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getGeocode($lat, $long, $accuracy, $granularity, $max_results, $callback);
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 12.3
+	 */
 	public function seedSearch()
 	{
 		// User latitude, longitude, query and ip
 		return array(
 			array(45, 45, 'Twitter HQ', '74.125.19.104'),
 			array(null, null, null, null)
-			);
+		);
 	}
 
 	/**
 	 * Tests the search method
 	 *
-	 * @param   float   $lat    The latitude to search around.
-	 * @param   float   $long   The longitude to search around.
-	 * @param   string  $query  Free-form text to match against while executing a geo-based query, best suited for finding nearby locations by name.
-	 * @param   string  $ip     An IP address.
+	 * @param   float  $lat   The latitude to search around.
+	 * @param   float  $long  The longitude to search around.
+	 * @param   string $query Free-form text to match against while executing a geo-based query, best suited for finding nearby locations by name.
+	 * @param   string $ip    An IP address.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedSearch
 	 */
 	public function testSearch($lat, $long, $query, $ip)
 	{
 		$granularity = 'city';
-		$accuracy = '5ft';
+		$accuracy    = '5ft';
 		$max_results = 10;
-		$within = '247f43d441defc03';
-		$attribute = '795 Folsom St';
-		$callback = 'callback';
+		$within      = '247f43d441defc03';
+		$attribute   = '795 Folsom St';
+		$callback    = 'callback';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "geo"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -344,23 +309,23 @@ class JTwitterPlacesTest extends TestCase
 			$this->object->search();
 		}
 
-		$data['lat'] = $lat;
-		$data['long'] = $long;
-		$data['query'] = rawurlencode($query);
-		$data['ip'] = $ip;
-		$data['granularity'] = $granularity;
-		$data['accuracy'] = $accuracy;
-		$data['max_results'] = $max_results;
-		$data['contained_within'] = $within;
+		$data['lat']                      = $lat;
+		$data['long']                     = $long;
+		$data['query']                    = rawurlencode($query);
+		$data['ip']                       = $ip;
+		$data['granularity']              = $granularity;
+		$data['accuracy']                 = $accuracy;
+		$data['max_results']              = $max_results;
+		$data['contained_within']         = $within;
 		$data['attribute:street_address'] = rawurlencode($attribute);
-		$data['callback'] = $callback;
+		$data['callback']                 = $callback;
 
 		$path = $this->object->fetchUrl('/geo/search.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->search($lat, $long, $query, $ip, $granularity, $accuracy, $max_results, $within, $attribute, $callback),
@@ -371,38 +336,38 @@ class JTwitterPlacesTest extends TestCase
 	/**
 	 * Tests the search method - failure
 	 *
-	 * @param   float   $lat    The latitude to search around.
-	 * @param   float   $long   The longitude to search around.
-	 * @param   string  $query  Free-form text to match against while executing a geo-based query, best suited for finding nearby locations by name.
-	 * @param   string  $ip     An IP address.
+	 * @param   float  $lat   The latitude to search around.
+	 * @param   float  $long  The longitude to search around.
+	 * @param   string $query Free-form text to match against while executing a geo-based query, best suited for finding nearby locations by name.
+	 * @param   string $ip    An IP address.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedSearch
 	 * @expectedException DomainException
 	 */
 	public function testSearchFailure($lat, $long, $query, $ip)
 	{
 		$granularity = 'city';
-		$accuracy = '5ft';
+		$accuracy    = '5ft';
 		$max_results = 10;
-		$within = '247f43d441defc03';
-		$attribute = '795 Folsom St';
-		$callback = 'callback';
+		$within      = '247f43d441defc03';
+		$attribute   = '795 Folsom St';
+		$callback    = 'callback';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "geo"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -413,23 +378,23 @@ class JTwitterPlacesTest extends TestCase
 			$this->object->search();
 		}
 
-		$data['lat'] = $lat;
-		$data['long'] = $long;
-		$data['query'] = rawurlencode($query);
-		$data['ip'] = $ip;
-		$data['granularity'] = $granularity;
-		$data['accuracy'] = $accuracy;
-		$data['max_results'] = $max_results;
-		$data['contained_within'] = $within;
+		$data['lat']                      = $lat;
+		$data['long']                     = $long;
+		$data['query']                    = rawurlencode($query);
+		$data['ip']                       = $ip;
+		$data['granularity']              = $granularity;
+		$data['accuracy']                 = $accuracy;
+		$data['max_results']              = $max_results;
+		$data['contained_within']         = $within;
 		$data['attribute:street_address'] = rawurlencode($attribute);
-		$data['callback'] = $callback;
+		$data['callback']                 = $callback;
 
 		$path = $this->object->fetchUrl('/geo/search.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->search($lat, $long, $query, $ip, $granularity, $accuracy, $max_results, $within, $attribute, $callback);
 	}
@@ -443,41 +408,41 @@ class JTwitterPlacesTest extends TestCase
 	 */
 	public function testSimilarPlaces()
 	{
-		$lat = 45;
-		$long = 45;
-		$name = 'Twitter HQ';
-		$within = '247f43d441defc03';
+		$lat       = 45;
+		$long      = 45;
+		$name      = 'Twitter HQ';
+		$within    = '247f43d441defc03';
 		$attribute = '795 Folsom St';
-		$callback = 'callback';
+		$callback  = 'callback';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "geo"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$data['lat'] = $lat;
-		$data['long'] = $long;
-		$data['name'] = rawurlencode($name);
-		$data['contained_within'] = $within;
+		$data['lat']                      = $lat;
+		$data['long']                     = $long;
+		$data['name']                     = rawurlencode($name);
+		$data['contained_within']         = $within;
 		$data['attribute:street_address'] = rawurlencode($attribute);
-		$data['callback'] = $callback;
+		$data['callback']                 = $callback;
 
 		$path = $this->object->fetchUrl('/geo/similar_places.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getSimilarPlaces($lat, $long, $name, $within, $attribute, $callback),
@@ -495,41 +460,41 @@ class JTwitterPlacesTest extends TestCase
 	 */
 	public function testSimilarPlacesFailure()
 	{
-		$lat = 45;
-		$long = 45;
-		$name = 'Twitter HQ';
-		$within = '247f43d441defc03';
+		$lat       = 45;
+		$long      = 45;
+		$name      = 'Twitter HQ';
+		$within    = '247f43d441defc03';
 		$attribute = '795 Folsom St';
-		$callback = 'callback';
+		$callback  = 'callback';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "geo"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$data['lat'] = $lat;
-		$data['long'] = $long;
-		$data['name'] = rawurlencode($name);
-		$data['contained_within'] = $within;
+		$data['lat']                      = $lat;
+		$data['long']                     = $long;
+		$data['name']                     = rawurlencode($name);
+		$data['contained_within']         = $within;
 		$data['attribute:street_address'] = rawurlencode($attribute);
-		$data['callback'] = $callback;
+		$data['callback']                 = $callback;
 
 		$path = $this->object->fetchUrl('/geo/similar_places.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getSimilarPlaces($lat, $long, $name, $within, $attribute, $callback);
 	}
@@ -543,43 +508,43 @@ class JTwitterPlacesTest extends TestCase
 	 */
 	public function testCreatePlace()
 	{
-		$lat = 45;
-		$long = 45;
-		$name = 'Twitter HQ';
-		$token = '477ae90717508e4704b0ea150ebc12ba';
-		$within = '247f43d441defc03';
+		$lat       = 45;
+		$long      = 45;
+		$name      = 'Twitter HQ';
+		$token     = '477ae90717508e4704b0ea150ebc12ba';
+		$within    = '247f43d441defc03';
 		$attribute = '795 Folsom St';
-		$callback = 'callback';
+		$callback  = 'callback';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "geo"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$data['lat'] = $lat;
-		$data['long'] = $long;
-		$data['name'] = rawurlencode($name);
-		$data['token'] = $token;
-		$data['contained_within'] = $within;
+		$data['lat']                      = $lat;
+		$data['long']                     = $long;
+		$data['name']                     = rawurlencode($name);
+		$data['token']                    = $token;
+		$data['contained_within']         = $within;
 		$data['attribute:street_address'] = rawurlencode($attribute);
-		$data['callback'] = $callback;
+		$data['callback']                 = $callback;
 
 		$path = $this->object->fetchUrl('/geo/place.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createPlace($lat, $long, $name, $token, $within, $attribute, $callback),
@@ -597,44 +562,79 @@ class JTwitterPlacesTest extends TestCase
 	 */
 	public function testCreatePlaceFailure()
 	{
-		$lat = 45;
-		$long = 45;
-		$name = 'Twitter HQ';
-		$token = '477ae90717508e4704b0ea150ebc12ba';
-		$within = '247f43d441defc03';
+		$lat       = 45;
+		$long      = 45;
+		$name      = 'Twitter HQ';
+		$token     = '477ae90717508e4704b0ea150ebc12ba';
+		$within    = '247f43d441defc03';
 		$attribute = '795 Folsom St';
-		$callback = 'callback';
+		$callback  = 'callback';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "geo"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$data['lat'] = $lat;
-		$data['long'] = $long;
-		$data['name'] = rawurlencode($name);
-		$data['token'] = $token;
-		$data['contained_within'] = $within;
+		$data['lat']                      = $lat;
+		$data['long']                     = $long;
+		$data['name']                     = rawurlencode($name);
+		$data['token']                    = $token;
+		$data['contained_within']         = $within;
 		$data['attribute:street_address'] = rawurlencode($attribute);
-		$data['callback'] = $callback;
+		$data['callback']                 = $callback;
 
 		$path = $this->object->fetchUrl('/geo/place.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->createPlace($lat, $long, $name, $token, $within, $attribute, $callback);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$key    = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0./twitter_test.php";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input   = new JInput;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth   = new JTwitterOAuth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JTwitterPlaces($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+		$this->options->set('sendheaders', true);
 	}
 }

@@ -58,43 +58,9 @@ class JGoogleDataPlusPeopleTest extends TestCase
 	protected $errorString = '{"error": {"message": "Generic Error."}}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$_SERVER['HTTP_HOST'] = 'mydomain.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$this->options = new JRegistry;
-		$this->http = $this->getMock('JHttp', array('head', 'get', 'delete', 'trace', 'post', 'put', 'patch'), array($this->options));
-		$this->input = new JInput;
-		$this->oauth = new JOAuth2Client($this->options, $this->http, $this->input);
-		$this->auth = new JGoogleAuthOauth2($this->options, $this->oauth);
-		$this->object = new JGoogleDataPlusPeople($this->options, $this->auth);
-
-		$this->object->setOption('clientid', '01234567891011.apps.googleusercontent.com');
-		$this->object->setOption('clientsecret', 'jeDs8rKw_jDJW8MMf-ff8ejs');
-		$this->object->setOption('redirecturi', 'http://localhost/oauth');
-
-		$token['access_token'] = 'accessvalue';
-		$token['refresh_token'] = 'refreshvalue';
-		$token['created'] = time() - 1800;
-		$token['expires_in'] = 3600;
-		$this->oauth->setToken($token);
-	}
-
-	/**
 	 * Tests the auth method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testAuth()
@@ -105,7 +71,7 @@ class JGoogleDataPlusPeopleTest extends TestCase
 	/**
 	 * Tests the isauth method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testIsAuth()
@@ -122,19 +88,19 @@ class JGoogleDataPlusPeopleTest extends TestCase
 	 */
 	public function testGetPeople()
 	{
-		$id = '124346363456';
+		$id     = '124346363456';
 		$fields = 'aboutMe,birthday';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$url = 'people/' . $id . '?fields=' . $fields;
 
 		$this->http->expects($this->once())
-		->method('get')
-		->with($url)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($url)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getPeople($id, $fields),
@@ -158,13 +124,13 @@ class JGoogleDataPlusPeopleTest extends TestCase
 	 */
 	public function testSearch()
 	{
-		$query = 'test search';
-		$fields = 'aboutMe,birthday';
+		$query    = 'test search';
+		$fields   = 'aboutMe,birthday';
 		$language = 'en-GB';
-		$max = 5;
-		$token = 'EAoaAA';
+		$max      = 5;
+		$token    = 'EAoaAA';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -172,9 +138,9 @@ class JGoogleDataPlusPeopleTest extends TestCase
 			'&maxResults=' . $max . '&pageToken=' . $token;
 
 		$this->http->expects($this->once())
-		->method('get')
-		->with($url)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($url)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->search($query, $fields, $language, $max, $token),
@@ -200,11 +166,11 @@ class JGoogleDataPlusPeopleTest extends TestCase
 	{
 		$activityId = 'z12ezrmamsvydrgsy221ypew2qrkt1ja404';
 		$collection = 'plusoners';
-		$fields = 'aboutMe,birthday';
-		$max = 5;
-		$token = 'EAoaAA';
+		$fields     = 'aboutMe,birthday';
+		$max        = 5;
+		$token      = 'EAoaAA';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -212,9 +178,9 @@ class JGoogleDataPlusPeopleTest extends TestCase
 			'&maxResults=' . $max . '&pageToken=' . $token;
 
 		$this->http->expects($this->once())
-		->method('get')
-		->with($url)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($url)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->listByActivity($activityId, $collection, $fields, $max, $token),
@@ -227,5 +193,39 @@ class JGoogleDataPlusPeopleTest extends TestCase
 			$this->object->listByActivity($activityId, $collection),
 			$this->equalTo(false)
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$_SERVER['HTTP_HOST']       = 'mydomain.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$this->options = new JRegistry;
+		$this->http    = $this->getMock('JHttp', array('head', 'get', 'delete', 'trace', 'post', 'put', 'patch'), array($this->options));
+		$this->input   = new JInput;
+		$this->oauth   = new JOAuth2Client($this->options, $this->http, $this->input);
+		$this->auth    = new JGoogleAuthOauth2($this->options, $this->oauth);
+		$this->object  = new JGoogleDataPlusPeople($this->options, $this->auth);
+
+		$this->object->setOption('clientid', '01234567891011.apps.googleusercontent.com');
+		$this->object->setOption('clientsecret', 'jeDs8rKw_jDJW8MMf-ff8ejs');
+		$this->object->setOption('redirecturi', 'http://localhost/oauth');
+
+		$token['access_token']  = 'accessvalue';
+		$token['refresh_token'] = 'refreshvalue';
+		$token['created']       = time() - 1800;
+		$token['expires_in']    = 3600;
+		$this->oauth->setToken($token);
 	}
 }

@@ -37,46 +37,16 @@ class ContactModelContact extends JModelForm
 	/**
 	 * Model context string.
 	 *
-	 * @var		string
+	 * @var        string
 	 */
 	protected $_context = 'com_contact.contact';
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication('site');
-
-		// Load state from the request.
-		$pk = $app->input->getInt('id');
-		$this->setState('contact.id', $pk);
-
-		// Load the parameters.
-		$params = $app->getParams();
-		$this->setState('params', $params);
-
-		$user = JFactory::getUser();
-
-		if ((!$user->authorise('core.edit.state', 'com_contact')) &&  (!$user->authorise('core.edit', 'com_contact')))
-		{
-			$this->setState('filter.published', 1);
-			$this->setState('filter.archived', 2);
-		}
-	}
 
 	/**
 	 * Method to get the contact form.
 	 * The base form is loaded from XML and then an event is fired
 	 *
-	 * @param   array    $data      An optional array of data for the form to interrogate.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data     An optional array of data for the form to interrogate.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  JForm  A JForm object on success, false on failure
 	 *
@@ -92,8 +62,8 @@ class ContactModelContact extends JModelForm
 			return false;
 		}
 
-		$id = $this->getState('contact.id');
-		$params = $this->getState('params');
+		$id      = $this->getState('contact.id');
+		$params  = $this->getState('params');
 		$contact = $this->_item[$id];
 		$params->merge($contact->params);
 
@@ -106,25 +76,9 @@ class ContactModelContact extends JModelForm
 	}
 
 	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  array    The default data is an empty array.
-	 *
-	 * @since   1.6.2
-	 */
-	protected function loadFormData()
-	{
-		$data = (array) JFactory::getApplication()->getUserState('com_contact.contact.data', array());
-
-		$this->preprocessData('com_contact.contact', $data);
-
-		return $data;
-	}
-
-	/**
 	 * Gets a contact
 	 *
-	 * @param   integer  $pk  Id for the contact
+	 * @param   integer $pk Id for the contact
 	 *
 	 * @return  mixed Object or null
 	 *
@@ -143,7 +97,7 @@ class ContactModelContact extends JModelForm
 		{
 			try
 			{
-				$db = $this->getDbo();
+				$db    = $this->getDbo();
 				$query = $db->getQuery(true);
 
 				// Changes for sqlsrv
@@ -165,24 +119,21 @@ class ContactModelContact extends JModelForm
 
 				$query->select($this->getState('item.select', 'a.*') . ',' . $case_when . ',' . $case_when1)
 					->from('#__contact_details AS a')
-
 					// Join on category table.
 					->select('c.title AS category_title, c.alias AS category_alias, c.access AS category_access')
 					->join('LEFT', '#__categories AS c on c.id = a.catid')
-
 					// Join over the categories to get parent category titles
 					->select('parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias')
 					->join('LEFT', '#__categories as parent ON parent.id = c.parent_id')
-
 					->where('a.id = ' . (int) $pk);
 
 				// Filter by start and end dates.
 				$nullDate = $db->quote($db->getNullDate());
-				$nowDate = $db->quote(JFactory::getDate()->toSql());
+				$nowDate  = $db->quote(JFactory::getDate()->toSql());
 
 				// Filter by published state.
 				$published = $this->getState('filter.published');
-				$archived = $this->getState('filter.archived');
+				$archived  = $this->getState('filter.archived');
 				if (is_numeric($published))
 				{
 					$query->where('(a.published = ' . (int) $published . ' OR a.published =' . (int) $archived . ')')
@@ -227,7 +178,7 @@ class ContactModelContact extends JModelForm
 				else
 				{
 					// If no access filter is set, the layout takes some responsibility for display of limited information.
-					$user = JFactory::getUser();
+					$user   = JFactory::getUser();
 					$groups = $user->getAuthorisedViewLevels();
 
 					if ($data->catid == 0 || $data->category_access === null)
@@ -260,7 +211,7 @@ class ContactModelContact extends JModelForm
 	/**
 	 * Load extended data (profile, articles) for a contact
 	 *
-	 * @param   object  $contact  The contact object
+	 * @param   object $contact The contact object
 	 *
 	 * @return  void
 	 */
@@ -350,7 +301,7 @@ class ContactModelContact extends JModelForm
 			}
 
 			$db->setQuery($query, 0, (int) $articles_display_num);
-			$articles = $db->loadObjectList();
+			$articles          = $db->loadObjectList();
 			$contact->articles = $articles;
 		}
 		else
@@ -361,7 +312,7 @@ class ContactModelContact extends JModelForm
 		// Get the profile information for the linked user
 		require_once JPATH_ADMINISTRATOR . '/components/com_users/models/user.php';
 		$userModel = JModelLegacy::getInstance('User', 'UsersModel', array('ignore_request' => true));
-		$data = $userModel->getItem((int) $contact->user_id);
+		$data      = $userModel->getItem((int) $contact->user_id);
 
 		JPluginHelper::importPlugin('user');
 		$form = new JForm('com_users.profile');
@@ -381,9 +332,81 @@ class ContactModelContact extends JModelForm
 	}
 
 	/**
+	 * Increment the hit counter for the contact.
+	 *
+	 * @param   integer $pk Optional primary key of the contact to increment.
+	 *
+	 * @return  boolean  True if successful; false otherwise and internal error set.
+	 *
+	 * @since   3.0
+	 */
+	public function hit($pk = 0)
+	{
+		$input    = JFactory::getApplication()->input;
+		$hitcount = $input->getInt('hitcount', 1);
+
+		if ($hitcount)
+		{
+			$pk = (!empty($pk)) ? $pk : (int) $this->getState('contact.id');
+
+			$table = JTable::getInstance('Contact', 'ContactTable');
+			$table->load($pk);
+			$table->hit($pk);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('site');
+
+		// Load state from the request.
+		$pk = $app->input->getInt('id');
+		$this->setState('contact.id', $pk);
+
+		// Load the parameters.
+		$params = $app->getParams();
+		$this->setState('params', $params);
+
+		$user = JFactory::getUser();
+
+		if ((!$user->authorise('core.edit.state', 'com_contact')) && (!$user->authorise('core.edit', 'com_contact')))
+		{
+			$this->setState('filter.published', 1);
+			$this->setState('filter.archived', 2);
+		}
+	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  array    The default data is an empty array.
+	 *
+	 * @since   1.6.2
+	 */
+	protected function loadFormData()
+	{
+		$data = (array) JFactory::getApplication()->getUserState('com_contact.contact.data', array());
+
+		$this->preprocessData('com_contact.contact', $data);
+
+		return $data;
+	}
+
+	/**
 	 * Gets the query to load a contact item
 	 *
-	 * @param   integer  $pk  The item to be loaded
+	 * @param   integer $pk The item to be loaded
 	 *
 	 * @return  mixed    The contact object on success, false on failure
 	 *
@@ -402,20 +425,20 @@ class ContactModelContact extends JModelForm
 		if ($pk)
 		{
 			// Sqlsrv changes
-			$case_when  = ' CASE WHEN ';
+			$case_when = ' CASE WHEN ';
 			$case_when .= $query->charLength('a.alias', '!=', '0');
 			$case_when .= ' THEN ';
 
-			$a_id       = $query->castAsChar('a.id');
+			$a_id = $query->castAsChar('a.id');
 			$case_when .= $query->concatenate(array($a_id, 'a.alias'), ':');
 			$case_when .= ' ELSE ';
 			$case_when .= $a_id . ' END as slug';
 
-			$case_when1  = ' CASE WHEN ';
+			$case_when1 = ' CASE WHEN ';
 			$case_when1 .= $query->charLength('cc.alias', '!=', '0');
 			$case_when1 .= ' THEN ';
 
-			$c_id        = $query->castAsChar('cc.id');
+			$c_id = $query->castAsChar('cc.id');
 			$case_when1 .= $query->concatenate(array($c_id, 'cc.alias'), ':');
 			$case_when1 .= ' ELSE ';
 			$case_when1 .= $c_id . ' END as catslug';
@@ -533,7 +556,7 @@ class ContactModelContact extends JModelForm
 					}
 
 					$db->setQuery($query, 0, (int) $articles_display_num);
-					$articles = $db->loadObjectList();
+					$articles         = $db->loadObjectList();
 					$result->articles = $articles;
 				}
 				else
@@ -544,7 +567,7 @@ class ContactModelContact extends JModelForm
 				// Get the profile information for the linked user
 				require_once JPATH_ADMINISTRATOR . '/components/com_users/models/user.php';
 				$userModel = JModelLegacy::getInstance('User', 'UsersModel', array('ignore_request' => true));
-				$data = $userModel->getItem((int) $result->user_id);
+				$data      = $userModel->getItem((int) $result->user_id);
 
 				JPluginHelper::importPlugin('user');
 				$form = new JForm('com_users.profile');
@@ -561,38 +584,12 @@ class ContactModelContact extends JModelForm
 				// Load the data into the form after the plugins have operated.
 				$form->bind($data);
 				$result->profile = $form;
-				$this->contact = $result;
+				$this->contact   = $result;
 
 				return $result;
 			}
 		}
 
 		return false;
-	}
-
-	/**
-	 * Increment the hit counter for the contact.
-	 *
-	 * @param   integer  $pk  Optional primary key of the contact to increment.
-	 *
-	 * @return  boolean  True if successful; false otherwise and internal error set.
-	 *
-	 * @since   3.0
-	 */
-	public function hit($pk = 0)
-	{
-		$input = JFactory::getApplication()->input;
-		$hitcount = $input->getInt('hitcount', 1);
-
-		if ($hitcount)
-		{
-			$pk = (!empty($pk)) ? $pk : (int) $this->getState('contact.id');
-
-			$table = JTable::getInstance('Contact', 'ContactTable');
-			$table->load($pk);
-			$table->hit($pk);
-		}
-
-		return true;
 	}
 }

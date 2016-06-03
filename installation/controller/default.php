@@ -34,7 +34,8 @@ class InstallationControllerDefault extends JControllerBase
 
 		// Set the default view name and format from the request.
 		if (file_exists(JPATH_CONFIGURATION . '/configuration.php') && (filesize(JPATH_CONFIGURATION . '/configuration.php') > 10)
-			&& file_exists(JPATH_INSTALLATION . '/index.php'))
+			&& file_exists(JPATH_INSTALLATION . '/index.php')
+		)
 		{
 			$default_view = 'remove';
 		}
@@ -58,7 +59,7 @@ class InstallationControllerDefault extends JControllerBase
 				$model        = new InstallationModelSetup;
 				$sufficient   = $model->getPhpOptionsSufficient();
 				$checkOptions = false;
-				$options = $model->getOptions();
+				$options      = $model->getOptions();
 
 				if ($sufficient)
 				{
@@ -69,16 +70,16 @@ class InstallationControllerDefault extends JControllerBase
 
 			case 'languages':
 			case 'defaultlanguage':
-				$model = new InstallationModelLanguages;
+				$model        = new InstallationModelLanguages;
 				$checkOptions = false;
-				$options = array();
+				$options      = array();
 				break;
 
 			default:
 				$model        = new InstallationModelSetup;
 				$sufficient   = $model->getPhpOptionsSufficient();
 				$checkOptions = true;
-				$options = $model->getOptions();
+				$options      = $model->getOptions();
 
 				if (!$sufficient)
 				{

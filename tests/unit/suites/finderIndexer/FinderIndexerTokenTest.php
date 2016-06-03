@@ -18,6 +18,32 @@ require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/token
 class FinderIndexerTokenTest extends TestCase
 {
 	/**
+	 * Tests the FinderIndexerToken constructor
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	public function test__construct()
+	{
+		$token = new FinderIndexerToken(array('These', 'parties', 'don\'t', 'end'), 'en-GB');
+
+		// Just to make sure we have an instance of ourself
+		$this->assertInstanceOf(
+			'FinderIndexerToken',
+			$token,
+			'Make sure our token is actually an instance of the token class'
+		);
+
+		// Verify the proper stem is returned
+		$this->assertEquals(
+			'These parties don end',
+			$token->stem,
+			'Verify the phrase is properly stemmed.'
+		);
+	}
+
+	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
@@ -52,31 +78,5 @@ class FinderIndexerTokenTest extends TestCase
 		$this->restoreFactoryState();
 
 		parent::tearDown();
-	}
-
-	/**
-	 * Tests the FinderIndexerToken constructor
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function test__construct()
-	{
-		$token = new FinderIndexerToken(array('These', 'parties', 'don\'t', 'end'), 'en-GB');
-
-		// Just to make sure we have an instance of ourself
-		$this->assertInstanceOf(
-			'FinderIndexerToken',
-			$token,
-			'Make sure our token is actually an instance of the token class'
-		);
-
-		// Verify the proper stem is returned
-		$this->assertEquals(
-			'These parties don end',
-			$token->stem,
-			'Verify the phrase is properly stemmed.'
-		);
 	}
 }

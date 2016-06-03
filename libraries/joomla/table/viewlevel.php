@@ -19,7 +19,7 @@ class JTableViewlevel extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  $db  Database driver object.
+	 * @param   JDatabaseDriver $db Database driver object.
 	 *
 	 * @since   11.1
 	 */
@@ -31,8 +31,8 @@ class JTableViewlevel extends JTable
 	/**
 	 * Method to bind the data.
 	 *
-	 * @param   array  $array   The data to bind.
-	 * @param   mixed  $ignore  An array or space separated list of fields to ignore.
+	 * @param   array $array  The data to bind.
+	 * @param   mixed $ignore An array or space separated list of fields to ignore.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *
@@ -70,7 +70,7 @@ class JTableViewlevel extends JTable
 		}
 
 		// Check for a duplicate title.
-		$db = $this->_db;
+		$db    = $this->_db;
 		$query = $db->getQuery(true)
 			->select('COUNT(title)')
 			->from($db->quoteName('#__viewlevels'))

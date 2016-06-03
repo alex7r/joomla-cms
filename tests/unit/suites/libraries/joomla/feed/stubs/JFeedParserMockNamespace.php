@@ -19,8 +19,8 @@ class JFeedParserMockNamespace implements JFeedParserNamespace
 	/**
 	 * Method to handle an element for the feed given that the itunes namespace is present.
 	 *
-	 * @param   JFeed             $feed  The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement  $el    The current XML element object to handle.
+	 * @param   JFeed            $feed The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement $el   The current XML element object to handle.
 	 *
 	 * @return  void
 	 *
@@ -34,8 +34,8 @@ class JFeedParserMockNamespace implements JFeedParserNamespace
 	/**
 	 * Method to handle the feed entry element for the feed given that the itunes namespace is present.
 	 *
-	 * @param   JFeedEntry        $entry  The JFeedEntry object being built from the parsed feed entry.
-	 * @param   SimpleXMLElement  $el     The current XML element object to handle.
+	 * @param   JFeedEntry       $entry The JFeedEntry object being built from the parsed feed entry.
+	 * @param   SimpleXMLElement $el    The current XML element object to handle.
 	 *
 	 * @return  void
 	 *

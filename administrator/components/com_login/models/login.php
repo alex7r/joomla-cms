@@ -17,53 +17,10 @@ defined('_JEXEC') or die;
 class LoginModelLogin extends JModelLegacy
 {
 	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication();
-
-		$input = $app->input;
-		$method = $input->getMethod();
-
-		$credentials = array(
-			'username' => $input->$method->get('username', '', 'USERNAME'),
-			'password' => $input->$method->get('passwd', '', 'RAW'),
-			'secretkey' => $input->$method->get('secretkey', '', 'RAW'),
-		);
-		$this->setState('credentials', $credentials);
-
-		// Check for return URL from the request first.
-		if ($return = $input->$method->get('return', '', 'BASE64'))
-		{
-			$return = base64_decode($return);
-
-			if (!JUri::isInternal($return))
-			{
-				$return = '';
-			}
-		}
-
-		// Set the return URL if empty.
-		if (empty($return))
-		{
-			$return = 'index.php';
-		}
-
-		$this->setState('return', $return);
-	}
-
-	/**
 	 * Get the administrator login module by name (real, eg 'login' or folder, eg 'mod_login').
 	 *
-	 * @param   string  $name   The name of the module.
-	 * @param   string  $title  The title of the module, optional.
+	 * @param   string $name  The name of the module.
+	 * @param   string $title The title of the module, optional.
 	 *
 	 * @return  object  The Module object.
 	 *
@@ -71,9 +28,9 @@ class LoginModelLogin extends JModelLegacy
 	 */
 	public static function getLoginModule($name = 'mod_login', $title = null)
 	{
-		$result = null;
+		$result  = null;
 		$modules = self::_load($name);
-		$total = count($modules);
+		$total   = count($modules);
 
 		for ($i = 0; $i < $total; $i++)
 		{
@@ -88,16 +45,16 @@ class LoginModelLogin extends JModelLegacy
 		// If we didn't find it, and the name is mod_something, create a dummy object.
 		if (is_null($result) && substr($name, 0, 4) == 'mod_')
 		{
-			$result = new stdClass;
-			$result->id = 0;
-			$result->title = '';
-			$result->module = $name;
-			$result->position = '';
-			$result->content = '';
+			$result            = new stdClass;
+			$result->id        = 0;
+			$result->title     = '';
+			$result->module    = $name;
+			$result->position  = '';
+			$result->content   = '';
 			$result->showtitle = 0;
-			$result->control = '';
-			$result->params = '';
-			$result->user = 0;
+			$result->control   = '';
+			$result->params    = '';
+			$result->user      = 0;
 		}
 
 		return $result;
@@ -112,7 +69,7 @@ class LoginModelLogin extends JModelLegacy
 	 * This is put in as a failsafe to avoid super user lock out caused by an unpublished
 	 * login module or by a module set to have a viewing access level that is not Public.
 	 *
-	 * @param   string  $module  The name of the module.
+	 * @param   string $module The name of the module.
 	 *
 	 * @return  array
 	 *
@@ -127,12 +84,12 @@ class LoginModelLogin extends JModelLegacy
 			return $clean;
 		}
 
-		$app = JFactory::getApplication();
-		$lang = JFactory::getLanguage()->getTag();
+		$app      = JFactory::getApplication();
+		$lang     = JFactory::getLanguage()->getTag();
 		$clientId = (int) $app->getClientId();
 
-		$cache = JFactory::getCache('com_modules', '');
-		$cacheid = md5(serialize(array($clientId, $lang)));
+		$cache       = JFactory::getCache('com_modules', '');
+		$cacheid     = md5(serialize(array($clientId, $lang)));
 		$loginmodule = array();
 
 		if (!($clean = $cache->get($cacheid)))
@@ -175,5 +132,48 @@ class LoginModelLogin extends JModelLegacy
 		}
 
 		return $loginmodule;
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication();
+
+		$input  = $app->input;
+		$method = $input->getMethod();
+
+		$credentials = array(
+			'username'  => $input->$method->get('username', '', 'USERNAME'),
+			'password'  => $input->$method->get('passwd', '', 'RAW'),
+			'secretkey' => $input->$method->get('secretkey', '', 'RAW'),
+		);
+		$this->setState('credentials', $credentials);
+
+		// Check for return URL from the request first.
+		if ($return = $input->$method->get('return', '', 'BASE64'))
+		{
+			$return = base64_decode($return);
+
+			if (!JUri::isInternal($return))
+			{
+				$return = '';
+			}
+		}
+
+		// Set the return URL if empty.
+		if (empty($return))
+		{
+			$return = 'index.php';
+		}
+
+		$this->setState('return', $return);
 	}
 }

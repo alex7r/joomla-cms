@@ -78,41 +78,6 @@ class JTwitterSearchTest extends TestCase
 			}}}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$key = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input = new JInput;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth = new JTwitterOAuth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JTwitterSearch($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-		$this->options->set('sendheaders', true);
-	}
-
-	/**
 	 * Tests the search method
 	 *
 	 * @return  void
@@ -121,52 +86,52 @@ class JTwitterSearchTest extends TestCase
 	 */
 	public function testSearch()
 	{
-		$query = '@noradio';
-		$callback = 'callback';
-		$geocode = '37.781157,-122.398720,1mi';
-		$lang = 'fr';
-		$locale = 'ja';
+		$query       = '@noradio';
+		$callback    = 'callback';
+		$geocode     = '37.781157,-122.398720,1mi';
+		$lang        = 'fr';
+		$locale      = 'ja';
 		$result_type = 'recent';
-		$count = 10;
-		$until = '2010-03-28';
-		$since_id = 12345;
-		$max_id = 54321;
-		$entities = true;
+		$count       = 10;
+		$until       = '2010-03-28';
+		$since_id    = 12345;
+		$max_id      = 54321;
+		$entities    = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->searchRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "search"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request parameters.
-		$data['q'] = rawurlencode($query);
-		$data['callback'] = $callback;
-		$data['geocode'] = $geocode;
-		$data['lang'] = $lang;
-		$data['locale'] = $locale;
-		$data['result_type'] = $result_type;
-		$data['count'] = $count;
-		$data['until'] = $until;
-		$data['since_id'] = $since_id;
-		$data['max_id'] = $max_id;
+		$data['q']                = rawurlencode($query);
+		$data['callback']         = $callback;
+		$data['geocode']          = $geocode;
+		$data['lang']             = $lang;
+		$data['locale']           = $locale;
+		$data['result_type']      = $result_type;
+		$data['count']            = $count;
+		$data['until']            = $until;
+		$data['since_id']         = $since_id;
+		$data['max_id']           = $max_id;
 		$data['include_entities'] = $entities;
 
 		$path = $this->object->fetchUrl('/search/tweets.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->search($query, $callback, $geocode, $lang, $locale, $result_type, $count, $until, $since_id, $max_id, $entities),
@@ -186,18 +151,18 @@ class JTwitterSearchTest extends TestCase
 	{
 		$query = '@noradio';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->searchRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "search"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -207,9 +172,9 @@ class JTwitterSearchTest extends TestCase
 		$path = $this->object->fetchUrl('/search/tweets.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->search($query);
 	}
@@ -223,27 +188,27 @@ class JTwitterSearchTest extends TestCase
 	 */
 	public function testGetSavedSearches()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->savedSearchesRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "saved_searches"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$path = $this->object->fetchUrl('/saved_searches/list.json');
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getSavedSearches(),
@@ -261,27 +226,27 @@ class JTwitterSearchTest extends TestCase
 	 */
 	public function testGetSavedSearchesFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->savedSearchesRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "saved_searches"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = $this->object->fetchUrl('/saved_searches/list.json');
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getSavedSearches();
 	}
@@ -297,27 +262,27 @@ class JTwitterSearchTest extends TestCase
 	{
 		$id = 12345;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->savedSearchesRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "saved_searches"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$path = $this->object->fetchUrl('/saved_searches/show/' . $id . '.json');
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getSavedSearchesById($id),
@@ -337,27 +302,27 @@ class JTwitterSearchTest extends TestCase
 	{
 		$id = 12345;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->savedSearchesRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "saved_searches"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = $this->object->fetchUrl('/saved_searches/show/' . $id . '.json');
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getSavedSearchesById($id);
 	}
@@ -373,7 +338,7 @@ class JTwitterSearchTest extends TestCase
 	{
 		$query = 'test';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -383,9 +348,9 @@ class JTwitterSearchTest extends TestCase
 		$path = $this->object->fetchUrl('/saved_searches/create.json');
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createSavedSearch($query),
@@ -405,7 +370,7 @@ class JTwitterSearchTest extends TestCase
 	{
 		$query = 'test';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -415,9 +380,9 @@ class JTwitterSearchTest extends TestCase
 		$path = $this->object->fetchUrl('/saved_searches/create.json');
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->createSavedSearch($query);
 	}
@@ -433,27 +398,27 @@ class JTwitterSearchTest extends TestCase
 	{
 		$id = 12345;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->savedSearchesRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "saved_searches"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$path = $this->object->fetchUrl('/saved_searches/destroy/' . $id . '.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteSavedSearch($id),
@@ -473,28 +438,63 @@ class JTwitterSearchTest extends TestCase
 	{
 		$id = 12345;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->savedSearchesRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "saved_searches"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = $this->object->fetchUrl('/saved_searches/destroy/' . $id . '.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->deleteSavedSearch($id);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$key    = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input   = new JInput;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth   = new JTwitterOAuth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JTwitterSearch($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+		$this->options->set('sendheaders', true);
 	}
 }

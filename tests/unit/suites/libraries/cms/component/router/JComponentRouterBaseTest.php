@@ -28,10 +28,10 @@ class JComponentRouterBaseTest extends TestCase
 	 */
 	public function testConstruct()
 	{
-		$app_bkp = JFactory::$application;
-		$app = TestMockApplication::create($this);
+		$app_bkp               = JFactory::$application;
+		$app                   = TestMockApplication::create($this);
 		JFactory::$application = $app;
-		$menu = TestMockMenu::create($this);
+		$menu                  = TestMockMenu::create($this);
 
 		/**
 		 * Test if standard setup of JComponentRouterBase works and $app and
@@ -48,7 +48,7 @@ class JComponentRouterBaseTest extends TestCase
 		 * Test if the setup works when an app object is handed over
 		 * Especially test if the app objects are different
 		 */
-		$app2 = TestMockApplication::create($this);
+		$app2   = TestMockApplication::create($this);
 		$object = new JComponentRouterBaseInspector($app2);
 		$this->assertEquals($app2, $object->app);
 		//The original $app is not the same object as $app2, thus we did not use JFactory
@@ -57,7 +57,7 @@ class JComponentRouterBaseTest extends TestCase
 		/**
 		 * Test if the setup works when both an app and menu object is handed over
 		 */
-		$menu2 = new stdClass();
+		$menu2  = new stdClass();
 		$object = new JComponentRouterBaseInspector($app, $menu2);
 		$this->assertEquals($app, $object->app);
 		$this->assertEquals($menu2, $object->menu);
@@ -82,8 +82,8 @@ class JComponentRouterBaseTest extends TestCase
 	 */
 	public function testPreprocess()
 	{
-		$app = TestMockApplication::create($this);
-		$menu = TestMockMenu::create($this);
+		$app    = TestMockApplication::create($this);
+		$menu   = TestMockMenu::create($this);
 		$object = new JComponentRouterBaseInspector($app, $menu);
 
 		$array = array('option' => 'com_test', 'view' => 'test');

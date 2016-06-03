@@ -9,12 +9,6 @@
 
 require_once 'JoomlaWebdriverTestCase.php';
 
-use SeleniumClient\By;
-use SeleniumClient\SelectElement;
-use SeleniumClient\WebDriver;
-use SeleniumClient\WebDriverWait;
-use SeleniumClient\DesiredCapabilities;
-
 /**
  * This class tests the  Banner: Add / Edit  Screen.
  *
@@ -42,7 +36,7 @@ class BannerManager0001Test extends JoomlaWebdriverTestCase
 	public function setUp()
 	{
 		parent::setUp();
-		$cpPage = $this->doAdminLogin();
+		$cpPage                  = $this->doAdminLogin();
 		$this->bannerManagerPage = $cpPage->clickMenu('Banners', 'BannerManagerPage');
 	}
 
@@ -108,7 +102,7 @@ class BannerManager0001Test extends JoomlaWebdriverTestCase
 	{
 		$this->bannerManagerPage->clickButton('toolbar-new');
 		$bannerEditPage = $this->getPageObject('BannerEditPage');
-		$textArray = $bannerEditPage->getTabIds();
+		$textArray      = $bannerEditPage->getTabIds();
 		$this->assertEquals($bannerEditPage->tabs, $textArray, 'Banner labels should match expected values.');
 		$bannerEditPage->clickButton('toolbar-cancel');
 		$this->bannerManagerPage = $this->getPageObject('BannerManagerPage');
@@ -123,7 +117,7 @@ class BannerManager0001Test extends JoomlaWebdriverTestCase
 	 */
 	public function addBanner_WithFieldDefaults_BannerAdded()
 	{
-		$salt = rand();
+		$salt       = rand();
 		$bannerName = 'Banner' . $salt;
 		$this->assertFalse($this->bannerManagerPage->getRowNumber($bannerName), 'Test Banner should not be present');
 		$this->bannerManagerPage->addBanner($bannerName, false);
@@ -143,11 +137,11 @@ class BannerManager0001Test extends JoomlaWebdriverTestCase
 	 */
 	public function addBanner_WithGivenFields_BannerAdded()
 	{
-		$salt = rand();
-		$bannerName = 'Banner' . $salt;
-		$client = 'Joomla!';
+		$salt        = rand();
+		$bannerName  = 'Banner' . $salt;
+		$client      = 'Joomla!';
 		$TrackClicks = 'Yes';
-		$width = '35';
+		$width       = '35';
 
 		$this->assertFalse($this->bannerManagerPage->getRowNumber($bannerName), 'Test banner should not be present');
 		$this->bannerManagerPage->addBanner($bannerName, array('Client' => $client, 'Track Clicks' => $TrackClicks, 'Width' => $width));
@@ -169,11 +163,11 @@ class BannerManager0001Test extends JoomlaWebdriverTestCase
 	 */
 	public function editBanner_ChangeFields_FieldsChanged()
 	{
-		$salt = rand();
-		$bannerName = 'Banner' . $salt;
-		$client = 'Joomla!';
+		$salt        = rand();
+		$bannerName  = 'Banner' . $salt;
+		$client      = 'Joomla!';
 		$TrackClicks = 'Yes';
-		$width = '35';
+		$width       = '35';
 		$this->assertFalse($this->bannerManagerPage->getRowNumber($bannerName), 'Test banner should not be present');
 		$this->bannerManagerPage->addBanner($bannerName, false);
 		$this->bannerManagerPage->editBanner($bannerName, array('Client' => $client, 'Track Clicks' => $TrackClicks, 'Width' => $width));
@@ -191,7 +185,7 @@ class BannerManager0001Test extends JoomlaWebdriverTestCase
 	 */
 	public function changeBannerState_ChangeEnabledUsingToolbar_EnabledChanged()
 	{
-		$salt = rand();
+		$salt       = rand();
 		$bannerName = 'Banner' . $salt;
 		$this->bannerManagerPage->addBanner($bannerName, false);
 		$state = $this->bannerManagerPage->getState($bannerName);

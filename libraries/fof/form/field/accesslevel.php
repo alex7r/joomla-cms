@@ -1,10 +1,10 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -20,20 +20,17 @@ JFormHelper::loadFieldClass('accesslevel');
  */
 class FOFFormFieldAccesslevel extends JFormFieldAccessLevel implements FOFFormField
 {
-	protected $static;
-
-	protected $repeatable;
-
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
-
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
 	public $item;
+	protected $static;
+	protected $repeatable;
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -106,8 +103,8 @@ class FOFFormFieldAccesslevel extends JFormFieldAccessLevel implements FOFFormFi
 		}
 
 		return '<span id="' . $this->id . '" ' . $class . '>' .
-			htmlspecialchars(FOFFormFieldList::getOptionName($options, $this->value), ENT_COMPAT, 'UTF-8') .
-			'</span>';
+		htmlspecialchars(FOFFormFieldList::getOptionName($options, $this->value), ENT_COMPAT, 'UTF-8') .
+		'</span>';
 	}
 
 	/**
@@ -150,7 +147,7 @@ class FOFFormFieldAccesslevel extends JFormFieldAccessLevel implements FOFFormFi
 		}
 
 		return '<span class="' . $this->id . ' ' . $class . '">' .
-			htmlspecialchars(FOFFormFieldList::getOptionName($options, $this->value), ENT_COMPAT, 'UTF-8') .
-			'</span>';
+		htmlspecialchars(FOFFormFieldList::getOptionName($options, $this->value), ENT_COMPAT, 'UTF-8') .
+		'</span>';
 	}
 }

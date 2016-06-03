@@ -20,6 +20,21 @@ jimport('joomla.base.adapterinstance');
 class JAdapterInstanceTest extends TestCase
 {
 	/**
+	 * Test...
+	 *
+	 * @return void
+	 */
+	public function testGetParent()
+	{
+		$this->object = new JAdapter(__DIR__, 'Test', 'stubs');
+
+		$this->assertThat(
+			$this->object->getAdapter('Testadapter3')->getParent(),
+			$this->identicalTo($this->object)
+		);
+	}
+
+	/**
 	 * Sets up the fixture.
 	 *
 	 * This method is called before a test is executed.
@@ -51,20 +66,5 @@ class JAdapterInstanceTest extends TestCase
 		$this->restoreFactoryState();
 
 		parent::tearDown();
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @return void
-	 */
-	public function testGetParent()
-	{
-		$this->object = new JAdapter(__DIR__, 'Test', 'stubs');
-
-		$this->assertThat(
-			$this->object->getAdapter('Testadapter3')->getParent(),
-			$this->identicalTo($this->object)
-		);
 	}
 }

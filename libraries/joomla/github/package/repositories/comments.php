@@ -21,10 +21,10 @@ class JGithubPackageRepositoriesComments extends JGithubPackage
 	/**
 	 * Method to get a list of commit comments for a repository.
 	 *
-	 * @param   string   $user   The name of the owner of the GitHub repository.
-	 * @param   string   $repo   The name of the GitHub repository.
-	 * @param   integer  $page   Page to request
-	 * @param   integer  $limit  Number of results to return per page
+	 * @param   string  $user  The name of the owner of the GitHub repository.
+	 * @param   string  $repo  The name of the GitHub repository.
+	 * @param   integer $page  Page to request
+	 * @param   integer $limit Number of results to return per page
 	 *
 	 * @return  array
 	 *
@@ -44,11 +44,11 @@ class JGithubPackageRepositoriesComments extends JGithubPackage
 	/**
 	 * Method to get a list of comments for a single commit for a repository.
 	 *
-	 * @param   string   $user   The name of the owner of the GitHub repository.
-	 * @param   string   $repo   The name of the GitHub repository.
-	 * @param   string   $sha    The SHA of the commit to retrieve.
-	 * @param   integer  $page   Page to request
-	 * @param   integer  $limit  Number of results to return per page
+	 * @param   string  $user  The name of the owner of the GitHub repository.
+	 * @param   string  $repo  The name of the GitHub repository.
+	 * @param   string  $sha   The SHA of the commit to retrieve.
+	 * @param   integer $page  Page to request
+	 * @param   integer $limit Number of results to return per page
 	 *
 	 * @return  array
 	 *
@@ -68,9 +68,9 @@ class JGithubPackageRepositoriesComments extends JGithubPackage
 	/**
 	 * Method to get a single comment on a commit.
 	 *
-	 * @param   string   $user  The name of the owner of the GitHub repository.
-	 * @param   string   $repo  The name of the GitHub repository.
-	 * @param   integer  $id    ID of the comment to retrieve
+	 * @param   string  $user The name of the owner of the GitHub repository.
+	 * @param   string  $repo The name of the GitHub repository.
+	 * @param   integer $id   ID of the comment to retrieve
 	 *
 	 * @return  array
 	 *
@@ -90,10 +90,10 @@ class JGithubPackageRepositoriesComments extends JGithubPackage
 	/**
 	 * Method to edit a comment on a commit.
 	 *
-	 * @param   string  $user     The name of the owner of the GitHub repository.
-	 * @param   string  $repo     The name of the GitHub repository.
-	 * @param   string  $id       The ID of the comment to edit.
-	 * @param   string  $comment  The text of the comment.
+	 * @param   string $user    The name of the owner of the GitHub repository.
+	 * @param   string $repo    The name of the GitHub repository.
+	 * @param   string $id      The ID of the comment to edit.
+	 * @param   string $comment The text of the comment.
 	 *
 	 * @return  object
 	 *
@@ -119,9 +119,9 @@ class JGithubPackageRepositoriesComments extends JGithubPackage
 	/**
 	 * Method to delete a comment on a commit.
 	 *
-	 * @param   string  $user  The name of the owner of the GitHub repository.
-	 * @param   string  $repo  The name of the GitHub repository.
-	 * @param   string  $id    The ID of the comment to edit.
+	 * @param   string $user The name of the owner of the GitHub repository.
+	 * @param   string $repo The name of the GitHub repository.
+	 * @param   string $id   The ID of the comment to edit.
 	 *
 	 * @return  object
 	 *
@@ -142,13 +142,13 @@ class JGithubPackageRepositoriesComments extends JGithubPackage
 	/**
 	 * Method to create a comment on a commit.
 	 *
-	 * @param   string   $user      The name of the owner of the GitHub repository.
-	 * @param   string   $repo      The name of the GitHub repository.
-	 * @param   string   $sha       The SHA of the commit to comment on.
-	 * @param   string   $comment   The text of the comment.
-	 * @param   integer  $line      The line number of the commit to comment on.
-	 * @param   string   $filepath  A relative path to the file to comment on within the commit.
-	 * @param   integer  $position  Line index in the diff to comment on.
+	 * @param   string  $user     The name of the owner of the GitHub repository.
+	 * @param   string  $repo     The name of the GitHub repository.
+	 * @param   string  $sha      The SHA of the commit to comment on.
+	 * @param   string  $comment  The text of the comment.
+	 * @param   integer $line     The line number of the commit to comment on.
+	 * @param   string  $filepath A relative path to the file to comment on within the commit.
+	 * @param   integer $position Line index in the diff to comment on.
 	 *
 	 * @return  object
 	 *
@@ -161,10 +161,10 @@ class JGithubPackageRepositoriesComments extends JGithubPackage
 
 		$data = json_encode(
 			array(
-				'body' => $comment,
-				'path' => $filepath,
+				'body'     => $comment,
+				'path'     => $filepath,
 				'position' => (int) $position,
-				'line' => (int) $line
+				'line'     => (int) $line
 			)
 		);
 

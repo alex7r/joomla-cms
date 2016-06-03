@@ -17,37 +17,37 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_checkin'); ?>" method="post" name="adminForm" id="adminForm">
-<?php if (!empty( $this->sidebar)) : ?>
+	<?php if (!empty($this->sidebar)) : ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
 	</div>
 	<div id="j-main-container" class="span10">
-<?php else : ?>
-	<div id="j-main-container">
-<?php endif;?>
-		<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this, 'options' => array('filterButton' => false))); ?>
-		<div class="clearfix"></div>
-		<?php if (empty($this->items)) : ?>
-			<div class="alert alert-no-items">
-				<?php echo JText::_('COM_CHECKIN_NO_ITEMS'); ?>
-			</div>
 		<?php else : ?>
-			<table id="global-checkin" class="table table-striped">
-				<thead>
+		<div id="j-main-container">
+			<?php endif; ?>
+			<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this, 'options' => array('filterButton' => false))); ?>
+			<div class="clearfix"></div>
+			<?php if (empty($this->items)) : ?>
+				<div class="alert alert-no-items">
+					<?php echo JText::_('COM_CHECKIN_NO_ITEMS'); ?>
+				</div>
+			<?php else : ?>
+				<table id="global-checkin" class="table table-striped">
+					<thead>
 					<tr>
 						<th width="1%"><?php echo JHtml::_('grid.checkall'); ?></th>
 						<th><?php echo JHtml::_('searchtools.sort', 'COM_CHECKIN_DATABASE_TABLE', 'table', $listDirn, $listOrder); ?></th>
 						<th><?php echo JHtml::_('searchtools.sort', 'COM_CHECKIN_ITEMS_TO_CHECK_IN', 'count', $listDirn, $listOrder); ?></th>
 					</tr>
-				</thead>
-				<tfoot>
+					</thead>
+					<tfoot>
 					<tr>
 						<td colspan="3">
 							<?php echo $this->pagination->getListFooter(); ?>
 						</td>
 					</tr>
-				</tfoot>
-				<tbody>
+					</tfoot>
+					<tbody>
 					<?php $i = 0; ?>
 					<?php foreach ($this->items as $table => $count): ?>
 						<tr class="row<?php echo $i % 2; ?>">
@@ -63,11 +63,11 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 						</tr>
 						<?php $i++; ?>
 					<?php endforeach; ?>
-				</tbody>
-			</table>
-		<?php endif;?>
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="boxchecked" value="0" />
-		<?php echo JHtml::_('form.token'); ?>
-	</div>
+					</tbody>
+				</table>
+			<?php endif; ?>
+			<input type="hidden" name="task" value=""/>
+			<input type="hidden" name="boxchecked" value="0"/>
+			<?php echo JHtml::_('form.token'); ?>
+		</div>
 </form>

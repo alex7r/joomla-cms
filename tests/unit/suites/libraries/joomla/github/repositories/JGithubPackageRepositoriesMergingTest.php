@@ -41,25 +41,6 @@ class JGithubPackageRepositoriesMergingTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @since   ¿
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options = new JRegistry;
-		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackageRepositoriesMerging($this->options, $this->client);
-	}
-
-	/**
 	 * @covers JGithubPackageRepositoriesMerging::perform
 	 *
 	 *     POST /repos/:owner/:repo/merges
@@ -178,16 +159,14 @@ class JGithubPackageRepositoriesMergingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('post')
-		             ->with('/repos/joomla/joomla-platform/merges')
-		             ->will($this->returnValue($this->response))
-		;
+			->method('post')
+			->with('/repos/joomla/joomla-platform/merges')
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->perform('joomla', 'joomla-platform', '123', '456', 'My Message'),
 			$this->equalTo(json_decode($this->sampleString))
-		)
-		;
+		);
 	}
 
 	/**
@@ -199,16 +178,14 @@ class JGithubPackageRepositoriesMergingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('post')
-		             ->with('/repos/joomla/joomla-platform/merges')
-		             ->will($this->returnValue($this->response))
-		;
+			->method('post')
+			->with('/repos/joomla/joomla-platform/merges')
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->perform('joomla', 'joomla-platform', '123', '456', 'My Message'),
 			$this->equalTo(json_decode($this->sampleString))
-		)
-		;
+		);
 	}
 
 	/**
@@ -220,16 +197,14 @@ class JGithubPackageRepositoriesMergingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('post')
-		             ->with('/repos/joomla/joomla-platform/merges')
-		             ->will($this->returnValue($this->response))
-		;
+			->method('post')
+			->with('/repos/joomla/joomla-platform/merges')
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->perform('joomla', 'joomla-platform', '123', '456', 'My Message'),
 			$this->equalTo(json_decode($this->sampleString))
-		)
-		;
+		);
 	}
 
 	/**
@@ -241,16 +216,14 @@ class JGithubPackageRepositoriesMergingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('post')
-		             ->with('/repos/joomla/joomla-platform/merges')
-		             ->will($this->returnValue($this->response))
-		;
+			->method('post')
+			->with('/repos/joomla/joomla-platform/merges')
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->perform('joomla', 'joomla-platform', '123', '456', 'My Message'),
 			$this->equalTo(json_decode($this->sampleString))
-		)
-		;
+		);
 	}
 
 	/**
@@ -262,15 +235,32 @@ class JGithubPackageRepositoriesMergingTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('post')
-		             ->with('/repos/joomla/joomla-platform/merges')
-		             ->will($this->returnValue($this->response))
-		;
+			->method('post')
+			->with('/repos/joomla/joomla-platform/merges')
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->perform('joomla', 'joomla-platform', '123', '456', 'My Message'),
 			$this->equalTo(json_decode($this->sampleString))
-		)
-		;
+		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @since   ¿
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options  = new JRegistry;
+		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackageRepositoriesMerging($this->options, $this->client);
 	}
 }

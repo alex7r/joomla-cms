@@ -1,19 +1,19 @@
 <?php
 /**
-* @package     Joomla.Administrator
-* @subpackage  com_templates
-*
-* @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
-* @license     GNU General Public License version 2 or later; see LICENSE.txt
-*/
+ * @package     Joomla.Administrator
+ * @subpackage  com_templates
+ *
+ * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
 
 defined('_JEXEC') or die;
 
 /**
-* View to edit a template style.
-*
-* @since  1.6
-*/
+ * View to edit a template style.
+ *
+ * @since  1.6
+ */
 class TemplatesViewTemplate extends JViewLegacy
 {
 	/**
@@ -89,7 +89,7 @@ class TemplatesViewTemplate extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -113,7 +113,7 @@ class TemplatesViewTemplate extends JViewLegacy
 
 		if (in_array($ext, $sourceTypes))
 		{
-			$this->form   = $this->get('Form');
+			$this->form = $this->get('Form');
 			$this->form->setFieldAttribute('source', 'syntax', $ext);
 			$this->source = $this->get('Source');
 			$this->type   = 'file';
@@ -168,17 +168,17 @@ class TemplatesViewTemplate extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		$app   = JFactory::getApplication();
-		$user  = JFactory::getUser();
+		$app  = JFactory::getApplication();
+		$user = JFactory::getUser();
 		$app->input->set('hidemainmenu', true);
 
 		// User is global SuperUser
 		$isSuperUser = $user->authorise('core.admin');
 
 		// Get the toolbar object instance
-		$bar = JToolbar::getInstance('toolbar');
+		$bar          = JToolbar::getInstance('toolbar');
 		$explodeArray = explode('.', $this->fileName);
-		$ext = end($explodeArray);
+		$ext          = end($explodeArray);
 
 		JToolbarHelper::title(JText::_('COM_TEMPLATES_MANAGER_VIEW_TEMPLATE'), 'eye thememanager');
 
@@ -260,7 +260,7 @@ class TemplatesViewTemplate extends JViewLegacy
 	/**
 	 * Method for creating the collapsible tree.
 	 *
-	 * @param   array  $array  The value of the present node for recursion
+	 * @param   array $array The value of the present node for recursion
 	 *
 	 * @return  string
 	 *
@@ -280,7 +280,7 @@ class TemplatesViewTemplate extends JViewLegacy
 	/**
 	 * Method for listing the folder tree in modals.
 	 *
-	 * @param   array  $array  The value of the present node for recursion
+	 * @param   array $array The value of the present node for recursion
 	 *
 	 * @return  string
 	 *

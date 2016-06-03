@@ -18,7 +18,7 @@ abstract class AbstractRegistryFormat implements FormatInterface
 {
 	/**
 	 * @var    AbstractRegistryFormat[]  Format instances container.
-	 * @since  1.0
+	 * @since       1.0
 	 * @deprecated  2.0  Object caching will no longer be supported
 	 */
 	protected static $instances = array();
@@ -27,13 +27,13 @@ abstract class AbstractRegistryFormat implements FormatInterface
 	 * Returns a reference to a Format object, only creating it
 	 * if it doesn't already exist.
 	 *
-	 * @param   string  $type     The format to load
-	 * @param   array   $options  Additional options to configure the object
+	 * @param   string $type    The format to load
+	 * @param   array  $options Additional options to configure the object
 	 *
 	 * @return  AbstractRegistryFormat  Registry format handler
 	 *
 	 * @deprecated  2.0  Use Factory::getFormat() instead
-	 * @since   1.0
+	 * @since       1.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public static function getInstance($type, array $options = array())

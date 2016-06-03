@@ -26,7 +26,7 @@ class JLogLoggerCallbackTestHelper
 	/**
 	 * Function for testing JLogLoggerCallback with a static method
 	 *
-	 * @param   JLogEntry  $entry  A log entry to be processed.
+	 * @param   JLogEntry $entry A log entry to be processed.
 	 *
 	 * @return  null
 	 *
@@ -40,7 +40,7 @@ class JLogLoggerCallbackTestHelper
 	/**
 	 * Function for testing JLogLoggerCallback with an object method
 	 *
-	 * @param   JLogEntry  $entry  A log entry to be processed.
+	 * @param   JLogEntry $entry A log entry to be processed.
 	 *
 	 * @return  null
 	 *
@@ -55,7 +55,7 @@ class JLogLoggerCallbackTestHelper
 /**
  * Function for testing JLogLoggerCallback
  *
- * @param   JLogEntry  $entry  A log entry to be processed.
+ * @param   JLogEntry $entry A log entry to be processed.
  *
  * @return  null
  *

@@ -55,98 +55,98 @@ class JDatabaseExporterPdomysqlTest extends PHPUnit_Framework_TestCase
 		)
 			->method('getPrefix')
 			->will(
-			$this->returnValue(
-				'jos_'
-			)
-		);
+				$this->returnValue(
+					'jos_'
+				)
+			);
 
 		$this->dbo->expects(
 			$this->any()
 		)
 			->method('getTableColumns')
 			->will(
-			$this->returnValue(
-				array(
-					(object) array(
-						'Field' => 'id',
-						'Type' => 'int(11) unsigned',
-						'Collation' => null,
-						'Null' => 'NO',
-						'Key' => 'PRI',
-						'Default' => '',
-						'Extra' => 'auto_increment',
-						'Privileges' => 'select,insert,update,references',
-						'Comment' => '',
-					),
-					(object) array(
-						'Field' => 'title',
-						'Type' => 'varchar(255)',
-						'Collation' => 'utf8_general_ci',
-						'Null' => 'NO',
-						'Key' => '',
-						'Default' => '',
-						'Extra' => '',
-						'Privileges' => 'select,insert,update,references',
-						'Comment' => '',
-					),
+				$this->returnValue(
+					array(
+						(object) array(
+							'Field'      => 'id',
+							'Type'       => 'int(11) unsigned',
+							'Collation'  => null,
+							'Null'       => 'NO',
+							'Key'        => 'PRI',
+							'Default'    => '',
+							'Extra'      => 'auto_increment',
+							'Privileges' => 'select,insert,update,references',
+							'Comment'    => '',
+						),
+						(object) array(
+							'Field'      => 'title',
+							'Type'       => 'varchar(255)',
+							'Collation'  => 'utf8_general_ci',
+							'Null'       => 'NO',
+							'Key'        => '',
+							'Default'    => '',
+							'Extra'      => '',
+							'Privileges' => 'select,insert,update,references',
+							'Comment'    => '',
+						),
+					)
 				)
-			)
-		);
+			);
 
 		$this->dbo->expects(
 			$this->any()
 		)
 			->method('getTableKeys')
 			->will(
-			$this->returnValue(
-				array(
-					(object) array(
-						'Table' => 'jos_test',
-						'Non_unique' => '0',
-						'Key_name' => 'PRIMARY',
-						'Seq_in_index' => '1',
-						'Column_name' => 'id',
-						'Collation' => 'A',
-						'Cardinality' => '2695',
-						'Sub_part' => '',
-						'Packed' => '',
-						'Null' => '',
-						'Index_type' => 'BTREE',
-						'Comment' => '',
+				$this->returnValue(
+					array(
+						(object) array(
+							'Table'        => 'jos_test',
+							'Non_unique'   => '0',
+							'Key_name'     => 'PRIMARY',
+							'Seq_in_index' => '1',
+							'Column_name'  => 'id',
+							'Collation'    => 'A',
+							'Cardinality'  => '2695',
+							'Sub_part'     => '',
+							'Packed'       => '',
+							'Null'         => '',
+							'Index_type'   => 'BTREE',
+							'Comment'      => '',
+						)
 					)
 				)
-			)
-		);
+			);
 
 		$this->dbo->expects(
 			$this->any()
 		)
 			->method('quoteName')
 			->will(
-			$this->returnCallback(
-				array($this, 'callbackQuoteName')
-			)
-		);
+				$this->returnCallback(
+					array($this, 'callbackQuoteName')
+				)
+			);
 
 		$this->dbo->expects(
 			$this->any()
 		)
 			->method('setQuery')
 			->will(
-			$this->returnCallback(
-				array($this, 'callbackSetQuery')
-			)
-		);
+				$this->returnCallback(
+					array($this, 'callbackSetQuery')
+				)
+			);
 
 		$this->dbo->expects(
 			$this->any()
 		)
 			->method('loadObjectList')
 			->will(
-			$this->returnCallback(
-				array($this, 'callbackLoadObjectList')
-			)
-		);
+				$this->returnCallback(
+					array($this, 'callbackLoadObjectList')
+				)
+			);
 	}
 
 	/**
@@ -164,7 +164,7 @@ class JDatabaseExporterPdomysqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Callback for the dbo quoteName method.
 	 *
-	 * @param   string  $value  The value to be quoted.
+	 * @param   string $value The value to be quoted.
 	 *
 	 * @return  string  The value passed wrapped in MySQL quotes.
 	 *
@@ -178,7 +178,7 @@ class JDatabaseExporterPdomysqlTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Callback for the dbo setQuery method.
 	 *
-	 * @param   string  $query  The query.
+	 * @param   string $query The query.
 	 *
 	 * @return  void
 	 *
@@ -528,7 +528,7 @@ class JDatabaseExporterPdomysqlTest extends PHPUnit_Framework_TestCase
 	{
 		$instance = new JDatabaseExporterPdomysql;
 
-		$result   = $instance->withStructure();
+		$result = $instance->withStructure();
 
 		$this->assertThat(
 			$result,

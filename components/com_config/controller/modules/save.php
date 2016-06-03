@@ -15,13 +15,13 @@ defined('_JEXEC') or die;
  * @package     Joomla.Site
  * @subpackage  com_config
  * @since       3.2
-*/
+ */
 class ConfigControllerModulesSave extends JControllerBase
 {
 	/**
 	 * Method to save module editing.
 	 *
-	 * @return  bool	True on success.
+	 * @return  bool    True on success.
 	 *
 	 * @since   3.2
 	 */
@@ -38,7 +38,8 @@ class ConfigControllerModulesSave extends JControllerBase
 		$user = JFactory::getUser();
 
 		if (!$user->authorise('module.edit.frontend', 'com_modules.module.' . $this->input->get('id'))
-			&& !$user->authorise('module.edit.frontend', 'com_modules'))
+			&& !$user->authorise('module.edit.frontend', 'com_modules')
+		)
 		{
 			$this->app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'));
 			$this->app->redirect('index.php');
@@ -52,7 +53,7 @@ class ConfigControllerModulesSave extends JControllerBase
 
 		// Get returnUri
 		$returnUri = $this->input->post->get('return', null, 'base64');
-		$redirect = '';
+		$redirect  = '';
 
 		if (!empty($returnUri))
 		{

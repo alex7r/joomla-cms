@@ -39,7 +39,7 @@ class JFormFieldCheckbox extends JFormField
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -59,8 +59,8 @@ class JFormFieldCheckbox extends JFormField
 	/**
 	 * Method to set certain otherwise inaccessible properties of the form field object.
 	 *
-	 * @param   string  $name   The property name for which to the the value.
-	 * @param   mixed   $value  The value of the property.
+	 * @param   string $name  The property name for which to the the value.
+	 * @param   mixed  $value The value of the property.
 	 *
 	 * @return  void
 	 *
@@ -71,7 +71,7 @@ class JFormFieldCheckbox extends JFormField
 		switch ($name)
 		{
 			case 'checked':
-				$value = (string) $value;
+				$value         = (string) $value;
 				$this->checked = ($value == 'true' || $value == $name || $value == '1');
 				break;
 
@@ -83,9 +83,9 @@ class JFormFieldCheckbox extends JFormField
 	/**
 	 * Method to attach a JForm object to the field.
 	 *
-	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
-	 * @param   mixed             $value    The form field value to validate.
-	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
+	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed            $value     The form field value to validate.
+	 * @param   string           $group     The field name group control value. This acts as as an array container for the field.
 	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
 	 *
@@ -100,7 +100,7 @@ class JFormFieldCheckbox extends JFormField
 
 		if ($return)
 		{
-			$checked = (string) $this->element['checked'];
+			$checked       = (string) $this->element['checked'];
 			$this->checked = ($checked == 'true' || $checked == 'checked' || $checked == '1');
 
 			empty($this->value) || $this->checked ? null : $this->checked = true;
@@ -136,7 +136,7 @@ class JFormFieldCheckbox extends JFormField
 		JHtml::_('script', 'system/html5fallback.js', false, true);
 
 		return '<input type="checkbox" name="' . $this->name . '" id="' . $this->id . '" value="'
-			. htmlspecialchars($value, ENT_COMPAT, 'UTF-8') . '"' . $class . $checked . $disabled . $onclick . $onchange
-			. $required . $autofocus . ' />';
+		. htmlspecialchars($value, ENT_COMPAT, 'UTF-8') . '"' . $class . $checked . $disabled . $onclick . $onchange
+		. $required . $autofocus . ' />';
 	}
 }

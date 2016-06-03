@@ -1,10 +1,10 @@
 <?php
 /**
- * @package	    Joomla.UnitTest
- * @subpackage  UCM
+ * @package        Joomla.UnitTest
+ * @subpackage     UCM
  *
- * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
- * @license	    GNU General Public License version 2 or later; see LICENSE
+ * @copyright      Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license        GNU General Public License version 2 or later; see LICENSE
  */
 
 /**
@@ -21,6 +21,24 @@ class JUcmContentTest extends TestCaseDatabase
 	 * @since  3.2
 	 */
 	protected $object;
+
+	/**
+	 * Tests the __construct()
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function test__construct()
+	{
+		$object = new JUcmContent(JTable::getInstance('Content'), 'com_content.article');
+
+		$this->assertInstanceOf(
+			'JTableContent',
+			TestReflection::getValue($object, 'table'),
+			'Ensure the table property is an instance of JTableContent'
+		);
+	}
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -73,23 +91,5 @@ class JUcmContentTest extends TestCaseDatabase
 		$dataSet->addTable('jos_ucm_content', JPATH_TEST_DATABASE . '/jos_ucm_content.csv');
 
 		return $dataSet;
-	}
-
-	/**
-	 * Tests the __construct()
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	public function test__construct()
-	{
-		$object = new JUcmContent(JTable::getInstance('Content'), 'com_content.article');
-
-		$this->assertInstanceOf(
-			'JTableContent',
-			TestReflection::getValue($object, 'table'),
-			'Ensure the table property is an instance of JTableContent'
-		);
 	}
 }

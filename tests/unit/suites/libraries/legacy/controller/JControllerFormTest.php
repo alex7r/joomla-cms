@@ -21,34 +21,6 @@ require_once __DIR__ . '/stubs/controllerform.php';
 class JControllerFormTest extends TestCase
 {
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$config = $this->getMockConfig();
-
-		parent::setUp();
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-		parent::tearDown();
-	}
-
-	/**
 	 * Tests the JControllerForm constructor.
 	 *
 	 * @since   11.1
@@ -91,5 +63,33 @@ class JControllerFormTest extends TestCase
 		);
 
 		$this->assertAttributeEquals('mints', 'view_list', $object, 'Check the _view_list variable was created properly');
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+		JFactory::$config      = $this->getMockConfig();
+
+		parent::setUp();
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+		parent::tearDown();
 	}
 }

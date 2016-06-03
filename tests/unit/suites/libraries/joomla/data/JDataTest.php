@@ -193,7 +193,7 @@ class JDataTest extends TestCase
 	 */
 	public function testBind_object()
 	{
-		$properties = new stdClass;
+		$properties             = new stdClass;
 		$properties->property_1 = 'value_1';
 		$properties->property_2 = '1';
 		$properties->property_3 = 1;
@@ -240,7 +240,7 @@ class JDataTest extends TestCase
 		$this->assertCount(1, $this->_instance);
 
 		// Set some more properties.
-		$this->_instance->bar = 'bar';
+		$this->_instance->bar  = 'bar';
 		$this->_instance->barz = 'barz';
 		$this->assertCount(3, $this->_instance);
 	}
@@ -268,10 +268,10 @@ class JDataTest extends TestCase
 		);
 
 		$properties = array(
-			'scalar' => 'value_1',
-			'date' => new JDate('2012-01-01'),
+			'scalar'   => 'value_1',
+			'date'     => new JDate('2012-01-01'),
 			'registry' => new Registry(array('key' => 'value')),
-			'JData' => new JData(
+			'JData'    => new JData(
 				array(
 					'level2' => new JData(
 						array(
@@ -403,7 +403,7 @@ class JDataTest extends TestCase
 		$this->_instance->set_test = 'set_test_value';
 		$this->assertEquals('set_test_value', $this->_instance->set_test);
 
-		$object = new JDataCapitaliser;
+		$object             = new JDataCapitaliser;
 		$object->test_value = 'upperCase';
 
 		$this->assertEquals('UPPERCASE', $object->test_value);

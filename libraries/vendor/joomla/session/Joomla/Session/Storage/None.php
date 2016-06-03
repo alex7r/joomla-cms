@@ -24,7 +24,7 @@ class None extends Storage
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since       1.0
 	 * @deprecated  2.0
 	 */
 	public function register()

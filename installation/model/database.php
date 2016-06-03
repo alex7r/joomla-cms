@@ -25,28 +25,6 @@ class InstallationModelDatabase extends JModelBase
 	protected static $userId = 0;
 
 	/**
-	 * Generates the user ID.
-	 *
-	 * @return  integer  The user ID.
-	 *
-	 * @since   3.1
-	 */
-	protected static function generateRandUserId()
-	{
-		$session = JFactory::getSession();
-		$randUserId = $session->get('randUserId');
-
-		if (empty($randUserId))
-		{
-			// Create the ID for the root user only once and store in session.
-			$randUserId = mt_rand(1, 1000);
-			$session->set('randUserId', $randUserId);
-		}
-
-		return $randUserId;
-	}
-
-	/**
 	 * Resets the user ID.
 	 *
 	 * @return  void
@@ -56,137 +34,63 @@ class InstallationModelDatabase extends JModelBase
 	public static function resetRandUserId()
 	{
 		self::$userId = 0;
-		$session = JFactory::getSession();
+		$session      = JFactory::getSession();
 		$session->set('randUserId', self::$userId);
 	}
 
 	/**
-	 * Retrieves the default user ID and sets it if necessary.
+	 * Method to process the old database.
 	 *
-	 * @return  integer  The user ID.
+	 * @param   array $options The options array.
+	 *
+	 * @return  boolean  True on success.
 	 *
 	 * @since   3.1
 	 */
-	public static function getUserId()
+	public function handleOldDatabase($options)
 	{
-		if (!self::$userId)
+		if (!isset($options['db_created']) || !$options['db_created'])
 		{
-			self::$userId = self::generateRandUserId();
+			return $this->createDatabase($options);
 		}
 
-		return self::$userId;
-	}
-
-	/**
-	 * Method to initialise the database.
-	 *
-	 * @param   array  $options  The options to use for configuration.
-	 *
-	 * @return  JDatabaseDriver|boolean  Database object on success, boolean false on failure
-	 *
-	 * @since   3.1
-	 */
-	public function initialise($options)
-	{
-		// Get the application.
-		/* @var InstallationApplicationWeb $app */
-		$app = JFactory::getApplication();
+		if (!$db = $this->initialise($options))
+		{
+			return false;
+		}
 
 		// Get the options as an object for easier handling.
 		$options = JArrayHelper::toObject($options);
 
-		// Load the back-end language files so that the DB error messages work.
-		$lang = JFactory::getLanguage();
-		$currentLang = $lang->getTag();
+		// Set the character set to UTF-8 for pre-existing databases.
+		$this->setDatabaseCharset($db, $options->db_name);
 
-		// Load the selected language
-		if (JLanguage::exists($currentLang, JPATH_ADMINISTRATOR))
+		// Should any old database tables be removed or backed up?
+		if ($options->db_old == 'remove')
 		{
-			$lang->load('joomla', JPATH_ADMINISTRATOR, $currentLang, true);
+			// Attempt to delete the old database tables.
+			if (!$this->deleteDatabase($db, $options->db_prefix))
+			{
+				// Message queued by method, simply return
+				return false;
+			}
 		}
-		// Pre-load en-GB in case the chosen language files do not exist.
 		else
 		{
-			$lang->load('joomla', JPATH_ADMINISTRATOR, 'en-GB', true);
-		}
-
-		// Ensure a database type was selected.
-		if (empty($options->db_type))
-		{
-			$app->enqueueMessage(JText::_('INSTL_DATABASE_INVALID_TYPE'), 'notice');
-
-			return false;
-		}
-
-		// Ensure that a hostname and user name were input.
-		if (empty($options->db_host) || empty($options->db_user))
-		{
-			$app->enqueueMessage(JText::_('INSTL_DATABASE_INVALID_DB_DETAILS'), 'notice');
-
-			return false;
-		}
-
-		// Ensure that a database name was input.
-		if (empty($options->db_name))
-		{
-			$app->enqueueMessage(JText::_('INSTL_DATABASE_EMPTY_NAME'), 'notice');
-
-			return false;
-		}
-
-		// Validate database table prefix.
-		if (!preg_match('#^[a-zA-Z]+[a-zA-Z0-9_]*$#', $options->db_prefix))
-		{
-			$app->enqueueMessage(JText::_('INSTL_DATABASE_PREFIX_MSG'), 'notice');
-
-			return false;
-		}
-
-		// Validate length of database table prefix.
-		if (strlen($options->db_prefix) > 15)
-		{
-			$app->enqueueMessage(JText::_('INSTL_DATABASE_FIX_TOO_LONG'), 'notice');
-
-			return false;
-		}
-
-		// Validate length of database name.
-		if (strlen($options->db_name) > 64)
-		{
-			$app->enqueueMessage(JText::_('INSTL_DATABASE_NAME_TOO_LONG'), 'notice');
-
-			return false;
-		}
-
-		// Workaround for UPPERCASE table prefix for postgresql
-		if ($options->db_type == 'postgresql')
-		{
-			if (strtolower($options->db_prefix) != $options->db_prefix)
+			// If the database isn't being deleted, back it up.
+			if (!$this->backupDatabase($db, $options->db_prefix))
 			{
-				$app->enqueueMessage(JText::_('INSTL_DATABASE_FIX_LOWERCASE'), 'notice');
 				return false;
 			}
 		}
 
-		// Get a database object.
-		try
-		{
-			return InstallationHelperDatabase::getDbo(
-				$options->db_type, $options->db_host, $options->db_user, $options->db_pass, $options->db_name, $options->db_prefix, $options->db_select
-			);
-		}
-		catch (RuntimeException $e)
-		{
-			$app->enqueueMessage(JText::sprintf('INSTL_DATABASE_COULD_NOT_CONNECT', $e->getMessage()), 'notice');
-
-			return false;
-		}
+		return true;
 	}
 
 	/**
 	 * Method to create a new database.
 	 *
-	 * @param   array  $options  The configuration options
+	 * @param   array $options The configuration options
 	 *
 	 * @return    boolean    True on success.
 	 *
@@ -240,12 +144,12 @@ class InstallationModelDatabase extends JModelBase
 				 * in order to trick the connection into creating the database
 				 */
 				$altDBoptions = array(
-					'driver' => $options->db_type,
-					'host' => $options->db_host,
-					'user' => $options->db_user,
+					'driver'   => $options->db_type,
+					'host'     => $options->db_host,
+					'user'     => $options->db_user,
 					'password' => $options->db_pass,
-					'prefix' => $options->db_prefix,
-					'select' => $options->db_select
+					'prefix'   => $options->db_prefix,
+					'select'   => $options->db_select
 				);
 
 				$altDB = JDatabaseDriver::getInstance($altDBoptions);
@@ -407,58 +311,269 @@ class InstallationModelDatabase extends JModelBase
 	}
 
 	/**
-	 * Method to process the old database.
+	 * Method to initialise the database.
 	 *
-	 * @param   array  $options  The options array.
+	 * @param   array $options The options to use for configuration.
+	 *
+	 * @return  JDatabaseDriver|boolean  Database object on success, boolean false on failure
+	 *
+	 * @since   3.1
+	 */
+	public function initialise($options)
+	{
+		// Get the application.
+		/* @var InstallationApplicationWeb $app */
+		$app = JFactory::getApplication();
+
+		// Get the options as an object for easier handling.
+		$options = JArrayHelper::toObject($options);
+
+		// Load the back-end language files so that the DB error messages work.
+		$lang        = JFactory::getLanguage();
+		$currentLang = $lang->getTag();
+
+		// Load the selected language
+		if (JLanguage::exists($currentLang, JPATH_ADMINISTRATOR))
+		{
+			$lang->load('joomla', JPATH_ADMINISTRATOR, $currentLang, true);
+		}
+		// Pre-load en-GB in case the chosen language files do not exist.
+		else
+		{
+			$lang->load('joomla', JPATH_ADMINISTRATOR, 'en-GB', true);
+		}
+
+		// Ensure a database type was selected.
+		if (empty($options->db_type))
+		{
+			$app->enqueueMessage(JText::_('INSTL_DATABASE_INVALID_TYPE'), 'notice');
+
+			return false;
+		}
+
+		// Ensure that a hostname and user name were input.
+		if (empty($options->db_host) || empty($options->db_user))
+		{
+			$app->enqueueMessage(JText::_('INSTL_DATABASE_INVALID_DB_DETAILS'), 'notice');
+
+			return false;
+		}
+
+		// Ensure that a database name was input.
+		if (empty($options->db_name))
+		{
+			$app->enqueueMessage(JText::_('INSTL_DATABASE_EMPTY_NAME'), 'notice');
+
+			return false;
+		}
+
+		// Validate database table prefix.
+		if (!preg_match('#^[a-zA-Z]+[a-zA-Z0-9_]*$#', $options->db_prefix))
+		{
+			$app->enqueueMessage(JText::_('INSTL_DATABASE_PREFIX_MSG'), 'notice');
+
+			return false;
+		}
+
+		// Validate length of database table prefix.
+		if (strlen($options->db_prefix) > 15)
+		{
+			$app->enqueueMessage(JText::_('INSTL_DATABASE_FIX_TOO_LONG'), 'notice');
+
+			return false;
+		}
+
+		// Validate length of database name.
+		if (strlen($options->db_name) > 64)
+		{
+			$app->enqueueMessage(JText::_('INSTL_DATABASE_NAME_TOO_LONG'), 'notice');
+
+			return false;
+		}
+
+		// Workaround for UPPERCASE table prefix for postgresql
+		if ($options->db_type == 'postgresql')
+		{
+			if (strtolower($options->db_prefix) != $options->db_prefix)
+			{
+				$app->enqueueMessage(JText::_('INSTL_DATABASE_FIX_LOWERCASE'), 'notice');
+
+				return false;
+			}
+		}
+
+		// Get a database object.
+		try
+		{
+			return InstallationHelperDatabase::getDbo(
+				$options->db_type, $options->db_host, $options->db_user, $options->db_pass, $options->db_name, $options->db_prefix, $options->db_select
+			);
+		}
+		catch (RuntimeException $e)
+		{
+			$app->enqueueMessage(JText::sprintf('INSTL_DATABASE_COULD_NOT_CONNECT', $e->getMessage()), 'notice');
+
+			return false;
+		}
+	}
+
+	/**
+	 * Method to create a new database.
+	 *
+	 * @param   JDatabaseDriver $db        JDatabase object.
+	 * @param   JObject         $options   JObject coming from "initialise" function to pass user
+	 *                                     and database name to database driver.
+	 * @param   boolean         $utf       True if the database supports the UTF-8 character set.
 	 *
 	 * @return  boolean  True on success.
 	 *
 	 * @since   3.1
 	 */
-	public function handleOldDatabase($options)
+	public function createDb($db, $options, $utf)
 	{
-		if (!isset($options['db_created']) || !$options['db_created'])
+		// Build the create database query.
+		try
 		{
-			return $this->createDatabase($options);
+			// Run the create database query.
+			$db->createDatabase($options, $utf);
 		}
-
-		if (!$db = $this->initialise($options))
+		catch (RuntimeException $e)
 		{
+			// If an error occurred return false.
 			return false;
-		}
-
-		// Get the options as an object for easier handling.
-		$options = JArrayHelper::toObject($options);
-
-		// Set the character set to UTF-8 for pre-existing databases.
-		$this->setDatabaseCharset($db, $options->db_name);
-
-		// Should any old database tables be removed or backed up?
-		if ($options->db_old == 'remove')
-		{
-			// Attempt to delete the old database tables.
-			if (!$this->deleteDatabase($db, $options->db_prefix))
-			{
-				// Message queued by method, simply return
-				return false;
-			}
-		}
-		else
-		{
-			// If the database isn't being deleted, back it up.
-			if (!$this->backupDatabase($db, $options->db_prefix))
-			{
-				return false;
-			}
 		}
 
 		return true;
 	}
 
 	/**
+	 * Method to set the database character set to UTF-8.
+	 *
+	 * @param   JDatabaseDriver $db   JDatabaseDriver object.
+	 * @param   string          $name Name of the database to process.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   3.1
+	 */
+	public function setDatabaseCharset($db, $name)
+	{
+		// Run the create database query.
+		$db->setQuery($db->getAlterDbCharacterSet($name));
+
+		try
+		{
+			$db->execute();
+		}
+		catch (RuntimeException $e)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Method to delete all tables in a database with a given prefix.
+	 *
+	 * @param   JDatabaseDriver $db     JDatabaseDriver object.
+	 * @param   string          $prefix Database table prefix.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   3.1
+	 */
+	public function deleteDatabase($db, $prefix)
+	{
+		$return = true;
+
+		// Get the tables in the database.
+		$tables = $db->getTableList();
+
+		if ($tables)
+		{
+			foreach ($tables as $table)
+			{
+				// If the table uses the given prefix, drop it.
+				if (strpos($table, $prefix) === 0)
+				{
+					// Drop the table.
+					try
+					{
+						$db->dropTable($table);
+					}
+					catch (RuntimeException $e)
+					{
+						JFactory::getApplication()->enqueueMessage(JText::sprintf('INSTL_DATABASE_ERROR_DELETE', $e->getMessage()), 'notice');
+						$return = false;
+					}
+				}
+			}
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Method to backup all tables in a database with a given prefix.
+	 *
+	 * @param   JDatabaseDriver $db     JDatabaseDriver object.
+	 * @param   string          $prefix Database table prefix.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since    3.1
+	 */
+	public function backupDatabase($db, $prefix)
+	{
+		$return = true;
+		$backup = 'bak_' . $prefix;
+
+		// Get the tables in the database.
+		$tables = $db->getTableList();
+
+		if ($tables)
+		{
+			foreach ($tables as $table)
+			{
+				// If the table uses the given prefix, back it up.
+				if (strpos($table, $prefix) === 0)
+				{
+					// Backup table name.
+					$backupTable = str_replace($prefix, $backup, $table);
+
+					// Drop the backup table.
+					try
+					{
+						$db->dropTable($backupTable, true);
+					}
+					catch (RuntimeException $e)
+					{
+						JFactory::getApplication()->enqueueMessage(JText::sprintf('INSTL_DATABASE_ERROR_BACKINGUP', $e->getMessage()), 'notice');
+						$return = false;
+					}
+
+					// Rename the current table to the backup table.
+					try
+					{
+						$db->renameTable($table, $backupTable, $backup, $prefix);
+					}
+					catch (RuntimeException $e)
+					{
+						JFactory::getApplication()->enqueueMessage(JText::sprintf('INSTL_DATABASE_ERROR_BACKINGUP', $e->getMessage()), 'notice');
+						$return = false;
+					}
+				}
+			}
+		}
+
+		return $return;
+	}
+
+	/**
 	 * Method to create the database tables.
 	 *
-	 * @param   array  $options  The options array.
+	 * @param   array $options The options array.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -618,7 +733,7 @@ class InstallationModelDatabase extends JModelBase
 		}
 
 		JFactory::$database = $db;
-		$installer = JInstaller::getInstance();
+		$installer          = JInstaller::getInstance();
 
 		foreach ($extensions as $extension)
 		{
@@ -653,7 +768,7 @@ class InstallationModelDatabase extends JModelBase
 		}
 
 		// Handle default backend language setting. This feature is available for localized versions of Joomla.
-		$app = JFactory::getApplication();
+		$app       = JFactory::getApplication();
 		$languages = $app->getLocaliseAdmin($db);
 
 		if (in_array($options->language, $languages['admin']) || in_array($options->language, $languages['site']))
@@ -663,7 +778,7 @@ class InstallationModelDatabase extends JModelBase
 
 			// Set default administrator/site language to sample data values.
 			$params['administrator'] = 'en-GB';
-			$params['site'] = 'en-GB';
+			$params['site']          = 'en-GB';
 
 			if (in_array($options->language, $languages['admin']))
 			{
@@ -699,234 +814,10 @@ class InstallationModelDatabase extends JModelBase
 	}
 
 	/**
-	 * Method to install the sample data.
-	 *
-	 * @param   array  $options  The options array.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   3.1
-	 */
-	public function installSampleData($options)
-	{
-		// Get the application.
-		/* @var InstallationApplicationWeb $app */
-		$app = JFactory::getApplication();
-
-		if (!isset($options['db_created']) || !$options['db_created'])
-		{
-			return $this->createDatabase($options);
-		}
-
-		if (!$db = $this->initialise($options))
-		{
-			return false;
-		}
-
-		// Get the options as an object for easier handling.
-		$options = JArrayHelper::toObject($options);
-
-		// Build the path to the sample data file.
-		$type = $options->db_type;
-
-		if ($type == 'mysqli' || $type == 'pdomysql')
-		{
-			$type = 'mysql';
-		}
-		elseif ($type == 'sqlsrv')
-		{
-			$type = 'sqlazure';
-		}
-
-		$data = JPATH_INSTALLATION . '/sql/' . $type . '/' . $options->sample_file;
-
-		// Attempt to import the database schema if one is chosen.
-		if ($options->sample_file != '')
-		{
-			if (!file_exists($data))
-			{
-				$app->enqueueMessage(JText::sprintf('INSTL_DATABASE_FILE_DOES_NOT_EXIST', $data), 'notice');
-
-				return false;
-			}
-			elseif (!$this->populateDatabase($db, $data))
-			{
-				return false;
-			}
-
-			$this->postInstallSampleData($db);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Method to update the user id of the sample data content to the new rand user id.
-	 *
-	 * @param   JDatabaseDriver  $db  Database connector object $db*.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function postInstallSampleData($db)
-	{
-		// Create the ID for the root user.
-		$userId = self::getUserId();
-
-		// Update all created_by field of the tables with the random user id
-		// categories (created_user_id), contact_details, content, newsfeeds.
-		$updates_array = array(
-			'categories' => 'created_user_id',
-			'contact_details' => 'created_by',
-			'content' => 'created_by',
-			'newsfeeds' => 'created_by',
-			'tags' => 'created_user_id',
-			'ucm_content' => 'core_created_user_id',
-			'ucm_history' => 'editor_user_id'
-		);
-
-		foreach ($updates_array as $table => $field)
-		{
-			$db->setQuery(
-				'UPDATE ' . $db->quoteName('#__' . $table) .
-					' SET ' . $db->quoteName($field) . ' = ' . $db->quote($userId)
-			);
-			$db->execute();
-		}
-	}
-
-	/**
-	 * Method to backup all tables in a database with a given prefix.
-	 *
-	 * @param   JDatabaseDriver  $db      JDatabaseDriver object.
-	 * @param   string           $prefix  Database table prefix.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since    3.1
-	 */
-	public function backupDatabase($db, $prefix)
-	{
-		$return = true;
-		$backup = 'bak_' . $prefix;
-
-		// Get the tables in the database.
-		$tables = $db->getTableList();
-
-		if ($tables)
-		{
-			foreach ($tables as $table)
-			{
-				// If the table uses the given prefix, back it up.
-				if (strpos($table, $prefix) === 0)
-				{
-					// Backup table name.
-					$backupTable = str_replace($prefix, $backup, $table);
-
-					// Drop the backup table.
-					try
-					{
-						$db->dropTable($backupTable, true);
-					}
-					catch (RuntimeException $e)
-					{
-						JFactory::getApplication()->enqueueMessage(JText::sprintf('INSTL_DATABASE_ERROR_BACKINGUP', $e->getMessage()), 'notice');
-						$return = false;
-					}
-
-					// Rename the current table to the backup table.
-					try
-					{
-						$db->renameTable($table, $backupTable, $backup, $prefix);
-					}
-					catch (RuntimeException $e)
-					{
-						JFactory::getApplication()->enqueueMessage(JText::sprintf('INSTL_DATABASE_ERROR_BACKINGUP', $e->getMessage()), 'notice');
-						$return = false;
-					}
-				}
-			}
-		}
-
-		return $return;
-	}
-
-	/**
-	 * Method to create a new database.
-	 *
-	 * @param   JDatabaseDriver  $db       JDatabase object.
-	 * @param   JObject          $options  JObject coming from "initialise" function to pass user
-	 *                                     and database name to database driver.
-	 * @param   boolean          $utf      True if the database supports the UTF-8 character set.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   3.1
-	 */
-	public function createDb($db, $options, $utf)
-	{
-		// Build the create database query.
-		try
-		{
-			// Run the create database query.
-			$db->createDatabase($options, $utf);
-		}
-		catch (RuntimeException $e)
-		{
-			// If an error occurred return false.
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Method to delete all tables in a database with a given prefix.
-	 *
-	 * @param   JDatabaseDriver  $db      JDatabaseDriver object.
-	 * @param   string           $prefix  Database table prefix.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   3.1
-	 */
-	public function deleteDatabase($db, $prefix)
-	{
-		$return = true;
-
-		// Get the tables in the database.
-		$tables = $db->getTableList();
-
-		if ($tables)
-		{
-			foreach ($tables as $table)
-			{
-				// If the table uses the given prefix, drop it.
-				if (strpos($table, $prefix) === 0)
-				{
-					// Drop the table.
-					try
-					{
-						$db->dropTable($table);
-					}
-					catch (RuntimeException $e)
-					{
-						JFactory::getApplication()->enqueueMessage(JText::sprintf('INSTL_DATABASE_ERROR_DELETE', $e->getMessage()), 'notice');
-						$return = false;
-					}
-				}
-			}
-		}
-
-		return $return;
-	}
-
-	/**
 	 * Method to import a database schema from a file.
 	 *
-	 * @param   JDatabaseDriver  $db      JDatabase object.
-	 * @param   string           $schema  Path to the schema file.
+	 * @param   JDatabaseDriver $db     JDatabase object.
+	 * @param   string          $schema Path to the schema file.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -995,36 +886,9 @@ class InstallationModelDatabase extends JModelBase
 	}
 
 	/**
-	 * Method to set the database character set to UTF-8.
-	 *
-	 * @param   JDatabaseDriver  $db    JDatabaseDriver object.
-	 * @param   string           $name  Name of the database to process.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   3.1
-	 */
-	public function setDatabaseCharset($db, $name)
-	{
-		// Run the create database query.
-		$db->setQuery($db->getAlterDbCharacterSet($name));
-
-		try
-		{
-			$db->execute();
-		}
-		catch (RuntimeException $e)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Method to split up queries from a schema file into an array.
 	 *
-	 * @param   string  $query  SQL schema.
+	 * @param   string $query SQL schema.
 	 *
 	 * @return  array  Queries to perform.
 	 *
@@ -1032,8 +896,8 @@ class InstallationModelDatabase extends JModelBase
 	 */
 	protected function _splitQueries($query)
 	{
-		$buffer = array();
-		$queries = array();
+		$buffer    = array();
+		$queries   = array();
 		$in_string = false;
 
 		// Trim any whitespace.
@@ -1057,8 +921,8 @@ class InstallationModelDatabase extends JModelBase
 			if ($query[$i] == ";" && !$in_string)
 			{
 				$queries[] = substr($query, 0, $i);
-				$query = substr($query, $i + 1);
-				$i = 0;
+				$query     = substr($query, $i + 1);
+				$i         = 0;
 			}
 
 			if ($in_string && ($query[$i] == $in_string) && $buffer[1] != "\\")
@@ -1091,5 +955,142 @@ class InstallationModelDatabase extends JModelBase
 		}
 
 		return $queries;
+	}
+
+	/**
+	 * Method to install the sample data.
+	 *
+	 * @param   array $options The options array.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   3.1
+	 */
+	public function installSampleData($options)
+	{
+		// Get the application.
+		/* @var InstallationApplicationWeb $app */
+		$app = JFactory::getApplication();
+
+		if (!isset($options['db_created']) || !$options['db_created'])
+		{
+			return $this->createDatabase($options);
+		}
+
+		if (!$db = $this->initialise($options))
+		{
+			return false;
+		}
+
+		// Get the options as an object for easier handling.
+		$options = JArrayHelper::toObject($options);
+
+		// Build the path to the sample data file.
+		$type = $options->db_type;
+
+		if ($type == 'mysqli' || $type == 'pdomysql')
+		{
+			$type = 'mysql';
+		}
+		elseif ($type == 'sqlsrv')
+		{
+			$type = 'sqlazure';
+		}
+
+		$data = JPATH_INSTALLATION . '/sql/' . $type . '/' . $options->sample_file;
+
+		// Attempt to import the database schema if one is chosen.
+		if ($options->sample_file != '')
+		{
+			if (!file_exists($data))
+			{
+				$app->enqueueMessage(JText::sprintf('INSTL_DATABASE_FILE_DOES_NOT_EXIST', $data), 'notice');
+
+				return false;
+			}
+			elseif (!$this->populateDatabase($db, $data))
+			{
+				return false;
+			}
+
+			$this->postInstallSampleData($db);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Method to update the user id of the sample data content to the new rand user id.
+	 *
+	 * @param   JDatabaseDriver $db Database connector object $db*.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function postInstallSampleData($db)
+	{
+		// Create the ID for the root user.
+		$userId = self::getUserId();
+
+		// Update all created_by field of the tables with the random user id
+		// categories (created_user_id), contact_details, content, newsfeeds.
+		$updates_array = array(
+			'categories'      => 'created_user_id',
+			'contact_details' => 'created_by',
+			'content'         => 'created_by',
+			'newsfeeds'       => 'created_by',
+			'tags'            => 'created_user_id',
+			'ucm_content'     => 'core_created_user_id',
+			'ucm_history'     => 'editor_user_id'
+		);
+
+		foreach ($updates_array as $table => $field)
+		{
+			$db->setQuery(
+				'UPDATE ' . $db->quoteName('#__' . $table) .
+				' SET ' . $db->quoteName($field) . ' = ' . $db->quote($userId)
+			);
+			$db->execute();
+		}
+	}
+
+	/**
+	 * Retrieves the default user ID and sets it if necessary.
+	 *
+	 * @return  integer  The user ID.
+	 *
+	 * @since   3.1
+	 */
+	public static function getUserId()
+	{
+		if (!self::$userId)
+		{
+			self::$userId = self::generateRandUserId();
+		}
+
+		return self::$userId;
+	}
+
+	/**
+	 * Generates the user ID.
+	 *
+	 * @return  integer  The user ID.
+	 *
+	 * @since   3.1
+	 */
+	protected static function generateRandUserId()
+	{
+		$session    = JFactory::getSession();
+		$randUserId = $session->get('randUserId');
+
+		if (empty($randUserId))
+		{
+			// Create the ID for the root user only once and store in session.
+			$randUserId = mt_rand(1, 1000);
+			$session->set('randUserId', $randUserId);
+		}
+
+		return $randUserId;
 	}
 }

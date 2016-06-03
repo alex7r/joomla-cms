@@ -27,9 +27,9 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	/**
 	 * Constructor.
 	 *
-	 * @param   SimpleXMLElement  $xml      XML from Google
-	 * @param   Registry          $options  Google options object
-	 * @param   JGoogleAuth       $auth     Google data http client object
+	 * @param   SimpleXMLElement $xml     XML from Google
+	 * @param   Registry         $options Google options object
+	 * @param   JGoogleAuth      $auth    Google data http client object
 	 *
 	 * @since   12.3
 	 */
@@ -48,7 +48,7 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	/**
 	 * Method to delete a Picasa album
 	 *
-	 * @param   mixed  $match  Check for most up to date album
+	 * @param   mixed $match Check for most up to date album
 	 *
 	 * @return  boolean  Success or failure.
 	 *
@@ -101,7 +101,7 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	/**
 	 * Method to get the album link
 	 *
-	 * @param   string  $type  Type of link to return
+	 * @param   string $type Type of link to return
 	 *
 	 * @return  string  Link or false on failure
 	 *
@@ -185,7 +185,7 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	/**
 	 * Method to set the title of the album
 	 *
-	 * @param   string  $title  New album title
+	 * @param   string $title New album title
 	 *
 	 * @return  JGoogleDataPicasaAlbum  The object for method chaining
 	 *
@@ -201,7 +201,7 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	/**
 	 * Method to set the summary of the album
 	 *
-	 * @param   string  $summary  New album summary
+	 * @param   string $summary New album summary
 	 *
 	 * @return  JGoogleDataPicasaAlbum  The object for method chaining
 	 *
@@ -217,7 +217,7 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	/**
 	 * Method to set the location of the album
 	 *
-	 * @param   string  $location  New album location
+	 * @param   string $location New album location
 	 *
 	 * @return  JGoogleDataPicasaAlbum  The object for method chaining
 	 *
@@ -233,7 +233,7 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	/**
 	 * Method to set the access level of the album
 	 *
-	 * @param   string  $access  New album access
+	 * @param   string $access New album access
 	 *
 	 * @return  JGoogleDataPicasaAlbum  The object for method chaining
 	 *
@@ -249,7 +249,7 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	/**
 	 * Method to set the time of the album
 	 *
-	 * @param   int  $time  New album time
+	 * @param   int $time New album time
 	 *
 	 * @return  JGoogleDataPicasaAlbum  The object for method chaining
 	 *
@@ -265,7 +265,7 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	/**
 	 * Method to modify a Picasa Album
 	 *
-	 * @param   string  $match  Optional eTag matching parameter
+	 * @param   string $match Optional eTag matching parameter
 	 *
 	 * @return  mixed  Data from Google.
 	 *
@@ -287,7 +287,7 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 			try
 			{
 				$headers = array('GData-Version' => 2, 'Content-type' => 'application/atom+xml', 'If-Match' => $match);
-				$jdata = $this->query($url, $this->xml->asXml(), $headers, 'put');
+				$jdata   = $this->query($url, $this->xml->asXml(), $headers, 'put');
 			}
 			catch (Exception $e)
 			{
@@ -321,8 +321,8 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	{
 		if ($this->isAuthenticated())
 		{
-			$url = $this->getLink();
-			$jdata = $this->query($url, null, array('GData-Version' => 2));
+			$url       = $this->getLink();
+			$jdata     = $this->query($url, null, array('GData-Version' => 2));
 			$this->xml = $this->safeXml($jdata->body);
 
 			return $this;
@@ -345,9 +345,9 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	{
 		if ($this->isAuthenticated())
 		{
-			$url = $this->getLink('http://schemas.google.com/g/2005#feed');
+			$url   = $this->getLink('http://schemas.google.com/g/2005#feed');
 			$jdata = $this->query($url, null, array('GData-Version' => 2));
-			$xml = $this->safeXml($jdata->body);
+			$xml   = $this->safeXml($jdata->body);
 
 			if (isset($xml->children()->entry))
 			{
@@ -374,9 +374,9 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	/**
 	 * Add photo
 	 *
-	 * @param   string  $file     Path of file to upload
-	 * @param   string  $title    Title to give to file (defaults to filename)
-	 * @param   string  $summary  Description of the file
+	 * @param   string $file    Path of file to upload
+	 * @param   string $title   Title to give to file (defaults to filename)
+	 * @param   string $summary Description of the file
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -429,7 +429,7 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 	/**
 	 * Add photo
 	 *
-	 * @param   string  $file  Filename
+	 * @param   string $file Filename
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -442,33 +442,33 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 		{
 			case 'bmp':
 			case 'bm':
-			return 'image/bmp';
+				return 'image/bmp';
 			case 'gif':
-			return 'image/gif';
+				return 'image/gif';
 			case 'jpg':
 			case 'jpeg':
 			case 'jpe':
 			case 'jif':
 			case 'jfif':
 			case 'jfi':
-			return 'image/jpeg';
+				return 'image/jpeg';
 			case 'png':
-			return 'image/png';
+				return 'image/png';
 			case '3gp':
-			return 'video/3gpp';
+				return 'video/3gpp';
 			case 'avi':
-			return 'video/avi';
+				return 'video/avi';
 			case 'mov':
 			case 'moov':
 			case 'qt':
-			return 'video/quicktime';
+				return 'video/quicktime';
 			case 'mp4':
 			case 'm4a':
 			case 'm4p':
 			case 'm4b':
 			case 'm4r':
 			case 'm4v':
-			return 'video/mp4';
+				return 'video/mp4';
 			case 'mpg':
 			case 'mpeg':
 			case 'mp1':
@@ -479,13 +479,13 @@ class JGoogleDataPicasaAlbum extends JGoogleData
 			case 'm2a':
 			case 'mpa':
 			case 'mpv':
-			return 'video/mpeg';
+				return 'video/mpeg';
 			case 'asf':
-			return 'video/x-ms-asf';
+				return 'video/x-ms-asf';
 			case 'wmv':
-			return 'video/x-ms-wmv';
+				return 'video/x-ms-wmv';
 			default:
-			return false;
+				return false;
 		}
 	}
 }

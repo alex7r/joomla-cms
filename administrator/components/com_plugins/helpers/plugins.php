@@ -21,7 +21,7 @@ class PluginsHelper
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string  $vName  The name of the active view.
+	 * @param   string $vName The name of the active view.
 	 *
 	 * @return  void
 	 */
@@ -56,7 +56,7 @@ class PluginsHelper
 	public static function publishedOptions()
 	{
 		// Build the active state filter options.
-		$options = array();
+		$options   = array();
 		$options[] = JHtml::_('select.option', '1', 'JENABLED');
 		$options[] = JHtml::_('select.option', '0', 'JDISABLED');
 
@@ -70,7 +70,7 @@ class PluginsHelper
 	 */
 	public static function folderOptions()
 	{
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('DISTINCT(folder) AS value, folder AS text')
 			->from('#__extensions')
@@ -94,8 +94,8 @@ class PluginsHelper
 	/**
 	 * Parse the template file.
 	 *
-	 * @param   string  $templateBaseDir  Base path to the template directory.
-	 * @param   string  $templateDir      Template directory.
+	 * @param   string $templateBaseDir Base path to the template directory.
+	 * @param   string $templateDir     Template directory.
 	 *
 	 * @return  JObject
 	 */

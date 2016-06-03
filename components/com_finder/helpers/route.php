@@ -19,8 +19,8 @@ class FinderHelperRoute
 	/**
 	 * Method to get the route for a search page.
 	 *
-	 * @param   integer  $f  The search filter id. [optional]
-	 * @param   string   $q  The search query string. [optional]
+	 * @param   integer $f The search filter id. [optional]
+	 * @param   string  $q The search query string. [optional]
 	 *
 	 * @return  string  The search route.
 	 *
@@ -30,7 +30,7 @@ class FinderHelperRoute
 	{
 		// Get the menu item id.
 		$query = array('view' => 'search', 'q' => $q, 'f' => $f);
-		$item = self::getItemid($query);
+		$item  = self::getItemid($query);
 
 		// Get the base route.
 		$uri = clone(JUri::getInstance('index.php?option=com_finder&view=search'));
@@ -57,50 +57,10 @@ class FinderHelperRoute
 	}
 
 	/**
-	 * Method to get the route for an advanced search page.
-	 *
-	 * @param   integer  $f  The search filter id. [optional]
-	 * @param   string   $q  The search query string. [optional]
-	 *
-	 * @return  string  The advanced search route.
-	 *
-	 * @since   2.5
-	 */
-	public static function getAdvancedRoute($f = null, $q = null)
-	{
-		// Get the menu item id.
-		$query = array('view' => 'advanced', 'q' => $q, 'f' => $f);
-		$item = self::getItemid($query);
-
-		// Get the base route.
-		$uri = clone(JUri::getInstance('index.php?option=com_finder&view=advanced'));
-
-		// Add the pre-defined search filter if present.
-		if ($q !== null)
-		{
-			$uri->setVar('f', $f);
-		}
-
-		// Add the search query string if present.
-		if ($q !== null)
-		{
-			$uri->setVar('q', $q);
-		}
-
-		// Add the menu item id if present.
-		if ($item !== null)
-		{
-			$uri->setVar('Itemid', $item);
-		}
-
-		return $uri->toString(array('path', 'query'));
-	}
-
-	/**
 	 * Method to get the most appropriate menu item for the route based on the
 	 * supplied query needles.
 	 *
-	 * @param   array  $query  An array of URL parameters.
+	 * @param   array $query An array of URL parameters.
 	 *
 	 * @return  mixed  An integer on success, null otherwise.
 	 *
@@ -113,12 +73,12 @@ class FinderHelperRoute
 		// Get the menu items for com_finder.
 		if (!$items || !$active)
 		{
-			$app = JFactory::getApplication('site');
-			$com = JComponentHelper::getComponent('com_finder');
-			$menu = $app->getMenu();
+			$app    = JFactory::getApplication('site');
+			$com    = JComponentHelper::getComponent('com_finder');
+			$menu   = $app->getMenu();
 			$active = $menu->getActive();
-			$items = $menu->getItems('component_id', $com->id);
-			$items = is_array($items) ? $items : array();
+			$items  = $menu->getItems('component_id', $com->id);
+			$items  = is_array($items) ? $items : array();
 		}
 
 		// Try to match the active view and filter.
@@ -155,5 +115,45 @@ class FinderHelperRoute
 		}
 
 		return null;
+	}
+
+	/**
+	 * Method to get the route for an advanced search page.
+	 *
+	 * @param   integer $f The search filter id. [optional]
+	 * @param   string  $q The search query string. [optional]
+	 *
+	 * @return  string  The advanced search route.
+	 *
+	 * @since   2.5
+	 */
+	public static function getAdvancedRoute($f = null, $q = null)
+	{
+		// Get the menu item id.
+		$query = array('view' => 'advanced', 'q' => $q, 'f' => $f);
+		$item  = self::getItemid($query);
+
+		// Get the base route.
+		$uri = clone(JUri::getInstance('index.php?option=com_finder&view=advanced'));
+
+		// Add the pre-defined search filter if present.
+		if ($q !== null)
+		{
+			$uri->setVar('f', $f);
+		}
+
+		// Add the search query string if present.
+		if ($q !== null)
+		{
+			$uri->setVar('q', $q);
+		}
+
+		// Add the menu item id if present.
+		if ($item !== null)
+		{
+			$uri->setVar('Itemid', $item);
+		}
+
+		return $uri->toString(array('path', 'query'));
 	}
 }

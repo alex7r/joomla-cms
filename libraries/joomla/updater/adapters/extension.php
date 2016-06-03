@@ -19,207 +19,9 @@ jimport('joomla.updater.updateadapter');
 class JUpdaterExtension extends JUpdateAdapter
 {
 	/**
-	 * Start element parser callback.
-	 *
-	 * @param   object  $parser  The parser object.
-	 * @param   string  $name    The name of the element.
-	 * @param   array   $attrs   The attributes of the element.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function _startElement($parser, $name, $attrs = array())
-	{
-		array_push($this->stack, $name);
-		$tag = $this->_getStackLocation();
-
-		// Reset the data
-		if (isset($this->$tag))
-		{
-			$this->$tag->_data = "";
-		}
-
-		switch ($name)
-		{
-			case 'UPDATE':
-				$this->currentUpdate = JTable::getInstance('update');
-				$this->currentUpdate->update_site_id = $this->updateSiteId;
-				$this->currentUpdate->detailsurl = $this->_url;
-				$this->currentUpdate->folder = "";
-				$this->currentUpdate->client_id = 1;
-				break;
-
-			// Don't do anything
-			case 'UPDATES':
-				break;
-
-			default:
-				if (in_array($name, $this->updatecols))
-				{
-					$name = strtolower($name);
-					$this->currentUpdate->$name = '';
-				}
-
-				if ($name == 'TARGETPLATFORM')
-				{
-					$this->currentUpdate->targetplatform = $attrs;
-				}
-
-				if ($name == 'PHP_MINIMUM')
-				{
-					$this->currentUpdate->php_minimum = '';
-				}
-				break;
-		}
-	}
-
-	/**
-	 * Character Parser Function
-	 *
-	 * @param   object  $parser  Parser object.
-	 * @param   object  $name    The name of the element.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function _endElement($parser, $name)
-	{
-		array_pop($this->stack);
-
-		// @todo remove code: echo 'Closing: '. $name .'<br />';
-		switch ($name)
-		{
-			case 'UPDATE':
-				// Lower case and remove the exclamation mark
-				$product = strtolower(JFilterInput::getInstance()->clean(JVersion::PRODUCT, 'cmd'));
-
-				// Support for the min_dev_level and max_dev_level attributes is deprecated, a regexp should be used instead
-				if (isset($this->currentUpdate->targetplatform->min_dev_level) || isset($this->currentUpdate->targetplatform->max_dev_level))
-				{
-					JLog::add(
-						'Support for the min_dev_level and max_dev_level attributes of an update\'s <targetplatform> tag is deprecated and'
-						. ' will be removed in 4.0. The full version should be specified in the version attribute and may optionally be a regexp.',
-						JLog::WARNING,
-						'deprecated'
-					);
-				}
-
-				/*
-				 * Check that the product matches and that the version matches (optionally a regexp)
-				 *
-				 * Check for optional min_dev_level and max_dev_level attributes to further specify targetplatform (e.g., 3.0.1)
-				 */
-				if ($product == $this->currentUpdate->targetplatform['NAME']
-					&& preg_match('/^' . $this->currentUpdate->targetplatform['VERSION'] . '/', JVERSION)
-					&& ((!isset($this->currentUpdate->targetplatform->min_dev_level)) || JVersion::DEV_LEVEL >= $this->currentUpdate->targetplatform->min_dev_level)
-					&& ((!isset($this->currentUpdate->targetplatform->max_dev_level)) || JVersion::DEV_LEVEL <= $this->currentUpdate->targetplatform->max_dev_level))
-				{
-					// Check if PHP version supported via <php_minimum> tag, assume true if tag isn't present
-					if (!isset($this->currentUpdate->php_minimum) || version_compare(PHP_VERSION, $this->currentUpdate->php_minimum, '>='))
-					{
-						$phpMatch = true;
-					}
-					else
-					{
-						// Notify the user of the potential update
-						$msg = JText::sprintf(
-							'JLIB_INSTALLER_AVAILABLE_UPDATE_PHP_VERSION',
-							$this->currentUpdate->name,
-							$this->currentUpdate->version,
-							$this->currentUpdate->php_minimum,
-							PHP_VERSION
-						);
-
-						JFactory::getApplication()->enqueueMessage($msg, 'warning');
-
-						$phpMatch = false;
-					}
-
-					// Check minimum stability
-					$stabilityMatch = true;
-
-					if (isset($this->currentUpdate->stability) && ($this->currentUpdate->stability < $this->minimum_stability))
-					{
-						$stabilityMatch = false;
-					}
-
-					// Some properties aren't valid fields in the update table so unset them to prevent J! from trying to store them
-					unset($this->currentUpdate->targetplatform);
-
-					if (isset($this->currentUpdate->php_minimum))
-					{
-						unset($this->currentUpdate->php_minimum);
-					}
-
-					if (isset($this->currentUpdate->stability))
-					{
-						unset($this->currentUpdate->stability);
-					}
-
-					// If the PHP version and minimum stability checks pass, consider this version as a possible update
-					if ($phpMatch && $stabilityMatch)
-					{
-						if (isset($this->latest))
-						{
-							// We already have a possible update. Check the version.
-							if (version_compare($this->currentUpdate->version, $this->latest->version, '>') == 1)
-							{
-								$this->latest = $this->currentUpdate;
-							}
-						}
-						else
-						{
-							// We don't have any possible updates yet, assume this is an available update.
-							$this->latest = $this->currentUpdate;
-						}
-					}
-				}
-				break;
-
-			case 'UPDATES':
-				// :D
-				break;
-		}
-	}
-
-	/**
-	 * Character Parser Function
-	 *
-	 * @param   object  $parser  Parser object.
-	 * @param   object  $data    The data.
-	 *
-	 * @return  void
-	 *
-	 * @note    This is public because its called externally.
-	 * @since   11.1
-	 */
-	protected function _characterData($parser, $data)
-	{
-		$tag = $this->_getLastTag();
-
-		if (in_array($tag, $this->updatecols))
-		{
-			$tag = strtolower($tag);
-			$this->currentUpdate->$tag .= $data;
-		}
-
-		if ($tag == 'PHP_MINIMUM')
-		{
-			$this->currentUpdate->php_minimum = $data;
-		}
-
-		if ($tag == 'TAG')
-		{
-			$this->currentUpdate->stability = $this->stabilityTagToInteger((string) $data);
-		}
-	}
-
-	/**
 	 * Finds an update.
 	 *
-	 * @param   array  $options  Update options.
+	 * @param   array $options Update options.
 	 *
 	 * @return  array  Array containing the array of update sites and array of updates
 	 *
@@ -298,10 +100,209 @@ class JUpdaterExtension extends JUpdateAdapter
 	}
 
 	/**
+	 * Start element parser callback.
+	 *
+	 * @param   object $parser The parser object.
+	 * @param   string $name   The name of the element.
+	 * @param   array  $attrs  The attributes of the element.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function _startElement($parser, $name, $attrs = array())
+	{
+		array_push($this->stack, $name);
+		$tag = $this->_getStackLocation();
+
+		// Reset the data
+		if (isset($this->$tag))
+		{
+			$this->$tag->_data = "";
+		}
+
+		switch ($name)
+		{
+			case 'UPDATE':
+				$this->currentUpdate                 = JTable::getInstance('update');
+				$this->currentUpdate->update_site_id = $this->updateSiteId;
+				$this->currentUpdate->detailsurl     = $this->_url;
+				$this->currentUpdate->folder         = "";
+				$this->currentUpdate->client_id      = 1;
+				break;
+
+			// Don't do anything
+			case 'UPDATES':
+				break;
+
+			default:
+				if (in_array($name, $this->updatecols))
+				{
+					$name                       = strtolower($name);
+					$this->currentUpdate->$name = '';
+				}
+
+				if ($name == 'TARGETPLATFORM')
+				{
+					$this->currentUpdate->targetplatform = $attrs;
+				}
+
+				if ($name == 'PHP_MINIMUM')
+				{
+					$this->currentUpdate->php_minimum = '';
+				}
+				break;
+		}
+	}
+
+	/**
+	 * Character Parser Function
+	 *
+	 * @param   object $parser Parser object.
+	 * @param   object $name   The name of the element.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function _endElement($parser, $name)
+	{
+		array_pop($this->stack);
+
+		// @todo remove code: echo 'Closing: '. $name .'<br />';
+		switch ($name)
+		{
+			case 'UPDATE':
+				// Lower case and remove the exclamation mark
+				$product = strtolower(JFilterInput::getInstance()->clean(JVersion::PRODUCT, 'cmd'));
+
+				// Support for the min_dev_level and max_dev_level attributes is deprecated, a regexp should be used instead
+				if (isset($this->currentUpdate->targetplatform->min_dev_level) || isset($this->currentUpdate->targetplatform->max_dev_level))
+				{
+					JLog::add(
+						'Support for the min_dev_level and max_dev_level attributes of an update\'s <targetplatform> tag is deprecated and'
+						. ' will be removed in 4.0. The full version should be specified in the version attribute and may optionally be a regexp.',
+						JLog::WARNING,
+						'deprecated'
+					);
+				}
+
+				/*
+				 * Check that the product matches and that the version matches (optionally a regexp)
+				 *
+				 * Check for optional min_dev_level and max_dev_level attributes to further specify targetplatform (e.g., 3.0.1)
+				 */
+				if ($product == $this->currentUpdate->targetplatform['NAME']
+					&& preg_match('/^' . $this->currentUpdate->targetplatform['VERSION'] . '/', JVERSION)
+					&& ((!isset($this->currentUpdate->targetplatform->min_dev_level)) || JVersion::DEV_LEVEL >= $this->currentUpdate->targetplatform->min_dev_level)
+					&& ((!isset($this->currentUpdate->targetplatform->max_dev_level)) || JVersion::DEV_LEVEL <= $this->currentUpdate->targetplatform->max_dev_level)
+				)
+				{
+					// Check if PHP version supported via <php_minimum> tag, assume true if tag isn't present
+					if (!isset($this->currentUpdate->php_minimum) || version_compare(PHP_VERSION, $this->currentUpdate->php_minimum, '>='))
+					{
+						$phpMatch = true;
+					}
+					else
+					{
+						// Notify the user of the potential update
+						$msg = JText::sprintf(
+							'JLIB_INSTALLER_AVAILABLE_UPDATE_PHP_VERSION',
+							$this->currentUpdate->name,
+							$this->currentUpdate->version,
+							$this->currentUpdate->php_minimum,
+							PHP_VERSION
+						);
+
+						JFactory::getApplication()->enqueueMessage($msg, 'warning');
+
+						$phpMatch = false;
+					}
+
+					// Check minimum stability
+					$stabilityMatch = true;
+
+					if (isset($this->currentUpdate->stability) && ($this->currentUpdate->stability < $this->minimum_stability))
+					{
+						$stabilityMatch = false;
+					}
+
+					// Some properties aren't valid fields in the update table so unset them to prevent J! from trying to store them
+					unset($this->currentUpdate->targetplatform);
+
+					if (isset($this->currentUpdate->php_minimum))
+					{
+						unset($this->currentUpdate->php_minimum);
+					}
+
+					if (isset($this->currentUpdate->stability))
+					{
+						unset($this->currentUpdate->stability);
+					}
+
+					// If the PHP version and minimum stability checks pass, consider this version as a possible update
+					if ($phpMatch && $stabilityMatch)
+					{
+						if (isset($this->latest))
+						{
+							// We already have a possible update. Check the version.
+							if (version_compare($this->currentUpdate->version, $this->latest->version, '>') == 1)
+							{
+								$this->latest = $this->currentUpdate;
+							}
+						}
+						else
+						{
+							// We don't have any possible updates yet, assume this is an available update.
+							$this->latest = $this->currentUpdate;
+						}
+					}
+				}
+				break;
+
+			case 'UPDATES':
+				// :D
+				break;
+		}
+	}
+
+	/**
+	 * Character Parser Function
+	 *
+	 * @param   object $parser Parser object.
+	 * @param   object $data   The data.
+	 *
+	 * @return  void
+	 *
+	 * @note    This is public because its called externally.
+	 * @since   11.1
+	 */
+	protected function _characterData($parser, $data)
+	{
+		$tag = $this->_getLastTag();
+
+		if (in_array($tag, $this->updatecols))
+		{
+			$tag = strtolower($tag);
+			$this->currentUpdate->$tag .= $data;
+		}
+
+		if ($tag == 'PHP_MINIMUM')
+		{
+			$this->currentUpdate->php_minimum = $data;
+		}
+
+		if ($tag == 'TAG')
+		{
+			$this->currentUpdate->stability = $this->stabilityTagToInteger((string) $data);
+		}
+	}
+
+	/**
 	 * Converts a tag to numeric stability representation. If the tag doesn't represent a known stability level (one of
 	 * dev, alpha, beta, rc, stable) it is ignored.
 	 *
-	 * @param   string  $tag  The tag string, e.g. dev, alpha, beta, rc, stable
+	 * @param   string $tag The tag string, e.g. dev, alpha, beta, rc, stable
 	 *
 	 * @return  integer
 	 *

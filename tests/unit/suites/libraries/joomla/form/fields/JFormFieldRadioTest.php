@@ -20,44 +20,6 @@ require_once __DIR__ . '/TestHelpers/JHtmlFieldRadio-helper-dataset.php';
 class JFormFieldRadioTest extends TestCase
 {
 	/**
-	 * Sets up dependencies for the test.
-	 *
-	 * @since       11.3
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockApplication();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
 	 * Test...
 	 *
 	 * @return  array
@@ -73,13 +35,13 @@ class JFormFieldRadioTest extends TestCase
 	 * Test the getInput method where there is no value from the element
 	 * and no checked attribute.
 	 *
-	 * @param   string  $element   @todo
-	 * @param   array   $data  	   @todo
-	 * @param   string  $expected  @todo
+	 * @param   string $element  @todo
+	 * @param   array  $data     @todo
+	 * @param   string $expected @todo
 	 *
 	 * @return  void
 	 *
-	 * @since   12.2
+	 * @since         12.2
 	 *
 	 * @dataProvider  getInputData
 	 */
@@ -139,5 +101,43 @@ class JFormFieldRadioTest extends TestCase
 			),
 			'Line:' . __LINE__ . ' The field should not contain a Yes option.'
 		);
+	}
+
+	/**
+	 * Sets up dependencies for the test.
+	 *
+	 * @since       11.3
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockApplication();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 }

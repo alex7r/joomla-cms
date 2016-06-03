@@ -81,47 +81,12 @@ class JTwitterListsTest extends TestCase
 			}}}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
+	 * Provides test data for request format detection.
 	 *
-	 * @access protected
+	 * @return array
 	 *
-	 * @return void
+	 * @since 12.3
 	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$key = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input = new JInput;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth = new JTwitterOAuth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JTwitterLists($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-		$this->options->set('sendheaders', true);
-	}
-
-	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
 	public function seedUser()
 	{
 		// User ID or screen name
@@ -129,35 +94,35 @@ class JTwitterListsTest extends TestCase
 			array(234654235457),
 			array('testUser'),
 			array(null)
-			);
+		);
 	}
 
 	/**
 	 * Tests the getAllLists method
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedUser
 	 */
 	public function testGetLists($user)
 	{
 		$reverse = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -181,9 +146,9 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/list.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getLists($user, $reverse),
@@ -194,28 +159,28 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the getAllLists method - failure
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedUser
 	 * @expectedException DomainException
 	 */
 	public function testGetListsFailure($user)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -237,20 +202,20 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/list.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getLists($user);
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 12.3
+	 */
 	public function seedListStatuses()
 	{
 		// List ID or slug and owner
@@ -260,40 +225,40 @@ class JTwitterListsTest extends TestCase
 			array('test-list', 12345),
 			array('test-list', null),
 			array(null, null)
-			);
+		);
 	}
 
 	/**
 	 * Tests the getListStatuses method
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 */
 	public function testGetStatuses($list, $owner)
 	{
-		$since_id = 12345;
-		$max_id = 54321;
-		$count = 10;
-		$entities = true;
+		$since_id    = 12345;
+		$max_id      = 54321;
+		$count       = 10;
+		$entities    = true;
 		$include_rts = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -327,18 +292,18 @@ class JTwitterListsTest extends TestCase
 			$this->object->getStatuses($list, $owner);
 		}
 
-		$data['since_id'] = $since_id;
-		$data['max_id'] = $max_id;
-		$data['count'] = $count;
+		$data['since_id']         = $since_id;
+		$data['max_id']           = $max_id;
+		$data['count']            = $count;
 		$data['include_entities'] = $entities;
-		$data['include_rts'] = $include_rts;
+		$data['include_rts']      = $include_rts;
 
 		$path = $this->object->fetchUrl('/lists/statuses.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getStatuses($list, $owner, $since_id, $max_id, $count, $entities, $include_rts),
@@ -349,29 +314,29 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the getListStatuses method - failure
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 * @expectedException DomainException
 	 */
 	public function testGetStatusesFailure($list, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -408,9 +373,9 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/statuses.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getStatuses($list, $owner);
 	}
@@ -418,32 +383,32 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the getListSubscribers method
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 */
 	public function testGetSubscribers($list, $owner)
 	{
-		$cursor = 1234;
-		$entities = true;
+		$cursor      = 1234;
+		$entities    = true;
 		$skip_status = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -477,16 +442,16 @@ class JTwitterListsTest extends TestCase
 			$this->object->getSubscribers($list, $owner);
 		}
 
-		$data['cursor'] = $cursor;
+		$data['cursor']           = $cursor;
 		$data['include_entities'] = $entities;
-		$data['skip_status'] = $skip_status;
+		$data['skip_status']      = $skip_status;
 
 		$path = $this->object->fetchUrl('/lists/subscribers.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getSubscribers($list, $owner, $cursor, $entities, $skip_status),
@@ -497,33 +462,33 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the getListSubscribers method - failure
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 * @expectedException DomainException
 	 */
 	public function testGetSubscribersFailure($list, $owner)
 	{
-		$cursor = 1234;
-		$entities = true;
+		$cursor      = 1234;
+		$entities    = true;
 		$skip_status = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -557,27 +522,27 @@ class JTwitterListsTest extends TestCase
 			$this->object->getSubscribers($list, $owner);
 		}
 
-		$data['cursor'] = $cursor;
+		$data['cursor']           = $cursor;
 		$data['include_entities'] = $entities;
-		$data['skip_status'] = $skip_status;
+		$data['skip_status']      = $skip_status;
 
 		$path = $this->object->fetchUrl('/lists/subscribers.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getSubscribers($list, $owner, $cursor, $entities, $skip_status);
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 12.3
+	 */
 	public function seedMembers()
 	{
 		// List, User ID, screen name and owner.
@@ -589,25 +554,25 @@ class JTwitterListsTest extends TestCase
 			array('test-list', null, null, 'testUser'),
 			array('test-list', 'testUser', '234654235457', 'userTest'),
 			array(null, null, null, null)
-			);
+		);
 	}
 
 	/**
 	 * Tests the deleteListMembers method
 	 *
-	 * @param   mixed   $list         Either an integer containing the list ID or a string containing the list slug.
-	 * @param   string  $user_id      A comma separated list of user IDs, up to 100 are allowed in a single request.
-	 * @param   string  $screen_name  A comma separated list of screen names, up to 100 are allowed in a single request.
-	 * @param   mixed   $owner        Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   mixed  $list        Either an integer containing the list ID or a string containing the list slug.
+	 * @param   string $user_id     A comma separated list of user IDs, up to 100 are allowed in a single request.
+	 * @param   string $screen_name A comma separated list of screen names, up to 100 are allowed in a single request.
+	 * @param   mixed  $owner       Either an integer containing the user ID or a string containing the screen name of the owner.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedMembers
 	 */
 	public function testDeleteMembers($list, $user_id, $screen_name, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -658,9 +623,9 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/members/destroy_all.json');
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteMembers($list, $user_id, $screen_name, $owner),
@@ -671,20 +636,20 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the deleteListMembers method - failure
 	 *
-	 * @param   mixed   $list         Either an integer containing the list ID or a string containing the list slug.
-	 * @param   string  $user_id      A comma separated list of user IDs, up to 100 are allowed in a single request.
-	 * @param   string  $screen_name  A comma separated list of screen names, up to 100 are allowed in a single request.
-	 * @param   mixed   $owner        Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   mixed  $list        Either an integer containing the list ID or a string containing the list slug.
+	 * @param   string $user_id     A comma separated list of user IDs, up to 100 are allowed in a single request.
+	 * @param   string $screen_name A comma separated list of screen names, up to 100 are allowed in a single request.
+	 * @param   mixed  $owner       Either an integer containing the user ID or a string containing the screen name of the owner.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedMembers
 	 * @expectedException DomainException
 	 */
 	public function testDeleteMembersFailure($list, $user_id, $screen_name, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -735,9 +700,9 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/members/destroy_all.json');
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->deleteMembers($list, $user_id, $screen_name, $owner);
 	}
@@ -745,28 +710,28 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the subscribe method
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 */
 	public function testSubscribe($list, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -803,9 +768,9 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/subscribers/create.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->subscribe($list, $owner),
@@ -816,29 +781,29 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the subscribe method - failure
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 * @expectedException DomainException
 	 */
 	public function testSubscribeFailure($list, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -875,20 +840,20 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/subscribers/create.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->subscribe($list, $owner);
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 12.3
+	 */
 	public function seedListUserOwner()
 	{
 		// List, User and Owner.
@@ -899,38 +864,38 @@ class JTwitterListsTest extends TestCase
 			array('test-list', 'testUser', null),
 			array('test-list', null, 'testUser'),
 			array(null, null, null)
-			);
+		);
 	}
 
 	/**
 	 * Tests the isListMember method
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $user   Either an integer containing the user ID or a string containing the screen name of the user to remove.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $user  Either an integer containing the user ID or a string containing the screen name of the user to remove.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name of the owner.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListUserOwner
 	 */
 	public function testIsMember($list, $user, $owner)
 	{
-		$entities = true;
+		$entities    = true;
 		$skip_status = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -980,14 +945,14 @@ class JTwitterListsTest extends TestCase
 		}
 
 		$data['include_entities'] = $entities;
-		$data['skip_status'] = $skip_status;
+		$data['skip_status']      = $skip_status;
 
 		$path = $this->object->fetchUrl('/lists/members/show.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->isMember($list, $user, $owner, $entities, $skip_status),
@@ -998,33 +963,33 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the isListMember method - failure
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $user   Either an integer containing the user ID or a string containing the screen name of the user to remove.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $user  Either an integer containing the user ID or a string containing the screen name of the user to remove.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name of the owner.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListUserOwner
 	 * @expectedException DomainException
 	 */
 	public function testIsMemberFailure($list, $user, $owner)
 	{
-		$entities = true;
+		$entities    = true;
 		$skip_status = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -1074,14 +1039,14 @@ class JTwitterListsTest extends TestCase
 		}
 
 		$data['include_entities'] = $entities;
-		$data['skip_status'] = $skip_status;
+		$data['skip_status']      = $skip_status;
 
 		$path = $this->object->fetchUrl('/lists/members/show.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->isMember($list, $user, $owner, $entities, $skip_status);
 	}
@@ -1089,32 +1054,32 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the isListSubscriber method
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $user   Either an integer containing the user ID or a string containing the screen name of the user to remove.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $user  Either an integer containing the user ID or a string containing the screen name of the user to remove.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name of the owner.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListUserOwner
 	 */
 	public function testIsSubscriber($list, $user, $owner)
 	{
-		$entities = true;
+		$entities    = true;
 		$skip_status = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -1164,14 +1129,14 @@ class JTwitterListsTest extends TestCase
 		}
 
 		$data['include_entities'] = $entities;
-		$data['skip_status'] = $skip_status;
+		$data['skip_status']      = $skip_status;
 
 		$path = $this->object->fetchUrl('/lists/subscribers/show.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->isSubscriber($list, $user, $owner, $entities, $skip_status),
@@ -1182,33 +1147,33 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the isListSubscriber method - failure
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $user   Either an integer containing the user ID or a string containing the screen name of the user to remove.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $user  Either an integer containing the user ID or a string containing the screen name of the user to remove.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name of the owner.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListUserOwner
 	 * @expectedException DomainException
 	 */
 	public function testIsSubscriberFailure($list, $user, $owner)
 	{
-		$entities = true;
+		$entities    = true;
 		$skip_status = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -1258,14 +1223,14 @@ class JTwitterListsTest extends TestCase
 		}
 
 		$data['include_entities'] = $entities;
-		$data['skip_status'] = $skip_status;
+		$data['skip_status']      = $skip_status;
 
 		$path = $this->object->fetchUrl('/lists/subscribers/show.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->isSubscriber($list, $user, $owner, $entities, $skip_status);
 	}
@@ -1273,28 +1238,28 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the unsubscribe method
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 */
 	public function testUnsubscribe($list, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -1331,9 +1296,9 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/subscribers/destroy.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->unsubscribe($list, $owner),
@@ -1344,29 +1309,29 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the unsubscribe method - failure
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 * @expectedException DomainException
 	 */
 	public function testUnsubscribeFailure($list, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -1403,9 +1368,9 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/subscribers/destroy.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->unsubscribe($list, $owner);
 	}
@@ -1413,30 +1378,30 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the addListMembers method
 	 *
-	 * @param   mixed   $list         Either an integer containing the list ID or a string containing the list slug.
-	 * @param   string  $user_id      A comma separated list of user IDs, up to 100 are allowed in a single request.
-	 * @param   string  $screen_name  A comma separated list of screen names, up to 100 are allowed in a single request.
-	 * @param   mixed   $owner        Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed  $list        Either an integer containing the list ID or a string containing the list slug.
+	 * @param   string $user_id     A comma separated list of user IDs, up to 100 are allowed in a single request.
+	 * @param   string $screen_name A comma separated list of screen names, up to 100 are allowed in a single request.
+	 * @param   mixed  $owner       Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedMembers
 	 */
 	public function testAddMembers($list, $user_id, $screen_name, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -1487,9 +1452,9 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/members/create_all.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->addMembers($list, $user_id, $screen_name, $owner),
@@ -1500,31 +1465,31 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the addListMembers method - failure
 	 *
-	 * @param   mixed   $list         Either an integer containing the list ID or a string containing the list slug.
-	 * @param   string  $user_id      A comma separated list of user IDs, up to 100 are allowed in a single request.
-	 * @param   string  $screen_name  A comma separated list of screen names, up to 100 are allowed in a single request.
-	 * @param   mixed   $owner        Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed  $list        Either an integer containing the list ID or a string containing the list slug.
+	 * @param   string $user_id     A comma separated list of user IDs, up to 100 are allowed in a single request.
+	 * @param   string $screen_name A comma separated list of screen names, up to 100 are allowed in a single request.
+	 * @param   mixed  $owner       Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedMembers
 	 * @expectedException DomainException
 	 */
 	public function testAddMembersFailure($list, $user_id, $screen_name, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -1575,9 +1540,9 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/members/create_all.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->addMembers($list, $user_id, $screen_name, $owner);
 	}
@@ -1585,31 +1550,31 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the getListMembers method
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 */
 	public function testGetMembers($list, $owner)
 	{
-		$entities = true;
+		$entities    = true;
 		$skip_status = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -1644,14 +1609,14 @@ class JTwitterListsTest extends TestCase
 		}
 
 		$data['include_entities'] = $entities;
-		$data['skip_status'] = $skip_status;
+		$data['skip_status']      = $skip_status;
 
 		$path = $this->object->fetchUrl('/lists/members.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getMembers($list, $owner, $entities, $skip_status),
@@ -1662,32 +1627,32 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the getListMembers method - failure
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 * @expectedException DomainException
 	 */
 	public function testGetMembersFailure($list, $owner)
 	{
-		$entities = true;
+		$entities    = true;
 		$skip_status = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -1722,14 +1687,14 @@ class JTwitterListsTest extends TestCase
 		}
 
 		$data['include_entities'] = $entities;
-		$data['skip_status'] = $skip_status;
+		$data['skip_status']      = $skip_status;
 
 		$path = $this->object->fetchUrl('/lists/members.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getMembers($list, $owner, $entities, $skip_status);
 	}
@@ -1737,28 +1702,28 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the getListById method
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 */
 	public function testGetListById($list, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -1795,9 +1760,9 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/show.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getListById($list, $owner),
@@ -1808,29 +1773,29 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the getListById method - failure
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 * @expectedException DomainException
 	 */
 	public function testGetListByIdFailure($list, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -1867,9 +1832,9 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/show.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getListById($list, $owner);
 	}
@@ -1877,30 +1842,30 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the getSubscriptions method
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedUser
 	 */
 	public function testGetSubscriptions($user)
 	{
-		$count = 10;
+		$count  = 10;
 		$cursor = 1234;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -1919,15 +1884,15 @@ class JTwitterListsTest extends TestCase
 			$this->object->getSubscriptions($user);
 		}
 
-		$data['count'] = $count;
+		$data['count']  = $count;
 		$data['cursor'] = $cursor;
 
 		$path = $this->object->fetchUrl('/lists/subscriptions.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getSubscriptions($user, $count, $cursor),
@@ -1938,31 +1903,31 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the getSubscriptions method - failure
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedUser
 	 * @expectedException DomainException
 	 */
 	public function testGetSubscriptionsFailure($user)
 	{
-		$count = 10;
+		$count  = 10;
 		$cursor = 1234;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -1981,15 +1946,15 @@ class JTwitterListsTest extends TestCase
 			$this->object->getSubscriptions($user);
 		}
 
-		$data['count'] = $count;
+		$data['count']  = $count;
 		$data['cursor'] = $cursor;
 
 		$path = $this->object->fetchUrl('/lists/subscriptions.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getSubscriptions($user, $count, $cursor);
 	}
@@ -1997,32 +1962,32 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the updateList method
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 */
 	public function testUpdate($list, $owner)
 	{
-		$name = 'test list';
-		$mode = 'private';
+		$name        = 'test list';
+		$mode        = 'private';
 		$description = 'this is a description';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -2056,16 +2021,16 @@ class JTwitterListsTest extends TestCase
 			$this->object->update($list, $owner);
 		}
 
-		$data['name'] = $name;
-		$data['mode'] = $mode;
+		$data['name']        = $name;
+		$data['mode']        = $mode;
 		$data['description'] = $description;
 
 		$path = $this->object->fetchUrl('/lists/update.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->update($list, $owner, $name, $mode, $description),
@@ -2076,33 +2041,33 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the updateList method - failure
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 * @expectedException DomainException
 	 */
 	public function testUpdateFailure($list, $owner)
 	{
-		$name = 'test list';
-		$mode = 'private';
+		$name        = 'test list';
+		$mode        = 'private';
 		$description = 'this is a description';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -2136,16 +2101,16 @@ class JTwitterListsTest extends TestCase
 			$this->object->update($list, $owner);
 		}
 
-		$data['name'] = $name;
-		$data['mode'] = $mode;
+		$data['name']        = $name;
+		$data['mode']        = $mode;
 		$data['description'] = $description;
 
 		$path = $this->object->fetchUrl('/lists/update.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->update($list, $owner, $name, $mode, $description);
 	}
@@ -2159,35 +2124,35 @@ class JTwitterListsTest extends TestCase
 	 */
 	public function testCreate()
 	{
-		$name = 'test list';
-		$mode = 'private';
+		$name        = 'test list';
+		$mode        = 'private';
 		$description = 'this is a description';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$data['name'] = $name;
-		$data['mode'] = $mode;
+		$data['name']        = $name;
+		$data['mode']        = $mode;
 		$data['description'] = $description;
 
 		$path = $this->object->fetchUrl('/lists/create.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->create($name, $mode, $description),
@@ -2205,35 +2170,35 @@ class JTwitterListsTest extends TestCase
 	 */
 	public function testCreateFailure()
 	{
-		$name = 'test list';
-		$mode = 'private';
+		$name        = 'test list';
+		$mode        = 'private';
 		$description = 'this is a description';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$data['name'] = $name;
-		$data['mode'] = $mode;
+		$data['name']        = $name;
+		$data['mode']        = $mode;
 		$data['description'] = $description;
 
 		$path = $this->object->fetchUrl('/lists/create.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->create($name, $mode, $description);
 	}
@@ -2241,28 +2206,28 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the deleteList method
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 */
 	public function testDelete($list, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -2299,9 +2264,9 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/destroy.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->delete($list, $owner),
@@ -2312,29 +2277,29 @@ class JTwitterListsTest extends TestCase
 	/**
 	 * Tests the deleteList method - failure
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedListStatuses
 	 * @expectedException DomainException
 	 */
 	public function testDeleteFailure($list, $owner)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "lists"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -2371,10 +2336,45 @@ class JTwitterListsTest extends TestCase
 		$path = $this->object->fetchUrl('/lists/destroy.json');
 
 		$this->client->expects($this->at(1))
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->delete($list, $owner);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$key    = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input   = new JInput;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth   = new JTwitterOAuth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JTwitterLists($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+		$this->options->set('sendheaders', true);
 	}
 }

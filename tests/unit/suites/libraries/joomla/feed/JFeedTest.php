@@ -77,7 +77,7 @@ class JFeedTest extends TestCase
 	 */
 	public function testMagicSetUpdatedDateJDateObject()
 	{
-		$date = new JDate('October 12, 2011');
+		$date                         = new JDate('October 12, 2011');
 		$this->_instance->updatedDate = $date;
 
 		$properties = TestReflection::getValue($this->_instance, 'properties');
@@ -367,7 +367,7 @@ class JFeedTest extends TestCase
 	{
 		$person = new JFeedPerson;
 
-		$properties = array();
+		$properties                 = array();
 		$properties['contributors'] = array(1 => $person);
 
 		TestReflection::setValue($this->_instance, 'properties', $properties);

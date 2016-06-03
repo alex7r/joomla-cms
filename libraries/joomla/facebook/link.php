@@ -22,7 +22,7 @@ class JFacebookLink extends JFacebookObject
 	/**
 	 * Method to get a link. Requires authentication and read_stream permission for non-public links.
 	 *
-	 * @param   string  $link  The link id.
+	 * @param   string $link The link id.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -36,11 +36,11 @@ class JFacebookLink extends JFacebookObject
 	/**
 	 * Method to get a link's comments. Requires authentication and read_stream permission for non-public links.
 	 *
-	 * @param   string   $link    The link id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
-	 * @param   string   $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $link   The link id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
+	 * @param   string  $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -54,8 +54,8 @@ class JFacebookLink extends JFacebookObject
 	/**
 	 * Method to comment on a link. Requires authentication and publish_stream permission.
 	 *
-	 * @param   string  $link     The link id.
-	 * @param   string  $message  The comment's text.
+	 * @param   string $link    The link id.
+	 * @param   string $message The comment's text.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -64,7 +64,7 @@ class JFacebookLink extends JFacebookObject
 	public function createComment($link, $message)
 	{
 		// Set POST request parameters.
-		$data = array();
+		$data            = array();
 		$data['message'] = $message;
 
 		return $this->createConnection($link, 'comments', $data);
@@ -73,7 +73,7 @@ class JFacebookLink extends JFacebookObject
 	/**
 	 * Method to delete a comment. Requires authentication and publish_stream permission.
 	 *
-	 * @param   string  $comment  The comment's id.
+	 * @param   string $comment The comment's id.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -87,11 +87,11 @@ class JFacebookLink extends JFacebookObject
 	/**
 	 * Method to get link's likes. Requires authentication and read_stream permission for non-public links.
 	 *
-	 * @param   string   $link    The link id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
-	 * @param   string   $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $link   The link id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
+	 * @param   string  $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -105,7 +105,7 @@ class JFacebookLink extends JFacebookObject
 	/**
 	 * Method to like a link. Requires authentication and publish_stream permission.
 	 *
-	 * @param   string  $link  The link id.
+	 * @param   string $link The link id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -119,7 +119,7 @@ class JFacebookLink extends JFacebookObject
 	/**
 	 * Method to unlike a link. Requires authentication and publish_stream permission.
 	 *
-	 * @param   string  $link  The link id.
+	 * @param   string $link The link id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *

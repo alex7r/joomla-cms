@@ -39,9 +39,9 @@ class PlgUserJoomla extends JPlugin
 	 *
 	 * Method is called after user data is deleted from the database
 	 *
-	 * @param   array    $user     Holds the user data
-	 * @param   boolean  $success  True if user was successfully stored in the database
-	 * @param   string   $msg      Message
+	 * @param   array   $user    Holds the user data
+	 * @param   boolean $success True if user was successfully stored in the database
+	 * @param   string  $msg     Message
 	 *
 	 * @return  boolean
 	 *
@@ -75,10 +75,10 @@ class PlgUserJoomla extends JPlugin
 	 *
 	 * This method sends a registration email to new users created in the backend.
 	 *
-	 * @param   array    $user     Holds the new user data.
-	 * @param   boolean  $isnew    True if a new user is stored.
-	 * @param   boolean  $success  True if user was successfully stored in the database.
-	 * @param   string   $msg      Message.
+	 * @param   array   $user    Holds the new user data.
+	 * @param   boolean $isnew   True if a new user is stored.
+	 * @param   boolean $success True if user was successfully stored in the database.
+	 * @param   string  $msg     Message.
 	 *
 	 * @return  void
 	 *
@@ -95,13 +95,13 @@ class PlgUserJoomla extends JPlugin
 			{
 				if ($mail_to_user)
 				{
-					$lang = JFactory::getLanguage();
+					$lang          = JFactory::getLanguage();
 					$defaultLocale = $lang->getTag();
 
 					/**
 					 * Look for user language. Priority:
-					 * 	1. User frontend language
-					 * 	2. User backend language
+					 *    1. User frontend language
+					 *    2. User backend language
 					 */
 					$userParams = new Registry($user['params']);
 					$userLocale = $userParams->get('language', $userParams->get('admin_language', $defaultLocale));
@@ -164,8 +164,8 @@ class PlgUserJoomla extends JPlugin
 	/**
 	 * This method should handle any login logic and report back to the subject
 	 *
-	 * @param   array  $user     Holds the user data
-	 * @param   array  $options  Array holding options (remember, autoregister, group)
+	 * @param   array $user    Holds the user data
+	 * @param   array $options Array holding options (remember, autoregister, group)
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -249,10 +249,68 @@ class PlgUserJoomla extends JPlugin
 	}
 
 	/**
+	 * This method will return a user object
+	 *
+	 * If options['autoregister'] is true, if the user doesn't exist yet he will be created
+	 *
+	 * @param   array $user    Holds the user data.
+	 * @param   array $options Array holding options (remember, autoregister, group).
+	 *
+	 * @return  object  A JUser object
+	 *
+	 * @since   1.5
+	 */
+	protected function _getUser($user, $options = array())
+	{
+		$instance = JUser::getInstance();
+		$id       = (int) JUserHelper::getUserId($user['username']);
+
+		if ($id)
+		{
+			$instance->load($id);
+
+			return $instance;
+		}
+
+		// TODO : move this out of the plugin
+		$config = JComponentHelper::getParams('com_users');
+
+		// Hard coded default to match the default value from com_users.
+		$defaultUserGroup = $config->get('new_usertype', 2);
+
+		$instance->set('id', 0);
+		$instance->set('name', $user['fullname']);
+		$instance->set('username', $user['username']);
+		$instance->set('password_clear', $user['password_clear']);
+
+		// Result should contain an email (check).
+		$instance->set('email', $user['email']);
+		$instance->set('groups', array($defaultUserGroup));
+
+		// If autoregister is set let's register the user
+		$autoregister = isset($options['autoregister']) ? $options['autoregister'] : $this->params->get('autoregister', 1);
+
+		if ($autoregister)
+		{
+			if (!$instance->save())
+			{
+				JLog::add('Error in autoregistration for user ' . $user['username'] . '.', JLog::WARNING, 'error');
+			}
+		}
+		else
+		{
+			// No existing user and autoregister off, this is a temporary user.
+			$instance->set('tmp_user', true);
+		}
+
+		return $instance;
+	}
+
+	/**
 	 * This method should handle any logout logic and report back to the subject
 	 *
-	 * @param   array  $user     Holds the user data.
-	 * @param   array  $options  Array holding options (client, ...).
+	 * @param   array $user    Holds the user data.
+	 * @param   array $options Array holding options (client, ...).
 	 *
 	 * @return  object  True on success
 	 *
@@ -310,63 +368,5 @@ class PlgUserJoomla extends JPlugin
 		}
 
 		return true;
-	}
-
-	/**
-	 * This method will return a user object
-	 *
-	 * If options['autoregister'] is true, if the user doesn't exist yet he will be created
-	 *
-	 * @param   array  $user     Holds the user data.
-	 * @param   array  $options  Array holding options (remember, autoregister, group).
-	 *
-	 * @return  object  A JUser object
-	 *
-	 * @since   1.5
-	 */
-	protected function _getUser($user, $options = array())
-	{
-		$instance = JUser::getInstance();
-		$id = (int) JUserHelper::getUserId($user['username']);
-
-		if ($id)
-		{
-			$instance->load($id);
-
-			return $instance;
-		}
-
-		// TODO : move this out of the plugin
-		$config = JComponentHelper::getParams('com_users');
-
-		// Hard coded default to match the default value from com_users.
-		$defaultUserGroup = $config->get('new_usertype', 2);
-
-		$instance->set('id', 0);
-		$instance->set('name', $user['fullname']);
-		$instance->set('username', $user['username']);
-		$instance->set('password_clear', $user['password_clear']);
-
-		// Result should contain an email (check).
-		$instance->set('email', $user['email']);
-		$instance->set('groups', array($defaultUserGroup));
-
-		// If autoregister is set let's register the user
-		$autoregister = isset($options['autoregister']) ? $options['autoregister'] : $this->params->get('autoregister', 1);
-
-		if ($autoregister)
-		{
-			if (!$instance->save())
-			{
-				JLog::add('Error in autoregistration for user ' . $user['username'] . '.', JLog::WARNING, 'error');
-			}
-		}
-		else
-		{
-			// No existing user and autoregister off, this is a temporary user.
-			$instance->set('tmp_user', true);
-		}
-
-		return $instance;
 	}
 }

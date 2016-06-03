@@ -24,11 +24,11 @@ class JHtmlSelectTest_DataSet
 			array(
 				array(
 					'value' => '1',
-					'text' => 'Foo',
+					'text'  => 'Foo',
 				),
 				array(
 					'value' => '2',
-					'text' => 'Bar',
+					'text'  => 'Bar',
 				),
 			),
 			'myName',
@@ -38,11 +38,11 @@ class JHtmlSelectTest_DataSet
 			array(
 				array(
 					'value' => '1',
-					'text' => 'Foo',
+					'text'  => 'Foo',
 				),
 				array(
 					'value' => '2',
-					'text' => 'Bar',
+					'text'  => 'Bar',
 				),
 			),
 			'myName',
@@ -57,16 +57,16 @@ class JHtmlSelectTest_DataSet
 			array(
 				array(
 					'value' => '1',
-					'text' => 'Foo',
+					'text'  => 'Foo',
 				),
 				array(
 					'value' => '2',
-					'text' => 'Bar',
+					'text'  => 'Bar',
 				),
 			),
 			'myName',
 			array(
-				'id' => 'myId',
+				'id'          => 'myId',
 				'list.select' => '2',
 			),
 		),
@@ -94,16 +94,16 @@ class JHtmlSelectTest_DataSet
 			array(
 				array(
 					'value' => '1',
-					'text' => 'Yes',
-					'id' => "yesId",
+					'text'  => 'Yes',
+					'id'    => "yesId",
 				),
 				array(
 					'value' => '0',
-					'text' => 'No',
+					'text'  => 'No',
 				),
 				array(
 					'value' => '-1',
-					'text' => 'Maybe',
+					'text'  => 'Maybe',
 				),
 			),
 			"myRadioListName"
@@ -124,7 +124,7 @@ class JHtmlSelectTest_DataSet
 				array(
 					'key' => 'foo',
 					'val' => 'FOO',
-					'id' => "fooId",
+					'id'  => "fooId",
 				),
 				array(
 					'key' => 'bar',
@@ -133,7 +133,7 @@ class JHtmlSelectTest_DataSet
 			),
 			"myFooBarListName",
 			array(
-				'class' => 'i am radio',
+				'class'    => 'i am radio',
 				'onchange' => 'jsfunc();',
 			),
 			'key',
@@ -148,7 +148,7 @@ class JHtmlSelectTest_DataSet
 			array(
 				array(
 					'value' => '1',
-					'text' => '&nbsp;Test',
+					'text'  => '&nbsp;Test',
 				),
 			),
 		),
@@ -156,8 +156,8 @@ class JHtmlSelectTest_DataSet
 			"<option value=\"1\" disabled=\"disabled\">&nbsp;Test</option>\n",
 			array(
 				array(
-					'value' => '1',
-					'text' => '&nbsp;Test',
+					'value'   => '1',
+					'text'    => '&nbsp;Test',
 					'disable' => true,
 				),
 			),
@@ -167,11 +167,11 @@ class JHtmlSelectTest_DataSet
 			array(
 				array(
 					'optionValue' => '1',
-					'optionText' => '&nbsp;Test',
+					'optionText'  => '&nbsp;Test',
 				),
 			),
 			array(
-				'option.key' => 'optionValue',
+				'option.key'  => 'optionValue',
 				'option.text' => 'optionText'
 			),
 		),
@@ -179,17 +179,17 @@ class JHtmlSelectTest_DataSet
 			"<option value=\"1\" id=\"myId\" label=\"My Label\" readonly>&nbsp;Test</option>\n",
 			array(
 				array(
-					'value' => '1',
-					'text' => '&nbsp;Test -         ',
-					'label' => 'My Label',
-					'id' => 'myId',
+					'value'       => '1',
+					'text'        => '&nbsp;Test -         ',
+					'label'       => 'My Label',
+					'id'          => 'myId',
 					'extraAttrib' => 'readonly',
 				),
 			),
 			array(
 				'option.label' => 'label',
-				'option.id' => 'id',
-				'option.attr' => 'extraAttrib',
+				'option.id'    => 'id',
+				'option.attr'  => 'extraAttrib',
 			),
 		),
 		array(
@@ -197,10 +197,10 @@ class JHtmlSelectTest_DataSet
 			array(
 				array(
 					'value' => '1',
-					'text' => '&nbsp;Test -         ',
+					'text'  => '&nbsp;Test -         ',
 					'label' => 'My Label',
-					'id' => 'myId',
-					'attrs' => array('class' => "foo bar",'style' => 'color:red;',),
+					'id'    => 'myId',
+					'attrs' => array('class' => "foo bar", 'style' => 'color:red;',),
 				),
 			),
 			array(
@@ -213,8 +213,8 @@ class JHtmlSelectTest_DataSet
 		// @todo remove: array($expected, $value, $text = '', $optKey = 'value', $optText = 'text', $disable = false)
 		array(
 			array(
-				'value' => 'optionValue',
-				'text' => 'optionText',
+				'value'   => 'optionValue',
+				'text'    => 'optionText',
 				'disable' => false,
 			),
 			'optionValue',
@@ -222,7 +222,7 @@ class JHtmlSelectTest_DataSet
 		),
 		array(
 			array(
-				'fookey' => 'optionValue',
+				'fookey'  => 'optionValue',
 				'bartext' => 'optionText',
 				'disable' => false,
 			),
@@ -233,8 +233,8 @@ class JHtmlSelectTest_DataSet
 		),
 		array(
 			array(
-				'value' => 'optionValue',
-				'text' => 'optionText',
+				'value'   => 'optionValue',
+				'text'    => 'optionText',
 				'disable' => true,
 			),
 			'optionValue',
@@ -245,22 +245,22 @@ class JHtmlSelectTest_DataSet
 		),
 		array(
 			array(
-				'optionValue' => 'optionValue',
-				'optionText' => 'optionText',
+				'optionValue'    => 'optionValue',
+				'optionText'     => 'optionText',
 				'foobarDisabled' => false,
-				'lebal' => 'My Label',
-				'class' => 'foo bar',
+				'lebal'          => 'My Label',
+				'class'          => 'foo bar',
 			),
 			'optionValue',
 			'optionText',
 			array(
 				'option.disable' => 'foobarDisabled',
-				'option.attr' => 'class',
-				'attr' => 'foo bar',
-				'option.label' => 'lebal',
-				'label' => "My Label",
-				'option.key' => 'optionValue',
-				'option.text' => 'optionText',
+				'option.attr'    => 'class',
+				'attr'           => 'foo bar',
+				'option.label'   => 'lebal',
+				'label'          => "My Label",
+				'option.key'     => 'optionValue',
+				'option.text'    => 'optionText',
 			),
 		),
 	);

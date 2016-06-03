@@ -19,8 +19,8 @@ abstract class JHtmlTabs
 	/**
 	 * Creates a panes and creates the JavaScript object for it.
 	 *
-	 * @param   string  $group   The pane identifier.
-	 * @param   array   $params  An array of option.
+	 * @param   string $group  The pane identifier.
+	 * @param   array  $params An array of option.
 	 *
 	 * @return  string
 	 *
@@ -34,37 +34,10 @@ abstract class JHtmlTabs
 	}
 
 	/**
-	 * Close the current pane
-	 *
-	 * @return  string  HTML to close the pane
-	 *
-	 * @since   1.6
-	 */
-	public static function end()
-	{
-		return '</dd></dl>';
-	}
-
-	/**
-	 * Begins the display of a new panel.
-	 *
-	 * @param   string  $text  Text to display.
-	 * @param   string  $id    Identifier of the panel.
-	 *
-	 * @return  string  HTML to start a new panel
-	 *
-	 * @since   1.6
-	 */
-	public static function panel($text, $id)
-	{
-		return '</dd><dt class="tabs ' . $id . '"><span><h3><a href="javascript:void(0);">' . $text . '</a></h3></span></dt><dd class="tabs">';
-	}
-
-	/**
 	 * Load the JavaScript behavior.
 	 *
-	 * @param   string  $group   The pane identifier.
-	 * @param   array   $params  Array of options.
+	 * @param   string $group  The pane identifier.
+	 * @param   array  $params Array of options.
 	 *
 	 * @return  void
 	 *
@@ -102,5 +75,32 @@ abstract class JHtmlTabs
 
 			$loaded[(string) $group] = true;
 		}
+	}
+
+	/**
+	 * Close the current pane
+	 *
+	 * @return  string  HTML to close the pane
+	 *
+	 * @since   1.6
+	 */
+	public static function end()
+	{
+		return '</dd></dl>';
+	}
+
+	/**
+	 * Begins the display of a new panel.
+	 *
+	 * @param   string $text Text to display.
+	 * @param   string $id   Identifier of the panel.
+	 *
+	 * @return  string  HTML to start a new panel
+	 *
+	 * @since   1.6
+	 */
+	public static function panel($text, $id)
+	{
+		return '</dd><dt class="tabs ' . $id . '"><span><h3><a href="javascript:void(0);">' . $text . '</a></h3></span></dt><dd class="tabs">';
 	}
 }

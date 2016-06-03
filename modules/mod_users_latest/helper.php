@@ -22,7 +22,7 @@ class ModUsersLatestHelper
 	/**
 	 * Get users sorted by activation date
 	 *
-	 * @param   \Joomla\Registry\Registry  $params  module parameters
+	 * @param   \Joomla\Registry\Registry $params module parameters
 	 *
 	 * @return  array  The array of users
 	 *
@@ -35,7 +35,7 @@ class ModUsersLatestHelper
 			->select($db->quoteName(array('a.id', 'a.name', 'a.username', 'a.registerDate')))
 			->order($db->quoteName('a.registerDate') . ' DESC')
 			->from('#__users AS a');
-		$user = JFactory::getUser();
+		$user  = JFactory::getUser();
 
 		if (!$user->authorise('core.admin') && $params->get('filter_groups', 0) == 1)
 		{

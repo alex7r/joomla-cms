@@ -17,15 +17,15 @@ defined('_JEXEC') or die;
 class FinderHelper
 {
 	/**
-	 * @var		string	The extension name.
-	 * @since	2.5
+	 * @var        string    The extension name.
+	 * @since    2.5
 	 */
 	public static $extension = 'com_finder';
 
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string  $vName  The name of the active view.
+	 * @param   string $vName The name of the active view.
 	 *
 	 * @return  void
 	 *
@@ -55,7 +55,7 @@ class FinderHelper
 	 *
 	 * @return  JObject  A JObject containing the allowed actions.
 	 *
-	 * @since   2.5
+	 * @since       2.5
 	 * @deprecated  3.2  Use JHelperContent::getActions() instead
 	 */
 	public static function getActions()

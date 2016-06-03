@@ -19,7 +19,7 @@ class TemplatesModelTemplates extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JControllerLegacy
 	 * @since   1.6
@@ -57,7 +57,7 @@ class TemplatesModelTemplates extends JModelList
 
 		foreach ($items as &$item)
 		{
-			$client = JApplicationHelper::getClientInfo($item->client_id);
+			$client        = JApplicationHelper::getClientInfo($item->client_id);
 			$item->xmldata = TemplatesHelper::parseXMLTemplateFile($client->path, $item->element);
 		}
 
@@ -74,7 +74,7 @@ class TemplatesModelTemplates extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the required fields from the table.
@@ -116,7 +116,7 @@ class TemplatesModelTemplates extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string  $id  A prefix for the store id.
+	 * @param   string $id A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -136,8 +136,8 @@ class TemplatesModelTemplates extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -150,7 +150,7 @@ class TemplatesModelTemplates extends JModelList
 
 		// Special case for the client id.
 		$clientId = (int) $this->getUserStateFromRequest($this->context . '.client_id', 'client_id', 0, 'int');
-		$clientId = (!in_array($clientId, array (0, 1))) ? 0 : $clientId;
+		$clientId = (!in_array($clientId, array(0, 1))) ? 0 : $clientId;
 		$this->setState('client_id', $clientId);
 
 		// Load the parameters.

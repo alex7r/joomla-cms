@@ -21,7 +21,7 @@ class JoomlaupdateHelper
 	 *
 	 * @return  JObject
 	 *
-	 * @since	2.5.4
+	 * @since       2.5.4
 	 * @deprecated  3.2  Use JHelperContent::getActions() instead
 	 */
 	public static function getActions()

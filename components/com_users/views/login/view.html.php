@@ -27,7 +27,7 @@ class UsersViewLogin extends JViewLegacy
 	/**
 	 * Method to display the view.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 *
@@ -58,7 +58,7 @@ class UsersViewLogin extends JViewLegacy
 		}
 
 		require_once JPATH_ADMINISTRATOR . '/components/com_users/helpers/users.php';
-		$tfa = UsersHelper::getTwoFactorMethods();
+		$tfa       = UsersHelper::getTwoFactorMethods();
 		$this->tfa = is_array($tfa) && count($tfa) > 1;
 
 		// Escape strings for HTML output

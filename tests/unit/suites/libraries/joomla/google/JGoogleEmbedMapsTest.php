@@ -36,27 +36,9 @@ class JGoogleEmbedMapsTest extends TestCase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options = new JRegistry;
-
-		$this->http = $this->getMock('JHttp', array('get'), array($this->options));
-		$this->uri = new JUri;
-		$this->object = new JGoogleEmbedMaps($this->options, $this->uri, $this->http);
-	}
-
-	/**
 	 * Tests the getKey method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetKey()
@@ -69,7 +51,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the setKey method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetKey()
@@ -82,7 +64,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the getMapID method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetMapId()
@@ -98,7 +80,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the setMapID method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetMapId()
@@ -111,7 +93,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the getMapClass method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetMapClass()
@@ -127,7 +109,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the setMapClass method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetMapClass()
@@ -140,7 +122,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the getMapStyle method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetMapStyle()
@@ -156,7 +138,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the setMapStyle method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetMapStyle()
@@ -169,7 +151,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the getMapType method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetMapType()
@@ -185,7 +167,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the setMapType method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetMapType()
@@ -198,7 +180,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the getAdditionalMapOptions method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetAdditionalMapOptions()
@@ -214,7 +196,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the setAdditionalMapOptions method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetAdditionalMapOptions()
@@ -227,7 +209,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the getAdditionalJavascript method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetAdditionalJavascript()
@@ -243,7 +225,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the setAdditionalJavascript method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetAdditionalJavascript()
@@ -256,7 +238,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the getZoom method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetZoom()
@@ -272,7 +254,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the setZoom method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetZoom()
@@ -285,7 +267,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the getCenter method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetCenter()
@@ -301,7 +283,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the setCenter method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetCenter()
@@ -327,12 +309,12 @@ class JGoogleEmbedMapsTest extends TestCase
 		$center = $this->object->getOption('mapcenter');
 		$this->assertEquals($center, array(37.44188340, -122.14301950));
 
-		$obj = $this->object->setCenter('Nowhere');
+		$obj    = $this->object->setCenter('Nowhere');
 		$center = $this->object->getOption('mapcenter');
 		$this->assertFalse($obj);
 		$this->assertEquals($center, array(37.44188340, -122.14301950));
 
-		$obj = $this->object->setCenter('Nowhere', false);
+		$obj    = $this->object->setCenter('Nowhere', false);
 		$center = $this->object->getOption('mapcenter');
 		$this->assertFalse($obj);
 		$this->assertEquals($center, array(37.44188340, -122.14301950));
@@ -344,7 +326,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the addMarker method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testAddMarker()
@@ -370,7 +352,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the listMarkers method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testListMarkers()
@@ -386,7 +368,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the deleteMarkers method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testDeleteMarkers()
@@ -413,7 +395,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the deleteMarkers method with an out of bounds index
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @expectedException OutOfBoundsException
 	 * @return void
 	 */
@@ -425,7 +407,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the isAsync method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testIsAsync()
@@ -445,7 +427,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the useAsync method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testUseAsync()
@@ -458,7 +440,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the useAsync method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testUseSync()
@@ -471,7 +453,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the getAsyncCallback method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetAsyncCallback()
@@ -487,7 +469,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the setAsyncCallback method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetAsyncCallback()
@@ -500,7 +482,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the hasSensor method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testHasSensor()
@@ -520,7 +502,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the useSensor method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testUseSensor()
@@ -533,7 +515,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the noSensor method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testNoSensor()
@@ -547,7 +529,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the getAutoload method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetAutoload()
@@ -563,7 +545,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the setAutoload method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetAutoload()
@@ -576,7 +558,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the getHeader method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetHeader()
@@ -591,7 +573,7 @@ class JGoogleEmbedMapsTest extends TestCase
 		$this->object->setMapId('MAPID');
 		$this->object->setKey('123456');
 		$this->object->useSensor();
-		$this->object->setAdditionalMapOptions(array('mapkey1' => 5, 'mapkey2' => array ('subkey' => 'subvalue')));
+		$this->object->setAdditionalMapOptions(array('mapkey1' => 5, 'mapkey2' => array('subkey' => 'subvalue')));
 		$this->object->addMarker(array(25, 75));
 		$this->object->setAdditionalJavascript('alert();');
 		$this->object->setAutoload('onload');
@@ -634,7 +616,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the getBody method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetBody()
@@ -651,7 +633,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the echoHeader method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testEchoHeader()
@@ -666,7 +648,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the echoBody method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testEchoBody()
@@ -679,7 +661,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the geocodeAddress method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGeocodeAddress()
@@ -696,7 +678,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the geocodeAddress method with 400 error
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @expectedException RuntimeException
 	 * @return void
 	 */
@@ -709,7 +691,7 @@ class JGoogleEmbedMapsTest extends TestCase
 	/**
 	 * Tests the geocodeAddress method with bad json
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @expectedException RuntimeException
 	 * @return void
 	 */
@@ -718,14 +700,32 @@ class JGoogleEmbedMapsTest extends TestCase
 		$this->http->expects($this->once())->method('get')->will($this->returnCallback('mapsGeocodeBadJsonCallback'));
 		$this->object->geocodeAddress('Palo Alto');
 	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+
+		$this->http   = $this->getMock('JHttp', array('get'), array($this->options));
+		$this->uri    = new JUri;
+		$this->object = new JGoogleEmbedMaps($this->options, $this->uri, $this->http);
+	}
 }
 
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -734,30 +734,30 @@ class JGoogleEmbedMapsTest extends TestCase
 function mapsGeocodeCallback($url, array $headers = null, $timeout = null)
 {
 	$query = parse_url($url, PHP_URL_QUERY);
-	
+
 	parse_str($query, $params);
-	
+
 	$address = strtolower($params['address']);
 
 	switch ($address)
 	{
 		case 'san francisco':
-		$data = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'sanfrancisco.txt');
-		break;
+			$data = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'sanfrancisco.txt');
+			break;
 
 		case 'palo alto':
-		$data = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'paloalto.txt');
-		break;
+			$data = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'paloalto.txt');
+			break;
 
 		default:
-		$data = "{\n   \"results\" : [],\n   \"status\" : \"ZERO_RESULTS\"\n}\n";
+			$data = "{\n   \"results\" : [],\n   \"status\" : \"ZERO_RESULTS\"\n}\n";
 	}
 
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'application/json');
-	$response->body = $data;
+	$response->body    = $data;
 
 	return $response;
 }
@@ -765,9 +765,9 @@ function mapsGeocodeCallback($url, array $headers = null, $timeout = null)
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -777,9 +777,9 @@ function mapsGeocode400Callback($url, array $headers = null, $timeout = null)
 {
 	$response = new stdClass;
 
-	$response->code = 400;
+	$response->code    = 400;
 	$response->headers = array('Content-Type' => 'application/json');
-	$response->body = '';
+	$response->body    = '';
 
 	return $response;
 }
@@ -787,9 +787,9 @@ function mapsGeocode400Callback($url, array $headers = null, $timeout = null)
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -799,9 +799,9 @@ function mapsGeocodeBadJsonCallback($url, array $headers = null, $timeout = null
 {
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'application/json');
-	$response->body = 'BADDATA';
+	$response->body    = 'BADDATA';
 
 	return $response;
 }

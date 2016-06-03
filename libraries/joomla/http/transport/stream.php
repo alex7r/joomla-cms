@@ -27,7 +27,7 @@ class JHttpTransportStream implements JHttpTransport
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry  $options  Client options object.
+	 * @param   Registry $options Client options object.
 	 *
 	 * @since   11.3
 	 * @throws  RuntimeException
@@ -50,14 +50,26 @@ class JHttpTransportStream implements JHttpTransport
 	}
 
 	/**
+	 * Method to check if http transport stream available for use
+	 *
+	 * @return bool true if available else false
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		return function_exists('fopen') && is_callable('fopen') && ini_get('allow_url_fopen');
+	}
+
+	/**
 	 * Send a request to the server and return a JHttpResponse object with the response.
 	 *
-	 * @param   string   $method     The HTTP method for sending the request.
-	 * @param   JUri     $uri        The URI to the resource to request.
-	 * @param   mixed    $data       Either an associative array or a string to be sent with the request.
-	 * @param   array    $headers    An array of request headers to send with the request.
-	 * @param   integer  $timeout    Read timeout in seconds.
-	 * @param   string   $userAgent  The optional user agent string to send with the request.
+	 * @param   string  $method    The HTTP method for sending the request.
+	 * @param   JUri    $uri       The URI to the resource to request.
+	 * @param   mixed   $data      Either an associative array or a string to be sent with the request.
+	 * @param   array   $headers   An array of request headers to send with the request.
+	 * @param   integer $timeout   Read timeout in seconds.
+	 * @param   string  $userAgent The optional user agent string to send with the request.
 	 *
 	 * @return  JHttpResponse
 	 *
@@ -134,10 +146,10 @@ class JHttpTransportStream implements JHttpTransport
 		$context = stream_context_create(
 			array(
 				'http' => $options,
-				'ssl' => array(
-					'verify_peer'   => true,
-					'cafile'        => $this->options->get('stream.certpath', __DIR__ . '/cacert.pem'),
-					'verify_depth'  => 5,
+				'ssl'  => array(
+					'verify_peer'  => true,
+					'cafile'       => $this->options->get('stream.certpath', __DIR__ . '/cacert.pem'),
+					'verify_depth' => 5,
 				)
 			)
 		);
@@ -202,8 +214,8 @@ class JHttpTransportStream implements JHttpTransport
 	/**
 	 * Method to get a response object from a server response.
 	 *
-	 * @param   array   $headers  The response headers as an array.
-	 * @param   string  $body     The response body as a string.
+	 * @param   array  $headers The response headers as an array.
+	 * @param   string $body    The response body as a string.
 	 *
 	 * @return  JHttpResponse
 	 *
@@ -236,22 +248,10 @@ class JHttpTransportStream implements JHttpTransport
 		// Add the response headers to the response object.
 		foreach ($headers as $header)
 		{
-			$pos = strpos($header, ':');
+			$pos                                             = strpos($header, ':');
 			$return->headers[trim(substr($header, 0, $pos))] = trim(substr($header, ($pos + 1)));
 		}
 
 		return $return;
-	}
-
-	/**
-	 * Method to check if http transport stream available for use
-	 *
-	 * @return bool true if available else false
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		return function_exists('fopen') && is_callable('fopen') && ini_get('allow_url_fopen');
 	}
 }

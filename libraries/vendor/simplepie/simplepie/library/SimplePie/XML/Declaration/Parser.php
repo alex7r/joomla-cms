@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- * 	* Redistributions of source code must retain the above copyright notice, this list of
- * 	  conditions and the following disclaimer.
+ *    * Redistributions of source code must retain the above copyright notice, this list of
+ *      conditions and the following disclaimer.
  *
- * 	* Redistributions in binary form must reproduce the above copyright notice, this list
- * 	  of conditions and the following disclaimer in the documentation and/or other materials
- * 	  provided with the distribution.
+ *    * Redistributions in binary form must reproduce the above copyright notice, this list
+ *      of conditions and the following disclaimer in the documentation and/or other materials
+ *      provided with the distribution.
  *
- * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
- * 	  to endorse or promote products derived from this software without specific prior
- * 	  written permission.
+ *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
+ *      to endorse or promote products derived from this software without specific prior
+ *      written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,21 +32,21 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package SimplePie
- * @version 1.3.1
+ * @package   SimplePie
+ * @version   1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author Ryan Parman
- * @author Geoffrey Sneddon
- * @author Ryan McCue
- * @link http://simplepie.org/ SimplePie
- * @license http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author    Ryan Parman
+ * @author    Geoffrey Sneddon
+ * @author    Ryan McCue
+ * @link      http://simplepie.org/ SimplePie
+ * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 
 /**
  * Parses the XML Declaration
  *
- * @package SimplePie
+ * @package    SimplePie
  * @subpackage Parsing
  */
 class SimplePie_XML_Declaration_Parser
@@ -111,11 +111,12 @@ class SimplePie_XML_Declaration_Parser
 	 * Create an instance of the class with the input data
 	 *
 	 * @access public
+	 *
 	 * @param string $data Input data
 	 */
 	public function __construct($data)
 	{
-		$this->data = $data;
+		$this->data        = $data;
 		$this->data_length = strlen($this->data);
 	}
 
@@ -139,9 +140,10 @@ class SimplePie_XML_Declaration_Parser
 		}
 		else
 		{
-			$this->version = '';
-			$this->encoding = '';
+			$this->version    = '';
+			$this->encoding   = '';
 			$this->standalone = '';
+
 			return false;
 		}
 	}
@@ -157,38 +159,6 @@ class SimplePie_XML_Declaration_Parser
 		return (bool) ($this->position < $this->data_length);
 	}
 
-	/**
-	 * Advance past any whitespace
-	 *
-	 * @return int Number of whitespace characters passed
-	 */
-	public function skip_whitespace()
-	{
-		$whitespace = strspn($this->data, "\x09\x0A\x0D\x20", $this->position);
-		$this->position += $whitespace;
-		return $whitespace;
-	}
-
-	/**
-	 * Read value
-	 */
-	public function get_value()
-	{
-		$quote = substr($this->data, $this->position, 1);
-		if ($quote === '"' || $quote === "'")
-		{
-			$this->position++;
-			$len = strcspn($this->data, $quote, $this->position);
-			if ($this->has_data())
-			{
-				$value = substr($this->data, $this->position, $len);
-				$this->position += $len + 1;
-				return $value;
-			}
-		}
-		return false;
-	}
-
 	public function before_version_name()
 	{
 		if ($this->skip_whitespace())
@@ -199,6 +169,19 @@ class SimplePie_XML_Declaration_Parser
 		{
 			$this->state = false;
 		}
+	}
+
+	/**
+	 * Advance past any whitespace
+	 *
+	 * @return int Number of whitespace characters passed
+	 */
+	public function skip_whitespace()
+	{
+		$whitespace = strspn($this->data, "\x09\x0A\x0D\x20", $this->position);
+		$this->position += $whitespace;
+
+		return $whitespace;
 	}
 
 	public function version_name()
@@ -247,6 +230,28 @@ class SimplePie_XML_Declaration_Parser
 		{
 			$this->state = false;
 		}
+	}
+
+	/**
+	 * Read value
+	 */
+	public function get_value()
+	{
+		$quote = substr($this->data, $this->position, 1);
+		if ($quote === '"' || $quote === "'")
+		{
+			$this->position++;
+			$len = strcspn($this->data, $quote, $this->position);
+			if ($this->has_data())
+			{
+				$value = substr($this->data, $this->position, $len);
+				$this->position += $len + 1;
+
+				return $value;
+			}
+		}
+
+		return false;
 	}
 
 	public function encoding_name()
@@ -341,6 +346,7 @@ class SimplePie_XML_Declaration_Parser
 
 				default:
 					$this->state = false;
+
 					return;
 			}
 

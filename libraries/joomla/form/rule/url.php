@@ -21,19 +21,19 @@ class JFormRuleUrl extends JFormRule
 	/**
 	 * Method to test an external or internal url for all valid parts.
 	 *
-	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
-	 * @param   mixed             $value    The form field value to validate.
-	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
+	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed            $value     The form field value to validate.
+	 * @param   string           $group     The field name group control value. This acts as as an array container for the field.
 	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
-	 * @param   Registry          $input    An optional Registry object with the entire data set to validate against the entire form.
-	 * @param   JForm             $form     The form object for which the field is being tested.
+	 * @param   Registry         $input     An optional Registry object with the entire data set to validate against the entire form.
+	 * @param   JForm            $form      The form object for which the field is being tested.
 	 *
 	 * @return  boolean  True if the value is valid, false otherwise.
 	 *
-	 * @since   11.1
-	 * @link    http://www.w3.org/Addressing/URL/url-spec.txt
-	 * @see	    JString
+	 * @since      11.1
+	 * @link       http://www.w3.org/Addressing/URL/url-spec.txt
+	 * @see        JString
 	 */
 	public function test(SimpleXMLElement $element, $value, $group = null, Registry $input = null, JForm $form = null)
 	{
@@ -80,6 +80,7 @@ class JFormRuleUrl extends JFormRule
 			{
 				return false;
 			}
+
 			// The internal URL seems to be good.
 			return true;
 		}
@@ -95,8 +96,9 @@ class JFormRuleUrl extends JFormRule
 
 		// For some schemes here must be two slashes.
 		if (($urlScheme == 'http' || $urlScheme == 'https' || $urlScheme == 'ftp' || $urlScheme == 'sftp' || $urlScheme == 'gopher'
-			|| $urlScheme == 'wais' || $urlScheme == 'gopher' || $urlScheme == 'prospero' || $urlScheme == 'telnet' || $urlScheme == 'git')
-			&& ((substr($value, strlen($urlScheme), 3)) !== '://'))
+				|| $urlScheme == 'wais' || $urlScheme == 'gopher' || $urlScheme == 'prospero' || $urlScheme == 'telnet' || $urlScheme == 'git')
+			&& ((substr($value, strlen($urlScheme), 3)) !== '://')
+		)
 		{
 			return false;
 		}

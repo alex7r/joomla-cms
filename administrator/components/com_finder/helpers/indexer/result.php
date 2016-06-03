@@ -24,13 +24,124 @@ JLoader::register('FinderIndexer', __DIR__ . '/indexer.php');
 class FinderIndexerResult
 {
 	/**
+	 * The content URL.
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
+	public $url;
+	/**
+	 * The content route.
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
+	public $route;
+	/**
+	 * The content title.
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
+	public $title;
+	/**
+	 * The content description.
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
+	public $description;
+	/**
+	 * The published state of the result.
+	 *
+	 * @var    integer
+	 * @since  2.5
+	 */
+	public $published;
+	/**
+	 * The content published state.
+	 *
+	 * @var    integer
+	 * @since  2.5
+	 */
+	public $state;
+	/**
+	 * The content access level.
+	 *
+	 * @var    integer
+	 * @since  2.5
+	 */
+	public $access;
+	/**
+	 * The content language.
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
+	public $language = '*';
+	/**
+	 * The publishing start date.
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
+	public $publish_start_date;
+	/**
+	 * The publishing end date.
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
+	public $publish_end_date;
+	/**
+	 * The generic start date.
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
+	public $start_date;
+	/**
+	 * The generic end date.
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
+	public $end_date;
+	/**
+	 * The item list price.
+	 *
+	 * @var    mixed
+	 * @since  2.5
+	 */
+	public $list_price;
+	/**
+	 * The item sale price.
+	 *
+	 * @var    mixed
+	 * @since  2.5
+	 */
+	public $sale_price;
+	/**
+	 * The content type id. This is set by the adapter.
+	 *
+	 * @var    integer
+	 * @since  2.5
+	 */
+	public $type_id;
+	/**
+	 * The default language for content.
+	 *
+	 * @var    string
+	 * @since  3.0.2
+	 */
+	public $defaultLanguage;
+	/**
 	 * An array of extra result properties.
 	 *
 	 * @var    array
 	 * @since  2.5
 	 */
 	protected $elements = array();
-
 	/**
 	 * This array tells the indexer which properties should be indexed and what
 	 * weights to use for those properties.
@@ -40,12 +151,11 @@ class FinderIndexerResult
 	 */
 	protected $instructions = array(
 		FinderIndexer::TITLE_CONTEXT => array('title', 'subtitle', 'id'),
-		FinderIndexer::TEXT_CONTEXT => array('summary', 'body'),
-		FinderIndexer::META_CONTEXT => array('meta', 'list_price', 'sale_price'),
-		FinderIndexer::PATH_CONTEXT => array('path', 'alias'),
-		FinderIndexer::MISC_CONTEXT => array('comments')
+		FinderIndexer::TEXT_CONTEXT  => array('summary', 'body'),
+		FinderIndexer::META_CONTEXT  => array('meta', 'list_price', 'sale_price'),
+		FinderIndexer::PATH_CONTEXT  => array('path', 'alias'),
+		FinderIndexer::MISC_CONTEXT  => array('comments')
 	);
-
 	/**
 	 * The indexer will use this data to create taxonomy mapping entries for
 	 * the item so that it can be filtered by type, label, category,
@@ -55,134 +165,6 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	protected $taxonomy = array();
-
-	/**
-	 * The content URL.
-	 *
-	 * @var    string
-	 * @since  2.5
-	 */
-	public $url;
-
-	/**
-	 * The content route.
-	 *
-	 * @var    string
-	 * @since  2.5
-	 */
-	public $route;
-
-	/**
-	 * The content title.
-	 *
-	 * @var    string
-	 * @since  2.5
-	 */
-	public $title;
-
-	/**
-	 * The content description.
-	 *
-	 * @var    string
-	 * @since  2.5
-	 */
-	public $description;
-
-	/**
-	 * The published state of the result.
-	 *
-	 * @var    integer
-	 * @since  2.5
-	 */
-	public $published;
-
-	/**
-	 * The content published state.
-	 *
-	 * @var    integer
-	 * @since  2.5
-	 */
-	public $state;
-
-	/**
-	 * The content access level.
-	 *
-	 * @var    integer
-	 * @since  2.5
-	 */
-	public $access;
-
-	/**
-	 * The content language.
-	 *
-	 * @var    string
-	 * @since  2.5
-	 */
-	public $language = '*';
-
-	/**
-	 * The publishing start date.
-	 *
-	 * @var    string
-	 * @since  2.5
-	 */
-	public $publish_start_date;
-
-	/**
-	 * The publishing end date.
-	 *
-	 * @var    string
-	 * @since  2.5
-	 */
-	public $publish_end_date;
-
-	/**
-	 * The generic start date.
-	 *
-	 * @var    string
-	 * @since  2.5
-	 */
-	public $start_date;
-
-	/**
-	 * The generic end date.
-	 *
-	 * @var    string
-	 * @since  2.5
-	 */
-	public $end_date;
-
-	/**
-	 * The item list price.
-	 *
-	 * @var    mixed
-	 * @since  2.5
-	 */
-	public $list_price;
-
-	/**
-	 * The item sale price.
-	 *
-	 * @var    mixed
-	 * @since  2.5
-	 */
-	public $sale_price;
-
-	/**
-	 * The content type id. This is set by the adapter.
-	 *
-	 * @var    integer
-	 * @since  2.5
-	 */
-	public $type_id;
-
-	/**
-	 * The default language for content.
-	 *
-	 * @var    string
-	 * @since  3.0.2
-	 */
-	public $defaultLanguage;
 
 	/**
 	 * Constructor
@@ -195,26 +177,10 @@ class FinderIndexerResult
 	}
 
 	/**
-	 * The magic set method is used to push additional values into the elements
-	 * array in order to preserve the cleanliness of the object.
-	 *
-	 * @param   string  $name   The name of the element.
-	 * @param   mixed   $value  The value of the element.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.5
-	 */
-	public function __set($name, $value)
-	{
-		$this->elements[$name] = $value;
-	}
-
-	/**
 	 * The magic get method is used to retrieve additional element values
 	 * from the elements array.
 	 *
-	 * @param   string  $name  The name of the element.
+	 * @param   string $name The name of the element.
 	 *
 	 * @return  mixed  The value of the element if set, null otherwise.
 	 *
@@ -234,10 +200,26 @@ class FinderIndexerResult
 	}
 
 	/**
+	 * The magic set method is used to push additional values into the elements
+	 * array in order to preserve the cleanliness of the object.
+	 *
+	 * @param   string $name  The name of the element.
+	 * @param   mixed  $value The value of the element.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	public function __set($name, $value)
+	{
+		$this->elements[$name] = $value;
+	}
+
+	/**
 	 * The magic isset method is used to check the state of additional element
 	 * values in the elements array.
 	 *
-	 * @param   string  $name  The name of the element.
+	 * @param   string $name The name of the element.
 	 *
 	 * @return  boolean  True if set, false otherwise.
 	 *
@@ -252,7 +234,7 @@ class FinderIndexerResult
 	 * The magic unset method is used to unset additional element values in the
 	 * elements array.
 	 *
-	 * @param   string  $name  The name of the element.
+	 * @param   string $name The name of the element.
 	 *
 	 * @return  void
 	 *
@@ -266,7 +248,7 @@ class FinderIndexerResult
 	/**
 	 * Method to retrieve additional element values from the elements array.
 	 *
-	 * @param   string  $name  The name of the element.
+	 * @param   string $name The name of the element.
 	 *
 	 * @return  mixed  The value of the element if set, null otherwise.
 	 *
@@ -288,8 +270,8 @@ class FinderIndexerResult
 	/**
 	 * Method to set additional element values in the elements array.
 	 *
-	 * @param   string  $name   The name of the element.
-	 * @param   mixed   $value  The value of the element.
+	 * @param   string $name  The name of the element.
+	 * @param   mixed  $value The value of the element.
 	 *
 	 * @return  void
 	 *
@@ -315,8 +297,8 @@ class FinderIndexerResult
 	/**
 	 * Method to add a processing instruction for an item property.
 	 *
-	 * @param   string  $group     The group to associate the property with.
-	 * @param   string  $property  The property to process.
+	 * @param   string $group    The group to associate the property with.
+	 * @param   string $property The property to process.
 	 *
 	 * @return  void
 	 *
@@ -339,8 +321,8 @@ class FinderIndexerResult
 	/**
 	 * Method to remove a processing instruction for an item property.
 	 *
-	 * @param   string  $group     The group to associate the property with.
-	 * @param   string  $property  The property to process.
+	 * @param   string $group    The group to associate the property with.
+	 * @param   string $property The property to process.
 	 *
 	 * @return  void
 	 *
@@ -365,7 +347,7 @@ class FinderIndexerResult
 	/**
 	 * Method to get the taxonomy maps for an item.
 	 *
-	 * @param   string  $branch  The taxonomy branch to get. [optional]
+	 * @param   string $branch The taxonomy branch to get. [optional]
 	 *
 	 * @return  array  An array of taxonomy maps.
 	 *
@@ -388,10 +370,10 @@ class FinderIndexerResult
 	/**
 	 * Method to add a taxonomy map for an item.
 	 *
-	 * @param   string   $branch  The title of the taxonomy branch to add the node to.
-	 * @param   string   $title   The title of the taxonomy node.
-	 * @param   integer  $state   The published state of the taxonomy node. [optional]
-	 * @param   integer  $access  The access level of the taxonomy node. [optional]
+	 * @param   string  $branch The title of the taxonomy branch to add the node to.
+	 * @param   string  $title  The title of the taxonomy node.
+	 * @param   integer $state  The published state of the taxonomy node. [optional]
+	 * @param   integer $access The access level of the taxonomy node. [optional]
 	 *
 	 * @return  void
 	 *
@@ -403,9 +385,9 @@ class FinderIndexerResult
 		$branch = preg_replace('#[^\pL\pM\pN\p{Pi}\p{Pf}\'+-.,_]+#mui', ' ', $branch);
 
 		// Create the taxonomy node.
-		$node = new JObject;
-		$node->title = $title;
-		$node->state = (int) $state;
+		$node         = new JObject;
+		$node->title  = $title;
+		$node->state  = (int) $state;
 		$node->access = (int) $access;
 
 		// Add the node to the taxonomy branch.

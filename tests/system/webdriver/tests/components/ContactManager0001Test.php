@@ -9,12 +9,6 @@
 
 require_once 'JoomlaWebdriverTestCase.php';
 
-use SeleniumClient\By;
-use SeleniumClient\SelectElement;
-use SeleniumClient\WebDriver;
-use SeleniumClient\WebDriverWait;
-use SeleniumClient\DesiredCapabilities;
-
 /**
  * This class tests the  Contact: Add / Edit  Screen.
  *
@@ -42,7 +36,7 @@ class ContactManager0001Test extends JoomlaWebdriverTestCase
 	public function setUp()
 	{
 		parent::setUp();
-		$cpPage = $this->doAdminLogin();
+		$cpPage                   = $this->doAdminLogin();
 		$this->contactManagerPage = $cpPage->clickMenu('Contacts', 'ContactManagerPage');
 	}
 
@@ -107,7 +101,7 @@ class ContactManager0001Test extends JoomlaWebdriverTestCase
 	{
 		$this->contactManagerPage->clickButton('toolbar-new');
 		$contactEditPage = $this->getPageObject('ContactEditPage');
-		$textArray = $contactEditPage->getTabIds();
+		$textArray       = $contactEditPage->getTabIds();
 		$this->assertEquals($contactEditPage->tabs, $textArray, 'Contact labels should match expected values.');
 		$contactEditPage->clickButton('toolbar-cancel');
 		$this->contactManagerPage = $this->getPageObject('ContactManagerPage');
@@ -122,7 +116,7 @@ class ContactManager0001Test extends JoomlaWebdriverTestCase
 	 */
 	public function addContact_WithFieldDefaults_ContactAdded()
 	{
-		$salt = rand();
+		$salt        = rand();
 		$contactName = 'Contact' . $salt;
 		$this->assertFalse($this->contactManagerPage->getRowNumber($contactName), 'Test Contact should not be present');
 		$this->contactManagerPage->addContact($contactName, false);
@@ -142,11 +136,11 @@ class ContactManager0001Test extends JoomlaWebdriverTestCase
 	 */
 	public function addContact_WithGivenFields_ContactAdded()
 	{
-		$salt = rand();
+		$salt        = rand();
 		$contactName = 'Contact' . $salt;
-		$address = '10 Downing Street';
-		$city = 'London';
-		$country = 'England';
+		$address     = '10 Downing Street';
+		$city        = 'London';
+		$country     = 'England';
 
 		$this->assertFalse($this->contactManagerPage->getRowNumber($contactName), 'Test contact should not be present');
 		$this->contactManagerPage->addContact($contactName, array('Country' => $country, 'Address' => $address, 'City or Suburb' => $city));
@@ -168,7 +162,7 @@ class ContactManager0001Test extends JoomlaWebdriverTestCase
 	 */
 	public function editContact_ChangeFields_FieldsChanged()
 	{
-		$salt = rand();
+		$salt        = rand();
 		$contactName = 'Contact' . $salt;
 		$this->assertFalse($this->contactManagerPage->getRowNumber($contactName), 'Test contact should not be present');
 		$this->contactManagerPage->addContact($contactName, false);
@@ -186,7 +180,7 @@ class ContactManager0001Test extends JoomlaWebdriverTestCase
 	 */
 	public function changeContactState_ChangeEnabledUsingToolbar_EnabledChanged()
 	{
-		$salt = rand();
+		$salt        = rand();
 		$contactName = 'Contact' . $salt;
 		$this->contactManagerPage->addContact($contactName, false);
 		$state = $this->contactManagerPage->getState($contactName);

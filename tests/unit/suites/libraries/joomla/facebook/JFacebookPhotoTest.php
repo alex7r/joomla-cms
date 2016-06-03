@@ -55,45 +55,6 @@ class JFacebookPhotoTest extends TestCase
 	protected $errorString = '{"error": {"message": "Generic Error."}}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   13.1
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$app_id = "app_id";
-		$app_secret = "app_secret";
-		$my_url = "http://localhost/gsoc/joomla-platform/facebook_test.php";
-		$access_token = array(
-			'access_token' => 'token',
-			'expires' => '51837673', 'created' => '2443672521');
-
-		$this->options = new Registry;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->input = new JInput;
-		$this->oauth = new JFacebookOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JFacebookPhoto($this->options, $this->client, $this->oauth);
-
-		$this->options->set('clientid', $app_id);
-		$this->options->set('clientsecret', $app_secret);
-		$this->options->set('redirecturi', $my_url);
-		$this->options->set('sendheaders', true);
-		$this->options->set('authmethod', 'get');
-
-		parent::setUp();
-	}
-
-	/**
 	 * Tests the getPhoto method
 	 *
 	 * @return  void
@@ -105,14 +66,14 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($photo . '?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($photo . '?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getPhoto($photo),
@@ -133,14 +94,14 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($photo . '?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($photo . '?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->getPhoto($photo);
 	}
@@ -157,14 +118,14 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($photo . '/comments?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($photo . '/comments?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getComments($photo),
@@ -185,14 +146,14 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($photo . '/comments?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($photo . '/comments?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->getComments($photo);
 	}
@@ -206,22 +167,22 @@ class JFacebookPhotoTest extends TestCase
 	 */
 	public function testCreateComment()
 	{
-		$token = $this->oauth->getToken();
-		$photo = '124346363456';
+		$token   = $this->oauth->getToken();
+		$photo   = '124346363456';
 		$message = 'test message';
 
 		// Set POST request parameters.
-		$data = array();
+		$data            = array();
 		$data['message'] = $message;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($photo . '/comments?access_token=' . $token['access_token'], $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($photo . '/comments?access_token=' . $token['access_token'], $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createComment($photo, $message),
@@ -239,22 +200,22 @@ class JFacebookPhotoTest extends TestCase
 	 */
 	public function testCreateCommentFailure()
 	{
-		$token = $this->oauth->getToken();
-		$photo = '124346363456';
+		$token   = $this->oauth->getToken();
+		$photo   = '124346363456';
 		$message = 'test message';
 
 		// Set POST request parameters.
-		$data = array();
+		$data            = array();
 		$data['message'] = $message;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($photo . '/comments?access_token=' . $token['access_token'], $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($photo . '/comments?access_token=' . $token['access_token'], $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->createComment($photo, $message);
 	}
@@ -268,17 +229,17 @@ class JFacebookPhotoTest extends TestCase
 	 */
 	public function testDeleteComment()
 	{
-		$token = $this->oauth->getToken();
+		$token   = $this->oauth->getToken();
 		$comment = '5148941614_12343468';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = true;
 
 		$this->client->expects($this->once())
-		->method('delete')
-		->with($comment . '?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('delete')
+			->with($comment . '?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteComment($comment),
@@ -296,17 +257,17 @@ class JFacebookPhotoTest extends TestCase
 	 */
 	public function testDeleteCommentFailure()
 	{
-		$token = $this->oauth->getToken();
+		$token   = $this->oauth->getToken();
 		$comment = '5148941614_12343468';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('delete')
-		->with($comment . '?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('delete')
+			->with($comment . '?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->deleteComment($comment);
 	}
@@ -323,14 +284,14 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($photo . '/likes?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($photo . '/likes?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getLikes($photo),
@@ -351,14 +312,14 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($photo . '/likes?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($photo . '/likes?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->getLikes($photo);
 	}
@@ -375,14 +336,14 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($photo . '/likes?access_token=' . $token['access_token'], '')
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($photo . '/likes?access_token=' . $token['access_token'], '')
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createLike($photo),
@@ -403,14 +364,14 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($photo . '/likes?access_token=' . $token['access_token'], '')
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($photo . '/likes?access_token=' . $token['access_token'], '')
+			->will($this->returnValue($returnData));
 
 		$this->object->createLike($photo);
 	}
@@ -427,14 +388,14 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = true;
 
 		$this->client->expects($this->once())
-		->method('delete')
-		->with($photo . '/likes?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('delete')
+			->with($photo . '/likes?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->deleteLike($photo),
@@ -455,14 +416,14 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('delete')
-		->with($photo . '/likes?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('delete')
+			->with($photo . '/likes?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->deleteLike($photo);
 	}
@@ -479,14 +440,14 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($photo . '/tags?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($photo . '/tags?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getTags($photo),
@@ -507,25 +468,25 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($photo . '/tags?access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($photo . '/tags?access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->getTags($photo);
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 13.1
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 13.1
+	 */
 	public function seedCreateTag()
 	{
 		// User_id
@@ -538,27 +499,27 @@ class JFacebookPhotoTest extends TestCase
 	/**
 	 * Tests the createTag method.
 	 *
-	 * @param   mixed  $to  ID of the User or an array of Users to tag in the photo.
+	 * @param   mixed $to ID of the User or an array of Users to tag in the photo.
 	 *
 	 * @dataProvider  seedCreateTag
 	 *
 	 * @return  void
 	 *
-	 * @since   13.1
+	 * @since         13.1
 	 */
 	public function testCreateTag($to)
 	{
-		$token = $this->oauth->getToken();
-		$photo = '124346363456';
+		$token    = $this->oauth->getToken();
+		$photo    = '124346363456';
 		$tag_text = 'tag text';
-		$x = 12;
-		$y = 65;
+		$x        = 12;
+		$y        = 65;
 
 		// Set POST request parameters.
-		$data = array();
+		$data             = array();
 		$data['tag_text'] = $tag_text;
-		$data['x'] = $x;
-		$data['y'] = $y;
+		$data['x']        = $x;
+		$data['y']        = $y;
 
 		if (is_array($to))
 		{
@@ -569,14 +530,14 @@ class JFacebookPhotoTest extends TestCase
 			$data['to'] = $to;
 		}
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($photo . '/tags?access_token=' . $token['access_token'], $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($photo . '/tags?access_token=' . $token['access_token'], $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->createTag($photo, $to, $tag_text, $x, $y),
@@ -587,28 +548,28 @@ class JFacebookPhotoTest extends TestCase
 	/**
 	 * Tests the createTag method - failure.
 	 *
-	 * @param   mixed  $to  ID of the User or an array of Users to tag in the photo.
+	 * @param   mixed $to ID of the User or an array of Users to tag in the photo.
 	 *
 	 * @dataProvider  seedCreateTag
 	 *
 	 * @return  void
 	 *
-	 * @since   13.1
+	 * @since         13.1
 	 * @expectedException  RuntimeException
 	 */
 	public function testCreateTagFailure($to)
 	{
-		$token = $this->oauth->getToken();
-		$photo = '124346363456';
+		$token    = $this->oauth->getToken();
+		$photo    = '124346363456';
 		$tag_text = 'tag text';
-		$x = 12;
-		$y = 65;
+		$x        = 12;
+		$y        = 65;
 
 		// Set POST request parameters.
-		$data = array();
+		$data             = array();
 		$data['tag_text'] = $tag_text;
-		$data['x'] = $x;
-		$data['y'] = $y;
+		$data['x']        = $x;
+		$data['y']        = $y;
 
 		if (is_array($to))
 		{
@@ -619,14 +580,14 @@ class JFacebookPhotoTest extends TestCase
 			$data['to'] = $to;
 		}
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($photo . '/tags?access_token=' . $token['access_token'], $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($photo . '/tags?access_token=' . $token['access_token'], $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->createTag($photo, $to, $tag_text, $x, $y);
 	}
@@ -642,24 +603,24 @@ class JFacebookPhotoTest extends TestCase
 	{
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
-		$to = '113467457834';
-		$x = 12;
-		$y = 65;
+		$to    = '113467457834';
+		$x     = 12;
+		$y     = 65;
 
 		// Set POST request parameters.
-		$data = array();
+		$data       = array();
 		$data['to'] = $to;
-		$data['x'] = $x;
-		$data['y'] = $y;
+		$data['x']  = $x;
+		$data['y']  = $y;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($photo . '/tags?access_token=' . $token['access_token'], $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($photo . '/tags?access_token=' . $token['access_token'], $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->updateTag($photo, $to, $x, $y),
@@ -679,24 +640,24 @@ class JFacebookPhotoTest extends TestCase
 	{
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
-		$to = '113467457834';
-		$x = 12;
-		$y = 65;
+		$to    = '113467457834';
+		$x     = 12;
+		$y     = 65;
 
 		// Set POST request parameters.
-		$data = array();
+		$data       = array();
 		$data['to'] = $to;
-		$data['x'] = $x;
-		$data['y'] = $y;
+		$data['x']  = $x;
+		$data['y']  = $y;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($photo . '/tags?access_token=' . $token['access_token'], $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($photo . '/tags?access_token=' . $token['access_token'], $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->updateTag($photo, $to, $x, $y);
 	}
@@ -713,14 +674,14 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($photo . '/picture?redirect=false&access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($photo . '/picture?redirect=false&access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getPicture($photo, false),
@@ -741,15 +702,54 @@ class JFacebookPhotoTest extends TestCase
 		$token = $this->oauth->getToken();
 		$photo = '124346363456';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($photo . '/picture?redirect=false&access_token=' . $token['access_token'])
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($photo . '/picture?redirect=false&access_token=' . $token['access_token'])
+			->will($this->returnValue($returnData));
 
 		$this->object->getPicture($photo, false);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   13.1
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$app_id       = "app_id";
+		$app_secret   = "app_secret";
+		$my_url       = "http://localhost/gsoc/joomla-platform/facebook_test.php";
+		$access_token = array(
+			'access_token' => 'token',
+			'expires'      => '51837673', 'created' => '2443672521');
+
+		$this->options = new Registry;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->input   = new JInput;
+		$this->oauth   = new JFacebookOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JFacebookPhoto($this->options, $this->client, $this->oauth);
+
+		$this->options->set('clientid', $app_id);
+		$this->options->set('clientsecret', $app_secret);
+		$this->options->set('redirecturi', $my_url);
+		$this->options->set('sendheaders', true);
+		$this->options->set('authmethod', 'get');
+
+		parent::setUp();
 	}
 }

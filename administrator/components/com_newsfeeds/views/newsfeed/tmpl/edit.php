@@ -14,7 +14,7 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select', null, array('disable_search_threshold' => 0 ));
+JHtml::_('formbehavior.chosen', 'select', null, array('disable_search_threshold' => 0));
 
 $app   = JFactory::getApplication();
 $input = $app->input;
@@ -44,7 +44,9 @@ $layout  = $isModal ? 'modal' : 'edit';
 $tmpl    = $isModal ? '&tmpl=component' : '';
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_newsfeeds&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="newsfeed-form" class="form-validate">
+<form
+	action="<?php echo JRoute::_('index.php?option=com_newsfeeds&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
+	method="post" name="adminForm" id="newsfeed-form" class="form-validate">
 
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
@@ -68,12 +70,12 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'images', JText::_('JGLOBAL_FIELDSET_IMAGE_OPTIONS')); ?>
 		<div class="row-fluid">
 			<div class="span6">
-					<?php echo $this->form->getControlGroup('images'); ?>
-					<?php foreach ($this->form->getGroup('images') as $field) : ?>
-						<?php echo $field->getControlGroup(); ?>
-					<?php endforeach; ?>
-				</div>
+				<?php echo $this->form->getControlGroup('images'); ?>
+				<?php foreach ($this->form->getGroup('images') as $field) : ?>
+					<?php echo $field->getControlGroup(); ?>
+				<?php endforeach; ?>
 			</div>
+		</div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
 
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('JGLOBAL_FIELDSET_PUBLISHING')); ?>
@@ -93,7 +95,7 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 
 		<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 
-		<?php if ( ! $isModal && $assoc) : ?>
+		<?php if (!$isModal && $assoc) : ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations', JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')); ?>
 			<?php echo $this->loadTemplate('associations'); ?>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
@@ -103,6 +105,6 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 	</div>
-	<input type="hidden" name="task" value="" />
+	<input type="hidden" name="task" value=""/>
 	<?php echo JHtml::_('form.token'); ?>
 </form>

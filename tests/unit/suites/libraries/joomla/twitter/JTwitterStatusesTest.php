@@ -8,13 +8,13 @@
  */
 
 /**
-* Test class for JTwitterStatuses.
-*
-* @package     Joomla.UnitTest
-* @subpackage  Twitter
-*
-* @since       12.3
-*/
+ * Test class for JTwitterStatuses.
+ *
+ * @package     Joomla.UnitTest
+ * @subpackage  Twitter
+ *
+ * @since       12.3
+ */
 class JTwitterStatusesTest extends TestCase
 {
 	/**
@@ -74,41 +74,6 @@ class JTwitterStatusesTest extends TestCase
 	protected $errorString = '{"error":"Generic error"}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$key = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input = new JInput;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth = new JTwitterOAuth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JTwitterStatuses($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-		$this->options->set('sendheaders', true);
-	}
-
-	/**
 	 * Tests the getTweetById method
 	 *
 	 * @return  void
@@ -117,38 +82,38 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testGetTweetById()
 	{
-		$id = 12324354;
-		$trim_user = true;
-		$entities = true;
+		$id         = 12324354;
+		$trim_user  = true;
+		$entities   = true;
 		$my_retweet = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request parameters.
-		$data = array();
-		$data['trim_user'] = $trim_user;
-		$data['include_entities'] = $entities;
+		$data                       = array();
+		$data['trim_user']          = $trim_user;
+		$data['include_entities']   = $entities;
 		$data['include_my_retweet'] = $my_retweet;
 
 		$path = $this->object->fetchUrl('/statuses/show/' . $id . '.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getTweetById($id, $trim_user, $entities, $my_retweet),
@@ -169,38 +134,38 @@ class JTwitterStatusesTest extends TestCase
 	{
 		$id = 12324354;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = $this->object->fetchUrl('/statuses/show/' . $id . '.json');
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getTweetById($id);
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 12.3
+	 */
 	public function seedUser()
 	{
 		// User ID or screen name
@@ -208,42 +173,42 @@ class JTwitterStatusesTest extends TestCase
 			array(234654235457),
 			array('testUser'),
 			array(null)
-			);
+		);
 	}
 
 	/**
 	 * Tests the getUserTimeline method
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
 	 *
-	 * @since   12.3
+	 * @since         12.3
 	 */
 	public function testGetUserTimeline($user)
 	{
-		$count = 10;
+		$count       = 10;
 		$include_rts = true;
 		$contributor = true;
-		$no_replies = true;
-		$since_id = 10;
-		$max_id = 10;
-		$trim_user = true;
+		$no_replies  = true;
+		$since_id    = 10;
+		$max_id      = 10;
+		$trim_user   = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -262,20 +227,20 @@ class JTwitterStatusesTest extends TestCase
 			$this->object->getUserTimeline($user, $count, $include_rts, $no_replies, $since_id, $max_id, $trim_user, $contributor);
 		}
 
-		$data['count'] = $count;
-		$data['include_rts'] = $include_rts;
-		$data['exclude_replies'] = $no_replies;
-		$data['since_id'] = $since_id;
-		$data['max_id'] = $max_id;
-		$data['trim_user'] = $trim_user;
+		$data['count']               = $count;
+		$data['include_rts']         = $include_rts;
+		$data['exclude_replies']     = $no_replies;
+		$data['since_id']            = $since_id;
+		$data['max_id']              = $max_id;
+		$data['trim_user']           = $trim_user;
 		$data['contributor_details'] = $contributor;
 
 		$path = $this->object->fetchUrl('/statuses/user_timeline.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getUserTimeline($user, $count, $include_rts, $no_replies, $since_id, $max_id, $trim_user, $contributor),
@@ -286,11 +251,11 @@ class JTwitterStatusesTest extends TestCase
 	/**
 	 * Tests the getUserTimeline method - failure
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
-	 * @since   12.3
+	 * @since         12.3
 	 * @dataProvider  seedUser
 	 * @expectedException  DomainException
 	 */
@@ -298,18 +263,18 @@ class JTwitterStatusesTest extends TestCase
 	{
 		$count = 10;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -333,9 +298,9 @@ class JTwitterStatusesTest extends TestCase
 		$path = $this->object->fetchUrl('/statuses/user_timeline.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getUserTimeline($user, $count);
 	}
@@ -349,27 +314,27 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testTweet()
 	{
-		$status = 'This is a status';
+		$status                = 'This is a status';
 		$in_reply_to_status_id = 1336421235;
-		$lat = 42.53;
-		$long = 45.21;
-		$place_id = '23455ER235V';
-		$display_coordinates = true;
-		$trim_user = true;
+		$lat                   = 42.53;
+		$long                  = 45.21;
+		$place_id              = '23455ER235V';
+		$display_coordinates   = true;
+		$trim_user             = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set POST request parameters.
-		$data = array();
-		$data['status'] = utf8_encode($status);
+		$data                          = array();
+		$data['status']                = utf8_encode($status);
 		$data['in_reply_to_status_id'] = $in_reply_to_status_id;
-		$data['lat'] = $lat;
-		$data['long'] = $long;
-		$data['place_id'] = $place_id;
-		$data['display_coordinates'] = $display_coordinates;
-		$data['trim_user'] = $trim_user;
+		$data['lat']                   = $lat;
+		$data['long']                  = $long;
+		$data['place_id']              = $place_id;
+		$data['display_coordinates']   = $display_coordinates;
+		$data['trim_user']             = $trim_user;
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -377,8 +342,8 @@ class JTwitterStatusesTest extends TestCase
 			->will($this->returnValue($returnData));
 
 		$this->assertThat(
-		$this->object->tweet($status, $in_reply_to_status_id, $lat, $long, $place_id, $display_coordinates, $trim_user),
-		$this->equalTo(json_decode($this->sampleString))
+			$this->object->tweet($status, $in_reply_to_status_id, $lat, $long, $place_id, $display_coordinates, $trim_user),
+			$this->equalTo(json_decode($this->sampleString))
 		);
 	}
 
@@ -395,12 +360,12 @@ class JTwitterStatusesTest extends TestCase
 	{
 		$status = 'This is a status';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set POST request parameters.
-		$data = array();
+		$data           = array();
 		$data['status'] = utf8_encode($status);
 
 		$this->client->expects($this->once())
@@ -420,45 +385,45 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testGetMentions()
 	{
-		$count = 10;
+		$count       = 10;
 		$include_rts = true;
-		$entities = true;
-		$since_id = 10;
-		$max_id = 10;
-		$trim_user = true;
+		$entities    = true;
+		$since_id    = 10;
+		$max_id      = 10;
+		$trim_user   = true;
 		$contributor = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request parameters.
-		$data = array();
-		$data['count'] = $count;
-		$data['include_rts'] = $include_rts;
-		$data['include_entities'] = $entities;
-		$data['since_id'] = $since_id;
-		$data['max_id'] = $max_id;
-		$data['trim_user'] = $trim_user;
+		$data                        = array();
+		$data['count']               = $count;
+		$data['include_rts']         = $include_rts;
+		$data['include_entities']    = $entities;
+		$data['since_id']            = $since_id;
+		$data['max_id']              = $max_id;
+		$data['trim_user']           = $trim_user;
 		$data['contributor_details'] = $contributor;
 
 		$path = $this->object->fetchUrl('/statuses/mentions_timeline.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getMentions($count, $include_rts, $entities, $since_id, $max_id, $trim_user, $contributor),
@@ -479,31 +444,31 @@ class JTwitterStatusesTest extends TestCase
 	{
 		$count = 10;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set request parameters.
-		$data = array();
+		$data          = array();
 		$data['count'] = $count;
 
 		$path = $this->object->fetchUrl('/statuses/mentions_timeline.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getMentions($count);
 	}
@@ -517,42 +482,42 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testGetRetweetsOfMe()
 	{
-		$since_id = 10;
-		$count = 10;
-		$entities = true;
+		$since_id      = 10;
+		$count         = 10;
+		$entities      = true;
 		$user_entities = true;
-		$max_id = 10;
-		$trim_user = true;
+		$max_id        = 10;
+		$trim_user     = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request parameters.
-		$data['count'] = $count;
-		$data['since_id'] = $since_id;
-		$data['max_id'] = $max_id;
-		$data['trim_user'] = $trim_user;
-		$data['include_entities'] = $entities;
+		$data['count']                 = $count;
+		$data['since_id']              = $since_id;
+		$data['max_id']                = $max_id;
+		$data['trim_user']             = $trim_user;
+		$data['include_entities']      = $entities;
 		$data['include_user_entities'] = $user_entities;
 
 		$path = $this->object->fetchUrl('/statuses/retweets_of_me.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getRetweetsOfMe($count, $since_id, $entities, $user_entities, $max_id, $trim_user),
@@ -573,18 +538,18 @@ class JTwitterStatusesTest extends TestCase
 	{
 		$count = 10;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -594,9 +559,9 @@ class JTwitterStatusesTest extends TestCase
 		$path = $this->object->fetchUrl('/statuses/retweets_of_me.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getRetweetsOfMe($count);
 	}
@@ -610,38 +575,38 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testGetRetweeters()
 	{
-		$id = 217781292748652545;
-		$count = 5;
-		$cursor = 1234;
+		$id            = 217781292748652545;
+		$count         = 5;
+		$cursor        = 1234;
 		$stringify_ids = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request parameters.
-		$data['id'] = $id;
-		$data['count'] = $count;
-		$data['cursor'] = $cursor;
+		$data['id']            = $id;
+		$data['count']         = $count;
+		$data['cursor']        = $cursor;
 		$data['stringify_ids'] = $stringify_ids;
 
 		$path = $this->object->fetchUrl('/statuses/retweeters/ids.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getRetweeters($id, $count, $cursor, $stringify_ids),
@@ -660,34 +625,34 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testGetRetweetersFailure()
 	{
-		$id = 217781292748652545;
+		$id    = 217781292748652545;
 		$count = 5;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set request parameters.
-		$data['id'] = $id;
+		$data['id']    = $id;
 		$data['count'] = $count;
 
 		$path = $this->object->fetchUrl('/statuses/retweeters/ids.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getRetweeters($id, $count);
 	}
@@ -701,35 +666,35 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testGetRetweetsById()
 	{
-		$id = 217781292748652545;
-		$count = 5;
+		$id        = 217781292748652545;
+		$count     = 5;
 		$trim_user = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request parameters.
-		$data['count'] = $count;
+		$data['count']     = $count;
 		$data['trim_user'] = $trim_user;
 
 		$path = $this->object->fetchUrl('/statuses/retweets/' . $id . '.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getRetweetsById($id, $count, $trim_user),
@@ -748,21 +713,21 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testGetRetweetsByIdFailure()
 	{
-		$id = 217781292748652545;
+		$id    = 217781292748652545;
 		$count = 5;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -772,9 +737,9 @@ class JTwitterStatusesTest extends TestCase
 		$path = $this->object->fetchUrl('/statuses/retweets/' . $id . '.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getRetweetsById($id, $count);
 	}
@@ -788,15 +753,15 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testDeleteTweet()
 	{
-		$id = 1234329764382109394;
+		$id        = 1234329764382109394;
 		$trim_user = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set POST request parameters.
-		$data = array();
+		$data              = array();
 		$data['trim_user'] = $trim_user;
 
 		$this->client->expects($this->once())
@@ -805,8 +770,8 @@ class JTwitterStatusesTest extends TestCase
 			->will($this->returnValue($returnData));
 
 		$this->assertThat(
-		$this->object->deleteTweet($id, $trim_user),
-		$this->equalTo(json_decode($this->sampleString))
+			$this->object->deleteTweet($id, $trim_user),
+			$this->equalTo(json_decode($this->sampleString))
 		);
 	}
 
@@ -821,15 +786,15 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testDeleteTweetFailure()
 	{
-		$id = 1234329764389394;
+		$id        = 1234329764389394;
 		$trim_user = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set POST request parameters.
-		$data = array();
+		$data              = array();
 		$data['trim_user'] = $trim_user;
 
 		$this->client->expects($this->once())
@@ -849,10 +814,10 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testRetweet()
 	{
-		$id = 217781292748652545;
+		$id        = 217781292748652545;
 		$trim_user = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -862,9 +827,9 @@ class JTwitterStatusesTest extends TestCase
 		$path = $this->object->fetchUrl('/statuses/retweet/' . $id . '.json');
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->retweet($id, $trim_user),
@@ -883,10 +848,10 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testRetweetFailure()
 	{
-		$id = 217781292748652545;
+		$id        = 217781292748652545;
 		$trim_user = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -896,65 +861,65 @@ class JTwitterStatusesTest extends TestCase
 		$path = $this->object->fetchUrl('/statuses/retweet/' . $id . '.json');
 
 		$this->client->expects($this->once())
-		->method('post')
-		->with($path, $data)
-		->will($this->returnValue($returnData));
+			->method('post')
+			->with($path, $data)
+			->will($this->returnValue($returnData));
 
 		$this->object->retweet($id, $trim_user);
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 12.3
+	 */
 	public function seedTweetWithMedia()
 	{
 		// User ID or screen name
 		return array(
 			array(array("x-mediaratelimit-remaining" => 10)),
 			array(array("x-mediaratelimit-remaining" => 0, "x-mediaratelimit-reset" => 1243245654))
-			);
+		);
 	}
 
 	/**
 	 * Tests the tweetWithMedia method
 	 *
-	 * @param   string  $header  The JSON encoded header.
+	 * @param   string $header The JSON encoded header.
 	 *
 	 * @return  void
 	 *
-	 * @since   12.3
+	 * @since        12.3
 	 * @dataProvider seedTweetWithMedia
 	 */
 	public function testTweetWithMedia($header)
 	{
-		$status = 'This is a status';
-		$media = 'path/to/source';
+		$status                = 'This is a status';
+		$media                 = 'path/to/source';
 		$in_reply_to_status_id = 1336421235;
-		$lat = 42.53;
-		$long = 45.21;
-		$place_id = '23455ER235V';
-		$display_coordinates = true;
-		$sensitive = true;
+		$lat                   = 42.53;
+		$long                  = 45.21;
+		$place_id              = '23455ER235V';
+		$display_coordinates   = true;
+		$sensitive             = true;
 
-		$returnData = new stdClass;
-		$returnData->code = 200;
-		$returnData->body = $this->sampleString;
+		$returnData          = new stdClass;
+		$returnData->code    = 200;
+		$returnData->body    = $this->sampleString;
 		$returnData->headers = $header;
 
 		// Set POST request parameters.
-		$data = array();
-		$data['media[]'] = "@{$media}";
-		$data['status'] = utf8_encode($status);
+		$data                          = array();
+		$data['media[]']               = "@{$media}";
+		$data['status']                = utf8_encode($status);
 		$data['in_reply_to_status_id'] = $in_reply_to_status_id;
-		$data['lat'] = $lat;
-		$data['long'] = $long;
-		$data['place_id'] = $place_id;
-		$data['display_coordinates'] = $display_coordinates;
-		$data['possibly_sensitive'] = $sensitive;
+		$data['lat']                   = $lat;
+		$data['long']                  = $long;
+		$data['place_id']              = $place_id;
+		$data['display_coordinates']   = $display_coordinates;
+		$data['possibly_sensitive']    = $sensitive;
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -986,16 +951,16 @@ class JTwitterStatusesTest extends TestCase
 	public function testTweetWithMediaFailure()
 	{
 		$status = 'This is a status';
-		$media = 'path/to/source';
+		$media  = 'path/to/source';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		// Set POST request parameters.
-		$data = array();
+		$data            = array();
 		$data['media[]'] = "@{$media}";
-		$data['status'] = utf8_encode($status);
+		$data['status']  = utf8_encode($status);
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -1014,46 +979,46 @@ class JTwitterStatusesTest extends TestCase
 	 */
 	public function testGetOembed()
 	{
-		$id = 217781292748652545;
-		$maxwidth = 300;
-		$hide_media = true;
+		$id          = 217781292748652545;
+		$maxwidth    = 300;
+		$hide_media  = true;
 		$hide_thread = true;
 		$omit_script = true;
-		$align = 'center';
-		$related = 'twitter';
-		$lang = 'fr';
+		$align       = 'center';
+		$related     = 'twitter';
+		$lang        = 'fr';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		// Set request parameters.
-		$data['id'] = $id;
-		$data['maxwidth'] = $maxwidth;
-		$data['hide_media'] = $hide_media;
+		$data['id']          = $id;
+		$data['maxwidth']    = $maxwidth;
+		$data['hide_media']  = $hide_media;
 		$data['hide_thread'] = $hide_thread;
 		$data['omit_script'] = $omit_script;
-		$data['align'] = $align;
-		$data['related'] = $related;
-		$data['lang'] = $lang;
+		$data['align']       = $align;
+		$data['related']     = $related;
+		$data['lang']        = $lang;
 
 		$path = $this->object->fetchUrl('/statuses/oembed.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getOembed($id, null, $maxwidth, $hide_media, $hide_thread, $omit_script, $align, $related, $lang),
@@ -1062,45 +1027,45 @@ class JTwitterStatusesTest extends TestCase
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 12.3
+	 */
 	public function seedGetoembed()
 	{
 		// URL
 		return array(
 			array('https://twitter.com/twitter/status/99530515043983360'),
 			array(null)
-			);
+		);
 	}
 
 	/**
 	 * Tests the getOembed method - failure
 	 *
-	 * @param   mixed  $url  The URL string or null.
+	 * @param   mixed $url The URL string or null.
 	 *
 	 * @return  void
 	 *
-	 * @since   12.3
+	 * @since        12.3
 	 * @dataProvider seedGetOembed
 	 */
 	public function testGetOembedFailure($url)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->rateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "statuses"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -1113,9 +1078,9 @@ class JTwitterStatusesTest extends TestCase
 			$path = $this->object->fetchUrl('/statuses/oembed.json', $data);
 
 			$this->client->expects($this->at(1))
-			->method('get')
-			->with($path)
-			->will($this->returnValue($returnData));
+				->method('get')
+				->with($path)
+				->will($this->returnValue($returnData));
 
 			$this->object->getOembed(null, $url);
 		}
@@ -1126,5 +1091,40 @@ class JTwitterStatusesTest extends TestCase
 
 			$this->object->getOembed(null, null);
 		}
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$key    = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input   = new JInput;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth   = new JTwitterOAuth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JTwitterStatuses($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+		$this->options->set('sendheaders', true);
 	}
 }

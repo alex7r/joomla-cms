@@ -165,7 +165,7 @@ class JDocumentFeed extends JDocument
 	/**
 	 * Class constructor
 	 *
-	 * @param   array  $options  Associative array of options
+	 * @param   array $options Associative array of options
 	 *
 	 * @since  11.1
 	 */
@@ -180,8 +180,8 @@ class JDocumentFeed extends JDocument
 	/**
 	 * Render the document
 	 *
-	 * @param   boolean  $cache   If true, cache the output
-	 * @param   array    $params  Associative array of attributes
+	 * @param   boolean $cache  If true, cache the output
+	 * @param   array   $params Associative array of attributes
 	 *
 	 * @return  The rendered data
 	 *
@@ -226,7 +226,7 @@ class JDocumentFeed extends JDocument
 	/**
 	 * Adds an JFeedItem to the feed.
 	 *
-	 * @param   JFeedItem  $item  The feeditem to add to the feed.
+	 * @param   JFeedItem $item The feeditem to add to the feed.
 	 *
 	 * @return  JDocumentFeed  instance of $this to allow chaining
 	 *
@@ -234,7 +234,7 @@ class JDocumentFeed extends JDocument
 	 */
 	public function addItem(JFeedItem $item)
 	{
-		$item->source = $this->link;
+		$item->source  = $this->link;
 		$this->items[] = $item;
 
 		return $this;
@@ -371,7 +371,7 @@ class JFeedItem
 	/**
 	 * Set the JFeedEnclosure for this item
 	 *
-	 * @param   JFeedEnclosure  $enclosure  The JFeedEnclosure to add to the feed.
+	 * @param   JFeedEnclosure $enclosure The JFeedEnclosure to add to the feed.
 	 *
 	 * @return  JFeedItem instance of $this to allow chaining
 	 *

@@ -69,46 +69,10 @@ class JLanguageMultiLangTest extends TestCaseDatabase
 
 		$this->backupServer = $_SERVER;
 
-		$_SERVER['HTTP_HOST'] = self::TEST_HTTP_HOST;
+		$_SERVER['HTTP_HOST']       = self::TEST_HTTP_HOST;
 		$_SERVER['HTTP_USER_AGENT'] = self::TEST_USER_AGENT;
-		$_SERVER['REQUEST_URI'] = self::TEST_REQUEST_URI;
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-	}
-
-	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDown()
-	 * @since   3.6
-	 */
-	protected function tearDown()
-	{
-		// Reset the dispatcher instance.
-		TestReflection::setValue('JEventDispatcher', 'instance', null);
-
-		$_SERVER = $this->backupServer;
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   3.6
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
-
-		return $dataSet;
+		$_SERVER['REQUEST_URI']     = self::TEST_REQUEST_URI;
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
 	}
 
 	/**
@@ -149,5 +113,40 @@ class JLanguageMultiLangTest extends TestCaseDatabase
 		$this->assertFalse(
 			JLanguageMultilang::isEnabled()
 		);
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDown()
+	 * @since   3.6
+	 */
+	protected function tearDown()
+	{
+		// Reset the dispatcher instance.
+		TestReflection::setValue('JEventDispatcher', 'instance', null);
+
+		$_SERVER = $this->backupServer;
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   3.6
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
+
+		return $dataSet;
 	}
 }

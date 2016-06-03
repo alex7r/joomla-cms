@@ -39,6 +39,18 @@ class JFormFieldSpacer extends JFormField
 	}
 
 	/**
+	 * Method to get the field title.
+	 *
+	 * @return  string  The field title.
+	 *
+	 * @since   11.1
+	 */
+	protected function getTitle()
+	{
+		return $this->getLabel();
+	}
+
+	/**
 	 * Method to get the field label markup for a spacer.
 	 * Use the label text or name from the XML element as the spacer or
 	 * Use a hr="true" to automatically generate plain hr markup
@@ -49,8 +61,8 @@ class JFormFieldSpacer extends JFormField
 	 */
 	protected function getLabel()
 	{
-		$html = array();
-		$class = !empty($this->class) ? ' class="' . $this->class . '"' : '';
+		$html   = array();
+		$class  = !empty($this->class) ? ' class="' . $this->class . '"' : '';
 		$html[] = '<span class="spacer">';
 		$html[] = '<span class="before"></span>';
 		$html[] = '<span' . $class . '>';
@@ -91,17 +103,5 @@ class JFormFieldSpacer extends JFormField
 		$html[] = '</span>';
 
 		return implode('', $html);
-	}
-
-	/**
-	 * Method to get the field title.
-	 *
-	 * @return  string  The field title.
-	 *
-	 * @since   11.1
-	 */
-	protected function getTitle()
-	{
-		return $this->getLabel();
 	}
 }

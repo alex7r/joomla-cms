@@ -22,7 +22,7 @@ jimport('joomla.filesystem.path');
  * @contributor  Michael Slusarz <slusarz@horde.org>
  * @contributor  Michael Cochrane <mike@graftonhall.co.nz>
  *
- * @since  11.1
+ * @since        11.1
  */
 class JArchiveTar implements JArchiveExtractable
 {
@@ -60,11 +60,23 @@ class JArchiveTar implements JArchiveExtractable
 	private $_metadata = null;
 
 	/**
+	 * Tests whether this adapter can unpack files on this computer.
+	 *
+	 * @return  boolean  True if supported
+	 *
+	 * @since   11.3
+	 */
+	public static function isSupported()
+	{
+		return true;
+	}
+
+	/**
 	 * Extract a ZIP compressed file to a given path
 	 *
-	 * @param   string  $archive      Path to ZIP archive to extract
-	 * @param   string  $destination  Path to extract archive into
-	 * @param   array   $options      Extraction options [unused]
+	 * @param   string $archive     Path to ZIP archive to extract
+	 * @param   string $destination Path to extract archive into
+	 * @param   array  $options     Extraction options [unused]
 	 *
 	 * @return  boolean True if successful
 	 *
@@ -73,7 +85,7 @@ class JArchiveTar implements JArchiveExtractable
 	 */
 	public function extract($archive, $destination, array $options = array())
 	{
-		$this->_data = null;
+		$this->_data     = null;
 		$this->_metadata = null;
 
 		$this->_data = file_get_contents($archive);
@@ -99,7 +111,7 @@ class JArchiveTar implements JArchiveExtractable
 			if ($type == 'file' || $type == 'unix file')
 			{
 				$buffer = $this->_metadata[$i]['data'];
-				$path = JPath::clean($destination . '/' . $this->_metadata[$i]['name']);
+				$path   = JPath::clean($destination . '/' . $this->_metadata[$i]['name']);
 
 				// Make sure the destination folder exists
 				if (!JFolder::create(dirname($path)))
@@ -132,21 +144,9 @@ class JArchiveTar implements JArchiveExtractable
 	}
 
 	/**
-	 * Tests whether this adapter can unpack files on this computer.
-	 *
-	 * @return  boolean  True if supported
-	 *
-	 * @since   11.3
-	 */
-	public static function isSupported()
-	{
-		return true;
-	}
-
-	/**
 	 * Get the list of files/data from a Tar archive buffer.
 	 *
-	 * @param   string  &$data  The Tar archive buffer.
+	 * @param   string &$data The Tar archive buffer.
 	 *
 	 * @return   array  Archive metadata array
 	 * <pre>
@@ -163,7 +163,7 @@ class JArchiveTar implements JArchiveExtractable
 	 */
 	protected function _getTarInfo(& $data)
 	{
-		$position = 0;
+		$position     = 0;
 		$return_array = array();
 
 		while ($position < strlen($data))
@@ -225,7 +225,7 @@ class JArchiveTar implements JArchiveExtractable
 					// File or folder.
 					$file['data'] = $contents;
 
-					$mode = hexdec(substr($info['mode'], 4, 3));
+					$mode         = hexdec(substr($info['mode'], 4, 3));
 					$file['attr'] = (($info['typeflag'] == 0x35) ? 'd' : '-') . (($mode & 0x400) ? 'r' : '-') . (($mode & 0x200) ? 'w' : '-') .
 						(($mode & 0x100) ? 'x' : '-') . (($mode & 0x040) ? 'r' : '-') . (($mode & 0x020) ? 'w' : '-') . (($mode & 0x010) ? 'x' : '-') .
 						(($mode & 0x004) ? 'r' : '-') . (($mode & 0x002) ? 'w' : '-') . (($mode & 0x001) ? 'x' : '-');

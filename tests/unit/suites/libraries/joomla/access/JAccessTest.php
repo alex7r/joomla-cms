@@ -64,32 +64,32 @@ class JAccessTest extends TestCaseDatabase
 	{
 		return array(
 			'valid_manager_admin_login' => array(44, 'core.login.admin', 1, true, 'Line:' . __LINE__ . ' Administrator group can login to admin'),
-			'valid_manager_login' => array(44, 'core.admin', 1, false, 'Line:' . __LINE__ . ' Administrator group cannot login to admin core'),
-			'super_user_admin' => array(42, 'core.admin', 3, true, 'Line:' . __LINE__ . ' Super User group can do anything'),
-			'super_user_admin' => array(42, 'core.admin', null, true, 'Line:' . __LINE__ . ' Null asset should default to root'),
-			'publisher_delete_banner' => array(
+			'valid_manager_login'       => array(44, 'core.admin', 1, false, 'Line:' . __LINE__ . ' Administrator group cannot login to admin core'),
+			'super_user_admin'          => array(42, 'core.admin', 3, true, 'Line:' . __LINE__ . ' Super User group can do anything'),
+			'super_user_admin'          => array(42, 'core.admin', null, true, 'Line:' . __LINE__ . ' Null asset should default to root'),
+			'publisher_delete_banner'   => array(
 				43,
 				'core.delete',
 				3,
 				false,
 				'Line:' . __LINE__ . ' Explicit deny for editor overrides allow for publisher'),
-			'invalid_user_group_login' => array(58, 'core.login.site', 3, null, 'Line:' . __LINE__ . ' Invalid user and group cannot log in to site'),
-			'invalid_action' => array(42, 'complusoft', 3, null, 'Line:' . __LINE__ . ' Invalid action returns null permission'),
-			'publisher_login_admin' => array(43, 'core.login.admin', 1, null, 'Line:' . __LINE__ . ' Publisher may not log into admin'));
+			'invalid_user_group_login'  => array(58, 'core.login.site', 3, null, 'Line:' . __LINE__ . ' Invalid user and group cannot log in to site'),
+			'invalid_action'            => array(42, 'complusoft', 3, null, 'Line:' . __LINE__ . ' Invalid action returns null permission'),
+			'publisher_login_admin'     => array(43, 'core.login.admin', 1, null, 'Line:' . __LINE__ . ' Publisher may not log into admin'));
 	}
 
 	/**
 	 * Tests the JAccess::check method.
 	 *
-	 * @param   integer  $userId   user id
-	 * @param   string   $action   action to test
-	 * @param   integer  $assetId  asset id
-	 * @param   mixed    $result   true if success, null if not
-	 * @param   string   $message  fail message
+	 * @param   integer $userId  user id
+	 * @param   string  $action  action to test
+	 * @param   integer $assetId asset id
+	 * @param   mixed   $result  true if success, null if not
+	 * @param   string  $message fail message
 	 *
 	 * @return  void
 	 *
-	 * @since   11.1
+	 * @since         11.1
 	 * @dataProvider  casesCheck()
 	 */
 	public function testCheck($userId, $action, $assetId, $result, $message)
@@ -116,35 +116,35 @@ class JAccessTest extends TestCaseDatabase
 	public function casesCheckGroup()
 	{
 		return array(
-			'valid_admin_site_login' => array(7, 'core.login.site', 3, true, 'Line:' . __LINE__ . ' Administrator group can login to site'),
-			'valid_editor_site_login' => array(4, 'core.login.site', 1, true, 'Line:' . __LINE__ . ' Editor group'),
+			'valid_admin_site_login'    => array(7, 'core.login.site', 3, true, 'Line:' . __LINE__ . ' Administrator group can login to site'),
+			'valid_editor_site_login'   => array(4, 'core.login.site', 1, true, 'Line:' . __LINE__ . ' Editor group'),
 			'valid_manager_admin_login' => array(6, 'core.login.admin', 1, true, 'Line:' . __LINE__ . ' Administrator group can login to admin'),
-			'valid_manager_login' => array(6, 'core.admin', 1, false, 'Line:' . __LINE__ . ' Administrator group cannot login to admin core'),
-			'super_user_admin' => array(8, 'core.admin', 3, true, 'Line:' . __LINE__ . ' Super User group can do anything'),
-			'null_asset' => array(8, 'core.admin', null, true, 'Line:' . __LINE__ . ' Null asset should default to 1'),
-			'publisher_delete_banner' => array(
+			'valid_manager_login'       => array(6, 'core.admin', 1, false, 'Line:' . __LINE__ . ' Administrator group cannot login to admin core'),
+			'super_user_admin'          => array(8, 'core.admin', 3, true, 'Line:' . __LINE__ . ' Super User group can do anything'),
+			'null_asset'                => array(8, 'core.admin', null, true, 'Line:' . __LINE__ . ' Null asset should default to 1'),
+			'publisher_delete_banner'   => array(
 				5,
 				'core.delete',
 				3,
 				false,
 				'Line:' . __LINE__ . ' Explicit deny for editor overrides allow for publisher'),
-			'invalid_user_group_login' => array(99, 'core.login.site', 3, null, 'Line:' . __LINE__ . ' Invalid user and group cannot log in to site'),
-			'invalid_action' => array(8, 'complusoft', 3, null, 'Line:' . __LINE__ . ' Invalid action returns null permission'),
-			'publisher_login_admin' => array(5, 'core.login.admin', 1, null, 'Line:' . __LINE__ . ' Publisher may not log into admin'));
+			'invalid_user_group_login'  => array(99, 'core.login.site', 3, null, 'Line:' . __LINE__ . ' Invalid user and group cannot log in to site'),
+			'invalid_action'            => array(8, 'complusoft', 3, null, 'Line:' . __LINE__ . ' Invalid action returns null permission'),
+			'publisher_login_admin'     => array(5, 'core.login.admin', 1, null, 'Line:' . __LINE__ . ' Publisher may not log into admin'));
 	}
 
 	/**
 	 * Tests the JAccess::checkGroup method.
 	 *
-	 * @param   integer  $groupId  group id
-	 * @param   string   $action   action to test
-	 * @param   integer  $assetId  asset id
-	 * @param   mixed    $result   true if success, null if not
-	 * @param   string   $message  fail message
+	 * @param   integer $groupId group id
+	 * @param   string  $action  action to test
+	 * @param   integer $assetId asset id
+	 * @param   mixed   $result  true if success, null if not
+	 * @param   string  $message fail message
 	 *
 	 * @return  void
 	 *
-	 * @since   11.1
+	 * @since         11.1
 	 * @dataProvider  casesCheckGroup()
 	 */
 	public function testCheckGroup($groupId, $action, $assetId, $result, $message)
@@ -162,9 +162,9 @@ class JAccessTest extends TestCaseDatabase
 	 */
 	public function testGetAssetRulesValidTrue()
 	{
-		$access = new JAccess;
+		$access         = new JAccess;
 		$ObjArrayJrules = $access->getAssetRules(3, true);
-		$string1 = '{"core.login.site":{"6":1,"2":1},"core.login.admin":{"6":1},"core.login.offline":[],"core.admin":{"8":1,"7":1},' .
+		$string1        = '{"core.login.site":{"6":1,"2":1},"core.login.admin":{"6":1},"core.login.offline":[],"core.admin":{"8":1,"7":1},' .
 			'"core.manage":{"7":1,"6":1},"core.create":{"6":1,"3":1},"core.delete":{"6":1},"core.edit":{"6":1,"4":1},"core.edit.state":{"6":1,"5":1},' .
 			'"core.edit.own":{"6":1,"3":1}}';
 		$this->assertThat((string) $ObjArrayJrules, $this->equalTo($string1), 'Recursive rules from a valid asset. Line: ' . __LINE__);
@@ -179,9 +179,9 @@ class JAccessTest extends TestCaseDatabase
 	 */
 	public function testGetAssetRulesValidFalse()
 	{
-		$access = new JAccess;
+		$access         = new JAccess;
 		$ObjArrayJrules = $access->getAssetRules(3, false);
-		$string1 = '{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[]}';
+		$string1        = '{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[]}';
 		$this->assertThat((string) $ObjArrayJrules, $this->equalTo($string1), 'Non recursive rules from a valid asset. Line: ' . __LINE__);
 	}
 
@@ -194,9 +194,9 @@ class JAccessTest extends TestCaseDatabase
 	 */
 	public function testGetAssetRulesInvalidFalse()
 	{
-		$access = new JAccess;
+		$access         = new JAccess;
 		$ObjArrayJrules = $access->getAssetRules(1550, false);
-		$string1 = '{"core.login.site":{"6":1,"2":1},"core.login.admin":{"6":1},"core.login.offline":[],"core.admin":{"8":1},"core.manage":{"7":1},' .
+		$string1        = '{"core.login.site":{"6":1,"2":1},"core.login.admin":{"6":1},"core.login.offline":[],"core.admin":{"8":1},"core.manage":{"7":1},' .
 			'"core.create":{"6":1,"3":1},"core.delete":{"6":1},"core.edit":{"6":1,"4":1},"core.edit.state":{"6":1,"5":1},"core.edit.own":{"6":1,"3":1}}';
 		$this->assertThat((string) $ObjArrayJrules, $this->equalTo($string1), 'Invalid asset uses rule from root. Line: ' . __LINE__);
 	}
@@ -210,9 +210,9 @@ class JAccessTest extends TestCaseDatabase
 	 */
 	public function testGetAssetRulesTextFalse()
 	{
-		$access = new JAccess;
+		$access         = new JAccess;
 		$ObjArrayJrules = $access->getAssetRules('testasset', false);
-		$string1 = '{"core.login.site":{"6":1,"2":1},"core.login.admin":{"6":1},"core.login.offline":[],"core.admin":{"8":1},"core.manage":{"7":1},' .
+		$string1        = '{"core.login.site":{"6":1,"2":1},"core.login.admin":{"6":1},"core.login.offline":[],"core.admin":{"8":1},"core.manage":{"7":1},' .
 			'"core.create":{"6":1,"3":1},"core.delete":{"6":1},"core.edit":{"6":1,"4":1},"core.edit.state":{"6":1,"5":1},"core.edit.own":{"6":1,"3":1}}';
 		$this->assertThat((string) $ObjArrayJrules, $this->equalTo($string1), 'Invalid asset uses rule from root. Line: ' . __LINE__);
 	}
@@ -226,9 +226,9 @@ class JAccessTest extends TestCaseDatabase
 	 */
 	public function testGetAssetRulesTextTrue()
 	{
-		$access = new JAccess;
+		$access         = new JAccess;
 		$ObjArrayJrules = $access->getAssetRules('testasset', true);
-		$string1 = '{"core.login.site":{"6":1,"2":1},"core.login.admin":{"6":1},"core.login.offline":[],"core.admin":{"8":1},"core.manage":{"7":1},' .
+		$string1        = '{"core.login.site":{"6":1,"2":1},"core.login.admin":{"6":1},"core.login.offline":[],"core.admin":{"8":1},"core.manage":{"7":1},' .
 			'"core.create":{"6":1,"3":1},"core.delete":{"6":1},"core.edit":{"6":1,"4":1},"core.edit.state":{"6":1,"5":1},"core.edit.own":{"6":1,"3":1}}';
 		$this->assertThat((string) $ObjArrayJrules, $this->equalTo($string1), 'Invalid asset uses rule from root. Line: ' . __LINE__);
 	}
@@ -383,14 +383,14 @@ class JAccessTest extends TestCaseDatabase
 	/**
 	 * Tests the JAccess::getActionsFromData method.
 	 *
-	 * @param   string  $data      The XML string representing the actions.
-	 * @param   string  $xpath     The XPath query to extract the action elements.
-	 * @param   mixed   $expected  The expected array of actions.
-	 * @param   string  $msg       The failure message.
+	 * @param   string $data     The XML string representing the actions.
+	 * @param   string $xpath    The XPath query to extract the action elements.
+	 * @param   mixed  $expected The expected array of actions.
+	 * @param   string $msg      The failure message.
 	 *
 	 * @return  void
 	 *
-	 * @since   12.1
+	 * @since         12.1
 	 * @dataProvider  casesGetActionsFromData
 	 */
 	public function testGetActionsFromData($data, $xpath, $expected, $msg)
@@ -494,18 +494,6 @@ class JAccessTest extends TestCaseDatabase
 	}
 
 	/**
-	 * Remove created files
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	protected function tearDown()
-	{
-		$this->_cleanupTestFiles();
-	}
-
-	/**
 	 * Convenience method to cleanup before and after test
 	 *
 	 * @return  void
@@ -521,7 +509,7 @@ class JAccessTest extends TestCaseDatabase
 	/**
 	 * Convenience method to clean up for files test
 	 *
-	 * @param   string  $path  The path to clean
+	 * @param   string $path The path to clean
 	 *
 	 * @return  void
 	 *
@@ -540,5 +528,17 @@ class JAccessTest extends TestCaseDatabase
 				rmdir($path);
 			}
 		}
+	}
+
+	/**
+	 * Remove created files
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	protected function tearDown()
+	{
+		$this->_cleanupTestFiles();
 	}
 }

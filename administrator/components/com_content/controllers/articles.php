@@ -19,7 +19,7 @@ class ContentControllerArticles extends JControllerAdmin
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -107,9 +107,9 @@ class ContentControllerArticles extends JControllerAdmin
 	/**
 	 * Proxy for getModel.
 	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  The array of possible config values. Optional.
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config The array of possible config values. Optional.
 	 *
 	 * @return  JModel
 	 *
@@ -126,8 +126,8 @@ class ContentControllerArticles extends JControllerAdmin
 	 * Function that allows child controller access to model data
 	 * after the item has been deleted.
 	 *
-	 * @param   JModelLegacy  $model  The data model object.
-	 * @param   integer       $ids    The array of ids for items being deleted.
+	 * @param   JModelLegacy $model The data model object.
+	 * @param   integer      $ids   The array of ids for items being deleted.
 	 *
 	 * @return  void
 	 *

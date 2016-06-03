@@ -21,8 +21,8 @@ class JGithubPackageGistsComments extends JGithubPackage
 	/**
 	 * Method to create a comment on a gist.
 	 *
-	 * @param   integer  $gistId  The gist number.
-	 * @param   string   $body    The comment body text.
+	 * @param   integer $gistId The gist number.
+	 * @param   string  $body   The comment body text.
 	 *
 	 * @throws DomainException
 	 * @since   11.3
@@ -58,7 +58,7 @@ class JGithubPackageGistsComments extends JGithubPackage
 	/**
 	 * Method to delete a comment on a gist.
 	 *
-	 * @param   integer  $commentId  The id of the comment to delete.
+	 * @param   integer $commentId The id of the comment to delete.
 	 *
 	 * @throws DomainException
 	 * @since   11.3
@@ -85,8 +85,8 @@ class JGithubPackageGistsComments extends JGithubPackage
 	/**
 	 * Method to update a comment on a gist.
 	 *
-	 * @param   integer  $commentId  The id of the comment to update.
-	 * @param   string   $body       The new body text for the comment.
+	 * @param   integer $commentId The id of the comment to update.
+	 * @param   string  $body      The new body text for the comment.
 	 *
 	 * @throws DomainException
 	 * @since   11.3
@@ -122,7 +122,7 @@ class JGithubPackageGistsComments extends JGithubPackage
 	/**
 	 * Method to get a specific comment on a gist.
 	 *
-	 * @param   integer  $commentId  The comment id to get.
+	 * @param   integer $commentId The comment id to get.
 	 *
 	 * @throws DomainException
 	 * @since   11.3
@@ -151,9 +151,9 @@ class JGithubPackageGistsComments extends JGithubPackage
 	/**
 	 * Method to get the list of comments on a gist.
 	 *
-	 * @param   integer  $gistId  The gist number.
-	 * @param   integer  $page    The page number from which to get items.
-	 * @param   integer  $limit   The number of items on a page.
+	 * @param   integer $gistId The gist number.
+	 * @param   integer $page   The page number from which to get items.
+	 * @param   integer $limit  The number of items on a page.
 	 *
 	 * @throws DomainException
 	 * @since   11.3

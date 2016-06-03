@@ -93,10 +93,10 @@ class JApplicationAdministratorTest extends TestCaseDatabase
 
 		$this->backupServer = $_SERVER;
 
-		$_SERVER['HTTP_HOST'] = self::TEST_HTTP_HOST;
+		$_SERVER['HTTP_HOST']       = self::TEST_HTTP_HOST;
 		$_SERVER['HTTP_USER_AGENT'] = self::TEST_USER_AGENT;
-		$_SERVER['REQUEST_URI'] = self::TEST_REQUEST_URI;
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
+		$_SERVER['REQUEST_URI']     = self::TEST_REQUEST_URI;
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
 
 		// Set the config for the app
 		$config = new Registry;
@@ -105,49 +105,6 @@ class JApplicationAdministratorTest extends TestCaseDatabase
 		// Get a new JApplicationAdministrator instance.
 		$this->class = new JApplicationAdministrator($this->getMockInput(), $config);
 		TestReflection::setValue('JApplicationCms', 'instances', array('administrator' => $this->class));
-	}
-
-	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDown()
-	 * @since   3.2
-	 */
-	protected function tearDown()
-	{
-		// Reset the dispatcher and application instances.
-		TestReflection::setValue('JEventDispatcher', 'instance', null);
-		TestReflection::setValue('JApplicationCms', 'instances', array());
-
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   3.2
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
-		$dataSet->addTable('jos_menu', JPATH_TEST_DATABASE . '/jos_menu.csv');
-		$dataSet->addTable('jos_menu_types', JPATH_TEST_DATABASE . '/jos_menu_types.csv');
-		$dataSet->addTable('jos_template_styles', JPATH_TEST_DATABASE . '/jos_template_styles.csv');
-		$dataSet->addTable('jos_usergroups', JPATH_TEST_DATABASE . '/jos_usergroups.csv');
-		$dataSet->addTable('jos_users', JPATH_TEST_DATABASE . '/jos_users.csv');
-		$dataSet->addTable('jos_viewlevels', JPATH_TEST_DATABASE . '/jos_viewlevels.csv');
-
-		return $dataSet;
 	}
 
 	/**
@@ -273,5 +230,48 @@ class JApplicationAdministratorTest extends TestCaseDatabase
 		TestReflection::invoke($this->class, 'render');
 
 		$this->assertEquals(array('JWeb Body'), TestReflection::getValue($this->class, 'response')->body);
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDown()
+	 * @since   3.2
+	 */
+	protected function tearDown()
+	{
+		// Reset the dispatcher and application instances.
+		TestReflection::setValue('JEventDispatcher', 'instance', null);
+		TestReflection::setValue('JApplicationCms', 'instances', array());
+
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   3.2
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
+		$dataSet->addTable('jos_menu', JPATH_TEST_DATABASE . '/jos_menu.csv');
+		$dataSet->addTable('jos_menu_types', JPATH_TEST_DATABASE . '/jos_menu_types.csv');
+		$dataSet->addTable('jos_template_styles', JPATH_TEST_DATABASE . '/jos_template_styles.csv');
+		$dataSet->addTable('jos_usergroups', JPATH_TEST_DATABASE . '/jos_usergroups.csv');
+		$dataSet->addTable('jos_users', JPATH_TEST_DATABASE . '/jos_users.csv');
+		$dataSet->addTable('jos_viewlevels', JPATH_TEST_DATABASE . '/jos_viewlevels.csv');
+
+		return $dataSet;
 	}
 }

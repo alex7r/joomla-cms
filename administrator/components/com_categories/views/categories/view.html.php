@@ -17,47 +17,41 @@ defined('_JEXEC') or die;
 class CategoriesViewCategories extends JViewLegacy
 {
 	/**
-	 * An array of items
-	 *
-	 * @var  array
-	 */
-	protected $items;
-
-	/**
-	 * The pagination object
-	 *
-	 * @var  JPagination
-	 */
-	protected $pagination;
-
-	/**
-	 * The model state
-	 *
-	 * @var  object
-	 */
-	protected $state;
-
-	/**
-	 * Flag if an association exists
-	 *
-	 * @var  boolean
-	 */
-	protected $assoc;
-
-	/**
 	 * Form object for search filters
 	 *
 	 * @var  JForm
 	 */
 	public $filterForm;
-
 	/**
 	 * The active search filters
 	 *
 	 * @var  array
 	 */
 	public $activeFilters;
-
+	/**
+	 * An array of items
+	 *
+	 * @var  array
+	 */
+	protected $items;
+	/**
+	 * The pagination object
+	 *
+	 * @var  JPagination
+	 */
+	protected $pagination;
+	/**
+	 * The model state
+	 *
+	 * @var  object
+	 */
+	protected $state;
+	/**
+	 * Flag if an association exists
+	 *
+	 * @var  boolean
+	 */
+	protected $assoc;
 	/**
 	 * The sidebar markup
 	 *
@@ -68,7 +62,7 @@ class CategoriesViewCategories extends JViewLegacy
 	/**
 	 * Display the view
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -171,12 +165,12 @@ class CategoriesViewCategories extends JViewLegacy
 			$title = JText::_($component_title_key);
 		}
 		elseif ($lang->hasKey($component_section_key = strtoupper($component . ($section ? "_$section" : ''))))
-		// Else if the component section string exits, let's use it
+			// Else if the component section string exits, let's use it
 		{
 			$title = JText::sprintf('COM_CATEGORIES_CATEGORIES_TITLE', $this->escape(JText::_($component_section_key)));
 		}
 		else
-		// Else use the base title
+			// Else use the base title
 		{
 			$title = JText::_('COM_CATEGORIES_CATEGORIES_BASE_TITLE');
 		}
@@ -212,7 +206,8 @@ class CategoriesViewCategories extends JViewLegacy
 		// Add a batch button
 		if ($user->authorise('core.create', $extension)
 			&& $user->authorise('core.edit', $extension)
-			&& $user->authorise('core.edit.state', $extension))
+			&& $user->authorise('core.edit.state', $extension)
+		)
 		{
 			$title = JText::_('JTOOLBAR_BATCH');
 
@@ -257,7 +252,7 @@ class CategoriesViewCategories extends JViewLegacy
 		if ($lang->hasKey($lang_help_url = strtoupper($component) . '_HELP_URL'))
 		{
 			$debug = $lang->setDebug(false);
-			$url = JText::_($lang_help_url);
+			$url   = JText::_($lang_help_url);
 			$lang->setDebug($debug);
 		}
 		else
@@ -278,12 +273,12 @@ class CategoriesViewCategories extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'a.lft' => JText::_('JGRID_HEADING_ORDERING'),
+			'a.lft'       => JText::_('JGRID_HEADING_ORDERING'),
 			'a.published' => JText::_('JSTATUS'),
-			'a.title' => JText::_('JGLOBAL_TITLE'),
-			'a.access' => JText::_('JGRID_HEADING_ACCESS'),
-			'language' => JText::_('JGRID_HEADING_LANGUAGE'),
-			'a.id' => JText::_('JGRID_HEADING_ID')
+			'a.title'     => JText::_('JGLOBAL_TITLE'),
+			'a.access'    => JText::_('JGRID_HEADING_ACCESS'),
+			'language'    => JText::_('JGRID_HEADING_LANGUAGE'),
+			'a.id'        => JText::_('JGRID_HEADING_ID')
 		);
 	}
 }

@@ -1,10 +1,10 @@
 <?php
 /**
- * @package	    Joomla.UnitTest
- * @subpackage  Toolbar
+ * @package        Joomla.UnitTest
+ * @subpackage     Toolbar
  *
- * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
- * @license	    GNU General Public License version 2 or later; see LICENSE
+ * @copyright      Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license        GNU General Public License version 2 or later; see LICENSE
  */
 
 /**
@@ -21,40 +21,6 @@ class JToolbarTest extends TestCase
 	 * @since  3.0
 	 */
 	protected $object;
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.0
-	 */
-	protected function setUp()
-	{
-		$this->object = new JToolbar('toolbar');
-
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
 
 	/**
 	 * Tests the constructor
@@ -202,7 +168,7 @@ class JToolbarTest extends TestCase
 		{
 			$this->assertThat(
 				$initialValue[$i],
-				$this->equalTo($newValue[$i+2])
+				$this->equalTo($newValue[$i + 2])
 			);
 		}
 	}
@@ -230,8 +196,42 @@ class JToolbarTest extends TestCase
 		{
 			$this->assertThat(
 				$initialValue[$i],
-				$this->equalTo($newValue[$i+1])
+				$this->equalTo($newValue[$i + 1])
 			);
 		}
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.0
+	 */
+	protected function setUp()
+	{
+		$this->object = new JToolbar('toolbar');
+
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 }

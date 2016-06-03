@@ -39,7 +39,7 @@ class InstallationControllerFtp extends JControllerBase
 		$model->checkForm('ftp');
 
 		// Redirect to the page.
-		$r = new stdClass;
+		$r       = new stdClass;
 		$r->view = 'summary';
 		$app->sendJsonResponse($r);
 	}

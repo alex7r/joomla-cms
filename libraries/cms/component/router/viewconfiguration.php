@@ -91,7 +91,7 @@ class JComponentRouterViewconfiguration
 	/**
 	 * Constructor for the View-configuration class
 	 *
-	 * @param   string  $name  Name of the view
+	 * @param   string $name Name of the view
 	 *
 	 * @since   3.5
 	 */
@@ -104,7 +104,7 @@ class JComponentRouterViewconfiguration
 	/**
 	 * Set the name of the view
 	 *
-	 * @param   string  $name  Name of the view
+	 * @param   string $name Name of the view
 	 *
 	 * @return  JComponentRouterViewconfiguration  This object for chaining
 	 *
@@ -123,7 +123,7 @@ class JComponentRouterViewconfiguration
 	/**
 	 * Set the key-identifier for the view
 	 *
-	 * @param   string  $key  Key of the view
+	 * @param   string $key Key of the view
 	 *
 	 * @return  JComponentRouterViewconfiguration  This object for chaining
 	 *
@@ -139,8 +139,8 @@ class JComponentRouterViewconfiguration
 	/**
 	 * Set the parent view of this view
 	 *
-	 * @param   JComponentRouterViewconfiguration  $parent      Parent view object
-	 * @param   string                             $parent_key  Key of the parent view in this context
+	 * @param   JComponentRouterViewconfiguration $parent     Parent view object
+	 * @param   string                            $parent_key Key of the parent view in this context
 	 *
 	 * @return  JComponentRouterViewconfiguration  This object for chaining
 	 *
@@ -183,7 +183,7 @@ class JComponentRouterViewconfiguration
 	/**
 	 * Set if this view is nestable or not
 	 *
-	 * @param   bool  $isNestable  If set to true, the view is nestable
+	 * @param   bool $isNestable If set to true, the view is nestable
 	 *
 	 * @return  JComponentRouterViewconfiguration  This object for chaining
 	 *
@@ -199,7 +199,7 @@ class JComponentRouterViewconfiguration
 	/**
 	 * Add a layout to this view
 	 *
-	 * @param   string  $layout  Layouts that this view supports
+	 * @param   string $layout Layouts that this view supports
 	 *
 	 * @return  JComponentRouterViewconfiguration  This object for chaining
 	 *
@@ -212,11 +212,11 @@ class JComponentRouterViewconfiguration
 
 		return $this;
 	}
-	
+
 	/**
 	 * Remove a layout from this view
 	 *
-	 * @param   string  $layout  Layouts that this view supports
+	 * @param   string $layout Layouts that this view supports
 	 *
 	 * @return  JComponentRouterViewconfiguration  This object for chaining
 	 *

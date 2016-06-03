@@ -32,8 +32,8 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 		$array = array(
 			'edit' => array(
 				-42 => 1,
-				2 => 1,
-				3 => 0
+				2   => 1,
+				3   => 0
 			)
 		);
 
@@ -60,8 +60,8 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 		$array = array(
 			'edit' => array(
 				-42 => 1,
-				2 => 1,
-				3 => 0
+				2   => 1,
+				3   => 0
 			)
 		);
 
@@ -92,8 +92,8 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 		$array = array(
 			'edit' => array(
 				-42 => 1,
-				2 => 1,
-				3 => 0
+				2   => 1,
+				3   => 0
 			)
 		);
 
@@ -119,8 +119,8 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 		$array = array(
 			'edit' => array(
 				-42 => 1,
-				2 => 1,
-				3 => 0
+				2   => 1,
+				3   => 0
 			)
 		);
 
@@ -147,15 +147,15 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 	{
 		$identities = array(
 			-42 => 1,
-			2 => 1,
-			3 => 0
+			2   => 1,
+			3   => 0
 		);
 
 		$result = array(
 			'edit' => array(
 				-42 => 1,
-				2 => 1,
-				3 => 0
+				2   => 1,
+				3   => 0
 			)
 		);
 
@@ -171,18 +171,18 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 		// Merge a new set, flipping some bits.
 		$identities = array(
 			-42 => 0,
-			2 => 1,
-			3 => 1,
-			4 => 1
+			2   => 1,
+			3   => 1,
+			4   => 1
 		);
 
 		// Ident 3 should remain false, 4 should be added.
 		$result = array(
 			'edit' => array(
 				-42 => 0,
-				2 => 1,
-				3 => 0,
-				4 => 1
+				2   => 1,
+				3   => 0,
+				4   => 1
 			)
 		);
 
@@ -203,8 +203,8 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testMerge()
 	{
-		$array1 = array(
-			'edit' => array(
+		$array1  = array(
+			'edit'   => array(
 				-42 => 1
 			),
 			'delete' => array(
@@ -223,12 +223,12 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 		);
 
 		$result2 = array(
-			'edit' => array(
+			'edit'   => array(
 				-42 => 1
 			),
 			'delete' => array(
 				-42 => 0,
-				2 => 0
+				2   => 0
 			),
 			'create' => array(
 				2 => 1
@@ -256,8 +256,8 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testMergeRulesNull()
 	{
-		$array1 = array(
-			'edit' => array(
+		$array1  = array(
+			'edit'   => array(
 				-42 => 1
 			),
 			'delete' => array(
@@ -287,7 +287,7 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 	public function testMergeRules()
 	{
 		$array1 = array(
-			'edit' => array(
+			'edit'   => array(
 				-42 => 1
 			),
 			'delete' => array(
@@ -305,12 +305,12 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 		);
 
 		$result2 = array(
-			'edit' => array(
+			'edit'   => array(
 				-42 => 1
 			),
 			'delete' => array(
 				-42 => 0,
-				2 => 0
+				2   => 0
 			),
 			'create' => array(
 				2 => 1
@@ -337,12 +337,12 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 	public function testAllow()
 	{
 		$array1 = array(
-			'edit' => array(
+			'edit'   => array(
 				-42 => 1
 			),
 			'delete' => array(
 				-42 => 0,
-				2 => 1
+				2   => 1
 			)
 		);
 
@@ -397,12 +397,12 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 			'create' => array(
 				-42 => 1
 			),
-			'edit' => array(
+			'edit'   => array(
 				-42 => 1
 			),
 			'delete' => array(
 				-42 => 0,
-				2 => 1
+				2   => 1
 			)
 		);
 
@@ -410,7 +410,7 @@ class JAccessRulesTest extends PHPUnit_Framework_TestCase
 		$result->set('create', true);
 		$result->set('edit', true);
 
-		$rules = new JAccessRules($array1);
+		$rules   = new JAccessRules($array1);
 		$allowed = $rules->getAllowed(-42);
 
 		$this->assertThat(

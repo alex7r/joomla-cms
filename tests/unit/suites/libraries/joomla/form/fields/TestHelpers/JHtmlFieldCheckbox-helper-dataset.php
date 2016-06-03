@@ -19,7 +19,7 @@ class JHtmlFieldCheckboxTest_DataSet
 	public static $getInputTest = array(
 		'NoValueNoChecked' => array(
 			array(
-				'id' => 'myTestId',
+				'id'   => 'myTestId',
 				'name' => 'myTestName',
 			),
 			'<input type="checkbox" name="myTestName" id="myTestId" value="1" />',
@@ -27,18 +27,18 @@ class JHtmlFieldCheckboxTest_DataSet
 
 		'ValueNoChecked' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'      => 'myTestId',
+				'name'    => 'myTestName',
 				'default' => 'red',
-				'value' => 'red',
+				'value'   => 'red',
 			),
 			'<input type="checkbox" name="myTestName" id="myTestId" value="red" checked />',
 		),
 
 		'NoValueChecked' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'      => 'myTestId',
+				'name'    => 'myTestName',
 				'default' => 'red',
 				'checked' => true,
 			),
@@ -47,8 +47,8 @@ class JHtmlFieldCheckboxTest_DataSet
 
 		'Disabled' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'       => 'myTestId',
+				'name'     => 'myTestName',
 				'disabled' => true,
 			),
 			'<input type="checkbox" name="myTestName" id="myTestId" value="1" disabled />',
@@ -56,8 +56,8 @@ class JHtmlFieldCheckboxTest_DataSet
 
 		'Class' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'    => 'myTestId',
+				'name'  => 'myTestName',
 				'class' => 'foo bar',
 			),
 			'<input type="checkbox" name="myTestName" id="myTestId" value="1" class="foo bar" />',
@@ -65,8 +65,8 @@ class JHtmlFieldCheckboxTest_DataSet
 
 		'Autofocus' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'        => 'myTestId',
+				'name'      => 'myTestName',
 				'autofocus' => true,
 			),
 			'<input type="checkbox" name="myTestName" id="myTestId" value="1" autofocus />',
@@ -74,18 +74,18 @@ class JHtmlFieldCheckboxTest_DataSet
 
 		'OnchangeOnclick' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'       => 'myTestId',
+				'name'     => 'myTestName',
 				'onchange' => 'bar();',
-				'onclick' => 'foo();',
+				'onclick'  => 'foo();',
 			),
 			'<input type="checkbox" name="myTestName" id="myTestId" value="1" onclick="foo();" onchange="bar();" />',
 		),
 
 		'Required' => array(
 			array(
-				'id' => 'myTestId',
-				'name' => 'myTestName',
+				'id'       => 'myTestId',
+				'name'     => 'myTestName',
 				'required' => true,
 			),
 			'<input type="checkbox" name="myTestName" id="myTestId" value="1" required aria-required="true" />',

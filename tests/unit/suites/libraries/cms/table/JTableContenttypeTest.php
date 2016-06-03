@@ -23,42 +23,11 @@ class JTableContenttypeTest extends TestCaseDatabase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object = new JTableContenttype(static::$driver);
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   3.1
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_content_types', JPATH_TEST_DATABASE . '/jos_content_types.csv');
-
-		return $dataSet;
-	}
-
-	/**
 	 * Tests JTableContenttype::check with an empty dataset
 	 *
 	 * @return  void
 	 *
-	 * @since   3.1
+	 * @since                     3.1
 	 * @expectedException         UnexpectedValueException
 	 * @expectedExceptionMessage  The title is empty
 	 */
@@ -72,7 +41,7 @@ class JTableContenttypeTest extends TestCaseDatabase
 	 *
 	 * @return  void
 	 *
-	 * @since   3.1
+	 * @since                     3.1
 	 * @expectedException         UnexpectedValueException
 	 * @expectedExceptionMessage  The type_alias is empty
 	 */
@@ -123,5 +92,36 @@ class JTableContenttypeTest extends TestCaseDatabase
 		$this->object->type_title = 'Unit Test Item';
 		$this->object->type_alias = 'com_test.item';
 		$this->assertTrue($this->object->store());
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->object = new JTableContenttype(static::$driver);
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   3.1
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_content_types', JPATH_TEST_DATABASE . '/jos_content_types.csv');
+
+		return $dataSet;
 	}
 }

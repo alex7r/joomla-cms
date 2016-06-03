@@ -19,7 +19,7 @@ class ContactRouter extends JComponentRouterBase
 	/**
 	 * Build the route for the com_contact component
 	 *
-	 * @param   array  &$query  An array of URL arguments
+	 * @param   array &$query An array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *
@@ -30,7 +30,7 @@ class ContactRouter extends JComponentRouterBase
 		$segments = array();
 
 		// Get a menu item based on Itemid or currently active
-		$params = JComponentHelper::getParams('com_contact');
+		$params   = JComponentHelper::getParams('com_contact');
 		$advanced = $params->get('sef_advanced_link', 0);
 
 		if (empty($query['Itemid']))
@@ -43,7 +43,7 @@ class ContactRouter extends JComponentRouterBase
 		}
 
 		$mView = (empty($menuItem->query['view'])) ? null : $menuItem->query['view'];
-		$mId = (empty($menuItem->query['id'])) ? null : $menuItem->query['id'];
+		$mId   = (empty($menuItem->query['id'])) ? null : $menuItem->query['id'];
 
 		if (isset($query['view']))
 		{
@@ -63,6 +63,7 @@ class ContactRouter extends JComponentRouterBase
 			unset($query['view']);
 			unset($query['catid']);
 			unset($query['id']);
+
 			return $segments;
 		}
 
@@ -79,9 +80,9 @@ class ContactRouter extends JComponentRouterBase
 					$catid = $query['id'];
 				}
 
-				$menuCatid = $mId;
+				$menuCatid  = $mId;
 				$categories = JCategories::getInstance('Contact');
-				$category = $categories->get($catid);
+				$category   = $categories->get($catid);
 
 				if ($category)
 				{
@@ -159,7 +160,7 @@ class ContactRouter extends JComponentRouterBase
 	/**
 	 * Parse the segments of a URL.
 	 *
-	 * @param   array  &$segments  The segments of the URL to parse.
+	 * @param   array &$segments The segments of the URL to parse.
 	 *
 	 * @return  array  The URL attributes to be used by the application.
 	 *
@@ -168,7 +169,7 @@ class ContactRouter extends JComponentRouterBase
 	public function parse(&$segments)
 	{
 		$total = count($segments);
-		$vars = array();
+		$vars  = array();
 
 		for ($i = 0; $i < $total; $i++)
 		{
@@ -176,8 +177,8 @@ class ContactRouter extends JComponentRouterBase
 		}
 
 		// Get the active menu item.
-		$item = $this->menu->getActive();
-		$params = JComponentHelper::getParams('com_contact');
+		$item     = $this->menu->getActive();
+		$params   = JComponentHelper::getParams('com_contact');
 		$advanced = $params->get('sef_advanced_link', 0);
 
 		// Count route segments
@@ -187,7 +188,8 @@ class ContactRouter extends JComponentRouterBase
 		if (!isset($item))
 		{
 			$vars['view'] = $segments[0];
-			$vars['id'] = $segments[$count - 1];
+			$vars['id']   = $segments[$count - 1];
+
 			return $vars;
 		}
 
@@ -196,10 +198,10 @@ class ContactRouter extends JComponentRouterBase
 
 		$contactCategory = JCategories::getInstance('Contact')->get($id);
 
-		$categories = ($contactCategory) ? $contactCategory->getChildren() : array();
+		$categories    = ($contactCategory) ? $contactCategory->getChildren() : array();
 		$vars['catid'] = $id;
-		$vars['id'] = $id;
-		$found = 0;
+		$vars['id']    = $id;
+		$found         = 0;
 
 		foreach ($segments as $segment)
 		{
@@ -209,11 +211,11 @@ class ContactRouter extends JComponentRouterBase
 			{
 				if ($category->slug == $segment || $category->alias == $segment)
 				{
-					$vars['id'] = $category->id;
+					$vars['id']    = $category->id;
 					$vars['catid'] = $category->id;
-					$vars['view'] = 'category';
-					$categories = $category->getChildren();
-					$found = 1;
+					$vars['view']  = 'category';
+					$categories    = $category->getChildren();
+					$found         = 1;
 					break;
 				}
 			}
@@ -222,7 +224,7 @@ class ContactRouter extends JComponentRouterBase
 			{
 				if ($advanced)
 				{
-					$db = JFactory::getDbo();
+					$db    = JFactory::getDbo();
 					$query = $db->getQuery(true)
 						->select($db->quoteName('id'))
 						->from('#__contact_details')
@@ -236,7 +238,7 @@ class ContactRouter extends JComponentRouterBase
 					$nid = $segment;
 				}
 
-				$vars['id'] = $nid;
+				$vars['id']   = $nid;
 				$vars['view'] = 'contact';
 			}
 
@@ -253,7 +255,7 @@ class ContactRouter extends JComponentRouterBase
  * These functions are proxys for the new router interface
  * for old SEF extensions.
  *
- * @param   array  &$query  An array of URL arguments
+ * @param   array &$query An array of URL arguments
  *
  * @return  array  The URL arguments to use to assemble the subsequent URL.
  *
@@ -272,7 +274,7 @@ function ContactBuildRoute(&$query)
  * These functions are proxys for the new router interface
  * for old SEF extensions.
  *
- * @param   array  $segments  The segments of the URL to parse.
+ * @param   array $segments The segments of the URL to parse.
  *
  * @return  array  The URL attributes to be used by the application.
  *

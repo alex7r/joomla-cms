@@ -55,35 +55,11 @@ class JUpdaterCollection extends JUpdateAdapter
 	protected $updates;
 
 	/**
-	 * Gets the reference to the current direct parent
-	 *
-	 * @return  object
-	 *
-	 * @since   11.1
-	 */
-	protected function _getStackLocation()
-	{
-		return implode('->', $this->stack);
-	}
-
-	/**
-	 * Get the parent tag
-	 *
-	 * @return  string   parent
-	 *
-	 * @since   11.1
-	 */
-	protected function _getParent()
-	{
-		return end($this->parent);
-	}
-
-	/**
 	 * Opening an XML element
 	 *
-	 * @param   object  $parser  Parser object
-	 * @param   string  $name    Name of element that is opened
-	 * @param   array   $attrs   Array of attributes for the element
+	 * @param   object $parser Parser object
+	 * @param   string $name   Name of element that is opened
+	 * @param   array  $attrs  Array of attributes for the element
 	 *
 	 * @return  void
 	 *
@@ -181,38 +157,21 @@ class JUpdaterCollection extends JUpdateAdapter
 	}
 
 	/**
-	 * Closing an XML element
-	 * Note: This is a protected function though has to be exposed externally as a callback
+	 * Gets the reference to the current direct parent
 	 *
-	 * @param   object  $parser  Parser object
-	 * @param   string  $name    Name of the element closing
-	 *
-	 * @return  void
+	 * @return  object
 	 *
 	 * @since   11.1
 	 */
-	protected function _endElement($parser, $name)
+	protected function _getStackLocation()
 	{
-		array_pop($this->stack);
-
-		switch ($name)
-		{
-			case 'CATEGORY':
-				if ($this->pop_parent)
-				{
-					$this->pop_parent = 0;
-					array_pop($this->parent);
-				}
-				break;
-		}
+		return implode('->', $this->stack);
 	}
-
-	// Note: we don't care about char data in collection because there should be none
 
 	/**
 	 * Finds an update
 	 *
-	 * @param   array  $options  Options to use: update_site_id: the unique ID of the update site to look at
+	 * @param   array $options Options to use: update_site_id: the unique ID of the update site to look at
 	 *
 	 * @return  array  Update_sites and updates discovered
 	 *
@@ -251,5 +210,46 @@ class JUpdaterCollection extends JUpdateAdapter
 
 		// TODO: Decrement the bad counter if non-zero
 		return array('update_sites' => $this->update_sites, 'updates' => $this->updates);
+	}
+
+	/**
+	 * Get the parent tag
+	 *
+	 * @return  string   parent
+	 *
+	 * @since   11.1
+	 */
+	protected function _getParent()
+	{
+		return end($this->parent);
+	}
+
+	// Note: we don't care about char data in collection because there should be none
+
+	/**
+	 * Closing an XML element
+	 * Note: This is a protected function though has to be exposed externally as a callback
+	 *
+	 * @param   object $parser Parser object
+	 * @param   string $name   Name of the element closing
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function _endElement($parser, $name)
+	{
+		array_pop($this->stack);
+
+		switch ($name)
+		{
+			case 'CATEGORY':
+				if ($this->pop_parent)
+				{
+					$this->pop_parent = 0;
+					array_pop($this->parent);
+				}
+				break;
+		}
 	}
 }

@@ -48,39 +48,21 @@ class JGithubStatusesTest extends TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options = new JRegistry;
-		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JGithubStatuses($this->options, $this->client);
-	}
-
-	/**
 	 * Tests the create method
 	 *
 	 * @return void
 	 */
 	public function testCreate()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
 		// Build the request data.
 		$data = json_encode(
 			array(
-				'state' => 'success',
-				'target_url' => 'http://example.com/my_url',
+				'state'       => 'success',
+				'target_url'  => 'http://example.com/my_url',
 				'description' => 'Success is the only option - failure is not.'
 			)
 		);
@@ -112,7 +94,7 @@ class JGithubStatusesTest extends TestCase
 	 */
 	public function testCreateFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 501;
 		$returnData->body = $this->errorString;
 
@@ -138,7 +120,7 @@ class JGithubStatusesTest extends TestCase
 	 */
 	public function testGetList()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -162,7 +144,7 @@ class JGithubStatusesTest extends TestCase
 	 */
 	public function testGetListFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -172,5 +154,23 @@ class JGithubStatusesTest extends TestCase
 			->will($this->returnValue($returnData));
 
 		$this->object->getList('joomla', 'joomla-platform', '6dcb09b5b57875f334f61aebed695e2e4193db5e');
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client  = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JGithubStatuses($this->options, $this->client);
 	}
 }

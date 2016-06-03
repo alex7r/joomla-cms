@@ -25,7 +25,7 @@ class UsersControllerUsers extends JControllerAdmin
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @since   1.6
 	 * @see     JController
@@ -36,22 +36,6 @@ class UsersControllerUsers extends JControllerAdmin
 
 		$this->registerTask('block', 'changeBlock');
 		$this->registerTask('unblock', 'changeBlock');
-	}
-
-	/**
-	 * Proxy for getModel.
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  object  The model.
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'User', $prefix = 'UsersModel', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
 	}
 
 	/**
@@ -99,6 +83,22 @@ class UsersControllerUsers extends JControllerAdmin
 		}
 
 		$this->setRedirect('index.php?option=com_users&view=users');
+	}
+
+	/**
+	 * Proxy for getModel.
+	 *
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return  object  The model.
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'User', $prefix = 'UsersModel', $config = array('ignore_request' => true))
+	{
+		return parent::getModel($name, $prefix, $config);
 	}
 
 	/**

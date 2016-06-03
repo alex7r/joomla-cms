@@ -58,11 +58,11 @@ class FOFHalLink
 	/**
 	 * Public constructor of a FOFHalLink object
 	 *
-	 * @param   string   $href       See $this->_href
-	 * @param   boolean  $templated  See $this->_templated
-	 * @param   string   $name       See $this->_name
-	 * @param   string   $hreflang   See $this->_hreflang
-	 * @param   string   $title      See $this->_title
+	 * @param   string  $href      See $this->_href
+	 * @param   boolean $templated See $this->_templated
+	 * @param   string  $name      See $this->_name
+	 * @param   string  $hreflang  See $this->_hreflang
+	 * @param   string  $title     See $this->_title
 	 *
 	 * @throws  RuntimeException  If $href is empty
 	 */
@@ -73,11 +73,11 @@ class FOFHalLink
 			throw new RuntimeException('A HAL link must always have a non-empty href');
 		}
 
-		$this->_href = $href;
+		$this->_href      = $href;
 		$this->_templated = $templated;
-		$this->_name = $name;
-		$this->_hreflang = $hreflang;
-		$this->_title = $title;
+		$this->_name      = $name;
+		$this->_hreflang  = $hreflang;
+		$this->_title     = $title;
 	}
 
 	/**
@@ -94,7 +94,7 @@ class FOFHalLink
 	/**
 	 * Magic getter for the protected properties
 	 *
-	 * @param   string  $name  The name of the property to retrieve, sans the underscore
+	 * @param   string $name The name of the property to retrieve, sans the underscore
 	 *
 	 * @return  mixed  Null will always be returned if the property doesn't exist
 	 */
@@ -115,8 +115,8 @@ class FOFHalLink
 	/**
 	 * Magic setter for the protected properties
 	 *
-	 * @param   string  $name   The name of the property to set, sans the underscore
-	 * @param   mixed   $value  The value of the property to set
+	 * @param   string $name  The name of the property to set, sans the underscore
+	 * @param   mixed  $value The value of the property to set
 	 *
 	 * @return  void
 	 */

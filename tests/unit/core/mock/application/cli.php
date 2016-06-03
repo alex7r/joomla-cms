@@ -15,32 +15,10 @@
 class TestMockApplicationCli extends TestMockApplicationBase
 {
 	/**
-	 * Gets the methods of the JApplicationCli object.
-	 *
-	 * @return  array
-	 *
-	 * @since   3.4
-	 */
-	public static function getMethods()
-	{
-		// Collect all the relevant methods in JApplicationCli.
-		$methods = array(
-			'get',
-			'execute',
-			'loadConfiguration',
-			'out',
-			'in',
-			'set',
-		);
-
-		return array_merge($methods, parent::getMethods());
-	}
-
-	/**
 	 * Creates and instance of the mock JApplicationCli object.
 	 *
-	 * @param   TestCase  $test     A test object.
-	 * @param   array     $options  A set of options to configure the mock.
+	 * @param   TestCase $test    A test object.
+	 * @param   array    $options A set of options to configure the mock.
 	 *
 	 * @return  PHPUnit_Framework_MockObject_MockObject
 	 *
@@ -66,5 +44,27 @@ class TestMockApplicationCli extends TestMockApplicationBase
 		$mockObject = self::addBehaviours($test, $mockObject, $options);
 
 		return $mockObject;
+	}
+
+	/**
+	 * Gets the methods of the JApplicationCli object.
+	 *
+	 * @return  array
+	 *
+	 * @since   3.4
+	 */
+	public static function getMethods()
+	{
+		// Collect all the relevant methods in JApplicationCli.
+		$methods = array(
+			'get',
+			'execute',
+			'loadConfiguration',
+			'out',
+			'in',
+			'set',
+		);
+
+		return array_merge($methods, parent::getMethods());
 	}
 }

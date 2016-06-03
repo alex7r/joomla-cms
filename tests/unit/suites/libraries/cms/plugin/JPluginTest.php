@@ -21,35 +21,6 @@ require_once __DIR__ . '/stubs/PlgSystemPrivate.php';
 class JPluginTest extends TestCase
 {
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function setUp()
-	{
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$database    = $this->getMockDatabase();
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-	}
-
-	/**
 	 * Test constructor with app and database variables
 	 *
 	 * @return  void
@@ -135,5 +106,34 @@ class JPluginTest extends TestCase
 			TestReflection::getValue($plugin, '_name'),
 			$this->equalTo('Private')
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function setUp()
+	{
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+		JFactory::$database    = $this->getMockDatabase();
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
 	}
 }

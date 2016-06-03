@@ -82,22 +82,26 @@ else
 }
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo  $this->language; ?>" lang="<?php echo  $this->language; ?>" dir="<?php echo  $this->direction; ?>">
-	<head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<jdoc:include type="head" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>"
+      lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<jdoc:include type="head"/>
 	<!-- Load additional CSS styles for Internet Explorer -->
 	<!--[if IE 8]>
-		<link href="<?php echo $this->baseurl; ?>/templates/<?php echo  $this->template; ?>/css/ie8.css" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $this->baseurl; ?>/templates/<?php echo  $this->template; ?>/css/ie8.css" rel="stylesheet"
+	      type="text/css"/>
 	<![endif]-->
 	<!--[if IE 7]>
-		<link href="<?php echo $this->baseurl; ?>/templates/<?php echo  $this->template; ?>/css/ie7.css" rel="stylesheet" type="text/css" />
+	<link href="<?php echo $this->baseurl; ?>/templates/<?php echo  $this->template; ?>/css/ie7.css" rel="stylesheet"
+	      type="text/css"/>
 	<![endif]-->
 	<!--[if lt IE 9]>
-		<script src="<?php echo JUri::root(true); ?>/media/jui/js/html5.js"></script>
+	<script src="<?php echo JUri::root(true); ?>/media/jui/js/html5.js"></script>
 	<![endif]-->
-	</head>
+</head>
 <body id="minwidth-body">
 <div id="containerwrap" data-basepath="<?php echo JURI::root(true); ?>">
 	<!-- Header Logo -->
@@ -105,14 +109,16 @@ else
 		<!-- Site Title and Skip to Content -->
 		<div class="title-ua">
 			<h1 class="title"><?php echo $this->params->get('showSiteName') ? $app->get('sitename') . " " . JText::_('JADMINISTRATION') : JText::_('JADMINISTRATION'); ?></h1>
-			<div id="skiplinkholder"><p><a id="skiplink" href="#skiptarget"><?php echo JText::_('TPL_HATHOR_SKIP_TO_MAIN_CONTENT'); ?></a></p></div>
+			<div id="skiplinkholder"><p><a id="skiplink"
+			                               href="#skiptarget"><?php echo JText::_('TPL_HATHOR_SKIP_TO_MAIN_CONTENT'); ?></a>
+				</p></div>
 		</div>
 	</div><!-- end header -->
 	<!-- Main Menu Navigation -->
 	<div id="nav">
 		<div id="module-menu">
 			<h2 class="element-invisible"><?php echo JText::_('TPL_HATHOR_MAIN_MENU'); ?></h2>
-			<jdoc:include type="modules" name="menu" />
+			<jdoc:include type="modules" name="menu"/>
 		</div>
 		<div class="clr"></div>
 	</div><!-- end nav -->
@@ -123,14 +129,14 @@ else
 	<!-- Content Area -->
 	<div id="content">
 		<!-- Component Title -->
-		<jdoc:include type="modules" name="title" />
+		<jdoc:include type="modules" name="title"/>
 		<!-- System Messages -->
-		<jdoc:include type="message" />
+		<jdoc:include type="message"/>
 		<!-- Sub Menu Navigation -->
 		<div class="subheader">
 			<?php if (!$app->input->getInt('hidemainmenu')) : ?>
 				<h3 class="element-invisible"><?php echo JText::_('TPL_HATHOR_SUB_MENU'); ?></h3>
-				<jdoc:include type="modules" name="submenu" style="xhtmlid" id="submenu-box" />
+				<jdoc:include type="modules" name="submenu" style="xhtmlid" id="submenu-box"/>
 				<?php echo " " ?>
 			<?php else : ?>
 				<div id="no-submenu"></div>
@@ -138,7 +144,7 @@ else
 		</div>
 		<!-- Toolbar Icon Buttons -->
 		<div class="toolbar-box">
-			<jdoc:include type="modules" name="toolbar" style="xhtml" />
+			<jdoc:include type="modules" name="toolbar" style="xhtml"/>
 			<div class="clr"></div>
 		</div>
 		<!-- Beginning of Actual Content -->
@@ -146,7 +152,7 @@ else
 			<div id="container-collapse" class="container-collapse"></div>
 			<p id="skiptargetholder"><a id="skiptarget" class="skip" tabindex="-1"></a></p>
 			<!-- The main component -->
-			<jdoc:include type="component" />
+			<jdoc:include type="component"/>
 			<div class="clr"></div>
 		</div><!-- end of element-box -->
 		<noscript>
@@ -158,7 +164,7 @@ else
 </div><!-- end of containerwrap -->
 <!-- Footer -->
 <div id="footer">
-	<jdoc:include type="modules" name="footer" style="none" />
+	<jdoc:include type="modules" name="footer" style="none"/>
 	<p class="copyright">
 		<?php
 		// Fix wrong display of Joomla!® in RTL language
@@ -175,7 +181,7 @@ else
 	</p>
 </div>
 <script type="text/javascript">
-	(function($){
+	(function ($) {
 		$(document).ready(function () {
 			// Patches to fix some wrong render of chosen fields
 			$('.chzn-container, .chzn-drop, .chzn-choices .search-field input').each(function (index) {

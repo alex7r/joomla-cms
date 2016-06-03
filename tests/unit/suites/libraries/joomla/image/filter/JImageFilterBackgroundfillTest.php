@@ -17,24 +17,6 @@
 class JImageFilterBackgroundfillTest extends TestCase
 {
 	/**
-	 * Setup for testing.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	protected function setUp()
-	{
-		// Verify that GD support for PHP is available.
-		if (!extension_loaded('gd'))
-		{
-			$this->markTestSkipped('No GD support so skipping JImage tests.');
-		}
-
-		parent::setUp();
-	}
-
-	/**
 	 * Tests the JImageFilterBackgroundfill::execute method.
 	 *
 	 * This tests to make sure we can fill background of the image.
@@ -43,8 +25,8 @@ class JImageFilterBackgroundfillTest extends TestCase
 	 *
 	 * @since   3.4
 	 *
-	 * @note    Because GD2 uses 7bit alpha channel, results differ slightly 
-	 *          compared to 8bit systems like Adobe Photoshop. 
+	 * @note    Because GD2 uses 7bit alpha channel, results differ slightly
+	 *          compared to 8bit systems like Adobe Photoshop.
 	 *          Example: GD: 171, 45, 45, Photoshop: 172, 45, 45
 	 *
 	 * @note    To test alpha, use imagecolorsforindex($imageHandle, $color);
@@ -57,7 +39,7 @@ class JImageFilterBackgroundfillTest extends TestCase
 		imagesavealpha($imageHandle, true);
 
 		// Define semi-transparent gray areas.
-		$dark = imagecolorallocatealpha($imageHandle, 90, 90, 90, 63);
+		$dark  = imagecolorallocatealpha($imageHandle, 90, 90, 90, 63);
 		$light = imagecolorallocatealpha($imageHandle, 120, 120, 120, 63);
 
 		imagefilledrectangle($imageHandle, 0, 0, 50, 99, $dark);
@@ -105,5 +87,23 @@ class JImageFilterBackgroundfillTest extends TestCase
 		$filter = new JImageFilterBackgroundfill($imageHandle);
 
 		$filter->execute(array());
-	}	
+	}
+
+	/**
+	 * Setup for testing.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.4
+	 */
+	protected function setUp()
+	{
+		// Verify that GD support for PHP is available.
+		if (!extension_loaded('gd'))
+		{
+			$this->markTestSkipped('No GD support so skipping JImage tests.');
+		}
+
+		parent::setUp();
+	}
 }

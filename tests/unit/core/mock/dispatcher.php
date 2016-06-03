@@ -33,8 +33,8 @@ class TestMockDispatcher
 	/**
 	 * Creates and instance of the mock JEventDispatcher object.
 	 *
-	 * @param   PHPUnit_Framework_TestCase  $test        A test object.
-	 * @param   boolean                     $defaults  True to create the default mock handlers and triggers.
+	 * @param   PHPUnit_Framework_TestCase $test     A test object.
+	 * @param   boolean                    $defaults True to create the default mock handlers and triggers.
 	 *
 	 * @return  PHPUnit_Framework_MockObject_MockObject
 	 *
@@ -43,7 +43,7 @@ class TestMockDispatcher
 	public static function create($test, $defaults = true)
 	{
 		// Clear the static tracker properties.
-		self::$handlers = array();
+		self::$handlers  = array();
 		self::$triggered = array();
 
 		// Collect all the relevant methods in JEventDispatcher.
@@ -79,7 +79,7 @@ class TestMockDispatcher
 				$mockObject,
 				array(
 					'register' => array(get_called_class(), 'mockRegister'),
-					'trigger' => array(get_called_class(), 'mockTrigger'),
+					'trigger'  => array(get_called_class(), 'mockTrigger'),
 				)
 			);
 
@@ -91,9 +91,9 @@ class TestMockDispatcher
 	/**
 	 * Callback for the JEventDispatcher register method.
 	 *
-	 * @param   string  $event    Name of the event to register handler for.
-	 * @param   string  $handler  Name of the event handler.
-	 * @param   mixed   $return   The mock value to return for the given event handler.
+	 * @param   string $event   Name of the event to register handler for.
+	 * @param   string $handler Name of the event handler.
+	 * @param   mixed  $return  The mock value to return for the given event handler.
 	 *
 	 * @return  void
 	 *
@@ -112,8 +112,8 @@ class TestMockDispatcher
 	/**
 	 * Callback for the JEventDispatcher trigger method.
 	 *
-	 * @param   string  $event  The event to trigger.
-	 * @param   array   $args   An array of arguments.
+	 * @param   string $event The event to trigger.
+	 * @param   array  $args  An array of arguments.
 	 *
 	 * @return  array  An array of results from each function call.
 	 *

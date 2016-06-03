@@ -24,7 +24,7 @@ class JFormRuleBooleanTest extends TestCase
 	public function testBoolean()
 	{
 		$rule = new JFormRuleBoolean;
-		$xml = simplexml_load_string('<form><field name="foo" /></form>');
+		$xml  = simplexml_load_string('<form><field name="foo" /></form>');
 
 		// Test fail conditions.
 

@@ -29,7 +29,7 @@ class CategoriesControllerCategory extends JControllerForm
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @since  1.6
 	 * @see    JControllerLegacy
@@ -46,9 +46,32 @@ class CategoriesControllerCategory extends JControllerForm
 	}
 
 	/**
+	 * Method to run batch operations.
+	 *
+	 * @param   object $model The model.
+	 *
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   1.6
+	 */
+	public function batch($model = null)
+	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		// Set the model
+		/** @var CategoriesModelCategory $model */
+		$model = $this->getModel('Category');
+
+		// Preset the redirect
+		$this->setRedirect('index.php?option=com_categories&view=categories&extension=' . $this->extension);
+
+		return parent::batch($model);
+	}
+
+	/**
 	 * Method to check if you can add a new record.
 	 *
-	 * @param   array  $data  An array of input data.
+	 * @param   array $data An array of input data.
 	 *
 	 * @return  boolean
 	 *
@@ -64,8 +87,8 @@ class CategoriesControllerCategory extends JControllerForm
 	/**
 	 * Method to check if you can edit a record.
 	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
+	 * @param   array  $data An array of input data.
+	 * @param   string $key  The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *
@@ -74,7 +97,7 @@ class CategoriesControllerCategory extends JControllerForm
 	protected function allowEdit($data = array(), $key = 'parent_id')
 	{
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-		$user = JFactory::getUser();
+		$user     = JFactory::getUser();
 
 		// Check general edit permission first.
 		if ($user->authorise('core.edit', $this->extension))
@@ -119,33 +142,10 @@ class CategoriesControllerCategory extends JControllerForm
 	}
 
 	/**
-	 * Method to run batch operations.
-	 *
-	 * @param   object  $model  The model.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   1.6
-	 */
-	public function batch($model = null)
-	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-		// Set the model
-		/** @var CategoriesModelCategory $model */
-		$model = $this->getModel('Category');
-
-		// Preset the redirect
-		$this->setRedirect('index.php?option=com_categories&view=categories&extension=' . $this->extension);
-
-		return parent::batch($model);
-	}
-
-	/**
 	 * Gets the URL arguments to append to an item redirect.
 	 *
-	 * @param   integer  $recordId  The primary key id for the item.
-	 * @param   string   $urlVar    The name of the URL variable for the id.
+	 * @param   integer $recordId The primary key id for the item.
+	 * @param   string  $urlVar   The name of the URL variable for the id.
 	 *
 	 * @return  string  The arguments to append to the redirect URL.
 	 *
@@ -177,8 +177,8 @@ class CategoriesControllerCategory extends JControllerForm
 	/**
 	 * Function that allows child controller access to model data after the data has been saved.
 	 *
-	 * @param   JModelLegacy  $model      The data model object.
-	 * @param   array         $validData  The validated data.
+	 * @param   JModelLegacy $model     The data model object.
+	 * @param   array        $validData The validated data.
 	 *
 	 * @return  void
 	 *

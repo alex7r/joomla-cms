@@ -21,7 +21,7 @@ class TemplatesControllerTemplate extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JControllerLegacy
 	 * @since   3.2
@@ -157,9 +157,9 @@ class TemplatesControllerTemplate extends JControllerLegacy
 	/**
 	 * Method to get a model object, loading it if required.
 	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional (note, the empty array is atypical compared to other models).
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config Configuration array for model. Optional (note, the empty array is atypical compared to other models).
 	 *
 	 * @return  JModelLegacy  The model.
 	 *
@@ -170,30 +170,6 @@ class TemplatesControllerTemplate extends JControllerLegacy
 		$model = parent::getModel($name, $prefix, $config);
 
 		return $model;
-	}
-
-	/**
-	 * Method to check if you can add a new record.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.2
-	 */
-	protected function allowEdit()
-	{
-		return JFactory::getUser()->authorise('core.edit', 'com_templates');
-	}
-
-	/**
-	 * Method to check if you can save a new or existing record.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.2
-	 */
-	protected function allowSave()
-	{
-		return $this->allowEdit();
 	}
 
 	/**
@@ -297,22 +273,46 @@ class TemplatesControllerTemplate extends JControllerLegacy
 		// Redirect the user based on the chosen task.
 		switch ($task)
 		{
-		case 'apply':
+			case 'apply':
 
-			// Redirect back to the edit screen.
-			$url = 'index.php?option=com_templates&view=template&id=' . $model->getState('extension.id') . '&file=' . $fileName;
-			$this->setRedirect(JRoute::_($url, false));
-			break;
+				// Redirect back to the edit screen.
+				$url = 'index.php?option=com_templates&view=template&id=' . $model->getState('extension.id') . '&file=' . $fileName;
+				$this->setRedirect(JRoute::_($url, false));
+				break;
 
-		default:
+			default:
 
-			// Redirect to the list screen.
-			$file = base64_encode('home');
-			$id   = $app->input->get('id');
-			$url  = 'index.php?option=com_templates&view=template&id=' . $id . '&file=' . $file;
-			$this->setRedirect(JRoute::_($url, false));
-			break;
+				// Redirect to the list screen.
+				$file = base64_encode('home');
+				$id   = $app->input->get('id');
+				$url  = 'index.php?option=com_templates&view=template&id=' . $id . '&file=' . $file;
+				$this->setRedirect(JRoute::_($url, false));
+				break;
 		}
+	}
+
+	/**
+	 * Method to check if you can save a new or existing record.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.2
+	 */
+	protected function allowSave()
+	{
+		return $this->allowEdit();
+	}
+
+	/**
+	 * Method to check if you can add a new record.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.2
+	 */
+	protected function allowEdit()
+	{
+		return JFactory::getUser()->authorise('core.edit', 'com_templates');
 	}
 
 	/**
@@ -395,7 +395,7 @@ class TemplatesControllerTemplate extends JControllerLegacy
 		{
 			$this->setMessage(JText::_('COM_TEMPLATES_FILE_DELETE_SUCCESS'));
 			$file = base64_encode('home');
-			$url = 'index.php?option=com_templates&view=template&id=' . $id . '&file=' . $file;
+			$url  = 'index.php?option=com_templates&view=template&id=' . $id . '&file=' . $file;
 			$this->setRedirect(JRoute::_($url, false));
 		}
 		else
@@ -442,7 +442,7 @@ class TemplatesControllerTemplate extends JControllerLegacy
 		{
 			$this->setMessage(JText::_('COM_TEMPLATES_FILE_CREATE_SUCCESS'));
 			$file = urlencode(base64_encode($location . '/' . $name . '.' . $type));
-			$url = 'index.php?option=com_templates&view=template&id=' . $id . '&file=' . $file;
+			$url  = 'index.php?option=com_templates&view=template&id=' . $id . '&file=' . $file;
 			$this->setRedirect(JRoute::_($url, false));
 		}
 		else
@@ -476,7 +476,7 @@ class TemplatesControllerTemplate extends JControllerLegacy
 		{
 			$app->enqueueMessage(JText::_('COM_TEMPLATES_FILE_UPLOAD_SUCCESS') . $upload['name']);
 			$redirect = base64_encode($return);
-			$url = 'index.php?option=com_templates&view=template&id=' . $id . '&file=' . $redirect;
+			$url      = 'index.php?option=com_templates&view=template&id=' . $id . '&file=' . $redirect;
 			$this->setRedirect(JRoute::_($url, false));
 		}
 		else

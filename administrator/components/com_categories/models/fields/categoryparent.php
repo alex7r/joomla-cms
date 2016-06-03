@@ -37,7 +37,7 @@ class JFormFieldCategoryParent extends JFormFieldList
 	{
 		// Initialise variables.
 		$options = array();
-		$name = (string) $this->element['name'];
+		$name    = (string) $this->element['name'];
 
 		// Let's get the id for the current item, either category or content item.
 		$jinput = JFactory::getApplication()->input;
@@ -53,7 +53,7 @@ class JFormFieldCategoryParent extends JFormFieldList
 			$oldCat = $this->form->getValue($name);
 		}
 
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('a.id AS value, a.title AS text, a.level')
 			->from('#__categories AS a')
@@ -108,7 +108,7 @@ class JFormFieldCategoryParent extends JFormFieldList
 			}
 
 			// Displays language code if not set to All
-			$db = JFactory::getDbo();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select($db->quoteName('language'))
 				->where($db->quoteName('id') . '=' . (int) $options[$i]->value)
@@ -176,7 +176,7 @@ class JFormFieldCategoryParent extends JFormFieldList
 		{
 			if ($row->parent_id == '1')
 			{
-				$parent = new stdClass;
+				$parent       = new stdClass;
 				$parent->text = JText::_('JGLOBAL_ROOT_PARENT');
 				array_unshift($options, $parent);
 			}

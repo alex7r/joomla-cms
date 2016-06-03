@@ -39,7 +39,7 @@ class JFormFieldUsergroup extends JFormField
 		JLog::add('JFormFieldUsergroup is deprecated. Use JFormFieldUserGroupList instead.', JLog::WARNING, 'deprecated');
 
 		$options = array();
-		$attr = '';
+		$attr    = '';
 
 		// Initialize some field attributes.
 		$attr .= !empty($this->class) ? ' class="' . $this->class . '"' : '';

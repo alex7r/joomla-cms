@@ -12,26 +12,27 @@ defined('_JEXEC') or die;
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('bootstrap.tooltip');
 
-$listOrder  = $this->escape($this->state->get('list.ordering'));
-$listDirn   = $this->escape($this->state->get('list.direction'));
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn  = $this->escape($this->state->get('list.direction'));
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_banners&view=tracks'); ?>" method="post" name="adminForm" id="adminForm">
-<?php if (!empty( $this->sidebar)) : ?>
+<form action="<?php echo JRoute::_('index.php?option=com_banners&view=tracks'); ?>" method="post" name="adminForm"
+      id="adminForm">
+	<?php if (!empty($this->sidebar)) : ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
 	</div>
 	<div id="j-main-container" class="span10">
-<?php else : ?>
-	<div id="j-main-container">
-<?php endif;?>
-		<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
-		<?php if (empty($this->items)) : ?>
-			<div class="alert alert-no-items">
-				<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
-			</div>
 		<?php else : ?>
-			<table class="table table-striped">
-				<thead>
+		<div id="j-main-container">
+			<?php endif; ?>
+			<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+			<?php if (empty($this->items)) : ?>
+				<div class="alert alert-no-items">
+					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+				</div>
+			<?php else : ?>
+				<table class="table table-striped">
+					<thead>
 					<tr>
 						<th class="title">
 							<?php echo JHtml::_('searchtools.sort', 'COM_BANNERS_HEADING_NAME', 'b.name', $listDirn, $listOrder); ?>
@@ -49,15 +50,15 @@ $listDirn   = $this->escape($this->state->get('list.direction'));
 							<?php echo JHtml::_('searchtools.sort', 'JDATE', 'a.track_date', $listDirn, $listOrder); ?>
 						</th>
 					</tr>
-				</thead>
-				<tfoot>
+					</thead>
+					<tfoot>
 					<tr>
 						<td colspan="5">
 							<?php echo $this->pagination->getListFooter(); ?>
 						</td>
 					</tr>
-				</tfoot>
-				<tbody>
+					</tfoot>
+					<tbody>
 					<?php foreach ($this->items as $i => $item) : ?>
 						<tr class="row<?php echo $i % 2; ?>">
 							<td>
@@ -80,11 +81,11 @@ $listDirn   = $this->escape($this->state->get('list.direction'));
 							</td>
 						</tr>
 					<?php endforeach; ?>
-				</tbody>
-			</table>
-		<?php endif; ?>
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="boxchecked" value="0" />
-		<?php echo JHtml::_('form.token'); ?>
-	</div>
+					</tbody>
+				</table>
+			<?php endif; ?>
+			<input type="hidden" name="task" value=""/>
+			<input type="hidden" name="boxchecked" value="0"/>
+			<?php echo JHtml::_('form.token'); ?>
+		</div>
 </form>

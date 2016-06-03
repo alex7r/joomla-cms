@@ -53,25 +53,6 @@ class JGithubHooksTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options = new JRegistry;
-		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubHooks($this->options, $this->client);
-	}
-
-	/**
 	 * Tests the create method
 	 *
 	 * @return  void
@@ -83,8 +64,8 @@ class JGithubHooksTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 201;
 		$this->response->body = $this->sampleString;
 
-		$hook = new stdClass;
-		$hook->name = 'acunote';
+		$hook         = new stdClass;
+		$hook->name   = 'acunote';
 		$hook->config = array('token' => '123456789');
 		$hook->events = array('push', 'public');
 		$hook->active = true;
@@ -114,8 +95,8 @@ class JGithubHooksTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 500;
 		$this->response->body = $this->errorString;
 
-		$hook = new stdClass;
-		$hook->name = 'acunote';
+		$hook         = new stdClass;
+		$hook->name   = 'acunote';
 		$hook->config = array('token' => '123456789');
 		$hook->events = array('push', 'public');
 		$hook->active = true;
@@ -225,13 +206,13 @@ class JGithubHooksTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 200;
 		$this->response->body = $this->sampleString;
 
-		$hook = new stdClass;
-		$hook->name = 'acunote';
-		$hook->config = array('token' => '123456789');
-		$hook->events = array('push', 'public');
-		$hook->add_events = array('watch');
+		$hook                = new stdClass;
+		$hook->name          = 'acunote';
+		$hook->config        = array('token' => '123456789');
+		$hook->events        = array('push', 'public');
+		$hook->add_events    = array('watch');
 		$hook->remove_events = array('watch');
-		$hook->active = true;
+		$hook->active        = true;
 
 		$this->client->expects($this->once())
 			->method('patch')
@@ -260,13 +241,13 @@ class JGithubHooksTest extends PHPUnit_Framework_TestCase
 		$this->response->code = 500;
 		$this->response->body = $this->errorString;
 
-		$hook = new stdClass;
-		$hook->name = 'acunote';
-		$hook->config = array('token' => '123456789');
-		$hook->events = array('push', 'public');
-		$hook->add_events = array('watch');
+		$hook                = new stdClass;
+		$hook->name          = 'acunote';
+		$hook->config        = array('token' => '123456789');
+		$hook->events        = array('push', 'public');
+		$hook->add_events    = array('watch');
 		$hook->remove_events = array('watch');
-		$hook->active = true;
+		$hook->active        = true;
 
 		$this->client->expects($this->once())
 			->method('patch')
@@ -438,5 +419,24 @@ class JGithubHooksTest extends PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->object->test('joomla', 'joomla-platform', 42);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.3
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options  = new JRegistry;
+		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubHooks($this->options, $this->client);
 	}
 }

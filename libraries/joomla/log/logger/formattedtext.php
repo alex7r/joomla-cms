@@ -44,7 +44,7 @@ class JLogLoggerFormattedtext extends JLogLogger
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  &$options  Log object options.
+	 * @param   array &$options Log object options.
 	 *
 	 * @since   11.1
 	 */
@@ -85,9 +85,31 @@ class JLogLoggerFormattedtext extends JLogLogger
 	}
 
 	/**
+	 * Method to parse the format string into an array of fields.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function parseFields()
+	{
+		$this->fields = array();
+		$matches      = array();
+
+		// Get all of the available fields in the format string.
+		preg_match_all("/{(.*?)}/i", $this->format, $matches);
+
+		// Build the parsed fields list based on the found fields.
+		foreach ($matches[1] as $match)
+		{
+			$this->fields[] = strtoupper($match);
+		}
+	}
+
+	/**
 	 * Method to add an entry to the log.
 	 *
-	 * @param   JLogEntry  $entry  The log entry object to add to the log.
+	 * @param   JLogEntry $entry The log entry object to add to the log.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -122,8 +144,8 @@ class JLogLoggerFormattedtext extends JLogLogger
 		{
 			// Get the date and time strings in GMT.
 			$entry->datetime = $entry->date->toISO8601();
-			$entry->time = $entry->date->format('H:i:s', false);
-			$entry->date = $entry->date->format('Y-m-d', false);
+			$entry->time     = $entry->date->format('H:i:s', false);
+			$entry->date     = $entry->date->format('Y-m-d', false);
 		}
 
 		// Get a list of all the entry keys and make sure they are upper case.
@@ -144,6 +166,36 @@ class JLogLoggerFormattedtext extends JLogLogger
 		$line .= "\n";
 
 		if (!JFile::append($this->path, $line))
+		{
+			throw new RuntimeException('Cannot write to log file.');
+		}
+	}
+
+	/**
+	 * Method to initialise the log file.  This will create the folder path to the file if it doesn't already
+	 * exist and also get a new file header if the file doesn't already exist.  If the file already exists it
+	 * will simply open it for writing.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 * @throws  RuntimeException
+	 */
+	protected function initFile()
+	{
+		// We only need to make sure the file exists
+		if (JFile::exists($this->path))
+		{
+			return;
+		}
+
+		// Make sure the folder exists in which to create the log file.
+		JFolder::create(dirname($this->path));
+
+		// Build the log file header.
+		$head = $this->generateFileHeader();
+
+		if (!JFile::write($this->path, $head))
 		{
 			throw new RuntimeException('Cannot write to log file.');
 		}
@@ -179,57 +231,5 @@ class JLogLoggerFormattedtext extends JLogLogger
 		$head[] = '';
 
 		return implode("\n", $head);
-	}
-
-	/**
-	 * Method to initialise the log file.  This will create the folder path to the file if it doesn't already
-	 * exist and also get a new file header if the file doesn't already exist.  If the file already exists it
-	 * will simply open it for writing.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 * @throws  RuntimeException
-	 */
-	protected function initFile()
-	{
-		// We only need to make sure the file exists
-		if (JFile::exists($this->path))
-		{
-			return;
-		}
-
-		// Make sure the folder exists in which to create the log file.
-		JFolder::create(dirname($this->path));
-
-		// Build the log file header.
-		$head = $this->generateFileHeader();
-
-		if (!JFile::write($this->path, $head))
-		{
-			throw new RuntimeException('Cannot write to log file.');
-		}
-	}
-
-	/**
-	 * Method to parse the format string into an array of fields.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function parseFields()
-	{
-		$this->fields = array();
-		$matches = array();
-
-		// Get all of the available fields in the format string.
-		preg_match_all("/{(.*?)}/i", $this->format, $matches);
-
-		// Build the parsed fields list based on the found fields.
-		foreach ($matches[1] as $match)
-		{
-			$this->fields[] = strtoupper($match);
-		}
 	}
 }

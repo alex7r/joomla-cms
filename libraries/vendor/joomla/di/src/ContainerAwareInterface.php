@@ -29,7 +29,7 @@ interface ContainerAwareInterface
 	/**
 	 * Set the DI container.
 	 *
-	 * @param   Container  $container  The DI container.
+	 * @param   Container $container The DI container.
 	 *
 	 * @return  mixed
 	 *

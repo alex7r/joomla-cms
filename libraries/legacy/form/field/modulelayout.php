@@ -75,10 +75,10 @@ class JFormFieldModulelayout extends JFormField
 			// Load language file
 			$lang = JFactory::getLanguage();
 			$lang->load($module . '.sys', $client->path, null, false, true)
-				|| $lang->load($module . '.sys', $client->path . '/modules/' . $module, null, false, true);
+			|| $lang->load($module . '.sys', $client->path . '/modules/' . $module, null, false, true);
 
 			// Get the database object and a new query object.
-			$db = JFactory::getDbo();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
 			// Build the query.
@@ -116,16 +116,16 @@ class JFormFieldModulelayout extends JFormField
 			if (is_dir($module_path) && ($module_layouts = JFolder::files($module_path, '^[^_]*\.php$')))
 			{
 				// Create the group for the module
-				$groups['_'] = array();
-				$groups['_']['id'] = $this->id . '__';
-				$groups['_']['text'] = JText::sprintf('JOPTION_FROM_MODULE');
+				$groups['_']          = array();
+				$groups['_']['id']    = $this->id . '__';
+				$groups['_']['text']  = JText::sprintf('JOPTION_FROM_MODULE');
 				$groups['_']['items'] = array();
 
 				foreach ($module_layouts as $file)
 				{
 					// Add an option to the module group
-					$value = basename($file, '.php');
-					$text = $lang->hasKey($key = strtoupper($module . '_LAYOUT_' . $value)) ? JText::_($key) : $value;
+					$value                  = basename($file, '.php');
+					$text                   = $lang->hasKey($key = strtoupper($module . '_LAYOUT_' . $value)) ? JText::_($key) : $value;
 					$groups['_']['items'][] = JHtml::_('select.option', '_:' . $value, $text);
 				}
 			}
@@ -137,7 +137,7 @@ class JFormFieldModulelayout extends JFormField
 				{
 					// Load language file
 					$lang->load('tpl_' . $template->element . '.sys', $client->path, null, false, true)
-						|| $lang->load('tpl_' . $template->element . '.sys', $client->path . '/templates/' . $template->element, null, false, true);
+					|| $lang->load('tpl_' . $template->element . '.sys', $client->path . '/templates/' . $template->element, null, false, true);
 
 					$template_path = JPath::clean($client->path . '/templates/' . $template->element . '/html/' . $module);
 
@@ -156,16 +156,16 @@ class JFormFieldModulelayout extends JFormField
 						if (count($files))
 						{
 							// Create the group for the template
-							$groups[$template->element] = array();
-							$groups[$template->element]['id'] = $this->id . '_' . $template->element;
-							$groups[$template->element]['text'] = JText::sprintf('JOPTION_FROM_TEMPLATE', $template->name);
+							$groups[$template->element]          = array();
+							$groups[$template->element]['id']    = $this->id . '_' . $template->element;
+							$groups[$template->element]['text']  = JText::sprintf('JOPTION_FROM_TEMPLATE', $template->name);
 							$groups[$template->element]['items'] = array();
 
 							foreach ($files as $file)
 							{
 								// Add an option to the template group
-								$value = basename($file, '.php');
-								$text = $lang->hasKey($key = strtoupper('TPL_' . $template->element . '_' . $module . '_LAYOUT_' . $value))
+								$value                                 = basename($file, '.php');
+								$text                                  = $lang->hasKey($key = strtoupper('TPL_' . $template->element . '_' . $module . '_LAYOUT_' . $value))
 									? JText::_($key) : $value;
 								$groups[$template->element]['items'][] = JHtml::_('select.option', $template->element . ':' . $value, $text);
 							}

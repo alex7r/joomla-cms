@@ -43,7 +43,7 @@ abstract class JArchiveTestCase extends PHPUnit_Framework_TestCase
 			mkdir($this->outputPath, 0777);
 		}
 
-		if (! is_dir($this->outputPath))
+		if (!is_dir($this->outputPath))
 		{
 			$this->markTestSkipped('We can not create the output dir, so skip all tests');
 		}
@@ -62,7 +62,7 @@ abstract class JArchiveTestCase extends PHPUnit_Framework_TestCase
 		if (is_dir($this->outputPath))
 		{
 			// delete files in output directory
-			foreach(glob("{$this->outputPath}/*") as $file)
+			foreach (glob("{$this->outputPath}/*") as $file)
 			{
 				unlink($file);
 			}

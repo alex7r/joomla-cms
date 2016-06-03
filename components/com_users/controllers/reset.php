@@ -94,8 +94,8 @@ class UsersControllerReset extends UsersController
 	 *
 	 * @return  boolean
 	 *
-	 * @access	public
-	 * @since   1.6
+	 * @access    public
+	 * @since     1.6
 	 */
 	public function confirm()
 	{

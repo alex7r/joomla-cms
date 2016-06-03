@@ -107,14 +107,14 @@ class JFormFieldModal_Newsfeed extends JFormField
 		$linkNewsfeeds = 'index.php?option=com_newsfeeds&amp;view=newsfeeds&amp;layout=modal&amp;tmpl=component'
 			. '&amp;function=jSelectNewsfeed_' . $this->id;
 
-		$linkNewsfeed  = 'index.php?option=com_newsfeeds&amp;view=newsfeed&amp;layout=modal&amp;tmpl=component'
+		$linkNewsfeed = 'index.php?option=com_newsfeeds&amp;view=newsfeed&amp;layout=modal&amp;tmpl=component'
 			. '&amp;task=newsfeed.edit'
 			. '&amp;function=jEditNewsfeed_' . $value;
 
 		if (isset($this->element['language']))
 		{
 			$linkNewsfeeds .= '&amp;forcedLanguage=' . $this->element['language'];
-			$linkNewsfeed  .= '&amp;forcedLanguage=' . $this->element['language'];
+			$linkNewsfeed .= '&amp;forcedLanguage=' . $this->element['language'];
 		}
 
 		$urlSelect = $linkNewsfeeds . '&amp;' . JSession::getFormToken() . '=1';
@@ -192,14 +192,14 @@ class JFormFieldModal_Newsfeed extends JFormField
 			'bootstrap.renderModal',
 			'newsfeedSelect' . $this->id . 'Modal',
 			array(
-				'title'       => JText::_('COM_NEWSFEEDS_SELECT_A_FEED'),
-				'url'         => $urlSelect,
-				'height'      => '400px',
-				'width'       => '800px',
-				'bodyHeight'  => '70',
-				'modalWidth'  => '80',
-				'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">'
-						. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>',
+				'title'      => JText::_('COM_NEWSFEEDS_SELECT_A_FEED'),
+				'url'        => $urlSelect,
+				'height'     => '400px',
+				'width'      => '800px',
+				'bodyHeight' => '70',
+				'modalWidth' => '80',
+				'footer'     => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">'
+					. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>',
 			)
 		);
 
@@ -218,14 +218,14 @@ class JFormFieldModal_Newsfeed extends JFormField
 				'bodyHeight'  => '70',
 				'modalWidth'  => '80',
 				'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"'
-						. ' onclick="jQuery(\'#newsfeedEdit' . $value . 'Modal iframe\').contents().find(\'#closeBtn\').click();">'
-						. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
-						. '<button type="button" class="btn btn-primary" aria-hidden="true"'
-						. ' onclick="jQuery(\'#newsfeedEdit' . $value . 'Modal iframe\').contents().find(\'#saveBtn\').click();">'
-						. JText::_("JSAVE") . '</button>'
-						. '<button type="button" class="btn btn-success" aria-hidden="true"'
-						. ' onclick="jQuery(\'#newsfeedEdit' . $value . 'Modal iframe\').contents().find(\'#applyBtn\').click();">'
-						. JText::_("JAPPLY") . '</button>',
+					. ' onclick="jQuery(\'#newsfeedEdit' . $value . 'Modal iframe\').contents().find(\'#closeBtn\').click();">'
+					. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
+					. '<button type="button" class="btn btn-primary" aria-hidden="true"'
+					. ' onclick="jQuery(\'#newsfeedEdit' . $value . 'Modal iframe\').contents().find(\'#saveBtn\').click();">'
+					. JText::_("JSAVE") . '</button>'
+					. '<button type="button" class="btn btn-success" aria-hidden="true"'
+					. ' onclick="jQuery(\'#newsfeedEdit' . $value . 'Modal iframe\').contents().find(\'#applyBtn\').click();">'
+					. JText::_("JAPPLY") . '</button>',
 			)
 		);
 

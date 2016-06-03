@@ -77,7 +77,7 @@ class JFormFieldColor extends JFormField
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -102,8 +102,8 @@ class JFormFieldColor extends JFormField
 	/**
 	 * Method to set certain otherwise inaccessible properties of the form field object.
 	 *
-	 * @param   string  $name   The property name for which to the the value.
-	 * @param   mixed   $value  The value of the property.
+	 * @param   string $name  The property name for which to the the value.
+	 * @param   mixed  $value The value of the property.
 	 *
 	 * @return  void
 	 *
@@ -135,9 +135,9 @@ class JFormFieldColor extends JFormField
 	/**
 	 * Method to attach a JForm object to the field.
 	 *
-	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
-	 * @param   mixed             $value    The form field value to validate.
-	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
+	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed            $value     The form field value to validate.
+	 * @param   string           $group     The field name group control value. This acts as as an array container for the field.
 	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
 	 *
@@ -193,7 +193,7 @@ class JFormFieldColor extends JFormField
 		$autofocus = $this->autofocus ? ' autofocus' : '';
 
 		$color = strtolower($this->value);
-		$color = ! $color ? '' : $color;
+		$color = !$color ? '' : $color;
 
 		if ($control == 'simple')
 		{
@@ -254,7 +254,7 @@ class JFormFieldColor extends JFormField
 
 			$split = $split ? $split : 3;
 
-			$html = array();
+			$html   = array();
 			$html[] = '<select data-chosen="true" name="' . $this->name . '" id="' . $this->id . '"' . $disabled . $required
 				. $class . $position . $onchange . $autofocus . ' style="visibility:hidden;width:22px;height:1px">';
 
@@ -276,7 +276,7 @@ class JFormFieldColor extends JFormField
 		{
 			if (in_array($this->format, array('rgb', 'rgba')) && $this->validate != 'color')
 			{
-				$alpha = ($this->format == 'rgba') ? true : false;
+				$alpha       = ($this->format == 'rgba') ? true : false;
 				$placeholder = $alpha ? 'rgba(0, 0, 0, 0.5)' : 'rgb(0, 0, 0)';
 			}
 			else
@@ -284,17 +284,17 @@ class JFormFieldColor extends JFormField
 				$placeholder = '#rrggbb';
 			}
 
-			$inputclass   = ($this->keywords && ! in_array($this->format, array('rgb', 'rgba'))) ? ' keywords' : ' ' . $this->format;
+			$inputclass   = ($this->keywords && !in_array($this->format, array('rgb', 'rgba'))) ? ' keywords' : ' ' . $this->format;
 			$class        = ' class="' . trim('minicolors ' . $class) . ($this->validate == 'color' ? '' : $inputclass) . '"';
 			$control      = $control ? ' data-control="' . $control . '"' : '';
 			$format       = $this->format ? ' data-format="' . $this->format . '"' : '';
 			$keywords     = $this->keywords ? ' data-keywords="' . $this->keywords . '"' : '';
 			$readonly     = $this->readonly ? ' readonly' : '';
 			$hint         = $hint ? ' placeholder="' . $hint . '"' : ' placeholder="' . $placeholder . '"';
-			$autocomplete = ! $this->autocomplete ? ' autocomplete="off"' : '';
+			$autocomplete = !$this->autocomplete ? ' autocomplete="off"' : '';
 
 			// Force LTR input value in RTL, due to display issues with rgba/hex colors
-			$direction    = $lang->isRTL() ? ' dir="ltr" style="text-align:right"' : '';
+			$direction = $lang->isRTL() ? ' dir="ltr" style="text-align:right"' : '';
 
 			// Including fallback code for HTML5 non supported browsers.
 			JHtml::_('jquery.framework');
@@ -303,9 +303,9 @@ class JFormFieldColor extends JFormField
 			JHtml::_('behavior.colorpicker');
 
 			return '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' . ' value="'
-				. htmlspecialchars($color, ENT_COMPAT, 'UTF-8') . '"' . $hint . $class . $position . $control
-				. $readonly . $disabled . $required . $onchange . $autocomplete . $autofocus
-				. $format . $keywords . $direction . $validate . '/>';
+			. htmlspecialchars($color, ENT_COMPAT, 'UTF-8') . '"' . $hint . $class . $position . $control
+			. $readonly . $disabled . $required . $onchange . $autocomplete . $autofocus
+			. $format . $keywords . $direction . $validate . '/>';
 		}
 	}
 }

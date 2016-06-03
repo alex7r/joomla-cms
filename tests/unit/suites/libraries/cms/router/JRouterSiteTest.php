@@ -29,40 +29,6 @@ class JRouterSiteTest extends TestCase
 	private $server;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		JUri::reset();
-
-		$this->server = $_SERVER;
-
-		$_SERVER['HTTP_HOST'] = 'mydomain.com';
-	}
-
-	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDown()
-	 * @since   3.2
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->server;
-
-		parent::tearDown();
-	}
-
-	/**
 	 * Tests the __construct() method
 	 *
 	 * @return  void
@@ -232,7 +198,7 @@ class JRouterSiteTest extends TestCase
 		$vars = $object->parse($uri);
 
 		$this->assertEquals($expectedVars, $vars);
-		$this->assertEquals($expectedUris, (string)$uri);
+		$this->assertEquals($expectedUris, (string) $uri);
 	}
 
 	/**
@@ -483,7 +449,7 @@ class JRouterSiteTest extends TestCase
 		$object->setMode($mode);
 
 		// Check the expected values
-		$this->assertEquals($expected, (string)($object->build($url)));
+		$this->assertEquals($expected, (string) ($object->build($url)));
 	}
 
 	/**
@@ -941,7 +907,7 @@ class JRouterSiteTest extends TestCase
 		$buildRawRouteMethod->setAccessible(true);
 
 		$buildRawRouteMethod->invokeArgs($object, array(&$uri));
-		$this->assertEquals('index.php', (string)$uri);
+		$this->assertEquals('index.php', (string) $uri);
 	}
 
 	/**
@@ -966,7 +932,7 @@ class JRouterSiteTest extends TestCase
 
 		$uri->setVar('option', 'com_test');
 		$buildRawRouteMethod->invokeArgs($object, array(&$uri));
-		$this->assertEquals('index.php?option=com_test&testvar=testvalue', (string)$uri);
+		$this->assertEquals('index.php?option=com_test&testvar=testvalue', (string) $uri);
 	}
 
 	/**
@@ -992,7 +958,7 @@ class JRouterSiteTest extends TestCase
 		$uri->setVar('option', 'com_ te?st');
 		$uri->delVar('testvar');
 		$buildRawRouteMethod->invokeArgs($object, array(&$uri));
-		$this->assertEquals('index.php?option=com_ te?st&testvar=testvalue', (string)$uri);
+		$this->assertEquals('index.php?option=com_ te?st&testvar=testvalue', (string) $uri);
 	}
 
 	/**
@@ -1018,7 +984,7 @@ class JRouterSiteTest extends TestCase
 		$uri->setVar('option', 'com_test3');
 		$uri->delVar('testvar');
 		$buildRawRouteMethod->invokeArgs($object, array(&$uri));
-		$this->assertEquals('index.php?option=com_test3', (string)$uri);
+		$this->assertEquals('index.php?option=com_test3', (string) $uri);
 	}
 
 	/**
@@ -1100,7 +1066,7 @@ class JRouterSiteTest extends TestCase
 		$buildSefRouteMethod->setAccessible(true);
 		$buildSefRouteMethod->invokeArgs($object, array(&$uri));
 
-		$this->assertEquals($expected, (string)$uri);
+		$this->assertEquals($expected, (string) $uri);
 	}
 
 	/**
@@ -1204,7 +1170,7 @@ class JRouterSiteTest extends TestCase
 
 		$processBuildRulesMethod->invokeArgs($object, array(&$uri));
 
-		$this->assertEquals($expected, (string)$uri);
+		$this->assertEquals($expected, (string) $uri);
 	}
 
 	/**
@@ -1296,7 +1262,7 @@ class JRouterSiteTest extends TestCase
 		$uri = $createUriMethod->invoke($object, $url);
 
 		$this->assertInstanceOf('JUri', $uri);
-		$this->assertEquals($expected, (string)$uri);
+		$this->assertEquals($expected, (string) $uri);
 	}
 
 	/**
@@ -1373,5 +1339,39 @@ class JRouterSiteTest extends TestCase
 		);
 
 		$this->assertFalse($object->setComponentRouter('com_test3', new stdClass));
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.4
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		JUri::reset();
+
+		$this->server = $_SERVER;
+
+		$_SERVER['HTTP_HOST'] = 'mydomain.com';
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDown()
+	 * @since   3.2
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->server;
+
+		parent::tearDown();
 	}
 }

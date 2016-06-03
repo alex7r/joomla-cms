@@ -23,8 +23,8 @@ class PlgSystemCache extends JPlugin
 	/**
 	 * Constructor.
 	 *
-	 * @param   object  &$subject  The object to observe.
-	 * @param   array   $config    An optional associative array of configuration settings.
+	 * @param   object &$subject The object to observe.
+	 * @param   array  $config   An optional associative array of configuration settings.
 	 *
 	 * @since   1.5
 	 */

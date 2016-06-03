@@ -21,17 +21,99 @@ class ContentModelArchive extends ContentModelArticles
 	/**
 	 * Model context string.
 	 *
-	 * @var		string
+	 * @var        string
 	 */
 	public $_context = 'com_content.archive';
+
+	/**
+	 * Method to get the archived article list
+	 *
+	 * @access public
+	 * @return array
+	 */
+	public function getData()
+	{
+		$app = JFactory::getApplication();
+
+		// Lets load the content if it doesn't already exist
+		if (empty($this->_data))
+		{
+			// Get the page/component configuration
+			$params = $app->getParams();
+
+			// Get the pagination request variables
+			$limit      = $app->input->get('limit', $params->get('display_num', 20), 'uint');
+			$limitstart = $app->input->get('limitstart', 0, 'uint');
+
+			$query = $this->_buildQuery();
+
+			$this->_data = $this->_getList($query, $limitstart, $limit);
+		}
+
+		return $this->_data;
+	}
+
+	/**
+	 * JModelLegacy override to add alternating value for $odd
+	 *
+	 * @param   string  $query      The query.
+	 * @param   integer $limitstart Offset.
+	 * @param   integer $limit      The number of records.
+	 *
+	 * @return  array  An array of results.
+	 *
+	 * @since   12.2
+	 * @throws  RuntimeException
+	 */
+	protected function _getList($query, $limitstart = 0, $limit = 0)
+	{
+		$result = parent::_getList($query, $limitstart, $limit);
+
+		$odd = 1;
+
+		foreach ($result as $k => $row)
+		{
+			$result[$k]->odd = $odd;
+			$odd             = 1 - $odd;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Gets the archived articles years
+	 *
+	 * @return   array
+	 *
+	 * @since    3.6.0
+	 */
+	public function getYears()
+	{
+		$db       = $this->getDbo();
+		$nullDate = $db->quote($db->getNullDate());
+		$nowDate  = $db->quote(JFactory::getDate()->toSql());
+
+		$query = $db->getQuery(true);
+		$years = $query->year($db->qn('created'));
+		$query->select('DISTINCT (' . $years . ')')
+			->from($db->qn('#__content'))
+			->where($db->qn('state') . '= 2')
+			->where('(publish_up = ' . $nullDate . ' OR publish_up <= ' . $nowDate . ')')
+			->where('(publish_down = ' . $nullDate . ' OR publish_down >= ' . $nowDate . ')')
+			->order('1 ASC');
+
+		$db->setQuery($query);
+
+		return $db->loadColumn();
+	}
 
 	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   The field to order on.
-	 * @param   string  $direction  The direction to order on.
+	 * @param   string $ordering  The field to order on.
+	 * @param   string $direction The direction to order on.
 	 *
 	 * @return  void.
 	 *
@@ -58,7 +140,7 @@ class ContentModelArchive extends ContentModelArticles
 
 		// Get list limit
 		$itemid = $app->input->get('Itemid', 0, 'int');
-		$limit = $app->getUserStateFromRequest('com_content.archive.list' . $itemid . '.limit', 'limit', $params->get('display_num'), 'uint');
+		$limit  = $app->getUserStateFromRequest('com_content.archive.list' . $itemid . '.limit', 'limit', $params->get('display_num'), 'uint');
 		$this->setState('list.limit', $limit);
 	}
 
@@ -72,14 +154,14 @@ class ContentModelArchive extends ContentModelArticles
 	protected function getListQuery()
 	{
 		// Set the archive ordering
-		$params = $this->state->params;
-		$articleOrderby = $params->get('orderby_sec', 'rdate');
+		$params           = $this->state->params;
+		$articleOrderby   = $params->get('orderby_sec', 'rdate');
 		$articleOrderDate = $params->get('order_date');
 
 		// No category ordering
 		$categoryOrderby = '';
-		$secondary = ContentHelperQuery::orderbySecondary($articleOrderby, $articleOrderDate) . ', ';
-		$primary = ContentHelperQuery::orderbyPrimary($categoryOrderby);
+		$secondary       = ContentHelperQuery::orderbySecondary($articleOrderby, $articleOrderDate) . ', ';
+		$primary         = ContentHelperQuery::orderbyPrimary($categoryOrderby);
 
 		$orderby = $primary . ' ' . $secondary . ' a.created DESC ';
 		$this->setState('list.ordering', $orderby);
@@ -88,8 +170,8 @@ class ContentModelArchive extends ContentModelArticles
 		// Create a new query object.
 		$query = parent::getListQuery();
 
-			// Add routing for archive
-			// Sqlsrv changes
+		// Add routing for archive
+		// Sqlsrv changes
 		$case_when = ' CASE WHEN ';
 		$case_when .= $query->charLength('a.alias', '!=', '0');
 		$case_when .= ' THEN ';
@@ -124,86 +206,5 @@ class ContentModelArchive extends ContentModelArticles
 		}
 
 		return $query;
-	}
-
-	/**
-	 * Method to get the archived article list
-	 *
-	 * @access public
-	 * @return array
-	 */
-	public function getData()
-	{
-		$app = JFactory::getApplication();
-
-		// Lets load the content if it doesn't already exist
-		if (empty($this->_data))
-		{
-			// Get the page/component configuration
-			$params = $app->getParams();
-
-			// Get the pagination request variables
-			$limit      = $app->input->get('limit', $params->get('display_num', 20), 'uint');
-			$limitstart = $app->input->get('limitstart', 0, 'uint');
-
-			$query = $this->_buildQuery();
-
-			$this->_data = $this->_getList($query, $limitstart, $limit);
-		}
-
-		return $this->_data;
-	}
-
-	/**
-	 * JModelLegacy override to add alternating value for $odd
-	 *
-	 * @param   string   $query       The query.
-	 * @param   integer  $limitstart  Offset.
-	 * @param   integer  $limit       The number of records.
-	 *
-	 * @return  array  An array of results.
-	 *
-	 * @since   12.2
-	 * @throws  RuntimeException
-	 */
-	protected function _getList($query, $limitstart=0, $limit=0)
-	{
-		$result = parent::_getList($query, $limitstart, $limit);
-
-		$odd = 1;
-
-		foreach ($result as $k => $row)
-		{
-			$result[$k]->odd = $odd;
-			$odd = 1 - $odd;
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Gets the archived articles years
-	 *
-	 * @return   array
-	 * 
-	 * @since    3.6.0
-	 */
-	public function getYears()
-	{
-		$db = $this->getDbo();
-		$nullDate = $db->quote($db->getNullDate());
-		$nowDate  = $db->quote(JFactory::getDate()->toSql());
-
-		$query = $db->getQuery(true);
-		$years = $query->year($db->qn('created'));
-		$query->select('DISTINCT (' . $years . ')')
-			->from($db->qn('#__content'))
-			->where($db->qn('state') . '= 2')
-			->where('(publish_up = ' . $nullDate . ' OR publish_up <= ' . $nowDate . ')')
-			->where('(publish_down = ' . $nullDate . ' OR publish_down >= ' . $nowDate . ')')
-			->order('1 ASC');
-
-		$db->setQuery($query);
-		return $db->loadColumn();
 	}
 }

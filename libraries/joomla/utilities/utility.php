@@ -19,7 +19,7 @@ class JUtility
 	/**
 	 * Method to extract key/value pairs out of a string with XML style attributes
 	 *
-	 * @param   string  $string  String containing XML style attributes
+	 * @param   string $string String containing XML style attributes
 	 *
 	 * @return  array  Key/Value pairs for the attributes
 	 *
@@ -27,7 +27,7 @@ class JUtility
 	 */
 	public static function parseAttributes($string)
 	{
-		$attr = array();
+		$attr     = array();
 		$retarray = array();
 
 		// Let's grab all the key/value pairs using a regular expression

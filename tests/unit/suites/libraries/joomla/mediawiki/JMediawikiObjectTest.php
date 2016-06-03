@@ -52,22 +52,6 @@ class JMediawikiObjectTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '<message>Generic Error</message>';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->options = new JRegistry;
-		$this->client = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JMediawikiObjectMock($this->options, $this->client);
-	}
-
-	/**
 	 * Tests the buildParameter method
 	 *
 	 * @return void
@@ -78,6 +62,22 @@ class JMediawikiObjectTest extends PHPUnit_Framework_TestCase
 			$this->object->buildParameter(array('Joomla', 'Joomla', 'Joomla')),
 			$this->equalTo('Joomla|Joomla|Joomla')
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$this->options = new JRegistry;
+		$this->client  = $this->getMock('JMediawikiHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JMediawikiObjectMock($this->options, $this->client);
 	}
 
 }

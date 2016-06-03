@@ -83,7 +83,7 @@ class JModelList extends JModelLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JModelLegacy
 	 * @since   12.2
@@ -103,33 +103,6 @@ class JModelList extends JModelLegacy
 		{
 			$this->context = strtolower($this->option . '.' . $this->getName());
 		}
-	}
-
-	/**
-	 * Method to cache the last query constructed.
-	 *
-	 * This method ensures that the query is constructed only once for a given state of the model.
-	 *
-	 * @return  JDatabaseQuery  A JDatabaseQuery object
-	 *
-	 * @since   12.2
-	 */
-	protected function _getListQuery()
-	{
-		// Capture the last store id used.
-		static $lastStoreId;
-
-		// Compute the current store id.
-		$currentStoreId = $this->getStoreId();
-
-		// If the last store id is different from the current, refresh the query.
-		if ($lastStoreId != $currentStoreId || empty($this->query))
-		{
-			$lastStoreId = $currentStoreId;
-			$this->query = $this->getListQuery();
-		}
-
-		return $this->query;
 	}
 
 	/**
@@ -198,56 +171,13 @@ class JModelList extends JModelLegacy
 	}
 
 	/**
-	 * Method to get a JDatabaseQuery object for retrieving the data set from a database.
-	 *
-	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
-	 *
-	 * @since   12.2
-	 */
-	protected function getListQuery()
-	{
-		$db = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		return $query;
-	}
-
-	/**
-	 * Method to get a JPagination object for the data set.
-	 *
-	 * @return  JPagination  A JPagination object for the data set.
-	 *
-	 * @since   12.2
-	 */
-	public function getPagination()
-	{
-		// Get a storage key.
-		$store = $this->getStoreId('getPagination');
-
-		// Try to load the data from internal storage.
-		if (isset($this->cache[$store]))
-		{
-			return $this->cache[$store];
-		}
-
-		// Create the pagination object.
-		$limit = (int) $this->getState('list.limit') - (int) $this->getState('list.links');
-		$page = new JPagination($this->getTotal(), $this->getStart(), $limit);
-
-		// Add the object to the internal cache.
-		$this->cache[$store] = $page;
-
-		return $this->cache[$store];
-	}
-
-	/**
 	 * Method to get a store id based on the model configuration state.
 	 *
 	 * This is necessary because the model is used by the component and
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string  $id  An identifier string to generate the store id.
+	 * @param   string $id An identifier string to generate the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -262,6 +192,83 @@ class JModelList extends JModelLegacy
 		$id .= ':' . $this->getState('list.direction');
 
 		return md5($this->context . ':' . $id);
+	}
+
+	/**
+	 * Method to cache the last query constructed.
+	 *
+	 * This method ensures that the query is constructed only once for a given state of the model.
+	 *
+	 * @return  JDatabaseQuery  A JDatabaseQuery object
+	 *
+	 * @since   12.2
+	 */
+	protected function _getListQuery()
+	{
+		// Capture the last store id used.
+		static $lastStoreId;
+
+		// Compute the current store id.
+		$currentStoreId = $this->getStoreId();
+
+		// If the last store id is different from the current, refresh the query.
+		if ($lastStoreId != $currentStoreId || empty($this->query))
+		{
+			$lastStoreId = $currentStoreId;
+			$this->query = $this->getListQuery();
+		}
+
+		return $this->query;
+	}
+
+	/**
+	 * Method to get a JDatabaseQuery object for retrieving the data set from a database.
+	 *
+	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
+	 *
+	 * @since   12.2
+	 */
+	protected function getListQuery()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		return $query;
+	}
+
+	/**
+	 * Method to get the starting number of items for the data set.
+	 *
+	 * @return  integer  The starting number of items available in the data set.
+	 *
+	 * @since   12.2
+	 */
+	public function getStart()
+	{
+		$store = $this->getStoreId('getstart');
+
+		// Try to load the data from internal storage.
+		if (isset($this->cache[$store]))
+		{
+			return $this->cache[$store];
+		}
+
+		$start = $this->getState('list.start');
+		$limit = $this->getState('list.limit');
+
+		if ($start > 0)
+		{
+			$total = $this->getTotal();
+			if ($start > $total - $limit)
+			{
+				$start = max(0, (int) (ceil($total / $limit) - 1) * $limit);
+			}
+		}
+
+		// Add the total to the internal cache.
+		$this->cache[$store] = $start;
+
+		return $this->cache[$store];
 	}
 
 	/**
@@ -303,15 +310,16 @@ class JModelList extends JModelLegacy
 	}
 
 	/**
-	 * Method to get the starting number of items for the data set.
+	 * Method to get a JPagination object for the data set.
 	 *
-	 * @return  integer  The starting number of items available in the data set.
+	 * @return  JPagination  A JPagination object for the data set.
 	 *
 	 * @since   12.2
 	 */
-	public function getStart()
+	public function getPagination()
 	{
-		$store = $this->getStoreId('getstart');
+		// Get a storage key.
+		$store = $this->getStoreId('getPagination');
 
 		// Try to load the data from internal storage.
 		if (isset($this->cache[$store]))
@@ -319,20 +327,12 @@ class JModelList extends JModelLegacy
 			return $this->cache[$store];
 		}
 
-		$start = $this->getState('list.start');
-		$limit = $this->getState('list.limit');
+		// Create the pagination object.
+		$limit = (int) $this->getState('list.limit') - (int) $this->getState('list.links');
+		$page  = new JPagination($this->getTotal(), $this->getStart(), $limit);
 
-		if ($start > 0)
-		{
-			$total = $this->getTotal();
-			if ($start > $total - $limit)
-			{
-				$start = max(0, (int) (ceil($total / $limit) - 1) * $limit);
-			}
-		}
-
-		// Add the total to the internal cache.
-		$this->cache[$store] = $start;
+		// Add the object to the internal cache.
+		$this->cache[$store] = $page;
 
 		return $this->cache[$store];
 	}
@@ -340,8 +340,8 @@ class JModelList extends JModelLegacy
 	/**
 	 * Get the filter form
 	 *
-	 * @param   array    $data      data
-	 * @param   boolean  $loadData  load current data
+	 * @param   array   $data     data
+	 * @param   boolean $loadData load current data
 	 *
 	 * @return  JForm/false  the JForm object or false
 	 *
@@ -374,11 +374,11 @@ class JModelList extends JModelLegacy
 	/**
 	 * Method to get a form object.
 	 *
-	 * @param   string   $name     The name of the form.
-	 * @param   string   $source   The form source. Can be XML string if file flag is set to false.
-	 * @param   array    $options  Optional array of options for the form creation.
-	 * @param   boolean  $clear    Optional argument to force load a new form.
-	 * @param   string   $xpath    An optional xpath to search for the fields.
+	 * @param   string  $name    The name of the form.
+	 * @param   string  $source  The form source. Can be XML string if file flag is set to false.
+	 * @param   array   $options Optional array of options for the form creation.
+	 * @param   boolean $clear   Optional argument to force load a new form.
+	 * @param   string  $xpath   An optional xpath to search for the fields.
 	 *
 	 * @return  mixed  JForm object on success, False on error.
 	 *
@@ -440,9 +440,9 @@ class JModelList extends JModelLegacy
 	/**
 	 * Method to get the data that should be injected in the form.
 	 *
-	 * @return	mixed	The data for the form.
+	 * @return    mixed    The data for the form.
 	 *
-	 * @since	3.2
+	 * @since    3.2
 	 */
 	protected function loadFormData()
 	{
@@ -464,6 +464,96 @@ class JModelList extends JModelLegacy
 	}
 
 	/**
+	 * Method to allow derived classes to preprocess the form.
+	 *
+	 * @param   JForm  $form  A JForm object.
+	 * @param   mixed  $data  The data expected for the form.
+	 * @param   string $group The name of the plugin group to import (defaults to "content").
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 * @throws  Exception if there is an error in the form event.
+	 */
+	protected function preprocessForm(JForm $form, $data, $group = 'content')
+	{
+		// Import the appropriate plugin group.
+		JPluginHelper::importPlugin($group);
+
+		// Get the dispatcher.
+		$dispatcher = JDispatcher::getInstance();
+
+		// Trigger the form preparation event.
+		$results = $dispatcher->trigger('onContentPrepareForm', array($form, $data));
+
+		// Check for errors encountered while preparing the form.
+		if (count($results) && in_array(false, $results, true))
+		{
+			// Get the last error.
+			$error = $dispatcher->getError();
+
+			if (!($error instanceof Exception))
+			{
+				throw new Exception($error);
+			}
+		}
+	}
+
+	/**
+	 * Gets the value of a user state variable and sets it in the session
+	 *
+	 * This is the same as the method in JApplication except that this also can optionally
+	 * force you back to the first page when a filter has changed
+	 *
+	 * @param   string  $key       The key of the user state variable.
+	 * @param   string  $request   The name of the variable passed in a request.
+	 * @param   string  $default   The default value for the variable if not found. Optional.
+	 * @param   string  $type      Filter for the variable, for valid values see {@link JFilterInput::clean()}. Optional.
+	 * @param   boolean $resetPage If true, the limitstart in request is set to zero
+	 *
+	 * @return  The request user state.
+	 *
+	 * @since   12.2
+	 */
+	public function getUserStateFromRequest($key, $request, $default = null, $type = 'none', $resetPage = true)
+	{
+		$app       = JFactory::getApplication();
+		$input     = $app->input;
+		$old_state = $app->getUserState($key);
+		$cur_state = (!is_null($old_state)) ? $old_state : $default;
+		$new_state = $input->get($request, null, $type);
+
+		// BC for Search Tools which uses different naming
+		if ($new_state === null && strpos($request, 'filter_') === 0)
+		{
+			$name    = substr($request, 7);
+			$filters = $app->input->get('filter', array(), 'array');
+
+			if (isset($filters[$name]))
+			{
+				$new_state = $filters[$name];
+			}
+		}
+
+		if (($cur_state != $new_state) && ($resetPage))
+		{
+			$input->set('limitstart', 0);
+		}
+
+		// Save the new value only if it is set in this request.
+		if ($new_state !== null)
+		{
+			$app->setUserState($key, $new_state);
+		}
+		else
+		{
+			$new_state = $cur_state;
+		}
+
+		return $new_state;
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * This method should only be called once per instantiation and is designed
@@ -472,8 +562,8 @@ class JModelList extends JModelLegacy
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -579,7 +669,7 @@ class JModelList extends JModelLegacy
 				}
 			}
 			else
-			// Keep B/C for components previous to jform forms for filters
+				// Keep B/C for components previous to jform forms for filters
 			{
 				// Pre-fill the limits
 				$limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->get('list_limit'), 'uint');
@@ -624,7 +714,7 @@ class JModelList extends JModelLegacy
 				$this->setState('list.direction', $oldDirection);
 			}
 
-			$value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0, 'int');
+			$value      = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0, 'int');
 			$limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
 			$this->setState('list.start', $limitstart);
 		}
@@ -636,100 +726,10 @@ class JModelList extends JModelLegacy
 	}
 
 	/**
-	 * Method to allow derived classes to preprocess the form.
-	 *
-	 * @param   JForm   $form   A JForm object.
-	 * @param   mixed   $data   The data expected for the form.
-	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 * @throws  Exception if there is an error in the form event.
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
-	{
-		// Import the appropriate plugin group.
-		JPluginHelper::importPlugin($group);
-
-		// Get the dispatcher.
-		$dispatcher = JDispatcher::getInstance();
-
-		// Trigger the form preparation event.
-		$results = $dispatcher->trigger('onContentPrepareForm', array($form, $data));
-
-		// Check for errors encountered while preparing the form.
-		if (count($results) && in_array(false, $results, true))
-		{
-			// Get the last error.
-			$error = $dispatcher->getError();
-
-			if (!($error instanceof Exception))
-			{
-				throw new Exception($error);
-			}
-		}
-	}
-
-	/**
-	 * Gets the value of a user state variable and sets it in the session
-	 *
-	 * This is the same as the method in JApplication except that this also can optionally
-	 * force you back to the first page when a filter has changed
-	 *
-	 * @param   string   $key        The key of the user state variable.
-	 * @param   string   $request    The name of the variable passed in a request.
-	 * @param   string   $default    The default value for the variable if not found. Optional.
-	 * @param   string   $type       Filter for the variable, for valid values see {@link JFilterInput::clean()}. Optional.
-	 * @param   boolean  $resetPage  If true, the limitstart in request is set to zero
-	 *
-	 * @return  The request user state.
-	 *
-	 * @since   12.2
-	 */
-	public function getUserStateFromRequest($key, $request, $default = null, $type = 'none', $resetPage = true)
-	{
-		$app       = JFactory::getApplication();
-		$input     = $app->input;
-		$old_state = $app->getUserState($key);
-		$cur_state = (!is_null($old_state)) ? $old_state : $default;
-		$new_state = $input->get($request, null, $type);
-
-		// BC for Search Tools which uses different naming
-		if ($new_state === null && strpos($request, 'filter_') === 0)
-		{
-			$name    = substr($request, 7);
-			$filters = $app->input->get('filter', array(), 'array');
-
-			if (isset($filters[$name]))
-			{
-				$new_state = $filters[$name];
-			}
-		}
-
-		if (($cur_state != $new_state) && ($resetPage))
-		{
-			$input->set('limitstart', 0);
-		}
-
-		// Save the new value only if it is set in this request.
-		if ($new_state !== null)
-		{
-			$app->setUserState($key, $new_state);
-		}
-		else
-		{
-			$new_state = $cur_state;
-		}
-
-		return $new_state;
-	}
-
-	/**
 	 * Parse and transform the search string into a string fit for regex-ing arbitrary strings against
 	 *
-	 * @param   string  $search          The search string
-	 * @param   string  $regexDelimiter  The regex delimiter to use for the quoting
+	 * @param   string $search         The search string
+	 * @param   string $regexDelimiter The regex delimiter to use for the quoting
 	 *
 	 * @return string Search string escaped for regex
 	 */

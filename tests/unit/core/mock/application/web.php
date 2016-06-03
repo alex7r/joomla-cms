@@ -39,6 +39,55 @@ class TestMockApplicationWeb extends TestMockApplicationBase
 	public static $cachable = false;
 
 	/**
+	 * Creates and instance of the mock JApplicationWeb object.
+	 *
+	 * The test can implement the following overrides:
+	 * - mockAppendBody
+	 * - mockGetBody
+	 * - mockPrepentBody
+	 * - mockSetBody
+	 * - mockGetHeaders
+	 * - mockSetHeaders
+	 * - mockAllowCache
+	 *
+	 * If any *Body methods are implemented in the test class, all should be implemented otherwise behaviour will be unreliable.
+	 *
+	 * @param   TestCase $test    A test object.
+	 * @param   array    $options A set of options to configure the mock.
+	 *
+	 * @return  PHPUnit_Framework_MockObject_MockObject
+	 *
+	 * @since   11.3
+	 */
+	public static function create($test, $options = array())
+	{
+		// Set expected server variables.
+		if (!isset($_SERVER['HTTP_HOST']))
+		{
+			$_SERVER['HTTP_HOST'] = 'localhost';
+		}
+
+		// Collect all the relevant methods in JApplicationWeb (work in progress).
+		$methods = self::getMethods();
+
+		// Create the mock.
+		$mockObject = $test->getMock(
+			'JApplicationWeb',
+			$methods,
+			// Constructor arguments.
+			array(),
+			// Mock class name.
+			'',
+			// Call original constructor.
+			true
+		);
+
+		$mockObject = self::addBehaviours($test, $mockObject, $options);
+
+		return $mockObject;
+	}
+
+	/**
 	 * Gets the methods of the JApplicationWeb object.
 	 *
 	 * @return  array
@@ -77,9 +126,9 @@ class TestMockApplicationWeb extends TestMockApplicationBase
 	/**
 	 * Adds mock objects for some methods.
 	 *
-	 * @param  TestCase                                 $test        A test object.
-	 * @param  PHPUnit_Framework_MockObject_MockObject  $mockObject  The mock object.
-	 * @param  array                                    $options     A set of options to configure the mock.
+	 * @param  TestCase                                $test       A test object.
+	 * @param  PHPUnit_Framework_MockObject_MockObject $mockObject The mock object.
+	 * @param  array                                   $options    A set of options to configure the mock.
 	 *
 	 * @return  PHPUnit_Framework_MockObject_MockObject  The object with the behaviours added
 	 *
@@ -106,14 +155,14 @@ class TestMockApplicationWeb extends TestMockApplicationBase
 		$test->assignMockCallbacks(
 			$mockObject,
 			array(
-				'appendBody' => array((is_callable(array($test, 'mockAppendBody')) ? $test : get_called_class()), 'mockAppendBody'),
-				'getBody' => array((is_callable(array($test, 'mockGetBody')) ? $test : get_called_class()), 'mockGetBody'),
-				'prependBody' => array((is_callable(array($test, 'mockPrependBody')) ? $test : get_called_class()), 'mockPrependBody'),
-				'setBody' => array((is_callable(array($test, 'mockSetBody')) ? $test : get_called_class()), 'mockSetBody'),
-				'getHeaders' => array((is_callable(array($test, 'mockGetHeaders')) ? $test : get_called_class()), 'mockGetHeaders'),
-				'setHeader' => array((is_callable(array($test, 'mockSetHeader')) ? $test : get_called_class()), 'mockSetHeader'),
+				'appendBody'   => array((is_callable(array($test, 'mockAppendBody')) ? $test : get_called_class()), 'mockAppendBody'),
+				'getBody'      => array((is_callable(array($test, 'mockGetBody')) ? $test : get_called_class()), 'mockGetBody'),
+				'prependBody'  => array((is_callable(array($test, 'mockPrependBody')) ? $test : get_called_class()), 'mockPrependBody'),
+				'setBody'      => array((is_callable(array($test, 'mockSetBody')) ? $test : get_called_class()), 'mockSetBody'),
+				'getHeaders'   => array((is_callable(array($test, 'mockGetHeaders')) ? $test : get_called_class()), 'mockGetHeaders'),
+				'setHeader'    => array((is_callable(array($test, 'mockSetHeader')) ? $test : get_called_class()), 'mockSetHeader'),
 				'clearHeaders' => array((is_callable(array($test, 'mockClearHeaders')) ? $test : get_called_class()), 'mockClearHeaders'),
-				'allowCache' => array((is_callable(array($test, 'mockAllowCache')) ? $test : get_called_class()), 'mockAllowCache'),
+				'allowCache'   => array((is_callable(array($test, 'mockAllowCache')) ? $test : get_called_class()), 'mockAllowCache'),
 			)
 		);
 
@@ -130,58 +179,9 @@ class TestMockApplicationWeb extends TestMockApplicationBase
 	}
 
 	/**
-	 * Creates and instance of the mock JApplicationWeb object.
-	 *
-	 * The test can implement the following overrides:
-	 * - mockAppendBody
-	 * - mockGetBody
-	 * - mockPrepentBody
-	 * - mockSetBody
-	 * - mockGetHeaders
-	 * - mockSetHeaders
-	 * - mockAllowCache
-	 *
-	 * If any *Body methods are implemented in the test class, all should be implemented otherwise behaviour will be unreliable.
-	 *
-	 * @param   TestCase  $test     A test object.
-	 * @param   array     $options  A set of options to configure the mock.
-	 *
-	 * @return  PHPUnit_Framework_MockObject_MockObject
-	 *
-	 * @since   11.3
-	 */
-	public static function create($test, $options = array())
-	{
-		// Set expected server variables.
-		if (!isset($_SERVER['HTTP_HOST']))
-		{
-			$_SERVER['HTTP_HOST'] = 'localhost';
-		}
-
-		// Collect all the relevant methods in JApplicationWeb (work in progress).
-		$methods = self::getMethods();
-
-		// Create the mock.
-		$mockObject = $test->getMock(
-			'JApplicationWeb',
-			$methods,
-			// Constructor arguments.
-			array(),
-			// Mock class name.
-			'',
-			// Call original constructor.
-			true
-		);
-
-		$mockObject = self::addBehaviours($test, $mockObject, $options);
-
-		return $mockObject;
-	}
-
-	/**
 	 * Mock JApplicationWeb->appendBody method.
 	 *
-	 * @param   string  $content  The content to append to the response body.
+	 * @param   string $content The content to append to the response body.
 	 *
 	 * @return  mixed
 	 *
@@ -195,7 +195,7 @@ class TestMockApplicationWeb extends TestMockApplicationBase
 	/**
 	 * Mock JApplicationWeb->getBody method.
 	 *
-	 * @param   boolean  $asArray  True to return the body as an array of strings.
+	 * @param   boolean $asArray True to return the body as an array of strings.
 	 *
 	 * @return  mixed
 	 *
@@ -209,7 +209,7 @@ class TestMockApplicationWeb extends TestMockApplicationBase
 	/**
 	 * Mock JApplicationWeb->appendBody method.
 	 *
-	 * @param   string  $content  The content to append to the response body.
+	 * @param   string $content The content to append to the response body.
 	 *
 	 * @return  mixed
 	 *
@@ -223,7 +223,7 @@ class TestMockApplicationWeb extends TestMockApplicationBase
 	/**
 	 * Mock JApplicationWeb->setBody method.
 	 *
-	 * @param   string  $content  The body of the response.
+	 * @param   string $content The body of the response.
 	 *
 	 * @return  void
 	 *
@@ -249,9 +249,9 @@ class TestMockApplicationWeb extends TestMockApplicationBase
 	/**
 	 * Mock JApplicationWeb->setHeader method.
 	 *
-	 * @param   string   $name     The name of the header to set.
-	 * @param   string   $value    The value of the header to set.
-	 * @param   boolean  $replace  True to replace any headers with the same name.
+	 * @param   string  $name    The name of the header to set.
+	 * @param   string  $value   The value of the header to set.
+	 * @param   boolean $replace True to replace any headers with the same name.
 	 *
 	 * @return  void
 	 *
@@ -260,7 +260,7 @@ class TestMockApplicationWeb extends TestMockApplicationBase
 	public static function mockSetHeader($name, $value, $replace = false)
 	{
 		// Sanitize the input values.
-		$name = (string) $name;
+		$name  = (string) $name;
 		$value = (string) $value;
 
 		// If the replace flag is set, unset all known headers with the given name.
@@ -297,7 +297,7 @@ class TestMockApplicationWeb extends TestMockApplicationBase
 	/**
 	 * Mock JApplicationWeb->allowCache method.
 	 *
-	 * @param   boolean  $allow  True to allow browser caching.
+	 * @param   boolean $allow True to allow browser caching.
 	 *
 	 * @return  boolean
 	 *

@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -17,20 +17,17 @@ defined('FOF_INCLUDED') or die;
  */
 class FOFFormFieldOrdering extends JFormField implements FOFFormField
 {
-	protected $static;
-
-	protected $repeatable;
-
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
 	public $item;
-
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
+	protected $static;
+	protected $repeatable;
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -61,48 +58,6 @@ class FOFFormFieldOrdering extends JFormField implements FOFFormField
 			default:
 				return parent::__get($name);
 		}
-	}
-
-	/**
-	 * Method to get the field input markup for this field type.
-	 *
-	 * @since 2.0
-	 *
-	 * @return  string  The field input markup.
-	 */
-	protected function getInput()
-	{
-		$html = array();
-		$attr = '';
-
-		// Initialize some field attributes.
-		$attr .= !empty($this->class) ? ' class="' . $this->class . '"' : '';
-		$attr .= $this->disabled ? ' disabled' : '';
-		$attr .= !empty($this->size) ? ' size="' . $this->size . '"' : '';
-
-		// Initialize JavaScript field attributes.
-		$attr .= !empty($this->onchange) ? ' onchange="' . $this->onchange . '"' : '';
-
-		$this->item = $this->form->getModel()->getItem();
-
-		$keyfield = $this->item->getKeyName();
-		$itemId   = $this->item->$keyfield;
-
-		$query = $this->getQuery();
-
-		// Create a read-only list (no name) with a hidden input to store the value.
-		if ($this->readonly)
-		{
-			$html[] = JHtml::_('list.ordering', '', $query, trim($attr), $this->value, $itemId ? 0 : 1);
-			$html[] = '<input type="hidden" name="' . $this->name . '" value="' . $this->value . '"/>';
-		}
-		else
-		{
-			// Create a regular list.
-			$html[] = JHtml::_('list.ordering', $this->name, $query, trim($attr), $this->value, $itemId ? 0 : 1);
-		}
-
-		return implode($html);
 	}
 
 	/**
@@ -160,13 +115,13 @@ class FOFFormFieldOrdering extends JFormField implements FOFFormField
 			if ($view->getPerms()->editstate)
 			{
 				$disableClassName = '';
-				$disabledLabel = '';
+				$disabledLabel    = '';
 
 				$hasAjaxOrderingSupport = $view->hasAjaxOrderingSupport();
 
 				if (!$hasAjaxOrderingSupport['saveOrder'])
 				{
-					$disabledLabel = JText::_('JORDERINGDISABLED');
+					$disabledLabel    = JText::_('JORDERINGDISABLED');
 					$disableClassName = 'inactive tip-top';
 				}
 
@@ -196,6 +151,48 @@ class FOFFormFieldOrdering extends JFormField implements FOFFormField
 	}
 
 	/**
+	 * Method to get the field input markup for this field type.
+	 *
+	 * @since 2.0
+	 *
+	 * @return  string  The field input markup.
+	 */
+	protected function getInput()
+	{
+		$html = array();
+		$attr = '';
+
+		// Initialize some field attributes.
+		$attr .= !empty($this->class) ? ' class="' . $this->class . '"' : '';
+		$attr .= $this->disabled ? ' disabled' : '';
+		$attr .= !empty($this->size) ? ' size="' . $this->size . '"' : '';
+
+		// Initialize JavaScript field attributes.
+		$attr .= !empty($this->onchange) ? ' onchange="' . $this->onchange . '"' : '';
+
+		$this->item = $this->form->getModel()->getItem();
+
+		$keyfield = $this->item->getKeyName();
+		$itemId   = $this->item->$keyfield;
+
+		$query = $this->getQuery();
+
+		// Create a read-only list (no name) with a hidden input to store the value.
+		if ($this->readonly)
+		{
+			$html[] = JHtml::_('list.ordering', '', $query, trim($attr), $this->value, $itemId ? 0 : 1);
+			$html[] = '<input type="hidden" name="' . $this->name . '" value="' . $this->value . '"/>';
+		}
+		else
+		{
+			// Create a regular list.
+			$html[] = JHtml::_('list.ordering', $this->name, $query, trim($attr), $this->value, $itemId ? 0 : 1);
+		}
+
+		return implode($html);
+	}
+
+	/**
 	 * Builds the query for the ordering list.
 	 *
 	 * @since 2.3.2
@@ -207,11 +204,11 @@ class FOFFormFieldOrdering extends JFormField implements FOFFormField
 		$ordering = $this->name;
 		$title    = $this->element['ordertitle'] ? (string) $this->element['ordertitle'] : $this->item->getColumnAlias('title');
 
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select(array($db->quoteName($ordering, 'value'), $db->quoteName($title, 'text')))
-				->from($db->quoteName($this->item->getTableName()))
-				->order($ordering);
+			->from($db->quoteName($this->item->getTableName()))
+			->order($ordering);
 
 		return $query;
 	}

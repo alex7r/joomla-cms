@@ -48,40 +48,6 @@ class JGithubMilestonesTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options = new JRegistry;
-		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-
-		$this->object = new JGithubMilestones($this->options, $this->client);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @param   string  $name  The method name.
-	 *
-	 * @return string
-	 */
-	protected function getMethod($name)
-	{
-		$class = new ReflectionClass('JGithubMilestones');
-		$method = $class->getMethod($name);
-		$method->setAccessible(true);
-
-		return $method;
-	}
-
-	/**
 	 * Tests the create method
 	 *
 	 * @return void
@@ -90,15 +56,15 @@ class JGithubMilestonesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreate()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
-		$milestone = new stdClass;
-		$milestone->title = 'My Milestone';
-		$milestone->state = 'open';
+		$milestone              = new stdClass;
+		$milestone->title       = 'My Milestone';
+		$milestone->state       = 'open';
 		$milestone->description = 'This milestone is impossible';
-		$milestone->due_on = '2012-12-25T20:09:31Z';
+		$milestone->due_on      = '2012-12-25T20:09:31Z';
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -122,15 +88,15 @@ class JGithubMilestonesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreateFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 501;
 		$returnData->body = $this->errorString;
 
-		$milestone = new stdClass;
-		$milestone->title = 'My Milestone';
-		$milestone->state = 'open';
+		$milestone              = new stdClass;
+		$milestone->title       = 'My Milestone';
+		$milestone->state       = 'open';
 		$milestone->description = 'This milestone is impossible';
-		$milestone->due_on = '2012-12-25T20:09:31Z';
+		$milestone->due_on      = '2012-12-25T20:09:31Z';
 
 		$this->client->expects($this->once())
 			->method('post')
@@ -149,11 +115,11 @@ class JGithubMilestonesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEdit()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$milestone = new stdClass;
+		$milestone        = new stdClass;
 		$milestone->state = 'closed';
 
 		$this->client->expects($this->once())
@@ -177,15 +143,15 @@ class JGithubMilestonesTest extends PHPUnit_Framework_TestCase
 	public function testEditAllParameters()
 	{
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$milestone = new stdClass;
-		$milestone->title = 'This is the revised title.';
-		$milestone->state = 'closed';
+		$milestone              = new stdClass;
+		$milestone->title       = 'This is the revised title.';
+		$milestone->state       = 'closed';
 		$milestone->description = 'This describes it perfectly.';
-		$milestone->due_on = '2012-12-25T20:09:31Z';
+		$milestone->due_on      = '2012-12-25T20:09:31Z';
 
 		$this->client->expects($this->once())
 			->method('patch')
@@ -210,17 +176,17 @@ class JGithubMilestonesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testEditFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$milestone = new stdClass;
+		$milestone        = new stdClass;
 		$milestone->state = 'closed';
 
 		$this->client->expects($this->once())
-		->method('patch')
-		->with('/repos/joomla/joomla-platform/milestones/523', json_encode($milestone))
-		->will($this->returnValue($returnData));
+			->method('patch')
+			->with('/repos/joomla/joomla-platform/milestones/523', json_encode($milestone))
+			->will($this->returnValue($returnData));
 
 		$this->object->edit('joomla', 'joomla-platform', 523, null, 'closed');
 	}
@@ -234,7 +200,7 @@ class JGithubMilestonesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGet()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -260,7 +226,7 @@ class JGithubMilestonesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -281,18 +247,18 @@ class JGithubMilestonesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetList()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with('/repos/joomla/joomla-platform/milestones?state=open&sort=due_date&direction=desc')
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with('/repos/joomla/joomla-platform/milestones?state=open&sort=due_date&direction=desc')
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
-				$this->object->getList('joomla', 'joomla-platform'),
-				$this->equalTo(json_decode($this->sampleString))
+			$this->object->getList('joomla', 'joomla-platform'),
+			$this->equalTo(json_decode($this->sampleString))
 		);
 	}
 
@@ -307,14 +273,14 @@ class JGithubMilestonesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetListFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with('/repos/joomla/joomla-platform/milestones?state=open&sort=due_date&direction=desc')
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with('/repos/joomla/joomla-platform/milestones?state=open&sort=due_date&direction=desc')
+			->will($this->returnValue($returnData));
 
 		$this->object->getList('joomla', 'joomla-platform');
 	}
@@ -328,14 +294,14 @@ class JGithubMilestonesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testDelete()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 204;
 		$returnData->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		->method('delete')
-		->with('/repos/joomla/joomla-platform/milestones/254')
-		->will($this->returnValue($returnData));
+			->method('delete')
+			->with('/repos/joomla/joomla-platform/milestones/254')
+			->will($this->returnValue($returnData));
 
 		$this->object->delete('joomla', 'joomla-platform', 254);
 	}
@@ -351,15 +317,49 @@ class JGithubMilestonesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testDeleteFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 504;
 		$returnData->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		->method('delete')
-		->with('/repos/joomla/joomla-platform/milestones/254')
-		->will($this->returnValue($returnData));
+			->method('delete')
+			->with('/repos/joomla/joomla-platform/milestones/254')
+			->will($this->returnValue($returnData));
 
 		$this->object->delete('joomla', 'joomla-platform', 254);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+		$this->client  = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+
+		$this->object = new JGithubMilestones($this->options, $this->client);
+	}
+
+	/**
+	 * Test...
+	 *
+	 * @param   string $name The method name.
+	 *
+	 * @return string
+	 */
+	protected function getMethod($name)
+	{
+		$class  = new ReflectionClass('JGithubMilestones');
+		$method = $class->getMethod($name);
+		$method->setAccessible(true);
+
+		return $method;
 	}
 }

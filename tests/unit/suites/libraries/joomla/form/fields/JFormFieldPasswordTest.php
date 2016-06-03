@@ -28,46 +28,6 @@ class JFormFieldPasswordTest extends TestCase
 	protected $backupServer;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$database    = $this->getMockDatabase();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
 	 * Test...
 	 *
 	 * @return  array
@@ -89,7 +49,7 @@ class JFormFieldPasswordTest extends TestCase
 	 */
 	public function testSetupMaxlength()
 	{
-		$field = new JFormFieldPassword;
+		$field   = new JFormFieldPassword;
 		$element = simplexml_load_string(
 			'<field name="myName" type="password" maxlength="60" />');
 
@@ -116,7 +76,7 @@ class JFormFieldPasswordTest extends TestCase
 	 */
 	public function testSetupThreshold()
 	{
-		$field = new JFormFieldPassword;
+		$field   = new JFormFieldPassword;
 		$element = simplexml_load_string(
 			'<field name="myName" type="password" threshold="75" />');
 
@@ -143,7 +103,7 @@ class JFormFieldPasswordTest extends TestCase
 	 */
 	public function testSetupMeter()
 	{
-		$field = new JFormFieldPassword;
+		$field   = new JFormFieldPassword;
 		$element = simplexml_load_string(
 			'<field name="myName" type="password" strengthmeter="true" />');
 
@@ -167,7 +127,7 @@ class JFormFieldPasswordTest extends TestCase
 	 */
 	public function testSetMeter()
 	{
-		$field = new JFormFieldPassword;
+		$field   = new JFormFieldPassword;
 		$element = simplexml_load_string(
 			'<field name="myName" type="password" />');
 
@@ -193,12 +153,12 @@ class JFormFieldPasswordTest extends TestCase
 	 * Test the getInput method where there is no value from the element
 	 * and no checked attribute.
 	 *
-	 * @param   array   $data  	   @todo
-	 * @param   string  $expected  @todo
+	 * @param   array  $data     @todo
+	 * @param   string $expected @todo
 	 *
 	 * @return  void
 	 *
-	 * @since   12.2
+	 * @since         12.2
 	 *
 	 * @dataProvider  getInputData
 	 */
@@ -216,5 +176,45 @@ class JFormFieldPasswordTest extends TestCase
 			TestReflection::invoke($formField, 'getInput'),
 			'Line:' . __LINE__ . ' The field with no value and no checked attribute did not produce the right html'
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+		JFactory::$database    = $this->getMockDatabase();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 }

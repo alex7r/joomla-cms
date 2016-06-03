@@ -19,7 +19,7 @@ class FinderViewSearch extends JViewLegacy
 	/**
 	 * Method to display the view.
 	 *
-	 * @param   string  $tpl  A template file to load. [optional]
+	 * @param   string $tpl A template file to load. [optional]
 	 *
 	 * @return  mixed  JError object on failure, void on success.
 	 *
@@ -34,9 +34,9 @@ class FinderViewSearch extends JViewLegacy
 		$app->input->set('limit', $app->get('feed_limit'));
 
 		// Get view data.
-		$state = $this->get('State');
-		$params = $state->get('params');
-		$query = $this->get('Query');
+		$state   = $this->get('State');
+		$params  = $state->get('params');
+		$query   = $this->get('Query');
 		$results = $this->get('Results');
 
 		// Push out the query data.

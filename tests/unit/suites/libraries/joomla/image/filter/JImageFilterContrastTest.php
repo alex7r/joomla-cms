@@ -17,24 +17,6 @@
 class JImageFilterContrastTest extends TestCase
 {
 	/**
-	 * Setup for testing.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.4
-	 */
-	protected function setUp()
-	{
-		// Verify that GD support for PHP is available.
-		if (!extension_loaded('gd'))
-		{
-			$this->markTestSkipped('No GD support so skipping JImage tests.');
-		}
-
-		parent::setUp();
-	}
-
-	/**
 	 * Tests the JImageFilterContrast::execute method.
 	 *
 	 * This tests to make sure we can brighten the image.
@@ -49,7 +31,7 @@ class JImageFilterContrastTest extends TestCase
 		$imageHandle = imagecreatetruecolor(100, 100);
 
 		// Define red.
-		$dark = imagecolorallocate($imageHandle, 90, 90, 90);
+		$dark  = imagecolorallocate($imageHandle, 90, 90, 90);
 		$light = imagecolorallocate($imageHandle, 120, 120, 120);
 
 		imagefilledrectangle($imageHandle, 0, 0, 50, 99, $dark);
@@ -90,5 +72,23 @@ class JImageFilterContrastTest extends TestCase
 		$filter = new JImageFilterContrast($imageHandle);
 
 		$filter->execute(array());
+	}
+
+	/**
+	 * Setup for testing.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.4
+	 */
+	protected function setUp()
+	{
+		// Verify that GD support for PHP is available.
+		if (!extension_loaded('gd'))
+		{
+			$this->markTestSkipped('No GD support so skipping JImage tests.');
+		}
+
+		parent::setUp();
 	}
 }

@@ -20,27 +20,26 @@ use Joomla\Registry\Registry;
 class JApplicationCli extends JApplicationBase
 {
 	/**
+	 * @var    JApplicationCli  The application instance.
+	 * @since  11.1
+	 */
+	protected static $instance;
+	/**
 	 * @var    CliOutput  The output type.
 	 * @since  3.3
 	 */
 	protected $output;
 
 	/**
-	 * @var    JApplicationCli  The application instance.
-	 * @since  11.1
-	 */
-	protected static $instance;
-
-	/**
 	 * Class constructor.
 	 *
-	 * @param   JInputCli         $input       An optional argument to provide dependency injection for the application's
+	 * @param   JInputCli        $input        An optional argument to provide dependency injection for the application's
 	 *                                         input object.  If the argument is a JInputCli object that object will become
 	 *                                         the application's input object, otherwise a default input object is created.
-	 * @param   Registry          $config      An optional argument to provide dependency injection for the application's
+	 * @param   Registry         $config       An optional argument to provide dependency injection for the application's
 	 *                                         config object.  If the argument is a Registry object that object will become
 	 *                                         the application's config object, otherwise a default config object is created.
-	 * @param   JEventDispatcher  $dispatcher  An optional argument to provide dependency injection for the application's
+	 * @param   JEventDispatcher $dispatcher   An optional argument to provide dependency injection for the application's
 	 *                                         event dispatcher.  If the argument is a JEventDispatcher object that object will become
 	 *                                         the application's event dispatcher, if it is null then the default event dispatcher
 	 *                                         will be created based on the application's loadDispatcher() method.
@@ -97,11 +96,82 @@ class JApplicationCli extends JApplicationBase
 	}
 
 	/**
+	 * Load an object or array into the application configuration object.
+	 *
+	 * @param   mixed $data Either an array or object to be loaded into the configuration object.
+	 *
+	 * @return  JApplicationCli  Instance of $this to allow chaining.
+	 *
+	 * @since   11.1
+	 */
+	public function loadConfiguration($data)
+	{
+		// Load the data into the configuration object.
+		if (is_array($data))
+		{
+			$this->config->loadArray($data);
+		}
+		elseif (is_object($data))
+		{
+			$this->config->loadObject($data);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Method to load a PHP configuration class file based on convention and return the instantiated data object.  You
+	 * will extend this method in child classes to provide configuration data from whatever data source is relevant
+	 * for your specific application.
+	 *
+	 * @param   string $file    The path and filename of the configuration file. If not provided, configuration.php
+	 *                          in JPATH_BASE will be used.
+	 * @param   string $class   The class name to instantiate.
+	 *
+	 * @return  mixed   Either an array or object to be loaded into the configuration object.
+	 *
+	 * @since   11.1
+	 */
+	protected function fetchConfigurationData($file = '', $class = 'JConfig')
+	{
+		// Instantiate variables.
+		$config = array();
+
+		if (empty($file) && defined('JPATH_BASE'))
+		{
+			$file = JPATH_BASE . '/configuration.php';
+
+			// Applications can choose not to have any configuration data
+			// by not implementing this method and not having a config file.
+			if (!file_exists($file))
+			{
+				$file = '';
+			}
+		}
+
+		if (!empty($file))
+		{
+			JLoader::register($class, $file);
+
+			if (class_exists($class))
+			{
+				$config = new $class;
+			}
+			else
+			{
+				throw new RuntimeException('Configuration class does not exist.');
+			}
+		}
+
+		return $config;
+	}
+
+	/**
 	 * Returns a reference to the global JApplicationCli object, only creating it if it doesn't already exist.
 	 *
 	 * This method must be invoked as: $cli = JApplicationCli::getInstance();
 	 *
-	 * @param   string  $name  The name (optional) of the JApplicationCli class to instantiate.
+	 * @param   string $name The name (optional) of the JApplicationCli class to instantiate.
 	 *
 	 * @return  JApplicationCli
 	 *
@@ -145,34 +215,24 @@ class JApplicationCli extends JApplicationBase
 	}
 
 	/**
-	 * Load an object or array into the application configuration object.
+	 * Method to run the application routines.  Most likely you will want to instantiate a controller
+	 * and execute it, or perform some sort of task directly.
 	 *
-	 * @param   mixed  $data  Either an array or object to be loaded into the configuration object.
+	 * @return  void
 	 *
-	 * @return  JApplicationCli  Instance of $this to allow chaining.
-	 *
-	 * @since   11.1
+	 * @codeCoverageIgnore
+	 * @since   11.3
 	 */
-	public function loadConfiguration($data)
+	protected function doExecute()
 	{
-		// Load the data into the configuration object.
-		if (is_array($data))
-		{
-			$this->config->loadArray($data);
-		}
-		elseif (is_object($data))
-		{
-			$this->config->loadObject($data);
-		}
-
-		return $this;
+		// Your application routines go here.
 	}
 
 	/**
 	 * Write a string to standard output.
 	 *
-	 * @param   string   $text  The text to display.
-	 * @param   boolean  $nl    True (default) to append a new line at the end of the output string.
+	 * @param   string  $text The text to display.
+	 * @param   boolean $nl   True (default) to append a new line at the end of the output string.
 	 *
 	 * @return  JApplicationCli  Instance of $this to allow chaining.
 	 *
@@ -210,7 +270,7 @@ class JApplicationCli extends JApplicationBase
 	/**
 	 * Set an output object.
 	 *
-	 * @param   CliOutput  $output  CliOutput object
+	 * @param   CliOutput $output CliOutput object
 	 *
 	 * @return  JApplicationCli  Instance of $this to allow chaining.
 	 *
@@ -234,66 +294,5 @@ class JApplicationCli extends JApplicationBase
 	public function in()
 	{
 		return rtrim(fread(STDIN, 8192), "\n");
-	}
-
-	/**
-	 * Method to load a PHP configuration class file based on convention and return the instantiated data object.  You
-	 * will extend this method in child classes to provide configuration data from whatever data source is relevant
-	 * for your specific application.
-	 *
-	 * @param   string  $file   The path and filename of the configuration file. If not provided, configuration.php
-	 *                          in JPATH_BASE will be used.
-	 * @param   string  $class  The class name to instantiate.
-	 *
-	 * @return  mixed   Either an array or object to be loaded into the configuration object.
-	 *
-	 * @since   11.1
-	 */
-	protected function fetchConfigurationData($file = '', $class = 'JConfig')
-	{
-		// Instantiate variables.
-		$config = array();
-
-		if (empty($file) && defined('JPATH_BASE'))
-		{
-			$file = JPATH_BASE . '/configuration.php';
-
-			// Applications can choose not to have any configuration data
-			// by not implementing this method and not having a config file.
-			if (!file_exists($file))
-			{
-				$file = '';
-			}
-		}
-
-		if (!empty($file))
-		{
-			JLoader::register($class, $file);
-
-			if (class_exists($class))
-			{
-				$config = new $class;
-			}
-			else
-			{
-				throw new RuntimeException('Configuration class does not exist.');
-			}
-		}
-
-		return $config;
-	}
-
-	/**
-	 * Method to run the application routines.  Most likely you will want to instantiate a controller
-	 * and execute it, or perform some sort of task directly.
-	 *
-	 * @return  void
-	 *
-	 * @codeCoverageIgnore
-	 * @since   11.3
-	 */
-	protected function doExecute()
-	{
-		// Your application routines go here.
 	}
 }

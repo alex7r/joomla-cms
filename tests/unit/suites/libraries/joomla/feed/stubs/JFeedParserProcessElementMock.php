@@ -31,9 +31,9 @@ class JFeedParserProcessElementMock extends JFeedParser
 	/**
 	 * Method to parse a specific feed element.
 	 *
-	 * @param   JFeed             $feed        The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement  $el          The current XML element object to handle.
-	 * @param   array             $namespaces  The array of relevant namespace objects to process for the element.
+	 * @param   JFeed            $feed       The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement $el         The current XML element object to handle.
+	 * @param   array            $namespaces The array of relevant namespace objects to process for the element.
 	 *
 	 * @return  void
 	 *
@@ -47,8 +47,8 @@ class JFeedParserProcessElementMock extends JFeedParser
 	/**
 	 * Method to handle the <link> element for the feed.
 	 *
-	 * @param   JFeed             $feed  The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement  $el    The current XML element object to handle.
+	 * @param   JFeed            $feed The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement $el   The current XML element object to handle.
 	 *
 	 * @return  void
 	 *

@@ -37,7 +37,7 @@ class JFormFieldModulePosition extends JFormFieldText
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -57,8 +57,8 @@ class JFormFieldModulePosition extends JFormFieldText
 	/**
 	 * Method to set certain otherwise inaccessible properties of the form field object.
 	 *
-	 * @param   string  $name   The property name for which to the the value.
-	 * @param   mixed   $value  The value of the property.
+	 * @param   string $name  The property name for which to the the value.
+	 * @param   mixed  $value The value of the property.
 	 *
 	 * @return  void
 	 *
@@ -80,9 +80,9 @@ class JFormFieldModulePosition extends JFormFieldText
 	/**
 	 * Method to attach a JForm object to the field.
 	 *
-	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
-	 * @param   mixed             $value    The form field value to validate.
-	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
+	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed            $value     The form field value to validate.
+	 * @param   string           $group     The field name group control value. This acts as as an array container for the field.
 	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
 	 *
@@ -106,7 +106,7 @@ class JFormFieldModulePosition extends JFormFieldText
 
 				if (isset($clientName))
 				{
-					$client = JApplicationHelper::getClientInfo($clientName, true);
+					$client   = JApplicationHelper::getClientInfo($clientName, true);
 					$clientId = $client->id;
 				}
 			}
@@ -125,7 +125,7 @@ class JFormFieldModulePosition extends JFormFieldText
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @return  string	The field input markup.
+	 * @return  string    The field input markup.
 	 *
 	 * @since   1.6
 	 */
@@ -135,7 +135,7 @@ class JFormFieldModulePosition extends JFormFieldText
 		JHtml::_('behavior.modal', 'a.modal');
 
 		// Build the script.
-		$script = array();
+		$script   = array();
 		$script[] = '	function jSelectPosition_' . $this->id . '(name) {';
 		$script[] = '		document.getElementById("' . $this->id . '").value = name;';
 		$script[] = '		jModalClose();';

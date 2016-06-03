@@ -18,30 +18,6 @@
 class JResponseTest extends TestCase
 {
 	/**
-	 * Sets up the fixture, for example, open a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function setUp()
-	{
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockWeb();
-	}
-
-	/**
-	 * Tears down the fixture, for example, close a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-	}
-
-	/**
 	 * Test...
 	 *
 	 * @return void
@@ -121,5 +97,29 @@ class JResponseTest extends TestCase
 			count(JResponse::getHeaders()),
 			$this->equalTo(0)
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, open a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function setUp()
+	{
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockWeb();
+	}
+
+	/**
+	 * Tears down the fixture, for example, close a network connection.
+	 * This method is called after a test is executed.
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
 	}
 }

@@ -16,20 +16,6 @@
 class JFormFieldCategoryTest extends TestCaseDatabase
 {
 	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_categories', JPATH_TEST_DATABASE . '/jos_categories.csv');
-
-		return $dataSet;
-	}
-
-	/**
 	 * Test the getInput method.
 	 */
 	public function testGetInput()
@@ -46,5 +32,19 @@ class JFormFieldCategoryTest extends TestCaseDatabase
 		$this->assertNotEmpty(
 			$field->input
 		);
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_categories', JPATH_TEST_DATABASE . '/jos_categories.csv');
+
+		return $dataSet;
 	}
 }

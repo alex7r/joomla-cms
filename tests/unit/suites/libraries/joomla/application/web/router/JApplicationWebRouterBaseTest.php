@@ -74,8 +74,8 @@ class JApplicationWebRouterBaseTest extends TestCase
 		$this->assertAttributeEquals(
 			array(
 				array(
-					'regex' => chr(1) . '^foo$' . chr(1),
-					'vars' => array(),
+					'regex'      => chr(1) . '^foo$' . chr(1),
+					'vars'       => array(),
 					'controller' => 'MyApplicationFoo'
 				)
 			),
@@ -94,31 +94,31 @@ class JApplicationWebRouterBaseTest extends TestCase
 	public function testAddMaps()
 	{
 		$maps = array(
-			'login' => 'login',
-			'logout' => 'logout',
-			'requests' => 'requests',
+			'login'                => 'login',
+			'logout'               => 'logout',
+			'requests'             => 'requests',
 			'requests/:request_id' => 'request'
 		);
 
 		$rules = array(
 			array(
-				'regex' => chr(1) . '^login$' . chr(1),
-				'vars' => array(),
+				'regex'      => chr(1) . '^login$' . chr(1),
+				'vars'       => array(),
 				'controller' => 'login'
 			),
 			array(
-				'regex' => chr(1) . '^logout$' . chr(1),
-				'vars' => array(),
+				'regex'      => chr(1) . '^logout$' . chr(1),
+				'vars'       => array(),
 				'controller' => 'logout'
 			),
 			array(
-				'regex' => chr(1) . '^requests$' . chr(1),
-				'vars' => array(),
+				'regex'      => chr(1) . '^requests$' . chr(1),
+				'vars'       => array(),
 				'controller' => 'requests'
 			),
 			array(
-				'regex' => chr(1) . '^requests/([^/]*)$' . chr(1),
-				'vars' => array('request_id'),
+				'regex'      => chr(1) . '^requests/([^/]*)$' . chr(1),
+				'vars'       => array('request_id'),
 				'controller' => 'request'
 			)
 		);
@@ -131,11 +131,11 @@ class JApplicationWebRouterBaseTest extends TestCase
 	/**
 	 * Tests the JApplicationWebRouterBase::parseRoute method.
 	 *
-	 * @param   string   $r  The route to parse.
-	 * @param   boolean  $e  True if an exception is expected.
-	 * @param   string   $c  The expected controller name.
-	 * @param   array    $i  The expected input object data.
-	 * @param   integer  $m  The map set to use for setting up the router.
+	 * @param   string  $r The route to parse.
+	 * @param   boolean $e True if an exception is expected.
+	 * @param   string  $c The expected controller name.
+	 * @param   array   $i The expected input object data.
+	 * @param   integer $m The map set to use for setting up the router.
 	 *
 	 * @return  void
 	 *
@@ -188,12 +188,12 @@ class JApplicationWebRouterBaseTest extends TestCase
 	{
 		$this->_instance->addMaps(
 			array(
-				'login' => 'login',
-				'logout' => 'logout',
-				'articles' => 'articles',
-				'articles/:article_id' => 'article',
-				'test/:seg1/path/:seg2' => 'test',
-				'content/:/\*' => 'content',
+				'login'                      => 'login',
+				'logout'                     => 'logout',
+				'articles'                   => 'articles',
+				'articles/:article_id'       => 'article',
+				'test/:seg1/path/:seg2'      => 'test',
+				'content/:/\*'               => 'content',
 				'content/*category/:article' => 'article'
 			)
 		);
@@ -212,7 +212,7 @@ class JApplicationWebRouterBaseTest extends TestCase
 		parent::setUp();
 
 		// Construct the clean JInput object.
-		$array = array();
+		$array        = array();
 		$this->_input = new JInput($array);
 
 		$this->_instance = new JApplicationWebRouterBase($this->getMockWeb(), $this->_input);

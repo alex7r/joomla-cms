@@ -75,7 +75,7 @@ class Session implements \IteratorAggregate
 	 * The domain to use when setting cookies.
 	 *
 	 * @var    mixed
-	 * @since  1.0
+	 * @since       1.0
 	 * @deprecated  2.0
 	 */
 	protected $cookie_domain;
@@ -84,7 +84,7 @@ class Session implements \IteratorAggregate
 	 * The path to use when setting cookies.
 	 *
 	 * @var    mixed
-	 * @since  1.0
+	 * @since       1.0
 	 * @deprecated  2.0
 	 */
 	protected $cookie_path;
@@ -93,7 +93,7 @@ class Session implements \IteratorAggregate
 	 * Session instances container.
 	 *
 	 * @var    Session
-	 * @since  1.0
+	 * @since       1.0
 	 * @deprecated  2.0
 	 */
 	protected static $instance;
@@ -102,7 +102,7 @@ class Session implements \IteratorAggregate
 	 * The type of storage for the session.
 	 *
 	 * @var    string
-	 * @since  1.0
+	 * @since       1.0
 	 * @deprecated  2.0
 	 */
 	protected $storeName;
@@ -126,8 +126,8 @@ class Session implements \IteratorAggregate
 	/**
 	 * Constructor
 	 *
-	 * @param   string  $store    The type of storage for the session.
-	 * @param   array   $options  Optional parameters
+	 * @param   string $store   The type of storage for the session.
+	 * @param   array  $options Optional parameters
 	 *
 	 * @since   1.0
 	 */
@@ -162,11 +162,11 @@ class Session implements \IteratorAggregate
 	/**
 	 * Magic method to get read-only access to properties.
 	 *
-	 * @param   string  $name  Name of property to retrieve
+	 * @param   string $name Name of property to retrieve
 	 *
 	 * @return  mixed   The value of the property
 	 *
-	 * @since   1.0
+	 * @since       1.0
 	 * @deprecated  2.0  Use get methods for non-deprecated properties
 	 */
 	public function __get($name)
@@ -181,15 +181,15 @@ class Session implements \IteratorAggregate
 	 * Returns the global Session object, only creating it
 	 * if it doesn't already exist.
 	 *
-	 * @param   string  $handler  The type of session handler.
-	 * @param   array   $options  An array of configuration options (for new sessions only).
+	 * @param   string $handler The type of session handler.
+	 * @param   array  $options An array of configuration options (for new sessions only).
 	 *
 	 * @return  Session  The Session object.
 	 *
-	 * @since   1.0
+	 * @since       1.0
 	 * @deprecated  2.0  A singleton object store will no longer be supported
 	 */
-	public static function getInstance($handler, array $options = array ())
+	public static function getInstance($handler, array $options = array())
 	{
 		if (!is_object(self::$instance))
 		{
@@ -230,7 +230,7 @@ class Session implements \IteratorAggregate
 	 * has been generated the system will check the post request to see if
 	 * it is present, if not it will invalidate the session.
 	 *
-	 * @param   boolean  $forceNew  If true, force a new token to be created
+	 * @param   boolean $forceNew If true, force a new token to be created
 	 *
 	 * @return  string  The session token
 	 *
@@ -254,8 +254,8 @@ class Session implements \IteratorAggregate
 	 * Method to determine if a token exists in the session. If not the
 	 * session will be set to expired
 	 *
-	 * @param   string   $tCheck       Hashed token to be verified
-	 * @param   boolean  $forceExpire  If true, expires the session
+	 * @param   string  $tCheck      Hashed token to be verified
+	 * @param   boolean $forceExpire If true, expires the session
 	 *
 	 * @return  boolean
 	 *
@@ -332,7 +332,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  array  An array of available session handlers
 	 *
-	 * @since   1.0
+	 * @since       1.0
 	 * @deprecated  2.0  The Storage class chain will be removed
 	 */
 	public static function getStores()
@@ -401,12 +401,12 @@ class Session implements \IteratorAggregate
 	/**
 	 * Check whether this session is currently created
 	 *
-	 * @param   Input                $input       Input object for the session to use.
-	 * @param   DispatcherInterface  $dispatcher  Dispatcher object for the session to use.
+	 * @param   Input               $input      Input object for the session to use.
+	 * @param   DispatcherInterface $dispatcher Dispatcher object for the session to use.
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since       1.0
 	 * @deprecated  2.0  In 2.0 the DispatcherInterface should be injected via the object constructor
 	 */
 	public function initialise(Input $input, DispatcherInterface $dispatcher = null)
@@ -418,9 +418,9 @@ class Session implements \IteratorAggregate
 	/**
 	 * Get data from the session store
 	 *
-	 * @param   string  $name       Name of a variable
-	 * @param   mixed   $default    Default value of a variable if not set
-	 * @param   string  $namespace  Namespace to use, default to 'default' {@deprecated 2.0 Namespace support will be removed.}
+	 * @param   string $name      Name of a variable
+	 * @param   mixed  $default   Default value of a variable if not set
+	 * @param   string $namespace Namespace to use, default to 'default' {@deprecated 2.0 Namespace support will be removed.}
 	 *
 	 * @return  mixed  Value of a variable
 	 *
@@ -450,9 +450,9 @@ class Session implements \IteratorAggregate
 	/**
 	 * Set data into the session store.
 	 *
-	 * @param   string  $name       Name of a variable.
-	 * @param   mixed   $value      Value of a variable.
-	 * @param   string  $namespace  Namespace to use, default to 'default' {@deprecated 2.0 Namespace support will be removed.}
+	 * @param   string $name      Name of a variable.
+	 * @param   mixed  $value     Value of a variable.
+	 * @param   string $namespace Namespace to use, default to 'default' {@deprecated 2.0 Namespace support will be removed.}
 	 *
 	 * @return  mixed  Old value of a variable.
 	 *
@@ -486,8 +486,8 @@ class Session implements \IteratorAggregate
 	/**
 	 * Check whether data exists in the session store
 	 *
-	 * @param   string  $name       Name of variable
-	 * @param   string  $namespace  Namespace to use, default to 'default' {@deprecated 2.0 Namespace support will be removed.}
+	 * @param   string $name      Name of variable
+	 * @param   string $namespace Namespace to use, default to 'default' {@deprecated 2.0 Namespace support will be removed.}
 	 *
 	 * @return  boolean  True if the variable exists
 	 *
@@ -510,8 +510,8 @@ class Session implements \IteratorAggregate
 	/**
 	 * Unset data from the session store
 	 *
-	 * @param   string  $name       Name of variable
-	 * @param   string  $namespace  Namespace to use, default to 'default' {@deprecated 2.0 Namespace support will be removed.}
+	 * @param   string $name      Name of variable
+	 * @param   string $namespace Namespace to use, default to 'default' {@deprecated 2.0 Namespace support will be removed.}
 	 *
 	 * @return  mixed   The value from session or NULL if not set
 	 *
@@ -577,7 +577,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  boolean  true on success
 	 *
-	 * @since   1.0
+	 * @since       1.0
 	 * @deprecated  2.0
 	 */
 	protected function _start()
@@ -752,7 +752,7 @@ class Session implements \IteratorAggregate
 	/**
 	 * Set the session expiration
 	 *
-	 * @param   integer  $expire  Maximum age of unused session in minutes
+	 * @param   integer $expire Maximum age of unused session in minutes
 	 *
 	 * @return  $this
 	 *
@@ -768,7 +768,7 @@ class Session implements \IteratorAggregate
 	/**
 	 * Set the session state
 	 *
-	 * @param   string  $state  Internal state
+	 * @param   string $state Internal state
 	 *
 	 * @return  $this
 	 *
@@ -786,7 +786,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
+	 * @since       1.0
 	 * @deprecated  2.0
 	 */
 	protected function _setCookieParams()
@@ -814,11 +814,11 @@ class Session implements \IteratorAggregate
 	/**
 	 * Create a token-string
 	 *
-	 * @param   integer  $length  Length of string
+	 * @param   integer $length Length of string
 	 *
 	 * @return  string  Generated token
 	 *
-	 * @since   1.0
+	 * @since       1.0
 	 * @deprecated  2.0  Use createToken instead
 	 */
 	protected function _createToken($length = 32)
@@ -829,7 +829,7 @@ class Session implements \IteratorAggregate
 	/**
 	 * Create a token-string
 	 *
-	 * @param   integer  $length  Length of string
+	 * @param   integer $length Length of string
 	 *
 	 * @return  string  Generated token
 	 *
@@ -838,9 +838,9 @@ class Session implements \IteratorAggregate
 	protected function createToken($length = 32)
 	{
 		static $chars = '0123456789abcdef';
-		$max = strlen($chars) - 1;
+		$max   = strlen($chars) - 1;
 		$token = '';
-		$name = session_name();
+		$name  = session_name();
 
 		for ($i = 0; $i < $length; ++$i)
 		{
@@ -855,7 +855,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since       1.0
 	 * @deprecated  2.0  Use setCounter instead
 	 */
 	protected function _setCounter()
@@ -885,7 +885,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since       1.0
 	 * @deprecated  2.0  Use setTimers instead
 	 */
 	protected function _setTimers()
@@ -920,11 +920,11 @@ class Session implements \IteratorAggregate
 	/**
 	 * Set additional session options
 	 *
-	 * @param   array  $options  List of parameter
+	 * @param   array $options List of parameter
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
+	 * @since       1.0
 	 * @deprecated  2.0  Use setOptions instead
 	 */
 	protected function _setOptions(array $options)
@@ -935,7 +935,7 @@ class Session implements \IteratorAggregate
 	/**
 	 * Set additional session options
 	 *
-	 * @param   array  $options  List of parameter
+	 * @param   array $options List of parameter
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -997,12 +997,12 @@ class Session implements \IteratorAggregate
 	 *
 	 * If one check failed, session data has to be cleaned.
 	 *
-	 * @param   boolean  $restart  Reactivate session
+	 * @param   boolean $restart Reactivate session
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @see     http://shiflett.org/articles/the-truth-about-sessions
-	 * @since   1.0
+	 * @see         http://shiflett.org/articles/the-truth-about-sessions
+	 * @since       1.0
 	 * @deprecated  2.0  Use validate instead
 	 */
 	protected function _validate($restart = false)
@@ -1019,7 +1019,7 @@ class Session implements \IteratorAggregate
 	 *
 	 * If one check failed, session data has to be cleaned.
 	 *
-	 * @param   boolean  $restart  Reactivate session
+	 * @param   boolean $restart Reactivate session
 	 *
 	 * @return  boolean  True on success
 	 *

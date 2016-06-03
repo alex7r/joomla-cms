@@ -33,7 +33,7 @@ class JLogLoggerMessageQueueTest extends PHPUnit_Framework_TestCase
 	{
 		parent::setUp();
 
-		$this->app = JFactory::$application;
+		$this->app             = JFactory::$application;
 		JFactory::$application = new JApplicationMock;
 	}
 

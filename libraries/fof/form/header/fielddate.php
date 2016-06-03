@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -24,8 +24,8 @@ class FOFFormHeaderFielddate extends FOFFormHeaderField
 	protected function getFilter()
 	{
 		// Initialize some field attributes.
-		$format		 = $this->element['format'] ? (string) $this->element['format'] : '%Y-%m-%d';
-		$attributes  = array();
+		$format     = $this->element['format'] ? (string) $this->element['format'] : '%Y-%m-%d';
+		$attributes = array();
 
 		if ($this->element['size'])
 		{

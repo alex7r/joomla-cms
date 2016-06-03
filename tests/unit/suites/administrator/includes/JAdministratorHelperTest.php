@@ -24,33 +24,6 @@ class JAdministratorHelperTest extends TestCase
 	protected $user;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		//$this->object = new JErrorPage;
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$application->input = $this->getMockInput();
-		$this->user = $this->getMock('JUser', array('get', 'authorise'));
-
-		JFactory::$application->expects($this->once())
-			->method('getIdentity')
-			->will($this->returnValue($this->user));
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-	}
-
-	/**
 	 * Tests the findOption() method simulating a guest.
 	 */
 	public function testFindOptionGuest()
@@ -152,5 +125,32 @@ class JAdministratorHelperTest extends TestCase
 			'com_login',
 			JFactory::$application->input->get('option')
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		//$this->object = new JErrorPage;
+		$this->saveFactoryState();
+
+		JFactory::$application        = $this->getMockCmsApp();
+		JFactory::$application->input = $this->getMockInput();
+		$this->user                   = $this->getMock('JUser', array('get', 'authorise'));
+
+		JFactory::$application->expects($this->once())
+			->method('getIdentity')
+			->will($this->returnValue($this->user));
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
 	}
 }

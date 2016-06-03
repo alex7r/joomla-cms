@@ -19,16 +19,6 @@ require_once __DIR__ . '/stubs/database/inspector.php';
 class JLogLoggerDatabaseTest extends TestCaseDatabase
 {
 	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return xml dataset
-	 */
-	protected function getDataSet()
-	{
-		return $this->createXMLDataSet(__DIR__ . '/stubs/database/S01.xml');
-	}
-
-	/**
 	 * Test the JLogLoggerDatabase::__construct method.
 	 *
 	 * @return void
@@ -38,7 +28,7 @@ class JLogLoggerDatabaseTest extends TestCaseDatabase
 		// Setup the basic configuration.
 		$config = array(
 			'db_driver' => 'mysqli',
-			'db_host' => 'db.domain.com'
+			'db_host'   => 'db.domain.com'
 		);
 		$logger = new JLogLoggerDatabaseInspector($config);
 
@@ -84,9 +74,9 @@ class JLogLoggerDatabaseTest extends TestCaseDatabase
 	{
 		// Setup the logger.
 		$config = array(
-			'db_driver' => 'sqlite',
+			'db_driver'   => 'sqlite',
 			'db_database' => ':memory:',
-			'db_prefix' => 'jos_'
+			'db_prefix'   => 'jos_'
 		);
 		$logger = new JLogLoggerDatabase($config);
 		TestReflection::setValue($logger, 'db', JFactory::$database);
@@ -115,9 +105,9 @@ class JLogLoggerDatabaseTest extends TestCaseDatabase
 	{
 		// Setup the basic configuration.
 		$config = array(
-			'db_driver' => 'sqlite',
+			'db_driver'   => 'sqlite',
 			'db_database' => ':memory:',
-			'db_prefix' => 'jos_'
+			'db_prefix'   => 'jos_'
 		);
 
 		$logger = new JLogLoggerDatabaseInspector($config);
@@ -139,13 +129,23 @@ class JLogLoggerDatabaseTest extends TestCaseDatabase
 	{
 		// Setup the basic configuration.
 		$config = array(
-			'db_driver' => 'failure',
-			'db_host' => 'foo',
+			'db_driver'   => 'failure',
+			'db_host'     => 'foo',
 			'db_database' => 'bar',
-			'db_prefix' => 'blah_'
+			'db_prefix'   => 'blah_'
 		);
 
 		$logger = new JLogLoggerDatabaseInspector($config);
 		$logger->connect();
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return xml dataset
+	 */
+	protected function getDataSet()
+	{
+		return $this->createXMLDataSet(__DIR__ . '/stubs/database/S01.xml');
 	}
 }

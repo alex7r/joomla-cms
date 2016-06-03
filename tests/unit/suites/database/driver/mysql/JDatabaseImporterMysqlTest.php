@@ -29,11 +29,11 @@ class JDatabaseImporterMysqlTest extends TestCase
 	 * @var    array  Selected sample data for tests.
 	 */
 	protected $sample = array(
-		'xml-id-field' =>
+		'xml-id-field'    =>
 			'<field Field="id" Type="int(11) unsigned" Null="NO" Key="PRI" Default="" Extra="auto_increment" />',
 		'xml-title-field' =>
 			'<field Field="title" Type="varchar(50)" Null="NO" Key="" Default="" Extra="" />',
-		'xml-body-field' =>
+		'xml-body-field'  =>
 			'<field Field="body" Type="mediumtext" Null="NO" Key="" Default="" Extra="" />',
 		'xml-primary-key' =>
 			'<key Table="#__test" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />',
@@ -53,131 +53,6 @@ class JDatabaseImporterMysqlTest extends TestCase
 	}
 
 	/**
-	 * Sets up the fixture, for example, open a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		$this->dbo = $this->getMock(
-			'JDatabaseDriverMysql',
-			array(
-				'getErrorNum',
-				'getPrefix',
-				'getTableColumns',
-				'getTableKeys',
-				'quoteName',
-				'loadObjectList',
-				'quote',
-				'setQuery',
-			),
-			array(),
-			'',
-			false
-		);
-
-		$this->dbo
-			->expects($this->any())
-			->method('getPrefix')
-			->will(
-				$this->returnValue('jos_')
-		);
-
-		$this->dbo
-			->expects($this->any())
-			->method('getTableColumns')
-			->will(
-			$this->returnValue(
-				array(
-					'id' => (object) array(
-						'Field' => 'id',
-						'Type' => 'int(11) unsigned',
-						'Collation' => null,
-						'Null' => 'NO',
-						'Key' => 'PRI',
-						'Default' => '',
-						'Extra' => 'auto_increment',
-						'Privileges' => 'select,insert,update,references',
-						'Comment' => '',
-					),
-					'title' => (object) array(
-						'Field' => 'title',
-						'Type' => 'varchar(255)',
-						'Collation' => 'utf8_general_ci',
-						'Null' => 'NO',
-						'Key' => '',
-						'Default' => '',
-						'Extra' => '',
-						'Privileges' => 'select,insert,update,references',
-						'Comment' => '',
-					),
-				)
-			)
-		);
-
-		$this->dbo
-			->expects($this->any())
-			->method('getTableKeys')
-			->will(
-			$this->returnValue(
-				array(
-					(object) array(
-						'Table' => 'jos_test',
-						'Non_unique' => '0',
-						'Key_name' => 'PRIMARY',
-						'Seq_in_index' => '1',
-						'Column_name' => 'id',
-						'Collation' => 'A',
-						'Cardinality' => '2695',
-						'Sub_part' => '',
-						'Packed' => '',
-						'Null' => '',
-						'Index_type' => 'BTREE',
-						'Comment' => '',
-					)
-				)
-			)
-		);
-
-		$this->dbo
-			->expects($this->any())
-			->method('quoteName')
-			->will(
-			$this->returnCallback(
-				array($this, 'callbackQuoteName')
-			)
-		);
-
-		$this->dbo
-			->expects($this->any())
-			->method('quote')
-			->will(
-			$this->returnCallback(
-				array($this, 'callbackQuote')
-			)
-		);
-
-		$this->dbo
-			->expects($this->any())
-			->method('setQuery')
-			->will(
-			$this->returnCallback(
-				array($this, 'callbackSetQuery')
-			)
-		);
-
-		$this->dbo
-			->expects($this->any())
-			->method('loadObjectList')
-			->will(
-			$this->returnCallback(
-				array($this, 'callbackLoadObjectList')
-			)
-		);
-	}
-
-	/**
 	 * Callback for the dbo loadObjectList method.
 	 *
 	 * @return array  An array of results based on the setting of the last query.
@@ -190,7 +65,7 @@ class JDatabaseImporterMysqlTest extends TestCase
 	/**
 	 * Callback for the dbo quote method.
 	 *
-	 * @param   string  $value  The value to be quoted.
+	 * @param   string $value The value to be quoted.
 	 *
 	 * @return string  The value passed wrapped in MySQL quotes.
 	 */
@@ -202,7 +77,7 @@ class JDatabaseImporterMysqlTest extends TestCase
 	/**
 	 * Callback for the dbo quoteName method.
 	 *
-	 * @param   string  $value  The value to be quoted.
+	 * @param   string $value The value to be quoted.
 	 *
 	 * @return string  The value passed wrapped in MySQL quotes.
 	 */
@@ -214,7 +89,7 @@ class JDatabaseImporterMysqlTest extends TestCase
 	/**
 	 * Callback for the dbo setQuery method.
 	 *
-	 * @param   string  $query  The query.
+	 * @param   string $query The query.
 	 *
 	 * @return void
 	 */
@@ -504,8 +379,8 @@ class JDatabaseImporterMysqlTest extends TestCase
 	 * Tests the getColumnSQL method.
 	 *
 	 * @param   string $field
-	 * @param   string  $expected  The expected result from the getColumnSQL method.
-	 * @param   string  $message   The error message to display if the result does not match the expected value.
+	 * @param   string $expected The expected result from the getColumnSQL method.
+	 * @param   string $message  The error message to display if the result does not match the expected value.
 	 *
 	 * @dataProvider dataGetColumnSQL
 	 */
@@ -587,7 +462,7 @@ class JDatabaseImporterMysqlTest extends TestCase
 			TestReflection::invoke($instance, 'getKeyLookup', array($o1, $o2, $o3)),
 			$this->equalTo(
 				array(
-					'id' => array($o1, $o2),
+					'id'    => array($o1, $o2),
 					'title' => array($o3)
 				)
 			),
@@ -602,7 +477,7 @@ class JDatabaseImporterMysqlTest extends TestCase
 			TestReflection::invoke($instance, 'getKeyLookup', array($o1, $o2, $o3)),
 			$this->equalTo(
 				array(
-					'id' => array($o1, $o2),
+					'id'    => array($o1, $o2),
 					'title' => array($o3)
 				)
 			),
@@ -614,8 +489,8 @@ class JDatabaseImporterMysqlTest extends TestCase
 	 * Tests the getKeySQL method.
 	 *
 	 * @param   string $field
-	 * @param   string  $expected  The expected result from the getKeySQL method.
-	 * @param   string  $message   The error message to display if the result does not match the expected value.
+	 * @param   string $expected The expected result from the getKeySQL method.
+	 * @param   string $message  The error message to display if the result does not match the expected value.
 	 *
 	 * @dataProvider dataGetKeySQL
 	 */
@@ -704,5 +579,130 @@ class JDatabaseImporterMysqlTest extends TestCase
 			$this->isFalse(),
 			'The explicit use of withStructure with false should result in false.'
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, open a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		$this->dbo = $this->getMock(
+			'JDatabaseDriverMysql',
+			array(
+				'getErrorNum',
+				'getPrefix',
+				'getTableColumns',
+				'getTableKeys',
+				'quoteName',
+				'loadObjectList',
+				'quote',
+				'setQuery',
+			),
+			array(),
+			'',
+			false
+		);
+
+		$this->dbo
+			->expects($this->any())
+			->method('getPrefix')
+			->will(
+				$this->returnValue('jos_')
+			);
+
+		$this->dbo
+			->expects($this->any())
+			->method('getTableColumns')
+			->will(
+				$this->returnValue(
+					array(
+						'id'    => (object) array(
+							'Field'      => 'id',
+							'Type'       => 'int(11) unsigned',
+							'Collation'  => null,
+							'Null'       => 'NO',
+							'Key'        => 'PRI',
+							'Default'    => '',
+							'Extra'      => 'auto_increment',
+							'Privileges' => 'select,insert,update,references',
+							'Comment'    => '',
+						),
+						'title' => (object) array(
+							'Field'      => 'title',
+							'Type'       => 'varchar(255)',
+							'Collation'  => 'utf8_general_ci',
+							'Null'       => 'NO',
+							'Key'        => '',
+							'Default'    => '',
+							'Extra'      => '',
+							'Privileges' => 'select,insert,update,references',
+							'Comment'    => '',
+						),
+					)
+				)
+			);
+
+		$this->dbo
+			->expects($this->any())
+			->method('getTableKeys')
+			->will(
+				$this->returnValue(
+					array(
+						(object) array(
+							'Table'        => 'jos_test',
+							'Non_unique'   => '0',
+							'Key_name'     => 'PRIMARY',
+							'Seq_in_index' => '1',
+							'Column_name'  => 'id',
+							'Collation'    => 'A',
+							'Cardinality'  => '2695',
+							'Sub_part'     => '',
+							'Packed'       => '',
+							'Null'         => '',
+							'Index_type'   => 'BTREE',
+							'Comment'      => '',
+						)
+					)
+				)
+			);
+
+		$this->dbo
+			->expects($this->any())
+			->method('quoteName')
+			->will(
+				$this->returnCallback(
+					array($this, 'callbackQuoteName')
+				)
+			);
+
+		$this->dbo
+			->expects($this->any())
+			->method('quote')
+			->will(
+				$this->returnCallback(
+					array($this, 'callbackQuote')
+				)
+			);
+
+		$this->dbo
+			->expects($this->any())
+			->method('setQuery')
+			->will(
+				$this->returnCallback(
+					array($this, 'callbackSetQuery')
+				)
+			);
+
+		$this->dbo
+			->expects($this->any())
+			->method('loadObjectList')
+			->will(
+				$this->returnCallback(
+					array($this, 'callbackLoadObjectList')
+				)
+			);
 	}
 }

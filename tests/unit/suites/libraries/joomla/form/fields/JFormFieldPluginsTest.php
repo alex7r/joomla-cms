@@ -19,22 +19,6 @@ JFormHelper::loadFieldClass('plugins');
 class JFormFieldPluginsTest extends TestCaseDatabase
 {
 	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   12.1
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
-
-		return $dataSet;
-	}
-
-	/**
 	 * Tests folder attribute setup by JFormFieldPlugins::setup method
 	 *
 	 * @covers JFormField::setup
@@ -44,7 +28,7 @@ class JFormFieldPluginsTest extends TestCaseDatabase
 	 */
 	public function testSetupFolder()
 	{
-		$field = new JFormFieldPlugins;
+		$field   = new JFormFieldPlugins;
 		$element = simplexml_load_string(
 			'<field name="editors" type="plugins" folder="editors" />');
 
@@ -94,5 +78,21 @@ class JFormFieldPluginsTest extends TestCaseDatabase
 		}
 
 		// TODO: Should check all the attributes have come in properly.
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   12.1
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
+
+		return $dataSet;
 	}
 }

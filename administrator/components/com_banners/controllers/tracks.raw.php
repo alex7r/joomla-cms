@@ -25,26 +25,10 @@ class BannersControllerTracks extends JControllerLegacy
 	protected $context = 'com_banners.tracks';
 
 	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param   string  $name    The name of the model.
-	 * @param   string  $prefix  The prefix for the model class name.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  JModelLegacy
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'Tracks', $prefix = 'BannersModel', $config = array())
-	{
-		return parent::getModel($name, $prefix, array('ignore_request' => true));
-	}
-
-	/**
 	 * Display method for the raw track data.
 	 *
-	 * @param   boolean  $cachable   If true, the view output will be cached
-	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean $cachable  If true, the view output will be cached
+	 * @param   array   $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  BannersControllerTracks  This object to support chaining.
 	 *
@@ -96,5 +80,21 @@ class BannersControllerTracks extends JControllerLegacy
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string $name   The name of the model.
+	 * @param   string $prefix The prefix for the model class name.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return  JModelLegacy
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'Tracks', $prefix = 'BannersModel', $config = array())
+	{
+		return parent::getModel($name, $prefix, array('ignore_request' => true));
 	}
 }

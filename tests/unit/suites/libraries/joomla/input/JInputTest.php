@@ -348,7 +348,7 @@ class JInputTest extends PHPUnit_Framework_TestCase
 		include_once __DIR__ . '/stubs/JFilterInputMock.php';
 		include_once __DIR__ . '/stubs/JFilterInputMockTracker.php';
 
-		$array = null;
+		$array       = null;
 		$this->class = new JInputInspector($array, array('filter' => new JFilterInputMock));
 	}
 }

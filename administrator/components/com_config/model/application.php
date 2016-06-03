@@ -21,12 +21,12 @@ class ConfigModelApplication extends ConfigModelForm
 	/**
 	 * Method to get a form object.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
-	 * @since	1.6
+	 * @since    1.6
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -48,9 +48,9 @@ class ConfigModelApplication extends ConfigModelForm
 	 * JConfig. If configuration data has been saved in the session, that
 	 * data will be merged into the original data, overwriting it.
 	 *
-	 * @return	array  An array containg all global config data.
+	 * @return    array  An array containg all global config data.
 	 *
-	 * @since	1.6
+	 * @since    1.6
 	 */
 	public function getData()
 	{
@@ -68,7 +68,7 @@ class ConfigModelApplication extends ConfigModelForm
 		// If no filter data found, get from com_content (update of 1.6/1.7 site)
 		if (empty($data['filters']))
 		{
-			$contentParams = JComponentHelper::getParams('com_content');
+			$contentParams   = JComponentHelper::getParams('com_content');
 			$data['filters'] = JArrayHelper::fromObject($contentParams->get('filters'));
 		}
 
@@ -87,11 +87,11 @@ class ConfigModelApplication extends ConfigModelForm
 	/**
 	 * Method to save the configuration data.
 	 *
-	 * @param   array  $data  An array containing all global config data.
+	 * @param   array $data An array containing all global config data.
 	 *
-	 * @return	boolean  True on success, false on failure.
+	 * @return    boolean  True on success, false on failure.
 	 *
-	 * @since	1.6
+	 * @since    1.6
 	 */
 	public function save($data)
 	{
@@ -288,38 +288,13 @@ class ConfigModelApplication extends ConfigModelForm
 	}
 
 	/**
-	 * Method to unset the root_user value from configuration data.
-	 *
-	 * This method will load the global configuration data straight from
-	 * JConfig and remove the root_user value for security, then save the configuration.
-	 *
-	 * @return	boolean  True on success, false on failure.
-	 *
-	 * @since	1.6
-	 */
-	public function removeroot()
-	{
-		// Get the previous configuration.
-		$prev = new JConfig;
-		$prev = JArrayHelper::fromObject($prev);
-
-		// Create the new configuration object, and unset the root_user property
-		$config = new Registry('config');
-		unset($prev['root_user']);
-		$config->loadArray($prev);
-
-		// Write the configuration file.
-		return $this->writeConfigFile($config);
-	}
-
-	/**
 	 * Method to write the configuration to a file.
 	 *
-	 * @param   Registry  $config  A Registry object containing all global config data.
+	 * @param   Registry $config A Registry object containing all global config data.
 	 *
-	 * @return	boolean  True on success, false on failure.
+	 * @return    boolean  True on success, false on failure.
 	 *
-	 * @since	2.5.4
+	 * @since    2.5.4
 	 * @throws  RuntimeException
 	 */
 	private function writeConfigFile(Registry $config)
@@ -359,12 +334,37 @@ class ConfigModelApplication extends ConfigModelForm
 	}
 
 	/**
+	 * Method to unset the root_user value from configuration data.
+	 *
+	 * This method will load the global configuration data straight from
+	 * JConfig and remove the root_user value for security, then save the configuration.
+	 *
+	 * @return    boolean  True on success, false on failure.
+	 *
+	 * @since    1.6
+	 */
+	public function removeroot()
+	{
+		// Get the previous configuration.
+		$prev = new JConfig;
+		$prev = JArrayHelper::fromObject($prev);
+
+		// Create the new configuration object, and unset the root_user property
+		$config = new Registry('config');
+		unset($prev['root_user']);
+		$config->loadArray($prev);
+
+		// Write the configuration file.
+		return $this->writeConfigFile($config);
+	}
+
+	/**
 	 * Method to store the permission values in the asset table.
 	 *
 	 * This method will get an array with permission key value pairs and transform it
 	 * into json and update the asset table in the database.
 	 *
-	 * @param   string  $permission  Need an array with Permissions (component, rule, value and title)
+	 * @param   string $permission Need an array with Permissions (component, rule, value and title)
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *
@@ -387,12 +387,12 @@ class ConfigModelApplication extends ConfigModelForm
 
 			if (empty($results))
 			{
-				$data = array();
+				$data                        = array();
 				$data[$permission['action']] = array();
 				$data[$permission['action']] = array($permission['rule'] => $permission['value']);
 
-				$rules = new JAccessRules($data);
-				$asset = JTable::getInstance('asset');
+				$rules        = new JAccessRules($data);
+				$asset        = JTable::getInstance('asset');
 				$asset->rules = (string) $rules;
 				$asset->name  = (string) $permission['component'];
 				$asset->title = (string) $permission['title'];
@@ -472,7 +472,7 @@ class ConfigModelApplication extends ConfigModelForm
 	public function sendTestMail()
 	{
 		// Set the new values to test with the current settings
-		$app = JFactory::getApplication();
+		$app   = JFactory::getApplication();
 		$input = $app->input;
 
 		$app->set('smtpauth', $input->get('smtpauth'));

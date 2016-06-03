@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -19,20 +19,17 @@ JFormHelper::loadFieldClass('list');
  */
 class FOFFormFieldActions extends JFormFieldList implements FOFFormField
 {
-	protected $static;
-
-	protected $repeatable;
-
 	/** @var int A monotonically increasing number, denoting the row number in a repeatable view */
 	public $rowid;
-
 	/** @var   FOFTable  The item being rendered in a repeatable form field */
 	public $item;
+	protected $static;
+	protected $repeatable;
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -63,109 +60,6 @@ class FOFFormFieldActions extends JFormFieldList implements FOFFormField
 			default:
 				return parent::__get($name);
 		}
-	}
-
-	/**
-	 * Get the field configuration
-	 *
-	 * @return  array
-	 */
-	protected function getConfig()
-	{
-		// If no custom options were defined let's figure out which ones of the
-		// defaults we shall use...
-		$config = array(
-			'published'		 => 1,
-			'unpublished'	 => 1,
-			'archived'		 => 0,
-			'trash'			 => 0,
-			'all'			 => 0,
-		);
-
-		$stack = array();
-
-		if (isset($this->element['show_published']))
-		{
-			$config['published'] = FOFStringUtils::toBool($this->element['show_published']);
-		}
-
-		if (isset($this->element['show_unpublished']))
-		{
-			$config['unpublished'] = FOFStringUtils::toBool($this->element['show_unpublished']);
-		}
-
-		if (isset($this->element['show_archived']))
-		{
-			$config['archived'] = FOFStringUtils::toBool($this->element['show_archived']);
-		}
-
-		if (isset($this->element['show_trash']))
-		{
-			$config['trash'] = FOFStringUtils::toBool($this->element['show_trash']);
-		}
-
-		if (isset($this->element['show_all']))
-		{
-			$config['all'] = FOFStringUtils::toBool($this->element['show_all']);
-		}
-
-		return $config;
-	}
-
-	/**
-	 * Method to get the field options.
-	 *
-	 * @since 2.0
-	 *
-	 * @return  array  The field option objects.
-	 */
-	protected function getOptions()
-	{
-		return null;
-	}
-
-	/**
-	 * Method to get a
-	 *
-	 * @param   string  $enabledFieldName  Name of the enabled/published field
-	 *
-	 * @return  FOFFormFieldPublished  Field
-	 */
-	protected function getPublishedField($enabledFieldName)
-	{
-		$attributes = array(
-			'name' => $enabledFieldName,
-			'type' => 'published',
-		);
-
-		if ($this->element['publish_up'])
-		{
-			$attributes['publish_up'] = (string) $this->element['publish_up'];
-		}
-
-		if ($this->element['publish_down'])
-		{
-			$attributes['publish_down'] = (string) $this->element['publish_down'];
-		}
-
-		foreach ($attributes as $name => $value)
-		{
-			if (!is_null($value))
-			{
-				$renderedAttributes[] = $name . '="' . $value . '"';
-			}
-		}
-
-		$publishedXml = new SimpleXMLElement('<field ' . implode(' ', $renderedAttributes) . ' />');
-
-		$publishedField = new FOFFormFieldPublished($this->form);
-
-		// Pass required objects to the field
-		$publishedField->item = $this->item;
-		$publishedField->rowid = $this->rowid;
-		$publishedField->setup($publishedXml, $this->item->{$enabledFieldName});
-
-		return $publishedField;
 	}
 
 	/**
@@ -221,7 +115,7 @@ class FOFFormFieldActions extends JFormFieldList implements FOFFormField
 
 			if ($config['archived'])
 			{
-				$archived	= $this->item->{$publishedFieldName} == 2 ? true : false;
+				$archived = $this->item->{$publishedFieldName} == 2 ? true : false;
 
 				// Create dropdown items
 				$action = $archived ? 'unarchive' : 'archive';
@@ -230,7 +124,7 @@ class FOFFormFieldActions extends JFormFieldList implements FOFFormField
 
 			if ($config['trash'])
 			{
-				$trashed	= $this->item->{$publishedFieldName} == -2 ? true : false;
+				$trashed = $this->item->{$publishedFieldName} == -2 ? true : false;
 
 				$action = $trashed ? 'untrash' : 'trash';
 				JHtml::_('actionsdropdown.' . $action, 'cb' . $this->rowid, $prefix);
@@ -246,5 +140,108 @@ class FOFFormFieldActions extends JFormFieldList implements FOFFormField
 		$html .= '</div>';
 
 		return $html;
+	}
+
+	/**
+	 * Get the field configuration
+	 *
+	 * @return  array
+	 */
+	protected function getConfig()
+	{
+		// If no custom options were defined let's figure out which ones of the
+		// defaults we shall use...
+		$config = array(
+			'published'   => 1,
+			'unpublished' => 1,
+			'archived'    => 0,
+			'trash'       => 0,
+			'all'         => 0,
+		);
+
+		$stack = array();
+
+		if (isset($this->element['show_published']))
+		{
+			$config['published'] = FOFStringUtils::toBool($this->element['show_published']);
+		}
+
+		if (isset($this->element['show_unpublished']))
+		{
+			$config['unpublished'] = FOFStringUtils::toBool($this->element['show_unpublished']);
+		}
+
+		if (isset($this->element['show_archived']))
+		{
+			$config['archived'] = FOFStringUtils::toBool($this->element['show_archived']);
+		}
+
+		if (isset($this->element['show_trash']))
+		{
+			$config['trash'] = FOFStringUtils::toBool($this->element['show_trash']);
+		}
+
+		if (isset($this->element['show_all']))
+		{
+			$config['all'] = FOFStringUtils::toBool($this->element['show_all']);
+		}
+
+		return $config;
+	}
+
+	/**
+	 * Method to get a
+	 *
+	 * @param   string $enabledFieldName Name of the enabled/published field
+	 *
+	 * @return  FOFFormFieldPublished  Field
+	 */
+	protected function getPublishedField($enabledFieldName)
+	{
+		$attributes = array(
+			'name' => $enabledFieldName,
+			'type' => 'published',
+		);
+
+		if ($this->element['publish_up'])
+		{
+			$attributes['publish_up'] = (string) $this->element['publish_up'];
+		}
+
+		if ($this->element['publish_down'])
+		{
+			$attributes['publish_down'] = (string) $this->element['publish_down'];
+		}
+
+		foreach ($attributes as $name => $value)
+		{
+			if (!is_null($value))
+			{
+				$renderedAttributes[] = $name . '="' . $value . '"';
+			}
+		}
+
+		$publishedXml = new SimpleXMLElement('<field ' . implode(' ', $renderedAttributes) . ' />');
+
+		$publishedField = new FOFFormFieldPublished($this->form);
+
+		// Pass required objects to the field
+		$publishedField->item  = $this->item;
+		$publishedField->rowid = $this->rowid;
+		$publishedField->setup($publishedXml, $this->item->{$enabledFieldName});
+
+		return $publishedField;
+	}
+
+	/**
+	 * Method to get the field options.
+	 *
+	 * @since 2.0
+	 *
+	 * @return  array  The field option objects.
+	 */
+	protected function getOptions()
+	{
+		return null;
 	}
 }

@@ -31,26 +31,9 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options = new JRegistry;
-
-		$this->uri = new JUri;
-		$this->object = new JGoogleEmbedAnalytics($this->options, $this->uri);
-	}
-
-	/**
 	 * Tests the getCode method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetCode()
@@ -63,7 +46,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the setCode method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetCode()
@@ -76,7 +59,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the isAsync method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testIsAsync()
@@ -96,7 +79,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the useAsync method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testUseAsync()
@@ -109,7 +92,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the useAsync method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testUseSync()
@@ -122,7 +105,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the addCall method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testAddCall()
@@ -134,7 +117,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the listCalls method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testListCalls()
@@ -150,7 +133,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the deleteCalls method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testDeleteCalls()
@@ -175,7 +158,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the createCall method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testCreateCall()
@@ -192,7 +175,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the addCustomVar method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testAddCustomVar()
@@ -204,7 +187,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the createCall method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testCreateCustomVar()
@@ -216,7 +199,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the addEvent method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testAddEvent()
@@ -228,7 +211,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the createCall method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testCreateEvent()
@@ -240,7 +223,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the getHeader method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetHeader()
@@ -268,7 +251,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the getHeader method without a code
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @expectedException UnexpectedValueException
 	 * @return void
 	 */
@@ -280,7 +263,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the getBody method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetBody()
@@ -314,7 +297,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the getBody method without a code
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @expectedException UnexpectedValueException
 	 * @return void
 	 */
@@ -326,7 +309,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the echoHeader method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testEchoHeader()
@@ -341,7 +324,7 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 	/**
 	 * Tests the echoBody method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testEchoBody()
@@ -351,5 +334,22 @@ class JGoogleEmbedAnalyticsTest extends TestCase
 		$body = $this->object->getBody();
 		$this->expectOutputString($body);
 		$this->object->echoBody();
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options = new JRegistry;
+
+		$this->uri    = new JUri;
+		$this->object = new JGoogleEmbedAnalytics($this->options, $this->uri);
 	}
 }

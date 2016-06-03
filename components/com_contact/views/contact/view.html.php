@@ -54,7 +54,7 @@ class ContactViewContact extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -115,7 +115,8 @@ class ContactViewContact extends JViewLegacy
 		}
 
 		if ($params->get('show_street_address') || $params->get('show_suburb') || $params->get('show_state')
-			|| $params->get('show_postcode') || $params->get('show_country'))
+			|| $params->get('show_postcode') || $params->get('show_country')
+		)
 		{
 			if (!empty ($item->address) || !empty ($item->suburb) || !empty ($item->state) || !empty ($item->country) || !empty ($item->postcode))
 			{
@@ -132,24 +133,24 @@ class ContactViewContact extends JViewLegacy
 		{
 			case 1 :
 				// Text
-				$params->set('marker_address',   JText::_('COM_CONTACT_ADDRESS') . ": ");
-				$params->set('marker_email',     JText::_('JGLOBAL_EMAIL') . ": ");
+				$params->set('marker_address', JText::_('COM_CONTACT_ADDRESS') . ": ");
+				$params->set('marker_email', JText::_('JGLOBAL_EMAIL') . ": ");
 				$params->set('marker_telephone', JText::_('COM_CONTACT_TELEPHONE') . ": ");
-				$params->set('marker_fax',       JText::_('COM_CONTACT_FAX') . ": ");
-				$params->set('marker_mobile',    JText::_('COM_CONTACT_MOBILE') . ": ");
-				$params->set('marker_misc',      JText::_('COM_CONTACT_OTHER_INFORMATION') . ": ");
-				$params->set('marker_class',     'jicons-text');
+				$params->set('marker_fax', JText::_('COM_CONTACT_FAX') . ": ");
+				$params->set('marker_mobile', JText::_('COM_CONTACT_MOBILE') . ": ");
+				$params->set('marker_misc', JText::_('COM_CONTACT_OTHER_INFORMATION') . ": ");
+				$params->set('marker_class', 'jicons-text');
 				break;
 
 			case 2 :
 				// None
-				$params->set('marker_address',   '');
-				$params->set('marker_email',     '');
+				$params->set('marker_address', '');
+				$params->set('marker_email', '');
 				$params->set('marker_telephone', '');
-				$params->set('marker_mobile',    '');
-				$params->set('marker_fax',       '');
-				$params->set('marker_misc',      '');
-				$params->set('marker_class',     'jicons-none');
+				$params->set('marker_mobile', '');
+				$params->set('marker_fax', '');
+				$params->set('marker_misc', '');
+				$params->set('marker_class', 'jicons-none');
 				break;
 
 			default :
@@ -211,13 +212,13 @@ class ContactViewContact extends JViewLegacy
 					$image6 = JHtml::_('image', 'contacts/' . $params->get('icon_mobile', 'con_mobile.png'), JText::_('COM_CONTACT_MOBILE') . ": ", null, true);
 				}
 
-				$params->set('marker_address',   $image1);
-				$params->set('marker_email',     $image2);
+				$params->set('marker_address', $image1);
+				$params->set('marker_email', $image2);
 				$params->set('marker_telephone', $image3);
-				$params->set('marker_fax',       $image4);
-				$params->set('marker_misc',      $image5);
-				$params->set('marker_mobile',    $image6);
-				$params->set('marker_class',     'jicons-icons');
+				$params->set('marker_fax', $image4);
+				$params->set('marker_misc', $image5);
+				$params->set('marker_mobile', $image6);
+				$params->set('marker_class', 'jicons-icons');
 				break;
 		}
 
@@ -233,23 +234,23 @@ class ContactViewContact extends JViewLegacy
 		}
 
 		// Process the content plugins.
-		$dispatcher	= JEventDispatcher::getInstance();
+		$dispatcher = JEventDispatcher::getInstance();
 		JPluginHelper::importPlugin('content');
 		$offset = $state->get('list.offset');
 
 		// Fix for where some plugins require a text attribute
-		!empty($item->misc)? $item->text = $item->misc : $item->text = null;
-		$dispatcher->trigger('onContentPrepare', array ('com_contact.contact', &$item, &$this->params, $offset));
+		!empty($item->misc) ? $item->text = $item->misc : $item->text = null;
+		$dispatcher->trigger('onContentPrepare', array('com_contact.contact', &$item, &$this->params, $offset));
 
 		// Store the events for later
-		$item->event = new stdClass;
-		$results = $dispatcher->trigger('onContentAfterTitle', array('com_contact.contact', &$item, &$this->params, $offset));
+		$item->event                    = new stdClass;
+		$results                        = $dispatcher->trigger('onContentAfterTitle', array('com_contact.contact', &$item, &$this->params, $offset));
 		$item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-		$results = $dispatcher->trigger('onContentBeforeDisplay', array('com_contact.contact', &$item, &$this->params, $offset));
+		$results                           = $dispatcher->trigger('onContentBeforeDisplay', array('com_contact.contact', &$item, &$this->params, $offset));
 		$item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-		$results = $dispatcher->trigger('onContentAfterDisplay', array('com_contact.contact', &$item, &$this->params, $offset));
+		$results                          = $dispatcher->trigger('onContentAfterDisplay', array('com_contact.contact', &$item, &$this->params, $offset));
 		$item->event->afterDisplayContent = trim(implode("\n", $results));
 
 		if ($item->text)
@@ -335,12 +336,12 @@ class ContactViewContact extends JViewLegacy
 				$title = $this->item->name;
 			}
 
-			$path = array(array('title' => $this->contact->name, 'link' => ''));
+			$path     = array(array('title' => $this->contact->name, 'link' => ''));
 			$category = JCategories::getInstance('Contact')->get($this->contact->catid);
 
 			while ($category && ($menu->query['option'] != 'com_contact' || $menu->query['view'] == 'contact' || $id != $category->id) && $category->id > 1)
 			{
-				$path[] = array('title' => $category->title, 'link' => ContactHelperRoute::getCategoryRoute($this->contact->catid));
+				$path[]   = array('title' => $category->title, 'link' => ContactHelperRoute::getCategoryRoute($this->contact->catid));
 				$category = $category->getParent();
 			}
 

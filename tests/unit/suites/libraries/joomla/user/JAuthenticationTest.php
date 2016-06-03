@@ -35,74 +35,10 @@ class JAuthenticationTest extends TestCase
 	protected $backupServer;
 
 	/**
-	 * Sets up the fixture.
-	 *
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-
-		// Mock the event dispatcher.
-		$dispatcher = $this->getMockDispatcher(false);
-		$this->assignMockCallbacks(
-			$dispatcher,
-			array(
-				'trigger' => array(get_called_class(), 'mockTrigger'),
-			)
-		);
-
-		// Inject the mock dispatcher into the JEventDispatcher singleton.
-		TestReflection::setValue('JEventDispatcher', 'instance', $dispatcher);
-
-		// Mock the authentication plugin
-		require_once __DIR__ . '/stubs/FakeAuthenticationPlugin.php';
-
-		// Inject the mocked plugin list.
-		TestReflection::setValue('JPluginHelper', 'plugins', array(
-				(object) array(
-					'type' => 'authentication',
-					'name' => 'fake'
-				)
-			)
-		);
-	}
-
-	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDown()
-	 * @since   11.1
-	 */
-	protected function tearDown()
-	{
-		// Reset the dispatcher instance.
-		TestReflection::setValue('JEventDispatcher', 'instance', null);
-
-		// Reset the loaded plugins.
-		TestReflection::setValue('JPluginHelper', 'plugins', null);
-
-		$_SERVER = $this->backupServer;
-
-		parent::tearDown();
-	}
-
-	/**
 	 * Callback for the JEventDispatcher trigger method.
 	 *
-	 * @param   string  $event  The event to trigger.
-	 * @param   array   $args   An array of arguments.
+	 * @param   string $event The event to trigger.
+	 * @param   array  $args  An array of arguments.
 	 *
 	 * @return  array  An array of results from each function call.
 	 *
@@ -152,16 +88,16 @@ class JAuthenticationTest extends TestCase
 	public function casesAuthentication()
 	{
 		// Successful authentication from the FakeAuthenticationPlugin
-		$success = new JAuthenticationResponse;
-		$success->status = JAuthentication::STATUS_SUCCESS;
-		$success->type = 'fake';
+		$success           = new JAuthenticationResponse;
+		$success->status   = JAuthentication::STATUS_SUCCESS;
+		$success->type     = 'fake';
 		$success->username = 'test';
 		$success->password = 'test';
 		$success->fullname = 'test';
 
 		// Failed authentication
-		$failure = new JAuthenticationResponse;
-		$failure->status = JAuthentication::STATUS_FAILURE;
+		$failure           = new JAuthenticationResponse;
+		$failure->status   = JAuthentication::STATUS_FAILURE;
 		$failure->username = 'test';
 		$failure->password = 'wrongpassword';
 		$failure->fullname = 'test';
@@ -199,14 +135,14 @@ class JAuthenticationTest extends TestCase
 	/**
 	 * This checks for the correct Long Version.
 	 *
-	 * @param   string  $input    User name
-	 * @param   string  $expect   Expected user id
-	 * @param   string  $message  Expected error info
+	 * @param   string $input   User name
+	 * @param   string $expect  Expected user id
+	 * @param   string $message Expected error info
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesAuthentication
-	 * @since   11.1
+	 * @since        11.1
 	 */
 	public function testAuthentication($input, $expect, $message)
 	{
@@ -227,12 +163,12 @@ class JAuthenticationTest extends TestCase
 	 */
 	public function casesAuthorise()
 	{
-		$cases = array();
-		$expect = new JAuthenticationResponse;
+		$cases    = array();
+		$expect   = new JAuthenticationResponse;
 		$response = new JAuthenticationResponse;
 
 		$response->username = 'test';
-		$expect->status = JAuthentication::STATUS_SUCCESS;
+		$expect->status     = JAuthentication::STATUS_SUCCESS;
 
 		$cases[] = array(
 			clone($response),
@@ -241,7 +177,7 @@ class JAuthenticationTest extends TestCase
 		);
 
 		$response->username = 'denied';
-		$expect->status = JAuthentication::STATUS_DENIED;
+		$expect->status     = JAuthentication::STATUS_DENIED;
 
 		$cases[] = array(
 			clone($response),
@@ -250,7 +186,7 @@ class JAuthenticationTest extends TestCase
 		);
 
 		$response->username = 'expired';
-		$expect->status = JAuthentication::STATUS_EXPIRED;
+		$expect->status     = JAuthentication::STATUS_EXPIRED;
 
 		$cases[] = array(
 			clone($response),
@@ -259,7 +195,7 @@ class JAuthenticationTest extends TestCase
 		);
 
 		$response->username = 'unknown';
-		$expect->status = JAuthentication::STATUS_UNKNOWN;
+		$expect->status     = JAuthentication::STATUS_UNKNOWN;
 
 		$cases[] = array(
 			clone($response),
@@ -273,15 +209,15 @@ class JAuthenticationTest extends TestCase
 	/**
 	 * This checks for the correct response to authorising a user
 	 *
-	 * @param   string  $input    User name
-	 * @param   string  $expect   Expected user id
-	 * @param   string  $message  Expected error info
+	 * @param   string $input   User name
+	 * @param   string $expect  Expected user id
+	 * @param   string $message Expected error info
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesAuthorise
-	 * @since   11.1
-	 * @covers  JAuthentication::authorise
+	 * @since        11.1
+	 * @covers       JAuthentication::authorise
 	 */
 	public function testAuthorise($input, $expect, $message)
 	{
@@ -291,5 +227,69 @@ class JAuthenticationTest extends TestCase
 			$authentication->authorise($input),
 			$message
 		);
+	}
+
+	/**
+	 * Sets up the fixture.
+	 *
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+
+		// Mock the event dispatcher.
+		$dispatcher = $this->getMockDispatcher(false);
+		$this->assignMockCallbacks(
+			$dispatcher,
+			array(
+				'trigger' => array(get_called_class(), 'mockTrigger'),
+			)
+		);
+
+		// Inject the mock dispatcher into the JEventDispatcher singleton.
+		TestReflection::setValue('JEventDispatcher', 'instance', $dispatcher);
+
+		// Mock the authentication plugin
+		require_once __DIR__ . '/stubs/FakeAuthenticationPlugin.php';
+
+		// Inject the mocked plugin list.
+		TestReflection::setValue('JPluginHelper', 'plugins', array(
+				(object) array(
+					'type' => 'authentication',
+					'name' => 'fake'
+				)
+			)
+		);
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDown()
+	 * @since   11.1
+	 */
+	protected function tearDown()
+	{
+		// Reset the dispatcher instance.
+		TestReflection::setValue('JEventDispatcher', 'instance', null);
+
+		// Reset the loaded plugins.
+		TestReflection::setValue('JPluginHelper', 'plugins', null);
+
+		$_SERVER = $this->backupServer;
+
+		parent::tearDown();
 	}
 }

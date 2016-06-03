@@ -42,26 +42,8 @@ class JAdminCssMenu extends JObject
 	 */
 	public function __construct()
 	{
-		$this->_root = new JMenuNode('ROOT');
-		$this->_current = & $this->_root;
-	}
-
-	/**
-	 * Method to add a child
-	 *
-	 * @param   JMenuNode  $node        The node to process
-	 * @param   boolean    $setCurrent  True to set as current working node
-	 *
-	 * @return  void
-	 */
-	public function addChild(JMenuNode $node, $setCurrent = false)
-	{
-		$this->_current->addChild($node);
-
-		if ($setCurrent)
-		{
-			$this->_current = &$node;
-		}
+		$this->_root    = new JMenuNode('ROOT');
+		$this->_current = &$this->_root;
 	}
 
 	/**
@@ -95,10 +77,28 @@ class JAdminCssMenu extends JObject
 	}
 
 	/**
+	 * Method to add a child
+	 *
+	 * @param   JMenuNode $node       The node to process
+	 * @param   boolean   $setCurrent True to set as current working node
+	 *
+	 * @return  void
+	 */
+	public function addChild(JMenuNode $node, $setCurrent = false)
+	{
+		$this->_current->addChild($node);
+
+		if ($setCurrent)
+		{
+			$this->_current = &$node;
+		}
+	}
+
+	/**
 	 * Method to render the menu
 	 *
-	 * @param   string  $id     The id of the menu to be rendered
-	 * @param   string  $class  The class of the menu to be rendered
+	 * @param   string $id    The id of the menu to be rendered
+	 * @param   string $class The class of the menu to be rendered
 	 *
 	 * @return  void
 	 */
@@ -123,7 +123,7 @@ class JAdminCssMenu extends JObject
 
 			foreach ($this->_current->getChildren() as $child)
 			{
-				$this->_current = & $child;
+				$this->_current = &$child;
 				$this->renderLevel($depth++);
 			}
 
@@ -142,7 +142,7 @@ class JAdminCssMenu extends JObject
 	/**
 	 * Method to render a given level of a menu
 	 *
-	 * @param   integer  $depth  The level of the menu to be rendered
+	 * @param   integer $depth The level of the menu to be rendered
 	 *
 	 * @return  void
 	 */
@@ -180,14 +180,14 @@ class JAdminCssMenu extends JObject
 		echo "<li" . $class . ">";
 
 		// Print a link if it exists
-		$linkClass = array();
-		$dataToggle = '';
+		$linkClass     = array();
+		$dataToggle    = '';
 		$dropdownCaret = '';
 
 		if ($this->_current->hasChildren())
 		{
 			$linkClass[] = 'dropdown-toggle';
-			$dataToggle = ' data-toggle="dropdown"';
+			$dataToggle  = ' data-toggle="dropdown"';
 
 			if (!$this->_current->getParent()->hasParent())
 			{
@@ -251,7 +251,7 @@ class JAdminCssMenu extends JObject
 
 			foreach ($this->_current->getChildren() as $child)
 			{
-				$this->_current = & $child;
+				$this->_current = &$child;
 				$this->renderLevel($depth++);
 			}
 
@@ -265,9 +265,9 @@ class JAdminCssMenu extends JObject
 	 * Method to get the CSS class name for an icon identifier or create one if
 	 * a custom image path is passed as the identifier
 	 *
-	 * @param   string  $identifier  Icon identification string
+	 * @param   string $identifier Icon identification string
 	 *
-	 * @return  string	CSS class name
+	 * @return  string    CSS class name
 	 *
 	 * @since   1.5
 	 */
@@ -290,7 +290,7 @@ class JAdminCssMenu extends JObject
 			if (substr($identifier, 0, 6) == 'class:')
 			{
 				// We were passed a class name
-				$class = substr($identifier, 6);
+				$class                = substr($identifier, 6);
 				$classes[$identifier] = "menu-$class";
 			}
 			else
@@ -304,9 +304,9 @@ class JAdminCssMenu extends JObject
 				$class = preg_replace('#\.[^.]*$#', '', basename($identifier));
 				$class = preg_replace('#\.\.[^A-Za-z0-9\.\_\- ]#', '', $class);
 
-				$this->_css  .= "\n.menu-$class {\n" .
-						"\tbackground: url($identifier) no-repeat;\n" .
-						"}\n";
+				$this->_css .= "\n.menu-$class {\n" .
+					"\tbackground: url($identifier) no-repeat;\n" .
+					"}\n";
 
 				$classes[$identifier] = "menu-$class";
 			}
@@ -383,12 +383,12 @@ class JMenuNode extends JObject
 	/**
 	 * Constructor for the class.
 	 *
-	 * @param   string   $title      The title of the node
-	 * @param   string   $link       The node link
-	 * @param   string   $class      The CSS class for the node
-	 * @param   boolean  $active     True if node is active, false otherwise
-	 * @param   string   $target     The link target
-	 * @param   string   $titleicon  The title icon for the node
+	 * @param   string  $title     The title of the node
+	 * @param   string  $link      The node link
+	 * @param   string  $class     The CSS class for the node
+	 * @param   boolean $active    True if node is active, false otherwise
+	 * @param   string  $target    The link target
+	 * @param   string  $titleicon The title icon for the node
 	 */
 	public function __construct($title, $link = null, $class = null, $active = false, $target = null, $titleicon = null)
 	{
@@ -421,39 +421,13 @@ class JMenuNode extends JObject
 	 *
 	 * If the child already has a parent, the link is unset
 	 *
-	 * @param   JMenuNode  &$child  The child to be added
+	 * @param   JMenuNode &$child The child to be added
 	 *
 	 * @return  void
 	 */
 	public function addChild(JMenuNode &$child)
 	{
 		$child->setParent($this);
-	}
-
-	/**
-	 * Set the parent of a this node
-	 *
-	 * If the node already has a parent, the link is unset
-	 *
-	 * @param   JMenuNode  &$parent  The JMenuNode for parent to be set or null
-	 *
-	 * @return  void
-	 */
-	public function setParent(JMenuNode &$parent = null)
-	{
-		$hash = spl_object_hash($this);
-
-		if (!is_null($this->_parent))
-		{
-			unset($this->_parent->children[$hash]);
-		}
-
-		if (!is_null($parent))
-		{
-			$parent->_children[$hash] = & $this;
-		}
-
-		$this->_parent = & $parent;
 	}
 
 	/**
@@ -464,16 +438,6 @@ class JMenuNode extends JObject
 	public function &getChildren()
 	{
 		return $this->_children;
-	}
-
-	/**
-	 * Get the parent of this node
-	 *
-	 * @return  mixed  JMenuNode object with the parent or null for no parent
-	 */
-	public function &getParent()
-	{
-		return $this->_parent;
 	}
 
 	/**
@@ -494,5 +458,41 @@ class JMenuNode extends JObject
 	public function hasParent()
 	{
 		return $this->getParent() != null;
+	}
+
+	/**
+	 * Get the parent of this node
+	 *
+	 * @return  mixed  JMenuNode object with the parent or null for no parent
+	 */
+	public function &getParent()
+	{
+		return $this->_parent;
+	}
+
+	/**
+	 * Set the parent of a this node
+	 *
+	 * If the node already has a parent, the link is unset
+	 *
+	 * @param   JMenuNode &$parent The JMenuNode for parent to be set or null
+	 *
+	 * @return  void
+	 */
+	public function setParent(JMenuNode &$parent = null)
+	{
+		$hash = spl_object_hash($this);
+
+		if (!is_null($this->_parent))
+		{
+			unset($this->_parent->children[$hash]);
+		}
+
+		if (!is_null($parent))
+		{
+			$parent->_children[$hash] = &$this;
+		}
+
+		$this->_parent = &$parent;
 	}
 }

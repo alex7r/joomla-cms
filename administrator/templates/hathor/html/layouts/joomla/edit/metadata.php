@@ -25,7 +25,7 @@ $form = $displayData->get('form');
 			<?php echo $form->getInput('metakey'); ?>
 		</div>
 	</div>
-	<?php if ($form->getLabel('xreference')):?>
+	<?php if ($form->getLabel('xreference')): ?>
 		<div class="control-group">
 			<?php echo $form->getLabel('xreference'); ?>
 			<div class="controls">
@@ -34,7 +34,7 @@ $form = $displayData->get('form');
 		</div>
 	<?php endif; ?>
 	<?php foreach ($form->getGroup('metadata') as $field) : ?>
-		<?php if ($field->name != 'jform[metadata][tags][]') :?>
+		<?php if ($field->name != 'jform[metadata][tags][]') : ?>
 			<div class="control-group">
 				<?php if (!$field->hidden) : ?>
 					<?php echo $field->label; ?>

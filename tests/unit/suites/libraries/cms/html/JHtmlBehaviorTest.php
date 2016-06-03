@@ -27,49 +27,6 @@ class JHtmlBehaviorTest extends TestCase
 	protected $backupServer;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		// Ensure the loaded states are reset
-		JHtmlBehaviorInspector::resetLoaded();
-
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$document = $this->getMockDocument();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
 	 * Data for the testFramework method
 	 *
 	 * @return  array
@@ -93,9 +50,9 @@ class JHtmlBehaviorTest extends TestCase
 	/**
 	 * Tests the framework method.
 	 *
-	 * @param   string   $expected  @todo
-	 * @param   boolean  $extras    @todo
-	 * @param   boolean  $debug     @todo
+	 * @param   string  $expected @todo
+	 * @param   boolean $extras   @todo
+	 * @param   boolean $debug    @todo
 	 *
 	 * @return  void
 	 *
@@ -146,8 +103,8 @@ class JHtmlBehaviorTest extends TestCase
 	/**
 	 * Tests the caption method.
 	 *
-	 * @param   string  $expected  @todo
-	 * @param   string  $selector  @todo
+	 * @param   string $expected @todo
+	 * @param   string $selector @todo
 	 *
 	 * @return  void
 	 *
@@ -283,18 +240,18 @@ class JHtmlBehaviorTest extends TestCase
 		$data = array(
 			array(
 				array(
-					'JHtmlBehavior::core' => true,
+					'JHtmlBehavior::core'      => true,
 					'JHtmlBehavior::framework' => array('core' => true, 'more' => true),
-					'JHtmlBehavior::tooltip' => array(
+					'JHtmlBehavior::tooltip'   => array(
 						md5(serialize(array('.hasTooltip', array()))) => true
 					),
 				),
 			),
 			array(
 				array(
-					'JHtmlBehavior::core' => true,
+					'JHtmlBehavior::core'      => true,
 					'JHtmlBehavior::framework' => array('core' => true, 'more' => true),
-					'JHtmlBehavior::tooltip' => array(
+					'JHtmlBehavior::tooltip'   => array(
 						md5(serialize(array('.hasTooltip2', array()))) => true
 					),
 				),
@@ -302,9 +259,9 @@ class JHtmlBehaviorTest extends TestCase
 			),
 			array(
 				array(
-					'JHtmlBehavior::core' => true,
+					'JHtmlBehavior::core'      => true,
 					'JHtmlBehavior::framework' => array('core' => true, 'more' => true),
-					'JHtmlBehavior::tooltip' => array(
+					'JHtmlBehavior::tooltip'   => array(
 						md5(serialize(array('.hasTooltip2', array('showDelay' => 1000)))) => true
 					),
 				),
@@ -319,9 +276,9 @@ class JHtmlBehaviorTest extends TestCase
 	/**
 	 * Tests the tooltip method.
 	 *
-	 * @param   string  $expected  @todo
-	 * @param   string  $selector  @todo
-	 * @param   array   $params    @todo
+	 * @param   string $expected @todo
+	 * @param   string $selector @todo
+	 * @param   array  $params   @todo
 	 *
 	 * @return  void
 	 *
@@ -364,18 +321,18 @@ class JHtmlBehaviorTest extends TestCase
 		$data = array(
 			array(
 				array(
-					'JHtmlBehavior::core' => true,
+					'JHtmlBehavior::core'      => true,
 					'JHtmlBehavior::framework' => array('core' => true, 'more' => true),
-					'JHtmlBehavior::modal' => array(
+					'JHtmlBehavior::modal'     => array(
 						md5(serialize(array('a.modal', array()))) => true
 					)
 				)
 			),
 			array(
 				array(
-					'JHtmlBehavior::core' => true,
+					'JHtmlBehavior::core'      => true,
 					'JHtmlBehavior::framework' => array('core' => true, 'more' => true),
-					'JHtmlBehavior::modal' => array(
+					'JHtmlBehavior::modal'     => array(
 						md5(serialize(array('a.modal2', array()))) => true
 					)
 				),
@@ -383,9 +340,9 @@ class JHtmlBehaviorTest extends TestCase
 			),
 			array(
 				array(
-					'JHtmlBehavior::core' => true,
+					'JHtmlBehavior::core'      => true,
 					'JHtmlBehavior::framework' => array('core' => true, 'more' => true),
-					'JHtmlBehavior::modal' => array(
+					'JHtmlBehavior::modal'     => array(
 						md5(serialize(array('a.modal2', array('size' => 1000)))) => true
 					)
 				),
@@ -400,9 +357,9 @@ class JHtmlBehaviorTest extends TestCase
 	/**
 	 * Tests the modal method.
 	 *
-	 * @param   string  $expected  @todo
-	 * @param   string  $selector  @todo
-	 * @param   array   $params    @todo
+	 * @param   string $expected @todo
+	 * @param   string $selector @todo
+	 * @param   array  $params   @todo
 	 *
 	 * @return  void
 	 *
@@ -445,13 +402,13 @@ class JHtmlBehaviorTest extends TestCase
 		$data = array(
 			array(
 				array(
-					'JHtmlBehavior::core' => true,
+					'JHtmlBehavior::core'        => true,
 					'JHtmlBehavior::multiselect' => array('adminForm' => true),
 				)
 			),
 			array(
 				array(
-					'JHtmlBehavior::core' => true,
+					'JHtmlBehavior::core'        => true,
 					'JHtmlBehavior::multiselect' => array('adminForm2' => true),
 				),
 				'adminForm2'
@@ -464,8 +421,8 @@ class JHtmlBehaviorTest extends TestCase
 	/**
 	 * Tests the multiselect method.
 	 *
-	 * @param   string  $expected  @todo
-	 * @param   string  $id        @todo
+	 * @param   string $expected @todo
+	 * @param   string $id       @todo
 	 *
 	 * @return  void
 	 *
@@ -508,9 +465,9 @@ class JHtmlBehaviorTest extends TestCase
 		$data = array(
 			array(
 				array(
-					'JHtmlBehavior::core' => true,
+					'JHtmlBehavior::core'      => true,
 					'JHtmlBehavior::framework' => array('core' => true),
-					'JHtmlBehavior::tree' => array('myid' => true)
+					'JHtmlBehavior::tree'      => array('myid' => true)
 				),
 				'myid'
 			),
@@ -522,10 +479,10 @@ class JHtmlBehaviorTest extends TestCase
 	/**
 	 * Tests the tree method.
 	 *
-	 * @param   string   $expected  @todo
-	 * @param   integer  $id        @todo
-	 * @param   array    $params    @todo
-	 * @param   array    $root      @todo
+	 * @param   string  $expected @todo
+	 * @param   integer $id       @todo
+	 * @param   array   $params   @todo
+	 * @param   array   $root     @todo
 	 *
 	 * @return  void
 	 *
@@ -671,5 +628,48 @@ class JHtmlBehaviorTest extends TestCase
 			array('JHtmlBehavior::core' => true, 'JHtmlBehavior::noframes' => true),
 			JHtmlBehaviorInspector::getLoaded()
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		// Ensure the loaded states are reset
+		JHtmlBehaviorInspector::resetLoaded();
+
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+		JFactory::$document    = $this->getMockDocument();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 }

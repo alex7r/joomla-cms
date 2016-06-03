@@ -47,7 +47,7 @@ interface JSessionHandlerInterface
 	/**
 	 * Sets the session ID
 	 *
-	 * @param   string  $id  The session ID
+	 * @param   string $id The session ID
 	 *
 	 * @return  void
 	 *
@@ -67,7 +67,7 @@ interface JSessionHandlerInterface
 	/**
 	 * Sets the session name
 	 *
-	 * @param   string  $name  The name of the session
+	 * @param   string $name The name of the session
 	 *
 	 * @return  void
 	 *
@@ -80,8 +80,8 @@ interface JSessionHandlerInterface
 	 *
 	 * Note regenerate+destroy should not clear the session data in memory only delete the session data from persistent storage.
 	 *
-	 * @param   boolean  $destroy   Destroy session when regenerating?
-	 * @param   integer  $lifetime  Sets the cookie lifetime for the session cookie. A null value will leave the system settings unchanged,
+	 * @param   boolean $destroy    Destroy session when regenerating?
+	 * @param   integer $lifetime   Sets the cookie lifetime for the session cookie. A null value will leave the system settings unchanged,
 	 *                              0 sets the cookie to expire with browser session. Time is in seconds, and is not a Unix timestamp.
 	 *
 	 * @return  boolean  True if session regenerated, false if error

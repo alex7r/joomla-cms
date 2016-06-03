@@ -17,24 +17,6 @@
 class JImageFilterTest extends TestCase
 {
 	/**
-	 * Setup for testing.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.4
-	 */
-	protected function setUp()
-	{
-		// Verify that GD support for PHP is available.
-		if (!extension_loaded('gd'))
-		{
-			$this->markTestSkipped('No GD support so skipping JImage tests.');
-		}
-
-		parent::setUp();
-	}
-
-	/**
 	 * Tests the JImage::__construct method - with an invalid argument.
 	 *
 	 * @return  void
@@ -63,5 +45,23 @@ class JImageFilterTest extends TestCase
 		$filter = new JImageFilterBrightness($imageHandle);
 
 		$this->assertEquals(TestReflection::getValue($filter, 'handle'), $imageHandle);
+	}
+
+	/**
+	 * Setup for testing.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.4
+	 */
+	protected function setUp()
+	{
+		// Verify that GD support for PHP is available.
+		if (!extension_loaded('gd'))
+		{
+			$this->markTestSkipped('No GD support so skipping JImage tests.');
+		}
+
+		parent::setUp();
 	}
 }

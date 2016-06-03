@@ -18,19 +18,19 @@
 
 $response = new stdClass;
 
-$response->method = getVar($_SERVER, 'REQUEST_METHOD');
-$response->http_user_agent = getVar($_SERVER, 'HTTP_USER_AGENT');
-$response->request_uri = getVar($_SERVER, 'REQUEST_URI');
-$response->query_string = getVar($_SERVER, 'QUERY_STRING');
-$response->http_accept = getVar($_SERVER, 'HTTP_ACCEPT');
-$response->http_accept_charset = getVar($_SERVER, 'HTTP_ACCEPT_CHARSET');
+$response->method               = getVar($_SERVER, 'REQUEST_METHOD');
+$response->http_user_agent      = getVar($_SERVER, 'HTTP_USER_AGENT');
+$response->request_uri          = getVar($_SERVER, 'REQUEST_URI');
+$response->query_string         = getVar($_SERVER, 'QUERY_STRING');
+$response->http_accept          = getVar($_SERVER, 'HTTP_ACCEPT');
+$response->http_accept_charset  = getVar($_SERVER, 'HTTP_ACCEPT_CHARSET');
 $response->http_accept_encoding = getVar($_SERVER, 'HTTP_ACCEPT_ENCODING');
 
 $response->http_referer = getVar($_SERVER, 'HTTP_REFERER');
 
-$response->get = $_GET;
-$response->post = $_POST;
-$response->files = $_FILES;
+$response->get     = $_GET;
+$response->post    = $_POST;
+$response->files   = $_FILES;
 $response->cookies = $_COOKIE;
 
 echo json_encode($response);
@@ -39,9 +39,9 @@ echo json_encode($response);
 /**
  * Retrieves a value from an array, returning a default value if not present
  *
- * @param   array   $array    The array from which to retrieve a value.
- * @param   string  $key      The value to retrieve.
- * @param   mixed   $default  The value to return if the key isn't present.
+ * @param   array  $array   The array from which to retrieve a value.
+ * @param   string $key     The value to retrieve.
+ * @param   mixed  $default The value to return if the key isn't present.
  *
  * @return  mixed
  *

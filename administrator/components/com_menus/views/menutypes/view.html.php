@@ -19,7 +19,7 @@ class MenusViewMenutypes extends JViewLegacy
 	/**
 	 * Display the view
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 *
@@ -27,39 +27,39 @@ class MenusViewMenutypes extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$input = JFactory::getApplication()->input;
+		$input          = JFactory::getApplication()->input;
 		$this->recordId = $input->getInt('recordId');
-		$types = $this->get('TypeOptions');
+		$types          = $this->get('TypeOptions');
 
 		// Adding System Links
-		$list = array();
-		$o = new JObject;
-		$o->title = 'COM_MENUS_TYPE_EXTERNAL_URL';
-		$o->type = 'url';
-		$o->description  = 'COM_MENUS_TYPE_EXTERNAL_URL_DESC';
-		$o->request = null;
-		$list[] = $o;
+		$list           = array();
+		$o              = new JObject;
+		$o->title       = 'COM_MENUS_TYPE_EXTERNAL_URL';
+		$o->type        = 'url';
+		$o->description = 'COM_MENUS_TYPE_EXTERNAL_URL_DESC';
+		$o->request     = null;
+		$list[]         = $o;
 
-		$o = new JObject;
-		$o->title = 'COM_MENUS_TYPE_ALIAS';
-		$o->type = 'alias';
+		$o              = new JObject;
+		$o->title       = 'COM_MENUS_TYPE_ALIAS';
+		$o->type        = 'alias';
 		$o->description = 'COM_MENUS_TYPE_ALIAS_DESC';
-		$o->request = null;
-		$list[] = $o;
+		$o->request     = null;
+		$list[]         = $o;
 
-		$o = new JObject;
-		$o->title = 'COM_MENUS_TYPE_SEPARATOR';
-		$o->type = 'separator';
+		$o              = new JObject;
+		$o->title       = 'COM_MENUS_TYPE_SEPARATOR';
+		$o->type        = 'separator';
 		$o->description = 'COM_MENUS_TYPE_SEPARATOR_DESC';
-		$o->request = null;
-		$list[] = $o;
+		$o->request     = null;
+		$list[]         = $o;
 
-		$o = new JObject;
-		$o->title = 'COM_MENUS_TYPE_HEADING';
-		$o->type = 'heading';
-		$o->description = 'COM_MENUS_TYPE_HEADING_DESC';
-		$o->request = null;
-		$list[] = $o;
+		$o                              = new JObject;
+		$o->title                       = 'COM_MENUS_TYPE_HEADING';
+		$o->type                        = 'heading';
+		$o->description                 = 'COM_MENUS_TYPE_HEADING_DESC';
+		$o->request                     = null;
+		$list[]                         = $o;
 		$types['COM_MENUS_TYPE_SYSTEM'] = $list;
 
 		$sortedTypes = array();

@@ -39,24 +39,24 @@ abstract class JTwitterObject
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry       &$options  Twitter options object.
-	 * @param   JHttp          $client    The HTTP client object.
-	 * @param   JTwitterOAuth  $oauth     The OAuth client.
+	 * @param   Registry      &$options Twitter options object.
+	 * @param   JHttp         $client   The HTTP client object.
+	 * @param   JTwitterOAuth $oauth    The OAuth client.
 	 *
 	 * @since   12.3
 	 */
 	public function __construct(Registry &$options = null, JHttp $client = null, JTwitterOAuth $oauth = null)
 	{
 		$this->options = isset($options) ? $options : new Registry;
-		$this->client = isset($client) ? $client : new JHttp($this->options);
-		$this->oauth = $oauth;
+		$this->client  = isset($client) ? $client : new JHttp($this->options);
+		$this->oauth   = $oauth;
 	}
 
 	/**
 	 * Method to check the rate limit for the requesting IP address
 	 *
-	 * @param   string  $resource  A resource or a comma-separated list of resource families you want to know the current rate limit disposition for.
-	 * @param   string  $action    An action for the specified resource, if only one resource is specified.
+	 * @param   string $resource A resource or a comma-separated list of resource families you want to know the current rate limit disposition for.
+	 * @param   string $action   An action for the specified resource, if only one resource is specified.
 	 *
 	 * @return  void
 	 *
@@ -85,51 +85,9 @@ abstract class JTwitterObject
 	}
 
 	/**
-	 * Method to build and return a full request URL for the request.  This method will
-	 * add appropriate pagination details if necessary and also prepend the API url
-	 * to have a complete URL for the request.
-	 *
-	 * @param   string  $path        URL to inflect
-	 * @param   array   $parameters  The parameters passed in the URL.
-	 *
-	 * @return  string  The request URL.
-	 *
-	 * @since   12.3
-	 */
-	public function fetchUrl($path, $parameters = null)
-	{
-		if ($parameters)
-		{
-			foreach ($parameters as $key => $value)
-			{
-				if (strpos($path, '?') === false)
-				{
-					$path .= '?' . $key . '=' . $value;
-				}
-				else
-				{
-					$path .= '&' . $key . '=' . $value;
-				}
-			}
-		}
-
-		// Get a new JUri object fousing the api url and given path.
-		if (strpos($path, 'http://search.twitter.com/search.json') === false)
-		{
-			$uri = new JUri($this->options->get('api.url') . $path);
-		}
-		else
-		{
-			$uri = new JUri($path);
-		}
-
-		return (string) $uri;
-	}
-
-	/**
 	 * Method to retrieve the rate limit for the requesting IP address
 	 *
-	 * @param   string  $resource  A resource or a comma-separated list of resource families you want to know the current rate limit disposition for.
+	 * @param   string $resource A resource or a comma-separated list of resource families you want to know the current rate limit disposition for.
 	 *
 	 * @return  array  The JSON response decoded
 	 *
@@ -142,7 +100,7 @@ abstract class JTwitterObject
 
 		if (!is_null($resource))
 		{
-			return $this->sendRequest($path, 'GET',  array('resources' => $resource));
+			return $this->sendRequest($path, 'GET', array('resources' => $resource));
 		}
 
 		return $this->sendRequest($path);
@@ -151,10 +109,10 @@ abstract class JTwitterObject
 	/**
 	 * Method to send the request.
 	 *
-	 * @param   string  $path     The path of the request to make
-	 * @param   string  $method   The request method.
-	 * @param   mixed   $data     Either an associative array or a string to be sent with the post request.
-	 * @param   array   $headers  An array of name-value pairs to include in the header of the request
+	 * @param   string $path    The path of the request to make
+	 * @param   string $method  The request method.
+	 * @param   mixed  $data    Either an associative array or a string to be sent with the post request.
+	 * @param   array  $headers An array of name-value pairs to include in the header of the request
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -195,9 +153,51 @@ abstract class JTwitterObject
 	}
 
 	/**
+	 * Method to build and return a full request URL for the request.  This method will
+	 * add appropriate pagination details if necessary and also prepend the API url
+	 * to have a complete URL for the request.
+	 *
+	 * @param   string $path       URL to inflect
+	 * @param   array  $parameters The parameters passed in the URL.
+	 *
+	 * @return  string  The request URL.
+	 *
+	 * @since   12.3
+	 */
+	public function fetchUrl($path, $parameters = null)
+	{
+		if ($parameters)
+		{
+			foreach ($parameters as $key => $value)
+			{
+				if (strpos($path, '?') === false)
+				{
+					$path .= '?' . $key . '=' . $value;
+				}
+				else
+				{
+					$path .= '&' . $key . '=' . $value;
+				}
+			}
+		}
+
+		// Get a new JUri object fousing the api url and given path.
+		if (strpos($path, 'http://search.twitter.com/search.json') === false)
+		{
+			$uri = new JUri($this->options->get('api.url') . $path);
+		}
+		else
+		{
+			$uri = new JUri($path);
+		}
+
+		return (string) $uri;
+	}
+
+	/**
 	 * Get an option from the JTwitterObject instance.
 	 *
-	 * @param   string  $key  The name of the option to get.
+	 * @param   string $key The name of the option to get.
 	 *
 	 * @return  mixed  The option value.
 	 *
@@ -211,8 +211,8 @@ abstract class JTwitterObject
 	/**
 	 * Set an option for the JTwitterObject instance.
 	 *
-	 * @param   string  $key    The name of the option to set.
-	 * @param   mixed   $value  The option value to set.
+	 * @param   string $key   The name of the option to set.
+	 * @param   mixed  $value The option value to set.
 	 *
 	 * @return  JTwitterObject  This object for method chaining.
 	 *

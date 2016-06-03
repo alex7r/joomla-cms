@@ -19,7 +19,7 @@ class MediaViewMedia extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 *
@@ -117,7 +117,7 @@ class MediaViewMedia extends JViewLegacy
 	/**
 	 * Display a folder level
 	 *
-	 * @param   array  $folder  Array with folder data
+	 * @param   array $folder Array with folder data
 	 *
 	 * @return  string
 	 *

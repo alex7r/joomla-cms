@@ -28,45 +28,6 @@ class JFormFieldTextTest extends TestCase
 	protected $backupServer;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-
-		$this->backupServer = $_SERVER;
-
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['SCRIPT_NAME'] = '';
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	protected function tearDown()
-	{
-		$_SERVER = $this->backupServer;
-
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
 	 * Test...
 	 *
 	 * @return  array
@@ -88,7 +49,7 @@ class JFormFieldTextTest extends TestCase
 	 */
 	public function testSetupMaxlength()
 	{
-		$field = new JFormFieldText;
+		$field   = new JFormFieldText;
 		$element = simplexml_load_string(
 			'<field name="myName" type="text" maxlength="60" />');
 
@@ -108,12 +69,12 @@ class JFormFieldTextTest extends TestCase
 	/**
 	 * Test the getInput method where there is no value from the element.
 	 *
-	 * @param   array   $data  	   @todo
-	 * @param   string  $expected  @todo
+	 * @param   array  $data     @todo
+	 * @param   string $expected @todo
 	 *
 	 * @return  void
 	 *
-	 * @since   12.2
+	 * @since         12.2
 	 *
 	 * @dataProvider  getInputData
 	 */
@@ -133,5 +94,44 @@ class JFormFieldTextTest extends TestCase
 			TestReflection::invoke($formField, 'getInput'),
 			'Line:' . __LINE__ . ' The field did not produce the right html'
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+
+		$this->backupServer = $_SERVER;
+
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['SCRIPT_NAME'] = '';
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.1
+	 */
+	protected function tearDown()
+	{
+		$_SERVER = $this->backupServer;
+
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 }

@@ -26,7 +26,8 @@ foreach (JPluginHelper::getPlugin('captcha') as $plugin)
 }
 ?>
 <div class="contact-form">
-	<form id="contact-form" action="<?php echo JRoute::_('index.php'); ?>" method="post" class="form-validate form-horizontal well">
+	<form id="contact-form" action="<?php echo JRoute::_('index.php'); ?>" method="post"
+	      class="form-validate form-horizontal well">
 		<?php foreach ($this->form->getFieldsets() as $fieldset): ?>
 			<?php if ($fieldset->name === 'captcha' && !$captchaEnabled) : ?>
 				<?php continue; ?>
@@ -48,11 +49,12 @@ foreach (JPluginHelper::getPlugin('captcha') as $plugin)
 		<?php endforeach; ?>
 		<div class="control-group">
 			<div class="controls">
-				<button class="btn btn-primary validate" type="submit"><?php echo JText::_('COM_CONTACT_CONTACT_SEND'); ?></button>
-				<input type="hidden" name="option" value="com_contact" />
-				<input type="hidden" name="task" value="contact.submit" />
-				<input type="hidden" name="return" value="<?php echo $this->return_page; ?>" />
-				<input type="hidden" name="id" value="<?php echo $this->contact->slug; ?>" />
+				<button class="btn btn-primary validate"
+				        type="submit"><?php echo JText::_('COM_CONTACT_CONTACT_SEND'); ?></button>
+				<input type="hidden" name="option" value="com_contact"/>
+				<input type="hidden" name="task" value="contact.submit"/>
+				<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
+				<input type="hidden" name="id" value="<?php echo $this->contact->slug; ?>"/>
 				<?php echo JHtml::_('form.token'); ?>
 			</div>
 		</div>

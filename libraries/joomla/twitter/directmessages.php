@@ -19,18 +19,18 @@ class JTwitterDirectmessages extends JTwitterObject
 	/**
 	 * Method to get the most recent direct messages sent to the authenticating user.
 	 *
-	 * @param   integer  $since_id     Returns results with an ID greater than (that is, more recent than) the specified ID.
-	 * @param   integer  $max_id       Returns results with an ID less than (that is, older than) or equal to the specified ID.
-	 * @param   integer  $count        Specifies the number of direct messages to try and retrieve, up to a maximum of 200.
-	 * @param   boolean  $entities     When set to true,  each tweet will include a node called "entities,". This node offers a variety of metadata
+	 * @param   integer $since_id      Returns results with an ID greater than (that is, more recent than) the specified ID.
+	 * @param   integer $max_id        Returns results with an ID less than (that is, older than) or equal to the specified ID.
+	 * @param   integer $count         Specifies the number of direct messages to try and retrieve, up to a maximum of 200.
+	 * @param   boolean $entities      When set to true,  each tweet will include a node called "entities,". This node offers a variety of metadata
 	 *                                 about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
-	 * @param   boolean  $skip_status  When set to either true, t or 1 statuses will not be included in the returned user objects.
+	 * @param   boolean $skip_status   When set to either true, t or 1 statuses will not be included in the returned user objects.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
 	 * @since   12.3
 	 */
-	public function getDirectMessages($since_id = 0, $max_id =  0, $count = 20, $entities = null, $skip_status = null)
+	public function getDirectMessages($since_id = 0, $max_id = 0, $count = 20, $entities = null, $skip_status = null)
 	{
 		// Check the rate limit for remaining hits
 		$this->checkRateLimit('direct_messages');
@@ -75,18 +75,18 @@ class JTwitterDirectmessages extends JTwitterObject
 	/**
 	 * Method to get the most recent direct messages sent by the authenticating user.
 	 *
-	 * @param   integer  $since_id  Returns results with an ID greater than (that is, more recent than) the specified ID.
-	 * @param   integer  $max_id    Returns results with an ID less than (that is, older than) or equal to the specified ID.
-	 * @param   integer  $count     Specifies the number of direct messages to try and retrieve, up to a maximum of 200.
-	 * @param   integer  $page      Specifies the page of results to retrieve.
-	 * @param   boolean  $entities  When set to true,  each tweet will include a node called "entities,". This node offers a variety of metadata
+	 * @param   integer $since_id   Returns results with an ID greater than (that is, more recent than) the specified ID.
+	 * @param   integer $max_id     Returns results with an ID less than (that is, older than) or equal to the specified ID.
+	 * @param   integer $count      Specifies the number of direct messages to try and retrieve, up to a maximum of 200.
+	 * @param   integer $page       Specifies the page of results to retrieve.
+	 * @param   boolean $entities   When set to true,  each tweet will include a node called "entities,". This node offers a variety of metadata
 	 *                              about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
 	 * @since   12.3
 	 */
-	public function getSentDirectMessages($since_id = 0, $max_id =  0, $count = 20, $page = 0, $entities = null)
+	public function getSentDirectMessages($since_id = 0, $max_id = 0, $count = 20, $page = 0, $entities = null)
 	{
 		// Check the rate limit for remaining hits
 		$this->checkRateLimit('direct_messages', 'sent');
@@ -131,8 +131,8 @@ class JTwitterDirectmessages extends JTwitterObject
 	/**
 	 * Method to send a new direct message to the specified user from the authenticating user.
 	 *
-	 * @param   mixed   $user  Either an integer containing the user ID or a string containing the screen name.
-	 * @param   string  $text  The text of your direct message. Be sure to keep the message under 140 characters.
+	 * @param   mixed  $user Either an integer containing the user ID or a string containing the screen name.
+	 * @param   string $text The text of your direct message. Be sure to keep the message under 140 characters.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -168,7 +168,7 @@ class JTwitterDirectmessages extends JTwitterObject
 	/**
 	 * Method to get a single direct message, specified by an id parameter.
 	 *
-	 * @param   integer  $id  The ID of the direct message.
+	 * @param   integer $id The ID of the direct message.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -191,8 +191,8 @@ class JTwitterDirectmessages extends JTwitterObject
 	/**
 	 * Method to delete the direct message specified in the required ID parameter.
 	 *
-	 * @param   integer  $id        The ID of the direct message.
-	 * @param   boolean  $entities  When set to true,  each tweet will include a node called "entities,". This node offers a variety of metadata
+	 * @param   integer $id         The ID of the direct message.
+	 * @param   boolean $entities   When set to true,  each tweet will include a node called "entities,". This node offers a variety of metadata
 	 *                              about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
 	 *
 	 * @return  array  The decoded JSON response

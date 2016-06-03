@@ -67,10 +67,10 @@ abstract class JLoader
 	/**
 	 * Method to discover classes of a given type in a given path.
 	 *
-	 * @param   string   $classPrefix  The class name prefix to use for discovery.
-	 * @param   string   $parentPath   Full path to the parent folder for the classes to discover.
-	 * @param   boolean  $force        True to overwrite the autoload path value for the class if it already exists.
-	 * @param   boolean  $recurse      Recurse through all child directories as well as the parent path.
+	 * @param   string  $classPrefix The class name prefix to use for discovery.
+	 * @param   string  $parentPath  Full path to the parent folder for the classes to discover.
+	 * @param   boolean $force       True to overwrite the autoload path value for the class if it already exists.
+	 * @param   boolean $recurse     Recurse through all child directories as well as the parent path.
 	 *
 	 * @return  void
 	 *
@@ -118,6 +118,33 @@ abstract class JLoader
 	}
 
 	/**
+	 * Directly register a class to the autoload list.
+	 *
+	 * @param   string  $class The class name to register.
+	 * @param   string  $path  Full path to the file that holds the class to register.
+	 * @param   boolean $force True to overwrite the autoload path value for the class if it already exists.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public static function register($class, $path, $force = true)
+	{
+		// Sanitize class name.
+		$class = strtolower($class);
+
+		// Only attempt to register the class if the name and file exist.
+		if (!empty($class) && is_file($path))
+		{
+			// Register the class with the autoloader if not already registered or the force flag is set.
+			if (empty(self::$classes[$class]) || $force)
+			{
+				self::$classes[$class] = $path;
+			}
+		}
+	}
+
+	/**
 	 * Method to get the list of registered classes and their respective file paths for the autoloader.
 	 *
 	 * @return  array  The array of class => path values for the autoloader.
@@ -144,8 +171,8 @@ abstract class JLoader
 	/**
 	 * Loads a class from specified directories.
 	 *
-	 * @param   string  $key   The class name to look for (dot notation).
-	 * @param   string  $base  Search this directory for the class.
+	 * @param   string $key  The class name to look for (dot notation).
+	 * @param   string $base Search this directory for the class.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -158,10 +185,10 @@ abstract class JLoader
 		{
 			// Setup some variables.
 			$success = false;
-			$parts = explode('.', $key);
-			$class = array_pop($parts);
-			$base = (!empty($base)) ? $base : __DIR__;
-			$path = str_replace('.', DIRECTORY_SEPARATOR, $key);
+			$parts   = explode('.', $key);
+			$class   = array_pop($parts);
+			$base    = (!empty($base)) ? $base : __DIR__;
+			$path    = str_replace('.', DIRECTORY_SEPARATOR, $key);
 
 			// Handle special case for helper classes.
 			if ($class == 'helper')
@@ -184,7 +211,7 @@ abstract class JLoader
 				if (is_file($base . '/' . $path . '.php'))
 				{
 					self::$classes[strtolower($class)] = $base . '/' . $path . '.php';
-					$success = true;
+					$success                           = true;
 				}
 			}
 			/*
@@ -210,7 +237,7 @@ abstract class JLoader
 	/**
 	 * Load the file for a class.
 	 *
-	 * @param   string  $class  The class to be loaded.
+	 * @param   string $class The class to be loaded.
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -239,85 +266,11 @@ abstract class JLoader
 	}
 
 	/**
-	 * Directly register a class to the autoload list.
-	 *
-	 * @param   string   $class  The class name to register.
-	 * @param   string   $path   Full path to the file that holds the class to register.
-	 * @param   boolean  $force  True to overwrite the autoload path value for the class if it already exists.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	public static function register($class, $path, $force = true)
-	{
-		// Sanitize class name.
-		$class = strtolower($class);
-
-		// Only attempt to register the class if the name and file exist.
-		if (!empty($class) && is_file($path))
-		{
-			// Register the class with the autoloader if not already registered or the force flag is set.
-			if (empty(self::$classes[$class]) || $force)
-			{
-				self::$classes[$class] = $path;
-			}
-		}
-	}
-
-	/**
-	 * Register a class prefix with lookup path.  This will allow developers to register library
-	 * packages with different class prefixes to the system autoloader.  More than one lookup path
-	 * may be registered for the same class prefix, but if this method is called with the reset flag
-	 * set to true then any registered lookups for the given prefix will be overwritten with the current
-	 * lookup path. When loaded, prefix paths are searched in a "last in, first out" order.
-	 *
-	 * @param   string   $prefix   The class prefix to register.
-	 * @param   string   $path     Absolute file path to the library root where classes with the given prefix can be found.
-	 * @param   boolean  $reset    True to reset the prefix with only the given lookup path.
-	 * @param   boolean  $prepend  If true, push the path to the beginning of the prefix lookup paths array.
-	 *
-	 * @return  void
-	 *
-	 * @throws  RuntimeException
-	 *
-	 * @since   12.1
-	 */
-	public static function registerPrefix($prefix, $path, $reset = false, $prepend = false)
-	{
-		// Verify the library path exists.
-		if (!file_exists($path))
-		{
-			$path = (str_replace(JPATH_ROOT, '', $path) == $path) ? basename($path) : str_replace(JPATH_ROOT, '', $path);
-
-			throw new RuntimeException('Library path ' . $path . ' cannot be found.', 500);
-		}
-
-		// If the prefix is not yet registered or we have an explicit reset flag then set set the path.
-		if (!isset(self::$prefixes[$prefix]) || $reset)
-		{
-			self::$prefixes[$prefix] = array($path);
-		}
-		// Otherwise we want to simply add the path to the prefix.
-		else
-		{
-			if ($prepend)
-			{
-				array_unshift(self::$prefixes[$prefix], $path);
-			}
-			else
-			{
-				self::$prefixes[$prefix][] = $path;
-			}
-		}
-	}
-
-	/**
 	 * Offers the ability for "just in time" usage of `class_alias()`.
 	 * You cannot overwrite an existing alias.
 	 *
-	 * @param   string  $alias     The alias name to register.
-	 * @param   string  $original  The original class to alias.
+	 * @param   string $alias    The alias name to register.
+	 * @param   string $original The original class to alias.
 	 *
 	 * @return  boolean  True if registration was successful. False if the alias already exists.
 	 *
@@ -353,10 +306,10 @@ abstract class JLoader
 	/**
 	 * Register a namespace to the autoloader. When loaded, namespace paths are searched in a "last in, first out" order.
 	 *
-	 * @param   string   $namespace  A case sensitive Namespace to register.
-	 * @param   string   $path       A case sensitive absolute file path to the library root where classes of the given namespace can be found.
-	 * @param   boolean  $reset      True to reset the namespace with only the given lookup path.
-	 * @param   boolean  $prepend    If true, push the path to the beginning of the namespace lookup paths array.
+	 * @param   string  $namespace A case sensitive Namespace to register.
+	 * @param   string  $path      A case sensitive absolute file path to the library root where classes of the given namespace can be found.
+	 * @param   boolean $reset     True to reset the namespace with only the given lookup path.
+	 * @param   boolean $prepend   If true, push the path to the beginning of the namespace lookup paths array.
 	 *
 	 * @return  void
 	 *
@@ -401,9 +354,9 @@ abstract class JLoader
 	 * This will allow people to register a class in a specific location and override platform libraries
 	 * as was previously possible.
 	 *
-	 * @param   boolean  $enablePsr       True to enable autoloading based on PSR-0.
-	 * @param   boolean  $enablePrefixes  True to enable prefix based class loading (needed to auto load the Joomla core).
-	 * @param   boolean  $enableClasses   True to enable class map based class loading (needed to auto load the Joomla core).
+	 * @param   boolean $enablePsr      True to enable autoloading based on PSR-0.
+	 * @param   boolean $enablePrefixes True to enable prefix based class loading (needed to auto load the Joomla core).
+	 * @param   boolean $enableClasses  True to enable class map based class loading (needed to auto load the Joomla core).
 	 *
 	 * @return  void
 	 *
@@ -435,9 +388,56 @@ abstract class JLoader
 	}
 
 	/**
+	 * Register a class prefix with lookup path.  This will allow developers to register library
+	 * packages with different class prefixes to the system autoloader.  More than one lookup path
+	 * may be registered for the same class prefix, but if this method is called with the reset flag
+	 * set to true then any registered lookups for the given prefix will be overwritten with the current
+	 * lookup path. When loaded, prefix paths are searched in a "last in, first out" order.
+	 *
+	 * @param   string  $prefix  The class prefix to register.
+	 * @param   string  $path    Absolute file path to the library root where classes with the given prefix can be found.
+	 * @param   boolean $reset   True to reset the prefix with only the given lookup path.
+	 * @param   boolean $prepend If true, push the path to the beginning of the prefix lookup paths array.
+	 *
+	 * @return  void
+	 *
+	 * @throws  RuntimeException
+	 *
+	 * @since   12.1
+	 */
+	public static function registerPrefix($prefix, $path, $reset = false, $prepend = false)
+	{
+		// Verify the library path exists.
+		if (!file_exists($path))
+		{
+			$path = (str_replace(JPATH_ROOT, '', $path) == $path) ? basename($path) : str_replace(JPATH_ROOT, '', $path);
+
+			throw new RuntimeException('Library path ' . $path . ' cannot be found.', 500);
+		}
+
+		// If the prefix is not yet registered or we have an explicit reset flag then set set the path.
+		if (!isset(self::$prefixes[$prefix]) || $reset)
+		{
+			self::$prefixes[$prefix] = array($path);
+		}
+		// Otherwise we want to simply add the path to the prefix.
+		else
+		{
+			if ($prepend)
+			{
+				array_unshift(self::$prefixes[$prefix], $path);
+			}
+			else
+			{
+				self::$prefixes[$prefix][] = $path;
+			}
+		}
+	}
+
+	/**
 	 * Method to autoload classes that are namespaced to the PSR-0 standard.
 	 *
-	 * @param   string  $class  The fully qualified class name to autoload.
+	 * @param   string $class The fully qualified class name to autoload.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
@@ -494,7 +494,7 @@ abstract class JLoader
 	/**
 	 * Method to autoload classes that have been aliased using the registerAlias method.
 	 *
-	 * @param   string  $class  The fully qualified class name to autoload.
+	 * @param   string $class The fully qualified class name to autoload.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
@@ -525,7 +525,7 @@ abstract class JLoader
 	/**
 	 * Applies a class alias for an already loaded class, if a class alias was created for it.
 	 *
-	 * @param   string  $class  We'll look for and register aliases for this (real) class name
+	 * @param   string $class We'll look for and register aliases for this (real) class name
 	 *
 	 * @return  void
 	 *
@@ -551,7 +551,7 @@ abstract class JLoader
 	/**
 	 * Autoload a class based on name.
 	 *
-	 * @param   string  $class  The class to be loaded.
+	 * @param   string $class The class to be loaded.
 	 *
 	 * @return  boolean  True if the class was loaded, false otherwise.
 	 *
@@ -575,8 +575,8 @@ abstract class JLoader
 	/**
 	 * Load a class based on name and lookup array.
 	 *
-	 * @param   string  $class   The class to be loaded (wihtout prefix).
-	 * @param   array   $lookup  The array of base paths to use for finding the class file.
+	 * @param   string $class  The class to be loaded (wihtout prefix).
+	 * @param   array  $lookup The array of base paths to use for finding the class file.
 	 *
 	 * @return  boolean  True if the class was loaded, false otherwise.
 	 *
@@ -585,7 +585,7 @@ abstract class JLoader
 	private static function _load($class, $lookup)
 	{
 		// Split the class name into parts separated by camelCase.
-		$parts = preg_split('/(?<=[a-z0-9])(?=[A-Z])/x', $class);
+		$parts      = preg_split('/(?<=[a-z0-9])(?=[A-Z])/x', $class);
 		$partsCount = count($parts);
 
 		foreach ($lookup as $base)
@@ -627,7 +627,7 @@ if (!function_exists('jexit'))
 	 *
 	 * This function provides a single exit point for the platform.
 	 *
-	 * @param   mixed  $message  Exit code or string. Defaults to zero.
+	 * @param   mixed $message Exit code or string. Defaults to zero.
 	 *
 	 * @return  void
 	 *
@@ -643,8 +643,8 @@ if (!function_exists('jexit'))
 /**
  * Intelligent file importer.
  *
- * @param   string  $path  A dot syntax path.
- * @param   string  $base  Search this directory for the class.
+ * @param   string $path A dot syntax path.
+ * @param   string $base Search this directory for the class.
  *
  * @return  boolean  True on success.
  *

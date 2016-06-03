@@ -107,14 +107,14 @@ class JFormFieldModal_Article extends JFormField
 		$linkArticles = 'index.php?option=com_content&amp;view=articles&amp;layout=modal&amp;tmpl=component'
 			. '&amp;function=jSelectArticle_' . $this->id;
 
-		$linkArticle  = 'index.php?option=com_content&amp;view=article&amp;layout=modal&amp;tmpl=component'
+		$linkArticle = 'index.php?option=com_content&amp;view=article&amp;layout=modal&amp;tmpl=component'
 			. '&amp;task=article.edit'
 			. '&amp;function=jEditArticle_' . $value;
 
 		if (isset($this->element['language']))
 		{
 			$linkArticles .= '&amp;forcedLanguage=' . $this->element['language'];
-			$linkArticle  .= '&amp;forcedLanguage=' . $this->element['language'];
+			$linkArticle .= '&amp;forcedLanguage=' . $this->element['language'];
 		}
 
 		$urlSelect = $linkArticles . '&amp;' . JSession::getFormToken() . '=1';
@@ -192,14 +192,14 @@ class JFormFieldModal_Article extends JFormField
 			'bootstrap.renderModal',
 			'articleSelect' . $this->id . 'Modal',
 			array(
-				'title'       => JText::_('COM_CONTENT_CHANGE_ARTICLE'),
-				'url'         => $urlSelect,
-				'height'      => '400px',
-				'width'       => '800px',
-				'bodyHeight'  => '70',
-				'modalWidth'  => '80',
-				'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">'
-						. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>',
+				'title'      => JText::_('COM_CONTENT_CHANGE_ARTICLE'),
+				'url'        => $urlSelect,
+				'height'     => '400px',
+				'width'      => '800px',
+				'bodyHeight' => '70',
+				'modalWidth' => '80',
+				'footer'     => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">'
+					. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>',
 			)
 		);
 
@@ -218,14 +218,14 @@ class JFormFieldModal_Article extends JFormField
 				'bodyHeight'  => '70',
 				'modalWidth'  => '80',
 				'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"'
-						. ' onclick="jQuery(\'#articleEdit' . $value . 'Modal iframe\').contents().find(\'#closeBtn\').click();">'
-						. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
-						. '<button type="button" class="btn btn-primary" aria-hidden="true"'
-						. ' onclick="jQuery(\'#articleEdit' . $value . 'Modal iframe\').contents().find(\'#saveBtn\').click();">'
-						. JText::_("JSAVE") . '</button>'
-						. '<button type="button" class="btn btn-success" aria-hidden="true"'
-						. ' onclick="jQuery(\'#articleEdit' . $value . 'Modal iframe\').contents().find(\'#applyBtn\').click();">'
-						. JText::_("JAPPLY") . '</button>',
+					. ' onclick="jQuery(\'#articleEdit' . $value . 'Modal iframe\').contents().find(\'#closeBtn\').click();">'
+					. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
+					. '<button type="button" class="btn btn-primary" aria-hidden="true"'
+					. ' onclick="jQuery(\'#articleEdit' . $value . 'Modal iframe\').contents().find(\'#saveBtn\').click();">'
+					. JText::_("JSAVE") . '</button>'
+					. '<button type="button" class="btn btn-success" aria-hidden="true"'
+					. ' onclick="jQuery(\'#articleEdit' . $value . 'Modal iframe\').contents().find(\'#applyBtn\').click();">'
+					. JText::_("JAPPLY") . '</button>',
 			)
 		);
 

@@ -39,7 +39,7 @@ class FOFLessFormatterCompressed extends FOFLessFormatterClassic
 	/**
 	 * Indent a string by $n positions
 	 *
-	 * @param   integer  $n  How many positions to indent
+	 * @param   integer $n How many positions to indent
 	 *
 	 * @return  string  The indented string
 	 */

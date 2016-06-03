@@ -25,53 +25,6 @@ class JTableExtensionTest extends TestCaseDatabase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		// Get the mocks
-		$this->saveFactoryState();
-
-		JFactory::$session = $this->getMockSession();
-
-		$this->object = new JTableExtension(self::$driver);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   11.4
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
-
-		return $dataSet;
-	}
-
-	/**
 	 * Tests JTableExtension::check
 	 *
 	 * @return  void
@@ -88,7 +41,7 @@ class JTableExtensionTest extends TestCaseDatabase
 			'Line: ' . __LINE__ . ' Checking an empty table should fail.'
 		);
 
-		$table->name = 'com_content';
+		$table->name    = 'com_content';
 		$table->element = 'com_content';
 		$this->assertThat(
 			$table->check(),
@@ -140,5 +93,52 @@ class JTableExtensionTest extends TestCaseDatabase
 		$this->assertTrue($table->publish('22', '1'), 'Line: ' . __LINE__ . ' Publish with a single pk should work');
 		$table->load('22');
 		$this->assertEquals('1', $table->enabled, 'Line: ' . __LINE__ . ' Id 32 should be published');
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		// Get the mocks
+		$this->saveFactoryState();
+
+		JFactory::$session = $this->getMockSession();
+
+		$this->object = new JTableExtension(self::$driver);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   11.4
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_extensions', JPATH_TEST_DATABASE . '/jos_extensions.csv');
+
+		return $dataSet;
 	}
 }

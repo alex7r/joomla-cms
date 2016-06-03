@@ -22,7 +22,7 @@ class JFacebookNote extends JFacebookObject
 	/**
 	 * Method to get a note. Requires authentication and user_notes or friends_notes permission for non-public notes.
 	 *
-	 * @param   string  $note  The note id.
+	 * @param   string $note The note id.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -36,11 +36,11 @@ class JFacebookNote extends JFacebookObject
 	/**
 	 * Method to get a note's comments. Requires authentication and user_notes or friends_notes permission for non-public notes.
 	 *
-	 * @param   string   $note    The note id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
-	 * @param   string   $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $note   The note id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
+	 * @param   string  $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -54,8 +54,8 @@ class JFacebookNote extends JFacebookObject
 	/**
 	 * Method to comment on a note. Requires authentication and publish_stream and user_notes or friends_notes permissions.
 	 *
-	 * @param   string  $note     The note id.
-	 * @param   string  $message  The comment's text.
+	 * @param   string $note    The note id.
+	 * @param   string $message The comment's text.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -64,7 +64,7 @@ class JFacebookNote extends JFacebookObject
 	public function createComment($note, $message)
 	{
 		// Set POST request parameters.
-		$data = array();
+		$data            = array();
 		$data['message'] = $message;
 
 		return $this->createConnection($note, 'comments', $data);
@@ -73,7 +73,7 @@ class JFacebookNote extends JFacebookObject
 	/**
 	 * Method to delete a comment. Requires authentication and publish_stream and user_notes or friends_notes permissions.
 	 *
-	 * @param   string  $comment  The comment's id.
+	 * @param   string $comment The comment's id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -87,11 +87,11 @@ class JFacebookNote extends JFacebookObject
 	/**
 	 * Method to get note's likes. Requires authentication and user_notes or friends_notes for non-public notes.
 	 *
-	 * @param   string   $note    The note id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
-	 * @param   string   $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $note   The note id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
+	 * @param   string  $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -105,7 +105,7 @@ class JFacebookNote extends JFacebookObject
 	/**
 	 * Method to like a note. Requires authentication and publish_stream and user_notes or friends_notes permissions.
 	 *
-	 * @param   string  $note  The note id.
+	 * @param   string $note The note id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -119,7 +119,7 @@ class JFacebookNote extends JFacebookObject
 	/**
 	 * Method to unlike a note. Requires authentication and publish_stream and user_notes or friends_notes permissions.
 	 *
-	 * @param   string  $note  The note id.
+	 * @param   string $note The note id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *

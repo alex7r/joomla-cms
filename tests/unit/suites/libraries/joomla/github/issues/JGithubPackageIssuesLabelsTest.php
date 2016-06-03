@@ -41,21 +41,6 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 	protected $errorString = '{"message": "Generic Error"}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->options = new JRegistry;
-		$this->client = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('JHttpResponse');
-
-		$this->object = new JGithubPackageIssuesLabels($this->options, $this->client);
-	}
-
-	/**
 	 * @covers JGithubPackageIssuesLabels::getList
 	 *         GET /repos/:owner/:repo/labels
 	 *
@@ -71,16 +56,14 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('get')
-		             ->with('/repos/joomla/joomla-platform/labels', 0, 0)
-		             ->will($this->returnValue($this->response))
-		;
+			->method('get')
+			->with('/repos/joomla/joomla-platform/labels', 0, 0)
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->getList('joomla', 'joomla-platform', '1'),
 			$this->equalTo(json_decode($this->response->body))
-		)
-		;
+		);
 	}
 
 	/**
@@ -100,16 +83,14 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('get')
-		             ->with('/repos/joomla/joomla-platform/labels/1', 0, 0)
-		             ->will($this->returnValue($this->response))
-		;
+			->method('get')
+			->with('/repos/joomla/joomla-platform/labels/1', 0, 0)
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->get('joomla', 'joomla-platform', '1'),
 			$this->equalTo(json_decode($this->response->body))
-		)
-		;
+		);
 	}
 
 	/**
@@ -148,16 +129,14 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('post')
-		             ->with('/repos/joomla/joomla-platform/labels', '{"name":"foobar","color":"red"}', 0, 0)
-		             ->will($this->returnValue($this->response))
-		;
+			->method('post')
+			->with('/repos/joomla/joomla-platform/labels', '{"name":"foobar","color":"red"}', 0, 0)
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->create('joomla', 'joomla-platform', 'foobar', 'red'),
 			$this->equalTo(json_decode($this->response->body))
-		)
-		;
+		);
 	}
 
 	/**
@@ -169,16 +148,14 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->errorString;
 
 		$this->client->expects($this->once())
-		             ->method('post')
-		             ->with('/repos/joomla/joomla-platform/labels', '{"name":"foobar","color":"red"}', 0, 0)
-		             ->will($this->returnValue($this->response))
-		;
+			->method('post')
+			->with('/repos/joomla/joomla-platform/labels', '{"name":"foobar","color":"red"}', 0, 0)
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->create('joomla', 'joomla-platform', 'foobar', 'red'),
 			$this->equalTo(json_decode($this->response->body))
-		)
-		;
+		);
 	}
 
 	/**
@@ -216,16 +193,14 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('patch')
-		             ->with('/repos/joomla/joomla-platform/labels/foobar', '{"name":"boofaz","color":"red"}', 0, 0)
-		             ->will($this->returnValue($this->response))
-		;
+			->method('patch')
+			->with('/repos/joomla/joomla-platform/labels/foobar', '{"name":"boofaz","color":"red"}', 0, 0)
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->update('joomla', 'joomla-platform', 'foobar', 'boofaz', 'red'),
 			$this->equalTo(json_decode($this->response->body))
-		)
-		;
+		);
 	}
 
 	/**
@@ -245,16 +220,14 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('delete')
-		             ->with('/repos/joomla/joomla-platform/labels/foobar', 0, 0)
-		             ->will($this->returnValue($this->response))
-		;
+			->method('delete')
+			->with('/repos/joomla/joomla-platform/labels/foobar', 0, 0)
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->delete('joomla', 'joomla-platform', 'foobar'),
 			$this->equalTo(json_decode($this->response->body))
-		)
-		;
+		);
 	}
 
 	/**
@@ -274,16 +247,14 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('get')
-		             ->with('/repos/joomla/joomla-platform/issues/1/labels', 0, 0)
-		             ->will($this->returnValue($this->response))
-		;
+			->method('get')
+			->with('/repos/joomla/joomla-platform/issues/1/labels', 0, 0)
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->getListByIssue('joomla', 'joomla-platform', 1),
 			$this->equalTo(json_decode($this->response->body))
-		)
-		;
+		);
 	}
 
 	/**
@@ -318,16 +289,14 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('post')
-		             ->with('/repos/joomla/joomla-platform/issues/1/labels', '["A","B"]', 0, 0)
-		             ->will($this->returnValue($this->response))
-		;
+			->method('post')
+			->with('/repos/joomla/joomla-platform/issues/1/labels', '["A","B"]', 0, 0)
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->add('joomla', 'joomla-platform', 1, array('A', 'B')),
 			$this->equalTo(json_decode($this->response->body))
-		)
-		;
+		);
 	}
 
 	/**
@@ -355,16 +324,14 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('delete')
-		             ->with('/repos/joomla/joomla-platform/issues/1/labels/foobar', 0, 0)
-		             ->will($this->returnValue($this->response))
-		;
+			->method('delete')
+			->with('/repos/joomla/joomla-platform/issues/1/labels/foobar', 0, 0)
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->removeFromIssue('joomla', 'joomla-platform', 1, 'foobar'),
 			$this->equalTo(json_decode($this->response->body))
-		)
-		;
+		);
 	}
 
 	/**
@@ -400,16 +367,14 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('put')
-		             ->with('/repos/joomla/joomla-platform/issues/1/labels', '["A","B"]', 0, 0)
-		             ->will($this->returnValue($this->response))
-		;
+			->method('put')
+			->with('/repos/joomla/joomla-platform/issues/1/labels', '["A","B"]', 0, 0)
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->replace('joomla', 'joomla-platform', 1, array('A', 'B')),
 			$this->equalTo(json_decode($this->response->body))
-		)
-		;
+		);
 	}
 
 	/**
@@ -429,16 +394,14 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('delete')
-		             ->with('/repos/joomla/joomla-platform/issues/1/labels', 0, 0)
-		             ->will($this->returnValue($this->response))
-		;
+			->method('delete')
+			->with('/repos/joomla/joomla-platform/issues/1/labels', 0, 0)
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->removeAllFromIssue('joomla', 'joomla-platform', 1),
 			$this->equalTo(json_decode($this->response->body))
-		)
-		;
+		);
 	}
 
 	/**
@@ -466,15 +429,28 @@ class JGithubPackageIssuesLabelsTest extends PHPUnit_Framework_TestCase
 		$this->response->body = $this->sampleString;
 
 		$this->client->expects($this->once())
-		             ->method('get')
-		             ->with('/repos/joomla/joomla-platform/milestones/1/labels', 0, 0)
-		             ->will($this->returnValue($this->response))
-		;
+			->method('get')
+			->with('/repos/joomla/joomla-platform/milestones/1/labels', 0, 0)
+			->will($this->returnValue($this->response));
 
 		$this->assertThat(
 			$this->object->getListByMilestone('joomla', 'joomla-platform', 1),
 			$this->equalTo(json_decode($this->response->body))
-		)
-		;
+		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->options  = new JRegistry;
+		$this->client   = $this->getMock('JGithubHttp', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->response = $this->getMock('JHttpResponse');
+
+		$this->object = new JGithubPackageIssuesLabels($this->options, $this->client);
 	}
 }

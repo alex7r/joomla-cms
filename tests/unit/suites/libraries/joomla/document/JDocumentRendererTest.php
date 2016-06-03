@@ -24,6 +24,19 @@ class JDocumentRendererTest extends PHPUnit_Framework_TestCase
 	 */
 	protected $backupServer;
 
+	public function testRenderByDefaultReturnsNull()
+	{
+		$this->assertNull($this->object->render('test'));
+	}
+
+	public function testGetTheDefaultContentType()
+	{
+		$this->assertEquals(
+			'text/html',
+			$this->object->getContentType()
+		);
+	}
+
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
@@ -34,12 +47,12 @@ class JDocumentRendererTest extends PHPUnit_Framework_TestCase
 	{
 		parent::setUp();
 
-		$doc = new JDocument;
+		$doc          = new JDocument;
 		$this->object = new JDocumentRenderer($doc);
 
 		$this->backupServer = $_SERVER;
 
-		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['SCRIPT_NAME'] = '';
 	}
 
@@ -54,18 +67,5 @@ class JDocumentRendererTest extends PHPUnit_Framework_TestCase
 		$_SERVER = $this->backupServer;
 
 		parent::tearDown();
-	}
-
-	public function testRenderByDefaultReturnsNull()
-	{
-		$this->assertNull($this->object->render('test'));
-	}
-
-	public function testGetTheDefaultContentType()
-	{
-		$this->assertEquals(
-			'text/html',
-			$this->object->getContentType()
-		);
 	}
 }

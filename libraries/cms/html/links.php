@@ -19,7 +19,7 @@ abstract class JHtmlLinks
 	/**
 	 * Method to generate html code for groups of lists of links
 	 *
-	 * @param   array  $groupsOfLinks  Array of links
+	 * @param   array $groupsOfLinks Array of links
 	 *
 	 * @return  string
 	 *
@@ -42,10 +42,10 @@ abstract class JHtmlLinks
 					$html[] = $layout->render($title);
 				}
 
-				$layout = new JLayoutFile('joomla.links.groupopen');
+				$layout     = new JLayoutFile('joomla.links.groupopen');
 				$htmlHeader = $layout->render($title);
 
-				$htmlLinks  = JHtml::_('links.links', $links);
+				$htmlLinks = JHtml::_('links.links', $links);
 
 				if ($htmlLinks != '')
 				{
@@ -67,7 +67,7 @@ abstract class JHtmlLinks
 	/**
 	 * Method to generate html code for a list of links
 	 *
-	 * @param   array  $links  Array of links
+	 * @param   array $links Array of links
 	 *
 	 * @return  string
 	 *
@@ -88,7 +88,7 @@ abstract class JHtmlLinks
 	/**
 	 * Method to generate html code for a list of links
 	 *
-	 * @param   array  $link  link properties
+	 * @param   array $link link properties
 	 *
 	 * @return  string
 	 *

@@ -30,7 +30,7 @@ class JSimplecrypt
 	 * Object Constructor takes an optional key to be used for encryption/decryption. If no key is given then the
 	 * secret word from the configuration object is used.
 	 *
-	 * @param   string  $privateKey  Optional encryption key
+	 * @param   string $privateKey Optional encryption key
 	 *
 	 * @since       11.1
 	 * @deprecated  12.3  Use JCrypt instead.
@@ -54,11 +54,11 @@ class JSimplecrypt
 	/**
 	 * Decrypt a string
 	 *
-	 * @param   string  $s  String to decrypt
+	 * @param   string $s String to decrypt
 	 *
 	 * @return  string
 	 *
-	 * @since   11.1
+	 * @since       11.1
 	 * @deprecated  12.3  Use JCrypt instead.
 	 */
 	public function decrypt($s)
@@ -69,11 +69,11 @@ class JSimplecrypt
 	/**
 	 * Encrypt a string
 	 *
-	 * @param   string  $s  String to encrypt
+	 * @param   string $s String to encrypt
 	 *
 	 * @return  string
 	 *
-	 * @since   11.1
+	 * @since       11.1
 	 * @deprecated  12.3  Use JCrypt instead.
 	 */
 	public function encrypt($s)

@@ -36,22 +36,22 @@ class JDateTest extends TestCaseDatabase
 		date_default_timezone_set('UTC');
 
 		return array(
-			'basic' => array(
+			'basic'         => array(
 				'12/23/2008 13:45',
 				null,
 				'Tue 12/23/2008 13:45',
 			),
-			'unix' => array(
+			'unix'          => array(
 				strtotime('12/26/2008 13:45'),
 				null,
 				'Fri 12/26/2008 13:45',
 			),
-			'tzCT' => array(
+			'tzCT'          => array(
 				'12/23/2008 13:45',
 				'US/Central',
 				'Tue 12/23/2008 13:45',
 			),
-			"tzCT" => array(
+			"tzCT"          => array(
 				'12/23/2008 13:45',
 				'US/Central',
 				'Tue 12/23/2008 13:45',
@@ -79,57 +79,57 @@ class JDateTest extends TestCaseDatabase
 				'daysinmonth',
 				31,
 			),
-			'dayofweek' => array(
+			'dayofweek'   => array(
 				'2000-01-02 03:04:05',
 				'dayofweek',
 				7,
 			),
-			'dayofyear' => array(
+			'dayofyear'   => array(
 				'2000-01-02 03:04:05',
 				'dayofyear',
 				1,
 			),
-			'isleapyear' => array(
+			'isleapyear'  => array(
 				'2000-01-02 03:04:05',
 				'isleapyear',
 				true,
 			),
-			'day' => array(
+			'day'         => array(
 				'2000-01-02 03:04:05',
 				'day',
 				2,
 			),
-			'hour' => array(
+			'hour'        => array(
 				'2000-01-02 03:04:05',
 				'hour',
 				3,
 			),
-			'minute' => array(
+			'minute'      => array(
 				'2000-01-02 03:04:05',
 				'minute',
 				4,
 			),
-			'second' => array(
+			'second'      => array(
 				'2000-01-02 03:04:05',
 				'second',
 				5,
 			),
-			'month' => array(
+			'month'       => array(
 				'2000-01-02 03:04:05',
 				'month',
 				1,
 			),
-			'ordinal' => array(
+			'ordinal'     => array(
 				'2000-01-02 03:04:05',
 				'ordinal',
 				'nd',
 			),
-			'week' => array(
+			'week'        => array(
 				'2000-01-02 03:04:05',
 				'week',
 				52,
 			),
-			'year' => array(
+			'year'        => array(
 				'2000-01-02 03:04:05',
 				'year',
 				2000,
@@ -147,12 +147,12 @@ class JDateTest extends TestCaseDatabase
 	public function casesFormat()
 	{
 		return array(
-			'basic' => array(
+			'basic'     => array(
 				'd/m/Y H:i:s',
 				true,
 				'20/12/2007 11:44:56',
 			),
-			'mmddyy' => array(
+			'mmddyy'    => array(
 				'mdy His',
 				true,
 				'122007 114456',
@@ -162,36 +162,36 @@ class JDateTest extends TestCaseDatabase
 				false,
 				'122007 164456',
 			),
- 			'Long' => array(
- 				'D F j, Y H:i:s',
+			'Long'      => array(
+				'D F j, Y H:i:s',
 				true,
- 				'Thu December 20, 2007 11:44:56',
- 			),
- 			'LongGMT' => array(
- 				'D F j, Y H:i:s',
- 				false,
- 				'Thu December 20, 2007 16:44:56',
- 			),
- 			'Long2' => array(
- 				'H:i:s D F j, Y',
- 				false,
- 				'16:44:56 Thu December 20, 2007',
- 			),
- 			'Long3' => array(
- 				'H:i:s l F j, Y',
- 				false,
- 				'16:44:56 Thursday December 20, 2007',
- 			),
- 			'Long4' => array(
- 				'H:i:s l M j, Y',
- 				false,
- 				'16:44:56 Thursday Dec 20, 2007',
- 			),
- 			'RFC822' => array(
- 				'r',
- 				false,
- 				'Thu, 20 Dec 2007 16:44:56 +0000',
- 			),
+				'Thu December 20, 2007 11:44:56',
+			),
+			'LongGMT'   => array(
+				'D F j, Y H:i:s',
+				false,
+				'Thu December 20, 2007 16:44:56',
+			),
+			'Long2'     => array(
+				'H:i:s D F j, Y',
+				false,
+				'16:44:56 Thu December 20, 2007',
+			),
+			'Long3'     => array(
+				'H:i:s l F j, Y',
+				false,
+				'16:44:56 Thursday December 20, 2007',
+			),
+			'Long4'     => array(
+				'H:i:s l M j, Y',
+				false,
+				'16:44:56 Thursday Dec 20, 2007',
+			),
+			'RFC822'    => array(
+				'r',
+				false,
+				'Thu, 20 Dec 2007 16:44:56 +0000',
+			),
 		);
 	}
 
@@ -205,25 +205,25 @@ class JDateTest extends TestCaseDatabase
 	public function casesGetOffsetFromGmt()
 	{
 		return array(
-			'basic' => array(
+			'basic'                    => array(
 				null,
 				'2007-11-20 11:44:56',
 				null,
 				0,
 			),
-			'Atlantic/Azores' => array(
+			'Atlantic/Azores'          => array(
 				'Atlantic/Azores',
 				'2007-11-20 11:44:56',
 				null,
 				-3600,
 			),
-			'	/Hours' => array(
+			'	/Hours'               => array(
 				'Atlantic/Azores',
 				'2007-11-20 11:44:56',
 				true,
 				-1,
 			),
-			'Australia/Brisbane' => array(
+			'Australia/Brisbane'       => array(
 				'Australia/Brisbane',
 				'2007-5-20 11:44:56',
 				null,
@@ -248,23 +248,23 @@ class JDateTest extends TestCaseDatabase
 	public function casesSetTimezone()
 	{
 		return array(
-			'New_York' => array(
+			'New_York'             => array(
 				'America/New_York',
 				'Thu, 20 Dec 2007 11:44:56 -0500',
 			),
-			'Chicago' => array(
+			'Chicago'              => array(
 				'America/Chicago',
 				'Thu, 20 Dec 2007 10:44:56 -0600',
 			),
-			'Los_Angeles' => array(
+			'Los_Angeles'          => array(
 				'America/Los_Angeles',
 				'Thu, 20 Dec 2007 08:44:56 -0800',
 			),
-			'Isle of Man' => array(
+			'Isle of Man'          => array(
 				'Europe/Isle_of_Man',
 				'Thu, 20 Dec 2007 16:44:56 +0000',
 			),
-			'Berlin' => array(
+			'Berlin'               => array(
 				'Europe/Berlin',
 				'Thu, 20 Dec 2007 17:44:56 +0100',
 			),
@@ -285,25 +285,25 @@ class JDateTest extends TestCaseDatabase
 	public function casesToISO8601()
 	{
 		return array(
-			'basic' => array(
+			'basic'                    => array(
 				null,
 				'2007-11-20 11:44:56',
 				null,
 				'2007-11-20T11:44:56+00:00',
 			),
-			'Atlantic/AzoresGMT' => array(
+			'Atlantic/AzoresGMT'       => array(
 				'Atlantic/Azores',
 				'2007-11-20 11:44:56',
 				null,
 				'2007-11-20T12:44:56+00:00',
 			),
-			'Atlantic/AzoresLocal' => array(
+			'Atlantic/AzoresLocal'     => array(
 				'Atlantic/Azores',
 				'2007-11-20 11:44:56',
 				true,
 				'2007-11-20T11:44:56-01:00',
 			),
-			'Australia/BrisbaneGMT' => array(
+			'Australia/BrisbaneGMT'    => array(
 				'Australia/Brisbane',
 				'2007-5-20 11:44:56',
 				null,
@@ -328,25 +328,25 @@ class JDateTest extends TestCaseDatabase
 	public function casesToSql()
 	{
 		return array(
-			'basic' => array(
+			'basic'                    => array(
 				null,
 				'2007-11-20 11:44:56',
 				null,
 				'2007-11-20 11:44:56',
 			),
-			'Atlantic/AzoresGMT' => array(
+			'Atlantic/AzoresGMT'       => array(
 				'Atlantic/Azores',
 				'2007-11-20 11:44:56',
 				null,
 				'2007-11-20 12:44:56',
 			),
-			'Atlantic/AzoresLocal' => array(
+			'Atlantic/AzoresLocal'     => array(
 				'Atlantic/Azores',
 				'2007-11-20 11:44:56',
 				true,
 				'2007-11-20 11:44:56',
 			),
-			'Australia/BrisbaneGMT' => array(
+			'Australia/BrisbaneGMT'    => array(
 				'Australia/Brisbane',
 				'2007-5-20 11:44:56',
 				null,
@@ -371,25 +371,25 @@ class JDateTest extends TestCaseDatabase
 	public function casesToRFC822()
 	{
 		return array(
-			'basic' => array(
+			'basic'                    => array(
 				null,
 				'2007-11-22 11:44:56',
 				null,
 				'Thu, 22 Nov 2007 11:44:56 +0000',
 			),
-			'Atlantic/AzoresGMT' => array(
+			'Atlantic/AzoresGMT'       => array(
 				'Atlantic/Azores',
 				'2007-11-20 11:44:56',
 				null,
 				'Tue, 20 Nov 2007 12:44:56 +0000',
 			),
-			'Atlantic/AzoresLocal' => array(
+			'Atlantic/AzoresLocal'     => array(
 				'Atlantic/Azores',
 				'2007-11-20 11:44:56',
 				true,
 				'Tue, 20 Nov 2007 11:44:56 -0100',
 			),
-			'Australia/BrisbaneGMT' => array(
+			'Australia/BrisbaneGMT'    => array(
 				'Australia/Brisbane',
 				'2007-5-22 11:44:56',
 				null,
@@ -414,7 +414,7 @@ class JDateTest extends TestCaseDatabase
 	public function casesToString()
 	{
 		return array(
-			'basic' => array(
+			'basic'   => array(
 				null,
 				'2007-12-20 11:44:56',
 			),
@@ -422,7 +422,7 @@ class JDateTest extends TestCaseDatabase
 				'mdy His',
 				'122007 114456',
 			),
-			'Long' => array(
+			'Long'    => array(
 				'D F j, Y H:i:s',
 				'Thu December 20, 2007 11:44:56',
 			),
@@ -439,22 +439,22 @@ class JDateTest extends TestCaseDatabase
 	public function casesToUnix()
 	{
 		return array(
-			'basic' => array(
+			'basic'                    => array(
 				null,
 				'2007-11-20 11:44:56',
 				1195559096,
 			),
-			'Atlantic/AzoresGMT' => array(
+			'Atlantic/AzoresGMT'       => array(
 				'Atlantic/Azores',
 				'2007-11-20 11:44:56',
 				1195562696,
 			),
-			'Atlantic/AzoresLocal' => array(
+			'Atlantic/AzoresLocal'     => array(
 				'Atlantic/Azores',
 				'2007-11-20 11:44:56',
 				1195562696,
 			),
-			'Australia/BrisbaneGMT' => array(
+			'Australia/BrisbaneGMT'    => array(
 				'Australia/Brisbane',
 				'2007-5-20 11:44:56',
 				1179625496,
@@ -468,33 +468,17 @@ class JDateTest extends TestCaseDatabase
 	}
 
 	/**
-	 * Sets up the fixture.
-	 *
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.3
-	 */
-	protected function setUp()
-	{
-		// Note: do not extend parent setUp method
-
-		$this->object = new JDate('12/20/2007 11:44:56', 'America/New_York');
-	}
-
-	/**
 	 * Testing the Constructor
 	 *
-	 * @param   string  $date          What time should be set?
-	 * @param   mixed   $tz            Which time zone? (can be string or numeric
-	 * @param   string  $expectedTime  What should the resulting time string look like?
+	 * @param   string $date         What time should be set?
+	 * @param   mixed  $tz           Which time zone? (can be string or numeric
+	 * @param   string $expectedTime What should the resulting time string look like?
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  cases__construct
-	 * @since   11.3
-	 * @covers  JDate::__construct
+	 * @since         11.3
+	 * @covers        JDate::__construct
 	 */
 	public function test__construct($date, $tz, $expectedTime)
 	{
@@ -505,24 +489,24 @@ class JDateTest extends TestCaseDatabase
 			$this->equalTo($expectedTime)
 		);
 
- 		$this->assertThat(
- 			$jdate->format('D m/d/Y H:i', true),
- 			$this->equalTo($expectedTime)
- 		);
+		$this->assertThat(
+			$jdate->format('D m/d/Y H:i', true),
+			$this->equalTo($expectedTime)
+		);
 	}
 
 	/**
 	 * Testing the Constructor
 	 *
-	 * @param   string  $date      The date.
-	 * @param   string  $property  The property to test.
-	 * @param   string  $expected  The expected value.
+	 * @param   string $date     The date.
+	 * @param   string $property The property to test.
+	 * @param   string $expected The expected value.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  cases__get
-	 * @since   11.3
-	 * @covers  JDate::__get
+	 * @since         11.3
+	 * @covers        JDate::__get
 	 */
 	public function test__get($date, $property, $expected)
 	{
@@ -557,14 +541,14 @@ class JDateTest extends TestCaseDatabase
 	/**
 	 * Testing toString
 	 *
-	 * @param   string  $format        How should the time be formatted?
-	 * @param   string  $expectedTime  What should the resulting time string look like?
+	 * @param   string $format       How should the time be formatted?
+	 * @param   string $expectedTime What should the resulting time string look like?
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesToString
-	 * @since   11.3
-	 * @covers  JDate::__toString
+	 * @since        11.3
+	 * @covers       JDate::__toString
 	 */
 	public function testToString($format, $expectedTime)
 	{
@@ -605,16 +589,16 @@ class JDateTest extends TestCaseDatabase
 	/**
 	 * Testing getOffsetFromGMT
 	 *
-	 * @param   mixed    $tz        Which time zone? (can be string or numeric
-	 * @param   string   $setTime   What time should be set?
-	 * @param   boolean  $hours     Return offset in hours (true) or seconds?
-	 * @param   string   $expected  What should the resulting time string look like?
+	 * @param   mixed   $tz       Which time zone? (can be string or numeric
+	 * @param   string  $setTime  What time should be set?
+	 * @param   boolean $hours    Return offset in hours (true) or seconds?
+	 * @param   string  $expected What should the resulting time string look like?
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesGetOffsetFromGmt
-	 * @since   11.3
-	 * @covers  JDate::getOffsetFromGMT
+	 * @since        11.3
+	 * @covers       JDate::getOffsetFromGMT
 	 */
 	public function testGetOffsetFromGmt($tz, $setTime, $hours, $expected)
 	{
@@ -642,15 +626,15 @@ class JDateTest extends TestCaseDatabase
 	/**
 	 * Testing format
 	 *
-	 * @param   string   $format    How should the time be formatted?
-	 * @param   boolean  $local     Local (true) or GMT?
-	 * @param   string   $expected  What should the resulting time string look like?
+	 * @param   string  $format   How should the time be formatted?
+	 * @param   boolean $local    Local (true) or GMT?
+	 * @param   string  $expected What should the resulting time string look like?
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesFormat
-	 * @since   11.3
-	 * @covers  JDate::format
+	 * @since        11.3
+	 * @covers       JDate::format
 	 */
 	public function testFormat($format, $local, $expected)
 	{
@@ -663,21 +647,21 @@ class JDateTest extends TestCaseDatabase
 	/**
 	 * Testing toRFC822
 	 *
-	 * @param   mixed   $tz        Which time zone? (can be string or numeric
-	 * @param   string  $setTime   What time should be set?
-	 * @param   bool    $local     Local (true) or GMT?
-	 * @param   string  $expected  What should the resulting time string look like?
+	 * @param   mixed  $tz       Which time zone? (can be string or numeric
+	 * @param   string $setTime  What time should be set?
+	 * @param   bool   $local    Local (true) or GMT?
+	 * @param   string $expected What should the resulting time string look like?
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesToRFC822
-	 * @since   11.3
-	 * @covers  JDate::toRFC822
+	 * @since        11.3
+	 * @covers       JDate::toRFC822
 	 */
 	public function testToRFC822($tz, $setTime, $local, $expected)
 	{
 		$language = JFactory::getLanguage();
-		$debug = $language->setDebug(true);
+		$debug    = $language->setDebug(true);
 
 		if (is_null($tz))
 		{
@@ -698,16 +682,16 @@ class JDateTest extends TestCaseDatabase
 	/**
 	 * Testing toISO8601
 	 *
-	 * @param   mixed    $tz        Which time zone? (can be string or numeric
-	 * @param   string   $setTime   What time should be set?
-	 * @param   boolean  $local     Local (true) or GMT?
-	 * @param   string   $expected  What should the resulting time string look like?
+	 * @param   mixed   $tz       Which time zone? (can be string or numeric
+	 * @param   string  $setTime  What time should be set?
+	 * @param   boolean $local    Local (true) or GMT?
+	 * @param   string  $expected What should the resulting time string look like?
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesToISO8601
-	 * @since   11.3
-	 * @covers  JDate::toISO8601
+	 * @since        11.3
+	 * @covers       JDate::toISO8601
 	 */
 	public function testToISO8601($tz, $setTime, $local, $expected)
 	{
@@ -729,16 +713,16 @@ class JDateTest extends TestCaseDatabase
 	/**
 	 * Testing toSql
 	 *
-	 * @param   mixed    $tz        Which time zone? (can be string or numeric
-	 * @param   string   $setTime   What time should be set?
-	 * @param   boolean  $local     Local (true) or GMT?
-	 * @param   string   $expected  What should the resulting time string look like?
+	 * @param   mixed   $tz       Which time zone? (can be string or numeric
+	 * @param   string  $setTime  What time should be set?
+	 * @param   boolean $local    Local (true) or GMT?
+	 * @param   string  $expected What should the resulting time string look like?
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesToSQL
-	 * @since   11.3
-	 * @covers  JDate::toSql
+	 * @since        11.3
+	 * @covers       JDate::toSql
 	 */
 	public function testToSql($tz, $setTime, $local, $expected)
 	{
@@ -760,15 +744,15 @@ class JDateTest extends TestCaseDatabase
 	/**
 	 * Testing toUnix
 	 *
-	 * @param   mixed   $tz        Which time zone? (can be string or numeric
-	 * @param   string  $setTime   What time should be set?
-	 * @param   string  $expected  What should the resulting time string look like?
+	 * @param   mixed  $tz       Which time zone? (can be string or numeric
+	 * @param   string $setTime  What time should be set?
+	 * @param   string $expected What should the resulting time string look like?
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesToUnix
-	 * @since   11.3
-	 * @covers  JDate::toUnix
+	 * @since        11.3
+	 * @covers       JDate::toUnix
 	 */
 	public function testToUnix($tz, $setTime, $expected)
 	{
@@ -790,14 +774,14 @@ class JDateTest extends TestCaseDatabase
 	/**
 	 * Testing setTimezone
 	 *
-	 * @param   string  $tz        Which Time Zone should it be?
-	 * @param   string  $expected  What should the resulting time string look like?
+	 * @param   string $tz       Which Time Zone should it be?
+	 * @param   string $expected What should the resulting time string look like?
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider casesSetTimezone
-	 * @since   11.3
-	 * @covers  JDate::setTimezone
+	 * @since        11.3
+	 * @covers       JDate::setTimezone
 	 */
 	public function testSetTimezone($tz, $expected)
 	{
@@ -806,5 +790,21 @@ class JDateTest extends TestCaseDatabase
 			$this->object->format('r', true),
 			$this->equalTo($expected)
 		);
+	}
+
+	/**
+	 * Sets up the fixture.
+	 *
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.3
+	 */
+	protected function setUp()
+	{
+		// Note: do not extend parent setUp method
+
+		$this->object = new JDate('12/20/2007 11:44:56', 'America/New_York');
 	}
 }

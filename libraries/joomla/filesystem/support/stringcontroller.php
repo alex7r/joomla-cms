@@ -17,6 +17,22 @@ defined('JPATH_PLATFORM') or die;
 class JStringController
 {
 	/**
+	 * Create a reference
+	 *
+	 * @param   string $reference The key
+	 * @param   string &$string   The value
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public function createRef($reference, &$string)
+	{
+		$ref             = &self::_getArray();
+		$ref[$reference] = &$string;
+	}
+
+	/**
 	 * Defines a variable as an array
 	 *
 	 * @return  array
@@ -31,25 +47,9 @@ class JStringController
 	}
 
 	/**
-	 * Create a reference
-	 *
-	 * @param   string  $reference  The key
-	 * @param   string  &$string    The value
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	public function createRef($reference, &$string)
-	{
-		$ref = &self::_getArray();
-		$ref[$reference] = & $string;
-	}
-
-	/**
 	 * Get reference
 	 *
-	 * @param   string  $reference  The key for the reference.
+	 * @param   string $reference The key for the reference.
 	 *
 	 * @return  mixed  False if not set, reference if it it exists
 	 *

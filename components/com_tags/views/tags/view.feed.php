@@ -19,7 +19,7 @@ class TagsViewTags extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -55,7 +55,7 @@ class TagsViewTags extends JViewLegacy
 			$date        = ($item->displayDate ? date('r', strtotime($item->displayDate)) : '');
 
 			// Load individual item creator class
-			$feeditem = new JFeedItem;
+			$feeditem              = new JFeedItem;
 			$feeditem->title       = $title;
 			$feeditem->link        = '/index.php?option=com_tags&view=tag&id=' . (int) $item->id;
 			$feeditem->description = $description;

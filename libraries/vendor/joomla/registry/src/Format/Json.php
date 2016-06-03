@@ -20,8 +20,8 @@ class Json extends AbstractRegistryFormat
 	/**
 	 * Converts an object into a JSON formatted string.
 	 *
-	 * @param   object  $object   Data source object.
-	 * @param   array   $options  Options used by the formatter.
+	 * @param   object $object  Data source object.
+	 * @param   array  $options Options used by the formatter.
 	 *
 	 * @return  string  JSON formatted string.
 	 *
@@ -47,8 +47,8 @@ class Json extends AbstractRegistryFormat
 	 *
 	 * If the string is not in JSON format, this method will attempt to parse it as INI format.
 	 *
-	 * @param   string  $data     JSON formatted string to convert.
-	 * @param   array   $options  Options used by the formatter.
+	 * @param   string $data    JSON formatted string to convert.
+	 * @param   array  $options Options used by the formatter.
 	 *
 	 * @return  object   Data object.
 	 *

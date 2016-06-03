@@ -68,54 +68,12 @@ class JLinkedinPeopleTest extends TestCase
 	protected $errorString = '{"errorCode":401, "message": "Generic error"}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
+	 * Provides test data for request format detection.
 	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$key = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/linkedin_test.php";
-
-		$this->options = new JRegistry;
-		$this->input = new JInput;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth = new JLinkedinOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
-
-		$this->object = new JLinkedinPeople($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
+	 * @return array
 	 *
-	 * @return void
+	 * @since 13.1
 	 */
-	protected function tearDown()
-	{
-	}
-
-	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 13.1
-	*/
 	public function seedIdUrl()
 	{
 		// Member ID or url
@@ -123,23 +81,23 @@ class JLinkedinPeopleTest extends TestCase
 			array('lcnIwDU0S6', null),
 			array(null, 'http://www.linkedin.com/in/dianaprajescu'),
 			array(null, null)
-			);
+		);
 	}
 
 	/**
 	 * Tests the getProfile method
 	 *
-	 * @param   string  $id   Member id of the profile you want.
-	 * @param   string  $url  The public profile URL.
+	 * @param   string $id  Member id of the profile you want.
+	 * @param   string $url The public profile URL.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedIdUrl
-	 * @since   13.1
+	 * @since        13.1
 	 */
 	public function testGetProfile($id, $url)
 	{
-		$fields = '(id,first-name,last-name)';
+		$fields   = '(id,first-name,last-name)';
 		$language = 'en-US';
 
 		// Set request parameters.
@@ -169,7 +127,7 @@ class JLinkedinPeopleTest extends TestCase
 		$path .= ':' . $fields;
 		$header = array('Accept-Language' => $language);
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -189,18 +147,18 @@ class JLinkedinPeopleTest extends TestCase
 	/**
 	 * Tests the getProfile method - failure
 	 *
-	 * @param   string  $id   Member id of the profile you want.
-	 * @param   string  $url  The public profile URL.
+	 * @param   string $id  Member id of the profile you want.
+	 * @param   string $url The public profile URL.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedIdUrl
-	 * @since   13.1
+	 * @since        13.1
 	 * @expectedException DomainException
 	 */
 	public function testGetProfileFailure($id, $url)
 	{
-		$fields = '(id,first-name,last-name)';
+		$fields   = '(id,first-name,last-name)';
 		$language = 'en-US';
 
 		// Set request parameters.
@@ -230,7 +188,7 @@ class JLinkedinPeopleTest extends TestCase
 		$path .= ':' . $fields;
 		$header = array('Accept-Language' => $language);
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -253,24 +211,24 @@ class JLinkedinPeopleTest extends TestCase
 	 */
 	public function testGetConnections()
 	{
-		$fields = '(id,first-name,last-name)';
-		$start = 1;
-		$count = 50;
-		$modified = 'new';
+		$fields         = '(id,first-name,last-name)';
+		$start          = 1;
+		$count          = 50;
+		$modified       = 'new';
 		$modified_since = '1267401600000';
 
 		// Set request parameters.
-		$data['format'] = 'json';
-		$data['start'] = $start;
-		$data['count'] = $count;
-		$data['modified'] = $modified;
+		$data['format']         = 'json';
+		$data['start']          = $start;
+		$data['count']          = $count;
+		$data['modified']       = $modified;
 		$data['modified-since'] = $modified_since;
 
 		$path = '/v1/people/~/connections';
 
 		$path .= ':' . $fields;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -297,24 +255,24 @@ class JLinkedinPeopleTest extends TestCase
 	 */
 	public function testGetConnectionsFailure()
 	{
-		$fields = '(id,first-name,last-name)';
-		$start = 1;
-		$count = 50;
-		$modified = 'new';
+		$fields         = '(id,first-name,last-name)';
+		$start          = 1;
+		$count          = 50;
+		$modified       = 'new';
 		$modified_since = '1267401600000';
 
 		// Set request parameters.
-		$data['format'] = 'json';
-		$data['start'] = $start;
-		$data['count'] = $count;
-		$data['modified'] = $modified;
+		$data['format']         = 'json';
+		$data['start']          = $start;
+		$data['count']          = $count;
+		$data['modified']       = $modified;
 		$data['modified-since'] = $modified_since;
 
 		$path = '/v1/people/~/connections';
 
 		$path .= ':' . $fields;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -329,84 +287,84 @@ class JLinkedinPeopleTest extends TestCase
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 13.1
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 13.1
+	 */
 	public function seedFields()
 	{
 		// Fields
 		return array(
 			array('(people:(id,first-name,last-name,api-standard-profile-request))'),
 			array('(people:(id,first-name,last-name))')
-			);
+		);
 	}
 
 	/**
 	 * Tests the search method
 	 *
-	 * @param   string  $fields  Request fields beyond the default ones. provide 'api-standard-profile-request' field for out of network profiles.
+	 * @param   string $fields Request fields beyond the default ones. provide 'api-standard-profile-request' field for out of network profiles.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider seedFields
-	 * @since   13.1
+	 * @since        13.1
 	 */
 	public function testSearch($fields)
 	{
-		$keywords = 'Princess';
-		$first_name = 'Clair';
-		$last_name = 'Standish';
-		$company_name = 'Smth';
+		$keywords        = 'Princess';
+		$first_name      = 'Clair';
+		$last_name       = 'Standish';
+		$company_name    = 'Smth';
 		$current_company = true;
-		$title = 'developer';
-		$current_title = true;
-		$school_name = 'Shermer High School';
-		$current_school = true;
-		$country_code = 'us';
-		$postal_code = 12345;
-		$distance = 500;
-		$facets = 'location,industry,network,language,current-company,past-company,school';
-		$facet = array('us-84', 47, 'F', 'en', 1006, 1028, 2345);
-		$start = 1;
-		$count = 50;
-		$sort = 'distance';
+		$title           = 'developer';
+		$current_title   = true;
+		$school_name     = 'Shermer High School';
+		$current_school  = true;
+		$country_code    = 'us';
+		$postal_code     = 12345;
+		$distance        = 500;
+		$facets          = 'location,industry,network,language,current-company,past-company,school';
+		$facet           = array('us-84', 47, 'F', 'en', 1006, 1028, 2345);
+		$start           = 1;
+		$count           = 50;
+		$sort            = 'distance';
 
 		// Set request parameters.
-		$data['format'] = 'json';
-		$data['keywords'] = $keywords;
-		$data['first-name'] = $first_name;
-		$data['last-name'] = $last_name;
-		$data['company-name'] = $company_name;
+		$data['format']          = 'json';
+		$data['keywords']        = $keywords;
+		$data['first-name']      = $first_name;
+		$data['last-name']       = $last_name;
+		$data['company-name']    = $company_name;
 		$data['current-company'] = $current_company;
-		$data['title'] = $title;
-		$data['current-title'] = $current_title;
-		$data['school-name'] = $school_name;
-		$data['current-school'] = $current_school;
-		$data['country-code'] = $country_code;
-		$data['postal-code'] = $postal_code;
-		$data['distance'] = $distance;
-		$data['facets'] = $facets;
-		$data['facet'] = array();
-		$data['facet'][] = 'location,' . $facet[0];
-		$data['facet'][] = 'industry,' . $facet[1];
-		$data['facet'][] = 'network,' . $facet[2];
-		$data['facet'][] = 'language,' . $facet[3];
-		$data['facet'][] = 'current-company,' . $facet[4];
-		$data['facet'][] = 'past-company,' . $facet[5];
-		$data['facet'][] = 'school,' . $facet[6];
+		$data['title']           = $title;
+		$data['current-title']   = $current_title;
+		$data['school-name']     = $school_name;
+		$data['current-school']  = $current_school;
+		$data['country-code']    = $country_code;
+		$data['postal-code']     = $postal_code;
+		$data['distance']        = $distance;
+		$data['facets']          = $facets;
+		$data['facet']           = array();
+		$data['facet'][]         = 'location,' . $facet[0];
+		$data['facet'][]         = 'industry,' . $facet[1];
+		$data['facet'][]         = 'network,' . $facet[2];
+		$data['facet'][]         = 'language,' . $facet[3];
+		$data['facet'][]         = 'current-company,' . $facet[4];
+		$data['facet'][]         = 'past-company,' . $facet[5];
+		$data['facet'][]         = 'school,' . $facet[6];
 
 		$data['start'] = $start;
 		$data['count'] = $count;
-		$data['sort'] = $sort;
+		$data['sort']  = $sort;
 
 		$path = '/v1/people-search';
 
 		$path .= ':' . $fields;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -421,7 +379,7 @@ class JLinkedinPeopleTest extends TestCase
 		}
 		else
 		{
-			$returnData = new stdClass;
+			$returnData       = new stdClass;
 			$returnData->code = 200;
 			$returnData->body = $this->outString;
 
@@ -430,15 +388,15 @@ class JLinkedinPeopleTest extends TestCase
 				->with($path)
 				->will($this->returnValue($returnData));
 
-			$returnData = new stdClass;
+			$returnData       = new stdClass;
 			$returnData->code = 200;
 			$returnData->body = $this->sampleString;
 
 			$path = '/v1/people/oAFz-3CZyv';
 			$path = $this->oauth->toUrl($path, $data);
 
-			$name = 'x-li-auth-token';
-			$value = 'NAME_SEARCH:-Ogn';
+			$name          = 'x-li-auth-token';
+			$value         = 'NAME_SEARCH:-Ogn';
 			$header[$name] = $value;
 
 			$this->client->expects($this->at(1))
@@ -452,7 +410,7 @@ class JLinkedinPeopleTest extends TestCase
 				$fields, $keywords, $first_name, $last_name, $company_name,
 				$current_company, $title, $current_title, $school_name, $current_school, $country_code,
 				$postal_code, $distance, $facets, $facet, $start, $count, $sort
-				),
+			),
 			$this->equalTo(json_decode($this->sampleString))
 		);
 	}
@@ -467,58 +425,58 @@ class JLinkedinPeopleTest extends TestCase
 	 */
 	public function testSearchFailure()
 	{
-		$fields = '(id,first-name,last-name)';
-		$keywords = 'Princess';
-		$first_name = 'Clair';
-		$last_name = 'Standish';
-		$company_name = 'Smth';
+		$fields          = '(id,first-name,last-name)';
+		$keywords        = 'Princess';
+		$first_name      = 'Clair';
+		$last_name       = 'Standish';
+		$company_name    = 'Smth';
 		$current_company = true;
-		$title = 'developer';
-		$current_title = true;
-		$school_name = 'Shermer High School';
-		$current_school = true;
-		$country_code = 'us';
-		$postal_code = 12345;
-		$distance = 500;
-		$facets = 'location,industry,network,language,current-company,past-company,school';
-		$facet = array('us-84', 47, 'F', 'en', 1006, 1028, 2345);
-		$start = 1;
-		$count = 50;
-		$sort = 'distance';
+		$title           = 'developer';
+		$current_title   = true;
+		$school_name     = 'Shermer High School';
+		$current_school  = true;
+		$country_code    = 'us';
+		$postal_code     = 12345;
+		$distance        = 500;
+		$facets          = 'location,industry,network,language,current-company,past-company,school';
+		$facet           = array('us-84', 47, 'F', 'en', 1006, 1028, 2345);
+		$start           = 1;
+		$count           = 50;
+		$sort            = 'distance';
 
 		// Set request parameters.
-		$data['format'] = 'json';
-		$data['keywords'] = $keywords;
-		$data['first-name'] = $first_name;
-		$data['last-name'] = $last_name;
-		$data['company-name'] = $company_name;
+		$data['format']          = 'json';
+		$data['keywords']        = $keywords;
+		$data['first-name']      = $first_name;
+		$data['last-name']       = $last_name;
+		$data['company-name']    = $company_name;
 		$data['current-company'] = $current_company;
-		$data['title'] = $title;
-		$data['current-title'] = $current_title;
-		$data['school-name'] = $school_name;
-		$data['current-school'] = $current_school;
-		$data['country-code'] = $country_code;
-		$data['postal-code'] = $postal_code;
-		$data['distance'] = $distance;
-		$data['facets'] = $facets;
-		$data['facet'] = array();
-		$data['facet'][] = 'location,' . $facet[0];
-		$data['facet'][] = 'industry,' . $facet[1];
-		$data['facet'][] = 'network,' . $facet[2];
-		$data['facet'][] = 'language,' . $facet[3];
-		$data['facet'][] = 'current-company,' . $facet[4];
-		$data['facet'][] = 'past-company,' . $facet[5];
-		$data['facet'][] = 'school,' . $facet[6];
+		$data['title']           = $title;
+		$data['current-title']   = $current_title;
+		$data['school-name']     = $school_name;
+		$data['current-school']  = $current_school;
+		$data['country-code']    = $country_code;
+		$data['postal-code']     = $postal_code;
+		$data['distance']        = $distance;
+		$data['facets']          = $facets;
+		$data['facet']           = array();
+		$data['facet'][]         = 'location,' . $facet[0];
+		$data['facet'][]         = 'industry,' . $facet[1];
+		$data['facet'][]         = 'network,' . $facet[2];
+		$data['facet'][]         = 'language,' . $facet[3];
+		$data['facet'][]         = 'current-company,' . $facet[4];
+		$data['facet'][]         = 'past-company,' . $facet[5];
+		$data['facet'][]         = 'school,' . $facet[6];
 
 		$data['start'] = $start;
 		$data['count'] = $count;
-		$data['sort'] = $sort;
+		$data['sort']  = $sort;
 
 		$path = '/v1/people-search';
 
 		$path .= ':' . $fields;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -533,6 +491,48 @@ class JLinkedinPeopleTest extends TestCase
 			$fields, $keywords, $first_name, $last_name, $company_name,
 			$current_company, $title, $current_title, $school_name, $current_school, $country_code,
 			$postal_code, $distance, $facets, $facet, $start, $count, $sort
-			);
+		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$key    = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/linkedin_test.php";
+
+		$this->options = new JRegistry;
+		$this->input   = new JInput;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth   = new JLinkedinOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
+
+		$this->object = new JLinkedinPeople($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
 	}
 }

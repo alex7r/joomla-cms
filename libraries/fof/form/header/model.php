@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -32,13 +32,13 @@ class FOFFormHeaderModel extends FOFFormHeaderFieldselectable
 		$options = array();
 
 		// Initialize some field attributes.
-		$key = $this->element['key_field'] ? (string) $this->element['key_field'] : 'value';
-		$value = $this->element['value_field'] ? (string) $this->element['value_field'] : (string) $this->element['name'];
-		$applyAccess = $this->element['apply_access'] ? (string) $this->element['apply_access'] : 'false';
-		$modelName = (string) $this->element['model'];
+		$key             = $this->element['key_field'] ? (string) $this->element['key_field'] : 'value';
+		$value           = $this->element['value_field'] ? (string) $this->element['value_field'] : (string) $this->element['name'];
+		$applyAccess     = $this->element['apply_access'] ? (string) $this->element['apply_access'] : 'false';
+		$modelName       = (string) $this->element['model'];
 		$nonePlaceholder = (string) $this->element['none'];
-		$translate = empty($this->element['translate']) ? 'true' : (string) $this->element['translate'];
-		$translate = in_array(strtolower($translate), array('true','yes','1','on')) ? true : false;
+		$translate       = empty($this->element['translate']) ? 'true' : (string) $this->element['translate'];
+		$translate       = in_array(strtolower($translate), array('true', 'yes', '1', 'on')) ? true : false;
 
 		if (!empty($nonePlaceholder))
 		{
@@ -50,13 +50,13 @@ class FOFFormHeaderModel extends FOFFormHeaderFieldselectable
 		$applyAccess = in_array($applyAccess, array('yes', 'on', 'true', '1'));
 
 		// Explode model name into model name and prefix
-		$parts = FOFInflector::explode($modelName);
-		$mName = ucfirst(array_pop($parts));
+		$parts   = FOFInflector::explode($modelName);
+		$mName   = ucfirst(array_pop($parts));
 		$mPrefix = FOFInflector::implode($parts);
 
 		// Get the model object
 		$config = array('savestate' => 0);
-		$model = FOFModel::getTmpInstance($mName, $mPrefix, $config);
+		$model  = FOFModel::getTmpInstance($mName, $mPrefix, $config);
 
 		if ($applyAccess)
 		{
@@ -72,7 +72,7 @@ class FOFFormHeaderModel extends FOFFormHeaderFieldselectable
 				continue;
 			}
 
-			$stateKey = (string) $stateoption['key'];
+			$stateKey   = (string) $stateoption['key'];
 			$stateValue = (string) $stateoption;
 
 			$model->setState($stateKey, $stateValue);

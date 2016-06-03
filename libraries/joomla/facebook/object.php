@@ -39,17 +39,46 @@ abstract class JFacebookObject
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry        $options  Facebook options object.
-	 * @param   JHttp           $client   The HTTP client object.
-	 * @param   JFacebookOAuth  $oauth    The OAuth client.
+	 * @param   Registry       $options Facebook options object.
+	 * @param   JHttp          $client  The HTTP client object.
+	 * @param   JFacebookOAuth $oauth   The OAuth client.
 	 *
 	 * @since   13.1
 	 */
 	public function __construct(Registry $options = null, JHttp $client = null, JFacebookOAuth $oauth = null)
 	{
 		$this->options = isset($options) ? $options : new Registry;
-		$this->client = isset($client) ? $client : new JHttp($this->options);
-		$this->oauth = $oauth;
+		$this->client  = isset($client) ? $client : new JHttp($this->options);
+		$this->oauth   = $oauth;
+	}
+
+	/**
+	 * Method to get an object.
+	 *
+	 * @param   string $object The object id.
+	 *
+	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
+	 *
+	 * @since   13.1
+	 */
+	public function get($object)
+	{
+		if ($this->oauth != null)
+		{
+			if ($this->oauth->isAuthenticated())
+			{
+				$response = $this->oauth->query($this->fetchUrl($object));
+
+				return json_decode($response->body);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		// Send the request.
+		return $this->sendRequest($object);
 	}
 
 	/**
@@ -57,11 +86,11 @@ abstract class JFacebookObject
 	 * add appropriate pagination details if necessary and also prepend the API url
 	 * to have a complete URL for the request.
 	 *
-	 * @param   string     $path    URL to inflect.
-	 * @param   integer    $limit   The number of objects per page.
-	 * @param   integer    $offset  The object's number on the page.
-	 * @param   timestamp  $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   timestamp  $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string    $path   URL to inflect.
+	 * @param   integer   $limit  The number of objects per page.
+	 * @param   integer   $offset The object's number on the page.
+	 * @param   timestamp $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   timestamp $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  string  The request URL.
 	 *
@@ -98,13 +127,13 @@ abstract class JFacebookObject
 	/**
 	 * Method to send the request.
 	 *
-	 * @param   string   $path     The path of the request to make.
-	 * @param   mixed    $data     Either an associative array or a string to be sent with the post request.
-	 * @param   array    $headers  An array of name-value pairs to include in the header of the request
-	 * @param   integer  $limit    The number of objects per page.
-	 * @param   integer  $offset   The object's number on the page.
-	 * @param   string   $until    A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since    A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $path    The path of the request to make.
+	 * @param   mixed   $data    Either an associative array or a string to be sent with the post request.
+	 * @param   array   $headers An array of name-value pairs to include in the header of the request
+	 * @param   integer $limit   The number of objects per page.
+	 * @param   integer $offset  The object's number on the page.
+	 * @param   string  $until   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since   A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return   mixed  The request response.
 	 *
@@ -128,44 +157,15 @@ abstract class JFacebookObject
 	}
 
 	/**
-	 * Method to get an object.
-	 *
-	 * @param   string  $object  The object id.
-	 *
-	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
-	 *
-	 * @since   13.1
-	 */
-	public function get($object)
-	{
-		if ($this->oauth != null)
-		{
-			if ($this->oauth->isAuthenticated())
-			{
-				$response = $this->oauth->query($this->fetchUrl($object));
-
-				return json_decode($response->body);
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		// Send the request.
-		return $this->sendRequest($object);
-	}
-
-	/**
 	 * Method to get object's connection.
 	 *
-	 * @param   string   $object        The object id.
-	 * @param   string   $connection    The object's connection name.
-	 * @param   string   $extra_fields  URL fields.
-	 * @param   integer  $limit         The number of objects per page.
-	 * @param   integer  $offset        The object's number on the page.
-	 * @param   string   $until         A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since         A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $object       The object id.
+	 * @param   string  $connection   The object's connection name.
+	 * @param   string  $extra_fields URL fields.
+	 * @param   integer $limit        The number of objects per page.
+	 * @param   integer $offset       The object's number on the page.
+	 * @param   string  $until        A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since        A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -203,10 +203,10 @@ abstract class JFacebookObject
 	/**
 	 * Method to create a connection.
 	 *
-	 * @param   string  $object      The object id.
-	 * @param   string  $connection  The object's connection name.
-	 * @param   array   $parameters  The POST request parameters.
-	 * @param   array   $headers     An array of name-value pairs to include in the header of the request
+	 * @param   string $object     The object id.
+	 * @param   string $connection The object's connection name.
+	 * @param   array  $parameters The POST request parameters.
+	 * @param   array  $headers    An array of name-value pairs to include in the header of the request
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -240,9 +240,9 @@ abstract class JFacebookObject
 	/**
 	 * Method to delete a connection.
 	 *
-	 * @param   string  $object        The object id.
-	 * @param   string  $connection    The object's connection name.
-	 * @param   string  $extra_fields  URL fields.
+	 * @param   string $object       The object id.
+	 * @param   string $connection   The object's connection name.
+	 * @param   string $extra_fields URL fields.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -274,9 +274,21 @@ abstract class JFacebookObject
 	}
 
 	/**
+	 * Method used to get the OAuth client.
+	 *
+	 * @return  JFacebookOAuth  The OAuth client
+	 *
+	 * @since   13.1
+	 */
+	public function getOAuth()
+	{
+		return $this->oauth;
+	}
+
+	/**
 	 * Method used to set the OAuth client.
 	 *
-	 * @param   JFacebookOAuth  $oauth  The OAuth client object.
+	 * @param   JFacebookOAuth $oauth The OAuth client object.
 	 *
 	 * @return  JFacebookObject  This object for method chaining.
 	 *
@@ -287,17 +299,5 @@ abstract class JFacebookObject
 		$this->oauth = $oauth;
 
 		return $this;
-	}
-
-	/**
-	 * Method used to get the OAuth client.
-	 *
-	 * @return  JFacebookOAuth  The OAuth client
-	 *
-	 * @since   13.1
-	 */
-	public function getOAuth()
-	{
-		return $this->oauth;
 	}
 }

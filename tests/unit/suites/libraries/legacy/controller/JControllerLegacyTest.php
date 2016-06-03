@@ -28,43 +28,6 @@ class JControllerLegacyTest extends TestCase
 	protected $class;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		if (!defined('JPATH_COMPONENT'))
-		{
-			define('JPATH_COMPONENT', JPATH_BASE . '/components/com_foobar');
-		}
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-		JFactory::$config = $this->getMockConfig();
-
-		$this->class = new JControllerLegacy;
-
-		parent::setUp();
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return  void
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-		$this->class = null;
-
-		parent::tearDown();
-	}
-
-	/**
 	 * @testdox  Ensure addModelPath() adds a model path to the internal array
 	 *
 	 * @covers   JControllerLegacy::addModelPath
@@ -141,7 +104,7 @@ class JControllerLegacyTest extends TestCase
 	 */
 	public function testConstructerWithInjectedName()
 	{
-		$name = 'foobar';
+		$name   = 'foobar';
 		$config = array(
 			'name' => $name
 		);
@@ -418,5 +381,42 @@ class JControllerLegacyTest extends TestCase
 		$this->assertAttributeEquals('index.php?option=com_foobar', 'redirect', $this->class);
 		$this->assertAttributeEquals('Folks?', 'message', $this->class);
 		$this->assertAttributeEquals('question', 'messageType', $this->class);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function setUp()
+	{
+		if (!defined('JPATH_COMPONENT'))
+		{
+			define('JPATH_COMPONENT', JPATH_BASE . '/components/com_foobar');
+		}
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+		JFactory::$config      = $this->getMockConfig();
+
+		$this->class = new JControllerLegacy;
+
+		parent::setUp();
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return  void
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+		$this->class = null;
+
+		parent::tearDown();
 	}
 }

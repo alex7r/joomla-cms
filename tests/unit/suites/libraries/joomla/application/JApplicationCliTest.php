@@ -44,22 +44,6 @@ class JApplicationCliTest extends TestCase
 	}
 
 	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDown()
-	 * @since   11.1
-	 */
-	protected function tearDown()
-	{
-		// Reset the dispatcher instance.
-		TestReflection::setValue('JEventDispatcher', 'instance', null);
-
-		parent::tearDown();
-	}
-
-	/**
 	 * Tests the JApplicationCli::__construct method.
 	 *
 	 * @return  void
@@ -173,23 +157,23 @@ class JApplicationCliTest extends TestCase
 		return array(
 			// Note: file, class, expectsClass, (expected result array), whether there should be an exception
 			'Default configuration class' => array(JPATH_TEST_STUBS . '/configuration.php', null, 'JConfig', 'ConfigEval'),
-			'Custom file, invalid class' => array(JPATH_TEST_STUBS . '/config.wrongclass.php', 'noclass', false, array(), true),
+			'Custom file, invalid class'  => array(JPATH_TEST_STUBS . '/config.wrongclass.php', 'noclass', false, array(), true),
 		);
 	}
 
 	/**
 	 * Tests the JApplicationCli::fetchConfigurationData method.
 	 *
-	 * @param   string   $file               The name of the configuration file.
-	 * @param   string   $class              The name of the class.
-	 * @param   boolean  $expectsClass       The result is expected to be a class.
-	 * @param   array    $expects            The expected result as an array.
-	 * @param   boolean  $expectedException  The expected exception
+	 * @param   string  $file              The name of the configuration file.
+	 * @param   string  $class             The name of the class.
+	 * @param   boolean $expectsClass      The result is expected to be a class.
+	 * @param   array   $expects           The expected result as an array.
+	 * @param   boolean $expectedException The expected exception
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider getFetchConfigurationData
-	 * @since    11.3
+	 * @since        11.3
 	 */
 	public function testFetchConfigurationData($file, $class, $expectsClass, $expects, $expectedException = false)
 	{
@@ -308,5 +292,21 @@ class JApplicationCliTest extends TestCase
 
 		$this->assertEquals('bar', $this->class->set('foo', 'car'), 'Checks set returns the previous value.');
 		$this->assertEquals('car', $config->get('foo'), 'Checks the new value has been set.');
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDown()
+	 * @since   11.1
+	 */
+	protected function tearDown()
+	{
+		// Reset the dispatcher instance.
+		TestReflection::setValue('JEventDispatcher', 'instance', null);
+
+		parent::tearDown();
 	}
 }

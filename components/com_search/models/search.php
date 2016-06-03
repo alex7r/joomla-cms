@@ -35,7 +35,7 @@ class SearchModelSearch extends JModelLegacy
 	 *
 	 * @var integer
 	 */
-	protected  $_areas = null;
+	protected $_areas = null;
 
 	/**
 	 * Pagination object
@@ -91,13 +91,13 @@ class SearchModelSearch extends JModelLegacy
 	/**
 	 * Method to set the search parameters
 	 *
-	 * @param   string  $keyword   string search string
-	 * @param   string  $match     matching option, exact|any|all
-	 * @param   string  $ordering  option, newest|oldest|popular|alpha|category
+	 * @param   string $keyword  string search string
+	 * @param   string $match    matching option, exact|any|all
+	 * @param   string $ordering option, newest|oldest|popular|alpha|category
 	 *
 	 * @return  void
 	 *
-	 * @access	public
+	 * @access    public
 	 */
 	public function setSearch($keyword, $match = 'all', $ordering = 'newest')
 	{
@@ -139,11 +139,11 @@ class SearchModelSearch extends JModelLegacy
 
 			JPluginHelper::importPlugin('search');
 			$dispatcher = JEventDispatcher::getInstance();
-			$results = $dispatcher->trigger('onContentSearch', array(
-				$this->getState('keyword'),
-				$this->getState('match'),
-				$this->getState('ordering'),
-				$areas['active'])
+			$results    = $dispatcher->trigger('onContentSearch', array(
+					$this->getState('keyword'),
+					$this->getState('match'),
+					$this->getState('ordering'),
+					$areas['active'])
 			);
 
 			$rows = array();
@@ -166,51 +166,6 @@ class SearchModelSearch extends JModelLegacy
 		}
 
 		return $this->_data;
-	}
-
-	/**
-	 * Method to get the total number of weblink items for the category
-	 *
-	 * @access  public
-	 *
-	 * @return  integer
-	 */
-	public function getTotal()
-	{
-		return $this->_total;
-	}
-
-	/**
-	 * Method to set the search areas
-	 *
-	 * @param   array  $active  areas
-	 * @param   array  $search  areas
-	 *
-	 * @return  void
-	 *
-	 * @access  public
-	 */
-	public function setAreas($active = array(), $search = array())
-	{
-		$this->_areas['active'] = $active;
-		$this->_areas['search'] = $search;
-	}
-
-	/**
-	 * Method to get a pagination object of the weblink items for the category
-	 *
-	 * @access public
-	 * @return  integer
-	 */
-	public function getPagination()
-	{
-		// Lets load the content if it doesn't already exist
-		if (empty($this->_pagination))
-		{
-			$this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'), $this->getState('limit'));
-		}
-
-		return $this->_pagination;
 	}
 
 	/**
@@ -243,5 +198,50 @@ class SearchModelSearch extends JModelLegacy
 		}
 
 		return $this->_areas;
+	}
+
+	/**
+	 * Method to set the search areas
+	 *
+	 * @param   array $active areas
+	 * @param   array $search areas
+	 *
+	 * @return  void
+	 *
+	 * @access  public
+	 */
+	public function setAreas($active = array(), $search = array())
+	{
+		$this->_areas['active'] = $active;
+		$this->_areas['search'] = $search;
+	}
+
+	/**
+	 * Method to get a pagination object of the weblink items for the category
+	 *
+	 * @access public
+	 * @return  integer
+	 */
+	public function getPagination()
+	{
+		// Lets load the content if it doesn't already exist
+		if (empty($this->_pagination))
+		{
+			$this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'), $this->getState('limit'));
+		}
+
+		return $this->_pagination;
+	}
+
+	/**
+	 * Method to get the total number of weblink items for the category
+	 *
+	 * @access  public
+	 *
+	 * @return  integer
+	 */
+	public function getTotal()
+	{
+		return $this->_total;
 	}
 }

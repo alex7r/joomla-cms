@@ -62,7 +62,7 @@ class JModelFormTest extends TestCase
 	/**
 	 * Test JModelForm::validate
 	 *
-	 * @param   JModelForm  $object  object used
+	 * @param   JModelForm $object object used
 	 *
 	 * @since   3.4
 	 *
@@ -106,7 +106,7 @@ class JModelFormTest extends TestCase
 	/**
 	 * Test JModelForm::validate
 	 *
-	 * @param   JModelForm  $object  object used
+	 * @param   JModelForm $object object used
 	 *
 	 * @since   3.4
 	 *
@@ -124,16 +124,16 @@ class JModelFormTest extends TestCase
 	/**
 	 * Test JModelForm::validate
 	 *
-	 * @param   array  $data      data before validation
-	 * @param   array  $expected  data after validation
+	 * @param   array $data     data before validation
+	 * @param   array $expected data after validation
 	 *
-	 * @since   3.4
+	 * @since        3.4
 	 *
 	 * @dataProvider validationDataProvider
 	 *
 	 * @return  void
 	 *
-	 * @testdox validate() modifies tags array
+	 * @testdox      validate() modifies tags array
 	 */
 	public function testValidateModifiesTagsArray($data, $expected)
 	{
@@ -161,7 +161,7 @@ class JModelFormTest extends TestCase
 	 */
 	public function testValidatePassesDataAndGroupToJform()
 	{
-		$data = array("a" => "b");
+		$data  = array("a" => "b");
 		$group = "groupy";
 
 		$formMock = $this->getMockBuilder('JForm')

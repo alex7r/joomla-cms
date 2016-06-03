@@ -21,8 +21,8 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for addUserToGroup
 	 *
-	 * @param   integer  $userId   The id of the user.
-	 * @param   integer  $groupId  The id of the group.
+	 * @param   integer $userId  The id of the user.
+	 * @param   integer $groupId The id of the group.
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -38,7 +38,7 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for getUserGroups
 	 *
-	 * @param   integer  $userId  The id of the user.
+	 * @param   integer $userId The id of the user.
 	 *
 	 * @return  array    List of groups
 	 *
@@ -53,8 +53,8 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for removeUserFromGroup
 	 *
-	 * @param   integer  $userId   The id of the user.
-	 * @param   integer  $groupId  The id of the group.
+	 * @param   integer $userId  The id of the user.
+	 * @param   integer $groupId The id of the group.
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -69,8 +69,8 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for setUserGroups
 	 *
-	 * @param   integer  $userId  The id of the user.
-	 * @param   array    $groups  An array of group ids to put the user in.
+	 * @param   integer $userId The id of the user.
+	 * @param   array   $groups An array of group ids to put the user in.
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -85,7 +85,7 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for getProfile
 	 *
-	 * @param   integer  $userId  The id of the user.
+	 * @param   integer $userId The id of the user.
 	 *
 	 * @return  object
 	 *
@@ -100,7 +100,7 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for activateUser
 	 *
-	 * @param   string  $activation  Activation string
+	 * @param   string $activation Activation string
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -115,7 +115,7 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for getUserId
 	 *
-	 * @param   string  $username  The username to search on.
+	 * @param   string $username The username to search on.
 	 *
 	 * @return  integer  The user id or 0 if not found.
 	 *
@@ -130,7 +130,7 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for hashPassword
 	 *
-	 * @param   string  $password  The plaintext password to encrypt.
+	 * @param   string $password The plaintext password to encrypt.
 	 *
 	 * @return  string  The encrypted password.
 	 *
@@ -145,9 +145,9 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for verifyPassword
 	 *
-	 * @param   string   $password  The plaintext password to check.
-	 * @param   string   $hash      The hash to verify against.
-	 * @param   integer  $user_id   ID of the user if the password hash should be updated
+	 * @param   string  $password The plaintext password to check.
+	 * @param   string  $hash     The hash to verify against.
+	 * @param   integer $user_id  ID of the user if the password hash should be updated
 	 *
 	 * @return  boolean  True if the password and hash match, false otherwise
 	 *
@@ -162,20 +162,20 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for getCryptedPassword
 	 *
-	 * @param   string   $plaintext     The plaintext password to encrypt.
-	 * @param   string   $salt          The salt to use to encrypt the password. []
+	 * @param   string  $plaintext      The plaintext password to encrypt.
+	 * @param   string  $salt           The salt to use to encrypt the password. []
 	 *                                  If not present, a new salt will be
 	 *                                  generated.
-	 * @param   string   $encryption    The kind of password encryption to use.
+	 * @param   string  $encryption     The kind of password encryption to use.
 	 *                                  Defaults to md5-hex.
-	 * @param   boolean  $show_encrypt  Some password systems prepend the kind of
+	 * @param   boolean $show_encrypt   Some password systems prepend the kind of
 	 *                                  encryption to the crypted password ({SHA},
 	 *                                  etc). Defaults to false.
 	 *
 	 * @return  string  The encrypted password.
 	 *
-	 * @see     JUserHelper::getCryptedPassword()
-	 * @since   3.4
+	 * @see         JUserHelper::getCryptedPassword()
+	 * @since       3.4
 	 * @deprecated  4.0
 	 */
 	public function getCryptedPassword($plaintext, $salt = '', $encryption = 'md5-hex', $show_encrypt = false)
@@ -186,18 +186,18 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for getSalt
 	 *
-	 * @param   string  $encryption  The kind of password encryption to use.
+	 * @param   string $encryption   The kind of password encryption to use.
 	 *                               Defaults to md5-hex.
-	 * @param   string  $seed        The seed to get the salt from (probably a
+	 * @param   string $seed         The seed to get the salt from (probably a
 	 *                               previously generated password). Defaults to
 	 *                               generating a new seed.
-	 * @param   string  $plaintext   The plaintext password that we're generating
+	 * @param   string $plaintext    The plaintext password that we're generating
 	 *                               a salt for. Defaults to none.
 	 *
 	 * @return  string  The generated or extracted salt.
 	 *
-	 * @see     JUserHelper::getSalt()
-	 * @since   3.4
+	 * @see         JUserHelper::getSalt()
+	 * @since       3.4
 	 * @deprecated  4.0
 	 */
 	public function getSalt($encryption = 'md5-hex', $seed = '', $plaintext = '')
@@ -208,7 +208,7 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for genRandomPassword
 	 *
-	 * @param   integer  $length  Length of the password to generate
+	 * @param   integer $length Length of the password to generate
 	 *
 	 * @return  string  Random Password
 	 *
@@ -223,13 +223,13 @@ class JUserWrapperHelper
 	/**
 	 * Helper wrapper method for invalidateCookie
 	 *
-	 * @param   string  $userId      User ID for this user
-	 * @param   string  $cookieName  Series id (cookie name decoded)
+	 * @param   string $userId     User ID for this user
+	 * @param   string $cookieName Series id (cookie name decoded)
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @see     JUserHelper::invalidateCookie()
-	 * @since   3.4
+	 * @see         JUserHelper::invalidateCookie()
+	 * @since       3.4
 	 * @deprecated  4.0
 	 */
 	public function invalidateCookie($userId, $cookieName)
@@ -242,8 +242,8 @@ class JUserWrapperHelper
 	 *
 	 * @return  mixed  Database query result
 	 *
-	 * @see     JUserHelper::clearExpiredTokens()
-	 * @since   3.4
+	 * @see         JUserHelper::clearExpiredTokens()
+	 * @since       3.4
 	 * @deprecated  4.0
 	 */
 	public function clearExpiredTokens()
@@ -256,8 +256,8 @@ class JUserWrapperHelper
 	 *
 	 * @return  mixed  An array of information from an authentication cookie or false if there is no cookie
 	 *
-	 * @see     JUserHelper::getRememberCookieData()
-	 * @since   3.4
+	 * @see         JUserHelper::getRememberCookieData()
+	 * @since       3.4
 	 * @deprecated  4.0
 	 */
 	public function getRememberCookieData()

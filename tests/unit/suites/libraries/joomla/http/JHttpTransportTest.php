@@ -29,29 +29,6 @@ class JHttpTransportTest extends PHPUnit_Framework_TestCase
 	protected $stubUrl;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		if (!defined('JTEST_HTTP_STUB') && getenv('JTEST_HTTP_STUB') == '')
-		{
-			$this->markTestSkipped('The JHttpTransport test stub has not been configured');
-		}
-		else
-		{
-			$this->options = $this->getMock('\\Joomla\\Registry\\Registry', array('get', 'set'));
-			$this->stubUrl = defined('JTEST_HTTP_STUB') ? JTEST_HTTP_STUB : getenv('JTEST_HTTP_STUB');
-		}
-	}
-
-	/**
 	 * Data provider for the request test methods.
 	 *
 	 * @return  array
@@ -70,7 +47,7 @@ class JHttpTransportTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the request method with a get request
 	 *
-	 * @param   string  $transportClass  The transport class to test
+	 * @param   string $transportClass The transport class to test
 	 *
 	 * @return  void
 	 *
@@ -99,7 +76,7 @@ class JHttpTransportTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the request method with a get request with a bad domain
 	 *
-	 * @param   string  $transportClass  The transport class to test
+	 * @param   string $transportClass The transport class to test
 	 *
 	 * @return  void
 	 *
@@ -116,7 +93,7 @@ class JHttpTransportTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the request method with a get request for non existant url
 	 *
-	 * @param   string  $transportClass  The transport class to test
+	 * @param   string $transportClass The transport class to test
 	 *
 	 * @return  void
 	 *
@@ -126,13 +103,13 @@ class JHttpTransportTest extends PHPUnit_Framework_TestCase
 	public function testRequestGet404($transportClass)
 	{
 		$transport = new $transportClass($this->options);
-		$response = $transport->request('get', new JUri($this->stubUrl . ':80'));
+		$response  = $transport->request('get', new JUri($this->stubUrl . ':80'));
 	}
 
 	/**
 	 * Tests the request method with a put request
 	 *
-	 * @param   string  $transportClass  The transport class to test
+	 * @param   string $transportClass The transport class to test
 	 *
 	 * @return  void
 	 *
@@ -161,7 +138,7 @@ class JHttpTransportTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the request method with a post request and array data
 	 *
-	 * @param   string  $transportClass  The transport class to test
+	 * @param   string $transportClass The transport class to test
 	 *
 	 * @return  void
 	 *
@@ -195,7 +172,7 @@ class JHttpTransportTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the request method with a post request and scalar data
 	 *
-	 * @param   string  $transportClass  The transport class to test
+	 * @param   string $transportClass The transport class to test
 	 *
 	 * @return  void
 	 *
@@ -224,5 +201,28 @@ class JHttpTransportTest extends PHPUnit_Framework_TestCase
 			$body->post->key,
 			$this->equalTo('value')
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.4
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		if (!defined('JTEST_HTTP_STUB') && getenv('JTEST_HTTP_STUB') == '')
+		{
+			$this->markTestSkipped('The JHttpTransport test stub has not been configured');
+		}
+		else
+		{
+			$this->options = $this->getMock('\\Joomla\\Registry\\Registry', array('get', 'set'));
+			$this->stubUrl = defined('JTEST_HTTP_STUB') ? JTEST_HTTP_STUB : getenv('JTEST_HTTP_STUB');
+		}
 	}
 }

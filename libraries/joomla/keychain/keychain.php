@@ -31,10 +31,10 @@ class JKeychain extends \Joomla\Registry\Registry
 	/**
 	 * Create a passphrase file
 	 *
-	 * @param   string  $passphrase            The passphrase to store in the passphrase file.
-	 * @param   string  $passphraseFile        Path to the passphrase file to create.
-	 * @param   string  $privateKeyFile        Path to the private key file to encrypt the passphrase file.
-	 * @param   string  $privateKeyPassphrase  The passphrase for the private key.
+	 * @param   string $passphrase           The passphrase to store in the passphrase file.
+	 * @param   string $passphraseFile       Path to the passphrase file to create.
+	 * @param   string $privateKeyFile       Path to the private key file to encrypt the passphrase file.
+	 * @param   string $privateKeyPassphrase The passphrase for the private key.
 	 *
 	 * @return  boolean  Result of writing the passphrase file to disk.
 	 *
@@ -63,7 +63,7 @@ class JKeychain extends \Joomla\Registry\Registry
 	/**
 	 * Delete a registry value (very simple method)
 	 *
-	 * @param   string  $path  Registry Path (e.g. joomla.content.showauthor)
+	 * @param   string $path Registry Path (e.g. joomla.content.showauthor)
 	 *
 	 * @return  mixed  Value of old value or boolean false if operation failed
 	 *
@@ -103,9 +103,9 @@ class JKeychain extends \Joomla\Registry\Registry
 	/**
 	 * Load a keychain file into this object.
 	 *
-	 * @param   string  $keychainFile    Path to the keychain file.
-	 * @param   string  $passphraseFile  The path to the passphrase file to decript the keychain.
-	 * @param   string  $publicKeyFile   The file containing the public key to decrypt the passphrase file.
+	 * @param   string $keychainFile   Path to the keychain file.
+	 * @param   string $passphraseFile The path to the passphrase file to decript the keychain.
+	 * @param   string $publicKeyFile  The file containing the public key to decrypt the passphrase file.
 	 *
 	 * @return  boolean  Result of loading the object.
 	 *
@@ -132,37 +132,10 @@ class JKeychain extends \Joomla\Registry\Registry
 	}
 
 	/**
-	 * Save this keychain to a file.
-	 *
-	 * @param   string  $keychainFile    The path to the keychain file.
-	 * @param   string  $passphraseFile  The path to the passphrase file to encrypt the keychain.
-	 * @param   string  $publicKeyFile   The file containing the public key to decrypt the passphrase file.
-	 *
-	 * @return  boolean  Result of storing the file.
-	 *
-	 * @since   12.3
-	 * @throws  RuntimeException
-	 */
-	public function saveKeychain($keychainFile, $passphraseFile, $publicKeyFile)
-	{
-		$passphrase = $this->getPassphraseFromFile($passphraseFile, $publicKeyFile);
-		$data = $this->toString('JSON');
-
-		$encrypted = @openssl_encrypt($data, $this->method, $passphrase, true, $this->iv);
-
-		if ($encrypted === false)
-		{
-			throw new RuntimeException('Unable to encrypt keychain');
-		}
-
-		return file_put_contents($keychainFile, $encrypted);
-	}
-
-	/**
 	 * Get the passphrase for this keychain
 	 *
-	 * @param   string  $passphraseFile  The file containing the passphrase to encrypt and decrypt.
-	 * @param   string  $publicKeyFile   The file containing the public key to decrypt the passphrase file.
+	 * @param   string $passphraseFile The file containing the passphrase to encrypt and decrypt.
+	 * @param   string $publicKeyFile  The file containing the public key to decrypt the passphrase file.
 	 *
 	 * @return  string  The passphrase in from passphraseFile
 	 *
@@ -196,5 +169,32 @@ class JKeychain extends \Joomla\Registry\Registry
 		}
 
 		return $passphrase;
+	}
+
+	/**
+	 * Save this keychain to a file.
+	 *
+	 * @param   string $keychainFile   The path to the keychain file.
+	 * @param   string $passphraseFile The path to the passphrase file to encrypt the keychain.
+	 * @param   string $publicKeyFile  The file containing the public key to decrypt the passphrase file.
+	 *
+	 * @return  boolean  Result of storing the file.
+	 *
+	 * @since   12.3
+	 * @throws  RuntimeException
+	 */
+	public function saveKeychain($keychainFile, $passphraseFile, $publicKeyFile)
+	{
+		$passphrase = $this->getPassphraseFromFile($passphraseFile, $publicKeyFile);
+		$data       = $this->toString('JSON');
+
+		$encrypted = @openssl_encrypt($data, $this->method, $passphrase, true, $this->iv);
+
+		if ($encrypted === false)
+		{
+			throw new RuntimeException('Unable to encrypt keychain');
+		}
+
+		return file_put_contents($keychainFile, $encrypted);
 	}
 }

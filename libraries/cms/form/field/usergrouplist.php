@@ -19,20 +19,19 @@ JFormHelper::loadFieldClass('list');
 class JFormFieldUserGroupList extends JFormFieldList
 {
 	/**
-	 * The form field type.
-	 *
-	 * @var		string
-	 * @since   3.2
-	 */
-	protected $type = 'UserGroupList';
-
-	/**
 	 * Cached array of the category items.
 	 *
 	 * @var    array
 	 * @since  3.2
 	 */
 	protected static $options = array();
+	/**
+	 * The form field type.
+	 *
+	 * @var        string
+	 * @since   3.2
+	 */
+	protected $type = 'UserGroupList';
 
 	/**
 	 * Method to get the options to populate list
@@ -52,7 +51,7 @@ class JFormFieldUserGroupList extends JFormFieldList
 
 			$options = array();
 
-			$db = JFactory::getDbo();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select('a.id AS value')
 				->select('a.title AS text')

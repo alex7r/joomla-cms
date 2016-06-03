@@ -19,8 +19,8 @@ class SearchController extends JControllerLegacy
 	/**
 	 * Method to display a view.
 	 *
-	 * @param   bool  $cachable   If true, the view output will be cached
-	 * @param   bool  $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   bool $cachable  If true, the view output will be cached
+	 * @param   bool $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  JControllerLegacy This object to support chaining.
 	 *
@@ -44,7 +44,7 @@ class SearchController extends JControllerLegacy
 	public function search()
 	{
 		// Slashes cause errors, <> get stripped anyway later on. # causes problems.
-		$badchars = array('#', '>', '<', '\\');
+		$badchars   = array('#', '>', '<', '\\');
 		$searchword = trim(str_replace($badchars, '', $this->input->getString('searchword', null, 'post')));
 
 		// If searchword enclosed in double quotes, strip quotes and do exact match

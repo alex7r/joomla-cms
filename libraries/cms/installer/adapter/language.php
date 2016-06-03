@@ -29,44 +29,6 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 	protected $core = false;
 
 	/**
-	 * Method to copy the extension's base files from the `<files>` tag(s) and the manifest file
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 * @throws  RuntimeException
-	 */
-	protected function copyBaseFiles()
-	{
-		// TODO - Refactor adapter to use common code
-	}
-
-	/**
-	 * Method to do any prechecks and setup the install paths for the extension
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	protected function setupInstallPaths()
-	{
-		// TODO - Refactor adapter to use common code
-	}
-
-	/**
-	 * Method to store the extension to the database
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 * @throws  RuntimeException
-	 */
-	protected function storeExtension()
-	{
-		// TODO - Refactor adapter to use common code
-	}
-
-	/**
 	 * Custom install method
 	 *
 	 * Note: This behaves badly due to hacks made in the middle of 1.5.x to add
@@ -85,9 +47,9 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 		{
 			$this->parent
 				->setPath(
-				'source',
-				($this->parent->extension->client_id ? JPATH_ADMINISTRATOR : JPATH_SITE) . '/language/' . $this->parent->extension->element
-			);
+					'source',
+					($this->parent->extension->client_id ? JPATH_ADMINISTRATOR : JPATH_SITE) . '/language/' . $this->parent->extension->element
+				);
 		}
 
 		$this->setManifest($this->parent->getManifest());
@@ -107,17 +69,17 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
 			$basePath = $client->path;
 			$clientId = $client->id;
-			$element = $this->getManifest()->files;
+			$element  = $this->getManifest()->files;
 
 			return $this->_install($cname, $basePath, $clientId, $element);
 		}
 		else
 		{
 			// No client attribute was found so we assume the site as the client
-			$cname = 'site';
+			$cname    = 'site';
 			$basePath = JPATH_SITE;
 			$clientId = 0;
-			$element = $this->getManifest()->files;
+			$element  = $this->getManifest()->files;
 
 			return $this->_install($cname, $basePath, $clientId, $element);
 		}
@@ -126,10 +88,10 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 	/**
 	 * Install function that is designed to handle individual clients
 	 *
-	 * @param   string   $cname     Cname @todo: not used
-	 * @param   string   $basePath  The base name.
-	 * @param   integer  $clientId  The client id.
-	 * @param   object   &$element  The XML element.
+	 * @param   string  $cname    Cname @todo: not used
+	 * @param   string  $basePath The base name.
+	 * @param   integer $clientId The client id.
+	 * @param   object  &$element The XML element.
 	 *
 	 * @return  boolean
 	 *
@@ -184,11 +146,11 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 			{
 				$this->parent
 					->abort(
-					JText::sprintf(
-						'JLIB_INSTALLER_ABORT',
-						JText::sprintf('JLIB_INSTALLER_ERROR_CREATE_FOLDER_FAILED', $this->parent->getPath('extension_site'))
-					)
-				);
+						JText::sprintf(
+							'JLIB_INSTALLER_ABORT',
+							JText::sprintf('JLIB_INSTALLER_ERROR_CREATE_FOLDER_FAILED', $this->parent->getPath('extension_site'))
+						)
+					);
 
 				return false;
 			}
@@ -302,7 +264,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
 		// Clobber any possible pending updates
 		$update = JTable::getInstance('update');
-		$uid = $update->find(array('element' => $this->get('tag'), 'type' => 'language', 'folder' => ''));
+		$uid    = $update->find(array('element' => $this->get('tag'), 'type' => 'language', 'folder' => ''));
 
 		if ($uid)
 		{
@@ -412,7 +374,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
 		// Clobber any possible pending updates
 		$update = JTable::getInstance('update');
-		$uid = $update->find(array('element' => $this->get('tag'), 'type' => 'language', 'client_id' => $clientId));
+		$uid    = $update->find(array('element' => $this->get('tag'), 'type' => 'language', 'client_id' => $clientId));
 
 		if ($uid)
 		{
@@ -459,7 +421,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 	/**
 	 * Custom uninstall method
 	 *
-	 * @param   string  $eid  The tag of the language to uninstall
+	 * @param   string $eid The tag of the language to uninstall
 	 *
 	 * @return  mixed  Return value for uninstall method in component uninstall file
 	 *
@@ -537,7 +499,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 		$extension->delete();
 
 		// Setting the language of users which have this language as the default language
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->from('#__users')
 			->select('*');
@@ -592,8 +554,8 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 	 */
 	public function discover()
 	{
-		$results = array();
-		$site_languages = JFolder::folders(JPATH_SITE . '/language');
+		$results         = array();
+		$site_languages  = JFolder::folders(JPATH_SITE . '/language');
 		$admin_languages = JFolder::folders(JPATH_ADMINISTRATOR . '/language');
 
 		foreach ($site_languages as $language)
@@ -601,7 +563,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 			if (file_exists(JPATH_SITE . '/language/' . $language . '/' . $language . '.xml'))
 			{
 				$manifest_details = JInstaller::parseXMLInstallFile(JPATH_SITE . '/language/' . $language . '/' . $language . '.xml');
-				$extension = JTable::getInstance('extension');
+				$extension        = JTable::getInstance('extension');
 				$extension->set('type', 'language');
 				$extension->set('client_id', 0);
 				$extension->set('element', $language);
@@ -619,7 +581,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 			if (file_exists(JPATH_ADMINISTRATOR . '/language/' . $language . '/' . $language . '.xml'))
 			{
 				$manifest_details = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/language/' . $language . '/' . $language . '.xml');
-				$extension = JTable::getInstance('extension');
+				$extension        = JTable::getInstance('extension');
 				$extension->set('type', 'language');
 				$extension->set('client_id', 1);
 				$extension->set('element', $language);
@@ -646,18 +608,18 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 	public function discover_install()
 	{
 		// Need to find to find where the XML file is since we don't store this normally
-		$client = JApplicationHelper::getClientInfo($this->parent->extension->client_id);
-		$short_element = $this->parent->extension->element;
-		$manifestPath = $client->path . '/language/' . $short_element . '/' . $short_element . '.xml';
+		$client                 = JApplicationHelper::getClientInfo($this->parent->extension->client_id);
+		$short_element          = $this->parent->extension->element;
+		$manifestPath           = $client->path . '/language/' . $short_element . '/' . $short_element . '.xml';
 		$this->parent->manifest = $this->parent->isManifest($manifestPath);
 		$this->parent->setPath('manifest', $manifestPath);
 		$this->parent->setPath('source', $client->path . '/language/' . $short_element);
 		$this->parent->setPath('extension_root', $this->parent->getPath('source'));
-		$manifest_details = JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
+		$manifest_details                        = JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
 		$this->parent->extension->manifest_cache = json_encode($manifest_details);
-		$this->parent->extension->state = 0;
-		$this->parent->extension->name = $manifest_details['name'];
-		$this->parent->extension->enabled = 1;
+		$this->parent->extension->state          = 0;
+		$this->parent->extension->name           = $manifest_details['name'];
+		$this->parent->extension->enabled        = 1;
 
 		// @todo remove code: $this->parent->extension->params = $this->parent->getParams();
 		try
@@ -670,6 +632,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
 			return false;
 		}
+
 		return $this->parent->extension->get('extension_id');
 	}
 
@@ -682,13 +645,13 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 	 */
 	public function refreshManifestCache()
 	{
-		$client = JApplicationHelper::getClientInfo($this->parent->extension->client_id);
-		$manifestPath = $client->path . '/language/' . $this->parent->extension->element . '/' . $this->parent->extension->element . '.xml';
+		$client                 = JApplicationHelper::getClientInfo($this->parent->extension->client_id);
+		$manifestPath           = $client->path . '/language/' . $this->parent->extension->element . '/' . $this->parent->extension->element . '.xml';
 		$this->parent->manifest = $this->parent->isManifest($manifestPath);
 		$this->parent->setPath('manifest', $manifestPath);
-		$manifest_details = JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
+		$manifest_details                        = JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
 		$this->parent->extension->manifest_cache = json_encode($manifest_details);
-		$this->parent->extension->name = $manifest_details['name'];
+		$this->parent->extension->name           = $manifest_details['name'];
 
 		if ($this->parent->extension->store())
 		{
@@ -700,6 +663,44 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
 			return false;
 		}
+	}
+
+	/**
+	 * Method to copy the extension's base files from the `<files>` tag(s) and the manifest file
+	 *
+	 * @return  void
+	 *
+	 * @since   3.4
+	 * @throws  RuntimeException
+	 */
+	protected function copyBaseFiles()
+	{
+		// TODO - Refactor adapter to use common code
+	}
+
+	/**
+	 * Method to do any prechecks and setup the install paths for the extension
+	 *
+	 * @return  void
+	 *
+	 * @since   3.4
+	 */
+	protected function setupInstallPaths()
+	{
+		// TODO - Refactor adapter to use common code
+	}
+
+	/**
+	 * Method to store the extension to the database
+	 *
+	 * @return  void
+	 *
+	 * @since   3.4
+	 * @throws  RuntimeException
+	 */
+	protected function storeExtension()
+	{
+		// TODO - Refactor adapter to use common code
 	}
 }
 

@@ -40,9 +40,9 @@ class JCryptCipherCryptoTest extends TestCase
 		return array(
 			array('c-;3-(Is>{DJzOHMCv_<#yKuN/G`/Us{GkgicWG$M|HW;kI0BVZ^|FY/"Obt53?PNaWwhmRtH;lWkWE4vlG5CIFA!abu&F=Xo#Qw}gAp3;GL\'k])%D}C+W&ne6_F$3P5'),
 			array('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
-					'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ' .
-					'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt ' .
-					'in culpa qui officia deserunt mollit anim id est laborum.'),
+				'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ' .
+				'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt ' .
+				'in culpa qui officia deserunt mollit anim id est laborum.'),
 			array('لا أحد يحب الألم بذاته، يسعى ورائه أو يبتغيه، ببساطة لأنه الألم...'),
 			array('Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства'),
 			array('The quick brown fox jumps over the lazy dog.')
@@ -50,9 +50,9 @@ class JCryptCipherCryptoTest extends TestCase
 	}
 
 	/**
-	 * @testdox  Validates data is encrypted and decrypted correctly
+	 * @testdox       Validates data is encrypted and decrypted correctly
 	 *
-	 * @param   string  $data  The decrypted data to validate
+	 * @param   string $data The decrypted data to validate
 	 *
 	 * @covers        JCryptCipherCrypto::decrypt
 	 * @covers        JCryptCipherCrypto::encrypt

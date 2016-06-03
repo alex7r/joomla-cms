@@ -20,27 +20,27 @@ class FOFRenderJoomla3 extends FOFRenderStrapper
 	 */
 	public function __construct()
 	{
-		$this->priority	 = 55;
-		$this->enabled	 = version_compare(JVERSION, '3.0', 'ge');
+		$this->priority = 55;
+		$this->enabled  = version_compare(JVERSION, '3.0', 'ge');
 	}
 
 	/**
 	 * Echoes any HTML to show before the view template
 	 *
-	 * @param   string    $view    The current view
-	 * @param   string    $task    The current task
-	 * @param   FOFInput  $input   The input array (request parameters)
-	 * @param   array     $config  The view configuration array
+	 * @param   string   $view   The current view
+	 * @param   string   $task   The current task
+	 * @param   FOFInput $input  The input array (request parameters)
+	 * @param   array    $config The view configuration array
 	 *
 	 * @return  void
 	 */
 	public function preRender($view, $task, $input, $config = array())
 	{
-		$format	 = $input->getCmd('format', 'html');
+		$format = $input->getCmd('format', 'html');
 
 		if (empty($format))
 		{
-			$format	 = 'html';
+			$format = 'html';
 		}
 
 		if ($format != 'html')
@@ -61,25 +61,25 @@ class FOFRenderJoomla3 extends FOFRenderStrapper
 		if ($platform->isBackend())
 		{
 			// Wrap output in various classes
-			$version = new JVersion;
+			$version      = new JVersion;
 			$versionParts = explode('.', $version->RELEASE);
 			$minorVersion = str_replace('.', '', $version->RELEASE);
 			$majorVersion = array_shift($versionParts);
 
 			$option = $input->getCmd('option', '');
-			$view = $input->getCmd('view', '');
+			$view   = $input->getCmd('view', '');
 			$layout = $input->getCmd('layout', '');
-			$task = $input->getCmd('task', '');
+			$task   = $input->getCmd('task', '');
 
 			$classes = ' class="' . implode(array(
-				'joomla-version-' . $majorVersion,
-				'joomla-version-' . $minorVersion,
-				'admin',
-				$option,
-				'view-' . $view,
-				'layout-' . $layout,
-				'task-' . $task,
-			), ' ') . '"';
+					'joomla-version-' . $majorVersion,
+					'joomla-version-' . $minorVersion,
+					'admin',
+					$option,
+					'view-' . $view,
+					'layout-' . $layout,
+					'task-' . $task,
+				), ' ') . '"';
 		}
 		else
 		{
@@ -97,45 +97,12 @@ class FOFRenderJoomla3 extends FOFRenderStrapper
 	}
 
 	/**
-	 * Echoes any HTML to show after the view template
-	 *
-	 * @param   string    $view    The current view
-	 * @param   string    $task    The current task
-	 * @param   FOFInput  $input   The input array (request parameters)
-	 * @param   array     $config  The view configuration array
-	 *
-	 * @return  void
-	 */
-	public function postRender($view, $task, $input, $config = array())
-	{
-		$format	 = $input->getCmd('format', 'html');
-
-		if (empty($format))
-		{
-			$format	 = 'html';
-		}
-
-		if ($format != 'html')
-		{
-			return;
-		}
-
-		// Closing tag only if we're not in CLI
-		if (FOFPlatform::getInstance()->isCli())
-		{
-			return;
-		}
-
-		echo "</div>\n";    // Closes akeeba-renderjoomla div
-	}
-
-	/**
 	 * Renders the submenu (link bar)
 	 *
-	 * @param   string    $view    The active view name
-	 * @param   string    $task    The current task
-	 * @param   FOFInput  $input   The input object
-	 * @param   array     $config  Extra configuration variables for the toolbar
+	 * @param   string   $view   The active view name
+	 * @param   string   $task   The current task
+	 * @param   FOFInput $input  The input object
+	 * @param   array    $config Extra configuration variables for the toolbar
 	 *
 	 * @return  void
 	 */
@@ -162,20 +129,53 @@ class FOFRenderJoomla3 extends FOFRenderStrapper
 	}
 
 	/**
+	 * Echoes any HTML to show after the view template
+	 *
+	 * @param   string   $view   The current view
+	 * @param   string   $task   The current task
+	 * @param   FOFInput $input  The input array (request parameters)
+	 * @param   array    $config The view configuration array
+	 *
+	 * @return  void
+	 */
+	public function postRender($view, $task, $input, $config = array())
+	{
+		$format = $input->getCmd('format', 'html');
+
+		if (empty($format))
+		{
+			$format = 'html';
+		}
+
+		if ($format != 'html')
+		{
+			return;
+		}
+
+		// Closing tag only if we're not in CLI
+		if (FOFPlatform::getInstance()->isCli())
+		{
+			return;
+		}
+
+		echo "</div>\n";    // Closes akeeba-renderjoomla div
+	}
+
+	/**
 	 * Renders a label for a fieldset.
 	 *
-	 * @param   object  	$field  	The field of the label to render
-	 * @param   FOFForm   	&$form      The form to render
-	 * @param 	string		$title		The title of the label
+	 * @param   object  $field The field of the label to render
+	 * @param   FOFForm &$form The form to render
+	 * @param    string $title The title of the label
 	 *
-	 * @return 	string		The rendered label
+	 * @return    string        The rendered label
 	 */
 	protected function renderFieldsetLabel($field, FOFForm &$form, $title)
 	{
 		$html = '';
 
-		$labelClass	 = $field->labelClass ? $field->labelClass : $field->labelclass; // Joomla! 2.5/3.x use different case for the same name
-		$required	 = $field->required;
+		$labelClass = $field->labelClass ? $field->labelClass : $field->labelclass; // Joomla! 2.5/3.x use different case for the same name
+		$required   = $field->required;
 
 		$tooltip = $form->getFieldAttribute($field->fieldname, 'tooltip', '', $field->group);
 

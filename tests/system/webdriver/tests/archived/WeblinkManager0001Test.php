@@ -9,12 +9,6 @@
 
 require_once 'JoomlaWebdriverTestCase.php';
 
-use SeleniumClient\By;
-use SeleniumClient\SelectElement;
-use SeleniumClient\WebDriver;
-use SeleniumClient\WebDriverWait;
-use SeleniumClient\DesiredCapabilities;
-
 /**
  * This class tests the  Weblink: Add / Edit  Screen.
  *
@@ -42,7 +36,7 @@ class WeblinkManager0001Test extends JoomlaWebdriverTestCase
 	public function setUp()
 	{
 		parent::setUp();
-		$cpPage = $this->doAdminLogin();
+		$cpPage                   = $this->doAdminLogin();
 		$this->weblinkManagerPage = $cpPage->clickMenu('Weblinks', 'WeblinkManagerPage');
 	}
 
@@ -64,7 +58,7 @@ class WeblinkManager0001Test extends JoomlaWebdriverTestCase
 	 *
 	 * @return void
 	 *
-	 * 
+	 *
 	 */
 	public function getAllInputFields_ScreenDisplayed_EqualExpected()
 	{
@@ -86,7 +80,7 @@ class WeblinkManager0001Test extends JoomlaWebdriverTestCase
 	 *
 	 * @return void
 	 *
-	 * 
+	 *
 	 */
 	public function constructor_OpenEditScreen_WeblinkEditOpened()
 	{
@@ -101,13 +95,13 @@ class WeblinkManager0001Test extends JoomlaWebdriverTestCase
 	 *
 	 * @return void
 	 *
-	 * 
+	 *
 	 */
 	public function getTabIds_ScreenDisplayed_EqualExpected()
 	{
 		$this->weblinkManagerPage->clickButton('toolbar-new');
 		$weblinkEditPage = $this->getPageObject('WeblinkEditPage');
-		$textArray = $weblinkEditPage->getTabIds();
+		$textArray       = $weblinkEditPage->getTabIds();
 		$this->assertEquals($weblinkEditPage->tabs, $textArray, 'Weblink labels should match expected values.');
 		$weblinkEditPage->clickButton('toolbar-cancel');
 		$this->weblinkManagerPage = $this->getPageObject('WeblinkManagerPage');
@@ -118,13 +112,13 @@ class WeblinkManager0001Test extends JoomlaWebdriverTestCase
 	 *
 	 * @return void
 	 *
-	 * 
+	 *
 	 */
 	public function addWeblink_WithFieldDefaults_WeblinkAdded()
 	{
-		$salt = rand();
+		$salt        = rand();
 		$weblinkName = 'Weblink' . $salt;
-		$url = 'www.example.com';
+		$url         = 'www.example.com';
 		$this->assertFalse($this->weblinkManagerPage->getRowNumber($weblinkName), 'Test Weblink should not be present');
 		$this->weblinkManagerPage->addWeblink($weblinkName, $url, false);
 		$message = $this->weblinkManagerPage->getAlertMessage();
@@ -139,16 +133,16 @@ class WeblinkManager0001Test extends JoomlaWebdriverTestCase
 	 *
 	 * @return void
 	 *
-	 * 
+	 *
 	 */
 	public function addWeblink_WithGivenFields_WeblinkAdded()
 	{
-		$salt = rand();
+		$salt        = rand();
 		$weblinkName = 'Weblink' . $salt;
-		$url = 'www.example.com';
-		$alt = 'Alternative Text' . $salt;
-		$float = 'Right';
-		$caption = 'Sample Caption' . $salt;
+		$url         = 'www.example.com';
+		$alt         = 'Alternative Text' . $salt;
+		$float       = 'Right';
+		$caption     = 'Sample Caption' . $salt;
 
 		$this->weblinkManagerPage->searchFor($weblinkName);
 		$this->assertFalse($this->weblinkManagerPage->getRowNumber($weblinkName), 'Test weblink should not be present');
@@ -173,13 +167,13 @@ class WeblinkManager0001Test extends JoomlaWebdriverTestCase
 	 *
 	 * @return void
 	 *
-	 * 
+	 *
 	 */
 	public function editWeblink_ChangeFields_FieldsChanged()
 	{
-		$salt = rand();
+		$salt        = rand();
 		$weblinkName = 'Weblink' . $salt;
-		$url = 'www.example.com';
+		$url         = 'www.example.com';
 		$this->assertFalse($this->weblinkManagerPage->getRowNumber($weblinkName), 'Test weblink should not be present');
 		$this->weblinkManagerPage->addWeblink($weblinkName, $url, false);
 		$this->weblinkManagerPage->editWeblink($weblinkName, array('Alt text' => 'Alternative Text' . $salt, 'Caption' => 'Sample Caption' . $salt, 'Image Float' => 'Right'));
@@ -192,13 +186,13 @@ class WeblinkManager0001Test extends JoomlaWebdriverTestCase
 	 *
 	 * @return void
 	 *
-	 * 
+	 *
 	 */
 	public function changeWeblinkState_ChangeEnabledUsingToolbar_EnabledChanged()
 	{
-		$salt = rand();
+		$salt        = rand();
 		$weblinkName = 'Weblink' . $salt;
-		$url = 'www.example.com';
+		$url         = 'www.example.com';
 		$this->weblinkManagerPage->addWeblink($weblinkName, $url, false);
 		$state = $this->weblinkManagerPage->getState($weblinkName);
 		$this->assertEquals('published', $state, 'Initial state should be published');

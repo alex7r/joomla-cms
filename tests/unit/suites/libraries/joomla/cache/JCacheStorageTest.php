@@ -13,18 +13,16 @@
 class JCacheStorageTest extends TestCase
 {
 	/**
-	 * @var  JCacheStorage
-	 */
-	protected $object;
-
-	/**
 	 * @var  array
 	 */
 	protected static $actualError;
-
+	/**
+	 * @var  JCacheStorage
+	 */
+	protected $object;
 	/**
 	 * Array of known cache stores and whether they are available for this test
-
+	 *
 	 * @var  array
 	 */
 	private $available = array();
@@ -32,74 +30,17 @@ class JCacheStorageTest extends TestCase
 	/**
 	 * Receives the callback from JError and logs the required error information for the test.
 	 *
-	 * @param   JException  $error  The JException object from JError
+	 * @param   JException $error The JException object from JError
 	 *
 	 * @return  boolean  To not continue with JError processing
 	 */
 	public static function errorCallback($error)
 	{
 		self::$actualError['code'] = $error->get('code');
-		self::$actualError['msg'] = $error->get('message');
+		self::$actualError['msg']  = $error->get('message');
 		self::$actualError['info'] = $error->get('info');
 
 		return false;
-	}
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveErrorHandlers();
-		$this->setErrorCallback('JCacheStorageTest');
-		self::$actualError = array();
-
-		$this->object = new JCacheStorage;
-
-		$this->checkStores();
-
-		$this->saveFactoryState();
-
-		JFactory::$application = $this->getMockCmsApp();
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @return void
-	 */
-	protected function checkStores()
-	{
-		$this->available = array(
-			'apc'       => JCacheStorageApc::isSupported(),
-			'apcu'      => JCacheStorageApcu::isSupported(),
-			'cachelite' => JCacheStorageCachelite::isSupported(),
-			'file'      => true,
-			'memcache'  => JCacheStorageMemcache::isSupported(),
-			'memcached' => JCacheStorageMemcached::isSupported(),
-			'redis'     => JCacheStorageRedis::isSupported(),
-			'wincache'  => JCacheStorageWincache::isSupported(),
-			'xcache'    => JCacheStorageXcache::isSupported(),
-		);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-		$this->restoreErrorHandlers();
-		$this->restoreFactoryState();
-
-		parent::tearDown();
 	}
 
 	/**
@@ -112,25 +53,25 @@ class JCacheStorageTest extends TestCase
 		$this->checkStores();
 
 		return array(
-			'defaultapc' => array(
+			'defaultapc'       => array(
 				'apc',
 				array(
 					'application' => null,
-					'language' => 'en-GB',
-					'locking' => true,
-					'lifetime' => null,
-					'now' => time(),
+					'language'    => 'en-GB',
+					'locking'     => true,
+					'lifetime'    => null,
+					'now'         => time(),
 				),
 				($this->available['apc'] ? 'JCacheStorageApc' : false),
 			),
-			'defaultapcu' => array(
+			'defaultapcu'      => array(
 				'apcu',
 				array(
 					'application' => null,
-					'language' => 'en-GB',
-					'locking' => true,
-					'lifetime' => null,
-					'now' => time(),
+					'language'    => 'en-GB',
+					'locking'     => true,
+					'lifetime'    => null,
+					'now'         => time(),
 				),
 				($this->available['apcu'] ? 'JCacheStorageApcu' : false),
 			),
@@ -138,35 +79,35 @@ class JCacheStorageTest extends TestCase
 				'cachelite',
 				array(
 					'application' => null,
-					'language' => 'en-GB',
-					'locking' => true,
-					'lifetime' => null,
-					'cachebase' => JPATH_BASE . '/cache',
-					'caching' => true,
-					'now' => time(),
+					'language'    => 'en-GB',
+					'locking'     => true,
+					'lifetime'    => null,
+					'cachebase'   => JPATH_BASE . '/cache',
+					'caching'     => true,
+					'now'         => time(),
 				),
 				($this->available['cachelite'] ? 'JCacheStorageCachelite' : false),
 			),
-			'defaultfile' => array(
+			'defaultfile'      => array(
 				'file',
 				array(
 					'application' => null,
-					'language' => 'en-GB',
-					'locking' => true,
-					'lifetime' => null,
-					'cachebase' => JPATH_BASE . '/cache',
-					'now' => time(),
+					'language'    => 'en-GB',
+					'locking'     => true,
+					'lifetime'    => null,
+					'cachebase'   => JPATH_BASE . '/cache',
+					'now'         => time(),
 				),
 				'JCacheStorageFile',
 			),
-			'defaultmemcache' => array(
+			'defaultmemcache'  => array(
 				'memcache',
 				array(
 					'application' => null,
-					'language' => 'en-GB',
-					'locking' => true,
-					'lifetime' => null,
-					'now' => time(),
+					'language'    => 'en-GB',
+					'locking'     => true,
+					'lifetime'    => null,
+					'now'         => time(),
 				),
 				$this->available['memcache'] ? 'JCacheStorageMemcache' : false,
 			),
@@ -174,43 +115,43 @@ class JCacheStorageTest extends TestCase
 				'memcached',
 				array(
 					'application' => null,
-					'language' => 'en-GB',
-					'locking' => true,
-					'lifetime' => null,
-					'now' => time(),
+					'language'    => 'en-GB',
+					'locking'     => true,
+					'lifetime'    => null,
+					'now'         => time(),
 				),
 				$this->available['memcached'] ? 'JCacheStorageMemcached' : false,
 			),
-			'defaultredis' => array(
+			'defaultredis'     => array(
 				'redis',
 				array(
 					'application' => null,
-					'language' => 'en-GB',
-					'locking' => true,
-					'lifetime' => null,
-					'now' => time(),
+					'language'    => 'en-GB',
+					'locking'     => true,
+					'lifetime'    => null,
+					'now'         => time(),
 				),
 				$this->available['redis'] ? 'JCacheStorageRedis' : false,
 			),
-			'defaultwincache' => array(
+			'defaultwincache'  => array(
 				'wincache',
 				array(
 					'application' => null,
-					'language' => 'en-GB',
-					'locking' => true,
-					'lifetime' => null,
-					'now' => time(),
+					'language'    => 'en-GB',
+					'locking'     => true,
+					'lifetime'    => null,
+					'now'         => time(),
 				),
 				$this->available['wincache'] ? 'JCacheStorageWincache' : false,
 			),
-			'defaultxcache' => array(
+			'defaultxcache'    => array(
 				'xcache',
 				array(
 					'application' => null,
-					'language' => 'en-GB',
-					'locking' => true,
-					'lifetime' => null,
-					'now' => time(),
+					'language'    => 'en-GB',
+					'locking'     => true,
+					'lifetime'    => null,
+					'now'         => time(),
 				),
 				$this->available['xcache'] ? 'JCacheStorageXcache' : false,
 			),
@@ -220,9 +161,9 @@ class JCacheStorageTest extends TestCase
 	/**
 	 * Testing getInstance
 	 *
-	 * @param   string  $handler   cache storage
-	 * @param   array   $options   options for cache storage
-	 * @param   string  $expClass  name of expected cache storage class
+	 * @param   string $handler  cache storage
+	 * @param   array  $options  options for cache storage
+	 * @param   string $expClass name of expected cache storage class
 	 *
 	 * @return void
 	 *
@@ -266,7 +207,7 @@ class JCacheStorageTest extends TestCase
 			'Unexpected value for _locking.'
 		);
 
-		$config = JFactory::getConfig();
+		$config   = JFactory::getConfig();
 		$lifetime = !is_null($options['lifetime']) ? $options['lifetime'] * 60 : $config->get('cachetime', 1) * 60;
 		$this->assertThat(
 			$this->object->_lifetime,
@@ -359,5 +300,62 @@ class JCacheStorageTest extends TestCase
 			$this->object->isSupported(),
 			$this->isTrue()
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveErrorHandlers();
+		$this->setErrorCallback('JCacheStorageTest');
+		self::$actualError = array();
+
+		$this->object = new JCacheStorage;
+
+		$this->checkStores();
+
+		$this->saveFactoryState();
+
+		JFactory::$application = $this->getMockCmsApp();
+	}
+
+	/**
+	 * Test...
+	 *
+	 * @return void
+	 */
+	protected function checkStores()
+	{
+		$this->available = array(
+			'apc'       => JCacheStorageApc::isSupported(),
+			'apcu'      => JCacheStorageApcu::isSupported(),
+			'cachelite' => JCacheStorageCachelite::isSupported(),
+			'file'      => true,
+			'memcache'  => JCacheStorageMemcache::isSupported(),
+			'memcached' => JCacheStorageMemcached::isSupported(),
+			'redis'     => JCacheStorageRedis::isSupported(),
+			'wincache'  => JCacheStorageWincache::isSupported(),
+			'xcache'    => JCacheStorageXcache::isSupported(),
+		);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
+		$this->restoreErrorHandlers();
+		$this->restoreFactoryState();
+
+		parent::tearDown();
 	}
 }

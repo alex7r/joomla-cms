@@ -58,45 +58,12 @@ XML;
 
 	/**
 	 * @var    string  Sample XML error message.
-	* @since  13.1
-	*/
+	 * @since  13.1
+	 */
 	protected $errorString = <<<XML
 <?xml version='1.0'?>
 <osm>ERROR</osm>
 XML;
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	* This method is called before a test is executed.
-	*
-	* @access protected
-	*
-	* @return void
-	*/
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$key = "app_key";
-		$secret = "app_secret";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input = new JInput;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth = new JOpenstreetmapOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JOpenstreetmapUser($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('sendheaders', true);
-	}
 
 	/**
 	 * Tests the getDetails method
@@ -107,20 +74,20 @@ XML;
 	 */
 	public function testGetDetails()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleXml;
 
 		$path = 'user/details';
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
-				$this->object->getDetails(),
-				$this->equalTo($this->sampleXml)
+			$this->object->getDetails(),
+			$this->equalTo($this->sampleXml)
 		);
 	}
 
@@ -134,16 +101,16 @@ XML;
 	 */
 	public function testGetDetailsFailure()
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = 'user/details';
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getDetails();
 	}
@@ -158,20 +125,20 @@ XML;
 	public function testGetPreferences()
 	{
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleXml;
 
 		$path = 'user/preferences';
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
-				$this->object->getPreferences(),
-				$this->equalTo($this->sampleXml)
+			$this->object->getPreferences(),
+			$this->equalTo($this->sampleXml)
 		);
 	}
 
@@ -186,16 +153,16 @@ XML;
 	public function testGetPreferencesFailure()
 	{
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = 'user/preferences';
 
 		$this->client->expects($this->once())
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getPreferences();
 	}
@@ -212,20 +179,20 @@ XML;
 
 		$preferences = array("A" => "a");
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleXml;
 
 		$path = 'user/preferences';
 
 		$this->client->expects($this->once())
-		->method('put')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('put')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
-				$this->object->replacePreferences($preferences),
-				$this->equalTo($this->sampleXml)
+			$this->object->replacePreferences($preferences),
+			$this->equalTo($this->sampleXml)
 		);
 	}
 
@@ -242,16 +209,16 @@ XML;
 
 		$preferences = array("A" => "a");
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = 'user/preferences';
 
 		$this->client->expects($this->once())
-		->method('put')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('put')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->replacePreferences($preferences);
 	}
@@ -266,23 +233,23 @@ XML;
 	public function testChangePreference()
 	{
 
-		$key = "A";
+		$key        = "A";
 		$preference = "a";
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleXml;
 
 		$path = 'user/preferences/' . $key;
 
 		$this->client->expects($this->once())
-		->method('put')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('put')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
-				$this->object->changePreference($key, $preference),
-				$this->equalTo($this->sampleXml)
+			$this->object->changePreference($key, $preference),
+			$this->equalTo($this->sampleXml)
 		);
 	}
 
@@ -297,20 +264,53 @@ XML;
 	public function testChangePreferenceFailure()
 	{
 
-		$key = "A";
+		$key        = "A";
 		$preference = "a";
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
 		$path = 'user/preferences/' . $key;
 
 		$this->client->expects($this->once())
-		->method('put')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('put')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->changePreference($key, $preference);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$key    = "app_key";
+		$secret = "app_secret";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input   = new JInput;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth   = new JOpenstreetmapOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JOpenstreetmapUser($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('sendheaders', true);
 	}
 }

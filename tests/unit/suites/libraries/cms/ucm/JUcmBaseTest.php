@@ -1,10 +1,10 @@
 <?php
 /**
- * @package	    Joomla.UnitTest
- * @subpackage  UCM
+ * @package        Joomla.UnitTest
+ * @subpackage     UCM
  *
- * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
- * @license	    GNU General Public License version 2 or later; see LICENSE
+ * @copyright      Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @license        GNU General Public License version 2 or later; see LICENSE
  */
 
 /**
@@ -21,6 +21,40 @@ class JUcmBaseTest extends TestCaseDatabase
 	 * @since  3.2
 	 */
 	protected $object;
+
+	/**
+	 * Tests the __construct()
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function test__construct()
+	{
+		$object = new JUcmBase('com_content.article');
+
+		$this->assertInstanceOf(
+			'JUcmType',
+			TestReflection::getValue($object, 'type'),
+			'Ensure the type property is an instance of JUcmType'
+		);
+	}
+
+	/**
+	 * Tests the getType() method
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function testGetType()
+	{
+		$this->assertEquals(
+			$this->object->getType()->type->type_title,
+			'Article',
+			'The type title for com_content.article is Article.'
+		);
+	}
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -73,39 +107,5 @@ class JUcmBaseTest extends TestCaseDatabase
 		$dataSet->addTable('jos_ucm_content', JPATH_TEST_DATABASE . '/jos_ucm_content.csv');
 
 		return $dataSet;
-	}
-
-	/**
-	 * Tests the __construct()
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	public function test__construct()
-	{
-		$object = new JUcmBase('com_content.article');
-
-		$this->assertInstanceOf(
-			'JUcmType',
-			TestReflection::getValue($object, 'type'),
-			'Ensure the type property is an instance of JUcmType'
-		);
-	}
-
-	/**
-	 * Tests the getType() method
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	public function testGetType()
-	{
-		$this->assertEquals(
-			$this->object->getType()->type->type_title,
-			'Article',
-			'The type title for com_content.article is Article.'
-		);
 	}
 }

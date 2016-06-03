@@ -25,22 +25,6 @@ class JDatabaseFactoryTest extends TestCaseDatabase
 	protected static $instance;
 
 	/**
-	 * Sets up the fixture.
-	 *
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		static::$instance = JDatabaseFactory::getInstance();
-	}
-
-	/**
 	 * Test for the JDatabaseFactory::getInstance method.
 	 *
 	 * @return  void
@@ -163,5 +147,21 @@ class JDatabaseFactoryTest extends TestCaseDatabase
 				'Tests that getQuery with "mariadb" param throws an exception due to a class not existing.'
 			);
 		}
+	}
+
+	/**
+	 * Sets up the fixture.
+	 *
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		static::$instance = JDatabaseFactory::getInstance();
 	}
 }

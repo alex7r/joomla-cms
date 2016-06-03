@@ -19,7 +19,7 @@ class JFormFieldModuleOrder extends JFormField
 	/**
 	 * The form field type.
 	 *
-	 * @var		string
+	 * @var        string
 	 * @since   1.6
 	 */
 	protected $type = 'ModuleOrder';
@@ -27,7 +27,7 @@ class JFormFieldModuleOrder extends JFormField
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @return  string	The field input markup.
+	 * @return  string    The field input markup.
 	 *
 	 * @since   1.6
 	 */
@@ -84,7 +84,7 @@ class JFormFieldModuleOrder extends JFormField
 			}
 
 			$orders2[$orders[$i]->position]++;
-			$ord = $orders2[$orders[$i]->position];
+			$ord   = $orders2[$orders[$i]->position];
 			$title = JText::sprintf('COM_MODULES_OPTION_ORDER_POSITION', $ord, addslashes($orders[$i]->title));
 
 			$html[] = 'orders[' . $i . '] =  new Array("' . $orders[$i]->position . '","' . $ord . '","' . $title . '");';

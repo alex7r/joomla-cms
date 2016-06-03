@@ -19,6 +19,38 @@ JFormHelper::loadFieldClass('rules');
 class JFormFieldRulesTest extends TestCaseDatabase
 {
 	/**
+	 * Test the getInput method.
+	 *
+	 * @return void
+	 */
+	public function testGetInput()
+	{
+		$form = new JForm('form1');
+
+		$this->assertThat(
+			$form->load('<form><field name="rules" type="rules" section="component" component="com_content" /></form>'),
+			$this->isTrue(),
+			'Line:' . __LINE__ . ' XML string should load successfully.'
+		);
+
+		$field = new JFormFieldRules($form);
+
+		$this->assertThat(
+			$field->setup($form->getXml()->field, 'value'),
+			$this->isTrue(),
+			'Line:' . __LINE__ . ' The setup method should return true.'
+		);
+
+		$this->assertThat(
+			strlen($field->input),
+			$this->greaterThan(0),
+			'Line:' . __LINE__ . ' The getInput method should return something without error.'
+		);
+
+		// TODO: Should check all the attributes have come in properly.
+	}
+
+	/**
 	 * Sets up dependencies for the test.
 	 *
 	 * @return void
@@ -59,37 +91,5 @@ class JFormFieldRulesTest extends TestCaseDatabase
 		$dataSet->addTable('jos_assets', JPATH_TEST_DATABASE . '/jos_assets.csv');
 
 		return $dataSet;
-	}
-
-	/**
-	 * Test the getInput method.
-	 *
-	 * @return void
-	 */
-	public function testGetInput()
-	{
-		$form = new JForm('form1');
-
-		$this->assertThat(
-			$form->load('<form><field name="rules" type="rules" section="component" component="com_content" /></form>'),
-			$this->isTrue(),
-			'Line:' . __LINE__ . ' XML string should load successfully.'
-		);
-
-		$field = new JFormFieldRules($form);
-
-		$this->assertThat(
-			$field->setup($form->getXml()->field, 'value'),
-			$this->isTrue(),
-			'Line:' . __LINE__ . ' The setup method should return true.'
-		);
-
-		$this->assertThat(
-			strlen($field->input),
-			$this->greaterThan(0),
-			'Line:' . __LINE__ . ' The getInput method should return something without error.'
-		);
-
-		// TODO: Should check all the attributes have come in properly.
 	}
 }

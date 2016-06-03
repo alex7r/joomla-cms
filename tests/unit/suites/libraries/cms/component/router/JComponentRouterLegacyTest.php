@@ -27,21 +27,6 @@ class JComponentRouterLegacyTest extends TestCase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->object = new JComponentRouterLegacy('Comtest');
-	}
-
-	/**
 	 * Test JComponentRouterLegacy::__construct
 	 *
 	 * @return  void
@@ -83,15 +68,15 @@ class JComponentRouterLegacyTest extends TestCase
 	public function testBuild()
 	{
 		$array = array();
-		$this->assertEquals($array,	$this->object->build($array));
-		$query = array('option' => 'com_test');
+		$this->assertEquals($array, $this->object->build($array));
+		$query    = array('option' => 'com_test');
 		$segments = array('option-com_test');
 		$this->assertEquals($segments, $this->object->build($query));
-		$query = array('option' => 'com_test', '42' => 'test-test');
+		$query    = array('option' => 'com_test', '42' => 'test-test');
 		$segments = array('option-com_test', '42-test-test');
 		$this->assertEquals($segments, $this->object->build($query));
 		$object = new JComponentRouterLegacy('fake');
-		$query = array('option' => 'com_test', '42' => 'test-test');
+		$query  = array('option' => 'com_test', '42' => 'test-test');
 		$this->assertEquals(array(), $object->build($query));
 	}
 
@@ -106,15 +91,30 @@ class JComponentRouterLegacyTest extends TestCase
 	public function testParse()
 	{
 		$array = array();
-		$this->assertEquals($array,	$this->object->parse($array));
-		$query = array('option' => 'com_test');
+		$this->assertEquals($array, $this->object->parse($array));
+		$query    = array('option' => 'com_test');
 		$segments = array('option-com_test');
 		$this->assertEquals($query, $this->object->parse($segments));
-		$query = array('option' => 'com_test', '42' => 'test-test');
+		$query    = array('option' => 'com_test', '42' => 'test-test');
 		$segments = array('option-com_test', '42-test-test');
 		$this->assertEquals($query, $this->object->parse($segments));
-		$object = new JComponentRouterLegacy('fake');
+		$object   = new JComponentRouterLegacy('fake');
 		$segments = array('option-com_test', '42-test-test');
 		$this->assertEquals(array(), $object->parse($segments));
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.4
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->object = new JComponentRouterLegacy('Comtest');
 	}
 }

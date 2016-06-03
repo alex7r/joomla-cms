@@ -22,7 +22,7 @@ class JTableUpdatesite extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  $db  Database driver object.
+	 * @param   JDatabaseDriver $db Database driver object.
 	 *
 	 * @since   3.4
 	 */
@@ -48,6 +48,7 @@ class JTableUpdatesite extends JTable
 
 			return false;
 		}
+
 		return true;
 	}
 }

@@ -51,34 +51,6 @@ class JLinkedinObjectTest extends TestCase
 	protected $errorString = '{"errors":[{"message":"Sorry, that page does not exist","code":34}]}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		$this->options = new JRegistry;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-
-		$this->object = new JLinkedinObjectMock($this->options, $this->client);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
-
-	/**
 	 * Tests the setOption method
 	 *
 	 * @return void
@@ -93,5 +65,33 @@ class JLinkedinObjectTest extends TestCase
 			$this->options->get('api.url'),
 			$this->equalTo('https://example.com/settest')
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$this->options = new JRegistry;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+
+		$this->object = new JLinkedinObjectMock($this->options, $this->client);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
 	}
 }

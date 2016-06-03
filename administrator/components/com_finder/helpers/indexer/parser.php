@@ -19,7 +19,7 @@ abstract class FinderIndexerParser
 	/**
 	 * Method to get a parser, creating it if necessary.
 	 *
-	 * @param   string  $format  The type of parser to load.
+	 * @param   string $format The type of parser to load.
 	 *
 	 * @return  FinderIndexerParser  A FinderIndexerParser instance.
 	 *
@@ -44,8 +44,8 @@ abstract class FinderIndexerParser
 
 		// Setup the adapter for the parser.
 		$format = JFilterInput::getInstance()->clean($format, 'cmd');
-		$path = __DIR__ . '/parser/' . $format . '.php';
-		$class = 'FinderIndexerParser' . ucfirst($format);
+		$path   = __DIR__ . '/parser/' . $format . '.php';
+		$class  = 'FinderIndexerParser' . ucfirst($format);
 
 		// Check if a parser exists for the format.
 		if (file_exists($path))
@@ -69,7 +69,7 @@ abstract class FinderIndexerParser
 	 * batch out its parsing functionality to deal with the inefficiencies of
 	 * regular expressions. We will parse recursively in 2KB chunks.
 	 *
-	 * @param   string  $input  The input to parse.
+	 * @param   string $input The input to parse.
 	 *
 	 * @return  string  The plain text input.
 	 *
@@ -83,7 +83,7 @@ abstract class FinderIndexerParser
 		if (strlen($input) > 2048)
 		{
 			$start = 0;
-			$end = strlen($input);
+			$end   = strlen($input);
 			$chunk = 2048;
 
 			while ($start < $end)
@@ -120,7 +120,7 @@ abstract class FinderIndexerParser
 	/**
 	 * Method to process input and extract the plain text.
 	 *
-	 * @param   string  $input  The input to process.
+	 * @param   string $input The input to process.
 	 *
 	 * @return  string  The plain text input.
 	 *

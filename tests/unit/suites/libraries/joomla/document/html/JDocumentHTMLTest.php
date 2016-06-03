@@ -22,74 +22,46 @@ class JDocumentHtmlTest extends TestCase
 	 * @var  array
 	 */
 	private $testHeadData = array(
-		'title' => 'My Custom Title',
+		'title'       => 'My Custom Title',
 		'description' => 'My Description',
-		'link' => 'http://joomla.org',
-		'metaTags' => array(
+		'link'        => 'http://joomla.org',
+		'metaTags'    => array(
 			'myMetaTag' => array('myMetaTag', true)
 		),
-		'links' => array(
+		'links'       => array(
 			'index.php' => array(
 				'relation' => 'Start',
-				'relType' => 'rel',
-				'attribs' => array()
+				'relType'  => 'rel',
+				'attribs'  => array()
 			)
 		),
 		'styleSheets' => array(
 			'test.css' => array(
-				'mime' => 'text/css',
-				'media' => null,
+				'mime'    => 'text/css',
+				'media'   => null,
 				'attribs' => array()
 			)
 		),
-		'style' => array(
+		'style'       => array(
 			'text/css' => 'body { background: white; }'
 		),
-		'scripts' => array(
+		'scripts'     => array(
 			'test.js' => array(
-				'mime' => 'text/javascript',
+				'mime'  => 'text/javascript',
 				'defer' => false,
 				'async' => false
 			)
 		),
-		'script' => array(
+		'script'      => array(
 			'text/javascript' => "window.addEvent('load', function() { new JCaption('img.caption'); });"
 		),
-		'custom' => array(
+		'custom'      => array(
 			"<script>var html5 = true;</script>"
 		),
-	    'scriptText' => array(
-		    'JYES'
-	    )
+		'scriptText'  => array(
+			'JYES'
+		)
 	);
-
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->saveFactoryState();
-
-		JFactory::$language = JLanguage::getInstance('en-GB');
-
-		$this->object = new JDocumentHtml;
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		JDocument::$_buffer = null;
-
-		parent::tearDown();
-	}
 
 	/**
 	 * @testdox  Validate the 'title' key exists in the array returned by getHeadData
@@ -191,5 +163,33 @@ class JDocumentHtmlTest extends TestCase
 			$this->object,
 			$this->object->setBuffer('This is why we test.', array('type' => 'component', 'name' => 'Test Object', 'title' => 'Testing'))
 		);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$this->saveFactoryState();
+
+		JFactory::$language = JLanguage::getInstance('en-GB');
+
+		$this->object = new JDocumentHtml;
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		JDocument::$_buffer = null;
+
+		parent::tearDown();
 	}
 }

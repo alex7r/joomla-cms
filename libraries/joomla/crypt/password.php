@@ -28,12 +28,12 @@ interface JCryptPassword
 	/**
 	 * Creates a password hash
 	 *
-	 * @param   string  $password  The password to hash.
-	 * @param   string  $type      The type of hash. This determines the prefix of the hashing function.
+	 * @param   string $password The password to hash.
+	 * @param   string $type     The type of hash. This determines the prefix of the hashing function.
 	 *
 	 * @return  string  The hashed password.
 	 *
-	 * @since   12.2
+	 * @since       12.2
 	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
 	 */
 	public function create($password, $type = null);
@@ -41,12 +41,12 @@ interface JCryptPassword
 	/**
 	 * Verifies a password hash
 	 *
-	 * @param   string  $password  The password to verify.
-	 * @param   string  $hash      The password hash to check.
+	 * @param   string $password The password to verify.
+	 * @param   string $hash     The password hash to check.
 	 *
 	 * @return  boolean  True if the password is valid, false otherwise.
 	 *
-	 * @since   12.2
+	 * @since       12.2
 	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
 	 */
 	public function verify($password, $hash);
@@ -54,11 +54,11 @@ interface JCryptPassword
 	/**
 	 * Sets a default prefix
 	 *
-	 * @param   string  $type  The prefix to set as default
+	 * @param   string $type The prefix to set as default
 	 *
 	 * @return  void
 	 *
-	 * @since   12.3
+	 * @since       12.3
 	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
 	 */
 	public function setDefaultType($type);
@@ -68,7 +68,7 @@ interface JCryptPassword
 	 *
 	 * @return  void
 	 *
-	 * @since   12.3
+	 * @since       12.3
 	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
 	 */
 	public function getDefaultType();

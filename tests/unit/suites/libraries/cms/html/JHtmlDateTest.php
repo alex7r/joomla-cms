@@ -72,15 +72,15 @@ class JHtmlDateTest extends TestCase
 	/**
 	 * Tests the JHtmlDate::relative method.
 	 *
-	 * @param   string  $result  The expected test result
-	 * @param   string  $date    The date to convert
-	 * @param   string  $unit    The optional unit of measurement to return
+	 * @param   string $result    The expected test result
+	 * @param   string $date      The date to convert
+	 * @param   string $unit      The optional unit of measurement to return
 	 *                            if the value of the diff is greater than one
-	 * @param   string  $time    An optional time to compare to, defaults to now
+	 * @param   string $time      An optional time to compare to, defaults to now
 	 *
 	 * @return  void
 	 *
-	 * @since   3.1
+	 * @since        3.1
 	 * @dataProvider dataTestRelative
 	 */
 	public function testRelative($result, $date, $unit = null, $time = null)

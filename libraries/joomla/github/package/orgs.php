@@ -16,8 +16,8 @@ defined('JPATH_PLATFORM') or die;
  *
  * @documentation  http://developer.github.com/v3/orgs/
  *
- * @property-read  JGithubPackageOrgsMembers  $members  GitHub API object for members.
- * @property-read  JGithubPackageOrgsTeams    $teams    GitHub API object for teams.
+ * @property-read  JGithubPackageOrgsMembers $members  GitHub API object for members.
+ * @property-read  JGithubPackageOrgsTeams   $teams    GitHub API object for teams.
  */
 class JGithubPackageOrgs extends JGithubPackage
 {
@@ -32,7 +32,7 @@ class JGithubPackageOrgs extends JGithubPackage
 	 *
 	 * If a user name is given, public and private organizations for the authenticated user will be listed.
 	 *
-	 * @param   string  $user  The user name.
+	 * @param   string $user The user name.
 	 *
 	 * @since   3.3 (CMS)
 	 *
@@ -54,7 +54,7 @@ class JGithubPackageOrgs extends JGithubPackage
 	/**
 	 * Get an Organization.
 	 *
-	 * @param   string  $org  The organization name.
+	 * @param   string $org The organization name.
 	 *
 	 * @since   3.3 (CMS)
 	 *
@@ -74,12 +74,12 @@ class JGithubPackageOrgs extends JGithubPackage
 	/**
 	 * Edit an Organization.
 	 *
-	 * @param   string  $org           The organization name.
-	 * @param   string  $billingEmail  Billing email address. This address is not publicized.
-	 * @param   string  $company       The company name.
-	 * @param   string  $email         The email address.
-	 * @param   string  $location      The location name.
-	 * @param   string  $name          The name.
+	 * @param   string $org          The organization name.
+	 * @param   string $billingEmail Billing email address. This address is not publicized.
+	 * @param   string $company      The company name.
+	 * @param   string $email        The email address.
+	 * @param   string $location     The location name.
+	 * @param   string $name         The name.
 	 *
 	 * @since   3.3 (CMS)
 	 *

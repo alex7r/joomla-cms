@@ -60,48 +60,6 @@ class JLinkedinCommunicationsTest extends TestCase
 	protected $errorString = '{"errorCode":401, "message": "Generic error"}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$key = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/linkedin_test.php";
-
-		$this->options = new JRegistry;
-		$this->input = new JInput;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth = new JLinkedinOauth($this->options, $this->client, $this->input);
-		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
-
-		$this->object = new JLinkedinCommunications($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 *
-	 * @return void
-	 */
-	protected function tearDown()
-	{
-	}
-
-	/**
 	 * Tests the inviteByEmail method
 	 *
 	 * @return  void
@@ -110,11 +68,11 @@ class JLinkedinCommunicationsTest extends TestCase
 	 */
 	public function testInviteByEmail()
 	{
-		$email = 'example@domain.com';
+		$email      = 'example@domain.com';
 		$first_name = 'Frist';
-		$last_name = 'Last';
-		$subject = 'Subject';
-		$body = 'body';
+		$last_name  = 'Last';
+		$subject    = 'Subject';
+		$body       = 'body';
 		$connection = 'friend';
 
 		$path = '/v1/people/~/mailbox';
@@ -140,7 +98,7 @@ class JLinkedinCommunicationsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
@@ -165,11 +123,11 @@ class JLinkedinCommunicationsTest extends TestCase
 	 */
 	public function testInviteByEmailFailure()
 	{
-		$email = 'example@domain.com';
+		$email      = 'example@domain.com';
 		$first_name = 'Frist';
-		$last_name = 'Last';
-		$subject = 'Subject';
-		$body = 'body';
+		$last_name  = 'Last';
+		$subject    = 'Subject';
+		$body       = 'body';
 		$connection = 'friend';
 
 		$path = '/v1/people/~/mailbox';
@@ -195,7 +153,7 @@ class JLinkedinCommunicationsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -216,26 +174,26 @@ class JLinkedinCommunicationsTest extends TestCase
 	 */
 	public function testInviteById()
 	{
-		$id = 'lcnIwDU0S6';
+		$id         = 'lcnIwDU0S6';
 		$first_name = 'Frist';
-		$last_name = 'Last';
-		$subject = 'Subject';
-		$body = 'body';
+		$last_name  = 'Last';
+		$subject    = 'Subject';
+		$body       = 'body';
 		$connection = 'friend';
 
-		$name = 'NAME_SEARCH';
+		$name  = 'NAME_SEARCH';
 		$value = 'mwjY';
 
 		$path = '/v1/people-search:(people:(api-standard-profile-request))';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = '{"apiStandardProfileRequest": {"headers": {"_total": 1,"values": [{"name": "x-li-auth-token","value": "' .
 			$name . ':' . $value . '"}]}}}';
 
-		$data['format'] = 'json';
+		$data['format']     = 'json';
 		$data['first-name'] = $first_name;
-		$data['last-name'] = $last_name;
+		$data['last-name']  = $last_name;
 
 		$path = $this->oauth->toUrl($path, $data);
 
@@ -269,7 +227,7 @@ class JLinkedinCommunicationsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
@@ -294,25 +252,25 @@ class JLinkedinCommunicationsTest extends TestCase
 	 */
 	public function testInviteByIdFailure()
 	{
-		$id = 'lcnIwDU0S6';
+		$id         = 'lcnIwDU0S6';
 		$first_name = 'Frist';
-		$last_name = 'Last';
-		$subject = 'Subject';
-		$body = 'body';
+		$last_name  = 'Last';
+		$subject    = 'Subject';
+		$body       = 'body';
 		$connection = 'friend';
 
-		$name = 'NAME_SEARCH';
+		$name  = 'NAME_SEARCH';
 		$value = 'mwjY';
 
 		$path = '/v1/people-search:(people:(api-standard-profile-request))';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$data['format'] = 'json';
+		$data['format']     = 'json';
 		$data['first-name'] = $first_name;
-		$data['last-name'] = $last_name;
+		$data['last-name']  = $last_name;
 
 		$path = $this->oauth->toUrl($path, $data);
 
@@ -334,8 +292,8 @@ class JLinkedinCommunicationsTest extends TestCase
 	public function testSendMessage()
 	{
 		$recipient = array('~', 'lcnIwDU0S6');
-		$subject = 'Subject';
-		$body = 'body';
+		$subject   = 'Subject';
+		$body      = 'body';
 
 		$path = '/v1/people/~/mailbox';
 
@@ -355,7 +313,7 @@ class JLinkedinCommunicationsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 201;
 		$returnData->body = $this->sampleString;
 
@@ -381,8 +339,8 @@ class JLinkedinCommunicationsTest extends TestCase
 	public function testSendMessageFailure()
 	{
 		$recipient = array('~', 'lcnIwDU0S6');
-		$subject = 'Subject';
-		$body = 'body';
+		$subject   = 'Subject';
+		$body      = 'body';
 
 		$path = '/v1/people/~/mailbox';
 
@@ -402,7 +360,7 @@ class JLinkedinCommunicationsTest extends TestCase
 
 		$header['Content-Type'] = 'text/xml';
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 401;
 		$returnData->body = $this->errorString;
 
@@ -412,5 +370,47 @@ class JLinkedinCommunicationsTest extends TestCase
 			->will($this->returnValue($returnData));
 
 		$this->object->sendMessage($recipient, $subject, $body);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$key    = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/linkedin_test.php";
+
+		$this->options = new JRegistry;
+		$this->input   = new JInput;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth   = new JLinkedinOauth($this->options, $this->client, $this->input);
+		$this->oauth->setToken(array('key' => $key, 'secret' => $secret));
+
+		$this->object = new JLinkedinCommunications($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+	}
+
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown()
+	{
 	}
 }

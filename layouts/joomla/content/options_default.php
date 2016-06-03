@@ -17,7 +17,7 @@ defined('JPATH_BASE') or die;
 	<?php endif; ?>
 	<?php
 	$fieldsnames = explode(',', $displayData->fieldsname);
-	foreach($fieldsnames as $fieldname)
+	foreach ($fieldsnames as $fieldname)
 	{
 		foreach ($displayData->form->getFieldset($fieldname) as $field)
 		{
@@ -30,7 +30,7 @@ defined('JPATH_BASE') or die;
 				$showonarr = array();
 				foreach (preg_split('%\[AND\]|\[OR\]%', $showonstring) as $showonfield)
 				{
-					$showon   = explode(':', $showonfield, 2);
+					$showon      = explode(':', $showonfield, 2);
 					$showonarr[] = array(
 						'field'  => $displayData->form->getFormControl() . '[' . $displayData->form->getFieldAttribute($showon[0], 'name') . ']',
 						'values' => explode(',', $showon[1]),
@@ -40,15 +40,15 @@ defined('JPATH_BASE') or die;
 
 				$datashowon = ' data-showon=\'' . json_encode($showonarr) . '\'';
 			}
-	?>
-		<div class="control-group"<?php echo $datashowon; ?>>
-			<?php if (!isset($displayData->showlabel) || $displayData->showlabel): ?>
-				<div class="control-label"><?php echo $field->label; ?></div>
-			<?php endif; ?>
-			<div class="controls"><?php echo $field->input; ?></div>
-		</div>
-	<?php
+			?>
+			<div class="control-group"<?php echo $datashowon; ?>>
+				<?php if (!isset($displayData->showlabel) || $displayData->showlabel): ?>
+					<div class="control-label"><?php echo $field->label; ?></div>
+				<?php endif; ?>
+				<div class="controls"><?php echo $field->input; ?></div>
+			</div>
+			<?php
 		}
 	}
-?>
+	?>
 </fieldset>

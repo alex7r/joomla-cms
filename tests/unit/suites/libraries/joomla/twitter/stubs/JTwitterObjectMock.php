@@ -19,9 +19,9 @@ class JTwitterObjectMock extends JTwitterObject
 	 * add appropriate pagination details if necessary and also prepend the API url
 	 * to have a complete URL for the request.
 	 *
-	 * @param   string   $path   URL to inflect
-	 * @param   integer  $page   Page to request
-	 * @param   integer  $limit  Number of results to return per page
+	 * @param   string  $path  URL to inflect
+	 * @param   integer $page  Page to request
+	 * @param   integer $limit Number of results to return per page
 	 *
 	 * @return  string   The request URL.
 	 *

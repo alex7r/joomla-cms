@@ -37,12 +37,12 @@ class JMailHelperTest extends TestCase
 	/**
 	 * Test for the JMailHelper::cleanLine method.
 	 *
-	 * @param   string  $input     The input to clean
-	 * @param   string  $expected  The expected result
+	 * @param   string $input    The input to clean
+	 * @param   string $expected The expected result
 	 *
 	 * @return  void
 	 *
-	 * @since   12.1
+	 * @since         12.1
 	 *
 	 * @dataProvider  dataCleanLine
 	 */
@@ -102,12 +102,12 @@ class JMailHelperTest extends TestCase
 	/**
 	 * Test for the JMailHelper::cleanText method.
 	 *
-	 * @param   string  $input     The input to clean
-	 * @param   string  $expected  The expected result
+	 * @param   string $input    The input to clean
+	 * @param   string $expected The expected result
 	 *
 	 * @return  void
 	 *
-	 * @since   12.1
+	 * @since         12.1
 	 *
 	 * @dataProvider  dataCleanText
 	 */
@@ -148,12 +148,12 @@ class JMailHelperTest extends TestCase
 	/**
 	 * Test for the JMailHelper::cleanBody method.
 	 *
-	 * @param   string  $input     The input to clean
-	 * @param   string  $expected  The expected result
+	 * @param   string $input    The input to clean
+	 * @param   string $expected The expected result
 	 *
 	 * @return  void
 	 *
-	 * @since   12.1
+	 * @since         12.1
 	 *
 	 * @dataProvider  dataCleanBody
 	 */
@@ -192,12 +192,12 @@ class JMailHelperTest extends TestCase
 	/**
 	 * Test for the JMailHelper::cleanSubject method.
 	 *
-	 * @param   string  $input     The input to clean
-	 * @param   string  $expected  The expected result
+	 * @param   string $input    The input to clean
+	 * @param   string $expected The expected result
 	 *
 	 * @return  void
 	 *
-	 * @since   12.1
+	 * @since         12.1
 	 *
 	 * @dataProvider  dataCleanSubject
 	 */
@@ -230,12 +230,12 @@ class JMailHelperTest extends TestCase
 	/**
 	 * Test for the JMailHelper::cleanAddress method.
 	 *
-	 * @param   string  $input     The input to clean
-	 * @param   string  $expected  The expected result
+	 * @param   string $input    The input to clean
+	 * @param   string $expected The expected result
 	 *
 	 * @return  void
 	 *
-	 * @since   12.1
+	 * @since         12.1
 	 *
 	 * @dataProvider  dataCleanAddress
 	 */
@@ -284,12 +284,12 @@ class JMailHelperTest extends TestCase
 	/**
 	 * Test for the JMailHelper::isEmailAddress method.
 	 *
-	 * @param   string  $input     The input to clean
-	 * @param   string  $expected  The expected result
+	 * @param   string $input    The input to clean
+	 * @param   string $expected The expected result
 	 *
 	 * @return  void
 	 *
-	 * @since   12.1
+	 * @since         12.1
 	 *
 	 * @dataProvider  dataIsEmailAddress
 	 */

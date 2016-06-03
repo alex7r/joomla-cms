@@ -40,8 +40,8 @@ class FinderIndexerStemmerPorter_En extends FinderIndexerStemmer
 	/**
 	 * Method to stem a token and return the root.
 	 *
-	 * @param   string  $token  The token to stem.
-	 * @param   string  $lang   The language of the token.
+	 * @param   string $token The token to stem.
+	 * @param   string $lang  The language of the token.
 	 *
 	 * @return  string  The root token.
 	 *
@@ -83,7 +83,7 @@ class FinderIndexerStemmerPorter_En extends FinderIndexerStemmer
 	/**
 	 * Step 1
 	 *
-	 * @param   string  $word  The token to stem.
+	 * @param   string $word The token to stem.
 	 *
 	 * @return  string
 	 *
@@ -109,7 +109,8 @@ class FinderIndexerStemmerPorter_En extends FinderIndexerStemmer
 			// Words ending with ing and ed
 			// Note use of && and OR, for precedence reasons
 			if (preg_match("#$v+#", substr($word, 0, -3)) && self::_replace($word, 'ing', '')
-				or preg_match("#$v+#", substr($word, 0, -2)) && self::_replace($word, 'ed', ''))
+				or preg_match("#$v+#", substr($word, 0, -2)) && self::_replace($word, 'ed', '')
+			)
 			{
 				// If one of above two test successful
 				if (!self::_replace($word, 'at', 'ate') and !self::_replace($word, 'bl', 'ble') and !self::_replace($word, 'iz', 'ize'))
@@ -131,9 +132,107 @@ class FinderIndexerStemmerPorter_En extends FinderIndexerStemmer
 	}
 
 	/**
+	 * Replaces the first string with the second, at the end of the string. If third
+	 * arg is given, then the preceding string must match that m count at least.
+	 *
+	 * @param   string  &$str  String to check
+	 * @param   string  $check Ending to check for
+	 * @param   string  $repl  Replacement string
+	 * @param   integer $m     Optional minimum number of m() to meet
+	 *
+	 * @return  boolean  Whether the $check string was at the end
+	 *                   of the $str string. True does not necessarily mean
+	 *                   that it was replaced.
+	 *
+	 * @since   2.5
+	 */
+	private static function _replace(&$str, $check, $repl, $m = null)
+	{
+		$len = 0 - strlen($check);
+
+		if (substr($str, $len) == $check)
+		{
+			$substr = substr($str, 0, $len);
+
+			if (is_null($m) or self::_m($substr) > $m)
+			{
+				$str = $substr . $repl;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * m() measures the number of consonant sequences in $str. if c is
+	 * a consonant sequence and v a vowel sequence, and <..> indicates arbitrary
+	 * presence,
+	 *
+	 * <c><v>       gives 0
+	 * <c>vc<v>     gives 1
+	 * <c>vcvc<v>   gives 2
+	 * <c>vcvcvc<v> gives 3
+	 *
+	 * @param   string $str The string to return the m count for
+	 *
+	 * @return  integer  The m count
+	 *
+	 * @since   2.5
+	 */
+	private static function _m($str)
+	{
+		$c = self::$_regex_consonant;
+		$v = self::$_regex_vowel;
+
+		$str = preg_replace("#^$c+#", '', $str);
+		$str = preg_replace("#$v+$#", '', $str);
+
+		preg_match_all("#($v+$c+)#", $str, $matches);
+
+		return count($matches[1]);
+	}
+
+	/**
+	 * Returns true/false as to whether the given string contains two
+	 * of the same consonant next to each other at the end of the string.
+	 *
+	 * @param   string $str String to check
+	 *
+	 * @return  boolean  Result
+	 *
+	 * @since   2.5
+	 */
+	private static function _doubleConsonant($str)
+	{
+		$c = self::$_regex_consonant;
+
+		return preg_match("#$c{2}$#", $str, $matches) and $matches[0]{0} == $matches[0]{1};
+	}
+
+	/**
+	 * Checks for ending CVC sequence where second C is not W, X or Y
+	 *
+	 * @param   string $str String to check
+	 *
+	 * @return  boolean  Result
+	 *
+	 * @since   2.5
+	 */
+	private static function _cvc($str)
+	{
+		$c = self::$_regex_consonant;
+		$v = self::$_regex_vowel;
+
+		return preg_match("#($c$v$c)$#", $str, $matches) and strlen($matches[1]) == 3 and $matches[1]{2} != 'w' and $matches[1]{2} != 'x'
+		and $matches[1]{2} != 'y';
+	}
+
+	/**
 	 * Step 1c
 	 *
-	 * @param   string  $word  The token to stem.
+	 * @param   string $word The token to stem.
 	 *
 	 * @return  string
 	 *
@@ -154,7 +253,7 @@ class FinderIndexerStemmerPorter_En extends FinderIndexerStemmer
 	/**
 	 * Step 2
 	 *
-	 * @param   string  $word  The token to stem.
+	 * @param   string $word The token to stem.
 	 *
 	 * @return  string
 	 *
@@ -209,7 +308,7 @@ class FinderIndexerStemmerPorter_En extends FinderIndexerStemmer
 	/**
 	 * Step 3
 	 *
-	 * @param   string  $word  The token to stem.
+	 * @param   string $word The token to stem.
 	 *
 	 * @return  string
 	 *
@@ -246,7 +345,7 @@ class FinderIndexerStemmerPorter_En extends FinderIndexerStemmer
 	/**
 	 * Step 4
 	 *
-	 * @param   string  $word  The token to stem.
+	 * @param   string $word The token to stem.
 	 *
 	 * @return  string
 	 *
@@ -260,7 +359,7 @@ class FinderIndexerStemmerPorter_En extends FinderIndexerStemmer
 				self::_replace($word, 'al', '', 1);
 				break;
 			case 'c':
-					self::_replace($word, 'ance', '', 1)
+				self::_replace($word, 'ance', '', 1)
 				or self::_replace($word, 'ence', '', 1);
 				break;
 			case 'e':
@@ -293,7 +392,7 @@ class FinderIndexerStemmerPorter_En extends FinderIndexerStemmer
 				self::_replace($word, 'ism', '', 1);
 				break;
 			case 't':
-					self::_replace($word, 'ate', '', 1)
+				self::_replace($word, 'ate', '', 1)
 				or self::_replace($word, 'iti', '', 1);
 				break;
 			case 'u':
@@ -313,7 +412,7 @@ class FinderIndexerStemmerPorter_En extends FinderIndexerStemmer
 	/**
 	 * Step 5
 	 *
-	 * @param   string  $word  The token to stem.
+	 * @param   string $word The token to stem.
 	 *
 	 * @return  string
 	 *
@@ -344,103 +443,5 @@ class FinderIndexerStemmerPorter_En extends FinderIndexerStemmer
 		}
 
 		return $word;
-	}
-
-	/**
-	 * Replaces the first string with the second, at the end of the string. If third
-	 * arg is given, then the preceding string must match that m count at least.
-	 *
-	 * @param   string   &$str   String to check
-	 * @param   string   $check  Ending to check for
-	 * @param   string   $repl   Replacement string
-	 * @param   integer  $m      Optional minimum number of m() to meet
-	 *
-	 * @return  boolean  Whether the $check string was at the end
-	 *                   of the $str string. True does not necessarily mean
-	 *                   that it was replaced.
-	 *
-	 * @since   2.5
-	 */
-	private static function _replace(&$str, $check, $repl, $m = null)
-	{
-		$len = 0 - strlen($check);
-
-		if (substr($str, $len) == $check)
-		{
-			$substr = substr($str, 0, $len);
-
-			if (is_null($m) or self::_m($substr) > $m)
-			{
-				$str = $substr . $repl;
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * m() measures the number of consonant sequences in $str. if c is
-	 * a consonant sequence and v a vowel sequence, and <..> indicates arbitrary
-	 * presence,
-	 *
-	 * <c><v>       gives 0
-	 * <c>vc<v>     gives 1
-	 * <c>vcvc<v>   gives 2
-	 * <c>vcvcvc<v> gives 3
-	 *
-	 * @param   string  $str  The string to return the m count for
-	 *
-	 * @return  integer  The m count
-	 *
-	 * @since   2.5
-	 */
-	private static function _m($str)
-	{
-		$c = self::$_regex_consonant;
-		$v = self::$_regex_vowel;
-
-		$str = preg_replace("#^$c+#", '', $str);
-		$str = preg_replace("#$v+$#", '', $str);
-
-		preg_match_all("#($v+$c+)#", $str, $matches);
-
-		return count($matches[1]);
-	}
-
-	/**
-	 * Returns true/false as to whether the given string contains two
-	 * of the same consonant next to each other at the end of the string.
-	 *
-	 * @param   string  $str  String to check
-	 *
-	 * @return  boolean  Result
-	 *
-	 * @since   2.5
-	 */
-	private static function _doubleConsonant($str)
-	{
-		$c = self::$_regex_consonant;
-
-		return preg_match("#$c{2}$#", $str, $matches) and $matches[0]{0} == $matches[0]{1};
-	}
-
-	/**
-	 * Checks for ending CVC sequence where second C is not W, X or Y
-	 *
-	 * @param   string  $str  String to check
-	 *
-	 * @return  boolean  Result
-	 *
-	 * @since   2.5
-	 */
-	private static function _cvc($str)
-	{
-		$c = self::$_regex_consonant;
-		$v = self::$_regex_vowel;
-
-		return preg_match("#($c$v$c)$#", $str, $matches) and strlen($matches[1]) == 3 and $matches[1]{2} != 'w' and $matches[1]{2} != 'x'
-			and $matches[1]{2} != 'y';
 	}
 }

@@ -36,7 +36,8 @@ JHtml::_('behavior.caption');
 	<?php if ($this->params->get('show_description', 1) || $this->params->def('show_description_image', 1)) : ?>
 		<div class="category-desc clearfix">
 			<?php if ($this->params->get('show_description_image') && $this->category->getParams()->get('image')) : ?>
-				<img src="<?php echo $this->category->getParams()->get('image'); ?>" alt="<?php echo htmlspecialchars($this->category->getParams()->get('image_alt'), ENT_COMPAT, 'UTF-8'); ?>"/>
+				<img src="<?php echo $this->category->getParams()->get('image'); ?>"
+				     alt="<?php echo htmlspecialchars($this->category->getParams()->get('image_alt'), ENT_COMPAT, 'UTF-8'); ?>"/>
 			<?php endif; ?>
 			<?php if ($this->params->get('show_description') && $this->category->description) : ?>
 				<?php echo JHtml::_('content.prepare', $this->category->description, '', 'com_content.category'); ?>
@@ -54,10 +55,11 @@ JHtml::_('behavior.caption');
 	<?php if (!empty($this->lead_items)) : ?>
 		<div class="items-leading clearfix">
 			<?php foreach ($this->lead_items as &$item) : ?>
-				<div class="leading-<?php echo $leadingcount; ?><?php echo $item->state == 0 ? ' system-unpublished' : null; ?>"
+				<div
+					class="leading-<?php echo $leadingcount; ?><?php echo $item->state == 0 ? ' system-unpublished' : null; ?>"
 					itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
 					<?php
-					$this->item = & $item;
+					$this->item = &$item;
 					echo $this->loadTemplate('item');
 					?>
 				</div>
@@ -68,7 +70,7 @@ JHtml::_('behavior.caption');
 
 	<?php
 	$introcount = (count($this->intro_items));
-	$counter = 0;
+	$counter    = 0;
 	?>
 
 	<?php if (!empty($this->intro_items)) : ?>
@@ -79,10 +81,11 @@ JHtml::_('behavior.caption');
 				<div class="items-row cols-<?php echo (int) $this->columns; ?> <?php echo 'row-' . $row; ?> row-fluid clearfix">
 			<?php endif; ?>
 			<div class="span<?php echo round((12 / $this->columns)); ?>">
-				<div class="item column-<?php echo $rowcount; ?><?php echo $item->state == 0 ? ' system-unpublished' : null; ?>"
+				<div
+					class="item column-<?php echo $rowcount; ?><?php echo $item->state == 0 ? ' system-unpublished' : null; ?>"
 					itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
 					<?php
-					$this->item = & $item;
+					$this->item = &$item;
 					echo $this->loadTemplate('item');
 					?>
 				</div>

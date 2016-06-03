@@ -21,7 +21,7 @@ class JTableExtension extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  $db  Database driver object.
+	 * @param   JDatabaseDriver $db Database driver object.
 	 *
 	 * @since   11.1
 	 */
@@ -54,9 +54,9 @@ class JTableExtension extends JTable
 	/**
 	 * Overloaded bind function
 	 *
-	 * @param   array  $array   Named array
-	 * @param   mixed  $ignore  An optional array or space separated list of properties
-	 * to ignore while binding.
+	 * @param   array $array  Named array
+	 * @param   mixed $ignore An optional array or space separated list of properties
+	 *                        to ignore while binding.
 	 *
 	 * @return  mixed  Null if operation was satisfactory, otherwise returns an error
 	 *
@@ -85,7 +85,7 @@ class JTableExtension extends JTable
 	/**
 	 * Method to create and execute a SELECT WHERE query.
 	 *
-	 * @param   array  $options  Array of options
+	 * @param   array $options Array of options
 	 *
 	 * @return  string  The database query result
 	 *
@@ -113,10 +113,10 @@ class JTableExtension extends JTable
 	 * table.  The method respects checked out rows by other users and will attempt
 	 * to checkin rows that it can after adjustments are made.
 	 *
-	 * @param   mixed    $pks     An optional array of primary key values to update.  If not
+	 * @param   mixed   $pks      An optional array of primary key values to update.  If not
 	 *                            set the instance property value is used.
-	 * @param   integer  $state   The publishing state. eg. [0 = unpublished, 1 = published]
-	 * @param   integer  $userId  The user id of the user performing the operation.
+	 * @param   integer $state    The publishing state. eg. [0 = unpublished, 1 = published]
+	 * @param   integer $userId   The user id of the user performing the operation.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -129,7 +129,7 @@ class JTableExtension extends JTable
 		// Sanitize input.
 		JArrayHelper::toInteger($pks);
 		$userId = (int) $userId;
-		$state = (int) $state;
+		$state  = (int) $state;
 
 		// If there are no primary keys set check to see if the instance key is set.
 		if (empty($pks))

@@ -17,45 +17,10 @@ defined('_JEXEC') or die;
 class ConfigHelperConfig extends JHelperContent
 {
 	/**
-	 * Get an array of all enabled components.
-	 *
-	 * @return  array
-	 *
-	 * @since   3.0
-	 */
-	public static function getAllComponents()
-	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true)
-			->select('element')
-			->from('#__extensions')
-			->where('type = ' . $db->quote('component'))
-			->where('enabled = 1');
-		$db->setQuery($query);
-		$result = $db->loadColumn();
-
-		return $result;
-	}
-
-	/**
-	 * Returns true if the component has configuration options.
-	 *
-	 * @param   string  $component  Component name
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.0
-	 */
-	public static function hasComponentConfig($component)
-	{
-		return is_file(JPATH_ADMINISTRATOR . '/components/' . $component . '/config.xml');
-	}
-
-	/**
 	 * Returns an array of all components with configuration options.
 	 * Optionally return only those components for which the current user has 'core.manage' rights.
 	 *
-	 * @param   boolean  $authCheck  True to restrict to components where current user has 'core.manage' rights.
+	 * @param   boolean $authCheck True to restrict to components where current user has 'core.manage' rights.
 	 *
 	 * @return  array
 	 *
@@ -63,9 +28,9 @@ class ConfigHelperConfig extends JHelperContent
 	 */
 	public static function getComponentsWithConfig($authCheck = true)
 	{
-		$result = array();
+		$result     = array();
 		$components = self::getAllComponents();
-		$user = JFactory::getUser();
+		$user       = JFactory::getUser();
 
 		// Remove com_config from the array as that may have weird side effects
 		$components = array_diff($components, array('com_config'));
@@ -85,26 +50,44 @@ class ConfigHelperConfig extends JHelperContent
 	}
 
 	/**
-	 * Load the sys language for the given component.
+	 * Get an array of all enabled components.
 	 *
-	 * @param   array  $components  Array of component names.
-	 *
-	 * @return  void
+	 * @return  array
 	 *
 	 * @since   3.0
 	 */
-	public static function loadLanguageForComponents($components)
+	public static function getAllComponents()
 	{
-		foreach ($components as $component)
-		{
-			self::loadLanguageForComponent($component);
-		}
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('element')
+			->from('#__extensions')
+			->where('type = ' . $db->quote('component'))
+			->where('enabled = 1');
+		$db->setQuery($query);
+		$result = $db->loadColumn();
+
+		return $result;
+	}
+
+	/**
+	 * Returns true if the component has configuration options.
+	 *
+	 * @param   string $component Component name
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.0
+	 */
+	public static function hasComponentConfig($component)
+	{
+		return is_file(JPATH_ADMINISTRATOR . '/components/' . $component . '/config.xml');
 	}
 
 	/**
 	 * Load the sys language for the given component.
 	 *
-	 * @param   string  $component  component name.
+	 * @param   string $component component name.
 	 *
 	 * @return  void
 	 *
@@ -123,5 +106,22 @@ class ConfigHelperConfig extends JHelperContent
 		// Load extension-local file.
 		$lang->load($component . '.sys', JPATH_BASE, null, false, true)
 		|| $lang->load($component . '.sys', JPATH_ADMINISTRATOR . '/components/' . $component, null, false, true);
+	}
+
+	/**
+	 * Load the sys language for the given component.
+	 *
+	 * @param   array $components Array of component names.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.0
+	 */
+	public static function loadLanguageForComponents($components)
+	{
+		foreach ($components as $component)
+		{
+			self::loadLanguageForComponent($component);
+		}
 	}
 }

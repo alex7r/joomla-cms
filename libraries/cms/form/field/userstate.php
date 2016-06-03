@@ -21,7 +21,7 @@ class JFormFieldUserState extends JFormFieldPredefinedList
 	/**
 	 * The form field type.
 	 *
-	 * @var		string
+	 * @var        string
 	 * @since   3.2
 	 */
 	protected $type = 'UserState';
@@ -33,7 +33,7 @@ class JFormFieldUserState extends JFormFieldPredefinedList
 	 * @since  3.2
 	 */
 	protected $predefinedOptions = array(
-		'0'  => 'JENABLED',
-		'1'  => 'JDISABLED'
+		'0' => 'JENABLED',
+		'1' => 'JDISABLED'
 	);
 }

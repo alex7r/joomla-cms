@@ -22,7 +22,7 @@ abstract class JMailHelper
 	/**
 	 * Cleans single line inputs.
 	 *
-	 * @param   string  $value  String to be cleaned.
+	 * @param   string $value String to be cleaned.
 	 *
 	 * @return  string  Cleaned string.
 	 *
@@ -38,7 +38,7 @@ abstract class JMailHelper
 	/**
 	 * Cleans multi-line inputs.
 	 *
-	 * @param   string  $value  Multi-line string to be cleaned.
+	 * @param   string $value Multi-line string to be cleaned.
 	 *
 	 * @return  string  Cleaned multi-line string.
 	 *
@@ -52,7 +52,7 @@ abstract class JMailHelper
 	/**
 	 * Cleans any injected headers from the email body.
 	 *
-	 * @param   string  $body  email body string.
+	 * @param   string $body email body string.
 	 *
 	 * @return  string  Cleaned email body string.
 	 *
@@ -67,7 +67,7 @@ abstract class JMailHelper
 	/**
 	 * Cleans any injected headers from the subject string.
 	 *
-	 * @param   string  $subject  email subject string.
+	 * @param   string $subject email subject string.
 	 *
 	 * @return  string  Cleaned email subject string.
 	 *
@@ -81,7 +81,7 @@ abstract class JMailHelper
 	/**
 	 * Verifies that an email address does not have any extra headers injected into it.
 	 *
-	 * @param   string  $address  email address.
+	 * @param   string $address email address.
 	 *
 	 * @return  mixed   email address string or boolean false if injected headers are present.
 	 *
@@ -100,7 +100,7 @@ abstract class JMailHelper
 	/**
 	 * Verifies that the string is in a proper email address format.
 	 *
-	 * @param   string  $email  String to be verified.
+	 * @param   string $email String to be verified.
 	 *
 	 * @return  boolean  True if string has the correct format; false otherwise.
 	 *
@@ -110,8 +110,8 @@ abstract class JMailHelper
 	{
 		// Split the email into a local and domain
 		$atIndex = strrpos($email, "@");
-		$domain = substr($email, $atIndex + 1);
-		$local = substr($email, 0, $atIndex);
+		$domain  = substr($email, $atIndex + 1);
+		$local   = substr($email, 0, $atIndex);
 
 		// Check Length of domain
 		$domainLen = strlen($domain);
@@ -128,7 +128,7 @@ abstract class JMailHelper
 		 * Also, period should not appear 2 or more times consecutively
 		 */
 		$allowed = 'a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-';
-		$regex = "/^[$allowed][\.$allowed]{0,63}$/";
+		$regex   = "/^[$allowed][\.$allowed]{0,63}$/";
 
 		if (!preg_match($regex, $local) || substr($local, -1) == '.' || $local[0] == '.' || preg_match('/\.\./', $local))
 		{
@@ -153,7 +153,7 @@ abstract class JMailHelper
 
 		// Check the domain
 		$domain_array = explode(".", rtrim($domain, '.'));
-		$regex = '/^[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/';
+		$regex        = '/^[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/';
 
 		foreach ($domain_array as $domain)
 		{

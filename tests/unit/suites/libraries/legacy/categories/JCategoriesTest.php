@@ -38,39 +38,8 @@ class JCategoriesTest extends TestCaseDatabase
 
 		// Add JApplication and JLanguage dependencies
 		$this->saveFactoryState();
-		JFactory::$language = $this->getMockLanguage();
+		JFactory::$language    = $this->getMockLanguage();
 		JFactory::$application = $this->getMockCmsApp();
-	}
-
-	/**
-	 * Overrides the parent tearDown method.
-	 *
-	 * @return  void
-	 *
-	 * @see     PHPUnit_Framework_TestCase::tearDown()
-	 * @since   3.2
-	 */
-	protected function tearDown()
-	{
-		$this->restoreFactoryState();
-
-		parent::tearDown();
-	}
-
-	/**
-	 * Gets the data set to be loaded into the database during setup
-	 *
-	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
-	 *
-	 * @since   3.2
-	 */
-	protected function getDataSet()
-	{
-		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
-
-		$dataSet->addTable('jos_categories', JPATH_TEST_DATABASE . '/jos_categories.csv');
-
-		return $dataSet;
 	}
 
 	/**
@@ -103,5 +72,36 @@ class JCategoriesTest extends TestCaseDatabase
 			'JCategoryNode',
 			JCategories::getInstance('Content')->get()
 		);
+	}
+
+	/**
+	 * Overrides the parent tearDown method.
+	 *
+	 * @return  void
+	 *
+	 * @see     PHPUnit_Framework_TestCase::tearDown()
+	 * @since   3.2
+	 */
+	protected function tearDown()
+	{
+		$this->restoreFactoryState();
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Gets the data set to be loaded into the database during setup
+	 *
+	 * @return  PHPUnit_Extensions_Database_DataSet_CsvDataSet
+	 *
+	 * @since   3.2
+	 */
+	protected function getDataSet()
+	{
+		$dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet(',', "'", '\\');
+
+		$dataSet->addTable('jos_categories', JPATH_TEST_DATABASE . '/jos_categories.csv');
+
+		return $dataSet;
 	}
 }

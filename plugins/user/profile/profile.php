@@ -19,6 +19,13 @@ use Joomla\Utilities\ArrayHelper;
 class PlgUserProfile extends JPlugin
 {
 	/**
+	 * Load the language file on instantiation.
+	 *
+	 * @var    boolean
+	 * @since  3.1
+	 */
+	protected $autoloadLanguage = true;
+	/**
 	 * Date of birth.
 	 *
 	 * @var    string
@@ -27,18 +34,10 @@ class PlgUserProfile extends JPlugin
 	private $date = '';
 
 	/**
-	 * Load the language file on instantiation.
-	 *
-	 * @var    boolean
-	 * @since  3.1
-	 */
-	protected $autoloadLanguage = true;
-
-	/**
 	 * Constructor
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An array that holds the plugin configuration
+	 * @param   object &$subject The object to observe
+	 * @param   array  $config   An array that holds the plugin configuration
 	 *
 	 * @since   1.5
 	 */
@@ -49,10 +48,94 @@ class PlgUserProfile extends JPlugin
 	}
 
 	/**
+	 * Returns an anchor tag generated from a given value
+	 *
+	 * @param   string $value url to use
+	 *
+	 * @return mixed|string
+	 */
+	public static function url($value)
+	{
+		if (empty($value))
+		{
+			return JHtml::_('users.value', $value);
+		}
+		else
+		{
+			// Convert website url to utf8 for display
+			$value = JStringPunycode::urlToUTF8(htmlspecialchars($value));
+
+			if (substr($value, 0, 4) == "http")
+			{
+				return '<a href="' . $value . '">' . $value . '</a>';
+			}
+			else
+			{
+				return '<a href="http://' . $value . '">' . $value . '</a>';
+			}
+		}
+	}
+
+	/**
+	 * Returns html markup showing a date picker
+	 *
+	 * @param   string $value valid date string
+	 *
+	 * @return  mixed
+	 */
+	public static function calendar($value)
+	{
+		if (empty($value))
+		{
+			return JHtml::_('users.value', $value);
+		}
+		else
+		{
+			return JHtml::_('date', $value, null, null);
+		}
+	}
+
+	/**
+	 * Returns the date of birth formatted and calculated using server timezone.
+	 *
+	 * @param   string $value valid date string
+	 *
+	 * @return  mixed
+	 */
+	public static function dob($value)
+	{
+		if (!$value)
+		{
+			return '';
+		}
+
+		return JHtml::_('date', $value, JText::_('DATE_FORMAT_LC1'), false);
+	}
+
+	/**
+	 * Return the translated strings yes or no depending on the value
+	 *
+	 * @param   boolean $value input value
+	 *
+	 * @return string
+	 */
+	public static function tos($value)
+	{
+		if ($value)
+		{
+			return JText::_('JYES');
+		}
+		else
+		{
+			return JText::_('JNO');
+		}
+	}
+
+	/**
 	 * Runs on content preparation
 	 *
-	 * @param   string  $context  The context for the data
-	 * @param   object  $data     An object containing the data for the form.
+	 * @param   string $context The context for the data
+	 * @param   object $data    An object containing the data for the form.
 	 *
 	 * @return  boolean
 	 *
@@ -76,8 +159,8 @@ class PlgUserProfile extends JPlugin
 				$db = JFactory::getDbo();
 				$db->setQuery(
 					'SELECT profile_key, profile_value FROM #__user_profiles'
-						. ' WHERE user_id = ' . (int) $userId . " AND profile_key LIKE 'profile.%'"
-						. ' ORDER BY ordering'
+					. ' WHERE user_id = ' . (int) $userId . " AND profile_key LIKE 'profile.%'"
+					. ' ORDER BY ordering'
 				);
 
 				try
@@ -96,7 +179,7 @@ class PlgUserProfile extends JPlugin
 
 				foreach ($results as $v)
 				{
-					$k = str_replace('profile.', '', $v[0]);
+					$k                 = str_replace('profile.', '', $v[0]);
 					$data->profile[$k] = json_decode($v[1], true);
 
 					if ($data->profile[$k] === null)
@@ -131,94 +214,10 @@ class PlgUserProfile extends JPlugin
 	}
 
 	/**
-	 * Returns an anchor tag generated from a given value
-	 *
-	 * @param   string  $value  url to use
-	 *
-	 * @return mixed|string
-	 */
-	public static function url($value)
-	{
-		if (empty($value))
-		{
-			return JHtml::_('users.value', $value);
-		}
-		else
-		{
-			// Convert website url to utf8 for display
-			$value = JStringPunycode::urlToUTF8(htmlspecialchars($value));
-
-			if (substr($value, 0, 4) == "http")
-			{
-				return '<a href="' . $value . '">' . $value . '</a>';
-			}
-			else
-			{
-				return '<a href="http://' . $value . '">' . $value . '</a>';
-			}
-		}
-	}
-
-	/**
-	 * Returns html markup showing a date picker
-	 *
-	 * @param   string  $value  valid date string
-	 *
-	 * @return  mixed
-	 */
-	public static function calendar($value)
-	{
-		if (empty($value))
-		{
-			return JHtml::_('users.value', $value);
-		}
-		else
-		{
-			return JHtml::_('date', $value, null, null);
-		}
-	}
-
-	/**
-	 * Returns the date of birth formatted and calculated using server timezone.
-	 *
-	 * @param   string  $value  valid date string
-	 *
-	 * @return  mixed
-	 */
-	public static function dob($value)
-	{
-		if (!$value)
-		{
-			return '';
-		}
-
-		return JHtml::_('date', $value, JText::_('DATE_FORMAT_LC1'), false);
-	}
-
-	/**
-	 * Return the translated strings yes or no depending on the value
-	 *
-	 * @param   boolean  $value  input value
-	 *
-	 * @return string
-	 */
-	public static function tos($value)
-	{
-		if ($value)
-		{
-			return JText::_('JYES');
-		}
-		else
-		{
-			return JText::_('JNO');
-		}
-	}
-
-	/**
 	 * Adds additional fields to the user editing form
 	 *
-	 * @param   JForm  $form  The form to be altered.
-	 * @param   mixed  $data  The associated data for the form.
+	 * @param   JForm $form The form to be altered.
+	 * @param   mixed $data The associated data for the form.
 	 *
 	 * @return  boolean
 	 *
@@ -301,7 +300,8 @@ class PlgUserProfile extends JPlugin
 			{
 				// Remove the field if it is disabled in registration and profile
 				if ($this->params->get('register-require_' . $field, 1) == 0
-					&& $this->params->get('profile-require_' . $field, 1) == 0)
+					&& $this->params->get('profile-require_' . $field, 1) == 0
+				)
 				{
 					$form->removeField($field, 'profile');
 				}
@@ -340,9 +340,9 @@ class PlgUserProfile extends JPlugin
 	/**
 	 * Method is called before user data is stored in the database
 	 *
-	 * @param   array    $user   Holds the old user data.
-	 * @param   boolean  $isnew  True if a new user is stored.
-	 * @param   array    $data   Holds the new user data.
+	 * @param   array   $user  Holds the old user data.
+	 * @param   boolean $isnew True if a new user is stored.
+	 * @param   array   $data  Holds the new user data.
 	 *
 	 * @return    boolean
 	 *
@@ -356,7 +356,7 @@ class PlgUserProfile extends JPlugin
 		{
 			try
 			{
-				$date = new JDate($data['profile']['dob']);
+				$date       = new JDate($data['profile']['dob']);
 				$this->date = $date->format('Y-m-d H:i:s');
 			}
 			catch (Exception $e)
@@ -391,10 +391,10 @@ class PlgUserProfile extends JPlugin
 	/**
 	 * Saves user profile data
 	 *
-	 * @param   array    $data    entered user data
-	 * @param   boolean  $isNew   true if this is a new user
-	 * @param   boolean  $result  true if saving the user worked
-	 * @param   string   $error   error message
+	 * @param   array   $data   entered user data
+	 * @param   boolean $isNew  true if this is a new user
+	 * @param   boolean $result true if saving the user worked
+	 * @param   string  $error  error message
 	 *
 	 * @return bool
 	 */
@@ -409,7 +409,7 @@ class PlgUserProfile extends JPlugin
 				// Sanitize the date
 				$data['profile']['dob'] = $this->date;
 
-				$db = JFactory::getDbo();
+				$db    = JFactory::getDbo();
 				$query = $db->getQuery(true)
 					->delete($db->quoteName('#__user_profiles'))
 					->where($db->quoteName('user_id') . ' = ' . (int) $userId)
@@ -418,7 +418,7 @@ class PlgUserProfile extends JPlugin
 				$db->execute();
 
 				$tuples = array();
-				$order = 1;
+				$order  = 1;
 
 				foreach ($data['profile'] as $k => $v)
 				{
@@ -444,9 +444,9 @@ class PlgUserProfile extends JPlugin
 	 *
 	 * Method is called after user data is deleted from the database
 	 *
-	 * @param   array    $user     Holds the user data
-	 * @param   boolean  $success  True if user was succesfully stored in the database
-	 * @param   string   $msg      Message
+	 * @param   array   $user    Holds the user data
+	 * @param   boolean $success True if user was succesfully stored in the database
+	 * @param   string  $msg     Message
 	 *
 	 * @return  boolean
 	 */
@@ -466,7 +466,7 @@ class PlgUserProfile extends JPlugin
 				$db = JFactory::getDbo();
 				$db->setQuery(
 					'DELETE FROM #__user_profiles WHERE user_id = ' . $userId
-						. " AND profile_key LIKE 'profile.%'"
+					. " AND profile_key LIKE 'profile.%'"
 				);
 
 				$db->execute();

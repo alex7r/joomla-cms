@@ -17,9 +17,9 @@ JHtml::script('com_joomlaupdate/json2.js', false, true, false);
 JHtml::script('com_joomlaupdate/encryption.js', false, true, false);
 JHtml::script('com_joomlaupdate/update.js', false, true, false);
 
-$password = JFactory::getApplication()->getUserState('com_joomlaupdate.password', null);
-$filesize = JFactory::getApplication()->getUserState('com_joomlaupdate.filesize', null);
-$ajaxUrl = JUri::base() . 'components/com_joomlaupdate/restore.php';
+$password  = JFactory::getApplication()->getUserState('com_joomlaupdate.password', null);
+$filesize  = JFactory::getApplication()->getUserState('com_joomlaupdate.filesize', null);
+$ajaxUrl   = JUri::base() . 'components/com_joomlaupdate/restore.php';
 $returnUrl = 'index.php?option=com_joomlaupdate&task=update.finalise';
 
 JFactory::getDocument()->addScriptDeclaration(
@@ -41,7 +41,8 @@ JFactory::getDocument()->addScriptDeclaration(
 <div id="update-progress">
 	<div id="extprogress">
 		<div id="progress" class="progress progress-striped active">
-			<div id="progress-bar" class="bar bar-success" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+			<div id="progress-bar" class="bar bar-success" aria-valuenow="0" aria-valuemin="0"
+			     aria-valuemax="100"></div>
 		</div>
 		<div class="extprogrow">
 			<span class="extlabel"><?php echo JText::_('COM_JOOMLAUPDATE_VIEW_UPDATE_PERCENT'); ?></span>

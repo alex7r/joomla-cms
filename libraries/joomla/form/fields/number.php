@@ -53,7 +53,7 @@ class JFormFieldNumber extends JFormField
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -75,8 +75,8 @@ class JFormFieldNumber extends JFormField
 	/**
 	 * Method to set certain otherwise inaccessible properties of the form field object.
 	 *
-	 * @param   string  $name   The property name for which to the the value.
-	 * @param   mixed   $value  The value of the property.
+	 * @param   string $name  The property name for which to the the value.
+	 * @param   mixed  $value The value of the property.
 	 *
 	 * @return  void
 	 *
@@ -100,9 +100,9 @@ class JFormFieldNumber extends JFormField
 	/**
 	 * Method to attach a JForm object to the field.
 	 *
-	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
-	 * @param   mixed             $value    The form field value to validate.
-	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
+	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed            $value     The form field value to validate.
+	 * @param   string           $group     The field name group control value. This acts as as an array container for the field.
 	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
 	 *
@@ -139,11 +139,11 @@ class JFormFieldNumber extends JFormField
 		$hint = $this->translateHint ? JText::_($this->hint) : $this->hint;
 
 		// Initialize some field attributes.
-		$size     = !empty($this->size) ? ' size="' . $this->size . '"' : '';
+		$size = !empty($this->size) ? ' size="' . $this->size . '"' : '';
 
 		// Must use isset instead of !empty for max/min because "zero" boundaries are always acceptable
-		$max      = isset($this->max) ? ' max="' . $this->max . '"' : '';
-		$min      = isset($this->min) ? ' min="' . $this->min . '"' : '';
+		$max = isset($this->max) ? ' max="' . $this->max . '"' : '';
+		$min = isset($this->min) ? ' min="' . $this->min . '"' : '';
 
 		$step     = !empty($this->step) ? ' step="' . $this->step . '"' : '';
 		$class    = !empty($this->class) ? ' class="' . $this->class . '"' : '';
@@ -175,7 +175,7 @@ class JFormFieldNumber extends JFormField
 		JHtml::_('script', 'system/html5fallback.js', false, true);
 
 		return '<input type="number" name="' . $this->name . '" id="' . $this->id . '"' . ' value="'
-			. htmlspecialchars($value, ENT_COMPAT, 'UTF-8') . '"' . $class . $size . $disabled . $readonly
-			. $hint . $onchange . $max . $step . $min . $required . $autocomplete . $autofocus . ' />';
+		. htmlspecialchars($value, ENT_COMPAT, 'UTF-8') . '"' . $class . $size . $disabled . $readonly
+		. $hint . $onchange . $max . $step . $min . $required . $autocomplete . $autofocus . ' />';
 	}
 }

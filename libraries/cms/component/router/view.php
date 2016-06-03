@@ -43,7 +43,7 @@ abstract class JComponentRouterView extends JComponentRouterBase
 	/**
 	 * Register the views of a component
 	 *
-	 * @param   JComponentRouterViewconfiguration  $view  View configuration object
+	 * @param   JComponentRouterViewconfiguration $view View configuration object
 	 *
 	 * @return  void
 	 *
@@ -55,22 +55,10 @@ abstract class JComponentRouterView extends JComponentRouterBase
 	}
 
 	/**
-	 * Return an array of registered view objects
-	 *
-	 * @return  JComponentRouterViewconfiguration[] Array of registered view objects
-	 *
-	 * @since   3.5
-	 */
-	public function getViews()
-	{
-		return $this->views;
-	}
-
-	/**
-	 * Get the path of views from target view to root view 
+	 * Get the path of views from target view to root view
 	 * including content items of a nestable view
 	 *
-	 * @param   array  $query  Array of query elements
+	 * @param   array $query Array of query elements
 	 *
 	 * @return  array List of views including IDs of content items
 	 *
@@ -126,6 +114,18 @@ abstract class JComponentRouterView extends JComponentRouterBase
 	}
 
 	/**
+	 * Return an array of registered view objects
+	 *
+	 * @return  JComponentRouterViewconfiguration[] Array of registered view objects
+	 *
+	 * @since   3.5
+	 */
+	public function getViews()
+	{
+		return $this->views;
+	}
+
+	/**
 	 * Get all currently attached rules
 	 *
 	 * @return  JComponentRouterRulesInterface[]  All currently attached rules in an array
@@ -140,7 +140,7 @@ abstract class JComponentRouterView extends JComponentRouterBase
 	/**
 	 * Add a number of router rules to the object
 	 *
-	 * @param   JComponentRouterRulesInterface[]  $rules  Array of JComponentRouterRulesInterface objects
+	 * @param   JComponentRouterRulesInterface[] $rules Array of JComponentRouterRulesInterface objects
 	 *
 	 * @return  void
 	 *
@@ -157,7 +157,7 @@ abstract class JComponentRouterView extends JComponentRouterBase
 	/**
 	 * Attach a build rule
 	 *
-	 * @param   JComponentRouterRulesInterface  $rule  The function to be called.
+	 * @param   JComponentRouterRulesInterface $rule The function to be called.
 	 *
 	 * @return  void
 	 *
@@ -171,7 +171,7 @@ abstract class JComponentRouterView extends JComponentRouterBase
 	/**
 	 * Remove a build rule
 	 *
-	 * @param   JComponentRouterRulesInterface  $rule  The rule to be removed.
+	 * @param   JComponentRouterRulesInterface $rule The rule to be removed.
 	 *
 	 * @return   boolean  Was a rule removed?
 	 *
@@ -195,7 +195,7 @@ abstract class JComponentRouterView extends JComponentRouterBase
 	/**
 	 * Generic method to preprocess a URL
 	 *
-	 * @param   array  $query  An associative array of URL arguments
+	 * @param   array $query An associative array of URL arguments
 	 *
 	 * @return  array  The URL arguments to use to assemble the subsequent URL.
 	 *
@@ -208,13 +208,14 @@ abstract class JComponentRouterView extends JComponentRouterBase
 		{
 			$rule->preprocess($query);
 		}
+
 		return $query;
 	}
 
 	/**
 	 * Build method for URLs
 	 *
-	 * @param   array  &$query  Array of query elements
+	 * @param   array &$query Array of query elements
 	 *
 	 * @return  array  Array of URL segments
 	 *
@@ -229,13 +230,14 @@ abstract class JComponentRouterView extends JComponentRouterBase
 		{
 			$rule->build($query, $segments);
 		}
+
 		return $segments;
 	}
 
 	/**
 	 * Parse method for URLs
 	 *
-	 * @param   array  &$segments  Array of URL string-segments
+	 * @param   array &$segments Array of URL string-segments
 	 *
 	 * @return  array  Associative array of query values
 	 *
@@ -250,6 +252,7 @@ abstract class JComponentRouterView extends JComponentRouterBase
 		{
 			$rule->parse($segments, $vars);
 		}
+
 		return $vars;
 	}
 

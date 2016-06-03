@@ -19,17 +19,17 @@ use Joomla\Registry\Registry;
 class JLinkedinOauth extends JOAuth1Client
 {
 	/**
-	* @var    Registry  Options for the JLinkedinOauth object.
-	* @since  13.1
-	*/
+	 * @var    Registry  Options for the JLinkedinOauth object.
+	 * @since  13.1
+	 */
 	protected $options;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry  $options  JLinkedinOauth options object.
-	 * @param   JHttp     $client   The HTTP client object.
-	 * @param   JInput    $input    The input object
+	 * @param   Registry $options JLinkedinOauth options object.
+	 * @param   JHttp    $client  The HTTP client object.
+	 * @param   JInput   $input   The input object
 	 *
 	 * @since   13.1
 	 */
@@ -84,8 +84,8 @@ class JLinkedinOauth extends JOAuth1Client
 	/**
 	 * Method to validate a response.
 	 *
-	 * @param   string         $url       The request URL.
-	 * @param   JHttpResponse  $response  The response to validate.
+	 * @param   string        $url      The request URL.
+	 * @param   JHttpResponse $response The response to validate.
 	 *
 	 * @return  void
 	 *
@@ -115,7 +115,7 @@ class JLinkedinOauth extends JOAuth1Client
 	/**
 	 * Method used to set permissions.
 	 *
-	 * @param   mixed  $scope  String or an array of string containing permissions.
+	 * @param   mixed $scope String or an array of string containing permissions.
 	 *
 	 * @return  JLinkedinOauth  This object for method chaining
 	 *

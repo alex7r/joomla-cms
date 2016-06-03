@@ -21,8 +21,8 @@ class JGoogleDataAdsense extends JGoogleData
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry     $options  Google options object
-	 * @param   JGoogleAuth  $auth     Google data http client object
+	 * @param   Registry    $options Google options object
+	 * @param   JGoogleAuth $auth    Google data http client object
 	 *
 	 * @since   12.3
 	 */
@@ -39,8 +39,8 @@ class JGoogleDataAdsense extends JGoogleData
 	/**
 	 * Method to get an Adsense account's settings from Google
 	 *
-	 * @param   string   $accountID    ID of account to get
-	 * @param   boolean  $subaccounts  Include list of subaccounts
+	 * @param   string  $accountID   ID of account to get
+	 * @param   boolean $subaccounts Include list of subaccounts
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -51,7 +51,7 @@ class JGoogleDataAdsense extends JGoogleData
 	{
 		if ($this->isAuthenticated())
 		{
-			$url = 'https://www.googleapis.com/adsense/v1.1/accounts/' . urlencode($accountID) . ($subaccounts ? '?tree=true' : '');
+			$url   = 'https://www.googleapis.com/adsense/v1.1/accounts/' . urlencode($accountID) . ($subaccounts ? '?tree=true' : '');
 			$jdata = $this->query($url);
 
 			if ($data = json_decode($jdata->body, true))
@@ -72,8 +72,8 @@ class JGoogleDataAdsense extends JGoogleData
 	/**
 	 * Method to retrieve a list of AdSense accounts from Google
 	 *
-	 * @param   array  $options   Search settings
-	 * @param   int    $maxpages  Maximum number of pages of accounts to return
+	 * @param   array $options  Search settings
+	 * @param   int   $maxpages Maximum number of pages of accounts to return
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -99,9 +99,9 @@ class JGoogleDataAdsense extends JGoogleData
 	/**
 	 * Method to retrieve a list of AdSense clients from Google
 	 *
-	 * @param   string  $accountID  ID of account to list the clients from
-	 * @param   array   $options    Search settings
-	 * @param   int     $maxpages   Maximum number of pages of accounts to return
+	 * @param   string $accountID ID of account to list the clients from
+	 * @param   array  $options   Search settings
+	 * @param   int    $maxpages  Maximum number of pages of accounts to return
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -127,9 +127,9 @@ class JGoogleDataAdsense extends JGoogleData
 	/**
 	 * Method to get an AdSense AdUnit
 	 *
-	 * @param   string  $accountID   ID of account to get
-	 * @param   string  $adclientID  ID of client to get
-	 * @param   string  $adunitID    ID of adunit to get
+	 * @param   string $accountID  ID of account to get
+	 * @param   string $adclientID ID of client to get
+	 * @param   string $adunitID   ID of adunit to get
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -162,11 +162,11 @@ class JGoogleDataAdsense extends JGoogleData
 	/**
 	 * Method to retrieve a list of AdSense Custom Channels for a specific Adunit
 	 *
-	 * @param   string  $accountID   ID of account
-	 * @param   string  $adclientID  ID of client
-	 * @param   string  $adunitID    ID of adunit to list channels from
-	 * @param   array   $options     Search settings
-	 * @param   int     $maxpages    Maximum number of pages of accounts to return
+	 * @param   string $accountID  ID of account
+	 * @param   string $adclientID ID of client
+	 * @param   string $adunitID   ID of adunit to list channels from
+	 * @param   array  $options    Search settings
+	 * @param   int    $maxpages   Maximum number of pages of accounts to return
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -193,9 +193,9 @@ class JGoogleDataAdsense extends JGoogleData
 	/**
 	 * Method to get an Adsense Channel
 	 *
-	 * @param   string  $accountID   ID of account to get
-	 * @param   string  $adclientID  ID of client to get
-	 * @param   string  $channelID   ID of channel to get
+	 * @param   string $accountID  ID of account to get
+	 * @param   string $adclientID ID of client to get
+	 * @param   string $channelID  ID of channel to get
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -228,10 +228,10 @@ class JGoogleDataAdsense extends JGoogleData
 	/**
 	 * Method to retrieve a list of AdSense Custom Channels
 	 *
-	 * @param   string  $accountID   ID of account
-	 * @param   string  $adclientID  ID of client to list channels from
-	 * @param   array   $options     Search settings
-	 * @param   int     $maxpages    Maximum number of pages of accounts to return
+	 * @param   string $accountID  ID of account
+	 * @param   string $adclientID ID of client to list channels from
+	 * @param   array  $options    Search settings
+	 * @param   int    $maxpages   Maximum number of pages of accounts to return
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -258,11 +258,11 @@ class JGoogleDataAdsense extends JGoogleData
 	/**
 	 * Method to retrieve a list of AdSense Adunits for a specific Custom Channel
 	 *
-	 * @param   string  $accountID   ID of account
-	 * @param   string  $adclientID  ID of client
-	 * @param   string  $channelID   ID of channel to list units from
-	 * @param   array   $options     Search settings
-	 * @param   int     $maxpages    Maximum number of pages of accounts to return
+	 * @param   string $accountID  ID of account
+	 * @param   string $adclientID ID of client
+	 * @param   string $channelID  ID of channel to list units from
+	 * @param   array  $options    Search settings
+	 * @param   int    $maxpages   Maximum number of pages of accounts to return
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -289,10 +289,10 @@ class JGoogleDataAdsense extends JGoogleData
 	/**
 	 * Method to generate a report from Google AdSense
 	 *
-	 * @param   string  $accountID   ID of account
-	 * @param   string  $adclientID  ID of client
-	 * @param   array   $options     Search settings
-	 * @param   int     $maxpages    Maximum number of pages of accounts to return
+	 * @param   string $accountID  ID of account
+	 * @param   string $adclientID ID of client
+	 * @param   array  $options    Search settings
+	 * @param   int    $maxpages   Maximum number of pages of accounts to return
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -319,11 +319,11 @@ class JGoogleDataAdsense extends JGoogleData
 	/**
 	 * Method to retrieve a list of AdSense Channel URLs
 	 *
-	 * @param   string  $accountID  ID of account
-	 * @param   mixed   $start      Start day
-	 * @param   mixed   $end        End day
-	 * @param   array   $options    Search settings
-	 * @param   int     $maxpages   Maximum number of pages of accounts to return
+	 * @param   string $accountID ID of account
+	 * @param   mixed  $start     Start day
+	 * @param   mixed  $end       End day
+	 * @param   array  $options   Search settings
+	 * @param   int    $maxpages  Maximum number of pages of accounts to return
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -376,7 +376,7 @@ class JGoogleDataAdsense extends JGoogleData
 			}
 
 			$options['startDate'] = $startobj->format('Y-m-d');
-			$options['endDate'] = $endobj->format('Y-m-d');
+			$options['endDate']   = $endobj->format('Y-m-d');
 
 			unset($options['startIndex']);
 
@@ -387,18 +387,18 @@ class JGoogleDataAdsense extends JGoogleData
 				$url .= '&';
 			}
 
-			$i = 0;
+			$i            = 0;
 			$data['rows'] = array();
 
 			do
 			{
-				$jdata = $this->query($url . 'startIndex=' . count($data['rows']));
+				$jdata   = $this->query($url . 'startIndex=' . count($data['rows']));
 				$newdata = json_decode($jdata->body, true);
 
 				if ($newdata && array_key_exists('rows', $newdata))
 				{
 					$newdata['rows'] = array_merge($data['rows'], $newdata['rows']);
-					$data = $newdata;
+					$data            = $newdata;
 				}
 				else
 				{
@@ -406,8 +406,7 @@ class JGoogleDataAdsense extends JGoogleData
 				}
 
 				$i++;
-			}
-			while (count($data['rows']) < $data['totalMatchedRows'] && $i < $maxpages);
+			} while (count($data['rows']) < $data['totalMatchedRows'] && $i < $maxpages);
 
 			return $data;
 		}

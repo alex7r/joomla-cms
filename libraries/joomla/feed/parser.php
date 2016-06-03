@@ -43,13 +43,13 @@ abstract class JFeedParser
 	/**
 	 * Constructor.
 	 *
-	 * @param   XMLReader  $stream  The XMLReader stream object for the feed.
+	 * @param   XMLReader $stream The XMLReader stream object for the feed.
 	 *
 	 * @since   12.3
 	 */
 	public function __construct(XMLReader $stream)
 	{
-		$this->stream  = $stream;
+		$this->stream = $stream;
 	}
 
 	/**
@@ -100,28 +100,9 @@ abstract class JFeedParser
 
 			// Skip over this element's children since it has been processed.
 			$this->moveToClosingElement();
-		}
-
-		while ($this->moveToNextElement());
+		} while ($this->moveToNextElement());
 
 		return $feed;
-	}
-
-	/**
-	 * Method to register a namespace handler object.
-	 *
-	 * @param   string                $prefix     The XML namespace prefix for which to register the namespace object.
-	 * @param   JFeedParserNamespace  $namespace  The namespace object to register.
-	 *
-	 * @return  JFeed
-	 *
-	 * @since   12.3
-	 */
-	public function registerNamespace($prefix, JFeedParserNamespace $namespace)
-	{
-		$this->namespaces[$prefix] = $namespace;
-
-		return $this;
 	}
 
 	/**
@@ -135,11 +116,39 @@ abstract class JFeedParser
 	abstract protected function initialise();
 
 	/**
+	 * Method to get a namespace object for a given namespace prefix.
+	 *
+	 * @param   string $prefix The XML prefix for which to fetch the namespace object.
+	 *
+	 * @return  mixed  JFeedParserNamespace or false if none exists.
+	 *
+	 * @since   12.3
+	 */
+	protected function fetchNamespace($prefix)
+	{
+		if (isset($this->namespaces[$prefix]))
+		{
+			return $this->namespaces[$prefix];
+		}
+
+		$className = get_class($this) . ucfirst($prefix);
+
+		if (class_exists($className))
+		{
+			$this->namespaces[$prefix] = new $className;
+
+			return $this->namespaces[$prefix];
+		}
+
+		return false;
+	}
+
+	/**
 	 * Method to parse a specific feed element.
 	 *
-	 * @param   JFeed             $feed        The JFeed object being built from the parsed feed.
-	 * @param   SimpleXMLElement  $el          The current XML element object to handle.
-	 * @param   array             $namespaces  The array of relevant namespace objects to process for the element.
+	 * @param   JFeed            $feed       The JFeed object being built from the parsed feed.
+	 * @param   SimpleXMLElement $el         The current XML element object to handle.
+	 * @param   array            $namespaces The array of relevant namespace objects to process for the element.
 	 *
 	 * @return  void
 	 *
@@ -190,64 +199,6 @@ abstract class JFeedParser
 	}
 
 	/**
-	 * Method to get a namespace object for a given namespace prefix.
-	 *
-	 * @param   string  $prefix  The XML prefix for which to fetch the namespace object.
-	 *
-	 * @return  mixed  JFeedParserNamespace or false if none exists.
-	 *
-	 * @since   12.3
-	 */
-	protected function fetchNamespace($prefix)
-	{
-		if (isset($this->namespaces[$prefix]))
-		{
-			return $this->namespaces[$prefix];
-		}
-
-		$className = get_class($this) . ucfirst($prefix);
-
-		if (class_exists($className))
-		{
-			$this->namespaces[$prefix] = new $className;
-
-			return $this->namespaces[$prefix];
-		}
-
-		return false;
-	}
-
-	/**
-	 * Method to move the stream parser to the next XML element node.
-	 *
-	 * @param   string  $name  The name of the element for which to move the stream forward until is found.
-	 *
-	 * @return  boolean  True if the stream parser is on an XML element node.
-	 *
-	 * @since   12.3
-	 */
-	protected function moveToNextElement($name = null)
-	{
-		// Only keep looking until the end of the stream.
-		while ($this->stream->read())
-		{
-			// As soon as we get to the next ELEMENT node we are done.
-			if ($this->stream->nodeType == XMLReader::ELEMENT)
-			{
-				// If we are looking for a specific name make sure we have it.
-				if (isset($name) && ($this->stream->name != $name))
-				{
-					continue;
-				}
-
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * Method to move the stream parser to the closing XML node of the current element.
 	 *
 	 * @return  void
@@ -278,5 +229,52 @@ abstract class JFeedParser
 		}
 
 		throw new RuntimeException('Unable to find the closing XML node.');
+	}
+
+	/**
+	 * Method to move the stream parser to the next XML element node.
+	 *
+	 * @param   string $name The name of the element for which to move the stream forward until is found.
+	 *
+	 * @return  boolean  True if the stream parser is on an XML element node.
+	 *
+	 * @since   12.3
+	 */
+	protected function moveToNextElement($name = null)
+	{
+		// Only keep looking until the end of the stream.
+		while ($this->stream->read())
+		{
+			// As soon as we get to the next ELEMENT node we are done.
+			if ($this->stream->nodeType == XMLReader::ELEMENT)
+			{
+				// If we are looking for a specific name make sure we have it.
+				if (isset($name) && ($this->stream->name != $name))
+				{
+					continue;
+				}
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Method to register a namespace handler object.
+	 *
+	 * @param   string               $prefix    The XML namespace prefix for which to register the namespace object.
+	 * @param   JFeedParserNamespace $namespace The namespace object to register.
+	 *
+	 * @return  JFeed
+	 *
+	 * @since   12.3
+	 */
+	public function registerNamespace($prefix, JFeedParserNamespace $namespace)
+	{
+		$this->namespaces[$prefix] = $namespace;
+
+		return $this;
 	}
 }

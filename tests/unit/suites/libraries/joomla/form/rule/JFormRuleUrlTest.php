@@ -19,9 +19,9 @@ class JFormRuleUrlTest extends TestCase
 	/**
 	 * Test the JFormRuleUrl::test method.
 	 *
-	 * @param   string  $xmlfield  @todo
-	 * @param   string  $url       @todo
-	 * @param   string  $expected  @todo
+	 * @param   string $xmlfield @todo
+	 * @param   string $url      @todo
+	 * @param   string $expected @todo
 	 *
 	 * @dataProvider provider
 	 *

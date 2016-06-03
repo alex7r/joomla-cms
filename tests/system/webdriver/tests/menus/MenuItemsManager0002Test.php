@@ -45,24 +45,24 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 	}
 
 	/**
-     * creates a menu item and check its existence on site page
-     *
+	 * creates a menu item and check its existence on site page
+	 *
 	 * @return void
 	 *
 	 * @test
 	 */
 	public function addMenuItem_FrontEndCheck_MenuAdded()
 	{
-		$cfg = new SeleniumConfig;
+		$cfg              = new SeleniumConfig;
 		$MenuItemsManager = 'administrator/index.php?option=com_menus&view=items';
 		$this->driver->get($cfg->host . $cfg->path . $MenuItemsManager);
 		$this->menuItemsManagerPage = $this->getPageObject('MenuItemsManagerPage');
-		$menuTitle = 'Test Menu Item' .rand(9, 999);
+		$menuTitle                  = 'Test Menu Item' . rand(9, 999);
 		$this->assertFalse($this->menuItemsManagerPage->getRowNumber($menuTitle), 'Test menu should not be present');
 		$this->menuItemsManagerPage->addMenuItem($menuTitle);
 		$message = $this->menuItemsManagerPage->getAlertMessage();
 		$this->assertTrue(strpos($message, 'Menu successfully saved') >= 0, 'Menu save should return success');
-		
+
 		$homePageUrl = 'index.php';
 		$this->driver->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
@@ -83,14 +83,14 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 	 *
 	 * @test
 	 */
-	public function  addMenu_SingleArticle_MenuAdded()
+	public function addMenu_SingleArticle_MenuAdded()
 	{
-		$cfg = new SeleniumConfig;
+		$cfg             = new SeleniumConfig;
 		$categoryManager = 'administrator/index.php?option=com_categories&extension=com_content';
 		$this->driver->get($cfg->host . $cfg->path . $categoryManager);
 
-		$salt = rand();
-		$categoryName = 'category_ABC' . $salt;
+		$salt                      = rand();
+		$categoryName              = 'category_ABC' . $salt;
 		$this->categoryManagerPage = $this->getPageObject('CategoryManagerPage');
 		$this->assertFalse($this->categoryManagerPage->getRowNumber($categoryName), 'Test Category should not be present');
 		$this->categoryManagerPage->addCategory($categoryName);
@@ -100,8 +100,8 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 		$articleManager = 'administrator/index.php?option=com_content';
 		$this->driver->get($cfg->host . $cfg->path . $articleManager);
 
-		$articleName = 'article_ABC' . $salt;
-		$category = $categoryName;
+		$articleName              = 'article_ABC' . $salt;
+		$category                 = $categoryName;
 		$this->articleManagerPage = $this->getPageObject('ArticleManagerPage');
 		$this->assertFalse($this->articleManagerPage->getRowNumber($articleName), 'Test Article should not be present');
 		$this->articleManagerPage->addArticle($articleName, $category);
@@ -109,9 +109,9 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 		$this->assertTrue(strpos($message, 'Article successfully saved') >= 0, 'Article save should return success');
 		$MenuItemManager = 'administrator/index.php?option=com_menus&view=items';
 		$this->driver->get($cfg->host . $cfg->path . $MenuItemManager);
-		$title = 'Menu Item' . $salt;
-		$menuType = 'Single Article';
-		$menuLocation = 'Main Menu';
+		$title                      = 'Menu Item' . $salt;
+		$menuType                   = 'Single Article';
+		$menuLocation               = 'Main Menu';
 		$this->menuItemsManagerPage = $this->getPageObject('MenuItemsManagerPage');
 		$this->menuItemsManagerPage->setFilter('Menu', $menuLocation);
 		$this->assertFalse($this->menuItemsManagerPage->getRowNumber($title), 'Test menu should not be present');
@@ -120,7 +120,7 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 		$this->assertContains('Menu item successfully saved', $message, 'Menu save should return success', true);
 
 		$homePageUrl = 'index.php';
-		$d = $this->driver;
+		$d           = $this->driver;
 		$d->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
 
@@ -133,7 +133,7 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 		$this->articleManagerPage = $this->getPageObject('ArticleManagerPage');
 		$this->articleManagerPage->trashAndDelete($articleName);
 		$this->assertFalse($this->articleManagerPage->getRowNumber($articleName), 'Test article should not be present');
-		
+
 		$this->driver->get($cfg->host . $cfg->path . $categoryManager);
 		$this->categoryManagerPage = $this->getPageObject('CategoryManagerPage');
 		$this->categoryManagerPage->trashAndDelete($categoryName);
@@ -155,12 +155,12 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 	 */
 	public function addMenu_CategoryBlog_MenuAdded()
 	{
-		$cfg = new SeleniumConfig;
+		$cfg             = new SeleniumConfig;
 		$categoryManager = 'administrator/index.php?option=com_categories&extension=com_content';
 		$this->driver->get($cfg->host . $cfg->path . $categoryManager);
 
-		$salt = rand();
-		$categoryName = 'category_ABC' . $salt;
+		$salt                      = rand();
+		$categoryName              = 'category_ABC' . $salt;
 		$this->categoryManagerPage = $this->getPageObject('CategoryManagerPage');
 		$this->assertFalse($this->categoryManagerPage->getRowNumber($categoryName), 'Test Category should not be present');
 		$this->categoryManagerPage->addCategory($categoryName);
@@ -170,8 +170,8 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 		$articleManager = 'administrator/index.php?option=com_content';
 		$this->driver->get($cfg->host . $cfg->path . $articleManager);
 
-		$articleName1 = 'article_ABC_1' . $salt;
-		$articleName2 = 'article_ABC_2' . $salt;
+		$articleName1             = 'article_ABC_1' . $salt;
+		$articleName2             = 'article_ABC_2' . $salt;
 		$this->articleManagerPage = $this->getPageObject('ArticleManagerPage');
 		$this->assertFalse($this->articleManagerPage->getRowNumber($articleName1), 'Test Article should not be present');
 		$this->assertFalse($this->articleManagerPage->getRowNumber($articleName2), 'Test Article should not be present');
@@ -185,10 +185,10 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 		$MenuItemsManager = 'administrator/index.php?option=com_menus&view=items';
 		$this->driver->get($cfg->host . $cfg->path . $MenuItemsManager);
 
-		$title = 'Menu Item' . $salt;
-		$menuType = 'Category Blog';
-		$menuLocation = 'Main Menu';
-		$metaDescription = 'Test menu item for web driver test.';
+		$title                      = 'Menu Item' . $salt;
+		$menuType                   = 'Category Blog';
+		$menuLocation               = 'Main Menu';
+		$metaDescription            = 'Test menu item for web driver test.';
 		$this->menuItemsManagerPage = $this->getPageObject('MenuItemsManagerPage');
 		$this->menuItemsManagerPage->setFilter('Menu', $menuLocation);
 		$this->assertFalse($this->menuItemsManagerPage->getRowNumber($title), 'Test menu should not be present');
@@ -197,7 +197,7 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 		$this->assertContains('Menu item successfully saved', $message, 'Menu save should return success', true);
 
 		$homePageUrl = 'index.php';
-		$d = $this->driver;
+		$d           = $this->driver;
 		$d->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
 		$this->assertTrue($this->siteHomePage->itemExist($title, 'a'));
@@ -224,7 +224,7 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 		$this->menuItemsManagerPage->trashAndDelete($title);
 		$this->assertFalse($this->menuItemsManagerPage->getRowNumber($title), 'Test menu should not be present');
 	}
-	
+
 	/**
 	 * create menu item of type category list and verifying its existence on front end.
 	 *
@@ -234,12 +234,12 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 	 */
 	public function addMenu_CategoryList_MenuAdded()
 	{
-		$cfg = new SeleniumConfig;
+		$cfg             = new SeleniumConfig;
 		$categoryManager = 'administrator/index.php?option=com_categories&extension=com_content';
 		$this->driver->get($cfg->host . $cfg->path . $categoryManager);
-		$salt = rand();
-		$categoryName1 = 'category_ABC1' . $salt;
-		$categoryName2 = 'category_ABC2' . $salt;
+		$salt                      = rand();
+		$categoryName1             = 'category_ABC1' . $salt;
+		$categoryName2             = 'category_ABC2' . $salt;
 		$this->categoryManagerPage = $this->getPageObject('CategoryManagerPage');
 		$this->assertFalse($this->categoryManagerPage->getRowNumber($categoryName1), 'Test Category should not be present');
 		$this->assertFalse($this->categoryManagerPage->getRowNumber($categoryName2), 'Test Category should not be present');
@@ -252,9 +252,9 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 
 		$MenuItemsManager = 'administrator/index.php?option=com_menus&view=items';
 		$this->driver->get($cfg->host . $cfg->path . $MenuItemsManager);
-		$title = 'Menu_Item_testing' . $salt;
-		$menuLocation = 'Main Menu';
-		$menuType = 'Category List';
+		$title                      = 'Menu_Item_testing' . $salt;
+		$menuLocation               = 'Main Menu';
+		$menuType                   = 'Category List';
 		$this->menuItemsManagerPage = $this->getPageObject('MenuItemsManagerPage');
 		$this->menuItemsManagerPage->setFilter('Menu', $menuLocation);
 		$this->assertFalse($this->menuItemsManagerPage->getRowNumber($title), 'Test menu should not be present');
@@ -264,8 +264,8 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 
 		$articleManager = 'administrator/index.php?option=com_content';
 		$this->driver->get($cfg->host . $cfg->path . $articleManager);
-		$articleName1 = 'article_ABC_1' . $salt;
-		$articleName2 = 'article_ABC_2' . $salt;
+		$articleName1             = 'article_ABC_1' . $salt;
+		$articleName2             = 'article_ABC_2' . $salt;
 		$this->articleManagerPage = $this->getPageObject('ArticleManagerPage');
 		$this->assertFalse($this->articleManagerPage->getRowNumber($articleName1), 'Test Article should not be present');
 		$this->assertFalse($this->articleManagerPage->getRowNumber($articleName2), 'Test Article should not be present');
@@ -276,8 +276,8 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 		$message = $this->articleManagerPage->getAlertMessage();
 		$this->assertTrue(strpos($message, 'Article successfully saved') >= 0, 'Article save should return success');
 
-		$articleName3 = 'article_ABC_3' . $salt;
-		$articleName4 = 'article_ABC_4' . $salt;
+		$articleName3             = 'article_ABC_3' . $salt;
+		$articleName4             = 'article_ABC_4' . $salt;
 		$this->articleManagerPage = $this->getPageObject('ArticleManagerPage');
 		$this->assertFalse($this->articleManagerPage->getRowNumber($articleName3), 'Test Article should not be present');
 		$this->assertFalse($this->articleManagerPage->getRowNumber($articleName4), 'Test Article should not be present');
@@ -289,7 +289,7 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 		$this->assertTrue(strpos($message, 'Article successfully saved') >= 0, 'Article save should return success');
 
 		$homePageUrl = 'index.php';
-		$d = $this->driver;
+		$d           = $this->driver;
 		$d->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
 
@@ -301,14 +301,14 @@ class MenuItemsManager0002Test extends JoomlaWebdriverTestCase
 		$this->doAdminLogin();
 		$MenuItemsManager = 'administrator/index.php?option=com_menus&view=items';
 		$this->driver->get($cfg->host . $cfg->path . $MenuItemsManager);
-		$title = 'Menu_Item_testing' . $salt;
-		$menuLocation = 'Main Menu';
+		$title                      = 'Menu_Item_testing' . $salt;
+		$menuLocation               = 'Main Menu';
 		$this->menuItemsManagerPage = $this->getPageObject('MenuItemsManagerPage');
 		$this->menuItemsManagerPage->setFilter('Menu', $menuLocation);
 		$this->menuItemsManagerPage->editMenuItem($title, array('category' => $categoryName2));
-		$cfg = new SeleniumConfig;
+		$cfg         = new SeleniumConfig;
 		$homePageUrl = 'index.php';
-		$d = $this->driver;
+		$d           = $this->driver;
 		$d->get($cfg->host . $cfg->path . $homePageUrl);
 		$this->siteHomePage = $this->getPageObject('SiteContentFeaturedPage');
 

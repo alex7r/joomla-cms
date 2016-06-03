@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -30,8 +30,8 @@ class FOFFormFieldTitle extends FOFFormFieldText implements FOFFormField
 	public function getRepeatable()
 	{
 		// Initialise
-		$slug_format	= '(%s)';
-		$slug_class		= 'small';
+		$slug_format = '(%s)';
+		$slug_class  = 'small';
 
 		// Get field parameters
 		if ($this->element['slug_field'])

@@ -75,7 +75,7 @@ class JOpenstreetmapUser extends JOpenstreetmapObject
 	/**
 	 * Method to replace user preferences
 	 *
-	 * @param   array  $preferences  Array of new preferences
+	 * @param   array $preferences Array of new preferences
 	 *
 	 * @return  array  The XML response
 	 *
@@ -110,8 +110,8 @@ class JOpenstreetmapUser extends JOpenstreetmapObject
 		$xml = '<?xml version="1.0" encoding="UTF-8"?>
 			<osm version="0.6" generator="JOpenstreetmap">
 				<preferences>'
-				. $preference_list .
-				'</preferences>
+			. $preference_list .
+			'</preferences>
 			</osm>';
 
 		$header['Content-Type'] = 'text/xml';
@@ -125,8 +125,8 @@ class JOpenstreetmapUser extends JOpenstreetmapObject
 	/**
 	 * Method to change user preferences
 	 *
-	 * @param   string  $key         Key of the preference
-	 * @param   string  $preference  New value for preference
+	 * @param   string $key        Key of the preference
+	 * @param   string $preference New value for preference
 	 *
 	 * @return  array  The XML response
 	 *

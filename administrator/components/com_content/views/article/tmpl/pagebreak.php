@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 
-$script  = 'function insertPagebreak() {' . "\n\t";
+$script = 'function insertPagebreak() {' . "\n\t";
 
 // Get the pagebreak title
 $script .= 'var title = document.getElementById("title").value;' . "\n\t";
@@ -36,15 +36,16 @@ JFactory::getDocument()->addScriptDeclaration($script);
 
 		<div class="control-group">
 			<label for="title" class="control-label"><?php echo JText::_('COM_CONTENT_PAGEBREAK_TITLE'); ?></label>
-			<div class="controls"><input type="text" id="title" name="title" /></div>
+			<div class="controls"><input type="text" id="title" name="title"/></div>
 		</div>
 
 		<div class="control-group">
 			<label for="alias" class="control-label"><?php echo JText::_('COM_CONTENT_PAGEBREAK_TOC'); ?></label>
-			<div class="controls"><input type="text" id="alt" name="alt" /></div>
+			<div class="controls"><input type="text" id="alt" name="alt"/></div>
 		</div>
 
-		<button onclick="insertPagebreak();" class="btn btn-primary"><?php echo JText::_('COM_CONTENT_PAGEBREAK_INSERT_BUTTON'); ?></button>
+		<button onclick="insertPagebreak();"
+		        class="btn btn-primary"><?php echo JText::_('COM_CONTENT_PAGEBREAK_INSERT_BUTTON'); ?></button>
 
 	</form>
 </div>

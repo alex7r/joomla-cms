@@ -52,28 +52,28 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 	 */
 	public function dataTestLoadNextObject()
 	{
-		$objCompOne = new stdClass;
-		$objCompOne->id = 1;
-		$objCompOne->title = 'Testing';
-		$objCompOne->start_date = '1980-04-18 00:00:00';
+		$objCompOne              = new stdClass;
+		$objCompOne->id          = 1;
+		$objCompOne->title       = 'Testing';
+		$objCompOne->start_date  = '1980-04-18 00:00:00';
 		$objCompOne->description = 'one';
 
-		$objCompTwo = new stdClass;
-		$objCompTwo->id = 2;
-		$objCompTwo->title = 'Testing2';
-		$objCompTwo->start_date = '1980-04-18 00:00:00';
+		$objCompTwo              = new stdClass;
+		$objCompTwo->id          = 2;
+		$objCompTwo->title       = 'Testing2';
+		$objCompTwo->start_date  = '1980-04-18 00:00:00';
 		$objCompTwo->description = 'one';
 
-		$objCompThree = new stdClass;
-		$objCompThree->id = 3;
-		$objCompThree->title = 'Testing3';
-		$objCompThree->start_date = '1980-04-18 00:00:00';
+		$objCompThree              = new stdClass;
+		$objCompThree->id          = 3;
+		$objCompThree->title       = 'Testing3';
+		$objCompThree->start_date  = '1980-04-18 00:00:00';
 		$objCompThree->description = 'three';
 
-		$objCompFour = new stdClass;
-		$objCompFour->id = 4;
-		$objCompFour->title = 'Testing4';
-		$objCompFour->start_date = '1980-04-18 00:00:00';
+		$objCompFour              = new stdClass;
+		$objCompFour->id          = 4;
+		$objCompFour->title       = 'Testing4';
+		$objCompFour->start_date  = '1980-04-18 00:00:00';
 		$objCompFour->description = 'four';
 
 		return array(array(array($objCompOne, $objCompTwo, $objCompThree, $objCompFour)));
@@ -112,9 +112,9 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 	/**
 	 * Tests the escape method.
 	 *
-	 * @param   string   $text      The string to be escaped.
-	 * @param   boolean  $extra     Optional parameter to provide extra escaping.
-	 * @param   string   $expected  The expected result.
+	 * @param   string  $text     The string to be escaped.
+	 * @param   boolean $extra    Optional parameter to provide extra escaping.
+	 * @param   string  $expected The expected result.
 	 *
 	 * @return  void
 	 *
@@ -247,7 +247,7 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 		);
 
 		/* not only type field */
-		$id = new stdClass;
+		$id             = new stdClass;
 		$id->Default    = null;
 		$id->Field      = 'id';
 		$id->Type       = 'int(10) unsigned';
@@ -258,7 +258,7 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 		$id->Privileges = 'select,insert,update,references';
 		$id->Comment    = '';
 
-		$title = new stdClass;
+		$title             = new stdClass;
 		$title->Default    = null;
 		$title->Field      = 'title';
 		$title->Type       = 'varchar(50)';
@@ -269,7 +269,7 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 		$title->Privileges = 'select,insert,update,references';
 		$title->Comment    = '';
 
-		$start_date = new stdClass;
+		$start_date             = new stdClass;
 		$start_date->Default    = null;
 		$start_date->Field      = 'start_date';
 		$start_date->Type       = 'datetime';
@@ -280,7 +280,7 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 		$start_date->Privileges = 'select,insert,update,references';
 		$start_date->Comment    = '';
 
-		$description = new stdClass;
+		$description             = new stdClass;
 		$description->Default    = null;
 		$description->Field      = 'description';
 		$description->Type       = 'text';
@@ -295,9 +295,9 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 			self::$driver->getTableColumns('jos_dbtest', false),
 			$this->equalTo(
 				array(
-					'id' => $id,
-					'title' => $title,
-					'start_date' => $start_date,
+					'id'          => $id,
+					'title'       => $title,
+					'start_date'  => $start_date,
 					'description' => $description
 				)
 			),
@@ -414,7 +414,7 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 	/**
 	 * Test loadNextObject function
 	 *
-	 * @param   array  $objArr  Array of expected objects
+	 * @param   array $objArr Array of expected objects
 	 *
 	 * @return  void
 	 *
@@ -439,7 +439,7 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 	/**
 	 * Test loadNextObject function with preceding loadObject call
 	 *
-	 * @param   array  $objArr  Array of expected objects
+	 * @param   array $objArr Array of expected objects
 	 *
 	 * @return  void
 	 *
@@ -466,7 +466,7 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 	/**
 	 * Test loadNextObject function with preceding query call
 	 *
-	 * @param   array  $objArr  Array of expected objects
+	 * @param   array $objArr Array of expected objects
 	 *
 	 * @return  void
 	 *
@@ -493,7 +493,7 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 	/**
 	 * Test loadNextRow function
 	 *
-	 * @param   array  $rowArr  Array of expected arrays
+	 * @param   array $rowArr Array of expected arrays
 	 *
 	 * @return   void
 	 *
@@ -518,7 +518,7 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 	/**
 	 * Test loadNextRow function with preceding query call
 	 *
-	 * @param   array  $rowArr  Array of expected arrays
+	 * @param   array $rowArr Array of expected arrays
 	 *
 	 * @return  void
 	 *
@@ -545,7 +545,7 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 	/**
 	 * Test loadNextRow function with preceding loadRow call
 	 *
-	 * @param   array  $rowArr  Array of expected arrays
+	 * @param   array $rowArr Array of expected arrays
 	 *
 	 * @return  void
 	 *
@@ -585,10 +585,10 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 		self::$driver->setQuery($query);
 		$result = self::$driver->loadObject();
 
-		$objCompare = new stdClass;
-		$objCompare->id = 3;
-		$objCompare->title = 'Testing3';
-		$objCompare->start_date = '1980-04-18 00:00:00';
+		$objCompare              = new stdClass;
+		$objCompare->id          = 3;
+		$objCompare->title       = 'Testing3';
+		$objCompare->start_date  = '1980-04-18 00:00:00';
 		$objCompare->description = 'three';
 
 		$this->assertThat($result, $this->equalTo($objCompare), __LINE__);
@@ -612,34 +612,34 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 
 		$expected = array();
 
-		$objCompare = new stdClass;
-		$objCompare->id = 1;
-		$objCompare->title = 'Testing';
-		$objCompare->start_date = '1980-04-18 00:00:00';
+		$objCompare              = new stdClass;
+		$objCompare->id          = 1;
+		$objCompare->title       = 'Testing';
+		$objCompare->start_date  = '1980-04-18 00:00:00';
 		$objCompare->description = 'one';
 
 		$expected[] = clone $objCompare;
 
-		$objCompare = new stdClass;
-		$objCompare->id = 2;
-		$objCompare->title = 'Testing2';
-		$objCompare->start_date = '1980-04-18 00:00:00';
+		$objCompare              = new stdClass;
+		$objCompare->id          = 2;
+		$objCompare->title       = 'Testing2';
+		$objCompare->start_date  = '1980-04-18 00:00:00';
 		$objCompare->description = 'one';
 
 		$expected[] = clone $objCompare;
 
-		$objCompare = new stdClass;
-		$objCompare->id = 3;
-		$objCompare->title = 'Testing3';
-		$objCompare->start_date = '1980-04-18 00:00:00';
+		$objCompare              = new stdClass;
+		$objCompare->id          = 3;
+		$objCompare->title       = 'Testing3';
+		$objCompare->start_date  = '1980-04-18 00:00:00';
 		$objCompare->description = 'three';
 
 		$expected[] = clone $objCompare;
 
-		$objCompare = new stdClass;
-		$objCompare->id = 4;
-		$objCompare->title = 'Testing4';
-		$objCompare->start_date = '1980-04-18 00:00:00';
+		$objCompare              = new stdClass;
+		$objCompare->id          = 4;
+		$objCompare->title       = 'Testing4';
+		$objCompare->start_date  = '1980-04-18 00:00:00';
 		$objCompare->description = 'four';
 
 		$expected[] = clone $objCompare;
@@ -828,8 +828,8 @@ class JDatabaseDriverMysqliTest extends TestCaseDatabaseMysqli
 	/**
 	 * Tests the transactionRollback method, with and without savepoint.
 	 *
-	 * @param   string  $toSavepoint  Savepoint name to rollback transaction to
-	 * @param   int     $tupleCount   Number of tuple found after insertion and rollback
+	 * @param   string $toSavepoint Savepoint name to rollback transaction to
+	 * @param   int    $tupleCount  Number of tuple found after insertion and rollback
 	 *
 	 * @return  void
 	 *

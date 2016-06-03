@@ -48,7 +48,7 @@ class JDocumentOpensearch extends JDocument
 	/**
 	 * Class constructor
 	 *
-	 * @param   array  $options  Associative array of options
+	 * @param   array $options Associative array of options
 	 *
 	 * @since  11.1
 	 */
@@ -63,23 +63,23 @@ class JDocumentOpensearch extends JDocument
 		$this->_mime = 'application/opensearchdescription+xml';
 
 		// Add the URL for self updating
-		$update = new JOpenSearchUrl;
-		$update->type = 'application/opensearchdescription+xml';
-		$update->rel = 'self';
+		$update           = new JOpenSearchUrl;
+		$update->type     = 'application/opensearchdescription+xml';
+		$update->rel      = 'self';
 		$update->template = JRoute::_(JUri::getInstance());
 		$this->addUrl($update);
 
 		// Add the favicon as the default image
 		// Try to find a favicon by checking the template and root folder
-		$app = JFactory::getApplication();
+		$app  = JFactory::getApplication();
 		$dirs = array(JPATH_THEMES . '/' . $app->getTemplate(), JPATH_BASE);
 
 		foreach ($dirs as $dir)
 		{
 			if (file_exists($dir . '/favicon.ico'))
 			{
-				$path = str_replace(JPATH_BASE, '', $dir);
-				$path = str_replace('\\', '/', $path);
+				$path    = str_replace(JPATH_BASE, '', $dir);
+				$path    = str_replace('\\', '/', $path);
 				$favicon = new JOpenSearchImage;
 
 				if ($path == "")
@@ -97,8 +97,8 @@ class JDocumentOpensearch extends JDocument
 				}
 
 				$favicon->height = '16';
-				$favicon->width = '16';
-				$favicon->type = 'image/vnd.microsoft.icon';
+				$favicon->width  = '16';
+				$favicon->type   = 'image/vnd.microsoft.icon';
 
 				$this->addImage($favicon);
 
@@ -108,10 +108,42 @@ class JDocumentOpensearch extends JDocument
 	}
 
 	/**
+	 * Adds a URL to the OpenSearch description.
+	 *
+	 * @param   JOpenSearchUrl $url The url to add to the description.
+	 *
+	 * @return  JDocumentOpensearch instance of $this to allow chaining
+	 *
+	 * @since   11.1
+	 */
+	public function addUrl(JOpenSearchUrl $url)
+	{
+		$this->_urls[] = $url;
+
+		return $this;
+	}
+
+	/**
+	 * Adds an image to the OpenSearch description.
+	 *
+	 * @param   JOpenSearchImage $image The image to add to the description.
+	 *
+	 * @return  JDocumentOpensearch instance of $this to allow chaining
+	 *
+	 * @since   11.1
+	 */
+	public function addImage(JOpenSearchImage $image)
+	{
+		$this->_images[] = $image;
+
+		return $this;
+	}
+
+	/**
 	 * Render the document
 	 *
-	 * @param   boolean  $cache   If true, cache the output
-	 * @param   array    $params  Associative array of attributes
+	 * @param   boolean $cache  If true, cache the output
+	 * @param   array   $params Associative array of attributes
 	 *
 	 * @return  The rendered data
 	 *
@@ -179,7 +211,7 @@ class JDocumentOpensearch extends JDocument
 	/**
 	 * Sets the short name
 	 *
-	 * @param   string  $name  The name.
+	 * @param   string $name The name.
 	 *
 	 * @return  JDocumentOpensearch instance of $this to allow chaining
 	 *
@@ -188,38 +220,6 @@ class JDocumentOpensearch extends JDocument
 	public function setShortName($name)
 	{
 		$this->_shortName = $name;
-
-		return $this;
-	}
-
-	/**
-	 * Adds a URL to the OpenSearch description.
-	 *
-	 * @param   JOpenSearchUrl  $url  The url to add to the description.
-	 *
-	 * @return  JDocumentOpensearch instance of $this to allow chaining
-	 *
-	 * @since   11.1
-	 */
-	public function addUrl(JOpenSearchUrl $url)
-	{
-		$this->_urls[] = $url;
-
-		return $this;
-	}
-
-	/**
-	 * Adds an image to the OpenSearch description.
-	 *
-	 * @param   JOpenSearchImage  $image  The image to add to the description.
-	 *
-	 * @return  JDocumentOpensearch instance of $this to allow chaining
-	 *
-	 * @since   11.1
-	 */
-	public function addImage(JOpenSearchImage $image)
-	{
-		$this->_images[] = $image;
 
 		return $this;
 	}

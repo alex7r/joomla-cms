@@ -22,7 +22,7 @@ class JFacebookGroup extends JFacebookObject
 	/**
 	 * Method to read a group. Requires authentication and user_groups or friends_groups permission for non-public groups.
 	 *
-	 * @param   string  $group  The group id.
+	 * @param   string $group The group id.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -36,11 +36,11 @@ class JFacebookGroup extends JFacebookObject
 	/**
 	 * Method to get the group's wall. Requires authentication and user_groups or friends_groups permission for non-public groups.
 	 *
-	 * @param   string   $group   The group id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
-	 * @param   string   $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $group  The group id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
+	 * @param   string  $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -54,9 +54,9 @@ class JFacebookGroup extends JFacebookObject
 	/**
 	 * Method to get the group's members. Requires authentication and user_groups or friends_groups permission for non-public groups.
 	 *
-	 * @param   string   $group   The group id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
+	 * @param   string  $group  The group id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -70,11 +70,11 @@ class JFacebookGroup extends JFacebookObject
 	/**
 	 * Method to get the group's docs. Requires authentication and user_groups or friends_groups permission for non-public groups.
 	 *
-	 * @param   string   $group   The group id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
-	 * @param   string   $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $group  The group id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
+	 * @param   string  $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -88,8 +88,8 @@ class JFacebookGroup extends JFacebookObject
 	/**
 	 * Method to get the groups's picture. Requires authentication and user_groups or friends_groups permission.
 	 *
-	 * @param   string  $group  The group id.
-	 * @param   string  $type   To request a different photo use square | small | normal | large.
+	 * @param   string $group The group id.
+	 * @param   string $type  To request a different photo use square | small | normal | large.
 	 *
 	 * @return  string   The URL to the group's picture.
 	 *
@@ -108,9 +108,9 @@ class JFacebookGroup extends JFacebookObject
 	/**
 	 * Method to post a link on group's wall. Requires authentication and publish_stream permission.
 	 *
-	 * @param   string  $group    The group id.
-	 * @param   string  $link     Link URL.
-	 * @param   strin   $message  Link message.
+	 * @param   string $group   The group id.
+	 * @param   string $link    Link URL.
+	 * @param   strin  $message Link message.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -119,7 +119,7 @@ class JFacebookGroup extends JFacebookObject
 	public function createLink($group, $link, $message = null)
 	{
 		// Set POST request parameters.
-		$data = array();
+		$data         = array();
 		$data['link'] = $link;
 
 		if ($message)
@@ -133,7 +133,7 @@ class JFacebookGroup extends JFacebookObject
 	/**
 	 * Method to delete a link. Requires authentication.
 	 *
-	 * @param   mixed  $link  The Link ID.
+	 * @param   mixed $link The Link ID.
 	 *
 	 * @return  boolean   Returns true if successful, and false otherwise.
 	 *
@@ -147,21 +147,21 @@ class JFacebookGroup extends JFacebookObject
 	/**
 	 * Method to post on group's wall. Message or link parameter is required. Requires authentication and publish_stream permission.
 	 *
-	 * @param   string  $group        The group id.
-	 * @param   string  $message      Post message.
-	 * @param   string  $link         Post URL.
-	 * @param   string  $picture      Post thumbnail image (can only be used if link is specified)
-	 * @param   string  $name         Post name (can only be used if link is specified).
-	 * @param   string  $caption      Post caption (can only be used if link is specified).
-	 * @param   string  $description  Post description (can only be used if link is specified).
-	 * @param   array   $actions      Post actions array of objects containing name and link.
+	 * @param   string $group       The group id.
+	 * @param   string $message     Post message.
+	 * @param   string $link        Post URL.
+	 * @param   string $picture     Post thumbnail image (can only be used if link is specified)
+	 * @param   string $name        Post name (can only be used if link is specified).
+	 * @param   string $caption     Post caption (can only be used if link is specified).
+	 * @param   string $description Post description (can only be used if link is specified).
+	 * @param   array  $actions     Post actions array of objects containing name and link.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
 	 * @since   13.1
 	 */
 	public function createPost($group, $message = null, $link = null, $picture = null, $name = null, $caption = null,
-		$description = null, $actions = null)
+	                           $description = null, $actions = null)
 	{
 		// Set POST request parameters.
 		if ($message)
@@ -205,7 +205,7 @@ class JFacebookGroup extends JFacebookObject
 	/**
 	 * Method to delete a post. Note: you can only delete the post if it was created by the current user. Requires authentication.
 	 *
-	 * @param   string  $post  The Post ID.
+	 * @param   string $post The Post ID.
 	 *
 	 * @return  boolean   Returns true if successful, and false otherwise.
 	 *
@@ -219,8 +219,8 @@ class JFacebookGroup extends JFacebookObject
 	/**
 	 * Method to post a status message on behalf of the user on the group's wall. Requires authentication and publish_stream permission.
 	 *
-	 * @param   string  $group    The group id.
-	 * @param   string  $message  Status message content.
+	 * @param   string $group   The group id.
+	 * @param   string $message Status message content.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -229,7 +229,7 @@ class JFacebookGroup extends JFacebookObject
 	public function createStatus($group, $message)
 	{
 		// Set POST request parameters.
-		$data = array();
+		$data            = array();
 		$data['message'] = $message;
 
 		return $this->createConnection($group, 'feed', $data);
@@ -238,7 +238,7 @@ class JFacebookGroup extends JFacebookObject
 	/**
 	 * Method to delete a status. Note: you can only delete the status if it was created by the current user. Requires authentication.
 	 *
-	 * @param   string  $status  The Status ID.
+	 * @param   string $status The Status ID.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *

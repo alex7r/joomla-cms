@@ -19,6 +19,13 @@ use Joomla\Registry\Registry;
 class PlgSystemRedirect extends JPlugin
 {
 	/**
+	 * The global exception handler registered before the plugin was instantiated
+	 *
+	 * @var    callable
+	 * @since  3.6
+	 */
+	private static $previousExceptionHandler;
+	/**
 	 * Affects constructor behavior. If true, language files will be loaded automatically.
 	 *
 	 * @var    boolean
@@ -27,18 +34,10 @@ class PlgSystemRedirect extends JPlugin
 	protected $autoloadLanguage = false;
 
 	/**
-	 * The global exception handler registered before the plugin was instantiated
-	 *
-	 * @var    callable
-	 * @since  3.6
-	 */
-	private static $previousExceptionHandler;
-
-	/**
 	 * Constructor.
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An optional associative array of configuration settings.
+	 * @param   object &$subject The object to observe
+	 * @param   array  $config   An optional associative array of configuration settings.
 	 *
 	 * @since   1.6
 	 */
@@ -56,7 +55,7 @@ class PlgSystemRedirect extends JPlugin
 	/**
 	 * Method to handle an error condition from JError.
 	 *
-	 * @param   JException  &$error  The JException object to be handled.
+	 * @param   JException &$error The JException object to be handled.
 	 *
 	 * @return  void
 	 *
@@ -68,32 +67,9 @@ class PlgSystemRedirect extends JPlugin
 	}
 
 	/**
-	 * Method to handle an uncaught exception.
-	 *
-	 * @param   Exception|Throwable  $exception  The Exception or Throwable object to be handled.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.5
-	 * @throws  InvalidArgumentException
-	 */
-	public static function handleException($exception)
-	{
-		// If this isn't a Throwable then bail out
-		if (!($exception instanceof Throwable) && !($exception instanceof Exception))
-		{
-			throw new InvalidArgumentException(
-				sprintf('The error handler requires an Exception or Throwable object, a "%s" object was given instead.', get_class($exception))
-			);
-		}
-
-		self::doErrorHandling($exception);
-	}
-
-	/**
 	 * Internal processor for all error handlers
 	 *
-	 * @param   Exception|Throwable  $error  The Exception or Throwable object to be handled.
+	 * @param   Exception|Throwable $error The Exception or Throwable object to be handled.
 	 *
 	 * @return  void
 	 *
@@ -118,10 +94,10 @@ class PlgSystemRedirect extends JPlugin
 
 		$uri = JUri::getInstance();
 
-		$url = rawurldecode($uri->toString(array('scheme', 'host', 'port', 'path', 'query', 'fragment')));
+		$url    = rawurldecode($uri->toString(array('scheme', 'host', 'port', 'path', 'query', 'fragment')));
 		$urlRel = rawurldecode($uri->toString(array('path', 'query', 'fragment')));
 
-		$urlWithoutQuery = rawurldecode($uri->toString(array('scheme', 'host', 'port', 'path', 'fragment')));
+		$urlWithoutQuery    = rawurldecode($uri->toString(array('scheme', 'host', 'port', 'path', 'fragment')));
 		$urlRelWithoutQuery = rawurldecode($uri->toString(array('path', 'fragment')));
 
 		// Why is this (still) here?
@@ -212,11 +188,11 @@ class PlgSystemRedirect extends JPlugin
 			if ((bool) $params->get('collect_urls', true))
 			{
 				$data = (object) array(
-					'id' => 0,
-					'old_url' => $url,
-					'referer' => $app->input->server->getString('HTTP_REFERER', ''),
-					'hits' => 1,
-					'published' => 0,
+					'id'           => 0,
+					'old_url'      => $url,
+					'referer'      => $app->input->server->getString('HTTP_REFERER', ''),
+					'hits'         => 1,
+					'published'    => 0,
 					'created_date' => JFactory::getDate()->toSql()
 				);
 
@@ -246,5 +222,28 @@ class PlgSystemRedirect extends JPlugin
 		}
 
 		JErrorPage::render($error);
+	}
+
+	/**
+	 * Method to handle an uncaught exception.
+	 *
+	 * @param   Exception|Throwable $exception The Exception or Throwable object to be handled.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.5
+	 * @throws  InvalidArgumentException
+	 */
+	public static function handleException($exception)
+	{
+		// If this isn't a Throwable then bail out
+		if (!($exception instanceof Throwable) && !($exception instanceof Exception))
+		{
+			throw new InvalidArgumentException(
+				sprintf('The error handler requires an Exception or Throwable object, a "%s" object was given instead.', get_class($exception))
+			);
+		}
+
+		self::doErrorHandling($exception);
 	}
 }

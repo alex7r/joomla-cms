@@ -25,7 +25,7 @@ class JImageInspector extends JImage
 	/**
 	 * Method for inspecting protected variables.
 	 *
-	 * @param   string  $name  The name of the property.
+	 * @param   string $name The name of the property.
 	 *
 	 * @return  mixed  The value of the class variable.
 	 *
@@ -47,8 +47,8 @@ class JImageInspector extends JImage
 	/**
 	 * Method for setting protected variables.
 	 *
-	 * @param   string  $name   The name of the property.
-	 * @param   mixed   $value  The value of the property.
+	 * @param   string $name  The name of the property.
+	 * @param   mixed  $value The value of the property.
 	 *
 	 * @return  void.
 	 *
@@ -70,7 +70,7 @@ class JImageInspector extends JImage
 	/**
 	 * Allows public access to protected method.
 	 *
-	 * @param   string  $type  The image filter type to get.
+	 * @param   string $type The image filter type to get.
 	 *
 	 * @return  JImageFilter
 	 *
@@ -92,9 +92,9 @@ class JImageInspector extends JImage
 	/**
 	 * Allows public access to protected method.
 	 *
-	 * @param   mixed    $width        The width of the resized image in pixels or a percentage.
-	 * @param   mixed    $height       The height of the resized image in pixels or a percentage.
-	 * @param   integer  $scaleMethod  The method to use for scaling
+	 * @param   mixed   $width       The width of the resized image in pixels or a percentage.
+	 * @param   mixed   $height      The height of the resized image in pixels or a percentage.
+	 * @param   integer $scaleMethod The method to use for scaling
 	 *
 	 * @return  object
 	 *
@@ -108,8 +108,8 @@ class JImageInspector extends JImage
 	/**
 	 * Allows public access to protected method.
 	 *
-	 * @param   mixed  $height  The input height value to sanitize.
-	 * @param   mixed  $width   The input width value for reference.
+	 * @param   mixed $height The input height value to sanitize.
+	 * @param   mixed $width  The input width value for reference.
 	 *
 	 * @return  integer
 	 *
@@ -123,7 +123,7 @@ class JImageInspector extends JImage
 	/**
 	 * Allows public access to protected method.
 	 *
-	 * @param   mixed  $offset  An offset value.
+	 * @param   mixed $offset An offset value.
 	 *
 	 * @return  integer
 	 *
@@ -137,8 +137,8 @@ class JImageInspector extends JImage
 	/**
 	 * Allows public access to protected method.
 	 *
-	 * @param   mixed  $width   The input width value to sanitize.
-	 * @param   mixed  $height  The input height value for reference.
+	 * @param   mixed $width  The input width value to sanitize.
+	 * @param   mixed $height The input height value for reference.
 	 *
 	 * @return  integer
 	 *

@@ -19,7 +19,7 @@ class LanguagesModelLanguage extends JModelAdmin
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -37,87 +37,10 @@ class LanguagesModelLanguage extends JModelAdmin
 	}
 
 	/**
-	 * Override to get the table.
-	 *
-	 * @param   string  $name     Name of the table.
-	 * @param   string  $prefix   Table name prefix.
-	 * @param   array   $options  Array of options.
-	 *
-	 * @return  JTable
-	 *
-	 * @since   1.6
-	 */
-	public function getTable($name = '', $prefix = '', $options = array())
-	{
-		return JTable::getInstance('Language');
-	}
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState()
-	{
-		$app    = JFactory::getApplication('administrator');
-		$params = JComponentHelper::getParams('com_languages');
-
-		// Load the User state.
-		$langId = $app->input->getInt('lang_id');
-		$this->setState('language.id', $langId);
-
-		// Load the parameters.
-		$this->setState('params', $params);
-	}
-
-	/**
-	 * Method to get a member item.
-	 *
-	 * @param   integer  $langId  The id of the member to get.
-	 *
-	 * @return  mixed  User data object on success, false on failure.
-	 *
-	 * @since   1.0
-	 */
-	public function getItem($langId = null)
-	{
-		$langId = (!empty($langId)) ? $langId : (int) $this->getState('language.id');
-
-		// Get a member row instance.
-		$table = $this->getTable();
-
-		// Attempt to load the row.
-		$return = $table->load($langId);
-
-		// Check for a table object error.
-		if ($return === false && $table->getError())
-		{
-			$this->setError($table->getError());
-
-			return false;
-		}
-
-		// Set a valid accesslevel in case '0' is stored due to a bug in the installation SQL (was fixed with PR 2714).
-		if ($table->access == '0')
-		{
-			$table->access = (int) JFactory::getConfig()->get('access');
-		}
-
-		$properties = $table->getProperties(1);
-		$value      = JArrayHelper::toObject($properties, 'JObject');
-
-		return $value;
-	}
-
-	/**
 	 * Method to get the group form.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure.
 	 *
@@ -137,31 +60,9 @@ class LanguagesModelLanguage extends JModelAdmin
 	}
 
 	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_languages.edit.language.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
-		}
-
-		$this->preprocessData('com_languages.language', $data);
-
-		return $data;
-	}
-
-	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array  $data  The form data.
+	 * @param   array $data The form data.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -250,8 +151,8 @@ class LanguagesModelLanguage extends JModelAdmin
 	/**
 	 * Custom clean cache method.
 	 *
-	 * @param   string   $group      Optional cache group name.
-	 * @param   integer  $client_id  Application client id.
+	 * @param   string  $group     Optional cache group name.
+	 * @param   integer $client_id Application client id.
 	 *
 	 * @return  void
 	 *
@@ -261,5 +162,104 @@ class LanguagesModelLanguage extends JModelAdmin
 	{
 		parent::cleanCache('_system');
 		parent::cleanCache('com_languages');
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		$app    = JFactory::getApplication('administrator');
+		$params = JComponentHelper::getParams('com_languages');
+
+		// Load the User state.
+		$langId = $app->input->getInt('lang_id');
+		$this->setState('language.id', $langId);
+
+		// Load the parameters.
+		$this->setState('params', $params);
+	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_languages.edit.language.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+
+		$this->preprocessData('com_languages.language', $data);
+
+		return $data;
+	}
+
+	/**
+	 * Method to get a member item.
+	 *
+	 * @param   integer $langId The id of the member to get.
+	 *
+	 * @return  mixed  User data object on success, false on failure.
+	 *
+	 * @since   1.0
+	 */
+	public function getItem($langId = null)
+	{
+		$langId = (!empty($langId)) ? $langId : (int) $this->getState('language.id');
+
+		// Get a member row instance.
+		$table = $this->getTable();
+
+		// Attempt to load the row.
+		$return = $table->load($langId);
+
+		// Check for a table object error.
+		if ($return === false && $table->getError())
+		{
+			$this->setError($table->getError());
+
+			return false;
+		}
+
+		// Set a valid accesslevel in case '0' is stored due to a bug in the installation SQL (was fixed with PR 2714).
+		if ($table->access == '0')
+		{
+			$table->access = (int) JFactory::getConfig()->get('access');
+		}
+
+		$properties = $table->getProperties(1);
+		$value      = JArrayHelper::toObject($properties, 'JObject');
+
+		return $value;
+	}
+
+	/**
+	 * Override to get the table.
+	 *
+	 * @param   string $name    Name of the table.
+	 * @param   string $prefix  Table name prefix.
+	 * @param   array  $options Array of options.
+	 *
+	 * @return  JTable
+	 *
+	 * @since   1.6
+	 */
+	public function getTable($name = '', $prefix = '', $options = array())
+	{
+		return JTable::getInstance('Language');
 	}
 }

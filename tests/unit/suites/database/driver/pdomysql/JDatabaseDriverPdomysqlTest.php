@@ -97,9 +97,9 @@ class JDatabaseDriverPdomysqlTest extends TestCaseDatabasePdomysql
 	/**
 	 * Tests the escape method.
 	 *
-	 * @param   string   $text      The string to be escaped.
-	 * @param   boolean  $extra     Optional parameter to provide extra escaping.
-	 * @param   string   $expected  The expected result.
+	 * @param   string  $text     The string to be escaped.
+	 * @param   boolean $extra    Optional parameter to provide extra escaping.
+	 * @param   string  $expected The expected result.
 	 *
 	 * @return  void
 	 *
@@ -292,9 +292,9 @@ class JDatabaseDriverPdomysqlTest extends TestCaseDatabasePdomysql
 			self::$driver->getTableColumns('#__dbtest', false),
 			$this->equalTo(
 				array(
-					'id' => $id,
-					'title' => $title,
-					'start_date' => $start_date,
+					'id'          => $id,
+					'title'       => $title,
+					'start_date'  => $start_date,
 					'description' => $description
 				)
 			),
@@ -383,8 +383,8 @@ class JDatabaseDriverPdomysqlTest extends TestCaseDatabasePdomysql
 				array(
 					'title' => 'Testing'
 				)),
-				__LINE__
-			);
+			__LINE__
+		);
 	}
 
 	/**
@@ -722,8 +722,8 @@ class JDatabaseDriverPdomysqlTest extends TestCaseDatabasePdomysql
 	/**
 	 * Tests the transactionRollback method, with and without savepoint.
 	 *
-	 * @param   string  $toSavepoint  Savepoint name to rollback transaction to
-	 * @param   int     $tupleCount   Number of tuple found after insertion and rollback
+	 * @param   string $toSavepoint Savepoint name to rollback transaction to
+	 * @param   int    $tupleCount  Number of tuple found after insertion and rollback
 	 *
 	 * @return  void
 	 *

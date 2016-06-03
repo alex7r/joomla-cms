@@ -26,7 +26,7 @@ function usage($command)
 {
 	echo PHP_EOL;
 	echo 'Usage: php ' . $command . ' [options]' . PHP_EOL;
-	echo PHP_TAB . '[options]:'.PHP_EOL;
+	echo PHP_TAB . '[options]:' . PHP_EOL;
 	echo PHP_TAB . PHP_TAB . '-v <version>:' . PHP_TAB . 'Version (ex: 3.6.0-dev, 3.6.0-beta1, 3.6.0-beta1-dev, 3.6.0-rc1, 3.6.0)' . PHP_EOL;
 	echo PHP_TAB . PHP_TAB . '-c <codename>:' . PHP_TAB . 'Codename [optional] (ex: Unicorn)' . PHP_EOL;
 	echo PHP_EOL;
@@ -36,28 +36,28 @@ function usage($command)
 const PHP_TAB = "\t";
 
 // File paths.
-$versionFile      = '/libraries/cms/version/version.php';
+$versionFile = '/libraries/cms/version/version.php';
 
-$coreXmlFiles     = array(
-			'/administrator/manifests/files/joomla.xml',
-			);
+$coreXmlFiles = array(
+	'/administrator/manifests/files/joomla.xml',
+);
 
 $languageXmlFiles = array(
-			'/language/en-GB/en-GB.xml',
-			'/language/en-GB/install.xml',
-			'/administrator/language/en-GB/en-GB.xml',
-			'/administrator/language/en-GB/install.xml',
-			'/installation/language/en-GB/en-GB.xml',
-			);
+	'/language/en-GB/en-GB.xml',
+	'/language/en-GB/install.xml',
+	'/administrator/language/en-GB/en-GB.xml',
+	'/administrator/language/en-GB/install.xml',
+	'/installation/language/en-GB/en-GB.xml',
+);
 
 $languagePackXmlFile = '/administrator/manifests/packages/pkg_en-GB.xml';
 
 $antJobFile = '/build.xml';
 
 $readMeFiles = array(
-			'/README.md',
-			'/README.txt',
-			);
+	'/README.md',
+	'/README.txt',
+);
 
 // Check arguments (exit if incorrect cli arguments).
 $opts = getopt("v:c:");
@@ -136,16 +136,16 @@ else
 $versionSubParts = explode('.', $versionParts[0]);
 
 $version = array(
-		'main'       => $versionSubParts[0] . '.' . $versionSubParts[1],
-		'release'    => $versionSubParts[0] . '.' . $versionSubParts[1] . '.' . $versionSubParts[2],
-		'dev_devel'  => $versionSubParts[2] . (!empty($versionParts[1]) ? '-' . $versionParts[1] : '') . (!empty($versionParts[2]) ? '-' . $versionParts[2] : ''),
-		'dev_status' => $dev_status,
-		'build'      => '',
-		'reldate'    => date('j-F-Y'),
-		'reltime'    => date('H:i'),
-		'reltz'      => 'GMT',
-		'credate'    => date('F Y'),
-		);
+	'main'       => $versionSubParts[0] . '.' . $versionSubParts[1],
+	'release'    => $versionSubParts[0] . '.' . $versionSubParts[1] . '.' . $versionSubParts[2],
+	'dev_devel'  => $versionSubParts[2] . (!empty($versionParts[1]) ? '-' . $versionParts[1] : '') . (!empty($versionParts[2]) ? '-' . $versionParts[2] : ''),
+	'dev_status' => $dev_status,
+	'build'      => '',
+	'reldate'    => date('j-F-Y'),
+	'reltime'    => date('H:i'),
+	'reltz'      => 'GMT',
+	'credate'    => date('F Y'),
+);
 
 // Version Codename.
 if (!empty($opts['c']))
@@ -155,16 +155,16 @@ if (!empty($opts['c']))
 
 // Prints version information.
 echo PHP_EOL;
-echo 'Version data:'. PHP_EOL;
+echo 'Version data:' . PHP_EOL;
 echo '- Main:' . PHP_TAB . PHP_TAB . PHP_TAB . $version['main'] . PHP_EOL;
 echo '- Release:' . PHP_TAB . PHP_TAB . $version['release'] . PHP_EOL;
-echo '- Full:'  . PHP_TAB . PHP_TAB . PHP_TAB . $version['main'] . '.' . $version['dev_devel'] . PHP_EOL;
+echo '- Full:' . PHP_TAB . PHP_TAB . PHP_TAB . $version['main'] . '.' . $version['dev_devel'] . PHP_EOL;
 echo '- Build:' . PHP_TAB . PHP_TAB . $version['build'] . PHP_EOL;
 echo '- Dev Level:' . PHP_TAB . PHP_TAB . $version['dev_devel'] . PHP_EOL;
 echo '- Dev Status:' . PHP_TAB . PHP_TAB . $version['dev_status'] . PHP_EOL;
 echo '- Release date:' . PHP_TAB . PHP_TAB . $version['reldate'] . PHP_EOL;
 echo '- Release time:' . PHP_TAB . PHP_TAB . $version['reltime'] . PHP_EOL;
-echo '- Release timezone:'  . PHP_TAB . $version['reltz'] . PHP_EOL;
+echo '- Release timezone:' . PHP_TAB . $version['reltz'] . PHP_EOL;
 echo '- Creation date:' . PHP_TAB . $version['credate'] . PHP_EOL;
 if (!empty($version['codename']))
 {

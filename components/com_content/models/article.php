@@ -26,45 +26,9 @@ class ContentModelArticle extends JModelItem
 	protected $_context = 'com_content.article';
 
 	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @since   1.6
-	 *
-	 * @return void
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication('site');
-
-		// Load state from the request.
-		$pk = $app->input->getInt('id');
-		$this->setState('article.id', $pk);
-
-		$offset = $app->input->getUInt('limitstart');
-		$this->setState('list.offset', $offset);
-
-		// Load the parameters.
-		$params = $app->getParams();
-		$this->setState('params', $params);
-
-		// TODO: Tune these values based on other permissions.
-		$user = JFactory::getUser();
-
-		if ((!$user->authorise('core.edit.state', 'com_content')) && (!$user->authorise('core.edit', 'com_content')))
-		{
-			$this->setState('filter.published', 1);
-			$this->setState('filter.archived', 2);
-		}
-
-		$this->setState('filter.language', JLanguageMultilang::isEnabled());
-	}
-
-	/**
 	 * Method to get article data.
 	 *
-	 * @param   integer  $pk  The id of the article.
+	 * @param   integer $pk The id of the article.
 	 *
 	 * @return  mixed  Menu item data object on success, false on failure.
 	 */
@@ -83,7 +47,7 @@ class ContentModelArticle extends JModelItem
 		{
 			try
 			{
-				$db = $this->getDbo();
+				$db    = $this->getDbo();
 				$query = $db->getQuery(true)
 					->select(
 						$this->getState(
@@ -122,14 +86,13 @@ class ContentModelArticle extends JModelItem
 				// Join on voting table
 				$query->select('ROUND(v.rating_sum / v.rating_count, 0) AS rating, v.rating_count as rating_count')
 					->join('LEFT', '#__content_rating AS v ON a.id = v.content_id')
-
 					->where('a.id = ' . (int) $pk);
 
 				if ((!$user->authorise('core.edit.state', 'com_content')) && (!$user->authorise('core.edit', 'com_content')))
 				{
 					// Filter by start and end dates.
 					$nullDate = $db->quote($db->getNullDate());
-					$date = JFactory::getDate();
+					$date     = JFactory::getDate();
 
 					$nowDate = $db->quote($date->toSql());
 
@@ -147,7 +110,7 @@ class ContentModelArticle extends JModelItem
 
 				// Filter by published state.
 				$published = $this->getState('filter.published');
-				$archived = $this->getState('filter.archived');
+				$archived  = $this->getState('filter.archived');
 
 				if (is_numeric($published))
 				{
@@ -184,7 +147,7 @@ class ContentModelArticle extends JModelItem
 				if (!$user->get('guest'))
 				{
 					$userId = $user->get('id');
-					$asset = 'com_content.article.' . $data->id;
+					$asset  = 'com_content.article.' . $data->id;
 
 					// Check general edit permission first.
 					if ($user->authorise('core.edit', $asset))
@@ -212,7 +175,7 @@ class ContentModelArticle extends JModelItem
 				else
 				{
 					// If no access filter is set, the layout takes some responsibility for display of limited information.
-					$user = JFactory::getUser();
+					$user   = JFactory::getUser();
 					$groups = $user->getAuthorisedViewLevels();
 
 					if ($data->catid == 0 || $data->category_access === null)
@@ -248,13 +211,13 @@ class ContentModelArticle extends JModelItem
 	/**
 	 * Increment the hit counter for the article.
 	 *
-	 * @param   integer  $pk  Optional primary key of the article to increment.
+	 * @param   integer $pk Optional primary key of the article to increment.
 	 *
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function hit($pk = 0)
 	{
-		$input = JFactory::getApplication()->input;
+		$input    = JFactory::getApplication()->input;
 		$hitcount = $input->getInt('hitcount', 1);
 
 		if ($hitcount)
@@ -272,8 +235,8 @@ class ContentModelArticle extends JModelItem
 	/**
 	 * Save user vote on article
 	 *
-	 * @param   integer  $pk    Joomla Article Id
-	 * @param   integer  $rate  Voting rate
+	 * @param   integer $pk   Joomla Article Id
+	 * @param   integer $rate Voting rate
 	 *
 	 * @return  boolean          Return true on success
 	 */
@@ -370,5 +333,41 @@ class ContentModelArticle extends JModelItem
 		JError::raiseWarning('SOME_ERROR_CODE', JText::sprintf('COM_CONTENT_INVALID_RATING', $rate), "JModelArticle::storeVote($rate)");
 
 		return false;
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @since   1.6
+	 *
+	 * @return void
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('site');
+
+		// Load state from the request.
+		$pk = $app->input->getInt('id');
+		$this->setState('article.id', $pk);
+
+		$offset = $app->input->getUInt('limitstart');
+		$this->setState('list.offset', $offset);
+
+		// Load the parameters.
+		$params = $app->getParams();
+		$this->setState('params', $params);
+
+		// TODO: Tune these values based on other permissions.
+		$user = JFactory::getUser();
+
+		if ((!$user->authorise('core.edit.state', 'com_content')) && (!$user->authorise('core.edit', 'com_content')))
+		{
+			$this->setState('filter.published', 1);
+			$this->setState('filter.archived', 2);
+		}
+
+		$this->setState('filter.language', JLanguageMultilang::isEnabled());
 	}
 }

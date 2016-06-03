@@ -13,6 +13,6 @@ $html = JHtml::_('icons.buttons', $buttons);
 ?>
 <?php if (!empty($html)): ?>
 	<div class="cpanel clearfix">
-		<?php echo $html;?>
+		<?php echo $html; ?>
 	</div>
-<?php endif;?>
+<?php endif; ?>

@@ -23,11 +23,11 @@ class JFilesystemWrapperFolder
 	/**
 	 * Helper wrapper method for copy
 	 *
-	 * @param   string   $src          The path to the source folder.
-	 * @param   string   $dest         The path to the destination folder.
-	 * @param   string   $path         An optional base path to prefix to the file names.
-	 * @param   boolean  $force        Force copy.
-	 * @param   boolean  $use_streams  Optionally force folder/file overwrites.
+	 * @param   string  $src         The path to the source folder.
+	 * @param   string  $dest        The path to the destination folder.
+	 * @param   string  $path        An optional base path to prefix to the file names.
+	 * @param   boolean $force       Force copy.
+	 * @param   boolean $use_streams Optionally force folder/file overwrites.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -43,8 +43,8 @@ class JFilesystemWrapperFolder
 	/**
 	 * Helper wrapper method for create
 	 *
-	 * @param   string   $path  A path to create from the base path.
-	 * @param   integer  $mode  Directory permissions to set for folders created. 0755 by default.
+	 * @param   string  $path A path to create from the base path.
+	 * @param   integer $mode Directory permissions to set for folders created. 0755 by default.
 	 *
 	 * @return  boolean  True if successful.
 	 *
@@ -59,7 +59,7 @@ class JFilesystemWrapperFolder
 	/**
 	 * Helper wrapper method for delete
 	 *
-	 * @param   string  $path  The path to the folder to delete.
+	 * @param   string $path The path to the folder to delete.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -75,10 +75,10 @@ class JFilesystemWrapperFolder
 	/**
 	 * Helper wrapper method for move
 	 *
-	 * @param   string   $src          The path to the source folder.
-	 * @param   string   $dest         The path to the destination folder.
-	 * @param   string   $path         An optional base path to prefix to the file names.
-	 * @param   boolean  $use_streams  Optionally use streams.
+	 * @param   string  $src         The path to the source folder.
+	 * @param   string  $dest        The path to the destination folder.
+	 * @param   string  $path        An optional base path to prefix to the file names.
+	 * @param   boolean $use_streams Optionally use streams.
 	 *
 	 * @return  mixed  Error message on false or boolean true on success.
 	 *
@@ -93,7 +93,7 @@ class JFilesystemWrapperFolder
 	/**
 	 * Helper wrapper method for exists
 	 *
-	 * @param   string  $path  Folder name relative to installation dir.
+	 * @param   string $path Folder name relative to installation dir.
 	 *
 	 * @return  boolean  True if path is a folder.
 	 *
@@ -108,13 +108,13 @@ class JFilesystemWrapperFolder
 	/**
 	 * Helper wrapper method for files
 	 *
-	 * @param   string   $path           The path of the folder to read.
-	 * @param   string   $filter         A filter for file names.
-	 * @param   mixed    $recurse        True to recursively search into sub-folders, or an integer to specify the maximum depth.
-	 * @param   boolean  $full           True to return the full path to the file.
-	 * @param   array    $exclude        Array with names of files which should not be shown in the result.
-	 * @param   array    $excludefilter  Array of filter to exclude.
-	 * @param   boolean  $naturalSort    False for asort, true for natsort.
+	 * @param   string  $path          The path of the folder to read.
+	 * @param   string  $filter        A filter for file names.
+	 * @param   mixed   $recurse       True to recursively search into sub-folders, or an integer to specify the maximum depth.
+	 * @param   boolean $full          True to return the full path to the file.
+	 * @param   array   $exclude       Array with names of files which should not be shown in the result.
+	 * @param   array   $excludefilter Array of filter to exclude.
+	 * @param   boolean $naturalSort   False for asort, true for natsort.
 	 *
 	 * @return  array  Files in the given folder.
 	 *
@@ -122,7 +122,7 @@ class JFilesystemWrapperFolder
 	 * @since   3.4
 	 */
 	public function files($path, $filter = '.', $recurse = false, $full = false, $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX'),
-		$excludefilter = array('^\..*', '.*~'), $naturalSort = false)
+	                      $excludefilter = array('^\..*', '.*~'), $naturalSort = false)
 	{
 		return JFolder::files($path, $filter, $recurse, $full, $exclude, $excludefilter, $naturalSort);
 	}
@@ -130,12 +130,12 @@ class JFilesystemWrapperFolder
 	/**
 	 * Helper wrapper method for folders
 	 *
-	 * @param   string   $path           The path of the folder to read.
-	 * @param   string   $filter         A filter for folder names.
-	 * @param   mixed    $recurse        True to recursively search into sub-folders, or an integer to specify the maximum depth.
-	 * @param   boolean  $full           True to return the full path to the folders.
-	 * @param   array    $exclude        Array with names of folders which should not be shown in the result.
-	 * @param   array    $excludefilter  Array with regular expressions matching folders which should not be shown in the result.
+	 * @param   string  $path          The path of the folder to read.
+	 * @param   string  $filter        A filter for folder names.
+	 * @param   mixed   $recurse       True to recursively search into sub-folders, or an integer to specify the maximum depth.
+	 * @param   boolean $full          True to return the full path to the folders.
+	 * @param   array   $exclude       Array with names of folders which should not be shown in the result.
+	 * @param   array   $excludefilter Array with regular expressions matching folders which should not be shown in the result.
 	 *
 	 * @return  array  Folders in the given folder.
 	 *
@@ -143,7 +143,7 @@ class JFilesystemWrapperFolder
 	 * @since   3.4
 	 */
 	public function folders($path, $filter = '.', $recurse = false, $full = false, $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX'),
-		$excludefilter = array('^\..*'))
+	                        $excludefilter = array('^\..*'))
 	{
 		return JFolder::folders($path, $filter, $recurse, $full, $exclude, $excludefilter);
 	}
@@ -151,11 +151,11 @@ class JFilesystemWrapperFolder
 	/**
 	 * Helper wrapper method for listFolderTree
 	 *
-	 * @param   string   $path      The path of the folder to read.
-	 * @param   string   $filter    A filter for folder names.
-	 * @param   integer  $maxLevel  The maximum number of levels to recursively read, defaults to three.
-	 * @param   integer  $level     The current level, optional.
-	 * @param   integer  $parent    Unique identifier of the parent folder, if any.
+	 * @param   string  $path     The path of the folder to read.
+	 * @param   string  $filter   A filter for folder names.
+	 * @param   integer $maxLevel The maximum number of levels to recursively read, defaults to three.
+	 * @param   integer $level    The current level, optional.
+	 * @param   integer $parent   Unique identifier of the parent folder, if any.
 	 *
 	 * @return  array  Folders in the given folder.
 	 *
@@ -170,7 +170,7 @@ class JFilesystemWrapperFolder
 	/**
 	 * Helper wrapper method for makeSafe
 	 *
-	 * @param   string  $path  The full path to sanitise.
+	 * @param   string $path The full path to sanitise.
 	 *
 	 * @return  string  The sanitised string
 	 *

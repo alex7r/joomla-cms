@@ -19,9 +19,9 @@ class ContentController extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 * Recognized key values include 'name', 'default_task', 'model_path', and
-	 * 'view_path' (this list is not meant to be comprehensive).
+	 * @param   array $config An optional associative array of configuration settings.
+	 *                        Recognized key values include 'name', 'default_task', 'model_path', and
+	 *                        'view_path' (this list is not meant to be comprehensive).
 	 *
 	 * @since   12.2
 	 */
@@ -47,8 +47,8 @@ class ContentController extends JControllerLegacy
 	/**
 	 * Method to display a view.
 	 *
-	 * @param   boolean  $cachable   If true, the view output will be cached.
-	 * @param   boolean  $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean $cachable  If true, the view output will be cached.
+	 * @param   boolean $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  JController  This object to support chaining.
 	 *
@@ -71,28 +71,29 @@ class ContentController extends JControllerLegacy
 
 		if ($user->get('id')
 			|| ($this->input->getMethod() == 'POST'
-			&& (($vName == 'category' && $this->input->get('layout') != 'blog') || $vName == 'archive' )))
+				&& (($vName == 'category' && $this->input->get('layout') != 'blog') || $vName == 'archive'))
+		)
 		{
 			$cachable = false;
 		}
 
 		$safeurlparams = array(
-			'catid' => 'INT',
-			'id' => 'INT',
-			'cid' => 'ARRAY',
-			'year' => 'INT',
-			'month' => 'INT',
-			'limit' => 'UINT',
-			'limitstart' => 'UINT',
-			'showall' => 'INT',
-			'return' => 'BASE64',
-			'filter' => 'STRING',
-			'filter_order' => 'CMD',
+			'catid'            => 'INT',
+			'id'               => 'INT',
+			'cid'              => 'ARRAY',
+			'year'             => 'INT',
+			'month'            => 'INT',
+			'limit'            => 'UINT',
+			'limitstart'       => 'UINT',
+			'showall'          => 'INT',
+			'return'           => 'BASE64',
+			'filter'           => 'STRING',
+			'filter_order'     => 'CMD',
 			'filter_order_Dir' => 'CMD',
-			'filter-search' => 'STRING',
-			'print' => 'BOOLEAN',
-			'lang' => 'CMD',
-			'Itemid' => 'INT');
+			'filter-search'    => 'STRING',
+			'print'            => 'BOOLEAN',
+			'lang'             => 'CMD',
+			'Itemid'           => 'INT');
 
 		// Check for edit form.
 		if ($vName == 'form' && !$this->checkEditId('com_content.edit.article', $id))

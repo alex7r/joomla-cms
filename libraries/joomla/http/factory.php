@@ -21,8 +21,8 @@ class JHttpFactory
 	/**
 	 * method to receive Http instance.
 	 *
-	 * @param   Registry  $options   Client options object.
-	 * @param   mixed     $adapters  Adapter (string) or queue of adapters (array) to use for communication.
+	 * @param   Registry $options  Client options object.
+	 * @param   mixed    $adapters Adapter (string) or queue of adapters (array) to use for communication.
 	 *
 	 * @return  JHttp      Joomla Http class
 	 *
@@ -58,8 +58,8 @@ class JHttpFactory
 	/**
 	 * Finds an available http transport object for communication
 	 *
-	 * @param   Registry  $options  Option for creating http transport object
-	 * @param   mixed     $default  Adapter (string) or queue of adapters (array) to use
+	 * @param   Registry $options Option for creating http transport object
+	 * @param   mixed    $default Adapter (string) or queue of adapters (array) to use
 	 *
 	 * @return  JHttpTransport Interface sub-class
 	 *
@@ -105,7 +105,7 @@ class JHttpFactory
 	 */
 	public static function getHttpTransports()
 	{
-		$names = array();
+		$names    = array();
 		$iterator = new DirectoryIterator(__DIR__ . '/transport');
 
 		/* @type  $file  DirectoryIterator */

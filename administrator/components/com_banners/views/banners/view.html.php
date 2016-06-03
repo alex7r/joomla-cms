@@ -47,7 +47,7 @@ class BannersViewBanners extends JViewLegacy
 	/**
 	 * Method to display the view.
 	 *
-	 * @param   string  $tpl  A template file to load. [optional]
+	 * @param   string $tpl A template file to load. [optional]
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -138,7 +138,8 @@ class BannersViewBanners extends JViewLegacy
 		// Add a batch button
 		if ($user->authorise('core.create', 'com_banners')
 			&& $user->authorise('core.edit', 'com_banners')
-			&& $user->authorise('core.edit.state', 'com_banners'))
+			&& $user->authorise('core.edit.state', 'com_banners')
+		)
 		{
 			$title = JText::_('JTOOLBAR_BATCH');
 
@@ -176,15 +177,15 @@ class BannersViewBanners extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'ordering' => JText::_('JGRID_HEADING_ORDERING'),
-			'a.state' => JText::_('JSTATUS'),
-			'a.name' => JText::_('COM_BANNERS_HEADING_NAME'),
-			'a.sticky' => JText::_('COM_BANNERS_HEADING_STICKY'),
+			'ordering'    => JText::_('JGRID_HEADING_ORDERING'),
+			'a.state'     => JText::_('JSTATUS'),
+			'a.name'      => JText::_('COM_BANNERS_HEADING_NAME'),
+			'a.sticky'    => JText::_('COM_BANNERS_HEADING_STICKY'),
 			'client_name' => JText::_('COM_BANNERS_HEADING_CLIENT'),
-			'impmade' => JText::_('COM_BANNERS_HEADING_IMPRESSIONS'),
-			'clicks' => JText::_('COM_BANNERS_HEADING_CLICKS'),
-			'a.language' => JText::_('JGRID_HEADING_LANGUAGE'),
-			'a.id' => JText::_('JGRID_HEADING_ID')
+			'impmade'     => JText::_('COM_BANNERS_HEADING_IMPRESSIONS'),
+			'clicks'      => JText::_('COM_BANNERS_HEADING_CLICKS'),
+			'a.language'  => JText::_('JGRID_HEADING_LANGUAGE'),
+			'a.id'        => JText::_('JGRID_HEADING_ID')
 		);
 	}
 }

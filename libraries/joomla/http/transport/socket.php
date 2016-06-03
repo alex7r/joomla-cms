@@ -33,7 +33,7 @@ class JHttpTransportSocket implements JHttpTransport
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry  $options  Client options object.
+	 * @param   Registry $options Client options object.
 	 *
 	 * @since   11.3
 	 * @throws  RuntimeException
@@ -49,14 +49,26 @@ class JHttpTransportSocket implements JHttpTransport
 	}
 
 	/**
+	 * Method to check if http transport socket available for use
+	 *
+	 * @return  boolean   True if available else false
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		return function_exists('fsockopen') && is_callable('fsockopen');
+	}
+
+	/**
 	 * Send a request to the server and return a JHttpResponse object with the response.
 	 *
-	 * @param   string   $method     The HTTP method for sending the request.
-	 * @param   JUri     $uri        The URI to the resource to request.
-	 * @param   mixed    $data       Either an associative array or a string to be sent with the request.
-	 * @param   array    $headers    An array of request headers to send with the request.
-	 * @param   integer  $timeout    Read timeout in seconds.
-	 * @param   string   $userAgent  The optional user agent string to send with the request.
+	 * @param   string  $method    The HTTP method for sending the request.
+	 * @param   JUri    $uri       The URI to the resource to request.
+	 * @param   mixed   $data      Either an associative array or a string to be sent with the request.
+	 * @param   array   $headers   An array of request headers to send with the request.
+	 * @param   integer $timeout   Read timeout in seconds.
+	 * @param   string  $userAgent The optional user agent string to send with the request.
 	 *
 	 * @return  JHttpResponse
 	 *
@@ -105,7 +117,7 @@ class JHttpTransportSocket implements JHttpTransport
 		}
 
 		// Build the request payload.
-		$request = array();
+		$request   = array();
 		$request[] = strtoupper($method) . ' ' . ((empty($path)) ? '/' : $path) . ' HTTP/1.0';
 		$request[] = 'Host: ' . $uri->getHost();
 
@@ -166,64 +178,10 @@ class JHttpTransportSocket implements JHttpTransport
 	}
 
 	/**
-	 * Method to get a response object from a server response.
-	 *
-	 * @param   string  $content  The complete server response, including headers.
-	 *
-	 * @return  JHttpResponse
-	 *
-	 * @since   11.3
-	 * @throws  UnexpectedValueException
-	 */
-	protected function getResponse($content)
-	{
-		// Create the response object.
-		$return = new JHttpResponse;
-
-		if (empty($content))
-		{
-			throw new UnexpectedValueException('No content in response.');
-		}
-
-		// Split the response into headers and body.
-		$response = explode("\r\n\r\n", $content, 2);
-
-		// Get the response headers as an array.
-		$headers = explode("\r\n", $response[0]);
-
-		// Set the body for the response.
-		$return->body = empty($response[1]) ? '' : $response[1];
-
-		// Get the response code from the first offset of the response headers.
-		preg_match('/[0-9]{3}/', array_shift($headers), $matches);
-		$code = $matches[0];
-
-		if (is_numeric($code))
-		{
-			$return->code = (int) $code;
-		}
-
-		// No valid response code was detected.
-		else
-		{
-			throw new UnexpectedValueException('No HTTP response code found.');
-		}
-
-		// Add the response headers to the response object.
-		foreach ($headers as $header)
-		{
-			$pos = strpos($header, ':');
-			$return->headers[trim(substr($header, 0, $pos))] = trim(substr($header, ($pos + 1)));
-		}
-
-		return $return;
-	}
-
-	/**
 	 * Method to connect to a server and get the resource.
 	 *
-	 * @param   JUri     $uri      The URI to connect with.
-	 * @param   integer  $timeout  Read timeout in seconds.
+	 * @param   JUri    $uri     The URI to connect with.
+	 * @param   integer $timeout Read timeout in seconds.
 	 *
 	 * @return  resource  Socket connection resource.
 	 *
@@ -233,7 +191,7 @@ class JHttpTransportSocket implements JHttpTransport
 	protected function connect(JUri $uri, $timeout = null)
 	{
 		$errno = null;
-		$err = null;
+		$err   = null;
 
 		// Get the host from the uri.
 		$host = ($uri->isSsl()) ? 'ssl://' . $uri->getHost() : $uri->getHost();
@@ -318,14 +276,56 @@ class JHttpTransportSocket implements JHttpTransport
 	}
 
 	/**
-	 * Method to check if http transport socket available for use
+	 * Method to get a response object from a server response.
 	 *
-	 * @return  boolean   True if available else false
+	 * @param   string $content The complete server response, including headers.
 	 *
-	 * @since   12.1
+	 * @return  JHttpResponse
+	 *
+	 * @since   11.3
+	 * @throws  UnexpectedValueException
 	 */
-	public static function isSupported()
+	protected function getResponse($content)
 	{
-		return function_exists('fsockopen') && is_callable('fsockopen');
+		// Create the response object.
+		$return = new JHttpResponse;
+
+		if (empty($content))
+		{
+			throw new UnexpectedValueException('No content in response.');
+		}
+
+		// Split the response into headers and body.
+		$response = explode("\r\n\r\n", $content, 2);
+
+		// Get the response headers as an array.
+		$headers = explode("\r\n", $response[0]);
+
+		// Set the body for the response.
+		$return->body = empty($response[1]) ? '' : $response[1];
+
+		// Get the response code from the first offset of the response headers.
+		preg_match('/[0-9]{3}/', array_shift($headers), $matches);
+		$code = $matches[0];
+
+		if (is_numeric($code))
+		{
+			$return->code = (int) $code;
+		}
+
+		// No valid response code was detected.
+		else
+		{
+			throw new UnexpectedValueException('No HTTP response code found.');
+		}
+
+		// Add the response headers to the response object.
+		foreach ($headers as $header)
+		{
+			$pos                                             = strpos($header, ':');
+			$return->headers[trim(substr($header, 0, $pos))] = trim(substr($header, ($pos + 1)));
+		}
+
+		return $return;
 	}
 }

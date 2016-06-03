@@ -19,7 +19,7 @@ class RedirectModelLinks extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @since   1.6
 	 */
@@ -42,6 +42,7 @@ class RedirectModelLinks extends JModelList
 
 		parent::__construct($config);
 	}
+
 	/**
 	 * Removes all of the unpublished redirects from the table.
 	 *
@@ -72,12 +73,71 @@ class RedirectModelLinks extends JModelList
 	}
 
 	/**
+	 * Add the entered URLs into the database
+	 *
+	 * @param   array $batch_urls Array of URLs to enter into the database
+	 *
+	 * @return bool
+	 */
+	public function batchProcess($batch_urls)
+	{
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$columns = array(
+			$db->quoteName('old_url'),
+			$db->quoteName('new_url'),
+			$db->quoteName('referer'),
+			$db->quoteName('comment'),
+			$db->quoteName('hits'),
+			$db->quoteName('published'),
+			$db->quoteName('created_date')
+		);
+
+		$query->columns($columns);
+
+		foreach ($batch_urls as $batch_url)
+		{
+			// Source URLs need to have the correct URL format to work properly
+			if (strpos($batch_url[0], JUri::root()) === false)
+			{
+				$old_url = JUri::root() . $batch_url[0];
+			}
+			else
+			{
+				$old_url = $batch_url[0];
+			}
+
+			// Destination URL can also be an external URL
+			if (!empty($batch_url[1]))
+			{
+				$new_url = $batch_url[1];
+			}
+			else
+			{
+				$new_url = '';
+			}
+
+			$query->insert($db->quoteName('#__redirect_links'), false)
+				->values(
+					$db->quote($old_url) . ', ' . $db->quote($new_url) . ' ,' . $db->quote('') . ', ' . $db->quote('') . ', 0, 0, ' .
+					$db->quote(JFactory::getDate()->toSql())
+				);
+		}
+
+		$db->setQuery($query);
+		$db->execute();
+
+		return true;
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -105,7 +165,7 @@ class RedirectModelLinks extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string  $id  A prefix for the store id.
+	 * @param   string $id A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -131,7 +191,7 @@ class RedirectModelLinks extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the required fields from the table.
@@ -186,64 +246,5 @@ class RedirectModelLinks extends JModelList
 		$query->order($db->escape($this->getState('list.ordering', 'a.old_url')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 
 		return $query;
-	}
-
-	/**
-	 * Add the entered URLs into the database
-	 *
-	 * @param   array  $batch_urls  Array of URLs to enter into the database
-	 *
-	 * @return bool
-	 */
-	public function batchProcess($batch_urls)
-	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
-		$columns = array(
-			$db->quoteName('old_url'),
-			$db->quoteName('new_url'),
-			$db->quoteName('referer'),
-			$db->quoteName('comment'),
-			$db->quoteName('hits'),
-			$db->quoteName('published'),
-			$db->quoteName('created_date')
-		);
-
-		$query->columns($columns);
-
-		foreach ($batch_urls as $batch_url)
-		{
-			// Source URLs need to have the correct URL format to work properly
-			if (strpos($batch_url[0], JUri::root()) === false)
-			{
-				$old_url = JUri::root() . $batch_url[0];
-			}
-			else
-			{
-				$old_url = $batch_url[0];
-			}
-
-			// Destination URL can also be an external URL
-			if (!empty($batch_url[1]))
-			{
-				$new_url = $batch_url[1];
-			}
-			else
-			{
-				$new_url = '';
-			}
-
-			$query->insert($db->quoteName('#__redirect_links'), false)
-				->values(
-					$db->quote($old_url) . ', ' . $db->quote($new_url) . ' ,' . $db->quote('') . ', ' . $db->quote('') . ', 0, 0, ' .
-					$db->quote(JFactory::getDate()->toSql())
-				);
-		}
-
-		$db->setQuery($query);
-		$db->execute();
-
-		return true;
 	}
 }

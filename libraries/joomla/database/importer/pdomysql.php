@@ -19,43 +19,34 @@ defined('JPATH_PLATFORM') or die;
 class JDatabaseImporterPdomysql extends JDatabaseImporter
 {
 	/**
-	 * Get the SQL syntax to add a column.
+	 * Checks if all data and options are in order prior to exporting.
 	 *
-	 * @param   string            $table  The table name.
-	 * @param   SimpleXMLElement  $field  The XML field definition.
-	 *
-	 * @return  string
+	 * @return  JDatabaseImporterPdomysql  Method supports chaining.
 	 *
 	 * @since   3.4
+	 * @throws  Exception if an error is encountered.
 	 */
-	protected function getAddColumnSql($table, SimpleXMLElement $field)
+	public function check()
 	{
-		$sql = 'ALTER TABLE ' . $this->db->quoteName($table) . ' ADD COLUMN ' . $this->getColumnSql($field);
+		// Check if the db connector has been set.
+		if (!($this->db instanceof JDatabaseDriverPdomysql))
+		{
+			throw new Exception('JPLATFORM_ERROR_DATABASE_CONNECTOR_WRONG_TYPE');
+		}
 
-		return $sql;
-	}
+		// Check if the tables have been specified.
+		if (empty($this->from))
+		{
+			throw new Exception('JPLATFORM_ERROR_NO_TABLES_SPECIFIED');
+		}
 
-	/**
-	 * Get the SQL syntax to add a key.
-	 *
-	 * @param   string  $table  The table name.
-	 * @param   array   $keys   An array of the fields pertaining to this key.
-	 *
-	 * @return  string
-	 *
-	 * @since   3.4
-	 */
-	protected function getAddKeySql($table, $keys)
-	{
-		$sql = 'ALTER TABLE ' . $this->db->quoteName($table) . ' ADD ' . $this->getKeySql($keys);
-
-		return $sql;
+		return $this;
 	}
 
 	/**
 	 * Get alters for table if there is a difference.
 	 *
-	 * @param   SimpleXMLElement  $structure  The XML structure pf the table.
+	 * @param   SimpleXMLElement $structure The XML structure pf the table.
 	 *
 	 * @return  array
 	 *
@@ -205,8 +196,8 @@ class JDatabaseImporterPdomysql extends JDatabaseImporter
 	/**
 	 * Get the syntax to alter a column.
 	 *
-	 * @param   string            $table  The name of the database table to alter.
-	 * @param   SimpleXMLElement  $field  The XML definition for the field.
+	 * @param   string           $table The name of the database table to alter.
+	 * @param   SimpleXMLElement $field The XML definition for the field.
 	 *
 	 * @return  string
 	 *
@@ -223,7 +214,7 @@ class JDatabaseImporterPdomysql extends JDatabaseImporter
 	/**
 	 * Get the SQL syntax for a single column that would be included in a table create or alter statement.
 	 *
-	 * @param   SimpleXMLElement  $field  The XML field definition.
+	 * @param   SimpleXMLElement $field The XML field definition.
 	 *
 	 * @return  string
 	 *
@@ -277,10 +268,27 @@ class JDatabaseImporterPdomysql extends JDatabaseImporter
 	}
 
 	/**
+	 * Get the SQL syntax to add a column.
+	 *
+	 * @param   string           $table The table name.
+	 * @param   SimpleXMLElement $field The XML field definition.
+	 *
+	 * @return  string
+	 *
+	 * @since   3.4
+	 */
+	protected function getAddColumnSql($table, SimpleXMLElement $field)
+	{
+		$sql = 'ALTER TABLE ' . $this->db->quoteName($table) . ' ADD COLUMN ' . $this->getColumnSql($field);
+
+		return $sql;
+	}
+
+	/**
 	 * Get the SQL syntax to drop a column.
 	 *
-	 * @param   string  $table  The table name.
-	 * @param   string  $name   The name of the field to drop.
+	 * @param   string $table The table name.
+	 * @param   string $name  The name of the field to drop.
 	 *
 	 * @return  string
 	 *
@@ -294,42 +302,9 @@ class JDatabaseImporterPdomysql extends JDatabaseImporter
 	}
 
 	/**
-	 * Get the SQL syntax to drop a key.
-	 *
-	 * @param   string  $table  The table name.
-	 * @param   string  $name   The name of the key to drop.
-	 *
-	 * @return  string
-	 *
-	 * @since   3.4
-	 */
-	protected function getDropKeySql($table, $name)
-	{
-		$sql = 'ALTER TABLE ' . $this->db->quoteName($table) . ' DROP KEY ' . $this->db->quoteName($name);
-
-		return $sql;
-	}
-
-	/**
-	 * Get the SQL syntax to drop a key.
-	 *
-	 * @param   string  $table  The table name.
-	 *
-	 * @return  string
-	 *
-	 * @since   3.4
-	 */
-	protected function getDropPrimaryKeySql($table)
-	{
-		$sql = 'ALTER TABLE ' . $this->db->quoteName($table) . ' DROP PRIMARY KEY';
-
-		return $sql;
-	}
-
-	/**
 	 * Get the details list of keys for a table.
 	 *
-	 * @param   array  $keys  An array of objects that comprise the keys for the table.
+	 * @param   array $keys An array of objects that comprise the keys for the table.
 	 *
 	 * @return  array  The lookup array. array({key name} => array(object, ...))
 	 *
@@ -364,9 +339,43 @@ class JDatabaseImporterPdomysql extends JDatabaseImporter
 	}
 
 	/**
+	 * Get the SQL syntax to drop a key.
+	 *
+	 * @param   string $table The table name.
+	 * @param   string $name  The name of the key to drop.
+	 *
+	 * @return  string
+	 *
+	 * @since   3.4
+	 */
+	protected function getDropKeySql($table, $name)
+	{
+		$sql = 'ALTER TABLE ' . $this->db->quoteName($table) . ' DROP KEY ' . $this->db->quoteName($name);
+
+		return $sql;
+	}
+
+	/**
+	 * Get the SQL syntax to add a key.
+	 *
+	 * @param   string $table The table name.
+	 * @param   array  $keys  An array of the fields pertaining to this key.
+	 *
+	 * @return  string
+	 *
+	 * @since   3.4
+	 */
+	protected function getAddKeySql($table, $keys)
+	{
+		$sql = 'ALTER TABLE ' . $this->db->quoteName($table) . ' ADD ' . $this->getKeySql($keys);
+
+		return $sql;
+	}
+
+	/**
 	 * Get the SQL syntax for a key.
 	 *
-	 * @param   array  $columns  An array of SimpleXMLElement objects comprising the key.
+	 * @param   array $columns An array of SimpleXMLElement objects comprising the key.
 	 *
 	 * @return  string
 	 *
@@ -411,27 +420,18 @@ class JDatabaseImporterPdomysql extends JDatabaseImporter
 	}
 
 	/**
-	 * Checks if all data and options are in order prior to exporting.
+	 * Get the SQL syntax to drop a key.
 	 *
-	 * @return  JDatabaseImporterPdomysql  Method supports chaining.
+	 * @param   string $table The table name.
+	 *
+	 * @return  string
 	 *
 	 * @since   3.4
-	 * @throws  Exception if an error is encountered.
 	 */
-	public function check()
+	protected function getDropPrimaryKeySql($table)
 	{
-		// Check if the db connector has been set.
-		if (!($this->db instanceof JDatabaseDriverPdomysql))
-		{
-			throw new Exception('JPLATFORM_ERROR_DATABASE_CONNECTOR_WRONG_TYPE');
-		}
+		$sql = 'ALTER TABLE ' . $this->db->quoteName($table) . ' DROP PRIMARY KEY';
 
-		// Check if the tables have been specified.
-		if (empty($this->from))
-		{
-			throw new Exception('JPLATFORM_ERROR_NO_TABLES_SPECIFIED');
-		}
-
-		return $this;
+		return $sql;
 	}
 }

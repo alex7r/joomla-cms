@@ -89,47 +89,12 @@ class JTwitterFriendsTest extends TestCase
 			}}}';
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
+	 * Provides test data for request format detection.
 	 *
-	 * @access protected
+	 * @return array
 	 *
-	 * @return void
+	 * @since 12.3
 	 */
-	protected function setUp()
-	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$key = "app_key";
-		$secret = "app_secret";
-		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
-
-		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
-
-		$this->options = new JRegistry;
-		$this->input = new JInput;
-		$this->client = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
-		$this->oauth = new JTwitterOAuth($this->options, $this->client, $this->input);
-		$this->oauth->setToken($access_token);
-
-		$this->object = new JTwitterFriends($this->options, $this->client, $this->oauth);
-
-		$this->options->set('consumer_key', $key);
-		$this->options->set('consumer_secret', $secret);
-		$this->options->set('callback', $my_url);
-		$this->options->set('sendheaders', true);
-	}
-
-	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
 	public function seedUser()
 	{
 		// User ID or screen name
@@ -137,37 +102,37 @@ class JTwitterFriendsTest extends TestCase
 			array(234654235457),
 			array('testUser'),
 			array(null)
-			);
+		);
 	}
 
 	/**
 	 * Tests the getFriendIds method
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
-	 * @since   12.3
+	 * @since         12.3
 	 */
 	public function testGetFriendIds($user)
 	{
-		$cursor = 123;
+		$cursor     = 123;
 		$string_ids = true;
-		$count = 5;
+		$count      = 5;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->friendsRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "friends"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -186,16 +151,16 @@ class JTwitterFriendsTest extends TestCase
 			$this->object->getFriendIds($user, $cursor, $string_ids, $count);
 		}
 
-		$data['cursor'] = $cursor;
+		$data['cursor']        = $cursor;
 		$data['stringify_ids'] = $string_ids;
-		$data['count'] = $count;
+		$data['count']         = $count;
 
 		$path = $this->object->fetchUrl('/friends/ids.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getFriendIds($user, $cursor, $string_ids, $count),
@@ -206,32 +171,32 @@ class JTwitterFriendsTest extends TestCase
 	/**
 	 * Tests the getFriendIds method - failure
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
-	 * @since   12.3
+	 * @since         12.3
 	 * @expectedException  DomainException
 	 */
 	public function testGetFriendIdsFailure($user)
 	{
-		$cursor = 123;
+		$cursor     = 123;
 		$string_ids = true;
-		$count = 5;
+		$count      = 5;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->friendsRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "friends"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -250,27 +215,27 @@ class JTwitterFriendsTest extends TestCase
 			$this->object->getFriendIds($user, $cursor, $string_ids, $count);
 		}
 
-		$data['cursor'] = $cursor;
+		$data['cursor']        = $cursor;
 		$data['stringify_ids'] = $string_ids;
-		$data['count'] = $count;
+		$data['count']         = $count;
 
 		$path = $this->object->fetchUrl('/friends/ids.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getFriendIds($user, $cursor, $string_ids, $count);
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 12.3
+	 */
 	public function seedFriendshipDetails()
 	{
 		// User IDs or screen names
@@ -281,34 +246,34 @@ class JTwitterFriendsTest extends TestCase
 			array('testUser', 'userTest'),
 			array('testUser', null),
 			array(null, 'userTest')
-			);
+		);
 	}
 
 	/**
 	 * Tests the getFriendshipDetails method
 	 *
-	 * @param   mixed  $user_a  Either an integer containing the user ID or a string containing the screen name of the first user.
-	 * @param   mixed  $user_b  Either an integer containing the user ID or a string containing the screen name of the second user.
+	 * @param   mixed $user_a Either an integer containing the user ID or a string containing the screen name of the first user.
+	 * @param   mixed $user_b Either an integer containing the user ID or a string containing the screen name of the second user.
 	 *
 	 * @dataProvider seedFriendshipDetails
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 */
 	public function testGetFriendshipDetails($user_a, $user_b)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->friendshipsRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "friendships"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -344,9 +309,9 @@ class JTwitterFriendsTest extends TestCase
 		$path = $this->object->fetchUrl('/friendships/show.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getFriendshipDetails($user_a, $user_b),
@@ -357,29 +322,29 @@ class JTwitterFriendsTest extends TestCase
 	/**
 	 * Tests the getFriendshipDetails method - failure
 	 *
-	 * @param   mixed  $user_a  Either an integer containing the user ID or a string containing the screen name of the first user.
-	 * @param   mixed  $user_b  Either an integer containing the user ID or a string containing the screen name of the second user.
+	 * @param   mixed $user_a Either an integer containing the user ID or a string containing the screen name of the first user.
+	 * @param   mixed $user_b Either an integer containing the user ID or a string containing the screen name of the second user.
 	 *
 	 * @dataProvider seedFriendshipDetails
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @expectedException  DomainException
 	 */
 	public function testGetFriendshipDetailsFailure($user_a, $user_b)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->friendshipsRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "friendships"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -415,9 +380,9 @@ class JTwitterFriendsTest extends TestCase
 		$path = $this->object->fetchUrl('/friendships/show.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getFriendshipDetails($user_a, $user_b);
 	}
@@ -425,31 +390,31 @@ class JTwitterFriendsTest extends TestCase
 	/**
 	 * Tests the getFollowerIds method
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
-	 * @since   12.3
+	 * @since         12.3
 	 */
 	public function testGetFollowerIds($user)
 	{
-		$cursor = 123;
+		$cursor     = 123;
 		$string_ids = true;
-		$count = 5;
+		$count      = 5;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->followersRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "followers"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -468,16 +433,16 @@ class JTwitterFriendsTest extends TestCase
 			$this->object->getFollowerIds($user, $cursor, $string_ids, $count);
 		}
 
-		$data['cursor'] = $cursor;
+		$data['cursor']        = $cursor;
 		$data['stringify_ids'] = $string_ids;
-		$data['count'] = $count;
+		$data['count']         = $count;
 
 		$path = $this->object->fetchUrl('/followers/ids.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getFollowerIds($user, $cursor, $string_ids, $count),
@@ -488,32 +453,32 @@ class JTwitterFriendsTest extends TestCase
 	/**
 	 * Tests the getFollowerIds method - failure
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedUser
-	 * @since   12.3
+	 * @since         12.3
 	 * @expectedException  DomainException
 	 */
 	public function testGetFollowerIdsFailure($user)
 	{
-		$cursor = 123;
+		$cursor     = 123;
 		$string_ids = true;
-		$count = 5;
+		$count      = 5;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->followersRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "followers"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -532,16 +497,16 @@ class JTwitterFriendsTest extends TestCase
 			$this->object->getFollowerIds($user, $cursor, $string_ids, $count);
 		}
 
-		$data['cursor'] = $cursor;
+		$data['cursor']        = $cursor;
 		$data['stringify_ids'] = $string_ids;
-		$data['count'] = $count;
+		$data['count']         = $count;
 
 		$path = $this->object->fetchUrl('/followers/ids.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getFollowerIds($user, $cursor, $string_ids, $count);
 	}
@@ -555,33 +520,33 @@ class JTwitterFriendsTest extends TestCase
 	 */
 	public function testGetFriendshipsIncoming()
 	{
-		$cursor = 1234;
+		$cursor     = 1234;
 		$string_ids = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->friendshipsRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "friendships"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$data['cursor'] = $cursor;
+		$data['cursor']        = $cursor;
 		$data['stringify_ids'] = $string_ids;
 
 		$path = $this->object->fetchUrl('/friendships/incoming.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getFriendshipsIncoming($cursor, $string_ids),
@@ -599,33 +564,33 @@ class JTwitterFriendsTest extends TestCase
 	 */
 	public function testGetFriendshipsIncomingFailure()
 	{
-		$cursor = 1243;
+		$cursor     = 1243;
 		$string_ids = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->friendshipsRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "friendships"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$data['cursor'] = $cursor;
+		$data['cursor']        = $cursor;
 		$data['stringify_ids'] = $string_ids;
 
 		$path = $this->object->fetchUrl('/friendships/incoming.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getFriendshipsIncoming($cursor, $string_ids);
 	}
@@ -639,33 +604,33 @@ class JTwitterFriendsTest extends TestCase
 	 */
 	public function testGetFriendshipsOutgoing()
 	{
-		$cursor = 12344;
+		$cursor     = 12344;
 		$string_ids = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->friendshipsRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "friendships"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		$data['cursor'] = $cursor;
+		$data['cursor']        = $cursor;
 		$data['stringify_ids'] = $string_ids;
 
 		$path = $this->object->fetchUrl('/friendships/outgoing.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getFriendshipsOutgoing($cursor, $string_ids),
@@ -683,44 +648,44 @@ class JTwitterFriendsTest extends TestCase
 	 */
 	public function testGetFriendshipsOutgoingFailure()
 	{
-		$cursor = 1234;
+		$cursor     = 1234;
 		$string_ids = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->friendshipsRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "friendships"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
-		$data['cursor'] = $cursor;
+		$data['cursor']        = $cursor;
 		$data['stringify_ids'] = $string_ids;
 
 		$path = $this->object->fetchUrl('/friendships/outgoing.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getFriendshipsOutgoing($cursor, $string_ids);
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 12.3
+	 */
 	public function seedFriendship()
 	{
 		// User ID or screen name
@@ -728,25 +693,25 @@ class JTwitterFriendsTest extends TestCase
 			array('234654235457'),
 			array('testUser'),
 			array(null)
-			);
+		);
 	}
 
 	/**
 	 * Tests the follow method
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedFriendship
 	 *
-	 * @since   12.3
+	 * @since         12.3
 	 */
 	public function testFollow($user)
 	{
 		$follow = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -780,19 +745,19 @@ class JTwitterFriendsTest extends TestCase
 	/**
 	 * Tests the follow method - failure
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedFriendship
 	 *
-	 * @since   12.3
+	 * @since         12.3
 	 *
 	 * @expectedException  DomainException
 	 */
 	public function testFollowFailure($user)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -822,17 +787,17 @@ class JTwitterFriendsTest extends TestCase
 	/**
 	 * Tests the unfollow method
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedFriendship
 	 *
-	 * @since   12.3
+	 * @since         12.3
 	 */
 	public function testUnfollow($user)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -865,19 +830,19 @@ class JTwitterFriendsTest extends TestCase
 	/**
 	 * Tests the unfollow method - failure
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedFriendship
 	 *
-	 * @since   12.3
+	 * @since         12.3
 	 *
 	 * @expectedException  DomainException
 	 */
 	public function testUnfollowFailure($user)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -905,12 +870,12 @@ class JTwitterFriendsTest extends TestCase
 	}
 
 	/**
-	* Provides test data for request format detection.
-	*
-	* @return array
-	*
-	* @since 12.3
-	*/
+	 * Provides test data for request format detection.
+	 *
+	 * @return array
+	 *
+	 * @since 12.3
+	 */
 	public function seedFriendshipsLookup()
 	{
 		// User ID and screen name
@@ -920,34 +885,34 @@ class JTwitterFriendsTest extends TestCase
 			array('testUser', null),
 			array('testUser', '234654235457'),
 			array(null, null)
-			);
+		);
 	}
 
 	/**
 	 * Tests the getFriendshipsLookup method
 	 *
-	 * @param   string  $screen_name  A comma separated list of screen names, up to 100 are allowed in a single request.
-	 * @param   string  $id           A comma separated list of user IDs, up to 100 are allowed in a single request.
+	 * @param   string $screen_name A comma separated list of screen names, up to 100 are allowed in a single request.
+	 * @param   string $id          A comma separated list of user IDs, up to 100 are allowed in a single request.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedFriendshipsLookup
 	 */
 	public function testGetFriendshipsLookup($screen_name, $id)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->friendshipsRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "friendships"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -968,9 +933,9 @@ class JTwitterFriendsTest extends TestCase
 		$path = $this->oauth->toUrl('/friendships/lookup.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getFriendshipsLookup($screen_name, $id),
@@ -981,29 +946,29 @@ class JTwitterFriendsTest extends TestCase
 	/**
 	 * Tests the getFriendshipsLookup method - failure
 	 *
-	 * @param   string  $screen_name  A comma separated list of screen names, up to 100 are allowed in a single request.
-	 * @param   string  $id           A comma separated list of user IDs, up to 100 are allowed in a single request.
+	 * @param   string $screen_name A comma separated list of screen names, up to 100 are allowed in a single request.
+	 * @param   string $id          A comma separated list of user IDs, up to 100 are allowed in a single request.
 	 *
 	 * @return  void
 	 *
-	 * @since 12.3
+	 * @since        12.3
 	 * @dataProvider seedFriendshipsLookup
 	 * @expectedException  DomainException
 	 */
 	public function testGetFriendshipsLookupFailure($screen_name, $id)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->friendshipsRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "friendships"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -1024,9 +989,9 @@ class JTwitterFriendsTest extends TestCase
 		$path = $this->oauth->toUrl('/friendships/lookup.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getFriendshipsLookup($screen_name, $id);
 	}
@@ -1034,20 +999,20 @@ class JTwitterFriendsTest extends TestCase
 	/**
 	 * Tests the updateFriendship method
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedFriendship
 	 *
-	 * @since   12.3
+	 * @since         12.3
 	 */
 	public function testUpdateFriendship($user)
 	{
-		$device = true;
+		$device   = true;
 		$retweets = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -1066,7 +1031,7 @@ class JTwitterFriendsTest extends TestCase
 			$this->object->updateFriendship($user, $device, $retweets);
 		}
 
-		$data['device'] = $device;
+		$data['device']   = $device;
 		$data['retweets'] = $retweets;
 
 		$this->client->expects($this->once())
@@ -1083,19 +1048,19 @@ class JTwitterFriendsTest extends TestCase
 	/**
 	 * Tests the updateFriendship method - failure
 	 *
-	 * @param   mixed  $user  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $user Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  void
 	 *
 	 * @dataProvider  seedFriendship
 	 *
-	 * @since   12.3
+	 * @since         12.3
 	 *
 	 * @expectedException  DomainException
 	 */
 	public function testUpdateFriendshipFailure($user)
 	{
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -1133,18 +1098,18 @@ class JTwitterFriendsTest extends TestCase
 	{
 		$string_ids = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->friendshipsRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "friendships"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
@@ -1153,9 +1118,9 @@ class JTwitterFriendsTest extends TestCase
 		$path = $this->object->fetchUrl('/friendships/no_retweets/ids.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->assertThat(
 			$this->object->getFriendshipNoRetweetIds($string_ids),
@@ -1175,18 +1140,18 @@ class JTwitterFriendsTest extends TestCase
 	{
 		$string_ids = true;
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 200;
 		$returnData->body = $this->friendshipsRateLimit;
 
 		$path = $this->object->fetchUrl('/application/rate_limit_status.json', array("resources" => "friendships"));
 
 		$this->client->expects($this->at(0))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
-		$returnData = new stdClass;
+		$returnData       = new stdClass;
 		$returnData->code = 500;
 		$returnData->body = $this->errorString;
 
@@ -1195,10 +1160,45 @@ class JTwitterFriendsTest extends TestCase
 		$path = $this->object->fetchUrl('/friendships/no_retweets/ids.json', $data);
 
 		$this->client->expects($this->at(1))
-		->method('get')
-		->with($path)
-		->will($this->returnValue($returnData));
+			->method('get')
+			->with($path)
+			->will($this->returnValue($returnData));
 
 		$this->object->getFriendshipNoRetweetIds($string_ids);
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 *
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		$_SERVER['HTTP_HOST']       = 'example.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$key    = "app_key";
+		$secret = "app_secret";
+		$my_url = "http://127.0.0.1/gsoc/joomla-platform/twitter_test.php";
+
+		$access_token = array('key' => 'token_key', 'secret' => 'token_secret');
+
+		$this->options = new JRegistry;
+		$this->input   = new JInput;
+		$this->client  = $this->getMock('JHttp', array('get', 'post', 'delete', 'put'));
+		$this->oauth   = new JTwitterOAuth($this->options, $this->client, $this->input);
+		$this->oauth->setToken($access_token);
+
+		$this->object = new JTwitterFriends($this->options, $this->client, $this->oauth);
+
+		$this->options->set('consumer_key', $key);
+		$this->options->set('consumer_secret', $secret);
+		$this->options->set('callback', $my_url);
+		$this->options->set('sendheaders', true);
 	}
 }

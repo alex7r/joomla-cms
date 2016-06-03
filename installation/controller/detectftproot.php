@@ -48,7 +48,7 @@ class InstallationControllerDetectftproot extends JControllerBase
 		$return = $ftp->detectFtpRoot($vars);
 
 		// Build the response object
-		$r = new stdClass;
+		$r       = new stdClass;
 		$r->view = 'ftp';
 
 		// If we got a FTP root, add it to the response object

@@ -19,7 +19,7 @@ defined('JPATH_PLATFORM') or die;
  *
  * @since  3.3 (CMS)
  */
-class JGithubPackageRepositoriesStatistics  extends JGithubPackage
+class JGithubPackageRepositoriesStatistics extends JGithubPackage
 {
 	/**
 	 * Get contributors list with additions, deletions, and commit counts.
@@ -34,8 +34,8 @@ class JGithubPackageRepositoriesStatistics  extends JGithubPackage
 	 * d - Number of deletions
 	 * c - Number of commits
 	 *
-	 * @param   string  $owner  The owner of the repository.
-	 * @param   string  $repo   The repository name.
+	 * @param   string $owner The owner of the repository.
+	 * @param   string $repo  The repository name.
 	 *
 	 * @since   1.0
 	 *
@@ -51,13 +51,37 @@ class JGithubPackageRepositoriesStatistics  extends JGithubPackage
 	}
 
 	/**
+	 * Process the response and decode it.
+	 *
+	 * @param   JHttpResponse $response     The response.
+	 * @param   integer       $expectedCode The expected "good" code.
+	 *
+	 * @return  mixed
+	 *
+	 * @since   1.0
+	 * @throws  \DomainException
+	 */
+	protected function processResponse(JHttpResponse $response, $expectedCode = 200)
+	{
+		if (202 == $response->code)
+		{
+			throw new \DomainException(
+				'GitHub is building the statistics data. Please try again in a few moments.',
+				$response->code
+			);
+		}
+
+		return parent::processResponse($response, $expectedCode);
+	}
+
+	/**
 	 * Get the last year of commit activity data.
 	 *
 	 * Returns the last year of commit activity grouped by week.
 	 * The days array is a group of commits per day, starting on Sunday.
 	 *
-	 * @param   string  $owner  The owner of the repository.
-	 * @param   string  $repo   The repository name.
+	 * @param   string $owner The owner of the repository.
+	 * @param   string $repo  The repository name.
 	 *
 	 * @since   1.0
 	 *
@@ -77,8 +101,8 @@ class JGithubPackageRepositoriesStatistics  extends JGithubPackage
 	 *
 	 * Response returns a weekly aggregate of the number of additions and deletions pushed to a repository.
 	 *
-	 * @param   string  $owner  The owner of the repository.
-	 * @param   string  $repo   The repository name.
+	 * @param   string $owner The owner of the repository.
+	 * @param   string $repo  The repository name.
 	 *
 	 * @since   1.0
 	 *
@@ -102,8 +126,8 @@ class JGithubPackageRepositoriesStatistics  extends JGithubPackage
 	 *
 	 * The array order is oldest week (index 0) to most recent week.
 	 *
-	 * @param   string  $owner  The owner of the repository.
-	 * @param   string  $repo   The repository name.
+	 * @param   string $owner The owner of the repository.
+	 * @param   string $repo  The repository name.
 	 *
 	 * @since   1.0
 	 *
@@ -131,8 +155,8 @@ class JGithubPackageRepositoriesStatistics  extends JGithubPackage
 	 * For example, [2, 14, 25] indicates that there were 25 total commits, during the 2:00pm hour on Tuesdays.
 	 * All times are based on the time zone of individual commits.
 	 *
-	 * @param   string  $owner  The owner of the repository.
-	 * @param   string  $repo   The repository name.
+	 * @param   string $owner The owner of the repository.
+	 * @param   string $repo  The repository name.
 	 *
 	 * @since   1.0
 	 *
@@ -145,29 +169,5 @@ class JGithubPackageRepositoriesStatistics  extends JGithubPackage
 
 		// Send the request.
 		return $this->processResponse($this->client->get($this->fetchUrl($path)));
-	}
-
-	/**
-	 * Process the response and decode it.
-	 *
-	 * @param   JHttpResponse  $response      The response.
-	 * @param   integer        $expectedCode  The expected "good" code.
-	 *
-	 * @return  mixed
-	 *
-	 * @since   1.0
-	 * @throws  \DomainException
-	 */
-	protected function processResponse(JHttpResponse $response, $expectedCode = 200)
-	{
-		if (202 == $response->code)
-		{
-			throw new \DomainException(
-				'GitHub is building the statistics data. Please try again in a few moments.',
-				$response->code
-			);
-		}
-
-		return parent::processResponse($response, $expectedCode);
 	}
 }

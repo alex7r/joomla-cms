@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 
 $input = JFactory::getApplication()->input;
-$task = $input->get('task');
+$task  = $input->get('task');
 
 if ($task != 'login' && $task != 'logout')
 {

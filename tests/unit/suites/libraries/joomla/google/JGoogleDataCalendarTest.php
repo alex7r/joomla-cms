@@ -46,43 +46,9 @@ class JGoogleDataCalendarTest extends TestCase
 	protected $object;
 
 	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 * @return void
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$_SERVER['HTTP_HOST'] = 'mydomain.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
-
-		$this->options = new JRegistry;
-		$this->http = $this->getMock('JHttp', array('head', 'get', 'delete', 'trace', 'post', 'put', 'patch'), array($this->options));
-		$this->input = new JInput;
-		$this->oauth = new JOAuth2Client($this->options, $this->http, $this->input);
-		$this->auth = new JGoogleAuthOauth2($this->options, $this->oauth);
-		$this->object = new JGoogleDataCalendar($this->options, $this->auth);
-
-		$this->object->setOption('clientid', '01234567891011.apps.googleusercontent.com');
-		$this->object->setOption('clientsecret', 'jeDs8rKw_jDJW8MMf-ff8ejs');
-		$this->object->setOption('redirecturi', 'http://localhost/oauth');
-
-		$token['access_token'] = 'accessvalue';
-		$token['refresh_token'] = 'refreshvalue';
-		$token['created'] = time() - 1800;
-		$token['expires_in'] = 3600;
-		$this->oauth->setToken($token);
-	}
-
-	/**
 	 * Tests the auth method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testAuth()
@@ -93,7 +59,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the isauth method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testIsAuth()
@@ -104,7 +70,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the removeCalendar method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testRemoveCalendar()
@@ -117,7 +83,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the getCalendar method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetCalendar()
@@ -130,7 +96,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the addCalendar method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testAddCalendar()
@@ -143,7 +109,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the listCalendars method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testListCalendars()
@@ -156,7 +122,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the editCalendarSettings method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testEditCalendarSettings()
@@ -169,7 +135,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the clearCalendar method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testClearCalendar()
@@ -182,7 +148,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the deleteCalendar method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testDeleteCalendar()
@@ -195,7 +161,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the createCalendar method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testCreateCalendar()
@@ -208,7 +174,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the editCalendar method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testEditCalendar()
@@ -221,7 +187,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the deleteEvent method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testDeleteEvent()
@@ -234,7 +200,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the getEvent method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetEvent()
@@ -247,15 +213,15 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the createCalendar method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testCreateEvent()
 	{
 		$this->http->expects($this->exactly(9))->method('post')->will($this->returnCallback('jsonDataCalendarCallback'));
 		$timezone = new DateTimeZone('Europe/London');
-		$start = new DateTime('now');
-		$end = new DateTime;
+		$start    = new DateTime('now');
+		$end      = new DateTime;
 		$end->setTimestamp(time() + 3600)->setTimeZone($timezone);
 
 		$result = $this->object->createEvent('calendarID', time(), time() + 100000, array('option' => 'value'));
@@ -289,7 +255,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the createEvent method with a bad start date
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @expectedException InvalidArgumentException
 	 * @return void
 	 */
@@ -301,7 +267,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the createEvent method with a bad end date
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @expectedException InvalidArgumentException
 	 * @return void
 	 */
@@ -313,7 +279,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the listRecurrences method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testListRecurrences()
@@ -326,7 +292,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the listEvents method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testListEvents()
@@ -339,7 +305,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the moveEvent method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testMoveEvent()
@@ -352,7 +318,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the editCalendar method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testEditEvent()
@@ -365,7 +331,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the setOption method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testSetOption()
@@ -381,7 +347,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests the getOption method
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testGetOption()
@@ -397,29 +363,29 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests that all functions properly return false
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testFalse()
 	{
 		$this->oauth->setToken(false);
 
-		$functions['removeCalendar'] = array('calendarID');
-		$functions['getCalendar'] = array('calendarID');
-		$functions['addCalendar'] = array('calendarID', array('option' => 'value'));
-		$functions['listCalendars'] = array(array('option' => 'value'));
+		$functions['removeCalendar']       = array('calendarID');
+		$functions['getCalendar']          = array('calendarID');
+		$functions['addCalendar']          = array('calendarID', array('option' => 'value'));
+		$functions['listCalendars']        = array(array('option' => 'value'));
 		$functions['editCalendarSettings'] = array('calendarID', array('option' => 'value'));
-		$functions['clearCalendar'] = array('calendarID');
-		$functions['deleteCalendar'] = array('calendarID');
-		$functions['createCalendar'] = array('Title', array('option' => 'value'));
-		$functions['editCalendar'] = array('calendarID', array('option' => 'value'));
-		$functions['deleteEvent'] = array('calendarID', 'eventID');
-		$functions['getEvent'] = array('calendarID', 'eventID', array('option' => 'value'));
-		$functions['createEvent'] = array('calendarID', time(), time() + 100000, array('option' => 'value'));
-		$functions['listRecurrences'] = array('calendarID', 'eventID', array('option' => 'value'));
-		$functions['listEvents'] = array('calendarID', array('option' => 'value'));
-		$functions['moveEvent'] = array('calendarID', 'eventID', 'newCalendarID');
-		$functions['editEvent'] = array('calendarID', 'eventID', array('option' => 'value'));
+		$functions['clearCalendar']        = array('calendarID');
+		$functions['deleteCalendar']       = array('calendarID');
+		$functions['createCalendar']       = array('Title', array('option' => 'value'));
+		$functions['editCalendar']         = array('calendarID', array('option' => 'value'));
+		$functions['deleteEvent']          = array('calendarID', 'eventID');
+		$functions['getEvent']             = array('calendarID', 'eventID', array('option' => 'value'));
+		$functions['createEvent']          = array('calendarID', time(), time() + 100000, array('option' => 'value'));
+		$functions['listRecurrences']      = array('calendarID', 'eventID', array('option' => 'value'));
+		$functions['listEvents']           = array('calendarID', array('option' => 'value'));
+		$functions['moveEvent']            = array('calendarID', 'eventID', 'newCalendarID');
+		$functions['editEvent']            = array('calendarID', 'eventID', array('option' => 'value'));
 
 		foreach ($functions as $function => $params)
 		{
@@ -430,7 +396,7 @@ class JGoogleDataCalendarTest extends TestCase
 	/**
 	 * Tests that all functions properly return Exceptions
 	 *
-	 * @group	JGoogle
+	 * @group    JGoogle
 	 * @return void
 	 */
 	public function testExceptions()
@@ -440,22 +406,22 @@ class JGoogleDataCalendarTest extends TestCase
 		$this->http->expects($this->atLeastOnce())->method('post')->will($this->returnCallback('calendarDataExceptionCallback'));
 		$this->http->expects($this->atLeastOnce())->method('put')->will($this->returnCallback('calendarDataExceptionCallback'));
 
-		$functions['removeCalendar'] = array('calendarID');
-		$functions['getCalendar'] = array('calendarID');
-		$functions['addCalendar'] = array('calendarID', array('option' => 'value'));
-		$functions['listCalendars'] = array(array('option' => 'value'));
+		$functions['removeCalendar']       = array('calendarID');
+		$functions['getCalendar']          = array('calendarID');
+		$functions['addCalendar']          = array('calendarID', array('option' => 'value'));
+		$functions['listCalendars']        = array(array('option' => 'value'));
 		$functions['editCalendarSettings'] = array('calendarID', array('option' => 'value'));
-		$functions['clearCalendar'] = array('calendarID');
-		$functions['deleteCalendar'] = array('calendarID');
-		$functions['createCalendar'] = array('Title', array('option' => 'value'));
-		$functions['editCalendar'] = array('calendarID', array('option' => 'value'));
-		$functions['deleteEvent'] = array('calendarID', 'eventID');
-		$functions['getEvent'] = array('calendarID', 'eventID', array('option' => 'value'));
-		$functions['createEvent'] = array('calendarID', time(), time() + 100000, array('option' => 'value'));
-		$functions['listRecurrences'] = array('calendarID', 'eventID', array('option' => 'value'));
-		$functions['listEvents'] = array('calendarID', array('option' => 'value'));
-		$functions['moveEvent'] = array('calendarID', 'eventID', 'newCalendarID');
-		$functions['editEvent'] = array('calendarID', 'eventID', array('option' => 'value'));
+		$functions['clearCalendar']        = array('calendarID');
+		$functions['deleteCalendar']       = array('calendarID');
+		$functions['createCalendar']       = array('Title', array('option' => 'value'));
+		$functions['editCalendar']         = array('calendarID', array('option' => 'value'));
+		$functions['deleteEvent']          = array('calendarID', 'eventID');
+		$functions['getEvent']             = array('calendarID', 'eventID', array('option' => 'value'));
+		$functions['createEvent']          = array('calendarID', time(), time() + 100000, array('option' => 'value'));
+		$functions['listRecurrences']      = array('calendarID', 'eventID', array('option' => 'value'));
+		$functions['listEvents']           = array('calendarID', array('option' => 'value'));
+		$functions['moveEvent']            = array('calendarID', 'eventID', 'newCalendarID');
+		$functions['editEvent']            = array('calendarID', 'eventID', array('option' => 'value'));
 
 		foreach ($functions as $function => $params)
 		{
@@ -473,15 +439,49 @@ class JGoogleDataCalendarTest extends TestCase
 			$this->assertTrue($exception);
 		}
 	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @access protected
+	 * @return void
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
+
+		$_SERVER['HTTP_HOST']       = 'mydomain.com';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
+
+		$this->options = new JRegistry;
+		$this->http    = $this->getMock('JHttp', array('head', 'get', 'delete', 'trace', 'post', 'put', 'patch'), array($this->options));
+		$this->input   = new JInput;
+		$this->oauth   = new JOAuth2Client($this->options, $this->http, $this->input);
+		$this->auth    = new JGoogleAuthOauth2($this->options, $this->oauth);
+		$this->object  = new JGoogleDataCalendar($this->options, $this->auth);
+
+		$this->object->setOption('clientid', '01234567891011.apps.googleusercontent.com');
+		$this->object->setOption('clientsecret', 'jeDs8rKw_jDJW8MMf-ff8ejs');
+		$this->object->setOption('redirecturi', 'http://localhost/oauth');
+
+		$token['access_token']  = 'accessvalue';
+		$token['refresh_token'] = 'refreshvalue';
+		$token['created']       = time() - 1800;
+		$token['expires_in']    = 3600;
+		$this->oauth->setToken($token);
+	}
 }
 
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   mixed    $data     Either an associative array or a string to be sent with the request.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   mixed   $data    Either an associative array or a string to be sent with the request.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -491,9 +491,9 @@ function jsonDataCalendarCallback($url, $data, array $headers = null, $timeout =
 {
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'application/json');
-	$response->body = '{"items":{"1":1,"2":2}}';
+	$response->body    = '{"items":{"1":1,"2":2}}';
 
 	return $response;
 }
@@ -501,10 +501,10 @@ function jsonDataCalendarCallback($url, $data, array $headers = null, $timeout =
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   mixed    $data     Either an associative array or a string to be sent with the request.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   mixed   $data    Either an associative array or a string to be sent with the request.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -514,9 +514,9 @@ function emptyDataCalendarCallback($url, $data, array $headers = null, $timeout 
 {
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'text/html');
-	$response->body = '';
+	$response->body    = '';
 
 	return $response;
 }
@@ -524,9 +524,9 @@ function emptyDataCalendarCallback($url, $data, array $headers = null, $timeout 
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -536,9 +536,9 @@ function jsonCalendarCallback($url, array $headers = null, $timeout = null)
 {
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'application/json');
-	$response->body = '{"items":{"1":1,"2":2}}';
+	$response->body    = '{"items":{"1":1,"2":2}}';
 
 	return $response;
 }
@@ -546,9 +546,9 @@ function jsonCalendarCallback($url, array $headers = null, $timeout = null)
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -558,9 +558,9 @@ function emptyCalendarCallback($url, array $headers = null, $timeout = null)
 {
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'text/html');
-	$response->body = '';
+	$response->body    = '';
 
 	return $response;
 }
@@ -568,9 +568,9 @@ function emptyCalendarCallback($url, array $headers = null, $timeout = null)
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -580,9 +580,9 @@ function calendarExceptionCallback($url, array $headers = null, $timeout = null)
 {
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'application/json');
-	$response->body = 'BADDATA';
+	$response->body    = 'BADDATA';
 
 	return $response;
 }
@@ -590,10 +590,10 @@ function calendarExceptionCallback($url, array $headers = null, $timeout = null)
 /**
  * Dummy method
  *
- * @param   string   $url      Path to the resource.
- * @param   mixed    $data     Either an associative array or a string to be sent with the request.
- * @param   array    $headers  An array of name-value pairs to include in the header of the request.
- * @param   integer  $timeout  Read timeout in seconds.
+ * @param   string  $url     Path to the resource.
+ * @param   mixed   $data    Either an associative array or a string to be sent with the request.
+ * @param   array   $headers An array of name-value pairs to include in the header of the request.
+ * @param   integer $timeout Read timeout in seconds.
  *
  * @return  JHttpResponse
  *
@@ -603,9 +603,9 @@ function calendarDataExceptionCallback($url, $data, array $headers = null, $time
 {
 	$response = new stdClass;
 
-	$response->code = 200;
+	$response->code    = 200;
 	$response->headers = array('Content-Type' => 'application/json');
-	$response->body = 'BADDATA';
+	$response->body    = 'BADDATA';
 
 	return $response;
 }

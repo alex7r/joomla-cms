@@ -26,6 +26,83 @@ class JFormFieldGroupedList extends JFormField
 	protected $type = 'GroupedList';
 
 	/**
+	 * Method to get the field input markup fora grouped list.
+	 * Multiselect is enabled by using the multiple attribute.
+	 *
+	 * @return  string  The field input markup.
+	 *
+	 * @since   11.1
+	 */
+	protected function getInput()
+	{
+		$html = array();
+		$attr = '';
+
+		// Initialize some field attributes.
+		$attr .= !empty($this->class) ? ' class="' . $this->class . '"' : '';
+		$attr .= !empty($this->size) ? ' size="' . $this->size . '"' : '';
+		$attr .= $this->multiple ? ' multiple' : '';
+		$attr .= $this->required ? ' required aria-required="true"' : '';
+		$attr .= $this->autofocus ? ' autofocus' : '';
+
+		// To avoid user's confusion, readonly="true" should imply disabled="true".
+		if ($this->readonly || $this->disabled)
+		{
+			$attr .= ' disabled="disabled"';
+		}
+
+		// Initialize JavaScript field attributes.
+		$attr .= !empty($this->onchange) ? ' onchange="' . $this->onchange . '"' : '';
+
+		// Get the field groups.
+		$groups = (array) $this->getGroups();
+
+		// Create a read-only list (no name) with a hidden input to store the value.
+		if ($this->readonly)
+		{
+			$html[] = JHtml::_(
+				'select.groupedlist', $groups, null,
+				array(
+					'list.attr'          => $attr, 'id' => $this->id, 'list.select' => $this->value, 'group.items' => null, 'option.key.toHtml' => false,
+					'option.text.toHtml' => false
+				)
+			);
+
+			// E.g. form field type tag sends $this->value as array
+			if ($this->multiple && is_array($this->value))
+			{
+				if (!count($this->value))
+				{
+					$this->value[] = '';
+				}
+
+				foreach ($this->value as $value)
+				{
+					$html[] = '<input type="hidden" name="' . $this->name . '" value="' . htmlspecialchars($value, ENT_COMPAT, 'UTF-8') . '"/>';
+				}
+			}
+			else
+			{
+				$html[] = '<input type="hidden" name="' . $this->name . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"/>';
+			}
+		}
+
+		// Create a regular list.
+		else
+		{
+			$html[] = JHtml::_(
+				'select.groupedlist', $groups, $this->name,
+				array(
+					'list.attr'          => $attr, 'id' => $this->id, 'list.select' => $this->value, 'group.items' => null, 'option.key.toHtml' => false,
+					'option.text.toHtml' => false
+				)
+			);
+		}
+
+		return implode($html);
+	}
+
+	/**
 	 * Method to get the field option groups.
 	 *
 	 * @return  array  The field option objects as a nested array in groups.
@@ -36,7 +113,7 @@ class JFormFieldGroupedList extends JFormField
 	protected function getGroups()
 	{
 		$groups = array();
-		$label = 0;
+		$label  = 0;
 
 		foreach ($this->element->children() as $element)
 		{
@@ -127,82 +204,5 @@ class JFormFieldGroupedList extends JFormField
 		reset($groups);
 
 		return $groups;
-	}
-
-	/**
-	 * Method to get the field input markup fora grouped list.
-	 * Multiselect is enabled by using the multiple attribute.
-	 *
-	 * @return  string  The field input markup.
-	 *
-	 * @since   11.1
-	 */
-	protected function getInput()
-	{
-		$html = array();
-		$attr = '';
-
-		// Initialize some field attributes.
-		$attr .= !empty($this->class) ? ' class="' . $this->class . '"' : '';
-		$attr .= !empty($this->size) ? ' size="' . $this->size . '"' : '';
-		$attr .= $this->multiple ? ' multiple' : '';
-		$attr .= $this->required ? ' required aria-required="true"' : '';
-		$attr .= $this->autofocus ? ' autofocus' : '';
-
-		// To avoid user's confusion, readonly="true" should imply disabled="true".
-		if ($this->readonly || $this->disabled)
-		{
-			$attr .= ' disabled="disabled"';
-		}
-
-		// Initialize JavaScript field attributes.
-		$attr .= !empty($this->onchange) ? ' onchange="' . $this->onchange . '"' : '';
-
-		// Get the field groups.
-		$groups = (array) $this->getGroups();
-
-		// Create a read-only list (no name) with a hidden input to store the value.
-		if ($this->readonly)
-		{
-			$html[] = JHtml::_(
-				'select.groupedlist', $groups, null,
-				array(
-					'list.attr' => $attr, 'id' => $this->id, 'list.select' => $this->value, 'group.items' => null, 'option.key.toHtml' => false,
-					'option.text.toHtml' => false
-				)
-			);
-
-			// E.g. form field type tag sends $this->value as array
-			if ($this->multiple && is_array($this->value))
-			{
-				if (!count($this->value))
-				{
-					$this->value[] = '';
-				}
-
-				foreach ($this->value as $value)
-				{
-					$html[] = '<input type="hidden" name="' . $this->name . '" value="' . htmlspecialchars($value, ENT_COMPAT, 'UTF-8') . '"/>';
-				}
-			}
-			else
-			{
-				$html[] = '<input type="hidden" name="' . $this->name . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"/>';
-			}
-		}
-
-		// Create a regular list.
-		else
-		{
-			$html[] = JHtml::_(
-				'select.groupedlist', $groups, $this->name,
-				array(
-					'list.attr' => $attr, 'id' => $this->id, 'list.select' => $this->value, 'group.items' => null, 'option.key.toHtml' => false,
-					'option.text.toHtml' => false
-				)
-			);
-		}
-
-		return implode($html);
 	}
 }

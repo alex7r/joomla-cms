@@ -11,11 +11,11 @@
 
 defined('_JEXEC') or die;
 
-$clientId  = $this->state->get('client_id');
+$clientId = $this->state->get('client_id');
 
 // Show only Module Positions of published Templates
-$published = 1;
-$positions = JHtml::_('modules.positions', $clientId, $published);
+$published                = 1;
+$positions                = JHtml::_('modules.positions', $clientId, $published);
 $positions['']['items'][] = ModulesHelper::createOption('nochange', JText::_('COM_MODULES_BATCH_POSITION_NOCHANGE'));
 $positions['']['items'][] = ModulesHelper::createOption('noposition', JText::_('COM_MODULES_BATCH_POSITION_NOPOSITION'));
 
@@ -26,9 +26,9 @@ $customGroupText = JText::_('COM_MODULES_CUSTOM_POSITION');
 $attr = array(
 	'id'        => 'batch-position-id',
 	'list.attr' => 'class="chzn-custom-value input-xlarge" '
-	. 'data-custom_group_text="' . $customGroupText . '" '
-	. 'data-no_results_text="' . JText::_('COM_MODULES_ADD_CUSTOM_POSITION') . '" '
-	. 'data-placeholder="' . JText::_('COM_MODULES_TYPE_OR_SELECT_POSITION') . '" '
+		. 'data-custom_group_text="' . $customGroupText . '" '
+		. 'data-no_results_text="' . JText::_('COM_MODULES_ADD_CUSTOM_POSITION') . '" '
+		. 'data-placeholder="' . JText::_('COM_MODULES_TYPE_OR_SELECT_POSITION') . '" '
 );
 
 ?>
@@ -70,7 +70,9 @@ $attr = array(
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" type="button" onclick="document.getElementById('batch-position-id').value='';document.getElementById('batch-access').value='';document.getElementById('batch-language-id').value=''" data-dismiss="modal">
+		<button class="btn" type="button"
+		        onclick="document.getElementById('batch-position-id').value='';document.getElementById('batch-access').value='';document.getElementById('batch-language-id').value=''"
+		        data-dismiss="modal">
 			<?php echo JText::_('JCANCEL'); ?>
 		</button>
 		<button class="btn btn-success" type="submit" onclick="Joomla.submitbutton('module.batch');">

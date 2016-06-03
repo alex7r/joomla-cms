@@ -39,7 +39,7 @@ class NewsfeedsViewNewsfeed extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 *
@@ -79,8 +79,8 @@ class NewsfeedsViewNewsfeed extends JViewLegacy
 		}
 
 		// Add router helpers.
-		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
-		$item->catslug = $item->category_alias ? ($item->catid . ':' . $item->category_alias) : $item->catid;
+		$item->slug        = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
+		$item->catslug     = $item->category_alias ? ($item->catid . ':' . $item->category_alias) : $item->catid;
 		$item->parent_slug = $item->category_alias ? ($item->parent_id . ':' . $item->parent_alias) : $item->parent_id;
 
 		// Check if cache directory is writeable
@@ -95,10 +95,10 @@ class NewsfeedsViewNewsfeed extends JViewLegacy
 
 		// Merge newsfeed params. If this is single-newsfeed view, menu params override newsfeed params
 		// Otherwise, newsfeed params override menu item params
-		$params = $state->get('params');
+		$params          = $state->get('params');
 		$newsfeed_params = clone $item->params;
-		$active = $app->getMenu()->getActive();
-		$temp = clone $params;
+		$active          = $app->getMenu()->getActive();
+		$temp            = clone $params;
 
 		// Check to see which parameters should take priority
 		if ($active)
@@ -169,7 +169,7 @@ class NewsfeedsViewNewsfeed extends JViewLegacy
 
 		try
 		{
-			$feed = new JFeedFactory;
+			$feed         = new JFeedFactory;
 			$this->rssDoc = $feed->getFeed($newsfeed->link);
 		}
 		catch (InvalidArgumentException $e)
@@ -260,12 +260,12 @@ class NewsfeedsViewNewsfeed extends JViewLegacy
 				$title = $this->item->name;
 			}
 
-			$path = array(array('title' => $this->item->name, 'link' => ''));
+			$path     = array(array('title' => $this->item->name, 'link' => ''));
 			$category = JCategories::getInstance('Newsfeeds')->get($this->item->catid);
 
 			while (($menu->query['option'] != 'com_newsfeeds' || $menu->query['view'] == 'newsfeed' || $id != $category->id) && $category->id > 1)
 			{
-				$path[] = array('title' => $category->title, 'link' => NewsfeedsHelperRoute::getCategoryRoute($category->id));
+				$path[]   = array('title' => $category->title, 'link' => NewsfeedsHelperRoute::getCategoryRoute($category->id));
 				$category = $category->getParent();
 			}
 
