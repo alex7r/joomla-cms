@@ -70,6 +70,7 @@ before_script:
 
 script:
   - libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml
+  - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs -i; fi
   - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs --report=full --extensions=php --ignore=./tests,./build -p --standard=PSR2 .; fi
 
 branches:

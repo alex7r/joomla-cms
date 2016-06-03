@@ -25,7 +25,7 @@ abstract class ModLoggedHelper
      *
      * @throws  RuntimeException
      */
-    public static function getList(&$params)
+                public static function getList(&$params)
     {
         $db    = JFactory::getDbo();
         $user  = JFactory::getUser();
