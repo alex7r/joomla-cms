@@ -24,39 +24,6 @@ JLoader::register('FinderIndexer', __DIR__ . '/indexer.php');
 class FinderIndexerResult
 {
 	/**
-	 * An array of extra result properties.
-	 *
-	 * @var    array
-	 * @since  2.5
-	 */
-	protected $elements = array();
-
-	/**
-	 * This array tells the indexer which properties should be indexed and what
-	 * weights to use for those properties.
-	 *
-	 * @var    array
-	 * @since  2.5
-	 */
-	protected $instructions = array(
-		FinderIndexer::TITLE_CONTEXT => array('title', 'subtitle', 'id'),
-		FinderIndexer::TEXT_CONTEXT => array('summary', 'body'),
-		FinderIndexer::META_CONTEXT => array('meta', 'list_price', 'sale_price'),
-		FinderIndexer::PATH_CONTEXT => array('path', 'alias'),
-		FinderIndexer::MISC_CONTEXT => array('comments')
-	);
-
-	/**
-	 * The indexer will use this data to create taxonomy mapping entries for
-	 * the item so that it can be filtered by type, label, category,
-	 * or whatever.
-	 *
-	 * @var    array
-	 * @since  2.5
-	 */
-	protected $taxonomy = array();
-
-	/**
 	 * The content URL.
 	 *
 	 * @var    string
@@ -185,6 +152,39 @@ class FinderIndexerResult
 	public $defaultLanguage;
 
 	/**
+	 * An array of extra result properties.
+	 *
+	 * @var    array
+	 * @since  2.5
+	 */
+	protected $elements = array();
+
+	/**
+	 * This array tells the indexer which properties should be indexed and what
+	 * weights to use for those properties.
+	 *
+	 * @var    array
+	 * @since  2.5
+	 */
+	protected $instructions = array(
+		FinderIndexer::TITLE_CONTEXT => array('title', 'subtitle', 'id'),
+		FinderIndexer::TEXT_CONTEXT => array('summary', 'body'),
+		FinderIndexer::META_CONTEXT => array('meta', 'list_price', 'sale_price'),
+		FinderIndexer::PATH_CONTEXT => array('path', 'alias'),
+		FinderIndexer::MISC_CONTEXT => array('comments')
+	);
+
+	/**
+	 * The indexer will use this data to create taxonomy mapping entries for
+	 * the item so that it can be filtered by type, label, category,
+	 * or whatever.
+	 *
+	 * @var    array
+	 * @since  2.5
+	 */
+	protected $taxonomy = array();
+
+	/**
 	 * Constructor
 	 *
 	 * @since   3.0.3
@@ -192,22 +192,6 @@ class FinderIndexerResult
 	public function __construct()
 	{
 		$this->defaultLanguage = JComponentHelper::getParams('com_languages')->get('site', 'en-GB');
-	}
-
-	/**
-	 * The magic set method is used to push additional values into the elements
-	 * array in order to preserve the cleanliness of the object.
-	 *
-	 * @param   string  $name   The name of the element.
-	 * @param   mixed   $value  The value of the element.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.5
-	 */
-	public function __set($name, $value)
-	{
-		$this->elements[$name] = $value;
 	}
 
 	/**
@@ -231,6 +215,22 @@ class FinderIndexerResult
 		{
 			return null;
 		}
+	}
+
+	/**
+	 * The magic set method is used to push additional values into the elements
+	 * array in order to preserve the cleanliness of the object.
+	 *
+	 * @param   string  $name   The name of the element.
+	 * @param   mixed   $value  The value of the element.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	public function __set($name, $value)
+	{
+		$this->elements[$name] = $value;
 	}
 
 	/**

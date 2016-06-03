@@ -17,6 +17,20 @@ defined('_JEXEC') or die;
 class ContactViewContacts extends JViewLegacy
 {
 	/**
+	 * Form object for search filters
+	 *
+	 * @var  JForm
+	 */
+	public $filterForm;
+
+	/**
+	 * The active search filters
+	 *
+	 * @var  array
+	 */
+	public $activeFilters;
+
+	/**
 	 * An array of items
 	 *
 	 * @var  array
@@ -36,20 +50,6 @@ class ContactViewContacts extends JViewLegacy
 	 * @var  object
 	 */
 	protected $state;
-
-	/**
-	 * Form object for search filters
-	 *
-	 * @var  JForm
-	 */
-	public $filterForm;
-
-	/**
-	 * The active search filters
-	 *
-	 * @var  array
-	 */
-	public $activeFilters;
 
 	/**
 	 * The sidebar markup

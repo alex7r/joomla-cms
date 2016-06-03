@@ -57,23 +57,6 @@ class AdminModelHelp extends JModelLegacy
 	protected $latest_version_check = null;
 
 	/**
-	 * Method to get the help search string
-	 *
-	 * @return  string  Help search string
-	 *
-	 * @since   1.6
-	 */
-	public function &getHelpSearch()
-	{
-		if (is_null($this->help_search))
-		{
-			$this->help_search = JFactory::getApplication()->input->getString('helpsearch');
-		}
-
-		return $this->help_search;
-	}
-
-	/**
 	 * Method to get the page
 	 *
 	 * @return  string  The page
@@ -88,29 +71,6 @@ class AdminModelHelp extends JModelLegacy
 		}
 
 		return $this->page;
-	}
-
-	/**
-	 * Method to get the lang tag
-	 *
-	 * @return  string  lang iso tag
-	 *
-	 * @since  1.6
-	 */
-	public function getLangTag()
-	{
-		if (is_null($this->lang_tag))
-		{
-			$this->lang_tag = JFactory::getLanguage()->getTag();
-
-			if (!is_dir(JPATH_BASE . '/help/' . $this->lang_tag))
-			{
-				// Use English as fallback
-				$this->lang_tag = 'en-GB';
-			}
-		}
-
-		return $this->lang_tag;
 	}
 
 	/**
@@ -187,6 +147,46 @@ class AdminModelHelp extends JModelLegacy
 		asort($this->toc);
 
 		return $this->toc;
+	}
+
+	/**
+	 * Method to get the lang tag
+	 *
+	 * @return  string  lang iso tag
+	 *
+	 * @since  1.6
+	 */
+	public function getLangTag()
+	{
+		if (is_null($this->lang_tag))
+		{
+			$this->lang_tag = JFactory::getLanguage()->getTag();
+
+			if (!is_dir(JPATH_BASE . '/help/' . $this->lang_tag))
+			{
+				// Use English as fallback
+				$this->lang_tag = 'en-GB';
+			}
+		}
+
+		return $this->lang_tag;
+	}
+
+	/**
+	 * Method to get the help search string
+	 *
+	 * @return  string  Help search string
+	 *
+	 * @since   1.6
+	 */
+	public function &getHelpSearch()
+	{
+		if (is_null($this->help_search))
+		{
+			$this->help_search = JFactory::getApplication()->input->getString('helpsearch');
+		}
+
+		return $this->help_search;
 	}
 
 	/**

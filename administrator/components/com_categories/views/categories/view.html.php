@@ -17,6 +17,20 @@ defined('_JEXEC') or die;
 class CategoriesViewCategories extends JViewLegacy
 {
 	/**
+	 * Form object for search filters
+	 *
+	 * @var  JForm
+	 */
+	public $filterForm;
+
+	/**
+	 * The active search filters
+	 *
+	 * @var  array
+	 */
+	public $activeFilters;
+
+	/**
 	 * An array of items
 	 *
 	 * @var  array
@@ -43,20 +57,6 @@ class CategoriesViewCategories extends JViewLegacy
 	 * @var  boolean
 	 */
 	protected $assoc;
-
-	/**
-	 * Form object for search filters
-	 *
-	 * @var  JForm
-	 */
-	public $filterForm;
-
-	/**
-	 * The active search filters
-	 *
-	 * @var  array
-	 */
-	public $activeFilters;
 
 	/**
 	 * The sidebar markup

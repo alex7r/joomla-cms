@@ -33,29 +33,6 @@ class TemplatesModelTemplate extends JModelForm
 	protected $element = null;
 
 	/**
-	 * Internal method to get file properties.
-	 *
-	 * @param   string  $path  The base path.
-	 * @param   string  $name  The file name.
-	 *
-	 * @return  object
-	 *
-	 * @since   1.6
-	 */
-	protected function getFile($path, $name)
-	{
-		$temp = new stdClass;
-
-		if ($template = $this->getTemplate())
-		{
-			$temp->name = $name;
-			$temp->id = urlencode(base64_encode($path . $name));
-
-			return $temp;
-		}
-	}
-
-	/**
 	 * Method to get a list of all the files to edit in a template.
 	 *
 	 * @return  array  A nested array of relevant files.
@@ -142,26 +119,51 @@ class TemplatesModelTemplate extends JModelForm
 	}
 
 	/**
-	 * Method to auto-populate the model state.
+ 	* Check if the extension is allowed and will be shown in the template manager
+ 	*
+	* @param   string  $ext  The extension to check if it is allowed
+ 	*
+ 	* @return  boolean  true if the extension is allowed false otherwise
+ 	*
+ 	* @since   3.6.0
+	*/
+	protected function checkFormat($ext)
+	{
+		if (!isset($this->allowedFormats))
+		{
+			$params       = JComponentHelper::getParams('com_templates');
+			$imageTypes   = explode(',', $params->get('image_formats'));
+			$sourceTypes  = explode(',', $params->get('source_formats'));
+			$fontTypes    = explode(',', $params->get('font_formats'));
+			$archiveTypes = explode(',', $params->get('compressed_formats'));
+
+			$this->allowedFormats = array_merge($imageTypes, $sourceTypes, $fontTypes, $archiveTypes);
+		}
+
+		return in_array($ext, $this->allowedFormats);
+	}
+
+	/**
+	 * Internal method to get file properties.
 	 *
-	 * Note. Calling getState in this method will result in recursion.
+	 * @param   string  $path  The base path.
+	 * @param   string  $name  The file name.
 	 *
-	 * @return  void
+	 * @return  object
 	 *
 	 * @since   1.6
 	 */
-	protected function populateState()
+	protected function getFile($path, $name)
 	{
-		jimport('joomla.filesystem.file');
-		$app = JFactory::getApplication('administrator');
+		$temp = new stdClass;
 
-		// Load the User state.
-		$pk = $app->input->getInt('id');
-		$this->setState('extension.id', $pk);
+		if ($template = $this->getTemplate())
+		{
+			$temp->name = $name;
+			$temp->id = urlencode(base64_encode($path . $name));
 
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_templates');
-		$this->setState('params', $params);
+			return $temp;
+		}
 	}
 
 	/**
@@ -291,24 +293,6 @@ class TemplatesModelTemplate extends JModelForm
 	}
 
 	/**
-	 * Method to delete tmp folder
-	 *
-	 * @return  boolean   true if delete successful, false otherwise
-	 *
-	 * @since	2.5
-	 */
-	public function cleanup()
-	{
-		// Clear installation messages
-		$app = JFactory::getApplication();
-		$app->setUserState('com_installer.message', '');
-		$app->setUserState('com_installer.extension_message', '');
-
-		// Delete temporary directory
-		return JFolder::delete($this->getState('to_path'));
-	}
-
-	/**
 	 * Method to rename the template in the XML files and rename the language files
 	 *
 	 * @return  boolean  true if successful, false otherwise
@@ -349,6 +333,24 @@ class TemplatesModelTemplate extends JModelForm
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Method to delete tmp folder
+	 *
+	 * @return  boolean   true if delete successful, false otherwise
+	 *
+	 * @since	2.5
+	 */
+	public function cleanup()
+	{
+		// Clear installation messages
+		$app = JFactory::getApplication();
+		$app->setUserState('com_installer.message', '');
+		$app->setUserState('com_installer.extension_message', '');
+
+		// Delete temporary directory
+		return JFolder::delete($this->getState('to_path'));
 	}
 
 	/**
@@ -393,70 +395,6 @@ class TemplatesModelTemplate extends JModelForm
 		}
 
 		return $form;
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		$data = $this->getSource();
-
-		$this->preprocessData('com_templates.source', $data);
-
-		return $data;
-	}
-
-	/**
-	 * Method to get a single record.
-	 *
-	 * @return  mixed  Object on success, false on failure.
-	 *
-	 * @since   1.6
-	 */
-	public function &getSource()
-	{
-		$app = JFactory::getApplication();
-		$item = new stdClass;
-
-		if (!$this->template)
-		{
-			$this->getTemplate();
-		}
-
-		if ($this->template)
-		{
-			$input    = JFactory::getApplication()->input;
-			$fileName = base64_decode($input->get('file'));
-			$client   = JApplicationHelper::getClientInfo($this->template->client_id);
-
-			try
-			{
-				$filePath = JPath::check($client->path . '/templates/' . $this->template->element . '/' . $fileName);
-			}
-			catch (Exception $e)
-			{
-				$app->enqueueMessage(JText::_('COM_TEMPLATES_ERROR_SOURCE_FILE_NOT_FOUND'), 'error');
-				return;
-			}
-
-			if (file_exists($filePath))
-			{
-				$item->extension_id = $this->getState('extension.id');
-				$item->filename = $fileName;
-				$item->source = file_get_contents($filePath);
-			}
-			else
-			{
-				$app->enqueueMessage(JText::_('COM_TEMPLATES_ERROR_SOURCE_FILE_NOT_FOUND'), 'error');
-			}
-		}
-
-		return $item;
 	}
 
 	/**
@@ -531,25 +469,6 @@ class TemplatesModelTemplate extends JModelForm
 	}
 
 	/**
-	 * Get overrides folder.
-	 *
-	 * @param   string  $name  The name of override.
-	 * @param   string  $path  Location of override.
-	 *
-	 * @return  object  containing override name and path.
-	 *
-	 * @since   3.2
-	 */
-	public function getOverridesFolder($name,$path)
-	{
-		$folder = new stdClass;
-		$folder->name = $name;
-		$folder->path = base64_encode($path . $name);
-
-		return $folder;
-	}
-
-	/**
 	 * Get a list of overrides.
 	 *
 	 * @return  array containing overrides.
@@ -615,6 +534,25 @@ class TemplatesModelTemplate extends JModelForm
 		{
 			return $result;
 		}
+	}
+
+	/**
+	 * Get overrides folder.
+	 *
+	 * @param   string  $name  The name of override.
+	 * @param   string  $path  Location of override.
+	 *
+	 * @return  object  containing override name and path.
+	 *
+	 * @since   3.2
+	 */
+	public function getOverridesFolder($name,$path)
+	{
+		$folder = new stdClass;
+		$folder->name = $name;
+		$folder->path = base64_encode($path . $name);
+
+		return $folder;
 	}
 
 	/**
@@ -1391,27 +1329,89 @@ class TemplatesModelTemplate extends JModelForm
 	}
 
 	/**
- 	* Check if the extension is allowed and will be shown in the template manager
- 	*
-	* @param   string  $ext  The extension to check if it is allowed
- 	*
- 	* @return  boolean  true if the extension is allowed false otherwise
- 	*
- 	* @since   3.6.0
-	*/
-	protected function checkFormat($ext)
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
 	{
-		if (!isset($this->allowedFormats))
-		{
-			$params       = JComponentHelper::getParams('com_templates');
-			$imageTypes   = explode(',', $params->get('image_formats'));
-			$sourceTypes  = explode(',', $params->get('source_formats'));
-			$fontTypes    = explode(',', $params->get('font_formats'));
-			$archiveTypes = explode(',', $params->get('compressed_formats'));
+		jimport('joomla.filesystem.file');
+		$app = JFactory::getApplication('administrator');
 
-			$this->allowedFormats = array_merge($imageTypes, $sourceTypes, $fontTypes, $archiveTypes);
+		// Load the User state.
+		$pk = $app->input->getInt('id');
+		$this->setState('extension.id', $pk);
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_templates');
+		$this->setState('params', $params);
+	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		$data = $this->getSource();
+
+		$this->preprocessData('com_templates.source', $data);
+
+		return $data;
+	}
+
+	/**
+	 * Method to get a single record.
+	 *
+	 * @return  mixed  Object on success, false on failure.
+	 *
+	 * @since   1.6
+	 */
+	public function &getSource()
+	{
+		$app = JFactory::getApplication();
+		$item = new stdClass;
+
+		if (!$this->template)
+		{
+			$this->getTemplate();
 		}
 
-		return in_array($ext, $this->allowedFormats);
+		if ($this->template)
+		{
+			$input    = JFactory::getApplication()->input;
+			$fileName = base64_decode($input->get('file'));
+			$client   = JApplicationHelper::getClientInfo($this->template->client_id);
+
+			try
+			{
+				$filePath = JPath::check($client->path . '/templates/' . $this->template->element . '/' . $fileName);
+			}
+			catch (Exception $e)
+			{
+				$app->enqueueMessage(JText::_('COM_TEMPLATES_ERROR_SOURCE_FILE_NOT_FOUND'), 'error');
+				return;
+			}
+
+			if (file_exists($filePath))
+			{
+				$item->extension_id = $this->getState('extension.id');
+				$item->filename = $fileName;
+				$item->source = file_get_contents($filePath);
+			}
+			else
+			{
+				$app->enqueueMessage(JText::_('COM_TEMPLATES_ERROR_SOURCE_FILE_NOT_FOUND'), 'error');
+			}
+		}
+
+		return $item;
 	}
 }

@@ -17,23 +17,6 @@ defined('_JEXEC') or die;
 class AdminControllerProfile extends JControllerForm
 {
 	/**
-	 * Method to check if you can edit a record.
-	 *
-	 * Extended classes can override this if necessary.
-	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   1.6
-	 */
-	protected function allowEdit($data = array(), $key = 'id')
-	{
-		return isset($data['id']) && $data['id'] == JFactory::getUser()->id;
-	}
-
-	/**
 	 * Overrides parent save method to check the submitted passwords match.
 	 *
 	 * @param   string  $key     The name of the primary key of the URL variable.
@@ -75,5 +58,22 @@ class AdminControllerProfile extends JControllerForm
 		$this->setRedirect(JRoute::_('index.php', false));
 
 		return $return;
+	}
+
+	/**
+	 * Method to check if you can edit a record.
+	 *
+	 * Extended classes can override this if necessary.
+	 *
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   1.6
+	 */
+	protected function allowEdit($data = array(), $key = 'id')
+	{
+		return isset($data['id']) && $data['id'] == JFactory::getUser()->id;
 	}
 }

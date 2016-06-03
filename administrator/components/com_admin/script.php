@@ -45,162 +45,6 @@ class JoomlaInstallerScript
 	}
 
 	/**
-	 * Method to clear our stats plugin cache to ensure we get fresh data on Joomla Update
-	 *
-	 * @return  void
-	 *
-	 * @since   3.5
-	 */
-	protected function clearStatsCache()
-	{
-		$db = JFactory::getDbo();
-
-		try
-		{
-			// Get the params for the stats plugin
-			$params = $db->setQuery(
-				$db->getQuery(true)
-					->select($db->quoteName('params'))
-					->from($db->quoteName('#__extensions'))
-					->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
-					->where($db->quoteName('folder') . ' = ' . $db->quote('system'))
-					->where($db->quoteName('element') . ' = ' . $db->quote('stats'))
-			)->loadResult();
-		}
-		catch (Exception $e)
-		{
-			echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()) . '<br />';
-
-			return;
-		}
-
-		$params = json_decode($params, true);
-
-		// Reset the last run parameter
-		if (isset($params['lastrun']))
-		{
-			$params['lastrun'] = '';
-		}
-
-		$params = json_encode($params);
-
-		$query = $db->getQuery(true)
-			->update($db->quoteName('#__extensions'))
-			->set($db->quoteName('params') . ' = ' . $db->quote($params))
-			->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
-			->where($db->quoteName('folder') . ' = ' . $db->quote('system'))
-			->where($db->quoteName('element') . ' = ' . $db->quote('stats'));
-
-		try
-		{
-			$db->setQuery($query)->execute();
-		}
-		catch (Exception $e)
-		{
-			echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()) . '<br />';
-
-			return;
-		}
-	}
-
-	/**
-	 * Method to update Database
-	 *
-	 * @return  void
-	 */
-	protected function updateDatabase()
-	{
-		$db = JFactory::getDbo();
-
-		if (strpos($db->name, 'mysql') !== false)
-		{
-			$this->updateDatabaseMysql();
-		}
-
-		$this->uninstallEosPlugin();
-	}
-
-	/**
-	 * Method to update MySQL Database
-	 *
-	 * @return  void
-	 */
-	protected function updateDatabaseMysql()
-	{
-		$db = JFactory::getDbo();
-
-		$db->setQuery('SHOW ENGINES');
-
-		try
-		{
-			$results = $db->loadObjectList();
-		}
-		catch (Exception $e)
-		{
-			echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()) . '<br />';
-
-			return;
-		}
-
-		foreach ($results as $result)
-		{
-			if ($result->Support != 'DEFAULT')
-			{
-				continue;
-			}
-
-			$db->setQuery('ALTER TABLE #__update_sites_extensions ENGINE = ' . $result->Engine);
-
-			try
-			{
-				$db->execute();
-			}
-			catch (Exception $e)
-			{
-				echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()) . '<br />';
-
-				return;
-			}
-
-			break;
-		}
-	}
-
-	/**
-	 * Uninstall the 2.5 EOS plugin
-	 *
-	 * @return  void
-	 */
-	protected function uninstallEosPlugin()
-	{
-		$db = JFactory::getDbo();
-
-		// Check if the 2.5 EOS plugin is present and uninstall it if so
-		$id = $db->setQuery(
-			$db->getQuery(true)
-				->select('extension_id')
-				->from('#__extensions')
-				->where('name = ' . $db->quote('PLG_EOSNOTIFY'))
-		)->loadResult();
-
-		if (!$id)
-		{
-			return;
-		}
-
-		// We need to unprotect the plugin so we can uninstall it
-		$db->setQuery(
-			$db->getQuery(true)
-				->update('#__extensions')
-				->set('protected = 0')
-				->where($db->quoteName('extension_id') . ' = ' . $id)
-		)->execute();
-
-		$installer = new JInstaller;
-		$installer->uninstall('plugin', $id);
-	}
-
-	/**
 	 * Update the manifest caches
 	 *
 	 * @return  void
@@ -400,6 +244,426 @@ class JoomlaInstallerScript
 				echo JText::sprintf('FILES_JOOMLA_ERROR_MANIFEST', $extension->type, $extension->element, $extension->name, $extension->client_id) . '<br />';
 			}
 		}
+	}
+
+	/**
+	 * Method to update Database
+	 *
+	 * @return  void
+	 */
+	protected function updateDatabase()
+	{
+		$db = JFactory::getDbo();
+
+		if (strpos($db->name, 'mysql') !== false)
+		{
+			$this->updateDatabaseMysql();
+		}
+
+		$this->uninstallEosPlugin();
+	}
+
+	/**
+	 * Method to update MySQL Database
+	 *
+	 * @return  void
+	 */
+	protected function updateDatabaseMysql()
+	{
+		$db = JFactory::getDbo();
+
+		$db->setQuery('SHOW ENGINES');
+
+		try
+		{
+			$results = $db->loadObjectList();
+		}
+		catch (Exception $e)
+		{
+			echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()) . '<br />';
+
+			return;
+		}
+
+		foreach ($results as $result)
+		{
+			if ($result->Support != 'DEFAULT')
+			{
+				continue;
+			}
+
+			$db->setQuery('ALTER TABLE #__update_sites_extensions ENGINE = ' . $result->Engine);
+
+			try
+			{
+				$db->execute();
+			}
+			catch (Exception $e)
+			{
+				echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()) . '<br />';
+
+				return;
+			}
+
+			break;
+		}
+	}
+
+	/**
+	 * Uninstall the 2.5 EOS plugin
+	 *
+	 * @return  void
+	 */
+	protected function uninstallEosPlugin()
+	{
+		$db = JFactory::getDbo();
+
+		// Check if the 2.5 EOS plugin is present and uninstall it if so
+		$id = $db->setQuery(
+			$db->getQuery(true)
+				->select('extension_id')
+				->from('#__extensions')
+				->where('name = ' . $db->quote('PLG_EOSNOTIFY'))
+		)->loadResult();
+
+		if (!$id)
+		{
+			return;
+		}
+
+		// We need to unprotect the plugin so we can uninstall it
+		$db->setQuery(
+			$db->getQuery(true)
+				->update('#__extensions')
+				->set('protected = 0')
+				->where($db->quoteName('extension_id') . ' = ' . $id)
+		)->execute();
+
+		$installer = new JInstaller;
+		$installer->uninstall('plugin', $id);
+	}
+
+	/**
+	 * Clears the RAD layer's table cache.
+	 *
+	 * The cache vastly improves performance but needs to be cleared every time you update the database schema.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function clearRadCache()
+	{
+		jimport('joomla.filesystem.file');
+
+		if (JFile::exists(JPATH_CACHE . '/fof/cache.php'))
+		{
+			JFile::delete(JPATH_CACHE . '/fof/cache.php');
+		}
+	}
+
+	/**
+	 * Method to create assets for newly installed components
+	 *
+	 * @return  boolean
+	 *
+	 * @since   3.2
+	 */
+	public function updateAssets()
+	{
+		// List all components added since 1.6
+		$newComponents = array(
+			'com_finder',
+			'com_joomlaupdate',
+			'com_tags',
+			'com_contenthistory',
+			'com_ajax',
+			'com_postinstall'
+		);
+
+		foreach ($newComponents as $component)
+		{
+			/** @var JTableAsset $asset */
+			$asset = JTable::getInstance('Asset');
+
+			if ($asset->loadByName($component))
+			{
+				continue;
+			}
+
+			$asset->name = $component;
+			$asset->parent_id = 1;
+			$asset->rules = '{}';
+			$asset->title = $component;
+			$asset->setLocation(1, 'last-child');
+
+			if (!$asset->store())
+			{
+				// Install failed, roll back changes
+				$this->parent->abort(JText::sprintf('JLIB_INSTALLER_ABORT_COMP_INSTALL_ROLLBACK', $asset->stderr(true)));
+
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Method to clear our stats plugin cache to ensure we get fresh data on Joomla Update
+	 *
+	 * @return  void
+	 *
+	 * @since   3.5
+	 */
+	protected function clearStatsCache()
+	{
+		$db = JFactory::getDbo();
+
+		try
+		{
+			// Get the params for the stats plugin
+			$params = $db->setQuery(
+				$db->getQuery(true)
+					->select($db->quoteName('params'))
+					->from($db->quoteName('#__extensions'))
+					->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
+					->where($db->quoteName('folder') . ' = ' . $db->quote('system'))
+					->where($db->quoteName('element') . ' = ' . $db->quote('stats'))
+			)->loadResult();
+		}
+		catch (Exception $e)
+		{
+			echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()) . '<br />';
+
+			return;
+		}
+
+		$params = json_decode($params, true);
+
+		// Reset the last run parameter
+		if (isset($params['lastrun']))
+		{
+			$params['lastrun'] = '';
+		}
+
+		$params = json_encode($params);
+
+		$query = $db->getQuery(true)
+			->update($db->quoteName('#__extensions'))
+			->set($db->quoteName('params') . ' = ' . $db->quote($params))
+			->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
+			->where($db->quoteName('folder') . ' = ' . $db->quote('system'))
+			->where($db->quoteName('element') . ' = ' . $db->quote('stats'));
+
+		try
+		{
+			$db->setQuery($query)->execute();
+		}
+		catch (Exception $e)
+		{
+			echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()) . '<br />';
+
+			return;
+		}
+	}
+
+	/**
+	 * Converts the site's database tables to support UTF-8 Multibyte.
+	 *
+	 * @param   boolean  $doDbFixMsg  Flag if message to be shown to check db fix
+	 *
+	 * @return  void
+	 *
+	 * @since   3.5
+	 */
+	public function convertTablesToUtf8mb4($doDbFixMsg = false)
+	{
+		$db = JFactory::getDbo();
+
+		// This is only required for MySQL databases
+		$serverType = $db->getServerType();
+
+		if ($serverType != 'mysql')
+		{
+			return;
+		}
+
+		// Set required conversion status
+		if ($db->hasUTF8mb4Support())
+		{
+			$converted = 2;
+		}
+		else
+		{
+			$converted = 1;
+		}
+
+		// Check conversion status in database
+		$db->setQuery('SELECT ' . $db->quoteName('converted')
+			. ' FROM ' . $db->quoteName('#__utf8_conversion')
+			);
+
+		try
+		{
+			$convertedDB = $db->loadResult();
+		}
+		catch (Exception $e)
+		{
+			// Render the error message from the Exception object
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+
+			if ($doDbFixMsg)
+			{
+				// Show an error message telling to check database problems
+				JFactory::getApplication()->enqueueMessage(JText::_('JLIB_DATABASE_ERROR_DATABASE_UPGRADE_FAILED'), 'error');
+			}
+
+			return;
+		}
+
+		// Nothing to do, saved conversion status from DB is equal to required
+		if ($convertedDB == $converted)
+		{
+			return;
+		}
+
+		// Step 1: Drop indexes later to be added again with column lengths limitations at step 2
+		$fileName1 = JPATH_ADMINISTRATOR . "/components/com_admin/sql/others/mysql/utf8mb4-conversion-01.sql";
+
+		if (is_file($fileName1))
+		{
+			$fileContents1 = @file_get_contents($fileName1);
+			$queries1 = $db->splitSql($fileContents1);
+
+			if (!empty($queries1))
+			{
+				foreach ($queries1 as $query1)
+				{
+					try
+					{
+						$db->setQuery($query1)->execute();
+					}
+					catch (Exception $e)
+					{
+						// If the query fails we will go on. It just means the index to be dropped does not exist.
+					}
+				}
+			}
+		}
+
+		// Step 2: Perform the index modifications and conversions
+		$fileName2 = JPATH_ADMINISTRATOR . "/components/com_admin/sql/others/mysql/utf8mb4-conversion-02.sql";
+
+		if (is_file($fileName2))
+		{
+			$fileContents2 = @file_get_contents($fileName2);
+			$queries2 = $db->splitSql($fileContents2);
+
+			if (!empty($queries2))
+			{
+				foreach ($queries2 as $query2)
+				{
+					try
+					{
+						$db->setQuery($db->convertUtf8mb4QueryToUtf8($query2))->execute();
+					}
+					catch (Exception $e)
+					{
+						$converted = 0;
+
+						// Still render the error message from the Exception object
+						JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+					}
+				}
+			}
+		}
+
+		if ($doDbFixMsg && $converted == 0)
+		{
+			// Show an error message telling to check database problems
+			JFactory::getApplication()->enqueueMessage(JText::_('JLIB_DATABASE_ERROR_DATABASE_UPGRADE_FAILED'), 'error');
+		}
+
+		// Set flag in database if the update is done.
+		$db->setQuery('UPDATE ' . $db->quoteName('#__utf8_conversion')
+			. ' SET ' . $db->quoteName('converted') . ' = ' . $converted . ';')->execute();
+	}
+
+	/**
+	 * This method clean the Joomla Cache using the method `clean` from the com_cache model
+	 *
+	 * @return  void
+	 *
+	 * @since   3.5.1
+	 */
+	private function cleanJoomlaCache()
+	{
+		JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_cache/models');
+		$model = JModelLegacy::getInstance('cache', 'CacheModel');
+		$model->clean();
+	}
+
+	/**
+	 * If we migrated the session from the previous system, flush all the active sessions.
+	 * Otherwise users will be logged in, but not able to do anything since they don't have
+	 * a valid session
+	 *
+	 * @return  boolean
+	 */
+	public function flushSessions()
+	{
+		/**
+		 * The session may have not been started yet (e.g. CLI-based Joomla! update scripts). Let's make sure we do
+		 * have a valid session.
+		 */
+		$session = JFactory::getSession();
+
+		/**
+		 * Restarting the Session require a new login for the current user so lets check if we have an active session
+		 * and only restart it if not.
+		 * For B/C reasons we need to use getState as isActive is not available in 2.5
+		 */
+		if ($session->getState() !== 'active')
+		{
+			$session->restart();
+		}
+
+		// If $_SESSION['__default'] is no longer set we do not have a migrated session, therefore we can quit.
+		if (!isset($_SESSION['__default']))
+		{
+			return true;
+		}
+
+		$db = JFactory::getDbo();
+
+		try
+		{
+			switch ($db->name)
+			{
+				// MySQL database, use TRUNCATE (faster, more resilient)
+				case 'pdomysql':
+				case 'mysql':
+				case 'mysqli':
+					$db->truncateTable('#__session');
+					break;
+
+				// Non-MySQL databases, use a simple DELETE FROM query
+				default:
+					$query = $db->getQuery(true)
+						->delete($db->qn('#__session'));
+					$db->setQuery($query)->execute();
+					break;
+			}
+		}
+		catch (Exception $e)
+		{
+			echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()) . '<br />';
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -1550,269 +1814,5 @@ class JoomlaInstallerScript
 		{
 			JFile::delete(JPATH_MANIFESTS . '/packages/pkg_weblinks.xml');
 		}
-	}
-
-	/**
-	 * Clears the RAD layer's table cache.
-	 *
-	 * The cache vastly improves performance but needs to be cleared every time you update the database schema.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function clearRadCache()
-	{
-		jimport('joomla.filesystem.file');
-
-		if (JFile::exists(JPATH_CACHE . '/fof/cache.php'))
-		{
-			JFile::delete(JPATH_CACHE . '/fof/cache.php');
-		}
-	}
-
-	/**
-	 * Method to create assets for newly installed components
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.2
-	 */
-	public function updateAssets()
-	{
-		// List all components added since 1.6
-		$newComponents = array(
-			'com_finder',
-			'com_joomlaupdate',
-			'com_tags',
-			'com_contenthistory',
-			'com_ajax',
-			'com_postinstall'
-		);
-
-		foreach ($newComponents as $component)
-		{
-			/** @var JTableAsset $asset */
-			$asset = JTable::getInstance('Asset');
-
-			if ($asset->loadByName($component))
-			{
-				continue;
-			}
-
-			$asset->name = $component;
-			$asset->parent_id = 1;
-			$asset->rules = '{}';
-			$asset->title = $component;
-			$asset->setLocation(1, 'last-child');
-
-			if (!$asset->store())
-			{
-				// Install failed, roll back changes
-				$this->parent->abort(JText::sprintf('JLIB_INSTALLER_ABORT_COMP_INSTALL_ROLLBACK', $asset->stderr(true)));
-
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * If we migrated the session from the previous system, flush all the active sessions.
-	 * Otherwise users will be logged in, but not able to do anything since they don't have
-	 * a valid session
-	 *
-	 * @return  boolean
-	 */
-	public function flushSessions()
-	{
-		/**
-		 * The session may have not been started yet (e.g. CLI-based Joomla! update scripts). Let's make sure we do
-		 * have a valid session.
-		 */
-		$session = JFactory::getSession();
-
-		/**
-		 * Restarting the Session require a new login for the current user so lets check if we have an active session
-		 * and only restart it if not.
-		 * For B/C reasons we need to use getState as isActive is not available in 2.5
-		 */
-		if ($session->getState() !== 'active')
-		{
-			$session->restart();
-		}
-
-		// If $_SESSION['__default'] is no longer set we do not have a migrated session, therefore we can quit.
-		if (!isset($_SESSION['__default']))
-		{
-			return true;
-		}
-
-		$db = JFactory::getDbo();
-
-		try
-		{
-			switch ($db->name)
-			{
-				// MySQL database, use TRUNCATE (faster, more resilient)
-				case 'pdomysql':
-				case 'mysql':
-				case 'mysqli':
-					$db->truncateTable('#__session');
-					break;
-
-				// Non-MySQL databases, use a simple DELETE FROM query
-				default:
-					$query = $db->getQuery(true)
-						->delete($db->qn('#__session'));
-					$db->setQuery($query)->execute();
-					break;
-			}
-		}
-		catch (Exception $e)
-		{
-			echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()) . '<br />';
-
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Converts the site's database tables to support UTF-8 Multibyte.
-	 *
-	 * @param   boolean  $doDbFixMsg  Flag if message to be shown to check db fix
-	 *
-	 * @return  void
-	 *
-	 * @since   3.5
-	 */
-	public function convertTablesToUtf8mb4($doDbFixMsg = false)
-	{
-		$db = JFactory::getDbo();
-
-		// This is only required for MySQL databases
-		$serverType = $db->getServerType();
-
-		if ($serverType != 'mysql')
-		{
-			return;
-		}
-
-		// Set required conversion status
-		if ($db->hasUTF8mb4Support())
-		{
-			$converted = 2;
-		}
-		else
-		{
-			$converted = 1;
-		}
-
-		// Check conversion status in database
-		$db->setQuery('SELECT ' . $db->quoteName('converted')
-			. ' FROM ' . $db->quoteName('#__utf8_conversion')
-			);
-
-		try
-		{
-			$convertedDB = $db->loadResult();
-		}
-		catch (Exception $e)
-		{
-			// Render the error message from the Exception object
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-
-			if ($doDbFixMsg)
-			{
-				// Show an error message telling to check database problems
-				JFactory::getApplication()->enqueueMessage(JText::_('JLIB_DATABASE_ERROR_DATABASE_UPGRADE_FAILED'), 'error');
-			}
-
-			return;
-		}
-
-		// Nothing to do, saved conversion status from DB is equal to required
-		if ($convertedDB == $converted)
-		{
-			return;
-		}
-
-		// Step 1: Drop indexes later to be added again with column lengths limitations at step 2
-		$fileName1 = JPATH_ADMINISTRATOR . "/components/com_admin/sql/others/mysql/utf8mb4-conversion-01.sql";
-
-		if (is_file($fileName1))
-		{
-			$fileContents1 = @file_get_contents($fileName1);
-			$queries1 = $db->splitSql($fileContents1);
-
-			if (!empty($queries1))
-			{
-				foreach ($queries1 as $query1)
-				{
-					try
-					{
-						$db->setQuery($query1)->execute();
-					}
-					catch (Exception $e)
-					{
-						// If the query fails we will go on. It just means the index to be dropped does not exist.
-					}
-				}
-			}
-		}
-
-		// Step 2: Perform the index modifications and conversions
-		$fileName2 = JPATH_ADMINISTRATOR . "/components/com_admin/sql/others/mysql/utf8mb4-conversion-02.sql";
-
-		if (is_file($fileName2))
-		{
-			$fileContents2 = @file_get_contents($fileName2);
-			$queries2 = $db->splitSql($fileContents2);
-
-			if (!empty($queries2))
-			{
-				foreach ($queries2 as $query2)
-				{
-					try
-					{
-						$db->setQuery($db->convertUtf8mb4QueryToUtf8($query2))->execute();
-					}
-					catch (Exception $e)
-					{
-						$converted = 0;
-
-						// Still render the error message from the Exception object
-						JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-					}
-				}
-			}
-		}
-
-		if ($doDbFixMsg && $converted == 0)
-		{
-			// Show an error message telling to check database problems
-			JFactory::getApplication()->enqueueMessage(JText::_('JLIB_DATABASE_ERROR_DATABASE_UPGRADE_FAILED'), 'error');
-		}
-
-		// Set flag in database if the update is done.
-		$db->setQuery('UPDATE ' . $db->quoteName('#__utf8_conversion')
-			. ' SET ' . $db->quoteName('converted') . ' = ' . $converted . ';')->execute();
-	}
-
-	/**
-	 * This method clean the Joomla Cache using the method `clean` from the com_cache model
-	 *
-	 * @return  void
-	 *
-	 * @since   3.5.1
-	 */
-	private function cleanJoomlaCache()
-	{
-		JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_cache/models');
-		$model = JModelLegacy::getInstance('cache', 'CacheModel');
-		$model->clean();
 	}
 }
