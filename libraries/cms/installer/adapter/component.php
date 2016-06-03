@@ -137,56 +137,6 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	}
 
 	/**
-	 * Method to remove admin menu references to a component
-	 *
-	 * @param   int $id The ID of the extension whose admin menus will be removed
-	 *
-	 * @return  boolean  True if successful.
-	 *
-	 * @since   3.1
-	 */
-	protected function _removeAdminMenus($id)
-	{
-		$db = $this->parent->getDbo();
-
-		/** @var  JTableMenu $table */
-		$table = JTable::getInstance('menu');
-
-		// Get the ids of the menu items
-		$query = $db->getQuery(true)
-			->select('id')
-			->from('#__menu')
-			->where($db->quoteName('client_id') . ' = 1')
-			->where($db->quoteName('component_id') . ' = ' . (int) $id);
-
-		$db->setQuery($query);
-
-		$ids = $db->loadColumn();
-
-		$result = true;
-
-		// Check for error
-		if (!empty($ids))
-		{
-			// Iterate the items to delete each one.
-			foreach ($ids as $menuid)
-			{
-				if (!$table->delete((int) $menuid))
-				{
-					$this->setError($table->getError());
-
-					$result = false;
-				}
-			}
-
-			// Rebuild the whole tree
-			$table->rebuild();
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Custom uninstall method for components
 	 *
 	 * @param   integer $id The unique extension id of the component to uninstall
@@ -1038,6 +988,56 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 		}
 
 		return true;
+	}
+
+	/**
+	 * Method to remove admin menu references to a component
+	 *
+	 * @param   int $id The ID of the extension whose admin menus will be removed
+	 *
+	 * @return  boolean  True if successful.
+	 *
+	 * @since   3.1
+	 */
+	protected function _removeAdminMenus($id)
+	{
+		$db = $this->parent->getDbo();
+
+		/** @var  JTableMenu $table */
+		$table = JTable::getInstance('menu');
+
+		// Get the ids of the menu items
+		$query = $db->getQuery(true)
+			->select('id')
+			->from('#__menu')
+			->where($db->quoteName('client_id') . ' = 1')
+			->where($db->quoteName('component_id') . ' = ' . (int) $id);
+
+		$db->setQuery($query);
+
+		$ids = $db->loadColumn();
+
+		$result = true;
+
+		// Check for error
+		if (!empty($ids))
+		{
+			// Iterate the items to delete each one.
+			foreach ($ids as $menuid)
+			{
+				if (!$table->delete((int) $menuid))
+				{
+					$this->setError($table->getError());
+
+					$result = false;
+				}
+			}
+
+			// Rebuild the whole tree
+			$table->rebuild();
+		}
+
+		return $result;
 	}
 
 	/**

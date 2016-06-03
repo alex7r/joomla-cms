@@ -149,22 +149,6 @@ class LanguagesModelLanguage extends JModelAdmin
 	}
 
 	/**
-	 * Override to get the table.
-	 *
-	 * @param   string $name    Name of the table.
-	 * @param   string $prefix  Table name prefix.
-	 * @param   array  $options Array of options.
-	 *
-	 * @return  JTable
-	 *
-	 * @since   1.6
-	 */
-	public function getTable($name = '', $prefix = '', $options = array())
-	{
-		return JTable::getInstance('Language');
-	}
-
-	/**
 	 * Custom clean cache method.
 	 *
 	 * @param   string  $group     Optional cache group name.
@@ -261,5 +245,21 @@ class LanguagesModelLanguage extends JModelAdmin
 		$value      = JArrayHelper::toObject($properties, 'JObject');
 
 		return $value;
+	}
+
+	/**
+	 * Override to get the table.
+	 *
+	 * @param   string $name    Name of the table.
+	 * @param   string $prefix  Table name prefix.
+	 * @param   array  $options Array of options.
+	 *
+	 * @return  JTable
+	 *
+	 * @since   1.6
+	 */
+	public function getTable($name = '', $prefix = '', $options = array())
+	{
+		return JTable::getInstance('Language');
 	}
 }

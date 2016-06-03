@@ -607,21 +607,6 @@ class FOFModel extends FOFUtilsObject
 	}
 
 	/**
-	 * Sets the model state auto-save status. By default the model is set up to
-	 * save its state to the session.
-	 *
-	 * @param   boolean $newState True to save the state, false to not save it.
-	 *
-	 * @return  FOFModel  Reference to self
-	 */
-	public function &savestate($newState)
-	{
-		$this->_savestate = $newState ? true : false;
-
-		return $this;
-	}
-
-	/**
 	 * Gets the value of a user state variable.
 	 *
 	 * @param   string  $key          The key of the user state variable.
@@ -666,24 +651,6 @@ class FOFModel extends FOFUtilsObject
 				$this->id = $this->id_list[0];
 			}
 		}
-
-		return $this;
-	}
-
-	/**
-	 * Resets the model, like it was freshly loaded
-	 *
-	 * @return  FOFModel
-	 */
-	public function reset()
-	{
-		$this->id         = 0;
-		$this->id_list    = null;
-		$this->record     = null;
-		$this->list       = null;
-		$this->pagination = null;
-		$this->total      = null;
-		$this->otable     = null;
 
 		return $this;
 	}
@@ -783,6 +750,39 @@ class FOFModel extends FOFUtilsObject
 			->limit(0);
 
 		return $ret;
+	}
+
+	/**
+	 * Sets the model state auto-save status. By default the model is set up to
+	 * save its state to the session.
+	 *
+	 * @param   boolean $newState True to save the state, false to not save it.
+	 *
+	 * @return  FOFModel  Reference to self
+	 */
+	public function &savestate($newState)
+	{
+		$this->_savestate = $newState ? true : false;
+
+		return $this;
+	}
+
+	/**
+	 * Resets the model, like it was freshly loaded
+	 *
+	 * @return  FOFModel
+	 */
+	public function reset()
+	{
+		$this->id         = 0;
+		$this->id_list    = null;
+		$this->record     = null;
+		$this->list       = null;
+		$this->pagination = null;
+		$this->total      = null;
+		$this->otable     = null;
+
+		return $this;
 	}
 
 	/**
@@ -1619,19 +1619,6 @@ class FOFModel extends FOFUtilsObject
 	 * @since   12.2
 	 */
 	protected function populateState()
-	{
-	}
-
-	/**
-	 * This method can be overriden to automatically do something with the
-	 * list results array. You are supposed to modify the list which was passed
-	 * in the parameters; DO NOT return a new array!
-	 *
-	 * @param   array &$resultArray An array of objects, each row representing a record
-	 *
-	 * @return  void
-	 */
-	protected function onProcessList(&$resultArray)
 	{
 	}
 
@@ -3250,6 +3237,19 @@ class FOFModel extends FOFUtilsObject
 	protected function _getListCount($query)
 	{
 		return $this->getTotal();
+	}
+
+	/**
+	 * This method can be overriden to automatically do something with the
+	 * list results array. You are supposed to modify the list which was passed
+	 * in the parameters; DO NOT return a new array!
+	 *
+	 * @param   array &$resultArray An array of objects, each row representing a record
+	 *
+	 * @return  void
+	 */
+	protected function onProcessList(&$resultArray)
+	{
 	}
 
 	/**

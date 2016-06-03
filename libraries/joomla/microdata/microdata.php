@@ -117,23 +117,6 @@ class JMicrodata
 	}
 
 	/**
-	 * Load all available Types and Properties from the http://schema.org vocabulary contained in the types.json file
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected static function loadTypes()
-	{
-		// Load the JSON
-		if (!static::$types)
-		{
-			$path          = JPATH_PLATFORM . '/joomla/microdata/types.json';
-			static::$types = json_decode(file_get_contents($path), true);
-		}
-	}
-
-	/**
 	 * Return an array with all available Types from the http://schema.org vocabulary
 	 *
 	 * @return  array
@@ -305,6 +288,23 @@ class JMicrodata
 		static::loadTypes();
 
 		return (array_key_exists($type, static::$types)) ? true : false;
+	}
+
+	/**
+	 * Load all available Types and Properties from the http://schema.org vocabulary contained in the types.json file
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected static function loadTypes()
+	{
+		// Load the JSON
+		if (!static::$types)
+		{
+			$path          = JPATH_PLATFORM . '/joomla/microdata/types.json';
+			static::$types = json_decode(file_get_contents($path), true);
+		}
 	}
 
 	/**

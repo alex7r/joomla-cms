@@ -339,21 +339,6 @@ class JInstaller extends JAdapter
 	}
 
 	/**
-	 * Sets an installer path by name
-	 *
-	 * @param   string $name  Path name
-	 * @param   string $value Path
-	 *
-	 * @return  void
-	 *
-	 * @since   3.1
-	 */
-	public function setPath($name, $value)
-	{
-		$this->paths[$name] = $value;
-	}
-
-	/**
 	 * Installation abort method
 	 *
 	 * @param   string $msg  Abort message from the installer
@@ -472,6 +457,23 @@ class JInstaller extends JAdapter
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get the installation manifest object
+	 *
+	 * @return  SimpleXMLElement  Manifest object
+	 *
+	 * @since   3.1
+	 */
+	public function getManifest()
+	{
+		if (!is_object($this->manifest))
+		{
+			$this->findManifest();
+		}
+
+		return $this->manifest;
 	}
 
 	// Adapter functions
@@ -593,20 +595,18 @@ class JInstaller extends JAdapter
 	}
 
 	/**
-	 * Get the installation manifest object
+	 * Sets an installer path by name
 	 *
-	 * @return  SimpleXMLElement  Manifest object
+	 * @param   string $name  Path name
+	 * @param   string $value Path
+	 *
+	 * @return  void
 	 *
 	 * @since   3.1
 	 */
-	public function getManifest()
+	public function setPath($name, $value)
 	{
-		if (!is_object($this->manifest))
-		{
-			$this->findManifest();
-		}
-
-		return $this->manifest;
+		$this->paths[$name] = $value;
 	}
 
 	/**

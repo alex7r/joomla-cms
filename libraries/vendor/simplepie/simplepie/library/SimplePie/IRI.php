@@ -856,33 +856,13 @@ class SimplePie_IRI
 	}
 
 	/**
-	 * Check if the object represents a valid IRI. This needs to be done on each
-	 * call as some things change depending on another part of the IRI.
+	 * Return the entire IRI when you try and read the object as a string
 	 *
-	 * @return bool
+	 * @return string
 	 */
-	public function is_valid()
+	public function __toString()
 	{
-		$isauthority = $this->iuserinfo !== null || $this->ihost !== null || $this->port !== null;
-		if ($this->ipath !== '' &&
-			(
-				$isauthority && (
-					$this->ipath[0] !== '/' ||
-					substr($this->ipath, 0, 2) === '//'
-				) ||
-				(
-					$this->scheme === null &&
-					!$isauthority &&
-					strpos($this->ipath, ':') !== false &&
-					(strpos($this->ipath, '/') === false ? true : strpos($this->ipath, ':') < strpos($this->ipath, '/'))
-				)
-			)
-		)
-		{
-			return false;
-		}
-
-		return true;
+		return $this->get_iri();
 	}
 
 	/**
@@ -927,6 +907,36 @@ class SimplePie_IRI
 	}
 
 	/**
+	 * Check if the object represents a valid IRI. This needs to be done on each
+	 * call as some things change depending on another part of the IRI.
+	 *
+	 * @return bool
+	 */
+	public function is_valid()
+	{
+		$isauthority = $this->iuserinfo !== null || $this->ihost !== null || $this->port !== null;
+		if ($this->ipath !== '' &&
+			(
+				$isauthority && (
+					$this->ipath[0] !== '/' ||
+					substr($this->ipath, 0, 2) === '//'
+				) ||
+				(
+					$this->scheme === null &&
+					!$isauthority &&
+					strpos($this->ipath, ':') !== false &&
+					(strpos($this->ipath, '/') === false ? true : strpos($this->ipath, ':') < strpos($this->ipath, '/'))
+				)
+			)
+		)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Get the complete iauthority
 	 *
 	 * @return string
@@ -955,16 +965,6 @@ class SimplePie_IRI
 		{
 			return null;
 		}
-	}
-
-	/**
-	 * Return the entire IRI when you try and read the object as a string
-	 *
-	 * @return string
-	 */
-	public function __toString()
-	{
-		return $this->get_iri();
 	}
 
 	/**

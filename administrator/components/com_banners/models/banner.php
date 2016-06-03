@@ -164,22 +164,6 @@ class BannersModelBanner extends JModelAdmin
 	}
 
 	/**
-	 * Returns a JTable object, always creating it.
-	 *
-	 * @param   string $type   The table type to instantiate. [optional]
-	 * @param   string $prefix A prefix for the table class name. [optional]
-	 * @param   array  $config Configuration array for model. [optional]
-	 *
-	 * @return  JTable  A database object
-	 *
-	 * @since   1.6
-	 */
-	public function getTable($type = 'Banner', $prefix = 'BannersTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
-
-	/**
 	 * Method to save the form data.
 	 *
 	 * @param   array $data The form data.
@@ -288,6 +272,22 @@ class BannersModelBanner extends JModelAdmin
 		$this->cleanCache();
 
 		return true;
+	}
+
+	/**
+	 * Returns a JTable object, always creating it.
+	 *
+	 * @param   string $type   The table type to instantiate. [optional]
+	 * @param   string $prefix A prefix for the table class name. [optional]
+	 * @param   array  $config Configuration array for model. [optional]
+	 *
+	 * @return  JTable  A database object
+	 *
+	 * @since   1.6
+	 */
+	public function getTable($type = 'Banner', $prefix = 'BannersTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
 	}
 
 	/**

@@ -547,6 +547,22 @@ class UsersModelRegistration extends JModelForm
 	}
 
 	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		$data = $this->getData();
+
+		$this->preprocessData('com_users.registration', $data);
+
+		return $data;
+	}
+
+	/**
 	 * Method to get the registration form data.
 	 *
 	 * The base form data is loaded and then an event is fired
@@ -600,22 +616,6 @@ class UsersModelRegistration extends JModelForm
 		}
 
 		return $this->data;
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		$data = $this->getData();
-
-		$this->preprocessData('com_users.registration', $data);
-
-		return $data;
 	}
 
 	/**

@@ -152,60 +152,6 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	}
 
 	/**
-	 * Connects to the database if needed.
-	 *
-	 * @return  void  Returns void if the database connected successfully.
-	 *
-	 * @since   12.1
-	 * @throws  RuntimeException
-	 */
-	public function connect()
-	{
-		if ($this->connection)
-		{
-			return;
-		}
-
-		// Make sure the postgresql extension for PHP is installed and enabled.
-		if (!self::isSupported())
-		{
-			throw new JDatabaseExceptionUnsupported('PHP extension pg_connect is not available.');
-		}
-
-		// Build the DSN for the connection.
-		$dsn = '';
-
-		if (!empty($this->options['host']))
-		{
-			$dsn .= "host={$this->options['host']} ";
-		}
-
-		$dsn .= "dbname={$this->options['database']} user={$this->options['user']} password={$this->options['password']}";
-
-		// Attempt to connect to the server.
-		if (!($this->connection = @pg_connect($dsn)))
-		{
-			throw new JDatabaseExceptionConnecting('Error connecting to PGSQL database.');
-		}
-
-		pg_set_error_verbosity($this->connection, PGSQL_ERRORS_DEFAULT);
-		pg_query('SET standard_conforming_strings=off');
-		pg_query('SET escape_string_warning=off');
-	}
-
-	/**
-	 * Test to see if the PostgreSQL connector is available.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		return (function_exists('pg_connect'));
-	}
-
-	/**
 	 * Execute the SQL statement.
 	 *
 	 * @return  mixed  A database cursor resource on success, boolean false on failure.
@@ -488,6 +434,60 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 		}
 
 		return false;
+	}
+
+	/**
+	 * Connects to the database if needed.
+	 *
+	 * @return  void  Returns void if the database connected successfully.
+	 *
+	 * @since   12.1
+	 * @throws  RuntimeException
+	 */
+	public function connect()
+	{
+		if ($this->connection)
+		{
+			return;
+		}
+
+		// Make sure the postgresql extension for PHP is installed and enabled.
+		if (!self::isSupported())
+		{
+			throw new JDatabaseExceptionUnsupported('PHP extension pg_connect is not available.');
+		}
+
+		// Build the DSN for the connection.
+		$dsn = '';
+
+		if (!empty($this->options['host']))
+		{
+			$dsn .= "host={$this->options['host']} ";
+		}
+
+		$dsn .= "dbname={$this->options['database']} user={$this->options['user']} password={$this->options['password']}";
+
+		// Attempt to connect to the server.
+		if (!($this->connection = @pg_connect($dsn)))
+		{
+			throw new JDatabaseExceptionConnecting('Error connecting to PGSQL database.');
+		}
+
+		pg_set_error_verbosity($this->connection, PGSQL_ERRORS_DEFAULT);
+		pg_query('SET standard_conforming_strings=off');
+		pg_query('SET escape_string_warning=off');
+	}
+
+	/**
+	 * Test to see if the PostgreSQL connector is available.
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		return (function_exists('pg_connect'));
 	}
 
 	/**

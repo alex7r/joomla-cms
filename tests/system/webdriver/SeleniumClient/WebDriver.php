@@ -15,6 +15,7 @@
 
 namespace SeleniumClient;
 
+use SeleniumClient\DesiredCapabilities;
 use SeleniumClient\Http\HttpClient;
 use SeleniumClient\Http\HttpFactory;
 
@@ -51,47 +52,13 @@ class WebDriver
 	}
 
 	/**
-	 * Starts new Selenium session
+	 * Set whether production or testing mode for library
 	 *
-	 * @param DesiredCapabilities $desiredCapabilities
-	 *
-	 * @throws \Exception
+	 * @param String $value
 	 */
-	private function startSession(DesiredCapabilities $desiredCapabilities)
+	public function setEnvironment($value)
 	{
-		if ($desiredCapabilities->getBrowserName() == null || trim($desiredCapabilities->getBrowserName()) == '')
-		{
-			throw new \Exception("Can not start session if browser name is not specified");
-		}
-
-		$command         = "session";
-		$params          = array('desiredCapabilities' => $desiredCapabilities->getCapabilities());
-		$urlHubFormatted = $this->_hubUrl . "/{$command}";
-
-		$httpClient          = HttpFactory::getClient($this->_environment);
-		$results             = $httpClient->setUrl($urlHubFormatted)->setHttpMethod(HttpClient::POST)->setJsonParams($params)->execute();
-		$this->_sessionId    = $results['sessionId'];
-		$this->_capabilities = $this->setCapabilities();
-	}
-
-	/**
-	 * @return Array of actual capabilities
-	 */
-	private function setCapabilities()
-	{
-		$command         = "session";
-		$urlHubFormatted = $this->_hubUrl . "/{$command}/$this->_sessionId";
-
-		$httpClient = HttpFactory::getClient($this->_environment);
-		$results    = $httpClient->setUrl($urlHubFormatted)->setHttpMethod(HttpClient::GET)->execute();
-
-		$result = null;
-		if (isset($results["value"]))
-		{
-			$result = $results["value"];
-		}
-
-		return $result;
+		$this->_environment = $value;
 	}
 
 	/**
@@ -102,16 +69,6 @@ class WebDriver
 	public function getEnvironment()
 	{
 		return $this->_environment;
-	}
-
-	/**
-	 * Set whether production or testing mode for library
-	 *
-	 * @param String $value
-	 */
-	public function setEnvironment($value)
-	{
-		$this->_environment = $value;
 	}
 
 	/**
@@ -162,6 +119,50 @@ class WebDriver
 	public function switchTo()
 	{
 		return new TargetLocator($this);
+	}
+
+	/**
+	 * Starts new Selenium session
+	 *
+	 * @param DesiredCapabilities $desiredCapabilities
+	 *
+	 * @throws \Exception
+	 */
+	private function startSession(DesiredCapabilities $desiredCapabilities)
+	{
+		if ($desiredCapabilities->getBrowserName() == null || trim($desiredCapabilities->getBrowserName()) == '')
+		{
+			throw new \Exception("Can not start session if browser name is not specified");
+		}
+
+		$command         = "session";
+		$params          = array('desiredCapabilities' => $desiredCapabilities->getCapabilities());
+		$urlHubFormatted = $this->_hubUrl . "/{$command}";
+
+		$httpClient          = HttpFactory::getClient($this->_environment);
+		$results             = $httpClient->setUrl($urlHubFormatted)->setHttpMethod(HttpClient::POST)->setJsonParams($params)->execute();
+		$this->_sessionId    = $results['sessionId'];
+		$this->_capabilities = $this->setCapabilities();
+	}
+
+	/**
+	 * @return Array of actual capabilities
+	 */
+	private function setCapabilities()
+	{
+		$command         = "session";
+		$urlHubFormatted = $this->_hubUrl . "/{$command}/$this->_sessionId";
+
+		$httpClient = HttpFactory::getClient($this->_environment);
+		$results    = $httpClient->setUrl($urlHubFormatted)->setHttpMethod(HttpClient::GET)->execute();
+
+		$result = null;
+		if (isset($results["value"]))
+		{
+			$result = $results["value"];
+		}
+
+		return $result;
 	}
 
 	/**
@@ -413,6 +414,32 @@ class WebDriver
 	}
 
 	/**
+	 * Gets an element within current page
+	 *
+	 * @param By      $locator
+	 * @param Boolean $polling
+	 *
+	 * @return \SeleniumClient\WebElement
+	 */
+	public function findElement(By $locator, $polling = false)
+	{
+		$command         = "element";
+		$params          = array('using' => $locator->getStrategy(), 'value' => $locator->getSelectorValue());
+		$urlHubFormatted = $this->_hubUrl . "/session/{$this->_sessionId}/{$command}";
+
+		$httpClient = HttpFactory::getClient($this->_environment);
+		$results    = $httpClient->setUrl($urlHubFormatted)->setHttpMethod(HttpClient::POST)->setJsonParams($params)->setPolling($polling)->execute();
+
+		$result = null;
+		if (isset($results["value"]["ELEMENT"]) && trim($results["value"]["ELEMENT"]) != "")
+		{
+			$result = new WebElement($this, $results["value"]["ELEMENT"]);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Gets elements within current page
 	 *
 	 * @param By           $locator
@@ -467,6 +494,8 @@ class WebDriver
 		return $result;
 	}
 
+	#region Waiting Related
+
 	/**
 	 * Stops the process until an element is found
 	 *
@@ -486,8 +515,6 @@ class WebDriver
 
 		return $dynamicElement;
 	}
-
-	#region Waiting Related
 
 	/**
 	 * Stops the process until an element is not found
@@ -511,36 +538,9 @@ class WebDriver
 		}
 	}
 
-	/**
-	 * Gets an element within current page
-	 *
-	 * @param By      $locator
-	 * @param Boolean $polling
-	 *
-	 * @return \SeleniumClient\WebElement
-	 */
-	public function findElement(By $locator, $polling = false)
-	{
-		$command         = "element";
-		$params          = array('using' => $locator->getStrategy(), 'value' => $locator->getSelectorValue());
-		$urlHubFormatted = $this->_hubUrl . "/session/{$this->_sessionId}/{$command}";
-
-		$httpClient = HttpFactory::getClient($this->_environment);
-		$results    = $httpClient->setUrl($urlHubFormatted)->setHttpMethod(HttpClient::POST)->setJsonParams($params)->setPolling($polling)->execute();
-
-		$result = null;
-		if (isset($results["value"]["ELEMENT"]) && trim($results["value"]["ELEMENT"]) != "")
-		{
-			$result = new WebElement($this, $results["value"]["ELEMENT"]);
-		}
-
-		return $result;
-	}
-
 	#endregion
 
 	#region WebElement Related
-
 	/**
 	 * Send text to element
 	 *
@@ -923,19 +923,6 @@ class WebDriver
 	/**
 	 * Executes javascript on page
 	 *
-	 * @param String $script
-	 * @param Array  $args
-	 *
-	 * @return String
-	 */
-	public function executeScript($script, $args = null)
-	{
-		return $this->executeScriptInternal($script, false, $args);
-	}
-
-	/**
-	 * Executes javascript on page
-	 *
 	 * @param String  $script
 	 * @param Boolean $async
 	 * @param Array   $args
@@ -974,6 +961,19 @@ class WebDriver
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Executes javascript on page
+	 *
+	 * @param String $script
+	 * @param Array  $args
+	 *
+	 * @return String
+	 */
+	public function executeScript($script, $args = null)
+	{
+		return $this->executeScriptInternal($script, false, $args);
 	}
 
 	/**
@@ -1036,6 +1036,28 @@ class WebDriver
 	}
 
 	/**
+	 * Gets current window's identifier
+	 *
+	 * @return String
+	 */
+	public function getCurrentWindowHandle()
+	{
+		$command         = "window_handle";
+		$urlHubFormatted = $this->_hubUrl . "/session/{$this->_sessionId}/{$command}";
+
+		$httpClient = HttpFactory::getClient($this->_environment);
+		$results    = $httpClient->setUrl($urlHubFormatted)->setHttpMethod(HttpClient::GET)->execute();
+
+		$result = null;
+		if (isset($results["value"]))
+		{
+			$result = $results ["value"];
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Gets a list of available windows in current session
 	 *
 	 * @return Array
@@ -1069,27 +1091,6 @@ class WebDriver
 		$this->setWindowSize($windowHandle, $width, $height);
 	}
 
-	/**
-	 * Gets current window's identifier
-	 *
-	 * @return String
-	 */
-	public function getCurrentWindowHandle()
-	{
-		$command         = "window_handle";
-		$urlHubFormatted = $this->_hubUrl . "/session/{$this->_sessionId}/{$command}";
-
-		$httpClient = HttpFactory::getClient($this->_environment);
-		$results    = $httpClient->setUrl($urlHubFormatted)->setHttpMethod(HttpClient::GET)->execute();
-
-		$result = null;
-		if (isset($results["value"]))
-		{
-			$result = $results ["value"];
-		}
-
-		return $result;
-	}
 
 	/**
 	 * Sets specified window's size

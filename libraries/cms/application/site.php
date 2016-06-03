@@ -137,108 +137,6 @@ final class JApplicationSite extends JApplicationCms
 	}
 
 	/**
-	 * Get the application parameters
-	 *
-	 * @param   string $option The component option
-	 *
-	 * @return  Registry  The parameters object
-	 *
-	 * @since   3.2
-	 */
-	public function getParams($option = null)
-	{
-		static $params = array();
-
-		$hash = '__default';
-
-		if (!empty($option))
-		{
-			$hash = $option;
-		}
-
-		if (!isset($params[$hash]))
-		{
-			// Get component parameters
-			if (!$option)
-			{
-				$option = $this->input->getCmd('option', null);
-			}
-
-			// Get new instance of component global parameters
-			$params[$hash] = clone JComponentHelper::getParams($option);
-
-			// Get menu parameters
-			$menus = $this->getMenu();
-			$menu  = $menus->getActive();
-
-			// Get language
-			$lang_code = $this->getLanguage()->getTag();
-			$languages = JLanguageHelper::getLanguages('lang_code');
-
-			$title = $this->get('sitename');
-
-			if (isset($languages[$lang_code]) && $languages[$lang_code]->metadesc)
-			{
-				$description = $languages[$lang_code]->metadesc;
-			}
-			else
-			{
-				$description = $this->get('MetaDesc');
-			}
-
-			$rights = $this->get('MetaRights');
-			$robots = $this->get('robots');
-
-			// Retrieve com_menu global settings
-			$temp = clone JComponentHelper::getParams('com_menus');
-
-			// Lets cascade the parameters if we have menu item parameters
-			if (is_object($menu))
-			{
-				// Get show_page_heading from com_menu global settings
-				$params[$hash]->def('show_page_heading', $temp->get('show_page_heading'));
-
-				$temp = new Registry;
-				$temp->loadString($menu->params);
-				$params[$hash]->merge($temp);
-				$title = $menu->title;
-			}
-			else
-			{
-				// Merge com_menu global settings
-				$params[$hash]->merge($temp);
-
-				// If supplied, use page title
-				$title = $temp->get('page_title', $title);
-			}
-
-			$params[$hash]->def('page_title', $title);
-			$params[$hash]->def('page_description', $description);
-			$params[$hash]->def('page_rights', $rights);
-			$params[$hash]->def('robots', $robots);
-		}
-
-		return $params[$hash];
-	}
-
-	/**
-	 * Return a reference to the JMenu object.
-	 *
-	 * @param   string $name    The name of the application/client.
-	 * @param   array  $options An optional associative array of configuration settings.
-	 *
-	 * @return  JMenu  JMenu object.
-	 *
-	 * @since   3.2
-	 */
-	public function getMenu($name = 'site', $options = array())
-	{
-		$menu = parent::getMenu($name, $options);
-
-		return $menu;
-	}
-
-	/**
 	 * Return a reference to the JPathway object.
 	 *
 	 * @param   string $name    The name of the application.
@@ -519,6 +417,23 @@ final class JApplicationSite extends JApplicationCms
 	}
 
 	/**
+	 * Return a reference to the JMenu object.
+	 *
+	 * @param   string $name    The name of the application/client.
+	 * @param   array  $options An optional associative array of configuration settings.
+	 *
+	 * @return  JMenu  JMenu object.
+	 *
+	 * @since   3.2
+	 */
+	public function getMenu($name = 'site', $options = array())
+	{
+		$menu = parent::getMenu($name, $options);
+
+		return $menu;
+	}
+
+	/**
 	 * Dispatch the application
 	 *
 	 * @param   string $component The component which is being rendered.
@@ -621,6 +536,91 @@ final class JApplicationSite extends JApplicationCms
 		$options['mode'] = $config->get('sef');
 
 		return parent::getRouter($name, $options);
+	}
+
+	/**
+	 * Get the application parameters
+	 *
+	 * @param   string $option The component option
+	 *
+	 * @return  Registry  The parameters object
+	 *
+	 * @since   3.2
+	 */
+	public function getParams($option = null)
+	{
+		static $params = array();
+
+		$hash = '__default';
+
+		if (!empty($option))
+		{
+			$hash = $option;
+		}
+
+		if (!isset($params[$hash]))
+		{
+			// Get component parameters
+			if (!$option)
+			{
+				$option = $this->input->getCmd('option', null);
+			}
+
+			// Get new instance of component global parameters
+			$params[$hash] = clone JComponentHelper::getParams($option);
+
+			// Get menu parameters
+			$menus = $this->getMenu();
+			$menu  = $menus->getActive();
+
+			// Get language
+			$lang_code = $this->getLanguage()->getTag();
+			$languages = JLanguageHelper::getLanguages('lang_code');
+
+			$title = $this->get('sitename');
+
+			if (isset($languages[$lang_code]) && $languages[$lang_code]->metadesc)
+			{
+				$description = $languages[$lang_code]->metadesc;
+			}
+			else
+			{
+				$description = $this->get('MetaDesc');
+			}
+
+			$rights = $this->get('MetaRights');
+			$robots = $this->get('robots');
+
+			// Retrieve com_menu global settings
+			$temp = clone JComponentHelper::getParams('com_menus');
+
+			// Lets cascade the parameters if we have menu item parameters
+			if (is_object($menu))
+			{
+				// Get show_page_heading from com_menu global settings
+				$params[$hash]->def('show_page_heading', $temp->get('show_page_heading'));
+
+				$temp = new Registry;
+				$temp->loadString($menu->params);
+				$params[$hash]->merge($temp);
+				$title = $menu->title;
+			}
+			else
+			{
+				// Merge com_menu global settings
+				$params[$hash]->merge($temp);
+
+				// If supplied, use page title
+				$title = $temp->get('page_title', $title);
+			}
+
+			$params[$hash]->def('page_title', $title);
+			$params[$hash]->def('page_description', $description);
+			$params[$hash]->def('page_rights', $rights);
+			$params[$hash]->def('robots', $robots);
+		}
+
+		return $params[$hash];
 	}
 
 	/**

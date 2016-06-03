@@ -395,27 +395,6 @@ class ContentModelArticle extends JModelAdmin
 	}
 
 	/**
-	 * Custom clean the cache of com_content and content modules
-	 *
-	 * @param   string  $group     The cache group
-	 * @param   integer $client_id The ID of the client
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
-	{
-		parent::cleanCache('com_content');
-		parent::cleanCache('mod_articles_archive');
-		parent::cleanCache('mod_articles_categories');
-		parent::cleanCache('mod_articles_category');
-		parent::cleanCache('mod_articles_latest');
-		parent::cleanCache('mod_articles_news');
-		parent::cleanCache('mod_articles_popular');
-	}
-
-	/**
 	 * Void hit function for pagebreak when editing content from frontend
 	 *
 	 * @return  void
@@ -538,6 +517,27 @@ class ContentModelArticle extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
+	}
+
+	/**
+	 * Custom clean the cache of com_content and content modules
+	 *
+	 * @param   string  $group     The cache group
+	 * @param   integer $client_id The ID of the client
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		parent::cleanCache('com_content');
+		parent::cleanCache('mod_articles_archive');
+		parent::cleanCache('mod_articles_categories');
+		parent::cleanCache('mod_articles_category');
+		parent::cleanCache('mod_articles_latest');
+		parent::cleanCache('mod_articles_news');
+		parent::cleanCache('mod_articles_popular');
 	}
 
 	/**

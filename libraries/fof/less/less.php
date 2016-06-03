@@ -274,6 +274,235 @@ class FOFLess
 	}
 
 	/**
+	 * Compile execute
+	 *
+	 * @param   type $in    X
+	 * @param   type $force X
+	 * @param   self $less  X
+	 *
+	 * @return  type
+	 */
+	public static function cexecute($in, $force = false, $less = null)
+	{
+		if ($less === null)
+		{
+			$less = new self;
+		}
+
+		return $less->cachedCompile($in, $force);
+	}
+
+	/**
+	 * Execute lessphp on a .less file or a lessphp cache structure
+	 *
+	 * The lessphp cache structure contains information about a specific
+	 * less file having been parsed. It can be used as a hint for future
+	 * calls to determine whether or not a rebuild is required.
+	 *
+	 * The cache structure contains two important keys that may be used
+	 * externally:
+	 *
+	 * compiled: The final compiled CSS
+	 * updated: The time (in seconds) the CSS was last compiled
+	 *
+	 * The cache structure is a plain-ol' PHP associative array and can
+	 * be serialized and unserialized without a hitch.
+	 *
+	 * @param   mixed $in    Input
+	 * @param   bool  $force Force rebuild?
+	 *
+	 * @return  array  lessphp cache structure
+	 */
+	public function cachedCompile($in, $force = false)
+	{
+		// Assume no root
+		$root = null;
+
+		if (is_string($in))
+		{
+			$root = $in;
+		}
+		elseif (is_array($in) and isset($in['root']))
+		{
+			if ($force or !isset($in['files']))
+			{
+				/**
+				 * If we are forcing a recompile or if for some reason the
+				 * structure does not contain any file information we should
+				 * specify the root to trigger a rebuild.
+				 */
+				$root = $in['root'];
+			}
+			elseif (isset($in['files']) and is_array($in['files']))
+			{
+				foreach ($in['files'] as $fname => $ftime)
+				{
+					if (!file_exists($fname) or filemtime($fname) > $ftime)
+					{
+						/**
+						 * One of the files we knew about previously has changed
+						 * so we should look at our incoming root again.
+						 */
+						$root = $in['root'];
+						break;
+					}
+				}
+			}
+		}
+		else
+		{
+			/**
+			 * TODO: Throw an exception? We got neither a string nor something
+			 * that looks like a compatible lessphp cache structure.
+			 */
+			return null;
+		}
+
+		if ($root !== null)
+		{
+			// If we have a root value which means we should rebuild.
+			$out             = array();
+			$out['root']     = $root;
+			$out['compiled'] = $this->compileFile($root);
+			$out['files']    = $this->allParsedFiles();
+			$out['updated']  = time();
+
+			return $out;
+		}
+		else
+		{
+			// No changes, pass back the structure
+			// we were given initially.
+			return $in;
+		}
+	}
+
+	/**
+	 * All parsed files
+	 *
+	 * @return  type
+	 */
+	public function allParsedFiles()
+	{
+		return $this->allParsedFiles;
+	}
+
+	/**
+	 * Lib red
+	 *
+	 * @param   type $color X
+	 *
+	 * @return  type
+	 */
+	public function lib_red($color)
+	{
+		$color = $this->coerceColor($color);
+
+		if (is_null($color))
+		{
+			$this->throwError('color expected for red()');
+		}
+
+		return $color[1];
+	}
+
+	/**
+	 * Lib green
+	 *
+	 * @param   type $color X
+	 *
+	 * @return  type
+	 */
+	public function lib_green($color)
+	{
+		$color = $this->coerceColor($color);
+
+		if (is_null($color))
+		{
+			$this->throwError('color expected for green()');
+		}
+
+		return $color[2];
+	}
+
+	/**
+	 * Lib blue
+	 *
+	 * @param   type $color X
+	 *
+	 * @return  type
+	 */
+	public function lib_blue($color)
+	{
+		$color = $this->coerceColor($color);
+
+		if (is_null($color))
+		{
+			$this->throwError('color expected for blue()');
+		}
+
+		return $color[3];
+	}
+
+	/**
+	 * Parse and compile buffer
+	 *
+	 * @param   null $str              X
+	 * @param   type $initialVariables X
+	 *
+	 * @return  type
+	 *
+	 * @throws  Exception
+	 *
+	 * @deprecated  2.0
+	 */
+	public function parse($str = null, $initialVariables = null)
+	{
+		if (is_array($str))
+		{
+			$initialVariables = $str;
+			$str              = null;
+		}
+
+		$oldVars = $this->registeredVars;
+
+		if ($initialVariables !== null)
+		{
+			$this->setVariables($initialVariables);
+		}
+
+		if ($str == null)
+		{
+			if (empty($this->_parseFile))
+			{
+				throw new exception("nothing to parse");
+			}
+
+			$out = $this->compileFile($this->_parseFile);
+		}
+		else
+		{
+			$out = $this->compile($str);
+		}
+
+		$this->registeredVars = $oldVars;
+
+		return $out;
+	}
+
+	/**
+	 * Set variables
+	 *
+	 * @param   type $variables X
+	 *
+	 * @return  void
+	 */
+	public function setVariables($variables)
+	{
+		$this->registeredVars = array_merge($this->registeredVars, $variables);
+	}
+
+	/**
 	 * Compile file
 	 *
 	 * @param   type $fname    X
@@ -315,18 +544,6 @@ class FOFLess
 	}
 
 	/**
-	 * Add parsed file
-	 *
-	 * @param   type $file X
-	 *
-	 * @return  void
-	 */
-	protected function addParsedFile($file)
-	{
-		$this->allParsedFiles[realpath($file)] = filemtime($file);
-	}
-
-	/**
 	 * Compile
 	 *
 	 * @param   type $string X
@@ -362,23 +579,6 @@ class FOFLess
 		setlocale(LC_NUMERIC, $locale);
 
 		return $out;
-	}
-
-	/**
-	 * Make parser
-	 *
-	 * @param   type $name X
-	 *
-	 * @return  FOFLessParser
-	 */
-	protected function makeParser($name)
-	{
-		/** FOF -- BEGIN CHANGE * */
-		$parser = new FOFLessParser($this, $name);
-		/** FOF -- END CHANGE * */
-		$parser->writeComments = $this->preserveComments;
-
-		return $parser;
 	}
 
 	/**
@@ -438,335 +638,210 @@ class FOFLess
 	}
 
 	/**
-	 * The state of execution
+	 * Set Formatter
 	 *
-	 * @param   type $block X
-	 *
-	 * @return  stdclass
-	 */
-	protected function pushEnv($block = null)
-	{
-		$e         = new stdclass;
-		$e->parent = $this->env;
-		$e->store  = array();
-		$e->block  = $block;
-
-		$this->env = $e;
-
-		return $e;
-	}
-
-	/**
-	 * Set something in the current env
-	 *
-	 * @param   type $name  X
-	 * @param   type $value X
+	 * @param   type $name X
 	 *
 	 * @return  void
 	 */
-	protected function set($name, $value)
+	public function setFormatter($name)
 	{
-		$this->env->store[$name] = $value;
+		$this->formatterName = $name;
 	}
 
 	/**
-	 * Recursively compiles a block.
+	 * Set preserve comments
 	 *
-	 * A block is analogous to a CSS block in most cases. A single LESS document
-	 * is encapsulated in a block when parsed, but it does not have parent tags
-	 * so all of it's children appear on the root level when compiled.
-	 *
-	 * Blocks are made up of props and children.
-	 *
-	 * Props are property instructions, array tuples which describe an action
-	 * to be taken, eg. write a property, set a variable, mixin a block.
-	 *
-	 * The children of a block are just all the blocks that are defined within.
-	 * This is used to look up mixins when performing a mixin.
-	 *
-	 * Compiling the block involves pushing a fresh environment on the stack,
-	 * and iterating through the props, compiling each one.
-	 *
-	 * @param   stdClass $block Block
-	 *
-	 * @see  FOFLess::compileProp()
+	 * @param   type $preserve X
 	 *
 	 * @return  void
 	 */
-	protected function compileBlock($block)
+	public function setPreserveComments($preserve)
 	{
-		switch ($block->type)
+		$this->preserveComments = $preserve;
+	}
+
+	/**
+	 * Register function
+	 *
+	 * @param   type $name X
+	 * @param   type $func X
+	 *
+	 * @return  void
+	 */
+	public function registerFunction($name, $func)
+	{
+		$this->libFunctions[$name] = $func;
+	}
+
+	/**
+	 * Unregister function
+	 *
+	 * @param   type $name X
+	 *
+	 * @return  void
+	 */
+	public function unregisterFunction($name)
+	{
+		unset($this->libFunctions[$name]);
+	}
+
+	/**
+	 * Unset variable
+	 *
+	 * @param   type $name X
+	 *
+	 * @return  void
+	 */
+	public function unsetVariable($name)
+	{
+		unset($this->registeredVars[$name]);
+	}
+
+	/**
+	 * Set import dir
+	 *
+	 * @param   type $dirs X
+	 *
+	 * @return  void
+	 */
+	public function setImportDir($dirs)
+	{
+		$this->importDir = (array) $dirs;
+	}
+
+	/**
+	 * Add import dir
+	 *
+	 * @param   type $dir X
+	 *
+	 * @return  void
+	 */
+	public function addImportDir($dir)
+	{
+		$this->importDir   = (array) $this->importDir;
+		$this->importDir[] = $dir;
+	}
+
+	/**
+	 * Try import
+	 *
+	 * @param   string    $importPath  Import path
+	 * @param   stdObject $parentBlock Parent block
+	 * @param   string    $out         Out
+	 *
+	 * @return  boolean
+	 */
+	protected function tryImport($importPath, $parentBlock, $out)
+	{
+		if ($importPath[0] == "function" && $importPath[1] == "url")
 		{
-			case "root":
-				$this->compileRoot($block);
-				break;
-			case null:
-				$this->compileCSSBlock($block);
-				break;
-			case "media":
-				$this->compileMedia($block);
-				break;
-			case "directive":
-				$name = "@" . $block->name;
-
-				if (!empty($block->value))
-				{
-					$name .= " " . $this->compileValue($this->reduce($block->value));
-				}
-
-				$this->compileNestedBlock($block, array($name));
-				break;
-			default:
-				$this->throwError("unknown block type: $block->type\n");
+			$importPath = $this->flattenList($importPath[2]);
 		}
-	}
 
-	/**
-	 * Compile root
-	 *
-	 * @param   stdClass $root Root
-	 *
-	 * @return  void
-	 */
-	protected function compileRoot($root)
-	{
-		$this->pushEnv();
-		$this->scope = $this->makeOutputBlock($root->type);
-		$this->compileProps($root, $this->scope);
-		$this->popEnv();
-	}
+		$str = $this->coerceString($importPath);
 
-	/**
-	 * Make output block
-	 *
-	 * @param   type $type      X
-	 * @param   type $selectors X
-	 *
-	 * @return  stdclass
-	 */
-	protected function makeOutputBlock($type, $selectors = null)
-	{
-		$b            = new stdclass;
-		$b->lines     = array();
-		$b->children  = array();
-		$b->selectors = $selectors;
-		$b->type      = $type;
-		$b->parent    = $this->scope;
-
-		return $b;
-	}
-
-	/**
-	 * Compile props
-	 *
-	 * @param   type $block Something
-	 * @param   type $out   Something
-	 *
-	 * @return  void
-	 */
-	protected function compileProps($block, $out)
-	{
-		foreach ($this->sortProps($block->props) as $prop)
+		if ($str === null)
 		{
-			$this->compileProp($prop, $block, $out);
+			return false;
 		}
-	}
 
-	/**
-	 * Sort props
-	 *
-	 * @param   type $props X
-	 * @param   type $split X
-	 *
-	 * @return  type
-	 */
-	protected function sortProps($props, $split = false)
-	{
-		$vars    = array();
-		$imports = array();
-		$other   = array();
+		$url = $this->compileValue($this->lib_e($str));
 
-		foreach ($props as $prop)
+		// Don't import if it ends in css
+		if (substr_compare($url, '.css', -4, 4) === 0)
 		{
-			switch ($prop[0])
+			return false;
+		}
+
+		$realPath = $this->findImport($url);
+
+		if ($realPath === null)
+		{
+			return false;
+		}
+
+		if ($this->importDisabled)
+		{
+			return array(false, "/* import disabled */");
+		}
+
+		$this->addParsedFile($realPath);
+		$parser = $this->makeParser($realPath);
+		$root   = $parser->parse(file_get_contents($realPath));
+
+		// Set the parents of all the block props
+		foreach ($root->props as $prop)
+		{
+			if ($prop[0] == "block")
 			{
-				case "assign":
-					if (isset($prop[1][0]) && $prop[1][0] == $this->vPrefix)
-					{
-						$vars[] = $prop;
-					}
-					else
-					{
-						$other[] = $prop;
-					}
-					break;
-				case "import":
-					$id        = self::$nextImportId++;
-					$prop[]    = $id;
-					$imports[] = $prop;
-					$other[]   = array("import_mixin", $id);
-					break;
-				default:
-					$other[] = $prop;
+				$prop[1]->parent = $parentBlock;
 			}
 		}
 
-		if ($split)
+		/**
+		 * Copy mixins into scope, set their parents, bring blocks from import
+		 * into current block
+		 * TODO: need to mark the source parser    these came from this file
+		 */
+		foreach ($root->children as $childName => $child)
 		{
-			return array(array_merge($vars, $imports), $other);
+			if (isset($parentBlock->children[$childName]))
+			{
+				$parentBlock->children[$childName] = array_merge(
+					$parentBlock->children[$childName], $child
+				);
+			}
+			else
+			{
+				$parentBlock->children[$childName] = $child;
+			}
 		}
-		else
-		{
-			return array_merge($vars, $imports, $other);
-		}
+
+		$pi  = pathinfo($realPath);
+		$dir = $pi["dirname"];
+
+		list($top, $bottom) = $this->sortProps($root->props, true);
+		$this->compileImportedProps($top, $parentBlock, $out, $parser, $dir);
+
+		return array(true, $bottom, $parser, $dir);
 	}
 
 	/**
-	 * Compile a prop and update $lines or $blocks appropriately
+	 * Turn list of length 1 into value type
 	 *
-	 * @param   array    $prop  Prop
-	 * @param   stdClass $block Block
-	 * @param   string   $out   Out
+	 * @param   type $value X
 	 *
-	 * @return  void
+	 * @return  type
 	 */
-	protected function compileProp($prop, $block, $out)
+	protected function flattenList($value)
 	{
-		// Set error position context
-		$this->sourceLoc = isset($prop[-1]) ? $prop[-1] : -1;
-
-		switch ($prop[0])
+		if ($value[0] == "list" && count($value[2]) == 1)
 		{
-			case 'assign':
-				list(, $name, $value) = $prop;
-
-				if ($name[0] == $this->vPrefix)
-				{
-					$this->set($name, $value);
-				}
-				else
-				{
-					$out->lines[] = $this->formatter->property($name, $this->compileValue($this->reduce($value)));
-				}
-				break;
-			case 'block':
-				list(, $child) = $prop;
-				$this->compileBlock($child);
-				break;
-			case 'mixin':
-				list(, $path, $args, $suffix) = $prop;
-
-				$args   = array_map(array($this, "reduce"), (array) $args);
-				$mixins = $this->findBlocks($block, $path, $args);
-
-				if ($mixins === null)
-				{
-					// Throw error here??
-					break;
-				}
-
-				foreach ($mixins as $mixin)
-				{
-					$haveScope = false;
-
-					if (isset($mixin->parent->scope))
-					{
-						$haveScope                   = true;
-						$mixinParentEnv              = $this->pushEnv();
-						$mixinParentEnv->storeParent = $mixin->parent->scope;
-					}
-
-					$haveArgs = false;
-
-					if (isset($mixin->args))
-					{
-						$haveArgs = true;
-						$this->pushEnv();
-						$this->zipSetArgs($mixin->args, $args);
-					}
-
-					$oldParent = $mixin->parent;
-
-					if ($mixin != $block)
-					{
-						$mixin->parent = $block;
-					}
-
-					foreach ($this->sortProps($mixin->props) as $subProp)
-					{
-						if ($suffix !== null
-							&& $subProp[0] == "assign"
-							&& is_string($subProp[1])
-							&& $subProp[1]{0} != $this->vPrefix
-						)
-						{
-							$subProp[2] = array(
-								'list', ' ',
-								array($subProp[2], array('keyword', $suffix))
-							);
-						}
-
-						$this->compileProp($subProp, $mixin, $out);
-					}
-
-					$mixin->parent = $oldParent;
-
-					if ($haveArgs)
-					{
-						$this->popEnv();
-					}
-
-					if ($haveScope)
-					{
-						$this->popEnv();
-					}
-				}
-
-				break;
-			case 'raw':
-				$out->lines[] = $prop[1];
-				break;
-			case "directive":
-				list(, $name, $value) = $prop;
-				$out->lines[] = "@$name " . $this->compileValue($this->reduce($value)) . ';';
-				break;
-			case "comment":
-				$out->lines[] = $prop[1];
-				break;
-			case "import";
-				list(, $importPath, $importId) = $prop;
-				$importPath = $this->reduce($importPath);
-
-				if (!isset($this->env->imports))
-				{
-					$this->env->imports = array();
-				}
-
-				$result = $this->tryImport($importPath, $block, $out);
-
-				$this->env->imports[$importId] = $result === false ?
-					array(false, "@import " . $this->compileValue($importPath) . ";") :
-					$result;
-
-				break;
-			case "import_mixin":
-				list(, $importId) = $prop;
-				$import = $this->env->imports[$importId];
-
-				if ($import[0] === false)
-				{
-					$out->lines[] = $import[1];
-				}
-				else
-				{
-					list(, $bottom, $parser, $importDir) = $import;
-					$this->compileImportedProps($bottom, $block, $out, $parser, $importDir);
-				}
-
-				break;
-			default:
-				$this->throwError("unknown op: {$prop[0]}\n");
+			return $this->flattenList($value[2][0]);
 		}
+
+		return $value;
+	}
+
+	/**
+	 * Make something string like into a string
+	 *
+	 * @param   type $value X
+	 *
+	 * @return  null
+	 */
+	protected function coerceString($value)
+	{
+		switch ($value[0])
+		{
+			case "string":
+				return $value;
+			case "keyword":
+				return array("string", "", array($value[1]));
+		}
+
+		return null;
 	}
 
 	/**
@@ -935,6 +1010,345 @@ class FOFLess
 	}
 
 	/**
+	 * Utility func to unquote a string
+	 *
+	 * @param   string $arg Arg
+	 *
+	 * @return  string
+	 */
+	protected function lib_e($arg)
+	{
+		switch ($arg[0])
+		{
+			case "list":
+				$items = $arg[2];
+
+				if (isset($items[0]))
+				{
+					return $this->lib_e($items[0]);
+				}
+
+				return self::$defaultValue;
+
+			case "string":
+				$arg[1] = "";
+
+				return $arg;
+
+			case "keyword":
+				return $arg;
+
+			default:
+				return array("keyword", $this->compileValue($arg));
+		}
+	}
+
+	/**
+	 * Attempts to find the path of an import url, returns null for css files
+	 *
+	 * @param   string $url The URL of the import
+	 *
+	 * @return  string|null
+	 */
+	protected function findImport($url)
+	{
+		foreach ((array) $this->importDir as $dir)
+		{
+			$full = $dir . (substr($dir, -1) != '/' ? '/' : '') . $url;
+
+			if ($this->fileExists($file = $full . '.less') || $this->fileExists($file = $full))
+			{
+				return $file;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Does file $name exists? It's a simple proxy to JFile for now
+	 *
+	 * @param   string $name The file we check for existence
+	 *
+	 * @return  boolean
+	 */
+	protected function fileExists($name)
+	{
+		/** FOF - BEGIN CHANGE * */
+		return FOFPlatform::getInstance()->getIntegrationObject('filesystem')->fileExists($name);
+		/** FOF - END CHANGE * */
+	}
+
+	/**
+	 * Add parsed file
+	 *
+	 * @param   type $file X
+	 *
+	 * @return  void
+	 */
+	protected function addParsedFile($file)
+	{
+		$this->allParsedFiles[realpath($file)] = filemtime($file);
+	}
+
+	/**
+	 * Make parser
+	 *
+	 * @param   type $name X
+	 *
+	 * @return  FOFLessParser
+	 */
+	protected function makeParser($name)
+	{
+		/** FOF -- BEGIN CHANGE * */
+		$parser = new FOFLessParser($this, $name);
+		/** FOF -- END CHANGE * */
+		$parser->writeComments = $this->preserveComments;
+
+		return $parser;
+	}
+
+	/**
+	 * Sort props
+	 *
+	 * @param   type $props X
+	 * @param   type $split X
+	 *
+	 * @return  type
+	 */
+	protected function sortProps($props, $split = false)
+	{
+		$vars    = array();
+		$imports = array();
+		$other   = array();
+
+		foreach ($props as $prop)
+		{
+			switch ($prop[0])
+			{
+				case "assign":
+					if (isset($prop[1][0]) && $prop[1][0] == $this->vPrefix)
+					{
+						$vars[] = $prop;
+					}
+					else
+					{
+						$other[] = $prop;
+					}
+					break;
+				case "import":
+					$id        = self::$nextImportId++;
+					$prop[]    = $id;
+					$imports[] = $prop;
+					$other[]   = array("import_mixin", $id);
+					break;
+				default:
+					$other[] = $prop;
+			}
+		}
+
+		if ($split)
+		{
+			return array(array_merge($vars, $imports), $other);
+		}
+		else
+		{
+			return array_merge($vars, $imports, $other);
+		}
+	}
+
+	/**
+	 * Compile Imported Props
+	 *
+	 * @param   array         $props        Props
+	 * @param   stdClass      $block        Block
+	 * @param   string        $out          Out
+	 * @param   FOFLessParser $sourceParser Source parser
+	 * @param   string        $importDir    Import dir
+	 *
+	 * @return  void
+	 */
+	protected function compileImportedProps($props, $block, $out, $sourceParser, $importDir)
+	{
+		$oldSourceParser = $this->sourceParser;
+
+		$oldImport = $this->importDir;
+
+		// TODO: this is because the importDir api is stupid
+		$this->importDir = (array) $this->importDir;
+		array_unshift($this->importDir, $importDir);
+
+		foreach ($props as $prop)
+		{
+			$this->compileProp($prop, $block, $out);
+		}
+
+		$this->importDir    = $oldImport;
+		$this->sourceParser = $oldSourceParser;
+	}
+
+	/**
+	 * Compile a prop and update $lines or $blocks appropriately
+	 *
+	 * @param   array    $prop  Prop
+	 * @param   stdClass $block Block
+	 * @param   string   $out   Out
+	 *
+	 * @return  void
+	 */
+	protected function compileProp($prop, $block, $out)
+	{
+		// Set error position context
+		$this->sourceLoc = isset($prop[-1]) ? $prop[-1] : -1;
+
+		switch ($prop[0])
+		{
+			case 'assign':
+				list(, $name, $value) = $prop;
+
+				if ($name[0] == $this->vPrefix)
+				{
+					$this->set($name, $value);
+				}
+				else
+				{
+					$out->lines[] = $this->formatter->property($name, $this->compileValue($this->reduce($value)));
+				}
+				break;
+			case 'block':
+				list(, $child) = $prop;
+				$this->compileBlock($child);
+				break;
+			case 'mixin':
+				list(, $path, $args, $suffix) = $prop;
+
+				$args   = array_map(array($this, "reduce"), (array) $args);
+				$mixins = $this->findBlocks($block, $path, $args);
+
+				if ($mixins === null)
+				{
+					// Throw error here??
+					break;
+				}
+
+				foreach ($mixins as $mixin)
+				{
+					$haveScope = false;
+
+					if (isset($mixin->parent->scope))
+					{
+						$haveScope                   = true;
+						$mixinParentEnv              = $this->pushEnv();
+						$mixinParentEnv->storeParent = $mixin->parent->scope;
+					}
+
+					$haveArgs = false;
+
+					if (isset($mixin->args))
+					{
+						$haveArgs = true;
+						$this->pushEnv();
+						$this->zipSetArgs($mixin->args, $args);
+					}
+
+					$oldParent = $mixin->parent;
+
+					if ($mixin != $block)
+					{
+						$mixin->parent = $block;
+					}
+
+					foreach ($this->sortProps($mixin->props) as $subProp)
+					{
+						if ($suffix !== null
+							&& $subProp[0] == "assign"
+							&& is_string($subProp[1])
+							&& $subProp[1]{0} != $this->vPrefix
+						)
+						{
+							$subProp[2] = array(
+								'list', ' ',
+								array($subProp[2], array('keyword', $suffix))
+							);
+						}
+
+						$this->compileProp($subProp, $mixin, $out);
+					}
+
+					$mixin->parent = $oldParent;
+
+					if ($haveArgs)
+					{
+						$this->popEnv();
+					}
+
+					if ($haveScope)
+					{
+						$this->popEnv();
+					}
+				}
+
+				break;
+			case 'raw':
+				$out->lines[] = $prop[1];
+				break;
+			case "directive":
+				list(, $name, $value) = $prop;
+				$out->lines[] = "@$name " . $this->compileValue($this->reduce($value)) . ';';
+				break;
+			case "comment":
+				$out->lines[] = $prop[1];
+				break;
+			case "import";
+				list(, $importPath, $importId) = $prop;
+				$importPath = $this->reduce($importPath);
+
+				if (!isset($this->env->imports))
+				{
+					$this->env->imports = array();
+				}
+
+				$result = $this->tryImport($importPath, $block, $out);
+
+				$this->env->imports[$importId] = $result === false ?
+					array(false, "@import " . $this->compileValue($importPath) . ";") :
+					$result;
+
+				break;
+			case "import_mixin":
+				list(, $importId) = $prop;
+				$import = $this->env->imports[$importId];
+
+				if ($import[0] === false)
+				{
+					$out->lines[] = $import[1];
+				}
+				else
+				{
+					list(, $bottom, $parser, $importDir) = $import;
+					$this->compileImportedProps($bottom, $block, $out, $parser, $importDir);
+				}
+
+				break;
+			default:
+				$this->throwError("unknown op: {$prop[0]}\n");
+		}
+	}
+
+	/**
+	 * Set something in the current env
+	 *
+	 * @param   type $name  X
+	 * @param   type $value X
+	 *
+	 * @return  void
+	 */
+	protected function set($name, $value)
+	{
+		$this->env->store[$name] = $value;
+	}
+
+	/**
 	 * Reduce
 	 *
 	 * @param   type $value         X
@@ -1093,40 +1507,6 @@ class FOFLess
 		}
 
 		return $value;
-	}
-
-	/**
-	 * Utility func to unquote a string
-	 *
-	 * @param   string $arg Arg
-	 *
-	 * @return  string
-	 */
-	protected function lib_e($arg)
-	{
-		switch ($arg[0])
-		{
-			case "list":
-				$items = $arg[2];
-
-				if (isset($items[0]))
-				{
-					return $this->lib_e($items[0]);
-				}
-
-				return self::$defaultValue;
-
-			case "string":
-				$arg[1] = "";
-
-				return $arg;
-
-			case "keyword":
-				return $arg;
-
-			default:
-				return array("keyword", $this->compileValue($arg));
-		}
 	}
 
 	/**
@@ -1296,26 +1676,6 @@ class FOFLess
 
 			return $strRight;
 		}
-	}
-
-	/**
-	 * Make something string like into a string
-	 *
-	 * @param   type $value X
-	 *
-	 * @return  null
-	 */
-	protected function coerceString($value)
-	{
-		switch ($value[0])
-		{
-			case "string":
-				return $value;
-			case "keyword":
-				return array("string", "", array($value[1]));
-		}
-
-		return null;
 	}
 
 	/**
@@ -1570,261 +1930,125 @@ class FOFLess
 	}
 
 	/**
-	 * Attempt to find blocks matched by path and args
+	 * Recursively compiles a block.
 	 *
-	 * @param   array  $searchIn Block to search in
-	 * @param   string $path     The path to search for
-	 * @param   array  $args     Arguments
-	 * @param   array  $seen     Your guess is as good as mine; that's third party code
+	 * A block is analogous to a CSS block in most cases. A single LESS document
+	 * is encapsulated in a block when parsed, but it does not have parent tags
+	 * so all of it's children appear on the root level when compiled.
 	 *
-	 * @return  null
-	 */
-	protected function findBlocks($searchIn, $path, $args, $seen = array())
-	{
-		if ($searchIn == null)
-		{
-			return null;
-		}
-
-		if (isset($seen[$searchIn->id]))
-		{
-			return null;
-		}
-
-		$seen[$searchIn->id] = true;
-
-		$name = $path[0];
-
-		if (isset($searchIn->children[$name]))
-		{
-			$blocks = $searchIn->children[$name];
-
-			if (count($path) == 1)
-			{
-				$matches = $this->patternMatchAll($blocks, $args);
-
-				if (!empty($matches))
-				{
-					// This will return all blocks that match in the closest
-					// scope that has any matching block, like lessjs
-					return $matches;
-				}
-			}
-			else
-			{
-				$matches = array();
-
-				foreach ($blocks as $subBlock)
-				{
-					$subMatches = $this->findBlocks($subBlock, array_slice($path, 1), $args, $seen);
-
-					if (!is_null($subMatches))
-					{
-						foreach ($subMatches as $sm)
-						{
-							$matches[] = $sm;
-						}
-					}
-				}
-
-				return count($matches) > 0 ? $matches : null;
-			}
-		}
-
-		if ($searchIn->parent === $searchIn)
-		{
-			return null;
-		}
-
-		return $this->findBlocks($searchIn->parent, $path, $args, $seen);
-	}
-
-	/**
-	 * Pattern match all
+	 * Blocks are made up of props and children.
 	 *
-	 * @param   type $blocks      X
-	 * @param   type $callingArgs X
+	 * Props are property instructions, array tuples which describe an action
+	 * to be taken, eg. write a property, set a variable, mixin a block.
 	 *
-	 * @return  type
-	 */
-	protected function patternMatchAll($blocks, $callingArgs)
-	{
-		$matches = null;
-
-		foreach ($blocks as $block)
-		{
-			if ($this->patternMatch($block, $callingArgs))
-			{
-				$matches[] = $block;
-			}
-		}
-
-		return $matches;
-	}
-
-	/**
-	 * Pattern match
+	 * The children of a block are just all the blocks that are defined within.
+	 * This is used to look up mixins when performing a mixin.
 	 *
-	 * @param   type $block       X
-	 * @param   type $callingArgs X
+	 * Compiling the block involves pushing a fresh environment on the stack,
+	 * and iterating through the props, compiling each one.
 	 *
-	 * @return  boolean
-	 */
-	protected function patternMatch($block, $callingArgs)
-	{
-		/**
-		 * Match the guards if it has them
-		 * any one of the groups must have all its guards pass for a match
-		 */
-		if (!empty($block->guards))
-		{
-			$groupPassed = false;
-
-			foreach ($block->guards as $guardGroup)
-			{
-				foreach ($guardGroup as $guard)
-				{
-					$this->pushEnv();
-					$this->zipSetArgs($block->args, $callingArgs);
-
-					$negate = false;
-
-					if ($guard[0] == "negate")
-					{
-						$guard  = $guard[1];
-						$negate = true;
-					}
-
-					$passed = $this->reduce($guard) == self::$TRUE;
-
-					if ($negate)
-					{
-						$passed = !$passed;
-					}
-
-					$this->popEnv();
-
-					if ($passed)
-					{
-						$groupPassed = true;
-					}
-					else
-					{
-						$groupPassed = false;
-						break;
-					}
-				}
-
-				if ($groupPassed)
-				{
-					break;
-				}
-			}
-
-			if (!$groupPassed)
-			{
-				return false;
-			}
-		}
-
-		$numCalling = count($callingArgs);
-
-		if (empty($block->args))
-		{
-			return $block->isVararg || $numCalling == 0;
-		}
-
-		// No args
-		$i = -1;
-
-		// Try to match by arity or by argument literal
-		foreach ($block->args as $i => $arg)
-		{
-			switch ($arg[0])
-			{
-				case "lit":
-					if (empty($callingArgs[$i]) || !$this->eq($arg[1], $callingArgs[$i]))
-					{
-						return false;
-					}
-					break;
-				case "arg":
-					// No arg and no default value
-					if (!isset($callingArgs[$i]) && !isset($arg[2]))
-					{
-						return false;
-					}
-					break;
-				case "rest":
-					// Rest can be empty
-					$i--;
-					break 2;
-			}
-		}
-
-		if ($block->isVararg)
-		{
-			// Not having enough is handled above
-			return true;
-		}
-		else
-		{
-			$numMatched = $i + 1;
-
-			// Greater than becuase default values always match
-			return $numMatched >= $numCalling;
-		}
-	}
-
-	/**
-	 * Sets all argument names in $args to either the default value
-	 * or the one passed in through $values
+	 * @param   stdClass $block Block
 	 *
-	 * @param   array $args   Arguments
-	 * @param   array $values Values
+	 * @see  FOFLess::compileProp()
 	 *
 	 * @return  void
 	 */
-	protected function zipSetArgs($args, $values)
+	protected function compileBlock($block)
 	{
-		$i              = 0;
-		$assignedValues = array();
-
-		foreach ($args as $a)
+		switch ($block->type)
 		{
-			if ($a[0] == "arg")
-			{
-				if ($i < count($values) && !is_null($values[$i]))
+			case "root":
+				$this->compileRoot($block);
+				break;
+			case null:
+				$this->compileCSSBlock($block);
+				break;
+			case "media":
+				$this->compileMedia($block);
+				break;
+			case "directive":
+				$name = "@" . $block->name;
+
+				if (!empty($block->value))
 				{
-					$value = $values[$i];
-				}
-				elseif (isset($a[2]))
-				{
-					$value = $a[2];
-				}
-				else
-				{
-					$value = null;
+					$name .= " " . $this->compileValue($this->reduce($block->value));
 				}
 
-				$value = $this->reduce($value);
-				$this->set($a[1], $value);
-				$assignedValues[] = $value;
-			}
-
-			$i++;
+				$this->compileNestedBlock($block, array($name));
+				break;
+			default:
+				$this->throwError("unknown block type: $block->type\n");
 		}
+	}
 
-		// Check for a rest
-		$last = end($args);
+	/**
+	 * Compile root
+	 *
+	 * @param   stdClass $root Root
+	 *
+	 * @return  void
+	 */
+	protected function compileRoot($root)
+	{
+		$this->pushEnv();
+		$this->scope = $this->makeOutputBlock($root->type);
+		$this->compileProps($root, $this->scope);
+		$this->popEnv();
+	}
 
-		if ($last[0] == "rest")
+	/**
+	 * The state of execution
+	 *
+	 * @param   type $block X
+	 *
+	 * @return  stdclass
+	 */
+	protected function pushEnv($block = null)
+	{
+		$e         = new stdclass;
+		$e->parent = $this->env;
+		$e->store  = array();
+		$e->block  = $block;
+
+		$this->env = $e;
+
+		return $e;
+	}
+
+	/**
+	 * Make output block
+	 *
+	 * @param   type $type      X
+	 * @param   type $selectors X
+	 *
+	 * @return  stdclass
+	 */
+	protected function makeOutputBlock($type, $selectors = null)
+	{
+		$b            = new stdclass;
+		$b->lines     = array();
+		$b->children  = array();
+		$b->selectors = $selectors;
+		$b->type      = $type;
+		$b->parent    = $this->scope;
+
+		return $b;
+	}
+
+	/**
+	 * Compile props
+	 *
+	 * @param   type $block Something
+	 * @param   type $out   Something
+	 *
+	 * @return  void
+	 */
+	protected function compileProps($block, $out)
+	{
+		foreach ($this->sortProps($block->props) as $prop)
 		{
-			$rest = array_slice($values, count($args) - 1);
-			$this->set($last[1], $this->reduce(array("list", " ", $rest)));
+			$this->compileProp($prop, $block, $out);
 		}
-
-		$this->env->arguments = $assignedValues;
 	}
 
 	/**
@@ -1838,173 +2062,6 @@ class FOFLess
 		$this->env = $this->env->parent;
 
 		return $old;
-	}
-
-	/**
-	 * Try import
-	 *
-	 * @param   string    $importPath  Import path
-	 * @param   stdObject $parentBlock Parent block
-	 * @param   string    $out         Out
-	 *
-	 * @return  boolean
-	 */
-	protected function tryImport($importPath, $parentBlock, $out)
-	{
-		if ($importPath[0] == "function" && $importPath[1] == "url")
-		{
-			$importPath = $this->flattenList($importPath[2]);
-		}
-
-		$str = $this->coerceString($importPath);
-
-		if ($str === null)
-		{
-			return false;
-		}
-
-		$url = $this->compileValue($this->lib_e($str));
-
-		// Don't import if it ends in css
-		if (substr_compare($url, '.css', -4, 4) === 0)
-		{
-			return false;
-		}
-
-		$realPath = $this->findImport($url);
-
-		if ($realPath === null)
-		{
-			return false;
-		}
-
-		if ($this->importDisabled)
-		{
-			return array(false, "/* import disabled */");
-		}
-
-		$this->addParsedFile($realPath);
-		$parser = $this->makeParser($realPath);
-		$root   = $parser->parse(file_get_contents($realPath));
-
-		// Set the parents of all the block props
-		foreach ($root->props as $prop)
-		{
-			if ($prop[0] == "block")
-			{
-				$prop[1]->parent = $parentBlock;
-			}
-		}
-
-		/**
-		 * Copy mixins into scope, set their parents, bring blocks from import
-		 * into current block
-		 * TODO: need to mark the source parser    these came from this file
-		 */
-		foreach ($root->children as $childName => $child)
-		{
-			if (isset($parentBlock->children[$childName]))
-			{
-				$parentBlock->children[$childName] = array_merge(
-					$parentBlock->children[$childName], $child
-				);
-			}
-			else
-			{
-				$parentBlock->children[$childName] = $child;
-			}
-		}
-
-		$pi  = pathinfo($realPath);
-		$dir = $pi["dirname"];
-
-		list($top, $bottom) = $this->sortProps($root->props, true);
-		$this->compileImportedProps($top, $parentBlock, $out, $parser, $dir);
-
-		return array(true, $bottom, $parser, $dir);
-	}
-
-	/**
-	 * Turn list of length 1 into value type
-	 *
-	 * @param   type $value X
-	 *
-	 * @return  type
-	 */
-	protected function flattenList($value)
-	{
-		if ($value[0] == "list" && count($value[2]) == 1)
-		{
-			return $this->flattenList($value[2][0]);
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Attempts to find the path of an import url, returns null for css files
-	 *
-	 * @param   string $url The URL of the import
-	 *
-	 * @return  string|null
-	 */
-	protected function findImport($url)
-	{
-		foreach ((array) $this->importDir as $dir)
-		{
-			$full = $dir . (substr($dir, -1) != '/' ? '/' : '') . $url;
-
-			if ($this->fileExists($file = $full . '.less') || $this->fileExists($file = $full))
-			{
-				return $file;
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Does file $name exists? It's a simple proxy to JFile for now
-	 *
-	 * @param   string $name The file we check for existence
-	 *
-	 * @return  boolean
-	 */
-	protected function fileExists($name)
-	{
-		/** FOF - BEGIN CHANGE * */
-		return FOFPlatform::getInstance()->getIntegrationObject('filesystem')->fileExists($name);
-		/** FOF - END CHANGE * */
-	}
-
-	/**
-	 * Compile Imported Props
-	 *
-	 * @param   array         $props        Props
-	 * @param   stdClass      $block        Block
-	 * @param   string        $out          Out
-	 * @param   FOFLessParser $sourceParser Source parser
-	 * @param   string        $importDir    Import dir
-	 *
-	 * @return  void
-	 */
-	protected function compileImportedProps($props, $block, $out, $sourceParser, $importDir)
-	{
-		$oldSourceParser = $this->sourceParser;
-
-		$oldImport = $this->importDir;
-
-		// TODO: this is because the importDir api is stupid
-		$this->importDir = (array) $this->importDir;
-		array_unshift($this->importDir, $importDir);
-
-		foreach ($props as $prop)
-		{
-			$this->compileProp($prop, $block, $out);
-		}
-
-		$this->importDir    = $oldImport;
-		$this->sourceParser = $oldSourceParser;
 	}
 
 	/**
@@ -2332,318 +2389,261 @@ class FOFLess
 	}
 
 	/**
-	 * Compile execute
+	 * Attempt to find blocks matched by path and args
 	 *
-	 * @param   type $in    X
-	 * @param   type $force X
-	 * @param   self $less  X
+	 * @param   array  $searchIn Block to search in
+	 * @param   string $path     The path to search for
+	 * @param   array  $args     Arguments
+	 * @param   array  $seen     Your guess is as good as mine; that's third party code
 	 *
-	 * @return  type
+	 * @return  null
 	 */
-	public static function cexecute($in, $force = false, $less = null)
+	protected function findBlocks($searchIn, $path, $args, $seen = array())
 	{
-		if ($less === null)
+		if ($searchIn == null)
 		{
-			$less = new self;
-		}
-
-		return $less->cachedCompile($in, $force);
-	}
-
-	/**
-	 * Execute lessphp on a .less file or a lessphp cache structure
-	 *
-	 * The lessphp cache structure contains information about a specific
-	 * less file having been parsed. It can be used as a hint for future
-	 * calls to determine whether or not a rebuild is required.
-	 *
-	 * The cache structure contains two important keys that may be used
-	 * externally:
-	 *
-	 * compiled: The final compiled CSS
-	 * updated: The time (in seconds) the CSS was last compiled
-	 *
-	 * The cache structure is a plain-ol' PHP associative array and can
-	 * be serialized and unserialized without a hitch.
-	 *
-	 * @param   mixed $in    Input
-	 * @param   bool  $force Force rebuild?
-	 *
-	 * @return  array  lessphp cache structure
-	 */
-	public function cachedCompile($in, $force = false)
-	{
-		// Assume no root
-		$root = null;
-
-		if (is_string($in))
-		{
-			$root = $in;
-		}
-		elseif (is_array($in) and isset($in['root']))
-		{
-			if ($force or !isset($in['files']))
-			{
-				/**
-				 * If we are forcing a recompile or if for some reason the
-				 * structure does not contain any file information we should
-				 * specify the root to trigger a rebuild.
-				 */
-				$root = $in['root'];
-			}
-			elseif (isset($in['files']) and is_array($in['files']))
-			{
-				foreach ($in['files'] as $fname => $ftime)
-				{
-					if (!file_exists($fname) or filemtime($fname) > $ftime)
-					{
-						/**
-						 * One of the files we knew about previously has changed
-						 * so we should look at our incoming root again.
-						 */
-						$root = $in['root'];
-						break;
-					}
-				}
-			}
-		}
-		else
-		{
-			/**
-			 * TODO: Throw an exception? We got neither a string nor something
-			 * that looks like a compatible lessphp cache structure.
-			 */
 			return null;
 		}
 
-		if ($root !== null)
+		if (isset($seen[$searchIn->id]))
 		{
-			// If we have a root value which means we should rebuild.
-			$out             = array();
-			$out['root']     = $root;
-			$out['compiled'] = $this->compileFile($root);
-			$out['files']    = $this->allParsedFiles();
-			$out['updated']  = time();
-
-			return $out;
-		}
-		else
-		{
-			// No changes, pass back the structure
-			// we were given initially.
-			return $in;
-		}
-	}
-
-	/**
-	 * All parsed files
-	 *
-	 * @return  type
-	 */
-	public function allParsedFiles()
-	{
-		return $this->allParsedFiles;
-	}
-
-	/**
-	 * Lib red
-	 *
-	 * @param   type $color X
-	 *
-	 * @return  type
-	 */
-	public function lib_red($color)
-	{
-		$color = $this->coerceColor($color);
-
-		if (is_null($color))
-		{
-			$this->throwError('color expected for red()');
+			return null;
 		}
 
-		return $color[1];
-	}
+		$seen[$searchIn->id] = true;
 
-	/**
-	 * Lib green
-	 *
-	 * @param   type $color X
-	 *
-	 * @return  type
-	 */
-	public function lib_green($color)
-	{
-		$color = $this->coerceColor($color);
+		$name = $path[0];
 
-		if (is_null($color))
+		if (isset($searchIn->children[$name]))
 		{
-			$this->throwError('color expected for green()');
-		}
+			$blocks = $searchIn->children[$name];
 
-		return $color[2];
-	}
-
-	/**
-	 * Lib blue
-	 *
-	 * @param   type $color X
-	 *
-	 * @return  type
-	 */
-	public function lib_blue($color)
-	{
-		$color = $this->coerceColor($color);
-
-		if (is_null($color))
-		{
-			$this->throwError('color expected for blue()');
-		}
-
-		return $color[3];
-	}
-
-	/**
-	 * Parse and compile buffer
-	 *
-	 * @param   null $str              X
-	 * @param   type $initialVariables X
-	 *
-	 * @return  type
-	 *
-	 * @throws  Exception
-	 *
-	 * @deprecated  2.0
-	 */
-	public function parse($str = null, $initialVariables = null)
-	{
-		if (is_array($str))
-		{
-			$initialVariables = $str;
-			$str              = null;
-		}
-
-		$oldVars = $this->registeredVars;
-
-		if ($initialVariables !== null)
-		{
-			$this->setVariables($initialVariables);
-		}
-
-		if ($str == null)
-		{
-			if (empty($this->_parseFile))
+			if (count($path) == 1)
 			{
-				throw new exception("nothing to parse");
+				$matches = $this->patternMatchAll($blocks, $args);
+
+				if (!empty($matches))
+				{
+					// This will return all blocks that match in the closest
+					// scope that has any matching block, like lessjs
+					return $matches;
+				}
+			}
+			else
+			{
+				$matches = array();
+
+				foreach ($blocks as $subBlock)
+				{
+					$subMatches = $this->findBlocks($subBlock, array_slice($path, 1), $args, $seen);
+
+					if (!is_null($subMatches))
+					{
+						foreach ($subMatches as $sm)
+						{
+							$matches[] = $sm;
+						}
+					}
+				}
+
+				return count($matches) > 0 ? $matches : null;
+			}
+		}
+
+		if ($searchIn->parent === $searchIn)
+		{
+			return null;
+		}
+
+		return $this->findBlocks($searchIn->parent, $path, $args, $seen);
+	}
+
+	/**
+	 * Pattern match all
+	 *
+	 * @param   type $blocks      X
+	 * @param   type $callingArgs X
+	 *
+	 * @return  type
+	 */
+	protected function patternMatchAll($blocks, $callingArgs)
+	{
+		$matches = null;
+
+		foreach ($blocks as $block)
+		{
+			if ($this->patternMatch($block, $callingArgs))
+			{
+				$matches[] = $block;
+			}
+		}
+
+		return $matches;
+	}
+
+	/**
+	 * Pattern match
+	 *
+	 * @param   type $block       X
+	 * @param   type $callingArgs X
+	 *
+	 * @return  boolean
+	 */
+	protected function patternMatch($block, $callingArgs)
+	{
+		/**
+		 * Match the guards if it has them
+		 * any one of the groups must have all its guards pass for a match
+		 */
+		if (!empty($block->guards))
+		{
+			$groupPassed = false;
+
+			foreach ($block->guards as $guardGroup)
+			{
+				foreach ($guardGroup as $guard)
+				{
+					$this->pushEnv();
+					$this->zipSetArgs($block->args, $callingArgs);
+
+					$negate = false;
+
+					if ($guard[0] == "negate")
+					{
+						$guard  = $guard[1];
+						$negate = true;
+					}
+
+					$passed = $this->reduce($guard) == self::$TRUE;
+
+					if ($negate)
+					{
+						$passed = !$passed;
+					}
+
+					$this->popEnv();
+
+					if ($passed)
+					{
+						$groupPassed = true;
+					}
+					else
+					{
+						$groupPassed = false;
+						break;
+					}
+				}
+
+				if ($groupPassed)
+				{
+					break;
+				}
 			}
 
-			$out = $this->compileFile($this->_parseFile);
+			if (!$groupPassed)
+			{
+				return false;
+			}
+		}
+
+		$numCalling = count($callingArgs);
+
+		if (empty($block->args))
+		{
+			return $block->isVararg || $numCalling == 0;
+		}
+
+		// No args
+		$i = -1;
+
+		// Try to match by arity or by argument literal
+		foreach ($block->args as $i => $arg)
+		{
+			switch ($arg[0])
+			{
+				case "lit":
+					if (empty($callingArgs[$i]) || !$this->eq($arg[1], $callingArgs[$i]))
+					{
+						return false;
+					}
+					break;
+				case "arg":
+					// No arg and no default value
+					if (!isset($callingArgs[$i]) && !isset($arg[2]))
+					{
+						return false;
+					}
+					break;
+				case "rest":
+					// Rest can be empty
+					$i--;
+					break 2;
+			}
+		}
+
+		if ($block->isVararg)
+		{
+			// Not having enough is handled above
+			return true;
 		}
 		else
 		{
-			$out = $this->compile($str);
+			$numMatched = $i + 1;
+
+			// Greater than becuase default values always match
+			return $numMatched >= $numCalling;
+		}
+	}
+
+	/**
+	 * Sets all argument names in $args to either the default value
+	 * or the one passed in through $values
+	 *
+	 * @param   array $args   Arguments
+	 * @param   array $values Values
+	 *
+	 * @return  void
+	 */
+	protected function zipSetArgs($args, $values)
+	{
+		$i              = 0;
+		$assignedValues = array();
+
+		foreach ($args as $a)
+		{
+			if ($a[0] == "arg")
+			{
+				if ($i < count($values) && !is_null($values[$i]))
+				{
+					$value = $values[$i];
+				}
+				elseif (isset($a[2]))
+				{
+					$value = $a[2];
+				}
+				else
+				{
+					$value = null;
+				}
+
+				$value = $this->reduce($value);
+				$this->set($a[1], $value);
+				$assignedValues[] = $value;
+			}
+
+			$i++;
 		}
 
-		$this->registeredVars = $oldVars;
+		// Check for a rest
+		$last = end($args);
 
-		return $out;
-	}
+		if ($last[0] == "rest")
+		{
+			$rest = array_slice($values, count($args) - 1);
+			$this->set($last[1], $this->reduce(array("list", " ", $rest)));
+		}
 
-	/**
-	 * Set variables
-	 *
-	 * @param   type $variables X
-	 *
-	 * @return  void
-	 */
-	public function setVariables($variables)
-	{
-		$this->registeredVars = array_merge($this->registeredVars, $variables);
-	}
-
-	/**
-	 * Set Formatter
-	 *
-	 * @param   type $name X
-	 *
-	 * @return  void
-	 */
-	public function setFormatter($name)
-	{
-		$this->formatterName = $name;
-	}
-
-	/**
-	 * Set preserve comments
-	 *
-	 * @param   type $preserve X
-	 *
-	 * @return  void
-	 */
-	public function setPreserveComments($preserve)
-	{
-		$this->preserveComments = $preserve;
-	}
-
-	/**
-	 * Register function
-	 *
-	 * @param   type $name X
-	 * @param   type $func X
-	 *
-	 * @return  void
-	 */
-	public function registerFunction($name, $func)
-	{
-		$this->libFunctions[$name] = $func;
-	}
-
-	/**
-	 * Unregister function
-	 *
-	 * @param   type $name X
-	 *
-	 * @return  void
-	 */
-	public function unregisterFunction($name)
-	{
-		unset($this->libFunctions[$name]);
-	}
-
-	/**
-	 * Unset variable
-	 *
-	 * @param   type $name X
-	 *
-	 * @return  void
-	 */
-	public function unsetVariable($name)
-	{
-		unset($this->registeredVars[$name]);
-	}
-
-	/**
-	 * Set import dir
-	 *
-	 * @param   type $dirs X
-	 *
-	 * @return  void
-	 */
-	public function setImportDir($dirs)
-	{
-		$this->importDir = (array) $dirs;
-	}
-
-	/**
-	 * Add import dir
-	 *
-	 * @param   type $dir X
-	 *
-	 * @return  void
-	 */
-	public function addImportDir($dir)
-	{
-		$this->importDir   = (array) $this->importDir;
-		$this->importDir[] = $dir;
+		$this->env->arguments = $assignedValues;
 	}
 
 	/**

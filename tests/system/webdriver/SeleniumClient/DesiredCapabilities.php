@@ -15,6 +15,8 @@
 
 namespace SeleniumClient;
 
+use SeleniumClient\CapabilityType;
+
 require_once 'CapabilityType.php';
 
 class DesiredCapabilities
@@ -48,26 +50,6 @@ class DesiredCapabilities
 	}
 
 	/**
-	 * Sets specified capability
-	 *
-	 * @param String $capabilityType
-	 * @param String $value
-	 *
-	 * @throws \Exception
-	 */
-	public function setCapability($capabilityType, $value)
-	{
-		if (CapabilityType::isValidCapabilityType($capabilityType))
-		{
-			$this->_capabilities[$capabilityType] = $value;
-		}
-		else
-		{
-			throw new \Exception("'" . $capabilityType . "' is not an valid capability type");
-		}
-	}
-
-	/**
 	 * Gets current capabilities
 	 *
 	 * @return Array
@@ -75,16 +57,6 @@ class DesiredCapabilities
 	public function getCapabilities()
 	{
 		return $this->_capabilities;
-	}
-
-	/**
-	 * Gets whether javascript is enabled
-	 *
-	 * @return String
-	 */
-	public function getIsJavaScriptEnabled()
-	{
-		return $this->getCapability(CapabilityType::javascriptEnabled);
 	}
 
 	/**
@@ -111,6 +83,67 @@ class DesiredCapabilities
 		}
 	}
 
+	/**
+	 * Gets browser name
+	 *
+	 * @return String
+	 */
+	public function getBrowserName()
+	{
+		return $this->getCapability(CapabilityType::browserName);
+	}
+
+	/**
+	 * Gets platform name
+	 *
+	 * @return String
+	 */
+	public function getPlatform()
+	{
+		return $this->getCapability(CapabilityType::platform);
+	}
+
+	/**
+	 * Gets version
+	 *
+	 * @return String
+	 */
+	public function getVersion()
+	{
+		return $this->getCapability(CapabilityType::version);
+	}
+
+	/**
+	 * Gets whether javascript is enabled
+	 *
+	 * @return String
+	 */
+	public function getIsJavaScriptEnabled()
+	{
+		return $this->getCapability(CapabilityType::javascriptEnabled);
+	}
+
+
+	/**
+	 * Sets specified capability
+	 *
+	 * @param String $capabilityType
+	 * @param String $value
+	 *
+	 * @throws \Exception
+	 */
+	public function setCapability($capabilityType, $value)
+	{
+		if (CapabilityType::isValidCapabilityType($capabilityType))
+		{
+			$this->_capabilities[$capabilityType] = $value;
+		}
+		else
+		{
+			throw new \Exception("'" . $capabilityType . "' is not an valid capability type");
+		}
+	}
+
 	public function __toString()
 	{
 		$result = "DesiredCapabilities{BrowserName = " . $this->getBrowserName();
@@ -128,35 +161,5 @@ class DesiredCapabilities
 		$result .= "}";
 
 		return $result;
-	}
-
-	/**
-	 * Gets browser name
-	 *
-	 * @return String
-	 */
-	public function getBrowserName()
-	{
-		return $this->getCapability(CapabilityType::browserName);
-	}
-
-	/**
-	 * Gets version
-	 *
-	 * @return String
-	 */
-	public function getVersion()
-	{
-		return $this->getCapability(CapabilityType::version);
-	}
-
-	/**
-	 * Gets platform name
-	 *
-	 * @return String
-	 */
-	public function getPlatform()
-	{
-		return $this->getCapability(CapabilityType::platform);
 	}
 }

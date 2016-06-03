@@ -472,6 +472,25 @@ class InputFilter
 	}
 
 	/**
+	 * Function to determine if contents of an attribute are safe
+	 *
+	 * @param   array $attrSubSet A 2 element array for attribute's name, value
+	 *
+	 * @return  boolean  True if bad code is detected
+	 *
+	 * @since   1.0
+	 */
+	public static function checkAttribute($attrSubSet)
+	{
+		$attrSubSet[0] = strtolower($attrSubSet[0]);
+		$attrSubSet[1] = strtolower($attrSubSet[1]);
+
+		return (((strpos($attrSubSet[1], 'expression') !== false) && ($attrSubSet[0]) == 'style') || (strpos($attrSubSet[1], 'javascript:') !== false) ||
+			(strpos($attrSubSet[1], 'behaviour:') !== false) || (strpos($attrSubSet[1], 'vbscript:') !== false) ||
+			(strpos($attrSubSet[1], 'mocha:') !== false) || (strpos($attrSubSet[1], 'livescript:') !== false));
+	}
+
+	/**
 	 * Internal method to iteratively remove all unwanted tags and attributes
 	 *
 	 * @param   string $source Input string to be 'cleaned'
@@ -726,96 +745,6 @@ class InputFilter
 	}
 
 	/**
-	 * Escape < > and " inside attribute values
-	 *
-	 * @param   string $source The source string.
-	 *
-	 * @return  string  Filtered string
-	 *
-	 * @since   1.0
-	 */
-	protected function escapeAttributeValues($source)
-	{
-		$alreadyFiltered = '';
-		$remainder       = $source;
-		$badChars        = array('<', '"', '>');
-		$escapedChars    = array('&lt;', '&quot;', '&gt;');
-
-		// Process each portion based on presence of =" and "<space>, "/>, or ">
-		// See if there are any more attributes to process
-		while (preg_match('#<[^>]*?=\s*?(\"|\')#s', $remainder, $matches, PREG_OFFSET_CAPTURE))
-		{
-			// Get the portion before the attribute value
-			$quotePosition = $matches[0][1];
-			$nextBefore    = $quotePosition + strlen($matches[0][0]);
-
-			// Figure out if we have a single or double quote and look for the matching closing quote
-			// Closing quote should be "/>, ">, "<space>, or " at the end of the string
-			$quote     = substr($matches[0][0], -1);
-			$pregMatch = ($quote == '"') ? '#(\"\s*/\s*>|\"\s*>|\"\s+|\"$)#' : "#(\'\s*/\s*>|\'\s*>|\'\s+|\'$)#";
-
-			// Get the portion after attribute value
-			if (preg_match($pregMatch, substr($remainder, $nextBefore), $matches, PREG_OFFSET_CAPTURE))
-			{
-				// We have a closing quote
-				$nextAfter = $nextBefore + $matches[0][1];
-			}
-			else
-			{
-				// No closing quote
-				$nextAfter = strlen($remainder);
-			}
-
-			// Get the actual attribute value
-			$attributeValue = substr($remainder, $nextBefore, $nextAfter - $nextBefore);
-
-			// Escape bad chars
-			$attributeValue = str_replace($badChars, $escapedChars, $attributeValue);
-			$attributeValue = $this->stripCssExpressions($attributeValue);
-			$alreadyFiltered .= substr($remainder, 0, $nextBefore) . $attributeValue . $quote;
-			$remainder = substr($remainder, $nextAfter + 1);
-		}
-
-		// At this point, we just have to return the $alreadyFiltered and the $remainder
-		return $alreadyFiltered . $remainder;
-	}
-
-	/**
-	 * Remove CSS Expressions in the form of <property>:expression(...)
-	 *
-	 * @param   string $source The source string.
-	 *
-	 * @return  string  Filtered string
-	 *
-	 * @since   1.0
-	 */
-	protected function stripCssExpressions($source)
-	{
-		// Strip any comments out (in the form of /*...*/)
-		$test = preg_replace('#\/\*.*\*\/#U', '', $source);
-
-		// Test for :expression
-		if (!stripos($test, ':expression'))
-		{
-			// Not found, so we are done
-			$return = $source;
-		}
-		else
-		{
-			// At this point, we have stripped out the comments and have found :expression
-			// Test stripped string for :expression followed by a '('
-			if (preg_match_all('#:expression\s*\(#', $test, $matches))
-			{
-				// If found, remove :expression
-				$test   = str_ireplace(':expression', '', $test);
-				$return = $test;
-			}
-		}
-
-		return $return;
-	}
-
-	/**
 	 * Internal method to strip a tag of certain attributes
 	 *
 	 * @param   array $attrSet Array of attribute pairs to filter
@@ -920,25 +849,6 @@ class InputFilter
 	}
 
 	/**
-	 * Function to determine if contents of an attribute are safe
-	 *
-	 * @param   array $attrSubSet A 2 element array for attribute's name, value
-	 *
-	 * @return  boolean  True if bad code is detected
-	 *
-	 * @since   1.0
-	 */
-	public static function checkAttribute($attrSubSet)
-	{
-		$attrSubSet[0] = strtolower($attrSubSet[0]);
-		$attrSubSet[1] = strtolower($attrSubSet[1]);
-
-		return (((strpos($attrSubSet[1], 'expression') !== false) && ($attrSubSet[0]) == 'style') || (strpos($attrSubSet[1], 'javascript:') !== false) ||
-			(strpos($attrSubSet[1], 'behaviour:') !== false) || (strpos($attrSubSet[1], 'vbscript:') !== false) ||
-			(strpos($attrSubSet[1], 'mocha:') !== false) || (strpos($attrSubSet[1], 'livescript:') !== false));
-	}
-
-	/**
 	 * Try to convert to plaintext
 	 *
 	 * @param   string $source The source string.
@@ -951,5 +861,95 @@ class InputFilter
 	protected function decode($source)
 	{
 		return html_entity_decode($source, ENT_QUOTES, 'UTF-8');
+	}
+
+	/**
+	 * Escape < > and " inside attribute values
+	 *
+	 * @param   string $source The source string.
+	 *
+	 * @return  string  Filtered string
+	 *
+	 * @since   1.0
+	 */
+	protected function escapeAttributeValues($source)
+	{
+		$alreadyFiltered = '';
+		$remainder       = $source;
+		$badChars        = array('<', '"', '>');
+		$escapedChars    = array('&lt;', '&quot;', '&gt;');
+
+		// Process each portion based on presence of =" and "<space>, "/>, or ">
+		// See if there are any more attributes to process
+		while (preg_match('#<[^>]*?=\s*?(\"|\')#s', $remainder, $matches, PREG_OFFSET_CAPTURE))
+		{
+			// Get the portion before the attribute value
+			$quotePosition = $matches[0][1];
+			$nextBefore    = $quotePosition + strlen($matches[0][0]);
+
+			// Figure out if we have a single or double quote and look for the matching closing quote
+			// Closing quote should be "/>, ">, "<space>, or " at the end of the string
+			$quote     = substr($matches[0][0], -1);
+			$pregMatch = ($quote == '"') ? '#(\"\s*/\s*>|\"\s*>|\"\s+|\"$)#' : "#(\'\s*/\s*>|\'\s*>|\'\s+|\'$)#";
+
+			// Get the portion after attribute value
+			if (preg_match($pregMatch, substr($remainder, $nextBefore), $matches, PREG_OFFSET_CAPTURE))
+			{
+				// We have a closing quote
+				$nextAfter = $nextBefore + $matches[0][1];
+			}
+			else
+			{
+				// No closing quote
+				$nextAfter = strlen($remainder);
+			}
+
+			// Get the actual attribute value
+			$attributeValue = substr($remainder, $nextBefore, $nextAfter - $nextBefore);
+
+			// Escape bad chars
+			$attributeValue = str_replace($badChars, $escapedChars, $attributeValue);
+			$attributeValue = $this->stripCssExpressions($attributeValue);
+			$alreadyFiltered .= substr($remainder, 0, $nextBefore) . $attributeValue . $quote;
+			$remainder = substr($remainder, $nextAfter + 1);
+		}
+
+		// At this point, we just have to return the $alreadyFiltered and the $remainder
+		return $alreadyFiltered . $remainder;
+	}
+
+	/**
+	 * Remove CSS Expressions in the form of <property>:expression(...)
+	 *
+	 * @param   string $source The source string.
+	 *
+	 * @return  string  Filtered string
+	 *
+	 * @since   1.0
+	 */
+	protected function stripCssExpressions($source)
+	{
+		// Strip any comments out (in the form of /*...*/)
+		$test = preg_replace('#\/\*.*\*\/#U', '', $source);
+
+		// Test for :expression
+		if (!stripos($test, ':expression'))
+		{
+			// Not found, so we are done
+			$return = $source;
+		}
+		else
+		{
+			// At this point, we have stripped out the comments and have found :expression
+			// Test stripped string for :expression followed by a '('
+			if (preg_match_all('#:expression\s*\(#', $test, $matches))
+			{
+				// If found, remove :expression
+				$test   = str_ireplace(':expression', '', $test);
+				$return = $test;
+			}
+		}
+
+		return $return;
 	}
 }
