@@ -486,7 +486,11 @@ HTML;
             $form_class = '';
 
             if ($show_filters) {
-                JHtmlSidebar::setAction("index.php?option=" . $input->getCmd('option') . "&view=" . FOFInflector::pluralize($input->getCmd('view')));
+                JHtmlSidebar::setAction(
+                    "index.php?option=" . $input->getCmd('option') . "&view=" . FOFInflector::pluralize(
+                        $input->getCmd('view')
+                    )
+                );
             }
 
             // Reorder the fields with ordering first
@@ -567,9 +571,18 @@ HTML;
                     } elseif (!empty($options)) {
                         $label = $headerField->label;
 
-                        JHtmlSidebar::addFilter('- ' . JText::_($label) . ' -', (string)$headerField->name,
-                            JHtml::_('select.options', $options, 'value', 'text',
-                                $model->getState($headerField->name, ''), true));
+                        JHtmlSidebar::addFilter(
+                            '- ' . JText::_($label) . ' -',
+                            (string)$headerField->name,
+                            JHtml::_(
+                                'select.options',
+                                $options,
+                                'value',
+                                'text',
+                                $model->getState($headerField->name, ''),
+                                true
+                            )
+                        );
                     }
                 } else {
                     // Joomla! 2.5
@@ -590,8 +603,17 @@ HTML;
                         $attribs = array(
                             'onchange' => 'document.adminForm.submit();'
                         );
-                        $filter  = JHtml::_('select.genericlist', $options, $headerField->name, $attribs, 'value',
-                            'text', $headerField->value, false, true);
+                        $filter  = JHtml::_(
+                            'select.genericlist',
+                            $options,
+                            $headerField->name,
+                            $attribs,
+                            'value',
+                            'text',
+                            $headerField->value,
+                            false,
+                            true
+                        );
                         $filter_html .= "\t\t\t\t\t\t$filter" . PHP_EOL;
                     }
 
@@ -641,7 +663,9 @@ HTML;
                 if ($show_pagination) {
                     // Render the pagination rows per page selection box, if the pagination is enabled
                     $html .= "\t" . '<div class="btn-group pull-right hidden-phone">' . "\n";
-                    $html .= "\t\t" . '<label for="limit" class="element-invisible">' . JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC') . '</label>' . "\n";
+                    $html .= "\t\t" . '<label for="limit" class="element-invisible">' . JText::_(
+                            'JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'
+                        ) . '</label>' . "\n";
                     $html .= "\t\t" . $model->getPagination()->getLimitBox() . "\n";
                     $html .= "\t" . '</div>' . "\n";
                 }
@@ -651,21 +675,34 @@ HTML;
                     $asc_sel  = ($view->getLists()->order_Dir == 'asc') ? 'selected="selected"' : '';
                     $desc_sel = ($view->getLists()->order_Dir == 'desc') ? 'selected="selected"' : '';
                     $html .= "\t" . '<div class="btn-group pull-right hidden-phone">' . "\n";
-                    $html .= "\t\t" . '<label for="directionTable" class="element-invisible">' . JText::_('JFIELD_ORDERING_DESC') . '</label>' . "\n";
+                    $html .= "\t\t" . '<label for="directionTable" class="element-invisible">' . JText::_(
+                            'JFIELD_ORDERING_DESC'
+                        ) . '</label>' . "\n";
                     $html .= "\t\t" . '<select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">' . "\n";
                     $html .= "\t\t\t" . '<option value="">' . JText::_('JFIELD_ORDERING_DESC') . '</option>' . "\n";
-                    $html .= "\t\t\t" . '<option value="asc" ' . $asc_sel . '>' . JText::_('JGLOBAL_ORDER_ASCENDING') . '</option>' . "\n";
-                    $html .= "\t\t\t" . '<option value="desc" ' . $desc_sel . '>' . JText::_('JGLOBAL_ORDER_DESCENDING') . '</option>' . "\n";
+                    $html .= "\t\t\t" . '<option value="asc" ' . $asc_sel . '>' . JText::_(
+                            'JGLOBAL_ORDER_ASCENDING'
+                        ) . '</option>' . "\n";
+                    $html .= "\t\t\t" . '<option value="desc" ' . $desc_sel . '>' . JText::_(
+                            'JGLOBAL_ORDER_DESCENDING'
+                        ) . '</option>' . "\n";
                     $html .= "\t\t" . '</select>' . "\n";
                     $html .= "\t" . '</div>' . "\n\n";
 
                     // Display the sort fields
                     $html .= "\t" . '<div class="btn-group pull-right">' . "\n";
-                    $html .= "\t\t" . '<label for="sortTable" class="element-invisible">' . JText::_('JGLOBAL_SORT_BY') . '</label>' . "\n";
+                    $html .= "\t\t" . '<label for="sortTable" class="element-invisible">' . JText::_(
+                            'JGLOBAL_SORT_BY'
+                        ) . '</label>' . "\n";
                     $html .= "\t\t" . '<select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">' . "\n";
                     $html .= "\t\t\t" . '<option value="">' . JText::_('JGLOBAL_SORT_BY') . '</option>' . "\n";
-                    $html .= "\t\t\t" . JHtml::_('select.options', $sortFields, 'value', 'text',
-                            $view->getLists()->order) . "\n";
+                    $html .= "\t\t\t" . JHtml::_(
+                            'select.options',
+                            $sortFields,
+                            'value',
+                            'text',
+                            $view->getLists()->order
+                        ) . "\n";
                     $html .= "\t\t" . '</select>' . "\n";
                     $html .= "\t" . '</div>' . "\n";
                 }
@@ -796,9 +833,13 @@ HTML;
         }
 
         $html .= "\t" . '<input type="hidden" name="option" value="' . $input->getCmd('option') . '" />' . PHP_EOL;
-        $html .= "\t" . '<input type="hidden" name="view" value="' . FOFInflector::pluralize($input->getCmd('view')) . '" />' . PHP_EOL;
-        $html .= "\t" . '<input type="hidden" name="task" value="' . $input->getCmd('task',
-                'browse') . '" />' . PHP_EOL;
+        $html .= "\t" . '<input type="hidden" name="view" value="' . FOFInflector::pluralize(
+                $input->getCmd('view')
+            ) . '" />' . PHP_EOL;
+        $html .= "\t" . '<input type="hidden" name="task" value="' . $input->getCmd(
+                'task',
+                'browse'
+            ) . '" />' . PHP_EOL;
         $html .= "\t" . '<input type="hidden" name="layout" value="' . $input->getCmd('layout', '') . '" />' . PHP_EOL;
 
         // The id field is required in Joomla! 3 front-end to prevent the pagination limit box from screwing it up. Huh!!
@@ -812,8 +853,8 @@ HTML;
         $html .= "\t" . '<input type="hidden" name="filter_order" value="' . $filter_order . '" />' . PHP_EOL;
         $html .= "\t" . '<input type="hidden" name="filter_order_Dir" value="' . $filter_order_Dir . '" />' . PHP_EOL;
 
-        $html .= "\t" . '<input type="hidden" name="' . JFactory::getSession()
-                                                                ->getFormToken() . '" value="1" />' . PHP_EOL;
+        $html .= "\t" . '<input type="hidden" name="' . JFactory::getSession()->getFormToken(
+                ) . '" value="1" />' . PHP_EOL;
 
         // End the form
         $html .= '</form>' . PHP_EOL;
@@ -1170,8 +1211,8 @@ JS;
         $html .= "\t" . '<input type="hidden" name="task" value="' . $customTask . '" />' . PHP_EOL;
         $html .= "\t" . '<input type="hidden" name="' . $key . '" value="' . $keyValue . '" />' . PHP_EOL;
 
-        $html .= "\t" . '<input type="hidden" name="' . JFactory::getSession()
-                                                                ->getFormToken() . '" value="1" />' . PHP_EOL;
+        $html .= "\t" . '<input type="hidden" name="' . JFactory::getSession()->getFormToken(
+                ) . '" value="1" />' . PHP_EOL;
 
         $html .= $this->renderFormRaw($form, $model, $input, 'edit');
         $html .= '</form>';

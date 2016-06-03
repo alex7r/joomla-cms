@@ -21,7 +21,9 @@ class FOFDownloadAdapterCurl extends FOFDownloadAdapterAbstract implements FOFDo
         $this->supportsFileSize      = true;
         $this->supportsChunkDownload = true;
         $this->name                  = 'curl';
-        $this->isSupported           = function_exists('curl_init') && function_exists('curl_exec') && function_exists('curl_close');
+        $this->isSupported           = function_exists('curl_init') && function_exists('curl_exec') && function_exists(
+                'curl_close'
+            );
     }
 
     /**

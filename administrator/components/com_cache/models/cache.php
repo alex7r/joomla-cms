@@ -80,8 +80,9 @@ class CacheModelCache extends JModelList
     public function getPagination()
     {
         if (empty($this->_pagination)) {
-            $this->_pagination = new JPagination($this->getTotal(), $this->getState('list.start'),
-                $this->getState('list.limit'));
+            $this->_pagination = new JPagination(
+                $this->getTotal(), $this->getState('list.start'), $this->getState('list.limit')
+            );
         }
 
         return $this->_pagination;
@@ -127,8 +128,13 @@ class CacheModelCache extends JModelList
                 $listOrder = $this->getState('list.ordering', 'group');
                 $listDirn  = $this->getState('list.direction', 'ASC');
 
-                $this->_data = ArrayHelper::sortObjects($data, $listOrder, strtolower($listDirn) === 'desc' ? -1 : 1,
-                    true, true);
+                $this->_data = ArrayHelper::sortObjects(
+                    $data,
+                    $listOrder,
+                    strtolower($listDirn) === 'desc' ? -1 : 1,
+                    true,
+                    true
+                );
 
                 // Process pagination.
                 $limit = (int)$this->getState('list.limit', 25);
@@ -159,8 +165,10 @@ class CacheModelCache extends JModelList
             'defaultgroup' => '',
             'storage'      => $conf->get('cache_handler', ''),
             'caching'      => true,
-            'cachebase'    => ($this->getState('client_id') === 1) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path',
-                JPATH_SITE . '/cache')
+            'cachebase'    => ($this->getState('client_id') === 1) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get(
+                'cache_path',
+                JPATH_SITE . '/cache'
+            )
         );
 
         $cache = JCache::getInstance('', $options);
@@ -226,8 +234,10 @@ class CacheModelCache extends JModelList
     protected function populateState($ordering = 'group', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
 
         // Special case for client id.
         $clientId = (int)$this->getUserStateFromRequest($this->context . '.client_id', 'client_id', 0, 'int');

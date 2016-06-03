@@ -51,9 +51,19 @@ class TemplatesModelTemplate extends JModelForm
             $lang   = JFactory::getLanguage();
 
             // Load the core and/or local language file(s).
-            $lang->load('tpl_' . $template->element, $client->path, null, false,
-                true) || $lang->load('tpl_' . $template->element, $client->path . '/templates/' . $template->element,
-                null, false, true);
+            $lang->load(
+                'tpl_' . $template->element,
+                $client->path,
+                null,
+                false,
+                true
+            ) || $lang->load(
+                'tpl_' . $template->element,
+                $client->path . '/templates/' . $template->element,
+                null,
+                false,
+                true
+            );
             $this->element = $path;
 
             if (!is_writable($path)) {
@@ -87,11 +97,11 @@ class TemplatesModelTemplate extends JModelForm
             $app = JFactory::getApplication();
 
             // Get the template information.
-            $query = $db->getQuery(true)
-                        ->select('extension_id, client_id, element, name, manifest_cache')
-                        ->from('#__extensions')
-                        ->where($db->quoteName('extension_id') . ' = ' . (int)$pk)
-                        ->where($db->quoteName('type') . ' = ' . $db->quote('template'));
+            $query = $db->getQuery(true)->select('extension_id, client_id, element, name, manifest_cache')->from(
+                    '#__extensions'
+                )->where($db->quoteName('extension_id') . ' = ' . (int)$pk)->where(
+                    $db->quoteName('type') . ' = ' . $db->quote('template')
+                );
             $db->setQuery($query);
 
             try {
@@ -206,10 +216,9 @@ class TemplatesModelTemplate extends JModelForm
     public function checkNewName()
     {
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('COUNT(*)')
-                    ->from('#__extensions')
-                    ->where('name = ' . $db->quote($this->getState('new_name')));
+        $query = $db->getQuery(true)->select('COUNT(*)')->from('#__extensions')->where(
+                'name = ' . $db->quote($this->getState('new_name'))
+            );
         $db->setQuery($query);
 
         return ($db->loadResult() == 0);
@@ -342,10 +351,11 @@ class TemplatesModelTemplate extends JModelForm
 
         // Codemirror or Editor None should be enabled
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('COUNT(*)')
-                    ->from('#__extensions as a')
-                    ->where('(a.name =' . $db->quote('plg_editors_codemirror') . ' AND a.enabled = 1) OR (a.name =' . $db->quote('plg_editors_none') . ' AND a.enabled = 1)');
+        $query = $db->getQuery(true)->select('COUNT(*)')->from('#__extensions as a')->where(
+                '(a.name =' . $db->quote('plg_editors_codemirror') . ' AND a.enabled = 1) OR (a.name =' . $db->quote(
+                    'plg_editors_none'
+                ) . ' AND a.enabled = 1)'
+            );
         $db->setQuery($query);
         $state = $db->loadResult();
 
@@ -354,8 +364,11 @@ class TemplatesModelTemplate extends JModelForm
         }
 
         // Get the form.
-        $form = $this->loadForm('com_templates.source', 'source',
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_templates.source',
+            'source',
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
 
         if (empty($form)) {
             return false;
@@ -399,8 +412,10 @@ class TemplatesModelTemplate extends JModelForm
         // Try to make the template file writable.
         if (!is_writable($filePath)) {
             $app->enqueueMessage(JText::_('COM_TEMPLATES_ERROR_SOURCE_FILE_NOT_WRITABLE'), 'warning');
-            $app->enqueueMessage(JText::_('COM_TEMPLATES_FILE_PERMISSIONS' . JPath::getPermissions($filePath)),
-                'warning');
+            $app->enqueueMessage(
+                JText::_('COM_TEMPLATES_FILE_PERMISSIONS' . JPath::getPermissions($filePath)),
+                'warning'
+            );
 
             if (!JPath::isOwner($filePath)) {
                 $app->enqueueMessage(JText::_('COM_TEMPLATES_CHECK_FILE_OWNERSHIP'), 'warning');
@@ -534,7 +549,9 @@ class TemplatesModelTemplate extends JModelForm
 
                 $htmlPath = JPath::clean($client->path . '/templates/' . $template->element . '/html/' . $url);
             } else {
-                $htmlPath = JPath::clean($client->path . '/templates/' . $template->element . '/html/layouts/joomla/' . $name);
+                $htmlPath = JPath::clean(
+                    $client->path . '/templates/' . $template->element . '/html/layouts/joomla/' . $name
+                );
             }
 
             // Check Html folder, create if not exist
@@ -555,8 +572,13 @@ class TemplatesModelTemplate extends JModelForm
             }
 
             if ($return) {
-                $app->enqueueMessage(JText::_('COM_TEMPLATES_OVERRIDE_CREATED') . str_replace(JPATH_ROOT, '',
-                        $htmlPath));
+                $app->enqueueMessage(
+                    JText::_('COM_TEMPLATES_OVERRIDE_CREATED') . str_replace(
+                        JPATH_ROOT,
+                        '',
+                        $htmlPath
+                    )
+                );
 
                 return true;
             } else {
@@ -610,7 +632,9 @@ class TemplatesModelTemplate extends JModelForm
             if (JFile::exists($htmlFilePath)) {
                 // Generate new unique file name base on current time
                 $today        = JFactory::getDate();
-                $htmlFilePath = JFile::stripExt($htmlFilePath) . '-' . $today->format('Ymd-His') . '.' . JFile::getExt($htmlFilePath);
+                $htmlFilePath = JFile::stripExt($htmlFilePath) . '-' . $today->format('Ymd-His') . '.' . JFile::getExt(
+                        $htmlFilePath
+                    );
             }
 
             $return = JFile::copy($file, $htmlFilePath, '', true);
@@ -715,8 +739,10 @@ class TemplatesModelTemplate extends JModelForm
 
             // Add a message if we are not allowed to show this file in the backend.
             if (!$check) {
-                $app->enqueueMessage(JText::sprintf('COM_TEMPLATES_WARNING_FORMAT_WILL_NOT_BE_VISIBLE', $type),
-                    'warning');
+                $app->enqueueMessage(
+                    JText::sprintf('COM_TEMPLATES_WARNING_FORMAT_WILL_NOT_BE_VISIBLE', $type),
+                    'warning'
+                );
             }
 
             return true;

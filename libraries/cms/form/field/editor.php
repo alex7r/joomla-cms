@@ -197,7 +197,9 @@ class JFormFieldEditor extends JFormFieldTextarea
             $this->width       = $this->element['width'] ? (string)$this->element['width'] : '100%';
             $this->assetField  = $this->element['asset_field'] ? (string)$this->element['asset_field'] : 'asset_id';
             $this->authorField = $this->element['created_by_field'] ? (string)$this->element['created_by_field'] : 'created_by';
-            $this->asset       = $this->form->getValue($this->assetField) ? $this->form->getValue($this->assetField) : (string)$this->element['asset_id'];
+            $this->asset       = $this->form->getValue($this->assetField) ? $this->form->getValue(
+                $this->assetField
+            ) : (string)$this->element['asset_id'];
 
             $buttons    = (string)$this->element['buttons'];
             $hide       = (string)$this->element['hide'];
@@ -253,12 +255,9 @@ class JFormFieldEditor extends JFormFieldTextarea
                 // Iterate over teh types looking for an existing editor.
                 foreach ($types as $element) {
                     // Build the query.
-                    $query = $db->getQuery(true)
-                                ->select('element')
-                                ->from('#__extensions')
-                                ->where('element = ' . $db->quote($element))
-                                ->where('folder = ' . $db->quote('editors'))
-                                ->where('enabled = 1');
+                    $query = $db->getQuery(true)->select('element')->from('#__extensions')->where(
+                            'element = ' . $db->quote($element)
+                        )->where('folder = ' . $db->quote('editors'))->where('enabled = 1');
 
                     // Check of the editor exists.
                     $db->setQuery($query, 0, 1);
@@ -295,10 +294,21 @@ class JFormFieldEditor extends JFormFieldTextarea
         // Get an editor object.
         $editor = $this->getEditor();
 
-        return $editor->display($this->name, htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8'), $this->width,
-            $this->height, $this->columns, $this->rows,
-            $this->buttons ? (is_array($this->buttons) ? array_merge($this->buttons,
-                $this->hide) : $this->hide) : false, $this->id, $this->asset, $this->form->getValue($this->authorField),
-            array('syntax' => (string)$this->element['syntax']));
+        return $editor->display(
+            $this->name,
+            htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8'),
+            $this->width,
+            $this->height,
+            $this->columns,
+            $this->rows,
+            $this->buttons ? (is_array($this->buttons) ? array_merge(
+                $this->buttons,
+                $this->hide
+            ) : $this->hide) : false,
+            $this->id,
+            $this->asset,
+            $this->form->getValue($this->authorField),
+            array('syntax' => (string)$this->element['syntax'])
+        );
     }
 }

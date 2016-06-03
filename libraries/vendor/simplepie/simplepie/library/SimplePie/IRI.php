@@ -167,7 +167,11 @@ class SimplePie_IRI
                 return false;
             }
 
-            $return = $this->set_scheme($parsed['scheme']) && $this->set_authority($parsed['authority']) && $this->set_path($parsed['path']) && $this->set_query($parsed['query']) && $this->set_fragment($parsed['fragment']);
+            $return = $this->set_scheme($parsed['scheme']) && $this->set_authority(
+                    $parsed['authority']
+                ) && $this->set_path($parsed['path']) && $this->set_query($parsed['query']) && $this->set_fragment(
+                    $parsed['fragment']
+                );
 
             $cache[$iri] = array(
                 $this->scheme,
@@ -194,8 +198,11 @@ class SimplePie_IRI
     protected function parse_iri($iri)
     {
         $iri = trim($iri, "\x20\x09\x0A\x0C\x0D");
-        if (preg_match('/^((?P<scheme>[^:\/?#]+):)?(\/\/(?P<authority>[^\/?#]*))?(?P<path>[^?#]*)(\?(?P<query>[^#]*))?(#(?P<fragment>.*))?$/',
-            $iri, $match)) {
+        if (preg_match(
+            '/^((?P<scheme>[^:\/?#]+):)?(\/\/(?P<authority>[^\/?#]*))?(?P<path>[^?#]*)(\?(?P<query>[^#]*))?(#(?P<fragment>.*))?$/',
+            $iri,
+            $match
+        )) {
             if ($match[1] === '') {
                 $match['scheme'] = null;
             }
@@ -329,8 +336,11 @@ class SimplePie_IRI
     protected function replace_invalid_with_pct_encoding($string, $extra_chars, $iprivate = false)
     {
         // Normalize as many pct-encoded sections as possible
-        $string = preg_replace_callback('/(?:%[A-Fa-f0-9]{2})+/', array($this, 'remove_iunreserved_percent_encoded'),
-            $string);
+        $string = preg_replace_callback(
+            '/(?:%[A-Fa-f0-9]{2})+/',
+            array($this, 'remove_iunreserved_percent_encoded'),
+            $string
+        );
 
         // Replace invalid percent characters
         $string = preg_replace('/%(?![A-Fa-f0-9]{2})/', '%25', $string);
@@ -708,10 +718,23 @@ class SimplePie_IRI
     public function is_valid()
     {
         $isauthority = $this->iuserinfo !== null || $this->ihost !== null || $this->port !== null;
-        if ($this->ipath !== '' && ($isauthority && ($this->ipath[0] !== '/' || substr($this->ipath, 0,
-                        2) === '//') || ($this->scheme === null && !$isauthority && strpos($this->ipath,
-                        ':') !== false && (strpos($this->ipath, '/') === false ? true : strpos($this->ipath,
-                            ':') < strpos($this->ipath, '/'))))
+        if ($this->ipath !== '' && ($isauthority && ($this->ipath[0] !== '/' || substr(
+                                                                                    $this->ipath,
+                                                                                    0,
+                                                                                    2
+                                                                                ) === '//') || ($this->scheme === null && !$isauthority && strpos(
+                                                                                                                                               $this->ipath,
+                                                                                                                                               ':'
+                                                                                                                                           ) !== false && (strpos(
+                                                                                                                                                               $this->ipath,
+                                                                                                                                                               '/'
+                                                                                                                                                           ) === false ? true : strpos(
+                                                                                                                                                                                    $this->ipath,
+                                                                                                                                                                                    ':'
+                                                                                                                                                                                ) < strpos(
+                                                                                                                                                                                    $this->ipath,
+                                                                                                                                                                                    '/'
+                                                                                                                                                                                ))))
         ) {
             return false;
         }

@@ -16,12 +16,13 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-$app   = JFactory::getApplication();
+$app = JFactory::getApplication();
 $input = $app->input;
 
 $assoc = JLanguageAssociations::isEnabled();
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	Joomla.submitbutton = function(task)
 	{
 		if (task == "contact.cancel" || document.formvalidator.isValid(document.getElementById("contact-form")))
@@ -35,7 +36,8 @@ JFactory::getDocument()->addScriptDeclaration('
 			}
 		}
 	};
-');
+'
+);
 
 // Fieldsets to not automatically render by /layouts/joomla/edit/params.php
 $this->ignore_fieldsets = array('details', 'item_associations', 'jmetadata');
@@ -47,7 +49,9 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 ?>
 
 <form
-    action="<?php echo JRoute::_('index.php?option=com_contact&layout=' . $layout . $tmpl . '&id=' . (int)$this->item->id); ?>"
+    action="<?php echo JRoute::_(
+        'index.php?option=com_contact&layout=' . $layout . $tmpl . '&id=' . (int)$this->item->id
+    ); ?>"
     method="post" name="adminForm" id="contact-form" class="form-validate">
 
     <?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
@@ -55,8 +59,12 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
     <div class="form-horizontal">
         <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
 
-        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details',
-            empty($this->item->id) ? JText::_('COM_CONTACT_NEW_CONTACT') : JText::_('COM_CONTACT_EDIT_CONTACT')); ?>
+        <?php echo JHtml::_(
+            'bootstrap.addTab',
+            'myTab',
+            'details',
+            empty($this->item->id) ? JText::_('COM_CONTACT_NEW_CONTACT') : JText::_('COM_CONTACT_EDIT_CONTACT')
+        ); ?>
         <div class="row-fluid">
             <div class="span9">
                 <div class="row-fluid form-horizontal-desktop">
@@ -110,8 +118,12 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
         <?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 
         <?php if (!$isModal && $assoc) : ?>
-            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations',
-                JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')); ?>
+            <?php echo JHtml::_(
+                'bootstrap.addTab',
+                'myTab',
+                'associations',
+                JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')
+            ); ?>
             <?php echo $this->loadTemplate('associations'); ?>
             <?php echo JHtml::_('bootstrap.endTab'); ?>
         <?php elseif ($isModal && $assoc) : ?>

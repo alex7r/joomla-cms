@@ -173,8 +173,12 @@ abstract class JSchemaChangeitem
             return new $class($db, $file, $query);
         }
 
-        throw new RuntimeException(sprintf('JSchemaChangeitem child class not found for the %s database driver',
-            $dbname), 500);
+        throw new RuntimeException(
+            sprintf(
+                'JSchemaChangeitem child class not found for the %s database driver',
+                $dbname
+            ), 500
+        );
     }
 
     /**

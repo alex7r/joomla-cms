@@ -79,8 +79,10 @@ class TemplatesViewStyle extends JViewLegacy
         $isNew = ($this->item->id == 0);
         $canDo = $this->canDo;
 
-        JToolbarHelper::title($isNew ? JText::_('COM_TEMPLATES_MANAGER_ADD_STYLE') : JText::_('COM_TEMPLATES_MANAGER_EDIT_STYLE'),
-            'eye thememanager');
+        JToolbarHelper::title(
+            $isNew ? JText::_('COM_TEMPLATES_MANAGER_ADD_STYLE') : JText::_('COM_TEMPLATES_MANAGER_EDIT_STYLE'),
+            'eye thememanager'
+        );
 
         // If not checked out, can save the item.
         if ($canDo->get('core.edit')) {

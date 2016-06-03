@@ -114,12 +114,9 @@ class JFormFieldPlugins extends JFormFieldList
         if (!empty($folder)) {
             // Get list of plugins
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select('element AS value, name AS text')
-                        ->from('#__extensions')
-                        ->where('folder = ' . $db->quote($folder))
-                        ->where('enabled = 1')
-                        ->order('ordering, name');
+            $query = $db->getQuery(true)->select('element AS value, name AS text')->from('#__extensions')->where(
+                    'folder = ' . $db->quote($folder)
+                )->where('enabled = 1')->order('ordering, name');
             $db->setQuery($query);
 
             $options = $db->loadObjectList();
@@ -129,8 +126,13 @@ class JFormFieldPlugins extends JFormFieldList
             foreach ($options as $i => $item) {
                 $source    = JPATH_PLUGINS . '/' . $folder . '/' . $item->value;
                 $extension = 'plg_' . $folder . '_' . $item->value;
-                $lang->load($extension . '.sys', JPATH_ADMINISTRATOR, null, false,
-                    true) || $lang->load($extension . '.sys', $source, null, false, true);
+                $lang->load(
+                    $extension . '.sys',
+                    JPATH_ADMINISTRATOR,
+                    null,
+                    false,
+                    true
+                ) || $lang->load($extension . '.sys', $source, null, false, true);
                 $options[$i]->text = JText::_($item->text);
             }
         } else {

@@ -68,13 +68,15 @@ class JGithubPackageIssues extends JGithubPackage
         }
 
         // Build the request data.
-        $data = json_encode(array(
-            'title'     => $title,
-            'assignee'  => $assignee,
-            'milestone' => $milestone,
-            'labels'    => $labels,
-            'body'      => $body
-        ));
+        $data = json_encode(
+            array(
+                'title'     => $title,
+                'assignee'  => $assignee,
+                'milestone' => $milestone,
+                'labels'    => $labels,
+                'body'      => $body
+            )
+        );
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);

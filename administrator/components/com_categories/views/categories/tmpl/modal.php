@@ -36,7 +36,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 <div class="container-popup">
 
     <form
-        action="<?php echo JRoute::_('index.php?option=com_categories&view=categories&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken() . '=1'); ?>"
+        action="<?php echo JRoute::_(
+            'index.php?option=com_categories&view=categories&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken(
+            ) . '=1'
+        ); ?>"
         method="post" name="adminForm" id="adminForm">
 
         <?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
@@ -58,12 +61,22 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
                     </th>
                     <th width="10%" class="nowrap hidden-phone">
-                        <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'JGRID_HEADING_ACCESS',
+                            'access_level',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="15%" class="nowrap hidden-phone">
-                        <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language_title', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'JGRID_HEADING_LANGUAGE',
+                            'language_title',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="1%" class="nowrap hidden-phone">
                         <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -105,11 +118,21 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                             <span class="<?php echo $iconStates[$this->escape($item->published)]; ?>"></span>
                         </td>
                         <td>
-                            <?php echo JLayoutHelper::render('joomla.html.treeprefix',
-                                array('level' => $item->level)); ?>
+                            <?php echo JLayoutHelper::render(
+                                'joomla.html.treeprefix',
+                                array('level' => $item->level)
+                            ); ?>
                             <a href="javascript:void(0)"
-                               onclick="if (window.parent) window.parent.<?php echo $this->escape($function); ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->title)); ?>', null, '<?php echo $this->escape(ContentHelperRoute::getCategoryRoute($item->id,
-                                   $item->language)); ?>', '<?php echo $this->escape($lang); ?>', null);">
+                               onclick="if (window.parent) window.parent.<?php echo $this->escape(
+                                   $function
+                               ); ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(
+                                   addslashes($item->title)
+                               ); ?>', null, '<?php echo $this->escape(
+                                   ContentHelperRoute::getCategoryRoute(
+                                       $item->id,
+                                       $item->language
+                                   )
+                               ); ?>', '<?php echo $this->escape($lang); ?>', null);">
                                 <?php echo $this->escape($item->title); ?>
                             </a>
                         </td>
@@ -120,10 +143,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                             <?php if ($item->language == '*') : ?>
                                 <?php echo JText::alt('JALL', 'language'); ?>
                             <?php else: ?>
-                                <?php echo $item->language_title ? JHtml::_('image',
-                                        'mod_languages/' . $item->language_image . '.gif', $item->language_title,
+                                <?php echo $item->language_title ? JHtml::_(
+                                        'image',
+                                        'mod_languages/' . $item->language_image . '.gif',
+                                        $item->language_title,
                                         array('title' => $item->language_title),
-                                        true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                        true
+                                    ) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                             <?php endif; ?>
                         </td>
                         <td class="hidden-phone">

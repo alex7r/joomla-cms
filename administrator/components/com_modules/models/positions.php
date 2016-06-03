@@ -76,14 +76,18 @@ class ModulesModelPositions extends JModelList
 
             if ($type != 'template') {
                 // Get the database object and a new query object.
-                $query = $this->_db->getQuery(true)
-                                   ->select('DISTINCT(position) as value')
-                                   ->from('#__modules')
-                                   ->where($this->_db->quoteName('client_id') . ' = ' . (int)$clientId);
+                $query = $this->_db->getQuery(true)->select('DISTINCT(position) as value')->from('#__modules')->where(
+                        $this->_db->quoteName('client_id') . ' = ' . (int)$clientId
+                    );
 
                 if ($search) {
-                    $search = $this->_db->quote('%' . str_replace(' ', '%',
-                            $this->_db->escape(trim($search), true) . '%'));
+                    $search = $this->_db->quote(
+                        '%' . str_replace(
+                            ' ',
+                            '%',
+                            $this->_db->escape(trim($search), true) . '%'
+                        )
+                    );
                     $query->where('position LIKE ' . $search);
                 }
 
@@ -112,9 +116,19 @@ class ModulesModelPositions extends JModelList
                     $xml = simplexml_load_file($path);
 
                     if (isset($xml->positions[0])) {
-                        $lang->load('tpl_' . $template->element . '.sys', $client->path, null, false,
-                            true) || $lang->load('tpl_' . $template->element . '.sys',
-                            $client->path . '/templates/' . $template->element, null, false, true);
+                        $lang->load(
+                            'tpl_' . $template->element . '.sys',
+                            $client->path,
+                            null,
+                            false,
+                            true
+                        ) || $lang->load(
+                            'tpl_' . $template->element . '.sys',
+                            $client->path . '/templates/' . $template->element,
+                            null,
+                            false,
+                            true
+                        );
 
                         foreach ($xml->positions[0] as $position) {
                             $value = (string)$position['value'];
@@ -122,8 +136,11 @@ class ModulesModelPositions extends JModelList
 
                             if (!$value) {
                                 $value    = $label;
-                                $label    = preg_replace('/[^a-zA-Z0-9_\-]/', '_',
-                                    'TPL_' . $template->element . '_POSITION_' . $value);
+                                $label    = preg_replace(
+                                    '/[^a-zA-Z0-9_\-]/',
+                                    '_',
+                                    'TPL_' . $template->element . '_POSITION_' . $value
+                                );
                                 $altlabel = preg_replace('/[^a-zA-Z0-9_\-]/', '_', 'COM_MODULES_POSITION_' . $value);
 
                                 if (!$lang->hasKey($label) && $lang->hasKey($altlabel)) {
@@ -133,8 +150,10 @@ class ModulesModelPositions extends JModelList
 
                             if ($type == 'user' || ($state != '' && $state != $template->enabled)) {
                                 unset($positions[$value]);
-                            } elseif (preg_match(chr(1) . $search . chr(1) . 'i',
-                                    $value) && ($filter_template == '' || $filter_template == $template->element)
+                            } elseif (preg_match(
+                                          chr(1) . $search . chr(1) . 'i',
+                                          $value
+                                      ) && ($filter_template == '' || $filter_template == $template->element)
                             ) {
                                 if (!isset($positions[$value])) {
                                     $positions[$value] = array();
@@ -200,8 +219,12 @@ class ModulesModelPositions extends JModelList
         $clientId = $app->input->getInt('client_id', 0);
         $this->setState('filter.client_id', $clientId);
 
-        $template = $this->getUserStateFromRequest($this->context . '.filter.template', 'filter_template', '',
-            'string');
+        $template = $this->getUserStateFromRequest(
+            $this->context . '.filter.template',
+            'filter_template',
+            '',
+            'string'
+        );
         $this->setState('filter.template', $template);
 
         $type = $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string');

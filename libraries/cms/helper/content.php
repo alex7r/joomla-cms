@@ -85,8 +85,11 @@ class JHelperContent
     public static function _getActions($categoryId = 0, $id = 0, $assetName = '')
     {
         // Log usage of deprecated function
-        JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Reverted a change for version 2.5.6
         $user   = JFactory::getUser();
@@ -154,10 +157,9 @@ class JHelperContent
     public static function getLanguageId($langCode)
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('lang_id')
-                    ->from('#__languages')
-                    ->where($db->quoteName('lang_code') . ' = ' . $db->quote($langCode));
+        $query = $db->getQuery(true)->select('lang_id')->from('#__languages')->where(
+                $db->quoteName('lang_code') . ' = ' . $db->quote($langCode)
+            );
         $db->setQuery($query);
 
         $id = $db->loadResult();

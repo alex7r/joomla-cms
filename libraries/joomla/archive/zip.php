@@ -168,7 +168,9 @@ class JArchiveZip implements JArchiveExtractable
 
         // Get the hex time.
         $dtime    = dechex($this->_unix2DosTime($ftime));
-        $hexdtime = chr(hexdec($dtime[6] . $dtime[7])) . chr(hexdec($dtime[4] . $dtime[5])) . chr(hexdec($dtime[2] . $dtime[3])) . chr(hexdec($dtime[0] . $dtime[1]));
+        $hexdtime = chr(hexdec($dtime[6] . $dtime[7])) . chr(hexdec($dtime[4] . $dtime[5])) . chr(
+                hexdec($dtime[2] . $dtime[3])
+            ) . chr(hexdec($dtime[0] . $dtime[1]));
 
         /* Begin creating the ZIP data. */
         $fr = $this->_fileHeader;
@@ -486,8 +488,10 @@ class JArchiveZip implements JArchiveExtractable
         $offset = 0;
 
         if ($last) {
-            $endOfCentralDirectory = unpack('vNumberOfDisk/vNoOfDiskWithStartOfCentralDirectory/vNoOfCentralDirectoryEntriesOnDisk/' . 'vTotalCentralDirectoryEntries/VSizeOfCentralDirectory/VCentralDirectoryOffset/vCommentLength',
-                substr($data, $last + 4));
+            $endOfCentralDirectory = unpack(
+                'vNumberOfDisk/vNoOfDiskWithStartOfCentralDirectory/vNoOfCentralDirectoryEntriesOnDisk/' . 'vTotalCentralDirectoryEntries/VSizeOfCentralDirectory/VCentralDirectoryOffset/vCommentLength',
+                substr($data, $last + 4)
+            );
             $offset                = $endOfCentralDirectory['CentralDirectoryOffset'];
         }
 
@@ -516,9 +520,14 @@ class JArchiveZip implements JArchiveExtractable
                 'type'       => null
             );
 
-            $entries[$name]['date'] = mktime((($info['Time'] >> 11) & 0x1f), (($info['Time'] >> 5) & 0x3f),
-                (($info['Time'] << 1) & 0x3e), (($info['Time'] >> 21) & 0x07), (($info['Time'] >> 16) & 0x1f),
-                ((($info['Time'] >> 25) & 0x7f) + 1980));
+            $entries[$name]['date'] = mktime(
+                (($info['Time'] >> 11) & 0x1f),
+                (($info['Time'] >> 5) & 0x3f),
+                (($info['Time'] << 1) & 0x3e),
+                (($info['Time'] >> 21) & 0x07),
+                (($info['Time'] >> 16) & 0x1f),
+                ((($info['Time'] >> 25) & 0x7f) + 1980)
+            );
 
             if ($dataLength < $fhStart + 43) {
                 return $this->raiseWarning(100, 'Invalid ZIP data');
@@ -537,8 +546,10 @@ class JArchiveZip implements JArchiveExtractable
                 return $this->raiseWarning(100, 'Invalid Zip Data');
             }
 
-            $info                         = unpack('vMethod/VTime/VCRC32/VCompressed/VUncompressed/vLength/vExtraLength',
-                substr($data, $lfhStart + 8, 25));
+            $info                         = unpack(
+                'vMethod/VTime/VCRC32/VCompressed/VUncompressed/vLength/vExtraLength',
+                substr($data, $lfhStart + 8, 25)
+            );
             $name                         = substr($data, $lfhStart + 30, $info['Length']);
             $entries[$name]['_dataStart'] = $lfhStart + 30 + $info['Length'] + $info['ExtraLength'];
 
@@ -570,8 +581,13 @@ class JArchiveZip implements JArchiveExtractable
 
         switch ($method) {
             case 0x8:
-                return gzinflate(substr($this->_data, $this->_metadata[$key]['_dataStart'],
-                    $this->_metadata[$key]['csize']));
+                return gzinflate(
+                    substr(
+                        $this->_data,
+                        $this->_metadata[$key]['_dataStart'],
+                        $this->_metadata[$key]['csize']
+                    )
+                );
 
             case 0x0:
                 // Files that aren't compressed.
@@ -579,8 +595,13 @@ class JArchiveZip implements JArchiveExtractable
 
             case 0x12:
 
-                return bzdecompress(substr($this->_data, $this->_metadata[$key]['_dataStart'],
-                    $this->_metadata[$key]['csize']));
+                return bzdecompress(
+                    substr(
+                        $this->_data,
+                        $this->_metadata[$key]['_dataStart'],
+                        $this->_metadata[$key]['csize']
+                    )
+                );
         }
 
         return '';

@@ -135,8 +135,10 @@ class UsersModelProfile extends JModelForm
 
         if ($this->loadFormData()->username) {
             $username            = $this->loadFormData()->username;
-            $isUsernameCompliant = !(preg_match('#[<>"\'%;()&\\\\]|\\.\\./#',
-                    $username) || strlen(utf8_decode($username)) < 2 || trim($username) != $username);
+            $isUsernameCompliant = !(preg_match(
+                                         '#[<>"\'%;()&\\\\]|\\.\\./#',
+                                         $username
+                                     ) || strlen(utf8_decode($username)) < 2 || trim($username) != $username);
         }
 
         $this->setState('user.username.compliant', $isUsernameCompliant);
@@ -279,9 +281,10 @@ class UsersModelProfile extends JModelForm
             if ($twoFactorMethod != 'none') {
                 // Run the plugins
                 FOFPlatform::getInstance()->importPlugin('twofactorauth');
-                $otpConfigReplies = FOFPlatform::getInstance()
-                                               ->runPlugins('onUserTwofactorApplyConfiguration',
-                                                   array($twoFactorMethod));
+                $otpConfigReplies = FOFPlatform::getInstance()->runPlugins(
+                        'onUserTwofactorApplyConfiguration',
+                        array($twoFactorMethod)
+                    );
 
                 // Look for a valid reply
                 foreach ($otpConfigReplies as $reply) {

@@ -85,8 +85,11 @@ class MessagesModelMessage extends JModelAdmin
     public function getForm($data = array(), $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_messages.message', 'message',
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_messages.message',
+            'message',
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
 
         if (empty($form)) {
             return false;
@@ -200,7 +203,8 @@ class MessagesModelMessage extends JModelAdmin
 
             // Build the email subject and message
             $sitename = JFactory::getApplication()->get('sitename');
-            $siteURL  = JUri::root() . 'administrator/index.php?option=com_messages&view=message&message_id=' . $table->message_id;
+            $siteURL  = JUri::root(
+                ) . 'administrator/index.php?option=com_messages&view=message&message_id=' . $table->message_id;
             $subject  = sprintf($lang->_('COM_MESSAGES_NEW_MESSAGE_ARRIVED'), $sitename);
             $msg      = sprintf($lang->_('COM_MESSAGES_PLEASE_LOGIN'), $siteURL);
 
@@ -280,10 +284,9 @@ class MessagesModelMessage extends JModelAdmin
                     if ($replyId = $this->getState('reply.id')) {
                         // If replying to a message, preload some data.
                         $db    = $this->getDbo();
-                        $query = $db->getQuery(true)
-                                    ->select($db->quoteName(array('subject', 'user_id_from')))
-                                    ->from($db->quoteName('#__messages'))
-                                    ->where($db->quoteName('message_id') . ' = ' . (int)$replyId);
+                        $query = $db->getQuery(true)->select($db->quoteName(array('subject', 'user_id_from')))->from(
+                                $db->quoteName('#__messages')
+                            )->where($db->quoteName('message_id') . ' = ' . (int)$replyId);
 
                         try {
                             $message = $db->setQuery($query)->loadObject();
@@ -307,10 +310,9 @@ class MessagesModelMessage extends JModelAdmin
                 } else {
                     // Mark message read
                     $db    = $this->getDbo();
-                    $query = $db->getQuery(true)
-                                ->update($db->quoteName('#__messages'))
-                                ->set($db->quoteName('state') . ' = 1')
-                                ->where($db->quoteName('message_id') . ' = ' . $this->item->message_id);
+                    $query = $db->getQuery(true)->update($db->quoteName('#__messages'))->set(
+                            $db->quoteName('state') . ' = 1'
+                        )->where($db->quoteName('message_id') . ' = ' . $this->item->message_id);
                     $db->setQuery($query)->execute();
                 }
             }

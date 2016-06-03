@@ -49,7 +49,9 @@ JFactory::getDocument()->addScriptDeclaration($script);
                     <li><?php echo $this->form->getLabel('position'); ?>
                         <?php echo $this->form->getInput('custom_position'); ?>
                         <label id="jform_custom_position-lbl" for="jform_custom_position"
-                               class="element-invisible"><?php echo JText::_('TPL_HATHOR_COM_MODULES_CUSTOM_POSITION_LABEL'); ?></label>
+                               class="element-invisible"><?php echo JText::_(
+                                'TPL_HATHOR_COM_MODULES_CUSTOM_POSITION_LABEL'
+                            ); ?></label>
                         <?php echo $this->form->getInput('position'); ?></li>
 
                     <?php if ((string)$this->item->xml->name != 'Login Form') : ?>
@@ -93,7 +95,9 @@ JFactory::getDocument()->addScriptDeclaration($script);
 
                     <li><?php echo $this->form->getLabel('client_id'); ?>
                         <input type="text" size="35" id="jform_client_id"
-                               value="<?php echo $this->item->client_id == 0 ? JText::_('JSITE') : JText::_('JADMINISTRATOR'); ?>	"
+                               value="<?php echo $this->item->client_id == 0 ? JText::_('JSITE') : JText::_(
+                                   'JADMINISTRATOR'
+                               ); ?>	"
                                class="readonly" readonly="readonly"/>
                         <?php echo $this->form->getInput('client_id'); ?></li>
                 </ul>

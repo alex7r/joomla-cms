@@ -29,8 +29,11 @@ abstract class MediaHelper
      */
     public static function isImage($fileName)
     {
-        JLog::add('MediaHelper::isImage() is deprecated. Use JHelperMedia::isImage() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'MediaHelper::isImage() is deprecated. Use JHelperMedia::isImage() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
         $mediaHelper = new JHelperMedia;
 
         return $mediaHelper->isImage($fileName);
@@ -48,8 +51,11 @@ abstract class MediaHelper
      */
     public static function getTypeIcon($fileName)
     {
-        JLog::add('MediaHelper::getTypeIcon() is deprecated. Use JHelperMedia::getTypeIcon() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'MediaHelper::getTypeIcon() is deprecated. Use JHelperMedia::getTypeIcon() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
         $mediaHelper = new JHelperMedia;
 
         return $mediaHelper->getTypeIcon($fileName);
@@ -68,8 +74,11 @@ abstract class MediaHelper
      */
     public static function canUpload($file, $error = '')
     {
-        JLog::add('MediaHelper::canUpload() is deprecated. Use JHelperMedia::canUpload() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'MediaHelper::canUpload() is deprecated. Use JHelperMedia::canUpload() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
         $mediaHelper = new JHelperMedia;
 
         return $mediaHelper->canUpload($file, 'com_media');
@@ -87,8 +96,11 @@ abstract class MediaHelper
      */
     public static function parseSize($size)
     {
-        JLog::add('MediaHelper::parseSize() is deprecated. Use JHtmlNumber::bytes() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'MediaHelper::parseSize() is deprecated. Use JHtmlNumber::bytes() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return JHtml::_('number.bytes', $size);
     }
@@ -107,8 +119,11 @@ abstract class MediaHelper
      */
     public static function imageResize($width, $height, $target)
     {
-        JLog::add('MediaHelper::countFiles() is deprecated. Use JHelperMedia::countFiles() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'MediaHelper::countFiles() is deprecated. Use JHelperMedia::countFiles() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
         $mediaHelper = new JHelperMedia;
 
         return $mediaHelper->imageResize($width, $height, $target);
@@ -126,8 +141,11 @@ abstract class MediaHelper
      */
     public static function countFiles($dir)
     {
-        JLog::add('MediaHelper::countFiles() is deprecated. Use JHelperMedia::countFiles() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'MediaHelper::countFiles() is deprecated. Use JHelperMedia::countFiles() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
         $mediaHelper = new JHelperMedia;
 
         return $mediaHelper->countFiles($dir);

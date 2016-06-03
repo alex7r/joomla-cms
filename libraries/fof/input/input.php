@@ -89,8 +89,9 @@ class FOFInput extends JInput
      */
     public static function __callStatic($name, $arguments)
     {
-        FOFPlatform::getInstance()
-                   ->logDeprecated('FOFInput: static getXXX() methods are deprecated. Use the input object\'s methods instead.');
+        FOFPlatform::getInstance()->logDeprecated(
+                'FOFInput: static getXXX() methods are deprecated. Use the input object\'s methods instead.'
+            );
 
         if (substr($name, 0, 3) == 'get') {
             // Initialise arguments

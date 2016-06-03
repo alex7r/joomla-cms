@@ -74,8 +74,13 @@ class PlgAuthenticationLdap extends JPlugin
 
                 if ($bindtest) {
                     // Search for users DN
-                    $binddata = $ldap->simple_search(str_replace("[search]", $credentials['username'],
-                        $this->params->get('search_string')));
+                    $binddata = $ldap->simple_search(
+                        str_replace(
+                            "[search]",
+                            $credentials['username'],
+                            $this->params->get('search_string')
+                        )
+                    );
 
                     if (isset($binddata[0]) && isset($binddata[0]['dn'])) {
                         // Verify Users Credentials
@@ -99,8 +104,13 @@ class PlgAuthenticationLdap extends JPlugin
                 $success = $ldap->bind($credentials['username'], $credentials['password']);
 
                 if ($success) {
-                    $userdetails = $ldap->simple_search(str_replace("[search]", $credentials['username'],
-                        $this->params->get('search_string')));
+                    $userdetails = $ldap->simple_search(
+                        str_replace(
+                            "[search]",
+                            $credentials['username'],
+                            $this->params->get('search_string')
+                        )
+                    );
                 } else {
                     $response->status        = JAuthentication::STATUS_FAILURE;
                     $response->error_message = JText::_('JGLOBAL_AUTH_BIND_FAILED');

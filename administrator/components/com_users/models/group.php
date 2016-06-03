@@ -23,13 +23,16 @@ class UsersModelGroup extends JModelAdmin
      */
     public function __construct($config = array())
     {
-        $config = array_merge(array(
-            'event_after_delete'  => 'onUserAfterDeleteGroup',
-            'event_after_save'    => 'onUserAfterSaveGroup',
-            'event_before_delete' => 'onUserBeforeDeleteGroup',
-            'event_before_save'   => 'onUserBeforeSaveGroup',
-            'events_map'          => array('delete' => 'user', 'save' => 'user')
-        ), $config);
+        $config = array_merge(
+            array(
+                'event_after_delete'  => 'onUserAfterDeleteGroup',
+                'event_after_save'    => 'onUserAfterSaveGroup',
+                'event_before_delete' => 'onUserBeforeDeleteGroup',
+                'event_before_save'   => 'onUserBeforeSaveGroup',
+                'events_map'          => array('delete' => 'user', 'save' => 'user')
+            ),
+            $config
+        );
 
         parent::__construct($config);
     }
@@ -115,8 +118,10 @@ class UsersModelGroup extends JModelAdmin
                 $otherSuperAdmin = false;
 
                 foreach ($otherGroups as $otherGroup) {
-                    $otherSuperAdmin = ($otherSuperAdmin) ? $otherSuperAdmin : JAccess::checkGroup($otherGroup,
-                        'core.admin');
+                    $otherSuperAdmin = ($otherSuperAdmin) ? $otherSuperAdmin : JAccess::checkGroup(
+                        $otherGroup,
+                        'core.admin'
+                    );
                 }
 
                 /**
@@ -235,8 +240,10 @@ class UsersModelGroup extends JModelAdmin
                         return false;
                     } else {
                         // Trigger the after delete event.
-                        $dispatcher->trigger($this->event_after_delete,
-                            array($table->getProperties(), true, $this->getError()));
+                        $dispatcher->trigger(
+                            $this->event_after_delete,
+                            array($table->getProperties(), true, $this->getError())
+                        );
                     }
                 } else {
                     // Prune items that you can't change.

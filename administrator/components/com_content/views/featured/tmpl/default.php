@@ -51,8 +51,17 @@ if ($saveOrder) {
                     <thead>
                     <tr>
                         <th width="1%" class="nowrap center hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', '', 'fp.ordering', $listDirn, $listOrder, null,
-                                'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                '',
+                                'fp.ordering',
+                                $listDirn,
+                                $listOrder,
+                                null,
+                                'asc',
+                                'JGRID_HEADING_ORDERING',
+                                'icon-menu-2'
+                            ); ?>
                         </th>
                         <th width="1%" class="center">
                             <?php echo JHtml::_('grid.checkall'); ?>
@@ -61,20 +70,40 @@ if ($saveOrder) {
                             <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                         </th>
                         <th>
-                            <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGLOBAL_TITLE',
+                                'a.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'a.access', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ACCESS',
+                                'a.access',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JAUTHOR', 'a.created_by', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JAUTHOR',
+                                'a.created_by',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_LANGUAGE',
+                                'language',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
                             <?php echo JHtml::_('searchtools.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
@@ -83,8 +112,13 @@ if ($saveOrder) {
                             <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_HITS', 'a.hits', $listDirn, $listOrder); ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ID',
+                                'a.id',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -103,10 +137,14 @@ if ($saveOrder) {
                         $assetId = 'com_content.article.' . $item->id;
                         $canCreate = $user->authorise('core.create', 'com_content.category.' . $item->catid);
                         $canEdit = $user->authorise('core.edit', 'com_content.article.' . $item->id);
-                        $canCheckin = $user->authorise('core.manage',
-                                'com_checkin') || $item->checked_out == $userId || $item->checked_out == 0;
-                        $canChange = $user->authorise('core.edit.state',
-                                'com_content.article.' . $item->id) && $canCheckin;
+                        $canCheckin = $user->authorise(
+                                'core.manage',
+                                'com_checkin'
+                            ) || $item->checked_out == $userId || $item->checked_out == 0;
+                        $canChange = $user->authorise(
+                                'core.edit.state',
+                                'com_content.article.' . $item->id
+                            ) && $canCheckin;
                         ?>
                         <tr class="row<?php echo $i % 2; ?>">
                             <td class="order nowrap center hidden-phone">
@@ -116,7 +154,9 @@ if ($saveOrder) {
                                 if (!$canChange) {
                                     $iconClass = ' inactive';
                                 } elseif (!$saveOrder) {
-                                    $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+                                    $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText(
+                                            'JORDERINGDISABLED'
+                                        );
                                 }
                                 ?>
                                 <span class="sortable-handler<?php echo $iconClass ?>">
@@ -132,16 +172,34 @@ if ($saveOrder) {
                             </td>
                             <td class="center">
                                 <div class="btn-group">
-                                    <?php echo JHtml::_('jgrid.published', $item->state, $i, 'articles.', $canChange,
-                                        'cb', $item->publish_up, $item->publish_down); ?>
-                                    <?php echo JHtml::_('contentadministrator.featured', $item->featured, $i,
-                                        $canChange); ?>
+                                    <?php echo JHtml::_(
+                                        'jgrid.published',
+                                        $item->state,
+                                        $i,
+                                        'articles.',
+                                        $canChange,
+                                        'cb',
+                                        $item->publish_up,
+                                        $item->publish_down
+                                    ); ?>
+                                    <?php echo JHtml::_(
+                                        'contentadministrator.featured',
+                                        $item->featured,
+                                        $i,
+                                        $canChange
+                                    ); ?>
                                     <?php // Create dropdown items and render the dropdown list.
                                     if ($canChange) {
-                                        JHtml::_('actionsdropdown.' . ((int)$item->state === 2 ? 'un' : '') . 'archive',
-                                            'cb' . $i, 'articles');
-                                        JHtml::_('actionsdropdown.' . ((int)$item->state === -2 ? 'un' : '') . 'trash',
-                                            'cb' . $i, 'articles');
+                                        JHtml::_(
+                                            'actionsdropdown.' . ((int)$item->state === 2 ? 'un' : '') . 'archive',
+                                            'cb' . $i,
+                                            'articles'
+                                        );
+                                        JHtml::_(
+                                            'actionsdropdown.' . ((int)$item->state === -2 ? 'un' : '') . 'trash',
+                                            'cb' . $i,
+                                            'articles'
+                                        );
                                         echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
                                     }
                                     ?>
@@ -150,28 +208,42 @@ if ($saveOrder) {
                             <td class="has-context">
                                 <div class="pull-left break-word">
                                     <?php if ($item->checked_out) : ?>
-                                        <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor,
-                                            $item->checked_out_time, 'articles.', $canCheckin); ?>
+                                        <?php echo JHtml::_(
+                                            'jgrid.checkedout',
+                                            $i,
+                                            $item->editor,
+                                            $item->checked_out_time,
+                                            'articles.',
+                                            $canCheckin
+                                        ); ?>
                                     <?php endif; ?>
                                     <?php if ($item->language == '*') : ?>
                                         <?php $language = JText::alt('JALL', 'language'); ?>
                                     <?php else : ?>
-                                        <?php $language = $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                        <?php $language = $item->language_title ? $this->escape(
+                                            $item->language_title
+                                        ) : JText::_('JUNDEFINED'); ?>
                                     <?php endif; ?>
                                     <?php if ($canEdit) : ?>
-                                        <a href="<?php echo JRoute::_('index.php?option=com_content&task=article.edit&return=featured&id=' . $item->id); ?>"
+                                        <a href="<?php echo JRoute::_(
+                                            'index.php?option=com_content&task=article.edit&return=featured&id=' . $item->id
+                                        ); ?>"
                                            title="<?php echo JText::_('JACTION_EDIT'); ?>">
                                             <?php echo $this->escape($item->title); ?></a>
                                     <?php else : ?>
                                         <span
-                                            title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL',
-                                                $this->escape($item->alias)); ?>"><?php echo $this->escape($item->title); ?></span>
+                                            title="<?php echo JText::sprintf(
+                                                'JFIELD_ALIAS_LABEL',
+                                                $this->escape($item->alias)
+                                            ); ?>"><?php echo $this->escape($item->title); ?></span>
                                     <?php endif; ?>
                                     <span class="small break-word">
 									<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
 								</span>
                                     <div class="small">
-                                        <?php echo JText::_('JCATEGORY') . ": " . $this->escape($item->category_title); ?>
+                                        <?php echo JText::_('JCATEGORY') . ": " . $this->escape(
+                                                $item->category_title
+                                            ); ?>
                                     </div>
                                 </div>
                             </td>
@@ -181,8 +253,10 @@ if ($saveOrder) {
                             <td class="small hidden-phone">
                                 <?php if ($item->created_by_alias) : ?>
                                     <?php echo $this->escape($item->author_name); ?>
-                                    <p class="smallsub"> <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS',
-                                            $this->escape($item->created_by_alias)); ?></p>
+                                    <p class="smallsub"> <?php echo JText::sprintf(
+                                            'JGLOBAL_LIST_ALIAS',
+                                            $this->escape($item->created_by_alias)
+                                        ); ?></p>
                                 <?php else : ?>
                                     <?php echo $this->escape($item->author_name); ?>
                                 <?php endif; ?>
@@ -191,10 +265,13 @@ if ($saveOrder) {
                                 <?php if ($item->language == '*'): ?>
                                     <?php echo JText::alt('JALL', 'language'); ?>
                                 <?php else: ?>
-                                    <?php echo $item->language_title ? JHtml::_('image',
-                                            'mod_languages/' . $item->language_image . '.gif', $item->language_title,
+                                    <?php echo $item->language_title ? JHtml::_(
+                                            'image',
+                                            'mod_languages/' . $item->language_image . '.gif',
+                                            $item->language_title,
                                             array('title' => $item->language_title),
-                                            true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                            true
+                                        ) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                                 <?php endif; ?>
                             </td>
                             <td class="nowrap small hidden-phone">

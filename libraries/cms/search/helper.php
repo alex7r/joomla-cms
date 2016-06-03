@@ -38,9 +38,9 @@ class JSearchHelper
 
         if ($enable_log_searches) {
             // Query the table to determine if the term has been searched previously
-            $query->select($db->quoteName('hits'))
-                  ->from($db->quoteName('#__core_log_searches'))
-                  ->where($db->quoteName('search_term') . ' = ' . $db->quote($search_term));
+            $query->select($db->quoteName('hits'))->from($db->quoteName('#__core_log_searches'))->where(
+                    $db->quoteName('search_term') . ' = ' . $db->quote($search_term)
+                );
             $db->setQuery($query);
             $hits = intval($db->loadResult());
 
@@ -49,14 +49,16 @@ class JSearchHelper
 
             // Update the table based on the results
             if ($hits) {
-                $query->update($db->quoteName('#__core_log_searches'))
-                      ->set('hits = (hits + 1)')
-                      ->where($db->quoteName('search_term') . ' = ' . $db->quote($search_term));
+                $query->update($db->quoteName('#__core_log_searches'))->set('hits = (hits + 1)')->where(
+                        $db->quoteName('search_term') . ' = ' . $db->quote($search_term)
+                    );
             } else {
-                $query->insert($db->quoteName('#__core_log_searches'))->columns(array(
-                    $db->quoteName('search_term'),
-                    $db->quoteName('hits')
-                ))->values($db->quote($search_term) . ', 1');
+                $query->insert($db->quoteName('#__core_log_searches'))->columns(
+                    array(
+                        $db->quoteName('search_term'),
+                        $db->quoteName('hits')
+                    )
+                )->values($db->quote($search_term) . ', 1');
             }
 
             // Execute the update query

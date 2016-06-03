@@ -34,7 +34,9 @@ abstract class JHtmlIcon
 
         $uri = JUri::getInstance();
 
-        $url = 'index.php?option=com_content&task=article.add&return=' . base64_encode($uri) . '&a_id=0&catid=' . $category->id;
+        $url = 'index.php?option=com_content&task=article.add&return=' . base64_encode(
+                $uri
+            ) . '&a_id=0&catid=' . $category->id;
 
         if ($params->get('show_icons')) {
             if ($legacy) {
@@ -55,7 +57,9 @@ abstract class JHtmlIcon
 
         $button = JHtml::_('link', JRoute::_($url), $text, $attribs);
 
-        $output = '<span class="hasTooltip" title="' . JHtml::tooltipText('COM_CONTENT_CREATE_ARTICLE') . '">' . $button . '</span>';
+        $output = '<span class="hasTooltip" title="' . JHtml::tooltipText(
+                'COM_CONTENT_CREATE_ARTICLE'
+            ) . '">' . $button . '</span>';
 
         return $output;
     }
@@ -77,9 +81,17 @@ abstract class JHtmlIcon
         $uri      = JUri::getInstance();
         $base     = $uri->toString(array('scheme', 'host', 'port'));
         $template = JFactory::getApplication()->getTemplate();
-        $link     = $base . JRoute::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid,
-                $article->language), false);
-        $url      = 'index.php?option=com_mailto&tmpl=component&template=' . $template . '&link=' . MailToHelper::addLink($link);
+        $link     = $base . JRoute::_(
+                ContentHelperRoute::getArticleRoute(
+                    $article->slug,
+                    $article->catid,
+                    $article->language
+                ),
+                false
+            );
+        $url      = 'index.php?option=com_mailto&tmpl=component&template=' . $template . '&link=' . MailToHelper::addLink(
+                $link
+            );
 
         $status = 'width=400,height=350,menubar=yes,resizable=yes';
 
@@ -135,21 +147,29 @@ abstract class JHtmlIcon
         JHtml::_('bootstrap.tooltip');
 
         // Show checked_out icon if the article is checked out by a different user
-        if (property_exists($article, 'checked_out') && property_exists($article,
-                'checked_out_time') && $article->checked_out > 0 && $article->checked_out != $user->get('id')
+        if (property_exists($article, 'checked_out') && property_exists(
+                $article,
+                'checked_out_time'
+            ) && $article->checked_out > 0 && $article->checked_out != $user->get('id')
         ) {
             $checkoutUser = JFactory::getUser($article->checked_out);
             $date         = JHtml::_('date', $article->checked_out_time);
-            $tooltip      = JText::_('JLIB_HTML_CHECKED_OUT') . ' :: ' . JText::sprintf('COM_CONTENT_CHECKED_OUT_BY',
-                    $checkoutUser->name) . ' <br /> ' . $date;
+            $tooltip      = JText::_('JLIB_HTML_CHECKED_OUT') . ' :: ' . JText::sprintf(
+                    'COM_CONTENT_CHECKED_OUT_BY',
+                    $checkoutUser->name
+                ) . ' <br /> ' . $date;
 
             if ($legacy) {
                 $button = JHtml::_('image', 'system/checked_out.png', null, null, true);
-                $text   = '<span class="hasTooltip" title="' . JHtml::tooltipText($tooltip . '',
-                        0) . '">' . $button . '</span> ' . JText::_('JLIB_HTML_CHECKED_OUT');
+                $text   = '<span class="hasTooltip" title="' . JHtml::tooltipText(
+                        $tooltip . '',
+                        0
+                    ) . '">' . $button . '</span> ' . JText::_('JLIB_HTML_CHECKED_OUT');
             } else {
-                $text = '<span class="hasTooltip icon-lock" title="' . JHtml::tooltipText($tooltip . '',
-                        0) . '"></span> ' . JText::_('JLIB_HTML_CHECKED_OUT');
+                $text = '<span class="hasTooltip icon-lock" title="' . JHtml::tooltipText(
+                        $tooltip . '',
+                        0
+                    ) . '"></span> ' . JText::_('JLIB_HTML_CHECKED_OUT');
             }
 
             $output = JHtml::_('link', '#', $text, $attribs);
@@ -177,8 +197,12 @@ abstract class JHtmlIcon
         if ($legacy) {
             $icon = $article->state ? 'edit.png' : 'edit_unpublished.png';
 
-            if (strtotime($article->publish_up) > strtotime(JFactory::getDate()) || ((strtotime($article->publish_down) < strtotime(JFactory::getDate())) && $article->publish_down != JFactory::getDbo()
-                                                                                                                                                                                               ->getNullDate())
+            if (strtotime($article->publish_up) > strtotime(JFactory::getDate()) || ((strtotime(
+                                                                                          $article->publish_down
+                                                                                      ) < strtotime(
+                                                                                          JFactory::getDate()
+                                                                                      )) && $article->publish_down != JFactory::getDbo(
+                    )->getNullDate())
             ) {
                 $icon = 'edit_unpublished.png';
             }
@@ -187,14 +211,22 @@ abstract class JHtmlIcon
         } else {
             $icon = $article->state ? 'edit' : 'eye-close';
 
-            if (strtotime($article->publish_up) > strtotime(JFactory::getDate()) || ((strtotime($article->publish_down) < strtotime(JFactory::getDate())) && $article->publish_down != JFactory::getDbo()
-                                                                                                                                                                                               ->getNullDate())
+            if (strtotime($article->publish_up) > strtotime(JFactory::getDate()) || ((strtotime(
+                                                                                          $article->publish_down
+                                                                                      ) < strtotime(
+                                                                                          JFactory::getDate()
+                                                                                      )) && $article->publish_down != JFactory::getDbo(
+                    )->getNullDate())
             ) {
                 $icon = 'eye-close';
             }
 
-            $text = '<span class="hasTooltip icon-' . $icon . ' tip" title="' . JHtml::tooltipText(JText::_('COM_CONTENT_EDIT_ITEM'),
-                    $overlib, 0, 0) . '"></span>' . JText::_('JGLOBAL_EDIT');
+            $text = '<span class="hasTooltip icon-' . $icon . ' tip" title="' . JHtml::tooltipText(
+                    JText::_('COM_CONTENT_EDIT_ITEM'),
+                    $overlib,
+                    0,
+                    0
+                ) . '"></span>' . JText::_('JGLOBAL_EDIT');
         }
 
         $attribs['title'] = JText::_('JGLOBAL_EDIT_TITLE');
@@ -235,8 +267,10 @@ abstract class JHtmlIcon
             $text = JText::_('JGLOBAL_PRINT');
         }
 
-        $attribs['title']   = JText::sprintf('JGLOBAL_PRINT_TITLE',
-            htmlspecialchars($article->title, ENT_QUOTES, 'UTF-8'));
+        $attribs['title']   = JText::sprintf(
+            'JGLOBAL_PRINT_TITLE',
+            htmlspecialchars($article->title, ENT_QUOTES, 'UTF-8')
+        );
         $attribs['onclick'] = "window.open(this.href,'win2','" . $status . "'); return false;";
         $attribs['rel']     = 'nofollow';
 

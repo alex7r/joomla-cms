@@ -48,7 +48,9 @@ extract($displayData);
  */
 
 // Set the link for the user selection page
-$link = 'index.php?option=com_users&amp;view=users&amp;layout=modal&amp;tmpl=component&amp;required=' . ($required ? 1 : 0) . '&amp;field={field-user-id}' . (isset($groups) ? ('&amp;groups=' . base64_encode(json_encode($groups))) : '') . (isset($excluded) ? ('&amp;excluded=' . base64_encode(json_encode($excluded))) : '');
+$link = 'index.php?option=com_users&amp;view=users&amp;layout=modal&amp;tmpl=component&amp;required=' . ($required ? 1 : 0) . '&amp;field={field-user-id}' . (isset($groups) ? ('&amp;groups=' . base64_encode(
+            json_encode($groups)
+        )) : '') . (isset($excluded) ? ('&amp;excluded=' . base64_encode(json_encode($excluded))) : '');
 
 // Invalidate the input value if no user selected
 if (JText::_('JLIB_FORM_SELECT_USER') == htmlspecialchars($userName, ENT_COMPAT, 'UTF-8')) {
@@ -79,11 +81,15 @@ JHtml::script('jui/fielduser.min.js', false, true, false, false, true);
         <?php if (!$readonly) : ?>
             <a class="btn btn-primary button-select" title="<?php echo JText::_('JLIB_FORM_CHANGE_USER') ?>"><span
                     class="icon-user"></span></a>
-            <?php echo JHtml::_('bootstrap.renderModal', 'userModal_' . $id, array(
-                'title'       => JText::_('JLIB_FORM_CHANGE_USER'),
-                'closeButton' => true,
-                'footer'      => '<button class="btn" data-dismiss="modal">' . JText::_('JCANCEL') . '</button>'
-            )); ?>
+            <?php echo JHtml::_(
+                'bootstrap.renderModal',
+                'userModal_' . $id,
+                array(
+                    'title'       => JText::_('JLIB_FORM_CHANGE_USER'),
+                    'closeButton' => true,
+                    'footer'      => '<button class="btn" data-dismiss="modal">' . JText::_('JCANCEL') . '</button>'
+                )
+            ); ?>
         <?php endif; ?>
     </div>
     <?php // Create the real field, hidden, that stored the user id. ?>

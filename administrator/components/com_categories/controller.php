@@ -68,8 +68,12 @@ class CategoriesController extends JControllerLegacy
             // Somehow the person just went to the form - we don't allow that.
             $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
             $this->setMessage($this->getError(), 'error');
-            $this->setRedirect(JRoute::_('index.php?option=com_categories&view=categories&extension=' . $this->extension,
-                false));
+            $this->setRedirect(
+                JRoute::_(
+                    'index.php?option=com_categories&view=categories&extension=' . $this->extension,
+                    false
+                )
+            );
 
             return false;
         }
@@ -77,8 +81,11 @@ class CategoriesController extends JControllerLegacy
         // Get and render the view.
         if ($view = $this->getView($vName, $vFormat)) {
             // Get the model for the view.
-            $model = $this->getModel($vName, 'CategoriesModel',
-                array('name' => $vName . '.' . substr($this->extension, 4)));
+            $model = $this->getModel(
+                $vName,
+                'CategoriesModel',
+                array('name' => $vName . '.' . substr($this->extension, 4))
+            );
 
             // Push the model into the view (as default).
             $view->setModel($model, true);

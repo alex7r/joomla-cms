@@ -17,15 +17,25 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
 ?>
 
 
-<?php if ($this->item->state == 0 || strtotime($this->item->publish_up) > strtotime(JFactory::getDate()) || ((strtotime($this->item->publish_down) < strtotime(JFactory::getDate())) && $this->item->publish_down != JFactory::getDbo()
-                                                                                                                                                                                                                             ->getNullDate())) : ?>
+<?php if ($this->item->state == 0 || strtotime($this->item->publish_up) > strtotime(JFactory::getDate()) || ((strtotime(
+                                                                                                                  $this->item->publish_down
+                                                                                                              ) < strtotime(
+                                                                                                                  JFactory::getDate(
+                                                                                                                  )
+                                                                                                              )) && $this->item->publish_down != JFactory::getDbo(
+    )->getNullDate())) : ?>
 <div class="system-unpublished">
     <?php endif; ?>
     <?php if ($params->get('show_title')) : ?>
         <h2>
             <?php if ($params->get('link_titles') && $params->get('access-view')) : ?>
-                <a href="<?php echo JRoute::_(ContentHelperRoute::getArticleRoute($this->item->slug, $this->item->catid,
-                    $this->item->language)); ?>">
+                <a href="<?php echo JRoute::_(
+                    ContentHelperRoute::getArticleRoute(
+                        $this->item->slug,
+                        $this->item->catid,
+                        $this->item->language
+                    )
+                ); ?>">
                     <?php echo $this->escape($this->item->title); ?></a>
             <?php else : ?>
                 <?php echo $this->escape($this->item->title); ?>
@@ -61,14 +71,20 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
 
     <?php // to do not that elegant would be nice to group the params ?>
 
-    <?php if (($params->get('show_author')) or ($params->get('show_category')) or ($params->get('show_create_date')) or ($params->get('show_modify_date')) or ($params->get('show_publish_date')) or ($params->get('show_parent_category')) or ($params->get('show_hits'))) : ?>
+    <?php if (($params->get('show_author')) or ($params->get('show_category')) or ($params->get(
+        'show_create_date'
+    )) or ($params->get('show_modify_date')) or ($params->get('show_publish_date')) or ($params->get(
+        'show_parent_category'
+    )) or ($params->get('show_hits'))) : ?>
     <dl class="article-info">
         <dt class="article-info-term"><?php echo JText::_('COM_CONTENT_ARTICLE_INFO'); ?></dt>
         <?php endif; ?>
         <?php if ($params->get('show_parent_category') && $this->item->parent_id != 1) : ?>
             <dd class="parent-category-name">
                 <?php $title = $this->escape($this->item->parent_title);
-                $url         = '<a href="' . JRoute::_(ContentHelperRoute::getCategoryRoute($this->item->parent_id)) . '">' . $title . '</a>'; ?>
+                $url         = '<a href="' . JRoute::_(
+                        ContentHelperRoute::getCategoryRoute($this->item->parent_id)
+                    ) . '">' . $title . '</a>'; ?>
                 <?php if ($params->get('link_parent_category')) : ?>
                     <?php echo JText::sprintf('COM_CONTENT_PARENT', $url); ?>
                 <?php else : ?>
@@ -79,7 +95,9 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
         <?php if ($params->get('show_category')) : ?>
             <dd class="category-name">
                 <?php $title = $this->escape($this->item->category_title);
-                $url         = '<a href="' . JRoute::_(ContentHelperRoute::getCategoryRoute($this->item->catid)) . '">' . $title . '</a>'; ?>
+                $url         = '<a href="' . JRoute::_(
+                        ContentHelperRoute::getCategoryRoute($this->item->catid)
+                    ) . '">' . $title . '</a>'; ?>
                 <?php if ($params->get('link_category')) : ?>
                     <?php echo JText::sprintf('COM_CONTENT_CATEGORY', $url); ?>
                 <?php else : ?>
@@ -89,20 +107,26 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
         <?php endif; ?>
         <?php if ($params->get('show_create_date')) : ?>
             <dd class="create">
-                <?php echo JText::sprintf('COM_CONTENT_CREATED_DATE_ON',
-                    JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC2'))); ?>
+                <?php echo JText::sprintf(
+                    'COM_CONTENT_CREATED_DATE_ON',
+                    JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC2'))
+                ); ?>
             </dd>
         <?php endif; ?>
         <?php if ($params->get('show_modify_date')) : ?>
             <dd class="modified">
-                <?php echo JText::sprintf('COM_CONTENT_LAST_UPDATED',
-                    JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2'))); ?>
+                <?php echo JText::sprintf(
+                    'COM_CONTENT_LAST_UPDATED',
+                    JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2'))
+                ); ?>
             </dd>
         <?php endif; ?>
         <?php if ($params->get('show_publish_date')) : ?>
             <dd class="published">
-                <?php echo JText::sprintf('COM_CONTENT_PUBLISHED_DATE_ON',
-                    JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC2'))); ?>
+                <?php echo JText::sprintf(
+                    'COM_CONTENT_PUBLISHED_DATE_ON',
+                    JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC2'))
+                ); ?>
             </dd>
         <?php endif; ?>
         <?php if ($params->get('show_author') && !empty($this->item->author)) : ?>
@@ -110,8 +134,10 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
                 <?php $author = $this->item->author; ?>
                 <?php $author = ($this->item->created_by_alias ? $this->item->created_by_alias : $author); ?>
                 <?php if (!empty($this->item->contact_link) && $params->get('link_author') == true) : ?>
-                    <?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY',
-                        JHtml::_('link', $this->item->contact_link, $author)); ?>
+                    <?php echo JText::sprintf(
+                        'COM_CONTENT_WRITTEN_BY',
+                        JHtml::_('link', $this->item->contact_link, $author)
+                    ); ?>
                 <?php else : ?>
                     <?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY', $author); ?>
                 <?php endif; ?>
@@ -122,7 +148,11 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
                 <?php echo JText::sprintf('COM_CONTENT_ARTICLE_HITS', $this->item->hits); ?>
             </dd>
         <?php endif; ?>
-        <?php if (($params->get('show_author')) or ($params->get('show_category')) or ($params->get('show_create_date')) or ($params->get('show_modify_date')) or ($params->get('show_publish_date')) or ($params->get('show_parent_category')) or ($params->get('show_hits'))) : ?>
+        <?php if (($params->get('show_author')) or ($params->get('show_category')) or ($params->get(
+            'show_create_date'
+        )) or ($params->get('show_modify_date')) or ($params->get('show_publish_date')) or ($params->get(
+            'show_parent_category'
+        )) or ($params->get('show_hits'))) : ?>
     </dl>
 <?php endif; ?>
     <?php if (isset($images->image_intro) and !empty($images->image_intro)) : ?>
@@ -130,8 +160,11 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
         <div class="img-intro-<?php echo htmlspecialchars($imgfloat); ?>">
             <img
                 <?php if ($images->image_intro_caption):
-                    echo 'class="caption"' . ' title="' . htmlspecialchars($images->image_intro_caption, ENT_COMPAT,
-                            'UTF-8') . '"';
+                    echo 'class="caption"' . ' title="' . htmlspecialchars(
+                            $images->image_intro_caption,
+                            ENT_COMPAT,
+                            'UTF-8'
+                        ) . '"';
                 endif; ?>
                 src="<?php echo htmlspecialchars($images->image_intro, ENT_COMPAT, 'UTF-8'); ?>"
                 alt="<?php echo htmlspecialchars($images->image_intro_alt, ENT_COMPAT, 'UTF-8'); ?>"/>
@@ -141,16 +174,28 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
 
     <?php if ($params->get('show_readmore') && $this->item->readmore) :
         if ($params->get('access-view')) :
-            $link = JRoute::_(ContentHelperRoute::getArticleRoute($this->item->slug, $this->item->catid,
-                $this->item->language));
+            $link = JRoute::_(
+                ContentHelperRoute::getArticleRoute(
+                    $this->item->slug,
+                    $this->item->catid,
+                    $this->item->language
+                )
+            );
         else :
             $menu   = JFactory::getApplication()->getMenu();
             $active = $menu->getActive();
             $itemId = $active->id;
             $link   = new JUri(JRoute::_('index.php?option=com_users&view=login&Itemid=' . $itemId, false));
-            $link->setVar('return',
-                base64_encode(ContentHelperRoute::getArticleRoute($this->item->slug, $this->item->catid,
-                    $this->item->language)));
+            $link->setVar(
+                'return',
+                base64_encode(
+                    ContentHelperRoute::getArticleRoute(
+                        $this->item->slug,
+                        $this->item->catid,
+                        $this->item->language
+                    )
+                )
+            );
         endif;
         ?>
         <p class="readmore">
@@ -171,8 +216,11 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
         </p>
     <?php endif; ?>
 
-    <?php if ($this->item->state == 0 || strtotime($this->item->publish_up) > strtotime(JFactory::getDate()) || ((strtotime($this->item->publish_down) < strtotime(JFactory::getDate())) && $this->item->publish_down != JFactory::getDbo()
-                                                                                                                                                                                                                                 ->getNullDate())) : ?>
+    <?php if ($this->item->state == 0 || strtotime($this->item->publish_up) > strtotime(
+        JFactory::getDate()
+    ) || ((strtotime($this->item->publish_down) < strtotime(
+                JFactory::getDate()
+            )) && $this->item->publish_down != JFactory::getDbo()->getNullDate())) : ?>
 </div>
 <?php endif; ?>
 

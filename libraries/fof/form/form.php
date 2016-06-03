@@ -362,7 +362,9 @@ class FOFForm extends JForm
             }
         } elseif ($group === false) {
             // Get only field elements not in a group.
-            $fields = $this->xml->xpath('descendant::headers[not(@name)]/header | descendant::headers[not(@name)]/headerset/header ');
+            $fields = $this->xml->xpath(
+                'descendant::headers[not(@name)]/header | descendant::headers[not(@name)]/headerset/header '
+            );
         } else {
             // Get an array of all the <header /> elements.
             $fields = $this->xml->xpath('//header');

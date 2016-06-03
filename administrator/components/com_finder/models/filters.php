@@ -62,14 +62,22 @@ class FinderModelFilters extends JModelList
         $query->select('a.*')->from($db->quoteName('#__finder_filters', 'a'));
 
         // Join over the users for the checked out user.
-        $query->select($db->quoteName('uc.name', 'editor'))
-              ->join('LEFT', $db->quoteName('#__users',
-                      'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('a.checked_out'));
+        $query->select($db->quoteName('uc.name', 'editor'))->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__users',
+                    'uc'
+                ) . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('a.checked_out')
+            );
 
         // Join over the users for the author.
-        $query->select($db->quoteName('ua.name', 'user_name'))
-              ->join('LEFT', $db->quoteName('#__users',
-                      'ua') . ' ON ' . $db->quoteName('ua.id') . ' = ' . $db->quoteName('a.created_by'));
+        $query->select($db->quoteName('ua.name', 'user_name'))->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__users',
+                    'ua'
+                ) . ' ON ' . $db->quoteName('ua.id') . ' = ' . $db->quoteName('a.created_by')
+            );
 
         // Check for a search filter.
         if ($search = $this->getState('filter.search')) {
@@ -85,8 +93,14 @@ class FinderModelFilters extends JModelList
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.title') . ' ' . $db->escape($this->getState('list.direction', 'ASC'))));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.title'
+                ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+            )
+        );
 
         return $query;
     }
@@ -126,10 +140,14 @@ class FinderModelFilters extends JModelList
     protected function populateState($ordering = 'a.title', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('filter.state',
-            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'cmd'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.state',
+            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'cmd')
+        );
 
         // Load the parameters.
         $params = JComponentHelper::getParams('com_finder');

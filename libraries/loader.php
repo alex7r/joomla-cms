@@ -80,8 +80,9 @@ abstract class JLoader
     {
         try {
             if ($recurse) {
-                $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($parentPath),
-                    RecursiveIteratorIterator::SELF_FIRST);
+                $iterator = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator($parentPath), RecursiveIteratorIterator::SELF_FIRST
+                );
             } else {
                 $iterator = new DirectoryIterator($parentPath);
             }
@@ -291,8 +292,11 @@ abstract class JLoader
     {
         // Verify the library path exists.
         if (!file_exists($path)) {
-            $path = (str_replace(JPATH_ROOT, '', $path) == $path) ? basename($path) : str_replace(JPATH_ROOT, '',
-                $path);
+            $path = (str_replace(JPATH_ROOT, '', $path) == $path) ? basename($path) : str_replace(
+                JPATH_ROOT,
+                '',
+                $path
+            );
 
             throw new RuntimeException('Library path ' . $path . ' cannot be found.', 500);
         }
@@ -369,8 +373,11 @@ abstract class JLoader
     {
         // Verify the library path exists.
         if (!file_exists($path)) {
-            $path = (str_replace(JPATH_ROOT, '', $path) == $path) ? basename($path) : str_replace(JPATH_ROOT, '',
-                $path);
+            $path = (str_replace(JPATH_ROOT, '', $path) == $path) ? basename($path) : str_replace(
+                JPATH_ROOT,
+                '',
+                $path
+            );
 
             throw new RuntimeException('Library path ' . $path . ' cannot be found.', 500);
         }

@@ -18,8 +18,13 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 ?>
 <form
-    action="<?php echo JRoute::_('index.php?option=com_users&view=users&layout=modal&tmpl=component&groups=' . $input->get('groups',
-            '', 'BASE64') . '&excluded=' . $input->get('excluded', '', 'BASE64')); ?>"
+    action="<?php echo JRoute::_(
+        'index.php?option=com_users&view=users&layout=modal&tmpl=component&groups=' . $input->get(
+            'groups',
+            '',
+            'BASE64'
+        ) . '&excluded=' . $input->get('excluded', '', 'BASE64')
+    ); ?>"
     method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <legend class="element-invisible"><?php echo JText::_('JSEARCH_FILTER'); ?></legend>
@@ -30,11 +35,15 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                    title="<?php echo JText::_('COM_USERS_SEARCH_IN_NAME'); ?>"/>
             <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
             <button type="button"
-                    onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                    onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                    'JSEARCH_FILTER_CLEAR'
+                ); ?></button>
             <button type="button" data-user-value=""
                     data-user-name="<?php echo $this->escape(JText::_('JLIB_FORM_SELECT_USER')); ?>"
                     data-user-field="<?php echo $this->escape($field); ?>"
-                    onclick="if (window.parent) window.parent.jSelectUser(this);"><?php echo JText::_('JOPTION_NO_USER') ?></button>
+                    onclick="if (window.parent) window.parent.jSelectUser(this);"><?php echo JText::_(
+                    'JOPTION_NO_USER'
+                ) ?></button>
         </div>
 
         <div class="filter-select">

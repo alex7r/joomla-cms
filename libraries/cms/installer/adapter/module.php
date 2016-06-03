@@ -83,7 +83,9 @@ class JInstallerAdapterModule extends JInstallerAdapter
 
         foreach ($admin_list as $module) {
             if (file_exists(JPATH_ADMINISTRATOR . "/modules/$module/$module.xml")) {
-                $manifest_details = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . "/modules/$module/$module.xml");
+                $manifest_details = JInstaller::parseXMLInstallFile(
+                    JPATH_ADMINISTRATOR . "/modules/$module/$module.xml"
+                );
                 $extension        = JTable::getInstance('extension');
                 $extension->set('type', 'module');
                 $extension->set('client_id', $admin_info->id);
@@ -151,8 +153,11 @@ class JInstallerAdapterModule extends JInstallerAdapter
         // Is the module we are trying to uninstall a core one?
         // Because that is not a good idea...
         if ($this->extension->protected) {
-            JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_WARNCOREMODULE', $this->extension->name),
-                JLog::WARNING, 'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_WARNCOREMODULE', $this->extension->name),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -162,8 +167,12 @@ class JInstallerAdapterModule extends JInstallerAdapter
         $client  = JApplicationHelper::getClientInfo($this->extension->client_id);
 
         if ($client === false) {
-            $this->parent->abort(JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_UNKNOWN_CLIENT',
-                $this->extension->client_id));
+            $this->parent->abort(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ERROR_MOD_UNINSTALL_UNKNOWN_CLIENT',
+                    $this->extension->client_id
+                )
+            );
 
             return false;
         }
@@ -213,8 +222,11 @@ class JInstallerAdapterModule extends JInstallerAdapter
         if (!($this->getManifest() instanceof SimpleXMLElement)) {
             // Make sure we delete the folders
             JFolder::delete($this->parent->getPath('extension_root'));
-            JLog::add(JText::_('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_INVALID_NOTFOUND_MANIFEST'), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                JText::_('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_INVALID_NOTFOUND_MANIFEST'),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -238,11 +250,9 @@ class JInstallerAdapterModule extends JInstallerAdapter
         $this->parent->removeFiles($this->getManifest()->languages, $this->extension->client_id);
 
         // Let's delete all the module copies for the type we are uninstalling
-        $query->clear()
-              ->select($db->quoteName('id'))
-              ->from($db->quoteName('#__modules'))
-              ->where($db->quoteName('module') . ' = ' . $db->quote($this->extension->element))
-              ->where($db->quoteName('client_id') . ' = ' . (int)$this->extension->client_id);
+        $query->clear()->select($db->quoteName('id'))->from($db->quoteName('#__modules'))->where(
+                $db->quoteName('module') . ' = ' . $db->quote($this->extension->element)
+            )->where($db->quoteName('client_id') . ' = ' . (int)$this->extension->client_id);
         $db->setQuery($query);
 
         try {
@@ -258,16 +268,19 @@ class JInstallerAdapterModule extends JInstallerAdapter
             $modID = implode(',', $modules);
 
             // Wipe out any items assigned to menus
-            $query = $db->getQuery(true)
-                        ->delete($db->quoteName('#__modules_menu'))
-                        ->where($db->quoteName('moduleid') . ' IN (' . $modID . ')');
+            $query = $db->getQuery(true)->delete($db->quoteName('#__modules_menu'))->where(
+                    $db->quoteName('moduleid') . ' IN (' . $modID . ')'
+                );
             $db->setQuery($query);
 
             try {
                 $db->execute();
             } catch (RuntimeException $e) {
-                JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_EXCEPTION', $db->stderr(true)),
-                    JLog::WARNING, 'jerror');
+                JLog::add(
+                    JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_EXCEPTION', $db->stderr(true)),
+                    JLog::WARNING,
+                    'jerror'
+                );
                 $retval = false;
             }
 
@@ -279,8 +292,11 @@ class JInstallerAdapterModule extends JInstallerAdapter
                 $module->load($modInstanceId);
 
                 if (!$module->delete()) {
-                    JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_EXCEPTION', $module->getError()),
-                        JLog::WARNING, 'jerror');
+                    JLog::add(
+                        JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_EXCEPTION', $module->getError()),
+                        JLog::WARNING,
+                        'jerror'
+                    );
                     $retval = false;
                 }
             }
@@ -288,10 +304,9 @@ class JInstallerAdapterModule extends JInstallerAdapter
 
         // Now we will no longer need the module object, so let's delete it and free up memory
         $this->extension->delete($this->extension->extension_id);
-        $query = $db->getQuery(true)
-                    ->delete($db->quoteName('#__modules'))
-                    ->where($db->quoteName('module') . ' = ' . $db->quote($this->extension->element))
-                    ->where($db->quote('client_id') . ' = ' . $this->extension->client_id);
+        $query = $db->getQuery(true)->delete($db->quoteName('#__modules'))->where(
+                $db->quoteName('module') . ' = ' . $db->quote($this->extension->element)
+            )->where($db->quote('client_id') . ' = ' . $this->extension->client_id);
         $db->setQuery($query);
 
         try {
@@ -384,15 +399,22 @@ class JInstallerAdapterModule extends JInstallerAdapter
     protected function checkExistingExtension()
     {
         try {
-            $this->currentExtensionId = $this->extension->find(array(
-                'element'   => $this->element,
-                'type'      => $this->type,
-                'client_id' => $this->clientId
-            ));
+            $this->currentExtensionId = $this->extension->find(
+                array(
+                    'element'   => $this->element,
+                    'type'      => $this->type,
+                    'client_id' => $this->clientId
+                )
+            );
         } catch (RuntimeException $e) {
             // Install failed, roll back changes
-            throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_ROLLBACK',
-                JText::_('JLIB_INSTALLER_' . $this->route), $e->getMessage()), $e->getCode(), $e);
+            throw new RuntimeException(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ABORT_ROLLBACK',
+                    JText::_('JLIB_INSTALLER_' . $this->route),
+                    $e->getMessage()
+                ), $e->getCode(), $e
+            );
         }
     }
 
@@ -437,11 +459,13 @@ class JInstallerAdapterModule extends JInstallerAdapter
     {
         // Clobber any possible pending updates
         $update = JTable::getInstance('update');
-        $uid    = $update->find(array(
-            'element'   => $this->element,
-            'type'      => 'module',
-            'client_id' => $this->clientId
-        ));
+        $uid    = $update->find(
+            array(
+                'element'   => $this->element,
+                'type'      => 'module',
+                'client_id' => $this->clientId
+            )
+        );
 
         if ($uid) {
             $update->delete($uid);
@@ -488,8 +512,13 @@ class JInstallerAdapterModule extends JInstallerAdapter
             $client = JApplicationHelper::getClientInfo($cname, true);
 
             if ($client === false) {
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_MOD_UNKNOWN_CLIENT',
-                    JText::_('JLIB_INSTALLER_' . $this->route), $client->name));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_MOD_UNKNOWN_CLIENT',
+                        JText::_('JLIB_INSTALLER_' . $this->route),
+                        $client->name
+                    )
+                );
             }
 
             $basePath       = $client->path;
@@ -502,8 +531,12 @@ class JInstallerAdapterModule extends JInstallerAdapter
 
         // Set the installation path
         if (empty($this->element)) {
-            throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_MOD_INSTALL_NOFILE',
-                JText::_('JLIB_INSTALLER_' . $this->route)));
+            throw new RuntimeException(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ABORT_MOD_INSTALL_NOFILE',
+                    JText::_('JLIB_INSTALLER_' . $this->route)
+                )
+            );
         }
 
         $this->parent->setPath('extension_root', $basePath . '/modules/' . $this->element);
@@ -541,8 +574,13 @@ class JInstallerAdapterModule extends JInstallerAdapter
         if ($this->currentExtensionId) {
             if (!$this->parent->isOverwrite()) {
                 // Install failed, roll back changes
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_MOD_INSTALL_ALLREADY_EXISTS',
-                    JText::_('JLIB_INSTALLER_' . $this->route), $this->name));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_MOD_INSTALL_ALLREADY_EXISTS',
+                        JText::_('JLIB_INSTALLER_' . $this->route),
+                        $this->name
+                    )
+                );
             }
 
             // Load the entry and update the manifest_cache
@@ -556,8 +594,13 @@ class JInstallerAdapterModule extends JInstallerAdapter
 
             if (!$this->extension->store()) {
                 // Install failed, roll back changes
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_MOD_ROLLBACK',
-                    JText::_('JLIB_INSTALLER_' . $this->route), $this->extension->getError()));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_MOD_ROLLBACK',
+                        JText::_('JLIB_INSTALLER_' . $this->route),
+                        $this->extension->getError()
+                    )
+                );
             }
         } else {
             $this->extension->name    = $this->name;
@@ -579,16 +622,23 @@ class JInstallerAdapterModule extends JInstallerAdapter
 
             if (!$this->extension->store()) {
                 // Install failed, roll back changes
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_MOD_ROLLBACK',
-                    JText::_('JLIB_INSTALLER_' . $this->route), $this->extension->getError()));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_MOD_ROLLBACK',
+                        JText::_('JLIB_INSTALLER_' . $this->route),
+                        $this->extension->getError()
+                    )
+                );
             }
 
             // Since we have created a module item, we add it to the installation step stack
             // so that if we have to rollback the changes we can undo it.
-            $this->parent->pushStep(array(
-                'type'         => 'extension',
-                'extension_id' => $this->extension->extension_id
-            ));
+            $this->parent->pushStep(
+                array(
+                    'type'         => 'extension',
+                    'extension_id' => $this->extension->extension_id
+                )
+            );
 
             // Create unpublished module
             $name = preg_replace('#[\*?]#', '', JText::_($this->name));
@@ -624,9 +674,9 @@ class JInstallerAdapterModule extends JInstallerAdapter
         $db = $this->parent->getDbo();
 
         // Remove the entry from the #__modules_menu table
-        $query = $db->getQuery(true)
-                    ->delete($db->quoteName('#__modules_menu'))
-                    ->where($db->quoteName('moduleid') . ' = ' . (int)$arg['id']);
+        $query = $db->getQuery(true)->delete($db->quoteName('#__modules_menu'))->where(
+                $db->quoteName('moduleid') . ' = ' . (int)$arg['id']
+            );
         $db->setQuery($query);
 
         try {
@@ -652,9 +702,9 @@ class JInstallerAdapterModule extends JInstallerAdapter
         $db = $this->parent->getDbo();
 
         // Remove the entry from the #__modules table
-        $query = $db->getQuery(true)
-                    ->delete($db->quoteName('#__modules'))
-                    ->where($db->quoteName('id') . ' = ' . (int)$arg['id']);
+        $query = $db->getQuery(true)->delete($db->quoteName('#__modules'))->where(
+                $db->quoteName('id') . ' = ' . (int)$arg['id']
+            );
         $db->setQuery($query);
 
         try {

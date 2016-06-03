@@ -13,13 +13,15 @@ defined('_JEXEC') or die;
 JHtml::_('jquery.framework');
 
 // Use javascript to remove the modal added below from the current div and add it to the end of html body tag.
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	jQuery(document).ready(function($) {
 		var multilangueModal = $('#multiLangModal').clone();
 		$('#multiLangModal').remove();
 		$('body').append(multilangueModal);
 	});
-");
+"
+);
 ?>
 
     <div class="btn-group multilanguage">
@@ -32,12 +34,18 @@ JFactory::getDocument()->addScriptDeclaration("
         </a>
     </div>
 
-<?php echo JHtml::_('bootstrap.renderModal', 'multiLangModal', array(
-    'title'      => JText::_('MOD_MULTILANGSTATUS'),
-    'url'        => JRoute::_('index.php?option=com_languages&view=multilangstatus&tmpl=component'),
-    'height'     => '400px',
-    'width'      => '800px',
-    'bodyHeight' => '70',
-    'modalWidth' => '80',
-    'footer'     => '<button class="btn" data-dismiss="modal" type="button" aria-hidden="true">' . JText::_('JTOOLBAR_CLOSE') . '</button>',
-));
+<?php echo JHtml::_(
+    'bootstrap.renderModal',
+    'multiLangModal',
+    array(
+        'title'      => JText::_('MOD_MULTILANGSTATUS'),
+        'url'        => JRoute::_('index.php?option=com_languages&view=multilangstatus&tmpl=component'),
+        'height'     => '400px',
+        'width'      => '800px',
+        'bodyHeight' => '70',
+        'modalWidth' => '80',
+        'footer'     => '<button class="btn" data-dismiss="modal" type="button" aria-hidden="true">' . JText::_(
+                'JTOOLBAR_CLOSE'
+            ) . '</button>',
+    )
+);

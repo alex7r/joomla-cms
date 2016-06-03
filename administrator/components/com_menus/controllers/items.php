@@ -85,8 +85,11 @@ class MenusControllerItems extends JControllerAdmin
     {
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        JLog::add('MenusControllerItems::saveorder() is deprecated. Function will be removed in 4.0', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'MenusControllerItems::saveorder() is deprecated. Function will be removed in 4.0',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Get the arrays from the Request
         $order         = $this->input->post->get('order', null, 'array');
@@ -146,8 +149,14 @@ class MenusControllerItems extends JControllerAdmin
             }
         }
 
-        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&menutype=' . $app->getUserState('com_menus.items.menutype'),
-            false));
+        $this->setRedirect(
+            JRoute::_(
+                'index.php?option=' . $this->option . '&view=' . $this->view_list . '&menutype=' . $app->getUserState(
+                    'com_menus.items.menutype'
+                ),
+                false
+            )
+        );
     }
 
     /**
@@ -185,8 +194,13 @@ class MenusControllerItems extends JControllerAdmin
                 if ($value == 1) {
                     if ($errors) {
                         $app = JFactory::getApplication();
-                        $app->enqueueMessage(JText::plural($this->text_prefix . '_N_ITEMS_FAILED_PUBLISHING',
-                            count($cid)), 'error');
+                        $app->enqueueMessage(
+                            JText::plural(
+                                $this->text_prefix . '_N_ITEMS_FAILED_PUBLISHING',
+                                count($cid)
+                            ),
+                            'error'
+                        );
                     } else {
                         $ntext = $this->text_prefix . '_N_ITEMS_PUBLISHED';
                     }
@@ -202,9 +216,13 @@ class MenusControllerItems extends JControllerAdmin
             }
         }
 
-        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&menutype=' . JFactory::getApplication()
-                                                                                                                                ->getUserState('com_menus.items.menutype'),
-            false));
+        $this->setRedirect(
+            JRoute::_(
+                'index.php?option=' . $this->option . '&view=' . $this->view_list . '&menutype=' . JFactory::getApplication(
+                )->getUserState('com_menus.items.menutype'),
+                false
+            )
+        );
     }
 
     /**
@@ -227,17 +245,28 @@ class MenusControllerItems extends JControllerAdmin
         if ($return === false) {
             // Checkin failed.
             $message = JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError());
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&menutype=' . JFactory::getApplication()
-                                                                                                                                    ->getUserState('com_menus.items.menutype'),
-                false), $message, 'error');
+            $this->setRedirect(
+                JRoute::_(
+                    'index.php?option=' . $this->option . '&view=' . $this->view_list . '&menutype=' . JFactory::getApplication(
+                    )->getUserState('com_menus.items.menutype'),
+                    false
+                ),
+                $message,
+                'error'
+            );
 
             return false;
         } else {
             // Checkin succeeded.
             $message = JText::plural($this->text_prefix . '_N_ITEMS_CHECKED_IN', count($ids));
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&menutype=' . JFactory::getApplication()
-                                                                                                                                    ->getUserState('com_menus.items.menutype'),
-                false), $message);
+            $this->setRedirect(
+                JRoute::_(
+                    'index.php?option=' . $this->option . '&view=' . $this->view_list . '&menutype=' . JFactory::getApplication(
+                    )->getUserState('com_menus.items.menutype'),
+                    false
+                ),
+                $message
+            );
 
             return true;
         }

@@ -168,8 +168,11 @@ class JInstallerAdapterFile extends JInstallerAdapter
 
             if ($result === false) {
                 // Install failed, rollback changes
-                JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_FILE_UNINSTALL_SQL_ERROR', $db->stderr(true)),
-                    JLog::WARNING, 'jerror');
+                JLog::add(
+                    JText::sprintf('JLIB_INSTALLER_ERROR_FILE_UNINSTALL_SQL_ERROR', $db->stderr(true)),
+                    JLog::WARNING,
+                    'jerror'
+                );
                 $retval = false;
             }
 
@@ -223,8 +226,11 @@ class JInstallerAdapterFile extends JInstallerAdapter
                 JFolder::delete($folder);
             }
         } else {
-            JLog::add(JText::_('JLIB_INSTALLER_ERROR_FILE_UNINSTALL_INVALID_NOTFOUND_MANIFEST'), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                JText::_('JLIB_INSTALLER_ERROR_FILE_UNINSTALL_INVALID_NOTFOUND_MANIFEST'),
+                JLog::WARNING,
+                'jerror'
+            );
 
             // Delete the row because its broken
             $row->delete();
@@ -283,8 +289,12 @@ class JInstallerAdapterFile extends JInstallerAdapter
         foreach ($this->folderList as $folder) {
             if (!JFolder::exists($folder)) {
                 if (!$created = JFolder::create($folder)) {
-                    throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_FILE_INSTALL_FAIL_SOURCE_DIRECTORY',
-                        $folder));
+                    throw new RuntimeException(
+                        JText::sprintf(
+                            'JLIB_INSTALLER_ABORT_FILE_INSTALL_FAIL_SOURCE_DIRECTORY',
+                            $folder
+                        )
+                    );
                 }
 
                 // Since we created a directory and will want to remove it if we have to roll back.
@@ -346,8 +356,11 @@ class JInstallerAdapterFile extends JInstallerAdapter
 
             // Check if source folder exists
             if (!JFolder::exists($sourceFolder)) {
-                JLog::add(JText::sprintf('JLIB_INSTALLER_ABORT_FILE_INSTALL_FAIL_SOURCE_DIRECTORY', $sourceFolder),
-                    JLog::WARNING, 'jerror');
+                JLog::add(
+                    JText::sprintf('JLIB_INSTALLER_ABORT_FILE_INSTALL_FAIL_SOURCE_DIRECTORY', $sourceFolder),
+                    JLog::WARNING,
+                    'jerror'
+                );
 
                 // If installation fails, rollback
                 $this->parent->abort();
@@ -397,10 +410,12 @@ class JInstallerAdapterFile extends JInstallerAdapter
         // Clobber any possible pending updates
         $update = JTable::getInstance('update');
 
-        $uid = $update->find(array(
-            'element' => $this->element,
-            'type'    => $this->type
-        ));
+        $uid = $update->find(
+            array(
+                'element' => $this->element,
+                'type'    => $this->type
+            )
+        );
 
         if ($uid) {
             $update->delete($uid);
@@ -429,8 +444,12 @@ class JInstallerAdapterFile extends JInstallerAdapter
             if (!file_exists($path['dest']) || $this->parent->isOverwrite()) {
                 if (!$this->parent->copyFiles(array($path))) {
                     // Install failed, rollback changes
-                    throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_MANIFEST',
-                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route))));
+                    throw new RuntimeException(
+                        JText::sprintf(
+                            'JLIB_INSTALLER_ABORT_MANIFEST',
+                            JText::_('JLIB_INSTALLER_' . strtoupper($this->route))
+                        )
+                    );
                 }
             }
         }
@@ -489,8 +508,13 @@ class JInstallerAdapterFile extends JInstallerAdapter
 
             if (!$this->extension->store()) {
                 // Install failed, roll back changes
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_ROLLBACK',
-                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route)), $this->extension->getError()));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_ROLLBACK',
+                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
+                        $this->extension->getError()
+                    )
+                );
             }
         } else {
             // Add an entry to the extension table with a whole heap of defaults
@@ -511,8 +535,13 @@ class JInstallerAdapterFile extends JInstallerAdapter
 
             if (!$this->extension->store()) {
                 // Install failed, roll back changes
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_ROLLBACK',
-                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route)), $this->extension->getError()));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_ROLLBACK',
+                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
+                        $this->extension->getError()
+                    )
+                );
             }
 
             // Since we have created a module item, we add it to the installation step stack

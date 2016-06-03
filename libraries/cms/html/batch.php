@@ -29,8 +29,11 @@ abstract class JHtmlBatch
      */
     public static function access()
     {
-        JLog::add('The use of JHtml::_("batch.access") is deprecated use JLayout instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'The use of JHtml::_("batch.access") is deprecated use JLayout instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return JLayoutHelper::render('joomla.html.batch.access', array());
     }
@@ -66,8 +69,11 @@ abstract class JHtmlBatch
      */
     public static function language()
     {
-        JLog::add('The use of JHtml::_("batch.language") is deprecated use JLayout instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'The use of JHtml::_("batch.language") is deprecated use JLayout instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return JLayoutHelper::render('joomla.html.batch.language', array());
     }

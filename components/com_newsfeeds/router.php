@@ -189,11 +189,9 @@ class NewsfeedsRouter extends JComponentRouterBase
             if ($found == 0) {
                 if ($advanced) {
                     $db    = JFactory::getDbo();
-                    $query = $db->getQuery(true)
-                                ->select($db->quoteName('id'))
-                                ->from('#__newsfeeds')
-                                ->where($db->quoteName('catid') . ' = ' . (int)$vars['catid'])
-                                ->where($db->quoteName('alias') . ' = ' . $db->quote($segment));
+                    $query = $db->getQuery(true)->select($db->quoteName('id'))->from('#__newsfeeds')->where(
+                            $db->quoteName('catid') . ' = ' . (int)$vars['catid']
+                        )->where($db->quoteName('alias') . ' = ' . $db->quote($segment));
                     $db->setQuery($query);
                     $nid = $db->loadResult();
                 } else {

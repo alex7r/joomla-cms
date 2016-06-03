@@ -29,7 +29,10 @@ abstract class ModMenuHelper
         $query = $db->getQuery(true)
                     ->select('a.*, SUM(b.home) AS home')
                     ->from('#__menu_types AS a')
-                    ->join('LEFT', '#__menu AS b ON b.menutype = a.menutype AND b.home != 0')
+                    ->join(
+                        'LEFT',
+                        '#__menu AS b ON b.menutype = a.menutype AND b.home != 0'
+                    )
                     ->select('b.language')
                     ->join('LEFT', '#__languages AS l ON l.lang_code = language')
                     ->select('l.image')
@@ -73,10 +76,9 @@ abstract class ModMenuHelper
         $query->select('m.id, m.title, m.alias, m.link, m.parent_id, m.img, e.element')->from('#__menu AS m');
 
         // Filter on the enabled states.
-        $query->join('LEFT', '#__extensions AS e ON m.component_id = e.extension_id')
-              ->where('m.client_id = 1')
-              ->where('e.enabled = 1')
-              ->where('m.id > 1');
+        $query->join('LEFT', '#__extensions AS e ON m.component_id = e.extension_id')->where('m.client_id = 1')->where(
+                'e.enabled = 1'
+            )->where('m.id > 1');
 
         // Order by lft.
         $query->order('m.lft');
@@ -114,19 +116,33 @@ abstract class ModMenuHelper
                     if (!empty($component->element)) {
                         // Load the core file then
                         // Load extension-local file.
-                        $lang->load($component->element . '.sys', JPATH_BASE, null, false,
-                            true) || $lang->load($component->element . '.sys',
-                            JPATH_ADMINISTRATOR . '/components/' . $component->element, null, false, true);
+                        $lang->load(
+                            $component->element . '.sys',
+                            JPATH_BASE,
+                            null,
+                            false,
+                            true
+                        ) || $lang->load(
+                            $component->element . '.sys',
+                            JPATH_ADMINISTRATOR . '/components/' . $component->element,
+                            null,
+                            false,
+                            true
+                        );
                     }
 
-                    $component->text = $lang->hasKey($component->title) ? JText::_($component->title) : $component->alias;
+                    $component->text = $lang->hasKey($component->title) ? JText::_(
+                        $component->title
+                    ) : $component->alias;
                 }
             } else {
                 // Sub-menu level.
                 if (isset($result[$component->parent_id])) {
                     // Add the submenu link if it is defined.
                     if (isset($result[$component->parent_id]->submenu) && !empty($component->link)) {
-                        $component->text                          = $lang->hasKey($component->title) ? JText::_($component->title) : $component->alias;
+                        $component->text                          = $lang->hasKey($component->title) ? JText::_(
+                            $component->title
+                        ) : $component->alias;
                         $result[$component->parent_id]->submenu[] = &$component;
                     }
                 }

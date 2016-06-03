@@ -69,16 +69,19 @@ class ModulesModelModule extends JModelAdmin
      */
     public function __construct($config = array())
     {
-        $config = array_merge(array(
-            'event_after_delete'  => 'onExtensionAfterDelete',
-            'event_after_save'    => 'onExtensionAfterSave',
-            'event_before_delete' => 'onExtensionBeforeDelete',
-            'event_before_save'   => 'onExtensionBeforeSave',
-            'events_map'          => array(
-                'save'   => 'extension',
-                'delete' => 'extension'
-            )
-        ), $config);
+        $config = array_merge(
+            array(
+                'event_after_delete'  => 'onExtensionAfterDelete',
+                'event_after_save'    => 'onExtensionAfterSave',
+                'event_before_delete' => 'onExtensionBeforeDelete',
+                'event_before_save'   => 'onExtensionBeforeSave',
+                'events_map'          => array(
+                    'save'   => 'extension',
+                    'delete' => 'extension'
+                )
+            ),
+            $config
+        );
 
         parent::__construct($config);
     }
@@ -248,10 +251,9 @@ class ModulesModelModule extends JModelAdmin
 
         if (!empty($tuples)) {
             // Module-Menu Mapping: Do it in one query
-            $query = $db->getQuery(true)
-                        ->insert($db->quoteName('#__modules_menu'))
-                        ->columns($db->quoteName(array('moduleid', 'menuid')))
-                        ->values($tuples);
+            $query = $db->getQuery(true)->insert($db->quoteName('#__modules_menu'))->columns(
+                    $db->quoteName(array('moduleid', 'menuid'))
+                )->values($tuples);
 
             $this->_db->setQuery($query);
 
@@ -330,8 +332,11 @@ class ModulesModelModule extends JModelAdmin
             return false;
         }
 
-        $form->setFieldAttribute('position', 'client',
-            $this->getState('item.client_id') == 0 ? 'site' : 'administrator');
+        $form->setFieldAttribute(
+            'position',
+            'client',
+            $this->getState('item.client_id') == 0 ? 'site' : 'administrator'
+        );
 
         $user = JFactory::getUser();
 
@@ -339,8 +344,10 @@ class ModulesModelModule extends JModelAdmin
          * Check for existing module
          * Modify the form based on Edit State access controls.
          */
-        if ($id != 0 && (!$user->authorise('core.edit.state',
-                'com_modules.module.' . (int)$id)) || ($id == 0 && !$user->authorise('core.edit.state', 'com_modules'))
+        if ($id != 0 && (!$user->authorise(
+                'core.edit.state',
+                'com_modules.module.' . (int)$id
+            )) || ($id == 0 && !$user->authorise('core.edit.state', 'com_modules'))
         ) {
             // Disable fields for display.
             $form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -390,11 +397,9 @@ class ModulesModelModule extends JModelAdmin
             // Check if we are creating a new extension.
             if (empty($pk)) {
                 if ($extensionId = (int)$this->getState('extension.id')) {
-                    $query = $db->getQuery(true)
-                                ->select('element, client_id')
-                                ->from('#__extensions')
-                                ->where('extension_id = ' . $extensionId)
-                                ->where('type = ' . $db->quote('module'));
+                    $query = $db->getQuery(true)->select('element, client_id')->from('#__extensions')->where(
+                            'extension_id = ' . $extensionId
+                        )->where('type = ' . $db->quote('module'));
                     $db->setQuery($query);
 
                     try {
@@ -603,10 +608,12 @@ class ModulesModelModule extends JModelAdmin
             // and other menu items resulting in a module being displayed twice.
             if ($assignment === 0) {
                 // Assign new module to `all` menu item associations.
-                $query->clear()->insert('#__modules_menu')->columns(array(
-                    $db->quoteName('moduleid'),
-                    $db->quoteName('menuid')
-                ))->values((int)$table->id . ', 0');
+                $query->clear()->insert('#__modules_menu')->columns(
+                    array(
+                        $db->quoteName('moduleid'),
+                        $db->quoteName('menuid')
+                    )
+                )->values((int)$table->id . ', 0');
                 $db->setQuery($query);
 
                 try {
@@ -643,11 +650,10 @@ class ModulesModelModule extends JModelAdmin
         $dispatcher->trigger($this->event_after_save, array($context, &$table, $isNew));
 
         // Compute the extension id of this module in case the controller wants it.
-        $query = $db->getQuery(true)
-                    ->select('extension_id')
-                    ->from('#__extensions AS e')
-                    ->join('LEFT', '#__modules AS m ON e.element = m.module')
-                    ->where('m.id = ' . (int)$table->id);
+        $query = $db->getQuery(true)->select('extension_id')->from('#__extensions AS e')->join(
+                'LEFT',
+                '#__modules AS m ON e.element = m.module'
+            )->where('m.id = ' . (int)$table->id);
         $db->setQuery($query);
 
         try {
@@ -781,10 +787,9 @@ class ModulesModelModule extends JModelAdmin
 
                 // Insert the new records into the table
                 foreach ($menus as $menu) {
-                    $query->clear()
-                          ->insert($db->quoteName('#__modules_menu'))
-                          ->columns(array($db->quoteName('moduleid'), $db->quoteName('menuid')))
-                          ->values($newId . ', ' . $menu);
+                    $query->clear()->insert($db->quoteName('#__modules_menu'))->columns(
+                            array($db->quoteName('moduleid'), $db->quoteName('menuid'))
+                        )->values($newId . ', ' . $menu);
                     $db->setQuery($query);
                     $db->execute();
                 }
@@ -894,14 +899,28 @@ class ModulesModelModule extends JModelAdmin
             // Pre-select some filters (Status, Module Position, Language, Access Level) in edit form if those have been selected in Module Manager
             if (!$data->id) {
                 $filters = (array)$app->getUserState('com_modules.modules.filter');
-                $data->set('published', $app->input->getInt('published',
-                    ((isset($filters['state']) && $filters['state'] !== '') ? $filters['state'] : null)));
-                $data->set('position',
-                    $app->input->getInt('position', (!empty($filters['position']) ? $filters['position'] : null)));
-                $data->set('language',
-                    $app->input->getString('language', (!empty($filters['language']) ? $filters['language'] : null)));
-                $data->set('access', $app->input->getInt('access',
-                    (!empty($filters['access']) ? $filters['access'] : JFactory::getConfig()->get('access'))));
+                $data->set(
+                    'published',
+                    $app->input->getInt(
+                        'published',
+                        ((isset($filters['state']) && $filters['state'] !== '') ? $filters['state'] : null)
+                    )
+                );
+                $data->set(
+                    'position',
+                    $app->input->getInt('position', (!empty($filters['position']) ? $filters['position'] : null))
+                );
+                $data->set(
+                    'language',
+                    $app->input->getString('language', (!empty($filters['language']) ? $filters['language'] : null))
+                );
+                $data->set(
+                    'access',
+                    $app->input->getInt(
+                        'access',
+                        (!empty($filters['access']) ? $filters['access'] : JFactory::getConfig()->get('access'))
+                    )
+                );
             }
 
             // Avoid to delete params of a second module opened in a new browser tab while new one is not saved yet.
@@ -945,8 +964,13 @@ class ModulesModelModule extends JModelAdmin
         $formFile = JPath::clean($client->path . '/modules/' . $module . '/' . $module . '.xml');
 
         // Load the core and/or local language file(s).
-        $lang->load($module, $client->path, null, false, true) || $lang->load($module,
-            $client->path . '/modules/' . $module, null, false, true);
+        $lang->load($module, $client->path, null, false, true) || $lang->load(
+            $module,
+            $client->path . '/modules/' . $module,
+            null,
+            false,
+            true
+        );
 
         if (file_exists($formFile)) {
             // Get the module form.

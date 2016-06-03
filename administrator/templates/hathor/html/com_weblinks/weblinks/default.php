@@ -42,7 +42,9 @@ $saveOrder = $listOrder == 'a.ordering';
                            title="<?php echo JText::_('COM_WEBLINKS_SEARCH_IN_TITLE'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
 
                 <div class="filter-select">
@@ -51,8 +53,14 @@ $saveOrder = $listOrder == 'a.ordering';
                     </label>
                     <select name="filter_published" id="filter_published">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text',
-                            $this->state->get('filter.state'), true); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('jgrid.publishedOptions'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.state'),
+                            true
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_category_id">
@@ -60,8 +68,13 @@ $saveOrder = $listOrder == 'a.ordering';
                     </label>
                     <select name="filter_category_id" id="filter_category_id">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_CATEGORY'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('category.options', 'com_weblinks'), 'value',
-                            'text', $this->state->get('filter.category_id')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('category.options', 'com_weblinks'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.category_id')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_access">
@@ -69,8 +82,13 @@ $saveOrder = $listOrder == 'a.ordering';
                     </label>
                     <select name="filter_access" id="filter_access">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_ACCESS'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text',
-                            $this->state->get('filter.access')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('access.assetgroups'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.access')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_language">
@@ -78,8 +96,13 @@ $saveOrder = $listOrder == 'a.ordering';
                     </label>
                     <select name="filter_language" id="filter_language">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value',
-                            'text', $this->state->get('filter.language')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('contentlanguage.existing', true, true),
+                            'value',
+                            'text',
+                            $this->state->get('filter.language')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_tag">
@@ -87,8 +110,13 @@ $saveOrder = $listOrder == 'a.ordering';
                     </label>
                     <select name="filter_tag" id="filter_tag">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_TAG'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('tag.options', true, true), 'value', 'text',
-                            $this->state->get('filter.tag')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('tag.options', true, true),
+                            'value',
+                            'text',
+                            $this->state->get('filter.tag')
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -114,8 +142,13 @@ $saveOrder = $listOrder == 'a.ordering';
                         <?php echo JHtml::_('grid.sort', 'JCATEGORY', 'category_title', $listDirn, $listOrder); ?>
                     </th>
                     <th class="nowrap ordering-col">
-                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ORDERING', 'a.ordering', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'JGRID_HEADING_ORDERING',
+                            'a.ordering',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                         <?php if ($canOrder && $saveOrder) : ?>
                             <?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'weblinks.saveorder'); ?>
                         <?php endif; ?>
@@ -127,8 +160,13 @@ $saveOrder = $listOrder == 'a.ordering';
                         <?php echo JHtml::_('grid.sort', 'JGLOBAL_HITS', 'a.hits', $listDirn, $listOrder); ?>
                     </th>
                     <th class="width-5">
-                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'JGRID_HEADING_LANGUAGE',
+                            'a.language',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap id-col">
                         <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -139,13 +177,19 @@ $saveOrder = $listOrder == 'a.ordering';
                 <tbody>
                 <?php foreach ($this->items as $i => $item) :
                     $ordering = ($listOrder == 'a.ordering');
-                    $item->cat_link = JRoute::_('index.php?option=com_categories&extension=com_weblinks&task=edit&type=other&cid[]=' . $item->catid);
+                    $item->cat_link = JRoute::_(
+                        'index.php?option=com_categories&extension=com_weblinks&task=edit&type=other&cid[]=' . $item->catid
+                    );
                     $canCreate = $user->authorise('core.create', 'com_weblinks.category.' . $item->catid);
                     $canEdit = $user->authorise('core.edit', 'com_weblinks.category.' . $item->catid);
-                    $canCheckin = $user->authorise('core.manage',
-                            'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
-                    $canChange = $user->authorise('core.edit.state',
-                            'com_weblinks.category.' . $item->catid) && $canCheckin;
+                    $canCheckin = $user->authorise(
+                            'core.manage',
+                            'com_checkin'
+                        ) || $item->checked_out == $user->get('id') || $item->checked_out == 0;
+                    $canChange = $user->authorise(
+                            'core.edit.state',
+                            'com_weblinks.category.' . $item->catid
+                        ) && $canCheckin;
                     ?>
                     <tr class="row<?php echo $i % 2; ?>">
                         <td>
@@ -153,11 +197,19 @@ $saveOrder = $listOrder == 'a.ordering';
                         </td>
                         <td>
                             <?php if ($item->checked_out) : ?>
-                                <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time,
-                                    'weblinks.', $canCheckin); ?>
+                                <?php echo JHtml::_(
+                                    'jgrid.checkedout',
+                                    $i,
+                                    $item->editor,
+                                    $item->checked_out_time,
+                                    'weblinks.',
+                                    $canCheckin
+                                ); ?>
                             <?php endif; ?>
                             <?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_weblinks&task=weblink.edit&id=' . (int)$item->id); ?>">
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_weblinks&task=weblink.edit&id=' . (int)$item->id
+                                ); ?>">
                                     <?php echo $this->escape($item->title); ?></a>
                             <?php else : ?>
                                 <?php echo $this->escape($item->title); ?>
@@ -166,8 +218,16 @@ $saveOrder = $listOrder == 'a.ordering';
                                 <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?></p>
                         </td>
                         <td class="center">
-                            <?php echo JHtml::_('jgrid.published', $item->state, $i, 'weblinks.', $canChange, 'cb',
-                                $item->publish_up, $item->publish_down); ?>
+                            <?php echo JHtml::_(
+                                'jgrid.published',
+                                $item->state,
+                                $i,
+                                'weblinks.',
+                                $canChange,
+                                'cb',
+                                $item->publish_up,
+                                $item->publish_down
+                            ); ?>
                         </td>
                         <td class="center">
                             <?php echo $this->escape($item->category_title); ?>
@@ -176,19 +236,37 @@ $saveOrder = $listOrder == 'a.ordering';
                             <?php if ($canChange) : ?>
                                 <?php if ($saveOrder) : ?>
                                     <?php if ($listDirn == 'asc') : ?>
-                                        <span><?php echo $this->pagination->orderUpIcon($i,
-                                                ($item->catid == @$this->items[$i - 1]->catid), 'weblinks.orderup',
-                                                'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                                        <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total,
-                                                ($item->catid == @$this->items[$i + 1]->catid), 'weblinks.orderdown',
-                                                'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                        <span><?php echo $this->pagination->orderUpIcon(
+                                                $i,
+                                                ($item->catid == @$this->items[$i - 1]->catid),
+                                                'weblinks.orderup',
+                                                'JLIB_HTML_MOVE_UP',
+                                                $ordering
+                                            ); ?></span>
+                                        <span><?php echo $this->pagination->orderDownIcon(
+                                                $i,
+                                                $this->pagination->total,
+                                                ($item->catid == @$this->items[$i + 1]->catid),
+                                                'weblinks.orderdown',
+                                                'JLIB_HTML_MOVE_DOWN',
+                                                $ordering
+                                            ); ?></span>
                                     <?php elseif ($listDirn == 'desc') : ?>
-                                        <span><?php echo $this->pagination->orderUpIcon($i,
-                                                ($item->catid == @$this->items[$i - 1]->catid), 'weblinks.orderdown',
-                                                'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                                        <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total,
-                                                ($item->catid == @$this->items[$i + 1]->catid), 'weblinks.orderup',
-                                                'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                        <span><?php echo $this->pagination->orderUpIcon(
+                                                $i,
+                                                ($item->catid == @$this->items[$i - 1]->catid),
+                                                'weblinks.orderdown',
+                                                'JLIB_HTML_MOVE_UP',
+                                                $ordering
+                                            ); ?></span>
+                                        <span><?php echo $this->pagination->orderDownIcon(
+                                                $i,
+                                                $this->pagination->total,
+                                                ($item->catid == @$this->items[$i + 1]->catid),
+                                                'weblinks.orderup',
+                                                'JLIB_HTML_MOVE_DOWN',
+                                                $ordering
+                                            ); ?></span>
                                     <?php endif; ?>
                                 <?php endif; ?>
                                 <?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
@@ -209,10 +287,13 @@ $saveOrder = $listOrder == 'a.ordering';
                             <?php if ($item->language == '*') : ?>
                                 <?php echo JText::alt('JALL', 'language'); ?>
                             <?php else: ?>
-                                <?php echo $item->language_title ? JHtml::_('image',
-                                        'mod_languages/' . $item->language_image . '.gif', $item->language_title,
+                                <?php echo $item->language_title ? JHtml::_(
+                                        'image',
+                                        'mod_languages/' . $item->language_image . '.gif',
+                                        $item->language_title,
                                         array('title' => $item->language_title),
-                                        true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                        true
+                                    ) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                             <?php endif; ?>
                         </td>
                         <td class="center">

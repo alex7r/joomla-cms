@@ -178,7 +178,8 @@ class JFormFieldColor extends JFormField
         $control = $this->control;
 
         // Position of the panel can be: right (default), left, top or bottom (default RTL is left)
-        $position = ' data-position="' . (($lang->isRTL() && $this->position == 'default') ? 'left' : $this->position) . '"';
+        $position = ' data-position="' . (($lang->isRTL(
+                ) && $this->position == 'default') ? 'left' : $this->position) . '"';
 
         // Validation of data can be: color (hex color value). Keep for B/C (minicolors.js already auto-validates color)
         $validate = $this->validate ? ' data-validate="' . $this->validate . '"' : '';
@@ -261,9 +262,13 @@ class JFormFieldColor extends JFormField
                 $placeholder = '#rrggbb';
             }
 
-            $inputclass   = ($this->keywords && !in_array($this->format,
-                    array('rgb', 'rgba'))) ? ' keywords' : ' ' . $this->format;
-            $class        = ' class="' . trim('minicolors ' . $class) . ($this->validate == 'color' ? '' : $inputclass) . '"';
+            $inputclass   = ($this->keywords && !in_array(
+                    $this->format,
+                    array('rgb', 'rgba')
+                )) ? ' keywords' : ' ' . $this->format;
+            $class        = ' class="' . trim(
+                    'minicolors ' . $class
+                ) . ($this->validate == 'color' ? '' : $inputclass) . '"';
             $control      = $control ? ' data-control="' . $control . '"' : '';
             $format       = $this->format ? ' data-format="' . $this->format . '"' : '';
             $keywords     = $this->keywords ? ' data-keywords="' . $this->keywords . '"' : '';
@@ -280,9 +285,11 @@ class JFormFieldColor extends JFormField
 
             JHtml::_('behavior.colorpicker');
 
-            return '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars($color,
+            return '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars(
+                $color,
                 ENT_COMPAT,
-                'UTF-8') . '"' . $hint . $class . $position . $control . $readonly . $disabled . $required . $onchange . $autocomplete . $autofocus . $format . $keywords . $direction . $validate . '/>';
+                'UTF-8'
+            ) . '"' . $hint . $class . $position . $control . $readonly . $disabled . $required . $onchange . $autocomplete . $autofocus . $format . $keywords . $direction . $validate . '/>';
         }
     }
 }

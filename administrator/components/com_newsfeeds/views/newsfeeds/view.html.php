@@ -78,7 +78,9 @@ class NewsfeedsViewNewsfeeds extends JViewLegacy
             // We also need to change the category filter to show show categories with All or the forced language.
             if ($forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'CMD')) {
                 // If the language is forced we can't allow to select the language, so transform the language selector filter into an hidden field.
-                $languageXml = new SimpleXMLElement('<field name="language" type="hidden" default="' . $forcedLanguage . '" />');
+                $languageXml = new SimpleXMLElement(
+                    '<field name="language" type="hidden" default="' . $forcedLanguage . '" />'
+                );
                 $this->filterForm->setField($languageXml, 'filter', true);
 
                 // Also, unset the active language filter so the search tools is not open by default with this filter.
@@ -128,8 +130,10 @@ class NewsfeedsViewNewsfeeds extends JViewLegacy
         }
 
         // Add a batch button
-        if ($user->authorise('core.create', 'com_newsfeeds') && $user->authorise('core.edit',
-                'com_newsfeeds') && $user->authorise('core.edit.state', 'com_newsfeeds')
+        if ($user->authorise('core.create', 'com_newsfeeds') && $user->authorise(
+                'core.edit',
+                'com_newsfeeds'
+            ) && $user->authorise('core.edit.state', 'com_newsfeeds')
         ) {
             $title = JText::_('JTOOLBAR_BATCH');
 

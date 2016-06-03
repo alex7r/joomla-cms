@@ -62,21 +62,27 @@ class InstallerModelDiscover extends InstallerModel
 
         // Get all templates, including discovered ones
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)->select($db->quoteName(array(
-            'extension_id',
-            'element',
-            'folder',
-            'client_id',
-            'type'
-        )))->from($db->quoteName('#__extensions'));
+        $query = $db->getQuery(true)->select(
+            $db->quoteName(
+                array(
+                    'extension_id',
+                    'element',
+                    'folder',
+                    'client_id',
+                    'type'
+                )
+            )
+        )->from($db->quoteName('#__extensions'));
         $db->setQuery($query);
         $installedtmp = $db->loadObjectList();
 
         $extensions = array();
 
         foreach ($installedtmp as $install) {
-            $key              = implode(':',
-                array($install->type, $install->element, $install->folder, $install->client_id));
+            $key              = implode(
+                ':',
+                array($install->type, $install->element, $install->folder, $install->client_id)
+            );
             $extensions[$key] = $install;
         }
 
@@ -178,14 +184,22 @@ class InstallerModelDiscover extends InstallerModel
         $app = JFactory::getApplication();
 
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('filter.client_id',
-            $this->getUserStateFromRequest($this->context . '.filter.client_id', 'filter_client_id', null, 'int'));
-        $this->setState('filter.type',
-            $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string'));
-        $this->setState('filter.folder',
-            $this->getUserStateFromRequest($this->context . '.filter.folder', 'filter_folder', '', 'string'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.client_id',
+            $this->getUserStateFromRequest($this->context . '.filter.client_id', 'filter_client_id', null, 'int')
+        );
+        $this->setState(
+            'filter.type',
+            $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string')
+        );
+        $this->setState(
+            'filter.folder',
+            $this->getUserStateFromRequest($this->context . '.filter.folder', 'filter_folder', '', 'string')
+        );
 
         $this->setState('message', $app->getUserState('com_installer.message'));
         $this->setState('extension_message', $app->getUserState('com_installer.extension_message'));
@@ -206,10 +220,9 @@ class InstallerModelDiscover extends InstallerModel
     protected function getListQuery()
     {
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('*')
-                    ->from($db->quoteName('#__extensions'))
-                    ->where($db->quoteName('state') . ' = -1');
+        $query = $db->getQuery(true)->select('*')->from($db->quoteName('#__extensions'))->where(
+                $db->quoteName('state') . ' = -1'
+            );
 
         // Process select filters.
         $type     = $this->getState('filter.type');

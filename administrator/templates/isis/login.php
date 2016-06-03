@@ -29,7 +29,9 @@ JHtml::_('bootstrap.framework');
 JHtml::_('bootstrap.tooltip');
 
 // Add Stylesheets
-$doc->addStyleSheetVersion($this->baseurl . '/templates/' . $this->template . '/css/template' . ($this->direction == 'rtl' ? '-rtl' : '') . '.css');
+$doc->addStyleSheetVersion(
+    $this->baseurl . '/templates/' . $this->template . '/css/template' . ($this->direction == 'rtl' ? '-rtl' : '') . '.css'
+);
 
 // Load optional RTL Bootstrap CSS
 JHtml::_('bootstrap.loadCss', false, $this->direction);
@@ -68,14 +70,17 @@ function colorIsLight($color)
 
 // Background color
 if ($background_color) {
-    $doc->addStyleDeclaration("
+    $doc->addStyleDeclaration(
+        "
 	.view-login {
 		background-color: " . $background_color . ";
-	}");
+	}"
+    );
 }
 
 // Responsive Styles
-$doc->addStyleDeclaration("
+$doc->addStyleDeclaration(
+    "
 	@media (max-width: 480px) {
 		.view-login .container {
 			margin-top: -170px;
@@ -84,11 +89,13 @@ $doc->addStyleDeclaration("
 			font-size: 13px;
 			padding: 4px 10px 4px;
 		}
-	}");
+	}"
+);
 
 // Check if debug is on
 if ($app->get('debug_lang', 1) || $app->get('debug', 1)) {
-    $doc->addStyleDeclaration("
+    $doc->addStyleDeclaration(
+        "
 	.view-login .container {
 		position: static;
 		margin-top: 20px;
@@ -97,7 +104,8 @@ if ($app->get('debug_lang', 1) || $app->get('debug', 1)) {
 	}
 	.view-login .navbar-fixed-bottom {
 		display: none;
-	}");
+	}"
+    );
 }
 ?>
 <!DOCTYPE html>

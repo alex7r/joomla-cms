@@ -14,9 +14,9 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.multiselect');
 
-$user      = JFactory::getUser();
+$user = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 
 JText::script('COM_USERS_GROUPS_CONFIRM_DELETE');
 
@@ -27,7 +27,8 @@ foreach ($this->items as $i => $item) {
         array_push($groupsWithUsers, $i);
     }
 }
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 		Joomla.submitbutton = function(task) {
 			if (task == "groups.delete") {
 				var f = document.adminForm;
@@ -45,7 +46,8 @@ JFactory::getDocument()->addScriptDeclaration('
 			}
 			Joomla.submitform(task);
 		};
-');
+'
+);
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_users&view=groups'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -67,7 +69,9 @@ JFactory::getDocument()->addScriptDeclaration('
                            title="<?php echo JText::_('COM_USERS_SEARCH_IN_GROUPS'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
             </fieldset>
             <div class="clr"></div>
@@ -110,7 +114,9 @@ JFactory::getDocument()->addScriptDeclaration('
                         <td>
                             <?php echo str_repeat('<span class="gi">|&mdash;</span>', $item->level) ?>
                             <?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_users&task=group.edit&id=' . $item->id); ?>">
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_users&task=group.edit&id=' . $item->id
+                                ); ?>">
                                     <?php echo $this->escape($item->title); ?></a>
                             <?php else : ?>
                                 <?php echo $this->escape($item->title); ?>
@@ -119,7 +125,9 @@ JFactory::getDocument()->addScriptDeclaration('
                                 <div class="fltrt">
                                     <div class="button2-left smallsub">
                                         <div class="blank"><a
-                                                href="<?php echo JRoute::_('index.php?option=com_users&view=debuggroup&group_id=' . (int)$item->id); ?>">
+                                                href="<?php echo JRoute::_(
+                                                    'index.php?option=com_users&view=debuggroup&group_id=' . (int)$item->id
+                                                ); ?>">
                                                 <?php echo JText::_('COM_USERS_DEBUG_GROUP'); ?></a></div>
                                     </div>
                                 </div>

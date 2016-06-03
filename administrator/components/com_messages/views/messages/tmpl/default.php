@@ -16,11 +16,12 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
-$user      = JFactory::getUser();
+$user = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 
-JFactory::getDocument()->addStyleDeclaration("
+JFactory::getDocument()->addStyleDeclaration(
+    "
 	@media (min-width: 768px) {
 		div.modal {
 			left: none;
@@ -28,7 +29,8 @@ JFactory::getDocument()->addStyleDeclaration("
 			margin-left: -250px;
 		}
 	}
-	");
+	"
+);
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_messages&view=messages'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -54,16 +56,31 @@ JFactory::getDocument()->addStyleDeclaration("
                             <?php echo JHtml::_('grid.checkall'); ?>
                         </th>
                         <th class="title nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_MESSAGES_HEADING_SUBJECT', 'a.subject',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_MESSAGES_HEADING_SUBJECT',
+                                'a.subject',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap center">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_MESSAGES_HEADING_READ', 'a.state', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_MESSAGES_HEADING_READ',
+                                'a.state',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="15%" class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_MESSAGES_HEADING_FROM', 'a.user_id_from',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_MESSAGES_HEADING_FROM',
+                                'a.user_id_from',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="20%" class="nowrap hidden-tablet hidden-phone">
                             <?php echo JHtml::_('searchtools.sort', 'JDATE', 'a.date_time', $listDirn, $listOrder); ?>
@@ -86,7 +103,9 @@ JFactory::getDocument()->addStyleDeclaration("
                                 <?php echo JHtml::_('grid.id', $i, $item->message_id); ?>
                             </td>
                             <td>
-                                <a href="<?php echo JRoute::_('index.php?option=com_messages&view=message&message_id=' . (int)$item->message_id); ?>">
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_messages&view=message&message_id=' . (int)$item->message_id
+                                ); ?>">
                                     <?php echo $this->escape($item->subject); ?></a>
                             </td>
                             <td class="center">

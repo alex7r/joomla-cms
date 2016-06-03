@@ -376,7 +376,11 @@ class JAccess
             // Build the database query:
             $query->select('a.id, a.parent_id');
             $query->from('#__assets AS a');
-            $query->where('(a.name LIKE ' . $db->quote($extensionName . '.%') . ' OR a.name = ' . $db->quote($extensionName) . ' OR a.id = 1)');
+            $query->where(
+                '(a.name LIKE ' . $db->quote($extensionName . '.%') . ' OR a.name = ' . $db->quote(
+                    $extensionName
+                ) . ' OR a.id = 1)'
+            );
 
             // Get the Name Permission Map List
             $db->setQuery($query);
@@ -448,7 +452,11 @@ class JAccess
             // Build the database query:
             $query->select('a.id, a.name, a.rules');
             $query->from('#__assets AS a');
-            $query->where('(a.name LIKE ' . $db->quote($extensionName . '.%') . ' OR a.name = ' . $db->quote($extensionName) . ' OR a.id = 1 )');
+            $query->where(
+                '(a.name LIKE ' . $db->quote($extensionName . '.%') . ' OR a.name = ' . $db->quote(
+                    $extensionName
+                ) . ' OR a.id = 1 )'
+            );
 
             // Get the Name Permission Map List
             $db->setQuery($query);
@@ -663,9 +671,10 @@ class JAccess
                 if (empty($userId)) {
                     $query->from('#__usergroups AS a')->where('a.id = ' . (int)$guestUsergroup);
                 } else {
-                    $query->from('#__user_usergroup_map AS map')
-                          ->where('map.user_id = ' . (int)$userId)
-                          ->join('LEFT', '#__usergroups AS a ON a.id = map.group_id');
+                    $query->from('#__user_usergroup_map AS map')->where('map.user_id = ' . (int)$userId)->join(
+                            'LEFT',
+                            '#__usergroups AS a ON a.id = map.group_id'
+                        );
                 }
 
                 // If we want the rules cascading up to the global asset node we need a self-join.
@@ -810,13 +819,12 @@ class JAccess
         $test = $recursive ? '>=' : '=';
 
         // First find the users contained in the group
-        $query = $db->getQuery(true)
-                    ->select('DISTINCT(user_id)')
-                    ->from('#__usergroups as ug1')
-                    ->join('INNER',
-                        '#__usergroups AS ug2 ON ug2.lft' . $test . 'ug1.lft AND ug1.rgt' . $test . 'ug2.rgt')
-                    ->join('INNER', '#__user_usergroup_map AS m ON ug2.id=m.group_id')
-                    ->where('ug1.id=' . $db->quote($groupId));
+        $query = $db->getQuery(true)->select('DISTINCT(user_id)')->from('#__usergroups as ug1')->join(
+                'INNER',
+                '#__usergroups AS ug2 ON ug2.lft' . $test . 'ug1.lft AND ug1.rgt' . $test . 'ug2.rgt'
+            )->join('INNER', '#__user_usergroup_map AS m ON ug2.id=m.group_id')->where(
+                'ug1.id=' . $db->quote($groupId)
+            );
 
         $db->setQuery($query);
 
@@ -893,11 +901,16 @@ class JAccess
      */
     public static function getActions($component, $section = 'component')
     {
-        JLog::add(__METHOD__ . ' is deprecated. Use JAccess::getActionsFromFile or JAccess::getActionsFromData instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            __METHOD__ . ' is deprecated. Use JAccess::getActionsFromFile or JAccess::getActionsFromData instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
-        $actions = self::getActionsFromFile(JPATH_ADMINISTRATOR . '/components/' . $component . '/access.xml',
-            "/access/section[@name='" . $section . "']/");
+        $actions = self::getActionsFromFile(
+            JPATH_ADMINISTRATOR . '/components/' . $component . '/access.xml',
+            "/access/section[@name='" . $section . "']/"
+        );
 
         if (empty($actions)) {
             return array();

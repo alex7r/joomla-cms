@@ -57,12 +57,11 @@ class JFormFieldContenttype extends JFormFieldList
      */
     protected function getOptions()
     {
-        $lang  = JFactory::getLanguage();
-        $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('a.type_id AS value, a.type_title AS text, a.type_alias AS alias')
-                    ->from('#__content_types AS a')
-                    ->order('a.type_title ASC');
+        $lang = JFactory::getLanguage();
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true)->select('a.type_id AS value, a.type_title AS text, a.type_alias AS alias')->from(
+                '#__content_types AS a'
+            )->order('a.type_title ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -82,8 +81,13 @@ class JFormFieldContenttype extends JFormFieldList
             $comp  = array_shift($parts);
 
             // Make sure the component sys.ini is loaded
-            $lang->load($comp . '.sys', JPATH_ADMINISTRATOR, null, false, true) || $lang->load($comp . '.sys',
-                JPATH_ADMINISTRATOR . '/components/' . $comp, null, false, true);
+            $lang->load($comp . '.sys', JPATH_ADMINISTRATOR, null, false, true) || $lang->load(
+                $comp . '.sys',
+                JPATH_ADMINISTRATOR . '/components/' . $comp,
+                null,
+                false,
+                true
+            );
 
             $option->string = implode('_', $parts);
             $option->string = $comp . '_CONTENT_TYPE_' . $option->string;

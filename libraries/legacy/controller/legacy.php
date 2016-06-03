@@ -442,8 +442,13 @@ class JControllerLegacy extends JObject
             } elseif (isset($backuppath) && file_exists($backuppath)) {
                 require_once $backuppath;
             } else {
-                throw new InvalidArgumentException(JText::sprintf('JLIB_APPLICATION_ERROR_INVALID_CONTROLLER', $type,
-                    $format));
+                throw new InvalidArgumentException(
+                    JText::sprintf(
+                        'JLIB_APPLICATION_ERROR_INVALID_CONTROLLER',
+                        $type,
+                        $format
+                    )
+                );
             }
         }
 
@@ -451,8 +456,12 @@ class JControllerLegacy extends JObject
         if (class_exists($class)) {
             self::$instance = new $class($config);
         } else {
-            throw new InvalidArgumentException(JText::sprintf('JLIB_APPLICATION_ERROR_INVALID_CONTROLLER_CLASS',
-                $class));
+            throw new InvalidArgumentException(
+                JText::sprintf(
+                    'JLIB_APPLICATION_ERROR_INVALID_CONTROLLER_CLASS',
+                    $class
+                )
+            );
         }
 
         return self::$instance;
@@ -553,8 +562,12 @@ class JControllerLegacy extends JObject
         $viewName   = $this->input->get('view', $this->default_view);
         $viewLayout = $this->input->get('layout', 'default', 'string');
 
-        $view = $this->getView($viewName, $viewType, '',
-            array('base_path' => $this->basePath, 'layout' => $viewLayout));
+        $view = $this->getView(
+            $viewName,
+            $viewType,
+            '',
+            array('base_path' => $this->basePath, 'layout' => $viewLayout)
+        );
 
         // Get/Create the model
         if ($model = $this->getModel($viewName)) {
@@ -643,8 +656,9 @@ class JControllerLegacy extends JObject
                     $response = 404;
                 }
 
-                throw new Exception(JText::sprintf('JLIB_APPLICATION_ERROR_VIEW_NOT_FOUND', $name, $type, $prefix),
-                    $response);
+                throw new Exception(
+                    JText::sprintf('JLIB_APPLICATION_ERROR_VIEW_NOT_FOUND', $name, $type, $prefix), $response
+                );
             }
         }
 
@@ -682,15 +696,22 @@ class JControllerLegacy extends JObject
 
         if (!class_exists($viewClass)) {
             jimport('joomla.filesystem.path');
-            $path = JPath::find($this->paths['view'],
-                $this->createFileName('view', array('name' => $viewName, 'type' => $viewType)));
+            $path = JPath::find(
+                $this->paths['view'],
+                $this->createFileName('view', array('name' => $viewName, 'type' => $viewType))
+            );
 
             if ($path) {
                 require_once $path;
 
                 if (!class_exists($viewClass)) {
-                    throw new Exception(JText::sprintf('JLIB_APPLICATION_ERROR_VIEW_CLASS_NOT_FOUND', $viewClass,
-                        $path), 500);
+                    throw new Exception(
+                        JText::sprintf(
+                            'JLIB_APPLICATION_ERROR_VIEW_CLASS_NOT_FOUND',
+                            $viewClass,
+                            $path
+                        ), 500
+                    );
                 }
             } else {
                 return null;
@@ -928,8 +949,17 @@ class JControllerLegacy extends JObject
             $result = in_array((int)$id, $values);
 
             if (defined('JDEBUG') && JDEBUG) {
-                JLog::add(sprintf('Checking edit ID %s.%s: %d %s', $context, $id, (int)$result,
-                    str_replace("\n", ' ', print_r($values, 1))), JLog::INFO, 'controller');
+                JLog::add(
+                    sprintf(
+                        'Checking edit ID %s.%s: %d %s',
+                        $context,
+                        $id,
+                        (int)$result,
+                        str_replace("\n", ' ', print_r($values, 1))
+                    ),
+                    JLog::INFO,
+                    'controller'
+                );
             }
 
             return $result;
@@ -961,8 +991,16 @@ class JControllerLegacy extends JObject
             $app->setUserState($context . '.id', $values);
 
             if (defined('JDEBUG') && JDEBUG) {
-                JLog::add(sprintf('Holding edit ID %s.%s %s', $context, $id,
-                    str_replace("\n", ' ', print_r($values, 1))), JLog::INFO, 'controller');
+                JLog::add(
+                    sprintf(
+                        'Holding edit ID %s.%s %s',
+                        $context,
+                        $id,
+                        str_replace("\n", ' ', print_r($values, 1))
+                    ),
+                    JLog::INFO,
+                    'controller'
+                );
             }
         }
     }
@@ -990,8 +1028,16 @@ class JControllerLegacy extends JObject
             $app->setUserState($context . '.id', $values);
 
             if (defined('JDEBUG') && JDEBUG) {
-                JLog::add(sprintf('Releasing edit ID %s.%s %s', $context, $id,
-                    str_replace("\n", ' ', print_r($values, 1))), JLog::INFO, 'controller');
+                JLog::add(
+                    sprintf(
+                        'Releasing edit ID %s.%s %s',
+                        $context,
+                        $id,
+                        str_replace("\n", ' ', print_r($values, 1))
+                    ),
+                    JLog::INFO,
+                    'controller'
+                );
             }
         }
     }

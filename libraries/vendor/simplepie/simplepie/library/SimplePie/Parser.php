@@ -117,8 +117,10 @@ class SimplePie_Parser
             $data = substr($data, 3);
         }
 
-        if (substr($data, 0, 5) === '<?xml' && strspn(substr($data, 5, 1), "\x09\x0A\x0D\x20") && ($pos = strpos($data,
-                '?>')) !== false
+        if (substr($data, 0, 5) === '<?xml' && strspn(substr($data, 5, 1), "\x09\x0A\x0D\x20") && ($pos = strpos(
+                $data,
+                '?>'
+            )) !== false
         ) {
             $declaration = $this->registry->create('XML_Declaration_Parser', array(substr($data, 5, $pos - 5)));
             if ($declaration->parse()) {
@@ -222,21 +224,24 @@ class SimplePie_Parser
     {
         if ($this->current_xhtml_construct >= 0) {
             $this->current_xhtml_construct--;
-            if (end($this->namespace) === SIMPLEPIE_NAMESPACE_XHTML && !in_array(end($this->element), array(
-                    'area',
-                    'base',
-                    'basefont',
-                    'br',
-                    'col',
-                    'frame',
-                    'hr',
-                    'img',
-                    'input',
-                    'isindex',
-                    'link',
-                    'meta',
-                    'param'
-                ))
+            if (end($this->namespace) === SIMPLEPIE_NAMESPACE_XHTML && !in_array(
+                    end($this->element),
+                    array(
+                        'area',
+                        'base',
+                        'basefont',
+                        'br',
+                        'col',
+                        'frame',
+                        'hr',
+                        'img',
+                        'input',
+                        'isindex',
+                        'link',
+                        'meta',
+                        'param'
+                    )
+                )
             ) {
                 $this->data['data'] .= '</' . end($this->element) . '>';
             }
@@ -264,8 +269,11 @@ class SimplePie_Parser
         }
 
         if (isset($attribs[SIMPLEPIE_NAMESPACE_XML]['base'])) {
-            $base = $this->registry->call('Misc', 'absolutize_url',
-                array($attribs[SIMPLEPIE_NAMESPACE_XML]['base'], end($this->xml_base)));
+            $base = $this->registry->call(
+                'Misc',
+                'absolutize_url',
+                array($attribs[SIMPLEPIE_NAMESPACE_XML]['base'], end($this->xml_base))
+            );
             if ($base !== false) {
                 $this->xml_base[]          = $base;
                 $this->xml_base_explicit[] = true;
@@ -287,8 +295,11 @@ class SimplePie_Parser
                 $this->data['data'] .= '<' . end($this->element);
                 if (isset($attribs[''])) {
                     foreach ($attribs[''] as $name => $value) {
-                        $this->data['data'] .= ' ' . $name . '="' . htmlspecialchars($value, ENT_COMPAT,
-                                $this->encoding) . '"';
+                        $this->data['data'] .= ' ' . $name . '="' . htmlspecialchars(
+                                $value,
+                                ENT_COMPAT,
+                                $this->encoding
+                            ) . '"';
                     }
                 }
                 $this->data['data'] .= '>';
@@ -303,25 +314,50 @@ class SimplePie_Parser
                 'xml_base_explicit' => end($this->xml_base_explicit),
                 'xml_lang'          => end($this->xml_lang)
             );
-            if ((end($this->namespace) === SIMPLEPIE_NAMESPACE_ATOM_03 && in_array(end($this->element), array(
-                        'title',
-                        'tagline',
-                        'copyright',
-                        'info',
-                        'summary',
-                        'content'
-                    )) && isset($attribs['']['mode']) && $attribs['']['mode'] === 'xml') || (end($this->namespace) === SIMPLEPIE_NAMESPACE_ATOM_10 && in_array(end($this->element),
+            if ((end($this->namespace) === SIMPLEPIE_NAMESPACE_ATOM_03 && in_array(
+                        end($this->element),
                         array(
-                            'rights',
-                            'subtitle',
-                            'summary',
-                            'info',
                             'title',
+                            'tagline',
+                            'copyright',
+                            'info',
+                            'summary',
                             'content'
-                        )) && isset($attribs['']['type']) && $attribs['']['type'] === 'xhtml') || (end($this->namespace) === SIMPLEPIE_NAMESPACE_RSS_20 && in_array(end($this->element),
-                        array('title'))) || (end($this->namespace) === SIMPLEPIE_NAMESPACE_RSS_090 && in_array(end($this->element),
-                        array('title'))) || (end($this->namespace) === SIMPLEPIE_NAMESPACE_RSS_10 && in_array(end($this->element),
-                        array('title')))
+                        )
+                    ) && isset($attribs['']['mode']) && $attribs['']['mode'] === 'xml') || (end(
+                                                                                                $this->namespace
+                                                                                            ) === SIMPLEPIE_NAMESPACE_ATOM_10 && in_array(
+                                                                                                end($this->element),
+                                                                                                array(
+                                                                                                    'rights',
+                                                                                                    'subtitle',
+                                                                                                    'summary',
+                                                                                                    'info',
+                                                                                                    'title',
+                                                                                                    'content'
+                                                                                                )
+                                                                                            ) && isset($attribs['']['type']) && $attribs['']['type'] === 'xhtml') || (end(
+                                                                                                                                                                          $this->namespace
+                                                                                                                                                                      ) === SIMPLEPIE_NAMESPACE_RSS_20 && in_array(
+                                                                                                                                                                          end(
+                                                                                                                                                                              $this->element
+                                                                                                                                                                          ),
+                                                                                                                                                                          array('title')
+                                                                                                                                                                      )) || (end(
+                                                                                                                                                                                 $this->namespace
+                                                                                                                                                                             ) === SIMPLEPIE_NAMESPACE_RSS_090 && in_array(
+                                                                                                                                                                                 end(
+                                                                                                                                                                                     $this->element
+                                                                                                                                                                                 ),
+                                                                                                                                                                                 array('title')
+                                                                                                                                                                             )) || (end(
+                                                                                                                                                                                        $this->namespace
+                                                                                                                                                                                    ) === SIMPLEPIE_NAMESPACE_RSS_10 && in_array(
+                                                                                                                                                                                        end(
+                                                                                                                                                                                            $this->element
+                                                                                                                                                                                        ),
+                                                                                                                                                                                        array('title')
+                                                                                                                                                                                    ))
             ) {
                 $this->current_xhtml_construct = 0;
             }

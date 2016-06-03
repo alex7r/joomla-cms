@@ -127,10 +127,9 @@ class FOFFormFieldRules extends JFormFieldRules implements FOFFormField
         if ($section == 'component') {
             // Need to find the asset id by the name of the component.
             $db    = FOFPlatform::getInstance()->getDbo();
-            $query = $db->getQuery(true)
-                        ->select($db->quoteName('id'))
-                        ->from($db->quoteName('#__assets'))
-                        ->where($db->quoteName('name') . ' = ' . $db->quote($component));
+            $query = $db->getQuery(true)->select($db->quoteName('id'))->from($db->quoteName('#__assets'))->where(
+                    $db->quoteName('name') . ' = ' . $db->quote($component)
+                );
 
             $assetId = (int)$db->setQuery($query)->loadResult();
         } else {
@@ -226,16 +225,22 @@ class FOFFormFieldRules extends JFormFieldRules implements FOFFormField
             foreach ($actions as $action) {
                 $html[] = '<tr>';
                 $html[] = '<td headers="actions-th' . $group->value . '">';
-                $html[] = '<label for="' . $this->id . '_' . $action->name . '_' . $group->value . '" class="hasTooltip" title="' . htmlspecialchars(JText::_($action->title) . ' ' . JText::_($action->description),
-                        ENT_COMPAT, 'UTF-8') . '">';
+                $html[] = '<label for="' . $this->id . '_' . $action->name . '_' . $group->value . '" class="hasTooltip" title="' . htmlspecialchars(
+                        JText::_($action->title) . ' ' . JText::_($action->description),
+                        ENT_COMPAT,
+                        'UTF-8'
+                    ) . '">';
                 $html[] = JText::_($action->title);
                 $html[] = '</label>';
                 $html[] = '</td>';
 
                 $html[] = '<td headers="settings-th' . $group->value . '">';
 
-                $html[] = '<select class="input-small" name="' . $this->name . '[' . $action->name . '][' . $group->value . ']" id="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP',
-                        JText::_($action->title), trim($group->text)) . '">';
+                $html[] = '<select class="input-small" name="' . $this->name . '[' . $action->name . '][' . $group->value . ']" id="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . JText::sprintf(
+                        'JLIB_RULES_SELECT_ALLOW_DENY_GROUP',
+                        JText::_($action->title),
+                        trim($group->text)
+                    ) . '">';
 
                 $inheritedRule = JAccess::checkGroup($group->value, $action->name, $assetId);
 
@@ -245,9 +250,15 @@ class FOFFormFieldRules extends JFormFieldRules implements FOFFormField
                 // Build the dropdowns for the permissions sliders
 
                 // The parent group has "Not Set", all children can rightly "Inherit" from that.
-                $html[] = '<option value=""' . ($assetRule === null ? ' selected="selected"' : '') . '>' . JText::_(empty($group->parent_id) && empty($component) ? 'JLIB_RULES_NOT_SET' : 'JLIB_RULES_INHERITED') . '</option>';
-                $html[] = '<option value="1"' . ($assetRule === true ? ' selected="selected"' : '') . '>' . JText::_('JLIB_RULES_ALLOWED') . '</option>';
-                $html[] = '<option value="0"' . ($assetRule === false ? ' selected="selected"' : '') . '>' . JText::_('JLIB_RULES_DENIED') . '</option>';
+                $html[] = '<option value=""' . ($assetRule === null ? ' selected="selected"' : '') . '>' . JText::_(
+                        empty($group->parent_id) && empty($component) ? 'JLIB_RULES_NOT_SET' : 'JLIB_RULES_INHERITED'
+                    ) . '</option>';
+                $html[] = '<option value="1"' . ($assetRule === true ? ' selected="selected"' : '') . '>' . JText::_(
+                        'JLIB_RULES_ALLOWED'
+                    ) . '</option>';
+                $html[] = '<option value="0"' . ($assetRule === false ? ' selected="selected"' : '') . '>' . JText::_(
+                        'JLIB_RULES_DENIED'
+                    ) . '</option>';
 
                 $html[] = '</select>&#160; ';
 
@@ -268,18 +279,26 @@ class FOFFormFieldRules extends JFormFieldRules implements FOFFormField
 
                     if (JAccess::checkGroup($group->value, 'core.admin', $assetId) !== true) {
                         if ($inheritedRule === null) {
-                            $html[] = '<span class="label label-important">' . JText::_('JLIB_RULES_NOT_ALLOWED') . '</span>';
+                            $html[] = '<span class="label label-important">' . JText::_(
+                                    'JLIB_RULES_NOT_ALLOWED'
+                                ) . '</span>';
                         } elseif ($inheritedRule === true) {
                             $html[] = '<span class="label label-success">' . JText::_('JLIB_RULES_ALLOWED') . '</span>';
                         } elseif ($inheritedRule === false) {
                             if ($assetRule === false) {
-                                $html[] = '<span class="label label-important">' . JText::_('JLIB_RULES_NOT_ALLOWED') . '</span>';
+                                $html[] = '<span class="label label-important">' . JText::_(
+                                        'JLIB_RULES_NOT_ALLOWED'
+                                    ) . '</span>';
                             } else {
-                                $html[] = '<span class="label"><i class="icon-lock icon-white"></i> ' . JText::_('JLIB_RULES_NOT_ALLOWED_LOCKED') . '</span>';
+                                $html[] = '<span class="label"><i class="icon-lock icon-white"></i> ' . JText::_(
+                                        'JLIB_RULES_NOT_ALLOWED_LOCKED'
+                                    ) . '</span>';
                             }
                         }
                     } elseif (!empty($component)) {
-                        $html[] = '<span class="label label-success"><i class="icon-lock icon-white"></i> ' . JText::_('JLIB_RULES_ALLOWED_ADMIN') . '</span>';
+                        $html[] = '<span class="label label-success"><i class="icon-lock icon-white"></i> ' . JText::_(
+                                'JLIB_RULES_ALLOWED_ADMIN'
+                            ) . '</span>';
                     } else {
                         // Special handling for  groups that have global admin because they can't  be denied.
                         // The admin rights can be changed.
@@ -287,9 +306,13 @@ class FOFFormFieldRules extends JFormFieldRules implements FOFFormField
                             $html[] = '<span class="label label-success">' . JText::_('JLIB_RULES_ALLOWED') . '</span>';
                         } elseif ($inheritedRule === false) {
                             // Other actions cannot be changed.
-                            $html[] = '<span class="label label-important"><i class="icon-lock icon-white"></i> ' . JText::_('JLIB_RULES_NOT_ALLOWED_ADMIN_CONFLICT') . '</span>';
+                            $html[] = '<span class="label label-important"><i class="icon-lock icon-white"></i> ' . JText::_(
+                                    'JLIB_RULES_NOT_ALLOWED_ADMIN_CONFLICT'
+                                ) . '</span>';
                         } else {
-                            $html[] = '<span class="label label-success"><i class="icon-lock icon-white"></i> ' . JText::_('JLIB_RULES_ALLOWED_ADMIN') . '</span>';
+                            $html[] = '<span class="label label-success"><i class="icon-lock icon-white"></i> ' . JText::_(
+                                    'JLIB_RULES_ALLOWED_ADMIN'
+                                ) . '</span>';
                         }
                     }
 
@@ -438,16 +461,22 @@ class FOFFormFieldRules extends JFormFieldRules implements FOFFormField
             foreach ($actions as $action) {
                 $html[] = '<tr>';
                 $html[] = '<td headers="actions-th' . $group->value . '">';
-                $html[] = '<label class="hasTip" for="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . htmlspecialchars(JText::_($action->title) . '::' . JText::_($action->description),
-                        ENT_COMPAT, 'UTF-8') . '">';
+                $html[] = '<label class="hasTip" for="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . htmlspecialchars(
+                        JText::_($action->title) . '::' . JText::_($action->description),
+                        ENT_COMPAT,
+                        'UTF-8'
+                    ) . '">';
                 $html[] = JText::_($action->title);
                 $html[] = '</label>';
                 $html[] = '</td>';
 
                 $html[] = '<td headers="settings-th' . $group->value . '">';
 
-                $html[] = '<select name="' . $this->name . '[' . $action->name . '][' . $group->value . ']" id="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP',
-                        JText::_($action->title), trim($group->text)) . '">';
+                $html[] = '<select name="' . $this->name . '[' . $action->name . '][' . $group->value . ']" id="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . JText::sprintf(
+                        'JLIB_RULES_SELECT_ALLOW_DENY_GROUP',
+                        JText::_($action->title),
+                        trim($group->text)
+                    ) . '">';
 
                 $inheritedRule = JAccess::checkGroup($group->value, $action->name, $assetId);
 
@@ -457,9 +486,15 @@ class FOFFormFieldRules extends JFormFieldRules implements FOFFormField
                 // Build the dropdowns for the permissions sliders
 
                 // The parent group has "Not Set", all children can rightly "Inherit" from that.
-                $html[] = '<option value=""' . ($assetRule === null ? ' selected="selected"' : '') . '>' . JText::_(empty($group->parent_id) && empty($component) ? 'JLIB_RULES_NOT_SET' : 'JLIB_RULES_INHERITED') . '</option>';
-                $html[] = '<option value="1"' . ($assetRule === true ? ' selected="selected"' : '') . '>' . JText::_('JLIB_RULES_ALLOWED') . '</option>';
-                $html[] = '<option value="0"' . ($assetRule === false ? ' selected="selected"' : '') . '>' . JText::_('JLIB_RULES_DENIED') . '</option>';
+                $html[] = '<option value=""' . ($assetRule === null ? ' selected="selected"' : '') . '>' . JText::_(
+                        empty($group->parent_id) && empty($component) ? 'JLIB_RULES_NOT_SET' : 'JLIB_RULES_INHERITED'
+                    ) . '</option>';
+                $html[] = '<option value="1"' . ($assetRule === true ? ' selected="selected"' : '') . '>' . JText::_(
+                        'JLIB_RULES_ALLOWED'
+                    ) . '</option>';
+                $html[] = '<option value="0"' . ($assetRule === false ? ' selected="selected"' : '') . '>' . JText::_(
+                        'JLIB_RULES_DENIED'
+                    ) . '</option>';
 
                 $html[] = '</select>&#160; ';
 
@@ -485,13 +520,19 @@ class FOFFormFieldRules extends JFormFieldRules implements FOFFormField
                             $html[] = '<span class="icon-16-allowed">' . JText::_('JLIB_RULES_ALLOWED') . '</span>';
                         } elseif ($inheritedRule === false) {
                             if ($assetRule === false) {
-                                $html[] = '<span class="icon-16-denied">' . JText::_('JLIB_RULES_NOT_ALLOWED') . '</span>';
+                                $html[] = '<span class="icon-16-denied">' . JText::_(
+                                        'JLIB_RULES_NOT_ALLOWED'
+                                    ) . '</span>';
                             } else {
-                                $html[] = '<span class="icon-16-denied"><span class="icon-16-locked">' . JText::_('JLIB_RULES_NOT_ALLOWED_LOCKED') . '</span></span>';
+                                $html[] = '<span class="icon-16-denied"><span class="icon-16-locked">' . JText::_(
+                                        'JLIB_RULES_NOT_ALLOWED_LOCKED'
+                                    ) . '</span></span>';
                             }
                         }
                     } elseif (!empty($component)) {
-                        $html[] = '<span class="icon-16-allowed"><span class="icon-16-locked">' . JText::_('JLIB_RULES_ALLOWED_ADMIN') . '</span></span>';
+                        $html[] = '<span class="icon-16-allowed"><span class="icon-16-locked">' . JText::_(
+                                'JLIB_RULES_ALLOWED_ADMIN'
+                            ) . '</span></span>';
                     } else {
                         // Special handling for  groups that have global admin because they can't  be denied.
                         // The admin rights can be changed.
@@ -499,9 +540,13 @@ class FOFFormFieldRules extends JFormFieldRules implements FOFFormField
                             $html[] = '<span class="icon-16-allowed">' . JText::_('JLIB_RULES_ALLOWED') . '</span>';
                         } elseif ($inheritedRule === false) {
                             // Other actions cannot be changed.
-                            $html[] = '<span class="icon-16-denied"><span class="icon-16-locked">' . JText::_('JLIB_RULES_NOT_ALLOWED_ADMIN_CONFLICT') . '</span></span>';
+                            $html[] = '<span class="icon-16-denied"><span class="icon-16-locked">' . JText::_(
+                                    'JLIB_RULES_NOT_ALLOWED_ADMIN_CONFLICT'
+                                ) . '</span></span>';
                         } else {
-                            $html[] = '<span class="icon-16-allowed"><span class="icon-16-locked">' . JText::_('JLIB_RULES_ALLOWED_ADMIN') . '</span></span>';
+                            $html[] = '<span class="icon-16-allowed"><span class="icon-16-locked">' . JText::_(
+                                    'JLIB_RULES_ALLOWED_ADMIN'
+                                ) . '</span></span>';
                         }
                     }
 
@@ -528,9 +573,15 @@ class FOFFormFieldRules extends JFormFieldRules implements FOFFormField
         }
         $html[] = '</div></div>';
 
-        $js = "window.addEvent('domready', function(){ new Fx.Accordion($$('div#permissions-sliders.pane-sliders .panel h3.pane-toggler')," . "$$('div#permissions-sliders.pane-sliders .panel div.pane-slider'), {onActive: function(toggler, i) {toggler.addClass('pane-toggler-down');" . "toggler.removeClass('pane-toggler');i.addClass('pane-down');i.removeClass('pane-hide');Cookie.write('jpanesliders_permissions-sliders" . $component . "',$$('div#permissions-sliders.pane-sliders .panel h3').indexOf(toggler));}," . "onBackground: function(toggler, i) {toggler.addClass('pane-toggler');toggler.removeClass('pane-toggler-down');i.addClass('pane-hide');" . "i.removeClass('pane-down');}, duration: 300, display: " . JRequest::getInt('jpanesliders_permissions-sliders' . $component,
-                0, 'cookie') . ", show: " . JRequest::getInt('jpanesliders_permissions-sliders' . $component, 0,
-                'cookie') . ", alwaysHide:true, opacity: false}); });";
+        $js = "window.addEvent('domready', function(){ new Fx.Accordion($$('div#permissions-sliders.pane-sliders .panel h3.pane-toggler')," . "$$('div#permissions-sliders.pane-sliders .panel div.pane-slider'), {onActive: function(toggler, i) {toggler.addClass('pane-toggler-down');" . "toggler.removeClass('pane-toggler');i.addClass('pane-down');i.removeClass('pane-hide');Cookie.write('jpanesliders_permissions-sliders" . $component . "',$$('div#permissions-sliders.pane-sliders .panel h3').indexOf(toggler));}," . "onBackground: function(toggler, i) {toggler.addClass('pane-toggler');toggler.removeClass('pane-toggler-down');i.addClass('pane-hide');" . "i.removeClass('pane-down');}, duration: 300, display: " . JRequest::getInt(
+                'jpanesliders_permissions-sliders' . $component,
+                0,
+                'cookie'
+            ) . ", show: " . JRequest::getInt(
+                'jpanesliders_permissions-sliders' . $component,
+                0,
+                'cookie'
+            ) . ", alwaysHide:true, opacity: false}); });";
 
         JFactory::getDocument()->addScriptDeclaration($js);
 

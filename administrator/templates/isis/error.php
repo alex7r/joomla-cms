@@ -70,8 +70,11 @@ $stickyToolbar = $params->get('stickyToolbar', '1');
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title><?php echo $this->title; ?><?php echo htmlspecialchars($this->error->getMessage(), ENT_QUOTES,
-            'UTF-8'); ?></title>
+    <title><?php echo $this->title; ?><?php echo htmlspecialchars(
+            $this->error->getMessage(),
+            ENT_QUOTES,
+            'UTF-8'
+        ); ?></title>
     <?php if ($app->get('debug_lang', '0') == '1' || $app->get('debug', '0') == '1') : ?>
         <!-- Load additional CSS styles for debug mode-->
         <link href="<?php echo JUri::root(true); ?>/media/cms/css/debug.css" rel="stylesheet"/>
@@ -173,11 +176,15 @@ $stickyToolbar = $params->get('stickyToolbar', '1');
                                 </li>
                                 <li class="divider"></li>
                                 <li class="">
-                                    <a href="index.php?option=com_admin&amp;task=profile.edit&amp;id=<?php echo $user->id; ?>"><?php echo JText::_('TPL_ISIS_EDIT_ACCOUNT'); ?></a>
+                                    <a href="index.php?option=com_admin&amp;task=profile.edit&amp;id=<?php echo $user->id; ?>"><?php echo JText::_(
+                                            'TPL_ISIS_EDIT_ACCOUNT'
+                                        ); ?></a>
                                 </li>
                                 <li class="divider"></li>
                                 <li class="">
-                                    <a href="<?php echo JRoute::_('index.php?option=com_login&task=logout&' . JSession::getFormToken() . '=1'); ?>"><?php echo JText::_('TPL_ISIS_LOGOUT'); ?></a>
+                                    <a href="<?php echo JRoute::_(
+                                        'index.php?option=com_login&task=logout&' . JSession::getFormToken() . '=1'
+                                    ); ?>"><?php echo JText::_('TPL_ISIS_LOGOUT'); ?></a>
                                 </li>
                             </ul>
                         </li>
@@ -235,8 +242,12 @@ $stickyToolbar = $params->get('stickyToolbar', '1');
                 <h1 class="page-header"><?php echo JText::_('JERROR_AN_ERROR_HAS_OCCURRED'); ?></h1>
                 <blockquote>
 					<span
-                        class="label label-inverse"><?php echo $this->error->getCode(); ?></span> <?php echo htmlspecialchars($this->error->getMessage(),
-                        ENT_QUOTES, 'UTF-8'); ?>
+                        class="label label-inverse"><?php echo $this->error->getCode(
+                        ); ?></span> <?php echo htmlspecialchars(
+                        $this->error->getMessage(),
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ); ?>
                 </blockquote>
                 <?php if ($this->debug) : ?>
                     <?php echo $this->renderBacktrace(); ?>

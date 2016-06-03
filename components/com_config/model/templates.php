@@ -29,8 +29,11 @@ class ConfigModelTemplates extends ConfigModelForm
     public function getForm($data = array(), $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_config.templates', 'templates',
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_config.templates',
+            'templates',
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
 
         try {
             $form = new JForm('com_config.templates');
@@ -73,8 +76,13 @@ class ConfigModelTemplates extends ConfigModelForm
         jimport('joomla.filesystem.path');
 
         // Load the core and/or local language file(s).
-        $lang->load('tpl_' . $template, JPATH_BASE, null, false, true) || $lang->load('tpl_' . $template,
-            JPATH_BASE . '/templates/' . $template, null, false, true);
+        $lang->load('tpl_' . $template, JPATH_BASE, null, false, true) || $lang->load(
+            'tpl_' . $template,
+            JPATH_BASE . '/templates/' . $template,
+            null,
+            false,
+            true
+        );
 
         // Look for com_config.xml, which contains fileds to display
         $formFile = JPath::clean(JPATH_BASE . '/templates/' . $template . '/com_config.xml');

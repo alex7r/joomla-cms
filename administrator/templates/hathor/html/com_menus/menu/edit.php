@@ -16,7 +16,8 @@ JHtml::_('behavior.formvalidator');
 
 JText::script('ERROR');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 		Joomla.submitbutton = function(task)
 		{
 			var form = document.getElementById('item-form');
@@ -25,7 +26,8 @@ JFactory::getDocument()->addScriptDeclaration("
 				Joomla.submitform(task, form);
 			}
 		};
-");
+"
+);
 ?>
 
 <div class="menu-edit">
@@ -50,8 +52,11 @@ JFactory::getDocument()->addScriptDeclaration("
         <div class="clr"></div>
         <?php if ($this->canDo->get('core.admin')) : ?>
             <div class="col rules-section">
-                <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id,
-                    array('useCookie' => 1)); ?>
+                <?php echo JHtml::_(
+                    'sliders.start',
+                    'permissions-sliders-' . $this->item->id,
+                    array('useCookie' => 1)
+                ); ?>
 
                 <?php echo JHtml::_('sliders.panel', JText::_('COM_MENUS_FIELDSET_RULES'), 'access-rules'); ?>
                 <fieldset class="panelform">

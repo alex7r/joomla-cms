@@ -42,8 +42,13 @@ class ModulesModelSelect extends JModelList
 
             // 1.5 Format; Core files or language packs then
             // 1.6 3PD Extension Support
-            $lang->load($item->module . '.sys', $client->path, null, false, true) || $lang->load($item->module . '.sys',
-                $client->path . '/modules/' . $item->module, null, false, true);
+            $lang->load($item->module . '.sys', $client->path, null, false, true) || $lang->load(
+                $item->module . '.sys',
+                $client->path . '/modules/' . $item->module,
+                null,
+                false,
+                true
+            );
             $item->name = JText::_($item->name);
 
             if (isset($item->xml) && $text = trim($item->xml->description)) {
@@ -136,8 +141,14 @@ class ModulesModelSelect extends JModelList
         $query->where('a.enabled = 1');
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.ordering')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.ordering'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

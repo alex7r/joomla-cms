@@ -44,8 +44,10 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
         $source = $this->parent->getPath('source');
 
         if (!$source) {
-            $this->parent->setPath('source',
-                ($this->parent->extension->client_id ? JPATH_ADMINISTRATOR : JPATH_SITE) . '/language/' . $this->parent->extension->element);
+            $this->parent->setPath(
+                'source',
+                ($this->parent->extension->client_id ? JPATH_ADMINISTRATOR : JPATH_SITE) . '/language/' . $this->parent->extension->element
+            );
         }
 
         $this->setManifest($this->parent->getManifest());
@@ -56,8 +58,12 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
             $client = JApplicationHelper::getClientInfo($cname, true);
 
             if ($client === null) {
-                $this->parent->abort(JText::sprintf('JLIB_INSTALLER_ABORT',
-                    JText::sprintf('JLIB_INSTALLER_ERROR_UNKNOWN_CLIENT_TYPE', $cname)));
+                $this->parent->abort(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT',
+                        JText::sprintf('JLIB_INSTALLER_ERROR_UNKNOWN_CLIENT_TYPE', $cname)
+                    )
+                );
 
                 return false;
             }
@@ -104,8 +110,12 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
         // Check if we found the tag - if we didn't, we may be trying to install from an older language package
         if (!$tag) {
-            $this->parent->abort(JText::sprintf('JLIB_INSTALLER_ABORT',
-                JText::_('JLIB_INSTALLER_ERROR_NO_LANGUAGE_TAG')));
+            $this->parent->abort(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ABORT',
+                    JText::_('JLIB_INSTALLER_ERROR_NO_LANGUAGE_TAG')
+                )
+            );
 
             return false;
         }
@@ -132,9 +142,15 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
         if (!file_exists($this->parent->getPath('extension_site'))) {
             if (!$created = JFolder::create($this->parent->getPath('extension_site'))) {
-                $this->parent->abort(JText::sprintf('JLIB_INSTALLER_ABORT',
-                    JText::sprintf('JLIB_INSTALLER_ERROR_CREATE_FOLDER_FAILED',
-                        $this->parent->getPath('extension_site'))));
+                $this->parent->abort(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT',
+                        JText::sprintf(
+                            'JLIB_INSTALLER_ERROR_CREATE_FOLDER_FAILED',
+                            $this->parent->getPath('extension_site')
+                        )
+                    )
+                );
 
                 return false;
             }
@@ -151,14 +167,30 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
                 // We didn't have overwrite set, find an update function or find an update tag so lets call it safe
                 if (file_exists($this->parent->getPath('extension_site'))) {
                     // If the site exists say so.
-                    JLog::add(JText::sprintf('JLIB_INSTALLER_ABORT',
-                        JText::sprintf('JLIB_INSTALLER_ERROR_FOLDER_IN_USE', $this->parent->getPath('extension_site'))),
-                        JLog::WARNING, 'jerror');
+                    JLog::add(
+                        JText::sprintf(
+                            'JLIB_INSTALLER_ABORT',
+                            JText::sprintf(
+                                'JLIB_INSTALLER_ERROR_FOLDER_IN_USE',
+                                $this->parent->getPath('extension_site')
+                            )
+                        ),
+                        JLog::WARNING,
+                        'jerror'
+                    );
                 } else {
                     // If the admin exists say so.
-                    JLog::add(JText::sprintf('JLIB_INSTALLER_ABORT',
-                        JText::sprintf('JLIB_INSTALLER_ERROR_FOLDER_IN_USE',
-                            $this->parent->getPath('extension_administrator'))), JLog::WARNING, 'jerror');
+                    JLog::add(
+                        JText::sprintf(
+                            'JLIB_INSTALLER_ABORT',
+                            JText::sprintf(
+                                'JLIB_INSTALLER_ERROR_FOLDER_IN_USE',
+                                $this->parent->getPath('extension_administrator')
+                            )
+                        ),
+                        JLog::WARNING,
+                        'jerror'
+                    );
                 }
 
                 return false;
@@ -259,8 +291,12 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
         $client = JApplicationHelper::getClientInfo($cname, true);
 
         if ($client === null || (empty($cname) && $cname !== 0)) {
-            $this->parent->abort(JText::sprintf('JLIB_INSTALLER_ABORT',
-                JText::sprintf('JLIB_INSTALLER_ERROR_UNKNOWN_CLIENT_TYPE', $cname)));
+            $this->parent->abort(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ABORT',
+                    JText::sprintf('JLIB_INSTALLER_ERROR_UNKNOWN_CLIENT_TYPE', $cname)
+                )
+            );
 
             return false;
         }
@@ -279,8 +315,12 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
         // Check if we found the tag - if we didn't, we may be trying to install from an older language package
         if (!$tag) {
-            $this->parent->abort(JText::sprintf('JLIB_INSTALLER_ABORT',
-                JText::_('JLIB_INSTALLER_ERROR_NO_LANGUAGE_TAG')));
+            $this->parent->abort(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ABORT',
+                    JText::_('JLIB_INSTALLER_ERROR_NO_LANGUAGE_TAG')
+                )
+            );
 
             return false;
         }
@@ -343,11 +383,13 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
         // Update an entry to the extension table
         $row = JTable::getInstance('extension');
-        $eid = $row->find(array(
-            'element'   => strtolower($this->get('tag')),
-            'type'      => 'language',
-            'client_id' => $clientId
-        ));
+        $eid = $row->find(
+            array(
+                'element'   => strtolower($this->get('tag')),
+                'type'      => 'language',
+                'client_id' => $clientId
+            )
+        );
 
         if ($eid) {
             $row->load($eid);
@@ -473,10 +515,9 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
             if ($registry->get($param_name) == $element) {
                 $registry->set($param_name, '');
-                $query->clear()
-                      ->update('#__users')
-                      ->set('params=' . $db->quote($registry))
-                      ->where('id=' . (int)$user->id);
+                $query->clear()->update('#__users')->set('params=' . $db->quote($registry))->where(
+                        'id=' . (int)$user->id
+                    );
                 $db->setQuery($query);
                 $db->execute();
                 $count++;
@@ -507,7 +548,9 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
         foreach ($site_languages as $language) {
             if (file_exists(JPATH_SITE . '/language/' . $language . '/' . $language . '.xml')) {
-                $manifest_details = JInstaller::parseXMLInstallFile(JPATH_SITE . '/language/' . $language . '/' . $language . '.xml');
+                $manifest_details = JInstaller::parseXMLInstallFile(
+                    JPATH_SITE . '/language/' . $language . '/' . $language . '.xml'
+                );
                 $extension        = JTable::getInstance('extension');
                 $extension->set('type', 'language');
                 $extension->set('client_id', 0);
@@ -523,7 +566,9 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
         foreach ($admin_languages as $language) {
             if (file_exists(JPATH_ADMINISTRATOR . '/language/' . $language . '/' . $language . '.xml')) {
-                $manifest_details = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/language/' . $language . '/' . $language . '.xml');
+                $manifest_details = JInstaller::parseXMLInstallFile(
+                    JPATH_ADMINISTRATOR . '/language/' . $language . '/' . $language . '.xml'
+                );
                 $extension        = JTable::getInstance('extension');
                 $extension->set('type', 'language');
                 $extension->set('client_id', 1);

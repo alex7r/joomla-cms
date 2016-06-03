@@ -46,9 +46,11 @@ abstract class JHtmlBehavior
         JHtml::_('script', 'system/caption.js', false, true);
 
         // Attach caption to document
-        JFactory::getDocument()->addScriptDeclaration("jQuery(window).on('load',  function() {
+        JFactory::getDocument()->addScriptDeclaration(
+            "jQuery(window).on('load',  function() {
 				new JCaption('" . $selector . "');
-			});");
+			});"
+        );
 
         // Set static array
         static::$loaded[__METHOD__][$selector] = true;
@@ -290,7 +292,8 @@ abstract class JHtmlBehavior
         JHtml::_('jquery.framework');
 
         // Attach tooltips to document
-        JFactory::getDocument()->addScriptDeclaration("jQuery(function($) {
+        JFactory::getDocument()->addScriptDeclaration(
+            "jQuery(function($) {
 			 $('$selector').each(function() {
 				var title = $(this).attr('title');
 				if (title) {
@@ -301,7 +304,8 @@ abstract class JHtmlBehavior
 				}
 			});
 			var JTooltips = new Tips($('$selector').get(), $options);
-		});");
+		});"
+        );
 
         // Set static array
         static::$loaded[__METHOD__][$sig] = true;
@@ -351,13 +355,17 @@ abstract class JHtmlBehavior
         }
 
         // Setup options object
-        $opt['ajaxOptions']   = (isset($params['ajaxOptions']) && (is_array($params['ajaxOptions']))) ? $params['ajaxOptions'] : null;
+        $opt['ajaxOptions']   = (isset($params['ajaxOptions']) && (is_array(
+                $params['ajaxOptions']
+            ))) ? $params['ajaxOptions'] : null;
         $opt['handler']       = (isset($params['handler'])) ? $params['handler'] : null;
         $opt['parseSecure']   = (isset($params['parseSecure'])) ? (bool)$params['parseSecure'] : null;
         $opt['closable']      = (isset($params['closable'])) ? (bool)$params['closable'] : null;
         $opt['closeBtn']      = (isset($params['closeBtn'])) ? (bool)$params['closeBtn'] : null;
         $opt['iframePreload'] = (isset($params['iframePreload'])) ? (bool)$params['iframePreload'] : null;
-        $opt['iframeOptions'] = (isset($params['iframeOptions']) && (is_array($params['iframeOptions']))) ? $params['iframeOptions'] : null;
+        $opt['iframeOptions'] = (isset($params['iframeOptions']) && (is_array(
+                $params['iframeOptions']
+            ))) ? $params['iframeOptions'] : null;
         $opt['size']          = (isset($params['size']) && (is_array($params['size']))) ? $params['size'] : null;
         $opt['shadow']        = (isset($params['shadow'])) ? $params['shadow'] : null;
         $opt['overlay']       = (isset($params['overlay'])) ? $params['overlay'] : null;
@@ -379,7 +387,8 @@ abstract class JHtmlBehavior
         $options = JHtml::getJSObject($opt);
 
         // Attach modal behavior to document
-        $document->addScriptDeclaration("
+        $document->addScriptDeclaration(
+            "
 		jQuery(function($) {
 			SqueezeBox.initialize(" . $options . ");
 			SqueezeBox.assign($('" . $selector . "').get(), {
@@ -388,7 +397,8 @@ abstract class JHtmlBehavior
 		});
 		function jModalClose() {
 			SqueezeBox.close();
-		}");
+		}"
+        );
 
         // Set static array
         static::$loaded[__METHOD__][$sig] = true;
@@ -421,9 +431,11 @@ abstract class JHtmlBehavior
         JHtml::_('script', 'system/multiselect.js', false, true);
 
         // Attach multiselect to document
-        JFactory::getDocument()->addScriptDeclaration("jQuery(document).ready(function() {
+        JFactory::getDocument()->addScriptDeclaration(
+            "jQuery(document).ready(function() {
 				Joomla.JMultiSelect('" . $id . "');
-			});");
+			});"
+        );
 
         // Set static array
         static::$loaded[__METHOD__][$id] = true;
@@ -461,14 +473,22 @@ abstract class JHtmlBehavior
         $opt['div']   = (array_key_exists('div', $params)) ? $params['div'] : $id . '_tree';
         $opt['mode']  = (array_key_exists('mode', $params)) ? $params['mode'] : 'folders';
         $opt['grid']  = (array_key_exists('grid', $params)) ? '\\' . $params['grid'] : true;
-        $opt['theme'] = (array_key_exists('theme', $params)) ? $params['theme'] : JHtml::_('image',
-            'system/mootree.gif', '', array(), true, true);
+        $opt['theme'] = (array_key_exists('theme', $params)) ? $params['theme'] : JHtml::_(
+            'image',
+            'system/mootree.gif',
+            '',
+            array(),
+            true,
+            true
+        );
 
         // Event handlers
         $opt['onExpand'] = (array_key_exists('onExpand', $params)) ? '\\' . $params['onExpand'] : null;
         $opt['onSelect'] = (array_key_exists('onSelect', $params)) ? '\\' . $params['onSelect'] : null;
-        $opt['onClick']  = (array_key_exists('onClick',
-            $params)) ? '\\' . $params['onClick'] : '\\function(node){  window.open(node.data.url, node.data.target != null ? node.data.target : \'_self\'); }';
+        $opt['onClick']  = (array_key_exists(
+            'onClick',
+            $params
+        )) ? '\\' . $params['onClick'] : '\\function(node){  window.open(node.data.url, node.data.target != null ? node.data.target : \'_self\'); }';
 
         $options = JHtml::getJSObject($opt);
 
@@ -515,8 +535,12 @@ abstract class JHtmlBehavior
         $document = JFactory::getDocument();
         $tag      = JFactory::getLanguage()->getTag();
 
-        JHtml::_('stylesheet', 'system/calendar-jos.css',
-            array(' title' => JText::_('JLIB_HTML_BEHAVIOR_GREEN'), ' media' => 'all'), true);
+        JHtml::_(
+            'stylesheet',
+            'system/calendar-jos.css',
+            array(' title' => JText::_('JLIB_HTML_BEHAVIOR_GREEN'), ' media' => 'all'),
+            true
+        );
         JHtml::_('script', $tag . '/calendar.js', false, true);
         JHtml::_('script', $tag . '/calendar-setup.js', false, true);
 
@@ -549,60 +573,76 @@ abstract class JHtmlBehavior
 
         // To keep the code simple here, run strings through JText::_() using array_map()
         $callback       = array('JText', '_');
-        $weekdays_full  = array_map($callback, array(
-            'SUNDAY',
-            'MONDAY',
-            'TUESDAY',
-            'WEDNESDAY',
-            'THURSDAY',
-            'FRIDAY',
-            'SATURDAY',
-            'SUNDAY'
-        ));
-        $weekdays_short = array_map($callback, array(
-            'SUN',
-            'MON',
-            'TUE',
-            'WED',
-            'THU',
-            'FRI',
-            'SAT',
-            'SUN'
-        ));
-        $months_long    = array_map($callback, array(
-            'JANUARY',
-            'FEBRUARY',
-            'MARCH',
-            'APRIL',
-            'MAY',
-            'JUNE',
-            'JULY',
-            'AUGUST',
-            'SEPTEMBER',
-            'OCTOBER',
-            'NOVEMBER',
-            'DECEMBER'
-        ));
-        $months_short   = array_map($callback, array(
-            'JANUARY_SHORT',
-            'FEBRUARY_SHORT',
-            'MARCH_SHORT',
-            'APRIL_SHORT',
-            'MAY_SHORT',
-            'JUNE_SHORT',
-            'JULY_SHORT',
-            'AUGUST_SHORT',
-            'SEPTEMBER_SHORT',
-            'OCTOBER_SHORT',
-            'NOVEMBER_SHORT',
-            'DECEMBER_SHORT'
-        ));
+        $weekdays_full  = array_map(
+            $callback,
+            array(
+                'SUNDAY',
+                'MONDAY',
+                'TUESDAY',
+                'WEDNESDAY',
+                'THURSDAY',
+                'FRIDAY',
+                'SATURDAY',
+                'SUNDAY'
+            )
+        );
+        $weekdays_short = array_map(
+            $callback,
+            array(
+                'SUN',
+                'MON',
+                'TUE',
+                'WED',
+                'THU',
+                'FRI',
+                'SAT',
+                'SUN'
+            )
+        );
+        $months_long    = array_map(
+            $callback,
+            array(
+                'JANUARY',
+                'FEBRUARY',
+                'MARCH',
+                'APRIL',
+                'MAY',
+                'JUNE',
+                'JULY',
+                'AUGUST',
+                'SEPTEMBER',
+                'OCTOBER',
+                'NOVEMBER',
+                'DECEMBER'
+            )
+        );
+        $months_short   = array_map(
+            $callback,
+            array(
+                'JANUARY_SHORT',
+                'FEBRUARY_SHORT',
+                'MARCH_SHORT',
+                'APRIL_SHORT',
+                'MAY_SHORT',
+                'JUNE_SHORT',
+                'JULY_SHORT',
+                'AUGUST_SHORT',
+                'SEPTEMBER_SHORT',
+                'OCTOBER_SHORT',
+                'NOVEMBER_SHORT',
+                'DECEMBER_SHORT'
+            )
+        );
 
         // This will become an object in Javascript but define it first in PHP for readability
         $today = " " . JText::_('JLIB_HTML_BEHAVIOR_TODAY') . " ";
         $text  = array(
             'INFO'            => JText::_('JLIB_HTML_BEHAVIOR_ABOUT_THE_CALENDAR'),
-            'ABOUT'           => "DHTML Date/Time Selector\n" . "(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" . "For latest version visit: http://www.dynarch.com/projects/calendar/\n" . "Distributed under GNU LGPL.  See http://gnu.org/licenses/lgpl.html for details." . "\n\n" . JText::_('JLIB_HTML_BEHAVIOR_DATE_SELECTION') . JText::_('JLIB_HTML_BEHAVIOR_YEAR_SELECT') . JText::_('JLIB_HTML_BEHAVIOR_MONTH_SELECT') . JText::_('JLIB_HTML_BEHAVIOR_HOLD_MOUSE'),
+            'ABOUT'           => "DHTML Date/Time Selector\n" . "(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" . "For latest version visit: http://www.dynarch.com/projects/calendar/\n" . "Distributed under GNU LGPL.  See http://gnu.org/licenses/lgpl.html for details." . "\n\n" . JText::_(
+                    'JLIB_HTML_BEHAVIOR_DATE_SELECTION'
+                ) . JText::_('JLIB_HTML_BEHAVIOR_YEAR_SELECT') . JText::_('JLIB_HTML_BEHAVIOR_MONTH_SELECT') . JText::_(
+                    'JLIB_HTML_BEHAVIOR_HOLD_MOUSE'
+                ),
             'ABOUT_TIME'      => "\n\n" . "Time selection:\n" . "- Click on any of the time parts to increase it\n" . "- or Shift-click to decrease it\n" . "- or click and drag for faster selection.",
             'PREV_YEAR'       => JText::_('JLIB_HTML_BEHAVIOR_PREV_YEAR_HOLD_FOR_MENU'),
             'PREV_MONTH'      => JText::_('JLIB_HTML_BEHAVIOR_PREV_MONTH_HOLD_FOR_MENU'),
@@ -622,7 +662,13 @@ abstract class JHtmlBehavior
             'TIME'            => JText::_('JLIB_HTML_BEHAVIOR_TIME')
         );
 
-        return 'Calendar._DN = ' . json_encode($weekdays_full) . ';' . ' Calendar._SDN = ' . json_encode($weekdays_short) . ';' . ' Calendar._FD = 0;' . ' Calendar._MN = ' . json_encode($months_long) . ';' . ' Calendar._SMN = ' . json_encode($months_short) . ';' . ' Calendar._TT = ' . json_encode($text) . ';';
+        return 'Calendar._DN = ' . json_encode($weekdays_full) . ';' . ' Calendar._SDN = ' . json_encode(
+            $weekdays_short
+        ) . ';' . ' Calendar._FD = 0;' . ' Calendar._MN = ' . json_encode(
+                   $months_long
+               ) . ';' . ' Calendar._SMN = ' . json_encode($months_short) . ';' . ' Calendar._TT = ' . json_encode(
+                   $text
+               ) . ';';
     }
 
     /**
@@ -644,7 +690,8 @@ abstract class JHtmlBehavior
 
         JHtml::_('script', 'jui/jquery.minicolors.min.js', false, true);
         JHtml::_('stylesheet', 'jui/jquery.minicolors.css', false, true);
-        JFactory::getDocument()->addScriptDeclaration("
+        JFactory::getDocument()->addScriptDeclaration(
+            "
 				jQuery(document).ready(function (){
 					jQuery('.minicolors').each(function() {
 						jQuery(this).minicolors({
@@ -662,7 +709,8 @@ abstract class JHtmlBehavior
 						});
 					});
 				});
-			");
+			"
+        );
 
         static::$loaded[__METHOD__] = true;
     }
@@ -686,11 +734,13 @@ abstract class JHtmlBehavior
 
         JHtml::_('script', 'jui/jquery.simplecolors.min.js', false, true);
         JHtml::_('stylesheet', 'jui/jquery.simplecolors.css', false, true);
-        JFactory::getDocument()->addScriptDeclaration("
+        JFactory::getDocument()->addScriptDeclaration(
+            "
 				jQuery(document).ready(function (){
 					jQuery('select.simplecolors').simplecolors();
 				});
-			");
+			"
+        );
 
         static::$loaded[__METHOD__] = true;
     }
@@ -794,7 +844,8 @@ abstract class JHtmlBehavior
         }
 
         $document = JFactory::getDocument();
-        $document->addScriptDeclaration("
+        $document->addScriptDeclaration(
+            "
 			jQuery(function ($) {
 				var start = document.getElementById('" . $start . "');
 				var end = document.getElementById('" . $end . "');
@@ -811,7 +862,8 @@ abstract class JHtmlBehavior
 				$(start).remove();
 				$(end).remove();
 			});
-		");
+		"
+        );
 
         static::$loaded[__METHOD__][$sig] = true;
 
@@ -898,8 +950,11 @@ abstract class JHtmlBehavior
      */
     protected static function _getJSObject($array = array())
     {
-        JLog::add('JHtmlBehavior::_getJSObject() is deprecated. JHtml::getJSObject() instead..', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JHtmlBehavior::_getJSObject() is deprecated. JHtml::getJSObject() instead..',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return JHtml::getJSObject($array);
     }

@@ -37,8 +37,11 @@ JHtml::_('bootstrap.tooltip');
                 <div class="span3">
 					<span class="small">
 						<span
-                            class="icon-calendar"></span> <?php echo JHtml::_('date', $item->created,
-                            JText::_('DATE_FORMAT_LC4')); ?>
+                            class="icon-calendar"></span> <?php echo JHtml::_(
+                            'date',
+                            $item->created,
+                            JText::_('DATE_FORMAT_LC4')
+                        ); ?>
 					</span>
                 </div>
             </div>

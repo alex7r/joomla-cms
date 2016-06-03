@@ -85,7 +85,7 @@ class JEventDispatcher extends JObject
     /**
      * Registers an event handler to the event dispatcher
      *
-     * @param   string $event   Name of the event to register handler for
+     * @param   string $event Name of the event to register handler for
      * @param   string $handler Name of the event handler
      *
      * @return  void
@@ -126,7 +126,10 @@ class JEventDispatcher extends JObject
 
             // Make sure we haven't already attached this array as an observer
             foreach ($this->_observers as $check) {
-                if (is_array($check) && $check['event'] == $observer['event'] && $check['handler'] == $observer['handler']) {
+                if (is_array(
+                        $check
+                    ) && $check['event'] == $observer['event'] && $check['handler'] == $observer['handler']
+                ) {
                     return;
                 }
             }

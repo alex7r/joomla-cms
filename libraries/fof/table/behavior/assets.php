@@ -113,10 +113,9 @@ class FOFTableBehaviorAssets extends FOFTableBehavior
 
                 $db = $table->getDbo();
 
-                $query = $db->getQuery(true)
-                            ->update($db->qn($table->getTableName()))
-                            ->set($db->qn($asset_id_field) . ' = ' . (int)$table->$asset_id_field)
-                            ->where($db->qn($k) . ' = ' . (int)$table->$k);
+                $query = $db->getQuery(true)->update($db->qn($table->getTableName()))->set(
+                        $db->qn($asset_id_field) . ' = ' . (int)$table->$asset_id_field
+                    )->where($db->qn($k) . ' = ' . (int)$table->$k);
 
                 $db->setQuery($query)->execute();
             }
@@ -130,8 +129,8 @@ class FOFTableBehaviorAssets extends FOFTableBehavior
     /**
      * The event which runs after binding data to the table
      *
-     * @param   FOFTable     &$table The table which calls this event
-     * @param   object|array &$src   The data to bind
+     * @param   FOFTable &$table   The table which calls this event
+     * @param   object|array &$src The data to bind
      *
      * @return  boolean  True on success
      */

@@ -109,10 +109,9 @@ class FOFFormFieldTag extends JFormFieldTag implements FOFFormField
         $published = $this->element['published'] ? $this->element['published'] : array(0, 1);
 
         $db    = FOFPlatform::getInstance()->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('a.id AS value, a.path, a.title AS text, a.level, a.published')
-                    ->from('#__tags AS a')
-                    ->join('LEFT', $db->quoteName('#__tags') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
+        $query = $db->getQuery(true)->select('a.id AS value, a.path, a.title AS text, a.level, a.published')->from(
+                '#__tags AS a'
+            )->join('LEFT', $db->quoteName('#__tags') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
 
         if ($this->item instanceof FOFTable) {
             $item = $this->item;
@@ -127,10 +126,9 @@ class FOFFormFieldTag extends JFormFieldTag implements FOFFormField
             $type       = $item->getContentType();
 
             $selected_query = $db->getQuery(true);
-            $selected_query->select('tag_id')
-                           ->from('#__contentitem_tag_map')
-                           ->where('content_item_id = ' . (int)$content_id)
-                           ->where('type_alias = ' . $db->quote($type));
+            $selected_query->select('tag_id')->from('#__contentitem_tag_map')->where(
+                    'content_item_id = ' . (int)$content_id
+                )->where('type_alias = ' . $db->quote($type));
 
             $db->setQuery($selected_query);
 

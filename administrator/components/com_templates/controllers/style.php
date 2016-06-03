@@ -128,8 +128,10 @@ class TemplatesControllerStyle extends JControllerForm
                 $app->setUserState($context . '.data', $validData);
 
                 // Check-in failed, so go back to the record and display a notice.
-                $app->enqueueMessage(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()),
-                    'error');
+                $app->enqueueMessage(
+                    JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()),
+                    'error'
+                );
 
                 return false;
             }

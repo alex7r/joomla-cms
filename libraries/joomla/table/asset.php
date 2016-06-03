@@ -72,10 +72,9 @@ class JTableAsset extends JTableNested
      */
     public function loadByName($name)
     {
-        $query = $this->_db->getQuery(true)
-                           ->select($this->_db->quoteName('id'))
-                           ->from($this->_db->quoteName('#__assets'))
-                           ->where($this->_db->quoteName('name') . ' = ' . $this->_db->quote($name));
+        $query = $this->_db->getQuery(true)->select($this->_db->quoteName('id'))->from(
+                $this->_db->quoteName('#__assets')
+            )->where($this->_db->quoteName('name') . ' = ' . $this->_db->quote($name));
         $this->_db->setQuery($query);
         $assetId = (int)$this->_db->loadResult();
 
@@ -104,10 +103,9 @@ class JTableAsset extends JTableNested
         // JTableNested does not allow parent_id = 0, override this.
         if ($this->parent_id > 0) {
             // Get the JDatabaseQuery object
-            $query = $this->_db->getQuery(true)
-                               ->select('COUNT(id)')
-                               ->from($this->_db->quoteName($this->_tbl))
-                               ->where($this->_db->quoteName('id') . ' = ' . $this->parent_id);
+            $query = $this->_db->getQuery(true)->select('COUNT(id)')->from($this->_db->quoteName($this->_tbl))->where(
+                    $this->_db->quoteName('id') . ' = ' . $this->parent_id
+                );
             $this->_db->setQuery($query);
 
             if ($this->_db->loadResult()) {
@@ -192,12 +190,9 @@ class JTableAsset extends JTableNested
 
         // We've got the left value, and now that we've processed
         // the children of this node we also know the right value.
-        $query->clear()
-              ->update($this->_tbl)
-              ->set('lft = ' . (int)$leftId)
-              ->set('rgt = ' . (int)$rightId)
-              ->set('level = ' . (int)$level)
-              ->where($this->_tbl_key . ' = ' . (int)$parentId);
+        $query->clear()->update($this->_tbl)->set('lft = ' . (int)$leftId)->set('rgt = ' . (int)$rightId)->set(
+                'level = ' . (int)$level
+            )->where($this->_tbl_key . ' = ' . (int)$parentId);
         $this->_db->setQuery($query)->execute();
 
         // Return the right value of this node + 1.

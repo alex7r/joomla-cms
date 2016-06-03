@@ -29,9 +29,12 @@ abstract class ModLoginHelper
             return '';
         }
 
-        usort($languages, function ($a, $b) {
-            return strcmp($a["value"], $b["value"]);
-        });
+        usort(
+            $languages,
+            function ($a, $b) {
+                return strcmp($a["value"], $b["value"]);
+            }
+        );
 
         // Fix wrongly set parentheses in RTL languages
         if (JFactory::getLanguage()->isRtl()) {

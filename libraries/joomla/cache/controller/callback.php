@@ -99,8 +99,10 @@ class JCacheControllerCallback extends JCacheController
         if ($data !== false) {
             $cached                = unserialize(trim($data));
             $coptions['mergehead'] = isset($woptions['mergehead']) ? $woptions['mergehead'] : 0;
-            $output                = ($wrkarounds == false) ? $cached['output'] : JCache::getWorkarounds($cached['output'],
-                $coptions);
+            $output                = ($wrkarounds == false) ? $cached['output'] : JCache::getWorkarounds(
+                $cached['output'],
+                $coptions
+            );
             $result                = $cached['result'];
 
             if ($locktest->locked == true) {

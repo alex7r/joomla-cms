@@ -193,10 +193,14 @@ class JDocumentHtml extends JDocument
             return null;
         }
 
-        $this->title       = (isset($data['title']) && !empty($data['title']) && !stristr($this->title,
-                $data['title'])) ? $this->title . $data['title'] : $this->title;
-        $this->description = (isset($data['description']) && !empty($data['description']) && !stristr($this->description,
-                $data['description'])) ? $this->description . $data['description'] : $this->description;
+        $this->title       = (isset($data['title']) && !empty($data['title']) && !stristr(
+                $this->title,
+                $data['title']
+            )) ? $this->title . $data['title'] : $this->title;
+        $this->description = (isset($data['description']) && !empty($data['description']) && !stristr(
+                $this->description,
+                $data['description']
+            )) ? $this->description . $data['description'] : $this->description;
         $this->link        = (isset($data['link'])) ? $data['link'] : $this->link;
 
         if (isset($data['metaTags'])) {
@@ -209,10 +213,20 @@ class JDocumentHtml extends JDocument
             }
         }
 
-        $this->_links       = (isset($data['links']) && !empty($data['links']) && is_array($data['links'])) ? array_unique(array_merge($this->_links,
-            $data['links'])) : $this->_links;
-        $this->_styleSheets = (isset($data['styleSheets']) && !empty($data['styleSheets']) && is_array($data['styleSheets'])) ? array_merge($this->_styleSheets,
-            $data['styleSheets']) : $this->_styleSheets;
+        $this->_links       = (isset($data['links']) && !empty($data['links']) && is_array(
+                $data['links']
+            )) ? array_unique(
+            array_merge(
+                $this->_links,
+                $data['links']
+            )
+        ) : $this->_links;
+        $this->_styleSheets = (isset($data['styleSheets']) && !empty($data['styleSheets']) && is_array(
+                $data['styleSheets']
+            )) ? array_merge(
+            $this->_styleSheets,
+            $data['styleSheets']
+        ) : $this->_styleSheets;
 
         if (isset($data['style'])) {
             foreach ($data['style'] as $type => $stdata) {
@@ -222,8 +236,12 @@ class JDocumentHtml extends JDocument
             }
         }
 
-        $this->_scripts = (isset($data['scripts']) && !empty($data['scripts']) && is_array($data['scripts'])) ? array_merge($this->_scripts,
-            $data['scripts']) : $this->_scripts;
+        $this->_scripts = (isset($data['scripts']) && !empty($data['scripts']) && is_array(
+                $data['scripts']
+            )) ? array_merge(
+            $this->_scripts,
+            $data['scripts']
+        ) : $this->_scripts;
 
         if (isset($data['script'])) {
             foreach ($data['script'] as $type => $sdata) {
@@ -233,8 +251,14 @@ class JDocumentHtml extends JDocument
             }
         }
 
-        $this->_custom = (isset($data['custom']) && !empty($data['custom']) && is_array($data['custom'])) ? array_unique(array_merge($this->_custom,
-            $data['custom'])) : $this->_custom;
+        $this->_custom = (isset($data['custom']) && !empty($data['custom']) && is_array(
+                $data['custom']
+            )) ? array_unique(
+            array_merge(
+                $this->_custom,
+                $data['custom']
+            )
+        ) : $this->_custom;
 
         return $this;
     }
@@ -395,8 +419,13 @@ class JDocumentHtml extends JDocument
         $lang = JFactory::getLanguage();
 
         // 1.5 or core then 1.6
-        $lang->load('tpl_' . $template, JPATH_BASE, null, false, true) || $lang->load('tpl_' . $template,
-            $directory . '/' . $template, null, false, true);
+        $lang->load('tpl_' . $template, JPATH_BASE, null, false, true) || $lang->load(
+            'tpl_' . $template,
+            $directory . '/' . $template,
+            null,
+            false,
+            true
+        );
 
         // Assign the variables
         $this->template = $template;
@@ -615,7 +644,9 @@ class JDocumentHtml extends JDocument
 
         if (count($words) === 1) {
             $name   = strtolower($words[0]);
-            $result = ((isset(parent::$_buffer['modules'][$name])) && (parent::$_buffer['modules'][$name] === false)) ? 0 : count(JModuleHelper::getModules($name));
+            $result = ((isset(parent::$_buffer['modules'][$name])) && (parent::$_buffer['modules'][$name] === false)) ? 0 : count(
+                JModuleHelper::getModules($name)
+            );
 
             return $result;
         }
@@ -625,7 +656,9 @@ class JDocumentHtml extends JDocument
         for ($i = 0, $n = count($words); $i < $n; $i += 2) {
             // Odd parts (modules)
             $name      = strtolower($words[$i]);
-            $words[$i] = ((isset(parent::$_buffer['modules'][$name])) && (parent::$_buffer['modules'][$name] === false)) ? 0 : count(JModuleHelper::getModules($name));
+            $words[$i] = ((isset(parent::$_buffer['modules'][$name])) && (parent::$_buffer['modules'][$name] === false)) ? 0 : count(
+                JModuleHelper::getModules($name)
+            );
         }
 
         $str = 'return ' . implode(' ', $words) . ';';

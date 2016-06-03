@@ -28,15 +28,21 @@ if (count($this->children[$this->category->id]) > 0 && $this->maxLevel != 0) :
 
                         <?php if ($this->params->get('show_cat_items') == 1) : ?>
                             <span class="badge badge-info pull-right"
-                                  title="<?php echo JText::_('COM_CONTACT_CAT_NUM'); ?>"><?php echo $child->numitems; ?></span>
+                                  title="<?php echo JText::_(
+                                      'COM_CONTACT_CAT_NUM'
+                                  ); ?>"><?php echo $child->numitems; ?></span>
                         <?php endif; ?>
                     </h4>
 
                     <?php if ($this->params->get('show_subcat_desc') == 1) : ?>
                         <?php if ($child->description) : ?>
                             <div class="category-desc">
-                                <?php echo JHtml::_('content.prepare', $child->description, '',
-                                    'com_contact.category'); ?>
+                                <?php echo JHtml::_(
+                                    'content.prepare',
+                                    $child->description,
+                                    '',
+                                    'com_contact.category'
+                                ); ?>
                             </div>
                         <?php endif; ?>
                     <?php endif; ?>

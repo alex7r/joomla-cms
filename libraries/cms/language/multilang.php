@@ -46,12 +46,11 @@ class JLanguageMultilang
         if (!$tested) {
             // Determine status of language filter plug-in.
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select('enabled')
-                        ->from($db->quoteName('#__extensions'))
-                        ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
-                        ->where($db->quoteName('folder') . ' = ' . $db->quote('system'))
-                        ->where($db->quoteName('element') . ' = ' . $db->quote('languagefilter'));
+            $query = $db->getQuery(true)->select('enabled')->from($db->quoteName('#__extensions'))->where(
+                    $db->quoteName('type') . ' = ' . $db->quote('plugin')
+                )->where($db->quoteName('folder') . ' = ' . $db->quote('system'))->where(
+                    $db->quoteName('element') . ' = ' . $db->quote('languagefilter')
+                );
             $db->setQuery($query);
 
             $enabled = $db->loadResult();
@@ -76,12 +75,9 @@ class JLanguageMultilang
         if (!isset($multilangSiteLangs)) {
             // Check for published Site Languages.
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select('element')
-                        ->from('#__extensions')
-                        ->where('type = ' . $db->quote('language'))
-                        ->where('client_id = 0')
-                        ->where('enabled = 1');
+            $query = $db->getQuery(true)->select('element')->from('#__extensions')->where(
+                    'type = ' . $db->quote('language')
+                )->where('client_id = 0')->where('enabled = 1');
             $db->setQuery($query);
 
             $multilangSiteLangs = $db->loadObjectList('element');
@@ -105,13 +101,9 @@ class JLanguageMultilang
         if (!isset($multilangSiteHomePages)) {
             // Check for Home pages languages.
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select('language')
-                        ->select('id')
-                        ->from($db->quoteName('#__menu'))
-                        ->where('home = 1')
-                        ->where('published = 1')
-                        ->where('client_id = 0');
+            $query = $db->getQuery(true)->select('language')->select('id')->from($db->quoteName('#__menu'))->where(
+                    'home = 1'
+                )->where('published = 1')->where('client_id = 0');
             $db->setQuery($query);
 
             $multilangSiteHomePages = $db->loadObjectList('language');

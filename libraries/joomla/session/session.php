@@ -122,7 +122,9 @@ class JSession implements IteratorAggregate
         JSessionHandlerInterface $handlerInterface = null
     ) {
         // Set the session handler
-        $this->_handler = $handlerInterface instanceof JSessionHandlerInterface ? $handlerInterface : new JSessionHandlerJoomla($options);
+        $this->_handler = $handlerInterface instanceof JSessionHandlerInterface ? $handlerInterface : new JSessionHandlerJoomla(
+            $options
+        );
 
         // Initialize the data variable, let's avoid fatal error if the session is not corretly started (ie in CLI).
         $this->data = new \Joomla\Registry\Registry;
@@ -785,9 +787,13 @@ class JSession implements IteratorAggregate
         }
 
         // Check for client address
-        if (in_array('fix_adress',
-                $this->_security) && isset($_SERVER['REMOTE_ADDR']) && filter_var($_SERVER['REMOTE_ADDR'],
-                FILTER_VALIDATE_IP) !== false
+        if (in_array(
+                'fix_adress',
+                $this->_security
+            ) && isset($_SERVER['REMOTE_ADDR']) && filter_var(
+                                                       $_SERVER['REMOTE_ADDR'],
+                                                       FILTER_VALIDATE_IP
+                                                   ) !== false
         ) {
             $ip = $this->get('session.client.address');
 
@@ -801,8 +807,10 @@ class JSession implements IteratorAggregate
         }
 
         // Record proxy forwarded for in the session in case we need it later
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'],
-                FILTER_VALIDATE_IP) !== false
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && filter_var(
+                                                           $_SERVER['HTTP_X_FORWARDED_FOR'],
+                                                           FILTER_VALIDATE_IP
+                                                       ) !== false
         ) {
             $this->set('session.client.forwarded', $_SERVER['HTTP_X_FORWARDED_FOR']);
         }

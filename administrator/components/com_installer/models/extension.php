@@ -105,8 +105,13 @@ class InstallerModel extends JModelList
 
             // Process ordering.
             // Sort array object by selected ordering and selected direction. Sort is case insensative and using locale sorting.
-            $result = ArrayHelper::sortObjects($result, $listOrder, strtolower($listDirn) == 'desc' ? -1 : 1, false,
-                true);
+            $result = ArrayHelper::sortObjects(
+                $result,
+                $listOrder,
+                strtolower($listDirn) == 'desc' ? -1 : 1,
+                false,
+                true
+            );
 
             // Process pagination.
             $total                                      = count($result);
@@ -163,8 +168,13 @@ class InstallerModel extends JModelList
                 case 'component':
                     $extension = $item->element;
                     $source    = JPATH_ADMINISTRATOR . '/components/' . $extension;
-                    $lang->load("$extension.sys", JPATH_ADMINISTRATOR, null, false,
-                        true) || $lang->load("$extension.sys", $source, null, false, true);
+                    $lang->load(
+                        "$extension.sys",
+                        JPATH_ADMINISTRATOR,
+                        null,
+                        false,
+                        true
+                    ) || $lang->load("$extension.sys", $source, null, false, true);
                     break;
                 case 'file':
                     $extension = 'files_' . $item->element;
@@ -177,20 +187,35 @@ class InstallerModel extends JModelList
                 case 'module':
                     $extension = $item->element;
                     $source    = $path . '/modules/' . $extension;
-                    $lang->load("$extension.sys", $path, null, false, true) || $lang->load("$extension.sys", $source,
-                        null, false, true);
+                    $lang->load("$extension.sys", $path, null, false, true) || $lang->load(
+                        "$extension.sys",
+                        $source,
+                        null,
+                        false,
+                        true
+                    );
                     break;
                 case 'plugin':
                     $extension = 'plg_' . $item->folder . '_' . $item->element;
                     $source    = JPATH_PLUGINS . '/' . $item->folder . '/' . $item->element;
-                    $lang->load("$extension.sys", JPATH_ADMINISTRATOR, null, false,
-                        true) || $lang->load("$extension.sys", $source, null, false, true);
+                    $lang->load(
+                        "$extension.sys",
+                        JPATH_ADMINISTRATOR,
+                        null,
+                        false,
+                        true
+                    ) || $lang->load("$extension.sys", $source, null, false, true);
                     break;
                 case 'template':
                     $extension = 'tpl_' . $item->element;
                     $source    = $path . '/templates/' . $item->element;
-                    $lang->load("$extension.sys", $path, null, false, true) || $lang->load("$extension.sys", $source,
-                        null, false, true);
+                    $lang->load("$extension.sys", $path, null, false, true) || $lang->load(
+                        "$extension.sys",
+                        $source,
+                        null,
+                        false,
+                        true
+                    );
                     break;
                 case 'package':
                 default:

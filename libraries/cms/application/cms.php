@@ -205,9 +205,9 @@ class JApplicationCms extends JApplicationWeb
         if ($time % 2) {
             // The modulus introduces a little entropy, making the flushing less accurate
             // but fires the query less than half the time.
-            $query = $db->getQuery(true)
-                        ->delete($db->quoteName('#__session'))
-                        ->where($db->quoteName('time') . ' < ' . $db->quote((int)($time - $session->getExpire())));
+            $query = $db->getQuery(true)->delete($db->quoteName('#__session'))->where(
+                    $db->quoteName('time') . ' < ' . $db->quote((int)($time - $session->getExpire()))
+                );
 
             $db->setQuery($query);
             $db->execute();
@@ -216,7 +216,9 @@ class JApplicationCms extends JApplicationWeb
         // Get the session handler from the configuration.
         $handler = $this->get('session_handler', 'none');
 
-        if (($handler != 'database' && ($time % 2 || $session->isNew())) || ($handler == 'database' && $session->isNew())) {
+        if (($handler != 'database' && ($time % 2 || $session->isNew())) || ($handler == 'database' && $session->isNew(
+                ))
+        ) {
             $this->checkSession();
         }
 
@@ -255,10 +257,9 @@ class JApplicationCms extends JApplicationWeb
         $session = JFactory::getSession();
         $user    = JFactory::getUser();
 
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('session_id'))
-                    ->from($db->quoteName('#__session'))
-                    ->where($db->quoteName('session_id') . ' = ' . $db->quote($session->getId()));
+        $query = $db->getQuery(true)->select($db->quoteName('session_id'))->from($db->quoteName('#__session'))->where(
+                $db->quoteName('session_id') . ' = ' . $db->quote($session->getId())
+            );
 
         $db->setQuery($query, 0, 1);
         $exists = $db->loadResult();
@@ -268,14 +269,30 @@ class JApplicationCms extends JApplicationWeb
             $query->clear();
 
             if ($session->isNew()) {
-                $query->insert($db->quoteName('#__session'))
-                      ->columns($db->quoteName('session_id') . ', ' . $db->quoteName('client_id') . ', ' . $db->quoteName('time'))
-                      ->values($db->quote($session->getId()) . ', ' . (int)$this->getClientId() . ', ' . $db->quote((int)time()));
+                $query->insert($db->quoteName('#__session'))->columns(
+                        $db->quoteName('session_id') . ', ' . $db->quoteName('client_id') . ', ' . $db->quoteName(
+                            'time'
+                        )
+                    )->values(
+                        $db->quote($session->getId()) . ', ' . (int)$this->getClientId() . ', ' . $db->quote(
+                            (int)time()
+                        )
+                    );
                 $db->setQuery($query);
             } else {
-                $query->insert($db->quoteName('#__session'))
-                      ->columns($db->quoteName('session_id') . ', ' . $db->quoteName('client_id') . ', ' . $db->quoteName('guest') . ', ' . $db->quoteName('time') . ', ' . $db->quoteName('userid') . ', ' . $db->quoteName('username'))
-                      ->values($db->quote($session->getId()) . ', ' . (int)$this->getClientId() . ', ' . (int)$user->get('guest') . ', ' . $db->quote((int)$session->get('session.timer.start')) . ', ' . (int)$user->get('id') . ', ' . $db->quote($user->get('username')));
+                $query->insert($db->quoteName('#__session'))->columns(
+                        $db->quoteName('session_id') . ', ' . $db->quoteName('client_id') . ', ' . $db->quoteName(
+                            'guest'
+                        ) . ', ' . $db->quoteName('time') . ', ' . $db->quoteName('userid') . ', ' . $db->quoteName(
+                            'username'
+                        )
+                    )->values(
+                        $db->quote($session->getId()) . ', ' . (int)$this->getClientId() . ', ' . (int)$user->get(
+                            'guest'
+                        ) . ', ' . $db->quote((int)$session->get('session.timer.start')) . ', ' . (int)$user->get(
+                            'id'
+                        ) . ', ' . $db->quote($user->get('username'))
+                    );
 
                 $db->setQuery($query);
             }
@@ -353,7 +370,10 @@ class JApplicationCms extends JApplicationWeb
         }
 
         // If gzip compression is enabled in configuration and the server is compliant, compress the output.
-        if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get('output_handler') != 'ob_gzhandler')) {
+        if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get(
+                                                                              'output_handler'
+                                                                          ) != 'ob_gzhandler')
+        ) {
             $this->compress();
 
             // Trigger the onAfterCompress event.
@@ -387,7 +407,9 @@ class JApplicationCms extends JApplicationWeb
             $this->docOptions['directory'] = $this->get('themes.base');
         } // Fall back to constants.
         else {
-            $this->docOptions['directory'] = defined('JPATH_THEMES') ? JPATH_THEMES : (defined('JPATH_BASE') ? JPATH_BASE : __DIR__) . '/themes';
+            $this->docOptions['directory'] = defined('JPATH_THEMES') ? JPATH_THEMES : (defined(
+                    'JPATH_BASE'
+                ) ? JPATH_BASE : __DIR__) . '/themes';
         }
 
         // Parse the document.
@@ -399,8 +421,9 @@ class JApplicationCms extends JApplicationWeb
 
         $caching = false;
 
-        if ($this->isSite() && $this->get('caching') && $this->get('caching', 2) == 2 && !JFactory::getUser()
-                                                                                                  ->get('id')
+        if ($this->isSite() && $this->get('caching') && $this->get('caching', 2) == 2 && !JFactory::getUser()->get(
+                    'id'
+                )
         ) {
             $caching = true;
         }
@@ -845,8 +868,10 @@ class JApplicationCms extends JApplicationWeb
                     }
                 }
             } else {
-                if ($this->input->getCmd('option', '') != $option || $this->input->getCmd('view',
-                        '') != $view || $this->input->getCmd('layout', '') != $layout
+                if ($this->input->getCmd('option', '') != $option || $this->input->getCmd(
+                        'view',
+                        ''
+                    ) != $view || $this->input->getCmd('layout', '') != $layout
                 ) {
                     // Requested a different option/view/layout
                     $redirect = true;
@@ -856,8 +881,12 @@ class JApplicationCms extends JApplicationWeb
             if ($redirect) {
                 // Redirect to the profile edit page
                 $this->enqueueMessage(JText::_('JGLOBAL_PASSWORD_RESET_REQUIRED'), 'notice');
-                $this->redirect(JRoute::_('index.php?option=' . $option . '&view=' . $view . '&layout=' . $layout,
-                    false));
+                $this->redirect(
+                    JRoute::_(
+                        'index.php?option=' . $option . '&view=' . $view . '&layout=' . $layout,
+                        false
+                    )
+                );
             }
         }
     }
@@ -943,8 +972,11 @@ class JApplicationCms extends JApplicationWeb
              */
             if (isset($args[1]) && !empty($args[1]) && (!is_bool($args[1]) && !is_int($args[1]))) {
                 // Log that passing the message to the function is deprecated
-                JLog::add('Passing a message and message type to JFactory::getApplication()->redirect() is deprecated. ' . 'Please set your message via JFactory::getApplication()->enqueueMessage() prior to calling redirect().',
-                    JLog::WARNING, 'deprecated');
+                JLog::add(
+                    'Passing a message and message type to JFactory::getApplication()->redirect() is deprecated. ' . 'Please set your message via JFactory::getApplication()->enqueueMessage() prior to calling redirect().',
+                    JLog::WARNING,
+                    'deprecated'
+                );
 
                 $message = $args[1];
 

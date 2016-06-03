@@ -17,7 +17,8 @@ $data['options'] = !empty($data['options']) ? $data['options'] : array();
 if ($data['view'] instanceof MenusViewItems) {
     $doc = JFactory::getDocument();
 
-    $doc->addStyleDeclaration("
+    $doc->addStyleDeclaration(
+        "
 		/* Fixed filter field in search bar */
 		.js-stools .js-stools-menutype {
 			float: left;
@@ -32,7 +33,8 @@ if ($data['view'] instanceof MenusViewItems) {
 		.js-stools .js-stools-container-bar .js-stools-field-filter .chzn-container {
 			padding: 3px 0;
 		}
-	");
+	"
+    );
 
     // Menutype filter doesn't have to activate the filter bar
     unset($data['view']->activeFilters['menutype']);

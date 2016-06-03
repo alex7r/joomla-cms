@@ -45,8 +45,11 @@ class FOFFormHeaderFieldsearchable extends FOFFormHeaderField
             $onchange = ' onchange="document.adminForm.submit();"';
         }
 
-        return '<input type="text" name="' . $name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars($searchvalue,
-            ENT_COMPAT, 'UTF-8') . '"' . $filterclass . $size . $placeholder . $onchange . $maxLength . '/>';
+        return '<input type="text" name="' . $name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars(
+            $searchvalue,
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '"' . $filterclass . $size . $placeholder . $onchange . $maxLength . '/>';
     }
 
     /**
@@ -66,10 +69,14 @@ class FOFFormHeaderFieldsearchable extends FOFFormHeaderField
 
         $html = '';
 
-        $html .= '<button class="' . $buttonclass . '" onclick="this.form.submit();" title="' . JText::_('JSEARCH_FILTER') . '" >' . "\n";
+        $html .= '<button class="' . $buttonclass . '" onclick="this.form.submit();" title="' . JText::_(
+                'JSEARCH_FILTER'
+            ) . '" >' . "\n";
         $html .= '<i class="icon-search"></i>';
         $html .= '</button>' . "\n";
-        $html .= '<button class="' . $buttonclass . '" onclick="document.adminForm.' . $this->id . '.value=\'\';this.form.submit();" title="' . JText::_('JSEARCH_RESET') . '">' . "\n";
+        $html .= '<button class="' . $buttonclass . '" onclick="document.adminForm.' . $this->id . '.value=\'\';this.form.submit();" title="' . JText::_(
+                'JSEARCH_RESET'
+            ) . '">' . "\n";
         $html .= '<i class="icon-remove"></i>';
         $html .= '</button>' . "\n";
 

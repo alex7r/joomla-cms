@@ -53,32 +53,56 @@ class JLanguageAssociations
             $multilanguageAssociations[$queryKey] = array();
 
             $db                 = JFactory::getDbo();
-            $categoriesExtraSql = (($tablename === '#__categories') ? ' AND c2.extension = ' . $db->quote($extension) : '');
-            $query              = $db->getQuery(true)
-                                     ->select($db->quoteName('c2.language'))
-                                     ->from($db->quoteName($tablename, 'c'))
-                                     ->join('INNER', $db->quoteName('#__associations',
-                                             'a') . ' ON a.id = c.' . $db->quoteName($pk) . ' AND a.context=' . $db->quote($context))
-                                     ->join('INNER', $db->quoteName('#__associations', 'a2') . ' ON a.key = a2.key')
-                                     ->join('INNER', $db->quoteName($tablename,
-                                             'c2') . ' ON a2.id = c2.' . $db->quoteName($pk) . $categoriesExtraSql);
+            $categoriesExtraSql = (($tablename === '#__categories') ? ' AND c2.extension = ' . $db->quote(
+                    $extension
+                ) : '');
+            $query              = $db->getQuery(true)->select($db->quoteName('c2.language'))->from(
+                    $db->quoteName($tablename, 'c')
+                )->join(
+                    'INNER',
+                    $db->quoteName(
+                        '#__associations',
+                        'a'
+                    ) . ' ON a.id = c.' . $db->quoteName($pk) . ' AND a.context=' . $db->quote($context)
+                )->join('INNER', $db->quoteName('#__associations', 'a2') . ' ON a.key = a2.key')->join(
+                    'INNER',
+                    $db->quoteName(
+                        $tablename,
+                        'c2'
+                    ) . ' ON a2.id = c2.' . $db->quoteName($pk) . $categoriesExtraSql
+                );
 
             // Use alias field ?
             if (!empty($aliasField)) {
-                $query->select($query->concatenate(array(
-                        $db->quoteName('c2.' . $pk),
-                        $db->quoteName('c2.' . $aliasField)
-                    ), ':') . ' AS ' . $db->quoteName($pk));
+                $query->select(
+                    $query->concatenate(
+                        array(
+                            $db->quoteName('c2.' . $pk),
+                            $db->quoteName('c2.' . $aliasField)
+                        ),
+                        ':'
+                    ) . ' AS ' . $db->quoteName($pk)
+                );
             } else {
                 $query->select($db->quoteName('c2.' . $pk));
             }
 
             // Use catid field ?
             if (!empty($catField)) {
-                $query->join('INNER', $db->quoteName('#__categories',
-                        'ca') . ' ON ' . $db->quoteName('c2.' . $catField) . ' = ca.id AND ca.extension = ' . $db->quote($extension))
-                      ->select($query->concatenate(array('ca.id', 'ca.alias'),
-                              ':') . ' AS ' . $db->quoteName($catField));
+                $query->join(
+                    'INNER',
+                    $db->quoteName(
+                        '#__categories',
+                        'ca'
+                    ) . ' ON ' . $db->quoteName('c2.' . $catField) . ' = ca.id AND ca.extension = ' . $db->quote(
+                        $extension
+                    )
+                )->select(
+                        $query->concatenate(
+                            array('ca.id', 'ca.alias'),
+                            ':'
+                        ) . ' AS ' . $db->quoteName($catField)
+                    );
             }
 
             $query->where('c.' . $pk . ' = ' . (int)$id);

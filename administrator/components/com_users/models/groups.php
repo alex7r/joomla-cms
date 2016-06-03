@@ -80,13 +80,17 @@ class UsersModelGroups extends JModelList
             $query = $db->getQuery(true);
 
             // Count the objects in the user group.
-            $query->select('map.group_id, COUNT(DISTINCT map.user_id) AS user_count')
-                  ->from($db->quoteName('#__user_usergroup_map', 'map'))
-                  ->join('LEFT', $db->quoteName('#__users',
-                          'u') . ' ON ' . $db->quoteName('u.id') . ' = ' . $db->quoteName('map.user_id'))
-                  ->where($db->quoteName('map.group_id') . ' IN (' . implode(',', $groupIds) . ')')
-                  ->where($db->quoteName('u.block') . ' = 0')
-                  ->group($db->quoteName('map.group_id'));
+            $query->select('map.group_id, COUNT(DISTINCT map.user_id) AS user_count')->from(
+                    $db->quoteName('#__user_usergroup_map', 'map')
+                )->join(
+                    'LEFT',
+                    $db->quoteName(
+                        '#__users',
+                        'u'
+                    ) . ' ON ' . $db->quoteName('u.id') . ' = ' . $db->quoteName('map.user_id')
+                )->where($db->quoteName('map.group_id') . ' IN (' . implode(',', $groupIds) . ')')->where(
+                    $db->quoteName('u.block') . ' = 0'
+                )->group($db->quoteName('map.group_id'));
             $db->setQuery($query);
 
             try {
@@ -157,8 +161,10 @@ class UsersModelGroups extends JModelList
     protected function populateState($ordering = 'a.lft', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
 
         // Load the parameters.
         $params = JComponentHelper::getParams('com_users');
@@ -184,9 +190,10 @@ class UsersModelGroups extends JModelList
         $query->from($db->quoteName('#__usergroups') . ' AS a');
 
         // Add the level in the tree.
-        $query->select('COUNT(DISTINCT c2.id) AS level')
-              ->join('LEFT OUTER', $db->quoteName('#__usergroups') . ' AS c2 ON a.lft > c2.lft AND a.rgt < c2.rgt')
-              ->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
+        $query->select('COUNT(DISTINCT c2.id) AS level')->join(
+                'LEFT OUTER',
+                $db->quoteName('#__usergroups') . ' AS c2 ON a.lft > c2.lft AND a.rgt < c2.rgt'
+            )->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
 
         // Filter the comments over the search string if set.
         $search = $this->getState('filter.search');
@@ -201,8 +208,14 @@ class UsersModelGroups extends JModelList
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.lft')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.lft'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

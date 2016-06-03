@@ -249,7 +249,9 @@ class FOFRenderJoomla extends FOFRenderAbstract
 
         $html .= '<form action="' . $actionUrl . '" method="post" name="adminForm" id="adminForm">' . PHP_EOL;
         $html .= "\t" . '<input type="hidden" name="option" value="' . $input->getCmd('option') . '" />' . PHP_EOL;
-        $html .= "\t" . '<input type="hidden" name="view" value="' . FOFInflector::pluralize($input->getCmd('view')) . '" />' . PHP_EOL;
+        $html .= "\t" . '<input type="hidden" name="view" value="' . FOFInflector::pluralize(
+                $input->getCmd('view')
+            ) . '" />' . PHP_EOL;
         $html .= "\t" . '<input type="hidden" name="task" value="" />' . PHP_EOL;
         $html .= "\t" . '<input type="hidden" name="layout" value="' . $input->getCmd('layout', '') . '" />' . PHP_EOL;
         $html .= "\t" . '<input type="hidden" name="boxchecked" value="" />' . PHP_EOL;
@@ -257,8 +259,8 @@ class FOFRenderJoomla extends FOFRenderAbstract
         $html .= "\t" . '<input type="hidden" name="filter_order" value="' . $filter_order . '" />' . PHP_EOL;
         $html .= "\t" . '<input type="hidden" name="filter_order_Dir" value="' . $filter_order_Dir . '" />' . PHP_EOL;
 
-        $html .= "\t" . '<input type="hidden" name="' . JFactory::getSession()
-                                                                ->getFormToken() . '" value="1" />' . PHP_EOL;
+        $html .= "\t" . '<input type="hidden" name="' . JFactory::getSession()->getFormToken(
+                ) . '" value="1" />' . PHP_EOL;
 
         // Start the table output
         $html .= "\t\t" . '<table class="adminlist" id="adminList">' . PHP_EOL;
@@ -319,8 +321,17 @@ class FOFRenderJoomla extends FOFRenderAbstract
                     $attribs = array(
                         'onchange' => 'document.adminForm.submit();'
                     );
-                    $filter  = JHtml::_('select.genericlist', $options, $header->name, $attribs, 'value', 'text',
-                        $header->value, false, true);
+                    $filter  = JHtml::_(
+                        'select.genericlist',
+                        $options,
+                        $header->name,
+                        $attribs,
+                        'value',
+                        'text',
+                        $header->value,
+                        false,
+                        true
+                    );
                     $filter_html .= "\t\t\t\t\t\t$filter" . PHP_EOL;
                 }
 
@@ -672,8 +683,8 @@ class FOFRenderJoomla extends FOFRenderAbstract
         $html .= "\t" . '<input type="hidden" name="task" value="' . $customTask . '" />' . PHP_EOL;
         $html .= "\t" . '<input type="hidden" name="' . $key . '" value="' . $keyValue . '" />' . PHP_EOL;
 
-        $html .= "\t" . '<input type="hidden" name="' . JFactory::getSession()
-                                                                ->getFormToken() . '" value="1" />' . PHP_EOL;
+        $html .= "\t" . '<input type="hidden" name="' . JFactory::getSession()->getFormToken(
+                ) . '" value="1" />' . PHP_EOL;
 
         $html .= $this->renderFormRaw($form, $model, $input, 'edit');
         $html .= '</form>';

@@ -303,7 +303,9 @@ abstract class JHtml
 
                         if (file_exists($path)) {
                             $md5        = dirname($path) . '/MD5SUM';
-                            $includes[] = JUri::base(true) . "/templates/$template/$folder/$file" . (file_exists($md5) ? ('?' . file_get_contents($md5)) : '');
+                            $includes[] = JUri::base(true) . "/templates/$template/$folder/$file" . (file_exists(
+                                    $md5
+                                ) ? ('?' . file_get_contents($md5)) : '');
 
                             break;
                         } else {
@@ -322,7 +324,11 @@ abstract class JHtml
 
                                     if (file_exists($path)) {
                                         $md5        = dirname($path) . '/MD5SUM';
-                                        $includes[] = JUri::root(true) . "/media/$extension/$element/$folder/$file" . (file_exists($md5) ? ('?' . file_get_contents($md5)) : '');
+                                        $includes[] = JUri::root(
+                                                true
+                                            ) . "/media/$extension/$element/$folder/$file" . (file_exists(
+                                                $md5
+                                            ) ? ('?' . file_get_contents($md5)) : '');
 
                                         break;
                                     }
@@ -332,7 +338,11 @@ abstract class JHtml
 
                                     if (file_exists($path)) {
                                         $md5        = dirname($path) . '/MD5SUM';
-                                        $includes[] = JUri::root(true) . "/media/$extension/$folder/$element/$file" . (file_exists($md5) ? ('?' . file_get_contents($md5)) : '');
+                                        $includes[] = JUri::root(
+                                                true
+                                            ) . "/media/$extension/$folder/$element/$file" . (file_exists(
+                                                $md5
+                                            ) ? ('?' . file_get_contents($md5)) : '');
 
                                         break;
                                     }
@@ -342,7 +352,11 @@ abstract class JHtml
 
                                     if (file_exists($path)) {
                                         $md5        = dirname($path) . '/MD5SUM';
-                                        $includes[] = JUri::root(true) . "/templates/$template/$folder/system/$element/$file" . (file_exists($md5) ? ('?' . file_get_contents($md5)) : '');
+                                        $includes[] = JUri::root(
+                                                true
+                                            ) . "/templates/$template/$folder/system/$element/$file" . (file_exists(
+                                                $md5
+                                            ) ? ('?' . file_get_contents($md5)) : '');
 
                                         break;
                                     }
@@ -352,7 +366,11 @@ abstract class JHtml
 
                                     if (file_exists($path)) {
                                         $md5        = dirname($path) . '/MD5SUM';
-                                        $includes[] = JUri::root(true) . "/media/system/$folder/$element/$file" . (file_exists($md5) ? ('?' . file_get_contents($md5)) : '');
+                                        $includes[] = JUri::root(
+                                                true
+                                            ) . "/media/system/$folder/$element/$file" . (file_exists(
+                                                $md5
+                                            ) ? ('?' . file_get_contents($md5)) : '');
 
                                         break;
                                     }
@@ -362,7 +380,11 @@ abstract class JHtml
 
                                     if (file_exists($path)) {
                                         $md5        = dirname($path) . '/MD5SUM';
-                                        $includes[] = JUri::root(true) . "/media/$extension/$folder/$file" . (file_exists($md5) ? ('?' . file_get_contents($md5)) : '');
+                                        $includes[] = JUri::root(
+                                                true
+                                            ) . "/media/$extension/$folder/$file" . (file_exists(
+                                                $md5
+                                            ) ? ('?' . file_get_contents($md5)) : '');
 
                                         break;
                                     }
@@ -372,7 +394,11 @@ abstract class JHtml
 
                                     if (file_exists($path)) {
                                         $md5        = dirname($path) . '/MD5SUM';
-                                        $includes[] = JUri::root(true) . "/templates/$template/$folder/system/$file" . (file_exists($md5) ? ('?' . file_get_contents($md5)) : '');
+                                        $includes[] = JUri::root(
+                                                true
+                                            ) . "/templates/$template/$folder/system/$file" . (file_exists(
+                                                $md5
+                                            ) ? ('?' . file_get_contents($md5)) : '');
 
                                         break;
                                     }
@@ -382,7 +408,9 @@ abstract class JHtml
 
                                     if (file_exists($path)) {
                                         $md5        = dirname($path) . '/MD5SUM';
-                                        $includes[] = JUri::root(true) . "/media/system/$folder/$file" . (file_exists($md5) ? ('?' . file_get_contents($md5)) : '');
+                                        $includes[] = JUri::root(true) . "/media/system/$folder/$file" . (file_exists(
+                                                $md5
+                                            ) ? ('?' . file_get_contents($md5)) : '');
 
                                         break;
                                     }
@@ -393,7 +421,9 @@ abstract class JHtml
 
                                 if (file_exists($path)) {
                                     $md5        = dirname($path) . '/MD5SUM';
-                                    $includes[] = JUri::root(true) . "/media/system/$folder/$file" . (file_exists($md5) ? ('?' . file_get_contents($md5)) : '');
+                                    $includes[] = JUri::root(true) . "/media/system/$folder/$file" . (file_exists(
+                                            $md5
+                                        ) ? ('?' . file_get_contents($md5)) : '');
 
                                     break;
                                 }
@@ -433,7 +463,9 @@ abstract class JHtml
 
                         if (file_exists($path)) {
                             $md5        = dirname($path) . '/MD5SUM';
-                            $includes[] = JUri::root(true) . "/$file" . (file_exists($md5) ? ('?' . file_get_contents($md5)) : '');
+                            $includes[] = JUri::root(true) . "/$file" . (file_exists($md5) ? ('?' . file_get_contents(
+                                        $md5
+                                    )) : '');
 
                             break;
                         }
@@ -776,7 +808,9 @@ abstract class JHtml
         if ($path_rel) {
             return $file;
         } else {
-            return '<img src="' . $file . '" alt="' . $alt . '" ' . trim((is_array($attribs) ? JArrayHelper::toString($attribs) : $attribs) . ' /') . '>';
+            return '<img src="' . $file . '" alt="' . $alt . '" ' . trim(
+                (is_array($attribs) ? JArrayHelper::toString($attribs) : $attribs) . ' /'
+            ) . '>';
         }
     }
 
@@ -881,7 +915,8 @@ abstract class JHtml
         // Only display the triggers once for each control.
         if (!in_array($id, $done)) {
             $document = JFactory::getDocument();
-            $document->addScriptDeclaration('jQuery(document).ready(function($) {Calendar.setup({
+            $document->addScriptDeclaration(
+                'jQuery(document).ready(function($) {Calendar.setup({
 			// Id of the input field
 			inputField: "' . $id . '",
 			// Format of the input field
@@ -892,7 +927,8 @@ abstract class JHtml
 			align: "Tl",
 			singleClick: true,
 			firstDay: ' . JFactory::getLanguage()->getFirstDay() . '
-			});});');
+			});});'
+            );
             $done[] = $id;
         }
 
@@ -900,9 +936,16 @@ abstract class JHtml
         $btn_style = ($readonly || $disabled) ? ' style="display:none;"' : '';
         $div_class = (!$readonly && !$disabled) ? ' class="input-append"' : '';
 
-        return '<div' . $div_class . '>' . '<input type="text" title="' . ($inputvalue ? static::_('date', $value, null,
-            null) : '') . '" name="' . $name . '" id="' . $id . '" value="' . htmlspecialchars($inputvalue, ENT_COMPAT,
-            'UTF-8') . '" ' . $attribs . ' />' . '<button type="button" class="btn" id="' . $id . '_img"' . $btn_style . '><span class="icon-calendar"></span></button>' . '</div>';
+        return '<div' . $div_class . '>' . '<input type="text" title="' . ($inputvalue ? static::_(
+            'date',
+            $value,
+            null,
+            null
+        ) : '') . '" name="' . $name . '" id="' . $id . '" value="' . htmlspecialchars(
+                   $inputvalue,
+                   ENT_COMPAT,
+                   'UTF-8'
+               ) . '" ' . $attribs . ' />' . '<button type="button" class="btn" id="' . $id . '_img"' . $btn_style . '><span class="icon-calendar"></span></button>' . '</div>';
     }
 
     /**

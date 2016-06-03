@@ -194,10 +194,19 @@ class JBrowser
         if (!empty($this->agent)) {
             $this->_setPlatform();
 
-            if (strpos($this->lowerAgent, 'mobileexplorer') !== false || strpos($this->lowerAgent,
-                    'openwave') !== false || strpos($this->lowerAgent,
-                    'opera mini') !== false || strpos($this->lowerAgent,
-                    'opera mobi') !== false || strpos($this->lowerAgent, 'operamini') !== false
+            if (strpos($this->lowerAgent, 'mobileexplorer') !== false || strpos(
+                                                                             $this->lowerAgent,
+                                                                             'openwave'
+                                                                         ) !== false || strpos(
+                                                                                            $this->lowerAgent,
+                                                                                            'opera mini'
+                                                                                        ) !== false || strpos(
+                                                                                                           $this->lowerAgent,
+                                                                                                           'opera mobi'
+                                                                                                       ) !== false || strpos(
+                                                                                                                          $this->lowerAgent,
+                                                                                                                          'operamini'
+                                                                                                                      ) !== false
             ) {
                 $this->mobile = true;
             } elseif (preg_match('|Opera[/ ]([0-9.]+)|', $this->agent, $version)) {
@@ -223,13 +232,21 @@ class JBrowser
                 $this->setBrowser('chrome');
                 list ($this->majorVersion, $this->minorVersion) = explode('.', $version[1]);
                 $this->mobile = true;
-            } elseif (strpos($this->lowerAgent, 'elaine/') !== false || strpos($this->lowerAgent,
-                    'palmsource') !== false || strpos($this->lowerAgent, 'digital paths') !== false
+            } elseif (strpos($this->lowerAgent, 'elaine/') !== false || strpos(
+                                                                            $this->lowerAgent,
+                                                                            'palmsource'
+                                                                        ) !== false || strpos(
+                                                                                           $this->lowerAgent,
+                                                                                           'digital paths'
+                                                                                       ) !== false
             ) {
                 $this->setBrowser('palm');
                 $this->mobile = true;
-            } elseif ((preg_match('|MSIE ([0-9.]+)|', $this->agent,
-                    $version)) || (preg_match('|Internet Explorer/([0-9.]+)|', $this->agent, $version))
+            } elseif ((preg_match(
+                    '|MSIE ([0-9.]+)|',
+                    $this->agent,
+                    $version
+                )) || (preg_match('|Internet Explorer/([0-9.]+)|', $this->agent, $version))
             ) {
                 $this->setBrowser('msie');
 
@@ -259,8 +276,11 @@ class JBrowser
             } elseif (strpos($this->lowerAgent, 'avantgo') !== false) {
                 $this->setBrowser('avantgo');
                 $this->mobile = true;
-            } elseif (preg_match('|[Kk]onqueror/([0-9]+)|', $this->agent,
-                    $version) || preg_match('|Safari/([0-9]+)\.?([0-9]+)?|', $this->agent, $version)
+            } elseif (preg_match(
+                          '|[Kk]onqueror/([0-9]+)|',
+                          $this->agent,
+                          $version
+                      ) || preg_match('|Safari/([0-9]+)\.?([0-9]+)?|', $this->agent, $version)
             ) {
                 // Konqueror and Apple's Safari both use the KHTML
                 // rendering engine.
@@ -286,8 +306,10 @@ class JBrowser
                 $this->setBrowser('links');
             } elseif (preg_match('|HotJava/([0-9]+)|', $this->agent, $version)) {
                 $this->setBrowser('hotjava');
-            } elseif (strpos($this->agent, 'UP/') !== false || strpos($this->agent,
-                    'UP.B') !== false || strpos($this->agent, 'UP.L') !== false
+            } elseif (strpos($this->agent, 'UP/') !== false || strpos(
+                                                                   $this->agent,
+                                                                   'UP.B'
+                                                               ) !== false || strpos($this->agent, 'UP.L') !== false
             ) {
                 $this->setBrowser('up');
                 $this->mobile = true;
@@ -306,8 +328,10 @@ class JBrowser
             } elseif (strpos($this->lowerAgent, 'wap') !== false) {
                 $this->setBrowser('wap');
                 $this->mobile = true;
-            } elseif (strpos($this->lowerAgent, 'docomo') !== false || strpos($this->lowerAgent,
-                    'portalmmm') !== false
+            } elseif (strpos($this->lowerAgent, 'docomo') !== false || strpos(
+                                                                           $this->lowerAgent,
+                                                                           'portalmmm'
+                                                                       ) !== false
             ) {
                 $this->setBrowser('imode');
                 $this->mobile = true;
@@ -527,8 +551,10 @@ class JBrowser
             }
 
             // Deal with Mozilla pjpeg/jpeg issue
-            if ($this->isBrowser('mozilla') && ($mimetype == 'image/pjpeg') && (strpos($this->accept,
-                        'image/jpeg') !== false)
+            if ($this->isBrowser('mozilla') && ($mimetype == 'image/pjpeg') && (strpos(
+                                                                                    $this->accept,
+                                                                                    'image/jpeg'
+                                                                                ) !== false)
             ) {
                 return true;
             }
@@ -599,8 +625,11 @@ class JBrowser
      */
     public function isSSLConnection()
     {
-        JLog::add('JBrowser::isSSLConnection() is deprecated. Use the isSSLConnection method on the application object instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            'JBrowser::isSSLConnection() is deprecated. Use the isSSLConnection method on the application object instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) || getenv('SSL_PROTOCOL_VERSION'));
     }

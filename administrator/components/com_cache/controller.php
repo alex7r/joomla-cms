@@ -80,11 +80,18 @@ class CacheController extends JControllerLegacy
             $result = $this->getModel('cache')->cleanlist($cid);
 
             if ($result !== array()) {
-                JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_CACHE_EXPIRED_ITEMS_DELETE_ERROR',
-                    implode(', ', $result)), 'error');
+                JFactory::getApplication()->enqueueMessage(
+                    JText::sprintf(
+                        'COM_CACHE_EXPIRED_ITEMS_DELETE_ERROR',
+                        implode(', ', $result)
+                    ),
+                    'error'
+                );
             } else {
-                JFactory::getApplication()
-                        ->enqueueMessage(JText::_('COM_CACHE_EXPIRED_ITEMS_HAVE_BEEN_DELETED'), 'message');
+                JFactory::getApplication()->enqueueMessage(
+                        JText::_('COM_CACHE_EXPIRED_ITEMS_HAVE_BEEN_DELETED'),
+                        'message'
+                    );
             }
         }
         $this->setRedirect('index.php?option=com_cache');

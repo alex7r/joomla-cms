@@ -29,8 +29,11 @@ abstract class JDatabase
      */
     public static function getConnectors()
     {
-        JLog::add('JDatabase::getConnectors() is deprecated, use JDatabaseDriver::getConnectors() instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            'JDatabase::getConnectors() is deprecated, use JDatabaseDriver::getConnectors() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return JDatabaseDriver::getConnectors();
     }
@@ -54,8 +57,11 @@ abstract class JDatabase
      */
     public static function getInstance($options = array())
     {
-        JLog::add('JDatabase::getInstance() is deprecated, use JDatabaseDriver::getInstance() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JDatabase::getInstance() is deprecated, use JDatabaseDriver::getInstance() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return JDatabaseDriver::getInstance($options);
     }
@@ -72,8 +78,11 @@ abstract class JDatabase
      */
     public static function splitSql($query)
     {
-        JLog::add('JDatabase::splitSql() is deprecated, use JDatabaseDriver::splitSql() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JDatabase::splitSql() is deprecated, use JDatabaseDriver::splitSql() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return JDatabaseDriver::splitSql($query);
     }
@@ -88,8 +97,11 @@ abstract class JDatabase
      */
     public static function test()
     {
-        JLog::add('JDatabase::test() is deprecated. Use JDatabaseDriver::isSupported() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JDatabase::test() is deprecated. Use JDatabaseDriver::isSupported() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return static::isSupported();
     }
@@ -105,8 +117,11 @@ abstract class JDatabase
      */
     public function query()
     {
-        JLog::add('JDatabase::query() is deprecated, use JDatabaseDriver::execute() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JDatabase::query() is deprecated, use JDatabaseDriver::execute() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return $this->execute();
     }
@@ -123,8 +138,11 @@ abstract class JDatabase
      */
     public function getErrorMsg($escaped = false)
     {
-        JLog::add('JDatabase::getErrorMsg() is deprecated, use exception handling instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JDatabase::getErrorMsg() is deprecated, use exception handling instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         if ($escaped) {
             return addslashes($this->errorMsg);
@@ -143,8 +161,11 @@ abstract class JDatabase
      */
     public function getErrorNum()
     {
-        JLog::add('JDatabase::getErrorNum() is deprecated, use exception handling instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JDatabase::getErrorNum() is deprecated, use exception handling instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return $this->errorNum;
     }
@@ -164,8 +185,11 @@ abstract class JDatabase
         JLog::add('JDatabase::stderr() is deprecated.', JLog::WARNING, 'deprecated');
 
         if ($this->errorNum != 0) {
-            return JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $this->errorNum,
-                $this->errorMsg) . ($showSQL ? "<br />SQL = <pre>$this->sql</pre>" : '');
+            return JText::sprintf(
+                'JLIB_DATABASE_ERROR_FUNCTION_FAILED',
+                $this->errorNum,
+                $this->errorMsg
+            ) . ($showSQL ? "<br />SQL = <pre>$this->sql</pre>" : '');
         } else {
             return JText::_('JLIB_DATABASE_FUNCTION_NOERROR');
         }

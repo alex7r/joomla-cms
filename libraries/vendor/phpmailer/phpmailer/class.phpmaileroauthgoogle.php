@@ -71,10 +71,12 @@ class PHPMailerOAuthGoogle
 
     private function getProvider()
     {
-        return new League\OAuth2\Client\Provider\Google([
-            'clientId'     => $this->oauthClientId,
-            'clientSecret' => $this->oauthClientSecret
-        ]);
+        return new League\OAuth2\Client\Provider\Google(
+            [
+                'clientId'     => $this->oauthClientId,
+                'clientSecret' => $this->oauthClientSecret
+            ]
+        );
     }
 
     private function getGrant()

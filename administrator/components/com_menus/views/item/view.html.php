@@ -90,8 +90,10 @@ class MenusViewItem extends JViewLegacy
         $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
         $canDo      = $this->canDo;
 
-        JToolbarHelper::title(JText::_($isNew ? 'COM_MENUS_VIEW_NEW_ITEM_TITLE' : 'COM_MENUS_VIEW_EDIT_ITEM_TITLE'),
-            'list menu-add');
+        JToolbarHelper::title(
+            JText::_($isNew ? 'COM_MENUS_VIEW_NEW_ITEM_TITLE' : 'COM_MENUS_VIEW_EDIT_ITEM_TITLE'),
+            'list menu-add'
+        );
 
         // If a new item, can save the item.  Allow users with edit permissions to apply changes to prevent returning to grid.
         if ($isNew && $canDo->get('core.create')) {

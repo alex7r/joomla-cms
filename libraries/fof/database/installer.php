@@ -217,12 +217,21 @@ class FOFDatabaseInstaller
                         $this->db->execute();
 
                         if (version_compare(JVERSION, '3.1', 'lt')) {
-                            JError::setErrorHandling(E_NOTICE, $handlers[E_NOTICE]['mode'],
-                                $handlers[E_NOTICE]['options']);
-                            JError::setErrorHandling(E_WARNING, $handlers[E_WARNING]['mode'],
-                                $handlers[E_WARNING]['options']);
-                            JError::setErrorHandling(E_ERROR, $handlers[E_ERROR]['mode'],
-                                $handlers[E_ERROR]['options']);
+                            JError::setErrorHandling(
+                                E_NOTICE,
+                                $handlers[E_NOTICE]['mode'],
+                                $handlers[E_NOTICE]['options']
+                            );
+                            JError::setErrorHandling(
+                                E_WARNING,
+                                $handlers[E_WARNING]['mode'],
+                                $handlers[E_WARNING]['options']
+                            );
+                            JError::setErrorHandling(
+                                E_ERROR,
+                                $handlers[E_ERROR]['mode'],
+                                $handlers[E_ERROR]['options']
+                            );
                         }
 
                         if (version_compare(JVERSION, '3.1', 'lt') && $this->db->getErrorNum()) {
@@ -306,8 +315,10 @@ class FOFDatabaseInstaller
                 $thisDriverType = (string)$driverTypeTag;
 
                 if (// e.g. $driverType = 'mysqlistupid', $thisDriverType = 'mysqli' => driver matched
-                    strpos($driverType,
-                        $thisDriverType) === 0 // e.g. $driverType = 'stupidmysqli', $thisDriverType = 'mysqli' => driver matched
+                    strpos(
+                        $driverType,
+                        $thisDriverType
+                    ) === 0 // e.g. $driverType = 'stupidmysqli', $thisDriverType = 'mysqli' => driver matched
                     || (substr($driverType, -strlen($thisDriverType)) == $thisDriverType)
                 ) {
                     return $xml;

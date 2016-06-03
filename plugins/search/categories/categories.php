@@ -131,16 +131,21 @@ class PlgSearchCategories extends JPlugin
         $case_when .= $query->concatenate(array($a_id, 'a.alias'), ':');
         $case_when .= ' ELSE ';
         $case_when .= $a_id . ' END as slug';
-        $query->select('a.title, a.description AS text, \'\' AS created, \'2\' AS browsernav, a.id AS catid, ' . $case_when)
-              ->from('#__categories AS a')
-              ->where('(a.title LIKE ' . $text . ' OR a.description LIKE ' . $text . ') AND a.published IN (' . implode(',',
-                      $state) . ') AND a.extension = ' . $db->quote('com_content') . 'AND a.access IN (' . $groups . ')')
-              ->group('a.id, a.title, a.description, a.alias')
-              ->order($order);
+        $query->select(
+            'a.title, a.description AS text, \'\' AS created, \'2\' AS browsernav, a.id AS catid, ' . $case_when
+        )->from('#__categories AS a')->where(
+                '(a.title LIKE ' . $text . ' OR a.description LIKE ' . $text . ') AND a.published IN (' . implode(
+                    ',',
+                    $state
+                ) . ') AND a.extension = ' . $db->quote('com_content') . 'AND a.access IN (' . $groups . ')'
+            )->group('a.id, a.title, a.description, a.alias')->order($order);
 
         if ($app->isSite() && JLanguageMultilang::isEnabled()) {
-            $query->where('a.language in (' . $db->quote(JFactory::getLanguage()
-                                                                 ->getTag()) . ',' . $db->quote('*') . ')');
+            $query->where(
+                'a.language in (' . $db->quote(
+                    JFactory::getLanguage()->getTag()
+                ) . ',' . $db->quote('*') . ')'
+            );
         }
 
         $db->setQuery($query, 0, $limit);

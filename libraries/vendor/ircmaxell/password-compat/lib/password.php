@@ -48,8 +48,10 @@ namespace {
                 return null;
             }
             if (!is_int($algo)) {
-                trigger_error("password_hash() expects parameter 2 to be long, " . gettype($algo) . " given",
-                    E_USER_WARNING);
+                trigger_error(
+                    "password_hash() expects parameter 2 to be long, " . gettype($algo) . " given",
+                    E_USER_WARNING
+                );
 
                 return null;
             }
@@ -60,8 +62,13 @@ namespace {
                     if (isset($options['cost'])) {
                         $cost = $options['cost'];
                         if ($cost < 4 || $cost > 31) {
-                            trigger_error(sprintf("password_hash(): Invalid bcrypt cost parameter specified: %d",
-                                $cost), E_USER_WARNING);
+                            trigger_error(
+                                sprintf(
+                                    "password_hash(): Invalid bcrypt cost parameter specified: %d",
+                                    $cost
+                                ),
+                                E_USER_WARNING
+                            );
 
                             return null;
                         }
@@ -75,8 +82,10 @@ namespace {
                     $resultLength = 60;
                     break;
                 default:
-                    trigger_error(sprintf("password_hash(): Unknown password hashing algorithm: %s", $algo),
-                        E_USER_WARNING);
+                    trigger_error(
+                        sprintf("password_hash(): Unknown password hashing algorithm: %s", $algo),
+                        E_USER_WARNING
+                    );
 
                     return null;
             }
@@ -103,8 +112,14 @@ namespace {
                         return null;
                 }
                 if (PasswordCompat\binary\_strlen($salt) < $required_salt_len) {
-                    trigger_error(sprintf("password_hash(): Provided salt is too short: %d expecting %d",
-                        PasswordCompat\binary\_strlen($salt), $required_salt_len), E_USER_WARNING);
+                    trigger_error(
+                        sprintf(
+                            "password_hash(): Provided salt is too short: %d expecting %d",
+                            PasswordCompat\binary\_strlen($salt),
+                            $required_salt_len
+                        ),
+                        E_USER_WARNING
+                    );
 
                     return null;
                 } elseif (0 == preg_match('#^[a-zA-Z0-9./]+$#D', $salt)) {
@@ -249,7 +264,10 @@ namespace {
                 return false;
             }
             $ret = crypt($password, $hash);
-            if (!is_string($ret) || PasswordCompat\binary\_strlen($ret) != PasswordCompat\binary\_strlen($hash) || PasswordCompat\binary\_strlen($ret) <= 13) {
+            if (!is_string($ret) || PasswordCompat\binary\_strlen($ret) != PasswordCompat\binary\_strlen(
+                    $hash
+                ) || PasswordCompat\binary\_strlen($ret) <= 13
+            ) {
                 return false;
             }
 

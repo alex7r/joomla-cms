@@ -285,9 +285,16 @@ class WebClient
              *   Google encourages manufacturers to exclude the string Mobile from tablet device UA strings.
              *   In some modes Kindle Android devices include the string Mobile but they include the string Silk.
              */
-            if (stripos($userAgent, 'Android 3') !== false || stripos($userAgent,
-                    'Tablet') !== false || stripos($userAgent, 'Mobile') === false || stripos($userAgent,
-                    'Silk') !== false
+            if (stripos($userAgent, 'Android 3') !== false || stripos(
+                                                                  $userAgent,
+                                                                  'Tablet'
+                                                              ) !== false || stripos(
+                                                                                 $userAgent,
+                                                                                 'Mobile'
+                                                                             ) === false || stripos(
+                                                                                                $userAgent,
+                                                                                                'Silk'
+                                                                                            ) !== false
             ) {
                 $this->platform = self::ANDROIDTABLET;
             }
@@ -477,8 +484,11 @@ class WebClient
 
             foreach ($_SERVER as $name => $value) {
                 if (substr($name, 0, 5) == 'HTTP_') {
-                    $this->headers[str_replace(' ', '-',
-                        ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+                    $this->headers[str_replace(
+                        ' ',
+                        '-',
+                        ucwords(strtolower(str_replace('_', ' ', substr($name, 5))))
+                    )] = $value;
                 }
             }
         }

@@ -18,7 +18,8 @@ JHtml::_('formbehavior.chosen', 'select');
 
 JText::script('ERROR');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 		Joomla.submitbutton = function(task)
 		{
 			var form = document.getElementById('item-form');
@@ -27,7 +28,8 @@ JFactory::getDocument()->addScriptDeclaration("
 				Joomla.submitform(task, form);
 			}
 		};
-");
+"
+);
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_menus&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="item-form">

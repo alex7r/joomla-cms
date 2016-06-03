@@ -56,10 +56,9 @@ class UsersModelRemind extends JModelForm
 
         // Find the user id for the given email address.
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('*')
-                    ->from($db->quoteName('#__users'))
-                    ->where($db->quoteName('email') . ' = ' . $db->quote($data['email']));
+        $query = $db->getQuery(true)->select('*')->from($db->quoteName('#__users'))->where(
+                $db->quoteName('email') . ' = ' . $db->quote($data['email'])
+            );
 
         // Get the user id.
         $db->setQuery($query);
@@ -103,8 +102,12 @@ class UsersModelRemind extends JModelForm
         $data['link_html'] = JRoute::_($link, true, $mode);
 
         $subject = JText::sprintf('COM_USERS_EMAIL_USERNAME_REMINDER_SUBJECT', $data['sitename']);
-        $body    = JText::sprintf('COM_USERS_EMAIL_USERNAME_REMINDER_BODY', $data['sitename'], $data['username'],
-            $data['link_text']);
+        $body    = JText::sprintf(
+            'COM_USERS_EMAIL_USERNAME_REMINDER_BODY',
+            $data['sitename'],
+            $data['username'],
+            $data['link_text']
+        );
 
         // Send the password reset request email.
         $return = JFactory::getMailer()->sendMail($data['mailfrom'], $data['fromname'], $user->email, $subject, $body);

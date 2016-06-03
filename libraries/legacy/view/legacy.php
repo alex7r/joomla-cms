@@ -130,8 +130,11 @@ class JViewLegacy extends JObject
 
         // Set the charset (used by the variable escaping functions)
         if (array_key_exists('charset', $config)) {
-            JLog::add('Setting a custom charset for escaping is deprecated. Override JViewLegacy::escape() instead.',
-                JLog::WARNING, 'deprecated');
+            JLog::add(
+                'Setting a custom charset for escaping is deprecated. Override JViewLegacy::escape() instead.',
+                JLog::WARNING,
+                'deprecated'
+            );
             $this->_charset = $config['charset'];
         }
 
@@ -246,7 +249,8 @@ class JViewLegacy extends JObject
                 // Set the alternative template search dir
                 if (isset($app)) {
                     $component = preg_replace('/[^A-Z0-9_\.-]/i', '', $component);
-                    $fallback  = JPATH_THEMES . '/' . $app->getTemplate() . '/html/' . $component . '/' . $this->getName();
+                    $fallback  = JPATH_THEMES . '/' . $app->getTemplate(
+                        ) . '/html/' . $component . '/' . $this->getName();
                     $this->_addPath('template', $fallback);
                 }
                 break;
@@ -335,8 +339,13 @@ class JViewLegacy extends JObject
 
         // Load the language file for the template
         $lang = JFactory::getLanguage();
-        $lang->load('tpl_' . $template, JPATH_BASE, null, false, true) || $lang->load('tpl_' . $template,
-            JPATH_THEMES . "/$template", null, false, true);
+        $lang->load('tpl_' . $template, JPATH_BASE, null, false, true) || $lang->load(
+            'tpl_' . $template,
+            JPATH_THEMES . "/$template",
+            null,
+            false,
+            true
+        );
 
         // Change the template folder if alternative layout is in different template
         if (isset($layoutTemplate) && $layoutTemplate != '_' && $layoutTemplate != $template) {
@@ -350,8 +359,10 @@ class JViewLegacy extends JObject
 
         // If alternate layout can't be found, fall back to default layout
         if ($this->_template == false) {
-            $filetofind      = $this->_createFileName('',
-                array('name' => 'default' . (isset($tpl) ? '_' . $tpl : $tpl)));
+            $filetofind      = $this->_createFileName(
+                '',
+                array('name' => 'default' . (isset($tpl) ? '_' . $tpl : $tpl))
+            );
             $this->_template = JPath::find($this->_path['template'], $filetofind);
         }
 

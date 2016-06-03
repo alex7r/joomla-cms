@@ -84,8 +84,11 @@ class CategoriesModelCategory extends JModelAdmin
         }
 
         // Get the form.
-        $form = $this->loadForm('com_categories.category' . $extension, 'category',
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_categories.category' . $extension,
+            'category',
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
 
         if (empty($form)) {
             return false;
@@ -228,10 +231,9 @@ class CategoriesModelCategory extends JModelAdmin
 
             // Deleting old association for these items
             $db    = $this->getDbo();
-            $query = $db->getQuery(true)
-                        ->delete('#__associations')
-                        ->where($db->quoteName('context') . ' = ' . $db->quote($this->associationsContext))
-                        ->where($db->quoteName('id') . ' IN (' . implode(',', $associations) . ')');
+            $query = $db->getQuery(true)->delete('#__associations')->where(
+                    $db->quoteName('context') . ' = ' . $db->quote($this->associationsContext)
+                )->where($db->quoteName('id') . ' IN (' . implode(',', $associations) . ')');
             $db->setQuery($query);
 
             try {
@@ -588,12 +590,24 @@ class CategoriesModelCategory extends JModelAdmin
                 $extension = substr($app->getUserState('com_categories.categories.filter.extension'), 4);
                 $filters   = (array)$app->getUserState('com_categories.categories.' . $extension . '.filter');
 
-                $data->set('published', $app->input->getInt('published',
-                    ((isset($filters['published']) && $filters['published'] !== '') ? $filters['published'] : null)));
-                $data->set('language',
-                    $app->input->getString('language', (!empty($filters['language']) ? $filters['language'] : null)));
-                $data->set('access', $app->input->getInt('access',
-                    (!empty($filters['access']) ? $filters['access'] : JFactory::getConfig()->get('access'))));
+                $data->set(
+                    'published',
+                    $app->input->getInt(
+                        'published',
+                        ((isset($filters['published']) && $filters['published'] !== '') ? $filters['published'] : null)
+                    )
+                );
+                $data->set(
+                    'language',
+                    $app->input->getString('language', (!empty($filters['language']) ? $filters['language'] : null))
+                );
+                $data->set(
+                    'access',
+                    $app->input->getInt(
+                        'access',
+                        (!empty($filters['access']) ? $filters['access'] : JFactory::getConfig()->get('access'))
+                    )
+                );
             }
         }
 
@@ -654,8 +668,12 @@ class CategoriesModelCategory extends JModelAdmin
 
         if ($assoc) {
             if ($result->id != null) {
-                $result->associations = ArrayHelper::toInteger(CategoriesHelper::getAssociations($result->id,
-                    $result->extension));
+                $result->associations = ArrayHelper::toInteger(
+                    CategoriesHelper::getAssociations(
+                        $result->id,
+                        $result->extension
+                    )
+                );
             } else {
                 $result->associations = array();
             }
@@ -715,10 +733,25 @@ class CategoriesModelCategory extends JModelAdmin
             $cName = ucfirst($eName) . ucfirst($section) . 'HelperCategory';
 
             if (class_exists($cName) && is_callable(array($cName, 'onPrepareForm'))) {
-                $lang->load($component, JPATH_BASE, null, false, false) || $lang->load($component,
-                    JPATH_BASE . '/components/' . $component, null, false, false) || $lang->load($component, JPATH_BASE,
-                    $lang->getDefault(), false, false) || $lang->load($component,
-                    JPATH_BASE . '/components/' . $component, $lang->getDefault(), false, false);
+                $lang->load($component, JPATH_BASE, null, false, false) || $lang->load(
+                    $component,
+                    JPATH_BASE . '/components/' . $component,
+                    null,
+                    false,
+                    false
+                ) || $lang->load(
+                    $component,
+                    JPATH_BASE,
+                    $lang->getDefault(),
+                    false,
+                    false
+                ) || $lang->load(
+                    $component,
+                    JPATH_BASE . '/components/' . $component,
+                    $lang->getDefault(),
+                    false,
+                    false
+                );
                 call_user_func_array(array($cName, 'onPrepareForm'), array(&$form));
 
                 // Check for an error.
@@ -919,11 +952,9 @@ class CategoriesModelCategory extends JModelAdmin
             }
 
             // Copy is a bit tricky, because we also need to copy the children
-            $query->clear()
-                  ->select('id')
-                  ->from($db->quoteName('#__categories'))
-                  ->where('lft > ' . (int)$this->table->lft)
-                  ->where('rgt < ' . (int)$this->table->rgt);
+            $query->clear()->select('id')->from($db->quoteName('#__categories'))->where(
+                    'lft > ' . (int)$this->table->lft
+                )->where('rgt < ' . (int)$this->table->rgt);
             $db->setQuery($query);
             $childIds = $db->loadColumn();
 
@@ -956,8 +987,11 @@ class CategoriesModelCategory extends JModelAdmin
             $this->table->rgt      = null;
 
             // Alter the title & alias
-            list($title, $alias) = $this->generateNewTitle($this->table->parent_id, $this->table->alias,
-                $this->table->title);
+            list($title, $alias) = $this->generateNewTitle(
+                $this->table->parent_id,
+                $this->table->alias,
+                $this->table->title
+            );
             $this->table->title = $title;
             $this->table->alias = $alias;
 
@@ -1088,10 +1122,9 @@ class CategoriesModelCategory extends JModelAdmin
             // Check if we are moving to a different parent
             if ($parentId != $this->table->parent_id) {
                 // Add the child node ids to the children array.
-                $query->clear()
-                      ->select('id')
-                      ->from($db->quoteName('#__categories'))
-                      ->where($db->quoteName('lft') . ' BETWEEN ' . (int)$this->table->lft . ' AND ' . (int)$this->table->rgt);
+                $query->clear()->select('id')->from($db->quoteName('#__categories'))->where(
+                        $db->quoteName('lft') . ' BETWEEN ' . (int)$this->table->lft . ' AND ' . (int)$this->table->rgt
+                    );
                 $db->setQuery($query);
 
                 try {

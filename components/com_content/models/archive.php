@@ -138,8 +138,12 @@ class ContentModelArchive extends ContentModelArticles
 
         // Get list limit
         $itemid = $app->input->get('Itemid', 0, 'int');
-        $limit  = $app->getUserStateFromRequest('com_content.archive.list' . $itemid . '.limit', 'limit',
-            $params->get('display_num'), 'uint');
+        $limit  = $app->getUserStateFromRequest(
+            'com_content.archive.list' . $itemid . '.limit',
+            'limit',
+            $params->get('display_num'),
+            'uint'
+        );
         $this->setState('list.limit', $limit);
     }
 

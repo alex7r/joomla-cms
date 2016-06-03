@@ -53,9 +53,9 @@ class PlgUserJoomla extends JPlugin
             return false;
         }
 
-        $query = $this->db->getQuery(true)
-                          ->delete($this->db->quoteName('#__session'))
-                          ->where($this->db->quoteName('userid') . ' = ' . (int)$user['id']);
+        $query = $this->db->getQuery(true)->delete($this->db->quoteName('#__session'))->where(
+                $this->db->quoteName('userid') . ' = ' . (int)$user['id']
+            );
 
         try {
             $this->db->setQuery($query)->execute();
@@ -106,18 +106,29 @@ class PlgUserJoomla extends JPlugin
                     $lang->load('plg_user_joomla', JPATH_ADMINISTRATOR);
 
                     // Compute the mail subject.
-                    $emailSubject = JText::sprintf('PLG_USER_JOOMLA_NEW_USER_EMAIL_SUBJECT', $user['name'],
-                        $config = $this->app->get('sitename'));
+                    $emailSubject = JText::sprintf(
+                        'PLG_USER_JOOMLA_NEW_USER_EMAIL_SUBJECT',
+                        $user['name'],
+                        $config = $this->app->get('sitename')
+                    );
 
                     // Compute the mail body.
-                    $emailBody = JText::sprintf('PLG_USER_JOOMLA_NEW_USER_EMAIL_BODY', $user['name'],
-                        $this->app->get('sitename'), JUri::root(), $user['username'], $user['password_clear']);
+                    $emailBody = JText::sprintf(
+                        'PLG_USER_JOOMLA_NEW_USER_EMAIL_BODY',
+                        $user['name'],
+                        $this->app->get('sitename'),
+                        JUri::root(),
+                        $user['username'],
+                        $user['password_clear']
+                    );
 
                     // Assemble the email data...the sexy way!
-                    $mail = JFactory::getMailer()->setSender(array(
-                        $this->app->get('mailfrom'),
-                        $this->app->get('fromname')
-                    ))->addRecipient($user['email'])->setSubject($emailSubject)->setBody($emailBody);
+                    $mail = JFactory::getMailer()->setSender(
+                        array(
+                            $this->app->get('mailfrom'),
+                            $this->app->get('fromname')
+                        )
+                    )->addRecipient($user['email'])->setSubject($emailSubject)->setBody($emailBody);
 
                     // Set application language back to default if we changed it
                     if ($userLocale != $defaultLocale) {
@@ -185,12 +196,11 @@ class PlgUserJoomla extends JPlugin
         $this->app->checkSession();
 
         // Update the user related fields for the Joomla sessions table.
-        $query = $this->db->getQuery(true)
-                          ->update($this->db->quoteName('#__session'))
-                          ->set($this->db->quoteName('guest') . ' = ' . $this->db->quote($instance->guest))
-                          ->set($this->db->quoteName('username') . ' = ' . $this->db->quote($instance->username))
-                          ->set($this->db->quoteName('userid') . ' = ' . (int)$instance->id)
-                          ->where($this->db->quoteName('session_id') . ' = ' . $this->db->quote($session->getId()));
+        $query = $this->db->getQuery(true)->update($this->db->quoteName('#__session'))->set(
+                $this->db->quoteName('guest') . ' = ' . $this->db->quote($instance->guest)
+            )->set($this->db->quoteName('username') . ' = ' . $this->db->quote($instance->username))->set(
+                $this->db->quoteName('userid') . ' = ' . (int)$instance->id
+            )->where($this->db->quoteName('session_id') . ' = ' . $this->db->quote($session->getId()));
 
         try {
             $this->db->setQuery($query)->execute();
@@ -252,8 +262,10 @@ class PlgUserJoomla extends JPlugin
         $instance->set('groups', array($defaultUserGroup));
 
         // If autoregister is set let's register the user
-        $autoregister = isset($options['autoregister']) ? $options['autoregister'] : $this->params->get('autoregister',
-            1);
+        $autoregister = isset($options['autoregister']) ? $options['autoregister'] : $this->params->get(
+            'autoregister',
+            1
+        );
 
         if ($autoregister) {
             if (!$instance->save()) {
@@ -300,10 +312,9 @@ class PlgUserJoomla extends JPlugin
         $forceLogout = $this->params->get('forceLogout', 1);
 
         if ($forceLogout) {
-            $query = $this->db->getQuery(true)
-                              ->delete($this->db->quoteName('#__session'))
-                              ->where($this->db->quoteName('userid') . ' = ' . (int)$user['id'])
-                              ->where($this->db->quoteName('client_id') . ' = ' . (int)$options['clientid']);
+            $query = $this->db->getQuery(true)->delete($this->db->quoteName('#__session'))->where(
+                    $this->db->quoteName('userid') . ' = ' . (int)$user['id']
+                )->where($this->db->quoteName('client_id') . ' = ' . (int)$options['clientid']);
 
             try {
                 $this->db->setQuery($query)->execute();

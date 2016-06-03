@@ -118,11 +118,10 @@ class JApplicationAdministrator extends JApplicationCms
         $userid = $user->get('id');
 
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('*')
-                    ->from($db->quoteName('#__messages_cfg'))
-                    ->where($db->quoteName('user_id') . ' = ' . (int)$userid, 'AND')
-                    ->where($db->quoteName('cfg_name') . ' = ' . $db->quote('auto_purge'), 'AND');
+        $query = $db->getQuery(true)->select('*')->from($db->quoteName('#__messages_cfg'))->where(
+                $db->quoteName('user_id') . ' = ' . (int)$userid,
+                'AND'
+            )->where($db->quoteName('cfg_name') . ' = ' . $db->quote('auto_purge'), 'AND');
         $db->setQuery($query);
         $config = $db->loadObject();
 
@@ -140,10 +139,10 @@ class JApplicationAdministrator extends JApplicationCms
             $past      = JFactory::getDate(time() - $purge * 86400);
             $pastStamp = $past->toSql();
 
-            $query->clear()
-                  ->delete($db->quoteName('#__messages'))
-                  ->where($db->quoteName('date_time') . ' < ' . $db->quote($pastStamp), 'AND')
-                  ->where($db->quoteName('user_id_to') . ' = ' . (int)$userid, 'AND');
+            $query->clear()->delete($db->quoteName('#__messages'))->where(
+                    $db->quoteName('date_time') . ' < ' . $db->quote($pastStamp),
+                    'AND'
+                )->where($db->quoteName('user_id_to') . ' = ' . (int)$userid, 'AND');
             $db->setQuery($query);
             $db->execute();
         }
@@ -168,8 +167,10 @@ class JApplicationAdministrator extends JApplicationCms
             if ($lang->hasKey('JERROR_MAGIC_QUOTES')) {
                 $this->enqueueMessage(JText::_('JERROR_MAGIC_QUOTES'), 'error');
             } else {
-                $this->enqueueMessage('Your host needs to disable magic_quotes_gpc to run this version of Joomla!',
-                    'error');
+                $this->enqueueMessage(
+                    'Your host needs to disable magic_quotes_gpc to run this version of Joomla!',
+                    'error'
+                );
             }
         }
 
@@ -189,8 +190,12 @@ class JApplicationAdministrator extends JApplicationCms
          * $this->input->getCmd('option'); or $this->input->getCmd('view');
          * ex: due of the sef urls
          */
-        $this->checkUserRequireReset('com_admin', 'profile', 'edit',
-            'com_admin/profile.save,com_admin/profile.apply,com_login/logout');
+        $this->checkUserRequireReset(
+            'com_admin',
+            'profile',
+            'edit',
+            'com_admin/profile.save,com_admin/profile.apply,com_login/logout'
+        );
 
         // Dispatch the application
         $this->dispatch();
@@ -354,11 +359,12 @@ class JApplicationAdministrator extends JApplicationCms
 
         // Load the template name from the database
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('template, s.params')
-                    ->from('#__template_styles as s')
-                    ->join('LEFT',
-                        '#__extensions as e ON e.type=' . $db->quote('template') . ' AND e.element=s.template AND e.client_id=s.client_id');
+        $query = $db->getQuery(true)->select('template, s.params')->from('#__template_styles as s')->join(
+                'LEFT',
+                '#__extensions as e ON e.type=' . $db->quote(
+                    'template'
+                ) . ' AND e.element=s.template AND e.client_id=s.client_id'
+            );
 
         if ($admin_style) {
             $query->where('s.client_id = 1 AND id = ' . (int)$admin_style . ' AND e.enabled = 1', 'OR');
@@ -418,11 +424,17 @@ class JApplicationAdministrator extends JApplicationCms
         $config   = JFactory::getConfig();
         $rootUser = $config->get('root_user');
 
-        if (property_exists('JConfig', 'root_user') && (JFactory::getUser()
-                                                                ->get('username') == $rootUser || JFactory::getUser()->id === (string)$rootUser)
+        if (property_exists('JConfig', 'root_user') && (JFactory::getUser()->get(
+                        'username'
+                    ) == $rootUser || JFactory::getUser()->id === (string)$rootUser)
         ) {
-            $this->enqueueMessage(JText::sprintf('JWARNING_REMOVE_ROOT_USER',
-                'index.php?option=com_config&task=config.removeroot&' . JSession::getFormToken() . '=1'), 'notice');
+            $this->enqueueMessage(
+                JText::sprintf(
+                    'JWARNING_REMOVE_ROOT_USER',
+                    'index.php?option=com_config&task=config.removeroot&' . JSession::getFormToken() . '=1'
+                ),
+                'notice'
+            );
         }
 
         parent::render();

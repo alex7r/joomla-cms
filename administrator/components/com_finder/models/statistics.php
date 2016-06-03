@@ -38,26 +38,23 @@ class FinderModelStatistics extends JModelLegacy
         $db->setQuery($query);
         $data->link_count = $db->loadResult();
 
-        $query->clear()
-              ->select('COUNT(id)')
-              ->from($db->quoteName('#__finder_taxonomy'))
-              ->where($db->quoteName('parent_id') . ' = 1');
+        $query->clear()->select('COUNT(id)')->from($db->quoteName('#__finder_taxonomy'))->where(
+                $db->quoteName('parent_id') . ' = 1'
+            );
         $db->setQuery($query);
         $data->taxonomy_branch_count = $db->loadResult();
 
-        $query->clear()
-              ->select('COUNT(id)')
-              ->from($db->quoteName('#__finder_taxonomy'))
-              ->where($db->quoteName('parent_id') . ' > 1');
+        $query->clear()->select('COUNT(id)')->from($db->quoteName('#__finder_taxonomy'))->where(
+                $db->quoteName('parent_id') . ' > 1'
+            );
         $db->setQuery($query);
         $data->taxonomy_node_count = $db->loadResult();
 
-        $query->clear()
-              ->select('t.title AS type_title, COUNT(a.link_id) AS link_count')
-              ->from($db->quoteName('#__finder_links') . ' AS a')
-              ->join('INNER', $db->quoteName('#__finder_types') . ' AS t ON t.id = a.type_id')
-              ->group('a.type_id, t.title')
-              ->order($db->quoteName('type_title'), 'ASC');
+        $query->clear()->select('t.title AS type_title, COUNT(a.link_id) AS link_count')->from(
+                $db->quoteName('#__finder_links') . ' AS a'
+            )->join('INNER', $db->quoteName('#__finder_types') . ' AS t ON t.id = a.type_id')->group(
+                'a.type_id, t.title'
+            )->order($db->quoteName('type_title'), 'ASC');
         $db->setQuery($query);
         $data->type_list = $db->loadObjectList();
 
@@ -65,9 +62,19 @@ class FinderModelStatistics extends JModelLegacy
         $plugins = JPluginHelper::getPlugin('finder');
 
         foreach ($plugins as $plugin) {
-            $lang->load('plg_finder_' . $plugin->name . '.sys', JPATH_ADMINISTRATOR, null, false,
-                true) || $lang->load('plg_finder_' . $plugin->name . '.sys', JPATH_PLUGINS . '/finder/' . $plugin->name,
-                null, false, true);
+            $lang->load(
+                'plg_finder_' . $plugin->name . '.sys',
+                JPATH_ADMINISTRATOR,
+                null,
+                false,
+                true
+            ) || $lang->load(
+                'plg_finder_' . $plugin->name . '.sys',
+                JPATH_PLUGINS . '/finder/' . $plugin->name,
+                null,
+                false,
+                true
+            );
         }
 
         return $data;

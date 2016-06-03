@@ -47,15 +47,22 @@ $assoc      = JLanguageAssociations::isEnabled();
                            title="<?php echo JText::_('COM_MENUS_ITEMS_SEARCH_FILTER'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
                 <div class="filter-select">
                     <label class="selectlabel" for="menutype">
                         <?php echo JText::_('TPL_HATHOR_COM_MENUS_MENU'); ?>
                     </label>
                     <select name="menutype" id="menutype">
-                        <?php echo JHtml::_('select.options', JHtml::_('menu.menus'), 'value', 'text',
-                            $this->state->get('filter.menutype')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('menu.menus'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.menutype')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_level">
@@ -63,8 +70,13 @@ $assoc      = JLanguageAssociations::isEnabled();
                     </label>
                     <select name="filter_level" id="filter_level">
                         <option value=""><?php echo JText::_('COM_MENUS_OPTION_SELECT_LEVEL'); ?></option>
-                        <?php echo JHtml::_('select.options', $this->f_levels, 'value', 'text',
-                            $this->state->get('filter.level')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            $this->f_levels,
+                            'value',
+                            'text',
+                            $this->state->get('filter.level')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_published">
@@ -72,9 +84,14 @@ $assoc      = JLanguageAssociations::isEnabled();
                     </label>
                     <select name="filter_published" id="filter_published">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                        <?php echo JHtml::_('select.options',
-                            JHtml::_('jgrid.publishedOptions', array('archived' => false)), 'value', 'text',
-                            $this->state->get('filter.published'), true); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('jgrid.publishedOptions', array('archived' => false)),
+                            'value',
+                            'text',
+                            $this->state->get('filter.published'),
+                            true
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_access">
@@ -82,8 +99,13 @@ $assoc      = JLanguageAssociations::isEnabled();
                     </label>
                     <select name="filter_access" id="filter_access">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_ACCESS'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text',
-                            $this->state->get('filter.access')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('access.assetgroups'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.access')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_language">
@@ -91,8 +113,13 @@ $assoc      = JLanguageAssociations::isEnabled();
                     </label>
                     <select name="filter_language" id="filter_language">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value',
-                            'text', $this->state->get('filter.language')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('contentlanguage.existing', true, true),
+                            'value',
+                            'text',
+                            $this->state->get('filter.language')
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -121,8 +148,13 @@ $assoc      = JLanguageAssociations::isEnabled();
                         <?php endif; ?>
                     </th>
                     <th class="title access-col">
-                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'JGRID_HEADING_ACCESS',
+                            'access_level',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="10%">
                         <?php echo JText::_('JGRID_HEADING_MENU_ITEM_TYPE'); ?>
@@ -134,13 +166,23 @@ $assoc      = JLanguageAssociations::isEnabled();
                     if ($assoc):
                         ?>
                         <th class="width-5">
-                            <?php echo JHtml::_('grid.sort', 'COM_MENUS_HEADING_ASSOCIATION', 'association', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_MENUS_HEADING_ASSOCIATION',
+                                'association',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     <?php endif; ?>
                     <th class="language-col">
-                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'JGRID_HEADING_LANGUAGE',
+                            'language',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap id-col">
                         <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -154,8 +196,10 @@ $assoc      = JLanguageAssociations::isEnabled();
                     $orderkey = array_search($item->id, $this->ordering[$item->parent_id]);
                     $canCreate = $user->authorise('core.create', 'com_menus.menu.' . $menutypeid);
                     $canEdit = $user->authorise('core.edit', 'com_menus.menu.' . $menutypeid);
-                    $canCheckin = $user->authorise('core.manage',
-                            'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
+                    $canCheckin = $user->authorise(
+                            'core.manage',
+                            'com_checkin'
+                        ) || $item->checked_out == $user->get('id') || $item->checked_out == 0;
                     $canChange = $user->authorise('core.edit.state', 'com_menus.menu.' . $menutypeid) && $canCheckin;
                     ?>
                     <tr class="row<?php echo $i % 2; ?>">
@@ -165,11 +209,19 @@ $assoc      = JLanguageAssociations::isEnabled();
                         <td>
                             <?php echo str_repeat('<span class="gi">|&mdash;</span>', $item->level - 1) ?>
                             <?php if ($item->checked_out) : ?>
-                                <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time,
-                                    'items.', $canCheckin); ?>
+                                <?php echo JHtml::_(
+                                    'jgrid.checkedout',
+                                    $i,
+                                    $item->editor,
+                                    $item->checked_out_time,
+                                    'items.',
+                                    $canCheckin
+                                ); ?>
                             <?php endif; ?>
                             <?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_menus&task=item.edit&id=' . (int)$item->id); ?>">
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_menus&task=item.edit&id=' . (int)$item->id
+                                ); ?>">
                                     <?php echo $this->escape($item->title); ?></a>
                             <?php else : ?>
                                 <?php echo $this->escape($item->title); ?>
@@ -180,8 +232,11 @@ $assoc      = JLanguageAssociations::isEnabled();
                                     <?php if (empty($item->note)) : ?>
                                         <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
                                     <?php else : ?>
-                                        <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS_NOTE',
-                                            $this->escape($item->alias), $this->escape($item->note)); ?>
+                                        <?php echo JText::sprintf(
+                                            'JGLOBAL_LIST_ALIAS_NOTE',
+                                            $this->escape($item->alias),
+                                            $this->escape($item->note)
+                                        ); ?>
                                     <?php endif; ?>
                                 <?php elseif ($item->type == 'url' && $item->note) : ?>
                                     <?php echo JText::sprintf('JGLOBAL_LIST_NOTE', $this->escape($item->note)); ?>
@@ -193,12 +248,21 @@ $assoc      = JLanguageAssociations::isEnabled();
                         <td class="order">
                             <?php if ($canChange) : ?>
                                 <?php if ($saveOrder) : ?>
-                                    <span><?php echo $this->pagination->orderUpIcon($i,
-                                            isset($this->ordering[$item->parent_id][$orderkey - 1]), 'items.orderup',
-                                            'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                                    <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total,
-                                            isset($this->ordering[$item->parent_id][$orderkey + 1]), 'items.orderdown',
-                                            'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                    <span><?php echo $this->pagination->orderUpIcon(
+                                            $i,
+                                            isset($this->ordering[$item->parent_id][$orderkey - 1]),
+                                            'items.orderup',
+                                            'JLIB_HTML_MOVE_UP',
+                                            $ordering
+                                        ); ?></span>
+                                    <span><?php echo $this->pagination->orderDownIcon(
+                                            $i,
+                                            $this->pagination->total,
+                                            isset($this->ordering[$item->parent_id][$orderkey + 1]),
+                                            'items.orderdown',
+                                            'JLIB_HTML_MOVE_DOWN',
+                                            $ordering
+                                        ); ?></span>
                                 <?php endif; ?>
                                 <?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
                                 <input type="text" name="order[]"
@@ -213,26 +277,49 @@ $assoc      = JLanguageAssociations::isEnabled();
                         </td>
                         <td class="nowrap">
 					<span
-                        title="<?php echo isset($item->item_type_desc) ? htmlspecialchars($this->escape($item->item_type_desc),
-                            ENT_COMPAT, 'UTF-8') : ''; ?>">
+                        title="<?php echo isset($item->item_type_desc) ? htmlspecialchars(
+                            $this->escape($item->item_type_desc),
+                            ENT_COMPAT,
+                            'UTF-8'
+                        ) : ''; ?>">
 						<?php echo $this->escape($item->item_type); ?></span>
                         </td>
                         <td class="center">
                             <?php if ($item->type == 'component') : ?>
                                 <?php if ($item->language == '*' || $item->home == '0'): ?>
-                                    <?php echo JHtml::_('jgrid.isdefault', $item->home, $i, 'items.',
-                                        ($item->language != '*' || !$item->home) && $canChange); ?>
+                                    <?php echo JHtml::_(
+                                        'jgrid.isdefault',
+                                        $item->home,
+                                        $i,
+                                        'items.',
+                                        ($item->language != '*' || !$item->home) && $canChange
+                                    ); ?>
                                 <?php elseif ($canChange): ?>
-                                    <a href="<?php echo JRoute::_('index.php?option=com_menus&task=items.unsetDefault&cid[]=' . $item->id . '&' . JSession::getFormToken() . '=1'); ?>">
-                                        <?php echo JHtml::_('image', 'mod_languages/' . $item->language_image . '.gif',
-                                            $item->language_title, array(
-                                                'title' => JText::sprintf('COM_MENUS_GRID_UNSET_LANGUAGE',
-                                                    $item->language_title)
-                                            ), true); ?>
+                                    <a href="<?php echo JRoute::_(
+                                        'index.php?option=com_menus&task=items.unsetDefault&cid[]=' . $item->id . '&' . JSession::getFormToken(
+                                        ) . '=1'
+                                    ); ?>">
+                                        <?php echo JHtml::_(
+                                            'image',
+                                            'mod_languages/' . $item->language_image . '.gif',
+                                            $item->language_title,
+                                            array(
+                                                'title' => JText::sprintf(
+                                                    'COM_MENUS_GRID_UNSET_LANGUAGE',
+                                                    $item->language_title
+                                                )
+                                            ),
+                                            true
+                                        ); ?>
                                     </a>
                                 <?php else: ?>
-                                    <?php echo JHtml::_('image', 'mod_languages/' . $item->language_image . '.gif',
-                                        $item->language_title, array('title' => $item->language_title), true); ?>
+                                    <?php echo JHtml::_(
+                                        'image',
+                                        'mod_languages/' . $item->language_image . '.gif',
+                                        $item->language_title,
+                                        array('title' => $item->language_title),
+                                        true
+                                    ); ?>
                                 <?php endif; ?>
                             <?php endif; ?>
                         </td>
@@ -251,10 +338,13 @@ $assoc      = JLanguageAssociations::isEnabled();
                             <?php elseif ($item->language == '*'): ?>
                                 <?php echo JText::alt('JALL', 'language'); ?>
                             <?php else: ?>
-                                <?php echo $item->language_title ? JHtml::_('image',
-                                        'mod_languages/' . $item->language_image . '.gif', $item->language_title,
+                                <?php echo $item->language_title ? JHtml::_(
+                                        'image',
+                                        'mod_languages/' . $item->language_image . '.gif',
+                                        $item->language_title,
                                         array('title' => $item->language_title),
-                                        true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                        true
+                                    ) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                             <?php endif; ?>
                         </td>
                         <td class="center">
@@ -271,10 +361,15 @@ $assoc      = JLanguageAssociations::isEnabled();
 
             <?php //Load the batch processing form.is user is allowed ?>
             <?php if ($user->authorise('core.create', 'com_menus') || $user->authorise('core.edit', 'com_menus')) : ?>
-                <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                    'title'  => JText::_('COM_MENUS_BATCH_OPTIONS'),
-                    'footer' => $this->loadTemplate('batch_footer')
-                ), $this->loadTemplate('batch_body')); ?>
+                <?php echo JHtml::_(
+                    'bootstrap.renderModal',
+                    'collapseModal',
+                    array(
+                        'title'  => JText::_('COM_MENUS_BATCH_OPTIONS'),
+                        'footer' => $this->loadTemplate('batch_footer')
+                    ),
+                    $this->loadTemplate('batch_body')
+                ); ?>
             <?php endif; ?>
 
             <input type="hidden" name="task" value=""/>

@@ -84,8 +84,13 @@ class SimplePie_File
         if (class_exists('idna_convert')) {
             $idn    = new idna_convert();
             $parsed = SimplePie_Misc::parse_url($url);
-            $url    = SimplePie_Misc::compress_parse_url($parsed['scheme'], $idn->encode($parsed['authority']),
-                $parsed['path'], $parsed['query'], $parsed['fragment']);
+            $url    = SimplePie_Misc::compress_parse_url(
+                $parsed['scheme'],
+                $idn->encode($parsed['authority']),
+                $parsed['path'],
+                $parsed['query'],
+                $parsed['fragment']
+            );
         }
         $this->url       = $url;
         $this->useragent = $useragent;
@@ -115,8 +120,11 @@ class SimplePie_File
                 curl_setopt($fp, CURLOPT_REFERER, $url);
                 curl_setopt($fp, CURLOPT_USERAGENT, $useragent);
                 curl_setopt($fp, CURLOPT_HTTPHEADER, $headers2);
-                if (!ini_get('open_basedir') && !ini_get('safe_mode') && version_compare(SimplePie_Misc::get_curl_version(),
-                        '7.15.2', '>=')
+                if (!ini_get('open_basedir') && !ini_get('safe_mode') && version_compare(
+                        SimplePie_Misc::get_curl_version(),
+                        '7.15.2',
+                        '>='
+                    )
                 ) {
                     curl_setopt($fp, CURLOPT_FOLLOWLOCATION, 1);
                     curl_setopt($fp, CURLOPT_MAXREDIRS, $redirects);
@@ -140,19 +148,28 @@ class SimplePie_File
                         $this->headers     = $parser->headers;
                         $this->body        = $parser->body;
                         $this->status_code = $parser->status_code;
-                        if ((in_array($this->status_code, array(
-                                    300,
-                                    301,
-                                    302,
-                                    303,
-                                    307
-                                )) || $this->status_code > 307 && $this->status_code < 400) && isset($this->headers['location']) && $this->redirects < $redirects
+                        if ((in_array(
+                                 $this->status_code,
+                                 array(
+                                     300,
+                                     301,
+                                     302,
+                                     303,
+                                     307
+                                 )
+                             ) || $this->status_code > 307 && $this->status_code < 400) && isset($this->headers['location']) && $this->redirects < $redirects
                         ) {
                             $this->redirects++;
                             $location = SimplePie_Misc::absolutize_url($this->headers['location'], $url);
 
-                            return $this->__construct($location, $timeout, $redirects, $headers, $useragent,
-                                $force_fsockopen);
+                            return $this->__construct(
+                                $location,
+                                $timeout,
+                                $redirects,
+                                $headers,
+                                $useragent,
+                                $force_fsockopen
+                            );
                         }
                     }
                 }
@@ -211,19 +228,28 @@ class SimplePie_File
                             $this->headers     = $parser->headers;
                             $this->body        = $parser->body;
                             $this->status_code = $parser->status_code;
-                            if ((in_array($this->status_code, array(
-                                        300,
-                                        301,
-                                        302,
-                                        303,
-                                        307
-                                    )) || $this->status_code > 307 && $this->status_code < 400) && isset($this->headers['location']) && $this->redirects < $redirects
+                            if ((in_array(
+                                     $this->status_code,
+                                     array(
+                                         300,
+                                         301,
+                                         302,
+                                         303,
+                                         307
+                                     )
+                                 ) || $this->status_code > 307 && $this->status_code < 400) && isset($this->headers['location']) && $this->redirects < $redirects
                             ) {
                                 $this->redirects++;
                                 $location = SimplePie_Misc::absolutize_url($this->headers['location'], $url);
 
-                                return $this->__construct($location, $timeout, $redirects, $headers, $useragent,
-                                    $force_fsockopen);
+                                return $this->__construct(
+                                    $location,
+                                    $timeout,
+                                    $redirects,
+                                    $headers,
+                                    $useragent,
+                                    $force_fsockopen
+                                );
                             }
                             if (isset($this->headers['content-encoding'])) {
                                 // Hey, we act dumb elsewhere, so let's do that here too
@@ -246,7 +272,10 @@ class SimplePie_File
                                             if (($decompressed = gzuncompress($this->body)) !== false) {
                                                 $this->body = $decompressed;
                                             } else {
-                                                if (function_exists('gzdecode') && ($decompressed = gzdecode($this->body)) !== false) {
+                                                if (function_exists('gzdecode') && ($decompressed = gzdecode(
+                                                        $this->body
+                                                    )) !== false
+                                                ) {
                                                     $this->body = $decompressed;
                                                 } else {
                                                     $this->error   = 'Unable to decode HTTP "deflate" stream';

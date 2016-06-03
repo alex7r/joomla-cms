@@ -49,8 +49,11 @@ class JUcmContent extends JUcmBase
             $this->table = $table;
         } else {
             $tableObject = json_decode($this->type->type->table);
-            $this->table = JTable::getInstance($tableObject->special->type, $tableObject->special->prefix,
-                $tableObject->special->config);
+            $this->table = JTable::getInstance(
+                $tableObject->special->type,
+                $tableObject->special->prefix,
+                $tableObject->special->config
+            );
         }
     }
 
@@ -176,10 +179,12 @@ class JUcmContent extends JUcmBase
     {
         $db        = JFactory::getDbo();
         $queryccid = $db->getQuery(true);
-        $queryccid->select($db->quoteName('ucm_id'))->from($db->quoteName('#__ucm_base'))->where(array(
-            $db->quoteName('ucm_item_id') . ' = ' . $db->quote($contentItemId),
-            $db->quoteName('ucm_type_id') . ' = ' . $db->quote($typeId)
-        ));
+        $queryccid->select($db->quoteName('ucm_id'))->from($db->quoteName('#__ucm_base'))->where(
+            array(
+                $db->quoteName('ucm_item_id') . ' = ' . $db->quote($contentItemId),
+                $db->quoteName('ucm_type_id') . ' = ' . $db->quote($typeId)
+            )
+        );
         $db->setQuery($queryccid);
         $primaryKey = $db->loadResult();
 
@@ -205,10 +210,9 @@ class JUcmContent extends JUcmBase
             $pk = implode(',', $pk);
         }
 
-        $query = $db->getQuery(true)
-                    ->delete('#__ucm_content')
-                    ->where($db->quoteName('core_type_id') . ' = ' . (int)$type->type_id)
-                    ->where($db->quoteName('core_content_item_id') . ' IN (' . $pk . ')');
+        $query = $db->getQuery(true)->delete('#__ucm_content')->where(
+                $db->quoteName('core_type_id') . ' = ' . (int)$type->type_id
+            )->where($db->quoteName('core_content_item_id') . ' IN (' . $pk . ')');
 
         $db->setQuery($query);
         $db->execute();

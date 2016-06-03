@@ -11,8 +11,11 @@ defined('JPATH_BASE') or die;
 
 $data = $displayData;
 
-$metatitle = JHtml::tooltipText(JText::_($data->tip ? $data->tip : $data->title),
-    JText::_('JGLOBAL_CLICK_TO_SORT_THIS_COLUMN'), 0);
+$metatitle = JHtml::tooltipText(
+    JText::_($data->tip ? $data->tip : $data->title),
+    JText::_('JGLOBAL_CLICK_TO_SORT_THIS_COLUMN'),
+    0
+);
 JHtml::_('bootstrap.tooltip');
 ?>
 <a href="#" onclick="return false;" class="js-stools-column-order hasTooltip" data-order="<?php echo $data->order; ?>"

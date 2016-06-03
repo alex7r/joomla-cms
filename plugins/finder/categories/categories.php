@@ -226,13 +226,14 @@ class PlgFinderCategories extends FinderIndexerAdapter
      */
     protected function getStateQuery()
     {
-        $query = $this->db->getQuery(true)
-                          ->select($this->db->quoteName('a.id'))
-                          ->select($this->db->quoteName('a.parent_id'))
-                          ->select('a.' . $this->state_field . ' AS state, c.published AS cat_state')
-                          ->select('a.access, c.access AS cat_access')
-                          ->from($this->db->quoteName('#__categories') . ' AS a')
-                          ->join('LEFT', '#__categories AS c ON c.id = a.parent_id');
+        $query = $this->db->getQuery(true)->select($this->db->quoteName('a.id'))->select(
+                $this->db->quoteName('a.parent_id')
+            )->select('a.' . $this->state_field . ' AS state, c.published AS cat_state')->select(
+                'a.access, c.access AS cat_access'
+            )->from($this->db->quoteName('#__categories') . ' AS a')->join(
+                'LEFT',
+                '#__categories AS c ON c.id = a.parent_id'
+            );
 
         return $query;
     }
@@ -362,10 +363,18 @@ class PlgFinderCategories extends FinderIndexerAdapter
 
         // Check if we can use the supplied SQL query.
         $query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)
-                                                                ->select('a.id, a.title, a.alias, a.description AS summary, a.extension')
-                                                                ->select('a.created_user_id AS created_by, a.modified_time AS modified, a.modified_user_id AS modified_by')
-                                                                ->select('a.metakey, a.metadesc, a.metadata, a.language, a.lft, a.parent_id, a.level')
-                                                                ->select('a.created_time AS start_date, a.published AS state, a.access, a.params');
+                                                                ->select(
+                                                                    'a.id, a.title, a.alias, a.description AS summary, a.extension'
+                                                                )
+                                                                ->select(
+                                                                    'a.created_user_id AS created_by, a.modified_time AS modified, a.modified_user_id AS modified_by'
+                                                                )
+                                                                ->select(
+                                                                    'a.metakey, a.metadesc, a.metadata, a.language, a.lft, a.parent_id, a.level'
+                                                                )
+                                                                ->select(
+                                                                    'a.created_time AS start_date, a.published AS state, a.access, a.params'
+                                                                );
 
         // Handle the alias CASE WHEN portion of the query.
         $case_when_item_alias = ' CASE WHEN ';

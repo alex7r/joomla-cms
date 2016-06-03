@@ -9,9 +9,9 @@
 
 defined('_JEXEC') or die;
 
-$app  = JFactory::getApplication();
+$app = JFactory::getApplication();
 $lang = JFactory::getLanguage();
-$doc  = JFactory::getDocument();
+$doc = JFactory::getDocument();
 
 // Gets the FrontEnd Main page Uri
 $frontEndUri = JUri::getInstance(JUri::root());
@@ -98,7 +98,9 @@ if ($this->params->get('logoFile')) {
 <div id="containerwrap">
     <!-- Header Logo -->
     <div id="header">
-        <h1 class="title"><?php echo $this->params->get('showSiteName') ? $app->get('sitename') . " " . JText::_('JADMINISTRATION') : JText::_('JADMINISTRATION'); ?></h1>
+        <h1 class="title"><?php echo $this->params->get('showSiteName') ? $app->get('sitename') . " " . JText::_(
+                    'JADMINISTRATION'
+                ) : JText::_('JADMINISTRATION'); ?></h1>
     </div><!-- end header -->
     <!-- Content Area -->
     <div id="content">

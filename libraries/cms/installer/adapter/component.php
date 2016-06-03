@@ -94,12 +94,11 @@ class JInstallerAdapterComponent extends JInstallerAdapter
             // Try to delete existing failed records before retrying
             $db = $this->db;
 
-            $query = $db->getQuery(true)
-                        ->select($db->qn('extension_id'))
-                        ->from($db->qn('#__extensions'))
-                        ->where($db->qn('name') . ' = ' . $db->q($this->extension->name))
-                        ->where($db->qn('type') . ' = ' . $db->q($this->extension->type))
-                        ->where($db->qn('element') . ' = ' . $db->q($this->extension->element));
+            $query = $db->getQuery(true)->select($db->qn('extension_id'))->from($db->qn('#__extensions'))->where(
+                    $db->qn('name') . ' = ' . $db->q($this->extension->name)
+                )->where($db->qn('type') . ' = ' . $db->q($this->extension->type))->where(
+                    $db->qn('element') . ' = ' . $db->q($this->extension->element)
+                );
 
             $db->setQuery($query);
 
@@ -122,8 +121,9 @@ class JInstallerAdapterComponent extends JInstallerAdapter
             try {
                 $this->extension->store();
             } catch (RuntimeException $e) {
-                throw new RuntimeException(JText::_('JLIB_INSTALLER_ERROR_COMP_DISCOVER_STORE_DETAILS'), $e->getCode(),
-                    $e);
+                throw new RuntimeException(
+                    JText::_('JLIB_INSTALLER_ERROR_COMP_DISCOVER_STORE_DETAILS'), $e->getCode(), $e
+                );
             }
         }
     }
@@ -145,11 +145,9 @@ class JInstallerAdapterComponent extends JInstallerAdapter
         $table = JTable::getInstance('menu');
 
         // Get the ids of the menu items
-        $query = $db->getQuery(true)
-                    ->select('id')
-                    ->from('#__menu')
-                    ->where($db->quoteName('client_id') . ' = 1')
-                    ->where($db->quoteName('component_id') . ' = ' . (int)$id);
+        $query = $db->getQuery(true)->select('id')->from('#__menu')->where($db->quoteName('client_id') . ' = 1')->where(
+                $db->quoteName('component_id') . ' = ' . (int)$id
+            );
 
         $db->setQuery($query);
 
@@ -206,8 +204,10 @@ class JInstallerAdapterComponent extends JInstallerAdapter
         }
 
         // Get the admin and site paths for the component
-        $this->parent->setPath('extension_administrator',
-            JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $this->extension->element));
+        $this->parent->setPath(
+            'extension_administrator',
+            JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $this->extension->element)
+        );
         $this->parent->setPath('extension_site', JPath::clean(JPATH_SITE . '/components/' . $this->extension->element));
 
         // Copy the admin path as it's used as a common base
@@ -305,21 +305,22 @@ class JInstallerAdapterComponent extends JInstallerAdapter
         }
 
         // Remove categories for this component
-        $query->clear()
-              ->delete('#__categories')
-              ->where('extension=' . $db->quote($this->element), 'OR')
-              ->where('extension LIKE ' . $db->quote($this->element . '.%'));
+        $query->clear()->delete('#__categories')->where('extension=' . $db->quote($this->element), 'OR')->where(
+                'extension LIKE ' . $db->quote($this->element . '.%')
+            );
         $db->setQuery($query);
         $db->execute();
 
         // Clobber any possible pending updates
         $update = JTable::getInstance('update');
-        $uid    = $update->find(array(
-            'element'   => $this->extension->element,
-            'type'      => 'component',
-            'client_id' => 1,
-            'folder'    => ''
-        ));
+        $uid    = $update->find(
+            array(
+                'element'   => $this->extension->element,
+                'type'      => 'component',
+                'client_id' => 1,
+                'folder'    => ''
+            )
+        );
 
         if ($uid) {
             $update->delete($uid);
@@ -330,8 +331,11 @@ class JInstallerAdapterComponent extends JInstallerAdapter
             // Delete the component site directory
             if (is_dir($this->parent->getPath('extension_site'))) {
                 if (!JFolder::delete($this->parent->getPath('extension_site'))) {
-                    JLog::add(JText::_('JLIB_INSTALLER_ERROR_COMP_UNINSTALL_FAILED_REMOVE_DIRECTORY_SITE'),
-                        JLog::WARNING, 'jerror');
+                    JLog::add(
+                        JText::_('JLIB_INSTALLER_ERROR_COMP_UNINSTALL_FAILED_REMOVE_DIRECTORY_SITE'),
+                        JLog::WARNING,
+                        'jerror'
+                    );
                     $retval = false;
                 }
             }
@@ -339,8 +343,11 @@ class JInstallerAdapterComponent extends JInstallerAdapter
             // Delete the component admin directory
             if (is_dir($this->parent->getPath('extension_administrator'))) {
                 if (!JFolder::delete($this->parent->getPath('extension_administrator'))) {
-                    JLog::add(JText::_('JLIB_INSTALLER_ERROR_COMP_UNINSTALL_FAILED_REMOVE_DIRECTORY_ADMIN'),
-                        JLog::WARNING, 'jerror');
+                    JLog::add(
+                        JText::_('JLIB_INSTALLER_ERROR_COMP_UNINSTALL_FAILED_REMOVE_DIRECTORY_ADMIN'),
+                        JLog::WARNING,
+                        'jerror'
+                    );
                     $retval = false;
                 }
             }
@@ -431,10 +438,20 @@ class JInstallerAdapterComponent extends JInstallerAdapter
         $admin_components = JFolder::folders(JPATH_ADMINISTRATOR . '/components');
 
         foreach ($site_components as $component) {
-            if (file_exists(JPATH_SITE . '/components/' . $component . '/' . str_replace('com_', '',
-                    $component) . '.xml')) {
-                $manifest_details = JInstaller::parseXMLInstallFile(JPATH_SITE . '/components/' . $component . '/' . str_replace('com_',
-                        '', $component) . '.xml');
+            if (file_exists(
+                JPATH_SITE . '/components/' . $component . '/' . str_replace(
+                    'com_',
+                    '',
+                    $component
+                ) . '.xml'
+            )) {
+                $manifest_details = JInstaller::parseXMLInstallFile(
+                    JPATH_SITE . '/components/' . $component . '/' . str_replace(
+                        'com_',
+                        '',
+                        $component
+                    ) . '.xml'
+                );
                 $extension        = JTable::getInstance('extension');
                 $extension->set('type', 'component');
                 $extension->set('client_id', 0);
@@ -449,10 +466,20 @@ class JInstallerAdapterComponent extends JInstallerAdapter
         }
 
         foreach ($admin_components as $component) {
-            if (file_exists(JPATH_ADMINISTRATOR . '/components/' . $component . '/' . str_replace('com_', '',
-                    $component) . '.xml')) {
-                $manifest_details = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/' . $component . '/' . str_replace('com_',
-                        '', $component) . '.xml');
+            if (file_exists(
+                JPATH_ADMINISTRATOR . '/components/' . $component . '/' . str_replace(
+                    'com_',
+                    '',
+                    $component
+                ) . '.xml'
+            )) {
+                $manifest_details = JInstaller::parseXMLInstallFile(
+                    JPATH_ADMINISTRATOR . '/components/' . $component . '/' . str_replace(
+                        'com_',
+                        '',
+                        $component
+                    ) . '.xml'
+                );
                 $extension        = JTable::getInstance('extension');
                 $extension->set('type', 'component');
                 $extension->set('client_id', 1);
@@ -512,13 +539,18 @@ class JInstallerAdapterComponent extends JInstallerAdapter
          * If the component site or admin directory already exists, then we will assume that the component is already
          * installed or another component is using that directory.
          */
-        if (file_exists($this->parent->getPath('extension_site')) || file_exists($this->parent->getPath('extension_administrator'))) {
+        if (file_exists($this->parent->getPath('extension_site')) || file_exists(
+                $this->parent->getPath('extension_administrator')
+            )
+        ) {
             // Look for an update function or update tag
             $updateElement = $this->getManifest()->update;
 
             // Upgrade manually set or update function available or update tag detected
-            if ($this->parent->isUpgrade() || ($this->parent->manifestClass && method_exists($this->parent->manifestClass,
-                        'update')) || $updateElement
+            if ($this->parent->isUpgrade() || ($this->parent->manifestClass && method_exists(
+                        $this->parent->manifestClass,
+                        'update'
+                    )) || $updateElement
             ) {
                 // If there is a matching extension mark this as an update
                 $this->setRoute('update');
@@ -526,13 +558,21 @@ class JInstallerAdapterComponent extends JInstallerAdapter
                 // We didn't have overwrite set, find an update function or find an update tag so lets call it safe
                 if (file_exists($this->parent->getPath('extension_site'))) {
                     // If the site exists say so.
-                    throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ERROR_COMP_INSTALL_DIR_SITE',
-                        $this->parent->getPath('extension_site')));
+                    throw new RuntimeException(
+                        JText::sprintf(
+                            'JLIB_INSTALLER_ERROR_COMP_INSTALL_DIR_SITE',
+                            $this->parent->getPath('extension_site')
+                        )
+                    );
                 }
 
                 // If the admin exists say so
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ERROR_COMP_INSTALL_DIR_ADMIN',
-                    $this->parent->getPath('extension_administrator')));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ERROR_COMP_INSTALL_DIR_ADMIN',
+                        $this->parent->getPath('extension_administrator')
+                    )
+                );
             }
         }
 
@@ -558,23 +598,34 @@ class JInstallerAdapterComponent extends JInstallerAdapter
             }
 
             if ($result === false) {
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_COMP_FAIL_SITE_FILES',
-                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route))));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_COMP_FAIL_SITE_FILES',
+                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route))
+                    )
+                );
             }
         }
 
         // Copy admin files
         if ($this->getManifest()->administration->files) {
             if ($this->route == 'update') {
-                $result = $this->parent->parseFiles($this->getManifest()->administration->files, 1,
-                    $this->oldAdminFiles);
+                $result = $this->parent->parseFiles(
+                    $this->getManifest()->administration->files,
+                    1,
+                    $this->oldAdminFiles
+                );
             } else {
                 $result = $this->parent->parseFiles($this->getManifest()->administration->files, 1);
             }
 
             if ($result === false) {
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_COMP_FAIL_ADMIN_FILES',
-                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route))));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_COMP_FAIL_ADMIN_FILES',
+                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route))
+                    )
+                );
             }
         }
 
@@ -585,8 +636,12 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 
             if (!file_exists($path['dest']) || $this->parent->isOverwrite()) {
                 if (!$this->parent->copyFiles(array($path))) {
-                    throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_COMP_COPY_MANIFEST',
-                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route))));
+                    throw new RuntimeException(
+                        JText::sprintf(
+                            'JLIB_INSTALLER_ABORT_COMP_COPY_MANIFEST',
+                            JText::_('JLIB_INSTALLER_' . strtoupper($this->route))
+                        )
+                    );
                 }
             }
         }
@@ -607,8 +662,13 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 
         if (!file_exists($this->parent->getPath('extension_site'))) {
             if (!$created = JFolder::create($this->parent->getPath('extension_site'))) {
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ERROR_COMP_FAILED_TO_CREATE_DIRECTORY',
-                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route)), $this->parent->getPath('extension_site')));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ERROR_COMP_FAILED_TO_CREATE_DIRECTORY',
+                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
+                        $this->parent->getPath('extension_site')
+                    )
+                );
             }
         }
 
@@ -617,10 +677,12 @@ class JInstallerAdapterComponent extends JInstallerAdapter
          * the installation, let's add it to the installation step stack
          */
         if ($created) {
-            $this->parent->pushStep(array(
-                'type' => 'folder',
-                'path' => $this->parent->getPath('extension_site')
-            ));
+            $this->parent->pushStep(
+                array(
+                    'type' => 'folder',
+                    'path' => $this->parent->getPath('extension_site')
+                )
+            );
         }
 
         // If the component admin directory does not exist, let's create it
@@ -628,8 +690,13 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 
         if (!file_exists($this->parent->getPath('extension_administrator'))) {
             if (!$created = JFolder::create($this->parent->getPath('extension_administrator'))) {
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ERROR_COMP_FAILED_TO_CREATE_DIRECTORY',
-                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route)), $this->parent->getPath('extension_site')));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ERROR_COMP_FAILED_TO_CREATE_DIRECTORY',
+                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
+                        $this->parent->getPath('extension_site')
+                    )
+                );
             }
         }
 
@@ -638,10 +705,12 @@ class JInstallerAdapterComponent extends JInstallerAdapter
          * back the installation, let's add it to the installation step stack
          */
         if ($created) {
-            $this->parent->pushStep(array(
-                'type' => 'folder',
-                'path' => $this->parent->getPath('extension_administrator')
-            ));
+            $this->parent->pushStep(
+                array(
+                    'type' => 'folder',
+                    'path' => $this->parent->getPath('extension_administrator')
+                )
+            );
         }
     }
 
@@ -659,11 +728,13 @@ class JInstallerAdapterComponent extends JInstallerAdapter
         $update = JTable::getInstance('update');
 
         // Clobber any possible pending updates
-        $uid = $update->find(array(
-            'element'   => $this->element,
-            'type'      => $this->extension->type,
-            'client_id' => 1
-        ));
+        $uid = $update->find(
+            array(
+                'element'   => $this->element,
+                'type'      => $this->extension->type,
+                'client_id' => 1
+            )
+        );
 
         if ($uid) {
             $update->delete($uid);
@@ -673,8 +744,12 @@ class JInstallerAdapterComponent extends JInstallerAdapter
         if ($this->route != 'discover_install') {
             if (!$this->parent->copyManifest()) {
                 // Install failed, roll back changes
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_COMP_COPY_SETUP',
-                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route))));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_COMP_COPY_SETUP',
+                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route))
+                    )
+                );
             }
         }
 
@@ -703,8 +778,13 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 
             if (!$asset->store()) {
                 // Install failed, roll back changes
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_ROLLBACK',
-                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route)), $this->extension->getError()));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_ROLLBACK',
+                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
+                        $this->extension->getError()
+                    )
+                );
             }
         }
     }
@@ -725,13 +805,10 @@ class JInstallerAdapterComponent extends JInstallerAdapter
         $option = $this->get('element');
 
         // If a component exists with this option in the table then we don't need to add menus
-        $query = $db->getQuery(true)
-                    ->select('m.id, e.extension_id')
-                    ->from('#__menu AS m')
-                    ->join('LEFT', '#__extensions AS e ON m.component_id = e.extension_id')
-                    ->where('m.parent_id = 1')
-                    ->where('m.client_id = 1')
-                    ->where('e.element = ' . $db->quote($option));
+        $query = $db->getQuery(true)->select('m.id, e.extension_id')->from('#__menu AS m')->join(
+                'LEFT',
+                '#__extensions AS e ON m.component_id = e.extension_id'
+            )->where('m.parent_id = 1')->where('m.client_id = 1')->where('e.element = ' . $db->quote($option));
 
         $db->setQuery($query);
 
@@ -758,11 +835,9 @@ class JInstallerAdapterComponent extends JInstallerAdapter
         // Only try to detect the component ID if it's not provided
         if (empty($component_id)) {
             // Lets find the extension id
-            $query->clear()
-                  ->select('e.extension_id')
-                  ->from('#__extensions AS e')
-                  ->where('e.type = ' . $db->quote('component'))
-                  ->where('e.element = ' . $db->quote($option));
+            $query->clear()->select('e.extension_id')->from('#__extensions AS e')->where(
+                    'e.type = ' . $db->quote('component')
+                )->where('e.element = ' . $db->quote($option));
 
             $db->setQuery($query);
             $component_id = $db->loadResult();
@@ -795,7 +870,8 @@ class JInstallerAdapterComponent extends JInstallerAdapter
             $data['published']    = 0;
             $data['parent_id']    = 1;
             $data['component_id'] = $component_id;
-            $data['img']          = ((string)$menuElement->attributes()->img) ? (string)$menuElement->attributes()->img : 'class:component';
+            $data['img']          = ((string)$menuElement->attributes()->img) ? (string)$menuElement->attributes(
+            )->img : 'class:component';
             $data['home']         = 0;
             $data['path']         = '';
             $data['params']       = '';
@@ -843,7 +919,8 @@ class JInstallerAdapterComponent extends JInstallerAdapter
             $data['published']    = 0;
             $data['parent_id']    = $parent_id;
             $data['component_id'] = $component_id;
-            $data['img']          = ((string)$child->attributes()->img) ? (string)$child->attributes()->img : 'class:component';
+            $data['img']          = ((string)$child->attributes()->img) ? (string)$child->attributes(
+            )->img : 'class:component';
             $data['home']         = 0;
 
             // Set the sub menu link
@@ -921,15 +998,11 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 
         if (!$table->bind($data) || !$table->check() || !$table->store()) {
             // The menu item already exists. Delete it and retry instead of throwing an error.
-            $query = $db->getQuery(true)
-                        ->select('id')
-                        ->from('#__menu')
-                        ->where('menutype = ' . $db->q($data['menutype']))
-                        ->where('client_id = 1')
-                        ->where('link = ' . $db->q($data['link']))
-                        ->where('type = ' . $db->q($data['type']))
-                        ->where('parent_id = ' . $db->q($data['parent_id']))
-                        ->where('home = ' . $db->q($data['home']));
+            $query = $db->getQuery(true)->select('id')->from('#__menu')->where(
+                    'menutype = ' . $db->q($data['menutype'])
+                )->where('client_id = 1')->where('link = ' . $db->q($data['link']))->where(
+                    'type = ' . $db->q($data['type'])
+                )->where('parent_id = ' . $db->q($data['parent_id']))->where('home = ' . $db->q($data['home']));
 
             $db->setQuery($query);
             $menu_id = $db->loadResult();
@@ -976,12 +1049,13 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 
         // Update all menu items which contain 'index.php?option=com_extension' or 'index.php?option=com_extension&...'
         // to use the new component id.
-        $query = $db->getQuery(true)
-                    ->update('#__menu')
-                    ->set('component_id = ' . $db->quote($component_id))
-                    ->where("type = " . $db->quote('component'))
-                    ->where('client_id = 0')
-                    ->where('link LIKE ' . $db->quote('index.php?option=' . $option) . " OR link LIKE '" . $db->escape('index.php?option=' . $option . '&') . "%'");
+        $query = $db->getQuery(true)->update('#__menu')->set('component_id = ' . $db->quote($component_id))->where(
+                "type = " . $db->quote('component')
+            )->where('client_id = 0')->where(
+                'link LIKE ' . $db->quote('index.php?option=' . $option) . " OR link LIKE '" . $db->escape(
+                    'index.php?option=' . $option . '&'
+                ) . "%'"
+            );
 
         $db->setQuery($query);
 
@@ -1021,8 +1095,10 @@ class JInstallerAdapterComponent extends JInstallerAdapter
     {
         // Set the installation target paths
         $this->parent->setPath('extension_site', JPath::clean(JPATH_SITE . '/components/' . $this->element));
-        $this->parent->setPath('extension_administrator',
-            JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $this->element));
+        $this->parent->setPath(
+            'extension_administrator',
+            JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $this->element)
+        );
 
         // Copy the admin path as it's used as a common base
         $this->parent->setPath('extension_root', $this->parent->getPath('extension_administrator'));
@@ -1092,12 +1168,11 @@ class JInstallerAdapterComponent extends JInstallerAdapter
         if ($deleteExisting) {
             $db = $this->parent->getDbo();
 
-            $query = $db->getQuery(true)
-                        ->select($db->qn('extension_id'))
-                        ->from($db->qn('#__extensions'))
-                        ->where($db->qn('name') . ' = ' . $db->q($this->extension->name))
-                        ->where($db->qn('type') . ' = ' . $db->q($this->extension->type))
-                        ->where($db->qn('element') . ' = ' . $db->q($this->extension->element));
+            $query = $db->getQuery(true)->select($db->qn('extension_id'))->from($db->qn('#__extensions'))->where(
+                    $db->qn('name') . ' = ' . $db->q($this->extension->name)
+                )->where($db->qn('type') . ' = ' . $db->q($this->extension->type))->where(
+                    $db->qn('element') . ' = ' . $db->q($this->extension->element)
+                );
 
             $db->setQuery($query);
 
@@ -1134,8 +1209,12 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 
         if (!$couldStore && $deleteExisting) {
             // Install failed, roll back changes
-            throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_COMP_INSTALL_ROLLBACK',
-                $this->extension->getError()));
+            throw new RuntimeException(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ABORT_COMP_INSTALL_ROLLBACK',
+                    $this->extension->getError()
+                )
+            );
         }
 
         if (!$couldStore && !$deleteExisting) {

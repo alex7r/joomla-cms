@@ -42,7 +42,9 @@ class JHtmlTemplates
             $html       = JHtml::_('image', $thumb, JText::_('COM_TEMPLATES_PREVIEW'));
 
             if (file_exists($preview)) {
-                $html = '<a href="#' . $template . '-Modal" role="button" class="thumbnail pull-left hasTooltip" data-toggle="modal" title="' . JHtml::tooltipText('COM_TEMPLATES_CLICK_TO_ENLARGE') . '">' . $html . '</a>';
+                $html = '<a href="#' . $template . '-Modal" role="button" class="thumbnail pull-left hasTooltip" data-toggle="modal" title="' . JHtml::tooltipText(
+                        'COM_TEMPLATES_CLICK_TO_ENLARGE'
+                    ) . '">' . $html . '</a>';
             }
         }
 
@@ -71,14 +73,21 @@ class JHtmlTemplates
         if (file_exists($thumb)) {
             if (file_exists($preview)) {
                 $preview = $baseUrl . '/templates/' . $template . '/template_preview.png';
-                $footer  = '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('JTOOLBAR_CLOSE') . '</a>';
+                $footer  = '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_(
+                        'JTOOLBAR_CLOSE'
+                    ) . '</a>';
 
-                $html .= JHtml::_('bootstrap.renderModal', $template . '-Modal', array(
-                    'title'  => JText::_('COM_TEMPLATES_BUTTON_PREVIEW'),
-                    'height' => '500px',
-                    'width'  => '800px',
-                    'footer' => $footer
-                ), $body = '<div><img src="' . $preview . '" style="max-width:100%"></div>');
+                $html .= JHtml::_(
+                    'bootstrap.renderModal',
+                    $template . '-Modal',
+                    array(
+                        'title'  => JText::_('COM_TEMPLATES_BUTTON_PREVIEW'),
+                        'height' => '500px',
+                        'width'  => '800px',
+                        'footer' => $footer
+                    ),
+                    $body = '<div><img src="' . $preview . '" style="max-width:100%"></div>'
+                );
             }
         }
 

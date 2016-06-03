@@ -423,8 +423,11 @@ class JLayoutFile extends JLayoutBase
     public function setLayout($layoutId)
     {
         // Log usage of deprecated function
-        JLog::add(__METHOD__ . '() is deprecated, use JLayoutFile::setLayoutId() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JLayoutFile::setLayoutId() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return $this->setLayoutId($layoutId);
     }
@@ -522,10 +525,14 @@ class JLayoutFile extends JLayoutBase
             return null;
         }
 
-        $hash = md5(json_encode(array(
-            'paths'    => $includePaths,
-            'suffixes' => $suffixes
-        )));
+        $hash = md5(
+            json_encode(
+                array(
+                    'paths'    => $includePaths,
+                    'suffixes' => $suffixes
+                )
+            )
+        );
 
         if (!empty(static::$cache[$layoutId][$hash])) {
             $this->addDebugMessage('<strong>Cached path:</strong> ' . static::$cache[$layoutId][$hash]);
@@ -625,8 +632,11 @@ class JLayoutFile extends JLayoutBase
     protected function refreshIncludePaths()
     {
         // Log usage of deprecated function
-        JLog::add(__METHOD__ . '() is deprecated, use JLayoutFile::clearIncludePaths() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JLayoutFile::clearIncludePaths() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         $this->clearIncludePaths();
 

@@ -242,19 +242,29 @@ class SMTP
             $port = self::DEFAULT_SMTP_PORT;
         }
         // Connect to the SMTP server
-        $this->edebug("Connection: opening to $host:$port, timeout=$timeout, options=" . var_export($options, true),
-            self::DEBUG_CONNECTION);
+        $this->edebug(
+            "Connection: opening to $host:$port, timeout=$timeout, options=" . var_export($options, true),
+            self::DEBUG_CONNECTION
+        );
         $errno  = 0;
         $errstr = '';
         if ($streamok) {
             $socket_context = stream_context_create($options);
             //Suppress errors; connection failures are handled at a higher level
-            $this->smtp_conn = @stream_socket_client($host . ":" . $port, $errno, $errstr, $timeout,
-                STREAM_CLIENT_CONNECT, $socket_context);
+            $this->smtp_conn = @stream_socket_client(
+                $host . ":" . $port,
+                $errno,
+                $errstr,
+                $timeout,
+                STREAM_CLIENT_CONNECT,
+                $socket_context
+            );
         } else {
             //Fall back to fsockopen which should work in more places, but is missing some features
-            $this->edebug("Connection: stream_socket_client not available, falling back to fsockopen",
-                self::DEBUG_CONNECTION);
+            $this->edebug(
+                "Connection: stream_socket_client not available, falling back to fsockopen",
+                self::DEBUG_CONNECTION
+            );
             $this->smtp_conn = fsockopen($host, $port, $errno, $errstr, $timeout);
         }
         // Verify we connected properly
@@ -341,8 +351,11 @@ class SMTP
             default:
                 //Normalize line breaks
                 $str = preg_replace('/(\r\n|\r|\n)/ms', "\n", $str);
-                echo gmdate('Y-m-d H:i:s') . "\t" . str_replace("\n", "\n                   \t                  ",
-                        trim($str)) . "\n";
+                echo gmdate('Y-m-d H:i:s') . "\t" . str_replace(
+                        "\n",
+                        "\n                   \t                  ",
+                        trim($str)
+                    ) . "\n";
         }
     }
 
@@ -406,8 +419,10 @@ class SMTP
             }
             // Now check if reads took too long
             if ($endtime and time() > $endtime) {
-                $this->edebug('SMTP -> get_lines(): timelimit reached (' . $this->Timelimit . ' sec)',
-                    self::DEBUG_LOWLEVEL);
+                $this->edebug(
+                    'SMTP -> get_lines(): timelimit reached (' . $this->Timelimit . ' sec)',
+                    self::DEBUG_LOWLEVEL
+                );
                 break;
             }
         }
@@ -466,8 +481,11 @@ class SMTP
             $code    = $matches[1];
             $code_ex = (count($matches) > 2 ? $matches[2] : null);
             // Cut off error code from each response line
-            $detail = preg_replace("/{$code}[ -]" . ($code_ex ? str_replace('.', '\\.', $code_ex) . ' ' : '') . "/m",
-                '', $this->last_reply);
+            $detail = preg_replace(
+                "/{$code}[ -]" . ($code_ex ? str_replace('.', '\\.', $code_ex) . ' ' : '') . "/m",
+                '',
+                $this->last_reply
+            );
         } else {
             // Fall back to simple parsing if regex fails
             $code    = substr($this->last_reply, 0, 3);
@@ -544,8 +562,10 @@ class SMTP
             }
 
             self::edebug('Auth method requested: ' . ($authtype ? $authtype : 'UNKNOWN'), self::DEBUG_LOWLEVEL);
-            self::edebug('Auth methods available on the server: ' . implode(',', $this->server_caps['AUTH']),
-                self::DEBUG_LOWLEVEL);
+            self::edebug(
+                'Auth methods available on the server: ' . implode(',', $this->server_caps['AUTH']),
+                self::DEBUG_LOWLEVEL
+            );
 
             if (empty($authtype)) {
                 foreach (array('LOGIN', 'CRAM-MD5', 'NTLM', 'PLAIN', 'XOAUTH2') as $method) {
@@ -621,8 +641,10 @@ class SMTP
                 //Check that functions are available
                 if (!$ntlm_client->Initialize($temp)) {
                     $this->setError($temp->error);
-                    $this->edebug('You need to enable some modules in your php.ini file: ' . $this->error['error'],
-                        self::DEBUG_CLIENT);
+                    $this->edebug(
+                        'You need to enable some modules in your php.ini file: ' . $this->error['error'],
+                        self::DEBUG_CLIENT
+                    );
 
                     return false;
                 }

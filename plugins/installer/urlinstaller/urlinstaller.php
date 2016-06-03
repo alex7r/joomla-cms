@@ -67,7 +67,8 @@ class PlgInstallerUrlInstaller extends JPlugin
         <?php
         echo JHtml::_('bootstrap.endTab');
 
-        JFactory::getDocument()->addScriptDeclaration('
+        JFactory::getDocument()->addScriptDeclaration(
+            '
 			Joomla.submitbuttonurl = function()
 			{
 				var form = document.getElementById("adminForm");
@@ -83,7 +84,8 @@ class PlgInstallerUrlInstaller extends JPlugin
 					form.submit();
 				}
 			};
-		');
+		'
+        );
 
         return true;
     }

@@ -308,12 +308,15 @@ class JInstaller extends JAdapter
         // Fire the onExtensionBeforeInstall event.
         JPluginHelper::importPlugin('extension');
         $dispatcher = JEventDispatcher::getInstance();
-        $dispatcher->trigger('onExtensionBeforeInstall', array(
-            'method'    => 'install',
-            'type'      => $this->manifest->attributes()->type,
-            'manifest'  => $this->manifest,
-            'extension' => 0
-        ));
+        $dispatcher->trigger(
+            'onExtensionBeforeInstall',
+            array(
+                'method'    => 'install',
+                'type'      => $this->manifest->attributes()->type,
+                'manifest'  => $this->manifest,
+                'extension' => 0
+            )
+        );
 
         // Run the install
         $result = $adapter->install();
@@ -390,8 +393,9 @@ class JInstaller extends JAdapter
                     $query = $db->getQuery(true);
 
                     // Remove the entry from the #__extensions table
-                    $query->delete($db->quoteName('#__extensions'))
-                          ->where($db->quoteName('extension_id') . ' = ' . (int)$step['id']);
+                    $query->delete($db->quoteName('#__extensions'))->where(
+                            $db->quoteName('extension_id') . ' = ' . (int)$step['id']
+                        );
                     $db->setQuery($query);
                     $stepval = $db->execute();
 
@@ -774,12 +778,15 @@ class JInstaller extends JAdapter
         // Fire the onExtensionBeforeInstall event.
         JPluginHelper::importPlugin('extension');
         $dispatcher = JEventDispatcher::getInstance();
-        $dispatcher->trigger('onExtensionBeforeInstall', array(
-            'method'    => 'discover_install',
-            'type'      => $this->extension->get('type'),
-            'manifest'  => null,
-            'extension' => $this->extension->get('extension_id')
-        ));
+        $dispatcher->trigger(
+            'onExtensionBeforeInstall',
+            array(
+                'method'    => 'discover_install',
+                'type'      => $this->extension->get('type'),
+                'manifest'  => null,
+                'extension' => $this->extension->get('extension_id')
+            )
+        );
 
         // Run the install
         $result = $adapter->discover_install();
@@ -880,8 +887,10 @@ class JInstaller extends JAdapter
         // Fire the onExtensionBeforeUpdate event.
         JPluginHelper::importPlugin('extension');
         $dispatcher = JEventDispatcher::getInstance();
-        $dispatcher->trigger('onExtensionBeforeUpdate',
-            array('type' => $this->manifest->attributes()->type, 'manifest' => $this->manifest));
+        $dispatcher->trigger(
+            'onExtensionBeforeUpdate',
+            array('type' => $this->manifest->attributes()->type, 'manifest' => $this->manifest)
+        );
 
         // Run the update
         $result = $adapter->update();
@@ -927,8 +936,10 @@ class JInstaller extends JAdapter
         $result = $adapter->uninstall($identifier);
 
         // Fire the onExtensionAfterInstall
-        $dispatcher->trigger('onExtensionAfterUninstall',
-            array('installer' => clone $this, 'eid' => $identifier, 'result' => $result));
+        $dispatcher->trigger(
+            'onExtensionAfterUninstall',
+            array('installer' => clone $this, 'eid' => $identifier, 'result' => $result)
+        );
 
         // Refresh versionable assets cache
         JFactory::getApplication()->flushAssets();
@@ -1073,8 +1084,11 @@ class JInstaller extends JAdapter
 
                 // Check that sql files exists before reading. Otherwise raise error for rollback
                 if (!file_exists($sqlfile)) {
-                    JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_FILENOTFOUND', $sqlfile), JLog::WARNING,
-                        'jerror');
+                    JLog::add(
+                        JText::sprintf('JLIB_INSTALLER_ERROR_SQL_FILENOTFOUND', $sqlfile),
+                        JLog::WARNING,
+                        'jerror'
+                    );
 
                     return false;
                 }
@@ -1101,8 +1115,11 @@ class JInstaller extends JAdapter
                     $db->setQuery($db->convertUtf8mb4QueryToUtf8($query));
 
                     if (!$db->execute()) {
-                        JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING,
-                            'jerror');
+                        JLog::add(
+                            JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)),
+                            JLog::WARNING,
+                            'jerror'
+                        );
 
                         return false;
                     }
@@ -1154,8 +1171,11 @@ class JInstaller extends JAdapter
                 }
 
                 if (strlen($schemapath)) {
-                    $files = str_replace('.sql', '',
-                        JFolder::files($this->getPath('extension_root') . '/' . $schemapath, '\.sql$'));
+                    $files = str_replace(
+                        '.sql',
+                        '',
+                        JFolder::files($this->getPath('extension_root') . '/' . $schemapath, '\.sql$')
+                    );
                     usort($files, 'version_compare');
 
                     // Update the database
@@ -1163,10 +1183,9 @@ class JInstaller extends JAdapter
                     $db->setQuery($query);
 
                     if ($db->execute()) {
-                        $query->clear()
-                              ->insert($db->quoteName('#__schemas'))
-                              ->columns(array($db->quoteName('extension_id'), $db->quoteName('version_id')))
-                              ->values($eid . ', ' . $db->quote(end($files)));
+                        $query->clear()->insert($db->quoteName('#__schemas'))->columns(
+                                array($db->quoteName('extension_id'), $db->quoteName('version_id'))
+                            )->values($eid . ', ' . $db->quote(end($files)));
                         $db->setQuery($query);
                         $db->execute();
                     }
@@ -1220,18 +1239,20 @@ class JInstaller extends JAdapter
                 }
 
                 if (strlen($schemapath)) {
-                    $files = str_replace('.sql', '',
-                        JFolder::files($this->getPath('extension_root') . '/' . $schemapath, '\.sql$'));
+                    $files = str_replace(
+                        '.sql',
+                        '',
+                        JFolder::files($this->getPath('extension_root') . '/' . $schemapath, '\.sql$')
+                    );
                     usort($files, 'version_compare');
 
                     if (!count($files)) {
                         return $update_count;
                     }
 
-                    $query = $db->getQuery(true)
-                                ->select('version_id')
-                                ->from('#__schemas')
-                                ->where('extension_id = ' . $eid);
+                    $query = $db->getQuery(true)->select('version_id')->from('#__schemas')->where(
+                            'extension_id = ' . $eid
+                        );
                     $db->setQuery($query);
                     $version = $db->loadResult();
 
@@ -1242,12 +1263,17 @@ class JInstaller extends JAdapter
 
                     foreach ($files as $file) {
                         if (version_compare($file, $version) > 0) {
-                            $buffer = file_get_contents($this->getPath('extension_root') . '/' . $schemapath . '/' . $file . '.sql');
+                            $buffer = file_get_contents(
+                                $this->getPath('extension_root') . '/' . $schemapath . '/' . $file . '.sql'
+                            );
 
                             // Graceful exit and rollback if read not successful
                             if ($buffer === false) {
-                                JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), JLog::WARNING,
-                                    'jerror');
+                                JLog::add(
+                                    JText::sprintf('JLIB_INSTALLER_ERROR_SQL_READBUFFER'),
+                                    JLog::WARNING,
+                                    'jerror'
+                                );
 
                                 return false;
                             }
@@ -1265,16 +1291,25 @@ class JInstaller extends JAdapter
                                 $db->setQuery($db->convertUtf8mb4QueryToUtf8($query));
 
                                 if (!$db->execute()) {
-                                    JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)),
-                                        JLog::WARNING, 'jerror');
+                                    JLog::add(
+                                        JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)),
+                                        JLog::WARNING,
+                                        'jerror'
+                                    );
 
                                     return false;
                                 } else {
                                     $queryString = (string)$query;
-                                    $queryString = str_replace(array("\r", "\n"), array('', ' '),
-                                        substr($queryString, 0, 80));
-                                    JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $file, $queryString),
-                                        JLog::INFO, 'Update');
+                                    $queryString = str_replace(
+                                        array("\r", "\n"),
+                                        array('', ' '),
+                                        substr($queryString, 0, 80)
+                                    );
+                                    JLog::add(
+                                        JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $file, $queryString),
+                                        JLog::INFO,
+                                        'Update'
+                                    );
                                 }
 
                                 $update_count++;
@@ -1287,10 +1322,9 @@ class JInstaller extends JAdapter
                     $db->setQuery($query);
 
                     if ($db->execute()) {
-                        $query->clear()
-                              ->insert($db->quoteName('#__schemas'))
-                              ->columns(array($db->quoteName('extension_id'), $db->quoteName('version_id')))
-                              ->values($eid . ', ' . $db->quote(end($files)));
+                        $query->clear()->insert($db->quoteName('#__schemas'))->columns(
+                                array($db->quoteName('extension_id'), $db->quoteName('version_id'))
+                            )->values($eid . ', ' . $db->quote(end($files)));
                         $db->setQuery($query);
                         $db->execute();
                     }
@@ -1401,8 +1435,11 @@ class JInstaller extends JAdapter
                 $newdir = dirname($path['dest']);
 
                 if (!JFolder::create($newdir)) {
-                    JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_CREATE_DIRECTORY', $newdir), JLog::WARNING,
-                        'jerror');
+                    JLog::add(
+                        JText::sprintf('JLIB_INSTALLER_ERROR_CREATE_DIRECTORY', $newdir),
+                        JLog::WARNING,
+                        'jerror'
+                    );
 
                     return false;
                 }
@@ -1568,8 +1605,11 @@ class JInstaller extends JAdapter
                     // Copy the folder or file to the new location.
                     if ($filetype == 'folder') {
                         if (!(JFolder::copy($filesource, $filedest, null, $overwrite))) {
-                            JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_FAIL_COPY_FOLDER', $filesource, $filedest),
-                                JLog::WARNING, 'jerror');
+                            JLog::add(
+                                JText::sprintf('JLIB_INSTALLER_ERROR_FAIL_COPY_FOLDER', $filesource, $filedest),
+                                JLog::WARNING,
+                                'jerror'
+                            );
 
                             return false;
                         }
@@ -1577,8 +1617,11 @@ class JInstaller extends JAdapter
                         $step = array('type' => 'folder', 'path' => $filedest);
                     } else {
                         if (!(JFile::copy($filesource, $filedest, null))) {
-                            JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_FAIL_COPY_FILE', $filesource, $filedest),
-                                JLog::WARNING, 'jerror');
+                            JLog::add(
+                                JText::sprintf('JLIB_INSTALLER_ERROR_FAIL_COPY_FILE', $filesource, $filedest),
+                                JLog::WARNING,
+                                'jerror'
+                            );
 
                             // In 3.2, TinyMCE language handling changed.  Display a special notice in case an older language pack is installed.
                             if (strpos($filedest, 'media/editors/tinymce/jscripts/tiny_mce/langs')) {
@@ -1672,7 +1715,9 @@ class JInstaller extends JAdapter
                 if ((string)$file->attributes()->client != '') {
                     // Override the client
                     $langclient   = JApplicationHelper::getClientInfo((string)$file->attributes()->client, true);
-                    $path['dest'] = $langclient->path . '/language/' . $file->attributes()->tag . '/' . basename((string)$file);
+                    $path['dest'] = $langclient->path . '/language/' . $file->attributes()->tag . '/' . basename(
+                            (string)$file
+                        );
                 } else {
                     // Use the default client
                     $path['dest'] = $destination . '/' . $file->attributes()->tag . '/' . basename((string)$file);
@@ -1697,8 +1742,11 @@ class JInstaller extends JAdapter
                 $newdir = dirname($path['dest']);
 
                 if (!JFolder::create($newdir)) {
-                    JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_CREATE_DIRECTORY', $newdir), JLog::WARNING,
-                        'jerror');
+                    JLog::add(
+                        JText::sprintf('JLIB_INSTALLER_ERROR_CREATE_DIRECTORY', $newdir),
+                        JLog::WARNING,
+                        'jerror'
+                    );
 
                     return false;
                 }
@@ -1772,8 +1820,11 @@ class JInstaller extends JAdapter
                 $newdir = dirname($path['dest']);
 
                 if (!JFolder::create($newdir)) {
-                    JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_CREATE_DIRECTORY', $newdir), JLog::WARNING,
-                        'jerror');
+                    JLog::add(
+                        JText::sprintf('JLIB_INSTALLER_ERROR_CREATE_DIRECTORY', $newdir),
+                        JLog::WARNING,
+                        'jerror'
+                    );
 
                     return false;
                 }
@@ -1928,7 +1979,9 @@ class JInstaller extends JAdapter
                     $path = $source . '/' . $file->attributes()->tag . '/' . basename((string)$file);
                 } else {
                     $target_client = JApplicationHelper::getClientInfo((string)$file->attributes()->client, true);
-                    $path          = $target_client->path . '/language/' . $file->attributes()->tag . '/' . basename((string)$file);
+                    $path          = $target_client->path . '/language/' . $file->attributes()->tag . '/' . basename(
+                            (string)$file
+                        );
                 }
 
                 // If the language folder is not present, then the core pack hasn't been installed... ignore

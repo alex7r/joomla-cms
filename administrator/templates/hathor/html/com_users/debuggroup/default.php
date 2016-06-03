@@ -19,7 +19,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 ?>
 
 <form
-    action="<?php echo JRoute::_('index.php?option=com_users&view=debuggroup&group_id=' . (int)$this->state->get('group_id')); ?>"
+    action="<?php echo JRoute::_(
+        'index.php?option=com_users&view=debuggroup&group_id=' . (int)$this->state->get('group_id')
+    ); ?>"
     method="post" name="adminForm" id="adminForm">
     <?php if (!empty($this->sidebar)) : ?>
     <div id="j-sidebar-container" class="span2">
@@ -39,7 +41,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                            title="<?php echo JText::_('COM_USERS_SEARCH_USERS'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_RESET'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_RESET'
+                        ); ?></button>
                 </div>
 
                 <div class="filter-select fltrt">
@@ -48,25 +52,42 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     <select name="filter_component" id="filter_component">
                         <option value=""><?php echo JText::_('COM_USERS_OPTION_SELECT_COMPONENT'); ?></option>
                         <?php if (!empty($this->components)) {
-                            echo JHtml::_('select.options', $this->components, 'value', 'text',
-                                $this->state->get('filter.component'));
+                            echo JHtml::_(
+                                'select.options',
+                                $this->components,
+                                'value',
+                                'text',
+                                $this->state->get('filter.component')
+                            );
                         } ?>
                     </select>
 
                     <label class="selectlabel"
-                           for="filter_level_start"><?php echo JText::_('COM_USERS_OPTION_SELECT_LEVEL_START'); ?></label>
+                           for="filter_level_start"><?php echo JText::_(
+                            'COM_USERS_OPTION_SELECT_LEVEL_START'
+                        ); ?></label>
                     <select name="filter_level_start" id="filter_level_start">
                         <option value=""><?php echo JText::_('COM_USERS_OPTION_SELECT_LEVEL_START'); ?></option>
-                        <?php echo JHtml::_('select.options', $this->levels, 'value', 'text',
-                            $this->state->get('filter.level_start')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            $this->levels,
+                            'value',
+                            'text',
+                            $this->state->get('filter.level_start')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel"
                            for="filter_level_end"><?php echo JText::_('COM_USERS_OPTION_SELECT_LEVEL_END'); ?></label>
                     <select name="filter_level_end" id="filter_level_end">
                         <option value=""><?php echo JText::_('COM_USERS_OPTION_SELECT_LEVEL_END'); ?></option>
-                        <?php echo JHtml::_('select.options', $this->levels, 'value', 'text',
-                            $this->state->get('filter.level_end')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            $this->levels,
+                            'value',
+                            'text',
+                            $this->state->get('filter.level_end')
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -80,29 +101,45 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                 <?php echo JText::_('COM_USERS_DEBUG_LEGEND'); ?>
                 <span class="check-0 swatch"><?php echo JText::sprintf('COM_USERS_DEBUG_IMPLICIT_DENY', '-'); ?></span>
 				<span
-                    class="check-a swatch"><?php echo JText::sprintf('COM_USERS_DEBUG_EXPLICIT_ALLOW',
-                        '&#10003;'); ?></span>
+                    class="check-a swatch"><?php echo JText::sprintf(
+                        'COM_USERS_DEBUG_EXPLICIT_ALLOW',
+                        '&#10003;'
+                    ); ?></span>
 				<span
-                    class="check-d swatch"><?php echo JText::sprintf('COM_USERS_DEBUG_EXPLICIT_DENY',
-                        '&#10007;'); ?></span>
+                    class="check-d swatch"><?php echo JText::sprintf(
+                        'COM_USERS_DEBUG_EXPLICIT_DENY',
+                        '&#10007;'
+                    ); ?></span>
             </div>
 
             <table class="adminlist">
                 <thead>
                 <tr>
                     <th class="left">
-                        <?php echo JHtml::_('grid.sort', 'COM_USERS_HEADING_ASSET_TITLE', 'a.title', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_USERS_HEADING_ASSET_TITLE',
+                            'a.title',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="left">
-                        <?php echo JHtml::_('grid.sort', 'COM_USERS_HEADING_ASSET_NAME', 'a.name', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_USERS_HEADING_ASSET_NAME',
+                            'a.name',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <?php foreach ($this->actions as $key => $action) : ?>
                         <th class="width-5">
 							<span class="hasTooltip"
-                                  title="<?php echo JHtml::tooltipText($key,
-                                      $action[1]); ?>"><?php echo JText::_($key); ?></span>
+                                  title="<?php echo JHtml::tooltipText(
+                                      $key,
+                                      $action[1]
+                                  ); ?>"><?php echo JText::_($key); ?></span>
                         </th>
                     <?php endforeach; ?>
                     <th class="width-5 nowrap">
@@ -126,7 +163,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         </td>
                         <?php foreach ($this->actions as $action) : ?>
                             <?php
-                            $name  = $action[0];
+                            $name = $action[0];
                             $check = $item->checks[$name];
                             if ($check === true) :
                                 $class = 'check-a';

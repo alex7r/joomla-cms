@@ -95,8 +95,10 @@ class FOFLessParser
         $this->writeComments = false;
 
         if (!self::$operatorString) {
-            self::$operatorString = '(' . implode('|',
-                    array_map(array('FOFLess', 'preg_quote'), array_keys(self::$precedence))) . ')';
+            self::$operatorString = '(' . implode(
+                    '|',
+                    array_map(array('FOFLess', 'preg_quote'), array_keys(self::$precedence))
+                ) . ')';
 
             $commentSingle     = FOFLess::preg_quote(self::$commentSingle);
             $commentMultiLeft  = FOFLess::preg_quote(self::$commentMultiLeft);
@@ -472,8 +474,10 @@ class FOFLessParser
         }
 
         // Opening parametric mixin
-        if ($this->tag($tag, true) && $this->argumentDef($args,
-                $isVararg) && ($this->guards($guards) || true) && $this->literal('{')
+        if ($this->tag($tag, true) && $this->argumentDef(
+                $args,
+                $isVararg
+            ) && ($this->guards($guards) || true) && $this->literal('{')
         ) {
             $block           = $this->pushBlock($this->fixTags(array($tag)));
             $block->args     = $args;
@@ -539,7 +543,10 @@ class FOFLessParser
         }
 
         // Mixin
-        if ($this->mixinTags($tags) && ($this->argumentValues($argv) || true) && ($this->keyword($suffix) || true) && $this->end()) {
+        if ($this->mixinTags($tags) && ($this->argumentValues($argv) || true) && ($this->keyword(
+                    $suffix
+                ) || true) && $this->end()
+        ) {
             $tags = $this->fixTags($tags);
             $this->append(array('mixin', $tags, $argv, $suffix), $s);
 
@@ -1164,8 +1171,10 @@ class FOFLessParser
 
         $s = $this->seek();
 
-        if ($this->literal("@{") && $this->openString("}", $interp, null, array("'", '"', ";")) && $this->literal("}",
-                false)
+        if ($this->literal("@{") && $this->openString("}", $interp, null, array("'", '"', ";")) && $this->literal(
+                "}",
+                false
+            )
         ) {
             $out                   = array("interpolate", $interp);
             $this->eatWhiteDefault = $oldWhite;
@@ -1203,8 +1212,10 @@ class FOFLessParser
             // whitespace after the operator for it to be an expression
             $needWhite = $whiteBefore && !$this->inParens;
 
-            if ($this->match(self::$operatorString . ($needWhite ? '\s' : ''),
-                    $m) && self::$precedence[$m[1]] >= $minP
+            if ($this->match(
+                    self::$operatorString . ($needWhite ? '\s' : ''),
+                    $m
+                ) && self::$precedence[$m[1]] >= $minP
             ) {
                 if (!$this->inParens && isset($this->env->currentProperty) && $m[1] == "/" && empty($this->env->supressedDivision)) {
                     foreach (self::$supressDivisionProps as $pattern) {
@@ -1222,8 +1233,10 @@ class FOFLessParser
                 }
 
                 // Peek for next operator to see what to do with rhs
-                if ($this->peek(self::$operatorString,
-                        $next) && self::$precedence[$next[1]] > self::$precedence[$m[1]]
+                if ($this->peek(
+                        self::$operatorString,
+                        $next
+                    ) && self::$precedence[$next[1]] > self::$precedence[$m[1]]
                 ) {
                     $rhs = $this->expHelper($rhs, self::$precedence[$next[1]]);
                 }
@@ -1914,7 +1927,10 @@ class FOFLessParser
         $expressions = null;
         $parts       = array();
 
-        if (($this->literal("only") && ($only = true) || $this->literal("not") && ($not = true) || true) && $this->keyword($mediaType)) {
+        if (($this->literal("only") && ($only = true) || $this->literal(
+                    "not"
+                ) && ($not = true) || true) && $this->keyword($mediaType)
+        ) {
             $prop = array("mediaType");
 
             if (isset($only)) {
@@ -1964,7 +1980,10 @@ class FOFLessParser
         $s     = $this->seek();
         $value = null;
 
-        if ($this->literal("(") && $this->keyword($feature) && ($this->literal(":") && $this->expression($value) || true) && $this->literal(")")) {
+        if ($this->literal("(") && $this->keyword($feature) && ($this->literal(":") && $this->expression(
+                    $value
+                ) || true) && $this->literal(")")
+        ) {
             $out = array("mediaExp", $feature);
 
             if ($value) {

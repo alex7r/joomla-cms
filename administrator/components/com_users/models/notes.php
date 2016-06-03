@@ -90,13 +90,19 @@ class UsersModelNotes extends JModelList
         $query = $db->getQuery(true);
 
         // Select the required fields from the table.
-        $query->select($this->getState('list.select',
-            'a.id, a.subject, a.checked_out, a.checked_out_time,' . 'a.catid, a.created_time, a.review_time,' . 'a.state, a.publish_up, a.publish_down'));
+        $query->select(
+            $this->getState(
+                'list.select',
+                'a.id, a.subject, a.checked_out, a.checked_out_time,' . 'a.catid, a.created_time, a.review_time,' . 'a.state, a.publish_up, a.publish_down'
+            )
+        );
         $query->from('#__user_notes AS a');
 
         // Join over the category
-        $query->select('c.title AS category_title, c.params AS category_params')
-              ->join('LEFT', '#__categories AS c ON c.id = a.catid');
+        $query->select('c.title AS category_title, c.params AS category_params')->join(
+                'LEFT',
+                '#__categories AS c ON c.id = a.catid'
+            );
 
         // Join over the users for the note user.
         $query->select('u.name AS user_name')->join('LEFT', '#__users AS u ON u.id = a.user_id');
@@ -114,7 +120,9 @@ class UsersModelNotes extends JModelList
                 $query->where('a.user_id = ' . (int)substr($search, 4));
             } else {
                 $search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-                $query->where('((a.subject LIKE ' . $search . ') OR (u.name LIKE ' . $search . ') OR (u.username LIKE ' . $search . '))');
+                $query->where(
+                    '((a.subject LIKE ' . $search . ') OR (u.name LIKE ' . $search . ') OR (u.username LIKE ' . $search . '))'
+                );
             }
         }
 
@@ -148,8 +156,14 @@ class UsersModelNotes extends JModelList
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.review_time')) . ' ' . $db->escape($this->getState('list.direction', 'DESC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.review_time'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'DESC'))
+        );
 
         return $query;
     }
@@ -198,16 +212,26 @@ class UsersModelNotes extends JModelList
             $this->context .= '.' . $layout;
         }
 
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search'));
-        $this->setState('filter.published',
-            $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string'));
-        $this->setState('filter.category_id',
-            $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id'));
-        $this->setState('filter.user_id',
-            $this->getUserStateFromRequest($this->context . '.filter.user_id', 'filter_user_id'));
-        $this->setState('filter.level',
-            $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', '', 'cmd'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search')
+        );
+        $this->setState(
+            'filter.published',
+            $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string')
+        );
+        $this->setState(
+            'filter.category_id',
+            $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id')
+        );
+        $this->setState(
+            'filter.user_id',
+            $this->getUserStateFromRequest($this->context . '.filter.user_id', 'filter_user_id')
+        );
+        $this->setState(
+            'filter.level',
+            $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', '', 'cmd')
+        );
 
         parent::populateState($ordering, $direction);
     }

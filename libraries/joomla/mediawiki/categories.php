@@ -175,7 +175,9 @@ class JMediawikiCategories extends JMediawikiObject
 
         // Make sure both $cmtitle and $cmpageid are not set
         if (isset($cmtitle) && isset($cmpageid)) {
-            throw new RuntimeException('Both the $cmtitle and $cmpageid parameters cannot be set, please only use one of the two.');
+            throw new RuntimeException(
+                'Both the $cmtitle and $cmpageid parameters cannot be set, please only use one of the two.'
+            );
         }
 
         if (isset($cmtitle)) {

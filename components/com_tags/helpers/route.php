@@ -53,8 +53,11 @@ class TagsHelperRoute extends JHelperRoute
                 if ($routerMethod == 'getCategoryRoute') {
                     $link = $routerClass::$routerMethod($contentItemId, $language);
                 } else {
-                    $link = $routerClass::$routerMethod($contentItemId . ':' . $contentItemAlias, $contentCatId,
-                        $language);
+                    $link = $routerClass::$routerMethod(
+                        $contentItemId . ':' . $contentItemAlias,
+                        $contentCatId,
+                        $language
+                    );
                 }
             }
         }
@@ -136,7 +139,10 @@ class TagsHelperRoute extends JHelperRoute
                         // Only match menu items that list one tag
                         if (isset($item->query['id']) && is_array($item->query['id'])) {
                             foreach ($item->query['id'] as $position => $tagId) {
-                                if (!isset(self::$lookup[$lang][$view][$item->query['id'][$position]]) || count($item->query['id']) == 1) {
+                                if (!isset(self::$lookup[$lang][$view][$item->query['id'][$position]]) || count(
+                                                                                                              $item->query['id']
+                                                                                                          ) == 1
+                                ) {
                                     self::$lookup[$lang][$view][$item->query['id'][$position]] = $item->id;
                                 }
                             }

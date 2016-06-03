@@ -54,8 +54,11 @@ class ModBreadCrumbsHelper
 
         if ($params->get('showHome', 1)) {
             $item       = new stdClass;
-            $item->name = htmlspecialchars($params->get('homeText', JText::_('MOD_BREADCRUMBS_HOME')), ENT_COMPAT,
-                'UTF-8');
+            $item->name = htmlspecialchars(
+                $params->get('homeText', JText::_('MOD_BREADCRUMBS_HOME')),
+                ENT_COMPAT,
+                'UTF-8'
+            );
             $item->link = JRoute::_('index.php?Itemid=' . $home->id);
             array_unshift($crumbs, $item);
         }

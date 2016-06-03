@@ -19,22 +19,32 @@ if ($params->get('opensearch', 1)) {
     $doc = JFactory::getDocument();
 
     $ostitle = $params->get('opensearch_title', JText::_('MOD_SEARCH_SEARCHBUTTON_TEXT') . ' ' . $app->get('sitename'));
-    $doc->addHeadLink(JUri::getInstance()->toString(array(
-            'scheme',
-            'host',
-            'port'
-        )) . JRoute::_('&option=com_search&format=opensearch'), 'search', 'rel', array(
-        'title' => htmlspecialchars($ostitle, ENT_COMPAT, 'UTF-8'),
-        'type'  => 'application/opensearchdescription+xml'
-    ));
+    $doc->addHeadLink(
+        JUri::getInstance()->toString(
+            array(
+                'scheme',
+                'host',
+                'port'
+            )
+        ) . JRoute::_('&option=com_search&format=opensearch'),
+        'search',
+        'rel',
+        array(
+            'title' => htmlspecialchars($ostitle, ENT_COMPAT, 'UTF-8'),
+            'type'  => 'application/opensearchdescription+xml'
+        )
+    );
 }
 
 $upper_limit     = $lang->getUpperLimitSearchWord();
 $button          = $params->get('button', 0);
 $imagebutton     = $params->get('imagebutton', 0);
 $button_pos      = $params->get('button_pos', 'left');
-$button_text     = htmlspecialchars($params->get('button_text', JText::_('MOD_SEARCH_SEARCHBUTTON_TEXT')), ENT_COMPAT,
-    'UTF-8');
+$button_text     = htmlspecialchars(
+    $params->get('button_text', JText::_('MOD_SEARCH_SEARCHBUTTON_TEXT')),
+    ENT_COMPAT,
+    'UTF-8'
+);
 $width           = (int)$params->get('width');
 $maxlength       = $upper_limit;
 $text            = htmlspecialchars($params->get('text', JText::_('MOD_SEARCH_SEARCHBOX_TEXT')), ENT_COMPAT, 'UTF-8');

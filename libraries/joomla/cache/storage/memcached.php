@@ -79,8 +79,10 @@ class JCacheStorageMemcached extends JCacheStorage
 
         $memcached = new Memcached;
 
-        return @$memcached->addServer($config->get('memcached_server_host', 'localhost'),
-            $config->get('memcached_server_port', 11211));
+        return @$memcached->addServer(
+            $config->get('memcached_server_host', 'localhost'),
+            $config->get('memcached_server_port', 11211)
+        );
     }
 
     /**
@@ -104,8 +106,10 @@ class JCacheStorageMemcached extends JCacheStorage
             static::$_db = new Memcached;
         }
 
-        $memcachedtest = static::$_db->addServer($config->get('memcached_server_host', 'localhost'),
-            $config->get('memcached_server_port', 11211));
+        $memcachedtest = static::$_db->addServer(
+            $config->get('memcached_server_host', 'localhost'),
+            $config->get('memcached_server_port', 11211)
+        );
 
         if ($memcachedtest == false) {
             throw new RuntimeException('Could not connect to memcached server', 404);

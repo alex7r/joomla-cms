@@ -88,7 +88,9 @@ class JCacheStorage
         $this->_application = (isset($options['application'])) ? $options['application'] : null;
         $this->_language    = (isset($options['language'])) ? $options['language'] : 'en-GB';
         $this->_locking     = (isset($options['locking'])) ? $options['locking'] : true;
-        $this->_lifetime    = (isset($options['lifetime'])) ? $options['lifetime'] * 60 : $config->get('cachetime') * 60;
+        $this->_lifetime    = (isset($options['lifetime'])) ? $options['lifetime'] * 60 : $config->get(
+                'cachetime'
+            ) * 60;
         $this->_now         = (isset($options['now'])) ? $options['now'] : time();
 
         // Set time threshold value.  If the lifetime is not set, default to 60 (0 is BAD)
@@ -213,8 +215,11 @@ class JCacheStorage
      */
     public static function test()
     {
-        JLog::add(__METHOD__ . '() is deprecated. Use JCacheStorage::isSupported() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated. Use JCacheStorage::isSupported() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return static::isSupported();
     }

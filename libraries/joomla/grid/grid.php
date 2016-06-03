@@ -120,8 +120,10 @@ class JGrid
             $output[] = $this->renderArea($this->specialRows['footer'], 'tfoot');
         }
 
-        $ids = array_diff(array_keys($this->rows),
-            array_merge($this->specialRows['header'], $this->specialRows['footer']));
+        $ids = array_diff(
+            array_keys($this->rows),
+            array_merge($this->specialRows['header'], $this->specialRows['footer'])
+        );
 
         if (count($ids)) {
             $output[] = $this->renderArea($ids);
@@ -190,7 +192,9 @@ class JGrid
             foreach ($this->getColumns() as $name) {
                 if (isset($this->rows[$id][$name])) {
                     $column   = $this->rows[$id][$name];
-                    $output[] = "\t\t<" . $cell . $this->renderAttributes($column->options) . '>' . $column->content . '</' . $cell . ">\n";
+                    $output[] = "\t\t<" . $cell . $this->renderAttributes(
+                            $column->options
+                        ) . '>' . $column->content . '</' . $cell . ">\n";
                 }
             }
 
@@ -420,8 +424,10 @@ class JGrid
             }
         }
 
-        return array_diff(array_keys($this->rows),
-            array_merge($this->specialRows['header'], $this->specialRows['footer']));
+        return array_diff(
+            array_keys($this->rows),
+            array_merge($this->specialRows['header'], $this->specialRows['footer'])
+        );
     }
 
     /**

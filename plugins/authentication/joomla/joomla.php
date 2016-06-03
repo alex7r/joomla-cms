@@ -41,10 +41,9 @@ class PlgAuthenticationJoomla extends JPlugin
 
         // Get a database object
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('id, password')
-                    ->from('#__users')
-                    ->where('username=' . $db->quote($credentials['username']));
+        $query = $db->getQuery(true)->select('id, password')->from('#__users')->where(
+                'username=' . $db->quote($credentials['username'])
+            );
 
         $db->setQuery($query);
         $result = $db->loadObject();
@@ -129,8 +128,10 @@ class PlgAuthenticationJoomla extends JPlugin
             // Try to validate the OTP
             FOFPlatform::getInstance()->importPlugin('twofactorauth');
 
-            $otpAuthReplies = FOFPlatform::getInstance()
-                                         ->runPlugins('onUserTwofactorAuthenticate', array($credentials, $options));
+            $otpAuthReplies = FOFPlatform::getInstance()->runPlugins(
+                    'onUserTwofactorAuthenticate',
+                    array($credentials, $options)
+                );
 
             $check = false;
 

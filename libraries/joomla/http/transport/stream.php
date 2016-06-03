@@ -41,7 +41,9 @@ class JHttpTransportStream implements JHttpTransport
 
         // Verify that fopen() is available.
         if (!self::isSupported()) {
-            throw new RuntimeException('Cannot use a stream transport when fopen() is not available or "allow_url_fopen" is disabled.');
+            throw new RuntimeException(
+                'Cannot use a stream transport when fopen() is not available or "allow_url_fopen" is disabled.'
+            );
         }
 
         $this->options = $options;
@@ -131,14 +133,16 @@ class JHttpTransportStream implements JHttpTransport
         }
 
         // Create the stream context for the request.
-        $context = stream_context_create(array(
-            'http' => $options,
-            'ssl'  => array(
-                'verify_peer'  => true,
-                'cafile'       => $this->options->get('stream.certpath', __DIR__ . '/cacert.pem'),
-                'verify_depth' => 5,
+        $context = stream_context_create(
+            array(
+                'http' => $options,
+                'ssl'  => array(
+                    'verify_peer'  => true,
+                    'cafile'       => $this->options->get('stream.certpath', __DIR__ . '/cacert.pem'),
+                    'verify_depth' => 5,
+                )
             )
-        ));
+        );
 
         // Authentification, if needed
         if ($this->options->get('userauth') && $this->options->get('passwordauth')) {

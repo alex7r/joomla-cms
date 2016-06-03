@@ -40,7 +40,9 @@ class JTwitterLists extends JTwitterObject
             $data['screen_name'] = $user;
         } else {
             // We don't have a valid entry
-            throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+            throw new RuntimeException(
+                'The specified username is not in the correct format; must use integer or string'
+            );
         }
 
         // Check if reverse is specified.
@@ -98,7 +100,9 @@ class JTwitterLists extends JTwitterObject
                 $data['owner_screen_name'] = $owner;
             } else {
                 // We don't have a valid entry
-                throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+                throw new RuntimeException(
+                    'The specified username is not in the correct format; must use integer or string'
+                );
             }
         } else {
             // We don't have a valid entry
@@ -170,7 +174,9 @@ class JTwitterLists extends JTwitterObject
                 $data['owner_screen_name'] = $owner;
             } else {
                 // We don't have a valid entry
-                throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+                throw new RuntimeException(
+                    'The specified username is not in the correct format; must use integer or string'
+                );
             }
         } else {
             // We don't have a valid entry
@@ -227,7 +233,9 @@ class JTwitterLists extends JTwitterObject
                 $data['owner_screen_name'] = $owner;
             } else {
                 // We don't have a valid entry
-                throw new RuntimeException('The specified username for owner is not in the correct format; must use integer or string');
+                throw new RuntimeException(
+                    'The specified username for owner is not in the correct format; must use integer or string'
+                );
             }
         } else {
             // We don't have a valid entry
@@ -244,7 +252,9 @@ class JTwitterLists extends JTwitterObject
 
         if ($user_id == null && $screen_name == null) {
             // We don't have a valid entry
-            throw new RuntimeException('You must specify either a comma separated list of screen names, user IDs, or a combination of the two');
+            throw new RuntimeException(
+                'You must specify either a comma separated list of screen names, user IDs, or a combination of the two'
+            );
         }
 
         // Set the API path
@@ -283,7 +293,9 @@ class JTwitterLists extends JTwitterObject
                 $data['owner_screen_name'] = $owner;
             } else {
                 // We don't have a valid entry
-                throw new RuntimeException('The specified username for owner is not in the correct format; must use integer or string');
+                throw new RuntimeException(
+                    'The specified username for owner is not in the correct format; must use integer or string'
+                );
             }
         } else {
             // We don't have a valid entry
@@ -330,7 +342,9 @@ class JTwitterLists extends JTwitterObject
                 $data['owner_screen_name'] = $owner;
             } else {
                 // We don't have a valid entry
-                throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+                throw new RuntimeException(
+                    'The specified username is not in the correct format; must use integer or string'
+                );
             }
         } else {
             // We don't have a valid entry
@@ -343,7 +357,9 @@ class JTwitterLists extends JTwitterObject
             $data['screen_name'] = $user;
         } else {
             // We don't have a valid entry
-            throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+            throw new RuntimeException(
+                'The specified username is not in the correct format; must use integer or string'
+            );
         }
 
         // Set the API path
@@ -396,7 +412,9 @@ class JTwitterLists extends JTwitterObject
                 $data['owner_screen_name'] = $owner;
             } else {
                 // We don't have a valid entry
-                throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+                throw new RuntimeException(
+                    'The specified username is not in the correct format; must use integer or string'
+                );
             }
         } else {
             // We don't have a valid entry
@@ -409,7 +427,9 @@ class JTwitterLists extends JTwitterObject
             $data['screen_name'] = $user;
         } else {
             // We don't have a valid entry
-            throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+            throw new RuntimeException(
+                'The specified username is not in the correct format; must use integer or string'
+            );
         }
 
         // Set the API path
@@ -458,7 +478,9 @@ class JTwitterLists extends JTwitterObject
                 $data['owner_screen_name'] = $owner;
             } else {
                 // We don't have a valid entry
-                throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+                throw new RuntimeException(
+                    'The specified username is not in the correct format; must use integer or string'
+                );
             }
         } else {
             // We don't have a valid entry
@@ -503,7 +525,9 @@ class JTwitterLists extends JTwitterObject
                 $data['owner_screen_name'] = $owner;
             } else {
                 // We don't have a valid entry
-                throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+                throw new RuntimeException(
+                    'The specified username is not in the correct format; must use integer or string'
+                );
             }
         } else {
             // We don't have a valid entry
@@ -520,7 +544,9 @@ class JTwitterLists extends JTwitterObject
 
         if ($user_id == null && $screen_name == null) {
             // We don't have a valid entry
-            throw new RuntimeException('You must specify either a comma separated list of screen names, user IDs, or a combination of the two');
+            throw new RuntimeException(
+                'You must specify either a comma separated list of screen names, user IDs, or a combination of the two'
+            );
         }
 
         // Set the API path
@@ -562,7 +588,9 @@ class JTwitterLists extends JTwitterObject
                 $data['owner_screen_name'] = $owner;
             } else {
                 // We don't have a valid entry
-                throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+                throw new RuntimeException(
+                    'The specified username is not in the correct format; must use integer or string'
+                );
             }
         } else {
             // We don't have a valid entry
@@ -615,7 +643,9 @@ class JTwitterLists extends JTwitterObject
                 $data['owner_screen_name'] = $owner;
             } else {
                 // We don't have a valid entry
-                throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+                throw new RuntimeException(
+                    'The specified username is not in the correct format; must use integer or string'
+                );
             }
         } else {
             // We don't have a valid entry
@@ -653,7 +683,9 @@ class JTwitterLists extends JTwitterObject
             $data['screen_name'] = $user;
         } else {
             // We don't have a valid entry
-            throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+            throw new RuntimeException(
+                'The specified username is not in the correct format; must use integer or string'
+            );
         }
 
         // Check if count is specified.
@@ -706,7 +738,9 @@ class JTwitterLists extends JTwitterObject
                 $data['owner_screen_name'] = $owner;
             } else {
                 // We don't have a valid entry
-                throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+                throw new RuntimeException(
+                    'The specified username is not in the correct format; must use integer or string'
+                );
             }
         } else {
             // We don't have a valid entry
@@ -803,7 +837,9 @@ class JTwitterLists extends JTwitterObject
                 $data['owner_screen_name'] = $owner;
             } else {
                 // We don't have a valid entry
-                throw new RuntimeException('The specified username for owner is not in the correct format; must use integer or string');
+                throw new RuntimeException(
+                    'The specified username for owner is not in the correct format; must use integer or string'
+                );
             }
         } else {
             // We don't have a valid entry

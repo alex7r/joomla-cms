@@ -14,9 +14,9 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.multiselect');
 
-$user      = JFactory::getUser();
+$user = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_messages&view=messages'); ?>" method="post" name="adminForm"
@@ -39,7 +39,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                            title="<?php echo JText::_('COM_MESSAGES_SEARCH_IN_SUBJECT'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
                 <div class="filter-select">
                     <label class="selectlabel" for="filter_state">
@@ -47,8 +49,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     </label>
                     <select name="filter_state" id="filter_state">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                        <?php echo JHtml::_('select.options', MessagesHelper::getStateOptions(), 'value', 'text',
-                            $this->state->get('filter.state')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            MessagesHelper::getStateOptions(),
+                            'value',
+                            'text',
+                            $this->state->get('filter.state')
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -66,16 +73,31 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
                     </th>
                     <th class="title">
-                        <?php echo JHtml::_('grid.sort', 'COM_MESSAGES_HEADING_SUBJECT', 'a.subject', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_MESSAGES_HEADING_SUBJECT',
+                            'a.subject',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-5">
-                        <?php echo JHtml::_('grid.sort', 'COM_MESSAGES_HEADING_READ', 'a.state', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_MESSAGES_HEADING_READ',
+                            'a.state',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-15">
-                        <?php echo JHtml::_('grid.sort', 'COM_MESSAGES_HEADING_FROM', 'a.user_id_from', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_MESSAGES_HEADING_FROM',
+                            'a.user_id_from',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap width-20">
                         <?php echo JHtml::_('grid.sort', 'JDATE', 'a.date_time', $listDirn, $listOrder); ?>
@@ -92,7 +114,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                             <?php echo JHtml::_('grid.id', $i, $item->message_id); ?>
                         </td>
                         <td>
-                            <a href="<?php echo JRoute::_('index.php?option=com_messages&view=message&message_id=' . (int)$item->message_id); ?>">
+                            <a href="<?php echo JRoute::_(
+                                'index.php?option=com_messages&view=message&message_id=' . (int)$item->message_id
+                            ); ?>">
                                 <?php echo $this->escape($item->subject); ?></a>
                         </td>
                         <td class="center">

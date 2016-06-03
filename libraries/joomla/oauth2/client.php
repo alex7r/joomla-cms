@@ -93,7 +93,9 @@ class JOAuth2Client
 
                 return $token;
             } else {
-                throw new RuntimeException('Error code ' . $response->code . ' received requesting access token: ' . $response->body . '.');
+                throw new RuntimeException(
+                    'Error code ' . $response->code . ' received requesting access token: ' . $response->body . '.'
+                );
             }
         }
 
@@ -186,8 +188,10 @@ class JOAuth2Client
         }
 
         if ($this->getOption('scope')) {
-            $scope = is_array($this->getOption('scope')) ? implode(' ',
-                $this->getOption('scope')) : $this->getOption('scope');
+            $scope = is_array($this->getOption('scope')) ? implode(
+                ' ',
+                $this->getOption('scope')
+            ) : $this->getOption('scope');
             $url .= '&scope=' . urlencode($scope);
         }
 
@@ -293,7 +297,9 @@ class JOAuth2Client
         }
 
         if ($response->code < 200 || $response->code >= 400) {
-            throw new RuntimeException('Error code ' . $response->code . ' received requesting data: ' . $response->body . '.');
+            throw new RuntimeException(
+                'Error code ' . $response->code . ' received requesting data: ' . $response->body . '.'
+            );
         }
 
         return $response;
@@ -344,7 +350,9 @@ class JOAuth2Client
 
             return $token;
         } else {
-            throw new Exception('Error code ' . $response->code . ' received refreshing token: ' . $response->body . '.');
+            throw new Exception(
+                'Error code ' . $response->code . ' received refreshing token: ' . $response->body . '.'
+            );
         }
     }
 }

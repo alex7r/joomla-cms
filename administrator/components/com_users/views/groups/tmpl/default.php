@@ -16,13 +16,14 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
-$user      = JFactory::getUser();
+$user = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 
 JText::script('COM_USERS_GROUPS_CONFIRM_DELETE');
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 		Joomla.submitbutton = function(task) {
 			if (task == "groups.delete") {
 				var i, cids = document.getElementsByName("cid[]");
@@ -39,7 +40,8 @@ JFactory::getDocument()->addScriptDeclaration('
 			Joomla.submitform(task);
 			return false;
 		};
-');
+'
+);
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_users&view=groups'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -51,8 +53,10 @@ JFactory::getDocument()->addScriptDeclaration('
         <?php else : ?>
         <div id="j-main-container">
             <?php endif; ?>
-            <?php echo JLayoutHelper::render('joomla.searchtools.default',
-                array('view' => $this, 'options' => array('filterButton' => false))); ?>
+            <?php echo JLayoutHelper::render(
+                'joomla.searchtools.default',
+                array('view' => $this, 'options' => array('filterButton' => false))
+            ); ?>
             <div class="clearfix"></div>
             <?php if (empty($this->items)) : ?>
                 <div class="alert alert-no-items">
@@ -66,8 +70,13 @@ JFactory::getDocument()->addScriptDeclaration('
                             <?php echo JHtml::_('grid.checkall'); ?>
                         </th>
                         <th class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_GROUP_TITLE', 'a.title',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_USERS_HEADING_GROUP_TITLE',
+                                'a.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap center">
                             <i class="icon-publish hasTooltip"
@@ -80,8 +89,13 @@ JFactory::getDocument()->addScriptDeclaration('
                             <span class="hidden-phone"><?php echo JText::_('COM_USERS_COUNT_DISABLED_USERS'); ?></span>
                         </th>
                         <th width="1%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ID',
+                                'a.id',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -110,17 +124,23 @@ JFactory::getDocument()->addScriptDeclaration('
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <?php echo JLayoutHelper::render('joomla.html.treeprefix',
-                                    array('level' => $item->level + 1)); ?>
+                                <?php echo JLayoutHelper::render(
+                                    'joomla.html.treeprefix',
+                                    array('level' => $item->level + 1)
+                                ); ?>
                                 <?php if ($canEdit) : ?>
-                                    <a href="<?php echo JRoute::_('index.php?option=com_users&task=group.edit&id=' . $item->id); ?>">
+                                    <a href="<?php echo JRoute::_(
+                                        'index.php?option=com_users&task=group.edit&id=' . $item->id
+                                    ); ?>">
                                         <?php echo $this->escape($item->title); ?></a>
                                 <?php else : ?>
                                     <?php echo $this->escape($item->title); ?>
                                 <?php endif; ?>
                                 <?php if (JDEBUG) : ?>
                                     <div class="small"><a
-                                            href="<?php echo JRoute::_('index.php?option=com_users&view=debuggroup&group_id=' . (int)$item->id); ?>">
+                                            href="<?php echo JRoute::_(
+                                                'index.php?option=com_users&view=debuggroup&group_id=' . (int)$item->id
+                                            ); ?>">
                                             <?php echo JText::_('COM_USERS_DEBUG_GROUP'); ?></a></div>
                                 <?php endif; ?>
                             </td>
@@ -128,14 +148,18 @@ JFactory::getDocument()->addScriptDeclaration('
                                 <a class="badge <?php if ($item->count_enabled > 0) {
                                     echo "badge-success";
                                 } ?>"
-                                   href="<?php echo JRoute::_('index.php?option=com_users&view=users&filter[group_id]=' . (int)$item->id . '&filter[state]=0'); ?>">
+                                   href="<?php echo JRoute::_(
+                                       'index.php?option=com_users&view=users&filter[group_id]=' . (int)$item->id . '&filter[state]=0'
+                                   ); ?>">
                                     <?php echo $item->count_enabled; ?></a>
                             </td>
                             <td class="center btns">
                                 <a class="badge <?php if ($item->count_disabled > 0) {
                                     echo "badge-important";
                                 } ?>"
-                                   href="<?php echo JRoute::_('index.php?option=com_users&view=users&filter[group_id]=' . (int)$item->id . '&filter[state]=1'); ?>">
+                                   href="<?php echo JRoute::_(
+                                       'index.php?option=com_users&view=users&filter[group_id]=' . (int)$item->id . '&filter[state]=1'
+                                   ); ?>">
                                     <?php echo $item->count_disabled; ?></a>
                             </td>
                             <td class="hidden-phone">

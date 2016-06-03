@@ -45,7 +45,9 @@ class JTwitterUsers extends JTwitterObject
 
         if ($id == null && $screen_name == null) {
             // We don't have a valid entry
-            throw new RuntimeException('You must specify either a comma separated list of screen names, user IDs, or a combination of the two');
+            throw new RuntimeException(
+                'You must specify either a comma separated list of screen names, user IDs, or a combination of the two'
+            );
         }
 
         // Set the API path
@@ -84,7 +86,9 @@ class JTwitterUsers extends JTwitterObject
             $data['screen_name'] = $user;
         } else {
             // We don't have a valid entry
-            throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+            throw new RuntimeException(
+                'The specified username is not in the correct format; must use integer or string'
+            );
         }
 
         // Send the request.
@@ -157,7 +161,9 @@ class JTwitterUsers extends JTwitterObject
             $data['screen_name'] = $user;
         } else {
             // We don't have a valid entry
-            throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+            throw new RuntimeException(
+                'The specified username is not in the correct format; must use integer or string'
+            );
         }
 
         // Set the API path
@@ -196,7 +202,9 @@ class JTwitterUsers extends JTwitterObject
             $data['screen_name'] = $user;
         } else {
             // We don't have a valid entry
-            throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+            throw new RuntimeException(
+                'The specified username is not in the correct format; must use integer or string'
+            );
         }
 
         // Set the API path
@@ -240,7 +248,9 @@ class JTwitterUsers extends JTwitterObject
             $data['screen_name'] = $user;
         } else {
             // We don't have a valid entry
-            throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+            throw new RuntimeException(
+                'The specified username is not in the correct format; must use integer or string'
+            );
         }
 
         // Set the API path

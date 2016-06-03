@@ -40,7 +40,9 @@ class JMediawikiUsers extends JMediawikiObject
         $response = $this->client->post($this->fetchUrl($path), null);
 
         // Request path with login token.
-        $path = '?action=login&lgname=' . $lgname . '&lgpassword=' . $lgpassword . '&lgtoken=' . $this->validateResponse($response)->login['token'];
+        $path = '?action=login&lgname=' . $lgname . '&lgpassword=' . $lgpassword . '&lgtoken=' . $this->validateResponse(
+                $response
+            )->login['token'];
 
         if (isset($lgdomain)) {
             $path .= '&lgdomain=' . $lgdomain;

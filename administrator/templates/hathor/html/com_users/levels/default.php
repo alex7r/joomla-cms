@@ -14,10 +14,10 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.multiselect');
 
-$user      = JFactory::getUser();
+$user = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
-$canOrder  = $user->authorise('core.edit.state', 'com_users');
+$listDirn = $this->escape($this->state->get('list.direction'));
+$canOrder = $user->authorise('core.edit.state', 'com_users');
 $saveOrder = $listOrder == 'a.ordering';
 ?>
 
@@ -41,7 +41,9 @@ $saveOrder = $listOrder == 'a.ordering';
                            title="<?php echo JText::_('COM_USERS_SEARCH_TITLE_LEVELS'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_RESET'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_RESET'
+                        ); ?></button>
                 </div>
             </fieldset>
             <div class="clr"></div>
@@ -54,12 +56,22 @@ $saveOrder = $listOrder == 'a.ordering';
                                title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
                     </th>
                     <th>
-                        <?php echo JHtml::_('grid.sort', 'COM_USERS_HEADING_LEVEL_NAME', 'a.title', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_USERS_HEADING_LEVEL_NAME',
+                            'a.title',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap ordering-col">
-                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ORDERING', 'a.ordering', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'JGRID_HEADING_ORDERING',
+                            'a.ordering',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                         <?php if ($canOrder && $saveOrder) : ?>
                             <?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'levels.saveorder'); ?>
                         <?php endif; ?>
@@ -86,7 +98,9 @@ $saveOrder = $listOrder == 'a.ordering';
                         </td>
                         <td>
                             <?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_users&task=level.edit&id=' . $item->id); ?>">
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_users&task=level.edit&id=' . $item->id
+                                ); ?>">
                                     <?php echo $this->escape($item->title); ?></a>
                             <?php else : ?>
                                 <?php echo $this->escape($item->title); ?>
@@ -96,15 +110,37 @@ $saveOrder = $listOrder == 'a.ordering';
                             <?php if ($canChange) : ?>
                                 <?php if ($saveOrder) : ?>
                                     <?php if ($listDirn == 'asc') : ?>
-                                        <span><?php echo $this->pagination->orderUpIcon($i, true, 'levels.orderup',
-                                                'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                                        <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total,
-                                                true, 'levels.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                        <span><?php echo $this->pagination->orderUpIcon(
+                                                $i,
+                                                true,
+                                                'levels.orderup',
+                                                'JLIB_HTML_MOVE_UP',
+                                                $ordering
+                                            ); ?></span>
+                                        <span><?php echo $this->pagination->orderDownIcon(
+                                                $i,
+                                                $this->pagination->total,
+                                                true,
+                                                'levels.orderdown',
+                                                'JLIB_HTML_MOVE_DOWN',
+                                                $ordering
+                                            ); ?></span>
                                     <?php elseif ($listDirn == 'desc') : ?>
-                                        <span><?php echo $this->pagination->orderUpIcon($i, true, 'levels.orderdown',
-                                                'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                                        <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total,
-                                                true, 'levels.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                        <span><?php echo $this->pagination->orderUpIcon(
+                                                $i,
+                                                true,
+                                                'levels.orderdown',
+                                                'JLIB_HTML_MOVE_UP',
+                                                $ordering
+                                            ); ?></span>
+                                        <span><?php echo $this->pagination->orderDownIcon(
+                                                $i,
+                                                $this->pagination->total,
+                                                true,
+                                                'levels.orderup',
+                                                'JLIB_HTML_MOVE_DOWN',
+                                                $ordering
+                                            ); ?></span>
                                     <?php endif; ?>
                                 <?php endif; ?>
                                 <?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>

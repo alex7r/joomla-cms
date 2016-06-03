@@ -40,9 +40,9 @@ class LanguagesModelStrings extends JModelLegacy
         }
 
         // Create the insert query.
-        $query = $this->_db->getQuery(true)
-                           ->insert($this->_db->quoteName('#__overrider'))
-                           ->columns('constant, string, file');
+        $query = $this->_db->getQuery(true)->insert($this->_db->quoteName('#__overrider'))->columns(
+                'constant, string, file'
+            );
 
         // Initialize some variables.
         $client   = $app->getUserState('com_languages.overrides.filter.client', 'site') ? 'administrator' : 'site';
@@ -80,7 +80,11 @@ class LanguagesModelStrings extends JModelLegacy
                 $query->clear('values');
 
                 foreach ($strings as $key => $string) {
-                    $query->values($this->_db->quote($key) . ',' . $this->_db->quote($string) . ',' . $this->_db->quote(JPath::clean($file)));
+                    $query->values(
+                        $this->_db->quote($key) . ',' . $this->_db->quote($string) . ',' . $this->_db->quote(
+                            JPath::clean($file)
+                        )
+                    );
                 }
 
                 try {
@@ -118,9 +122,9 @@ class LanguagesModelStrings extends JModelLegacy
             $searchstring = $this->_db->quote('%' . $filter->clean($searchTerm, 'TRIM') . '%');
 
             // Create the search query.
-            $query = $this->_db->getQuery(true)
-                               ->select('constant, string, file')
-                               ->from($this->_db->quoteName('#__overrider'));
+            $query = $this->_db->getQuery(true)->select('constant, string, file')->from(
+                    $this->_db->quoteName('#__overrider')
+                );
 
             if ($input->get('searchtype') == 'constant') {
                 $query->where('constant LIKE ' . $searchstring);

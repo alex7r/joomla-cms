@@ -34,8 +34,12 @@ defined('_JEXEC') or die;
                         <?php echo JText::_('COM_INSTALLER_MSG_DATABASE_ERRORS'); ?>
                     </div>
                     <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'problems')); ?>
-                    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'problems',
-                        JText::plural('COM_INSTALLER_MSG_N_DATABASE_ERROR_PANEL', $this->errorCount)); ?>
+                    <?php echo JHtml::_(
+                        'bootstrap.addTab',
+                        'myTab',
+                        'problems',
+                        JText::plural('COM_INSTALLER_MSG_N_DATABASE_ERROR_PANEL', $this->errorCount)
+                    ); ?>
                     <fieldset class="panelform">
                         <ul>
                             <?php if (!$this->filterParams) : ?>
@@ -43,13 +47,19 @@ defined('_JEXEC') or die;
                             <?php endif; ?>
 
                             <?php if ($this->schemaVersion != $this->changeSet->getSchema()) : ?>
-                                <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_SCHEMA_ERROR',
-                                        $this->schemaVersion, $this->changeSet->getSchema()); ?></li>
+                                <li><?php echo JText::sprintf(
+                                        'COM_INSTALLER_MSG_DATABASE_SCHEMA_ERROR',
+                                        $this->schemaVersion,
+                                        $this->changeSet->getSchema()
+                                    ); ?></li>
                             <?php endif; ?>
 
                             <?php if (version_compare($this->updateVersion, JVERSION) != 0) : ?>
-                                <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_UPDATEVERSION_ERROR',
-                                        $this->updateVersion, JVERSION); ?></li>
+                                <li><?php echo JText::sprintf(
+                                        'COM_INSTALLER_MSG_DATABASE_UPDATEVERSION_ERROR',
+                                        $this->updateVersion,
+                                        JVERSION
+                                    ); ?></li>
                             <?php endif; ?>
 
                             <?php foreach ($this->errors as $line => $error) : ?>
@@ -67,21 +77,35 @@ defined('_JEXEC') or die;
 
                     <?php echo JHtml::_('bootstrap.endTab'); ?>
                 <?php endif; ?>
-                <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'other',
-                    JText::_('COM_INSTALLER_MSG_DATABASE_INFO')); ?>
+                <?php echo JHtml::_(
+                    'bootstrap.addTab',
+                    'myTab',
+                    'other',
+                    JText::_('COM_INSTALLER_MSG_DATABASE_INFO')
+                ); ?>
                 <div class="control-group">
                     <fieldset class="panelform">
                         <ul>
-                            <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_SCHEMA_VERSION',
-                                    $this->schemaVersion); ?></li>
-                            <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_UPDATE_VERSION',
-                                    $this->updateVersion); ?></li>
-                            <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_DRIVER',
-                                    JFactory::getDbo()->name); ?></li>
-                            <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_CHECKED_OK',
-                                    count($this->results['ok'])); ?></li>
-                            <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_SKIPPED',
-                                    count($this->results['skipped'])); ?></li>
+                            <li><?php echo JText::sprintf(
+                                    'COM_INSTALLER_MSG_DATABASE_SCHEMA_VERSION',
+                                    $this->schemaVersion
+                                ); ?></li>
+                            <li><?php echo JText::sprintf(
+                                    'COM_INSTALLER_MSG_DATABASE_UPDATE_VERSION',
+                                    $this->updateVersion
+                                ); ?></li>
+                            <li><?php echo JText::sprintf(
+                                    'COM_INSTALLER_MSG_DATABASE_DRIVER',
+                                    JFactory::getDbo()->name
+                                ); ?></li>
+                            <li><?php echo JText::sprintf(
+                                    'COM_INSTALLER_MSG_DATABASE_CHECKED_OK',
+                                    count($this->results['ok'])
+                                ); ?></li>
+                            <li><?php echo JText::sprintf(
+                                    'COM_INSTALLER_MSG_DATABASE_SKIPPED',
+                                    count($this->results['skipped'])
+                                ); ?></li>
                         </ul>
                     </fieldset>
                 </div>

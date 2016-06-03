@@ -72,9 +72,10 @@ class ConfigControllerDisplay extends JControllerBase
             $component = $model->getState()->get('component.option');
 
             // Access check.
-            if (!JFactory::getUser()->authorise('core.admin', $component) && !JFactory::getUser()
-                                                                                      ->authorise('core.options',
-                                                                                          $component)
+            if (!JFactory::getUser()->authorise('core.admin', $component) && !JFactory::getUser()->authorise(
+                        'core.options',
+                        $component
+                    )
             ) {
                 $this->app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 

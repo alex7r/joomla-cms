@@ -28,10 +28,9 @@ class MessagesModelConfig extends JModelForm
         $item = new JObject;
 
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('cfg_name, cfg_value')
-                    ->from('#__messages_cfg')
-                    ->where($db->quoteName('user_id') . ' = ' . (int)$this->getState('user.id'));
+        $query = $db->getQuery(true)->select('cfg_name, cfg_value')->from('#__messages_cfg')->where(
+                $db->quoteName('user_id') . ' = ' . (int)$this->getState('user.id')
+            );
 
         $db->setQuery($query);
 
@@ -88,9 +87,9 @@ class MessagesModelConfig extends JModelForm
         $db = $this->getDbo();
 
         if ($userId = (int)$this->getState('user.id')) {
-            $query = $db->getQuery(true)
-                        ->delete($db->quoteName('#__messages_cfg'))
-                        ->where($db->quoteName('user_id') . '=' . (int)$userId);
+            $query = $db->getQuery(true)->delete($db->quoteName('#__messages_cfg'))->where(
+                    $db->quoteName('user_id') . '=' . (int)$userId
+                );
             $db->setQuery($query);
 
             try {
@@ -102,9 +101,9 @@ class MessagesModelConfig extends JModelForm
             }
 
             if (count($data)) {
-                $query = $db->getQuery(true)
-                            ->insert($db->quoteName('#__messages_cfg'))
-                            ->columns($db->quoteName(array('user_id', 'cfg_name', 'cfg_value')));
+                $query = $db->getQuery(true)->insert($db->quoteName('#__messages_cfg'))->columns(
+                        $db->quoteName(array('user_id', 'cfg_name', 'cfg_value'))
+                    );
 
                 foreach ($data as $k => $v) {
                     $query->values($userId . ', ' . $db->quote($k) . ', ' . $db->quote($v));

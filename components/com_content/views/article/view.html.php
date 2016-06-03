@@ -66,8 +66,13 @@ class ContentViewArticle extends JViewLegacy
         }
 
         // TODO: Change based on shownoauth
-        $item->readmore_link = JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catid,
-            $item->language));
+        $item->readmore_link = JRoute::_(
+            ContentHelperRoute::getArticleRoute(
+                $item->slug,
+                $item->catid,
+                $item->language
+            )
+        );
 
         // Merge article params. If this is single-article view, menu params override article params
         // Otherwise, article params override menu item params
@@ -143,16 +148,22 @@ class ContentViewArticle extends JViewLegacy
         $dispatcher->trigger('onContentPrepare', array('com_content.article', &$item, &$item->params, $offset));
 
         $item->event                    = new stdClass;
-        $results                        = $dispatcher->trigger('onContentAfterTitle',
-            array('com_content.article', &$item, &$item->params, $offset));
+        $results                        = $dispatcher->trigger(
+            'onContentAfterTitle',
+            array('com_content.article', &$item, &$item->params, $offset)
+        );
         $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-        $results                           = $dispatcher->trigger('onContentBeforeDisplay',
-            array('com_content.article', &$item, &$item->params, $offset));
+        $results                           = $dispatcher->trigger(
+            'onContentBeforeDisplay',
+            array('com_content.article', &$item, &$item->params, $offset)
+        );
         $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-        $results                          = $dispatcher->trigger('onContentAfterDisplay',
-            array('com_content.article', &$item, &$item->params, $offset));
+        $results                          = $dispatcher->trigger(
+            'onContentAfterDisplay',
+            array('com_content.article', &$item, &$item->params, $offset)
+        );
         $item->event->afterDisplayContent = trim(implode("\n", $results));
 
         // Escape strings for HTML output
@@ -261,8 +272,12 @@ class ContentViewArticle extends JViewLegacy
         // If there is a pagebreak heading or title, add it to the page title
         if (!empty($this->item->page_title)) {
             $this->item->title = $this->item->title . ' - ' . $this->item->page_title;
-            $this->document->setTitle($this->item->page_title . ' - ' . JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM',
-                    $this->state->get('list.offset') + 1));
+            $this->document->setTitle(
+                $this->item->page_title . ' - ' . JText::sprintf(
+                    'PLG_CONTENT_PAGEBREAK_PAGE_NUM',
+                    $this->state->get('list.offset') + 1
+                )
+            );
         }
 
         if ($this->print) {

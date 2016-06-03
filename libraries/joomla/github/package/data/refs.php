@@ -97,10 +97,12 @@ class JGithubPackageDataRefs extends JGithubPackage
         $path = '/repos/' . $user . '/' . $repo . '/git/refs';
 
         // Build the request data.
-        $data = json_encode(array(
-            'ref' => $ref,
-            'sha' => $sha
-        ));
+        $data = json_encode(
+            array(
+                'ref' => $ref,
+                'sha' => $sha
+            )
+        );
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);

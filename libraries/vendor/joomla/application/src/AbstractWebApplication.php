@@ -136,7 +136,10 @@ abstract class AbstractWebApplication extends AbstractApplication
         // @event onAfterExecute
 
         // If gzip compression is enabled in configuration and the server is compliant, compress the output.
-        if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get('output_handler') != 'ob_gzhandler')) {
+        if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get(
+                                                                              'output_handler'
+                                                                          ) != 'ob_gzhandler')
+        ) {
             $this->compress();
         }
 
@@ -587,7 +590,9 @@ abstract class AbstractWebApplication extends AbstractApplication
         } else // If not in "Apache Mode" we will assume that we are in an IIS environment and proceed.
         {
             // IIS uses the SCRIPT_NAME variable instead of a REQUEST_URI variable... thanks, MS
-            $uri       = $scheme . $this->input->server->getString('HTTP_HOST') . $this->input->server->getString('SCRIPT_NAME');
+            $uri       = $scheme . $this->input->server->getString('HTTP_HOST') . $this->input->server->getString(
+                    'SCRIPT_NAME'
+                );
             $queryHost = $this->input->server->getString('QUERY_STRING', '');
 
             // If the QUERY_STRING variable exists append it to the URI string.
@@ -713,8 +718,10 @@ abstract class AbstractWebApplication extends AbstractApplication
 
         // Set the extended (non-base) part of the request URI as the route.
         if (stripos($this->get('uri.request'), $this->get('uri.base.full')) === 0) {
-            $this->set('uri.route',
-                substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full'))));
+            $this->set(
+                'uri.route',
+                substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full')))
+            );
         }
 
         // Get an explicitly set media URI is present.

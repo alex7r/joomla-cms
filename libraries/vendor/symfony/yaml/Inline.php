@@ -290,8 +290,14 @@ class Inline
 
             // a non-quoted string cannot start with @ or ` (reserved) nor with a scalar indicator (| or >)
             if ($output && ('@' === $output[0] || '`' === $output[0] || '|' === $output[0] || '>' === $output[0])) {
-                @trigger_error(sprintf('Not quoting the scalar "%s" starting with "%s" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.',
-                    $output, $output[0]), E_USER_DEPRECATED);
+                @trigger_error(
+                    sprintf(
+                        'Not quoting the scalar "%s" starting with "%s" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.',
+                        $output,
+                        $output[0]
+                    ),
+                    E_USER_DEPRECATED
+                );
 
                 // to be thrown in 3.0
                 // throw new ParseException(sprintf('The reserved indicator "%s" cannot start a plain scalar; you need to quote the scalar.', $output[0]));
@@ -379,7 +385,9 @@ class Inline
             case 'false' === $scalarLower:
                 return false;
             // Optimise for returning strings.
-            case $scalar[0] === '+' || $scalar[0] === '-' || $scalar[0] === '.' || $scalar[0] === '!' || is_numeric($scalar[0]):
+            case $scalar[0] === '+' || $scalar[0] === '-' || $scalar[0] === '.' || $scalar[0] === '!' || is_numeric(
+                    $scalar[0]
+                ):
                 switch (true) {
                     case 0 === strpos($scalar, '!str'):
                         return (string)substr($scalar, 5);
@@ -491,8 +499,12 @@ EOF;
         switch (true) {
             case is_resource($value):
                 if ($exceptionOnInvalidType) {
-                    throw new DumpException(sprintf('Unable to dump PHP resources in a YAML file ("%s").',
-                        get_resource_type($value)));
+                    throw new DumpException(
+                        sprintf(
+                            'Unable to dump PHP resources in a YAML file ("%s").',
+                            get_resource_type($value)
+                        )
+                    );
                 }
 
                 return 'null';
@@ -564,9 +576,13 @@ EOF;
         // array
         $keys      = array_keys($value);
         $keysCount = count($keys);
-        if ((1 === $keysCount && '0' == $keys[0]) || ($keysCount > 1 && array_reduce($keys, function ($v, $w) {
-                    return (int)$v + $w;
-                }, 0) === $keysCount * ($keysCount - 1) / 2)
+        if ((1 === $keysCount && '0' == $keys[0]) || ($keysCount > 1 && array_reduce(
+                                                                            $keys,
+                                                                            function ($v, $w) {
+                                                                                return (int)$v + $w;
+                                                                            },
+                                                                            0
+                                                                        ) === $keysCount * ($keysCount - 1) / 2)
         ) {
             $output = array();
             foreach ($value as $val) {
@@ -579,8 +595,11 @@ EOF;
         // mapping
         $output = array();
         foreach ($value as $key => $val) {
-            $output[] = sprintf('%s: %s', self::dump($key, $exceptionOnInvalidType, $objectSupport),
-                self::dump($val, $exceptionOnInvalidType, $objectSupport));
+            $output[] = sprintf(
+                '%s: %s',
+                self::dump($key, $exceptionOnInvalidType, $objectSupport),
+                self::dump($val, $exceptionOnInvalidType, $objectSupport)
+            );
         }
 
         return sprintf('{ %s }', implode(', ', $output));

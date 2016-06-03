@@ -37,8 +37,9 @@ abstract class JToolbarHelper
 
         $app                  = JFactory::getApplication();
         $app->JComponentTitle = $html;
-        JFactory::getDocument()
-                ->setTitle(strip_tags($title) . ' - ' . $app->get('sitename') . ' - ' . JText::_('JADMINISTRATION'));
+        JFactory::getDocument()->setTitle(
+                strip_tags($title) . ' - ' . $app->get('sitename') . ' - ' . JText::_('JADMINISTRATION')
+            );
     }
 
     /**
@@ -187,8 +188,14 @@ abstract class JToolbarHelper
         $bar = JToolbar::getInstance('toolbar');
 
         // Add an upload button.
-        $bar->appendButton('Popup', 'upload', $alt,
-            'index.php?option=com_media&tmpl=component&task=popupUpload&folder=' . $directory, 800, 520);
+        $bar->appendButton(
+            'Popup',
+            'upload',
+            $alt,
+            'index.php?option=com_media&tmpl=component&task=popupUpload&folder=' . $directory,
+            800,
+            520
+        );
     }
 
     /**
@@ -594,8 +601,12 @@ abstract class JToolbarHelper
         $return = urlencode(base64_encode($uri));
 
         // Add a button linking to config for component.
-        $bar->appendButton('Link', 'options', $alt,
-            'index.php?option=com_config&amp;view=component&amp;component=' . $component . '&amp;path=' . $path . '&amp;return=' . $return);
+        $bar->appendButton(
+            'Link',
+            'options',
+            $alt,
+            'index.php?option=com_config&amp;view=component&amp;component=' . $component . '&amp;path=' . $path . '&amp;return=' . $return
+        );
     }
 
     /**

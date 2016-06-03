@@ -155,8 +155,9 @@ class FinderIndexerHelper
                 // Create the two word phrase.
                 if ($i2 < $n && isset($tokens[$i2])) {
                     // Tokenize the two word phrase.
-                    $token          = new FinderIndexerToken(array($tokens[$i]->term, $tokens[$i2]->term), $lang,
-                        $lang === 'zh' ? '' : ' ');
+                    $token          = new FinderIndexerToken(
+                        array($tokens[$i]->term, $tokens[$i2]->term), $lang, $lang === 'zh' ? '' : ' '
+                    );
                     $token->derived = true;
 
                     // Add the token to the stack.
@@ -166,11 +167,13 @@ class FinderIndexerHelper
                 // Create the three word phrase.
                 if ($i3 < $n && isset($tokens[$i3])) {
                     // Tokenize the three word phrase.
-                    $token          = new FinderIndexerToken(array(
-                        $tokens[$i]->term,
-                        $tokens[$i2]->term,
-                        $tokens[$i3]->term
-                    ), $lang, $lang === 'zh' ? '' : ' ');
+                    $token          = new FinderIndexerToken(
+                        array(
+                            $tokens[$i]->term,
+                            $tokens[$i2]->term,
+                            $tokens[$i3]->term
+                        ), $lang, $lang === 'zh' ? '' : ' '
+                    );
                     $token->derived = true;
 
                     // Add the token to the stack.
@@ -279,10 +282,12 @@ class FinderIndexerHelper
         }
 
         // Add the type.
-        $query->clear()->insert($db->quoteName('#__finder_types'))->columns(array(
-            $db->quoteName('title'),
-            $db->quoteName('mime')
-        ))->values($db->quote($title) . ', ' . $db->quote($mime));
+        $query->clear()->insert($db->quoteName('#__finder_types'))->columns(
+            array(
+                $db->quoteName('title'),
+                $db->quoteName('mime')
+            )
+        )->values($db->quote($title) . ', ' . $db->quote($mime));
         $db->setQuery($query);
         $db->execute();
 

@@ -40,24 +40,36 @@ if (!empty($this->items)) {
 
 <form action="<?php echo htmlspecialchars(JUri::getInstance()->toString()); ?>" method="post" name="adminForm"
       id="adminForm" class="form-inline">
-    <?php if ($this->params->get('show_headings') || $this->params->get('filter_field') != 'hide' || $this->params->get('show_pagination_limit')) : ?>
+    <?php if ($this->params->get('show_headings') || $this->params->get('filter_field') != 'hide' || $this->params->get(
+            'show_pagination_limit'
+        )
+    ) : ?>
         <fieldset class="filters btn-toolbar clearfix">
             <?php if ($this->params->get('filter_field') != 'hide') : ?>
                 <div class="btn-group">
                     <?php if ($this->params->get('filter_field') != 'tag') : ?>
                         <label class="filter-search-lbl element-invisible" for="filter-search">
-                            <?php echo JText::_('COM_CONTENT_' . $this->params->get('filter_field') . '_FILTER_LABEL') . '&#160;'; ?>
+                            <?php echo JText::_(
+                                    'COM_CONTENT_' . $this->params->get('filter_field') . '_FILTER_LABEL'
+                                ) . '&#160;'; ?>
                         </label>
                         <input type="text" name="filter-search" id="filter-search"
                                value="<?php echo $this->escape($this->state->get('list.filter')); ?>" class="inputbox"
                                onchange="document.adminForm.submit();"
                                title="<?php echo JText::_('COM_CONTENT_FILTER_SEARCH_DESC'); ?>"
-                               placeholder="<?php echo JText::_('COM_CONTENT_' . $this->params->get('filter_field') . '_FILTER_LABEL'); ?>"/>
+                               placeholder="<?php echo JText::_(
+                                   'COM_CONTENT_' . $this->params->get('filter_field') . '_FILTER_LABEL'
+                               ); ?>"/>
                     <?php else : ?>
                         <select name="filter_tag" id="filter_tag" onchange="document.adminForm.submit();">
                             <option value=""><?php echo JText::_('JOPTION_SELECT_TAG'); ?></option>
-                            <?php echo JHtml::_('select.options', JHtml::_('tag.options', true, true), 'value', 'text',
-                                $this->state->get('filter.tag')); ?>
+                            <?php echo JHtml::_(
+                                'select.options',
+                                JHtml::_('tag.options', true, true),
+                                'value',
+                                'text',
+                                $this->state->get('filter.tag')
+                            ); ?>
                         </select>
                     <?php endif; ?>
                 </div>
@@ -102,14 +114,29 @@ if (!empty($this->items)) {
                 <?php if ($date = $this->params->get('list_show_date')) : ?>
                     <th id="categorylist_header_date">
                         <?php if ($date == "created") : ?>
-                            <?php echo JHtml::_('grid.sort', 'COM_CONTENT_' . $date . '_DATE', 'a.created', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_CONTENT_' . $date . '_DATE',
+                                'a.created',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         <?php elseif ($date == "modified") : ?>
-                            <?php echo JHtml::_('grid.sort', 'COM_CONTENT_' . $date . '_DATE', 'a.modified', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_CONTENT_' . $date . '_DATE',
+                                'a.modified',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         <?php elseif ($date == "published") : ?>
-                            <?php echo JHtml::_('grid.sort', 'COM_CONTENT_' . $date . '_DATE', 'a.publish_up',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_CONTENT_' . $date . '_DATE',
+                                'a.publish_up',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         <?php endif; ?>
                     </th>
                 <?php endif; ?>
@@ -138,8 +165,13 @@ if (!empty($this->items)) {
             <?php endif; ?>
             <td <?php echo $headerTitle; ?> class="list-title">
                 <?php if (in_array($article->access, $this->user->getAuthorisedViewLevels())) : ?>
-                    <a href="<?php echo JRoute::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid,
-                        $article->language)); ?>">
+                    <a href="<?php echo JRoute::_(
+                        ContentHelperRoute::getArticleRoute(
+                            $article->slug,
+                            $article->catid,
+                            $article->language
+                        )
+                    ); ?>">
                         <?php echo $this->escape($article->title); ?>
                     </a>
                 <?php else: ?>
@@ -149,9 +181,16 @@ if (!empty($this->items)) {
                     $active = $menu->getActive();
                     $itemId = $active->id;
                     $link   = new JUri(JRoute::_('index.php?option=com_users&view=login&Itemid=' . $itemId, false));
-                    $link->setVar('return',
-                        base64_encode(ContentHelperRoute::getArticleRoute($article->slug, $article->catid,
-                            $article->language)));
+                    $link->setVar(
+                        'return',
+                        base64_encode(
+                            ContentHelperRoute::getArticleRoute(
+                                $article->slug,
+                                $article->catid,
+                                $article->language
+                            )
+                        )
+                    );
                     ?>
                     <a href="<?php echo $link; ?>" class="register">
                         <?php echo JText::_('COM_CONTENT_REGISTER_TO_READ_MORE'); ?>
@@ -167,8 +206,9 @@ if (!empty($this->items)) {
 								<?php echo JText::_('JNOTPUBLISHEDYET'); ?>
 							</span>
                 <?php endif; ?>
-                <?php if ((strtotime($article->publish_down) < strtotime(JFactory::getDate())) && $article->publish_down != JFactory::getDbo()
-                                                                                                                                    ->getNullDate()
+                <?php if ((strtotime($article->publish_down) < strtotime(
+                            JFactory::getDate()
+                        )) && $article->publish_down != JFactory::getDbo()->getNullDate()
                 ) : ?>
                     <span class="list-published label label-warning">
 								<?php echo JText::_('JEXPIRED'); ?>
@@ -178,8 +218,11 @@ if (!empty($this->items)) {
             <?php if ($this->params->get('list_show_date')) : ?>
                 <td <?php echo $headerDate; ?> class="list-date small">
                     <?php
-                    echo JHtml::_('date', $article->displayDate,
-                        $this->escape($this->params->get('date_format', JText::_('DATE_FORMAT_LC3')))); ?>
+                    echo JHtml::_(
+                        'date',
+                        $article->displayDate,
+                        $this->escape($this->params->get('date_format', JText::_('DATE_FORMAT_LC3')))
+                    ); ?>
                 </td>
             <?php endif; ?>
             <?php if ($this->params->get('list_show_author', 1)) : ?>
@@ -188,8 +231,10 @@ if (!empty($this->items)) {
                         <?php $author = $article->author ?>
                         <?php $author = ($article->created_by_alias ? $article->created_by_alias : $author); ?>
                         <?php if (!empty($article->contact_link) && $this->params->get('link_author') == true) : ?>
-                            <?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY',
-                                JHtml::_('link', $article->contact_link, $author)); ?>
+                            <?php echo JText::sprintf(
+                                'COM_CONTENT_WRITTEN_BY',
+                                JHtml::_('link', $article->contact_link, $author)
+                            ); ?>
                         <?php else: ?>
                             <?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY', $author); ?>
                         <?php endif; ?>
@@ -223,8 +268,10 @@ if (!empty($this->items)) {
 
     <?php // Add pagination links ?>
     <?php if (!empty($this->items)) : ?>
-    <?php if (($this->params->def('show_pagination',
-                2) == 1 || ($this->params->get('show_pagination') == 2)) && ($this->pagination->pagesTotal > 1)
+    <?php if (($this->params->def(
+                'show_pagination',
+                2
+            ) == 1 || ($this->params->get('show_pagination') == 2)) && ($this->pagination->pagesTotal > 1)
     ) : ?>
         <div class="pagination">
 

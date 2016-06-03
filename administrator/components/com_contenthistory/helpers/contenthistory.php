@@ -103,7 +103,9 @@ class ContenthistoryHelper
                     $name = (string)$field->attributes()->name;
 
                     if (isset($expandedObjectArray[$name])) {
-                        $optionFieldArray                           = $field->xpath('option[@value="' . $expandedObjectArray[$name] . '"]');
+                        $optionFieldArray                           = $field->xpath(
+                            'option[@value="' . $expandedObjectArray[$name] . '"]'
+                        );
                         $valueText                                  = trim((string)$optionFieldArray[0]);
                         $values[(string)$field->attributes()->name] = JText::_($valueText);
                     }
@@ -165,8 +167,13 @@ class ContenthistoryHelper
              * Loading language file from the administrator/language directory then
              * loading language file from the administrator/components/extension/language directory
              */
-            $lang->load($component, JPATH_ADMINISTRATOR, null, false, true) || $lang->load($component,
-                JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component), null, false, true);
+            $lang->load($component, JPATH_ADMINISTRATOR, null, false, true) || $lang->load(
+                $component,
+                JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component),
+                null,
+                false,
+                true
+            );
 
             // Force loading of back-end global language file
             $lang->load('joomla', JPath::clean(JPATH_ADMINISTRATOR), null, false, true);
@@ -291,8 +298,10 @@ class ContenthistoryHelper
                     $sourceColumn = isset($lookup->sourceColumn) ? $lookup->sourceColumn : false;
                     $sourceValue  = isset($object->$sourceColumn->value) ? $object->$sourceColumn->value : false;
 
-                    if ($sourceColumn && $sourceValue && ($lookupValue = static::getLookupValue($lookup,
-                            $sourceValue))
+                    if ($sourceColumn && $sourceValue && ($lookupValue = static::getLookupValue(
+                            $lookup,
+                            $sourceValue
+                        ))
                     ) {
                         $object->$sourceColumn->value = $lookupValue;
                     }
@@ -320,9 +329,9 @@ class ContenthistoryHelper
         if (isset($lookup->sourceColumn) && isset($lookup->targetTable) && isset($lookup->targetColumn) && isset($lookup->displayColumn)) {
             $db    = JFactory::getDbo();
             $query = $db->getQuery(true);
-            $query->select($db->quoteName($lookup->displayColumn))
-                  ->from($db->quoteName($lookup->targetTable))
-                  ->where($db->quoteName($lookup->targetColumn) . ' = ' . $db->quote($value));
+            $query->select($db->quoteName($lookup->displayColumn))->from($db->quoteName($lookup->targetTable))->where(
+                    $db->quoteName($lookup->targetColumn) . ' = ' . $db->quote($value)
+                );
             $db->setQuery($query);
 
             try {

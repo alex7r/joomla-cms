@@ -65,8 +65,10 @@ class JFormFieldUrl extends JFormFieldText
         JHtml::_('jquery.framework');
         JHtml::_('script', 'system/html5fallback.js', false, true);
 
-        return '<input ' . $inputType . ' name="' . $this->name . '"' . $class . ' id="' . $this->id . '" value="' . htmlspecialchars(JStringPunycode::urlToUTF8($this->value),
+        return '<input ' . $inputType . ' name="' . $this->name . '"' . $class . ' id="' . $this->id . '" value="' . htmlspecialchars(
+            JStringPunycode::urlToUTF8($this->value),
             ENT_COMPAT,
-            'UTF-8') . '"' . $size . $disabled . $readonly . $hint . $autocomplete . $autofocus . $spellcheck . $onchange . $maxLength . $required . ' />';
+            'UTF-8'
+        ) . '"' . $size . $disabled . $readonly . $hint . $autocomplete . $autofocus . $spellcheck . $onchange . $maxLength . $required . ' />';
     }
 }

@@ -12,7 +12,8 @@ defined('_JEXEC') or die;
 $input = JFactory::getApplication()->input;
 // Checking if loaded via index.php or component.php
 $tmpl = ($input->getCmd('tmpl') != '') ? '1' : '';
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 		setmenutype = function(type) {
 			var tmpl = ' . json_encode($tmpl) . ';
 			if (tmpl)
@@ -25,7 +26,8 @@ JFactory::getDocument()->addScriptDeclaration('
 				window.location="index.php?option=com_menus&view=item&task=item.setType&layout=edit&type=" + type;
 			}
 		};
-	');
+	'
+);
 ?>
 
 <h2 class="modal-title"><?php echo JText::_('COM_MENUS_TYPE_CHOOSE'); ?></h2>
@@ -38,11 +40,15 @@ JFactory::getDocument()->addScriptDeclaration('
                     <ul>
                         <?php foreach ($list as $item): ?>
                             <li><a class="choose_type" href="#" title="<?php echo JText::_($item->description); ?>"
-                                   onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array(
-                                       'id'      => $this->recordId,
-                                       'title'   => $item->title,
-                                       'request' => $item->request
-                                   ))); ?>')">
+                                   onclick="javascript:setmenutype('<?php echo base64_encode(
+                                       json_encode(
+                                           array(
+                                               'id'      => $this->recordId,
+                                               'title'   => $item->title,
+                                               'request' => $item->request
+                                           )
+                                       )
+                                   ); ?>')">
                                     <?php echo JText::_($item->title); ?>
                                 </a>
                             </li>
@@ -60,34 +66,50 @@ JFactory::getDocument()->addScriptDeclaration('
                 <ul>
                     <li><a class="choose_type" href="#"
                            title="<?php echo JText::_('COM_MENUS_TYPE_EXTERNAL_URL_DESC'); ?>"
-                           onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array(
-                               'id'    => $this->recordId,
-                               'title' => 'url'
-                           ))); ?>')">
+                           onclick="javascript:setmenutype('<?php echo base64_encode(
+                               json_encode(
+                                   array(
+                                       'id'    => $this->recordId,
+                                       'title' => 'url'
+                                   )
+                               )
+                           ); ?>')">
                             <?php echo JText::_('COM_MENUS_TYPE_EXTERNAL_URL'); ?>
                         </a>
                     </li>
                     <li><a class="choose_type" href="#" title="<?php echo JText::_('COM_MENUS_TYPE_ALIAS_DESC'); ?>"
-                           onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array(
-                               'id'    => $this->recordId,
-                               'title' => 'alias'
-                           ))); ?>')">
+                           onclick="javascript:setmenutype('<?php echo base64_encode(
+                               json_encode(
+                                   array(
+                                       'id'    => $this->recordId,
+                                       'title' => 'alias'
+                                   )
+                               )
+                           ); ?>')">
                             <?php echo JText::_('COM_MENUS_TYPE_ALIAS'); ?>
                         </a>
                     </li>
                     <li><a class="choose_type" href="#" title="<?php echo JText::_('COM_MENUS_TYPE_SEPARATOR_DESC'); ?>"
-                           onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array(
-                               'id'    => $this->recordId,
-                               'title' => 'separator'
-                           ))); ?>')">
+                           onclick="javascript:setmenutype('<?php echo base64_encode(
+                               json_encode(
+                                   array(
+                                       'id'    => $this->recordId,
+                                       'title' => 'separator'
+                                   )
+                               )
+                           ); ?>')">
                             <?php echo JText::_('COM_MENUS_TYPE_SEPARATOR'); ?>
                         </a>
                     </li>
                     <li><a class="choose_type" href="#" title="<?php echo JText::_('COM_MENUS_TYPE_HEADING_DESC'); ?>"
-                           onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array(
-                               'id'    => $this->recordId,
-                               'title' => 'heading'
-                           ))); ?>')">
+                           onclick="javascript:setmenutype('<?php echo base64_encode(
+                               json_encode(
+                                   array(
+                                       'id'    => $this->recordId,
+                                       'title' => 'heading'
+                                   )
+                               )
+                           ); ?>')">
                             <?php echo JText::_('COM_MENUS_TYPE_HEADING'); ?>
                         </a>
                     </li>

@@ -229,7 +229,9 @@ class JLinkedinGroups extends JLinkedinObject
         $xml = '<group-membership>';
 
         if (!is_null($show_logo)) {
-            $xml .= '<show-group-logo-in-profile>' . $this->booleanToString($show_logo) . '</show-group-logo-in-profile>';
+            $xml .= '<show-group-logo-in-profile>' . $this->booleanToString(
+                    $show_logo
+                ) . '</show-group-logo-in-profile>';
         }
 
         if ($digest_frequency) {
@@ -237,11 +239,15 @@ class JLinkedinGroups extends JLinkedinObject
         }
 
         if (!is_null($announcements)) {
-            $xml .= '<email-announcements-from-managers>' . $this->booleanToString($announcements) . '</email-announcements-from-managers>';
+            $xml .= '<email-announcements-from-managers>' . $this->booleanToString(
+                    $announcements
+                ) . '</email-announcements-from-managers>';
         }
 
         if (!is_null($allow_messages)) {
-            $xml .= '<allow-messages-from-members>' . $this->booleanToString($allow_messages) . '</allow-messages-from-members>';
+            $xml .= '<allow-messages-from-members>' . $this->booleanToString(
+                    $allow_messages
+                ) . '</allow-messages-from-members>';
         }
 
         if (!is_null($new_post)) {
@@ -300,7 +306,9 @@ class JLinkedinGroups extends JLinkedinObject
         $xml = '<group-membership><group><id>' . $group_id . '</id></group>';
 
         if (!is_null($show_logo)) {
-            $xml .= '<show-group-logo-in-profile>' . $this->booleanToString($show_logo) . '</show-group-logo-in-profile>';
+            $xml .= '<show-group-logo-in-profile>' . $this->booleanToString(
+                    $show_logo
+                ) . '</show-group-logo-in-profile>';
         }
 
         if ($digest_frequency) {
@@ -308,11 +316,15 @@ class JLinkedinGroups extends JLinkedinObject
         }
 
         if (!is_null($announcements)) {
-            $xml .= '<email-announcements-from-managers>' . $this->booleanToString($announcements) . '</email-announcements-from-managers>';
+            $xml .= '<email-announcements-from-managers>' . $this->booleanToString(
+                    $announcements
+                ) . '</email-announcements-from-managers>';
         }
 
         if (!is_null($allow_messages)) {
-            $xml .= '<allow-messages-from-members>' . $this->booleanToString($allow_messages) . '</allow-messages-from-members>';
+            $xml .= '<allow-messages-from-members>' . $this->booleanToString(
+                    $allow_messages
+                ) . '</allow-messages-from-members>';
         }
 
         if (!is_null($new_post)) {

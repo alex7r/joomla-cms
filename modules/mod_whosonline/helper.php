@@ -74,12 +74,11 @@ class ModWhosonlineHelper
     public static function getOnlineUserNames($params)
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName(array('a.username', 'a.userid', 'a.client_id')))
-                    ->from('#__session AS a')
-                    ->where($db->quoteName('a.userid') . ' != 0')
-                    ->where($db->quoteName('a.client_id') . ' = 0')
-                    ->group($db->quoteName(array('a.username', 'a.userid', 'a.client_id')));
+        $query = $db->getQuery(true)->select($db->quoteName(array('a.username', 'a.userid', 'a.client_id')))->from(
+                '#__session AS a'
+            )->where($db->quoteName('a.userid') . ' != 0')->where($db->quoteName('a.client_id') . ' = 0')->group(
+                $db->quoteName(array('a.username', 'a.userid', 'a.client_id'))
+            );
 
         $user = JFactory::getUser();
 
@@ -90,10 +89,10 @@ class ModWhosonlineHelper
                 return array();
             }
 
-            $query->join('LEFT', '#__user_usergroup_map AS m ON m.user_id = a.userid')
-                  ->join('LEFT', '#__usergroups AS ug ON ug.id = m.group_id')
-                  ->where('ug.id in (' . implode(',', $groups) . ')')
-                  ->where('ug.id <> 1');
+            $query->join('LEFT', '#__user_usergroup_map AS m ON m.user_id = a.userid')->join(
+                    'LEFT',
+                    '#__usergroups AS ug ON ug.id = m.group_id'
+                )->where('ug.id in (' . implode(',', $groups) . ')')->where('ug.id <> 1');
         }
 
         $db->setQuery($query);

@@ -126,10 +126,9 @@ class JFormFieldChromeStyle extends JFormFieldGroupedList
         $query = $db->getQuery(true);
 
         // Build the query.
-        $query->select('element, name, enabled')
-              ->from('#__extensions')
-              ->where('client_id = 0')
-              ->where('type = ' . $db->quote('template'));
+        $query->select('element, name, enabled')->from('#__extensions')->where('client_id = 0')->where(
+                'type = ' . $db->quote('template')
+            );
 
         // Set the query and load the templates.
         $db->setQuery($query);

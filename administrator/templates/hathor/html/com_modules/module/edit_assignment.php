@@ -13,7 +13,8 @@ defined('_JEXEC') or die;
 require_once JPATH_ADMINISTRATOR . '/components/com_menus/helpers/menus.php';
 $menuTypes = MenusHelper::getMenuLinks();
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	window.addEvent('domready', function(){
 		validate();
 		document.getElements('select').addEvent('change', function(e){validate();});
@@ -38,7 +39,8 @@ JFactory::getDocument()->addScriptDeclaration("
 			});
 		}
 	}
-");
+"
+);
 ?>
 
 <fieldset class="adminform">
@@ -47,8 +49,14 @@ JFactory::getDocument()->addScriptDeclaration("
 
     <fieldset id="jform_menus" class="radio">
         <select name="jform[assignment]" id="jform_assignment">
-            <?php echo JHtml::_('select.options', ModulesHelper::getAssignmentOptions($this->item->client_id), 'value',
-                'text', $this->item->assignment, true); ?>
+            <?php echo JHtml::_(
+                'select.options',
+                ModulesHelper::getAssignmentOptions($this->item->client_id),
+                'value',
+                'text',
+                $this->item->assignment,
+                true
+            ); ?>
         </select>
 
     </fieldset>

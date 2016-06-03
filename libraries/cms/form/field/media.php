@@ -187,7 +187,9 @@ class JFormFieldMedia extends JFormField
             $assetField = $this->element['asset_field'] ? (string)$this->element['asset_field'] : 'asset_id';
 
             $this->authorField   = $this->element['created_by_field'] ? (string)$this->element['created_by_field'] : 'created_by';
-            $this->asset         = $this->form->getValue($assetField) ? $this->form->getValue($assetField) : (string)$this->element['asset_id'];
+            $this->asset         = $this->form->getValue($assetField) ? $this->form->getValue(
+                $assetField
+            ) : (string)$this->element['asset_id'];
             $this->link          = (string)$this->element['link'];
             $this->width         = isset($this->element['width']) ? (int)$this->element['width'] : 800;
             $this->height        = isset($this->element['height']) ? (int)$this->element['height'] : 500;
@@ -235,13 +237,18 @@ class JFormFieldMedia extends JFormField
 
         if ($this->value && file_exists(JPATH_ROOT . '/' . $this->value)) {
             $this->folder = explode('/', $this->value);
-            $this->folder = array_diff_assoc($this->folder,
-                explode('/', JComponentHelper::getParams('com_media')->get('image_path', 'images')));
+            $this->folder = array_diff_assoc(
+                $this->folder,
+                explode('/', JComponentHelper::getParams('com_media')->get('image_path', 'images'))
+            );
             array_pop($this->folder);
             $this->folder = implode('/', $this->folder);
-        } elseif (file_exists(JPATH_ROOT . '/' . JComponentHelper::getParams('com_media')
-                                                                 ->get('image_path',
-                                                                     'images') . '/' . $this->directory)) {
+        } elseif (file_exists(
+            JPATH_ROOT . '/' . JComponentHelper::getParams('com_media')->get(
+                    'image_path',
+                    'images'
+                ) . '/' . $this->directory
+        )) {
             $this->folder = $this->directory;
         } else {
             $this->folder = '';

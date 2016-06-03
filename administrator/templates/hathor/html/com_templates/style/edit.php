@@ -15,7 +15,8 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 $user = JFactory::getUser();
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'style.cancel' || document.formvalidator.isValid(document.getElementById('style-form')))
@@ -23,7 +24,8 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('style-form'));
 		}
 	}
-");
+"
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_templates&layout=edit&id=' . (int)$this->item->id); ?>"
@@ -40,7 +42,9 @@ JFactory::getDocument()->addScriptDeclaration("
                     <?php echo $this->form->getLabel('client_id'); ?>
                     <?php echo $this->form->getInput('client_id'); ?>
                     <input type="text" size="35"
-                           value="<?php echo $this->item->client_id == 0 ? JText::_('JSITE') : JText::_('JADMINISTRATOR'); ?>	"
+                           value="<?php echo $this->item->client_id == 0 ? JText::_('JSITE') : JText::_(
+                               'JADMINISTRATOR'
+                           ); ?>	"
                            class="readonly" readonly="readonly"/></li>
 
                 <li><?php echo $this->form->getLabel('home'); ?>

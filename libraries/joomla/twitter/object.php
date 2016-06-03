@@ -76,7 +76,9 @@ abstract class JTwitterObject
 
         if ($rate_limit->resources->$resource->$property->remaining == 0) {
             // The IP has exceeded the Twitter API rate limit
-            throw new RuntimeException('This server has exceed the Twitter API rate limit for the given period.  The limit will reset at ' . $rate_limit->resources->$resource->$property->reset);
+            throw new RuntimeException(
+                'This server has exceed the Twitter API rate limit for the given period.  The limit will reset at ' . $rate_limit->resources->$resource->$property->reset
+            );
         }
     }
 
@@ -131,7 +133,9 @@ abstract class JTwitterObject
 
             if ($response_headers['x-mediaratelimit-remaining'] == 0) {
                 // The IP has exceeded the Twitter API media rate limit
-                throw new RuntimeException('This server has exceed the Twitter API media rate limit for the given period.  The limit will reset in ' . $response_headers['x-mediaratelimit-reset'] . 'seconds.');
+                throw new RuntimeException(
+                    'This server has exceed the Twitter API media rate limit for the given period.  The limit will reset in ' . $response_headers['x-mediaratelimit-reset'] . 'seconds.'
+                );
             }
         }
 

@@ -20,7 +20,8 @@ $lang      = JFactory::getLanguage();
 JText::script('COM_FINDER_INDEX_CONFIRM_PURGE_PROMPT');
 JText::script('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT');
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	Joomla.submitbutton = function(pressbutton)
 	{
 		if (pressbutton == "index.purge")
@@ -48,7 +49,8 @@ JFactory::getDocument()->addScriptDeclaration('
 
 		Joomla.submitform(pressbutton);
 	};
-');
+'
+);
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_finder&view=index'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -76,23 +78,43 @@ JFactory::getDocument()->addScriptDeclaration('
                             <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'l.published', $listDirn, $listOrder); ?>
                         </th>
                         <th class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'l.title', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGLOBAL_TITLE',
+                                'l.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="5%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_FINDER_INDEX_HEADING_INDEX_TYPE', 't.title',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_FINDER_INDEX_HEADING_INDEX_TYPE',
+                                't.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_FINDER_INDEX_HEADING_INDEX_DATE',
-                                'l.indexdate', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_FINDER_INDEX_HEADING_INDEX_DATE',
+                                'l.indexdate',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap center hidden-phone hidden-tablet">
                             <?php echo JText::_('COM_FINDER_INDEX_HEADING_DETAILS'); ?>
                         </th>
                         <th width="35%" class="nowrap hidden-phone hidden-tablet">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_FINDER_INDEX_HEADING_LINK_URL', 'l.url',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_FINDER_INDEX_HEADING_LINK_URL',
+                                'l.url',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -111,8 +133,14 @@ JFactory::getDocument()->addScriptDeclaration('
                                 <?php echo JHtml::_('grid.id', $i, $item->link_id); ?>
                             </td>
                             <td class="center">
-                                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'index.', $canChange,
-                                    'cb'); ?>
+                                <?php echo JHtml::_(
+                                    'jgrid.published',
+                                    $item->published,
+                                    $i,
+                                    'index.',
+                                    $canChange,
+                                    'cb'
+                                ); ?>
                             </td>
                             <td>
                                 <label for="cb<?php echo $i ?>">
@@ -129,17 +157,27 @@ JFactory::getDocument()->addScriptDeclaration('
                                 <?php echo JHtml::_('date', $item->indexdate, JText::_('DATE_FORMAT_LC4')); ?>
                             </td>
                             <td class="center hidden-phone hidden-tablet">
-                                <?php if (intval($item->publish_start_date) or intval($item->publish_end_date) or intval($item->start_date) or intval($item->end_date)) : ?>
+                                <?php if (intval($item->publish_start_date) or intval(
+                                        $item->publish_end_date
+                                    ) or intval($item->start_date) or intval($item->end_date)
+                                ) : ?>
                                     <span class="icon-calendar pop hasPopover" data-placement="left"
                                           title="<?php echo JText::_('COM_FINDER_INDEX_DATE_INFO_TITLE'); ?>"
-                                          data-content="<?php echo JText::sprintf('COM_FINDER_INDEX_DATE_INFO',
-                                              $item->publish_start_date, $item->publish_end_date, $item->start_date,
-                                              $item->end_date); ?>"></span>
+                                          data-content="<?php echo JText::sprintf(
+                                              'COM_FINDER_INDEX_DATE_INFO',
+                                              $item->publish_start_date,
+                                              $item->publish_end_date,
+                                              $item->start_date,
+                                              $item->end_date
+                                          ); ?>"></span>
                                 <?php endif; ?>
                             </td>
                             <td class="small break-word hidden-phone hidden-tablet">
-                                <?php echo (strlen($item->url) > 80) ? substr($item->url, 0,
-                                        70) . '...' : $item->url; ?>
+                                <?php echo (strlen($item->url) > 80) ? substr(
+                                                                           $item->url,
+                                                                           0,
+                                                                           70
+                                                                       ) . '...' : $item->url; ?>
                             </td>
                         </tr>
 

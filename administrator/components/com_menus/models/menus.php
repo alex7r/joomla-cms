@@ -76,12 +76,9 @@ class MenusModelMenus extends JModelList
         $menuTypes = implode(',', array_map(array($db, 'quote'), $menuTypes));
 
         // Get the published menu counts.
-        $query = $db->getQuery(true)
-                    ->select('m.menutype, COUNT(DISTINCT m.id) AS count_published')
-                    ->from('#__menu AS m')
-                    ->where('m.published = 1')
-                    ->where('m.menutype IN (' . $menuTypes . ')')
-                    ->group('m.menutype');
+        $query = $db->getQuery(true)->select('m.menutype, COUNT(DISTINCT m.id) AS count_published')->from(
+                '#__menu AS m'
+            )->where('m.published = 1')->where('m.menutype IN (' . $menuTypes . ')')->group('m.menutype');
 
         $db->setQuery($query);
 
@@ -140,12 +137,9 @@ class MenusModelMenus extends JModelList
     public function getModMenuId()
     {
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('e.extension_id')
-                    ->from('#__extensions AS e')
-                    ->where('e.type = ' . $db->quote('module'))
-                    ->where('e.element = ' . $db->quote('mod_menu'))
-                    ->where('e.client_id = 0');
+        $query = $db->getQuery(true)->select('e.extension_id')->from('#__extensions AS e')->where(
+                'e.type = ' . $db->quote('module')
+            )->where('e.element = ' . $db->quote('mod_menu'))->where('e.client_id = 0');
         $db->setQuery($query);
 
         return $db->loadResult();
@@ -180,9 +174,9 @@ class MenusModelMenus extends JModelList
         $query = $db->getQuery(true);
 
         // Select all fields from the table.
-        $query->select($this->getState('list.select', 'a.id, a.menutype, a.title, a.description'))
-              ->from($db->quoteName('#__menu_types') . ' AS a')
-              ->where('a.id > 0');
+        $query->select($this->getState('list.select', 'a.id, a.menutype, a.title, a.description'))->from(
+                $db->quoteName('#__menu_types') . ' AS a'
+            )->where('a.id > 0');
 
         // Filter by search in title or menutype
         if ($search = trim($this->getState('filter.search'))) {
@@ -191,8 +185,14 @@ class MenusModelMenus extends JModelList
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.id'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

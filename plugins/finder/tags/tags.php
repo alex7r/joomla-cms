@@ -281,13 +281,13 @@ class PlgFinderTags extends FinderIndexerAdapter
         $db = JFactory::getDbo();
 
         // Check if we can use the supplied SQL query.
-        $query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)
-                                                                ->select('a.id, a.title, a.alias, a.description AS summary')
-                                                                ->select('a.created_time AS start_date, a.created_user_id AS created_by')
-                                                                ->select('a.metakey, a.metadesc, a.metadata, a.language, a.access')
-                                                                ->select('a.modified_time AS modified, a.modified_user_id AS modified_by')
-                                                                ->select('a.publish_up AS publish_start_date, a.publish_down AS publish_end_date')
-                                                                ->select('a.published AS state, a.access, a.created_time AS start_date, a.params');
+        $query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)->select(
+                'a.id, a.title, a.alias, a.description AS summary'
+            )->select('a.created_time AS start_date, a.created_user_id AS created_by')->select(
+                'a.metakey, a.metadesc, a.metadata, a.language, a.access'
+            )->select('a.modified_time AS modified, a.modified_user_id AS modified_by')->select(
+                'a.publish_up AS publish_start_date, a.publish_down AS publish_end_date'
+            )->select('a.published AS state, a.access, a.created_time AS start_date, a.params');
 
         // Handle the alias CASE WHEN portion of the query
         $case_when_item_alias = ' CASE WHEN ';
@@ -300,9 +300,9 @@ class PlgFinderTags extends FinderIndexerAdapter
         $query->select($case_when_item_alias)->from('#__tags AS a');
 
         // Join the #__users table
-        $query->select('u.name AS author')
-              ->join('LEFT', '#__users AS u ON u.id = b.created_user_id')
-              ->from('#__tags AS b');
+        $query->select('u.name AS author')->join('LEFT', '#__users AS u ON u.id = b.created_user_id')->from(
+                '#__tags AS b'
+            );
 
         // Exclude the ROOT item
         $query->where($db->quoteName('a.id') . ' > 1');
@@ -320,11 +320,12 @@ class PlgFinderTags extends FinderIndexerAdapter
     protected function getStateQuery()
     {
         $query = $this->db->getQuery(true);
-        $query->select($this->db->quoteName('a.id'))
-              ->select($this->db->quoteName('a.' . $this->state_field,
-                      'state') . ', ' . $this->db->quoteName('a.access'))
-              ->select('NULL AS cat_state, NULL AS cat_access')
-              ->from($this->db->quoteName($this->table, 'a'));
+        $query->select($this->db->quoteName('a.id'))->select(
+                $this->db->quoteName(
+                    'a.' . $this->state_field,
+                    'state'
+                ) . ', ' . $this->db->quoteName('a.access')
+            )->select('NULL AS cat_state, NULL AS cat_access')->from($this->db->quoteName($this->table, 'a'));
 
         return $query;
     }

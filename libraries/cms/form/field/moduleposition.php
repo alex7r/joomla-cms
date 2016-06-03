@@ -144,7 +144,11 @@ class JFormFieldModulePosition extends JFormFieldText
 
         // The current user display field.
         $html[] = '<div class="input-append">';
-        $html[] = parent::getInput() . '<a class="btn modal" title="' . JText::_('COM_MODULES_CHANGE_POSITION_TITLE') . '"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('COM_MODULES_CHANGE_POSITION_BUTTON') . '</a>';
+        $html[] = parent::getInput() . '<a class="btn modal" title="' . JText::_(
+                'COM_MODULES_CHANGE_POSITION_TITLE'
+            ) . '"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_(
+                'COM_MODULES_CHANGE_POSITION_BUTTON'
+            ) . '</a>';
         $html[] = '</div>';
 
         return implode("\n", $html);

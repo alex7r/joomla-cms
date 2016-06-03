@@ -66,7 +66,10 @@ class ContentController extends JControllerLegacy
 
         $user = JFactory::getUser();
 
-        if ($user->get('id') || ($this->input->getMethod() == 'POST' && (($vName == 'category' && $this->input->get('layout') != 'blog') || $vName == 'archive'))) {
+        if ($user->get('id') || ($this->input->getMethod() == 'POST' && (($vName == 'category' && $this->input->get(
+                            'layout'
+                        ) != 'blog') || $vName == 'archive'))
+        ) {
             $cachable = false;
         }
 

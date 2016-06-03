@@ -230,8 +230,10 @@ abstract class JOAuth1Client
         $parameters = array_merge($parameters, $defaults);
 
         // Do not encode multipart parameters. Do not include $data in the signature if $data is not array.
-        if (isset($headers['Content-Type']) && strpos($headers['Content-Type'],
-                'multipart/form-data') !== false || !is_array($data)
+        if (isset($headers['Content-Type']) && strpos(
+                                                   $headers['Content-Type'],
+                                                   'multipart/form-data'
+                                               ) !== false || !is_array($data)
         ) {
             $oauth_headers = $parameters;
         } else {
@@ -305,8 +307,16 @@ abstract class JOAuth1Client
         // Create the signature base string.
         $base = $this->_baseString($url, $method, $parameters);
 
-        $parameters['oauth_signature'] = $this->safeEncode(base64_encode(hash_hmac('sha1', $base,
-            $this->_prepareSigningKey(), true)));
+        $parameters['oauth_signature'] = $this->safeEncode(
+            base64_encode(
+                hash_hmac(
+                    'sha1',
+                    $base,
+                    $this->_prepareSigningKey(),
+                    true
+                )
+            )
+        );
 
         return $parameters;
     }
@@ -385,7 +395,9 @@ abstract class JOAuth1Client
      */
     private function _prepareSigningKey()
     {
-        return $this->safeEncode($this->getOption('consumer_secret')) . '&' . $this->safeEncode(($this->token) ? $this->token['secret'] : '');
+        return $this->safeEncode($this->getOption('consumer_secret')) . '&' . $this->safeEncode(
+            ($this->token) ? $this->token['secret'] : ''
+        );
     }
 
     /**
@@ -474,8 +486,10 @@ abstract class JOAuth1Client
         $url = $this->getOption('authoriseURL') . '?oauth_token=' . $this->token['key'];
 
         if ($this->getOption('scope')) {
-            $scope = is_array($this->getOption('scope')) ? implode(' ',
-                $this->getOption('scope')) : $this->getOption('scope');
+            $scope = is_array($this->getOption('scope')) ? implode(
+                ' ',
+                $this->getOption('scope')
+            ) : $this->getOption('scope');
             $url .= '&scope=' . urlencode($scope);
         }
 

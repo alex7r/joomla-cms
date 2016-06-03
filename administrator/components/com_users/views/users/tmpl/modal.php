@@ -30,14 +30,21 @@ $userRequired    = (int)$input->get('required', 0, 'int');
 ?>
 <div class="container-popup">
     <form
-        action="<?php echo JRoute::_('index.php?option=com_users&view=users&layout=modal&tmpl=component&groups=' . $input->get('groups',
-                '', 'BASE64') . '&excluded=' . $input->get('excluded', '', 'BASE64')); ?>"
+        action="<?php echo JRoute::_(
+            'index.php?option=com_users&view=users&layout=modal&tmpl=component&groups=' . $input->get(
+                'groups',
+                '',
+                'BASE64'
+            ) . '&excluded=' . $input->get('excluded', '', 'BASE64')
+        ); ?>"
         method="post" name="adminForm" id="adminForm">
         <?php if (!$userRequired) : ?>
             <div class="pull-left">
                 <button type="button" class="btn button-select" data-user-value="0"
                         data-user-name="<?php echo $this->escape(JText::_('JLIB_FORM_SELECT_USER')); ?>"
-                        data-user-field="<?php echo $this->escape($field); ?>"><?php echo JText::_('JOPTION_NO_USER'); ?></button>
+                        data-user-field="<?php echo $this->escape($field); ?>"><?php echo JText::_(
+                        'JOPTION_NO_USER'
+                    ); ?></button>
                 &nbsp;
             </div>
         <?php endif; ?>
@@ -51,20 +58,40 @@ $userRequired    = (int)$input->get('required', 0, 'int');
                 <thead>
                 <tr>
                     <th class="nowrap">
-                        <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_NAME', 'a.name', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'COM_USERS_HEADING_NAME',
+                            'a.name',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="25%" class="nowrap">
-                        <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_USERNAME', 'a.username', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'JGLOBAL_USERNAME',
+                            'a.username',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="1%" class="nowrap center">
-                        <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_ENABLED', 'a.block', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'COM_USERS_HEADING_ENABLED',
+                            'a.block',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="1%" class="nowrap center">
-                        <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_ACTIVATED', 'a.activation',
-                            $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'COM_USERS_HEADING_ACTIVATED',
+                            'a.activation',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="25%" class="nowrap">
                         <?php echo JText::_('COM_USERS_HEADING_GROUPS'); ?>

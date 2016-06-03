@@ -63,8 +63,10 @@ abstract class ConfigViewCmsHtml extends JViewHtml
         $component = preg_replace('/[^A-Z0-9_\.-]/i', '', $component);
 
         if (isset($paths)) {
-            $paths->insert(JPATH_THEMES . '/' . $app->getTemplate() . '/html/' . $component . '/' . $this->getName(),
-                2);
+            $paths->insert(
+                JPATH_THEMES . '/' . $app->getTemplate() . '/html/' . $component . '/' . $this->getName(),
+                2
+            );
         }
 
         parent::__construct($model, $paths);
@@ -131,8 +133,13 @@ abstract class ConfigViewCmsHtml extends JViewHtml
 
         // Load the language file for the template
         $lang = JFactory::getLanguage();
-        $lang->load('tpl_' . $template, JPATH_BASE, null, false, true) || $lang->load('tpl_' . $template,
-            JPATH_THEMES . "/$template", null, false, true);
+        $lang->load('tpl_' . $template, JPATH_BASE, null, false, true) || $lang->load(
+            'tpl_' . $template,
+            JPATH_THEMES . "/$template",
+            null,
+            false,
+            true
+        );
 
         // Prevents adding path twise
         if (empty($this->_path['template'])) {
@@ -151,8 +158,10 @@ abstract class ConfigViewCmsHtml extends JViewHtml
 
         // If alternate layout can't be found, fall back to default layout
         if ($this->_template == false) {
-            $filetofind      = $this->_createFileName('',
-                array('name' => 'default' . (isset($tpl) ? '_' . $tpl : $tpl)));
+            $filetofind      = $this->_createFileName(
+                '',
+                array('name' => 'default' . (isset($tpl) ? '_' . $tpl : $tpl))
+            );
             $this->_template = JPath::find($this->_path['template'], $filetofind);
         }
 

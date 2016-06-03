@@ -81,11 +81,9 @@ class FOFUtilsUpdate extends FOFModel
 
         // Find the extension ID
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('*')
-                    ->from($db->qn('#__extensions'))
-                    ->where($db->qn('type') . ' = ' . $db->q('component'))
-                    ->where($db->qn('element') . ' = ' . $db->q($this->component));
+        $query = $db->getQuery(true)->select('*')->from($db->qn('#__extensions'))->where(
+                $db->qn('type') . ' = ' . $db->q('component')
+            )->where($db->qn('element') . ' = ' . $db->q($this->component));
         $db->setQuery($query);
         $extension = $db->loadObject();
 
@@ -136,17 +134,16 @@ class FOFUtilsUpdate extends FOFModel
             }
 
             // Set the last_check_timestamp to 0
-            $query = $db->getQuery(true)
-                        ->update($db->qn('#__update_sites'))
-                        ->set($db->qn('last_check_timestamp') . ' = ' . $db->q('0'))
-                        ->where($db->qn('update_site_id') . ' IN (' . implode(', ', $updateSiteIds) . ')');
+            $query = $db->getQuery(true)->update($db->qn('#__update_sites'))->set(
+                    $db->qn('last_check_timestamp') . ' = ' . $db->q('0')
+                )->where($db->qn('update_site_id') . ' IN (' . implode(', ', $updateSiteIds) . ')');
             $db->setQuery($query);
             $db->execute();
 
             // Remove cached component update info from #__updates
-            $query = $db->getQuery(true)
-                        ->delete($db->qn('#__updates'))
-                        ->where($db->qn('update_site_id') . ' IN (' . implode(', ', $updateSiteIds) . ')');
+            $query = $db->getQuery(true)->delete($db->qn('#__updates'))->where(
+                    $db->qn('update_site_id') . ' IN (' . implode(', ', $updateSiteIds) . ')'
+                );
             $db->setQuery($query);
             $db->execute();
         }
@@ -159,10 +156,9 @@ class FOFUtilsUpdate extends FOFModel
         $this->updater->findUpdates($this->extension_id, $timeout);
 
         // Get the update record from the database
-        $query = $db->getQuery(true)
-                    ->select('*')
-                    ->from($db->qn('#__updates'))
-                    ->where($db->qn('extension_id') . ' = ' . $db->q($this->extension_id));
+        $query = $db->getQuery(true)->select('*')->from($db->qn('#__updates'))->where(
+                $db->qn('extension_id') . ' = ' . $db->q($this->extension_id)
+            );
         $db->setQuery($query);
         $updateRecord = $db->loadObject();
 
@@ -265,10 +261,9 @@ class FOFUtilsUpdate extends FOFModel
         } else {
             // Loop through all update sites
             foreach ($updateSiteIds as $id) {
-                $query = $db->getQuery(true)
-                            ->select('*')
-                            ->from($db->qn('#__update_sites'))
-                            ->where($db->qn('update_site_id') . ' = ' . $db->q($id));
+                $query = $db->getQuery(true)->select('*')->from($db->qn('#__update_sites'))->where(
+                        $db->qn('update_site_id') . ' = ' . $db->q($id)
+                    );
                 $db->setQuery($query);
                 $aSite = $db->loadObject();
 

@@ -11,7 +11,8 @@ defined('_JEXEC') or die;
 
 JHtml::_('behavior.formvalidator');
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 jQuery(document).ready(function() {
 	Joomla.submitbutton = function(task)
 	{
@@ -21,14 +22,17 @@ jQuery(document).ready(function() {
 			Joomla.submitform(task, document.getElementById("note-form"));
 		}
 	}
-});');
+});'
+);
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_users&view=note&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="note-form" class="form-validate">
     <div class="col main-section">
         <fieldset class="adminform">
-            <legend><?php echo empty($this->item->id) ? JText::_('COM_USERS_NEW_NOTE') : JText::sprintf('COM_USERS_EDIT_NOTE',
-                    $this->item->id); ?></legend>
+            <legend><?php echo empty($this->item->id) ? JText::_('COM_USERS_NEW_NOTE') : JText::sprintf(
+                    'COM_USERS_EDIT_NOTE',
+                    $this->item->id
+                ); ?></legend>
             <ul class="adminformlist">
                 <li>
                     <?php echo $this->form->getLabel('subject'); ?>

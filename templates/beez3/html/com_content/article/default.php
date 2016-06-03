@@ -9,10 +9,10 @@
 
 defined('_JEXEC') or die;
 
-$app            = JFactory::getApplication();
+$app = JFactory::getApplication();
 $templateparams = $app->getTemplate(true)->params;
-$images         = json_decode($this->item->images);
-$urls           = json_decode($this->item->urls);
+$images = json_decode($this->item->images);
+$urls = json_decode($this->item->urls);
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
 JHtml::_('behavior.caption');
 
@@ -77,7 +77,11 @@ $params = $this->item->params;
 
     <?php echo $this->item->event->beforeDisplayContent; ?>
 
-    <?php $useDefList = (($params->get('show_author')) or ($params->get('show_category')) or ($params->get('show_parent_category')) or ($params->get('show_create_date')) or ($params->get('show_modify_date')) or ($params->get('show_publish_date')) or ($params->get('show_hits'))); ?>
+    <?php $useDefList = (($params->get('show_author')) or ($params->get('show_category')) or ($params->get(
+            'show_parent_category'
+        )) or ($params->get('show_create_date')) or ($params->get('show_modify_date')) or ($params->get(
+            'show_publish_date'
+        )) or ($params->get('show_hits'))); ?>
 
     <?php if ($useDefList) : ?>
     <dl class="article-info">
@@ -86,7 +90,9 @@ $params = $this->item->params;
         <?php if ($params->get('show_parent_category') && $this->item->parent_slug != '1:root') : ?>
             <dd class="parent-category-name">
                 <?php $title = $this->escape($this->item->parent_title);
-                $url         = '<a href="' . JRoute::_(ContentHelperRoute::getCategoryRoute($this->item->parent_slug)) . '">' . $title . '</a>'; ?>
+                $url         = '<a href="' . JRoute::_(
+                        ContentHelperRoute::getCategoryRoute($this->item->parent_slug)
+                    ) . '">' . $title . '</a>'; ?>
                 <?php if ($params->get('link_parent_category') and $this->item->parent_slug) : ?>
                     <?php echo JText::sprintf('COM_CONTENT_PARENT', $url); ?>
                 <?php else : ?>
@@ -97,7 +103,9 @@ $params = $this->item->params;
         <?php if ($params->get('show_category')) : ?>
             <dd class="category-name">
                 <?php $title = $this->escape($this->item->category_title);
-                $url         = '<a href="' . JRoute::_(ContentHelperRoute::getCategoryRoute($this->item->catslug)) . '">' . $title . '</a>'; ?>
+                $url         = '<a href="' . JRoute::_(
+                        ContentHelperRoute::getCategoryRoute($this->item->catslug)
+                    ) . '">' . $title . '</a>'; ?>
                 <?php if ($params->get('link_category') and $this->item->catslug) : ?>
                     <?php echo JText::sprintf('COM_CONTENT_CATEGORY', $url); ?>
                 <?php else : ?>
@@ -107,20 +115,26 @@ $params = $this->item->params;
         <?php endif; ?>
         <?php if ($params->get('show_create_date')) : ?>
             <dd class="create">
-                <?php echo JText::sprintf('COM_CONTENT_CREATED_DATE_ON',
-                    JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC2'))); ?>
+                <?php echo JText::sprintf(
+                    'COM_CONTENT_CREATED_DATE_ON',
+                    JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC2'))
+                ); ?>
             </dd>
         <?php endif; ?>
         <?php if ($params->get('show_modify_date')) : ?>
             <dd class="modified">
-                <?php echo JText::sprintf('COM_CONTENT_LAST_UPDATED',
-                    JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2'))); ?>
+                <?php echo JText::sprintf(
+                    'COM_CONTENT_LAST_UPDATED',
+                    JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2'))
+                ); ?>
             </dd>
         <?php endif; ?>
         <?php if ($params->get('show_publish_date')) : ?>
             <dd class="published">
-                <?php echo JText::sprintf('COM_CONTENT_PUBLISHED_DATE_ON',
-                    JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC2'))); ?>
+                <?php echo JText::sprintf(
+                    'COM_CONTENT_PUBLISHED_DATE_ON',
+                    JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC2'))
+                ); ?>
             </dd>
         <?php endif; ?>
         <?php if ($params->get('show_author') && !empty($this->item->author)) : ?>
@@ -128,8 +142,10 @@ $params = $this->item->params;
                 <?php $author = $this->item->author; ?>
                 <?php $author = ($this->item->created_by_alias ? $this->item->created_by_alias : $author); ?>
                 <?php if (!empty($this->item->contact_link) && $params->get('link_author') == true) : ?>
-                    <?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY',
-                        JHtml::_('link', $this->item->contact_link, $author)); ?>
+                    <?php echo JText::sprintf(
+                        'COM_CONTENT_WRITTEN_BY',
+                        JHtml::_('link', $this->item->contact_link, $author)
+                    ); ?>
                 <?php else : ?>
                     <?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY', $author); ?>
                 <?php endif; ?>
@@ -148,18 +164,28 @@ $params = $this->item->params;
         <?php echo $this->item->toc; ?>
     <?php endif; ?>
 
-    <?php if (isset($urls) AND ((!empty($urls->urls_position) AND ($urls->urls_position == '0')) OR ($params->get('urls_position') == '0' AND empty($urls->urls_position))) OR (empty($urls->urls_position) AND (!$params->get('urls_position')))) : ?>
+    <?php if (isset($urls) AND ((!empty($urls->urls_position) AND ($urls->urls_position == '0')) OR ($params->get(
+                    'urls_position'
+                ) == '0' AND empty($urls->urls_position))) OR (empty($urls->urls_position) AND (!$params->get(
+                'urls_position'
+            )))
+    ) : ?>
 
         <?php echo $this->loadTemplate('links'); ?>
     <?php endif; ?>
     <?php if (isset($images->image_fulltext) and !empty($images->image_fulltext)) : ?>
-        <?php $imgfloat = (empty($images->float_fulltext)) ? $params->get('float_fulltext') : $images->float_fulltext; ?>
+        <?php $imgfloat = (empty($images->float_fulltext)) ? $params->get(
+            'float_fulltext'
+        ) : $images->float_fulltext; ?>
 
         <div class="img-fulltext-<?php echo htmlspecialchars($imgfloat, ENT_COMPAT, 'UTF-8'); ?>">
             <img
                 <?php if ($images->image_fulltext_caption):
-                    echo 'class="caption"' . ' title="' . htmlspecialchars($images->image_fulltext_caption, ENT_COMPAT,
-                            'UTF-8') . '"';
+                    echo 'class="caption"' . ' title="' . htmlspecialchars(
+                            $images->image_fulltext_caption,
+                            ENT_COMPAT,
+                            'UTF-8'
+                        ) . '"';
                 endif; ?>
                 src="<?php echo htmlspecialchars($images->image_fulltext, ENT_COMPAT, 'UTF-8'); ?>"
                 alt="<?php echo htmlspecialchars($images->image_fulltext_alt, ENT_COMPAT, 'UTF-8'); ?>"/>
@@ -183,7 +209,10 @@ $params = $this->item->params;
         echo $this->item->pagination; ?>
     <?php endif; ?>
 
-    <?php if (isset($urls) AND ((!empty($urls->urls_position) AND ($urls->urls_position == '1')) OR ($params->get('urls_position') == '1'))) : ?>
+    <?php if (isset($urls) AND ((!empty($urls->urls_position) AND ($urls->urls_position == '1')) OR ($params->get(
+                    'urls_position'
+                ) == '1'))
+    ) : ?>
 
         <?php echo $this->loadTemplate('links'); ?>
     <?php endif; ?>

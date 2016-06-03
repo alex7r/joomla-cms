@@ -420,8 +420,10 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 
         // Try to load again column specifications if the table is not loaded OR if it's loaded and
         // the previous call returned an error
-        if (!array_key_exists($tableName,
-                self::$tableFieldCache) || (isset(self::$tableFieldCache[$tableName]) && !self::$tableFieldCache[$tableName])
+        if (!array_key_exists(
+                $tableName,
+                self::$tableFieldCache
+            ) || (isset(self::$tableFieldCache[$tableName]) && !self::$tableFieldCache[$tableName])
         ) {
             // Lookup the fields for this table only once.
             $name = $tableName;
@@ -1300,18 +1302,26 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 
         if (is_array($joins)) {
             $db      = $this->_db;
-            $query   = $db->getQuery(true)
-                          ->select($db->qn('master') . '.' . $db->qn($k))
-                          ->from($db->qn($this->_tbl) . ' AS ' . $db->qn('master'));
+            $query   = $db->getQuery(true)->select($db->qn('master') . '.' . $db->qn($k))->from(
+                    $db->qn($this->_tbl) . ' AS ' . $db->qn('master')
+                );
             $tableNo = 0;
 
             foreach ($joins as $table) {
                 $tableNo++;
-                $query->select(array(
-                    'COUNT(DISTINCT ' . $db->qn('t' . $tableNo) . '.' . $db->qn($table['idfield']) . ') AS ' . $db->qn($table['idalias'])
-                ));
-                $query->join('LEFT',
-                    $db->qn($table['name']) . ' AS ' . $db->qn('t' . $tableNo) . ' ON ' . $db->qn('t' . $tableNo) . '.' . $db->qn($table['joinfield']) . ' = ' . $db->qn('master') . '.' . $db->qn($k));
+                $query->select(
+                    array(
+                        'COUNT(DISTINCT ' . $db->qn('t' . $tableNo) . '.' . $db->qn(
+                            $table['idfield']
+                        ) . ') AS ' . $db->qn($table['idalias'])
+                    )
+                );
+                $query->join(
+                    'LEFT',
+                    $db->qn($table['name']) . ' AS ' . $db->qn('t' . $tableNo) . ' ON ' . $db->qn(
+                        't' . $tableNo
+                    ) . '.' . $db->qn($table['joinfield']) . ' = ' . $db->qn('master') . '.' . $db->qn($k)
+                );
             }
 
             $query->where($db->qn('master') . '.' . $db->qn($k) . ' = ' . $db->q($this->$k));
@@ -1487,8 +1497,10 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
         if ($this->_trigger_events) {
             $name = FOFInflector::pluralize($this->getKeyName());
 
-            $result = FOFPlatform::getInstance()
-                                 ->runPlugins('onBeforeMove' . ucfirst($name), array(&$this, $updateNulls));
+            $result = FOFPlatform::getInstance()->runPlugins(
+                    'onBeforeMove' . ucfirst($name),
+                    array(&$this, $updateNulls)
+                );
 
             if (in_array(false, $result, true)) {
                 return false;
@@ -1561,10 +1573,12 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
         $date = FOFPlatform::getInstance()->getDate();
         $time = $date->toSql();
 
-        $query = $this->_db->getQuery(true)->update($this->_db->qn($this->_tbl))->set(array(
-            $this->_db->qn($fldLockedBy) . ' = ' . $this->_db->q((int)$userId),
-            $this->_db->qn($fldLockedOn) . ' = ' . $this->_db->q($time)
-        ))->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($this->$k));
+        $query = $this->_db->getQuery(true)->update($this->_db->qn($this->_tbl))->set(
+            array(
+                $this->_db->qn($fldLockedBy) . ' = ' . $this->_db->q((int)$userId),
+                $this->_db->qn($fldLockedOn) . ' = ' . $this->_db->q($time)
+            )
+        )->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($this->$k));
         $this->_db->setQuery((string)$query);
 
         $this->$fldLockedBy = $userId;
@@ -2123,11 +2137,9 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 
             // Make sure we don't have a duplicate slug on this table
             $db    = $this->getDbo();
-            $query = $db->getQuery(true)
-                        ->select($db->qn($slug))
-                        ->from($this->_tbl)
-                        ->where($db->qn($slug) . ' = ' . $db->q($this->$slug))
-                        ->where('NOT ' . $db->qn($this->_tbl_key) . ' = ' . $db->q($this->{$this->_tbl_key}));
+            $query = $db->getQuery(true)->select($db->qn($slug))->from($this->_tbl)->where(
+                    $db->qn($slug) . ' = ' . $db->q($this->$slug)
+                )->where('NOT ' . $db->qn($this->_tbl_key) . ' = ' . $db->q($this->{$this->_tbl_key}));
             $db->setQuery($query);
             $existingItems = $db->loadAssocList();
 
@@ -2137,11 +2149,9 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
             while (!empty($existingItems)) {
                 $count++;
                 $newSlug = $this->$slug . '-' . $count;
-                $query   = $db->getQuery(true)
-                              ->select($db->qn($slug))
-                              ->from($this->_tbl)
-                              ->where($db->qn($slug) . ' = ' . $db->q($newSlug))
-                              ->where('NOT ' . $db->qn($this->_tbl_key) . ' = ' . $db->q($this->{$this->_tbl_key}));
+                $query   = $db->getQuery(true)->select($db->qn($slug))->from($this->_tbl)->where(
+                        $db->qn($slug) . ' = ' . $db->q($newSlug)
+                    )->where('NOT ' . $db->qn($this->_tbl_key) . ' = ' . $db->q($this->{$this->_tbl_key}));
                 $db->setQuery($query);
                 $existingItems = $db->loadAssocList();
             }
@@ -2160,8 +2170,10 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
         // Execute onBeforeStore<tablename> events in loaded plugins
         if ($this->_trigger_events) {
             $name   = FOFInflector::pluralize($this->getKeyName());
-            $result = FOFPlatform::getInstance()
-                                 ->runPlugins('onBeforeStore' . ucfirst($name), array(&$this, $updateNulls));
+            $result = FOFPlatform::getInstance()->runPlugins(
+                    'onBeforeStore' . ucfirst($name),
+                    array(&$this, $updateNulls)
+                );
 
             if (in_array(false, $result, true)) {
                 return false;
@@ -2301,15 +2313,19 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
             return false;
         }
 
-        $query = $this->_db->getQuery(true)
-                           ->update($this->_db->qn($this->_tbl))
-                           ->set($this->_db->qn($enabledName) . ' = ' . (int)$publish);
+        $query = $this->_db->getQuery(true)->update($this->_db->qn($this->_tbl))->set(
+                $this->_db->qn($enabledName) . ' = ' . (int)$publish
+            );
 
         $checkin = in_array($locked_byName, $this->getKnownFields());
 
         if ($checkin) {
-            $query->where(' (' . $this->_db->qn($locked_byName) . ' = 0 OR ' . $this->_db->qn($locked_byName) . ' = ' . (int)$user_id . ')',
-                'AND');
+            $query->where(
+                ' (' . $this->_db->qn($locked_byName) . ' = 0 OR ' . $this->_db->qn(
+                    $locked_byName
+                ) . ' = ' . (int)$user_id . ')',
+                'AND'
+            );
         }
 
         // TODO Rewrite this statment using IN. Check if it work in SQLServer and PostgreSQL
@@ -2369,8 +2385,10 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
         if ($this->_trigger_events) {
             $name = FOFInflector::pluralize($this->getKeyName());
 
-            $result = FOFPlatform::getInstance()
-                                 ->runPlugins('onBeforePublish' . ucfirst($name), array(&$this, &$cid, $publish));
+            $result = FOFPlatform::getInstance()->runPlugins(
+                    'onBeforePublish' . ucfirst($name),
+                    array(&$this, &$cid, $publish)
+                );
 
             if (in_array(false, $result, true)) {
                 return false;
@@ -2408,10 +2426,12 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
             return false;
         }
 
-        $query = $this->_db->getQuery(true)->update($this->_db->qn($this->_tbl))->set(array(
-            $this->_db->qn($fldLockedBy) . ' = 0',
-            $this->_db->qn($fldLockedOn) . ' = ' . $this->_db->q($this->_db->getNullDate())
-        ))->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($this->$k));
+        $query = $this->_db->getQuery(true)->update($this->_db->qn($this->_tbl))->set(
+            array(
+                $this->_db->qn($fldLockedBy) . ' = 0',
+                $this->_db->qn($fldLockedOn) . ' = ' . $this->_db->q($this->_db->getNullDate())
+            )
+        )->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($this->$k));
         $this->_db->setQuery((string)$query);
 
         $this->$fldLockedBy = 0;
@@ -2555,19 +2575,17 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
             $result = false;
         } else {
             // Check the row in by primary key.
-            $query = $this->_db->getQuery(true)
-                               ->update($this->_tbl)
-                               ->set($this->_db->qn($hits_field) . ' = (' . $this->_db->qn($hits_field) . ' + 1)')
-                               ->where($this->_tbl_key . ' = ' . $this->_db->q($pk));
+            $query = $this->_db->getQuery(true)->update($this->_tbl)->set(
+                    $this->_db->qn($hits_field) . ' = (' . $this->_db->qn($hits_field) . ' + 1)'
+                )->where($this->_tbl_key . ' = ' . $this->_db->q($pk));
 
             $this->_db->setQuery($query)->execute();
 
             // In order to update the table object, I have to load the table
             if (!$this->$k) {
-                $query = $this->_db->getQuery(true)
-                                   ->select($this->_db->qn($hits_field))
-                                   ->from($this->_db->qn($this->_tbl))
-                                   ->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($pk));
+                $query = $this->_db->getQuery(true)->select($this->_db->qn($hits_field))->from(
+                        $this->_db->qn($this->_tbl)
+                    )->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($pk));
 
                 $this->$hits_field = $this->_db->setQuery($query)->loadResult();
             } else {
@@ -2809,7 +2827,9 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 
         // If there is no assetKey defined, stop here, or we'll get a wrong name
         if (!$this->_assetKey || !$this->$k) {
-            throw new UnexpectedValueException('Table must have an asset key defined and a value for the table id in order to track assets');
+            throw new UnexpectedValueException(
+                'Table must have an asset key defined and a value for the table id in order to track assets'
+            );
         }
 
         return $this->_assetKey . '.' . (int)$this->$k;
@@ -2960,7 +2980,9 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
         // If an ordering filter is set, attempt reorder the rows in the table based on the filter and value.
         if ($orderingFilter) {
             $filterValue = $this->$orderingFilter;
-            $this->reorder($orderingFilter ? $this->_db->qn($orderingFilter) . ' = ' . $this->_db->q($filterValue) : '');
+            $this->reorder(
+                $orderingFilter ? $this->_db->qn($orderingFilter) . ' = ' . $this->_db->q($filterValue) : ''
+            );
         }
 
         // Set the error to empty and return true.
@@ -3271,57 +3293,61 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
         if (!$contentType->load(array('type_alias' => $alias))) {
             $contentType->type_title = $name;
             $contentType->type_alias = $alias;
-            $contentType->table      = json_encode(array(
-                'special' => array(
-                    'dbtable' => $this->getTableName(),
-                    'key'     => $this->getKeyName(),
-                    'type'    => $name,
-                    'prefix'  => $this->_tablePrefix,
-                    'class'   => 'FOFTable',
-                    'config'  => 'array()'
-                ),
-                'common'  => array(
-                    'dbtable' => '#__ucm_content',
-                    'key'     => 'ucm_id',
-                    'type'    => 'CoreContent',
-                    'prefix'  => 'JTable',
-                    'config'  => 'array()'
-                )
-            ));
-
-            $contentType->field_mappings = json_encode(array(
-                'common'  => array(
-                    0 => array(
-                        "core_content_item_id" => $this->getKeyName(),
-                        "core_title"           => $this->getUcmCoreAlias('title'),
-                        "core_state"           => $this->getUcmCoreAlias('enabled'),
-                        "core_alias"           => $this->getUcmCoreAlias('alias'),
-                        "core_created_time"    => $this->getUcmCoreAlias('created_on'),
-                        "core_modified_time"   => $this->getUcmCoreAlias('created_by'),
-                        "core_body"            => $this->getUcmCoreAlias('body'),
-                        "core_hits"            => $this->getUcmCoreAlias('hits'),
-                        "core_publish_up"      => $this->getUcmCoreAlias('publish_up'),
-                        "core_publish_down"    => $this->getUcmCoreAlias('publish_down'),
-                        "core_access"          => $this->getUcmCoreAlias('access'),
-                        "core_params"          => $this->getUcmCoreAlias('params'),
-                        "core_featured"        => $this->getUcmCoreAlias('featured'),
-                        "core_metadata"        => $this->getUcmCoreAlias('metadata'),
-                        "core_language"        => $this->getUcmCoreAlias('language'),
-                        "core_images"          => $this->getUcmCoreAlias('images'),
-                        "core_urls"            => $this->getUcmCoreAlias('urls'),
-                        "core_version"         => $this->getUcmCoreAlias('version'),
-                        "core_ordering"        => $this->getUcmCoreAlias('ordering'),
-                        "core_metakey"         => $this->getUcmCoreAlias('metakey'),
-                        "core_metadesc"        => $this->getUcmCoreAlias('metadesc'),
-                        "core_catid"           => $this->getUcmCoreAlias('cat_id'),
-                        "core_xreference"      => $this->getUcmCoreAlias('xreference'),
-                        "asset_id"             => $this->getUcmCoreAlias('asset_id')
+            $contentType->table      = json_encode(
+                array(
+                    'special' => array(
+                        'dbtable' => $this->getTableName(),
+                        'key'     => $this->getKeyName(),
+                        'type'    => $name,
+                        'prefix'  => $this->_tablePrefix,
+                        'class'   => 'FOFTable',
+                        'config'  => 'array()'
+                    ),
+                    'common'  => array(
+                        'dbtable' => '#__ucm_content',
+                        'key'     => 'ucm_id',
+                        'type'    => 'CoreContent',
+                        'prefix'  => 'JTable',
+                        'config'  => 'array()'
                     )
-                ),
-                'special' => array(
-                    0 => array()
                 )
-            ));
+            );
+
+            $contentType->field_mappings = json_encode(
+                array(
+                    'common'  => array(
+                        0 => array(
+                            "core_content_item_id" => $this->getKeyName(),
+                            "core_title"           => $this->getUcmCoreAlias('title'),
+                            "core_state"           => $this->getUcmCoreAlias('enabled'),
+                            "core_alias"           => $this->getUcmCoreAlias('alias'),
+                            "core_created_time"    => $this->getUcmCoreAlias('created_on'),
+                            "core_modified_time"   => $this->getUcmCoreAlias('created_by'),
+                            "core_body"            => $this->getUcmCoreAlias('body'),
+                            "core_hits"            => $this->getUcmCoreAlias('hits'),
+                            "core_publish_up"      => $this->getUcmCoreAlias('publish_up'),
+                            "core_publish_down"    => $this->getUcmCoreAlias('publish_down'),
+                            "core_access"          => $this->getUcmCoreAlias('access'),
+                            "core_params"          => $this->getUcmCoreAlias('params'),
+                            "core_featured"        => $this->getUcmCoreAlias('featured'),
+                            "core_metadata"        => $this->getUcmCoreAlias('metadata'),
+                            "core_language"        => $this->getUcmCoreAlias('language'),
+                            "core_images"          => $this->getUcmCoreAlias('images'),
+                            "core_urls"            => $this->getUcmCoreAlias('urls'),
+                            "core_version"         => $this->getUcmCoreAlias('version'),
+                            "core_ordering"        => $this->getUcmCoreAlias('ordering'),
+                            "core_metakey"         => $this->getUcmCoreAlias('metakey'),
+                            "core_metadesc"        => $this->getUcmCoreAlias('metadesc'),
+                            "core_catid"           => $this->getUcmCoreAlias('cat_id'),
+                            "core_xreference"      => $this->getUcmCoreAlias('xreference'),
+                            "asset_id"             => $this->getUcmCoreAlias('asset_id')
+                        )
+                    ),
+                    'special' => array(
+                        0 => array()
+                    )
+                )
+            );
 
             $ignoreFields = array(
                 $this->getUcmCoreAlias('modified_on', null),
@@ -3332,9 +3358,11 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
                 $this->getUcmCoreAlias('version', null)
             );
 
-            $contentType->content_history_options = json_encode(array(
-                "ignoreChanges" => array_filter($ignoreFields, 'strlen')
-            ));
+            $contentType->content_history_options = json_encode(
+                array(
+                    "ignoreChanges" => array_filter($ignoreFields, 'strlen')
+                )
+            );
 
             $contentType->router = '';
 

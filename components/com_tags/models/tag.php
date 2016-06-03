@@ -231,11 +231,23 @@ class TagsModelTag extends JModelList
         }
 
         $tagsHelper = new JHelperTags;
-        $query      = $tagsHelper->getTagItemsQuery($tagId, $typesr, $includeChildren, $orderByOption, $orderDir,
-            $matchAll, $language, $stateFilter);
+        $query      = $tagsHelper->getTagItemsQuery(
+            $tagId,
+            $typesr,
+            $includeChildren,
+            $orderByOption,
+            $orderDir,
+            $matchAll,
+            $language,
+            $stateFilter
+        );
 
         if ($this->state->get('list.filter')) {
-            $query->where($this->_db->quoteName('c.core_title') . ' LIKE ' . $this->_db->quote('%' . $this->state->get('list.filter') . '%'));
+            $query->where(
+                $this->_db->quoteName('c.core_title') . ' LIKE ' . $this->_db->quote(
+                    '%' . $this->state->get('list.filter') . '%'
+                )
+            );
         }
 
         return $query;
@@ -304,8 +316,12 @@ class TagsModelTag extends JModelList
         $this->setState('list.start', $offset);
 
         $itemid   = $pkString . ':' . $app->input->get('Itemid', 0, 'int');
-        $orderCol = $app->getUserStateFromRequest('com_tags.tag.list.' . $itemid . '.filter_order', 'filter_order', '',
-            'string');
+        $orderCol = $app->getUserStateFromRequest(
+            'com_tags.tag.list.' . $itemid . '.filter_order',
+            'filter_order',
+            '',
+            'string'
+        );
         $orderCol = !$orderCol ? $this->state->params->get('tag_list_orderby', 'c.core_title') : $orderCol;
 
         if (!in_array($orderCol, $this->filter_fields)) {
@@ -314,8 +330,12 @@ class TagsModelTag extends JModelList
 
         $this->setState('list.ordering', $orderCol);
 
-        $listOrder = $app->getUserStateFromRequest('com_tags.tag.list.' . $itemid . '.filter_order_direction',
-            'filter_order_Dir', '', 'string');
+        $listOrder = $app->getUserStateFromRequest(
+            'com_tags.tag.list.' . $itemid . '.filter_order_direction',
+            'filter_order_Dir',
+            '',
+            'string'
+        );
         $listOrder = !$listOrder ? $this->state->params->get('tag_list_orderby_direction', 'ASC') : $listOrder;
 
         if (!in_array(strtoupper($listOrder), array('ASC', 'DESC', ''))) {
@@ -327,8 +347,12 @@ class TagsModelTag extends JModelList
         $this->setState('tag.state', 1);
 
         // Optional filter text
-        $filterSearch = $app->getUserStateFromRequest('com_tags.tag.list.' . $itemid . '.filter_search',
-            'filter-search', '', 'string');
+        $filterSearch = $app->getUserStateFromRequest(
+            'com_tags.tag.list.' . $itemid . '.filter_search',
+            'filter-search',
+            '',
+            'string'
+        );
         $this->setState('list.filter', $filterSearch);
     }
 }

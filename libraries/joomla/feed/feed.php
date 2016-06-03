@@ -80,7 +80,9 @@ class JFeed implements ArrayAccess
 
         // Validate that any authors that are set are instances of JFeedPerson or null.
         if (($name == 'author') && (!($value instanceof JFeedPerson) || ($value === null))) {
-            throw new InvalidArgumentException('JFeed "author" must be of type JFeedPerson. ' . gettype($value) . 'given.');
+            throw new InvalidArgumentException(
+                'JFeed "author" must be of type JFeedPerson. ' . gettype($value) . 'given.'
+            );
         }
 
         // Disallow setting categories or contributors directly.

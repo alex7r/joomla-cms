@@ -157,7 +157,10 @@ class JFormFieldTextarea extends JFormField
         JHtml::_('jquery.framework');
         JHtml::_('script', 'system/html5fallback.js', false, true);
 
-        return '<textarea name="' . $this->name . '" id="' . $this->id . '"' . $columns . $rows . $class . $hint . $disabled . $readonly . $onchange . $onclick . $required . $autocomplete . $autofocus . $spellcheck . $maxlength . ' >' . htmlspecialchars($this->value,
-            ENT_COMPAT, 'UTF-8') . '</textarea>';
+        return '<textarea name="' . $this->name . '" id="' . $this->id . '"' . $columns . $rows . $class . $hint . $disabled . $readonly . $onchange . $onclick . $required . $autocomplete . $autofocus . $spellcheck . $maxlength . ' >' . htmlspecialchars(
+            $this->value,
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</textarea>';
     }
 }

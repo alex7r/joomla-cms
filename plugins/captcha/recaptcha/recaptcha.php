@@ -51,14 +51,17 @@ class PlgCaptchaRecaptcha extends JPlugin
             $file  = 'https://www.google.com/recaptcha/api/js/recaptcha_ajax.js';
 
             JHtml::_('script', $file);
-            JFactory::getDocument()->addScriptDeclaration('jQuery( document ).ready(function()
-				{Recaptcha.create("' . $pubkey . '", "' . $id . '", {theme: "' . $theme . '",' . $this->_getLanguage() . 'tabindex: 0});});');
+            JFactory::getDocument()->addScriptDeclaration(
+                'jQuery( document ).ready(function()
+				{Recaptcha.create("' . $pubkey . '", "' . $id . '", {theme: "' . $theme . '",' . $this->_getLanguage(
+                ) . 'tabindex: 0});});'
+            );
         } else {
             // Load callback first for browser compatibility
             JHtml::_('script', 'plg_captcha_recaptcha/recaptcha.min.js', false, true);
 
-            $file = 'https://www.google.com/recaptcha/api.js?onload=JoomlaInitReCaptcha2&render=explicit&hl=' . JFactory::getLanguage()
-                                                                                                                        ->getTag();
+            $file = 'https://www.google.com/recaptcha/api.js?onload=JoomlaInitReCaptcha2&render=explicit&hl=' . JFactory::getLanguage(
+                )->getTag();
             JHtml::_('script', $file);
         }
 
@@ -123,10 +126,17 @@ class PlgCaptchaRecaptcha extends JPlugin
         if ($this->params->get('version', '1.0') == '1.0') {
             return '<div id="' . $id . '" ' . $class . '></div>';
         } else {
-            return '<div id="' . $id . '" ' . str_replace('class="', 'class="g-recaptcha ',
-                $class) . ' data-sitekey="' . $this->params->get('public_key',
-                '') . '" data-theme="' . $this->params->get('theme2',
-                'light') . '" data-size="' . $this->params->get('size', 'normal') . '"></div>';
+            return '<div id="' . $id . '" ' . str_replace(
+                'class="',
+                'class="g-recaptcha ',
+                $class
+            ) . ' data-sitekey="' . $this->params->get(
+                'public_key',
+                ''
+            ) . '" data-theme="' . $this->params->get(
+                'theme2',
+                'light'
+            ) . '" data-size="' . $this->params->get('size', 'normal') . '"></div>';
         }
     }
 
@@ -150,7 +160,9 @@ class PlgCaptchaRecaptcha extends JPlugin
             case '1.0':
                 $challenge = $input->get('recaptcha_challenge_field', '', 'string');
                 $response  = $input->get('recaptcha_response_field', '', 'string');
-                $spam      = ($challenge == null || strlen($challenge) == 0 || $response == null || strlen($response) == 0);
+                $spam      = ($challenge == null || strlen($challenge) == 0 || $response == null || strlen(
+                                                                                                        $response
+                                                                                                    ) == 0);
                 break;
             case '2.0':
                 // Challenge Not needed in 2.0 but needed for getResponse call
@@ -202,19 +214,32 @@ class PlgCaptchaRecaptcha extends JPlugin
 
         switch ($version) {
             case '1.0':
-                $response = $this->_recaptcha_http_post('www.google.com', '/recaptcha/api/verify', array(
-                    'privatekey' => $privatekey,
-                    'remoteip'   => $remoteip,
-                    'challenge'  => $challenge,
-                    'response'   => $response
-                ));
+                $response = $this->_recaptcha_http_post(
+                    'www.google.com',
+                    '/recaptcha/api/verify',
+                    array(
+                        'privatekey' => $privatekey,
+                        'remoteip'   => $remoteip,
+                        'challenge'  => $challenge,
+                        'response'   => $response
+                    )
+                );
 
                 $answers = explode("\n", $response[1]);
 
                 if (trim($answers[0]) !== 'true') {
                     // @todo use exceptions here
-                    $this->_subject->setError(JText::_('PLG_RECAPTCHA_ERROR_' . strtoupper(str_replace('-', '_',
-                            $answers[1]))));
+                    $this->_subject->setError(
+                        JText::_(
+                            'PLG_RECAPTCHA_ERROR_' . strtoupper(
+                                str_replace(
+                                    '-',
+                                    '_',
+                                    $answers[1]
+                                )
+                            )
+                        )
+                    );
 
                     return false;
                 }

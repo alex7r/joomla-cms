@@ -19,7 +19,8 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 
 JText::script('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT');
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	Joomla.submitbutton = function(pressbutton)
 	{
 		if (pressbutton == "filters.delete")
@@ -35,7 +36,8 @@ JFactory::getDocument()->addScriptDeclaration('
 		}
 		Joomla.submitform(pressbutton);
 	};
-');
+'
+);
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_finder&view=filters'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -64,24 +66,49 @@ JFactory::getDocument()->addScriptDeclaration('
                             <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                         </th>
                         <th class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGLOBAL_TITLE',
+                                'a.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_FINDER_HEADING_CREATED_BY',
-                                'a.created_by_alias', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_FINDER_HEADING_CREATED_BY',
+                                'a.created_by_alias',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_FINDER_HEADING_CREATED_ON', 'a.created',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_FINDER_HEADING_CREATED_ON',
+                                'a.created',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="5%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_FINDER_HEADING_MAP_COUNT', 'a.map_count',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_FINDER_HEADING_MAP_COUNT',
+                                'a.map_count',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.filter_id', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ID',
+                                'a.filter_id',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -97,8 +124,10 @@ JFactory::getDocument()->addScriptDeclaration('
                     foreach ($this->items as $i => $item) :
                         $canCreate = $user->authorise('core.create', 'com_finder');
                         $canEdit = $user->authorise('core.edit', 'com_finder');
-                        $canCheckin = $user->authorise('core.manage',
-                                'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
+                        $canCheckin = $user->authorise(
+                                'core.manage',
+                                'com_checkin'
+                            ) || $item->checked_out == $user->get('id') || $item->checked_out == 0;
                         $canChange = $user->authorise('core.edit.state', 'com_finder') && $canCheckin;
                         ?>
                         <tr class="row<?php echo $i % 2; ?>">
@@ -110,11 +139,19 @@ JFactory::getDocument()->addScriptDeclaration('
                             </td>
                             <td>
                                 <?php if ($item->checked_out) : ?>
-                                    <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time,
-                                        'filters.', $canCheckin); ?>
+                                    <?php echo JHtml::_(
+                                        'jgrid.checkedout',
+                                        $i,
+                                        $item->editor,
+                                        $item->checked_out_time,
+                                        'filters.',
+                                        $canCheckin
+                                    ); ?>
                                 <?php endif; ?>
                                 <?php if ($canEdit) : ?>
-                                    <a href="<?php echo JRoute::_('index.php?option=com_finder&task=filter.edit&filter_id=' . (int)$item->filter_id); ?>">
+                                    <a href="<?php echo JRoute::_(
+                                        'index.php?option=com_finder&task=filter.edit&filter_id=' . (int)$item->filter_id
+                                    ); ?>">
                                         <?php echo $this->escape($item->title); ?></a>
                                 <?php else : ?>
                                     <?php echo $this->escape($item->title); ?>

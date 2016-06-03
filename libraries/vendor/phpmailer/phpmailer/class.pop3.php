@@ -246,22 +246,26 @@ class POP3
         }
 
         //  connect to the POP3 server
-        $this->pop_conn = fsockopen($host, //  POP3 Host
+        $this->pop_conn = fsockopen(
+            $host, //  POP3 Host
             $port, //  Port #
             $errno, //  Error Number
             $errstr, //  Error Message
-            $tval); //  Timeout (seconds)
+            $tval
+        ); //  Timeout (seconds)
         //  Restore the error handler
         restore_error_handler();
 
         //  Did we connect?
         if (false === $this->pop_conn) {
             //  It would appear not...
-            $this->setError(array(
-                'error'  => "Failed to connect to server $host on port $port",
-                'errno'  => $errno,
-                'errstr' => $errstr
-            ));
+            $this->setError(
+                array(
+                    'error'  => "Failed to connect to server $host on port $port",
+                    'errno'  => $errno,
+                    'errstr' => $errstr
+                )
+            );
 
             return false;
         }
@@ -333,11 +337,13 @@ class POP3
     protected function checkResponse($string)
     {
         if (substr($string, 0, 3) !== '+OK') {
-            $this->setError(array(
-                'error'  => "Server reported an error: $string",
-                'errno'  => 0,
-                'errstr' => ''
-            ));
+            $this->setError(
+                array(
+                    'error'  => "Server reported an error: $string",
+                    'errno'  => 0,
+                    'errstr' => ''
+                )
+            );
 
             return false;
         } else {
@@ -443,12 +449,14 @@ class POP3
      */
     protected function catchWarning($errno, $errstr, $errfile, $errline)
     {
-        $this->setError(array(
-            'error'   => "Connecting to the POP3 server raised a PHP warning: ",
-            'errno'   => $errno,
-            'errstr'  => $errstr,
-            'errfile' => $errfile,
-            'errline' => $errline
-        ));
+        $this->setError(
+            array(
+                'error'   => "Connecting to the POP3 server raised a PHP warning: ",
+                'errno'   => $errno,
+                'errstr'  => $errstr,
+                'errfile' => $errfile,
+                'errline' => $errline
+            )
+        );
     }
 }

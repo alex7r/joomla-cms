@@ -55,8 +55,11 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
     public function getForm($data = array(), $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_newsfeeds.newsfeed', 'newsfeed',
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_newsfeeds.newsfeed',
+            'newsfeed',
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
 
         if (empty($form)) {
             return false;
@@ -123,8 +126,10 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
     {
         $input = JFactory::getApplication()->input;
 
-        JLoader::register('CategoriesHelper',
-            JPATH_ADMINISTRATOR . '/components/com_categories/helpers/categories.php');
+        JLoader::register(
+            'CategoriesHelper',
+            JPATH_ADMINISTRATOR . '/components/com_categories/helpers/categories.php'
+        );
 
         // Cast catid to integer for comparison
         $catid = (int)$data['catid'];
@@ -362,8 +367,10 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
             // Prime some default values.
             if ($this->getState('newsfeed.id') == 0) {
                 $app = JFactory::getApplication();
-                $data->set('catid',
-                    $app->input->get('catid', $app->getUserState('com_newsfeeds.newsfeeds.filter.category_id'), 'int'));
+                $data->set(
+                    'catid',
+                    $app->input->get('catid', $app->getUserState('com_newsfeeds.newsfeeds.filter.category_id'), 'int')
+                );
             }
         }
 
@@ -403,8 +410,12 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
             $item->associations = array();
 
             if ($item->id != null) {
-                $associations = JLanguageAssociations::getAssociations('com_newsfeeds', '#__newsfeeds',
-                    'com_newsfeeds.item', $item->id);
+                $associations = JLanguageAssociations::getAssociations(
+                    'com_newsfeeds',
+                    '#__newsfeeds',
+                    'com_newsfeeds.item',
+                    $item->id
+                );
 
                 foreach ($associations as $tag => $association) {
                     $item->associations[$tag] = $association->id;

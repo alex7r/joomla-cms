@@ -69,8 +69,13 @@ class TagsViewTag extends JViewLegacy
 
         // Need to load the menu language file as mod_menu hasn't been loaded yet.
         $lang = JFactory::getLanguage();
-        $lang->load('com_tags', JPATH_BASE, null, false, true) || $lang->load('com_tags',
-            JPATH_ADMINISTRATOR . '/components/com_tags', null, false, true);
+        $lang->load('com_tags', JPATH_BASE, null, false, true) || $lang->load(
+            'com_tags',
+            JPATH_ADMINISTRATOR . '/components/com_tags',
+            null,
+            false,
+            true
+        );
 
         // Get the results for each action.
         $canDo = $this->canDo;
@@ -89,7 +94,10 @@ class TagsViewTag extends JViewLegacy
             JToolbarHelper::save('tag.save');
             JToolbarHelper::save2new('tag.save2new');
         } // If not checked out, can save the item.
-        elseif (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.edit.own') && $this->item->created_user_id == $userId))) {
+        elseif (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get(
+                        'core.edit.own'
+                    ) && $this->item->created_user_id == $userId))
+        ) {
             JToolbarHelper::apply('tag.apply');
             JToolbarHelper::save('tag.save');
 

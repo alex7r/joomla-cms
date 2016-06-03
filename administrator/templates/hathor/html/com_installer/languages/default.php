@@ -18,7 +18,8 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 $version = new JVersion;
 
 // Add spindle-wheel for language installation.
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 jQuery(document).ready(function($) {
 	Joomla.loadingLayer("load");
 	$("#adminForm").on("submit", function(e) {
@@ -28,7 +29,8 @@ jQuery(document).ready(function($) {
 		}
 	});
 });
-');
+'
+);
 ?>
 <div id="installer-languages">
     <form action="<?php echo JRoute::_('index.php?option=com_installer&view=languages'); ?>" method="post"
@@ -53,8 +55,13 @@ jQuery(document).ready(function($) {
                                        onclick="Joomla.checkAll(this)"/>
                             </th>
                             <th class="nowrap">
-                                <?php echo JHtml::_('grid.sort', 'COM_INSTALLER_HEADING_NAME', 'name', $listDirn,
-                                    $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'grid.sort',
+                                    'COM_INSTALLER_HEADING_NAME',
+                                    'name',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th width="10%" class="center">
                                 <?php echo JText::_('JVERSION'); ?>
@@ -66,8 +73,13 @@ jQuery(document).ready(function($) {
                                 <?php echo JText::_('COM_INSTALLER_HEADING_DETAILS_URL'); ?>
                             </th>
                             <th width="30" class="nowrap hidden-phone">
-                                <?php echo JHtml::_('grid.sort', 'COM_INSTALLER_HEADING_ID', 'update_id', $listDirn,
-                                    $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'grid.sort',
+                                    'COM_INSTALLER_HEADING_ID',
+                                    'update_id',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                         </tr>
                         </thead>
@@ -81,12 +93,20 @@ jQuery(document).ready(function($) {
                                     <?php echo $language->name; ?>
 
                                     <?php // Display a Note if language pack version is not equal to Joomla version ?>
-                                    <?php if (substr($language->version, 0,
-                                            3) != $version::RELEASE || substr($language->version, 0,
-                                            5) != $version->getShortVersion()
+                                    <?php if (substr(
+                                                  $language->version,
+                                                  0,
+                                                  3
+                                              ) != $version::RELEASE || substr(
+                                                                            $language->version,
+                                                                            0,
+                                                                            5
+                                                                        ) != $version->getShortVersion()
                                     ) : ?>
                                         <div
-                                            class="small"><?php echo JText::_('JGLOBAL_LANGUAGE_VERSION_NOT_PLATFORM'); ?></div>
+                                            class="small"><?php echo JText::_(
+                                                'JGLOBAL_LANGUAGE_VERSION_NOT_PLATFORM'
+                                            ); ?></div>
                                     <?php endif; ?>
                                 </td>
                                 <td class="center">

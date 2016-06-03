@@ -123,9 +123,13 @@ class JTableObserverTags extends JTableObserver
         // Needed for PHP < 5.4.0 as it's not passing context $this to closure function
         static::$_myTableForPregreplaceOnly = $this->table;
 
-        $this->tagsHelper->typeAlias = preg_replace_callback('/{([^}]+)}/', function ($matches) {
-            return JTableObserverTags::$_myTableForPregreplaceOnly->{$matches[1]};
-        }, $this->typeAliasPattern);
+        $this->tagsHelper->typeAlias = preg_replace_callback(
+            '/{([^}]+)}/',
+            function ($matches) {
+                return JTableObserverTags::$_myTableForPregreplaceOnly->{$matches[1]};
+            },
+            $this->typeAliasPattern
+        );
     }
 
     /**

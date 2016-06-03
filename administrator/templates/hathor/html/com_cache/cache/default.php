@@ -29,8 +29,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         <?php echo JText::_('COM_CACHE_SELECT_CLIENT'); ?>
                     </label>
                     <select name="client_id" id="client_id">
-                        <?php echo JHtml::_('select.options', CacheHelper::getClientOptions(), 'value', 'text',
-                            $this->state->get('client_id')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            CacheHelper::getClientOptions(),
+                            'value',
+                            'text',
+                            $this->state->get('client_id')
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -49,8 +54,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         <?php echo JHtml::_('grid.sort', 'COM_CACHE_GROUP', 'group', $listDirn, $listOrder); ?>
                     </th>
                     <th class="width-5 center nowrap">
-                        <?php echo JHtml::_('grid.sort', 'COM_CACHE_NUMBER_OF_FILES', 'count', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_CACHE_NUMBER_OF_FILES',
+                            'count',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-10 center">
                         <?php echo JHtml::_('grid.sort', 'COM_CACHE_SIZE', 'size', $listDirn, $listOrder); ?>

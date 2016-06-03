@@ -58,7 +58,9 @@ abstract class JHtmlRules
         $html[] = JHtml::_('tabs.start', 'acl-rules-' . $assetId, array('useCookie' => 1));
         $html[] = JHtml::_('tabs.panel', JText::_('JLIB_HTML_ACCESS_SUMMARY'), 'summary');
         $html[] = '			<p>' . JText::_('JLIB_HTML_ACCESS_SUMMARY_DESC') . '</p>';
-        $html[] = '			<table class="aclsummary-table" summary="' . JText::_('JLIB_HTML_ACCESS_SUMMARY_DESC') . '">';
+        $html[] = '			<table class="aclsummary-table" summary="' . JText::_(
+                'JLIB_HTML_ACCESS_SUMMARY_DESC'
+            ) . '">';
         $html[] = '			<caption>' . JText::_('JLIB_HTML_ACCESS_SUMMARY_DESC_CAPTION') . '</caption>';
         $html[] = '			<tr>';
         $html[] = '				<th class="col1 hidelabeltxt">' . JText::_('JLIB_RULES_GROUPS') . '</th>';
@@ -74,9 +76,13 @@ abstract class JHtmlRules
             $html[] = '				<td class="col1">' . $group->text . '</td>';
 
             foreach ($actions as $j => $action) {
-                $html[] = '				<td class="col' . ($j + 2) . '">' . ($assetId ? ($inherited->allow($action->name,
-                        $group->identities) ? $images['allow'] : $images['deny']) : ($inheriting->allow($action->name,
-                        $group->identities) ? $images['allow'] : $images['deny'])) . '</td>';
+                $html[] = '				<td class="col' . ($j + 2) . '">' . ($assetId ? ($inherited->allow(
+                        $action->name,
+                        $group->identities
+                    ) ? $images['allow'] : $images['deny']) : ($inheriting->allow(
+                        $action->name,
+                        $group->identities
+                    ) ? $images['allow'] : $images['deny'])) . '</td>';
             }
 
             $html[] = '			</tr>';
@@ -90,7 +96,9 @@ abstract class JHtmlRules
             $html[]      = JHtml::_('tabs.panel', $actionTitle, $action->name);
             $html[]      = '			<p>' . $actionDesc . '</p>';
             $html[]      = '			<table class="aclmodify-table" summary="' . strip_tags($actionDesc) . '">';
-            $html[]      = '			<caption>' . JText::_('JLIB_HTML_ACCESS_MODIFY_DESC_CAPTION_ACL') . ' ' . $actionTitle . ' ' . JText::_('JLIB_HTML_ACCESS_MODIFY_DESC_CAPTION_TABLE') . '</caption>';
+            $html[]      = '			<caption>' . JText::_(
+                    'JLIB_HTML_ACCESS_MODIFY_DESC_CAPTION_ACL'
+                ) . ' ' . $actionTitle . ' ' . JText::_('JLIB_HTML_ACCESS_MODIFY_DESC_CAPTION_TABLE') . '</caption>';
             $html[]      = '			<tr>';
             $html[]      = '				<th class="col1 hidelabeltxt">' . JText::_('JLIB_RULES_GROUP') . '</th>';
             $html[]      = '				<th class="col2">' . JText::_('JLIB_RULES_INHERIT') . '</th>';
@@ -103,19 +111,34 @@ abstract class JHtmlRules
 
                 $html[] = '			<tr class="row' . ($i % 2) . '">';
                 $html[] = '				<td class="col1">' . $group->text . '</td>';
-                $html[] = '				<td class="col2">' . ($inheriting->allow($action->name,
-                        $group->identities) ? $images['allow-i'] : $images['deny-i']) . '</td>';
+                $html[] = '				<td class="col2">' . ($inheriting->allow(
+                        $action->name,
+                        $group->identities
+                    ) ? $images['allow-i'] : $images['deny-i']) . '</td>';
                 $html[] = '				<td class="col3">';
-                $html[] = '					<select id="' . $idPrefix . '_' . $action->name . '_' . $group->value . '" class="inputbox" size="1" name="' . $control . '[' . $action->name . '][' . $group->value . ']" title="' . JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP',
-                        $actionTitle, $group->text) . '">';
-                $html[] = '						<option value=""' . ($selected === null ? ' selected="selected"' : '') . '>' . JText::_('JLIB_RULES_INHERIT') . '</option>';
-                $html[] = '						<option value="1"' . ($selected === true ? ' selected="selected"' : '') . '>' . JText::_('JLIB_RULES_ALLOWED') . '</option>';
-                $html[] = '						<option value="0"' . ($selected === false ? ' selected="selected"' : '') . '>' . JText::_('JLIB_RULES_DENIED') . '</option>';
+                $html[] = '					<select id="' . $idPrefix . '_' . $action->name . '_' . $group->value . '" class="inputbox" size="1" name="' . $control . '[' . $action->name . '][' . $group->value . ']" title="' . JText::sprintf(
+                        'JLIB_RULES_SELECT_ALLOW_DENY_GROUP',
+                        $actionTitle,
+                        $group->text
+                    ) . '">';
+                $html[] = '						<option value=""' . ($selected === null ? ' selected="selected"' : '') . '>' . JText::_(
+                        'JLIB_RULES_INHERIT'
+                    ) . '</option>';
+                $html[] = '						<option value="1"' . ($selected === true ? ' selected="selected"' : '') . '>' . JText::_(
+                        'JLIB_RULES_ALLOWED'
+                    ) . '</option>';
+                $html[] = '						<option value="0"' . ($selected === false ? ' selected="selected"' : '') . '>' . JText::_(
+                        'JLIB_RULES_DENIED'
+                    ) . '</option>';
                 $html[] = '					</select>';
                 $html[] = '				</td>';
-                $html[] = '				<td class="col4">' . ($assetId ? ($inherited->allow($action->name,
-                        $group->identities) ? $images['allow'] : $images['deny']) : ($inheriting->allow($action->name,
-                        $group->identities) ? $images['allow'] : $images['deny'])) . '</td>';
+                $html[] = '				<td class="col4">' . ($assetId ? ($inherited->allow(
+                        $action->name,
+                        $group->identities
+                    ) ? $images['allow'] : $images['deny']) : ($inheriting->allow(
+                        $action->name,
+                        $group->identities
+                    ) ? $images['allow'] : $images['deny'])) . '</td>';
                 $html[] = '			</tr>';
             }
 
@@ -145,11 +168,17 @@ abstract class JHtmlRules
      */
     protected static function _getImagesArray()
     {
-        $images['allow-l'] = '<label class="icon-16-allow" title="' . JText::_('JLIB_RULES_ALLOWED') . '">' . JText::_('JLIB_RULES_ALLOWED') . '</label>';
-        $images['deny-l']  = '<label class="icon-16-deny" title="' . JText::_('JLIB_RULES_DENIED') . '">' . JText::_('JLIB_RULES_DENIED') . '</label>';
+        $images['allow-l'] = '<label class="icon-16-allow" title="' . JText::_('JLIB_RULES_ALLOWED') . '">' . JText::_(
+                'JLIB_RULES_ALLOWED'
+            ) . '</label>';
+        $images['deny-l']  = '<label class="icon-16-deny" title="' . JText::_('JLIB_RULES_DENIED') . '">' . JText::_(
+                'JLIB_RULES_DENIED'
+            ) . '</label>';
         $images['allow']   = '<a class="icon-16-allow" title="' . JText::_('JLIB_RULES_ALLOWED') . '"> </a>';
         $images['deny']    = '<a class="icon-16-deny" title="' . JText::_('JLIB_RULES_DENIED') . '"> </a>';
-        $images['allow-i'] = '<a class="icon-16-allowinactive" title="' . JText::_('JRULE_ALLOWED_INHERITED') . '"> </a>';
+        $images['allow-i'] = '<a class="icon-16-allowinactive" title="' . JText::_(
+                'JRULE_ALLOWED_INHERITED'
+            ) . '"> </a>';
         $images['deny-i']  = '<a class="icon-16-denyinactive" title="' . JText::_('JRULE_DENIED_INHERITED') . '"> </a>';
 
         return $images;
@@ -169,7 +198,9 @@ abstract class JHtmlRules
         $db = JFactory::getDbo();
 
         // Get the user groups from the database.
-        $db->setQuery('SELECT a.id AS value, a.title AS text, b.id as parent' . ' FROM #__usergroups AS a LEFT JOIN #__usergroups AS b ON a.lft >= b.lft AND a.rgt <= b.rgt' . ' ORDER BY a.lft ASC, b.lft ASC');
+        $db->setQuery(
+            'SELECT a.id AS value, a.title AS text, b.id as parent' . ' FROM #__usergroups AS a LEFT JOIN #__usergroups AS b ON a.lft >= b.lft AND a.rgt <= b.rgt' . ' ORDER BY a.lft ASC, b.lft ASC'
+        );
         $result  = $db->loadObjectList();
         $options = array();
 
@@ -208,9 +239,9 @@ abstract class JHtmlRules
         $query = $db->getQuery(true);
 
         // Get the user groups from the database.
-        $query->select($db->quoteName('parent_id'))
-              ->from($db->quoteName('#__assets'))
-              ->where($db->quoteName('id') . ' = ' . (int)$assetId);
+        $query->select($db->quoteName('parent_id'))->from($db->quoteName('#__assets'))->where(
+                $db->quoteName('id') . ' = ' . (int)$assetId
+            );
         $db->setQuery($query);
 
         return (int)$db->loadResult();

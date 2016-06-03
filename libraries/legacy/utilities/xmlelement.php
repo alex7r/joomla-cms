@@ -29,8 +29,11 @@ class JXMLElement extends SimpleXMLElement
      */
     public function name()
     {
-        JLog::add('JXMLElement::name() is deprecated, use SimpleXMLElement::getName() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JXMLElement::name() is deprecated, use SimpleXMLElement::getName() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return (string)$this->getName();
     }
@@ -49,8 +52,11 @@ class JXMLElement extends SimpleXMLElement
      */
     public function asFormattedXml($compressed = false, $indent = "\t", $level = 0)
     {
-        JLog::add('JXMLElement::asFormattedXml() is deprecated, use SimpleXMLElement::asXml() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JXMLElement::asFormattedXml() is deprecated, use SimpleXMLElement::asXml() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
         $out = '';
 
         // Start a new line, indent by the number indicated in $level

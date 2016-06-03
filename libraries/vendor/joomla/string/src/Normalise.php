@@ -39,8 +39,10 @@ abstract class Normalise
      */
     public static function fromCamelCase($input, $grouped = false)
     {
-        return $grouped ? preg_split('/(?<=[^A-Z_])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][^A-Z_])/x',
-            $input) : trim(preg_replace('#([A-Z])#', ' $1', $input));
+        return $grouped ? preg_split(
+            '/(?<=[^A-Z_])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][^A-Z_])/x',
+            $input
+        ) : trim(preg_replace('#([A-Z])#', ' $1', $input));
     }
 
     /**

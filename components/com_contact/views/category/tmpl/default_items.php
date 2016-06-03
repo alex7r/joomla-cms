@@ -25,7 +25,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                 <?php if ($this->params->get('filter_field')) : ?>
                     <div class="btn-group">
                         <label class="filter-search-lbl element-invisible" for="filter-search"><span
-                                class="label label-warning"><?php echo JText::_('JUNPUBLISHED'); ?></span><?php echo JText::_('COM_CONTACT_FILTER_LABEL') . '&#160;'; ?>
+                                class="label label-warning"><?php echo JText::_(
+                                    'JUNPUBLISHED'
+                                ); ?></span><?php echo JText::_('COM_CONTACT_FILTER_LABEL') . '&#160;'; ?>
                         </label>
                         <input type="text" name="filter-search" id="filter-search"
                                value="<?php echo $this->escape($this->state->get('list.filter')); ?>" class="inputbox"
@@ -59,18 +61,29 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     <?php if ($this->params->get('show_image_heading')) : ?>
                         <div class="span2 col-md-2">
                             <?php if ($this->items[$i]->image) : ?>
-                                <a href="<?php echo JRoute::_(ContactHelperRoute::getContactRoute($item->slug,
-                                    $item->catid)); ?>">
-                                    <?php echo JHtml::_('image', $this->items[$i]->image,
+                                <a href="<?php echo JRoute::_(
+                                    ContactHelperRoute::getContactRoute(
+                                        $item->slug,
+                                        $item->catid
+                                    )
+                                ); ?>">
+                                    <?php echo JHtml::_(
+                                        'image',
+                                        $this->items[$i]->image,
                                         JText::_('COM_CONTACT_IMAGE_DETAILS'),
-                                        array('class' => 'contact-thumbnail img-thumbnail')); ?></a>
+                                        array('class' => 'contact-thumbnail img-thumbnail')
+                                    ); ?></a>
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
 
                     <div class="list-title span7 col-md-7">
-                        <a href="<?php echo JRoute::_(ContactHelperRoute::getContactRoute($item->slug,
-                            $item->catid)); ?>">
+                        <a href="<?php echo JRoute::_(
+                            ContactHelperRoute::getContactRoute(
+                                $item->slug,
+                                $item->catid
+                            )
+                        ); ?>">
                             <?php echo $item->name; ?></a>
                         <?php if ($this->items[$i]->published == 0) : ?>
                             <span class="label label-warning"><?php echo JText::_('JUNPUBLISHED'); ?></span>

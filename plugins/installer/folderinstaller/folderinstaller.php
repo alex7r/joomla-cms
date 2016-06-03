@@ -73,7 +73,8 @@ class PlgInstallerFolderInstaller extends JPlugin
         <?php
         echo JHtml::_('bootstrap.endTab');
 
-        JFactory::getDocument()->addScriptDeclaration('
+        JFactory::getDocument()->addScriptDeclaration(
+            '
 			Joomla.submitbuttonfolder = function()
 			{
 				var form = document.getElementById("adminForm");
@@ -90,7 +91,8 @@ class PlgInstallerFolderInstaller extends JPlugin
 					form.submit();
 				}
 			};
-		');
+		'
+        );
 
         return true;
     }

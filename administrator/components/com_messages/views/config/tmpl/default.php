@@ -16,7 +16,8 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('bootstrap.tooltip', '.hasTooltip', array('placement' => 'bottom'));
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 		Joomla.submitbutton = function(task)
 		{
 			if (task == 'config.cancel' || document.formvalidator.isValid(document.getElementById('config-form')))
@@ -24,7 +25,8 @@ JFactory::getDocument()->addScriptDeclaration("
 				Joomla.submitform(task, document.getElementById('config-form'));
 			}
 		};
-	");
+	"
+);
 ?>
 <div class="container-popup">
     <form action="<?php echo JRoute::_('index.php?option=com_messages&view=config'); ?>" method="post" name="adminForm"

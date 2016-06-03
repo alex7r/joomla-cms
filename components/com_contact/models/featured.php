@@ -166,7 +166,9 @@ class ContactModelFeatured extends JModelList
 
         // Change for sqlsrv... aliased c.published to cat_published
         // Join to check for category published state in parent categories up the tree
-        $query->select('c.published as cat_published, CASE WHEN badcats.id is null THEN c.published ELSE 0 END AS parents_published');
+        $query->select(
+            'c.published as cat_published, CASE WHEN badcats.id is null THEN c.published ELSE 0 END AS parents_published'
+        );
         $subquery = 'SELECT cat.id as id FROM #__categories AS cat JOIN #__categories AS parent ';
         $subquery .= 'ON cat.lft BETWEEN parent.lft AND parent.rgt ';
         $subquery .= 'WHERE parent.extension = ' . $db->quote('com_contact');
@@ -188,20 +190,29 @@ class ContactModelFeatured extends JModelList
             $nullDate = $db->quote($db->getNullDate());
             $date     = JFactory::getDate();
             $nowDate  = $db->quote($date->toSql());
-            $query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')')
-                  ->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')')
-                  ->where($publishedWhere . ' = ' . (int)$state);
+            $query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')')->where(
+                    '(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')'
+                )->where($publishedWhere . ' = ' . (int)$state);
         }
 
         // Filter by language
         if ($this->getState('filter.language')) {
-            $query->where('a.language in (' . $db->quote(JFactory::getLanguage()
-                                                                 ->getTag()) . ',' . $db->quote('*') . ')');
+            $query->where(
+                'a.language in (' . $db->quote(
+                    JFactory::getLanguage()->getTag()
+                ) . ',' . $db->quote('*') . ')'
+            );
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.ordering')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.ordering'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

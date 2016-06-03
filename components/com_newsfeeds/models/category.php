@@ -241,15 +241,15 @@ class NewsfeedsModelCategory extends JModelList
         $query = $db->getQuery(true);
 
         // Select required fields from the categories.
-        $query->select($this->getState('list.select', 'a.*'))
-              ->from($db->quoteName('#__newsfeeds') . ' AS a')
-              ->where('a.access IN (' . $groups . ')');
+        $query->select($this->getState('list.select', 'a.*'))->from($db->quoteName('#__newsfeeds') . ' AS a')->where(
+                'a.access IN (' . $groups . ')'
+            );
 
         // Filter by category.
         if ($categoryId = $this->getState('category.id')) {
-            $query->where('a.catid = ' . (int)$categoryId)
-                  ->join('LEFT', '#__categories AS c ON c.id = a.catid')
-                  ->where('c.access IN (' . $groups . ')');
+            $query->where('a.catid = ' . (int)$categoryId)->join('LEFT', '#__categories AS c ON c.id = a.catid')->where(
+                    'c.access IN (' . $groups . ')'
+                );
         }
 
         // Filter by state
@@ -267,8 +267,9 @@ class NewsfeedsModelCategory extends JModelList
         $nowDate  = $db->quote($date->format($db->getDateFormat()));
 
         if ($this->getState('filter.publish_date')) {
-            $query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')')
-                  ->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
+            $query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')')->where(
+                    '(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')'
+                );
         }
 
         // Filter by search in title
@@ -281,13 +282,22 @@ class NewsfeedsModelCategory extends JModelList
 
         // Filter by language
         if ($this->getState('filter.language')) {
-            $query->where('a.language in (' . $db->quote(JFactory::getLanguage()
-                                                                 ->getTag()) . ',' . $db->quote('*') . ')');
+            $query->where(
+                'a.language in (' . $db->quote(
+                    JFactory::getLanguage()->getTag()
+                ) . ',' . $db->quote('*') . ')'
+            );
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.ordering')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.ordering'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }
@@ -342,8 +352,10 @@ class NewsfeedsModelCategory extends JModelList
 
         $user = JFactory::getUser();
 
-        if ((!$user->authorise('core.edit.state', 'com_newsfeeds')) && (!$user->authorise('core.edit',
-                'com_newsfeeds'))
+        if ((!$user->authorise('core.edit.state', 'com_newsfeeds')) && (!$user->authorise(
+                'core.edit',
+                'com_newsfeeds'
+            ))
         ) {
             // Limit to published for people who can't edit or edit.state.
             $this->setState('filter.published', 1);

@@ -39,10 +39,15 @@ function modChrome_beezHide($module, &$params, &$attribs)
     if (!empty ($module->content)) { ?>
 
         <div
-            class="moduletable_js <?php echo htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT,
-                'UTF-8'); ?>"><?php if ($module->showtitle) : ?>
+            class="moduletable_js <?php echo htmlspecialchars(
+                $params->get('moduleclass_sfx'),
+                ENT_COMPAT,
+                'UTF-8'
+            ); ?>"><?php if ($module->showtitle) : ?>
                 <h<?php echo $headerLevel; ?> class="js_heading"> <?php echo $module->title; ?> <a href="#"
-                                                                                                   title="<?php echo JText::_('TPL_BEEZ3_CLICK'); ?>"
+                                                                                                   title="<?php echo JText::_(
+                                                                                                       'TPL_BEEZ3_CLICK'
+                                                                                                   ); ?>"
                                                                                                    onclick="auf('module_<?php echo $module->id; ?>'); return false"
                                                                                                    class="opencloselink"
                                                                                                    id="link_<?php echo $module->id ?>"> <span
@@ -102,7 +107,9 @@ function modChrome_beezTabs($module, $params, $attribs)
             echo '<div tabindex="-1" class="tabcontent tabopen" id="module_' . $rendermodule->id . '">';
             echo $rendermodule->content;
             if ($counter != count($modules)) {
-                echo '<a href="#" class="unseen" onclick="nexttab(\'module_' . $rendermodule->id . '\');return false;" id="next_' . $rendermodule->id . '">' . JText::_('TPL_BEEZ3_NEXTTAB') . '</a>';
+                echo '<a href="#" class="unseen" onclick="nexttab(\'module_' . $rendermodule->id . '\');return false;" id="next_' . $rendermodule->id . '">' . JText::_(
+                        'TPL_BEEZ3_NEXTTAB'
+                    ) . '</a>';
             }
             echo '</div>';
         }

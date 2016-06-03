@@ -317,13 +317,13 @@ class PlgFinderNewsfeeds extends FinderIndexerAdapter
         $db = JFactory::getDbo();
 
         // Check if we can use the supplied SQL query.
-        $query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)
-                                                                ->select('a.id, a.catid, a.name AS title, a.alias, a.link AS link')
-                                                                ->select('a.published AS state, a.ordering, a.created AS start_date, a.params, a.access')
-                                                                ->select('a.publish_up AS publish_start_date, a.publish_down AS publish_end_date')
-                                                                ->select('a.metakey, a.metadesc, a.metadata, a.language')
-                                                                ->select('a.created_by, a.created_by_alias, a.modified, a.modified_by')
-                                                                ->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
+        $query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)->select(
+                'a.id, a.catid, a.name AS title, a.alias, a.link AS link'
+            )->select('a.published AS state, a.ordering, a.created AS start_date, a.params, a.access')->select(
+                'a.publish_up AS publish_start_date, a.publish_down AS publish_end_date'
+            )->select('a.metakey, a.metadesc, a.metadata, a.language')->select(
+                'a.created_by, a.created_by_alias, a.modified, a.modified_by'
+            )->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
 
         // Handle the alias CASE WHEN portion of the query.
         $case_when_item_alias = ' CASE WHEN ';
@@ -342,9 +342,10 @@ class PlgFinderNewsfeeds extends FinderIndexerAdapter
         $case_when_category_alias .= $query->concatenate(array($c_id, 'c.alias'), ':');
         $case_when_category_alias .= ' ELSE ';
         $case_when_category_alias .= $c_id . ' END as catslug';
-        $query->select($case_when_category_alias)
-              ->from('#__newsfeeds AS a')
-              ->join('LEFT', '#__categories AS c ON c.id = a.catid');
+        $query->select($case_when_category_alias)->from('#__newsfeeds AS a')->join(
+                'LEFT',
+                '#__categories AS c ON c.id = a.catid'
+            );
 
         return $query;
     }

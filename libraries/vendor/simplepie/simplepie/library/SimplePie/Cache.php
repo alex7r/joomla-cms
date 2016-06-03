@@ -110,8 +110,10 @@ class SimplePie_Cache
      */
     public function create($location, $filename, $extension)
     {
-        trigger_error('Cache::create() has been replaced with Cache::get_handler(). Switch to the registry system to use this.',
-            E_USER_DEPRECATED);
+        trigger_error(
+            'Cache::create() has been replaced with Cache::get_handler(). Switch to the registry system to use this.',
+            E_USER_DEPRECATED
+        );
 
         return self::get_handler($location, $filename, $extension);
     }

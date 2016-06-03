@@ -46,7 +46,9 @@ $this->direction = $doc->direction;
     <link rel="stylesheet" href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/print.css"
           type="text/css" media="Print"/>
     <link rel="stylesheet"
-          href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/<?php echo htmlspecialchars($color); ?>.css"
+          href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/<?php echo htmlspecialchars(
+              $color
+          ); ?>.css"
           type="text/css"/>
 
     <?php $files = JHtml::_('stylesheet', 'templates/' . $this->template . '/css/general.css', null, false, true); ?>
@@ -59,8 +61,11 @@ $this->direction = $doc->direction;
         <?php endforeach; ?>
     <?php endif; ?>
     <link rel="stylesheet"
-          href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/<?php echo htmlspecialchars($color,
-              ENT_COMPAT, 'UTF-8'); ?>.css"
+          href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/<?php echo htmlspecialchars(
+              $color,
+              ENT_COMPAT,
+              'UTF-8'
+          ); ?>.css"
           type="text/css"/>
     <?php if ($this->direction == 'rtl') : ?>
         <link rel="stylesheet"
@@ -68,8 +73,11 @@ $this->direction = $doc->direction;
               type="text/css"/>
         <?php if (file_exists(JPATH_SITE . '/templates/' . $this->template . '/css/' . $color . '_rtl.css')) : ?>
             <link rel="stylesheet"
-                  href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/<?php echo htmlspecialchars($color,
-                      ENT_COMPAT, 'UTF-8'); ?>_rtl.css"
+                  href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/<?php echo htmlspecialchars(
+                      $color,
+                      ENT_COMPAT,
+                      'UTF-8'
+                  ); ?>_rtl.css"
                   type="text/css"/>
         <?php endif; ?>
     <?php endif; ?>
@@ -177,7 +185,9 @@ $this->direction = $doc->direction;
                     <div><!-- start gotohomepage -->
                         <p>
                             <a href="<?php echo $this->baseurl; ?>/index.php"
-                               title="<?php echo JText::_('JERROR_LAYOUT_GO_TO_THE_HOME_PAGE'); ?>"><?php echo JText::_('JERROR_LAYOUT_HOME_PAGE'); ?></a>
+                               title="<?php echo JText::_('JERROR_LAYOUT_GO_TO_THE_HOME_PAGE'); ?>"><?php echo JText::_(
+                                    'JERROR_LAYOUT_HOME_PAGE'
+                                ); ?></a>
                         </p>
                     </div><!-- end gotohomepage -->
                     <h3>

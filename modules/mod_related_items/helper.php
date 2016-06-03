@@ -116,13 +116,12 @@ abstract class ModRelatedItemsHelper
                 $case_when .= $query->concatenate(array($c_id, 'cc.alias'), ':');
                 $case_when .= ' ELSE ';
                 $case_when .= $c_id . ' END as catslug';
-                $query->select($case_when)
-                      ->from('#__content AS a')
-                      ->join('LEFT', '#__content_frontpage AS f ON f.content_id = a.id')
-                      ->join('LEFT', '#__categories AS cc ON cc.id = a.catid')
-                      ->where('a.id != ' . (int)$id)
-                      ->where('a.state = 1')
-                      ->where('a.access IN (' . $groups . ')');
+                $query->select($case_when)->from('#__content AS a')->join(
+                        'LEFT',
+                        '#__content_frontpage AS f ON f.content_id = a.id'
+                    )->join('LEFT', '#__categories AS cc ON cc.id = a.catid')->where('a.id != ' . (int)$id)->where(
+                        'a.state = 1'
+                    )->where('a.access IN (' . $groups . ')');
 
                 $wheres = array();
 
@@ -130,14 +129,19 @@ abstract class ModRelatedItemsHelper
                     $wheres[] = 'a.metakey LIKE ' . $db->quote('%' . $keyword . '%');
                 }
 
-                $query->where('(' . implode(' OR ', $wheres) . ')')
-                      ->where('(a.publish_up = ' . $db->quote($nullDate) . ' OR a.publish_up <= ' . $db->quote($now) . ')')
-                      ->where('(a.publish_down = ' . $db->quote($nullDate) . ' OR a.publish_down >= ' . $db->quote($now) . ')');
+                $query->where('(' . implode(' OR ', $wheres) . ')')->where(
+                        '(a.publish_up = ' . $db->quote($nullDate) . ' OR a.publish_up <= ' . $db->quote($now) . ')'
+                    )->where(
+                        '(a.publish_down = ' . $db->quote($nullDate) . ' OR a.publish_down >= ' . $db->quote($now) . ')'
+                    );
 
                 // Filter by language
                 if (JLanguageMultilang::isEnabled()) {
-                    $query->where('a.language in (' . $db->quote(JFactory::getLanguage()
-                                                                         ->getTag()) . ',' . $db->quote('*') . ')');
+                    $query->where(
+                        'a.language in (' . $db->quote(
+                            JFactory::getLanguage()->getTag()
+                        ) . ',' . $db->quote('*') . ')'
+                    );
                 }
 
                 $db->setQuery($query, 0, $maximum);
@@ -172,8 +176,13 @@ abstract class ModRelatedItemsHelper
                 $item->slug    = $item->id . ':' . $item->alias;
                 $item->catslug = $item->catid . ':' . $item->category_alias;
 
-                $item->route = JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catid,
-                    $item->language));
+                $item->route = JRoute::_(
+                    ContentHelperRoute::getArticleRoute(
+                        $item->slug,
+                        $item->catid,
+                        $item->language
+                    )
+                );
             }
         }
 

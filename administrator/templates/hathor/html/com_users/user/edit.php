@@ -18,7 +18,8 @@ JHtml::_('behavior.keepalive');
 // Get the form fieldsets.
 $fieldsets = $this->form->getFieldsets();
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'user.cancel' || document.formvalidator.isValid(document.getElementById('user-form')))
@@ -42,7 +43,8 @@ JFactory::getDocument()->addScriptDeclaration("
 			}
 		});
 	}
-");
+"
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_users&layout=edit&id=' . (int)$this->item->id); ?>"
@@ -93,14 +95,24 @@ JFactory::getDocument()->addScriptDeclaration("
             <div class="control-group">
                 <div class="control-label">
                     <label id="jform_twofactor_method-lbl" for="jform_twofactor_method" class="hasTooltip"
-                           title="<?php echo '<strong>' . JText::_('COM_USERS_USER_FIELD_TWOFACTOR_LABEL') . '</strong><br />' . JText::_('COM_USERS_USER_FIELD_TWOFACTOR_DESC'); ?>">
+                           title="<?php echo '<strong>' . JText::_(
+                                   'COM_USERS_USER_FIELD_TWOFACTOR_LABEL'
+                               ) . '</strong><br />' . JText::_('COM_USERS_USER_FIELD_TWOFACTOR_DESC'); ?>">
                         <?php echo JText::_('COM_USERS_USER_FIELD_TWOFACTOR_LABEL'); ?>
                     </label>
                 </div>
                 <div class="controls">
-                    <?php echo JHtml::_('select.genericlist', Usershelper::getTwoFactorMethods(),
-                        'jform[twofactor][method]', array('onchange' => 'Joomla.twoFactorMethodChange()'), 'value',
-                        'text', $this->otpConfig->method, 'jform_twofactor_method', false) ?>
+                    <?php echo JHtml::_(
+                        'select.genericlist',
+                        Usershelper::getTwoFactorMethods(),
+                        'jform[twofactor][method]',
+                        array('onchange' => 'Joomla.twoFactorMethodChange()'),
+                        'value',
+                        'text',
+                        $this->otpConfig->method,
+                        'jform_twofactor_method',
+                        false
+                    ) ?>
                 </div>
             </div>
             <div id="com_users_twofactor_forms_container">

@@ -107,24 +107,24 @@ class PlgExtensionJoomla extends JPlugin
         $db = JFactory::getDbo();
 
         // Look if the location is used already; doesn't matter what type you can't have two types at the same address, doesn't make sense
-        $query = $db->getQuery(true)
-                    ->select('update_site_id')
-                    ->from('#__update_sites')
-                    ->where('location = ' . $db->quote($location));
+        $query = $db->getQuery(true)->select('update_site_id')->from('#__update_sites')->where(
+                'location = ' . $db->quote($location)
+            );
         $db->setQuery($query);
         $update_site_id = (int)$db->loadResult();
 
         // If it doesn't exist, add it!
         if (!$update_site_id) {
-            $query->clear()
-                  ->insert('#__update_sites')
-                  ->columns(array(
-                      $db->quoteName('name'),
-                      $db->quoteName('type'),
-                      $db->quoteName('location'),
-                      $db->quoteName('enabled')
-                  ))
-                  ->values($db->quote($name) . ', ' . $db->quote($type) . ', ' . $db->quote($location) . ', ' . (int)$enabled);
+            $query->clear()->insert('#__update_sites')->columns(
+                    array(
+                        $db->quoteName('name'),
+                        $db->quoteName('type'),
+                        $db->quoteName('location'),
+                        $db->quoteName('enabled')
+                    )
+                )->values(
+                    $db->quote($name) . ', ' . $db->quote($type) . ', ' . $db->quote($location) . ', ' . (int)$enabled
+                );
             $db->setQuery($query);
 
             if ($db->execute()) {
@@ -136,20 +136,20 @@ class PlgExtensionJoomla extends JPlugin
         // Check if it has an update site id (creation might have faileD)
         if ($update_site_id) {
             // Look for an update site entry that exists
-            $query->clear()
-                  ->select('update_site_id')
-                  ->from('#__update_sites_extensions')
-                  ->where('update_site_id = ' . $update_site_id)
-                  ->where('extension_id = ' . $this->eid);
+            $query->clear()->select('update_site_id')->from('#__update_sites_extensions')->where(
+                    'update_site_id = ' . $update_site_id
+                )->where('extension_id = ' . $this->eid);
             $db->setQuery($query);
             $tmpid = (int)$db->loadResult();
 
             if (!$tmpid) {
                 // Link this extension to the relevant update site
-                $query->clear()->insert('#__update_sites_extensions')->columns(array(
-                    $db->quoteName('update_site_id'),
-                    $db->quoteName('extension_id')
-                ))->values($update_site_id . ', ' . $this->eid);
+                $query->clear()->insert('#__update_sites_extensions')->columns(
+                    array(
+                        $db->quoteName('update_site_id'),
+                        $db->quoteName('extension_id')
+                    )
+                )->values($update_site_id . ', ' . $this->eid);
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -201,8 +201,12 @@ class PlgExtensionJoomla extends JPlugin
                 if (is_array($update_sites_pending_delete) && count($update_sites_pending_delete)) {
                     // Nuke any pending updates with this site before we delete it
                     // TODO: investigate alternative of using a query after the delete below with a query and not in like above
-                    $query->clear()->delete('#__updates')->where('update_site_id IN (' . implode(',',
-                            $update_sites_pending_delete) . ')');
+                    $query->clear()->delete('#__updates')->where(
+                        'update_site_id IN (' . implode(
+                            ',',
+                            $update_sites_pending_delete
+                        ) . ')'
+                    );
                     $db->setQuery($query);
                     $db->execute();
                 }

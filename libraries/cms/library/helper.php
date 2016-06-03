@@ -84,11 +84,11 @@ class JLibraryHelper
     protected static function _load($element)
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('extension_id AS id, element AS "option", params, enabled')
-                    ->from('#__extensions')
-                    ->where($db->quoteName('type') . ' = ' . $db->quote('library'))
-                    ->where($db->quoteName('element') . ' = ' . $db->quote($element));
+        $query = $db->getQuery(true)->select('extension_id AS id, element AS "option", params, enabled')->from(
+                '#__extensions'
+            )->where($db->quoteName('type') . ' = ' . $db->quote('library'))->where(
+                $db->quoteName('element') . ' = ' . $db->quote($element)
+            );
         $db->setQuery($query);
 
         $cache = JFactory::getCache('_system', 'callback');
@@ -97,8 +97,11 @@ class JLibraryHelper
             static::$libraries[$element] = $cache->get(array($db, 'loadObject'), null, $element, false);
         } catch (RuntimeException $e) {
             // Fatal error.
-            JLog::add(JText::sprintf('JLIB_APPLICATION_ERROR_LIBRARY_NOT_LOADING', $element, $e->getMessage()),
-                JLog::WARNING, 'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_APPLICATION_ERROR_LIBRARY_NOT_LOADING', $element, $e->getMessage()),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -106,8 +109,11 @@ class JLibraryHelper
         if (empty(static::$libraries[$element])) {
             // Fatal error.
             $error = JText::_('JLIB_APPLICATION_ERROR_LIBRARY_NOT_FOUND');
-            JLog::add(JText::sprintf('JLIB_APPLICATION_ERROR_LIBRARY_NOT_LOADING', $element, $error), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_APPLICATION_ERROR_LIBRARY_NOT_LOADING', $element, $error),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -138,11 +144,11 @@ class JLibraryHelper
         if (static::isEnabled($element)) {
             // Save params in DB
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->update($db->quoteName('#__extensions'))
-                        ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-                        ->where($db->quoteName('type') . ' = ' . $db->quote('library'))
-                        ->where($db->quoteName('element') . ' = ' . $db->quote($element));
+            $query = $db->getQuery(true)->update($db->quoteName('#__extensions'))->set(
+                    $db->quoteName('params') . ' = ' . $db->quote($params->toString())
+                )->where($db->quoteName('type') . ' = ' . $db->quote('library'))->where(
+                    $db->quoteName('element') . ' = ' . $db->quote($element)
+                );
             $db->setQuery($query);
 
             $result = $db->execute();

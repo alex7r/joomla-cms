@@ -124,12 +124,9 @@ class UsersModelUsers extends JModelList
                 return false;
             }
 
-            $query->clear()
-                  ->select('n.user_id, COUNT(n.id) As note_count')
-                  ->from('#__user_notes AS n')
-                  ->where('n.user_id IN (' . implode(',', $userIds) . ')')
-                  ->where('n.state >= 0')
-                  ->group('n.user_id');
+            $query->clear()->select('n.user_id, COUNT(n.id) As note_count')->from('#__user_notes AS n')->where(
+                    'n.user_id IN (' . implode(',', $userIds) . ')'
+                )->where('n.state >= 0')->group('n.user_id');
 
             $db->setQuery($query);
 
@@ -198,11 +195,10 @@ class UsersModelUsers extends JModelList
     protected function _getUserDisplayedGroups($user_id)
     {
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select($db->qn('title'))
-                    ->from($db->qn('#__usergroups', 'ug'))
-                    ->join('LEFT', $db->qn('#__user_usergroup_map', 'map') . ' ON (ug.id = map.group_id)')
-                    ->where($db->qn('map.user_id') . ' = ' . (int)$user_id);
+        $query = $db->getQuery(true)->select($db->qn('title'))->from($db->qn('#__usergroups', 'ug'))->join(
+                'LEFT',
+                $db->qn('#__user_usergroup_map', 'map') . ' ON (ug.id = map.group_id)'
+            )->where($db->qn('map.user_id') . ' = ' . (int)$user_id);
 
         try {
             $result = $db->setQuery($query)->loadColumn();
@@ -235,19 +231,35 @@ class UsersModelUsers extends JModelList
         }
 
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('filter.active',
-            $this->getUserStateFromRequest($this->context . '.filter.active', 'filter_active', '', 'cmd'));
-        $this->setState('filter.state',
-            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'cmd'));
-        $this->setState('filter.group_id',
-            $this->getUserStateFromRequest($this->context . '.filter.group_id', 'filter_group_id', null, 'int'));
-        $this->setState('filter.range',
-            $this->getUserStateFromRequest($this->context . '.filter.range', 'filter_range', '', 'cmd'));
-        $this->setState('filter.lastvisitrange',
-            $this->getUserStateFromRequest($this->context . '.filter.lastvisitrange', 'filter_lastvisitrange', '',
-                'cmd'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.active',
+            $this->getUserStateFromRequest($this->context . '.filter.active', 'filter_active', '', 'cmd')
+        );
+        $this->setState(
+            'filter.state',
+            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'cmd')
+        );
+        $this->setState(
+            'filter.group_id',
+            $this->getUserStateFromRequest($this->context . '.filter.group_id', 'filter_group_id', null, 'int')
+        );
+        $this->setState(
+            'filter.range',
+            $this->getUserStateFromRequest($this->context . '.filter.range', 'filter_range', '', 'cmd')
+        );
+        $this->setState(
+            'filter.lastvisitrange',
+            $this->getUserStateFromRequest(
+                $this->context . '.filter.lastvisitrange',
+                'filter_lastvisitrange',
+                '',
+                'cmd'
+            )
+        );
 
         $groups = json_decode(base64_decode($app->input->get('groups', '', 'BASE64')));
 
@@ -314,19 +326,23 @@ class UsersModelUsers extends JModelList
         $groups  = $this->getState('filter.groups');
 
         if ($groupId || isset($groups)) {
-            $query->join('LEFT', '#__user_usergroup_map AS map2 ON map2.user_id = a.id')->group($db->quoteName(array(
-                'a.id',
-                'a.name',
-                'a.username',
-                'a.password',
-                'a.block',
-                'a.sendEmail',
-                'a.registerDate',
-                'a.lastvisitDate',
-                'a.activation',
-                'a.params',
-                'a.email'
-            )));
+            $query->join('LEFT', '#__user_usergroup_map AS map2 ON map2.user_id = a.id')->group(
+                $db->quoteName(
+                    array(
+                        'a.id',
+                        'a.name',
+                        'a.username',
+                        'a.password',
+                        'a.block',
+                        'a.sendEmail',
+                        'a.registerDate',
+                        'a.lastvisitDate',
+                        'a.activation',
+                        'a.params',
+                        'a.email'
+                    )
+                )
+            );
 
             if ($groupId) {
                 $query->where('map2.group_id = ' . (int)$groupId);
@@ -371,7 +387,11 @@ class UsersModelUsers extends JModelList
             if ($dates['dNow'] === false) {
                 $query->where($db->qn('a.registerDate') . ' < ' . $db->quote($dates['dStart']->format('Y-m-d H:i:s')));
             } else {
-                $query->where($db->qn('a.registerDate') . ' >= ' . $db->quote($dates['dStart']->format('Y-m-d H:i:s')) . ' AND ' . $db->qn('a.registerDate') . ' <= ' . $db->quote($dates['dNow']->format('Y-m-d H:i:s')));
+                $query->where(
+                    $db->qn('a.registerDate') . ' >= ' . $db->quote(
+                        $dates['dStart']->format('Y-m-d H:i:s')
+                    ) . ' AND ' . $db->qn('a.registerDate') . ' <= ' . $db->quote($dates['dNow']->format('Y-m-d H:i:s'))
+                );
             }
         }
 
@@ -387,7 +407,13 @@ class UsersModelUsers extends JModelList
             } elseif ($dates['dNow'] === false) {
                 $query->where($db->qn('a.lastvisitDate') . ' < ' . $db->quote($dates['dStart']->format('Y-m-d H:i:s')));
             } else {
-                $query->where($db->qn('a.lastvisitDate') . ' >= ' . $db->quote($dates['dStart']->format('Y-m-d H:i:s')) . ' AND ' . $db->qn('a.lastvisitDate') . ' <= ' . $db->quote($dates['dNow']->format('Y-m-d H:i:s')));
+                $query->where(
+                    $db->qn('a.lastvisitDate') . ' >= ' . $db->quote(
+                        $dates['dStart']->format('Y-m-d H:i:s')
+                    ) . ' AND ' . $db->qn('a.lastvisitDate') . ' <= ' . $db->quote(
+                        $dates['dNow']->format('Y-m-d H:i:s')
+                    )
+                );
             }
         }
 
@@ -399,8 +425,16 @@ class UsersModelUsers extends JModelList
         }
 
         // Add the list ordering clause.
-        $query->order($db->qn($db->escape($this->getState('list.ordering',
-                'a.name'))) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->qn(
+                $db->escape(
+                    $this->getState(
+                        'list.ordering',
+                        'a.name'
+                    )
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

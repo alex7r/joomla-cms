@@ -36,8 +36,11 @@ class JFormFieldUsergroup extends JFormField
      */
     protected function getInput()
     {
-        JLog::add('JFormFieldUsergroup is deprecated. Use JFormFieldUserGroupList instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JFormFieldUsergroup is deprecated. Use JFormFieldUserGroupList instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         $options = array();
         $attr    = '';
@@ -65,8 +68,14 @@ class JFormFieldUsergroup extends JFormField
             $disabled = ($disabled == 'true' || $disabled == 'disabled' || $disabled == '1');
 
             // Create a new option object based on the <option /> element.
-            $tmp = JHtml::_('select.option', (string)$option['value'], trim((string)$option), 'value', 'text',
-                $disabled);
+            $tmp = JHtml::_(
+                'select.option',
+                (string)$option['value'],
+                trim((string)$option),
+                'value',
+                'text',
+                $disabled
+            );
 
             // Set some option attributes.
             $tmp->class = (string)$option['class'];

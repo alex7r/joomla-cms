@@ -67,11 +67,15 @@ class MessagesModelMessages extends JModelList
     protected function populateState($ordering = 'a.date_time', $direction = 'desc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
 
-        $this->setState('filter.state',
-            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'cmd'));
+        $this->setState(
+            'filter.state',
+            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'cmd')
+        );
 
         // List state information.
         parent::populateState($ordering, $direction);
@@ -118,8 +122,9 @@ class MessagesModelMessages extends JModelList
         $query->from('#__messages AS a');
 
         // Join over the users for message owner.
-        $query->join('INNER', '#__users AS u ON u.id = a.user_id_from')
-              ->where('a.user_id_to = ' . (int)$user->get('id'));
+        $query->join('INNER', '#__users AS u ON u.id = a.user_id_from')->where(
+                'a.user_id_to = ' . (int)$user->get('id')
+            );
 
         // Filter by published state.
         $state = $this->getState('filter.state');
@@ -139,8 +144,14 @@ class MessagesModelMessages extends JModelList
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.date_time')) . ' ' . $db->escape($this->getState('list.direction', 'DESC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.date_time'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'DESC'))
+        );
 
         return $query;
     }

@@ -40,13 +40,23 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         </th>
                     <?php endif; ?>
                     <th class="item-title">
-                        <?php echo JHtml::_('grid.sort', 'COM_CONTACT_CONTACT_EMAIL_NAME_LABEL', 'a.name', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_CONTACT_CONTACT_EMAIL_NAME_LABEL',
+                            'a.name',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <?php if ($this->params->get('show_position_headings')) : ?>
                         <th class="item-position">
-                            <?php echo JHtml::_('grid.sort', 'COM_CONTACT_POSITION', 'a.con_position', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_CONTACT_POSITION',
+                                'a.con_position',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     <?php endif; ?>
                     <?php if ($this->params->get('show_email_headings')) : ?>
@@ -74,8 +84,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 
                     <?php if ($this->params->get('show_suburb_headings')) : ?>
                         <th class="item-suburb">
-                            <?php echo JHtml::_('grid.sort', 'COM_CONTACT_SUBURB', 'a.suburb', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_CONTACT_SUBURB',
+                                'a.suburb',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     <?php endif; ?>
 
@@ -87,8 +102,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 
                     <?php if ($this->params->get('show_country_headings')) : ?>
                         <th class="item-state">
-                            <?php echo JHtml::_('grid.sort', 'COM_CONTACT_COUNTRY', 'a.country', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_CONTACT_COUNTRY',
+                                'a.country',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     <?php endif; ?>
 
@@ -107,8 +127,12 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                 <?php if ($this->params->get('show_image_heading')) : ?>
                     <td class="item-image">
                         <?php if ($this->items[$i]->image) : ?>
-                            <?php echo JHtml::_('image', $this->items[$i]->image, JText::_('COM_CONTACT_IMAGE_DETAILS'),
-                                array('class' => 'contact-thumbnail img-thumbnail')); ?>
+                            <?php echo JHtml::_(
+                                'image',
+                                $this->items[$i]->image,
+                                JText::_('COM_CONTACT_IMAGE_DETAILS'),
+                                array('class' => 'contact-thumbnail img-thumbnail')
+                            ); ?>
                         <?php endif; ?>
                     </td>
                 <?php endif; ?>

@@ -110,7 +110,11 @@ class PlgContentPagenavigation extends JPlugin
                     break;
             }
 
-            $xwhere = ' AND (a.state = 1 OR a.state = -1)' . ' AND (publish_up = ' . $db->quote($nullDate) . ' OR publish_up <= ' . $db->quote($now) . ')' . ' AND (publish_down = ' . $db->quote($nullDate) . ' OR publish_down >= ' . $db->quote($now) . ')';
+            $xwhere = ' AND (a.state = 1 OR a.state = -1)' . ' AND (publish_up = ' . $db->quote(
+                    $nullDate
+                ) . ' OR publish_up <= ' . $db->quote($now) . ')' . ' AND (publish_down = ' . $db->quote(
+                    $nullDate
+                ) . ' OR publish_down >= ' . $db->quote($now) . ')';
 
             // Array of articles in same category correctly ordered.
             $query = $db->getQuery(true);
@@ -125,11 +129,14 @@ class PlgContentPagenavigation extends JPlugin
             $c_id       = $query->castAsChar('cc.id');
             $case_when1 .= ' THEN ' . $query->concatenate(array($c_id, 'cc.alias'), ':');
             $case_when1 .= ' ELSE ' . $c_id . ' END as catslug';
-            $query->select('a.id, a.title, a.catid, a.language,' . $case_when . ',' . $case_when1)
-                  ->from('#__content AS a')
-                  ->join('LEFT', '#__categories AS cc ON cc.id = a.catid')
-                  ->where('a.catid = ' . (int)$row->catid . ' AND a.state = ' . (int)$row->state . ($canPublish ? '' : ' AND a.access IN (' . implode(",",
-                              JAccess::getAuthorisedViewLevels($user->id)) . ') ') . $xwhere);
+            $query->select('a.id, a.title, a.catid, a.language,' . $case_when . ',' . $case_when1)->from(
+                    '#__content AS a'
+                )->join('LEFT', '#__categories AS cc ON cc.id = a.catid')->where(
+                    'a.catid = ' . (int)$row->catid . ' AND a.state = ' . (int)$row->state . ($canPublish ? '' : ' AND a.access IN (' . implode(
+                            ",",
+                            JAccess::getAuthorisedViewLevels($user->id)
+                        ) . ') ') . $xwhere
+                );
             $query->order($orderby);
 
             if ($app->isSite() && $app->getLanguageFilter()) {
@@ -165,8 +172,13 @@ class PlgContentPagenavigation extends JPlugin
 
             if ($row->prev) {
                 $row->prev_label = ($this->params->get('display', 0) == 0) ? JText::_('JPREV') : $row->prev->title;
-                $row->prev       = JRoute::_(ContentHelperRoute::getArticleRoute($row->prev->slug, $row->prev->catid,
-                    $row->prev->language));
+                $row->prev       = JRoute::_(
+                    ContentHelperRoute::getArticleRoute(
+                        $row->prev->slug,
+                        $row->prev->catid,
+                        $row->prev->language
+                    )
+                );
             } else {
                 $row->prev_label = '';
                 $row->prev       = '';
@@ -174,8 +186,13 @@ class PlgContentPagenavigation extends JPlugin
 
             if ($row->next) {
                 $row->next_label = ($this->params->get('display', 0) == 0) ? JText::_('JNEXT') : $row->next->title;
-                $row->next       = JRoute::_(ContentHelperRoute::getArticleRoute($row->next->slug, $row->next->catid,
-                    $row->next->language));
+                $row->next       = JRoute::_(
+                    ContentHelperRoute::getArticleRoute(
+                        $row->next->slug,
+                        $row->next->catid,
+                        $row->next->language
+                    )
+                );
             } else {
                 $row->next_label = '';
                 $row->next       = '';
@@ -217,12 +234,16 @@ class PlgContentPagenavigation extends JPlugin
         switch ($orderDate) {
             // Use created if modified is not set
             case 'modified' :
-                $queryDate = ' CASE WHEN a.modified = ' . $db->quote($db->getNullDate()) . ' THEN a.created ELSE a.modified END';
+                $queryDate = ' CASE WHEN a.modified = ' . $db->quote(
+                        $db->getNullDate()
+                    ) . ' THEN a.created ELSE a.modified END';
                 break;
 
             // Use created if publish_up is not set
             case 'published' :
-                $queryDate = ' CASE WHEN a.publish_up = ' . $db->quote($db->getNullDate()) . ' THEN a.created ELSE a.publish_up END ';
+                $queryDate = ' CASE WHEN a.publish_up = ' . $db->quote(
+                        $db->getNullDate()
+                    ) . ' THEN a.created ELSE a.publish_up END ';
                 break;
 
             // Use created as default

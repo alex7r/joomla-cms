@@ -55,10 +55,9 @@ class PostinstallModelMessages extends FOFModel
     {
         $db = $this->getDbo();
 
-        $query = $db->getQuery(true)
-                    ->update($db->qn('#__postinstall_messages'))
-                    ->set($db->qn('enabled') . ' = ' . $db->q(1))
-                    ->where($db->qn('extension_id') . ' = ' . $db->q($eid));
+        $query = $db->getQuery(true)->update($db->qn('#__postinstall_messages'))->set(
+                $db->qn('enabled') . ' = ' . $db->q(1)
+            )->where($db->qn('extension_id') . ' = ' . $db->q($eid));
         $db->setQuery($query);
 
         return $db->execute();
@@ -75,10 +74,9 @@ class PostinstallModelMessages extends FOFModel
     {
         $db = $this->getDbo();
 
-        $query = $db->getQuery(true)
-                    ->select('extension_id')
-                    ->from($db->qn('#__postinstall_messages'))
-                    ->group(array($db->qn('extension_id')));
+        $query = $db->getQuery(true)->select('extension_id')->from($db->qn('#__postinstall_messages'))->group(
+                array($db->qn('extension_id'))
+            );
         $db->setQuery($query);
         $extension_ids = $db->loadColumn();
 
@@ -260,8 +258,9 @@ class PostinstallModelMessages extends FOFModel
 
         // Make sure there's a valid type
         if (!in_array($options['type'], array('message', 'link', 'action'))) {
-            throw new Exception('Post-installation message definitions need to declare a type of message, link or action',
-                500);
+            throw new Exception(
+                'Post-installation message definitions need to declare a type of message, link or action', 500
+            );
         }
 
         // Make sure there's a title key
@@ -276,60 +275,76 @@ class PostinstallModelMessages extends FOFModel
 
         // If the type is anything other than message you need an action key
         if (($options['type'] != 'message') && empty($options['action_key'])) {
-            throw new Exception('Post-installation message definitions need an action key when they are of type "' . $options['type'] . '"',
-                500);
+            throw new Exception(
+                'Post-installation message definitions need an action key when they are of type "' . $options['type'] . '"',
+                500
+            );
         }
 
         // You must specify the language extension
         if (empty($options['language_extension'])) {
-            throw new Exception('Post-installation message definitions need to specify which extension contains their language keys',
-                500);
+            throw new Exception(
+                'Post-installation message definitions need to specify which extension contains their language keys',
+                500
+            );
         }
 
         // The action file and method are only required for the "action" type
         if ($options['type'] == 'action') {
             if (empty($options['action_file'])) {
-                throw new Exception('Post-installation message definitions need an action file when they are of type "action"',
-                    500);
+                throw new Exception(
+                    'Post-installation message definitions need an action file when they are of type "action"', 500
+                );
             }
 
             $file_path = FOFTemplateUtils::parsePath($options['action_file'], true);
 
             if (!@is_file($file_path)) {
-                throw new Exception('The action file ' . $options['action_file'] . ' of your post-installation message definition does not exist',
-                    500);
+                throw new Exception(
+                    'The action file ' . $options['action_file'] . ' of your post-installation message definition does not exist',
+                    500
+                );
             }
 
             if (empty($options['action'])) {
-                throw new Exception('Post-installation message definitions need an action (function name) when they are of type "action"',
-                    500);
+                throw new Exception(
+                    'Post-installation message definitions need an action (function name) when they are of type "action"',
+                    500
+                );
             }
         }
 
         if ($options['type'] == 'link') {
             if (empty($options['link'])) {
-                throw new Exception('Post-installation message definitions need an action (URL) when they are of type "link"',
-                    500);
+                throw new Exception(
+                    'Post-installation message definitions need an action (URL) when they are of type "link"', 500
+                );
             }
         }
 
         // The condition file and method are only required when the type is not "message"
         if ($options['type'] != 'message') {
             if (empty($options['condition_file'])) {
-                throw new Exception('Post-installation message definitions need a condition file when they are of type "' . $options['type'] . '"',
-                    500);
+                throw new Exception(
+                    'Post-installation message definitions need a condition file when they are of type "' . $options['type'] . '"',
+                    500
+                );
             }
 
             $file_path = FOFTemplateUtils::parsePath($options['condition_file'], true);
 
             if (!@is_file($file_path)) {
-                throw new Exception('The condition file ' . $options['condition_file'] . ' of your post-installation message definition does not exist',
-                    500);
+                throw new Exception(
+                    'The condition file ' . $options['condition_file'] . ' of your post-installation message definition does not exist',
+                    500
+                );
             }
 
             if (empty($options['condition_method'])) {
-                throw new Exception('Post-installation message definitions need a condition method (function name) when they are of type "' . $options['type'] . '"',
-                    500);
+                throw new Exception(
+                    'Post-installation message definitions need a condition method (function name) when they are of type "' . $options['type'] . '"',
+                    500
+                );
             }
         }
 
@@ -338,12 +353,11 @@ class PostinstallModelMessages extends FOFModel
         $tableName = $table->getTableName();
 
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('*')
-                    ->from($db->qn($tableName))
-                    ->where($db->qn('extension_id') . ' = ' . $db->q($options['extension_id']))
-                    ->where($db->qn('type') . ' = ' . $db->q($options['type']))
-                    ->where($db->qn('title_key') . ' = ' . $db->q($options['title_key']));
+        $query = $db->getQuery(true)->select('*')->from($db->qn($tableName))->where(
+                $db->qn('extension_id') . ' = ' . $db->q($options['extension_id'])
+            )->where($db->qn('type') . ' = ' . $db->q($options['type']))->where(
+                $db->qn('title_key') . ' = ' . $db->q($options['title_key'])
+            );
 
         $existingRow = $db->setQuery($query)->loadAssoc();
 
@@ -364,11 +378,11 @@ class PostinstallModelMessages extends FOFModel
             }
 
             // Otherwise it's not the same row. Remove the old row before insert a new one.
-            $query = $db->getQuery(true)
-                        ->delete($db->qn($tableName))
-                        ->where($db->q('extension_id') . ' = ' . $db->q($options['extension_id']))
-                        ->where($db->q('type') . ' = ' . $db->q($options['type']))
-                        ->where($db->q('title_key') . ' = ' . $db->q($options['title_key']));
+            $query = $db->getQuery(true)->delete($db->qn($tableName))->where(
+                    $db->q('extension_id') . ' = ' . $db->q($options['extension_id'])
+                )->where($db->q('type') . ' = ' . $db->q($options['type']))->where(
+                    $db->q('title_key') . ' = ' . $db->q($options['title_key'])
+                );
 
             $db->setQuery($query)->execute();
         }
@@ -426,9 +440,10 @@ class PostinstallModelMessages extends FOFModel
 
                 if (!in_array($hash, $language_extensions)) {
                     $language_extensions[] = $hash;
-                    JFactory::getLanguage()
-                            ->load($item->language_extension,
-                                $item->language_client_id == 0 ? JPATH_SITE : JPATH_ADMINISTRATOR);
+                    JFactory::getLanguage()->load(
+                            $item->language_extension,
+                            $item->language_client_id == 0 ? JPATH_SITE : JPATH_ADMINISTRATOR
+                        );
                 }
             }
         }

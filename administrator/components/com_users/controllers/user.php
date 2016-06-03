@@ -39,8 +39,12 @@ class UsersControllerUser extends JControllerForm
         $model = $this->getModel('User', '', array());
 
         // Preset the redirect
-        $this->setRedirect(JRoute::_('index.php?option=com_users&view=users' . $this->getRedirectToListAppend(),
-            false));
+        $this->setRedirect(
+            JRoute::_(
+                'index.php?option=com_users&view=users' . $this->getRedirectToListAppend(),
+                false
+            )
+        );
 
         return parent::batch($model);
     }

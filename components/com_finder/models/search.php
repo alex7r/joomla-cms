@@ -105,10 +105,9 @@ class FinderModelSearch extends JModelList
 
         // Create the query to get the search results.
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('link_id') . ', ' . $db->quoteName('object'))
-                    ->from($db->quoteName('#__finder_links'))
-                    ->where($db->quoteName('link_id') . ' IN (' . implode(',', array_keys($items)) . ')');
+        $query = $db->getQuery(true)->select($db->quoteName('link_id') . ', ' . $db->quoteName('object'))->from(
+                $db->quoteName('#__finder_links')
+            )->where($db->quoteName('link_id') . ' IN (' . implode(',', array_keys($items)) . ')');
 
         // Load the results from the database.
         $db->setQuery($query);
@@ -315,7 +314,9 @@ class FinderModelSearch extends JModelList
              */
             foreach ($maps as $suffix => $ids) {
                 // Create a storage key for this set.
-                $setId = $this->getStoreId('getResultsData:' . serialize(array_values($ids)) . ':' . $start . ':' . $limit);
+                $setId = $this->getStoreId(
+                    'getResultsData:' . serialize(array_values($ids)) . ':' . $start . ':' . $limit
+                );
 
                 // Use the cached data if possible.
                 if ($this->retrieve($setId)) {
@@ -324,9 +325,10 @@ class FinderModelSearch extends JModelList
                 else {
                     // Adjust the query to join on the appropriate mapping table.
                     $query = clone($base);
-                    $query->join('INNER',
-                        $this->_db->quoteName('#__finder_links_terms' . $suffix) . ' AS m ON m.link_id = l.link_id')
-                          ->where('m.term_id IN (' . implode(',', $ids) . ')');
+                    $query->join(
+                        'INNER',
+                        $this->_db->quoteName('#__finder_links_terms' . $suffix) . ' AS m ON m.link_id = l.link_id'
+                    )->where('m.term_id IN (' . implode(',', $ids) . ')');
 
                     // Load the results from the database.
                     $this->_db->setQuery($query, $start, $limit);
@@ -417,8 +419,12 @@ class FinderModelSearch extends JModelList
                 $this->store($store, $sorted);
 
                 // Return the requested set.
-                return array_slice($this->retrieve($store), (int)$this->getState('list.start'),
-                    (int)$this->getState('list.limit'), true);
+                return array_slice(
+                    $this->retrieve($store),
+                    (int)$this->getState('list.start'),
+                    (int)$this->getState('list.limit'),
+                    true
+                );
             }
 
             /*
@@ -431,7 +437,9 @@ class FinderModelSearch extends JModelList
              */
             foreach ($this->requiredTerms as $token => $required) {
                 // Create a storage key for this set.
-                $setId = $this->getStoreId('getResultsData:required:' . serialize(array_values($required)) . ':' . $start . ':' . $limit);
+                $setId = $this->getStoreId(
+                    'getResultsData:required:' . serialize(array_values($required)) . ':' . $start . ':' . $limit
+                );
 
                 // Use the cached data if possible.
                 if ($this->retrieve($setId)) {
@@ -451,9 +459,10 @@ class FinderModelSearch extends JModelList
 
                         // Adjust the query to join on the appropriate mapping table.
                         $query = clone($base);
-                        $query->join('INNER',
-                            $this->_db->quoteName('#__finder_links_terms' . $suffix) . ' AS m ON m.link_id = l.link_id')
-                              ->where('m.term_id IN (' . implode(',', $required) . ')');
+                        $query->join(
+                            'INNER',
+                            $this->_db->quoteName('#__finder_links_terms' . $suffix) . ' AS m ON m.link_id = l.link_id'
+                        )->where('m.term_id IN (' . implode(',', $required) . ')');
 
                         // Load the results from the database.
                         $this->_db->setQuery($query, $reqStart, $limit);
@@ -500,8 +509,12 @@ class FinderModelSearch extends JModelList
         $this->store($store, $items);
 
         // Return the requested set.
-        return array_slice($this->retrieve($store), (int)$this->getState('list.start'),
-            (int)$this->getState('list.limit'), true);
+        return array_slice(
+            $this->retrieve($store),
+            (int)$this->getState('list.start'),
+            (int)$this->getState('list.limit'),
+            true
+        );
     }
 
     /**
@@ -527,20 +540,18 @@ class FinderModelSearch extends JModelList
 
         // Create a new query object.
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('l.link_id')
-                    ->from($db->quoteName('#__finder_links') . ' AS l')
-                    ->where('l.access IN (' . $groups . ')')
-                    ->where('l.state = 1')
-                    ->where('l.published = 1');
+        $query = $db->getQuery(true)->select('l.link_id')->from($db->quoteName('#__finder_links') . ' AS l')->where(
+                'l.access IN (' . $groups . ')'
+            )->where('l.state = 1')->where('l.published = 1');
 
         // Get the null date and the current date, minus seconds.
         $nullDate = $db->quote($db->getNullDate());
         $nowDate  = $db->quote(substr_replace(JFactory::getDate()->toSql(), '00', -2));
 
         // Add the publish up and publish down filters.
-        $query->where('(l.publish_start_date = ' . $nullDate . ' OR l.publish_start_date <= ' . $nowDate . ')')
-              ->where('(l.publish_end_date = ' . $nullDate . ' OR l.publish_end_date >= ' . $nowDate . ')');
+        $query->where('(l.publish_start_date = ' . $nullDate . ' OR l.publish_start_date <= ' . $nowDate . ')')->where(
+                '(l.publish_end_date = ' . $nullDate . ' OR l.publish_end_date >= ' . $nowDate . ')'
+            );
 
         /*
          * Add the taxonomy filters to the query. We have to join the taxonomy
@@ -555,9 +566,10 @@ class FinderModelSearch extends JModelList
             // Iterate through each taxonomy group and add the join and where.
             for ($i = 0, $c = count($groups); $i < $c; $i++) {
                 // We use the offset because each join needs a unique alias.
-                $query->join('INNER',
-                    $db->quoteName('#__finder_taxonomy_map') . ' AS t' . $i . ' ON t' . $i . '.link_id = l.link_id')
-                      ->where('t' . $i . '.node_id IN (' . implode(',', $groups[$i]) . ')');
+                $query->join(
+                    'INNER',
+                    $db->quoteName('#__finder_taxonomy_map') . ' AS t' . $i . ' ON t' . $i . '.link_id = l.link_id'
+                )->where('t' . $i . '.node_id IN (' . implode(',', $groups[$i]) . ')');
             }
         }
 
@@ -592,8 +604,11 @@ class FinderModelSearch extends JModelList
         }
         // Filter by language
         if ($this->getState('filter.language')) {
-            $query->where('l.language IN (' . $db->quote(JFactory::getLanguage()
-                                                                 ->getTag()) . ', ' . $db->quote('*') . ')');
+            $query->where(
+                'l.language IN (' . $db->quote(
+                    JFactory::getLanguage()->getTag()
+                ) . ', ' . $db->quote('*') . ')'
+            );
         }
         // Push the data into cache.
         $this->store($store, $query, false);
@@ -682,11 +697,9 @@ class FinderModelSearch extends JModelList
         foreach ($maps as $suffix => $ids) {
 
             // Create the query to get the links ids.
-            $query->clear()
-                  ->select('link_id')
-                  ->from($db->quoteName('#__finder_links_terms' . $suffix))
-                  ->where($db->quoteName('term_id') . ' IN (' . implode(',', $ids) . ')')
-                  ->group($db->quoteName('link_id'));
+            $query->clear()->select('link_id')->from($db->quoteName('#__finder_links_terms' . $suffix))->where(
+                    $db->quoteName('term_id') . ' IN (' . implode(',', $ids) . ')'
+                )->group($db->quoteName('link_id'));
 
             // Load the link ids from the database.
             $db->setQuery($query);
@@ -832,7 +845,9 @@ class FinderModelSearch extends JModelList
              */
             foreach ($maps as $suffix => $ids) {
                 // Create a storage key for this set.
-                $setId = $this->getStoreId('getResultsTotal:' . serialize(array_values($ids)) . ':' . $start . ':' . $limit);
+                $setId = $this->getStoreId(
+                    'getResultsTotal:' . serialize(array_values($ids)) . ':' . $start . ':' . $limit
+                );
 
                 // Use the cached data if possible.
                 if ($this->retrieve($setId)) {
@@ -841,8 +856,9 @@ class FinderModelSearch extends JModelList
                 else {
                     // Adjust the query to join on the appropriate mapping table.
                     $query = clone($base);
-                    $query->join('INNER', '#__finder_links_terms' . $suffix . ' AS m ON m.link_id = l.link_id')
-                          ->where('m.term_id IN (' . implode(',', $ids) . ')');
+                    $query->join('INNER', '#__finder_links_terms' . $suffix . ' AS m ON m.link_id = l.link_id')->where(
+                            'm.term_id IN (' . implode(',', $ids) . ')'
+                        );
 
                     // Load the results from the database.
                     $this->_db->setQuery($query, $start, $limit);
@@ -917,7 +933,9 @@ class FinderModelSearch extends JModelList
              */
             foreach ($this->requiredTerms as $token => $required) {
                 // Create a storage key for this set.
-                $setId = $this->getStoreId('getResultsTotal:required:' . serialize(array_values($required)) . ':' . $start . ':' . $limit);
+                $setId = $this->getStoreId(
+                    'getResultsTotal:required:' . serialize(array_values($required)) . ':' . $start . ':' . $limit
+                );
 
                 // Use the cached data if possible.
                 if ($this->retrieve($setId)) {
@@ -1008,10 +1026,9 @@ class FinderModelSearch extends JModelList
         // Create the SQL query to get the matching link ids.
         // TODO: Impact of removing SQL_NO_CACHE?
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('SQL_NO_CACHE link_id')
-                    ->from('#__finder_links_terms')
-                    ->where('term_id IN (' . implode(',', $terms) . ')');
+        $query = $db->getQuery(true)->select('SQL_NO_CACHE link_id')->from('#__finder_links_terms')->where(
+                'term_id IN (' . implode(',', $terms) . ')'
+            );
 
         return $query;
     }

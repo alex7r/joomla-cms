@@ -9,7 +9,9 @@
 
 defined('_JEXEC') or die;
 
-$notice_homes     = $this->homes == 2 || $this->homes == 1 || $this->homes - 1 != count($this->contentlangs) && ($this->language_filter || $this->switchers != 0);
+$notice_homes     = $this->homes == 2 || $this->homes == 1 || $this->homes - 1 != count(
+        $this->contentlangs
+    ) && ($this->language_filter || $this->switchers != 0);
 $notice_disabled  = !$this->language_filter && ($this->homes > 1 || $this->switchers != 0);
 $notice_switchers = !$this->switchers && ($this->homes > 1 || $this->language_filter);
 ?>
@@ -54,17 +56,23 @@ $notice_switchers = !$this->switchers && ($this->homes > 1 || $this->language_fi
                 </tr>
             <?php endif; ?>
             <?php foreach ($this->contentlangs as $contentlang) : ?>
-                <?php if (array_key_exists($contentlang->lang_code,
-                        $this->homepages) && (!array_key_exists($contentlang->lang_code,
-                            $this->site_langs) || !$contentlang->published)
+                <?php if (array_key_exists(
+                              $contentlang->lang_code,
+                              $this->homepages
+                          ) && (!array_key_exists(
+                            $contentlang->lang_code,
+                            $this->site_langs
+                        ) || !$contentlang->published)
                 ) : ?>
                     <tr class="warning">
                         <td>
                             <span class="icon-pending"></span>
                         </td>
                         <td>
-                            <?php echo JText::sprintf('COM_LANGUAGES_MULTILANGSTATUS_ERROR_CONTENT_LANGUAGE',
-                                $contentlang->lang_code); ?>
+                            <?php echo JText::sprintf(
+                                'COM_LANGUAGES_MULTILANGSTATUS_ERROR_CONTENT_LANGUAGE',
+                                $contentlang->lang_code
+                            ); ?>
                         </td>
                     </tr>
                 <?php endif; ?>
@@ -74,8 +82,10 @@ $notice_switchers = !$this->switchers && ($this->homes > 1 || $this->language_fi
                             <span class="icon-pending"></span>
                         </td>
                         <td>
-                            <?php echo JText::sprintf('COM_LANGUAGES_MULTILANGSTATUS_ERROR_LANGUAGE_TAG',
-                                $contentlang->lang_code); ?>
+                            <?php echo JText::sprintf(
+                                'COM_LANGUAGES_MULTILANGSTATUS_ERROR_LANGUAGE_TAG',
+                                $contentlang->lang_code
+                            ); ?>
                         </td>
                     </tr>
                 <?php endif; ?>
@@ -90,8 +100,10 @@ $notice_switchers = !$this->switchers && ($this->homes > 1 || $this->language_fi
                         <ul>
                             <?php foreach ($this->listUsersError as $user) : ?>
                                 <li>
-                                    <?php echo JText::sprintf('COM_LANGUAGES_MULTILANGSTATUS_CONTACTS_ERROR',
-                                        $user->name); ?>
+                                    <?php echo JText::sprintf(
+                                        'COM_LANGUAGES_MULTILANGSTATUS_CONTACTS_ERROR',
+                                        $user->name
+                                    ); ?>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
@@ -224,8 +236,10 @@ $notice_switchers = !$this->switchers && ($this->homes > 1 || $this->language_fi
                 <td class="center">
                     <?php if ($contentlang->published) : ?>
                         <span class="icon-ok"></span>
-                    <?php elseif (!$contentlang->published && array_key_exists($contentlang->lang_code,
-                            $this->homepages)
+                    <?php elseif (!$contentlang->published && array_key_exists(
+                            $contentlang->lang_code,
+                            $this->homepages
+                        )
                     ) : ?>
                         <span class="icon-not-ok"></span>
                     <?php elseif (!$contentlang->published) : ?>

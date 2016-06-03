@@ -42,14 +42,12 @@ abstract class JHtmlCategoriesAdministrator
 
             // Get the associated categories
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select('c.id, c.title')
-                        ->select('l.sef as lang_sef')
-                        ->from('#__categories as c')
-                        ->where('c.id IN (' . implode(',', array_values($associations)) . ')')
-                        ->join('LEFT', '#__languages as l ON c.language=l.lang_code')
-                        ->select('l.image')
-                        ->select('l.title as language_title');
+            $query = $db->getQuery(true)->select('c.id, c.title')->select('l.sef as lang_sef')->from(
+                    '#__categories as c'
+                )->where('c.id IN (' . implode(',', array_values($associations)) . ')')->join(
+                    'LEFT',
+                    '#__languages as l ON c.language=l.lang_code'
+                )->select('l.image')->select('l.title as language_title');
             $db->setQuery($query);
 
             try {
@@ -61,15 +59,30 @@ abstract class JHtmlCategoriesAdministrator
             if ($items) {
                 foreach ($items as &$item) {
                     $text         = strtoupper($item->lang_sef);
-                    $url          = JRoute::_('index.php?option=com_categories&task=category.edit&id=' . (int)$item->id . '&extension=' . $extension);
+                    $url          = JRoute::_(
+                        'index.php?option=com_categories&task=category.edit&id=' . (int)$item->id . '&extension=' . $extension
+                    );
                     $tooltipParts = array(
-                        JHtml::_('image', 'mod_languages/' . $item->image . '.gif', $item->language_title,
-                            array('title' => $item->language_title), true),
+                        JHtml::_(
+                            'image',
+                            'mod_languages/' . $item->image . '.gif',
+                            $item->language_title,
+                            array('title' => $item->language_title),
+                            true
+                        ),
                         $item->title
                     );
 
-                    $item->link = JHtml::_('tooltip', implode(' ', $tooltipParts), null, null, $text, $url, null,
-                        'hasTooltip label label-association label-' . $item->lang_sef);
+                    $item->link = JHtml::_(
+                        'tooltip',
+                        implode(' ', $tooltipParts),
+                        null,
+                        null,
+                        $text,
+                        $url,
+                        null,
+                        'hasTooltip label label-association label-' . $item->lang_sef
+                    );
                 }
             }
 

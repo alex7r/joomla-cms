@@ -102,8 +102,14 @@ class FOFFormFieldOrdering extends JFormField implements FOFFormField
             $html .= '<span>';
             $html .= $view->pagination->orderUpIcon($this->rowid, true, 'orderup', 'Move Up', $ordering);
             $html .= '</span><span>';
-            $html .= $view->pagination->orderDownIcon($this->rowid, $view->pagination->total, true, 'orderdown',
-                'Move Down', $ordering);
+            $html .= $view->pagination->orderDownIcon(
+                $this->rowid,
+                $view->pagination->total,
+                true,
+                'orderdown',
+                'Move Down',
+                $ordering
+            );
             $html .= '</span>';
             $html .= '<input type="text" name="order[]" size="5" value="' . $this->value . '" ' . $disabled;
             $html .= 'class="text-area-order" style="text-align: center" />';
@@ -191,13 +197,15 @@ class FOFFormFieldOrdering extends JFormField implements FOFFormField
     protected function getQuery()
     {
         $ordering = $this->name;
-        $title    = $this->element['ordertitle'] ? (string)$this->element['ordertitle'] : $this->item->getColumnAlias('title');
+        $title    = $this->element['ordertitle'] ? (string)$this->element['ordertitle'] : $this->item->getColumnAlias(
+            'title'
+        );
 
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true);
-        $query->select(array($db->quoteName($ordering, 'value'), $db->quoteName($title, 'text')))
-              ->from($db->quoteName($this->item->getTableName()))
-              ->order($ordering);
+        $query->select(array($db->quoteName($ordering, 'value'), $db->quoteName($title, 'text')))->from(
+                $db->quoteName($this->item->getTableName())
+            )->order($ordering);
 
         return $query;
     }

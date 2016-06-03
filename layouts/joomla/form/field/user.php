@@ -47,9 +47,13 @@ extract($displayData);
  * @var   mixed   $exclude        The users to exclude from the list of users
  */
 
-$link = 'index.php?option=com_users&amp;view=users&amp;layout=modal&amp;tmpl=component&amp;required=' . ($required ? 1 : 0) . '&amp;field=' . htmlspecialchars($id,
+$link = 'index.php?option=com_users&amp;view=users&amp;layout=modal&amp;tmpl=component&amp;required=' . ($required ? 1 : 0) . '&amp;field=' . htmlspecialchars(
+        $id,
         ENT_COMPAT,
-        'UTF-8') . (isset($groups) ? ('&amp;groups=' . base64_encode(json_encode($groups))) : '') . (isset($excluded) ? ('&amp;excluded=' . base64_encode(json_encode($excluded))) : '');
+        'UTF-8'
+    ) . (isset($groups) ? ('&amp;groups=' . base64_encode(
+            json_encode($groups)
+        )) : '') . (isset($excluded) ? ('&amp;excluded=' . base64_encode(json_encode($excluded))) : '');
 
 // Invalidate the input value if no user selected
 if (JText::_('JLIB_FORM_SELECT_USER') == htmlspecialchars($userName, ENT_COMPAT, 'UTF-8')) {

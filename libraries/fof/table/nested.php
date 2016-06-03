@@ -51,7 +51,10 @@ class FOFTableNested extends FOFTable
         parent::__construct($table, $key, $db, $config);
 
         if (!$this->hasField('lft') || !$this->hasField('rgt')) {
-            throw new \RuntimeException("Table " . $this->getTableName() . " is not compatible with FOFTableNested: it does not have lft/rgt columns");
+            throw new \RuntimeException(
+                "Table " . $this->getTableName(
+                ) . " is not compatible with FOFTableNested: it does not have lft/rgt columns"
+            );
         }
     }
 
@@ -269,9 +272,9 @@ class FOFTableNested extends FOFTable
     {
         $db = $this->getDbo();
 
-        $query = $db->getQuery(true)
-                    ->select($db->qn('node') . '.*')
-                    ->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'));
+        $query = $db->getQuery(true)->select($db->qn('node') . '.*')->from(
+                $db->qn($this->getTableName()) . ' AS ' . $db->qn('node')
+            );
 
         if ($this->treeNestedGet) {
             $query->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'));
@@ -305,17 +308,15 @@ class FOFTableNested extends FOFTable
 
         try {
             // Shrink lft values
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($fldLft . ' = ' . $fldLft . ' - ' . $width)
-                        ->where($fldLft . ' > ' . $db->q($myLeft));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $fldLft . ' = ' . $fldLft . ' - ' . $width
+                )->where($fldLft . ' > ' . $db->q($myLeft));
             $db->setQuery($query)->execute();
 
             // Shrink rgt values
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($fldRgt . ' = ' . $fldRgt . ' - ' . $width)
-                        ->where($fldRgt . ' > ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $fldRgt . ' = ' . $fldRgt . ' - ' . $width
+                )->where($fldRgt . ' > ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
             // Commit the transaction
@@ -473,15 +474,16 @@ class FOFTableNested extends FOFTable
             $fldLft = $db->qn($this->getColumnAlias('lft'));
             $fldRgt = $db->qn($this->getColumnAlias('rgt'));
 
-            $query = $db->getQuery(true)
-                        ->select('(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - 1) AS ' . $db->qn('depth'))
-                        ->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-                        ->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-                        ->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
-                        ->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-                        ->where($db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft))
-                        ->group($db->qn('node') . '.' . $fldLft)
-                        ->order($db->qn('node') . '.' . $fldLft . ' ASC');
+            $query = $db->getQuery(true)->select(
+                    '(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - 1) AS ' . $db->qn('depth')
+                )->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))->join(
+                    'CROSS',
+                    $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent')
+                )->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)->where(
+                    $db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt
+                )->where($db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft))->group(
+                    $db->qn('node') . '.' . $fldLft
+                )->order($db->qn('node') . '.' . $fldLft . ' ASC');
 
             $this->treeDepth = $db->setQuery($query, 0, 1)->loadResult();
         }
@@ -594,20 +596,22 @@ class FOFTableNested extends FOFTable
             return $this;
         }
 
-        if (empty($this->treeParent) || !is_object($this->treeParent) || !($this->treeParent instanceof FOFTableNested)) {
+        if (empty($this->treeParent) || !is_object(
+                $this->treeParent
+            ) || !($this->treeParent instanceof FOFTableNested)
+        ) {
             $db = $this->getDbo();
 
             $fldLft = $db->qn($this->getColumnAlias('lft'));
             $fldRgt = $db->qn($this->getColumnAlias('rgt'));
 
-            $query     = $db->getQuery(true)
-                            ->select($db->qn('parent') . '.' . $fldLft)
-                            ->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-                            ->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-                            ->where($db->qn('node') . '.' . $fldLft . ' > ' . $db->qn('parent') . '.' . $fldLft)
-                            ->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-                            ->where($db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft))
-                            ->order($db->qn('parent') . '.' . $fldLft . ' DESC');
+            $query     = $db->getQuery(true)->select($db->qn('parent') . '.' . $fldLft)->from(
+                    $db->qn($this->getTableName()) . ' AS ' . $db->qn('node')
+                )->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))->where(
+                    $db->qn('node') . '.' . $fldLft . ' > ' . $db->qn('parent') . '.' . $fldLft
+                )->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)->where(
+                    $db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft)
+                )->order($db->qn('parent') . '.' . $fldLft . ' DESC');
             $targetLft = $db->setQuery($query, 0, 1)->loadResult();
 
             $table = $this->getClone();
@@ -766,15 +770,19 @@ class FOFTableNested extends FOFTable
         $db->transactionStart();
 
         try {
-            $db->setQuery($db->getQuery(true)
-                             ->update($db->qn($this->getTableName()))
-                             ->set($fldLft . ' = ' . $fldLft . '+2')
-                             ->where($fldLft . ' >= ' . $db->q($myLeft)))->execute();
+            $db->setQuery(
+                $db->getQuery(true)
+                   ->update($db->qn($this->getTableName()))
+                   ->set($fldLft . ' = ' . $fldLft . '+2')
+                   ->where($fldLft . ' >= ' . $db->q($myLeft))
+            )->execute();
 
-            $db->setQuery($db->getQuery(true)
-                             ->update($db->qn($this->getTableName()))
-                             ->set($fldRgt . ' = ' . $fldRgt . '+2')
-                             ->where($fldRgt . ' > ' . $db->q($myLeft)))->execute();
+            $db->setQuery(
+                $db->getQuery(true)
+                   ->update($db->qn($this->getTableName()))
+                   ->set($fldRgt . ' = ' . $fldRgt . '+2')
+                   ->where($fldRgt . ' > ' . $db->q($myLeft))
+            )->execute();
 
             $this->store();
 
@@ -841,15 +849,19 @@ class FOFTableNested extends FOFTable
         $db->transactionStart();
 
         try {
-            $db->setQuery($db->getQuery(true)
-                             ->update($db->qn($this->getTableName()))
-                             ->set($fldRgt . ' = ' . $fldRgt . '+2')
-                             ->where($fldRgt . ' > ' . $db->q($myRight)))->execute();
+            $db->setQuery(
+                $db->getQuery(true)
+                   ->update($db->qn($this->getTableName()))
+                   ->set($fldRgt . ' = ' . $fldRgt . '+2')
+                   ->where($fldRgt . ' > ' . $db->q($myRight))
+            )->execute();
 
-            $db->setQuery($db->getQuery(true)
-                             ->update($db->qn($this->getTableName()))
-                             ->set($fldLft . ' = ' . $fldLft . '+2')
-                             ->where($fldLft . ' > ' . $db->q($myRight)))->execute();
+            $db->setQuery(
+                $db->getQuery(true)
+                   ->update($db->qn($this->getTableName()))
+                   ->set($fldLft . ' = ' . $fldLft . '+2')
+                   ->where($fldLft . ' > ' . $db->q($myRight))
+            )->execute();
 
             $this->store();
 
@@ -894,9 +906,10 @@ class FOFTableNested extends FOFTable
         $db    = $this->getDbo();
         $table = $this->getClone();
         $table->reset();
-        $leftSibling = $table->whereRaw($db->qn($this->getColumnAlias('rgt')) . ' = ' . $db->q($this->lft - 1))
-                             ->get(0, 1)
-                             ->current();
+        $leftSibling = $table->whereRaw($db->qn($this->getColumnAlias('rgt')) . ' = ' . $db->q($this->lft - 1))->get(
+                0,
+                1
+            )->current();
 
         // Move the node
         if (is_object($leftSibling) && ($leftSibling instanceof FOFTableNested)) {
@@ -945,51 +958,45 @@ class FOFTableNested extends FOFTable
 
         try {
             // Temporary remove subtree being moved
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set("$left = " . $db->q(0) . " - $left")
-                        ->set("$right = " . $db->q(0) . " - $right")
-                        ->where($left . ' >= ' . $db->q($myLeft))
-                        ->where($right . ' <= ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    "$left = " . $db->q(0) . " - $left"
+                )->set("$right = " . $db->q(0) . " - $right")->where($left . ' >= ' . $db->q($myLeft))->where(
+                    $right . ' <= ' . $db->q($myRight)
+                );
             $db->setQuery($query)->execute();
 
             // Close hole left behind
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($left . ' = ' . $left . ' - ' . $db->q($myWidth))
-                        ->where($left . ' > ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $left . ' = ' . $left . ' - ' . $db->q($myWidth)
+                )->where($left . ' > ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($right . ' = ' . $right . ' - ' . $db->q($myWidth))
-                        ->where($right . ' > ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $right . ' = ' . $right . ' - ' . $db->q($myWidth)
+                )->where($right . ' > ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
             // Make a hole for the new items
             $newSibLeft = ($sibLeft > $myRight) ? $sibLeft - $myWidth : $sibLeft;
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($right . ' = ' . $right . ' + ' . $db->q($myWidth))
-                        ->where($right . ' >= ' . $db->q($newSibLeft));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $right . ' = ' . $right . ' + ' . $db->q($myWidth)
+                )->where($right . ' >= ' . $db->q($newSibLeft));
             $db->setQuery($query)->execute();
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($left . ' = ' . $left . ' + ' . $db->q($myWidth))
-                        ->where($left . ' >= ' . $db->q($newSibLeft));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $left . ' = ' . $left . ' + ' . $db->q($myWidth)
+                )->where($left . ' >= ' . $db->q($newSibLeft));
             $db->setQuery($query)->execute();
 
             // Move node and subnodes
             $moveRight = $newSibLeft - $myLeft;
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($left . ' = ' . $db->q(0) . ' - ' . $left . ' + ' . $db->q($moveRight))
-                        ->set($right . ' = ' . $db->q(0) . ' - ' . $right . ' + ' . $db->q($moveRight))
-                        ->where($left . ' <= 0 - ' . $db->q($myLeft))
-                        ->where($right . ' >= 0 - ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $left . ' = ' . $db->q(0) . ' - ' . $left . ' + ' . $db->q($moveRight)
+                )->set($right . ' = ' . $db->q(0) . ' - ' . $right . ' + ' . $db->q($moveRight))->where(
+                    $left . ' <= 0 - ' . $db->q($myLeft)
+                )->where($right . ' >= 0 - ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
             // Commit the transaction
@@ -1037,9 +1044,10 @@ class FOFTableNested extends FOFTable
 
         $table = $this->getClone();
         $table->reset();
-        $rightSibling = $table->whereRaw($db->qn($this->getColumnAlias('lft')) . ' = ' . $db->q($this->rgt + 1))
-                              ->get(0, 1)
-                              ->current();
+        $rightSibling = $table->whereRaw($db->qn($this->getColumnAlias('lft')) . ' = ' . $db->q($this->rgt + 1))->get(
+                0,
+                1
+            )->current();
 
         // Move the node
         if (is_object($rightSibling) && ($rightSibling instanceof FOFTableNested)) {
@@ -1088,51 +1096,45 @@ class FOFTableNested extends FOFTable
 
         try {
             // Temporary remove subtree being moved
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set("$left = " . $db->q(0) . " - $left")
-                        ->set("$right = " . $db->q(0) . " - $right")
-                        ->where($left . ' >= ' . $db->q($myLeft))
-                        ->where($right . ' <= ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    "$left = " . $db->q(0) . " - $left"
+                )->set("$right = " . $db->q(0) . " - $right")->where($left . ' >= ' . $db->q($myLeft))->where(
+                    $right . ' <= ' . $db->q($myRight)
+                );
             $db->setQuery($query)->execute();
 
             // Close hole left behind
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($left . ' = ' . $left . ' - ' . $db->q($myWidth))
-                        ->where($left . ' > ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $left . ' = ' . $left . ' - ' . $db->q($myWidth)
+                )->where($left . ' > ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($right . ' = ' . $right . ' - ' . $db->q($myWidth))
-                        ->where($right . ' > ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $right . ' = ' . $right . ' - ' . $db->q($myWidth)
+                )->where($right . ' > ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
             // Make a hole for the new items
             $newSibRight = ($sibRight > $myRight) ? $sibRight - $myWidth : $sibRight;
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($left . ' = ' . $left . ' + ' . $db->q($myWidth))
-                        ->where($left . ' > ' . $db->q($newSibRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $left . ' = ' . $left . ' + ' . $db->q($myWidth)
+                )->where($left . ' > ' . $db->q($newSibRight));
             $db->setQuery($query)->execute();
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($right . ' = ' . $right . ' + ' . $db->q($myWidth))
-                        ->where($right . ' > ' . $db->q($newSibRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $right . ' = ' . $right . ' + ' . $db->q($myWidth)
+                )->where($right . ' > ' . $db->q($newSibRight));
             $db->setQuery($query)->execute();
 
             // Move node and subnodes
             $moveRight = ($sibRight > $myRight) ? $sibRight - $myRight : $sibRight - $myRight + $myWidth;
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($left . ' = ' . $db->q(0) . ' - ' . $left . ' + ' . $db->q($moveRight))
-                        ->set($right . ' = ' . $db->q(0) . ' - ' . $right . ' + ' . $db->q($moveRight))
-                        ->where($left . ' <= 0 - ' . $db->q($myLeft))
-                        ->where($right . ' >= 0 - ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $left . ' = ' . $db->q(0) . ' - ' . $left . ' + ' . $db->q($moveRight)
+                )->set($right . ' = ' . $db->q(0) . ' - ' . $right . ' + ' . $db->q($moveRight))->where(
+                    $left . ' <= 0 - ' . $db->q($myLeft)
+                )->where($right . ' >= 0 - ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
             // Commit the transaction
@@ -1228,51 +1230,45 @@ class FOFTableNested extends FOFTable
 
         try {
             // Temporary remove subtree being moved
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set("$left = " . $db->q(0) . " - $left")
-                        ->set("$right = " . $db->q(0) . " - $right")
-                        ->where($left . ' >= ' . $db->q($myLeft))
-                        ->where($right . ' <= ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    "$left = " . $db->q(0) . " - $left"
+                )->set("$right = " . $db->q(0) . " - $right")->where($left . ' >= ' . $db->q($myLeft))->where(
+                    $right . ' <= ' . $db->q($myRight)
+                );
             $db->setQuery($query)->execute();
 
             // Close hole left behind
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($left . ' = ' . $left . ' - ' . $db->q($myWidth))
-                        ->where($left . ' > ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $left . ' = ' . $left . ' - ' . $db->q($myWidth)
+                )->where($left . ' > ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($right . ' = ' . $right . ' - ' . $db->q($myWidth))
-                        ->where($right . ' > ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $right . ' = ' . $right . ' - ' . $db->q($myWidth)
+                )->where($right . ' > ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
             // Make a hole for the new items
             $newParentLeft = ($parentLeft > $myRight) ? $parentLeft - $myWidth : $parentLeft;
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($right . ' = ' . $right . ' + ' . $db->q($myWidth))
-                        ->where($right . ' >= ' . $db->q($newParentLeft));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $right . ' = ' . $right . ' + ' . $db->q($myWidth)
+                )->where($right . ' >= ' . $db->q($newParentLeft));
             $db->setQuery($query)->execute();
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($left . ' = ' . $left . ' + ' . $db->q($myWidth))
-                        ->where($left . ' > ' . $db->q($newParentLeft));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $left . ' = ' . $left . ' + ' . $db->q($myWidth)
+                )->where($left . ' > ' . $db->q($newParentLeft));
             $db->setQuery($query)->execute();
 
             // Move node and subnodes
             $moveRight = $newParentLeft - $myLeft + 1;
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($left . ' = ' . $db->q(0) . ' - ' . $left . ' + ' . $db->q($moveRight))
-                        ->set($right . ' = ' . $db->q(0) . ' - ' . $right . ' + ' . $db->q($moveRight))
-                        ->where($left . ' <= 0 - ' . $db->q($myLeft))
-                        ->where($right . ' >= 0 - ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $left . ' = ' . $db->q(0) . ' - ' . $left . ' + ' . $db->q($moveRight)
+                )->set($right . ' = ' . $db->q(0) . ' - ' . $right . ' + ' . $db->q($moveRight))->where(
+                    $left . ' <= 0 - ' . $db->q($myLeft)
+                )->where($right . ' >= 0 - ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
             // Commit the transaction
@@ -1341,51 +1337,45 @@ class FOFTableNested extends FOFTable
 
         try {
             // Temporary remove subtree being moved
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set("$left = " . $db->q(0) . " - $left")
-                        ->set("$right = " . $db->q(0) . " - $right")
-                        ->where($left . ' >= ' . $db->q($myLeft))
-                        ->where($right . ' <= ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    "$left = " . $db->q(0) . " - $left"
+                )->set("$right = " . $db->q(0) . " - $right")->where($left . ' >= ' . $db->q($myLeft))->where(
+                    $right . ' <= ' . $db->q($myRight)
+                );
             $db->setQuery($query)->execute();
 
             // Close hole left behind
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($left . ' = ' . $left . ' - ' . $db->q($myWidth))
-                        ->where($left . ' > ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $left . ' = ' . $left . ' - ' . $db->q($myWidth)
+                )->where($left . ' > ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($right . ' = ' . $right . ' - ' . $db->q($myWidth))
-                        ->where($right . ' > ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $right . ' = ' . $right . ' - ' . $db->q($myWidth)
+                )->where($right . ' > ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
             // Make a hole for the new items
             $newLeft = ($parentRight > $myRight) ? $parentRight - $myWidth : $parentRight;
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($left . ' = ' . $left . ' + ' . $db->q($myWidth))
-                        ->where($left . ' >= ' . $db->q($newLeft));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $left . ' = ' . $left . ' + ' . $db->q($myWidth)
+                )->where($left . ' >= ' . $db->q($newLeft));
             $db->setQuery($query)->execute();
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($right . ' = ' . $right . ' + ' . $db->q($myWidth))
-                        ->where($right . ' >= ' . $db->q($newLeft));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $right . ' = ' . $right . ' + ' . $db->q($myWidth)
+                )->where($right . ' >= ' . $db->q($newLeft));
             $db->setQuery($query)->execute();
 
             // Move node and subnodes
             $moveRight = ($parentRight > $myRight) ? $parentRight - $myRight - 1 : $parentRight - $myRight - 1 + $myWidth;
 
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($left . ' = ' . $db->q(0) . ' - ' . $left . ' + ' . $db->q($moveRight))
-                        ->set($right . ' = ' . $db->q(0) . ' - ' . $right . ' + ' . $db->q($moveRight))
-                        ->where($left . ' <= 0 - ' . $db->q($myLeft))
-                        ->where($right . ' >= 0 - ' . $db->q($myRight));
+            $query = $db->getQuery(true)->update($db->qn($this->getTableName()))->set(
+                    $left . ' = ' . $db->q(0) . ' - ' . $left . ' + ' . $db->q($moveRight)
+                )->set($right . ' = ' . $db->q(0) . ' - ' . $right . ' + ' . $db->q($moveRight))->where(
+                    $left . ' <= 0 - ' . $db->q($myLeft)
+                )->where($right . ' >= 0 - ' . $db->q($myRight));
             $db->setQuery($query)->execute();
 
             // Commit the transaction
@@ -1470,32 +1460,36 @@ class FOFTableNested extends FOFTable
                 }
             } catch (\RuntimeException $e) {
                 // If there is no root found throw an exception. Basically: your table is FUBAR.
-                throw new \RuntimeException("No root found for table " . $this->getTableName() . ", node lft=" . $this->lft);
+                throw new \RuntimeException(
+                    "No root found for table " . $this->getTableName() . ", node lft=" . $this->lft
+                );
             }
 
             // If the above method didn't work, get all roots and select the one with the appropriate lft/rgt values
             if (is_null($this->treeRoot)) {
                 // Find the node with depth = 0, lft < our lft and rgt > our right. That's our root node.
-                $query = $db->getQuery(true)
-                            ->select(array(
-                                $db->qn('node') . '.' . $fldLft,
-                                '(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - 1) AS ' . $db->qn('depth')
-                            ))
-                            ->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-                            ->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-                            ->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
-                            ->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-                            ->where($db->qn('node') . '.' . $fldLft . ' < ' . $db->q($this->lft))
-                            ->where($db->qn('node') . '.' . $fldRgt . ' > ' . $db->q($this->rgt))
-                            ->having($db->qn('depth') . ' = ' . $db->q(0))
-                            ->group($db->qn('node') . '.' . $fldLft);
+                $query = $db->getQuery(true)->select(
+                        array(
+                            $db->qn('node') . '.' . $fldLft,
+                            '(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - 1) AS ' . $db->qn('depth')
+                        )
+                    )->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))->join(
+                        'CROSS',
+                        $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent')
+                    )->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)->where(
+                        $db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt
+                    )->where($db->qn('node') . '.' . $fldLft . ' < ' . $db->q($this->lft))->where(
+                        $db->qn('node') . '.' . $fldRgt . ' > ' . $db->q($this->rgt)
+                    )->having($db->qn('depth') . ' = ' . $db->q(0))->group($db->qn('node') . '.' . $fldLft);
 
                 // Get the lft value
                 $targetLeft = $db->setQuery($query)->loadResult();
 
                 if (empty($targetLeft)) {
                     // If there is no root found throw an exception. Basically: your table is FUBAR.
-                    throw new \RuntimeException("No root found for table " . $this->getTableName() . ", node lft=" . $this->lft);
+                    throw new \RuntimeException(
+                        "No root found for table " . $this->getTableName() . ", node lft=" . $this->lft
+                    );
                 }
 
                 try {
@@ -1504,7 +1498,9 @@ class FOFTableNested extends FOFTable
                     $this->treeRoot = $table->whereRaw($fldLft . ' = ' . $db->q($targetLeft))->get(0, 1)->current();
                 } catch (\RuntimeException $e) {
                     // If there is no root found throw an exception. Basically: your table is FUBAR.
-                    throw new \RuntimeException("No root found for table " . $this->getTableName() . ", node lft=" . $this->lft);
+                    throw new \RuntimeException(
+                        "No root found for table " . $this->getTableName() . ", node lft=" . $this->lft
+                    );
                 }
             }
         }
@@ -1950,39 +1946,44 @@ class FOFTableNested extends FOFTable
         $fldLft = $db->qn($this->getColumnAlias('lft'));
         $fldRgt = $db->qn($this->getColumnAlias('rgt'));
 
-        $subQuery = $db->getQuery(true)
-                       ->select(array(
-                           $db->qn('node') . '.' . $fldLft,
-                           '(COUNT(*) - 1) AS ' . $db->qn('depth')
-                       ))
-                       ->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-                       ->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-                       ->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
-                       ->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-                       ->where($db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft))
-                       ->group($db->qn('node') . '.' . $fldLft)
-                       ->order($db->qn('node') . '.' . $fldLft . ' ASC');
+        $subQuery = $db->getQuery(true)->select(
+                array(
+                    $db->qn('node') . '.' . $fldLft,
+                    '(COUNT(*) - 1) AS ' . $db->qn('depth')
+                )
+            )->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))->from(
+                $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent')
+            )->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)->where(
+                $db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt
+            )->where($db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft))->group(
+                $db->qn('node') . '.' . $fldLft
+            )->order($db->qn('node') . '.' . $fldLft . ' ASC');
 
-        $query = $db->getQuery(true)
-                    ->select(array(
-                        $db->qn('node') . '.' . $fldLft,
-                        '(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - (' . $db->qn('sub_tree') . '.' . $db->qn('depth') . ' + 1)) AS ' . $db->qn('depth')
-                    ))
-                    ->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-                    ->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-                    ->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('sub_parent'))
-                    ->join('CROSS', '(' . $subQuery . ') AS ' . $db->qn('sub_tree'))
-                    ->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
-                    ->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-                    ->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('sub_parent') . '.' . $fldLft)
-                    ->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('sub_parent') . '.' . $fldRgt)
-                    ->where($db->qn('sub_parent') . '.' . $fldLft . ' = ' . $db->qn('sub_tree') . '.' . $fldLft)
-                    ->group($db->qn('node') . '.' . $fldLft)
-                    ->having(array(
-                        $db->qn('depth') . ' > ' . $db->q(0),
-                        $db->qn('depth') . ' <= ' . $db->q(1),
-                    ))
-                    ->order($db->qn('node') . '.' . $fldLft . ' ASC');
+        $query = $db->getQuery(true)->select(
+                array(
+                    $db->qn('node') . '.' . $fldLft,
+                    '(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - (' . $db->qn('sub_tree') . '.' . $db->qn(
+                        'depth'
+                    ) . ' + 1)) AS ' . $db->qn('depth')
+                )
+            )->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))->join(
+                'CROSS',
+                $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent')
+            )->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('sub_parent'))->join(
+                'CROSS',
+                '(' . $subQuery . ') AS ' . $db->qn('sub_tree')
+            )->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)->where(
+                $db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt
+            )->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('sub_parent') . '.' . $fldLft)->where(
+                $db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('sub_parent') . '.' . $fldRgt
+            )->where($db->qn('sub_parent') . '.' . $fldLft . ' = ' . $db->qn('sub_tree') . '.' . $fldLft)->group(
+                $db->qn('node') . '.' . $fldLft
+            )->having(
+                array(
+                    $db->qn('depth') . ' > ' . $db->q(0),
+                    $db->qn('depth') . ' <= ' . $db->q(1),
+                )
+            )->order($db->qn('node') . '.' . $fldLft . ' ASC');
 
         $leftValues = $db->setQuery($query)->loadColumn();
 
@@ -1990,9 +1991,12 @@ class FOFTableNested extends FOFTable
             $leftValues = array(0);
         }
 
-        array_walk($leftValues, function (&$item, $key) use (&$db) {
-            $item = $db->q($item);
-        });
+        array_walk(
+            $leftValues,
+            function (&$item, $key) use (&$db) {
+                $item = $db->q($item);
+            }
+        );
 
         $this->whereRaw($db->qn('node') . '.' . $fldLft . ' IN (' . implode(',', $leftValues) . ')');
     }
@@ -2028,18 +2032,18 @@ class FOFTableNested extends FOFTable
         $fldKey    = $db->qn($this->getColumnAlias($key));
         $fldColumn = $db->qn($this->getColumnAlias($column));
 
-        $query = $db->getQuery(true)
-                    ->select(array(
-                        $db->qn('node') . '.' . $fldKey,
-                        $db->qn('node') . '.' . $fldColumn,
-                        '(COUNT(' . $db->qn('parent') . '.' . $fldKey . ') - 1) AS ' . $db->qn('depth')
-                    ))
-                    ->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-                    ->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-                    ->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
-                    ->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-                    ->group($db->qn('node') . '.' . $fldLft)
-                    ->order($db->qn('node') . '.' . $fldLft . ' ASC');
+        $query = $db->getQuery(true)->select(
+                array(
+                    $db->qn('node') . '.' . $fldKey,
+                    $db->qn('node') . '.' . $fldColumn,
+                    '(COUNT(' . $db->qn('parent') . '.' . $fldKey . ') - 1) AS ' . $db->qn('depth')
+                )
+            )->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))->join(
+                'CROSS',
+                $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent')
+            )->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)->where(
+                $db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt
+            )->group($db->qn('node') . '.' . $fldLft)->order($db->qn('node') . '.' . $fldLft . ' ASC');
 
         $tempResults = $db->setQuery($query)->loadAssocList();
         $ret         = array();

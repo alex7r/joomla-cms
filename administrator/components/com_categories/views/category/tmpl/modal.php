@@ -14,13 +14,15 @@ JHtml::_('bootstrap.tooltip', '.hasTooltip', array('placement' => 'bottom'));
 $function = JFactory::getApplication()->input->getCmd('function', 'jEditCategory_' . (int)$this->item->id);
 
 // Function to update input title when changed
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	function jEditCategoryModal() {
 		if (window.parent && document.formvalidator.isValid(document.getElementById("item-form"))) {
 			return window.parent.' . $this->escape($function) . '(document.getElementById("jform_title").value);
 		}
 	}
-');
+'
+);
 ?>
 <button id="applyBtn" type="button" class="hidden"
         onclick="Joomla.submitbutton('category.apply'); jEditCategoryModal();"></button>

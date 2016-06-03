@@ -177,7 +177,8 @@ class FinderIndexerQuery
         $this->empty = isset($options['empty']) ? (bool)$options['empty'] : false;
 
         // Get the input language.
-        $this->language = !empty($options['language']) ? $options['language'] : FinderIndexerHelper::getDefaultLanguage();
+        $this->language = !empty($options['language']) ? $options['language'] : FinderIndexerHelper::getDefaultLanguage(
+        );
         $this->language = FinderIndexerHelper::getPrimaryLanguage($this->language);
 
         // Get the matching mode.
@@ -319,15 +320,13 @@ class FinderIndexerQuery
          * two reasons: one, it allows us to ensure that the filters being used
          * are real; two, we need to sort the filters by taxonomy branch.
          */
-        $query->clear()
-              ->select('t1.id, t1.title, t2.title AS branch')
-              ->from($db->quoteName('#__finder_taxonomy') . ' AS t1')
-              ->join('INNER', $db->quoteName('#__finder_taxonomy') . ' AS t2 ON t2.id = t1.parent_id')
-              ->where('t1.state = 1')
-              ->where('t1.access IN (' . $groups . ')')
-              ->where('t1.id IN (' . implode(',', $filters) . ')')
-              ->where('t2.state = 1')
-              ->where('t2.access IN (' . $groups . ')');
+        $query->clear()->select('t1.id, t1.title, t2.title AS branch')->from(
+                $db->quoteName('#__finder_taxonomy') . ' AS t1'
+            )->join('INNER', $db->quoteName('#__finder_taxonomy') . ' AS t2 ON t2.id = t1.parent_id')->where(
+                't1.state = 1'
+            )->where('t1.access IN (' . $groups . ')')->where('t1.id IN (' . implode(',', $filters) . ')')->where(
+                't2.state = 1'
+            )->where('t2.access IN (' . $groups . ')');
 
         // Load the filters.
         $db->setQuery($query);
@@ -1026,11 +1025,12 @@ class FinderIndexerQuery
         if (empty($token->matches)) {
             // Create a database query to get the similar terms.
             // TODO: PostgreSQL doesn't support SOUNDEX out of the box
-            $query->clear()
-                  ->select('DISTINCT t.term_id AS id, t.term AS term')
-                  ->from('#__finder_terms AS t')// ->where('t.soundex = ' . soundex($db->quote($token->term)))
-                  ->where('t.soundex = SOUNDEX(' . $db->quote($token->term) . ')')
-                  ->where('t.phrase = ' . (int)$token->phrase);
+            $query->clear()->select('DISTINCT t.term_id AS id, t.term AS term')->from(
+                    '#__finder_terms AS t'
+                )// ->where('t.soundex = ' . soundex($db->quote($token->term)))
+                  ->where('t.soundex = SOUNDEX(' . $db->quote($token->term) . ')')->where(
+                    't.phrase = ' . (int)$token->phrase
+                );
 
             // Get the terms.
             $db->setQuery($query);

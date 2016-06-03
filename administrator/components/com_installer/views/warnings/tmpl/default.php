@@ -24,13 +24,21 @@ defined('_JEXEC') or die;
                     <?php echo JHtml::_('bootstrap.startAccordion', 'warnings', array('active' => 'warning0')); ?>
                     <?php $i = 0; ?>
                     <?php foreach ($this->messages as $message) : ?>
-                        <?php echo JHtml::_('bootstrap.addSlide', 'warnings', $message['message'],
-                            'warning' . ($i++)); ?>
+                        <?php echo JHtml::_(
+                            'bootstrap.addSlide',
+                            'warnings',
+                            $message['message'],
+                            'warning' . ($i++)
+                        ); ?>
                         <?php echo $message['description']; ?>
                         <?php echo JHtml::_('bootstrap.endSlide'); ?>
                     <?php endforeach; ?>
-                    <?php echo JHtml::_('bootstrap.addSlide', 'warnings',
-                        JText::_('COM_INSTALLER_MSG_WARNINGFURTHERINFO'), 'furtherinfo'); ?>
+                    <?php echo JHtml::_(
+                        'bootstrap.addSlide',
+                        'warnings',
+                        JText::_('COM_INSTALLER_MSG_WARNINGFURTHERINFO'),
+                        'furtherinfo'
+                    ); ?>
                     <?php echo JText::_('COM_INSTALLER_MSG_WARNINGFURTHERINFODESC'); ?>
                     <?php echo JHtml::_('bootstrap.endSlide'); ?>
                     <?php echo JHtml::_('bootstrap.endAccordion'); ?>

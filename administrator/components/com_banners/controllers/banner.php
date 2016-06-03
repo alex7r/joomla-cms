@@ -43,8 +43,12 @@ class BannersControllerBanner extends JControllerForm
         $model = $this->getModel('Banner', '', array());
 
         // Preset the redirect
-        $this->setRedirect(JRoute::_('index.php?option=com_banners&view=banners' . $this->getRedirectToListAppend(),
-            false));
+        $this->setRedirect(
+            JRoute::_(
+                'index.php?option=com_banners&view=banners' . $this->getRedirectToListAppend(),
+                false
+            )
+        );
 
         return parent::batch($model);
     }

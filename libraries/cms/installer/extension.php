@@ -106,8 +106,11 @@ class JInstallerExtension extends JObject
                     $tmp_client_id = JApplicationHelper::getClientInfo($this->client, 1);
 
                     if ($tmp_client_id == null) {
-                        JLog::add(JText::_('JLIB_INSTALLER_ERROR_EXTENSION_INVALID_CLIENT_IDENTIFIER'), JLog::WARNING,
-                            'jerror');
+                        JLog::add(
+                            JText::_('JLIB_INSTALLER_ERROR_EXTENSION_INVALID_CLIENT_IDENTIFIER'),
+                            JLog::WARNING,
+                            'jerror'
+                        );
                     } else {
                         $this->client_id = $tmp_client_id->id;
                     }

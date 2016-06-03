@@ -54,10 +54,9 @@ class JHelper
     public function getLanguageId($langCode)
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('lang_id')
-                    ->from('#__languages')
-                    ->where($db->quoteName('lang_code') . ' = ' . $db->quote($langCode));
+        $query = $db->getQuery(true)->select('lang_id')->from('#__languages')->where(
+                $db->quoteName('lang_code') . ' = ' . $db->quote($langCode)
+            );
         $db->setQuery($query);
 
         $id = $db->loadResult();

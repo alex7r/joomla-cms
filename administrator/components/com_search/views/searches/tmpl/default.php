@@ -29,8 +29,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <?php else : ?>
         <div id="j-main-container">
             <?php endif; ?>
-            <?php echo JLayoutHelper::render('joomla.searchtools.default',
-                array('view' => $this, 'options' => array('filterButton' => false))); ?>
+            <?php echo JLayoutHelper::render(
+                'joomla.searchtools.default',
+                array('view' => $this, 'options' => array('filterButton' => false))
+            ); ?>
             <div class="clearfix"></div>
             <?php if (empty($this->items)) : ?>
                 <div class="alert alert-no-items">
@@ -41,8 +43,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     <thead>
                     <tr>
                         <th class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_SEARCH_HEADING_PHRASE', 'a.search_term',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_SEARCH_HEADING_PHRASE',
+                                'a.search_term',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="15%" class="nowrap">
                             <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_HITS', 'a.hits', $listDirn, $listOrder); ?>
@@ -74,7 +81,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                     <a class="badge <?php if ($item->returns > 0) {
                                         echo "badge-success";
                                     } ?>"
-                                       href="<?php echo JUri::root(); ?>index.php?option=com_search&amp;view=search&amp;searchword=<?php echo JFilterOutput::stringURLSafe($item->search_term); ?>">
+                                       href="<?php echo JUri::root(
+                                       ); ?>index.php?option=com_search&amp;view=search&amp;searchword=<?php echo JFilterOutput::stringURLSafe(
+                                           $item->search_term
+                                       ); ?>">
                                         <?php echo $item->returns; ?></a>
                                 </td>
                             <?php else: ?>

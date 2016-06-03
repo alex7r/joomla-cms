@@ -19,7 +19,8 @@ $branchFilter = $this->escape($this->state->get('filter.branch'));
 $colSpan      = $branchFilter ? 5 : 6;
 JText::script('COM_FINDER_MAPS_CONFIRM_DELETE_PROMPT');
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	Joomla.submitbutton = function(pressbutton)
 	{
 		if (pressbutton == "map.delete")
@@ -35,7 +36,8 @@ JFactory::getDocument()->addScriptDeclaration('
 		}
 		Joomla.submitform(pressbutton);
 	};
-');
+'
+);
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_finder&view=maps'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -64,8 +66,13 @@ JFactory::getDocument()->addScriptDeclaration('
                             <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                         </th>
                         <th class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'd.branch_title', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGLOBAL_TITLE',
+                                'd.branch_title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <?php if (!$branchFilter) : ?>
                             <th width="1%" class="nowrap center">
@@ -75,12 +82,16 @@ JFactory::getDocument()->addScriptDeclaration('
                         <th width="1%" class="nowrap center">
                             <i class="icon-publish"></i>
 							<span
-                                class="hidden-phone"><?php echo JText::_('COM_FINDER_MAPS_COUNT_PUBLISHED_ITEMS'); ?></span>
+                                class="hidden-phone"><?php echo JText::_(
+                                    'COM_FINDER_MAPS_COUNT_PUBLISHED_ITEMS'
+                                ); ?></span>
                         </th>
                         <th width="1%" class="nowrap center">
                             <i class="icon-unpublish"></i>
 							<span
-                                class="hidden-phone"><?php echo JText::_('COM_FINDER_MAPS_COUNT_UNPUBLISHED_ITEMS'); ?></span>
+                                class="hidden-phone"><?php echo JText::_(
+                                    'COM_FINDER_MAPS_COUNT_UNPUBLISHED_ITEMS'
+                                ); ?></span>
                         </th>
                     </tr>
                     </thead>
@@ -116,8 +127,12 @@ JFactory::getDocument()->addScriptDeclaration('
                                 <label for="cb<?php echo $i; ?>" style="display:inline-block;">
                                     <?php echo $this->escape($title); ?>
                                 </label>
-                                <?php if ($this->escape(trim($title,
-                                        '**')) == 'Language' && JLanguageMultilang::isEnabled()
+                                <?php if ($this->escape(
+                                        trim(
+                                            $title,
+                                            '**'
+                                        )
+                                    ) == 'Language' && JLanguageMultilang::isEnabled()
                                 ) : ?>
                                     <strong><?php echo JText::_('COM_FINDER_MAPS_MULTILANG'); ?></strong>
                                 <?php endif; ?>
@@ -125,7 +140,9 @@ JFactory::getDocument()->addScriptDeclaration('
                             <?php if (!$branchFilter) : ?>
                                 <td class="center btns">
                                     <?php if ((int)$item->num_children !== 0) : ?>
-                                        <a href="<?php echo JRoute::_('index.php?option=com_finder&view=maps&filter[branch]=' . $item->id); ?>">
+                                        <a href="<?php echo JRoute::_(
+                                            'index.php?option=com_finder&view=maps&filter[branch]=' . $item->id
+                                        ); ?>">
 											<span
                                                 class="badge <?php if ($item->num_children > 0) {
                                                     echo "badge-info";
@@ -141,7 +158,9 @@ JFactory::getDocument()->addScriptDeclaration('
                                         echo "badge-success";
                                     } ?>"
                                        title="<?php echo JText::_('COM_FINDER_MAPS_COUNT_PUBLISHED_ITEMS'); ?>"
-                                       href="<?php echo JRoute::_('index.php?option=com_finder&view=index&filter[state]=1&filter[content_map]=' . $item->id); ?>">
+                                       href="<?php echo JRoute::_(
+                                           'index.php?option=com_finder&view=index&filter[state]=1&filter[content_map]=' . $item->id
+                                       ); ?>">
                                         <?php echo (int)$item->count_published; ?></a>
                                 <?php else : ?>
                                     -
@@ -153,7 +172,9 @@ JFactory::getDocument()->addScriptDeclaration('
                                         echo "badge-important";
                                     } ?>"
                                        title="<?php echo JText::_('COM_FINDER_MAPS_COUNT_UNPUBLISHED_ITEMS'); ?>"
-                                       href="<?php echo JRoute::_('index.php?option=com_finder&view=index&filter[state]=0&filter[content_map]=' . $item->id); ?>">
+                                       href="<?php echo JRoute::_(
+                                           'index.php?option=com_finder&view=index&filter[state]=0&filter[content_map]=' . $item->id
+                                       ); ?>">
                                         <?php echo (int)$item->count_unpublished; ?></a>
                                 <?php else : ?>
                                     -

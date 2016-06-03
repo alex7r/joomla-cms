@@ -79,8 +79,13 @@ if (!$format) {
                 // Load language file for module
                 $basePath = JPATH_BASE;
                 $lang     = JFactory::getLanguage();
-                $lang->load('mod_' . $module, $basePath, null, false, true) || $lang->load('mod_' . $module,
-                    $basePath . '/modules/mod_' . $module, null, false, true);
+                $lang->load('mod_' . $module, $basePath, null, false, true) || $lang->load(
+                    'mod_' . $module,
+                    $basePath . '/modules/mod_' . $module,
+                    null,
+                    false,
+                    true
+                );
 
                 try {
                     $results = call_user_func($class . '::' . $method . 'Ajax');
@@ -93,8 +98,12 @@ if (!$format) {
             }
         } // The helper file does not exist
         else {
-            $results = new RuntimeException(JText::sprintf('COM_AJAX_FILE_NOT_EXISTS',
-                'mod_' . $module . '/helper.php'), 404);
+            $results = new RuntimeException(
+                JText::sprintf(
+                    'COM_AJAX_FILE_NOT_EXISTS',
+                    'mod_' . $module . '/helper.php'
+                ), 404
+            );
         }
     } // Module is not published, you do not have access to it, or it is not assigned to the current menu item
     else {

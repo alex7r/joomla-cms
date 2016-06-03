@@ -52,15 +52,17 @@ class Factory
             if (!class_exists($class)) {
                 // Were we given a custom namespace?  If not, there's nothing else we can do
                 if ($namespace === $localNamespace) {
-                    throw new \InvalidArgumentException(sprintf('Unable to load format class for type "%s".', $type),
-                        500);
+                    throw new \InvalidArgumentException(
+                        sprintf('Unable to load format class for type "%s".', $type), 500
+                    );
                 }
 
                 $class = $localNamespace . '\\' . ucfirst($type);
 
                 if (!class_exists($class)) {
-                    throw new \InvalidArgumentException(sprintf('Unable to load format class for type "%s".', $type),
-                        500);
+                    throw new \InvalidArgumentException(
+                        sprintf('Unable to load format class for type "%s".', $type), 500
+                    );
                 }
             }
 

@@ -137,8 +137,10 @@ class FOFTemplateUtils
 
                 $ret = array(
                     'normal'    => 'media/' . $pathAndParams[0],
-                    'alternate' => FOFPlatform::getInstance()
-                                              ->getTemplateOverridePath('media:/' . $pathAndParams[0], false),
+                    'alternate' => FOFPlatform::getInstance()->getTemplateOverridePath(
+                            'media:/' . $pathAndParams[0],
+                            false
+                        ),
                 );
                 break;
 

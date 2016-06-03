@@ -137,8 +137,10 @@ abstract class JHtmlSelect
         $id = str_replace(array('[', ']', ' '), '', $id);
 
         $baseIndent = str_repeat($options['format.indent'], $options['format.depth']++);
-        $html       = $baseIndent . '<select' . ($id !== '' ? ' id="' . $id . '"' : '') . ' name="' . $name . '"' . $attribs . '>' . $options['format.eol'] . static::options($data,
-                $options) . $baseIndent . '</select>' . $options['format.eol'];
+        $html       = $baseIndent . '<select' . ($id !== '' ? ' id="' . $id . '"' : '') . ' name="' . $name . '"' . $attribs . '>' . $options['format.eol'] . static::options(
+                $data,
+                $options
+            ) . $baseIndent . '</select>' . $options['format.eol'];
 
         return $html;
     }
@@ -188,8 +190,11 @@ abstract class JHtmlSelect
      */
     public static function options($arr, $optKey = 'value', $optText = 'text', $selected = null, $translate = false)
     {
-        $options = array_merge(JHtml::$formatOptions, static::$optionDefaults['option'],
-            array('format.depth' => 0, 'groups' => true, 'list.select' => null, 'list.translate' => false));
+        $options = array_merge(
+            JHtml::$formatOptions,
+            static::$optionDefaults['option'],
+            array('format.depth' => 0, 'groups' => true, 'list.select' => null, 'list.translate' => false)
+        );
 
         if (is_array($optKey)) {
             // Set default options and overwrite with anything passed in
@@ -274,7 +279,9 @@ abstract class JHtmlSelect
             $key = (string)$key;
 
             if ($options['groups'] && $key == '<OPTGROUP>') {
-                $html .= $baseIndent . '<optgroup label="' . ($options['list.translate'] ? JText::_($text) : $text) . '">' . $options['format.eol'];
+                $html .= $baseIndent . '<optgroup label="' . ($options['list.translate'] ? JText::_(
+                        $text
+                    ) : $text) . '">' . $options['format.eol'];
                 $baseIndent = str_repeat($options['format.indent'], ++$options['format.depth']);
             } elseif ($options['groups'] && $key == '</OPTGROUP>') {
                 $baseIndent = str_repeat($options['format.indent'], --$options['format.depth']);
@@ -322,10 +329,16 @@ abstract class JHtmlSelect
                 }
 
                 // Generate the option, encoding as required
-                $html .= $baseIndent . '<option value="' . ($options['option.key.toHtml'] ? htmlspecialchars($key,
-                        ENT_COMPAT, 'UTF-8') : $key) . '"' . $extra . '>';
-                $html .= $options['option.text.toHtml'] ? htmlentities(html_entity_decode($text, ENT_COMPAT, 'UTF-8'),
-                    ENT_COMPAT, 'UTF-8') : $text;
+                $html .= $baseIndent . '<option value="' . ($options['option.key.toHtml'] ? htmlspecialchars(
+                        $key,
+                        ENT_COMPAT,
+                        'UTF-8'
+                    ) : $key) . '"' . $extra . '>';
+                $html .= $options['option.text.toHtml'] ? htmlentities(
+                    html_entity_decode($text, ENT_COMPAT, 'UTF-8'),
+                    ENT_COMPAT,
+                    'UTF-8'
+                ) : $text;
                 $html .= '</option>' . $options['format.eol'];
             }
         }
@@ -356,12 +369,17 @@ abstract class JHtmlSelect
         $translate = false
     ) {
         // Log deprecated message
-        JLog::add('JHtmlSelect::suggestionlist() is deprecated. Create the <datalist> tag directly instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            'JHtmlSelect::suggestionlist() is deprecated. Create the <datalist> tag directly instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Note: $idtag is requried but has to be an optional argument in the funtion call due to argument order
         if (!$idtag) {
-            throw new InvalidArgumentException('$idtag is a required argument in deprecated JHtmlSelect::suggestionlist');
+            throw new InvalidArgumentException(
+                '$idtag is a required argument in deprecated JHtmlSelect::suggestionlist'
+            );
         }
 
         // Set default options
@@ -378,8 +396,10 @@ abstract class JHtmlSelect
         $id = ' id="' . $idtag . '"';
 
         $baseIndent = str_repeat($options['format.indent'], $options['format.depth']++);
-        $html       = $baseIndent . '<datalist' . $id . '>' . $options['format.eol'] . static::options($data,
-                $options) . $baseIndent . '</datalist>' . $options['format.eol'];
+        $html       = $baseIndent . '<datalist' . $id . '>' . $options['format.eol'] . static::options(
+                $data,
+                $options
+            ) . $baseIndent . '</datalist>' . $options['format.eol'];
 
         return $html;
     }
@@ -418,13 +438,17 @@ abstract class JHtmlSelect
     public static function groupedlist($data, $name, $options = array())
     {
         // Set default options and overwrite with anything passed in
-        $options = array_merge(JHtml::$formatOptions, array(
-            'format.depth'       => 0,
-            'group.items'        => 'items',
-            'group.label'        => 'text',
-            'group.label.toHtml' => true,
-            'id'                 => false
-        ), $options);
+        $options = array_merge(
+            JHtml::$formatOptions,
+            array(
+                'format.depth'       => 0,
+                'group.items'        => 'items',
+                'group.label'        => 'text',
+                'group.label.toHtml' => true,
+                'id'                 => false
+            ),
+            $options
+        );
 
         // Apply option rules
         if ($options['group.items'] === null) {
@@ -496,9 +520,14 @@ abstract class JHtmlSelect
             if ($noGroup) {
                 $html .= static::options($subList, $options);
             } else {
-                $html .= $groupIndent . '<optgroup' . (empty($id) ? '' : ' id="' . $id . '"') . ' label="' . ($options['group.label.toHtml'] ? htmlspecialchars($label,
-                        ENT_COMPAT, 'UTF-8') : $label) . '">' . $options['format.eol'] . static::options($subList,
-                        $options) . $groupIndent . '</optgroup>' . $options['format.eol'];
+                $html .= $groupIndent . '<optgroup' . (empty($id) ? '' : ' id="' . $id . '"') . ' label="' . ($options['group.label.toHtml'] ? htmlspecialchars(
+                        $label,
+                        ENT_COMPAT,
+                        'UTF-8'
+                    ) : $label) . '">' . $options['format.eol'] . static::options(
+                        $subList,
+                        $options
+                    ) . $groupIndent . '</optgroup>' . $options['format.eol'];
             }
         }
 
@@ -573,8 +602,11 @@ abstract class JHtmlSelect
      */
     public static function optgroup($text, $optKey = 'value', $optText = 'text')
     {
-        JLog::add('JHtmlSelect::optgroup() is deprecated, use JHtmlSelect::groupedList() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JHtmlSelect::optgroup() is deprecated, use JHtmlSelect::groupedList() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Set initial state
         static $state = 'open';

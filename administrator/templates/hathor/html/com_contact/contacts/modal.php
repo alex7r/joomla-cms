@@ -38,8 +38,13 @@ $listDirn       = $this->escape($this->state->get('list.direction'));
             </label>
             <select name="filter_access" id="filter_access">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_ACCESS'); ?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text',
-                    $this->state->get('filter.access')); ?>
+                <?php echo JHtml::_(
+                    'select.options',
+                    JHtml::_('access.assetgroups'),
+                    'value',
+                    'text',
+                    $this->state->get('filter.access')
+                ); ?>
             </select>
 
             <label class="selectlabel" for="filter_published">
@@ -47,8 +52,14 @@ $listDirn       = $this->escape($this->state->get('list.direction'));
             </label>
             <select name="filter_published" id="filter_published">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text',
-                    $this->state->get('filter.published'), true); ?>
+                <?php echo JHtml::_(
+                    'select.options',
+                    JHtml::_('jgrid.publishedOptions'),
+                    'value',
+                    'text',
+                    $this->state->get('filter.published'),
+                    true
+                ); ?>
             </select>
 
             <label class="selectlabel" for="filter_category_id">
@@ -56,8 +67,13 @@ $listDirn       = $this->escape($this->state->get('list.direction'));
             </label>
             <select name="filter_category_id" id="filter_category_id">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_CATEGORY'); ?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('category.options', 'com_contact'), 'value', 'text',
-                    $this->state->get('filter.category_id')); ?>
+                <?php echo JHtml::_(
+                    'select.options',
+                    JHtml::_('category.options', 'com_contact'),
+                    'value',
+                    'text',
+                    $this->state->get('filter.category_id')
+                ); ?>
             </select>
 
             <?php if ($forcedLanguage) : ?>
@@ -69,8 +85,13 @@ $listDirn       = $this->escape($this->state->get('list.direction'));
                        for="filter_language"><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></label>
                 <select name="filter_language" id="filter_language">
                     <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
-                    <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value',
-                        'text', $this->state->get('filter.language')); ?>
+                    <?php echo JHtml::_(
+                        'select.options',
+                        JHtml::_('contentlanguage.existing', true, true),
+                        'value',
+                        'text',
+                        $this->state->get('filter.language')
+                    ); ?>
                 </select>
             <?php endif; ?>
 
@@ -87,8 +108,13 @@ $listDirn       = $this->escape($this->state->get('list.direction'));
                 <?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.name', $listDirn, $listOrder); ?>
             </th>
             <th>
-                <?php echo JHtml::_('grid.sort', 'COM_CONTACT_FIELD_LINKED_USER_LABEL', 'ul.name', $listDirn,
-                    $listOrder); ?>
+                <?php echo JHtml::_(
+                    'grid.sort',
+                    'COM_CONTACT_FIELD_LINKED_USER_LABEL',
+                    'ul.name',
+                    $listDirn,
+                    $listOrder
+                ); ?>
             </th>
             <th class="title access-col">
                 <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
@@ -110,7 +136,9 @@ $listDirn       = $this->escape($this->state->get('list.direction'));
             <tr class="row<?php echo $i % 2; ?>">
                 <th>
                     <a class="pointer"
-                       onclick="if (window.parent) window.parent.<?php echo $this->escape($function); ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->name)); ?>');">
+                       onclick="if (window.parent) window.parent.<?php echo $this->escape(
+                           $function
+                       ); ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->name)); ?>');">
                         <?php echo $this->escape($item->name); ?></a>
                 </th>
                 <td class="center">
@@ -128,10 +156,13 @@ $listDirn       = $this->escape($this->state->get('list.direction'));
                     <?php if ($item->language == '*'): ?>
                         <?php echo JText::alt('JALL', 'language'); ?>
                     <?php else: ?>
-                        <?php echo $item->language_title ? JHtml::_('image',
-                                'mod_languages/' . $item->language_image . '.gif', $item->language_title,
+                        <?php echo $item->language_title ? JHtml::_(
+                                'image',
+                                'mod_languages/' . $item->language_image . '.gif',
+                                $item->language_title,
                                 array('title' => $item->language_title),
-                                true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                true
+                            ) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                     <?php endif; ?>
                 </td>
                 <td class="center">

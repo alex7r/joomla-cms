@@ -123,8 +123,10 @@ class FOFDownload
 
             $fullpath = $path . '/' . $file;
 
-            if ((is_dir($fullpath) && in_array($file, $ignoreFolders)) || (is_file($fullpath) && in_array($file,
-                        $ignoreFiles))
+            if ((is_dir($fullpath) && in_array($file, $ignoreFolders)) || (is_file($fullpath) && in_array(
+                        $file,
+                        $ignoreFiles
+                    ))
             ) {
                 continue;
             }
@@ -359,8 +361,10 @@ class FOFDownload
                         //debugMsg("-- Can't open local file $local_file for writing");
                         // Can't open the file for writing
                         $retArray['status'] = false;
-                        $retArray['error']  = JText::sprintf('LIB_FOF_DOWNLOAD_ERR_COULDNOTWRITELOCALFILE',
-                            $local_file);
+                        $retArray['error']  = JText::sprintf(
+                            'LIB_FOF_DOWNLOAD_ERR_COULDNOTWRITELOCALFILE',
+                            $local_file
+                        );
 
                         return $retArray;
                     }

@@ -254,11 +254,16 @@ abstract class JError
         $function = 'handle' . ucfirst($handler['mode']);
 
         if (is_callable(array('JError', $function))) {
-            $reference = call_user_func_array(array('JError', $function),
-                array(&$exception, (isset($handler['options'])) ? $handler['options'] : array()));
+            $reference = call_user_func_array(
+                array('JError', $function),
+                array(&$exception, (isset($handler['options'])) ? $handler['options'] : array())
+            );
         } else {
             // This is required to prevent a very unhelpful white-screen-of-death
-            jexit('JError::raise -> Static method JError::' . $function . ' does not exist. Contact a developer to debug' . '<br /><strong>Error was</strong> <br />' . $exception->getMessage());
+            jexit(
+                'JError::raise -> Static method JError::' . $function . ' does not exist. Contact a developer to debug' . '<br /><strong>Error was</strong> <br />' . $exception->getMessage(
+                )
+            );
         }
         // We don't need to store the error, since JException already does that for us!
         // Remove loop check
@@ -293,8 +298,12 @@ abstract class JError
 
             for ($i = count($backtrace) - 1; $i >= 0; $i--) {
                 if (isset($backtrace[$i]['class'])) {
-                    $trace .= sprintf("\n%s %s %s()", $backtrace[$i]['class'], $backtrace[$i]['type'],
-                        $backtrace[$i]['function']);
+                    $trace .= sprintf(
+                        "\n%s %s %s()",
+                        $backtrace[$i]['class'],
+                        $backtrace[$i]['type'],
+                        $backtrace[$i]['function']
+                    );
                 } else {
                     $trace .= sprintf("\n%s()", $backtrace[$i]['function']);
                 }
@@ -307,7 +316,9 @@ abstract class JError
 
         if (isset($_SERVER['HTTP_HOST'])) {
             // Output as html
-            echo "<br /><b>jos-$level_human</b>: " . $error->get('message') . "<br />\n" . (JDEBUG ? nl2br($trace) : '');
+            echo "<br /><b>jos-$level_human</b>: " . $error->get('message') . "<br />\n" . (JDEBUG ? nl2br(
+                    $trace
+                ) : '');
         } else {
             // Output as simple text
             if (defined('STDERR')) {
@@ -490,8 +501,12 @@ abstract class JError
         $function = 'handle' . ucfirst($mode);
 
         if (!is_callable(array('JError', $function))) {
-            return self::raiseError(E_ERROR, 'JError:' . JERROR_ILLEGAL_MODE, 'Error Handling mode is not known',
-                'Mode: ' . $mode . ' is not implemented.');
+            return self::raiseError(
+                E_ERROR,
+                'JError:' . JERROR_ILLEGAL_MODE,
+                'Error Handling mode is not known',
+                'Mode: ' . $mode . ' is not implemented.'
+            );
         }
 
         foreach ($levels as $eLevel => $eTitle) {
@@ -502,8 +517,11 @@ abstract class JError
             // Set callback options
             if ($mode == 'callback') {
                 if (!is_array($options)) {
-                    return self::raiseError(E_ERROR, 'JError:' . JERROR_ILLEGAL_OPTIONS,
-                        'Options for callback not valid');
+                    return self::raiseError(
+                        E_ERROR,
+                        'JError:' . JERROR_ILLEGAL_OPTIONS,
+                        'Options for callback not valid'
+                    );
                 }
 
                 if (!is_callable($options)) {
@@ -516,8 +534,12 @@ abstract class JError
                         $tmp[1] = $options;
                     }
 
-                    return self::raiseError(E_ERROR, 'JError:' . JERROR_CALLBACK_NOT_CALLABLE,
-                        'Function is not callable', 'Function:' . $tmp[1] . ' scope ' . $tmp[0] . '.');
+                    return self::raiseError(
+                        E_ERROR,
+                        'JError:' . JERROR_CALLBACK_NOT_CALLABLE,
+                        'Function is not callable',
+                        'Function:' . $tmp[1] . ' scope ' . $tmp[0] . '.'
+                    );
                 }
             }
 
@@ -699,8 +721,9 @@ abstract class JError
             JLog::addLogger($options, JLog::ALL, array('error'));
         }
 
-        $entry       = new JLogEntry(str_replace(array("\r", "\n"), array('', '\\n'), $error->get('message')),
-            $error->get('level'), 'error');
+        $entry       = new JLogEntry(
+            str_replace(array("\r", "\n"), array('', '\\n'), $error->get('message')), $error->get('level'), 'error'
+        );
         $entry->code = $error->get('code');
         JLog::add($entry);
 
@@ -739,8 +762,11 @@ abstract class JError
      */
     public static function customErrorPage(&$error)
     {
-        JLog::add('JError::customErrorPage() is deprecated, use JErrorPage::render() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JError::customErrorPage() is deprecated, use JErrorPage::render() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         JErrorPage::render($error);
     }

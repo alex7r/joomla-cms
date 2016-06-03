@@ -43,8 +43,10 @@ class JClientHelper
                 $return = false;
             } else {
                 if (class_exists('JError')) {
-                    $return = JError::raiseWarning('SOME_ERROR_CODE',
-                        JText::_('JLIB_CLIENT_ERROR_HELPER_SETCREDENTIALSFROMREQUEST_FAILED'));
+                    $return = JError::raiseWarning(
+                        'SOME_ERROR_CODE',
+                        JText::_('JLIB_CLIENT_ERROR_HELPER_SETCREDENTIALSFROMREQUEST_FAILED')
+                    );
                 } else {
                     throw new InvalidArgumentException('Invalid user credentials');
                 }

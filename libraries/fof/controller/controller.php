@@ -342,8 +342,10 @@ class FOFController extends FOFUtilsObject
             $this->layout = $config['layout'];
         }
 
-        $this->layout = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.layout',
-            $this->layout);
+        $this->layout = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.layout',
+            $this->layout
+        );
 
         $this->input->set('option', $this->component);
 
@@ -361,8 +363,10 @@ class FOFController extends FOFUtilsObject
             $basePath = $config['base_path'];
         }
 
-        $altBasePath = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.base_path',
-            null);
+        $altBasePath = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.base_path',
+            null
+        );
 
         if (!is_null($altBasePath)) {
             $platformDirs = FOFPlatform::getInstance()->getPlatformBaseDirs();
@@ -372,8 +376,10 @@ class FOFController extends FOFUtilsObject
         $this->basePath = $basePath;
 
         // If the default task is set, register it as such
-        $defaultTask = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.default_task',
-            'display');
+        $defaultTask = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.default_task',
+            'display'
+        );
 
         if (array_key_exists('default_task', $config)) {
             $this->registerDefaultTask($config['default_task']);
@@ -389,8 +395,10 @@ class FOFController extends FOFUtilsObject
                 $this->model_prefix = $config['model_prefix'];
             } else {
                 $this->model_prefix = $this->name . 'Model';
-                $this->model_prefix = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.model_prefix',
-                    $this->model_prefix);
+                $this->model_prefix = $this->configProvider->get(
+                    $this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.model_prefix',
+                    $this->model_prefix
+                );
             }
         }
 
@@ -401,8 +409,10 @@ class FOFController extends FOFUtilsObject
             $this->addModelPath($config['model_path'], $this->model_prefix);
         } else {
             $modelPath    = $this->basePath . '/models';
-            $altModelPath = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.model_path',
-                null);
+            $altModelPath = $this->configProvider->get(
+                $this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.model_path',
+                null
+            );
 
             if (!is_null($altModelPath)) {
                 $modelPath = $this->basePath . '/' . $altModelPath;
@@ -417,8 +427,10 @@ class FOFController extends FOFUtilsObject
             $this->setPath('view', $config['view_path']);
         } else {
             $viewPath    = $this->basePath . '/views';
-            $altViewPath = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.view_path',
-                null);
+            $altViewPath = $this->configProvider->get(
+                $this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.view_path',
+                null
+            );
 
             if (!is_null($altViewPath)) {
                 $viewPath = $this->basePath . '/' . $altViewPath;
@@ -436,8 +448,10 @@ class FOFController extends FOFUtilsObject
                 $this->default_view = $this->getName();
             }
 
-            $this->default_view = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.default_view',
-                $this->default_view);
+            $this->default_view = $this->configProvider->get(
+                $this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.default_view',
+                $this->default_view
+            );
         }
 
         // Set the CSRF protection
@@ -445,15 +459,19 @@ class FOFController extends FOFUtilsObject
             $this->csrfProtection = $config['csrf_protection'];
         }
 
-        $this->csrfProtection = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.csrf_protection',
-            $this->csrfProtection);
+        $this->csrfProtection = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.csrf_protection',
+            $this->csrfProtection
+        );
 
         // Set any model/view name overrides
         if (array_key_exists('viewName', $config)) {
             $this->setThisViewName($config['viewName']);
         } else {
-            $overrideViewName = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.viewName',
-                null);
+            $overrideViewName = $this->configProvider->get(
+                $this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.viewName',
+                null
+            );
 
             if ($overrideViewName) {
                 $this->setThisViewName($overrideViewName);
@@ -463,8 +481,10 @@ class FOFController extends FOFUtilsObject
         if (array_key_exists('modelName', $config)) {
             $this->setThisModelName($config['modelName']);
         } else {
-            $overrideModelName = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.modelName',
-                null);
+            $overrideModelName = $this->configProvider->get(
+                $this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.modelName',
+                null
+            );
 
             if ($overrideModelName) {
                 $this->setThisModelName($overrideModelName);
@@ -477,8 +497,10 @@ class FOFController extends FOFUtilsObject
                 $this->cacheableTasks = $config['cacheableTasks'];
             }
         } else {
-            $cacheableTasks = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.cacheableTasks',
-                null);
+            $cacheableTasks = $this->configProvider->get(
+                $this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.cacheableTasks',
+                null
+            );
 
             if ($cacheableTasks) {
                 $cacheableTasks = explode(',', $cacheableTasks);
@@ -497,15 +519,19 @@ class FOFController extends FOFUtilsObject
         }
 
         // Bit mask for auto routing on setRedirect
-        $this->autoRouting = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.autoRouting',
-            $this->autoRouting);
+        $this->autoRouting = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.config.autoRouting',
+            $this->autoRouting
+        );
 
         if (array_key_exists('autoRouting', $config)) {
             $this->autoRouting = $config['autoRouting'];
         }
 
         // Apply task map
-        $taskmap = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.taskmap');
+        $taskmap = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.taskmap'
+        );
 
         if (is_array($taskmap) && !empty($taskmap)) {
             foreach ($taskmap as $aliasedtask => $realmethod) {
@@ -765,8 +791,10 @@ class FOFController extends FOFUtilsObject
                 array_unshift($searchPaths, $config['searchpath']);
             } else {
                 $configProvider = new FOFConfigProvider;
-                $searchPath     = $configProvider->get($config['option'] . '.views.' . FOFInflector::singularize($config['view']) . '.config.searchpath',
-                    null);
+                $searchPath     = $configProvider->get(
+                    $config['option'] . '.views.' . FOFInflector::singularize($config['view']) . '.config.searchpath',
+                    null
+                );
 
                 if ($searchPath) {
                     array_unshift($searchPaths, $componentPaths['admin'] . '/' . $searchPath);
@@ -838,8 +866,9 @@ class FOFController extends FOFUtilsObject
      */
     public function authorise($task)
     {
-        FOFPlatform::getInstance()
-                   ->logDeprecated(__CLASS__ . '::' . __METHOD__ . ' is deprecated. Use checkACL() instead.');
+        FOFPlatform::getInstance()->logDeprecated(
+                __CLASS__ . '::' . __METHOD__ . ' is deprecated. Use checkACL() instead.'
+            );
 
         return true;
     }
@@ -869,7 +898,9 @@ class FOFController extends FOFUtilsObject
         }
 
         if ($result) {
-            $plugin_event  = FOFInflector::camelize('on before ' . $this->bareComponent . ' controller ' . $this->view . ' ' . $task);
+            $plugin_event  = FOFInflector::camelize(
+                'on before ' . $this->bareComponent . ' controller ' . $this->view . ' ' . $task
+            );
             $plugin_result = FOFPlatform::getInstance()->runPlugins($plugin_event, array(&$this, &$this->input));
 
             if (in_array(false, $plugin_result, true)) {
@@ -911,7 +942,9 @@ class FOFController extends FOFUtilsObject
         }
 
         if ($result) {
-            $plugin_event  = FOFInflector::camelize('on after ' . $this->bareComponent . ' controller ' . $this->view . ' ' . $task);
+            $plugin_event  = FOFInflector::camelize(
+                'on after ' . $this->bareComponent . ' controller ' . $this->view . ' ' . $task
+            );
             $plugin_result = FOFPlatform::getInstance()->runPlugins($plugin_event, array(&$this, &$this->input, &$ret));
 
             if (in_array(false, $plugin_result, true)) {
@@ -936,8 +969,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforeGenericTask($task)
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.' . $task,
-            '');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.' . $task,
+            ''
+        );
 
         return $this->checkACL($privilege);
     }
@@ -1209,8 +1244,9 @@ class FOFController extends FOFUtilsObject
         // Display the view
         $conf = FOFPlatform::getInstance()->getConfig();
 
-        if (FOFPlatform::getInstance()
-                       ->isFrontend() && $cachable && ($viewType != 'feed') && $conf->get('caching') >= 1
+        if (FOFPlatform::getInstance()->isFrontend() && $cachable && ($viewType != 'feed') && $conf->get(
+                'caching'
+            ) >= 1
         ) {
             // Get a JCache object
             $option = $this->input->get('option', 'com_foobar', 'cmd');
@@ -1370,8 +1406,9 @@ class FOFController extends FOFUtilsObject
             if ($view = $this->createView($name, $prefix, $type, $config)) {
                 $this->viewsCache[$signature] = &$view;
             } else {
-                throw new Exception(JText::sprintf('JLIB_APPLICATION_ERROR_VIEW_NOT_FOUND', $name, $type, $prefix),
-                    500);
+                throw new Exception(
+                    JText::sprintf('JLIB_APPLICATION_ERROR_VIEW_NOT_FOUND', $name, $type, $prefix), 500
+                );
             }
         }
 
@@ -1467,7 +1504,9 @@ class FOFController extends FOFUtilsObject
         $basePaths = array_merge($this->paths['view']);
 
         // Get the alternate (singular/plural) view name
-        $altViewName = FOFInflector::isPlural($viewName) ? FOFInflector::singularize($viewName) : FOFInflector::pluralize($viewName);
+        $altViewName = FOFInflector::isPlural($viewName) ? FOFInflector::singularize(
+            $viewName
+        ) : FOFInflector::pluralize($viewName);
 
         $suffixes = array(
             $viewName,
@@ -1509,13 +1548,17 @@ class FOFController extends FOFUtilsObject
         // Setup View configuration options
 
         if (!array_key_exists('template_path', $config)) {
-            $config['template_path'][] = $componentPaths['main'] . '/views/' . FOFInflector::pluralize($config['view']) . '/tmpl';
+            $config['template_path'][] = $componentPaths['main'] . '/views/' . FOFInflector::pluralize(
+                    $config['view']
+                ) . '/tmpl';
 
             if ($templateOverridePath) {
                 $config['template_path'][] = $templateOverridePath . '/' . FOFInflector::pluralize($config['view']);
             }
 
-            $config['template_path'][] = $componentPaths['main'] . '/views/' . FOFInflector::singularize($config['view']) . '/tmpl';
+            $config['template_path'][] = $componentPaths['main'] . '/views/' . FOFInflector::singularize(
+                    $config['view']
+                ) . '/tmpl';
 
             if ($templateOverridePath) {
                 $config['template_path'][] = $templateOverridePath . '/' . FOFInflector::singularize($config['view']);
@@ -1528,8 +1571,10 @@ class FOFController extends FOFUtilsObject
             }
         }
 
-        $extraTemplatePath = $this->configProvider->get($config['option'] . '.views.' . $config['view'] . '.config.template_path',
-            null);
+        $extraTemplatePath = $this->configProvider->get(
+            $config['option'] . '.views.' . $config['view'] . '.config.template_path',
+            null
+        );
 
         if ($extraTemplatePath) {
             array_unshift($config['template_path'], $componentPaths['main'] . '/' . $extraTemplatePath);
@@ -1542,24 +1587,30 @@ class FOFController extends FOFUtilsObject
             );
         }
 
-        $extraHelperPath = $this->configProvider->get($config['option'] . '.views.' . $config['view'] . '.config.helper_path',
-            null);
+        $extraHelperPath = $this->configProvider->get(
+            $config['option'] . '.views.' . $config['view'] . '.config.helper_path',
+            null
+        );
 
         if ($extraHelperPath) {
             $config['helper_path'][] = $componentPaths['main'] . '/' . $extraHelperPath;
         }
 
         // Set up the page title
-        $setFrontendPageTitle = $this->configProvider->get($config['option'] . '.views.' . $config['view'] . '.config.setFrontendPageTitle',
-            null);
+        $setFrontendPageTitle = $this->configProvider->get(
+            $config['option'] . '.views.' . $config['view'] . '.config.setFrontendPageTitle',
+            null
+        );
 
         if ($setFrontendPageTitle) {
             $setFrontendPageTitle             = strtolower($setFrontendPageTitle);
             $config['setFrontendPageTitle'][] = in_array($setFrontendPageTitle, array('1', 'yes', 'true', 'on'));
         }
 
-        $defaultPageTitle = $this->configProvider->get($config['option'] . '.views.' . $config['view'] . '.config.defaultPageTitle',
-            null);
+        $defaultPageTitle = $this->configProvider->get(
+            $config['option'] . '.views.' . $config['view'] . '.config.defaultPageTitle',
+            null
+        );
 
         if ($defaultPageTitle) {
             $config['defaultPageTitle'][] = in_array($defaultPageTitle, array('1', 'yes', 'true', 'on'));
@@ -1567,14 +1618,18 @@ class FOFController extends FOFUtilsObject
 
         // Set the use_hypermedia flag in $config if it's not already set
         if (!isset($config['use_hypermedia'])) {
-            $config['use_hypermedia'] = $this->configProvider->get($config['option'] . '.views.' . $config['view'] . '.config.use_hypermedia',
-                false);
+            $config['use_hypermedia'] = $this->configProvider->get(
+                $config['option'] . '.views.' . $config['view'] . '.config.use_hypermedia',
+                false
+            );
         }
 
         // Set also the linkbar_style
         if (!isset($config['linkbar_style'])) {
-            $style = $this->configProvider->get($config['option'] . '.views.' . $config['view'] . '.config.linkbar_style',
-                false);
+            $style = $this->configProvider->get(
+                $config['option'] . '.views.' . $config['view'] . '.config.linkbar_style',
+                false
+            );
 
             if ($style) {
                 $config['linkbar_style'] = $style;
@@ -1747,7 +1802,9 @@ class FOFController extends FOFUtilsObject
                 $customURL = base64_decode($customURL);
             }
 
-            $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+            $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                    $this->view
+                ) . $this->getItemidURLSuffix();
             $this->setRedirect($url, $model->getError(), 'error');
 
             return false;
@@ -1874,7 +1931,8 @@ class FOFController extends FOFUtilsObject
                 $customURL = base64_decode($customURL);
             }
 
-            $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . $this->view . '&task=edit&id=' . $id . $this->getItemidURLSuffix();
+            $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . $this->view . '&task=edit&id=' . $id . $this->getItemidURLSuffix(
+                );
             $this->setRedirect($url, JText::_($textkey));
         }
 
@@ -2028,9 +2086,11 @@ class FOFController extends FOFUtilsObject
             if (!empty($customURL)) {
                 $url = $customURL;
             } elseif ($id != 0) {
-                $url = 'index.php?option=' . $this->component . '&view=' . $this->view . '&task=edit&id=' . $id . $this->getItemidURLSuffix();
+                $url = 'index.php?option=' . $this->component . '&view=' . $this->view . '&task=edit&id=' . $id . $this->getItemidURLSuffix(
+                    );
             } else {
-                $url = 'index.php?option=' . $this->component . '&view=' . $this->view . '&task=add' . $this->getItemidURLSuffix();
+                $url = 'index.php?option=' . $this->component . '&view=' . $this->view . '&task=add' . $this->getItemidURLSuffix(
+                    );
             }
 
             $this->setRedirect($url, '<li>' . implode('</li><li>', $model->getErrors()) . '</li>', 'error');
@@ -2092,7 +2152,9 @@ class FOFController extends FOFUtilsObject
             $customURL = base64_decode($customURL);
         }
 
-        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                $this->view
+            ) . $this->getItemidURLSuffix();
 
         if (!$status) {
             $this->setRedirect($url, $model->getError(), 'error');
@@ -2131,7 +2193,9 @@ class FOFController extends FOFUtilsObject
                 $customURL = base64_decode($customURL);
             }
 
-            $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+            $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                    $this->view
+                ) . $this->getItemidURLSuffix();
             $this->setRedirect($url, JText::_($textkey));
         }
 
@@ -2161,7 +2225,8 @@ class FOFController extends FOFUtilsObject
                 $customURL = base64_decode($customURL);
             }
 
-            $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . $this->view . '&task=add' . $this->getItemidURLSuffix();
+            $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . $this->view . '&task=add' . $this->getItemidURLSuffix(
+                );
             $this->setRedirect($url, JText::_($textkey));
         }
 
@@ -2192,7 +2257,9 @@ class FOFController extends FOFUtilsObject
             $customURL = base64_decode($customURL);
         }
 
-        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                $this->view
+            ) . $this->getItemidURLSuffix();
         $this->setRedirect($url);
 
         return true;
@@ -2218,7 +2285,9 @@ class FOFController extends FOFUtilsObject
         if (!$model->loadhistory($historyId, $table, $alias)) {
             $this->setMessage($model->getError(), 'error');
 
-            $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+            $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                    $this->view
+                ) . $this->getItemidURLSuffix();
             $this->setRedirect($url);
 
             return false;
@@ -2235,14 +2304,18 @@ class FOFController extends FOFUtilsObject
         $urlVar = empty($this->urlVar) ? $key : $this->urlVar;
 
         // Access check.
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.edit',
-            'core.edit');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.edit',
+            'core.edit'
+        );
 
         if (!$this->checkACL($privilege)) {
             $this->setError(JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
             $this->setMessage($this->getError(), 'error');
 
-            $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+            $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                    $this->view
+                ) . $this->getItemidURLSuffix();
             $this->setRedirect($url);
             $table->checkin();
 
@@ -2250,11 +2323,18 @@ class FOFController extends FOFUtilsObject
         }
 
         $table->store();
-        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                $this->view
+            ) . $this->getItemidURLSuffix();
         $this->setRedirect($url);
 
-        $this->setMessage(JText::sprintf('JLIB_APPLICATION_SUCCESS_LOAD_HISTORY', $model->getState('save_date'),
-            $model->getState('version_note')));
+        $this->setMessage(
+            JText::sprintf(
+                'JLIB_APPLICATION_SUCCESS_LOAD_HISTORY',
+                $model->getState('save_date'),
+                $model->getState('version_note')
+            )
+        );
 
         return true;
     }
@@ -2332,7 +2412,9 @@ class FOFController extends FOFUtilsObject
             $customURL = base64_decode($customURL);
         }
 
-        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                $this->view
+            ) . $this->getItemidURLSuffix();
 
         if (!$status) {
             $this->setRedirect($url, $model->getError(), 'error');
@@ -2416,7 +2498,9 @@ class FOFController extends FOFUtilsObject
             $customURL = base64_decode($customURL);
         }
 
-        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                $this->view
+            ) . $this->getItemidURLSuffix();
 
         if (!$status) {
             $this->setRedirect($url, $model->getError(), 'error');
@@ -2521,7 +2605,9 @@ class FOFController extends FOFUtilsObject
             $customURL = base64_decode($customURL);
         }
 
-        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                $this->view
+            ) . $this->getItemidURLSuffix();
         $this->setRedirect($url);
 
         return $status;
@@ -2552,7 +2638,9 @@ class FOFController extends FOFUtilsObject
             $customURL = base64_decode($customURL);
         }
 
-        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                $this->view
+            ) . $this->getItemidURLSuffix();
 
         if (!$status) {
             $this->setRedirect($url, $model->getError(), 'error');
@@ -2588,7 +2676,9 @@ class FOFController extends FOFUtilsObject
             $customURL = base64_decode($customURL);
         }
 
-        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                $this->view
+            ) . $this->getItemidURLSuffix();
 
         if (!$status) {
             $this->setRedirect($url, $model->getError(), 'error');
@@ -2624,7 +2714,9 @@ class FOFController extends FOFUtilsObject
             $customURL = base64_decode($customURL);
         }
 
-        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize($this->view) . $this->getItemidURLSuffix();
+        $url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . FOFInflector::pluralize(
+                $this->view
+            ) . $this->getItemidURLSuffix();
 
         if (!$status) {
             $this->setRedirect($url, $model->getError(), 'error');
@@ -2708,8 +2800,9 @@ class FOFController extends FOFUtilsObject
      */
     protected function &_createModel($name, $prefix = '', $config = array())
     {
-        FOFPlatform::getInstance()
-                   ->logDeprecated(__CLASS__ . '::' . __METHOD__ . ' is deprecated. Use createModel() instead.');
+        FOFPlatform::getInstance()->logDeprecated(
+                __CLASS__ . '::' . __METHOD__ . ' is deprecated. Use createModel() instead.'
+            );
 
         return $this->createModel($name, $prefix, $config);
     }
@@ -2730,8 +2823,9 @@ class FOFController extends FOFUtilsObject
      */
     protected function &_createView($name, $prefix = '', $type = '', $config = array())
     {
-        FOFPlatform::getInstance()
-                   ->logDeprecated(__CLASS__ . '::' . __METHOD__ . ' is deprecated. Use createView() instead.');
+        FOFPlatform::getInstance()->logDeprecated(
+                __CLASS__ . '::' . __METHOD__ . ' is deprecated. Use createView() instead.'
+            );
 
         return $this->createView($name, $prefix, $type, $config);
     }
@@ -2743,8 +2837,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforeAccesspublic()
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.accesspublic',
-            'core.edit.state');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.accesspublic',
+            'core.edit.state'
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2756,8 +2852,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforeAccessregistered()
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.accessregistered',
-            'core.edit.state');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.accessregistered',
+            'core.edit.state'
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2769,8 +2867,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforeAccessspecial()
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.accessspecial',
-            'core.edit.state');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.accessspecial',
+            'core.edit.state'
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2782,8 +2882,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforeAdd()
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.add',
-            'core.create');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.add',
+            'core.create'
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2809,8 +2911,10 @@ class FOFController extends FOFUtilsObject
             $defaultPrivilege = 'core.edit';
         }
 
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.apply',
-            $defaultPrivilege);
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.apply',
+            $defaultPrivilege
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2824,8 +2928,10 @@ class FOFController extends FOFUtilsObject
     {
         $defaultPrivilege = '';
 
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.browse',
-            $defaultPrivilege);
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.browse',
+            $defaultPrivilege
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2851,8 +2957,10 @@ class FOFController extends FOFUtilsObject
             $defaultPrivilege = 'core.edit';
         }
 
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.cancel',
-            $defaultPrivilege);
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.cancel',
+            $defaultPrivilege
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2864,8 +2972,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforeEdit()
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.edit',
-            'core.edit');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.edit',
+            'core.edit'
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2877,8 +2987,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforeOrderdown()
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.orderdown',
-            'core.edit.state');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.orderdown',
+            'core.edit.state'
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2890,8 +3002,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforeOrderup()
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.orderup',
-            'core.edit.state');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.orderup',
+            'core.edit.state'
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2903,8 +3017,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforePublish()
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.publish',
-            'core.edit.state');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.publish',
+            'core.edit.state'
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2916,8 +3032,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforeRemove()
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.remove',
-            'core.delete');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.remove',
+            'core.delete'
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2943,8 +3061,10 @@ class FOFController extends FOFUtilsObject
             $defaultPrivilege = 'core.edit';
         }
 
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.save',
-            $defaultPrivilege);
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.save',
+            $defaultPrivilege
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2956,8 +3076,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforeSavenew()
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.savenew',
-            'core.create');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.savenew',
+            'core.create'
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2969,8 +3091,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforeSaveorder()
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.saveorder',
-            'core.edit.state');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.saveorder',
+            'core.edit.state'
+        );
 
         return $this->checkACL($privilege);
     }
@@ -2982,8 +3106,10 @@ class FOFController extends FOFUtilsObject
      */
     protected function onBeforeUnpublish()
     {
-        $privilege = $this->configProvider->get($this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.unpublish',
-            'core.edit.state');
+        $privilege = $this->configProvider->get(
+            $this->component . '.views.' . FOFInflector::singularize($this->view) . '.acl.unpublish',
+            'core.edit.state'
+        );
 
         return $this->checkACL($privilege);
     }

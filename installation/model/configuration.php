@@ -90,12 +90,18 @@ class InstallationModelConfiguration extends JModelBase
         $registry->set('helpurl', $options->helpurl);
         $registry->set('ftp_host', isset($options->ftp_host) ? $options->ftp_host : '');
         $registry->set('ftp_port', isset($options->ftp_host) ? $options->ftp_port : '');
-        $registry->set('ftp_user',
-            (isset($options->ftp_save) && $options->ftp_save && isset($options->ftp_user)) ? $options->ftp_user : '');
-        $registry->set('ftp_pass',
-            (isset($options->ftp_save) && $options->ftp_save && isset($options->ftp_pass)) ? $options->ftp_pass : '');
-        $registry->set('ftp_root',
-            (isset($options->ftp_save) && $options->ftp_save && isset($options->ftp_root)) ? $options->ftp_root : '');
+        $registry->set(
+            'ftp_user',
+            (isset($options->ftp_save) && $options->ftp_save && isset($options->ftp_user)) ? $options->ftp_user : ''
+        );
+        $registry->set(
+            'ftp_pass',
+            (isset($options->ftp_save) && $options->ftp_save && isset($options->ftp_pass)) ? $options->ftp_pass : ''
+        );
+        $registry->set(
+            'ftp_root',
+            (isset($options->ftp_save) && $options->ftp_save && isset($options->ftp_root)) ? $options->ftp_root : ''
+        );
         $registry->set('ftp_enable', isset($options->ftp_host) ? $options->ftp_enable : 0);
 
         // Locale settings.
@@ -164,7 +170,10 @@ class InstallationModelConfiguration extends JModelBase
          */
         $useFTP = false;
 
-        if ((file_exists($path) && !is_writable($path)) || (!file_exists($path) && !is_writable(dirname($path) . '/'))) {
+        if ((file_exists($path) && !is_writable($path)) || (!file_exists($path) && !is_writable(
+                    dirname($path) . '/'
+                ))
+        ) {
             $useFTP = true;
         }
 
@@ -226,8 +235,14 @@ class InstallationModelConfiguration extends JModelBase
 
         // Get a database object.
         try {
-            $db = InstallationHelperDatabase::getDbo($options->db_type, $options->db_host, $options->db_user,
-                $options->db_pass, $options->db_name, $options->db_prefix);
+            $db = InstallationHelperDatabase::getDbo(
+                $options->db_type,
+                $options->db_host,
+                $options->db_user,
+                $options->db_pass,
+                $options->db_name,
+                $options->db_prefix
+            );
         } catch (RuntimeException $e) {
             $app->enqueueMessage(JText::sprintf('INSTL_ERROR_CONNECT_DB', $e->getMessage()), 'notice');
 
@@ -248,27 +263,26 @@ class InstallationModelConfiguration extends JModelBase
         $nullDate    = $db->getNullDate();
 
         // Sqlsrv change.
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('id'))
-                    ->from($db->quoteName('#__users'))
-                    ->where($db->quoteName('id') . ' = ' . $db->quote($userId));
+        $query = $db->getQuery(true)->select($db->quoteName('id'))->from($db->quoteName('#__users'))->where(
+                $db->quoteName('id') . ' = ' . $db->quote($userId)
+            );
 
         $db->setQuery($query);
 
         if ($db->loadResult()) {
-            $query->clear()
-                  ->update($db->quoteName('#__users'))
-                  ->set($db->quoteName('name') . ' = ' . $db->quote('Super User'))
-                  ->set($db->quoteName('username') . ' = ' . $db->quote(trim($options->admin_user)))
-                  ->set($db->quoteName('email') . ' = ' . $db->quote($options->admin_email))
-                  ->set($db->quoteName('password') . ' = ' . $db->quote($cryptpass))
-                  ->set($db->quoteName('block') . ' = 0')
-                  ->set($db->quoteName('sendEmail') . ' = 1')
-                  ->set($db->quoteName('registerDate') . ' = ' . $db->quote($installdate))
-                  ->set($db->quoteName('lastvisitDate') . ' = ' . $db->quote($nullDate))
-                  ->set($db->quoteName('activation') . ' = ' . $db->quote('0'))
-                  ->set($db->quoteName('params') . ' = ' . $db->quote(''))
-                  ->where($db->quoteName('id') . ' = ' . $db->quote($userId));
+            $query->clear()->update($db->quoteName('#__users'))->set(
+                    $db->quoteName('name') . ' = ' . $db->quote('Super User')
+                )->set($db->quoteName('username') . ' = ' . $db->quote(trim($options->admin_user)))->set(
+                    $db->quoteName('email') . ' = ' . $db->quote($options->admin_email)
+                )->set($db->quoteName('password') . ' = ' . $db->quote($cryptpass))->set(
+                    $db->quoteName('block') . ' = 0'
+                )->set($db->quoteName('sendEmail') . ' = 1')->set(
+                    $db->quoteName('registerDate') . ' = ' . $db->quote($installdate)
+                )->set($db->quoteName('lastvisitDate') . ' = ' . $db->quote($nullDate))->set(
+                    $db->quoteName('activation') . ' = ' . $db->quote('0')
+                )->set($db->quoteName('params') . ' = ' . $db->quote(''))->where(
+                    $db->quoteName('id') . ' = ' . $db->quote($userId)
+                );
         } else {
             $columns = array(
                 $db->quoteName('id'),
@@ -283,10 +297,15 @@ class InstallationModelConfiguration extends JModelBase
                 $db->quoteName('activation'),
                 $db->quoteName('params')
             );
-            $query->clear()
-                  ->insert('#__users', true)
-                  ->columns($columns)
-                  ->values($db->quote($userId) . ', ' . $db->quote('Super User') . ', ' . $db->quote(trim($options->admin_user)) . ', ' . $db->quote($options->admin_email) . ', ' . $db->quote($cryptpass) . ', ' . $db->quote('0') . ', ' . $db->quote('1') . ', ' . $db->quote($installdate) . ', ' . $db->quote($nullDate) . ', ' . $db->quote('0') . ', ' . $db->quote(''));
+            $query->clear()->insert('#__users', true)->columns($columns)->values(
+                    $db->quote($userId) . ', ' . $db->quote('Super User') . ', ' . $db->quote(
+                        trim($options->admin_user)
+                    ) . ', ' . $db->quote($options->admin_email) . ', ' . $db->quote($cryptpass) . ', ' . $db->quote(
+                        '0'
+                    ) . ', ' . $db->quote('1') . ', ' . $db->quote($installdate) . ', ' . $db->quote(
+                        $nullDate
+                    ) . ', ' . $db->quote('0') . ', ' . $db->quote('')
+                );
         }
 
         $db->setQuery($query);
@@ -300,23 +319,20 @@ class InstallationModelConfiguration extends JModelBase
         }
 
         // Map the super admin to the Super Admin Group
-        $query->clear()
-              ->select($db->quoteName('user_id'))
-              ->from($db->quoteName('#__user_usergroup_map'))
-              ->where($db->quoteName('user_id') . ' = ' . $db->quote($userId));
+        $query->clear()->select($db->quoteName('user_id'))->from($db->quoteName('#__user_usergroup_map'))->where(
+                $db->quoteName('user_id') . ' = ' . $db->quote($userId)
+            );
 
         $db->setQuery($query);
 
         if ($db->loadResult()) {
-            $query->clear()
-                  ->update($db->quoteName('#__user_usergroup_map'))
-                  ->set($db->quoteName('user_id') . ' = ' . $db->quote($userId))
-                  ->set($db->quoteName('group_id') . ' = 8');
+            $query->clear()->update($db->quoteName('#__user_usergroup_map'))->set(
+                    $db->quoteName('user_id') . ' = ' . $db->quote($userId)
+                )->set($db->quoteName('group_id') . ' = 8');
         } else {
-            $query->clear()
-                  ->insert($db->quoteName('#__user_usergroup_map'), false)
-                  ->columns(array($db->quoteName('user_id'), $db->quoteName('group_id')))
-                  ->values($db->quote($userId) . ', 8');
+            $query->clear()->insert($db->quoteName('#__user_usergroup_map'), false)->columns(
+                    array($db->quoteName('user_id'), $db->quoteName('group_id'))
+                )->values($db->quote($userId) . ', 8');
         }
 
         $db->setQuery($query);

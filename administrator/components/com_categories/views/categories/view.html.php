@@ -115,7 +115,9 @@ class CategoriesViewCategories extends JViewLegacy
             // In article associations modal we need to remove language filter if forcing a language.
             if ($forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'CMD')) {
                 // If the language is forced we can't allow to select the language, so transform the language selector filter into an hidden field.
-                $languageXml = new SimpleXMLElement('<field name="language" type="hidden" default="' . $forcedLanguage . '" />');
+                $languageXml = new SimpleXMLElement(
+                    '<field name="language" type="hidden" default="' . $forcedLanguage . '" />'
+                );
                 $this->filterForm->setField($languageXml, 'filter', true);
 
                 // Also, unset the active language filter so the search tools is not open by default with this filter.
@@ -152,16 +154,27 @@ class CategoriesViewCategories extends JViewLegacy
 
         // Need to load the menu language file as mod_menu hasn't been loaded yet.
         $lang = JFactory::getLanguage();
-        $lang->load($component, JPATH_BASE, null, false, true) || $lang->load($component,
-            JPATH_ADMINISTRATOR . '/components/' . $component, null, false, true);
+        $lang->load($component, JPATH_BASE, null, false, true) || $lang->load(
+            $component,
+            JPATH_ADMINISTRATOR . '/components/' . $component,
+            null,
+            false,
+            true
+        );
 
         // Load the category helper.
         require_once JPATH_COMPONENT . '/helpers/categories.php';
 
         // If a component categories title string is present, let's use it.
-        if ($lang->hasKey($component_title_key = strtoupper($component . ($section ? "_$section" : '')) . '_CATEGORIES_TITLE')) {
+        if ($lang->hasKey(
+            $component_title_key = strtoupper($component . ($section ? "_$section" : '')) . '_CATEGORIES_TITLE'
+        )
+        ) {
             $title = JText::_($component_title_key);
-        } elseif ($lang->hasKey($component_section_key = strtoupper($component . ($section ? "_$section" : '')))) // Else if the component section string exits, let's use it
+        } elseif ($lang->hasKey(
+            $component_section_key = strtoupper($component . ($section ? "_$section" : ''))
+        )
+        ) // Else if the component section string exits, let's use it
         {
             $title = JText::sprintf('COM_CATEGORIES_CATEGORIES_TITLE', $this->escape(JText::_($component_section_key)));
         } else // Else use the base title
@@ -173,8 +186,10 @@ class CategoriesViewCategories extends JViewLegacy
         JHtml::_('stylesheet', $component . '/administrator/categories.css', array(), true);
 
         // Prepare the toolbar.
-        JToolbarHelper::title($title,
-            'folder categories ' . substr($component, 4) . ($section ? "-$section" : '') . '-categories');
+        JToolbarHelper::title(
+            $title,
+            'folder categories ' . substr($component, 4) . ($section ? "-$section" : '') . '-categories'
+        );
 
         if ($canDo->get('core.create') || (count($user->getAuthorisedCategories($component, 'core.create'))) > 0) {
             JToolbarHelper::addNew('category.add');
@@ -195,8 +210,10 @@ class CategoriesViewCategories extends JViewLegacy
         }
 
         // Add a batch button
-        if ($user->authorise('core.create', $extension) && $user->authorise('core.edit',
-                $extension) && $user->authorise('core.edit.state', $extension)
+        if ($user->authorise('core.create', $extension) && $user->authorise(
+                'core.edit',
+                $extension
+            ) && $user->authorise('core.edit.state', $extension)
         ) {
             $title = JText::_('JTOOLBAR_BATCH');
 
@@ -222,9 +239,16 @@ class CategoriesViewCategories extends JViewLegacy
         }
 
         // Compute the ref_key if it does exist in the component
-        if (!$lang->hasKey($ref_key = strtoupper($component . ($section ? "_$section" : '')) . '_CATEGORIES_HELP_KEY')) {
-            $ref_key = 'JHELP_COMPONENTS_' . strtoupper(substr($component,
-                        4) . ($section ? "_$section" : '')) . '_CATEGORIES';
+        if (!$lang->hasKey(
+            $ref_key = strtoupper($component . ($section ? "_$section" : '')) . '_CATEGORIES_HELP_KEY'
+        )
+        ) {
+            $ref_key = 'JHELP_COMPONENTS_' . strtoupper(
+                    substr(
+                        $component,
+                        4
+                    ) . ($section ? "_$section" : '')
+                ) . '_CATEGORIES';
         }
 
         /*

@@ -118,7 +118,9 @@ class FOFAutoloaderComponent
         }
 
         // Get the alternate view and class name (opposite singular/plural name)
-        $alt_view  = FOFInflector::isSingular($view) ? FOFInflector::pluralize($view) : FOFInflector::singularize($view);
+        $alt_view  = FOFInflector::isSingular($view) ? FOFInflector::pluralize($view) : FOFInflector::singularize(
+            $view
+        );
         $alt_class = FOFInflector::camelize($component_raw . '_controller_' . $alt_view);
 
         // Get the component's paths
@@ -273,7 +275,9 @@ class FOFAutoloaderComponent
         }
 
         // Get the alternate view and class name (opposite singular/plural name)
-        $alt_view  = FOFInflector::isSingular($view) ? FOFInflector::pluralize($view) : FOFInflector::singularize($view);
+        $alt_view  = FOFInflector::isSingular($view) ? FOFInflector::pluralize($view) : FOFInflector::singularize(
+            $view
+        );
         $alt_class = FOFInflector::camelize($component_raw . '_model_' . $alt_view);
 
         // Get the proper and alternate paths and file names
@@ -374,7 +378,9 @@ class FOFAutoloaderComponent
         }
 
         // Get the alternate view and class name (opposite singular/plural name)
-        $alt_view  = FOFInflector::isSingular($view) ? FOFInflector::pluralize($view) : FOFInflector::singularize($view);
+        $alt_view  = FOFInflector::isSingular($view) ? FOFInflector::pluralize($view) : FOFInflector::singularize(
+            $view
+        );
         $alt_class = FOFInflector::camelize($component_raw . '_view_' . $alt_view);
 
         // Get the proper and alternate paths and file names
@@ -484,7 +490,9 @@ class FOFAutoloaderComponent
         }
 
         // Get the alternate view and class name (opposite singular/plural name)
-        $alt_view  = FOFInflector::isSingular($view) ? FOFInflector::pluralize($view) : FOFInflector::singularize($view);
+        $alt_view  = FOFInflector::isSingular($view) ? FOFInflector::pluralize($view) : FOFInflector::singularize(
+            $view
+        );
         $alt_class = FOFInflector::camelize($component_raw . '_table_' . $alt_view);
 
         // Get the proper and alternate paths and file names
@@ -565,7 +573,9 @@ class FOFAutoloaderComponent
         }
 
         // Get the alternate view and class name (opposite singular/plural name)
-        $alt_view  = FOFInflector::isSingular($view) ? FOFInflector::pluralize($view) : FOFInflector::singularize($view);
+        $alt_view  = FOFInflector::isSingular($view) ? FOFInflector::pluralize($view) : FOFInflector::singularize(
+            $view
+        );
         $alt_class = FOFInflector::camelize($component_raw . '_helper_' . $alt_view);
 
         // Get the proper and alternate paths and file names

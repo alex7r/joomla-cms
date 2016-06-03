@@ -287,7 +287,9 @@ class JGoogleEmbedMaps extends JGoogleEmbed
         $response = $this->http->get($uri->toString());
 
         if ($response->code < 200 || $response->code >= 300) {
-            throw new RuntimeException('Error code ' . $response->code . ' received geocoding address: ' . $response->body . '.');
+            throw new RuntimeException(
+                'Error code ' . $response->code . ' received geocoding address: ' . $response->body . '.'
+            );
         }
 
         $data = json_decode($response->body, true);

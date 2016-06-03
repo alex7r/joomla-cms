@@ -43,8 +43,11 @@ class ConfigControllerComponent extends JControllerLegacy
      */
     public function cancel()
     {
-        JLog::add('ConfigControllerComponent is deprecated. Use ConfigControllerComponentCancel instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            'ConfigControllerComponent is deprecated. Use ConfigControllerComponentCancel instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         $controller = new ConfigControllerComponentCancel;
 
@@ -60,8 +63,11 @@ class ConfigControllerComponent extends JControllerLegacy
      */
     public function save()
     {
-        JLog::add('ConfigControllerComponent is deprecated. Use ConfigControllerComponentSave instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'ConfigControllerComponent is deprecated. Use ConfigControllerComponentSave instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         $controller = new ConfigControllerComponentSave;
 

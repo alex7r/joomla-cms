@@ -157,7 +157,7 @@ class FinderCli extends JApplicationCli
         $this->out(JText::_('FINDER_CLI_SAVE_FILTERS'));
 
         // Get the taxonomy ids used by the filters.
-        $db    = JFactory::getDbo();
+        $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('filter_id, title, data')->from($db->qn('#__finder_filters'));
         $filters = $db->setQuery($query)->loadObjectList();
@@ -171,10 +171,9 @@ class FinderCli extends JApplicationCli
 
             // Get taxonomy records.
             $query = $db->getQuery(true);
-            $query->select('t.title, p.title AS parent')
-                  ->from($db->qn('#__finder_taxonomy') . ' AS t')
-                  ->leftjoin($db->qn('#__finder_taxonomy') . ' AS p ON p.id = t.parent_id')
-                  ->where($db->qn('t.id') . ' IN (' . $filter->data . ')');
+            $query->select('t.title, p.title AS parent')->from($db->qn('#__finder_taxonomy') . ' AS t')->leftjoin(
+                    $db->qn('#__finder_taxonomy') . ' AS p ON p.id = t.parent_id'
+                )->where($db->qn('t.id') . ' IN (' . $filter->data . ')');
             $taxonomies = $db->setQuery($query)->loadObjectList();
 
             // Construct a temporary data structure to hold the filter information.
@@ -259,8 +258,14 @@ class FinderCli extends JApplicationCli
         JEventDispatcher::getInstance()->trigger('onBeforeIndex');
 
         // Startup reporting.
-        $this->out(JText::sprintf('FINDER_CLI_SETUP_ITEMS', $state->totalItems,
-            round(microtime(true) - $this->time, 3)), true);
+        $this->out(
+            JText::sprintf(
+                'FINDER_CLI_SETUP_ITEMS',
+                $state->totalItems,
+                round(microtime(true) - $this->time, 3)
+            ),
+            true
+        );
 
         // Get the number of batches.
         $t = (int)$state->totalItems;
@@ -280,8 +285,14 @@ class FinderCli extends JApplicationCli
                 JEventDispatcher::getInstance()->trigger('onBuildIndex');
 
                 // Batch reporting.
-                $this->out(JText::sprintf('FINDER_CLI_BATCH_COMPLETE', ($i + 1),
-                    round(microtime(true) - $this->qtime, 3)), true);
+                $this->out(
+                    JText::sprintf(
+                        'FINDER_CLI_BATCH_COMPLETE',
+                        ($i + 1),
+                        round(microtime(true) - $this->qtime, 3)
+                    ),
+                    true
+                );
             }
         } catch (Exception $e) {
             // Display the error
@@ -321,19 +332,25 @@ class FinderCli extends JApplicationCli
             foreach ($filter as $element) {
                 // Look for the old taxonomy in the new taxonomy table.
                 $query = $db->getQuery(true);
-                $query->select('t.id')
-                      ->from($db->qn('#__finder_taxonomy') . ' AS t')
-                      ->leftjoin($db->qn('#__finder_taxonomy') . ' AS p ON p.id = t.parent_id')
-                      ->where($db->qn('t.title') . ' = ' . $db->q($element['title']))
-                      ->where($db->qn('p.title') . ' = ' . $db->q($element['parent']));
+                $query->select('t.id')->from($db->qn('#__finder_taxonomy') . ' AS t')->leftjoin(
+                        $db->qn('#__finder_taxonomy') . ' AS p ON p.id = t.parent_id'
+                    )->where($db->qn('t.title') . ' = ' . $db->q($element['title']))->where(
+                        $db->qn('p.title') . ' = ' . $db->q($element['parent'])
+                    );
                 $taxonomy = $db->setQuery($query)->loadResult();
 
                 // If we found it then add it to the list.
                 if ($taxonomy) {
                     $tids[] = $taxonomy;
                 } else {
-                    $this->out(JText::sprintf('FINDER_CLI_FILTER_RESTORE_WARNING', $element['parent'],
-                        $element['title'], $element['filter']));
+                    $this->out(
+                        JText::sprintf(
+                            'FINDER_CLI_FILTER_RESTORE_WARNING',
+                            $element['parent'],
+                            $element['title'],
+                            $element['filter']
+                        )
+                    );
                 }
             }
 
@@ -342,9 +359,9 @@ class FinderCli extends JApplicationCli
 
             // Update the filter with the new taxonomy ids.
             $query = $db->getQuery(true);
-            $query->update($db->qn('#__finder_filters'))
-                  ->set($db->qn('data') . ' = ' . $db->q($taxonomyIds))
-                  ->where($db->qn('filter_id') . ' = ' . (int)$filter_id);
+            $query->update($db->qn('#__finder_filters'))->set($db->qn('data') . ' = ' . $db->q($taxonomyIds))->where(
+                    $db->qn('filter_id') . ' = ' . (int)$filter_id
+                );
             $db->setQuery($query)->execute();
         }
 

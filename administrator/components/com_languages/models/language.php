@@ -23,13 +23,16 @@ class LanguagesModelLanguage extends JModelAdmin
      */
     public function __construct($config = array())
     {
-        $config = array_merge(array(
-            'event_after_save'  => 'onExtensionAfterSave',
-            'event_before_save' => 'onExtensionBeforeSave',
-            'events_map'        => array(
-                'save' => 'extension'
-            )
-        ), $config);
+        $config = array_merge(
+            array(
+                'event_after_save'  => 'onExtensionAfterSave',
+                'event_before_save' => 'onExtensionBeforeSave',
+                'events_map'        => array(
+                    'save' => 'extension'
+                )
+            ),
+            $config
+        );
 
         parent::__construct($config);
     }
@@ -47,8 +50,11 @@ class LanguagesModelLanguage extends JModelAdmin
     public function getForm($data = array(), $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_languages.language', 'language',
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_languages.language',
+            'language',
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
 
         if (empty($form)) {
             return false;

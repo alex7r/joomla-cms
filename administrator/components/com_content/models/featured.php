@@ -95,13 +95,19 @@ class ContentModelFeatured extends ContentModelArticles
         $query = $db->getQuery(true);
 
         // Select the required fields from the table.
-        $query->select($this->getState('list.select',
-            'a.id, a.title, a.alias, a.checked_out, a.checked_out_time, a.catid, a.state, a.access, a.created, a.hits,' . 'a.featured, a.language, a.created_by_alias, a.publish_up, a.publish_down'));
+        $query->select(
+            $this->getState(
+                'list.select',
+                'a.id, a.title, a.alias, a.checked_out, a.checked_out_time, a.catid, a.state, a.access, a.created, a.hits,' . 'a.featured, a.language, a.created_by_alias, a.publish_up, a.publish_down'
+            )
+        );
         $query->from('#__content AS a');
 
         // Join over the language
-        $query->select('l.title AS language_title, l.image AS language_image')
-              ->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = a.language');
+        $query->select('l.title AS language_title, l.image AS language_image')->join(
+                'LEFT',
+                $db->quoteName('#__languages') . ' AS l ON l.lang_code = a.language'
+            );
 
         // Join over the content table.
         $query->select('fp.ordering')->join('INNER', '#__content_frontpage AS fp ON fp.content_id = a.id');
@@ -185,14 +191,26 @@ class ContentModelFeatured extends ContentModelArticles
         $tagId = $this->getState('filter.tag');
 
         if (is_numeric($tagId)) {
-            $query->where($db->quoteName('tagmap.tag_id') . ' = ' . (int)$tagId)
-                  ->join('LEFT', $db->quoteName('#__contentitem_tag_map',
-                          'tagmap') . ' ON ' . $db->quoteName('tagmap.content_item_id') . ' = ' . $db->quoteName('a.id') . ' AND ' . $db->quoteName('tagmap.type_alias') . ' = ' . $db->quote('com_content.article'));
+            $query->where($db->quoteName('tagmap.tag_id') . ' = ' . (int)$tagId)->join(
+                    'LEFT',
+                    $db->quoteName(
+                        '#__contentitem_tag_map',
+                        'tagmap'
+                    ) . ' ON ' . $db->quoteName('tagmap.content_item_id') . ' = ' . $db->quoteName(
+                        'a.id'
+                    ) . ' AND ' . $db->quoteName('tagmap.type_alias') . ' = ' . $db->quote('com_content.article')
+                );
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.title')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.title'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

@@ -91,19 +91,27 @@ class TagsViewTag extends JViewLegacy
                 $dispatcher = JEventDispatcher::getInstance();
 
                 JPluginHelper::importPlugin('content');
-                $dispatcher->trigger('onContentPrepare',
-                    array('com_tags.tag', &$itemElement, &$itemElement->core_params, 0));
+                $dispatcher->trigger(
+                    'onContentPrepare',
+                    array('com_tags.tag', &$itemElement, &$itemElement->core_params, 0)
+                );
 
-                $results                               = $dispatcher->trigger('onContentAfterTitle',
-                    array('com_tags.tag', &$itemElement, &$itemElement->core_params, 0));
+                $results                               = $dispatcher->trigger(
+                    'onContentAfterTitle',
+                    array('com_tags.tag', &$itemElement, &$itemElement->core_params, 0)
+                );
                 $itemElement->event->afterDisplayTitle = trim(implode("\n", $results));
 
-                $results                                  = $dispatcher->trigger('onContentBeforeDisplay',
-                    array('com_tags.tag', &$itemElement, &$itemElement->core_params, 0));
+                $results                                  = $dispatcher->trigger(
+                    'onContentBeforeDisplay',
+                    array('com_tags.tag', &$itemElement, &$itemElement->core_params, 0)
+                );
                 $itemElement->event->beforeDisplayContent = trim(implode("\n", $results));
 
-                $results                                 = $dispatcher->trigger('onContentAfterDisplay',
-                    array('com_tags.tag', &$itemElement, &$itemElement->core_params, 0));
+                $results                                 = $dispatcher->trigger(
+                    'onContentAfterDisplay',
+                    array('com_tags.tag', &$itemElement, &$itemElement->core_params, 0)
+                );
                 $itemElement->event->afterDisplayContent = trim(implode("\n", $results));
 
                 // Write the results back into the body

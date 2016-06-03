@@ -39,15 +39,24 @@ class LanguagesControllerOverride extends JControllerForm
         if (!$this->allowEdit()) {
             $this->setError(JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
             $this->setMessage($this->getError(), 'error');
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend(),
-                false));
+            $this->setRedirect(
+                JRoute::_(
+                    'index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend(
+                    ),
+                    false
+                )
+            );
 
             return;
         }
 
         $app->setUserState($context . '.data', null);
-        $this->setRedirect('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($recordId,
-                'id'));
+        $this->setRedirect(
+            'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend(
+                $recordId,
+                'id'
+            )
+        );
     }
 
     /**
@@ -78,8 +87,13 @@ class LanguagesControllerOverride extends JControllerForm
         if (!$this->allowSave($data, 'id')) {
             $this->setError(JText::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
             $this->setMessage($this->getError(), 'error');
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend(),
-                false));
+            $this->setRedirect(
+                JRoute::_(
+                    'index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend(
+                    ),
+                    false
+                )
+            );
 
             return;
         }
@@ -117,8 +131,15 @@ class LanguagesControllerOverride extends JControllerForm
             $app->setUserState($context . '.data', $data);
 
             // Redirect back to the edit screen.
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($recordId,
-                    'id'), false));
+            $this->setRedirect(
+                JRoute::_(
+                    'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend(
+                        $recordId,
+                        'id'
+                    ),
+                    false
+                )
+            );
 
             return;
         }
@@ -131,8 +152,15 @@ class LanguagesControllerOverride extends JControllerForm
             // Redirect back to the edit screen.
             $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()));
             $this->setMessage($this->getError(), 'error');
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($recordId,
-                    'id'), false));
+            $this->setRedirect(
+                JRoute::_(
+                    'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend(
+                        $recordId,
+                        'id'
+                    ),
+                    false
+                )
+            );
 
             return;
         }
@@ -147,8 +175,15 @@ class LanguagesControllerOverride extends JControllerForm
                 $app->setUserState($context . '.data', null);
 
                 // Redirect back to the edit screen
-                $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($validData['key'],
-                        'id'), false));
+                $this->setRedirect(
+                    JRoute::_(
+                        'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend(
+                            $validData['key'],
+                            'id'
+                        ),
+                        false
+                    )
+                );
                 break;
 
             case 'save2new':
@@ -156,8 +191,15 @@ class LanguagesControllerOverride extends JControllerForm
                 $app->setUserState($context . '.data', null);
 
                 // Redirect back to the edit screen
-                $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend(null,
-                        'id'), false));
+                $this->setRedirect(
+                    JRoute::_(
+                        'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend(
+                            null,
+                            'id'
+                        ),
+                        false
+                    )
+                );
                 break;
 
             default:
@@ -165,8 +207,13 @@ class LanguagesControllerOverride extends JControllerForm
                 $app->setUserState($context . '.data', null);
 
                 // Redirect to the list screen.
-                $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend(),
-                    false));
+                $this->setRedirect(
+                    JRoute::_(
+                        'index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend(
+                        ),
+                        false
+                    )
+                );
                 break;
         }
     }
@@ -188,7 +235,11 @@ class LanguagesControllerOverride extends JControllerForm
         $context = "$this->option.edit.$this->context";
 
         $app->setUserState($context . '.data', null);
-        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend(),
-            false));
+        $this->setRedirect(
+            JRoute::_(
+                'index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend(),
+                false
+            )
+        );
     }
 }

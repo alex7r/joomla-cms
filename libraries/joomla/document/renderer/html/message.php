@@ -45,8 +45,11 @@ class JDocumentRendererHtmlMessage extends JDocumentRenderer
         }
 
         if (function_exists('renderMessage')) {
-            JLog::add('renderMessage() is deprecated. Override system message rendering with layouts instead.',
-                JLog::WARNING, 'deprecated');
+            JLog::add(
+                'renderMessage() is deprecated. Override system message rendering with layouts instead.',
+                JLog::WARNING,
+                'deprecated'
+            );
 
             return renderMessage($msgList);
         }

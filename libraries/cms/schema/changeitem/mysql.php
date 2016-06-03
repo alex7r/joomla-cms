@@ -59,8 +59,19 @@ class JSchemaChangeitemMysql extends JSchemaChangeitem
         $command = strtoupper($wordArray[0] . ' ' . $wordArray[1]);
 
         // Check for special update statement to reset utf8mb4 conversion status
-        if (($command == 'UPDATE `#__UTF8_CONVERSION`' || $command == 'UPDATE #__UTF8_CONVERSION') && strtoupper($wordArray[2]) == 'SET' && strtolower(substr(str_replace('`',
-                '', $wordArray[3]), 0, 9)) == 'converted'
+        if (($command == 'UPDATE `#__UTF8_CONVERSION`' || $command == 'UPDATE #__UTF8_CONVERSION') && strtoupper(
+                                                                                                          $wordArray[2]
+                                                                                                      ) == 'SET' && strtolower(
+                                                                                                                        substr(
+                                                                                                                            str_replace(
+                                                                                                                                '`',
+                                                                                                                                '',
+                                                                                                                                $wordArray[3]
+                                                                                                                            ),
+                                                                                                                            0,
+                                                                                                                            9
+                                                                                                                        )
+                                                                                                                    ) == 'converted'
         ) {
             // Statement is special statement to reset conversion status
             $this->queryType = 'UTF8CNV';
@@ -73,7 +84,9 @@ class JSchemaChangeitemMysql extends JSchemaChangeitem
             $alterCommand = strtoupper($wordArray[3] . ' ' . $wordArray[4]);
 
             if ($alterCommand == 'ADD COLUMN') {
-                $result            = 'SHOW COLUMNS IN ' . $wordArray[2] . ' WHERE field = ' . $this->fixQuote($wordArray[5]);
+                $result            = 'SHOW COLUMNS IN ' . $wordArray[2] . ' WHERE field = ' . $this->fixQuote(
+                        $wordArray[5]
+                    );
                 $this->queryType   = 'ADD_COLUMN';
                 $this->msgElements = array($this->fixQuote($wordArray[2]), $this->fixQuote($wordArray[5]));
             } elseif ($alterCommand == 'ADD INDEX' || $alterCommand == 'ADD KEY') {
@@ -132,7 +145,9 @@ class JSchemaChangeitemMysql extends JSchemaChangeitem
                  */
                 $typeCheck = $this->fixUtf8mb4TypeChecks($type);
 
-                $result            = 'SHOW COLUMNS IN ' . $wordArray[2] . ' WHERE field = ' . $this->fixQuote($wordArray[4]) . ' AND ' . $typeCheck;
+                $result            = 'SHOW COLUMNS IN ' . $wordArray[2] . ' WHERE field = ' . $this->fixQuote(
+                        $wordArray[4]
+                    ) . ' AND ' . $typeCheck;
                 $this->queryType   = 'CHANGE_COLUMN_TYPE';
                 $this->msgElements = array($this->fixQuote($wordArray[2]), $this->fixQuote($wordArray[4]), $type);
             } elseif (strtoupper($wordArray[3]) == 'CHANGE') {
@@ -149,7 +164,9 @@ class JSchemaChangeitemMysql extends JSchemaChangeitem
                  */
                 $typeCheck = $this->fixUtf8mb4TypeChecks($type);
 
-                $result            = 'SHOW COLUMNS IN ' . $wordArray[2] . ' WHERE field = ' . $this->fixQuote($wordArray[5]) . ' AND ' . $typeCheck;
+                $result            = 'SHOW COLUMNS IN ' . $wordArray[2] . ' WHERE field = ' . $this->fixQuote(
+                        $wordArray[5]
+                    ) . ' AND ' . $typeCheck;
                 $this->queryType   = 'CHANGE_COLUMN_TYPE';
                 $this->msgElements = array($this->fixQuote($wordArray[2]), $this->fixQuote($wordArray[5]), $type);
             }

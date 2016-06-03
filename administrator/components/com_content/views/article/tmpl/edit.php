@@ -56,7 +56,8 @@ if (isset($this->item->attribs['show_urls_images_backend']) && $this->item->attr
     $params->show_urls_images_backend = $this->item->attribs['show_urls_images_backend'];
 }
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	Joomla.submitbutton = function(task)
 	{
 		if (task == "article.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
@@ -71,7 +72,8 @@ JFactory::getDocument()->addScriptDeclaration('
 			}
 		}
 	};
-');
+'
+);
 
 // In case of modal
 $isModal = $input->get('layout') == 'modal' ? true : false;
@@ -80,7 +82,9 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 ?>
 
 <form
-    action="<?php echo JRoute::_('index.php?option=com_content&layout=' . $layout . $tmpl . '&id=' . (int)$this->item->id); ?>"
+    action="<?php echo JRoute::_(
+        'index.php?option=com_content&layout=' . $layout . $tmpl . '&id=' . (int)$this->item->id
+    ); ?>"
     method="post" name="adminForm" id="item-form" class="form-validate">
 
     <?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
@@ -103,8 +107,12 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 
         <?php // Do not show the publishing options if the edit form is configured not to. ?>
         <?php if ($params->show_publishing_options == 1) : ?>
-            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing',
-                JText::_('COM_CONTENT_FIELDSET_PUBLISHING')); ?>
+            <?php echo JHtml::_(
+                'bootstrap.addTab',
+                'myTab',
+                'publishing',
+                JText::_('COM_CONTENT_FIELDSET_PUBLISHING')
+            ); ?>
             <div class="row-fluid form-horizontal-desktop">
                 <div class="span6">
                     <?php echo JLayoutHelper::render('joomla.edit.publishingdata', $this); ?>
@@ -118,8 +126,12 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 
         <?php // Do not show the images and links options if the edit form is configured not to. ?>
         <?php if ($params->show_urls_images_backend == 1) : ?>
-            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'images',
-                JText::_('COM_CONTENT_FIELDSET_URLS_AND_IMAGES')); ?>
+            <?php echo JHtml::_(
+                'bootstrap.addTab',
+                'myTab',
+                'images',
+                JText::_('COM_CONTENT_FIELDSET_URLS_AND_IMAGES')
+            ); ?>
             <div class="row-fluid form-horizontal-desktop">
                 <div class="span6">
                     <?php echo $this->form->getControlGroup('images'); ?>
@@ -137,8 +149,12 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
         <?php endif; ?>
 
         <?php if (!$isModal && $assoc) : ?>
-            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations',
-                JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')); ?>
+            <?php echo JHtml::_(
+                'bootstrap.addTab',
+                'myTab',
+                'associations',
+                JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')
+            ); ?>
             <?php echo $this->loadTemplate('associations'); ?>
             <?php echo JHtml::_('bootstrap.endTab'); ?>
         <?php elseif ($isModal && $assoc) : ?>

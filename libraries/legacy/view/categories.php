@@ -83,8 +83,10 @@ class JViewCategories extends JViewLegacy
         // Escape strings for HTML output
         $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'), ENT_COMPAT, 'UTF-8');
 
-        $this->maxLevelcat = $params->get('maxLevelcat', -1) < 0 ? PHP_INT_MAX : $params->get('maxLevelcat',
-            PHP_INT_MAX);
+        $this->maxLevelcat = $params->get('maxLevelcat', -1) < 0 ? PHP_INT_MAX : $params->get(
+            'maxLevelcat',
+            PHP_INT_MAX
+        );
         $this->params      = &$params;
         $this->parent      = &$parent;
         $this->items       = &$items;

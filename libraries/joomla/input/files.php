@@ -63,13 +63,15 @@ class JInputFiles extends JInput
     public function get($name, $default = null, $filter = 'cmd')
     {
         if (isset($this->data[$name])) {
-            $results = $this->decodeData(array(
-                $this->data[$name]['name'],
-                $this->data[$name]['type'],
-                $this->data[$name]['tmp_name'],
-                $this->data[$name]['error'],
-                $this->data[$name]['size']
-            ));
+            $results = $this->decodeData(
+                array(
+                    $this->data[$name]['name'],
+                    $this->data[$name]['type'],
+                    $this->data[$name]['tmp_name'],
+                    $this->data[$name]['error'],
+                    $this->data[$name]['size']
+                )
+            );
 
             // Prevent returning an unsafe file unless speciffically requested
             if ($filter != 'raw') {
@@ -101,13 +103,15 @@ class JInputFiles extends JInput
 
         if (is_array($data[0])) {
             foreach ($data[0] as $k => $v) {
-                $result[$k] = $this->decodeData(array(
-                    $data[0][$k],
-                    $data[1][$k],
-                    $data[2][$k],
-                    $data[3][$k],
-                    $data[4][$k]
-                ));
+                $result[$k] = $this->decodeData(
+                    array(
+                        $data[0][$k],
+                        $data[1][$k],
+                        $data[2][$k],
+                        $data[3][$k],
+                        $data[4][$k]
+                    )
+                );
             }
 
             return $result;

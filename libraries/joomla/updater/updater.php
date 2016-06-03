@@ -178,9 +178,9 @@ class JUpdater extends JAdapter
         $db    = $this->getDbo();
         $query = $db->getQuery(true);
 
-        $query->select('DISTINCT a.update_site_id, a.type, a.location, a.last_check_timestamp, a.extra_query')
-              ->from($db->quoteName('#__update_sites', 'a'))
-              ->where('a.enabled = 1');
+        $query->select('DISTINCT a.update_site_id, a.type, a.location, a.last_check_timestamp, a.extra_query')->from(
+                $db->quoteName('#__update_sites', 'a')
+            )->where('a.enabled = 1');
 
         if ($eid) {
             $query->join('INNER', '#__update_sites_extensions AS b ON a.update_site_id = b.update_site_id');
@@ -220,11 +220,10 @@ class JUpdater extends JAdapter
         $query = $db->getQuery(true)->select('DISTINCT update_site_id')->from('#__updates');
 
         if ($timestamp) {
-            $subQuery = $db->getQuery(true)
-                           ->select('update_site_id')
-                           ->from('#__update_sites')
-                           ->where($db->qn('last_check_timestamp') . ' IS NULL', 'OR')
-                           ->where($db->qn('last_check_timestamp') . ' <= ' . $db->q($timestamp), 'OR');
+            $subQuery = $db->getQuery(true)->select('update_site_id')->from('#__update_sites')->where(
+                    $db->qn('last_check_timestamp') . ' IS NULL',
+                    'OR'
+                )->where($db->qn('last_check_timestamp') . ' <= ' . $db->q($timestamp), 'OR');
 
             $query->where($db->qn('update_site_id') . ' IN (' . $subQuery . ')');
         }
@@ -307,19 +306,23 @@ class JUpdater extends JAdapter
                     /** @var JTableExtension $extension */
                     $extension = JTable::getInstance('extension');
 
-                    $uid = $update->find(array(
-                        'element'   => $current_update->get('element'),
-                        'type'      => $current_update->get('type'),
-                        'client_id' => $current_update->get('client_id'),
-                        'folder'    => $current_update->get('folder')
-                    ));
+                    $uid = $update->find(
+                        array(
+                            'element'   => $current_update->get('element'),
+                            'type'      => $current_update->get('type'),
+                            'client_id' => $current_update->get('client_id'),
+                            'folder'    => $current_update->get('folder')
+                        )
+                    );
 
-                    $eid = $extension->find(array(
-                        'element'   => $current_update->get('element'),
-                        'type'      => $current_update->get('type'),
-                        'client_id' => $current_update->get('client_id'),
-                        'folder'    => $current_update->get('folder')
-                    ));
+                    $eid = $extension->find(
+                        array(
+                            'element'   => $current_update->get('element'),
+                            'type'      => $current_update->get('type'),
+                            'client_id' => $current_update->get('client_id'),
+                            'folder'    => $current_update->get('folder')
+                        )
+                    );
 
                     if (!$uid) {
                         // Set the extension id
@@ -365,10 +368,9 @@ class JUpdater extends JAdapter
         $timestamp = time();
         $db        = JFactory::getDbo();
 
-        $query = $db->getQuery(true)
-                    ->update($db->quoteName('#__update_sites'))
-                    ->set($db->quoteName('last_check_timestamp') . ' = ' . $db->quote($timestamp))
-                    ->where($db->quoteName('update_site_id') . ' = ' . $db->quote($updateSiteId));
+        $query = $db->getQuery(true)->update($db->quoteName('#__update_sites'))->set(
+                $db->quoteName('last_check_timestamp') . ' = ' . $db->quote($timestamp)
+            )->where($db->quoteName('update_site_id') . ' = ' . $db->quote($updateSiteId));
         $db->setQuery($query);
         $db->execute();
     }

@@ -86,12 +86,9 @@ class BannersModelClients extends JModelList
         $clientIds = implode(',', array_map(array($db, 'quote'), $clientIds));
 
         // Get the published banners count.
-        $query = $db->getQuery(true)
-                    ->select('cid, COUNT(cid) AS count_published')
-                    ->from('#__banners')
-                    ->where('state = 1')
-                    ->where('cid IN (' . $clientIds . ')')
-                    ->group('cid');
+        $query = $db->getQuery(true)->select('cid, COUNT(cid) AS count_published')->from('#__banners')->where(
+                'state = 1'
+            )->where('cid IN (' . $clientIds . ')')->group('cid');
 
         $db->setQuery($query);
 
@@ -189,12 +186,18 @@ class BannersModelClients extends JModelList
     protected function populateState($ordering = 'a.name', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('filter.state',
-            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'string'));
-        $this->setState('filter.purchase_type',
-            $this->getUserStateFromRequest($this->context . '.filter.purchase_type', 'filter_purchase_type'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.state',
+            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'string')
+        );
+        $this->setState(
+            'filter.purchase_type',
+            $this->getUserStateFromRequest($this->context . '.filter.purchase_type', 'filter_purchase_type')
+        );
 
         // Load the parameters.
         $this->setState('params', JComponentHelper::getParams('com_banners'));
@@ -217,8 +220,12 @@ class BannersModelClients extends JModelList
         $defaultPurchase = JComponentHelper::getParams('com_banners')->get('purchase_type', 3);
 
         // Select the required fields from the table.
-        $query->select($this->getState('list.select',
-            'a.id AS id,' . 'a.name AS name,' . 'a.contact AS contact,' . 'a.checked_out AS checked_out,' . 'a.checked_out_time AS checked_out_time, ' . 'a.state AS state,' . 'a.metakey AS metakey,' . 'a.purchase_type as purchase_type'));
+        $query->select(
+            $this->getState(
+                'list.select',
+                'a.id AS id,' . 'a.name AS name,' . 'a.contact AS contact,' . 'a.checked_out AS checked_out,' . 'a.checked_out_time AS checked_out_time, ' . 'a.state AS state,' . 'a.metakey AS metakey,' . 'a.purchase_type as purchase_type'
+            )
+        );
 
         $query->from($db->quoteName('#__banner_clients') . ' AS a');
 
@@ -237,7 +244,9 @@ class BannersModelClients extends JModelList
             $query->where('(a.state IN (0, 1))');
         }
 
-        $query->group('a.id, a.name, a.contact, a.checked_out, a.checked_out_time, a.state, a.metakey, a.purchase_type, uc.name');
+        $query->group(
+            'a.id, a.name, a.contact, a.checked_out, a.checked_out_time, a.state, a.metakey, a.purchase_type, uc.name'
+        );
 
         // Filter by search in title
         $search = $this->getState('filter.search');
@@ -263,8 +272,14 @@ class BannersModelClients extends JModelList
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.name')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.name'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

@@ -1245,8 +1245,11 @@ class JLanguage
      */
     public function setLanguage($lang)
     {
-        JLog::add(__METHOD__ . ' is deprecated. Instantiate a new JLanguage object instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            __METHOD__ . ' is deprecated. Instantiate a new JLanguage object instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         $previous       = $this->lang;
         $this->lang     = $lang;

@@ -281,8 +281,13 @@ class SimplePie_Enclosure
         if (class_exists('idna_convert')) {
             $idn        = new idna_convert();
             $parsed     = SimplePie_Misc::parse_url($link);
-            $this->link = SimplePie_Misc::compress_parse_url($parsed['scheme'], $idn->encode($parsed['authority']),
-                $parsed['path'], $parsed['query'], $parsed['fragment']);
+            $this->link = SimplePie_Misc::compress_parse_url(
+                $parsed['scheme'],
+                $idn->encode($parsed['authority']),
+                $parsed['path'],
+                $parsed['query'],
+                $parsed['fragment']
+            );
         }
         $this->handler = $this->get_handler(); // Needs to load last
     }
@@ -1214,9 +1219,11 @@ class SimplePie_Enclosure
         // Flash
         if ($handler === 'flash') {
             if ($native) {
-                $embed .= "<embed src=\"" . $this->get_link() . "\" pluginspage=\"http://adobe.com/go/getflashplayer\" type=\"$type\" quality=\"high\" width=\"$width\" height=\"$height\" bgcolor=\"$bgcolor\" loop=\"$loop\"></embed>";
+                $embed .= "<embed src=\"" . $this->get_link(
+                    ) . "\" pluginspage=\"http://adobe.com/go/getflashplayer\" type=\"$type\" quality=\"high\" width=\"$width\" height=\"$height\" bgcolor=\"$bgcolor\" loop=\"$loop\"></embed>";
             } else {
-                $embed .= "<script type='text/javascript'>embed_flash('$bgcolor', '$width', '$height', '" . $this->get_link() . "', '$loop', '$type');</script>";
+                $embed .= "<script type='text/javascript'>embed_flash('$bgcolor', '$width', '$height', '" . $this->get_link(
+                    ) . "', '$loop', '$type');</script>";
             }
         }
 
@@ -1225,9 +1232,13 @@ class SimplePie_Enclosure
         elseif ($handler === 'fmedia' || ($handler === 'mp3' && $mediaplayer !== '')) {
             $height += 20;
             if ($native) {
-                $embed .= "<embed src=\"$mediaplayer\" pluginspage=\"http://adobe.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" quality=\"high\" width=\"$width\" height=\"$height\" wmode=\"transparent\" flashvars=\"file=" . rawurlencode($this->get_link() . '?file_extension=.' . $this->get_extension()) . "&autostart=false&repeat=$loop&showdigits=true&showfsbutton=false\"></embed>";
+                $embed .= "<embed src=\"$mediaplayer\" pluginspage=\"http://adobe.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" quality=\"high\" width=\"$width\" height=\"$height\" wmode=\"transparent\" flashvars=\"file=" . rawurlencode(
+                        $this->get_link() . '?file_extension=.' . $this->get_extension()
+                    ) . "&autostart=false&repeat=$loop&showdigits=true&showfsbutton=false\"></embed>";
             } else {
-                $embed .= "<script type='text/javascript'>embed_flv('$width', '$height', '" . rawurlencode($this->get_link() . '?file_extension=.' . $this->get_extension()) . "', '$placeholder', '$loop', '$mediaplayer');</script>";
+                $embed .= "<script type='text/javascript'>embed_flv('$width', '$height', '" . rawurlencode(
+                        $this->get_link() . '?file_extension=.' . $this->get_extension()
+                    ) . "', '$placeholder', '$loop', '$mediaplayer');</script>";
             }
         }
 
@@ -1237,20 +1248,25 @@ class SimplePie_Enclosure
             $height += 16;
             if ($native) {
                 if ($placeholder !== '') {
-                    $embed .= "<embed type=\"$type\" style=\"cursor:hand; cursor:pointer;\" href=\"" . $this->get_link() . "\" src=\"$placeholder\" width=\"$width\" height=\"$height\" autoplay=\"false\" target=\"myself\" controller=\"false\" loop=\"$loop\" scale=\"aspect\" bgcolor=\"$bgcolor\" pluginspage=\"http://apple.com/quicktime/download/\"></embed>";
+                    $embed .= "<embed type=\"$type\" style=\"cursor:hand; cursor:pointer;\" href=\"" . $this->get_link(
+                        ) . "\" src=\"$placeholder\" width=\"$width\" height=\"$height\" autoplay=\"false\" target=\"myself\" controller=\"false\" loop=\"$loop\" scale=\"aspect\" bgcolor=\"$bgcolor\" pluginspage=\"http://apple.com/quicktime/download/\"></embed>";
                 } else {
-                    $embed .= "<embed type=\"$type\" style=\"cursor:hand; cursor:pointer;\" src=\"" . $this->get_link() . "\" width=\"$width\" height=\"$height\" autoplay=\"false\" target=\"myself\" controller=\"true\" loop=\"$loop\" scale=\"aspect\" bgcolor=\"$bgcolor\" pluginspage=\"http://apple.com/quicktime/download/\"></embed>";
+                    $embed .= "<embed type=\"$type\" style=\"cursor:hand; cursor:pointer;\" src=\"" . $this->get_link(
+                        ) . "\" width=\"$width\" height=\"$height\" autoplay=\"false\" target=\"myself\" controller=\"true\" loop=\"$loop\" scale=\"aspect\" bgcolor=\"$bgcolor\" pluginspage=\"http://apple.com/quicktime/download/\"></embed>";
                 }
             } else {
-                $embed .= "<script type='text/javascript'>embed_quicktime('$type', '$bgcolor', '$width', '$height', '" . $this->get_link() . "', '$placeholder', '$loop');</script>";
+                $embed .= "<script type='text/javascript'>embed_quicktime('$type', '$bgcolor', '$width', '$height', '" . $this->get_link(
+                    ) . "', '$placeholder', '$loop');</script>";
             }
         } // Windows Media
         elseif ($handler === 'wmedia') {
             $height += 45;
             if ($native) {
-                $embed .= "<embed type=\"application/x-mplayer2\" src=\"" . $this->get_link() . "\" autosize=\"1\" width=\"$width\" height=\"$height\" showcontrols=\"1\" showstatusbar=\"0\" showdisplay=\"0\" autostart=\"0\"></embed>";
+                $embed .= "<embed type=\"application/x-mplayer2\" src=\"" . $this->get_link(
+                    ) . "\" autosize=\"1\" width=\"$width\" height=\"$height\" showcontrols=\"1\" showstatusbar=\"0\" showdisplay=\"0\" autostart=\"0\"></embed>";
             } else {
-                $embed .= "<script type='text/javascript'>embed_wmedia('$width', '$height', '" . $this->get_link() . "');</script>";
+                $embed .= "<script type='text/javascript'>embed_wmedia('$width', '$height', '" . $this->get_link(
+                    ) . "');</script>";
             }
         } // Everything else
         else {

@@ -66,7 +66,10 @@ class JTableContenttype extends JTable
         // Verify that the alias is unique
         $table = JTable::getInstance('Contenttype', 'JTable');
 
-        if ($table->load(array('type_alias' => $this->type_alias)) && ($table->type_id != $this->type_id || $this->type_id == 0)) {
+        if ($table->load(
+                array('type_alias' => $this->type_alias)
+            ) && ($table->type_id != $this->type_id || $this->type_id == 0)
+        ) {
             $this->setError(JText::_('COM_TAGS_ERROR_UNIQUE_ALIAS'));
 
             return false;
@@ -102,9 +105,9 @@ class JTableContenttype extends JTable
     {
         $db    = $this->_db;
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('type_id'))
-              ->from($db->quoteName($this->_tbl))
-              ->where($db->quoteName('type_alias') . ' = ' . $db->quote($typeAlias));
+        $query->select($db->quoteName('type_id'))->from($db->quoteName($this->_tbl))->where(
+                $db->quoteName('type_alias') . ' = ' . $db->quote($typeAlias)
+            );
         $db->setQuery($query);
 
         return $db->loadResult();
@@ -125,7 +128,10 @@ class JTableContenttype extends JTable
         $tableInfo = json_decode($this->table);
 
         if (is_object($tableInfo) && isset($tableInfo->special)) {
-            if (is_object($tableInfo->special) && isset($tableInfo->special->type) && isset($tableInfo->special->prefix)) {
+            if (is_object(
+                    $tableInfo->special
+                ) && isset($tableInfo->special->type) && isset($tableInfo->special->prefix)
+            ) {
                 $class = isset($tableInfo->special->class) ? $tableInfo->special->class : 'JTable';
 
                 if (!class_implements($class, 'JTableInterface')) {

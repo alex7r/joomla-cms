@@ -225,9 +225,15 @@ class FOFUtilsUpdateCollection
 
         $versionParts          = explode('.', $jVersion, 4);
         $platformVersionMajor  = $versionParts[0];
-        $platformVersionMinor  = (count($versionParts) > 1) ? $platformVersionMajor . '.' . $versionParts[1] : $platformVersionMajor;
-        $platformVersionNormal = (count($versionParts) > 2) ? $platformVersionMinor . '.' . $versionParts[2] : $platformVersionMinor;
-        $platformVersionFull   = (count($versionParts) > 3) ? $platformVersionNormal . '.' . $versionParts[3] : $platformVersionNormal;
+        $platformVersionMinor  = (count(
+                                      $versionParts
+                                  ) > 1) ? $platformVersionMajor . '.' . $versionParts[1] : $platformVersionMajor;
+        $platformVersionNormal = (count(
+                                      $versionParts
+                                  ) > 2) ? $platformVersionMinor . '.' . $versionParts[2] : $platformVersionMinor;
+        $platformVersionFull   = (count(
+                                      $versionParts
+                                  ) > 3) ? $platformVersionNormal . '.' . $versionParts[3] : $platformVersionNormal;
 
         $pickedExtension   = null;
         $pickedSpecificity = -1;

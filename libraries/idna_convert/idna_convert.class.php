@@ -2073,7 +2073,9 @@ class idna_convert
 
         // populate mbstring overloading cache if not set
         if (self::$_mb_string_overload === null) {
-            self::$_mb_string_overload = (extension_loaded('mbstring') && (ini_get('mbstring.func_overload') & 0x02) === 0x02);
+            self::$_mb_string_overload = (extension_loaded('mbstring') && (ini_get(
+                                                                               'mbstring.func_overload'
+                                                                           ) & 0x02) === 0x02);
         }
     }
 
@@ -2227,7 +2229,9 @@ class idna_convert
                     }
                 }
                 $parsed['host'] = join('.', $arr);
-                $return         = (empty($parsed['scheme']) ? '' : $parsed['scheme'] . (strtolower($parsed['scheme']) == 'mailto' ? ':' : '://')) . (empty($parsed['user']) ? '' : $parsed['user'] . (empty($parsed['pass']) ? '' : ':' . $parsed['pass']) . '@') . $parsed['host'] . (empty($parsed['port']) ? '' : ':' . $parsed['port']) . (empty($parsed['path']) ? '' : $parsed['path']) . (empty($parsed['query']) ? '' : '?' . $parsed['query']) . (empty($parsed['fragment']) ? '' : '#' . $parsed['fragment']);
+                $return         = (empty($parsed['scheme']) ? '' : $parsed['scheme'] . (strtolower(
+                                                                                            $parsed['scheme']
+                                                                                        ) == 'mailto' ? ':' : '://')) . (empty($parsed['user']) ? '' : $parsed['user'] . (empty($parsed['pass']) ? '' : ':' . $parsed['pass']) . '@') . $parsed['host'] . (empty($parsed['port']) ? '' : ':' . $parsed['port']) . (empty($parsed['path']) ? '' : $parsed['path']) . (empty($parsed['query']) ? '' : '?' . $parsed['query']) . (empty($parsed['fragment']) ? '' : '#' . $parsed['fragment']);
             } else { // parse_url seems to have failed, try without it
                 $arr = explode('.', $input);
                 foreach ($arr as $k => $v) {
@@ -2396,7 +2400,9 @@ class idna_convert
             } elseif ($v < (1 << 16)) { // 3 bytes
                 $output .= chr(224 + ($v >> 12)) . chr(128 + (($v >> 6) & 63)) . chr(128 + ($v & 63));
             } elseif ($v < (1 << 21)) { // 4 bytes
-                $output .= chr(240 + ($v >> 18)) . chr(128 + (($v >> 12) & 63)) . chr(128 + (($v >> 6) & 63)) . chr(128 + ($v & 63));
+                $output .= chr(240 + ($v >> 18)) . chr(128 + (($v >> 12) & 63)) . chr(128 + (($v >> 6) & 63)) . chr(
+                        128 + ($v & 63)
+                    );
             } elseif (self::$safe_mode) {
                 $output .= self::$safe_char;
             } else {
@@ -2548,7 +2554,9 @@ class idna_convert
             }
         }
         $parsed['host'] = join('.', $arr);
-        $return         = (empty($parsed['scheme']) ? '' : $parsed['scheme'] . (strtolower($parsed['scheme']) == 'mailto' ? ':' : '://')) . (empty($parsed['user']) ? '' : $parsed['user'] . (empty($parsed['pass']) ? '' : ':' . $parsed['pass']) . '@') . $parsed['host'] . (empty($parsed['port']) ? '' : ':' . $parsed['port']) . (empty($parsed['path']) ? '' : $parsed['path']) . (empty($parsed['query']) ? '' : '?' . $parsed['query']) . (empty($parsed['fragment']) ? '' : '#' . $parsed['fragment']);
+        $return         = (empty($parsed['scheme']) ? '' : $parsed['scheme'] . (strtolower(
+                                                                                    $parsed['scheme']
+                                                                                ) == 'mailto' ? ':' : '://')) . (empty($parsed['user']) ? '' : $parsed['user'] . (empty($parsed['pass']) ? '' : ':' . $parsed['pass']) . '@') . $parsed['host'] . (empty($parsed['port']) ? '' : ':' . $parsed['port']) . (empty($parsed['path']) ? '' : $parsed['path']) . (empty($parsed['query']) ? '' : '?' . $parsed['query']) . (empty($parsed['fragment']) ? '' : '#' . $parsed['fragment']);
 
         return $return;
     }
@@ -2574,7 +2582,9 @@ class idna_convert
             case 'ucs4_array':
                 break;
             default:
-                $this->_error('Unsupported input format: ' . ($one_time_encoding ? $one_time_encoding : $this->_api_encoding));
+                $this->_error(
+                    'Unsupported input format: ' . ($one_time_encoding ? $one_time_encoding : $this->_api_encoding)
+                );
 
                 return false;
         }
@@ -2615,8 +2625,13 @@ class idna_convert
                             if ($encoded) {
                                 $output .= $encoded;
                             } else {
-                                $output .= $this->_ucs4_to_utf8(array_slice($decoded, $last_begin,
-                                    (($k) - $last_begin)));
+                                $output .= $this->_ucs4_to_utf8(
+                                    array_slice(
+                                        $decoded,
+                                        $last_begin,
+                                        (($k) - $last_begin)
+                                    )
+                                );
                             }
                             $output .= chr($decoded[$k]);
                         }
@@ -2766,7 +2781,9 @@ class idna_convert
                         if ($q < $t) {
                             break;
                         }
-                        $encoded .= $this->_encode_digit(intval($t + (($q - $t) % ($this->_base - $t)))); //v0.4.5 Changed from ceil() to intval()
+                        $encoded .= $this->_encode_digit(
+                            intval($t + (($q - $t) % ($this->_base - $t)))
+                        ); //v0.4.5 Changed from ceil() to intval()
                         $q = (int)(($q - $t) / ($this->_base - $t));
                     }
                     $encoded .= $this->_encode_digit($q);

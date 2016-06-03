@@ -37,7 +37,9 @@ defined('_JEXEC') or die;
                         </div>
                     </div>
                     <button class="btn btn-primary" type="button"
-                            onclick="this.form.task.value='links.duplicateUrls';this.form.submit();"><?php echo JText::_('COM_REDIRECT_BUTTON_UPDATE_LINKS'); ?></button>
+                            onclick="this.form.task.value='links.duplicateUrls';this.form.submit();"><?php echo JText::_(
+                            'COM_REDIRECT_BUTTON_UPDATE_LINKS'
+                        ); ?></button>
                 </fieldset>
             </div>
         </div>

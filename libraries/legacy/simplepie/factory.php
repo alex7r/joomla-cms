@@ -36,8 +36,11 @@ class JSimplepieFactory
      */
     public static function getFeedParser($url, $cache_time = 0)
     {
-        JLog::add(__METHOD__ . ' is deprecated.   Use JFeedFactory() or supply Simple Pie instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            __METHOD__ . ' is deprecated.   Use JFeedFactory() or supply Simple Pie instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         $cache = JFactory::getCache('feed_parser', 'callback');
 

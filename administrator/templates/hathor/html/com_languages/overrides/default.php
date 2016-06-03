@@ -36,12 +36,19 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 
                     <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
                 <div class="filter-select fltrt">
                     <select name="filter_language_client" onchange="this.form.submit()">
-                        <?php echo JHtml::_('select.options', $this->languages, null, 'text',
-                            $this->state->get('filter.language_client')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            $this->languages,
+                            null,
+                            'text',
+                            $this->state->get('filter.language_client')
+                        ); ?>
                     </select>
                 </div>
             </fieldset>
@@ -55,12 +62,22 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         <input type="checkbox" name="checkall-toggle" value="" onclick="Joomla.checkAll(this)"/>
                     </th>
                     <th width="30%" class="left">
-                        <?php echo JHtml::_('grid.sort', 'COM_LANGUAGES_VIEW_OVERRIDES_KEY', 'key', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_LANGUAGES_VIEW_OVERRIDES_KEY',
+                            'key',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="left">
-                        <?php echo JHtml::_('grid.sort', 'COM_LANGUAGES_VIEW_OVERRIDES_TEXT', 'text', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_LANGUAGES_VIEW_OVERRIDES_TEXT',
+                            'text',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap">
                         <?php echo JText::_('COM_LANGUAGES_FIELD_LANG_TAG_LABEL'); ?>
@@ -88,14 +105,18 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         <td>
                             <?php if ($canEdit) : ?>
                                 <a id="key[<?php echo $this->escape($key); ?>]"
-                                   href="<?php echo JRoute::_('index.php?option=com_languages&task=override.edit&id=' . $key); ?>"><?php echo $this->escape($key); ?></a>
+                                   href="<?php echo JRoute::_(
+                                       'index.php?option=com_languages&task=override.edit&id=' . $key
+                                   ); ?>"><?php echo $this->escape($key); ?></a>
                             <?php else: ?>
                                 <?php echo $this->escape($key); ?>
                             <?php endif; ?>
                         </td>
                         <td>
 							<span
-                                id="string[<?php echo $this->escape($key); ?>]"><?php echo $this->escape($text); ?></span>
+                                id="string[<?php echo $this->escape($key); ?>]"><?php echo $this->escape(
+                                    $text
+                                ); ?></span>
                         </td>
                         <td class="center">
                             <?php echo $language; ?>

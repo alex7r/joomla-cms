@@ -433,42 +433,45 @@ final class ArrayHelper
         $key           = (array)$k;
         $sortLocale    = $locale;
 
-        usort($a, function ($a, $b) use ($sortCase, $sortDirection, $key, $sortLocale) {
-            for ($i = 0, $count = count($key); $i < $count; $i++) {
-                if (isset($sortDirection[$i])) {
-                    $direction = $sortDirection[$i];
+        usort(
+            $a,
+            function ($a, $b) use ($sortCase, $sortDirection, $key, $sortLocale) {
+                for ($i = 0, $count = count($key); $i < $count; $i++) {
+                    if (isset($sortDirection[$i])) {
+                        $direction = $sortDirection[$i];
+                    }
+
+                    if (isset($sortCase[$i])) {
+                        $caseSensitive = $sortCase[$i];
+                    }
+
+                    if (isset($sortLocale[$i])) {
+                        $locale = $sortLocale[$i];
+                    }
+
+                    $va = $a->{$key[$i]};
+                    $vb = $b->{$key[$i]};
+
+                    if ((is_bool($va) || is_numeric($va)) && (is_bool($vb) || is_numeric($vb))) {
+                        $cmp = $va - $vb;
+                    } elseif ($caseSensitive) {
+                        $cmp = StringHelper::strcmp($va, $vb, $locale);
+                    } else {
+                        $cmp = StringHelper::strcasecmp($va, $vb, $locale);
+                    }
+
+                    if ($cmp > 0) {
+                        return $direction;
+                    }
+
+                    if ($cmp < 0) {
+                        return -$direction;
+                    }
                 }
 
-                if (isset($sortCase[$i])) {
-                    $caseSensitive = $sortCase[$i];
-                }
-
-                if (isset($sortLocale[$i])) {
-                    $locale = $sortLocale[$i];
-                }
-
-                $va = $a->{$key[$i]};
-                $vb = $b->{$key[$i]};
-
-                if ((is_bool($va) || is_numeric($va)) && (is_bool($vb) || is_numeric($vb))) {
-                    $cmp = $va - $vb;
-                } elseif ($caseSensitive) {
-                    $cmp = StringHelper::strcmp($va, $vb, $locale);
-                } else {
-                    $cmp = StringHelper::strcasecmp($va, $vb, $locale);
-                }
-
-                if ($cmp > 0) {
-                    return $direction;
-                }
-
-                if ($cmp < 0) {
-                    return -$direction;
-                }
+                return 0;
             }
-
-            return 0;
-        });
+        );
 
         return $a;
     }

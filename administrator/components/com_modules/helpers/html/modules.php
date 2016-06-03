@@ -153,8 +153,11 @@ abstract class JHtmlModules
 
             if (is_array($positions)) {
                 foreach ($positions as $position) {
-                    $text      = ModulesHelper::getTranslatedModulePosition($clientId, $template,
-                            $position) . ' [' . $position . ']';
+                    $text      = ModulesHelper::getTranslatedModulePosition(
+                            $clientId,
+                            $template,
+                            $position
+                        ) . ' [' . $position . ']';
                     $options[] = ModulesHelper::createOption($position, $text);
 
                     if (!$isTemplatePosition && $selectedPosition === $position) {
@@ -206,12 +209,9 @@ abstract class JHtmlModules
     public static function positionList($clientId = 0)
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('DISTINCT(position) as value')
-                    ->select('position as text')
-                    ->from($db->quoteName('#__modules'))
-                    ->where($db->quoteName('client_id') . ' = ' . (int)$clientId)
-                    ->order('position');
+        $query = $db->getQuery(true)->select('DISTINCT(position) as value')->select('position as text')->from(
+                $db->quoteName('#__modules')
+            )->where($db->quoteName('client_id') . ' = ' . (int)$clientId)->order('position');
 
         // Get the options.
         $db->setQuery($query);

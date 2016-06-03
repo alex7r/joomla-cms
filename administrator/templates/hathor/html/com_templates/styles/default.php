@@ -15,9 +15,9 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('script', 'system/multiselect.js', false, true);
 
-$user      = JFactory::getUser();
+$user = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_templates&view=styles'); ?>" method="post" name="adminForm"
@@ -40,23 +40,34 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                            title="<?php echo JText::_('COM_TEMPLATES_STYLES_FILTER_SEARCH_DESC'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
 
                 <div class="filter-select">
                     <label class="selectlabel" for="client_id"><?php echo JText::_('JGLOBAL_FILTER_CLIENT'); ?></label>
                     <select name="client_id" id="client_id">
-                        <?php echo JHtml::_('select.options', TemplatesHelper::getClientOptions(), 'value', 'text',
-                            $this->state->get('client_id')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            TemplatesHelper::getClientOptions(),
+                            'value',
+                            'text',
+                            $this->state->get('client_id')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel"
                            for="filter_template"><?php echo JText::_('COM_TEMPLATES_FILTER_TEMPLATE'); ?></label>
                     <select name="filter_template" id="filter_template">
                         <option value="0"><?php echo JText::_('COM_TEMPLATES_FILTER_TEMPLATE'); ?></option>
-                        <?php echo JHtml::_('select.options',
-                            TemplatesHelper::getTemplateOptions($this->state->get('client_id')), 'value', 'text',
-                            $this->state->get('filter.template')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            TemplatesHelper::getTemplateOptions($this->state->get('client_id')),
+                            'value',
+                            'text',
+                            $this->state->get('filter.template')
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -72,19 +83,34 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         &#160;
                     </th>
                     <th>
-                        <?php echo JHtml::_('grid.sort', 'COM_TEMPLATES_HEADING_STYLE', 'a.title', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_TEMPLATES_HEADING_STYLE',
+                            'a.title',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-10">
                         <?php echo JHtml::_('grid.sort', 'JCLIENT', 'a.client_id', $listDirn, $listOrder); ?>
                     </th>
                     <th>
-                        <?php echo JHtml::_('grid.sort', 'COM_TEMPLATES_HEADING_TEMPLATE', 'a.template', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_TEMPLATES_HEADING_TEMPLATE',
+                            'a.template',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-5">
-                        <?php echo JHtml::_('grid.sort', 'COM_TEMPLATES_HEADING_DEFAULT', 'a.home', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_TEMPLATES_HEADING_DEFAULT',
+                            'a.home',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-5">
                         <?php echo JText::_('COM_TEMPLATES_HEADING_ASSIGNED'); ?>
@@ -110,23 +136,38 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                 <a target="_blank"
                                    href="<?php echo JUri::root() . 'index.php?tp=1&templateStyle=' . (int)$item->id ?>"
                                    class="jgrid hasTooltip"
-                                   title="<?php echo JHtml::tooltipText(JText::_('COM_TEMPLATES_TEMPLATE_PREVIEW'),
-                                       $item->title, 0); ?>"><span
+                                   title="<?php echo JHtml::tooltipText(
+                                       JText::_('COM_TEMPLATES_TEMPLATE_PREVIEW'),
+                                       $item->title,
+                                       0
+                                   ); ?>"><span
                                         class="state icon-16-preview"><span
-                                            class="text"><?php echo JText::_('COM_TEMPLATES_TEMPLATE_PREVIEW'); ?></span></span></a>
+                                            class="text"><?php echo JText::_(
+                                                'COM_TEMPLATES_TEMPLATE_PREVIEW'
+                                            ); ?></span></span></a>
                             <?php elseif ($item->client_id == '1') : ?>
                                 <span class="jgrid hasTooltip"
-                                      title="<?php echo JHtml::tooltipText('COM_TEMPLATES_TEMPLATE_NO_PREVIEW_ADMIN'); ?>"><span
+                                      title="<?php echo JHtml::tooltipText(
+                                          'COM_TEMPLATES_TEMPLATE_NO_PREVIEW_ADMIN'
+                                      ); ?>"><span
                                         class="state icon-16-nopreview"><span
-                                            class="text"><?php echo JText::_('COM_TEMPLATES_TEMPLATE_NO_PREVIEW_ADMIN'); ?></span></span></span>
+                                            class="text"><?php echo JText::_(
+                                                'COM_TEMPLATES_TEMPLATE_NO_PREVIEW_ADMIN'
+                                            ); ?></span></span></span>
                             <?php else: ?>
                                 <span class="jgrid hasTooltip"
-                                      title="<?php echo JHtml::tooltipText('COM_TEMPLATES_TEMPLATE_NO_PREVIEW'); ?>"><span
+                                      title="<?php echo JHtml::tooltipText(
+                                          'COM_TEMPLATES_TEMPLATE_NO_PREVIEW'
+                                      ); ?>"><span
                                         class="state icon-16-nopreview"><span
-                                            class="text"><?php echo JText::_('COM_TEMPLATES_TEMPLATE_NO_PREVIEW'); ?></span></span></span>
+                                            class="text"><?php echo JText::_(
+                                                'COM_TEMPLATES_TEMPLATE_NO_PREVIEW'
+                                            ); ?></span></span></span>
                             <?php endif; ?>
                             <?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_templates&task=style.edit&id=' . (int)$item->id); ?>">
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_templates&task=style.edit&id=' . (int)$item->id
+                                ); ?>">
                                     <?php echo $this->escape($item->title); ?></a>
                             <?php else : ?>
                                 <?php echo $this->escape($item->title); ?>
@@ -142,27 +183,50 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         </td>
                         <td class="center">
                             <?php if ($item->home == '0' || $item->home == '1'): ?>
-                                <?php echo JHtml::_('jgrid.isdefault', $item->home != '0', $i, 'styles.',
-                                    $canChange && $item->home != '1'); ?>
+                                <?php echo JHtml::_(
+                                    'jgrid.isdefault',
+                                    $item->home != '0',
+                                    $i,
+                                    'styles.',
+                                    $canChange && $item->home != '1'
+                                ); ?>
                             <?php elseif ($canChange): ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_templates&task=styles.unsetDefault&cid[]=' . $item->id . '&' . JSession::getFormToken() . '=1'); ?>">
-                                    <?php echo JHtml::_('image', 'mod_languages/' . $item->image . '.gif',
-                                        $item->language_title, array(
-                                            'title' => JText::sprintf('COM_TEMPLATES_GRID_UNSET_LANGUAGE',
-                                                $item->language_title)
-                                        ), true); ?>
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_templates&task=styles.unsetDefault&cid[]=' . $item->id . '&' . JSession::getFormToken(
+                                    ) . '=1'
+                                ); ?>">
+                                    <?php echo JHtml::_(
+                                        'image',
+                                        'mod_languages/' . $item->image . '.gif',
+                                        $item->language_title,
+                                        array(
+                                            'title' => JText::sprintf(
+                                                'COM_TEMPLATES_GRID_UNSET_LANGUAGE',
+                                                $item->language_title
+                                            )
+                                        ),
+                                        true
+                                    ); ?>
                                 </a>
                             <?php else: ?>
-                                <?php echo JHtml::_('image', 'mod_languages/' . $item->image . '.gif',
-                                    $item->language_title, array('title' => $item->language_title), true); ?>
+                                <?php echo JHtml::_(
+                                    'image',
+                                    'mod_languages/' . $item->image . '.gif',
+                                    $item->language_title,
+                                    array('title' => $item->language_title),
+                                    true
+                                ); ?>
                             <?php endif; ?>
                         </td>
                         <td class="center">
                             <?php if ($item->assigned > 0) : ?>
-                                <?php echo JHtml::_('image', 'admin/tick.png',
+                                <?php echo JHtml::_(
+                                    'image',
+                                    'admin/tick.png',
                                     JText::plural('COM_TEMPLATES_ASSIGNED', $item->assigned),
                                     array('title' => JText::plural('COM_TEMPLATES_ASSIGNED', $item->assigned)),
-                                    true); ?>
+                                    true
+                                ); ?>
                             <?php else : ?>
                                 &#160;
                             <?php endif; ?>

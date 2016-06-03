@@ -170,10 +170,9 @@ class JFormFieldOrdering extends JFormField
 
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true);
-        $query->select(array($db->quoteName($ordering, 'value'), $db->quoteName($title, 'text')))
-              ->from($db->quoteName(json_decode($ucmRow->table)->special->dbtable))
-              ->where($db->quoteName('catid') . ' = ' . (int)$categoryId)
-              ->order('ordering');
+        $query->select(array($db->quoteName($ordering, 'value'), $db->quoteName($title, 'text')))->from(
+                $db->quoteName(json_decode($ucmRow->table)->special->dbtable)
+            )->where($db->quoteName('catid') . ' = ' . (int)$categoryId)->order('ordering');
 
         return $query;
     }

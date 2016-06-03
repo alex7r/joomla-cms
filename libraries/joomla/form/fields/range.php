@@ -57,8 +57,10 @@ class JFormFieldRange extends JFormFieldNumber
         JHtml::_('jquery.framework');
         JHtml::_('script', 'system/html5fallback.js', false, true);
 
-        return '<input type="range" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars($value,
+        return '<input type="range" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars(
+            $value,
             ENT_COMPAT,
-            'UTF-8') . '"' . $class . $disabled . $readonly . $onchange . $max . $step . $min . $autofocus . ' />';
+            'UTF-8'
+        ) . '"' . $class . $disabled . $readonly . $onchange . $max . $step . $min . $autofocus . ' />';
     }
 }

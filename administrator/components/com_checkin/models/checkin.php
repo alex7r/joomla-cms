@@ -84,11 +84,9 @@ class CheckinModelCheckin extends JModelList
                 continue;
             }
 
-            $query = $db->getQuery(true)
-                        ->update($db->quoteName($tn))
-                        ->set('checked_out = 0')
-                        ->set('checked_out_time = ' . $db->quote($nullDate))
-                        ->where('checked_out > 0');
+            $query = $db->getQuery(true)->update($db->quoteName($tn))->set('checked_out = 0')->set(
+                    'checked_out_time = ' . $db->quote($nullDate)
+                )->where('checked_out > 0');
 
             $db->setQuery($query);
 
@@ -213,8 +211,10 @@ class CheckinModelCheckin extends JModelList
      */
     protected function populateState($ordering = null, $direction = null)
     {
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search')
+        );
 
         // List state information.
         parent::populateState('table', 'asc');

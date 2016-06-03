@@ -61,8 +61,11 @@ function modChrome_xhtml($module, &$params, &$attribs)
     $content = trim($module->content);
 
     if (!empty ($content)) : ?>
-        <<?php echo $moduleTag; ?> class="module<?php echo htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT,
-                'UTF-8') . $moduleClass; ?>">
+        <<?php echo $moduleTag; ?> class="module<?php echo htmlspecialchars(
+                                                               $params->get('moduleclass_sfx'),
+                                                               ENT_COMPAT,
+                                                               'UTF-8'
+                                                           ) . $moduleClass; ?>">
         <?php if ($module->showtitle != 0) : ?>
             <<?php echo $headerTag . $headerClass . '>' . $module->title; ?></<?php echo $headerTag; ?>>
         <?php endif; ?>

@@ -110,7 +110,10 @@ class ContactViewContact extends JViewLegacy
             $item->email_to = JHtml::_('email.cloak', $item->email_to);
         }
 
-        if ($params->get('show_street_address') || $params->get('show_suburb') || $params->get('show_state') || $params->get('show_postcode') || $params->get('show_country')) {
+        if ($params->get('show_street_address') || $params->get('show_suburb') || $params->get(
+                'show_state'
+            ) || $params->get('show_postcode') || $params->get('show_country')
+        ) {
             if (!empty ($item->address) || !empty ($item->suburb) || !empty ($item->state) || !empty ($item->country) || !empty ($item->postcode)) {
                 $params->set('address_check', 1);
             }
@@ -144,51 +147,111 @@ class ContactViewContact extends JViewLegacy
 
             default :
                 if ($params->get('icon_address')) {
-                    $image1 = JHtml::_('image', $params->get('icon_address', 'con_address.png'),
-                        JText::_('COM_CONTACT_ADDRESS') . ": ", null, false);
+                    $image1 = JHtml::_(
+                        'image',
+                        $params->get('icon_address', 'con_address.png'),
+                        JText::_('COM_CONTACT_ADDRESS') . ": ",
+                        null,
+                        false
+                    );
                 } else {
-                    $image1 = JHtml::_('image', 'contacts/' . $params->get('icon_address', 'con_address.png'),
-                        JText::_('COM_CONTACT_ADDRESS') . ": ", null, true);
+                    $image1 = JHtml::_(
+                        'image',
+                        'contacts/' . $params->get('icon_address', 'con_address.png'),
+                        JText::_('COM_CONTACT_ADDRESS') . ": ",
+                        null,
+                        true
+                    );
                 }
 
                 if ($params->get('icon_email')) {
-                    $image2 = JHtml::_('image', $params->get('icon_email', 'emailButton.png'),
-                        JText::_('JGLOBAL_EMAIL') . ": ", null, false);
+                    $image2 = JHtml::_(
+                        'image',
+                        $params->get('icon_email', 'emailButton.png'),
+                        JText::_('JGLOBAL_EMAIL') . ": ",
+                        null,
+                        false
+                    );
                 } else {
-                    $image2 = JHtml::_('image', 'contacts/' . $params->get('icon_email', 'emailButton.png'),
-                        JText::_('JGLOBAL_EMAIL') . ": ", null, true);
+                    $image2 = JHtml::_(
+                        'image',
+                        'contacts/' . $params->get('icon_email', 'emailButton.png'),
+                        JText::_('JGLOBAL_EMAIL') . ": ",
+                        null,
+                        true
+                    );
                 }
 
                 if ($params->get('icon_telephone')) {
-                    $image3 = JHtml::_('image', $params->get('icon_telephone', 'con_tel.png'),
-                        JText::_('COM_CONTACT_TELEPHONE') . ": ", null, false);
+                    $image3 = JHtml::_(
+                        'image',
+                        $params->get('icon_telephone', 'con_tel.png'),
+                        JText::_('COM_CONTACT_TELEPHONE') . ": ",
+                        null,
+                        false
+                    );
                 } else {
-                    $image3 = JHtml::_('image', 'contacts/' . $params->get('icon_telephone', 'con_tel.png'),
-                        JText::_('COM_CONTACT_TELEPHONE') . ": ", null, true);
+                    $image3 = JHtml::_(
+                        'image',
+                        'contacts/' . $params->get('icon_telephone', 'con_tel.png'),
+                        JText::_('COM_CONTACT_TELEPHONE') . ": ",
+                        null,
+                        true
+                    );
                 }
 
                 if ($params->get('icon_fax')) {
-                    $image4 = JHtml::_('image', $params->get('icon_fax', 'con_fax.png'),
-                        JText::_('COM_CONTACT_FAX') . ": ", null, false);
+                    $image4 = JHtml::_(
+                        'image',
+                        $params->get('icon_fax', 'con_fax.png'),
+                        JText::_('COM_CONTACT_FAX') . ": ",
+                        null,
+                        false
+                    );
                 } else {
-                    $image4 = JHtml::_('image', 'contacts/' . $params->get('icon_fax', 'con_fax.png'),
-                        JText::_('COM_CONTACT_FAX') . ": ", null, true);
+                    $image4 = JHtml::_(
+                        'image',
+                        'contacts/' . $params->get('icon_fax', 'con_fax.png'),
+                        JText::_('COM_CONTACT_FAX') . ": ",
+                        null,
+                        true
+                    );
                 }
 
                 if ($params->get('icon_misc')) {
-                    $image5 = JHtml::_('image', $params->get('icon_misc', 'con_info.png'),
-                        JText::_('COM_CONTACT_OTHER_INFORMATION') . ": ", null, false);
+                    $image5 = JHtml::_(
+                        'image',
+                        $params->get('icon_misc', 'con_info.png'),
+                        JText::_('COM_CONTACT_OTHER_INFORMATION') . ": ",
+                        null,
+                        false
+                    );
                 } else {
-                    $image5 = JHtml::_('image', 'contacts/' . $params->get('icon_misc', 'con_info.png'),
-                        JText::_('COM_CONTACT_OTHER_INFORMATION') . ": ", null, true);
+                    $image5 = JHtml::_(
+                        'image',
+                        'contacts/' . $params->get('icon_misc', 'con_info.png'),
+                        JText::_('COM_CONTACT_OTHER_INFORMATION') . ": ",
+                        null,
+                        true
+                    );
                 }
 
                 if ($params->get('icon_mobile')) {
-                    $image6 = JHtml::_('image', $params->get('icon_mobile', 'con_mobile.png'),
-                        JText::_('COM_CONTACT_MOBILE') . ": ", null, false);
+                    $image6 = JHtml::_(
+                        'image',
+                        $params->get('icon_mobile', 'con_mobile.png'),
+                        JText::_('COM_CONTACT_MOBILE') . ": ",
+                        null,
+                        false
+                    );
                 } else {
-                    $image6 = JHtml::_('image', 'contacts/' . $params->get('icon_mobile', 'con_mobile.png'),
-                        JText::_('COM_CONTACT_MOBILE') . ": ", null, true);
+                    $image6 = JHtml::_(
+                        'image',
+                        'contacts/' . $params->get('icon_mobile', 'con_mobile.png'),
+                        JText::_('COM_CONTACT_MOBILE') . ": ",
+                        null,
+                        true
+                    );
                 }
 
                 $params->set('marker_address', $image1);
@@ -221,16 +284,22 @@ class ContactViewContact extends JViewLegacy
 
         // Store the events for later
         $item->event                    = new stdClass;
-        $results                        = $dispatcher->trigger('onContentAfterTitle',
-            array('com_contact.contact', &$item, &$this->params, $offset));
+        $results                        = $dispatcher->trigger(
+            'onContentAfterTitle',
+            array('com_contact.contact', &$item, &$this->params, $offset)
+        );
         $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-        $results                           = $dispatcher->trigger('onContentBeforeDisplay',
-            array('com_contact.contact', &$item, &$this->params, $offset));
+        $results                           = $dispatcher->trigger(
+            'onContentBeforeDisplay',
+            array('com_contact.contact', &$item, &$this->params, $offset)
+        );
         $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-        $results                          = $dispatcher->trigger('onContentAfterDisplay',
-            array('com_contact.contact', &$item, &$this->params, $offset));
+        $results                          = $dispatcher->trigger(
+            'onContentAfterDisplay',
+            array('com_contact.contact', &$item, &$this->params, $offset)
+        );
         $item->event->afterDisplayContent = trim(implode("\n", $results));
 
         if ($item->text) {
@@ -255,8 +324,10 @@ class ContactViewContact extends JViewLegacy
         // If it is the active menu item, then the view and item id will match
         $active = $app->getMenu()->getActive();
 
-        if ((!$active) || ((strpos($active->link, 'view=contact') === false) || (strpos($active->link,
-                        '&id=' . (string)$this->item->id) === false))
+        if ((!$active) || ((strpos($active->link, 'view=contact') === false) || (strpos(
+                                                                                     $active->link,
+                                                                                     '&id=' . (string)$this->item->id
+                                                                                 ) === false))
         ) {
             if ($layout = $params->get('contact_layout')) {
                 $this->setLayout($layout);

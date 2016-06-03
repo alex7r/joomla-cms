@@ -62,8 +62,10 @@ class JFormFieldEMail extends JFormFieldText
         JHtml::_('jquery.framework');
         JHtml::_('script', 'system/html5fallback.js', false, true);
 
-        return '<input type="email" name="' . $this->name . '"' . $class . ' id="' . $this->id . '" value="' . htmlspecialchars(JStringPunycode::emailToUTF8($this->value),
+        return '<input type="email" name="' . $this->name . '"' . $class . ' id="' . $this->id . '" value="' . htmlspecialchars(
+            JStringPunycode::emailToUTF8($this->value),
             ENT_COMPAT,
-            'UTF-8') . '"' . $spellcheck . $size . $disabled . $readonly . $onchange . $autocomplete . $multiple . $maxLength . $hint . $required . $autofocus . ' />';
+            'UTF-8'
+        ) . '"' . $spellcheck . $size . $disabled . $readonly . $onchange . $autocomplete . $multiple . $maxLength . $hint . $required . $autofocus . ' />';
     }
 }

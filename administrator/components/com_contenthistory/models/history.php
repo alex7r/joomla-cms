@@ -174,8 +174,10 @@ class ContenthistoryModelHistory extends JModelList
         }
 
         // Access check
-        if (!JFactory::getUser()
-                     ->authorise('core.edit', $contentTypeTable->type_alias . '.' . (int)$items[0]->ucm_item_id)
+        if (!JFactory::getUser()->authorise(
+                'core.edit',
+                $contentTypeTable->type_alias . '.' . (int)$items[0]->ucm_item_id
+            )
         ) {
             $this->setError(JText::_('JERROR_ALERTNOAUTHOR'));
 
@@ -313,13 +315,17 @@ class ContenthistoryModelHistory extends JModelList
         $query = $db->getQuery(true);
 
         // Select the required fields from the table.
-        $query->select($this->getState('list.select',
-            'h.version_id, h.ucm_item_id, h.ucm_type_id, h.version_note, h.save_date, h.editor_user_id,' . 'h.character_count, h.sha1_hash, h.version_data, h.keep_forever'))
-              ->from($db->quoteName('#__ucm_history') . ' AS h')
-              ->where($db->quoteName('h.ucm_item_id') . ' = ' . (int)$this->getState('item_id'))
-              ->where($db->quoteName('h.ucm_type_id') . ' = ' . (int)$this->getState('type_id'))// Join over the users for the editor
-              ->select('uc.name AS editor')
-              ->join('LEFT', '#__users AS uc ON uc.id = h.editor_user_id');
+        $query->select(
+            $this->getState(
+                'list.select',
+                'h.version_id, h.ucm_item_id, h.ucm_type_id, h.version_note, h.save_date, h.editor_user_id,' . 'h.character_count, h.sha1_hash, h.version_data, h.keep_forever'
+            )
+        )->from($db->quoteName('#__ucm_history') . ' AS h')->where(
+                $db->quoteName('h.ucm_item_id') . ' = ' . (int)$this->getState('item_id')
+            )->where(
+                $db->quoteName('h.ucm_type_id') . ' = ' . (int)$this->getState('type_id')
+            )// Join over the users for the editor
+              ->select('uc.name AS editor')->join('LEFT', '#__users AS uc ON uc.id = h.editor_user_id');
 
         // Add the list ordering clause.
         $orderCol  = $this->state->get('list.ordering');

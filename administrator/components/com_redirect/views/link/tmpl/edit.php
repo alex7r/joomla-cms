@@ -16,7 +16,8 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'link.cancel' || document.formvalidator.isValid(document.getElementById('link-form')))
@@ -24,7 +25,8 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('link-form'));
 		}
 	};
-");
+"
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_redirect&id=' . (int)$this->item->id); ?>" method="post"
@@ -32,9 +34,15 @@ JFactory::getDocument()->addScriptDeclaration("
     <fieldset>
         <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'basic')); ?>
 
-        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'basic',
-            empty($this->item->id) ? JText::_('COM_REDIRECT_NEW_LINK') : JText::sprintf('COM_REDIRECT_EDIT_LINK',
-                $this->item->id)); ?>
+        <?php echo JHtml::_(
+            'bootstrap.addTab',
+            'myTab',
+            'basic',
+            empty($this->item->id) ? JText::_('COM_REDIRECT_NEW_LINK') : JText::sprintf(
+                'COM_REDIRECT_EDIT_LINK',
+                $this->item->id
+            )
+        ); ?>
         <?php echo $this->form->renderField('old_url'); ?>
         <?php echo $this->form->renderField('new_url'); ?>
         <?php echo $this->form->renderField('published'); ?>

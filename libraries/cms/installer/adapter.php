@@ -402,8 +402,12 @@ abstract class JInstallerAdapter extends JAdapterInstance
                             ob_end_clean();
 
                             // The script failed, rollback changes
-                            throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_INSTALL_CUSTOM_INSTALL_FAILURE',
-                                JText::_('JLIB_INSTALLER_' . $this->route)));
+                            throw new RuntimeException(
+                                JText::sprintf(
+                                    'JLIB_INSTALLER_ABORT_INSTALL_CUSTOM_INSTALL_FAILURE',
+                                    JText::_('JLIB_INSTALLER_' . $this->route)
+                                )
+                            );
                         }
                     }
                     break;
@@ -418,8 +422,12 @@ abstract class JInstallerAdapter extends JAdapterInstance
                             ob_end_clean();
 
                             // The script failed, rollback changes
-                            throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_INSTALL_CUSTOM_INSTALL_FAILURE',
-                                JText::_('JLIB_INSTALLER_' . $this->route)));
+                            throw new RuntimeException(
+                                JText::sprintf(
+                                    'JLIB_INSTALLER_ABORT_INSTALL_CUSTOM_INSTALL_FAILURE',
+                                    JText::_('JLIB_INSTALLER_' . $this->route)
+                                )
+                            );
                         }
                     }
                     break;
@@ -461,8 +469,13 @@ abstract class JInstallerAdapter extends JAdapterInstance
         if (in_array($this->route, array('install', 'discover_install', 'uninstall'))) {
             // This method may throw an exception, but it is caught by the parent caller
             if (!$this->doDatabaseTransactions()) {
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_SQL_ERROR',
-                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route)), $this->db->stderr(true)));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_SQL_ERROR',
+                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
+                        $this->db->stderr(true)
+                    )
+                );
             }
 
             // Set the schema version to be the latest update version
@@ -471,13 +484,20 @@ abstract class JInstallerAdapter extends JAdapterInstance
             }
         } elseif ($this->route == 'update') {
             if ($this->getManifest()->update) {
-                $result = $this->parent->parseSchemaUpdates($this->getManifest()->update->schemas,
-                    $this->extension->extension_id);
+                $result = $this->parent->parseSchemaUpdates(
+                    $this->getManifest()->update->schemas,
+                    $this->extension->extension_id
+                );
 
                 if ($result === false) {
                     // Install failed, rollback changes
-                    throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_SQL_ERROR',
-                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route)), $this->db->stderr(true)));
+                    throw new RuntimeException(
+                        JText::sprintf(
+                            'JLIB_INSTALLER_ABORT_SQL_ERROR',
+                            JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
+                            $this->db->stderr(true)
+                        )
+                    );
                 }
             }
         }
@@ -502,8 +522,13 @@ abstract class JInstallerAdapter extends JAdapterInstance
             if ($result === false) {
                 // Only rollback if installing
                 if ($route == 'install') {
-                    throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_SQL_ERROR',
-                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route)), $this->parent->getDbo()->stderr(true)));
+                    throw new RuntimeException(
+                        JText::sprintf(
+                            'JLIB_INSTALLER_ABORT_SQL_ERROR',
+                            JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
+                            $this->parent->getDbo()->stderr(true)
+                        )
+                    );
                 }
 
                 return false;
@@ -774,10 +799,12 @@ abstract class JInstallerAdapter extends JAdapterInstance
     protected function checkExistingExtension()
     {
         try {
-            $this->currentExtensionId = $this->extension->find(array(
-                'element' => $this->element,
-                'type'    => $this->type
-            ));
+            $this->currentExtensionId = $this->extension->find(
+                array(
+                    'element' => $this->element,
+                    'type'    => $this->type
+                )
+            );
 
             // If it does exist, load it
             if ($this->currentExtensionId) {
@@ -785,8 +812,13 @@ abstract class JInstallerAdapter extends JAdapterInstance
             }
         } catch (RuntimeException $e) {
             // Install failed, roll back changes
-            throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_ROLLBACK',
-                JText::_('JLIB_INSTALLER_' . $this->route), $e->getMessage()), $e->getCode(), $e);
+            throw new RuntimeException(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ABORT_ROLLBACK',
+                    JText::_('JLIB_INSTALLER_' . $this->route),
+                    $e->getMessage()
+                ), $e->getCode(), $e
+            );
         }
     }
 
@@ -800,13 +832,17 @@ abstract class JInstallerAdapter extends JAdapterInstance
      */
     protected function checkExtensionInFilesystem()
     {
-        if (file_exists($this->parent->getPath('extension_root')) && (!$this->parent->isOverwrite() || $this->parent->isUpgrade())) {
+        if (file_exists($this->parent->getPath('extension_root')) && (!$this->parent->isOverwrite(
+                ) || $this->parent->isUpgrade())
+        ) {
             // Look for an update function or update tag
             $updateElement = $this->getManifest()->update;
 
             // Upgrade manually set or update function available or update tag detected
-            if ($this->parent->isUpgrade() || ($this->parent->manifestClass && method_exists($this->parent->manifestClass,
-                        'update')) || $updateElement
+            if ($this->parent->isUpgrade() || ($this->parent->manifestClass && method_exists(
+                        $this->parent->manifestClass,
+                        'update'
+                    )) || $updateElement
             ) {
                 // Force this one
                 $this->parent->setOverwrite(true);
@@ -818,8 +854,14 @@ abstract class JInstallerAdapter extends JAdapterInstance
                 }
             } elseif (!$this->parent->isOverwrite()) {
                 // We didn't have overwrite set, find an update function or find an update tag so lets call it safe
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_DIRECTORY',
-                    JText::_('JLIB_INSTALLER_' . $this->route), $this->type, $this->parent->getPath('extension_root')));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_DIRECTORY',
+                        JText::_('JLIB_INSTALLER_' . $this->route),
+                        $this->type,
+                        $this->parent->getPath('extension_root')
+                    )
+                );
             }
         }
     }
@@ -851,8 +893,13 @@ abstract class JInstallerAdapter extends JAdapterInstance
 
         if (!file_exists($this->parent->getPath('extension_root'))) {
             if (!$created = JFolder::create($this->parent->getPath('extension_root'))) {
-                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_CREATE_DIRECTORY',
-                    JText::_('JLIB_INSTALLER_' . $this->route), $this->parent->getPath('extension_root')));
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_CREATE_DIRECTORY',
+                        JText::_('JLIB_INSTALLER_' . $this->route),
+                        $this->parent->getPath('extension_root')
+                    )
+                );
             }
         }
 
@@ -863,10 +910,12 @@ abstract class JInstallerAdapter extends JAdapterInstance
          */
 
         if ($created) {
-            $this->parent->pushStep(array(
-                'type' => 'folder',
-                'path' => $this->parent->getPath('extension_root')
-            ));
+            $this->parent->pushStep(
+                array(
+                    'type' => 'folder',
+                    'path' => $this->parent->getPath('extension_root')
+                )
+            );
         }
     }
 
@@ -906,7 +955,12 @@ abstract class JInstallerAdapter extends JAdapterInstance
     protected function doLoadLanguage($extension, $source, $base = JPATH_ADMINISTRATOR)
     {
         $lang = JFactory::getLanguage();
-        $lang->load($extension . '.sys', $source, null, false, true) || $lang->load($extension . '.sys', $base, null,
-            false, true);
+        $lang->load($extension . '.sys', $source, null, false, true) || $lang->load(
+            $extension . '.sys',
+            $base,
+            null,
+            false,
+            true
+        );
     }
 }

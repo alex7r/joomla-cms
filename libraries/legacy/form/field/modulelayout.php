@@ -70,8 +70,13 @@ class JFormFieldModulelayout extends JFormField
         if ($module && $client) {
             // Load language file
             $lang = JFactory::getLanguage();
-            $lang->load($module . '.sys', $client->path, null, false, true) || $lang->load($module . '.sys',
-                $client->path . '/modules/' . $module, null, false, true);
+            $lang->load($module . '.sys', $client->path, null, false, true) || $lang->load(
+                $module . '.sys',
+                $client->path . '/modules/' . $module,
+                null,
+                false,
+                true
+            );
 
             // Get the database object and a new query object.
             $db    = JFactory::getDbo();
@@ -89,8 +94,9 @@ class JFormFieldModulelayout extends JFormField
             }
 
             if ($template_style_id) {
-                $query->join('LEFT', '#__template_styles as s on s.template=e.element')
-                      ->where('s.id=' . (int)$template_style_id);
+                $query->join('LEFT', '#__template_styles as s on s.template=e.element')->where(
+                        's.id=' . (int)$template_style_id
+                    );
             }
 
             // Set the query and load the templates.
@@ -117,7 +123,9 @@ class JFormFieldModulelayout extends JFormField
                 foreach ($module_layouts as $file) {
                     // Add an option to the module group
                     $value                  = basename($file, '.php');
-                    $text                   = $lang->hasKey($key = strtoupper($module . '_LAYOUT_' . $value)) ? JText::_($key) : $value;
+                    $text                   = $lang->hasKey(
+                        $key = strtoupper($module . '_LAYOUT_' . $value)
+                    ) ? JText::_($key) : $value;
                     $groups['_']['items'][] = JHtml::_('select.option', '_:' . $value, $text);
                 }
             }
@@ -126,11 +134,23 @@ class JFormFieldModulelayout extends JFormField
             if ($templates) {
                 foreach ($templates as $template) {
                     // Load language file
-                    $lang->load('tpl_' . $template->element . '.sys', $client->path, null, false,
-                        true) || $lang->load('tpl_' . $template->element . '.sys',
-                        $client->path . '/templates/' . $template->element, null, false, true);
+                    $lang->load(
+                        'tpl_' . $template->element . '.sys',
+                        $client->path,
+                        null,
+                        false,
+                        true
+                    ) || $lang->load(
+                        'tpl_' . $template->element . '.sys',
+                        $client->path . '/templates/' . $template->element,
+                        null,
+                        false,
+                        true
+                    );
 
-                    $template_path = JPath::clean($client->path . '/templates/' . $template->element . '/html/' . $module);
+                    $template_path = JPath::clean(
+                        $client->path . '/templates/' . $template->element . '/html/' . $module
+                    );
 
                     // Add the layout options from the template path.
                     if (is_dir($template_path) && ($files = JFolder::files($template_path, '^[^_]*\.php$'))) {
@@ -145,16 +165,23 @@ class JFormFieldModulelayout extends JFormField
                             // Create the group for the template
                             $groups[$template->element]          = array();
                             $groups[$template->element]['id']    = $this->id . '_' . $template->element;
-                            $groups[$template->element]['text']  = JText::sprintf('JOPTION_FROM_TEMPLATE',
-                                $template->name);
+                            $groups[$template->element]['text']  = JText::sprintf(
+                                'JOPTION_FROM_TEMPLATE',
+                                $template->name
+                            );
                             $groups[$template->element]['items'] = array();
 
                             foreach ($files as $file) {
                                 // Add an option to the template group
                                 $value                                 = basename($file, '.php');
-                                $text                                  = $lang->hasKey($key = strtoupper('TPL_' . $template->element . '_' . $module . '_LAYOUT_' . $value)) ? JText::_($key) : $value;
-                                $groups[$template->element]['items'][] = JHtml::_('select.option',
-                                    $template->element . ':' . $value, $text);
+                                $text                                  = $lang->hasKey(
+                                    $key = strtoupper('TPL_' . $template->element . '_' . $module . '_LAYOUT_' . $value)
+                                ) ? JText::_($key) : $value;
+                                $groups[$template->element]['items'][] = JHtml::_(
+                                    'select.option',
+                                    $template->element . ':' . $value,
+                                    $text
+                                );
                             }
                         }
                     }
@@ -171,8 +198,12 @@ class JFormFieldModulelayout extends JFormField
             $selected = array($this->value);
 
             // Add a grouped list
-            $html[] = JHtml::_('select.groupedlist', $groups, $this->name,
-                array('id' => $this->id, 'group.id' => 'id', 'list.attr' => $attr, 'list.select' => $selected));
+            $html[] = JHtml::_(
+                'select.groupedlist',
+                $groups,
+                $this->name,
+                array('id' => $this->id, 'group.id' => 'id', 'list.attr' => $attr, 'list.select' => $selected)
+            );
 
             return implode($html);
         } else {

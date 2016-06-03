@@ -226,8 +226,11 @@ class JFormFieldSubform extends JFormField
                 $c     = max($this->min, min(count($value), $this->max));
                 for ($i = 0; $i < $c; $i++) {
                     $itemcontrol = $control . '[' . $this->fieldname . $i . ']';
-                    $itemform    = JForm::getInstance($formname . $i, $this->formsource,
-                        array('control' => $itemcontrol));
+                    $itemform    = JForm::getInstance(
+                        $formname . $i,
+                        $this->formsource,
+                        array('control' => $itemcontrol)
+                    );
 
                     if (!empty($value[$i])) {
                         $itemform->bind($value[$i]);

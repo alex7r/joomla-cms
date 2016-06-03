@@ -39,7 +39,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                            title="<?php echo JText::_('COM_BANNERS_SEARCH_IN_TITLE'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
 
                 <div class="filter-select">
@@ -48,8 +50,14 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     </label>
                     <select name="filter_state" id="filter_state">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text',
-                            $this->state->get('filter.state'), true); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('jgrid.publishedOptions'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.state'),
+                            true
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -66,19 +74,34 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
                     </th>
                     <th>
-                        <?php echo JHtml::_('grid.sort', 'COM_BANNERS_HEADING_CLIENT', 'name', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_BANNERS_HEADING_CLIENT',
+                            'name',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-30">
-                        <?php echo JHtml::_('grid.sort', 'COM_BANNERS_HEADING_CONTACT', 'contact', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_BANNERS_HEADING_CONTACT',
+                            'contact',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap state-col">
                         <?php echo JHtml::_('grid.sort', 'JSTATUS', 'state', $listDirn, $listOrder); ?>
                     </th>
                     <th class="width-5">
-                        <?php echo JHtml::_('grid.sort', 'COM_BANNERS_HEADING_ACTIVE', 'nbanners', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_BANNERS_HEADING_ACTIVE',
+                            'nbanners',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap width-5">
                         <?php echo JText::_('COM_BANNERS_HEADING_METAKEYWORDS'); ?>
@@ -97,8 +120,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     $ordering = ($listOrder == 'ordering');
                     $canCreate = $user->authorise('core.create', 'com_banners');
                     $canEdit = $user->authorise('core.edit', 'com_banners');
-                    $canCheckin = $user->authorise('core.manage',
-                            'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
+                    $canCheckin = $user->authorise(
+                            'core.manage',
+                            'com_checkin'
+                        ) || $item->checked_out == $user->get('id') || $item->checked_out == 0;
                     $canChange = $user->authorise('core.edit.state', 'com_banners') && $canCheckin;
                     ?>
                     <tr class="row<?php echo $i % 2; ?>">
@@ -107,11 +132,19 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         </td>
                         <td>
                             <?php if ($item->checked_out) : ?>
-                                <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time,
-                                    'clients.', $canCheckin); ?>
+                                <?php echo JHtml::_(
+                                    'jgrid.checkedout',
+                                    $i,
+                                    $item->editor,
+                                    $item->checked_out_time,
+                                    'clients.',
+                                    $canCheckin
+                                ); ?>
                             <?php endif; ?>
                             <?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_banners&task=client.edit&id=' . (int)$item->id); ?>">
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_banners&task=client.edit&id=' . (int)$item->id
+                                ); ?>">
                                     <?php echo $this->escape($item->name); ?></a>
                             <?php else : ?>
                                 <?php echo $this->escape($item->name); ?>
@@ -131,8 +164,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         </td>
                         <td class="center">
                             <?php if ($item->purchase_type < 0): ?>
-                                <?php echo JText::sprintf('COM_BANNERS_DEFAULT',
-                                    JText::_('COM_BANNERS_FIELD_VALUE_' . $this->state->params->get('purchase_type'))); ?>
+                                <?php echo JText::sprintf(
+                                    'COM_BANNERS_DEFAULT',
+                                    JText::_('COM_BANNERS_FIELD_VALUE_' . $this->state->params->get('purchase_type'))
+                                ); ?>
                             <?php else: ?>
                                 <?php echo JText::_('COM_BANNERS_FIELD_VALUE_' . $item->purchase_type); ?>
                             <?php endif; ?>

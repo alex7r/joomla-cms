@@ -53,7 +53,9 @@ abstract class JHtmlSortablelist
 
         // Note: $i is required but has to be an optional argument in the function call due to argument order
         if (null === $saveOrderingUrl) {
-            throw new InvalidArgumentException('$saveOrderingUrl is a required argument in JHtmlSortablelist::sortable');
+            throw new InvalidArgumentException(
+                '$saveOrderingUrl is a required argument in JHtmlSortablelist::sortable'
+            );
         }
 
         $displayData = array(
@@ -85,7 +87,8 @@ abstract class JHtmlSortablelist
      */
     public static function _proceedSaveOrderButton()
     {
-        JFactory::getDocument()->addScriptDeclaration("(function ($){
+        JFactory::getDocument()->addScriptDeclaration(
+            "(function ($){
 				$(document).ready(function (){
 					var saveOrderButton = $('.saveorder');
 					saveOrderButton.css({'opacity':'0.2', 'cursor':'default'}).attr('onclick','return false;');
@@ -102,7 +105,8 @@ abstract class JHtmlSortablelist
 						}
 					});
 				});
-			})(jQuery);");
+			})(jQuery);"
+        );
 
         return;
     }

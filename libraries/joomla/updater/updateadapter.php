@@ -175,8 +175,11 @@ abstract class JUpdateAdapter extends JAdapterInstance
         // Log the time it took to load this update site's information
         $endTime    = microtime(true);
         $timeToLoad = sprintf('%0.2f', $endTime - $startTime);
-        JLog::add("Loading information from update site #{$this->updateSiteId} with name " . "\"$this->updateSiteName\" and URL $url took $timeToLoad seconds",
-            JLog::INFO, 'updater');
+        JLog::add(
+            "Loading information from update site #{$this->updateSiteId} with name " . "\"$this->updateSiteName\" and URL $url took $timeToLoad seconds",
+            JLog::INFO,
+            'updater'
+        );
 
         if ($response === null || $response->code !== 200) {
             // If the URL is missing the .xml extension, try appending it and retry loading the update
@@ -187,11 +190,21 @@ abstract class JUpdateAdapter extends JAdapterInstance
             }
 
             // Log the exact update site name and URL which could not be loaded
-            JLog::add("Error opening url: " . $url . ' for update site: ' . $this->updateSiteName, JLog::WARNING,
-                'updater');
+            JLog::add(
+                "Error opening url: " . $url . ' for update site: ' . $this->updateSiteName,
+                JLog::WARNING,
+                'updater'
+            );
             $app = JFactory::getApplication();
-            $app->enqueueMessage(JText::sprintf('JLIB_UPDATER_ERROR_OPEN_UPDATE_SITE', $this->updateSiteId,
-                $this->updateSiteName, $url), 'warning');
+            $app->enqueueMessage(
+                JText::sprintf(
+                    'JLIB_UPDATER_ERROR_OPEN_UPDATE_SITE',
+                    $this->updateSiteId,
+                    $this->updateSiteName,
+                    $url
+                ),
+                'warning'
+            );
 
             return false;
         }
@@ -215,10 +228,9 @@ abstract class JUpdateAdapter extends JAdapterInstance
         }
 
         $db    = $this->parent->getDbo();
-        $query = $db->getQuery(true)
-                    ->select($db->qn('name'))
-                    ->from($db->qn('#__update_sites'))
-                    ->where($db->qn('update_site_id') . ' = ' . $db->q($updateSiteId));
+        $query = $db->getQuery(true)->select($db->qn('name'))->from($db->qn('#__update_sites'))->where(
+                $db->qn('update_site_id') . ' = ' . $db->q($updateSiteId)
+            );
         $db->setQuery($query);
 
         $name = '';
@@ -252,10 +264,9 @@ abstract class JUpdateAdapter extends JAdapterInstance
         }
 
         $db    = $this->parent->getDbo();
-        $query = $db->getQuery(true)
-                    ->update($db->qn('#__update_sites'))
-                    ->set($db->qn('enabled') . ' = ' . $db->q($enabled ? 1 : 0))
-                    ->where($db->qn('update_site_id') . ' = ' . $db->q($update_site_id));
+        $query = $db->getQuery(true)->update($db->qn('#__update_sites'))->set(
+                $db->qn('enabled') . ' = ' . $db->q($enabled ? 1 : 0)
+            )->where($db->qn('update_site_id') . ' = ' . $db->q($update_site_id));
         $db->setQuery($query);
 
         try {

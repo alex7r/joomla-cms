@@ -299,8 +299,10 @@ class SimplePie_Sanitize
         $data = trim($data);
         if ($data !== '' || $type & SIMPLEPIE_CONSTRUCT_IRI) {
             if ($type & SIMPLEPIE_CONSTRUCT_MAYBE_HTML) {
-                if (preg_match('/(&(#(x[0-9a-fA-F]+|[0-9]+)|[a-zA-Z0-9]+)|<\/[A-Za-z][^\x09\x0A\x0B\x0C\x0D\x20\x2F\x3E]*' . SIMPLEPIE_PCRE_HTML_ATTRIBUTE . '>)/',
-                    $data)) {
+                if (preg_match(
+                    '/(&(#(x[0-9a-fA-F]+|[0-9]+)|[a-zA-Z0-9]+)|<\/[A-Za-z][^\x09\x0A\x0B\x0C\x0D\x20\x2F\x3E]*' . SIMPLEPIE_PCRE_HTML_ATTRIBUTE . '>)/',
+                    $data
+                )) {
                     $type |= SIMPLEPIE_CONSTRUCT_HTML;
                 } else {
                     $type |= SIMPLEPIE_CONSTRUCT_TEXT;
@@ -358,28 +360,36 @@ class SimplePie_Sanitize
                     foreach ($images as $img) {
                         if ($img->hasAttribute('src')) {
                             $image_url = call_user_func($this->cache_name_function, $img->getAttribute('src'));
-                            $cache     = $this->registry->call('Cache', 'get_handler',
-                                array($this->cache_location, $image_url, 'spi'));
+                            $cache     = $this->registry->call(
+                                'Cache',
+                                'get_handler',
+                                array($this->cache_location, $image_url, 'spi')
+                            );
 
                             if ($cache->load()) {
                                 $img->setAttribute('src', $this->image_handler . $image_url);
                             } else {
-                                $file    = $this->registry->create('File', array(
-                                    $img['attribs']['src']['data'],
-                                    $this->timeout,
-                                    5,
-                                    array('X-FORWARDED-FOR' => $_SERVER['REMOTE_ADDR']),
-                                    $this->useragent,
-                                    $this->force_fsockopen
-                                ));
+                                $file    = $this->registry->create(
+                                    'File',
+                                    array(
+                                        $img['attribs']['src']['data'],
+                                        $this->timeout,
+                                        5,
+                                        array('X-FORWARDED-FOR' => $_SERVER['REMOTE_ADDR']),
+                                        $this->useragent,
+                                        $this->force_fsockopen
+                                    )
+                                );
                                 $headers = $file->headers;
 
                                 if ($file->success && ($file->method & SIMPLEPIE_FILE_SOURCE_REMOTE === 0 || ($file->status_code === 200 || $file->status_code > 206 && $file->status_code < 300))) {
                                     if ($cache->save(array('headers' => $file->headers, 'body' => $file->body))) {
                                         $img->setAttribute('src', $this->image_handler . $image_url);
                                     } else {
-                                        trigger_error("$this->cache_location is not writeable. Make sure you've set the correct relative or absolute path, and that the location is server-writable.",
-                                            E_USER_WARNING);
+                                        trigger_error(
+                                            "$this->cache_location is not writeable. Make sure you've set the correct relative or absolute path, and that the location is server-writable.",
+                                            E_USER_WARNING
+                                        );
                                     }
                                 }
                             }
@@ -537,8 +547,11 @@ class SimplePie_Sanitize
             foreach ($elements as $element) {
                 foreach ($attributes as $attribute) {
                     if ($element->hasAttribute($attribute)) {
-                        $value = $this->registry->call('Misc', 'absolutize_url',
-                            array($element->getAttribute($attribute), $this->base));
+                        $value = $this->registry->call(
+                            'Misc',
+                            'absolutize_url',
+                            array($element->getAttribute($attribute), $this->base)
+                        );
                         if ($value !== false) {
                             $element->setAttribute($attribute, $value);
                         }

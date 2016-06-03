@@ -75,12 +75,16 @@ class JFeedEntry
 
         // Validate that any authors that are set are instances of JFeedPerson or null.
         if (($name == 'author') && (!($value instanceof JFeedPerson) || ($value === null))) {
-            throw new InvalidArgumentException('JFeedEntry "author" must be of type JFeedPerson. ' . gettype($value) . 'given.');
+            throw new InvalidArgumentException(
+                'JFeedEntry "author" must be of type JFeedPerson. ' . gettype($value) . 'given.'
+            );
         }
 
         // Validate that any sources that are set are instances of JFeed or null.
         if (($name == 'source') && (!($value instanceof JFeed) || ($value === null))) {
-            throw new InvalidArgumentException('JFeedEntry "source" must be of type JFeed. ' . gettype($value) . 'given.');
+            throw new InvalidArgumentException(
+                'JFeedEntry "source" must be of type JFeed. ' . gettype($value) . 'given.'
+            );
         }
 
         // Disallow setting categories, contributors, or links directly.

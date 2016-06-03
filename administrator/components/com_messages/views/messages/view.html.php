@@ -76,9 +76,23 @@ class MessagesViewMessages extends JViewLegacy
 
         JToolbarHelper::divider();
         $bar = JToolBar::getInstance('toolbar');
-        $bar->appendButton('Popup', 'cog', 'COM_MESSAGES_TOOLBAR_MY_SETTINGS',
-            'index.php?option=com_messages&amp;view=config&amp;tmpl=component', 500, 250, 0, 0, '', '',
-            '<button class="btn" type="button" data-dismiss="modal" aria-hidden="true">' . JText::_('JCANCEL') . '</button>' . '<button class="btn btn-success" type="button" data-dismiss="modal" aria-hidden="true"' . ' onclick="jQuery(\'#modal-cog iframe\').contents().find(\'#saveBtn\').click();">' . JText::_('JSAVE') . '</button>');
+        $bar->appendButton(
+            'Popup',
+            'cog',
+            'COM_MESSAGES_TOOLBAR_MY_SETTINGS',
+            'index.php?option=com_messages&amp;view=config&amp;tmpl=component',
+            500,
+            250,
+            0,
+            0,
+            '',
+            '',
+            '<button class="btn" type="button" data-dismiss="modal" aria-hidden="true">' . JText::_(
+                'JCANCEL'
+            ) . '</button>' . '<button class="btn btn-success" type="button" data-dismiss="modal" aria-hidden="true"' . ' onclick="jQuery(\'#modal-cog iframe\').contents().find(\'#saveBtn\').click();">' . JText::_(
+                'JSAVE'
+            ) . '</button>'
+        );
 
         if ($state->get('filter.state') == -2 && $canDo->get('core.delete')) {
             JToolbarHelper::divider();

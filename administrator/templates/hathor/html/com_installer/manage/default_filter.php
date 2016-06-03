@@ -19,7 +19,9 @@ defined('_JEXEC') or die;
                title="<?php echo JText::_('COM_INSTALLER_FILTER_LABEL'); ?>"/>
         <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
         <button type="button"
-                onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                'JSEARCH_FILTER_CLEAR'
+            ); ?></button>
     </div>
 
     <div class="filter-select">
@@ -27,8 +29,14 @@ defined('_JEXEC') or die;
             <?php echo JText::_('COM_INSTALLER_VALUE_CLIENT_SELECT'); ?>
         </label>
         <select name="filter_client_id" id="filter_client_id">
-            <?php echo JHtml::_('select.options', array('0' => JText::_('JSITE'), '1' => JText::_('JADMINISTRATOR')),
-                'value', 'text', $this->state->get('filter.client_id'), true); ?>
+            <?php echo JHtml::_(
+                'select.options',
+                array('0' => JText::_('JSITE'), '1' => JText::_('JADMINISTRATOR')),
+                'value',
+                'text',
+                $this->state->get('filter.client_id'),
+                true
+            ); ?>
         </select>
 
         <label class="selectlabel" for="filter_status">
@@ -36,8 +44,14 @@ defined('_JEXEC') or die;
         </label>
         <select name="filter_status" id="filter_status">
             <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-            <?php echo JHtml::_('select.options', InstallerHelper::getStateOptions(), 'value', 'text',
-                $this->state->get('filter.status'), true); ?>
+            <?php echo JHtml::_(
+                'select.options',
+                InstallerHelper::getStateOptions(),
+                'value',
+                'text',
+                $this->state->get('filter.status'),
+                true
+            ); ?>
         </select>
 
         <label class="selectlabel" for="filter_type">
@@ -45,8 +59,14 @@ defined('_JEXEC') or die;
         </label>
         <select name="filter_type" id="filter_type">
             <option value=""><?php echo JText::_('COM_INSTALLER_VALUE_TYPE_SELECT'); ?></option>
-            <?php echo JHtml::_('select.options', InstallerHelper::getExtensionTypes(), 'value', 'text',
-                $this->state->get('filter.type'), true); ?>
+            <?php echo JHtml::_(
+                'select.options',
+                InstallerHelper::getExtensionTypes(),
+                'value',
+                'text',
+                $this->state->get('filter.type'),
+                true
+            ); ?>
         </select>
 
         <label class="selectlabel" for="filter_folder">
@@ -54,9 +74,17 @@ defined('_JEXEC') or die;
         </label>
         <select name="filter_folder" id="filter_folder">
             <option value=""><?php echo JText::_('COM_INSTALLER_VALUE_FOLDER_SELECT'); ?></option>
-            <?php echo JHtml::_('select.options', array_merge(InstallerHelper::getExtensionGroupes(),
-                array('*' => JText::_('COM_INSTALLER_VALUE_FOLDER_NONAPPLICABLE'))), 'value', 'text',
-                $this->state->get('filter.folder'), true); ?>
+            <?php echo JHtml::_(
+                'select.options',
+                array_merge(
+                    InstallerHelper::getExtensionGroupes(),
+                    array('*' => JText::_('COM_INSTALLER_VALUE_FOLDER_NONAPPLICABLE'))
+                ),
+                'value',
+                'text',
+                $this->state->get('filter.folder'),
+                true
+            ); ?>
         </select>
 
         <button type="submit" id="filter-go">

@@ -18,8 +18,8 @@ extract($displayData);
  * Layout variables
  * ------------------
  *
- * @param   string $selector                           Unique DOM identifier for the modal. CSS id without #
- * @param   array  $params                             Modal parameters. Default supported parameters:
+ * @param   string $selector Unique DOM identifier for the modal. CSS id without #
+ * @param   array  $params Modal parameters. Default supported parameters:
  *                                                     - title        string   The modal title
  *                                                     - backdrop     mixed    A boolean select if a modal-backdrop element should be included (default = true)
  *                                                     The string 'static' includes a backdrop which doesn't close the modal on click.
@@ -32,7 +32,7 @@ extract($displayData);
  *                                                     - bodyHeight   int      Optional height of the modal body in viewport units (vh)
  *                                                     - modalWidth   int      Optional width of the modal in viewport units (vh)
  *                                                     - footer       string   Optional markup for the modal footer
- * @param   string $body                               Markup for the modal body. Appended after the <iframe> if the url option is set
+ * @param   string $body Markup for the modal body. Appended after the <iframe> if the url option is set
  *
  */
 
@@ -54,11 +54,15 @@ $modalAttributes = array(
 );
 
 if (isset($params['backdrop'])) {
-    $modalAttributes['data-backdrop'] = (is_bool($params['backdrop']) ? ($params['backdrop'] ? 'true' : 'false') : $params['backdrop']);
+    $modalAttributes['data-backdrop'] = (is_bool(
+        $params['backdrop']
+    ) ? ($params['backdrop'] ? 'true' : 'false') : $params['backdrop']);
 }
 
 if (isset($params['keyboard'])) {
-    $modalAttributes['data-keyboard'] = (is_bool($params['keyboard']) ? ($params['keyboard'] ? 'true' : 'false') : 'true');
+    $modalAttributes['data-keyboard'] = (is_bool(
+        $params['keyboard']
+    ) ? ($params['keyboard'] ? 'true' : 'false') : 'true');
 }
 
 /**

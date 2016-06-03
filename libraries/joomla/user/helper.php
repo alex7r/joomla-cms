@@ -39,10 +39,9 @@ abstract class JUserHelper
         if (!in_array($groupId, $user->groups)) {
             // Get the title of the group.
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select($db->quoteName('title'))
-                        ->from($db->quoteName('#__usergroups'))
-                        ->where($db->quoteName('id') . ' = ' . (int)$groupId);
+            $query = $db->getQuery(true)->select($db->quoteName('title'))->from($db->quoteName('#__usergroups'))->where(
+                    $db->quoteName('id') . ' = ' . (int)$groupId
+                );
             $db->setQuery($query);
             $title = $db->loadResult();
 
@@ -152,11 +151,14 @@ abstract class JUserHelper
 
         // Get the titles for the user groups.
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('id') . ', ' . $db->quoteName('title'))
-                    ->from($db->quoteName('#__usergroups'))
-                    ->where($db->quoteName('id') . ' = ' . implode(' OR ' . $db->quoteName('id') . ' = ',
-                            $user->groups));
+        $query = $db->getQuery(true)->select($db->quoteName('id') . ', ' . $db->quoteName('title'))->from(
+                $db->quoteName('#__usergroups')
+            )->where(
+                $db->quoteName('id') . ' = ' . implode(
+                    ' OR ' . $db->quoteName('id') . ' = ',
+                    $user->groups
+                )
+            );
         $db->setQuery($query);
         $results = $db->loadObjectList();
 
@@ -227,12 +229,11 @@ abstract class JUserHelper
         $db = JFactory::getDbo();
 
         // Let's get the id of the user we want to activate
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('id'))
-                    ->from($db->quoteName('#__users'))
-                    ->where($db->quoteName('activation') . ' = ' . $db->quote($activation))
-                    ->where($db->quoteName('block') . ' = 1')
-                    ->where($db->quoteName('lastvisitDate') . ' = ' . $db->quote('0000-00-00 00:00:00'));
+        $query = $db->getQuery(true)->select($db->quoteName('id'))->from($db->quoteName('#__users'))->where(
+                $db->quoteName('activation') . ' = ' . $db->quote($activation)
+            )->where($db->quoteName('block') . ' = 1')->where(
+                $db->quoteName('lastvisitDate') . ' = ' . $db->quote('0000-00-00 00:00:00')
+            );
         $db->setQuery($query);
         $id = (int)$db->loadResult();
 
@@ -271,10 +272,9 @@ abstract class JUserHelper
     {
         // Initialise some variables
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('id'))
-                    ->from($db->quoteName('#__users'))
-                    ->where($db->quoteName('username') . ' = ' . $db->quote($username));
+        $query = $db->getQuery(true)->select($db->quoteName('id'))->from($db->quoteName('#__users'))->where(
+                $db->quoteName('username') . ' = ' . $db->quote($username)
+            );
         $db->setQuery($query, 0, 1);
 
         return $db->loadResult();
@@ -442,8 +442,10 @@ abstract class JUserHelper
                         $j = 5;
                     }
 
-                    $p[] = static::_toAPRMD5((ord($binary[$i]) << 16) | (ord($binary[$k]) << 8) | (ord($binary[$j])),
-                        5);
+                    $p[] = static::_toAPRMD5(
+                        (ord($binary[$i]) << 16) | (ord($binary[$k]) << 8) | (ord($binary[$j])),
+                        5
+                    );
                 }
 
                 return '$apr1$' . $salt . '$' . implode('', $p) . static::_toAPRMD5(ord($binary[11]), 3);
@@ -521,8 +523,12 @@ abstract class JUserHelper
                 if ($seed) {
                     return substr(preg_replace('|^{SSHA}|', '', $seed), -20);
                 } else {
-                    return mhash_keygen_s2k(MHASH_SHA1, $plaintext,
-                        substr(pack('h*', md5(JCrypt::genRandomBytes())), 0, 8), 4);
+                    return mhash_keygen_s2k(
+                        MHASH_SHA1,
+                        $plaintext,
+                        substr(pack('h*', md5(JCrypt::genRandomBytes())), 0, 8),
+                        4
+                    );
                 }
                 break;
 
@@ -530,8 +536,12 @@ abstract class JUserHelper
                 if ($seed) {
                     return substr(preg_replace('|^{SMD5}|', '', $seed), -16);
                 } else {
-                    return mhash_keygen_s2k(MHASH_MD5, $plaintext,
-                        substr(pack('h*', md5(JCrypt::genRandomBytes())), 0, 8), 4);
+                    return mhash_keygen_s2k(
+                        MHASH_MD5,
+                        $plaintext,
+                        substr(pack('h*', md5(JCrypt::genRandomBytes())), 0, 8),
+                        4
+                    );
                 }
                 break;
 
@@ -678,16 +688,23 @@ abstract class JUserHelper
         $query = $db->getQuery(true);
 
         // Invalidate cookie in the database
-        $query->update($db->quoteName('#__user_keys'))
-              ->set($db->quoteName('invalid') . ' = 1')
-              ->where($db->quotename('user_id') . ' = ' . $db->quote($userId));
+        $query->update($db->quoteName('#__user_keys'))->set($db->quoteName('invalid') . ' = 1')->where(
+                $db->quotename('user_id') . ' = ' . $db->quote($userId)
+            );
 
         $db->setQuery($query)->execute();
 
         // Destroy the cookie in the browser.
         $app = JFactory::getApplication();
-        $app->input->cookie->set($cookieName, false, time() - 42000, $app->get('cookie_path', '/'),
-            $app->get('cookie_domain'), false, true);
+        $app->input->cookie->set(
+            $cookieName,
+            false,
+            time() - 42000,
+            $app->get('cookie_path', '/'),
+            $app->get('cookie_domain'),
+            false,
+            true
+        );
 
         return true;
     }

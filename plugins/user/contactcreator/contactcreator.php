@@ -100,8 +100,10 @@ class PlgUserContactCreator extends JPlugin
                 $search_array = array('[name]', '[username]', '[userid]', '[email]');
 
                 // Replacement terms, urlencoded
-                $replace_array = array_map('urlencode',
-                    array($user['name'], $user['username'], $user['id'], $user['email']));
+                $replace_array = array_map(
+                    'urlencode',
+                    array($user['name'], $user['username'], $user['id'], $user['email'])
+                );
 
                 // Now replace it in together
                 $contact->webpage = str_replace($search_array, $replace_array, $autowebpage);

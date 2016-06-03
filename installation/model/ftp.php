@@ -36,13 +36,18 @@ class InstallationModelFtp extends JModelBase
 
         // Connect and login to the FTP server.
         // Use binary transfer mode to be able to compare files.
-        @$ftp = JClientFtp::getInstance($options->get('ftp_host'), $options->get('ftp_port'),
-            array('type' => FTP_BINARY));
+        @$ftp = JClientFtp::getInstance(
+            $options->get('ftp_host'),
+            $options->get('ftp_port'),
+            array('type' => FTP_BINARY)
+        );
 
         // Check to make sure FTP is connected and authenticated.
         if (!$ftp->isConnected()) {
-            $app->enqueueMessage($options->get('ftp_host') . ':' . $options->get('ftp_port') . ' ' . JText::_('INSTL_FTP_NOCONNECT'),
-                'error');
+            $app->enqueueMessage(
+                $options->get('ftp_host') . ':' . $options->get('ftp_port') . ' ' . JText::_('INSTL_FTP_NOCONNECT'),
+                'error'
+            );
 
             return false;
         }

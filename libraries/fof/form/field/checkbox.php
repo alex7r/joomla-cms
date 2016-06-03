@@ -84,8 +84,11 @@ class FOFFormFieldCheckbox extends JFormFieldCheckbox implements FOFFormField
             $checked = ' checked="checked"';
         }
 
-        return '<span id="' . $this->id . '" ' . $class . '>' . '<input type="checkbox" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars($value,
-            ENT_COMPAT, 'UTF-8') . '"' . $class . $checked . $disabled . $onclick . $required . ' />' . '</span>';
+        return '<span id="' . $this->id . '" ' . $class . '>' . '<input type="checkbox" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars(
+            $value,
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '"' . $class . $checked . $disabled . $onclick . $required . ' />' . '</span>';
     }
 
     /**
@@ -110,7 +113,10 @@ class FOFFormFieldCheckbox extends JFormFieldCheckbox implements FOFFormField
             $checked = ' checked="checked"';
         }
 
-        return '<span class="' . $this->id . ' ' . $class . '">' . '<input type="checkbox" name="' . $this->name . '" class="' . $this->id . ' ' . $class . '"' . ' value="' . htmlspecialchars($value,
-            ENT_COMPAT, 'UTF-8') . '"' . $checked . $disabled . $onclick . $required . ' />' . '</span>';
+        return '<span class="' . $this->id . ' ' . $class . '">' . '<input type="checkbox" name="' . $this->name . '" class="' . $this->id . ' ' . $class . '"' . ' value="' . htmlspecialchars(
+            $value,
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '"' . $checked . $disabled . $onclick . $required . ' />' . '</span>';
     }
 }

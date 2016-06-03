@@ -39,7 +39,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                            title="<?php echo JText::_('COM_REDIRECT_SEARCH_LINKS'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
 
                 <div class="filter-select">
@@ -48,8 +50,14 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     </label>
                     <select name="filter_state" id="filter_published">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                        <?php echo JHtml::_('select.options', RedirectHelper::publishedOptions(), 'value', 'text',
-                            $this->state->get('filter.state'), true); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            RedirectHelper::publishedOptions(),
+                            'value',
+                            'text',
+                            $this->state->get('filter.state'),
+                            true
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -66,24 +74,49 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
                     </th>
                     <th class="title">
-                        <?php echo JHtml::_('grid.sort', 'COM_REDIRECT_HEADING_OLD_URL', 'a.old_url', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_REDIRECT_HEADING_OLD_URL',
+                            'a.old_url',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-30">
-                        <?php echo JHtml::_('grid.sort', 'COM_REDIRECT_HEADING_NEW_URL', 'a.new_url', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_REDIRECT_HEADING_NEW_URL',
+                            'a.new_url',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-30">
-                        <?php echo JHtml::_('grid.sort', 'COM_REDIRECT_HEADING_REFERRER', 'a.referer', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_REDIRECT_HEADING_REFERRER',
+                            'a.referer',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-10">
-                        <?php echo JHtml::_('grid.sort', 'COM_REDIRECT_HEADING_CREATED_DATE', 'a.created_date',
-                            $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_REDIRECT_HEADING_CREATED_DATE',
+                            'a.created_date',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="1%" class="nowrap">
-                        <?php echo JHtml::_('grid.sort', 'COM_REDIRECT_HEADING_HITS', 'a.hits', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_REDIRECT_HEADING_HITS',
+                            'a.hits',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap state-col">
                         <?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
@@ -106,13 +139,25 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         </td>
                         <td>
                             <?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_redirect&task=link.edit&id=' . $item->id); ?>"
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_redirect&task=link.edit&id=' . $item->id
+                                ); ?>"
                                    title="<?php echo $this->escape($item->old_url); ?>">
-                                    <?php echo $this->escape(str_replace(JUri::root(), '',
-                                        rawurldecode($item->old_url))); ?></a>
+                                    <?php echo $this->escape(
+                                        str_replace(
+                                            JUri::root(),
+                                            '',
+                                            rawurldecode($item->old_url)
+                                        )
+                                    ); ?></a>
                             <?php else : ?>
-                                <?php echo $this->escape(str_replace(JUri::root(), '',
-                                    rawurldecode($item->old_url))); ?>
+                                <?php echo $this->escape(
+                                    str_replace(
+                                        JUri::root(),
+                                        '',
+                                        rawurldecode($item->old_url)
+                                    )
+                                ); ?>
                             <?php endif; ?>
                         </td>
                         <td>
@@ -139,13 +184,20 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
             </table>
 
             <?php //Load the batch processing form if user is allowed ?>
-            <?php if ($user->authorise('core.create', 'com_redirect') && $user->authorise('core.edit',
-                    'com_redirect') && $user->authorise('core.edit.state', 'com_redirect')
+            <?php if ($user->authorise('core.create', 'com_redirect') && $user->authorise(
+                    'core.edit',
+                    'com_redirect'
+                ) && $user->authorise('core.edit.state', 'com_redirect')
             ) : ?>
-                <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                    'title'  => JText::_('COM_REDIRECT_BATCH_OPTIONS'),
-                    'footer' => $this->loadTemplate('batch_footer')
-                ), $this->loadTemplate('batch_body')); ?>
+                <?php echo JHtml::_(
+                    'bootstrap.renderModal',
+                    'collapseModal',
+                    array(
+                        'title'  => JText::_('COM_REDIRECT_BATCH_OPTIONS'),
+                        'footer' => $this->loadTemplate('batch_footer')
+                    ),
+                    $this->loadTemplate('batch_body')
+                ); ?>
             <?php endif; ?>
 
             <?php echo $this->pagination->getListFooter(); ?>

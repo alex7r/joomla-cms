@@ -16,14 +16,16 @@ JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 $user = JFactory::getUser();
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'style.cancel' || document.formvalidator.isValid(document.getElementById('style-form'))) {
 			Joomla.submitform(task, document.getElementById('style-form'));
 		}
 	};
-");
+"
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_templates&layout=edit&id=' . (int)$this->item->id); ?>"
@@ -82,8 +84,12 @@ JFactory::getDocument()->addScriptDeclaration("
         <?php echo JHtml::_('bootstrap.endTab'); ?>
 
         <?php if ($description) : ?>
-            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'description',
-                JText::_('JGLOBAL_FIELDSET_DESCRIPTION')); ?>
+            <?php echo JHtml::_(
+                'bootstrap.addTab',
+                'myTab',
+                'description',
+                JText::_('JGLOBAL_FIELDSET_DESCRIPTION')
+            ); ?>
             <?php echo $description; ?>
             <?php echo JHtml::_('bootstrap.endTab'); ?>
         <?php endif; ?>
@@ -94,11 +100,17 @@ JFactory::getDocument()->addScriptDeclaration("
         echo JLayoutHelper::render('joomla.edit.params', $this);
         ?>
 
-        <?php if ($user->authorise('core.edit',
-                'com_menu') && $this->item->client_id == 0 && $this->canDo->get('core.edit.state')
+        <?php if ($user->authorise(
+                'core.edit',
+                'com_menu'
+            ) && $this->item->client_id == 0 && $this->canDo->get('core.edit.state')
         ) : ?>
-            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'assignment',
-                JText::_('COM_TEMPLATES_MENUS_ASSIGNMENT')); ?>
+            <?php echo JHtml::_(
+                'bootstrap.addTab',
+                'myTab',
+                'assignment',
+                JText::_('COM_TEMPLATES_MENUS_ASSIGNMENT')
+            ); ?>
             <?php echo $this->loadTemplate('assignment'); ?>
             <?php echo JHtml::_('bootstrap.endTab'); ?>
         <?php endif; ?>

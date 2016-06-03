@@ -80,8 +80,10 @@ class CategoriesControllerCategory extends JControllerForm
     {
         $user = JFactory::getUser();
 
-        return ($user->authorise('core.create',
-                $this->extension) || count($user->getAuthorisedCategories($this->extension, 'core.create')));
+        return ($user->authorise(
+                'core.create',
+                $this->extension
+            ) || count($user->getAuthorisedCategories($this->extension, 'core.create')));
     }
 
     /**
@@ -111,8 +113,10 @@ class CategoriesControllerCategory extends JControllerForm
 
         // Fallback on edit.own.
         // First test if the permission is available.
-        if ($user->authorise('core.edit.own',
-                $this->extension . '.category.' . $recordId) || $user->authorise('core.edit.own', $this->extension)
+        if ($user->authorise(
+                'core.edit.own',
+                $this->extension . '.category.' . $recordId
+            ) || $user->authorise('core.edit.own', $this->extension)
         ) {
             // Now test the owner is the user.
             $ownerId = (int)isset($data['created_user_id']) ? $data['created_user_id'] : 0;

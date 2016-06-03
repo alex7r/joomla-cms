@@ -173,8 +173,10 @@ class ContentModelCategory extends JModelList
             if (isset($this->state->params)) {
                 $params                = $this->state->params;
                 $options               = array();
-                $options['countItems'] = $params->get('show_cat_num_articles',
-                        1) || !$params->get('show_empty_categories_cat', 0);
+                $options['countItems'] = $params->get(
+                        'show_cat_num_articles',
+                        1
+                    ) || !$params->get('show_empty_categories_cat', 0);
             } else {
                 $options['countItems'] = 0;
             }
@@ -224,10 +226,18 @@ class ContentModelCategory extends JModelList
         $db        = $this->getDbo();
         $params    = $this->state->params;
         $itemid    = $app->input->get('id', 0, 'int') . ':' . $app->input->get('Itemid', 0, 'int');
-        $orderCol  = $app->getUserStateFromRequest('com_content.category.list.' . $itemid . '.filter_order',
-            'filter_order', '', 'string');
-        $orderDirn = $app->getUserStateFromRequest('com_content.category.list.' . $itemid . '.filter_order_Dir',
-            'filter_order_Dir', '', 'cmd');
+        $orderCol  = $app->getUserStateFromRequest(
+            'com_content.category.list.' . $itemid . '.filter_order',
+            'filter_order',
+            '',
+            'string'
+        );
+        $orderDirn = $app->getUserStateFromRequest(
+            'com_content.category.list.' . $itemid . '.filter_order_Dir',
+            'filter_order_Dir',
+            '',
+            'cmd'
+        );
         $orderby   = ' ';
 
         if (!in_array($orderCol, $this->filter_fields)) {
@@ -336,8 +346,11 @@ class ContentModelCategory extends JModelList
 
             if ($params->get('orderby_pri') == 'alpha' || $params->get('orderby_pri') == 'ralpha') {
                 jimport('joomla.utilities.arrayhelper');
-                JArrayHelper::sortObjects($this->_children, 'title',
-                    ($params->get('orderby_pri') == 'alpha') ? 1 : (-1));
+                JArrayHelper::sortObjects(
+                    $this->_children,
+                    'title',
+                    ($params->get('orderby_pri') == 'alpha') ? 1 : (-1)
+                );
             }
         }
 
@@ -426,13 +439,21 @@ class ContentModelCategory extends JModelList
         $itemid = $app->input->get('id', 0, 'int') . ':' . $app->input->get('Itemid', 0, 'int');
 
         // Optional filter text
-        $search = $app->getUserStateFromRequest('com_content.category.list.' . $itemid . '.filter-search',
-            'filter-search', '', 'string');
+        $search = $app->getUserStateFromRequest(
+            'com_content.category.list.' . $itemid . '.filter-search',
+            'filter-search',
+            '',
+            'string'
+        );
         $this->setState('list.filter', $search);
 
         // Filter.order
-        $orderCol = $app->getUserStateFromRequest('com_content.category.list.' . $itemid . '.filter_order',
-            'filter_order', '', 'string');
+        $orderCol = $app->getUserStateFromRequest(
+            'com_content.category.list.' . $itemid . '.filter_order',
+            'filter_order',
+            '',
+            'string'
+        );
 
         if (!in_array($orderCol, $this->filter_fields)) {
             $orderCol = 'a.ordering';
@@ -440,8 +461,12 @@ class ContentModelCategory extends JModelList
 
         $this->setState('list.ordering', $orderCol);
 
-        $listOrder = $app->getUserStateFromRequest('com_content.category.list.' . $itemid . '.filter_order_Dir',
-            'filter_order_Dir', '', 'cmd');
+        $listOrder = $app->getUserStateFromRequest(
+            'com_content.category.list.' . $itemid . '.filter_order_Dir',
+            'filter_order_Dir',
+            '',
+            'cmd'
+        );
 
         if (!in_array(strtoupper($listOrder), array('ASC', 'DESC', ''))) {
             $listOrder = 'ASC';
@@ -453,11 +478,17 @@ class ContentModelCategory extends JModelList
 
         // Set limit for query. If list, use parameter. If blog, add blog parameters for limit.
         if (($app->input->get('layout') == 'blog') || $params->get('layout_type') == 'blog') {
-            $limit = $params->get('num_leading_articles') + $params->get('num_intro_articles') + $params->get('num_links');
+            $limit = $params->get('num_leading_articles') + $params->get('num_intro_articles') + $params->get(
+                    'num_links'
+                );
             $this->setState('list.links', $params->get('num_links'));
         } else {
-            $limit = $app->getUserStateFromRequest('com_content.category.list.' . $itemid . '.limit', 'limit',
-                $params->get('display_num'), 'uint');
+            $limit = $app->getUserStateFromRequest(
+                'com_content.category.list.' . $itemid . '.limit',
+                'limit',
+                $params->get('display_num'),
+                'uint'
+            );
         }
 
         $this->setState('list.limit', $limit);

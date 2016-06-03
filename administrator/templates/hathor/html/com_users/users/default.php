@@ -40,7 +40,9 @@ $loggeduser = JFactory::getUser();
                            title="<?php echo JText::_('COM_USERS_SEARCH_USERS'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_RESET'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_RESET'
+                        ); ?></button>
                 </div>
 
                 <div class="filter-select">
@@ -51,8 +53,13 @@ $loggeduser = JFactory::getUser();
                     </label>
                     <select name="filter_state" id="filter_state">
                         <option value="*"><?php echo JText::_('COM_USERS_FILTER_STATE'); ?></option>
-                        <?php echo JHtml::_('select.options', UsersHelper::getStateOptions(), 'value', 'text',
-                            $this->state->get('filter.state')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            UsersHelper::getStateOptions(),
+                            'value',
+                            'text',
+                            $this->state->get('filter.state')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_active">
@@ -60,8 +67,13 @@ $loggeduser = JFactory::getUser();
                     </label>
                     <select name="filter_active" id="filter_active">
                         <option value="*"><?php echo JText::_('COM_USERS_FILTER_ACTIVE'); ?></option>
-                        <?php echo JHtml::_('select.options', UsersHelper::getActiveOptions(), 'value', 'text',
-                            $this->state->get('filter.active')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            UsersHelper::getActiveOptions(),
+                            'value',
+                            'text',
+                            $this->state->get('filter.active')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_group_id">
@@ -69,8 +81,13 @@ $loggeduser = JFactory::getUser();
                     </label>
                     <select name="filter_group_id" id="filter_group_id">
                         <option value=""><?php echo JText::_('COM_USERS_FILTER_USERGROUP'); ?></option>
-                        <?php echo JHtml::_('select.options', UsersHelper::getGroups(), 'value', 'text',
-                            $this->state->get('filter.group_id')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            UsersHelper::getGroups(),
+                            'value',
+                            'text',
+                            $this->state->get('filter.group_id')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_lastvisitrange">
@@ -78,8 +95,13 @@ $loggeduser = JFactory::getUser();
                     </label>
                     <select name="filter_lastvisitrange" id="filter_lastvisitrange">
                         <option value=""><?php echo JText::_('COM_USERS_OPTION_FILTER_LAST_VISIT_DATE'); ?></option>
-                        <?php echo JHtml::_('select.options', Usershelper::getRangeOptions(), 'value', 'text',
-                            $this->state->get('filter.lastvisitrange')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            Usershelper::getRangeOptions(),
+                            'value',
+                            'text',
+                            $this->state->get('filter.lastvisitrange')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_range">
@@ -87,8 +109,13 @@ $loggeduser = JFactory::getUser();
                     </label>
                     <select name="filter_range" id="filter_range">
                         <option value=""><?php echo JText::_('COM_USERS_OPTION_FILTER_DATE'); ?></option>
-                        <?php echo JHtml::_('select.options', Usershelper::getRangeOptions(), 'value', 'text',
-                            $this->state->get('filter.range')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            Usershelper::getRangeOptions(),
+                            'value',
+                            'text',
+                            $this->state->get('filter.range')
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -111,12 +138,22 @@ $loggeduser = JFactory::getUser();
                         <?php echo JHtml::_('grid.sort', 'JGLOBAL_USERNAME', 'a.username', $listDirn, $listOrder); ?>
                     </th>
                     <th class="nowrap width-5">
-                        <?php echo JHtml::_('grid.sort', 'COM_USERS_HEADING_ENABLED', 'a.block', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_USERS_HEADING_ENABLED',
+                            'a.block',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap width-5">
-                        <?php echo JHtml::_('grid.sort', 'COM_USERS_HEADING_ACTIVATED', 'a.activation', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_USERS_HEADING_ACTIVATED',
+                            'a.activation',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap width-10">
                         <?php echo JText::_('COM_USERS_HEADING_GROUPS'); ?>
@@ -125,12 +162,22 @@ $loggeduser = JFactory::getUser();
                         <?php echo JHtml::_('grid.sort', 'JGLOBAL_EMAIL', 'a.email', $listDirn, $listOrder); ?>
                     </th>
                     <th class="nowrap width-15">
-                        <?php echo JHtml::_('grid.sort', 'COM_USERS_HEADING_LAST_VISIT_DATE', 'a.lastvisitDate',
-                            $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_USERS_HEADING_LAST_VISIT_DATE',
+                            'a.lastvisitDate',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap width-15">
-                        <?php echo JHtml::_('grid.sort', 'COM_USERS_HEADING_REGISTRATION_DATE', 'a.registerDate',
-                            $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_USERS_HEADING_REGISTRATION_DATE',
+                            'a.registerDate',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap id-col">
                         <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -162,14 +209,20 @@ $loggeduser = JFactory::getUser();
                                 <?php echo JHtml::_('users.addNote', $item->id); ?>
                                 <?php if ($item->requireReset == '1') : ?>
                                     <span
-                                        class="label label-warning"><?php echo JText::_('COM_USERS_PASSWORD_RESET_REQUIRED'); ?></span>
+                                        class="label label-warning"><?php echo JText::_(
+                                            'COM_USERS_PASSWORD_RESET_REQUIRED'
+                                        ); ?></span>
                                 <?php endif; ?>
                                 <?php echo JHtml::_('users.notesModal', $item->note_count, $item->id); ?>
                             </div>
                             <?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&id=' . (int)$item->id); ?>"
-                                   title="<?php echo JText::sprintf('COM_USERS_EDIT_USER',
-                                       $this->escape($item->name)); ?>">
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_users&task=user.edit&id=' . (int)$item->id
+                                ); ?>"
+                                   title="<?php echo JText::sprintf(
+                                       'COM_USERS_EDIT_USER',
+                                       $this->escape($item->name)
+                                   ); ?>">
                                     <?php echo $this->escape($item->name); ?></a>
                             <?php else : ?>
                                 <?php echo $this->escape($item->name); ?>
@@ -178,7 +231,9 @@ $loggeduser = JFactory::getUser();
                                 <div class="fltrt">
                                     <div class="button2-left smallsub">
                                         <div class="blank"><a
-                                                href="<?php echo JRoute::_('index.php?option=com_users&view=debuguser&user_id=' . (int)$item->id); ?>">
+                                                href="<?php echo JRoute::_(
+                                                    'index.php?option=com_users&view=debuguser&user_id=' . (int)$item->id
+                                                ); ?>">
                                                 <?php echo JText::_('COM_USERS_DEBUG_USER'); ?></a></div>
                                     </div>
                                 </div>
@@ -190,8 +245,13 @@ $loggeduser = JFactory::getUser();
                         <td class="center">
                             <?php if ($canChange) : ?>
                                 <?php if ($loggeduser->id != $item->id) : ?>
-                                    <?php echo JHtml::_('grid.boolean', $i, !$item->block, 'users.unblock',
-                                        'users.block'); ?>
+                                    <?php echo JHtml::_(
+                                        'grid.boolean',
+                                        $i,
+                                        !$item->block,
+                                        'users.unblock',
+                                        'users.block'
+                                    ); ?>
                                 <?php else : ?>
                                     <?php echo JHtml::_('grid.boolean', $i, !$item->block, 'users.block', null); ?>
                                 <?php endif; ?>
@@ -205,9 +265,11 @@ $loggeduser = JFactory::getUser();
                         <td class="center">
                             <?php if (substr_count($item->group_names, "\n") > 1) : ?>
                                 <span class="hasTooltip"
-                                      title="<?php echo JHtml::tooltipText(JText::_('COM_USERS_HEADING_GROUPS'),
+                                      title="<?php echo JHtml::tooltipText(
+                                          JText::_('COM_USERS_HEADING_GROUPS'),
                                           nl2br($item->group_names),
-                                          0); ?>"><?php echo JText::_('COM_USERS_USERS_MULTIPLE_GROUPS'); ?></span>
+                                          0
+                                      ); ?>"><?php echo JText::_('COM_USERS_USERS_MULTIPLE_GROUPS'); ?></span>
                             <?php else : ?>
                                 <?php echo nl2br($item->group_names); ?>
                             <?php endif; ?>

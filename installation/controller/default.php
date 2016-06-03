@@ -33,7 +33,12 @@ class InstallationControllerDefault extends JControllerBase
         $document = $app->getDocument();
 
         // Set the default view name and format from the request.
-        if (file_exists(JPATH_CONFIGURATION . '/configuration.php') && (filesize(JPATH_CONFIGURATION . '/configuration.php') > 10) && file_exists(JPATH_INSTALLATION . '/index.php')) {
+        if (file_exists(JPATH_CONFIGURATION . '/configuration.php') && (filesize(
+                                                                            JPATH_CONFIGURATION . '/configuration.php'
+                                                                        ) > 10) && file_exists(
+                JPATH_INSTALLATION . '/index.php'
+            )
+        ) {
             $default_view = 'remove';
         } else {
             $default_view = 'site';

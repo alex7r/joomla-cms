@@ -66,8 +66,12 @@ class ntlm_sasl_client_class
                 break;
             case SASL_NTLM_STATE_RESPOND_CHALLENGE:
                 $ntlm_response = $this->NTLMResponse(substr($response, 24, 8), $this->credentials["password"]);
-                $message       = $this->TypeMsg3($ntlm_response, $this->credentials["user"],
-                    $this->credentials["realm"], $this->credentials["workstation"]);
+                $message       = $this->TypeMsg3(
+                    $ntlm_response,
+                    $this->credentials["user"],
+                    $this->credentials["realm"],
+                    $this->credentials["workstation"]
+                );
                 $this->state   = SASL_NTLM_STATE_DONE;
                 break;
             case SASL_NTLM_STATE_DONE:
@@ -90,9 +94,13 @@ class ntlm_sasl_client_class
         $workstation_offset = 32;
         $domain_offset      = $workstation_offset + $workstation_length;
 
-        return ("NTLMSSP\0" . "\x01\x00\x00\x00" . "\x07\x32\x00\x00" . pack("v", $domain_length) . pack("v",
-                $domain_length) . pack("V", $domain_offset) . pack("v", $workstation_length) . pack("v",
-                $workstation_length) . pack("V", $workstation_offset) . $workstation . $domain);
+        return ("NTLMSSP\0" . "\x01\x00\x00\x00" . "\x07\x32\x00\x00" . pack("v", $domain_length) . pack(
+                "v",
+                $domain_length
+            ) . pack("V", $domain_offset) . pack("v", $workstation_length) . pack(
+                    "v",
+                    $workstation_length
+                ) . pack("V", $workstation_offset) . $workstation . $domain);
     }
 
     public function NTLMResponse($challenge, $password)
@@ -148,12 +156,24 @@ class ntlm_sasl_client_class
         $session_length      = strlen($session);
         $session_offset      = $ntlm_offset + $ntlm_length;
 
-        return ("NTLMSSP\0" . "\x03\x00\x00\x00" . pack("v", $lm_length) . pack("v", $lm_length) . pack("V",
-                $lm_offset) . pack("v", $ntlm_length) . pack("v", $ntlm_length) . pack("V", $ntlm_offset) . pack("v",
-                $domain_length) . pack("v", $domain_length) . pack("V", $domain_offset) . pack("v",
-                $user_length) . pack("v", $user_length) . pack("V", $user_offset) . pack("v",
-                $workstation_length) . pack("v", $workstation_length) . pack("V", $workstation_offset) . pack("v",
-                $session_length) . pack("v", $session_length) . pack("V",
-                $session_offset) . "\x01\x02\x00\x00" . $domain_unicode . $user_unicode . $workstation_unicode . $lm . $ntlm);
+        return ("NTLMSSP\0" . "\x03\x00\x00\x00" . pack("v", $lm_length) . pack("v", $lm_length) . pack(
+                "V",
+                $lm_offset
+            ) . pack("v", $ntlm_length) . pack("v", $ntlm_length) . pack("V", $ntlm_offset) . pack(
+                    "v",
+                    $domain_length
+                ) . pack("v", $domain_length) . pack("V", $domain_offset) . pack(
+                    "v",
+                    $user_length
+                ) . pack("v", $user_length) . pack("V", $user_offset) . pack(
+                    "v",
+                    $workstation_length
+                ) . pack("v", $workstation_length) . pack("V", $workstation_offset) . pack(
+                    "v",
+                    $session_length
+                ) . pack("v", $session_length) . pack(
+                    "V",
+                    $session_offset
+                ) . "\x01\x02\x00\x00" . $domain_unicode . $user_unicode . $workstation_unicode . $lm . $ntlm);
     }
 }

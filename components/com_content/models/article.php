@@ -45,11 +45,17 @@ class ContentModelArticle extends JModelItem
         if (!isset($this->_item[$pk])) {
             try {
                 $db    = $this->getDbo();
-                $query = $db->getQuery(true)->select($this->getState('item.select',
-                    'a.id, a.asset_id, a.title, a.alias, a.introtext, a.fulltext, ' . // If badcats is not null, this means that the article is inside an unpublished category
-                    // In this case, the state is set to 0 to indicate Unpublished (even if the article state is Published)
-                    'CASE WHEN badcats.id is null THEN a.state ELSE 0 END AS state, ' . 'a.catid, a.created, a.created_by, a.created_by_alias, ' . // Use created if modified is 0
-                    'CASE WHEN a.modified = ' . $db->quote($db->getNullDate()) . ' THEN a.created ELSE a.modified END as modified, ' . 'a.modified_by, a.checked_out, a.checked_out_time, a.publish_up, a.publish_down, ' . 'a.images, a.urls, a.attribs, a.version, a.ordering, ' . 'a.metakey, a.metadesc, a.access, a.hits, a.metadata, a.featured, a.language, a.xreference'));
+                $query = $db->getQuery(true)->select(
+                    $this->getState(
+                        'item.select',
+                        'a.id, a.asset_id, a.title, a.alias, a.introtext, a.fulltext, ' . // If badcats is not null, this means that the article is inside an unpublished category
+                        // In this case, the state is set to 0 to indicate Unpublished (even if the article state is Published)
+                        'CASE WHEN badcats.id is null THEN a.state ELSE 0 END AS state, ' . 'a.catid, a.created, a.created_by, a.created_by_alias, ' . // Use created if modified is 0
+                        'CASE WHEN a.modified = ' . $db->quote(
+                            $db->getNullDate()
+                        ) . ' THEN a.created ELSE a.modified END as modified, ' . 'a.modified_by, a.checked_out, a.checked_out_time, a.publish_up, a.publish_down, ' . 'a.images, a.urls, a.attribs, a.version, a.ordering, ' . 'a.metakey, a.metadesc, a.access, a.hits, a.metadata, a.featured, a.language, a.xreference'
+                    )
+                );
                 $query->from('#__content AS a');
 
                 // Join on category table.
@@ -61,21 +67,27 @@ class ContentModelArticle extends JModelItem
 
                 // Filter by language
                 if ($this->getState('filter.language')) {
-                    $query->where('a.language in (' . $db->quote(JFactory::getLanguage()
-                                                                         ->getTag()) . ',' . $db->quote('*') . ')');
+                    $query->where(
+                        'a.language in (' . $db->quote(
+                            JFactory::getLanguage()->getTag()
+                        ) . ',' . $db->quote('*') . ')'
+                    );
                 }
 
                 // Join over the categories to get parent category titles
-                $query->select('parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias')
-                      ->join('LEFT', '#__categories as parent ON parent.id = c.parent_id');
+                $query->select(
+                    'parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias'
+                )->join('LEFT', '#__categories as parent ON parent.id = c.parent_id');
 
                 // Join on voting table
                 $query->select('ROUND(v.rating_sum / v.rating_count, 0) AS rating, v.rating_count as rating_count')
                       ->join('LEFT', '#__content_rating AS v ON a.id = v.content_id')
                       ->where('a.id = ' . (int)$pk);
 
-                if ((!$user->authorise('core.edit.state', 'com_content')) && (!$user->authorise('core.edit',
-                        'com_content'))
+                if ((!$user->authorise('core.edit.state', 'com_content')) && (!$user->authorise(
+                        'core.edit',
+                        'com_content'
+                    ))
                 ) {
                     // Filter by start and end dates.
                     $nullDate = $db->quote($db->getNullDate());
@@ -83,8 +95,9 @@ class ContentModelArticle extends JModelItem
 
                     $nowDate = $db->quote($date->toSql());
 
-                    $query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')')
-                          ->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
+                    $query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')')->where(
+                            '(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')'
+                        );
                 }
 
                 // Join to check for category published state in parent categories up the tree
@@ -112,7 +125,10 @@ class ContentModelArticle extends JModelItem
                 }
 
                 // Check for published state if filter set.
-                if (((is_numeric($published)) || (is_numeric($archived))) && (($data->state != $published) && ($data->state != $archived))) {
+                if (((is_numeric($published)) || (is_numeric(
+                            $archived
+                        ))) && (($data->state != $published) && ($data->state != $archived))
+                ) {
                     return JError::raiseError(404, JText::_('COM_CONTENT_ERROR_ARTICLE_NOT_FOUND'));
                 }
 
@@ -156,8 +172,10 @@ class ContentModelArticle extends JModelItem
                     if ($data->catid == 0 || $data->category_access === null) {
                         $data->params->set('access-view', in_array($data->access, $groups));
                     } else {
-                        $data->params->set('access-view',
-                            in_array($data->access, $groups) && in_array($data->category_access, $groups));
+                        $data->params->set(
+                            'access-view',
+                            in_array($data->access, $groups) && in_array($data->category_access, $groups)
+                        );
                     }
                 }
 
@@ -217,9 +235,9 @@ class ContentModelArticle extends JModelItem
             $query = $db->getQuery(true);
 
             // Create the base select statement.
-            $query->select('*')
-                  ->from($db->quoteName('#__content_rating'))
-                  ->where($db->quoteName('content_id') . ' = ' . (int)$pk);
+            $query->select('*')->from($db->quoteName('#__content_rating'))->where(
+                    $db->quoteName('content_id') . ' = ' . (int)$pk
+                );
 
             // Set the query and load the result.
             $db->setQuery($query);
@@ -238,12 +256,14 @@ class ContentModelArticle extends JModelItem
                 $query = $db->getQuery(true);
 
                 // Create the base insert statement.
-                $query->insert($db->quoteName('#__content_rating'))->columns(array(
-                    $db->quoteName('content_id'),
-                    $db->quoteName('lastip'),
-                    $db->quoteName('rating_sum'),
-                    $db->quoteName('rating_count')
-                ))->values((int)$pk . ', ' . $db->quote($userIP) . ',' . (int)$rate . ', 1');
+                $query->insert($db->quoteName('#__content_rating'))->columns(
+                    array(
+                        $db->quoteName('content_id'),
+                        $db->quoteName('lastip'),
+                        $db->quoteName('rating_sum'),
+                        $db->quoteName('rating_count')
+                    )
+                )->values((int)$pk . ', ' . $db->quote($userIP) . ',' . (int)$rate . ', 1');
 
                 // Set the query and execute the insert.
                 $db->setQuery($query);
@@ -260,11 +280,11 @@ class ContentModelArticle extends JModelItem
                     $query = $db->getQuery(true);
 
                     // Create the base update statement.
-                    $query->update($db->quoteName('#__content_rating'))
-                          ->set($db->quoteName('rating_count') . ' = rating_count + 1')
-                          ->set($db->quoteName('rating_sum') . ' = rating_sum + ' . (int)$rate)
-                          ->set($db->quoteName('lastip') . ' = ' . $db->quote($userIP))
-                          ->where($db->quoteName('content_id') . ' = ' . (int)$pk);
+                    $query->update($db->quoteName('#__content_rating'))->set(
+                            $db->quoteName('rating_count') . ' = rating_count + 1'
+                        )->set($db->quoteName('rating_sum') . ' = rating_sum + ' . (int)$rate)->set(
+                            $db->quoteName('lastip') . ' = ' . $db->quote($userIP)
+                        )->where($db->quoteName('content_id') . ' = ' . (int)$pk);
 
                     // Set the query and execute the update.
                     $db->setQuery($query);
@@ -284,8 +304,11 @@ class ContentModelArticle extends JModelItem
             return true;
         }
 
-        JError::raiseWarning('SOME_ERROR_CODE', JText::sprintf('COM_CONTENT_INVALID_RATING', $rate),
-            "JModelArticle::storeVote($rate)");
+        JError::raiseWarning(
+            'SOME_ERROR_CODE',
+            JText::sprintf('COM_CONTENT_INVALID_RATING', $rate),
+            "JModelArticle::storeVote($rate)"
+        );
 
         return false;
     }

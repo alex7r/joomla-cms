@@ -276,12 +276,10 @@ class JDatabaseDriverSqlite extends JDatabaseDriverPdo
 
         $type = 'table';
 
-        $query = $this->getQuery(true)
-                      ->select('name')
-                      ->from('sqlite_master')
-                      ->where('type = :type')
-                      ->bind(':type', $type)
-                      ->order('name');
+        $query = $this->getQuery(true)->select('name')->from('sqlite_master')->where('type = :type')->bind(
+                ':type',
+                $type
+            )->order('name');
 
         $this->setQuery($query);
 

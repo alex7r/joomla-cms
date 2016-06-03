@@ -46,8 +46,17 @@ if ($saveOrder) {
                     <thead>
                     <tr>
                         <th width="1%" class="nowrap center hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null,
-                                'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                '',
+                                'a.ordering',
+                                $listDirn,
+                                $listOrder,
+                                null,
+                                'asc',
+                                'JGRID_HEADING_ORDERING',
+                                'icon-menu-2'
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap center">
                             <?php echo JHtml::_('grid.checkall'); ?>
@@ -56,36 +65,76 @@ if ($saveOrder) {
                             <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
                         </th>
                         <th class="title nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGLOBAL_TITLE',
+                                'a.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th class="title nowrap hidden-phone hidden-tablet">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_LANGUAGES_HEADING_TITLE_NATIVE',
-                                'a.title_native', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_LANGUAGES_HEADING_TITLE_NATIVE',
+                                'a.title_native',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_LANGUAGES_HEADING_LANG_TAG', 'a.lang_code',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_LANGUAGES_HEADING_LANG_TAG',
+                                'a.lang_code',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_LANGUAGES_HEADING_LANG_CODE', 'a.sef',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_LANGUAGES_HEADING_LANG_CODE',
+                                'a.sef',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="5%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_LANGUAGES_HEADING_LANG_IMAGE', 'a.image',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_LANGUAGES_HEADING_LANG_IMAGE',
+                                'a.image',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="5%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'a.access', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ACCESS',
+                                'a.access',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="5%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_LANGUAGES_HEADING_HOMEPAGE', 'l.home',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_LANGUAGES_HEADING_HOMEPAGE',
+                                'l.home',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone hidden-tablet">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.lang_id', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ID',
+                                'a.lang_id',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -129,15 +178,25 @@ if ($saveOrder) {
                                 <?php echo JHtml::_('grid.id', $i, $item->lang_id); ?>
                             </td>
                             <td class="center">
-                                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'languages.',
-                                    $canChange); ?>
+                                <?php echo JHtml::_(
+                                    'jgrid.published',
+                                    $item->published,
+                                    $i,
+                                    'languages.',
+                                    $canChange
+                                ); ?>
                             </td>
                             <td>
 							<span class="editlinktip hasTooltip"
-                                  title="<?php echo JHtml::tooltipText(JText::_('JGLOBAL_EDIT_ITEM'), $item->title,
-                                      0); ?>">
+                                  title="<?php echo JHtml::tooltipText(
+                                      JText::_('JGLOBAL_EDIT_ITEM'),
+                                      $item->title,
+                                      0
+                                  ); ?>">
 							<?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_languages&task=language.edit&lang_id=' . (int)$item->lang_id); ?>"><?php echo $this->escape($item->title); ?></a>
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_languages&task=language.edit&lang_id=' . (int)$item->lang_id
+                                ); ?>"><?php echo $this->escape($item->title); ?></a>
                             <?php else : ?>
                                 <?php echo $this->escape($item->title); ?>
                             <?php endif; ?>
@@ -153,8 +212,13 @@ if ($saveOrder) {
                                 <?php echo $this->escape($item->sef); ?>
                             </td>
                             <td class="hidden-phone">
-                                <?php echo JHtml::_('image', 'mod_languages/' . $item->image . '.gif', $item->image,
-                                    array('title' => $item->image), true); ?>
+                                <?php echo JHtml::_(
+                                    'image',
+                                    'mod_languages/' . $item->image . '.gif',
+                                    $item->image,
+                                    array('title' => $item->image),
+                                    true
+                                ); ?>
                                 &nbsp;<?php echo $this->escape($item->image); ?>
                             </td>
                             <td class="hidden-phone">

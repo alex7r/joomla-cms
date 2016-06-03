@@ -33,24 +33,38 @@ class UsersHelper
      */
     public static function addSubmenu($vName)
     {
-        JHtmlSidebar::addEntry(JText::_('COM_USERS_SUBMENU_USERS'), 'index.php?option=com_users&view=users',
-            $vName == 'users');
+        JHtmlSidebar::addEntry(
+            JText::_('COM_USERS_SUBMENU_USERS'),
+            'index.php?option=com_users&view=users',
+            $vName == 'users'
+        );
 
         // Groups and Levels are restricted to core.admin
         $canDo = JHelperContent::getActions('com_users');
 
         if ($canDo->get('core.admin')) {
-            JHtmlSidebar::addEntry(JText::_('COM_USERS_SUBMENU_GROUPS'), 'index.php?option=com_users&view=groups',
-                $vName == 'groups');
-            JHtmlSidebar::addEntry(JText::_('COM_USERS_SUBMENU_LEVELS'), 'index.php?option=com_users&view=levels',
-                $vName == 'levels');
-            JHtmlSidebar::addEntry(JText::_('COM_USERS_SUBMENU_NOTES'), 'index.php?option=com_users&view=notes',
-                $vName == 'notes');
+            JHtmlSidebar::addEntry(
+                JText::_('COM_USERS_SUBMENU_GROUPS'),
+                'index.php?option=com_users&view=groups',
+                $vName == 'groups'
+            );
+            JHtmlSidebar::addEntry(
+                JText::_('COM_USERS_SUBMENU_LEVELS'),
+                'index.php?option=com_users&view=levels',
+                $vName == 'levels'
+            );
+            JHtmlSidebar::addEntry(
+                JText::_('COM_USERS_SUBMENU_NOTES'),
+                'index.php?option=com_users&view=notes',
+                $vName == 'notes'
+            );
 
             $extension = JFactory::getApplication()->input->getString('extension');
-            JHtmlSidebar::addEntry(JText::_('COM_USERS_SUBMENU_NOTE_CATEGORIES'),
+            JHtmlSidebar::addEntry(
+                JText::_('COM_USERS_SUBMENU_NOTE_CATEGORIES'),
                 'index.php?option=com_categories&extension=com_users',
-                $vName == 'categories' || $extension == 'com_users');
+                $vName == 'categories' || $extension == 'com_users'
+            );
         }
     }
 
@@ -64,8 +78,11 @@ class UsersHelper
     public static function getActions()
     {
         // Log usage of deprecated function
-        JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Get list of actions
         $result = JHelperContent::getActions('com_users');
@@ -120,7 +137,9 @@ class UsersHelper
         $query = $db->getQuery(true)
                     ->select('a.id AS value')
                     ->select('a.title AS text')
-                    ->select('COUNT(DISTINCT b.id) AS level')
+                    ->select(
+                        'COUNT(DISTINCT b.id) AS level'
+                    )
                     ->from('#__usergroups as a')
                     ->join('LEFT', '#__usergroups  AS b ON a.lft > b.lft AND a.rgt < b.rgt')
                     ->group('a.id, a.title, a.lft, a.rgt')
@@ -220,10 +239,9 @@ class UsersHelper
         $rules = implode(',', $rules);
 
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('a.title AS text')
-                    ->from('#__usergroups as a')
-                    ->where('a.id IN (' . $rules . ')');
+        $query = $db->getQuery(true)->select('a.title AS text')->from('#__usergroups as a')->where(
+                'a.id IN (' . $rules . ')'
+            );
         $db->setQuery($query);
 
         $groups = $db->loadColumn();

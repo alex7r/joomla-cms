@@ -74,8 +74,11 @@ class FOFFormFieldTextarea extends JFormFieldTextarea implements FOFFormField
     {
         $class = $this->element['class'] ? ' class="' . (string)$this->element['class'] . '"' : '';
 
-        return '<div id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(nl2br($this->value), ENT_COMPAT,
-            'UTF-8') . '</div>';
+        return '<div id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(
+            nl2br($this->value),
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</div>';
     }
 
     /**

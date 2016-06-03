@@ -74,8 +74,10 @@ class ContentModelCategories extends JModelList
             }
 
             $options               = array();
-            $options['countItems'] = $params->get('show_cat_num_articles_cat',
-                    1) || !$params->get('show_empty_categories_cat', 0);
+            $options['countItems'] = $params->get(
+                    'show_cat_num_articles_cat',
+                    1
+                ) || !$params->get('show_empty_categories_cat', 0);
             $categories            = JCategories::getInstance('Content', $options);
             $this->_parent         = $categories->get($this->getState('filter.parentId', 'root'));
 

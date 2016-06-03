@@ -822,8 +822,11 @@ abstract class JFormField
      */
     public function getControlGroup()
     {
-        JLog::add('JFormField->getControlGroup() is deprecated use JFormField->renderField().', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JFormField->getControlGroup() is deprecated use JFormField->renderField().',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return $this->renderField();
     }
@@ -861,8 +864,11 @@ abstract class JFormField
                 $showonarr[] = array(
                     'field'  => str_replace('[]', '', $this->getName($showon[0])),
                     'values' => explode(',', $showon[1]),
-                    'op'     => (preg_match('%\[(AND|OR)\]' . $showonfield . '%', $showonstring,
-                        $matches)) ? $matches[1] : ''
+                    'op'     => (preg_match(
+                        '%\[(AND|OR)\]' . $showonfield . '%',
+                        $showonstring,
+                        $matches
+                    )) ? $matches[1] : ''
                 );
             }
 

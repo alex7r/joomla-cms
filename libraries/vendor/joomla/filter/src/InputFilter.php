@@ -525,8 +525,10 @@ class InputFilter
              * OR no tagname
              * OR remove if xssauto is on and tag is blacklisted
              */
-            if ((!preg_match("/^[a-z][a-z0-9]*$/i", $tagName)) || (!$tagName) || ((in_array(strtolower($tagName),
-                        $this->tagBlacklist)) && ($this->xssAuto))
+            if ((!preg_match("/^[a-z][a-z0-9]*$/i", $tagName)) || (!$tagName) || ((in_array(
+                        strtolower($tagName),
+                        $this->tagBlacklist
+                    )) && ($this->xssAuto))
             ) {
                 $postTag       = substr($postTag, ($tagLength + 2));
                 $tagOpen_start = strpos($postTag, '<');
@@ -554,8 +556,10 @@ class InputFilter
                 if (preg_match('#\s*=\s*\"#', $fromSpace, $matches, PREG_OFFSET_CAPTURE)) {
                     $startAtt         = $matches[0][0];
                     $startAttPosition = $matches[0][1];
-                    $closeQuotes      = strpos(substr($fromSpace, ($startAttPosition + strlen($startAtt))),
-                            '"') + $startAttPosition + strlen($startAtt);
+                    $closeQuotes      = strpos(
+                                            substr($fromSpace, ($startAttPosition + strlen($startAtt))),
+                                            '"'
+                                        ) + $startAttPosition + strlen($startAtt);
                     $nextEqual        = $startAttPosition + strpos($startAtt, '=');
                     $openQuotes       = $startAttPosition + strpos($startAtt, '"');
                     $nextSpace        = strpos(substr($fromSpace, $closeQuotes), ' ') + $closeQuotes;
@@ -756,9 +760,13 @@ class InputFilter
 
             // Remove all "non-regular" attribute names
             // AND blacklisted attributes
-            if ((!preg_match('/[a-z]*$/i',
-                    $attrSubSet[0])) || (($this->xssAuto) && ((in_array(strtolower($attrSubSet[0]),
-                            $this->attrBlacklist)) || (substr($attrSubSet[0], 0, 2) == 'on')))
+            if ((!preg_match(
+                    '/[a-z]*$/i',
+                    $attrSubSet[0]
+                )) || (($this->xssAuto) && ((in_array(
+                            strtolower($attrSubSet[0]),
+                            $this->attrBlacklist
+                        )) || (substr($attrSubSet[0], 0, 2) == 'on')))
             ) {
                 continue;
             }
@@ -778,8 +786,11 @@ class InputFilter
                 $attrSubSet[1] = str_replace('"', '', $attrSubSet[1]);
 
                 // Convert single quotes from either side to doubles (Single quotes shouldn't be used to pad attr values)
-                if ((substr($attrSubSet[1], 0, 1) == "'") && (substr($attrSubSet[1], (strlen($attrSubSet[1]) - 1),
-                            1) == "'")
+                if ((substr($attrSubSet[1], 0, 1) == "'") && (substr(
+                                                                  $attrSubSet[1],
+                                                                  (strlen($attrSubSet[1]) - 1),
+                                                                  1
+                                                              ) == "'")
                 ) {
                     $attrSubSet[1] = substr($attrSubSet[1], 1, (strlen($attrSubSet[1]) - 2));
                 }
@@ -831,12 +842,25 @@ class InputFilter
         $attrSubSet[0] = strtolower($attrSubSet[0]);
         $attrSubSet[1] = strtolower($attrSubSet[1]);
 
-        return (((strpos($attrSubSet[1],
-                        'expression') !== false) && ($attrSubSet[0]) == 'style') || (strpos($attrSubSet[1],
-                    'javascript:') !== false) || (strpos($attrSubSet[1],
-                    'behaviour:') !== false) || (strpos($attrSubSet[1],
-                    'vbscript:') !== false) || (strpos($attrSubSet[1], 'mocha:') !== false) || (strpos($attrSubSet[1],
-                    'livescript:') !== false));
+        return (((strpos(
+                      $attrSubSet[1],
+                      'expression'
+                  ) !== false) && ($attrSubSet[0]) == 'style') || (strpos(
+                                                                       $attrSubSet[1],
+                                                                       'javascript:'
+                                                                   ) !== false) || (strpos(
+                                                                                        $attrSubSet[1],
+                                                                                        'behaviour:'
+                                                                                    ) !== false) || (strpos(
+                                                                                                         $attrSubSet[1],
+                                                                                                         'vbscript:'
+                                                                                                     ) !== false) || (strpos(
+                                                                                                                          $attrSubSet[1],
+                                                                                                                          'mocha:'
+                                                                                                                      ) !== false) || (strpos(
+                                                                                                                                           $attrSubSet[1],
+                                                                                                                                           'livescript:'
+                                                                                                                                       ) !== false));
     }
 
     /**

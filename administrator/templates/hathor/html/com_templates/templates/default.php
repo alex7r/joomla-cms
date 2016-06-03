@@ -15,9 +15,9 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 
-$user      = JFactory::getUser();
+$user = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_templates&view=templates'); ?>" method="post" name="adminForm"
@@ -40,15 +40,22 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                            title="<?php echo JText::_('COM_TEMPLATES_TEMPLATES_FILTER_SEARCH_DESC'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
                 <div class="filter-select">
                     <label class="selectlabel" for="client_id">
                         <?php echo JText::_('JGLOBAL_FILTER_CLIENT'); ?>
                     </label>
                     <select name="client_id" id="client_id">
-                        <?php echo JHtml::_('select.options', TemplatesHelper::getClientOptions(), 'value', 'text',
-                            $this->state->get('client_id')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            TemplatesHelper::getClientOptions(),
+                            'value',
+                            'text',
+                            $this->state->get('client_id')
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -64,8 +71,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         &#160;
                     </th>
                     <th>
-                        <?php echo JHtml::_('grid.sort', 'COM_TEMPLATES_HEADING_TEMPLATE', 'a.element', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_TEMPLATES_HEADING_TEMPLATE',
+                            'a.element',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-10">
                         <?php echo JHtml::_('grid.sort', 'JCLIENT', 'a.client_id', $listDirn, $listOrder); ?>
@@ -89,7 +101,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                             <?php echo JHtml::_('templates.thumb', $item->element, $item->client_id); ?>
                         </td>
                         <td class="template-name">
-                            <a href="<?php echo JRoute::_('index.php?option=com_templates&view=template&id=' . (int)$item->extension_id . '&file=' . $this->file); ?>">
+                            <a href="<?php echo JRoute::_(
+                                'index.php?option=com_templates&view=template&id=' . (int)$item->extension_id . '&file=' . $this->file
+                            ); ?>">
                                 <?php echo JText::sprintf('COM_TEMPLATES_TEMPLATE_DETAILS', $item->name); ?></a>
                             <p>
                                 <?php if ($this->preview && $item->client_id == '0') : ?>
@@ -100,8 +114,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                     <?php echo JText::_('COM_TEMPLATES_TEMPLATE_NO_PREVIEW_ADMIN'); ?>
                                 <?php else: ?>
                                     <span class="hasTooltip"
-                                          title="<?php echo JHtml::tooltipText('COM_TEMPLATES_TEMPLATE_NO_PREVIEW',
-                                              'COM_TEMPLATES_TEMPLATE_NO_PREVIEW_DESC'); ?>">
+                                          title="<?php echo JHtml::tooltipText(
+                                              'COM_TEMPLATES_TEMPLATE_NO_PREVIEW',
+                                              'COM_TEMPLATES_TEMPLATE_NO_PREVIEW_DESC'
+                                          ); ?>">
 							<?php echo JText::_('COM_TEMPLATES_TEMPLATE_NO_PREVIEW'); ?></span>
                                 <?php endif; ?>
                             </p>

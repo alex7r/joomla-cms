@@ -132,8 +132,15 @@ class JProfiler
         );
         $this->marks[] = $m;
 
-        $mark           = sprintf('%s %.3f seconds (%.3f); %0.2f MB (%0.3f) - %s', $m->prefix, $m->totalTime / 1000,
-            $m->time / 1000, $m->totalMemory, $m->memory, $m->label);
+        $mark           = sprintf(
+            '%s %.3f seconds (%.3f); %0.2f MB (%0.3f) - %s',
+            $m->prefix,
+            $m->totalTime / 1000,
+            $m->time / 1000,
+            $m->totalMemory,
+            $m->memory,
+            $m->label
+        );
         $this->buffer[] = $mark;
 
         $this->previousTime = $current;

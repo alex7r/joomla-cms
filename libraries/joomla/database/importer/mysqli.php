@@ -192,8 +192,10 @@ class JDatabaseImporterMysqli extends JDatabaseImporter
             }
         }
 
-        $query = $prefix . 'KEY ' . ($kName != 'PRIMARY' ? $this->db->quoteName($kName) : '') . ' (' . implode(',',
-                $kColumns) . ')';
+        $query = $prefix . 'KEY ' . ($kName != 'PRIMARY' ? $this->db->quoteName($kName) : '') . ' (' . implode(
+                ',',
+                $kColumns
+            ) . ')';
 
         return $query;
     }
@@ -334,7 +336,9 @@ class JDatabaseImporterMysqli extends JDatabaseImporter
      */
     protected function getChangeColumnSql($table, SimpleXMLElement $field)
     {
-        return 'ALTER TABLE ' . $this->db->quoteName($table) . ' CHANGE COLUMN ' . $this->db->quoteName((string)$field['Field']) . ' ' . $this->getColumnSql($field);
+        return 'ALTER TABLE ' . $this->db->quoteName($table) . ' CHANGE COLUMN ' . $this->db->quoteName(
+            (string)$field['Field']
+        ) . ' ' . $this->getColumnSql($field);
     }
 
     /**

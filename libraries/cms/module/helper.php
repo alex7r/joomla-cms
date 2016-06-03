@@ -44,8 +44,9 @@ abstract class JModuleHelper
         }
 
         if (count($result) == 0) {
-            if ($input->getBool('tp') && JComponentHelper::getParams('com_templates')
-                                                         ->get('template_positions_display')
+            if ($input->getBool('tp') && JComponentHelper::getParams('com_templates')->get(
+                        'template_positions_display'
+                    )
             ) {
                 $result[0]           = static::getModule('mod_' . $position);
                 $result[0]->title    = $position;
@@ -107,13 +108,13 @@ abstract class JModuleHelper
 
         $db = JFactory::getDbo();
 
-        $query = $db->getQuery(true)
-                    ->select('m.id, m.title, m.module, m.position, m.content, m.showtitle, m.params, mm.menuid')
-                    ->from('#__modules AS m')
-                    ->join('LEFT', '#__modules_menu AS mm ON mm.moduleid = m.id')
-                    ->where('m.published = 1')
-                    ->join('LEFT', '#__extensions AS e ON e.element = m.module AND e.client_id = m.client_id')
-                    ->where('e.enabled = 1');
+        $query = $db->getQuery(true)->select(
+                'm.id, m.title, m.module, m.position, m.content, m.showtitle, m.params, mm.menuid'
+            )->from('#__modules AS m')->join('LEFT', '#__modules_menu AS mm ON mm.moduleid = m.id')->where(
+                'm.published = 1'
+            )->join('LEFT', '#__extensions AS e ON e.element = m.module AND e.client_id = m.client_id')->where(
+                'e.enabled = 1'
+            );
 
         $date     = JFactory::getDate();
         $now      = $date->toSql();
@@ -282,8 +283,9 @@ abstract class JModuleHelper
         }
 
         if (JDEBUG) {
-            JProfiler::getInstance('Application')
-                     ->mark('beforeRenderModule ' . $module->module . ' (' . $module->title . ')');
+            JProfiler::getInstance('Application')->mark(
+                    'beforeRenderModule ' . $module->module . ' (' . $module->title . ')'
+                );
         }
 
         $app = JFactory::getApplication();
@@ -310,8 +312,13 @@ abstract class JModuleHelper
             $lang = JFactory::getLanguage();
 
             // 1.5 or Core then 1.6 3PD
-            $lang->load($module->module, JPATH_BASE, null, false, true) || $lang->load($module->module, dirname($path),
-                null, false, true);
+            $lang->load($module->module, JPATH_BASE, null, false, true) || $lang->load(
+                $module->module,
+                dirname($path),
+                null,
+                false,
+                true
+            );
 
             $content = '';
             ob_start();
@@ -349,8 +356,9 @@ abstract class JModuleHelper
         }
 
         // Dynamically add outline style
-        if ($app->input->getBool('tp') && JComponentHelper::getParams('com_templates')
-                                                          ->get('template_positions_display')
+        if ($app->input->getBool('tp') && JComponentHelper::getParams('com_templates')->get(
+                    'template_positions_display'
+                )
         ) {
             $attribs['style'] .= ' outline';
         }
@@ -382,8 +390,9 @@ abstract class JModuleHelper
         $app->triggerEvent('onAfterRenderModule', array(&$module, &$attribs));
 
         if (JDEBUG) {
-            JProfiler::getInstance('Application')
-                     ->mark('afterRenderModule ' . $module->module . ' (' . $module->title . ')');
+            JProfiler::getInstance('Application')->mark(
+                    'afterRenderModule ' . $module->module . ' (' . $module->title . ')'
+                );
         }
 
         return $module->content;
@@ -485,8 +494,13 @@ abstract class JModuleHelper
 
         switch ($cacheparams->cachemode) {
             case 'id':
-                $ret = $cache->get(array($cacheparams->class, $cacheparams->method), $cacheparams->methodparams,
-                    $cacheparams->modeparams, $wrkarounds, $wrkaroundoptions);
+                $ret = $cache->get(
+                    array($cacheparams->class, $cacheparams->method),
+                    $cacheparams->methodparams,
+                    $cacheparams->modeparams,
+                    $wrkarounds,
+                    $wrkaroundoptions
+                );
                 break;
 
             case 'safeuri':
@@ -507,29 +521,48 @@ abstract class JModuleHelper
                 }
 
                 $secureid = md5(serialize(array($safeuri, $cacheparams->method, $moduleparams)));
-                $ret      = $cache->get(array($cacheparams->class, $cacheparams->method), $cacheparams->methodparams,
-                    $module->id . $view_levels . $secureid, $wrkarounds, $wrkaroundoptions);
+                $ret      = $cache->get(
+                    array($cacheparams->class, $cacheparams->method),
+                    $cacheparams->methodparams,
+                    $module->id . $view_levels . $secureid,
+                    $wrkarounds,
+                    $wrkaroundoptions
+                );
                 break;
 
             case 'static':
-                $ret = $cache->get(array(
-                    $cacheparams->class,
-                    $cacheparams->method
-                ), $cacheparams->methodparams, $module->module . md5(serialize($cacheparams->methodparams)),
-                    $wrkarounds, $wrkaroundoptions);
+                $ret = $cache->get(
+                    array(
+                        $cacheparams->class,
+                        $cacheparams->method
+                    ),
+                    $cacheparams->methodparams,
+                    $module->module . md5(serialize($cacheparams->methodparams)),
+                    $wrkarounds,
+                    $wrkaroundoptions
+                );
                 break;
 
             // Provided for backward compatibility, not really useful.
             case 'oldstatic':
-                $ret = $cache->get(array($cacheparams->class, $cacheparams->method), $cacheparams->methodparams,
-                    $module->id . $view_levels, $wrkarounds, $wrkaroundoptions);
+                $ret = $cache->get(
+                    array($cacheparams->class, $cacheparams->method),
+                    $cacheparams->methodparams,
+                    $module->id . $view_levels,
+                    $wrkarounds,
+                    $wrkaroundoptions
+                );
                 break;
 
             case 'itemid':
             default:
-                $ret = $cache->get(array($cacheparams->class, $cacheparams->method), $cacheparams->methodparams,
-                    $module->id . $view_levels . JFactory::getApplication()->input->getInt('Itemid', null), $wrkarounds,
-                    $wrkaroundoptions);
+                $ret = $cache->get(
+                    array($cacheparams->class, $cacheparams->method),
+                    $cacheparams->methodparams,
+                    $module->id . $view_levels . JFactory::getApplication()->input->getInt('Itemid', null),
+                    $wrkarounds,
+                    $wrkaroundoptions
+                );
                 break;
         }
 

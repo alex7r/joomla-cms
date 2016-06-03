@@ -97,9 +97,9 @@ class UsersTableNote extends JTable
             }
         }
 
-        $query = $this->_db->getQuery(true)
-                           ->update($this->_db->quoteName($this->_tbl))
-                           ->set($this->_db->quoteName('state') . ' = ' . (int)$state);
+        $query = $this->_db->getQuery(true)->update($this->_db->quoteName($this->_tbl))->set(
+                $this->_db->quoteName('state') . ' = ' . (int)$state
+            );
 
         // Build the WHERE clause for the primary keys.
         $query->where($k . '=' . implode(' OR ' . $k . '=', $pks));

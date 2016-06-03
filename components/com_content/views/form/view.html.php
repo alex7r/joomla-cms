@@ -43,8 +43,10 @@ class ContentViewForm extends JViewLegacy
         $this->return_page = $this->get('ReturnPage');
 
         if (empty($this->item->id)) {
-            $authorised = $user->authorise('core.create',
-                    'com_content') || (count($user->getAuthorisedCategories('com_content', 'core.create')));
+            $authorised = $user->authorise(
+                    'core.create',
+                    'com_content'
+                ) || (count($user->getAuthorisedCategories('com_content', 'core.create')));
         } else {
             $authorised = $this->item->params->get('access-edit');
         }

@@ -91,9 +91,19 @@ class MenusViewItems extends JViewLegacy
                 case 'component':
                 default:
                     // Load language
-                    $lang->load($item->componentname . '.sys', JPATH_ADMINISTRATOR, null, false,
-                        true) || $lang->load($item->componentname . '.sys',
-                        JPATH_ADMINISTRATOR . '/components/' . $item->componentname, null, false, true);
+                    $lang->load(
+                        $item->componentname . '.sys',
+                        JPATH_ADMINISTRATOR,
+                        null,
+                        false,
+                        true
+                    ) || $lang->load(
+                        $item->componentname . '.sys',
+                        JPATH_ADMINISTRATOR . '/components/' . $item->componentname,
+                        null,
+                        false,
+                        true
+                    );
 
                     if (!empty($item->componentname)) {
                         $titleParts   = array();
@@ -135,9 +145,19 @@ class MenusViewItems extends JViewLegacy
                                 $file = JPATH_SITE . '/templates/' . $temp[0] . '/html/' . $item->componentname . '/' . $vars['view'] . '/' . $temp[1] . '.xml';
 
                                 // Load template language file
-                                $lang->load('tpl_' . $temp[0] . '.sys', JPATH_SITE, null, false,
-                                    true) || $lang->load('tpl_' . $temp[0] . '.sys',
-                                    JPATH_SITE . '/templates/' . $temp[0], null, false, true);
+                                $lang->load(
+                                    'tpl_' . $temp[0] . '.sys',
+                                    JPATH_SITE,
+                                    null,
+                                    false,
+                                    true
+                                ) || $lang->load(
+                                    'tpl_' . $temp[0] . '.sys',
+                                    JPATH_SITE . '/templates/' . $temp[0],
+                                    null,
+                                    false,
+                                    true
+                                );
                             } else {
                                 // Get XML file from component folder for standard layouts
                                 $file = JPATH_SITE . '/components/' . $item->componentname . '/views/' . $vars['view'] . '/tmpl/' . $vars['layout'] . '.xml';
@@ -258,8 +278,10 @@ class MenusViewItems extends JViewLegacy
         }
 
         // Add a batch button
-        if ($user->authorise('core.create', 'com_menus') && $user->authorise('core.edit',
-                'com_menus') && $user->authorise('core.edit.state', 'com_menus')
+        if ($user->authorise('core.create', 'com_menus') && $user->authorise(
+                'core.edit',
+                'com_menus'
+            ) && $user->authorise('core.edit.state', 'com_menus')
         ) {
             $title = JText::_('JTOOLBAR_BATCH');
 

@@ -50,12 +50,15 @@ class FinderViewIndex extends JViewLegacy
         }
 
         if (!$this->pluginState['plg_content_finder']->enabled) {
-            JFactory::getApplication()
-                    ->enqueueMessage(JText::_('COM_FINDER_INDEX_PLUGIN_CONTENT_NOT_ENABLED'), 'warning');
+            JFactory::getApplication()->enqueueMessage(
+                    JText::_('COM_FINDER_INDEX_PLUGIN_CONTENT_NOT_ENABLED'),
+                    'warning'
+                );
         } elseif ($this->get('TotalIndexed') === 0) {
-            JFactory::getApplication()
-                    ->enqueueMessage(JText::_('COM_FINDER_INDEX_NO_DATA') . '  ' . JText::_('COM_FINDER_INDEX_TIP'),
-                        'notice');
+            JFactory::getApplication()->enqueueMessage(
+                    JText::_('COM_FINDER_INDEX_NO_DATA') . '  ' . JText::_('COM_FINDER_INDEX_TIP'),
+                    'notice'
+                );
         }
 
         JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
@@ -80,9 +83,18 @@ class FinderViewIndex extends JViewLegacy
         JToolbarHelper::title(JText::_('COM_FINDER_INDEX_TOOLBAR_TITLE'), 'zoom-in finder');
 
         $toolbar = JToolbar::getInstance('toolbar');
-        $toolbar->appendButton('Popup', 'archive', 'COM_FINDER_INDEX',
-            'index.php?option=com_finder&view=indexer&tmpl=component', 500, 210, 0, 0,
-            'window.parent.location.reload()', 'COM_FINDER_HEADING_INDEXER');
+        $toolbar->appendButton(
+            'Popup',
+            'archive',
+            'COM_FINDER_INDEX',
+            'index.php?option=com_finder&view=indexer&tmpl=component',
+            500,
+            210,
+            0,
+            0,
+            'window.parent.location.reload()',
+            'COM_FINDER_HEADING_INDEXER'
+        );
 
         if ($canDo->get('core.edit.state')) {
             JToolbarHelper::publishList('index.publish');
@@ -93,8 +105,14 @@ class FinderViewIndex extends JViewLegacy
             JToolbarHelper::preferences('com_finder');
         }
 
-        $toolbar->appendButton('Popup', 'bars', 'COM_FINDER_STATISTICS',
-            'index.php?option=com_finder&view=statistics&tmpl=component', 550, 350);
+        $toolbar->appendButton(
+            'Popup',
+            'bars',
+            'COM_FINDER_STATISTICS',
+            'index.php?option=com_finder&view=statistics&tmpl=component',
+            550,
+            350
+        );
 
         if ($canDo->get('core.delete')) {
             JToolbarHelper::deleteList('', 'index.delete');

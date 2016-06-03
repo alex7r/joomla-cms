@@ -33,7 +33,9 @@ $listDirn  = $this->escape($this->state->get('list.direction')); ?>
                     <input type="text" name="filter_search" id="filter_search"
                            placeholder="<?php echo JText::_('JSEARCH_FILTER'); ?>"
                            value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="hasTooltip"
-                           title="<?php echo JHtml::tooltipText('COM_LANGUAGES_VIEW_OVERRIDES_FILTER_SEARCH_DESC'); ?>"/>
+                           title="<?php echo JHtml::tooltipText(
+                               'COM_LANGUAGES_VIEW_OVERRIDES_FILTER_SEARCH_DESC'
+                           ); ?>"/>
                 </div>
                 <div class="btn-group pull-left">
                     <button type="submit" class="btn hasTooltip"
@@ -46,7 +48,9 @@ $listDirn  = $this->escape($this->state->get('list.direction')); ?>
                 </div>
                 <div class="btn-group pull-right hidden-phone">
                     <label for="limit"
-                           class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
+                           class="element-invisible"><?php echo JText::_(
+                            'JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'
+                        ); ?></label>
                     <?php echo $this->pagination->getLimitBox(); ?>
                 </div>
             </div>
@@ -62,12 +66,22 @@ $listDirn  = $this->escape($this->state->get('list.direction')); ?>
                             <?php echo JHtml::_('grid.checkall'); ?>
                         </th>
                         <th width="30%" class="left">
-                            <?php echo JHtml::_('grid.sort', 'COM_LANGUAGES_VIEW_OVERRIDES_KEY', 'key', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_LANGUAGES_VIEW_OVERRIDES_KEY',
+                                'key',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th class="left hidden-phone">
-                            <?php echo JHtml::_('grid.sort', 'COM_LANGUAGES_VIEW_OVERRIDES_TEXT', 'text', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_LANGUAGES_VIEW_OVERRIDES_TEXT',
+                                'text',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th class="nowrap hidden-phone">
                             <?php echo JText::_('COM_LANGUAGES_FIELD_LANG_TAG_LABEL'); ?>
@@ -95,14 +109,18 @@ $listDirn  = $this->escape($this->state->get('list.direction')); ?>
                             <td>
                                 <?php if ($canEdit) : ?>
                                     <a id="key[<?php echo $this->escape($key); ?>]"
-                                       href="<?php echo JRoute::_('index.php?option=com_languages&task=override.edit&id=' . $key); ?>"><?php echo $this->escape($key); ?></a>
+                                       href="<?php echo JRoute::_(
+                                           'index.php?option=com_languages&task=override.edit&id=' . $key
+                                       ); ?>"><?php echo $this->escape($key); ?></a>
                                 <?php else: ?>
                                     <?php echo $this->escape($key); ?>
                                 <?php endif; ?>
                             </td>
                             <td class="hidden-phone">
 								<span
-                                    id="string[<?php echo $this->escape($key); ?>]"><?php echo $this->escape($text); ?></span>
+                                    id="string[<?php echo $this->escape($key); ?>]"><?php echo $this->escape(
+                                        $text
+                                    ); ?></span>
                             </td>
                             <td class="hidden-phone">
                                 <?php echo $language; ?>

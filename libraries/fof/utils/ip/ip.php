@@ -35,9 +35,12 @@ abstract class FOFUtilsIp
         if (!is_array($ipTable)) {
             if (strpos($ipTable, ',') !== false) {
                 $ipTable = explode(',', $ipTable);
-                $ipTable = array_map(function ($x) {
-                    return trim($x);
-                }, $ipTable);
+                $ipTable = array_map(
+                    function ($x) {
+                        return trim($x);
+                    },
+                    $ipTable
+                );
             } else {
                 $ipTable = trim($ipTable);
                 $ipTable = array($ipTable);

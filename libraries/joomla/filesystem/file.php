@@ -98,8 +98,11 @@ class JFile
             $stream = JFactory::getStream();
 
             if (!$stream->copy($src, $dest)) {
-                JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_JFILE_STREAMS', $src, $dest, $stream->getError()),
-                    JLog::WARNING, 'jerror');
+                JLog::add(
+                    JText::sprintf('JLIB_FILESYSTEM_ERROR_JFILE_STREAMS', $src, $dest, $stream->getError()),
+                    JLog::WARNING,
+                    'jerror'
+                );
 
                 return false;
             }
@@ -110,8 +113,13 @@ class JFile
 
             if ($FTPOptions['enabled'] == 1) {
                 // Connect the FTP client
-                $ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'],
-                    $FTPOptions['pass']);
+                $ftp = JClientFtp::getInstance(
+                    $FTPOptions['host'],
+                    $FTPOptions['port'],
+                    array(),
+                    $FTPOptions['user'],
+                    $FTPOptions['pass']
+                );
 
                 // If the parent folder doesn't exist we must create it
                 if (!file_exists(dirname($dest))) {
@@ -130,8 +138,11 @@ class JFile
                 $ret = true;
             } else {
                 if (!@ copy($src, $dest)) {
-                    JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_COPY_FAILED_ERR01', $src, $dest), JLog::WARNING,
-                        'jerror');
+                    JLog::add(
+                        JText::sprintf('JLIB_FILESYSTEM_ERROR_COPY_FAILED_ERR01', $src, $dest),
+                        JLog::WARNING,
+                        'jerror'
+                    );
 
                     return false;
                 }
@@ -166,8 +177,13 @@ class JFile
         // Do NOT use ftp if it is not enabled
         if ($FTPOptions['enabled'] == 1) {
             // Connect the FTP client
-            $ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'],
-                $FTPOptions['pass']);
+            $ftp = JClientFtp::getInstance(
+                $FTPOptions['host'],
+                $FTPOptions['port'],
+                array(),
+                $FTPOptions['user'],
+                $FTPOptions['pass']
+            );
         }
 
         foreach ($files as $file) {
@@ -236,8 +252,11 @@ class JFile
             $stream = JFactory::getStream();
 
             if (!$stream->move($src, $dest)) {
-                JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_JFILE_MOVE_STREAMS', $stream->getError()),
-                    JLog::WARNING, 'jerror');
+                JLog::add(
+                    JText::sprintf('JLIB_FILESYSTEM_ERROR_JFILE_MOVE_STREAMS', $stream->getError()),
+                    JLog::WARNING,
+                    'jerror'
+                );
 
                 return false;
             }
@@ -248,8 +267,13 @@ class JFile
 
             if ($FTPOptions['enabled'] == 1) {
                 // Connect the FTP client
-                $ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'],
-                    $FTPOptions['pass']);
+                $ftp = JClientFtp::getInstance(
+                    $FTPOptions['host'],
+                    $FTPOptions['port'],
+                    array(),
+                    $FTPOptions['user'],
+                    $FTPOptions['pass']
+                );
 
                 // Translate path for the FTP account
                 $src  = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $src), '/');
@@ -298,8 +322,11 @@ class JFile
         }
 
         if (false === $fh = fopen($filename, 'rb', $incpath)) {
-            JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_READ_UNABLE_TO_OPEN_FILE', $filename), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_FILESYSTEM_ERROR_READ_UNABLE_TO_OPEN_FILE', $filename),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -365,8 +392,11 @@ class JFile
                 return true;
             }
 
-            JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_WRITE_STREAMS', $file, $stream->getError()), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_FILESYSTEM_ERROR_WRITE_STREAMS', $file, $stream->getError()),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         } else {
@@ -376,8 +406,13 @@ class JFile
             if ($FTPOptions['enabled'] == 1) {
                 // Connect the FTP client
                 jimport('joomla.client.ftp');
-                $ftp = JFTP::getInstance($FTPOptions['host'], $FTPOptions['port'], null, $FTPOptions['user'],
-                    $FTPOptions['pass']);
+                $ftp = JFTP::getInstance(
+                    $FTPOptions['host'],
+                    $FTPOptions['port'],
+                    null,
+                    $FTPOptions['user'],
+                    $FTPOptions['pass']
+                );
 
                 // Translate path for the FTP account and use FTP write buffer to file
                 $file = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $file), '/');
@@ -422,8 +457,11 @@ class JFile
             $stream->set('chunksize', (1024 * 1024));
 
             if (!$stream->writeFile($file, $buffer)) {
-                JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_WRITE_STREAMS', $file, $stream->getError()),
-                    JLog::WARNING, 'jerror');
+                JLog::add(
+                    JText::sprintf('JLIB_FILESYSTEM_ERROR_WRITE_STREAMS', $file, $stream->getError()),
+                    JLog::WARNING,
+                    'jerror'
+                );
 
                 return false;
             }
@@ -435,8 +473,13 @@ class JFile
 
             if ($FTPOptions['enabled'] == 1) {
                 // Connect the FTP client
-                $ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'],
-                    $FTPOptions['pass']);
+                $ftp = JClientFtp::getInstance(
+                    $FTPOptions['host'],
+                    $FTPOptions['port'],
+                    array(),
+                    $FTPOptions['user'],
+                    $FTPOptions['pass']
+                );
 
                 // Translate path for the FTP account and use FTP write buffer to file
                 $file = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $file), '/');
@@ -511,8 +554,13 @@ class JFile
 
             if ($FTPOptions['enabled'] == 1) {
                 // Connect the FTP client
-                $ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'],
-                    $FTPOptions['pass']);
+                $ftp = JClientFtp::getInstance(
+                    $FTPOptions['host'],
+                    $FTPOptions['port'],
+                    array(),
+                    $FTPOptions['user'],
+                    $FTPOptions['pass']
+                );
 
                 // Translate path for the FTP account
                 $dest = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $dest), '/');
@@ -522,8 +570,11 @@ class JFile
                     unlink($src);
                     $ret = true;
                 } else {
-                    JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_WARNFS_ERR04', $src, $dest), JLog::WARNING,
-                        'jerror');
+                    JLog::add(
+                        JText::sprintf('JLIB_FILESYSTEM_ERROR_WARNFS_ERR04', $src, $dest),
+                        JLog::WARNING,
+                        'jerror'
+                    );
                 }
             } else {
                 if (is_writeable($baseDir) && move_uploaded_file($src, $dest)) {
@@ -534,8 +585,11 @@ class JFile
                         JLog::add(JText::_('JLIB_FILESYSTEM_ERROR_WARNFS_ERR01'), JLog::WARNING, 'jerror');
                     }
                 } else {
-                    JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_WARNFS_ERR04', $src, $dest), JLog::WARNING,
-                        'jerror');
+                    JLog::add(
+                        JText::sprintf('JLIB_FILESYSTEM_ERROR_WARNFS_ERR04', $src, $dest),
+                        JLog::WARNING,
+                        'jerror'
+                    );
                 }
             }
 

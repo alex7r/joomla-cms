@@ -91,17 +91,16 @@ class InstallerModelDatabase extends InstallerModel
 
         // Delete old row.
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->delete($db->quoteName('#__schemas'))
-                    ->where($db->quoteName('extension_id') . ' = 700');
+        $query = $db->getQuery(true)->delete($db->quoteName('#__schemas'))->where(
+                $db->quoteName('extension_id') . ' = 700'
+            );
         $db->setQuery($query);
         $db->execute();
 
         // Add new row.
-        $query->clear()
-              ->insert($db->quoteName('#__schemas'))
-              ->columns($db->quoteName('extension_id') . ',' . $db->quoteName('version_id'))
-              ->values('700, ' . $db->quote($schema));
+        $query->clear()->insert($db->quoteName('#__schemas'))->columns(
+                $db->quoteName('extension_id') . ',' . $db->quoteName('version_id')
+            )->values('700, ' . $db->quote($schema));
         $db->setQuery($query);
 
         if (!$db->execute()) {
@@ -121,10 +120,9 @@ class InstallerModelDatabase extends InstallerModel
     public function getSchemaVersion()
     {
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('version_id')
-                    ->from($db->quoteName('#__schemas'))
-                    ->where('extension_id = 700');
+        $query = $db->getQuery(true)->select('version_id')->from($db->quoteName('#__schemas'))->where(
+                'extension_id = 700'
+            );
         $db->setQuery($query);
         $result = $db->loadResult();
 
@@ -271,7 +269,9 @@ class InstallerModelDatabase extends InstallerModel
             return;
         }
 
-        $creaTabSql = 'CREATE TABLE IF NOT EXISTS ' . $db->quoteName('#__utf8_conversion') . ' (' . $db->quoteName('converted') . ' tinyint(4) NOT NULL DEFAULT 0' . ') ENGINE=InnoDB';
+        $creaTabSql = 'CREATE TABLE IF NOT EXISTS ' . $db->quoteName('#__utf8_conversion') . ' (' . $db->quoteName(
+                'converted'
+            ) . ' tinyint(4) NOT NULL DEFAULT 0' . ') ENGINE=InnoDB';
 
         if ($db->hasUTF8mb4Support()) {
             $creaTabSql = $creaTabSql . ' DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;';
@@ -288,12 +288,18 @@ class InstallerModelDatabase extends InstallerModel
         if ($count > 1) {
             // Table messed up somehow, clear it
             $db->setQuery('DELETE FROM ' . $db->quoteName('#__utf8_conversion') . ';')->execute();
-            $db->setQuery('INSERT INTO ' . $db->quoteName('#__utf8_conversion') . ' (' . $db->quoteName('converted') . ') VALUES (0);')
-               ->execute();
+            $db->setQuery(
+                'INSERT INTO ' . $db->quoteName('#__utf8_conversion') . ' (' . $db->quoteName(
+                    'converted'
+                ) . ') VALUES (0);'
+            )->execute();
         } elseif ($count == 0) {
             // Record missing somehow, fix this
-            $db->setQuery('INSERT INTO ' . $db->quoteName('#__utf8_conversion') . ' (' . $db->quoteName('converted') . ') VALUES (0);')
-               ->execute();
+            $db->setQuery(
+                'INSERT INTO ' . $db->quoteName('#__utf8_conversion') . ' (' . $db->quoteName(
+                    'converted'
+                ) . ') VALUES (0);'
+            )->execute();
         }
     }
 }

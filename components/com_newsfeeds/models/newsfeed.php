@@ -56,9 +56,9 @@ class NewsfeedsModelNewsfeed extends JModelItem
                 $query->select('u.name AS author')->join('LEFT', '#__users AS u on u.id = a.created_by');
 
                 // Join over the categories to get parent category titles
-                $query->select('parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias')
-                      ->join('LEFT', '#__categories as parent ON parent.id = c.parent_id')
-                      ->where('a.id = ' . (int)$pk);
+                $query->select(
+                    'parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias'
+                )->join('LEFT', '#__categories as parent ON parent.id = c.parent_id')->where('a.id = ' . (int)$pk);
 
                 // Filter by start and end dates.
                 $nullDate = $db->quote($db->getNullDate());
@@ -85,7 +85,10 @@ class NewsfeedsModelNewsfeed extends JModelItem
 
                 // Check for published state if filter set.
 
-                if (((is_numeric($published)) || (is_numeric($archived))) && (($data->published != $published) && ($data->published != $archived))) {
+                if (((is_numeric($published)) || (is_numeric(
+                            $archived
+                        ))) && (($data->published != $published) && ($data->published != $archived))
+                ) {
                     JError::raiseError(404, JText::_('COM_NEWSFEEDS_ERROR_FEED_NOT_FOUND'));
                 }
 
@@ -108,8 +111,10 @@ class NewsfeedsModelNewsfeed extends JModelItem
                     // If no access filter is set, the layout takes some responsibility for display of limited information.
                     $user   = JFactory::getUser();
                     $groups = $user->getAuthorisedViewLevels();
-                    $data->params->set('access-view',
-                        in_array($data->access, $groups) && in_array($data->category_access, $groups));
+                    $data->params->set(
+                        'access-view',
+                        in_array($data->access, $groups) && in_array($data->category_access, $groups)
+                    );
                 }
 
                 $this->_item[$pk] = $data;
@@ -173,8 +178,10 @@ class NewsfeedsModelNewsfeed extends JModelItem
 
         $user = JFactory::getUser();
 
-        if ((!$user->authorise('core.edit.state', 'com_newsfeeds')) && (!$user->authorise('core.edit',
-                'com_newsfeeds'))
+        if ((!$user->authorise('core.edit.state', 'com_newsfeeds')) && (!$user->authorise(
+                'core.edit',
+                'com_newsfeeds'
+            ))
         ) {
             $this->setState('filter.published', 1);
             $this->setState('filter.archived', 2);

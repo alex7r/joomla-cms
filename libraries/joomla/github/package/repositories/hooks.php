@@ -145,14 +145,16 @@ class JGithubPackageRepositoriesHooks extends JGithubPackage
         // Build the request path.
         $path = '/repos/' . $user . '/' . $repo . '/hooks/' . $id;
 
-        $data = json_encode(array(
-            'name'          => $name,
-            'config'        => $config,
-            'events'        => $events,
-            'add_events'    => $addEvents,
-            'remove_events' => $removeEvents,
-            'active'        => $active
-        ));
+        $data = json_encode(
+            array(
+                'name'          => $name,
+                'config'        => $config,
+                'events'        => $events,
+                'add_events'    => $addEvents,
+                'remove_events' => $removeEvents,
+                'active'        => $active
+            )
+        );
 
         return $this->processResponse($this->client->patch($this->fetchUrl($path), $data));
     }

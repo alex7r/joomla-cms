@@ -59,10 +59,15 @@ abstract class JHtmlList
             }
         }
 
-        $images = JHtml::_('select.genericlist', $images, $name, array(
-            'list.attr'   => 'class="inputbox" size="1" ' . $javascript,
-            'list.select' => $active
-        ));
+        $images = JHtml::_(
+            'select.genericlist',
+            $images,
+            $name,
+            array(
+                'list.attr'   => 'class="inputbox" size="1" ' . $javascript,
+                'list.select' => $active
+            )
+        );
 
         return $images;
     }
@@ -105,8 +110,11 @@ abstract class JHtmlList
             $options[] = JHtml::_('select.option', $items[$i]->value, $items[$i]->value . '. ' . $text);
         }
 
-        $options[] = JHtml::_('select.option', $items[$i - 1]->value + 1,
-            ($items[$i - 1]->value + 1) . ' ' . JText::_('JOPTION_ORDER_LAST'));
+        $options[] = JHtml::_(
+            'select.option',
+            $items[$i - 1]->value + 1,
+            ($items[$i - 1]->value + 1) . ' ' . JText::_('JOPTION_ORDER_LAST')
+        );
 
         return $options;
     }
@@ -132,8 +140,12 @@ abstract class JHtmlList
 
         if (empty($neworder)) {
             $orders = JHtml::_('list.genericordering', $query);
-            $html   = JHtml::_('select.genericlist', $orders, $name,
-                array('list.attr' => $attribs, 'list.select' => (int)$selected));
+            $html   = JHtml::_(
+                'select.genericlist',
+                $orders,
+                $name,
+                array('list.attr' => $attribs, 'list.select' => (int)$selected)
+            );
         } else {
             if ($neworder > 0) {
                 $text = JText::_('JGLOBAL_NEWITEMSLAST_DESC');
@@ -163,13 +175,10 @@ abstract class JHtmlList
     public static function users($name, $active, $nouser = 0, $javascript = null, $order = 'name')
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('u.id AS value, u.name AS text')
-                    ->from('#__users AS u')
-                    ->join('LEFT', '#__user_usergroup_map AS m ON m.user_id = u.id')
-                    ->where('u.block = 0')
-                    ->order($order)
-                    ->group('u.id');
+        $query = $db->getQuery(true)->select('u.id AS value, u.name AS text')->from('#__users AS u')->join(
+                'LEFT',
+                '#__user_usergroup_map AS m ON m.user_id = u.id'
+            )->where('u.block = 0')->order($order)->group('u.id');
         $db->setQuery($query);
 
         if ($nouser) {
@@ -179,10 +188,15 @@ abstract class JHtmlList
             $users = $db->loadObjectList();
         }
 
-        $users = JHtml::_('select.genericlist', $users, $name, array(
-            'list.attr'   => 'class="inputbox" size="1" ' . $javascript,
-            'list.select' => $active
-        ));
+        $users = JHtml::_(
+            'select.genericlist',
+            $users,
+            $name,
+            array(
+                'list.attr'   => 'class="inputbox" size="1" ' . $javascript,
+                'list.select' => $active
+            )
+        );
 
         return $users;
     }
@@ -231,12 +245,17 @@ abstract class JHtmlList
             $pos['right'] = JText::_('JGLOBAL_RIGHT');
         }
 
-        $positions = JHtml::_('select.genericlist', $pos, $name, array(
-            'id'          => $id,
-            'list.attr'   => 'class="inputbox" size="1"' . $javascript,
-            'list.select' => $active,
-            'option.key'  => null,
-        ));
+        $positions = JHtml::_(
+            'select.genericlist',
+            $pos,
+            $name,
+            array(
+                'id'          => $id,
+                'list.attr'   => 'class="inputbox" size="1"' . $javascript,
+                'list.select' => $active,
+                'option.key'  => null,
+            )
+        );
 
         return $positions;
     }

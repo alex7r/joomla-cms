@@ -46,9 +46,9 @@ abstract class JHtmlFilter
 
         // Load the predefined filter if specified.
         if (!empty($filterId)) {
-            $query->select('f.data, f.params')
-                  ->from($db->quoteName('#__finder_filters') . ' AS f')
-                  ->where('f.filter_id = ' . (int)$filterId);
+            $query->select('f.data, f.params')->from($db->quoteName('#__finder_filters') . ' AS f')->where(
+                    'f.filter_id = ' . (int)$filterId
+                );
 
             // Load the filter data.
             $db->setQuery($query);
@@ -98,8 +98,11 @@ abstract class JHtmlFilter
         }
 
         $branch_keys = array_keys($branches);
-        $html .= JHtml::_('bootstrap.startAccordion', 'accordion',
-            array('parent' => true, 'active' => 'accordion-' . $branch_keys[0]));
+        $html .= JHtml::_(
+            'bootstrap.startAccordion',
+            'accordion',
+            array('parent' => true, 'active' => 'accordion-' . $branch_keys[0])
+        );
 
         // Load plug-in language files.
         FinderHelperLanguage::loadPluginLanguage();
@@ -112,18 +115,18 @@ abstract class JHtmlFilter
             }
 
             // Build the query to get the child nodes for this branch.
-            $query->clear()
-                  ->select('t.*')
-                  ->from($db->quoteName('#__finder_taxonomy') . ' AS t')
-                  ->where('t.parent_id = ' . (int)$bk)
-                  ->where('t.state = 1')
-                  ->where('t.access IN (' . $groups . ')')
-                  ->order('t.ordering, t.title');
+            $query->clear()->select('t.*')->from($db->quoteName('#__finder_taxonomy') . ' AS t')->where(
+                    't.parent_id = ' . (int)$bk
+                )->where('t.state = 1')->where('t.access IN (' . $groups . ')')->order('t.ordering, t.title');
 
             // Self-join to get the parent title.
-            $query->select('e.title AS parent_title')
-                  ->join('LEFT', $db->quoteName('#__finder_taxonomy',
-                          'e') . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('t.parent_id'));
+            $query->select('e.title AS parent_title')->join(
+                    'LEFT',
+                    $db->quoteName(
+                        '#__finder_taxonomy',
+                        'e'
+                    ) . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('t.parent_id')
+                );
 
             // Load the branches.
             $db->setQuery($query);
@@ -147,12 +150,20 @@ abstract class JHtmlFilter
             }
 
             // Adding slides
-            $html .= JHtml::_('bootstrap.addSlide', 'accordion', JText::sprintf('COM_FINDER_FILTER_BRANCH_LABEL',
-                JText::_(FinderHelperLanguage::branchSingular($bv->title)) . ' - ' . count($nodes)),
-                'accordion-' . $bk);
+            $html .= JHtml::_(
+                'bootstrap.addSlide',
+                'accordion',
+                JText::sprintf(
+                    'COM_FINDER_FILTER_BRANCH_LABEL',
+                    JText::_(FinderHelperLanguage::branchSingular($bv->title)) . ' - ' . count($nodes)
+                ),
+                'accordion-' . $bk
+            );
 
             // Populate the toggle button.
-            $html .= "<button class=\"btn\" type=\"button\" class=\"jform-rightbtn\" onclick=\"jQuery('[id=tax-" . $bk . "]').each(function(){this.click();});\"><span class=\"icon-checkbox-partial\"></span> " . JText::_('JGLOBAL_SELECTION_INVERT') . "</button><hr/>";
+            $html .= "<button class=\"btn\" type=\"button\" class=\"jform-rightbtn\" onclick=\"jQuery('[id=tax-" . $bk . "]').each(function(){this.click();});\"><span class=\"icon-checkbox-partial\"></span> " . JText::_(
+                    'JGLOBAL_SELECTION_INVERT'
+                ) . "</button><hr/>";
 
             // Populate the group with nodes.
             foreach ($nodes as $nk => $nv) {
@@ -198,12 +209,14 @@ abstract class JHtmlFilter
 
         // Try to load the results from cache.
         $cache   = JFactory::getCache('com_finder', '');
-        $cacheId = 'filter_select_' . serialize(array(
-                $idxQuery->filter,
-                $options,
-                $groups,
-                JFactory::getLanguage()->getTag()
-            ));
+        $cacheId = 'filter_select_' . serialize(
+                array(
+                    $idxQuery->filter,
+                    $options,
+                    $groups,
+                    JFactory::getLanguage()->getTag()
+                )
+            );
 
         // Check the cached results.
         if (!($branches = $cache->get($cacheId))) {
@@ -212,9 +225,9 @@ abstract class JHtmlFilter
 
             // Load the predefined filter if specified.
             if (!empty($idxQuery->filter)) {
-                $query->select('f.data, ' . $db->quoteName('f.params'))
-                      ->from($db->quoteName('#__finder_filters') . ' AS f')
-                      ->where('f.filter_id = ' . (int)$idxQuery->filter);
+                $query->select('f.data, ' . $db->quoteName('f.params'))->from(
+                        $db->quoteName('#__finder_filters') . ' AS f'
+                    )->where('f.filter_id = ' . (int)$idxQuery->filter);
 
                 // Load the filter data.
                 $db->setQuery($query);
@@ -234,17 +247,13 @@ abstract class JHtmlFilter
             }
 
             // Build the query to get the branch data and the number of child nodes.
-            $query->clear()
-                  ->select('t.*, count(c.id) AS children')
-                  ->from($db->quoteName('#__finder_taxonomy') . ' AS t')
-                  ->join('INNER', $db->quoteName('#__finder_taxonomy') . ' AS c ON c.parent_id = t.id')
-                  ->where('t.parent_id = 1')
-                  ->where('t.state = 1')
-                  ->where('t.access IN (' . $groups . ')')
-                  ->where('c.state = 1')
-                  ->where('c.access IN (' . $groups . ')')
-                  ->group($db->quoteName('t.id'))
-                  ->order('t.ordering, t.title');
+            $query->clear()->select('t.*, count(c.id) AS children')->from(
+                    $db->quoteName('#__finder_taxonomy') . ' AS t'
+                )->join('INNER', $db->quoteName('#__finder_taxonomy') . ' AS c ON c.parent_id = t.id')->where(
+                    't.parent_id = 1'
+                )->where('t.state = 1')->where('t.access IN (' . $groups . ')')->where('c.state = 1')->where(
+                    'c.access IN (' . $groups . ')'
+                )->group($db->quoteName('t.id'))->order('t.ordering, t.title');
 
             // Limit the branch children to a predefined filter.
             if (!empty($filter->data)) {
@@ -273,18 +282,18 @@ abstract class JHtmlFilter
                 }
 
                 // Build the query to get the child nodes for this branch.
-                $query->clear()
-                      ->select('t.*')
-                      ->from($db->quoteName('#__finder_taxonomy') . ' AS t')
-                      ->where('t.parent_id = ' . (int)$bk)
-                      ->where('t.state = 1')
-                      ->where('t.access IN (' . $groups . ')')
-                      ->order('t.ordering, t.title');
+                $query->clear()->select('t.*')->from($db->quoteName('#__finder_taxonomy') . ' AS t')->where(
+                        't.parent_id = ' . (int)$bk
+                    )->where('t.state = 1')->where('t.access IN (' . $groups . ')')->order('t.ordering, t.title');
 
                 // Self-join to get the parent title.
-                $query->select('e.title AS parent_title')
-                      ->join('LEFT', $db->quoteName('#__finder_taxonomy',
-                              'e') . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('t.parent_id'));
+                $query->select('e.title AS parent_title')->join(
+                        'LEFT',
+                        $db->quoteName(
+                            '#__finder_taxonomy',
+                            'e'
+                        ) . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('t.parent_id')
+                    );
 
                 // Limit the nodes to a predefined filter.
                 if (!empty($filter->data)) {
@@ -313,8 +322,10 @@ abstract class JHtmlFilter
                 }
 
                 // Add the Search All option to the branch.
-                array_unshift($branches[$bk]->nodes,
-                    array('id' => null, 'title' => JText::_('COM_FINDER_FILTER_SELECT_ALL_LABEL')));
+                array_unshift(
+                    $branches[$bk]->nodes,
+                    array('id' => null, 'title' => JText::_('COM_FINDER_FILTER_SELECT_ALL_LABEL'))
+                );
             }
 
             // Store the data in cache.
@@ -350,12 +361,22 @@ abstract class JHtmlFilter
             // Build a node.
             $html .= '<div class="controls finder-selects">';
             $html .= '<label for="tax-' . JFilterOutput::stringUrlSafe($bv->title) . '" class="control-label">';
-            $html .= JText::sprintf('COM_FINDER_FILTER_BRANCH_LABEL',
-                JText::_(FinderHelperLanguage::branchSingular($bv->title)));
+            $html .= JText::sprintf(
+                'COM_FINDER_FILTER_BRANCH_LABEL',
+                JText::_(FinderHelperLanguage::branchSingular($bv->title))
+            );
             $html .= '</label>';
             $html .= '<br />';
-            $html .= JHtml::_('select.genericlist', $branches[$bk]->nodes, 't[]', 'class="inputbox advancedSelect"',
-                'id', 'title', $active, 'tax-' . JFilterOutput::stringUrlSafe($bv->title));
+            $html .= JHtml::_(
+                'select.genericlist',
+                $branches[$bk]->nodes,
+                't[]',
+                'class="inputbox advancedSelect"',
+                'id',
+                'title',
+                $active,
+                'tax-' . JFilterOutput::stringUrlSafe($bv->title)
+            );
             $html .= '</div>';
         }
 
@@ -401,25 +422,43 @@ abstract class JHtmlFilter
             // Start date filter.
             $attribs['class'] = 'input-medium';
             $html .= '<li class="filter-date' . $classSuffix . '">';
-            $html .= '<label for="filter_date1" class="hasTooltip" title ="' . JText::_('COM_FINDER_FILTER_DATE1_DESC') . '">';
+            $html .= '<label for="filter_date1" class="hasTooltip" title ="' . JText::_(
+                    'COM_FINDER_FILTER_DATE1_DESC'
+                ) . '">';
             $html .= JText::_('COM_FINDER_FILTER_DATE1');
             $html .= '</label>';
             $html .= '<br />';
-            $html .= JHtml::_('select.genericlist', $operators, 'w1',
-                'class="inputbox filter-date-operator advancedSelect"', 'value', 'text', $idxQuery->when1,
-                'finder-filter-w1');
+            $html .= JHtml::_(
+                'select.genericlist',
+                $operators,
+                'w1',
+                'class="inputbox filter-date-operator advancedSelect"',
+                'value',
+                'text',
+                $idxQuery->when1,
+                'finder-filter-w1'
+            );
             $html .= JHtml::calendar($idxQuery->date1, 'd1', 'filter_date1', '%Y-%m-%d', $attribs);
             $html .= '</li>';
 
             // End date filter.
             $html .= '<li class="filter-date' . $classSuffix . '">';
-            $html .= '<label for="filter_date2" class="hasTooltip" title ="' . JText::_('COM_FINDER_FILTER_DATE2_DESC') . '">';
+            $html .= '<label for="filter_date2" class="hasTooltip" title ="' . JText::_(
+                    'COM_FINDER_FILTER_DATE2_DESC'
+                ) . '">';
             $html .= JText::_('COM_FINDER_FILTER_DATE2');
             $html .= '</label>';
             $html .= '<br />';
-            $html .= JHtml::_('select.genericlist', $operators, 'w2',
-                'class="inputbox filter-date-operator advancedSelect"', 'value', 'text', $idxQuery->when2,
-                'finder-filter-w2');
+            $html .= JHtml::_(
+                'select.genericlist',
+                $operators,
+                'w2',
+                'class="inputbox filter-date-operator advancedSelect"',
+                'value',
+                'text',
+                $idxQuery->when2,
+                'finder-filter-w2'
+            );
             $html .= JHtml::calendar($idxQuery->date2, 'd2', 'filter_date2', '%Y-%m-%d', $attribs);
             $html .= '</li>';
 

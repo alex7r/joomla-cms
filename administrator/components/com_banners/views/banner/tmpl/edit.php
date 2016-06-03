@@ -13,7 +13,8 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.formvalidator');
 JHtml::_('formbehavior.chosen', 'select', null, array('disable_search_threshold' => 0));
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	Joomla.submitbutton = function(task)
 	{
 		if (task == "banner.cancel" || document.formvalidator.isValid(document.getElementById("banner-form")))
@@ -43,7 +44,8 @@ JFactory::getDocument()->addScriptDeclaration('
 			}
 		}).trigger("change");
 	});
-');
+'
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_banners&layout=edit&id=' . (int)$this->item->id); ?>"
@@ -75,8 +77,12 @@ JFactory::getDocument()->addScriptDeclaration('
         </div>
         <?php echo JHtml::_('bootstrap.endTab'); ?>
 
-        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'otherparams',
-            JText::_('COM_BANNERS_GROUP_LABEL_BANNER_DETAILS')); ?>
+        <?php echo JHtml::_(
+            'bootstrap.addTab',
+            'myTab',
+            'otherparams',
+            JText::_('COM_BANNERS_GROUP_LABEL_BANNER_DETAILS')
+        ); ?>
         <?php echo $this->form->getControlGroups('otherparams'); ?>
         <?php echo JHtml::_('bootstrap.endTab'); ?>
 

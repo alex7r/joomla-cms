@@ -71,8 +71,11 @@ class ContactModelContact extends JModelAdmin
         JForm::addFieldPath('JPATH_ADMINISTRATOR/components/com_users/models/fields');
 
         // Get the form.
-        $form = $this->loadForm('com_contact.contact', 'contact',
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_contact.contact',
+            'contact',
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
 
         if (empty($form)) {
             return false;
@@ -128,8 +131,10 @@ class ContactModelContact extends JModelAdmin
     {
         $input = JFactory::getApplication()->input;
 
-        JLoader::register('CategoriesHelper',
-            JPATH_ADMINISTRATOR . '/components/com_categories/helpers/categories.php');
+        JLoader::register(
+            'CategoriesHelper',
+            JPATH_ADMINISTRATOR . '/components/com_categories/helpers/categories.php'
+        );
 
         // Cast catid to integer for comparison
         $catid = (int)$data['catid'];
@@ -435,8 +440,10 @@ class ContactModelContact extends JModelAdmin
 
             // Prime some default values.
             if ($this->getState('contact.id') == 0) {
-                $data->set('catid',
-                    $app->input->get('catid', $app->getUserState('com_contact.contacts.filter.category_id'), 'int'));
+                $data->set(
+                    'catid',
+                    $app->input->get('catid', $app->getUserState('com_contact.contacts.filter.category_id'), 'int')
+                );
             }
         }
 
@@ -470,8 +477,12 @@ class ContactModelContact extends JModelAdmin
             $item->associations = array();
 
             if ($item->id != null) {
-                $associations = JLanguageAssociations::getAssociations('com_contact', '#__contact_details',
-                    'com_contact.item', $item->id);
+                $associations = JLanguageAssociations::getAssociations(
+                    'com_contact',
+                    '#__contact_details',
+                    'com_contact.item',
+                    $item->id
+                );
 
                 foreach ($associations as $tag => $association) {
                     $item->associations[$tag] = $association->id;

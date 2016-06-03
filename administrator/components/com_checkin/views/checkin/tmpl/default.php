@@ -25,8 +25,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <?php else : ?>
         <div id="j-main-container">
             <?php endif; ?>
-            <?php echo JLayoutHelper::render('joomla.searchtools.default',
-                array('view' => $this, 'options' => array('filterButton' => false))); ?>
+            <?php echo JLayoutHelper::render(
+                'joomla.searchtools.default',
+                array('view' => $this, 'options' => array('filterButton' => false))
+            ); ?>
             <div class="clearfix"></div>
             <?php if (empty($this->items)) : ?>
                 <div class="alert alert-no-items">
@@ -37,10 +39,20 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     <thead>
                     <tr>
                         <th width="1%"><?php echo JHtml::_('grid.checkall'); ?></th>
-                        <th><?php echo JHtml::_('searchtools.sort', 'COM_CHECKIN_DATABASE_TABLE', 'table', $listDirn,
-                                $listOrder); ?></th>
-                        <th><?php echo JHtml::_('searchtools.sort', 'COM_CHECKIN_ITEMS_TO_CHECK_IN', 'count', $listDirn,
-                                $listOrder); ?></th>
+                        <th><?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_CHECKIN_DATABASE_TABLE',
+                                'table',
+                                $listDirn,
+                                $listOrder
+                            ); ?></th>
+                        <th><?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_CHECKIN_ITEMS_TO_CHECK_IN',
+                                'count',
+                                $listDirn,
+                                $listOrder
+                            ); ?></th>
                     </tr>
                     </thead>
                     <tfoot>

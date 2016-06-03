@@ -76,13 +76,15 @@ class JGithubCommits extends JGithubObject
         // Build the request path.
         $path = '/repos/' . $user . '/' . $repo . '/commits/' . $sha . '/comments';
 
-        $data = json_encode(array(
-            'body'      => $comment,
-            'commit_id' => $sha,
-            'line'      => (int)$line,
-            'path'      => $filepath,
-            'position'  => (int)$position
-        ));
+        $data = json_encode(
+            array(
+                'body'      => $comment,
+                'commit_id' => $sha,
+                'line'      => (int)$line,
+                'path'      => $filepath,
+                'position'  => (int)$position
+            )
+        );
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);
@@ -147,9 +149,11 @@ class JGithubCommits extends JGithubObject
         // Build the request path.
         $path = '/repos/' . $user . '/' . $repo . '/comments/' . $id;
 
-        $data = json_encode(array(
-            'body' => $comment
-        ));
+        $data = json_encode(
+            array(
+                'body' => $comment
+            )
+        );
 
         // Send the request.
         $response = $this->client->patch($this->fetchUrl($path), $data);

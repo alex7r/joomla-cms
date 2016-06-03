@@ -59,8 +59,10 @@ class PluginsViewPlugin extends JViewLegacy
 
         $canDo = JHelperContent::getActions('com_plugins');
 
-        JToolbarHelper::title(JText::sprintf('COM_PLUGINS_MANAGER_PLUGIN', JText::_($this->item->name)),
-            'power-cord plugin');
+        JToolbarHelper::title(
+            JText::sprintf('COM_PLUGINS_MANAGER_PLUGIN', JText::_($this->item->name)),
+            'power-cord plugin'
+        );
 
         // If not checked out, can save the item.
         if ($canDo->get('core.edit')) {

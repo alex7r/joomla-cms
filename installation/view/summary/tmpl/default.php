@@ -12,9 +12,9 @@ defined('_JEXEC') or die;
 /* @var InstallationViewSummaryHtml $this */
 
 // Determine if the configuration file path is writable.
-$path   = JPATH_CONFIGURATION . '/configuration.php';
+$path = JPATH_CONFIGURATION . '/configuration.php';
 $useftp = (file_exists($path)) ? !is_writable($path) : !is_writable(JPATH_CONFIGURATION . '/');
-$prev   = $useftp ? 'ftp' : 'database';
+$prev = $useftp ? 'ftp' : 'database';
 ?>
 <?php echo JHtml::_('InstallationHtml.helper.stepbar'); ?>
 <form action="index.php" method="post" id="adminForm" class="form-validate form-horizontal">
@@ -56,8 +56,10 @@ $prev   = $useftp ? 'ftp' : 'database';
         <div class="controls">
             <?php echo $this->form->getInput('summary_email'); ?>
             <p class="help-block">
-                <?php echo JText::sprintf('INSTL_SUMMARY_EMAIL_DESC',
-                    '<span class="label">' . $this->options['admin_email'] . '</span>'); ?>
+                <?php echo JText::sprintf(
+                    'INSTL_SUMMARY_EMAIL_DESC',
+                    '<span class="label">' . $this->options['admin_email'] . '</span>'
+                ); ?>
             </p>
         </div>
     </div>
@@ -201,7 +203,9 @@ $prev   = $useftp ? 'ftp' : 'database';
                     <td>
 							<span
                                 class="label label-<?php echo ($this->options['db_old'] == 'remove') ? 'important' : 'success'; ?>">
-								<?php echo JText::_(($this->options['db_old'] == 'remove') ? 'INSTL_DATABASE_FIELD_VALUE_REMOVE' : 'INSTL_DATABASE_FIELD_VALUE_BACKUP'); ?>
+								<?php echo JText::_(
+                                    ($this->options['db_old'] == 'remove') ? 'INSTL_DATABASE_FIELD_VALUE_REMOVE' : 'INSTL_DATABASE_FIELD_VALUE_BACKUP'
+                                ); ?>
 							</span>
                     </td>
                 </tr>

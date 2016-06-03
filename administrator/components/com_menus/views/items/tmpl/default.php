@@ -52,8 +52,12 @@ if ($menuType == '') {
             <?php endif; ?>
             <?php
             // Search tools bar
-            echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this), null,
-                array('debug' => false));
+            echo JLayoutHelper::render(
+                'joomla.searchtools.default',
+                array('view' => $this),
+                null,
+                array('debug' => false)
+            );
             ?>
             <?php if (empty($this->items)) : ?>
                 <div class="alert alert-no-items">
@@ -65,8 +69,17 @@ if ($menuType == '') {
                     <tr>
                         <?php if ($menuType) : ?>
                             <th width="1%" class="nowrap center hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', '', 'a.lft', $listDirn, $listOrder, null, 'asc',
-                                    'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+                                <?php echo JHtml::_(
+                                    'searchtools.sort',
+                                    '',
+                                    'a.lft',
+                                    $listDirn,
+                                    $listOrder,
+                                    null,
+                                    'asc',
+                                    'JGRID_HEADING_ORDERING',
+                                    'icon-menu-2'
+                                ); ?>
                             </th>
                         <?php endif; ?>
                         <th width="1%" class="nowrap center">
@@ -76,34 +89,69 @@ if ($menuType == '') {
                             <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
                         </th>
                         <th class="title">
-                            <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGLOBAL_TITLE',
+                                'a.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_MENUS_HEADING_MENU', 'a.menutype', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_MENUS_HEADING_MENU',
+                                'a.menutype',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="5%" class="center nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_MENUS_HEADING_HOME', 'a.home', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_MENUS_HEADING_HOME',
+                                'a.home',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'a.access', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ACCESS',
+                                'a.access',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <?php if ($assoc) : ?>
                             <th width="5%" class="nowrap hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', 'COM_MENUS_HEADING_ASSOCIATION', 'association',
-                                    $listDirn, $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'searchtools.sort',
+                                    'COM_MENUS_HEADING_ASSOCIATION',
+                                    'association',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                         <?php endif; ?>
                         <th width="15%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_LANGUAGE',
+                                'language',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ID',
+                                'a.id',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -121,10 +169,14 @@ if ($menuType == '') {
                         $orderkey = array_search($item->id, $this->ordering[$item->parent_id]);
                         $canCreate = $user->authorise('core.create', 'com_menus.menu.' . $menuTypeId);
                         $canEdit = $user->authorise('core.edit', 'com_menus.menu.' . $menuTypeId);
-                        $canCheckin = $user->authorise('core.manage',
-                                'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
-                        $canChange = $user->authorise('core.edit.state',
-                                'com_menus.menu.' . $menuTypeId) && $canCheckin;
+                        $canCheckin = $user->authorise(
+                                'core.manage',
+                                'com_checkin'
+                            ) || $item->checked_out == $user->get('id') || $item->checked_out == 0;
+                        $canChange = $user->authorise(
+                                'core.edit.state',
+                                'com_menus.menu.' . $menuTypeId
+                            ) && $canCheckin;
 
                         // Get the parents of item for sorting
                         if ($item->level > 1) {
@@ -159,7 +211,9 @@ if ($menuType == '') {
                                     if (!$canChange) {
                                         $iconClass = ' inactive';
                                     } elseif (!$saveOrder) {
-                                        $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+                                        $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText(
+                                                'JORDERINGDISABLED'
+                                            );
                                     }
                                     ?>
                                     <span class="sortable-handler<?php echo $iconClass ?>">
@@ -178,16 +232,26 @@ if ($menuType == '') {
                                 <?php echo JHtml::_('MenusHtml.Menus.state', $item->published, $i, $canChange, 'cb'); ?>
                             </td>
                             <td>
-                                <?php $prefix = JLayoutHelper::render('joomla.html.treeprefix',
-                                    array('level' => $item->level)); ?>
+                                <?php $prefix = JLayoutHelper::render(
+                                    'joomla.html.treeprefix',
+                                    array('level' => $item->level)
+                                ); ?>
                                 <?php echo $prefix; ?>
                                 <?php if ($item->checked_out) : ?>
-                                    <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time,
-                                        'items.', $canCheckin); ?>
+                                    <?php echo JHtml::_(
+                                        'jgrid.checkedout',
+                                        $i,
+                                        $item->editor,
+                                        $item->checked_out_time,
+                                        'items.',
+                                        $canCheckin
+                                    ); ?>
                                 <?php endif; ?>
                                 <?php if ($canEdit) : ?>
                                     <a class="hasTooltip"
-                                       href="<?php echo JRoute::_('index.php?option=com_menus&task=item.edit&id=' . (int)$item->id); ?>"
+                                       href="<?php echo JRoute::_(
+                                           'index.php?option=com_menus&task=item.edit&id=' . (int)$item->id
+                                       ); ?>"
                                        title="<?php echo JText::_('JACTION_EDIT'); ?>">
                                         <?php echo $this->escape($item->title); ?></a>
                                 <?php else : ?>
@@ -198,8 +262,11 @@ if ($menuType == '') {
                                 <?php if (empty($item->note)) : ?>
                                     <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
                                 <?php else : ?>
-                                    <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS_NOTE', $this->escape($item->alias),
-                                        $this->escape($item->note)); ?>
+                                    <?php echo JText::sprintf(
+                                        'JGLOBAL_LIST_ALIAS_NOTE',
+                                        $this->escape($item->alias),
+                                        $this->escape($item->note)
+                                    ); ?>
                                 <?php endif; ?>
                             <?php elseif ($item->type == 'url' && $item->note) : ?>
                                 <?php echo JText::sprintf('JGLOBAL_LIST_NOTE', $this->escape($item->note)); ?>
@@ -208,8 +275,11 @@ if ($menuType == '') {
                                 <div title="<?php echo $this->escape($item->path); ?>">
                                     <?php echo $prefix; ?>
                                     <span class="small"
-                                          title="<?php echo isset($item->item_type_desc) ? htmlspecialchars($this->escape($item->item_type_desc),
-                                              ENT_COMPAT, 'UTF-8') : ''; ?>">
+                                          title="<?php echo isset($item->item_type_desc) ? htmlspecialchars(
+                                              $this->escape($item->item_type_desc),
+                                              ENT_COMPAT,
+                                              'UTF-8'
+                                          ) : ''; ?>">
 									<?php echo $this->escape($item->item_type); ?></span>
                                 </div>
                             </td>
@@ -219,20 +289,39 @@ if ($menuType == '') {
                             <td class="center hidden-phone">
                                 <?php if ($item->type == 'component') : ?>
                                     <?php if ($item->language == '*' || $item->home == '0') : ?>
-                                        <?php echo JHtml::_('jgrid.isdefault', $item->home, $i, 'items.',
-                                            ($item->language != '*' || !$item->home) && $canChange); ?>
+                                        <?php echo JHtml::_(
+                                            'jgrid.isdefault',
+                                            $item->home,
+                                            $i,
+                                            'items.',
+                                            ($item->language != '*' || !$item->home) && $canChange
+                                        ); ?>
                                     <?php elseif ($canChange) : ?>
-                                        <a href="<?php echo JRoute::_('index.php?option=com_menus&task=items.unsetDefault&cid[]=' . $item->id . '&' . JSession::getFormToken() . '=1'); ?>">
-                                            <?php echo JHtml::_('image',
+                                        <a href="<?php echo JRoute::_(
+                                            'index.php?option=com_menus&task=items.unsetDefault&cid[]=' . $item->id . '&' . JSession::getFormToken(
+                                            ) . '=1'
+                                        ); ?>">
+                                            <?php echo JHtml::_(
+                                                'image',
                                                 'mod_languages/' . $item->language_image . '.gif',
-                                                $item->language_title, array(
-                                                    'title' => JText::sprintf('COM_MENUS_GRID_UNSET_LANGUAGE',
-                                                        $item->language_title)
-                                                ), true); ?>
+                                                $item->language_title,
+                                                array(
+                                                    'title' => JText::sprintf(
+                                                        'COM_MENUS_GRID_UNSET_LANGUAGE',
+                                                        $item->language_title
+                                                    )
+                                                ),
+                                                true
+                                            ); ?>
                                         </a>
                                     <?php else : ?>
-                                        <?php echo JHtml::_('image', 'mod_languages/' . $item->language_image . '.gif',
-                                            $item->language_title, array('title' => $item->language_title), true); ?>
+                                        <?php echo JHtml::_(
+                                            'image',
+                                            'mod_languages/' . $item->language_image . '.gif',
+                                            $item->language_title,
+                                            array('title' => $item->language_title),
+                                            true
+                                        ); ?>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             </td>
@@ -252,10 +341,13 @@ if ($menuType == '') {
                                 <?php elseif ($item->language == '*') : ?>
                                     <?php echo JText::alt('JALL', 'language'); ?>
                                 <?php else : ?>
-                                    <?php echo $item->language_title ? JHtml::_('image',
-                                            'mod_languages/' . $item->language_image . '.gif', $item->language_title,
+                                    <?php echo $item->language_title ? JHtml::_(
+                                            'image',
+                                            'mod_languages/' . $item->language_image . '.gif',
+                                            $item->language_title,
                                             array('title' => $item->language_title),
-                                            true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                            true
+                                        ) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                                 <?php endif; ?>
                             </td>
                             <td class="hidden-phone">
@@ -268,13 +360,20 @@ if ($menuType == '') {
                     </tbody>
                 </table>
                 <?php // Load the batch processing form if user is allowed ?>
-                <?php if ($user->authorise('core.create', 'com_menus') || $user->authorise('core.edit',
-                        'com_menus')
+                <?php if ($user->authorise('core.create', 'com_menus') || $user->authorise(
+                        'core.edit',
+                        'com_menus'
+                    )
                 ) : ?>
-                    <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                        'title'  => JText::_('COM_MENUS_BATCH_OPTIONS'),
-                        'footer' => $this->loadTemplate('batch_footer')
-                    ), $this->loadTemplate('batch_body')); ?>
+                    <?php echo JHtml::_(
+                        'bootstrap.renderModal',
+                        'collapseModal',
+                        array(
+                            'title'  => JText::_('COM_MENUS_BATCH_OPTIONS'),
+                            'footer' => $this->loadTemplate('batch_footer')
+                        ),
+                        $this->loadTemplate('batch_body')
+                    ); ?>
                 <?php endif; ?>
             <?php endif; ?>
 

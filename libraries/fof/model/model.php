@@ -319,8 +319,10 @@ class FOFModel extends FOFUtilsObject
             $componentPaths = FOFPlatform::getInstance()->getComponentBaseDirs($this->option);
 
             $path    = $componentPaths['admin'] . '/tables';
-            $altPath = $this->configProvider->get($this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.table_path',
-                null);
+            $altPath = $this->configProvider->get(
+                $this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.table_path',
+                null
+            );
 
             if ($altPath) {
                 $path = $componentPaths['main'] . '/' . $altPath;
@@ -333,15 +335,21 @@ class FOFModel extends FOFUtilsObject
         if (array_key_exists('table', $config)) {
             $this->table = $config['table'];
         } else {
-            $table       = $this->configProvider->get($this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.table',
-                FOFInflector::singularize($view));
+            $table       = $this->configProvider->get(
+                $this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.table',
+                FOFInflector::singularize($view)
+            );
             $this->table = $table;
         }
 
         // Set the internal state marker - used to ignore setting state from the request
 
-        if (!empty($config['ignore_request']) || !is_null($this->configProvider->get($this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.ignore_request',
-                null))
+        if (!empty($config['ignore_request']) || !is_null(
+                $this->configProvider->get(
+                    $this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.ignore_request',
+                    null
+                )
+            )
         ) {
             $this->__state_set = true;
         }
@@ -362,10 +370,20 @@ class FOFModel extends FOFUtilsObject
                 $default_limit = 20;
             }
 
-            $limit      = $this->getUserStateFromRequest($component . '.' . $view . '.limit', 'limit', $default_limit,
-                'int', $this->_savestate);
-            $limitstart = $this->getUserStateFromRequest($component . '.' . $view . '.limitstart', 'limitstart', 0,
-                'int', $this->_savestate);
+            $limit      = $this->getUserStateFromRequest(
+                $component . '.' . $view . '.limit',
+                'limit',
+                $default_limit,
+                'int',
+                $this->_savestate
+            );
+            $limitstart = $this->getUserStateFromRequest(
+                $component . '.' . $view . '.limitstart',
+                'limitstart',
+                0,
+                'int',
+                $this->_savestate
+            );
         }
 
         $this->setState('limit', $limit);
@@ -375,8 +393,10 @@ class FOFModel extends FOFUtilsObject
 
         if (array_key_exists('cid', $config)) {
             $cid = $config['cid'];
-        } elseif ($cid = $this->configProvider->get($this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.cid',
-            null)
+        } elseif ($cid = $this->configProvider->get(
+            $this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.cid',
+            null
+        )
         ) {
             $cid = explode(',', $cid);
         } else {
@@ -385,8 +405,10 @@ class FOFModel extends FOFUtilsObject
 
         if (array_key_exists('id', $config)) {
             $id = $config['id'];
-        } elseif ($id = $this->configProvider->get($this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.id',
-            null)
+        } elseif ($id = $this->configProvider->get(
+            $this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.id',
+            null
+        )
         ) {
             $id = explode(',', $id);
             $id = array_shift($id);
@@ -408,8 +430,10 @@ class FOFModel extends FOFUtilsObject
         if (isset($config['event_after_delete'])) {
             $this->event_after_delete = $config['event_after_delete'];
         } else {
-            $this->event_after_delete = $this->configProvider->get($configKey . 'event_after_delete',
-                $this->event_after_delete);
+            $this->event_after_delete = $this->configProvider->get(
+                $configKey . 'event_after_delete',
+                $this->event_after_delete
+            );
         }
 
         // Assign after save event handler
@@ -417,8 +441,10 @@ class FOFModel extends FOFUtilsObject
         if (isset($config['event_after_save'])) {
             $this->event_after_save = $config['event_after_save'];
         } else {
-            $this->event_after_save = $this->configProvider->get($configKey . 'event_after_save',
-                $this->event_after_save);
+            $this->event_after_save = $this->configProvider->get(
+                $configKey . 'event_after_save',
+                $this->event_after_save
+            );
         }
 
         // Assign before delete event handler
@@ -426,8 +452,10 @@ class FOFModel extends FOFUtilsObject
         if (isset($config['event_before_delete'])) {
             $this->event_before_delete = $config['event_before_delete'];
         } else {
-            $this->event_before_delete = $this->configProvider->get($configKey . 'event_before_delete',
-                $this->event_before_delete);
+            $this->event_before_delete = $this->configProvider->get(
+                $configKey . 'event_before_delete',
+                $this->event_before_delete
+            );
         }
 
         // Assign before save event handler
@@ -435,8 +463,10 @@ class FOFModel extends FOFUtilsObject
         if (isset($config['event_before_save'])) {
             $this->event_before_save = $config['event_before_save'];
         } else {
-            $this->event_before_save = $this->configProvider->get($configKey . 'event_before_save',
-                $this->event_before_save);
+            $this->event_before_save = $this->configProvider->get(
+                $configKey . 'event_before_save',
+                $this->event_before_save
+            );
         }
 
         // Assign state change event handler
@@ -444,8 +474,10 @@ class FOFModel extends FOFUtilsObject
         if (isset($config['event_change_state'])) {
             $this->event_change_state = $config['event_change_state'];
         } else {
-            $this->event_change_state = $this->configProvider->get($configKey . 'event_change_state',
-                $this->event_change_state);
+            $this->event_change_state = $this->configProvider->get(
+                $configKey . 'event_change_state',
+                $this->event_change_state
+            );
         }
 
         // Assign cache clean event handler
@@ -453,8 +485,10 @@ class FOFModel extends FOFUtilsObject
         if (isset($config['event_clean_cache'])) {
             $this->event_clean_cache = $config['event_clean_cache'];
         } else {
-            $this->event_clean_cache = $this->configProvider->get($configKey . 'event_clean_cache',
-                $this->event_clean_cache);
+            $this->event_clean_cache = $this->configProvider->get(
+                $configKey . 'event_clean_cache',
+                $this->event_clean_cache
+            );
         }
 
         // Apply model behaviors
@@ -536,8 +570,14 @@ class FOFModel extends FOFUtilsObject
      */
     protected function getUserStateFromRequest($key, $request, $default = null, $type = 'none', $setUserState = true)
     {
-        return FOFPlatform::getInstance()
-                          ->getUserStateFromRequest($key, $request, $this->input, $default, $type, $setUserState);
+        return FOFPlatform::getInstance()->getUserStateFromRequest(
+                $key,
+                $request,
+                $this->input,
+                $default,
+                $type,
+                $setUserState
+            );
     }
 
     /**
@@ -609,7 +649,9 @@ class FOFModel extends FOFUtilsObject
 
         // First look for ComponentnameModelViewnameBehaviorName (e.g. FoobarModelItemsBehaviorFilter)
         $option_name   = str_replace('com_', '', $this->option);
-        $behaviorClass = ucfirst($option_name) . 'Model' . FOFInflector::pluralize($this->name) . 'Behavior' . ucfirst(strtolower($name));
+        $behaviorClass = ucfirst($option_name) . 'Model' . FOFInflector::pluralize($this->name) . 'Behavior' . ucfirst(
+                strtolower($name)
+            );
 
         if (class_exists($behaviorClass)) {
             $behavior = new $behaviorClass($this->modelDispatcher, $config);
@@ -663,14 +705,9 @@ class FOFModel extends FOFUtilsObject
             $config['savestate'] = false;
         }
 
-        $ret = self::getAnInstance($type, $prefix, $config)
-                   ->getClone()
-                   ->clearState()
-                   ->clearInput()
-                   ->reset()
-                   ->savestate(0)
-                   ->limitstart(0)
-                   ->limit(0);
+        $ret = self::getAnInstance($type, $prefix, $config)->getClone()->clearState()->clearInput()->reset()->savestate(
+                0
+            )->limitstart(0)->limit(0);
 
         return $ret;
     }
@@ -816,8 +853,10 @@ class FOFModel extends FOFUtilsObject
                 $include_paths = array_merge($extra_paths, $include_paths);
 
                 // Try to load the model file
-                $path = $filesystem->pathFind($include_paths,
-                    self::_createFileName('model', array('name' => 'default')));
+                $path = $filesystem->pathFind(
+                    $include_paths,
+                    self::_createFileName('model', array('name' => 'default'))
+                );
 
                 if ($path) {
                     require_once $path;
@@ -960,8 +999,10 @@ class FOFModel extends FOFUtilsObject
             return $table;
         }
 
-        FOFPlatform::getInstance()
-                   ->raiseError(0, JText::sprintf('JLIB_APPLICATION_ERROR_TABLE_NAME_NOT_SUPPORTED', $name));
+        FOFPlatform::getInstance()->raiseError(
+                0,
+                JText::sprintf('JLIB_APPLICATION_ERROR_TABLE_NAME_NOT_SUPPORTED', $name)
+            );
 
         return null;
     }
@@ -2070,9 +2111,10 @@ class FOFModel extends FOFUtilsObject
 
             // Call the plugin
             $name   = $this->name;
-            $result = FOFPlatform::getInstance()
-                                 ->runPlugins($this->event_before_save,
-                                     array($this->option . '.' . $name, &$table, $this->_isNewRecord));
+            $result = FOFPlatform::getInstance()->runPlugins(
+                    $this->event_before_save,
+                    array($this->option . '.' . $name, &$table, $this->_isNewRecord)
+                );
 
             if (in_array(false, $result, true)) {
                 // Plugin failed, return false
@@ -2113,9 +2155,10 @@ class FOFModel extends FOFUtilsObject
             }
 
             $name = $this->name;
-            FOFPlatform::getInstance()
-                       ->runPlugins($this->event_after_save,
-                           array($this->option . '.' . $name, &$table, $this->_isNewRecord));
+            FOFPlatform::getInstance()->runPlugins(
+                    $this->event_after_save,
+                    array($this->option . '.' . $name, &$table, $this->_isNewRecord)
+                );
 
             return true;
         } catch (Exception $e) {
@@ -2302,8 +2345,10 @@ class FOFModel extends FOFUtilsObject
         try {
             $name    = $this->name;
             $context = $this->option . '.' . $name;
-            $result  = FOFPlatform::getInstance()
-                                  ->runPlugins($this->event_after_delete, array($context, $this->_recordForDeletion));
+            $result  = FOFPlatform::getInstance()->runPlugins(
+                    $this->event_after_delete,
+                    array($context, $this->_recordForDeletion)
+                );
             unset($this->_recordForDeletion);
         } catch (Exception $e) {
             // Oops, an exception occured!
@@ -2349,8 +2394,10 @@ class FOFModel extends FOFUtilsObject
                 $context = $this->option . '.' . $name;
 
                 // @TODO should we do anything with this return value?
-                $result = FOFPlatform::getInstance()
-                                     ->runPlugins($this->event_change_state, array($context, $this->id_list, $publish));
+                $result = FOFPlatform::getInstance()->runPlugins(
+                        $this->event_change_state,
+                        array($context, $this->id_list, $publish)
+                    );
             }
         }
 
@@ -2572,8 +2619,9 @@ class FOFModel extends FOFUtilsObject
     {
         // If this is an array extract the first item
         if (is_array($id)) {
-            FOFPlatform::getInstance()
-                       ->logDeprecated('Passing arrays to FOFModel::setId is deprecated. Use setIds() instead.');
+            FOFPlatform::getInstance()->logDeprecated(
+                    'Passing arrays to FOFModel::setId is deprecated. Use setIds() instead.'
+                );
             $id = array_shift($id);
         }
 
@@ -2936,9 +2984,12 @@ class FOFModel extends FOFUtilsObject
         $platformDirs = FOFPlatform::getInstance()->getPlatformBaseDirs();
 
         $options = array(
-            'defaultgroup' => ($group) ? $group : (isset($this->option) ? $this->option : JFactory::getApplication()->input->get('option')),
-            'cachebase'    => ($client_id) ? $platformDirs['admin'] . '/cache' : $conf->get('cache_path',
-                $platformDirs['public'] . '/cache')
+            'defaultgroup' => ($group) ? $group : (isset($this->option) ? $this->option : JFactory::getApplication(
+            )->input->get('option')),
+            'cachebase'    => ($client_id) ? $platformDirs['admin'] . '/cache' : $conf->get(
+                'cache_path',
+                $platformDirs['public'] . '/cache'
+            )
         );
 
         $cache = JCache::getInstance('callback', $options);

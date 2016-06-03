@@ -41,10 +41,9 @@ abstract class JHtmlTag
         if (!isset(static::$items[$hash])) {
             $config = (array)$config;
             $db     = JFactory::getDbo();
-            $query  = $db->getQuery(true)
-                         ->select('a.id, a.title, a.level')
-                         ->from('#__tags AS a')
-                         ->where('a.parent_id > 0');
+            $query  = $db->getQuery(true)->select('a.id, a.title, a.level')->from('#__tags AS a')->where(
+                    'a.parent_id > 0'
+                );
 
             // Filter on the published state
             if (isset($config['filter.published'])) {
@@ -101,10 +100,9 @@ abstract class JHtmlTag
         $hash   = md5(serialize($config));
         $config = (array)$config;
         $db     = JFactory::getDbo();
-        $query  = $db->getQuery(true)
-                     ->select('a.id, a.title, a.level, a.parent_id')
-                     ->from('#__tags AS a')
-                     ->where('a.parent_id > 0');
+        $query  = $db->getQuery(true)->select('a.id, a.title, a.level, a.parent_id')->from('#__tags AS a')->where(
+                'a.parent_id > 0'
+            );
 
         // Filter on the published state
         if (isset($config['filter.published'])) {

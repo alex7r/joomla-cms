@@ -37,9 +37,10 @@ class PlgQuickiconExtensionupdate extends JPlugin
      */
     public function onGetIcons($context)
     {
-        if ($context != $this->params->get('context', 'mod_quickicon') || !JFactory::getUser()
-                                                                                   ->authorise('core.manage',
-                                                                                       'com_installer')
+        if ($context != $this->params->get('context', 'mod_quickicon') || !JFactory::getUser()->authorise(
+                    'core.manage',
+                    'com_installer'
+                )
         ) {
             return;
         }
@@ -52,11 +53,19 @@ class PlgQuickiconExtensionupdate extends JPlugin
         $script   = array();
         $script[] = 'var plg_quickicon_extensionupdate_url = \'' . $url . '\';';
         $script[] = 'var plg_quickicon_extensionupdate_ajax_url = \'' . $ajax_url . '\';';
-        $script[] = 'var plg_quickicon_extensionupdate_text = {' . '"UPTODATE" : "' . JText::_('PLG_QUICKICON_EXTENSIONUPDATE_UPTODATE',
-                true) . '",' . '"UPDATEFOUND": "' . JText::_('PLG_QUICKICON_EXTENSIONUPDATE_UPDATEFOUND',
-                true) . '",' . '"UPDATEFOUND_MESSAGE": "' . JText::_('PLG_QUICKICON_EXTENSIONUPDATE_UPDATEFOUND_MESSAGE',
-                true) . '",' . '"UPDATEFOUND_BUTTON": "' . JText::_('PLG_QUICKICON_EXTENSIONUPDATE_UPDATEFOUND_BUTTON',
-                true) . '",' . '"ERROR": "' . JText::_('PLG_QUICKICON_EXTENSIONUPDATE_ERROR', true) . '",' . '};';
+        $script[] = 'var plg_quickicon_extensionupdate_text = {' . '"UPTODATE" : "' . JText::_(
+                'PLG_QUICKICON_EXTENSIONUPDATE_UPTODATE',
+                true
+            ) . '",' . '"UPDATEFOUND": "' . JText::_(
+                'PLG_QUICKICON_EXTENSIONUPDATE_UPDATEFOUND',
+                true
+            ) . '",' . '"UPDATEFOUND_MESSAGE": "' . JText::_(
+                'PLG_QUICKICON_EXTENSIONUPDATE_UPDATEFOUND_MESSAGE',
+                true
+            ) . '",' . '"UPDATEFOUND_BUTTON": "' . JText::_(
+                'PLG_QUICKICON_EXTENSIONUPDATE_UPDATEFOUND_BUTTON',
+                true
+            ) . '",' . '"ERROR": "' . JText::_('PLG_QUICKICON_EXTENSIONUPDATE_ERROR', true) . '",' . '};';
         JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
         JHtml::_('script', 'plg_quickicon_extensionupdate/extensionupdatecheck.js', false, true);
 

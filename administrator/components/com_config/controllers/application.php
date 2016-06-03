@@ -43,8 +43,11 @@ class ConfigControllerApplication extends JControllerLegacy
      */
     public function save()
     {
-        JLog::add('ConfigControllerApplication is deprecated. Use ConfigControllerApplicationSave instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            'ConfigControllerApplication is deprecated. Use ConfigControllerApplicationSave instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         $controller = new ConfigControllerApplicationSave;
 
@@ -60,8 +63,11 @@ class ConfigControllerApplication extends JControllerLegacy
      */
     public function cancel()
     {
-        JLog::add('ConfigControllerApplication is deprecated. Use ConfigControllerApplicationCancel instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            'ConfigControllerApplication is deprecated. Use ConfigControllerApplicationCancel instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         $controller = new ConfigControllerApplicationCancel;
 
@@ -78,8 +84,11 @@ class ConfigControllerApplication extends JControllerLegacy
      */
     public function removeroot()
     {
-        JLog::add('ConfigControllerApplication is deprecated. Use ConfigControllerApplicationRemoveroot instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            'ConfigControllerApplication is deprecated. Use ConfigControllerApplicationRemoveroot instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         $controller = new ConfigControllerApplicationRemoveroot;
 

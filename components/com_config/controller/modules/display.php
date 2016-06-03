@@ -53,8 +53,10 @@ class ConfigControllerModulesDisplay extends ConfigControllerDisplay
 
         // Access back-end com_module
         JLoader::register('ModulesController', JPATH_ADMINISTRATOR . '/components/com_modules/controller.php');
-        JLoader::register('ModulesViewModule',
-            JPATH_ADMINISTRATOR . '/components/com_modules/views/module/view.json.php');
+        JLoader::register(
+            'ModulesViewModule',
+            JPATH_ADMINISTRATOR . '/components/com_modules/views/module/view.json.php'
+        );
         JLoader::register('ModulesModelModule', JPATH_ADMINISTRATOR . '/components/com_modules/models/module.php');
 
         $displayClass = new ModulesController;
@@ -85,9 +87,13 @@ class ConfigControllerModulesDisplay extends ConfigControllerDisplay
             // Access check.
             $user = JFactory::getUser();
 
-            if (!$user->authorise('module.edit.frontend',
-                    'com_modules.module.' . $serviceData['id']) && !$user->authorise('module.edit.frontend',
-                    'com_modules')
+            if (!$user->authorise(
+                    'module.edit.frontend',
+                    'com_modules.module.' . $serviceData['id']
+                ) && !$user->authorise(
+                    'module.edit.frontend',
+                    'com_modules'
+                )
             ) {
                 $app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
                 $app->redirect($redirect);

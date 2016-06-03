@@ -9,7 +9,8 @@
 
 defined('_JEXEC') or die;
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	var form = window.top.document.adminForm
 	var title = form.title.value;
 	var alltext = window.top.' . $this->editor->getContent('text') . ';
@@ -17,7 +18,8 @@ JFactory::getDocument()->addScriptDeclaration('
 	jQuery(document).ready(function() {
 		document.getElementById("td-title").innerHTML = title;
 		document.getElementById("td-text").innerHTML = alltext;
-	});');
+	});'
+);
 ?>
 
 <table class="center" width="90%">

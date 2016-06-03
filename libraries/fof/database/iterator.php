@@ -89,7 +89,9 @@ abstract class FOFDatabaseIterator implements Iterator
         $parts = FOFInflector::explode($class);
 
         if (count($parts) != 3) {
-            throw new InvalidArgumentException('Invalid table name, expected a pattern like ComponentTableFoobar got ' . $class);
+            throw new InvalidArgumentException(
+                'Invalid table name, expected a pattern like ComponentTableFoobar got ' . $class
+            );
         }
 
         $this->_tableObject = FOFTable::getInstance($parts[2], ucfirst($parts[0]) . ucfirst($parts[1]))->getClone();

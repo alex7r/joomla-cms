@@ -98,8 +98,12 @@ class SimplePie_Misc
     {
         $return = array();
         $name   = preg_quote($realname, '/');
-        if (preg_match_all("/<($name)" . SIMPLEPIE_PCRE_HTML_ATTRIBUTE . "(>(.*)<\/$name>|(\/)?>)/siU", $string,
-            $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
+        if (preg_match_all(
+            "/<($name)" . SIMPLEPIE_PCRE_HTML_ATTRIBUTE . "(>(.*)<\/$name>|(\/)?>)/siU",
+            $string,
+            $matches,
+            PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+        )) {
             for ($i = 0, $total_matches = count($matches); $i < $total_matches; $i++) {
                 $return[$i]['tag']    = $realname;
                 $return[$i]['full']   = $matches[$i][0][0];
@@ -111,15 +115,21 @@ class SimplePie_Misc
                     $return[$i]['content']      = $matches[$i][4][0];
                 }
                 $return[$i]['attribs'] = array();
-                if (isset($matches[$i][2][0]) && preg_match_all('/[\x09\x0A\x0B\x0C\x0D\x20]+([^\x09\x0A\x0B\x0C\x0D\x20\x2F\x3E][^\x09\x0A\x0B\x0C\x0D\x20\x2F\x3D\x3E]*)(?:[\x09\x0A\x0B\x0C\x0D\x20]*=[\x09\x0A\x0B\x0C\x0D\x20]*(?:"([^"]*)"|\'([^\']*)\'|([^\x09\x0A\x0B\x0C\x0D\x20\x22\x27\x3E][^\x09\x0A\x0B\x0C\x0D\x20\x3E]*)?))?/',
-                        ' ' . $matches[$i][2][0] . ' ', $attribs, PREG_SET_ORDER)
+                if (isset($matches[$i][2][0]) && preg_match_all(
+                        '/[\x09\x0A\x0B\x0C\x0D\x20]+([^\x09\x0A\x0B\x0C\x0D\x20\x2F\x3E][^\x09\x0A\x0B\x0C\x0D\x20\x2F\x3D\x3E]*)(?:[\x09\x0A\x0B\x0C\x0D\x20]*=[\x09\x0A\x0B\x0C\x0D\x20]*(?:"([^"]*)"|\'([^\']*)\'|([^\x09\x0A\x0B\x0C\x0D\x20\x22\x27\x3E][^\x09\x0A\x0B\x0C\x0D\x20\x3E]*)?))?/',
+                        ' ' . $matches[$i][2][0] . ' ',
+                        $attribs,
+                        PREG_SET_ORDER
+                    )
                 ) {
                     for ($j = 0, $total_attribs = count($attribs); $j < $total_attribs; $j++) {
                         if (count($attribs[$j]) === 2) {
                             $attribs[$j][2] = $attribs[$j][1];
                         }
-                        $return[$i]['attribs'][strtolower($attribs[$j][1])]['data'] = SimplePie_Misc::entities_decode(end($attribs[$j]),
-                            'UTF-8');
+                        $return[$i]['attribs'][strtolower($attribs[$j][1])]['data'] = SimplePie_Misc::entities_decode(
+                            end($attribs[$j]),
+                            'UTF-8'
+                        );
                     }
                 }
             }
@@ -201,13 +211,29 @@ class SimplePie_Misc
         $url    = SimplePie_Misc::normalize_url($url);
         $parsed = SimplePie_Misc::parse_url($url);
         if ($parsed['scheme'] !== '' && $parsed['scheme'] !== 'http' && $parsed['scheme'] !== 'https') {
-            return SimplePie_Misc::fix_protocol(SimplePie_Misc::compress_parse_url('http', $parsed['authority'],
-                $parsed['path'], $parsed['query'], $parsed['fragment']), $http);
+            return SimplePie_Misc::fix_protocol(
+                SimplePie_Misc::compress_parse_url(
+                    'http',
+                    $parsed['authority'],
+                    $parsed['path'],
+                    $parsed['query'],
+                    $parsed['fragment']
+                ),
+                $http
+            );
         }
 
         if ($parsed['scheme'] === '' && $parsed['authority'] === '' && !file_exists($url)) {
-            return SimplePie_Misc::fix_protocol(SimplePie_Misc::compress_parse_url('http', $parsed['path'], '',
-                $parsed['query'], $parsed['fragment']), $http);
+            return SimplePie_Misc::fix_protocol(
+                SimplePie_Misc::compress_parse_url(
+                    'http',
+                    $parsed['path'],
+                    '',
+                    $parsed['query'],
+                    $parsed['fragment']
+                ),
+                $http
+            );
         }
 
         if ($http === 2 && $parsed['scheme'] !== '') {
@@ -442,8 +468,10 @@ class SimplePie_Misc
 
     public static function is_isegment_nz_nc($string)
     {
-        return (bool)preg_match('/^([A-Za-z0-9\-._~\x{A0}-\x{D7FF}\x{F900}-\x{FDCF}\x{FDF0}-\x{FFEF}\x{10000}-\x{1FFFD}\x{20000}-\x{2FFFD}\x{30000}-\x{3FFFD}\x{40000}-\x{4FFFD}\x{50000}-\x{5FFFD}\x{60000}-\x{6FFFD}\x{70000}-\x{7FFFD}\x{80000}-\x{8FFFD}\x{90000}-\x{9FFFD}\x{A0000}-\x{AFFFD}\x{B0000}-\x{BFFFD}\x{C0000}-\x{CFFFD}\x{D0000}-\x{DFFFD}\x{E1000}-\x{EFFFD}!$&\'()*+,;=@]|(%[0-9ABCDEF]{2}))+$/u',
-            $string);
+        return (bool)preg_match(
+            '/^([A-Za-z0-9\-._~\x{A0}-\x{D7FF}\x{F900}-\x{FDCF}\x{FDF0}-\x{FFEF}\x{10000}-\x{1FFFD}\x{20000}-\x{2FFFD}\x{30000}-\x{3FFFD}\x{40000}-\x{4FFFD}\x{50000}-\x{5FFFD}\x{60000}-\x{6FFFD}\x{70000}-\x{7FFFD}\x{80000}-\x{8FFFD}\x{90000}-\x{9FFFD}\x{A0000}-\x{AFFFD}\x{B0000}-\x{BFFFD}\x{C0000}-\x{CFFFD}\x{D0000}-\x{DFFFD}\x{E1000}-\x{EFFFD}!$&\'()*+,;=@]|(%[0-9ABCDEF]{2}))+$/u',
+            $string
+        );
     }
 
     public static function space_seperated_tokens($string)
@@ -486,10 +514,14 @@ class SimplePie_Misc
                     return chr(0xc0 | ($codepoint >> 6)) . chr(0x80 | ($codepoint & 0x3f));
                 } else {
                     if ($codepoint <= 0xffff) {
-                        return chr(0xe0 | ($codepoint >> 12)) . chr(0x80 | (($codepoint >> 6) & 0x3f)) . chr(0x80 | ($codepoint & 0x3f));
+                        return chr(0xe0 | ($codepoint >> 12)) . chr(0x80 | (($codepoint >> 6) & 0x3f)) . chr(
+                            0x80 | ($codepoint & 0x3f)
+                        );
                     } else {
                         if ($codepoint <= 0x10ffff) {
-                            return chr(0xf0 | ($codepoint >> 18)) . chr(0x80 | (($codepoint >> 12) & 0x3f)) . chr(0x80 | (($codepoint >> 6) & 0x3f)) . chr(0x80 | ($codepoint & 0x3f));
+                            return chr(0xf0 | ($codepoint >> 18)) . chr(0x80 | (($codepoint >> 12) & 0x3f)) . chr(
+                                0x80 | (($codepoint >> 6) & 0x3f)
+                            ) . chr(0x80 | ($codepoint & 0x3f));
                         } else {
                             // U+FFFD REPLACEMENT CHARACTER
                             return "\xEF\xBF\xBD";
@@ -557,24 +589,34 @@ class SimplePie_Misc
         elseif (substr($data, 0, 3) === "\xEF\xBB\xBF") {
             $encoding[] = 'UTF-8';
         } // UTF-32 Big Endian Without BOM
-        elseif (substr($data, 0,
-                20) === "\x00\x00\x00\x3C\x00\x00\x00\x3F\x00\x00\x00\x78\x00\x00\x00\x6D\x00\x00\x00\x6C"
+        elseif (substr(
+                    $data,
+                    0,
+                    20
+                ) === "\x00\x00\x00\x3C\x00\x00\x00\x3F\x00\x00\x00\x78\x00\x00\x00\x6D\x00\x00\x00\x6C"
         ) {
             if ($pos = strpos($data, "\x00\x00\x00\x3F\x00\x00\x00\x3E")) {
-                $parser = $registry->create('XML_Declaration_Parser',
-                    array(SimplePie_Misc::change_encoding(substr($data, 20, $pos - 20), 'UTF-32BE', 'UTF-8')));
+                $parser = $registry->create(
+                    'XML_Declaration_Parser',
+                    array(SimplePie_Misc::change_encoding(substr($data, 20, $pos - 20), 'UTF-32BE', 'UTF-8'))
+                );
                 if ($parser->parse()) {
                     $encoding[] = $parser->encoding;
                 }
             }
             $encoding[] = 'UTF-32BE';
         } // UTF-32 Little Endian Without BOM
-        elseif (substr($data, 0,
-                20) === "\x3C\x00\x00\x00\x3F\x00\x00\x00\x78\x00\x00\x00\x6D\x00\x00\x00\x6C\x00\x00\x00"
+        elseif (substr(
+                    $data,
+                    0,
+                    20
+                ) === "\x3C\x00\x00\x00\x3F\x00\x00\x00\x78\x00\x00\x00\x6D\x00\x00\x00\x6C\x00\x00\x00"
         ) {
             if ($pos = strpos($data, "\x3F\x00\x00\x00\x3E\x00\x00\x00")) {
-                $parser = $registry->create('XML_Declaration_Parser',
-                    array(SimplePie_Misc::change_encoding(substr($data, 20, $pos - 20), 'UTF-32LE', 'UTF-8')));
+                $parser = $registry->create(
+                    'XML_Declaration_Parser',
+                    array(SimplePie_Misc::change_encoding(substr($data, 20, $pos - 20), 'UTF-32LE', 'UTF-8'))
+                );
                 if ($parser->parse()) {
                     $encoding[] = $parser->encoding;
                 }
@@ -583,8 +625,10 @@ class SimplePie_Misc
         } // UTF-16 Big Endian Without BOM
         elseif (substr($data, 0, 10) === "\x00\x3C\x00\x3F\x00\x78\x00\x6D\x00\x6C") {
             if ($pos = strpos($data, "\x00\x3F\x00\x3E")) {
-                $parser = $registry->create('XML_Declaration_Parser',
-                    array(SimplePie_Misc::change_encoding(substr($data, 20, $pos - 10), 'UTF-16BE', 'UTF-8')));
+                $parser = $registry->create(
+                    'XML_Declaration_Parser',
+                    array(SimplePie_Misc::change_encoding(substr($data, 20, $pos - 10), 'UTF-16BE', 'UTF-8'))
+                );
                 if ($parser->parse()) {
                     $encoding[] = $parser->encoding;
                 }
@@ -593,8 +637,10 @@ class SimplePie_Misc
         } // UTF-16 Little Endian Without BOM
         elseif (substr($data, 0, 10) === "\x3C\x00\x3F\x00\x78\x00\x6D\x00\x6C\x00") {
             if ($pos = strpos($data, "\x3F\x00\x3E\x00")) {
-                $parser = $registry->create('XML_Declaration_Parser',
-                    array(SimplePie_Misc::change_encoding(substr($data, 20, $pos - 10), 'UTF-16LE', 'UTF-8')));
+                $parser = $registry->create(
+                    'XML_Declaration_Parser',
+                    array(SimplePie_Misc::change_encoding(substr($data, 20, $pos - 10), 'UTF-16LE', 'UTF-8'))
+                );
                 if ($parser->parse()) {
                     $encoding[] = $parser->encoding;
                 }
@@ -646,8 +692,11 @@ class SimplePie_Misc
         if ($input === 'windows-1252' && $output === 'UTF-8') {
             return SimplePie_Misc::windows_1252_to_utf8($data);
         } // This is second, as behaviour of this varies only with PHP version (the middle part of this expression checks the encoding is supported).
-        elseif (function_exists('mb_convert_encoding') && ($return = SimplePie_Misc::change_encoding_mbstring($data,
-                $input, $output))
+        elseif (function_exists('mb_convert_encoding') && ($return = SimplePie_Misc::change_encoding_mbstring(
+                $data,
+                $input,
+                $output
+            ))
         ) {
             return $return;
         } // This is last, as behaviour of this varies with OS userland and PHP version

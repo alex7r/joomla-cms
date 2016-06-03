@@ -58,8 +58,10 @@ class SearchModelSearch extends JModelLegacy
         $config = JFactory::getConfig();
 
         // Get the pagination request variables
-        $this->setState('limit',
-            $app->getUserStateFromRequest('com_search.limit', 'limit', $config->get('list_limit'), 'uint'));
+        $this->setState(
+            'limit',
+            $app->getUserStateFromRequest('com_search.limit', 'limit', $config->get('list_limit'), 'uint')
+        );
         $this->setState('limitstart', $app->input->get('limitstart', 0, 'uint'));
 
         // Get parameters.
@@ -130,12 +132,15 @@ class SearchModelSearch extends JModelLegacy
 
             JPluginHelper::importPlugin('search');
             $dispatcher = JEventDispatcher::getInstance();
-            $results    = $dispatcher->trigger('onContentSearch', array(
-                $this->getState('keyword'),
-                $this->getState('match'),
-                $this->getState('ordering'),
-                $areas['active']
-            ));
+            $results    = $dispatcher->trigger(
+                'onContentSearch',
+                array(
+                    $this->getState('keyword'),
+                    $this->getState('match'),
+                    $this->getState('ordering'),
+                    $areas['active']
+                )
+            );
 
             $rows = array();
 
@@ -210,8 +215,9 @@ class SearchModelSearch extends JModelLegacy
     {
         // Lets load the content if it doesn't already exist
         if (empty($this->_pagination)) {
-            $this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'),
-                $this->getState('limit'));
+            $this->_pagination = new JPagination(
+                $this->getTotal(), $this->getState('limitstart'), $this->getState('limit')
+            );
         }
 
         return $this->_pagination;

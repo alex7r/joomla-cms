@@ -13,7 +13,8 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'tag.cancel' || document.formvalidator.isValid(document.getElementById('item-form'))) {
@@ -21,7 +22,8 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('item-form'));
 		}
 	};
-");
+"
+);
 
 // Fieldsets to not automatically render by /layouts/joomla/edit/params.php
 $this->ignore_fieldsets = array('jmetadata');

@@ -149,8 +149,12 @@ class CategoriesModelCategories extends JModelList
             $this->context .= '.' . $forcedLanguage;
         }
 
-        $extension = $app->getUserStateFromRequest($this->context . '.filter.extension', 'extension', 'com_content',
-            'cmd');
+        $extension = $app->getUserStateFromRequest(
+            $this->context . '.filter.extension',
+            'extension',
+            'com_content',
+            'cmd'
+        );
 
         $this->setState('filter.extension', $extension);
         $parts = explode('.', $extension);
@@ -161,18 +165,30 @@ class CategoriesModelCategories extends JModelList
         // Extract the optional section name
         $this->setState('filter.section', (count($parts) > 1) ? $parts[1] : null);
 
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.search', 'filter_search', '', 'string'));
-        $this->setState('filter.published',
-            $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string'));
-        $this->setState('filter.access',
-            $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'cmd'));
-        $this->setState('filter.language',
-            $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '', 'string'));
-        $this->setState('filter.tag',
-            $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag', '', 'string'));
-        $this->setState('filter.level',
-            $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', '', 'string'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.published',
+            $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string')
+        );
+        $this->setState(
+            'filter.access',
+            $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'cmd')
+        );
+        $this->setState(
+            'filter.language',
+            $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '', 'string')
+        );
+        $this->setState(
+            'filter.tag',
+            $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag', '', 'string')
+        );
+        $this->setState(
+            'filter.level',
+            $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', '', 'string')
+        );
 
         // List state information.
         parent::populateState($ordering, $direction);
@@ -225,13 +241,19 @@ class CategoriesModelCategories extends JModelList
         $user  = JFactory::getUser();
 
         // Select the required fields from the table.
-        $query->select($this->getState('list.select',
-            'a.id, a.title, a.alias, a.note, a.published, a.access' . ', a.checked_out, a.checked_out_time, a.created_user_id' . ', a.path, a.parent_id, a.level, a.lft, a.rgt' . ', a.language'));
+        $query->select(
+            $this->getState(
+                'list.select',
+                'a.id, a.title, a.alias, a.note, a.published, a.access' . ', a.checked_out, a.checked_out_time, a.created_user_id' . ', a.path, a.parent_id, a.level, a.lft, a.rgt' . ', a.language'
+            )
+        );
         $query->from('#__categories AS a');
 
         // Join over the language
-        $query->select('l.title AS language_title, l.image AS language_image')
-              ->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = a.language');
+        $query->select('l.title AS language_title, l.image AS language_image')->join(
+                'LEFT',
+                $db->quoteName('#__languages') . ' AS l ON l.lang_code = a.language'
+            );
 
         // Join over the users for the checked out user.
         $query->select('uc.name AS editor')->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
@@ -246,11 +268,12 @@ class CategoriesModelCategories extends JModelList
         $assoc = $this->getAssoc();
 
         if ($assoc) {
-            $query->select('COUNT(asso2.id)>1 as association')
-                  ->join('LEFT',
-                      '#__associations AS asso ON asso.id = a.id AND asso.context=' . $db->quote('com_categories.item'))
-                  ->join('LEFT', '#__associations AS asso2 ON asso2.key = asso.key')
-                  ->group('a.id, l.title, uc.name, ag.title, ua.name');
+            $query->select('COUNT(asso2.id)>1 as association')->join(
+                    'LEFT',
+                    '#__associations AS asso ON asso.id = a.id AND asso.context=' . $db->quote('com_categories.item')
+                )->join('LEFT', '#__associations AS asso2 ON asso2.key = asso.key')->group(
+                    'a.id, l.title, uc.name, ag.title, ua.name'
+                );
         }
 
         // Filter by extension
@@ -291,7 +314,9 @@ class CategoriesModelCategories extends JModelList
                 $query->where('a.id = ' . (int)substr($search, 3));
             } else {
                 $search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-                $query->where('(a.title LIKE ' . $search . ' OR a.alias LIKE ' . $search . ' OR a.note LIKE ' . $search . ')');
+                $query->where(
+                    '(a.title LIKE ' . $search . ' OR a.alias LIKE ' . $search . ' OR a.note LIKE ' . $search . ')'
+                );
             }
         }
 
@@ -304,9 +329,15 @@ class CategoriesModelCategories extends JModelList
         $tagId = $this->getState('filter.tag');
 
         if (is_numeric($tagId)) {
-            $query->where($db->quoteName('tagmap.tag_id') . ' = ' . (int)$tagId)
-                  ->join('LEFT', $db->quoteName('#__contentitem_tag_map',
-                          'tagmap') . ' ON ' . $db->quoteName('tagmap.content_item_id') . ' = ' . $db->quoteName('a.id') . ' AND ' . $db->quoteName('tagmap.type_alias') . ' = ' . $db->quote($extension . '.category'));
+            $query->where($db->quoteName('tagmap.tag_id') . ' = ' . (int)$tagId)->join(
+                    'LEFT',
+                    $db->quoteName(
+                        '#__contentitem_tag_map',
+                        'tagmap'
+                    ) . ' ON ' . $db->quoteName('tagmap.content_item_id') . ' = ' . $db->quoteName(
+                        'a.id'
+                    ) . ' AND ' . $db->quoteName('tagmap.type_alias') . ' = ' . $db->quote($extension . '.category')
+                );
         }
 
         // Add the list ordering clause
@@ -320,7 +351,8 @@ class CategoriesModelCategories extends JModelList
         }
 
         // Group by on Categories for JOIN with component tables to count items
-        $query->group('a.id, 
+        $query->group(
+            'a.id, 
 				a.title, 
 				a.alias, 
 				a.note, 
@@ -339,7 +371,8 @@ class CategoriesModelCategories extends JModelList
 				l.image,
 				uc.name, 
 				ag.title, 
-				ua.name');
+				ua.name'
+        );
 
         return $query;
     }

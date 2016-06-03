@@ -81,19 +81,21 @@ class BannersModelBanners extends JModelList
 
                 if ($count) {
                     // Update count
-                    $query->update('#__banner_tracks')
-                          ->set($db->quoteName('count') . ' = (' . $db->quoteName('count') . ' + 1)')
-                          ->where('track_type=1')
-                          ->where('banner_id=' . (int)$id)
-                          ->where('track_date=' . $db->quote($trackDate));
+                    $query->update('#__banner_tracks')->set(
+                            $db->quoteName('count') . ' = (' . $db->quoteName('count') . ' + 1)'
+                        )->where('track_type=1')->where('banner_id=' . (int)$id)->where(
+                            'track_date=' . $db->quote($trackDate)
+                        );
                 } else {
                     // Insert new count
-                    $query->insert('#__banner_tracks')->columns(array(
-                        $db->quoteName('count'),
-                        $db->quoteName('track_type'),
-                        $db->quoteName('banner_id'),
-                        $db->quoteName('track_date')
-                    ))->values('1, 1, ' . (int)$id . ', ' . $db->quote($trackDate));
+                    $query->insert('#__banner_tracks')->columns(
+                        array(
+                            $db->quoteName('count'),
+                            $db->quoteName('track_type'),
+                            $db->quoteName('banner_id'),
+                            $db->quoteName('track_date')
+                        )
+                    )->values('1, 1, ' . (int)$id . ', ' . $db->quote($trackDate));
                 }
 
                 $db->setQuery($query);
@@ -173,11 +175,15 @@ class BannersModelBanners extends JModelList
         $randomise  = ($ordering == 'random');
         $nullDate   = $db->quote($db->getNullDate());
 
-        $query->select('a.id as id,' . 'a.type as type,' . 'a.name as name,' . 'a.clickurl as clickurl,' . 'a.cid as cid,' . 'a.description as description,' . 'a.params as params,' . 'a.custombannercode as custombannercode,' . 'a.track_impressions as track_impressions,' . 'cl.track_impressions as client_track_impressions')
+        $query->select(
+            'a.id as id,' . 'a.type as type,' . 'a.name as name,' . 'a.clickurl as clickurl,' . 'a.cid as cid,' . 'a.description as description,' . 'a.params as params,' . 'a.custombannercode as custombannercode,' . 'a.track_impressions as track_impressions,' . 'cl.track_impressions as client_track_impressions'
+        )
               ->from('#__banners as a')
               ->join('LEFT', '#__banner_clients AS cl ON cl.id = a.cid')
               ->where('a.state=1')
-              ->where('(' . $query->currentTimestamp() . ' >= a.publish_up OR a.publish_up = ' . $nullDate . ')')
+              ->where(
+                  '(' . $query->currentTimestamp() . ' >= a.publish_up OR a.publish_up = ' . $nullDate . ')'
+              )
               ->where('(' . $query->currentTimestamp() . ' <= a.publish_down OR a.publish_down = ' . $nullDate . ')')
               ->where('(a.imptotal = 0 OR a.impmade <= a.imptotal)');
 
@@ -198,11 +204,10 @@ class BannersModelBanners extends JModelList
 
                 // Create a subquery for the subcategory list
                 $subQuery = $db->getQuery(true);
-                $subQuery->select('sub.id')
-                         ->from('#__categories as sub')
-                         ->join('INNER', '#__categories as this ON sub.lft > this.lft AND sub.rgt < this.rgt')
-                         ->where('this.id = ' . (int)$categoryId)
-                         ->where('sub.level <= this.level + ' . $levels);
+                $subQuery->select('sub.id')->from('#__categories as sub')->join(
+                        'INNER',
+                        '#__categories as this ON sub.lft > this.lft AND sub.rgt < this.rgt'
+                    )->where('this.id = ' . (int)$categoryId)->where('sub.level <= this.level + ' . $levels);
 
                 // Add the subquery to the main query
                 $query->where('(' . $categoryEquals . ' OR a.catid IN (' . (string)$subQuery . '))');
@@ -233,8 +238,15 @@ class BannersModelBanners extends JModelList
 
                 foreach ($keywords as $keyword) {
                     $keyword    = trim($keyword);
-                    $condition1 = "a.own_prefix=1 " . " AND a.metakey_prefix=SUBSTRING(" . $db->quote($keyword) . ",1,LENGTH( a.metakey_prefix)) " . " OR a.own_prefix=0 " . " AND cl.own_prefix=1 " . " AND cl.metakey_prefix=SUBSTRING(" . $db->quote($keyword) . ",1,LENGTH(cl.metakey_prefix)) " . " OR a.own_prefix=0 " . " AND cl.own_prefix=0 " . " AND " . ($prefix == substr($keyword,
-                            0, strlen($prefix)) ? '1' : '0');
+                    $condition1 = "a.own_prefix=1 " . " AND a.metakey_prefix=SUBSTRING(" . $db->quote(
+                            $keyword
+                        ) . ",1,LENGTH( a.metakey_prefix)) " . " OR a.own_prefix=0 " . " AND cl.own_prefix=1 " . " AND cl.metakey_prefix=SUBSTRING(" . $db->quote(
+                            $keyword
+                        ) . ",1,LENGTH(cl.metakey_prefix)) " . " OR a.own_prefix=0 " . " AND cl.own_prefix=0 " . " AND " . ($prefix == substr(
+                            $keyword,
+                            0,
+                            strlen($prefix)
+                        ) ? '1' : '0');
 
                     $condition2 = "a.metakey REGEXP '[[:<:]]" . $db->escape($keyword) . "[[:>:]]'";
 
@@ -255,8 +267,11 @@ class BannersModelBanners extends JModelList
 
         // Filter by language
         if ($this->getState('filter.language')) {
-            $query->where('a.language in (' . $db->quote(JFactory::getLanguage()
-                                                                 ->getTag()) . ',' . $db->quote('*') . ')');
+            $query->where(
+                'a.language in (' . $db->quote(
+                    JFactory::getLanguage()->getTag()
+                ) . ',' . $db->quote('*') . ')'
+            );
         }
 
         $query->order('a.sticky DESC,' . ($randomise ? $query->Rand() : 'a.ordering'));

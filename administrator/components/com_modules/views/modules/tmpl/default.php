@@ -46,8 +46,17 @@ $colSpan = $clientId === 1 ? 9 : 10;
                     <thead>
                     <tr>
                         <th width="1%" class="nowrap center hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null,
-                                'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                '',
+                                'a.ordering',
+                                $listDirn,
+                                $listOrder,
+                                null,
+                                'asc',
+                                'JGRID_HEADING_ORDERING',
+                                'icon-menu-2'
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap center">
                             <?php echo JHtml::_('grid.checkall'); ?>
@@ -56,34 +65,69 @@ $colSpan = $clientId === 1 ? 9 : 10;
                             <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
                         </th>
                         <th class="title">
-                            <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGLOBAL_TITLE',
+                                'a.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="15%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_MODULES_HEADING_POSITION', 'a.position',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_MODULES_HEADING_POSITION',
+                                'a.position',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone hidden-tablet">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_MODULES_HEADING_MODULE', 'name', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_MODULES_HEADING_MODULE',
+                                'name',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <?php if ($clientId === 0) : ?>
                             <th width="10%" class="nowrap hidden-phone hidden-tablet">
-                                <?php echo JHtml::_('searchtools.sort', 'COM_MODULES_HEADING_PAGES', 'pages', $listDirn,
-                                    $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'searchtools.sort',
+                                    'COM_MODULES_HEADING_PAGES',
+                                    'pages',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                         <?php endif; ?>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'ag.title', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ACCESS',
+                                'ag.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'l.title', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_LANGUAGE',
+                                'l.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap center hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ID',
+                                'a.id',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -99,10 +143,14 @@ $colSpan = $clientId === 1 ? 9 : 10;
                         $ordering = ($listOrder == 'a.ordering');
                         $canCreate = $user->authorise('core.create', 'com_modules');
                         $canEdit = $user->authorise('core.edit', 'com_modules.module.' . $item->id);
-                        $canCheckin = $user->authorise('core.manage',
-                                'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
-                        $canChange = $user->authorise('core.edit.state',
-                                'com_modules.module.' . $item->id) && $canCheckin;
+                        $canCheckin = $user->authorise(
+                                'core.manage',
+                                'com_checkin'
+                            ) || $item->checked_out == $user->get('id') || $item->checked_out == 0;
+                        $canChange = $user->authorise(
+                                'core.edit.state',
+                                'com_modules.module.' . $item->id
+                            ) && $canCheckin;
                         ?>
                         <tr class="row<?php echo $i % 2; ?>"
                             sortable-group-id="<?php echo $item->position ? $item->position : 'none'; ?>">
@@ -112,7 +160,9 @@ $colSpan = $clientId === 1 ? 9 : 10;
                                 if (!$canChange) {
                                     $iconClass = ' inactive';
                                 } elseif (!$saveOrder) {
-                                    $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+                                    $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText(
+                                            'JORDERINGDISABLED'
+                                        );
                                 }
                                 ?>
                                 <span class="sortable-handler<?php echo $iconClass; ?>">
@@ -133,15 +183,26 @@ $colSpan = $clientId === 1 ? 9 : 10;
                                     <?php // Check if extension is enabled 
                                     ?>
                                     <?php if ($item->enabled > 0) : ?>
-                                        <?php echo JHtml::_('jgrid.published', $item->published, $i, 'modules.',
-                                            $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
+                                        <?php echo JHtml::_(
+                                            'jgrid.published',
+                                            $item->published,
+                                            $i,
+                                            'modules.',
+                                            $canChange,
+                                            'cb',
+                                            $item->publish_up,
+                                            $item->publish_down
+                                        ); ?>
                                         <?php // Create dropdown items and render the dropdown list.
                                         if ($canCreate) {
                                             JHtml::_('actionsdropdown.duplicate', 'cb' . $i, 'modules');
                                         }
                                         if ($canChange) {
-                                            JHtml::_('actionsdropdown.' . ((int)$item->published === -2 ? 'un' : '') . 'trash',
-                                                'cb' . $i, 'modules');
+                                            JHtml::_(
+                                                'actionsdropdown.' . ((int)$item->published === -2 ? 'un' : '') . 'trash',
+                                                'cb' . $i,
+                                                'modules'
+                                            );
                                         }
                                         if ($canCreate || $canChange) {
                                             echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
@@ -150,7 +211,9 @@ $colSpan = $clientId === 1 ? 9 : 10;
                                     <?php else : ?>
                                         <?php // Extension is not enabled, show a message that indicates this. ?>
                                         <button class="btn-micro hasTooltip"
-                                                title="<?php echo JText::_('COM_MODULES_MSG_MANAGE_EXTENSION_DISABLED'); ?>">
+                                                title="<?php echo JText::_(
+                                                    'COM_MODULES_MSG_MANAGE_EXTENSION_DISABLED'
+                                                ); ?>">
                                             <i class="icon-ban-circle"></i></button>
                                     <?php endif; ?>
                                 </div>
@@ -158,12 +221,20 @@ $colSpan = $clientId === 1 ? 9 : 10;
                             <td class="has-context">
                                 <div class="pull-left">
                                     <?php if ($item->checked_out) : ?>
-                                        <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor,
-                                            $item->checked_out_time, 'modules.', $canCheckin); ?>
+                                        <?php echo JHtml::_(
+                                            'jgrid.checkedout',
+                                            $i,
+                                            $item->editor,
+                                            $item->checked_out_time,
+                                            'modules.',
+                                            $canCheckin
+                                        ); ?>
                                     <?php endif; ?>
                                     <?php if ($canEdit) : ?>
                                         <a class="hasTooltip"
-                                           href="<?php echo JRoute::_('index.php?option=com_modules&task=module.edit&id=' . (int)$item->id); ?>"
+                                           href="<?php echo JRoute::_(
+                                               'index.php?option=com_modules&task=module.edit&id=' . (int)$item->id
+                                           ); ?>"
                                            title="<?php echo JText::_('JACTION_EDIT'); ?>">
                                             <?php echo $this->escape($item->title); ?></a>
                                     <?php else : ?>
@@ -172,8 +243,10 @@ $colSpan = $clientId === 1 ? 9 : 10;
 
                                     <?php if (!empty($item->note)) : ?>
                                         <div class="small">
-                                            <?php echo JText::sprintf('JGLOBAL_LIST_NOTE',
-                                                $this->escape($item->note)); ?>
+                                            <?php echo JText::sprintf(
+                                                'JGLOBAL_LIST_NOTE',
+                                                $this->escape($item->note)
+                                            ); ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -206,10 +279,13 @@ $colSpan = $clientId === 1 ? 9 : 10;
                                 <?php elseif ($item->language == '*'): ?>
                                     <?php echo JText::alt('JALL', 'language'); ?>
                                 <?php else: ?>
-                                    <?php echo $item->language_title ? JHtml::_('image',
-                                            'mod_languages/' . $item->language_image . '.gif', $item->language_title,
+                                    <?php echo $item->language_title ? JHtml::_(
+                                            'image',
+                                            'mod_languages/' . $item->language_image . '.gif',
+                                            $item->language_title,
                                             array('title' => $item->language_title),
-                                            true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                            true
+                                        ) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                                 <?php endif; ?>
                             </td>
                             <td class="hidden-phone">
@@ -222,13 +298,20 @@ $colSpan = $clientId === 1 ? 9 : 10;
             <?php endif; ?>
 
             <?php // Load the batch processing form. ?>
-            <?php if ($user->authorise('core.create', 'com_modules') && $user->authorise('core.edit',
-                    'com_modules') && $user->authorise('core.edit.state', 'com_modules')
+            <?php if ($user->authorise('core.create', 'com_modules') && $user->authorise(
+                    'core.edit',
+                    'com_modules'
+                ) && $user->authorise('core.edit.state', 'com_modules')
             ) : ?>
-                <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                    'title'  => JText::_('COM_MODULES_BATCH_OPTIONS'),
-                    'footer' => $this->loadTemplate('batch_footer')
-                ), $this->loadTemplate('batch_body')); ?>
+                <?php echo JHtml::_(
+                    'bootstrap.renderModal',
+                    'collapseModal',
+                    array(
+                        'title'  => JText::_('COM_MODULES_BATCH_OPTIONS'),
+                        'footer' => $this->loadTemplate('batch_footer')
+                    ),
+                    $this->loadTemplate('batch_body')
+                ); ?>
             <?php endif; ?>
             <input type="hidden" name="task" value=""/>
             <input type="hidden" name="boxchecked" value="0"/>

@@ -556,7 +556,9 @@ class JMicrodata
 
                     default:
                         // Default $displayType = 'inline'
-                        $html = static::htmlScope($this->fallbackType) . ' ' . static::htmlProperty($this->fallbackProperty);
+                        $html = static::htmlScope($this->fallbackType) . ' ' . static::htmlProperty(
+                                $this->fallbackProperty
+                            );
                         break;
                 }
             } else {
@@ -572,7 +574,9 @@ class JMicrodata
                             $html = ($this->machineContent !== null) ? $this->machineContent : $this->content;
                             $html = static::htmlMeta($html, $this->fallbackProperty, $this->fallbackType);
                         } else {
-                            $html = static::htmlScope($this->fallbackType) . ' ' . static::htmlProperty($this->fallbackProperty);
+                            $html = static::htmlScope($this->fallbackType) . ' ' . static::htmlProperty(
+                                    $this->fallbackProperty
+                                );
                         }
 
                         break;
@@ -587,7 +591,9 @@ class JMicrodata
                             $html = static::htmlSpan($this->content, $this->fallbackProperty);
                             $html = static::htmlSpan($html, '', $this->fallbackType);
                         } else {
-                            $html = static::htmlScope($this->fallbackType) . ' ' . static::htmlProperty($this->fallbackProperty);
+                            $html = static::htmlScope($this->fallbackType) . ' ' . static::htmlProperty(
+                                    $this->fallbackProperty
+                                );
                         }
 
                         break;

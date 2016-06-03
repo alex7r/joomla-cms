@@ -12,8 +12,10 @@ defined('_JEXEC') or die;
 // Get additional language strings prefixed with TPL_HATHOR
 // @todo: Do we realy need this?
 $lang = JFactory::getLanguage();
-$lang->load('tpl_hathor', JPATH_ADMINISTRATOR) || $lang->load('tpl_hathor',
-    JPATH_ADMINISTRATOR . '/templates/hathor/language');
+$lang->load('tpl_hathor', JPATH_ADMINISTRATOR) || $lang->load(
+    'tpl_hathor',
+    JPATH_ADMINISTRATOR . '/templates/hathor/language'
+);
 
 $app = JFactory::getApplication();
 $doc = JFactory::getDocument();

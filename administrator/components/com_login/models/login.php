@@ -91,12 +91,12 @@ class LoginModelLogin extends JModelLegacy
         if (!($clean = $cache->get($cacheid))) {
             $db = JFactory::getDbo();
 
-            $query = $db->getQuery(true)
-                        ->select('m.id, m.title, m.module, m.position, m.showtitle, m.params')
-                        ->from('#__modules AS m')
-                        ->where('m.module =' . $db->quote($module) . ' AND m.client_id = 1')
-                        ->join('LEFT', '#__extensions AS e ON e.element = m.module AND e.client_id = m.client_id')
-                        ->where('e.enabled = 1');
+            $query = $db->getQuery(true)->select('m.id, m.title, m.module, m.position, m.showtitle, m.params')->from(
+                    '#__modules AS m'
+                )->where('m.module =' . $db->quote($module) . ' AND m.client_id = 1')->join(
+                    'LEFT',
+                    '#__extensions AS e ON e.element = m.module AND e.client_id = m.client_id'
+                )->where('e.enabled = 1');
 
             // Filter by language.
             if ($app->isSite() && $app->getLanguageFilter()) {

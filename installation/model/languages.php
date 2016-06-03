@@ -82,11 +82,9 @@ class InstallationModelLanguages extends JModelBase
         $db       = JFactory::getDbo();
         $extQuery = $db->getQuery(true);
 
-        $extQuery->select($db->qn('extension_id'))
-                 ->from($db->qn('#__extensions'))
-                 ->where($db->qn('type') . ' = ' . $db->q('package'))
-                 ->where($db->qn('element') . ' = ' . $db->q('pkg_en-GB'))
-                 ->where($db->qn('client_id') . ' = 0');
+        $extQuery->select($db->qn('extension_id'))->from($db->qn('#__extensions'))->where(
+                $db->qn('type') . ' = ' . $db->q('package')
+            )->where($db->qn('element') . ' = ' . $db->q('pkg_en-GB'))->where($db->qn('client_id') . ' = 0');
 
         $db->setQuery($extQuery);
 
@@ -369,12 +367,11 @@ class InstallationModelLanguages extends JModelBase
         $query = $db->getQuery(true);
 
         // Select field element from the extensions table.
-        $query->select($db->qn(array('element', 'name')))
-              ->from($db->qn('#__extensions'))
-              ->where($db->qn('type') . ' = ' . $db->q('language'))
-              ->where($db->qn('state') . ' = 0')
-              ->where($db->qn('enabled') . ' = 1')
-              ->where($db->qn('client_id') . ' = ' . (int)$client_id);
+        $query->select($db->qn(array('element', 'name')))->from($db->qn('#__extensions'))->where(
+                $db->qn('type') . ' = ' . $db->q('language')
+            )->where($db->qn('state') . ' = 0')->where($db->qn('enabled') . ' = 1')->where(
+                $db->qn('client_id') . ' = ' . (int)$client_id
+            );
 
         $db->setQuery($query);
 
@@ -517,11 +514,9 @@ class InstallationModelLanguages extends JModelBase
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true);
 
-        $query->clear()
-              ->update($db->qn('#__extensions'))
-              ->set($db->qn('enabled') . ' = 1')
-              ->where($db->qn('name') . ' = ' . $db->q($pluginName))
-              ->where($db->qn('type') . ' = ' . $db->q('plugin'));
+        $query->clear()->update($db->qn('#__extensions'))->set($db->qn('enabled') . ' = 1')->where(
+                $db->qn('name') . ' = ' . $db->q($pluginName)
+            )->where($db->qn('type') . ' = ' . $db->q('plugin'));
 
         $db->setQuery($query);
 
@@ -532,11 +527,9 @@ class InstallationModelLanguages extends JModelBase
         // Store language filter plugin parameters.
         if ($pluginName == 'plg_system_languagefilter') {
             $params = '{' . '"detect_browser":"0",' . '"automatic_change":"1",' . '"item_associations":"1",' . '"remove_default_prefix":"0",' . '"lang_cookie":"0",' . '"alternate_meta":"1"' . '}';
-            $query->clear()
-                  ->update($db->qn('#__extensions'))
-                  ->set($db->qn('params') . ' = ' . $db->q($params))
-                  ->where($db->qn('name') . ' = ' . $db->q('plg_system_languagefilter'))
-                  ->where($db->qn('type') . ' = ' . $db->q('plugin'));
+            $query->clear()->update($db->qn('#__extensions'))->set($db->qn('params') . ' = ' . $db->q($params))->where(
+                    $db->qn('name') . ' = ' . $db->q('plg_system_languagefilter')
+                )->where($db->qn('type') . ' = ' . $db->q('plugin'));
 
             $db->setQuery($query);
 
@@ -850,7 +843,9 @@ class InstallationModelLanguages extends JModelBase
             'module'    => 'mod_menu',
             'access'    => 1,
             'showtitle' => 1,
-            'params'    => '{"menutype":"mainmenu-' . strtolower($itemLanguage->language) . '","startLevel":"0","endLevel":"0","showAllChildren":"0","tag_id":"","class_sfx":"","window_open":"",' . '"layout":"","moduleclass_sfx":"_menu","cache":"1","cache_time":"900","cachemode":"itemid"}',
+            'params'    => '{"menutype":"mainmenu-' . strtolower(
+                    $itemLanguage->language
+                ) . '","startLevel":"0","endLevel":"0","showAllChildren":"0","tag_id":"","class_sfx":"","window_open":"",' . '"layout":"","moduleclass_sfx":"_menu","cache":"1","cache_time":"900","cachemode":"itemid"}',
             'client_id' => 0,
             'language'  => $itemLanguage->language,
             'published' => 1,
@@ -892,7 +887,9 @@ class InstallationModelLanguages extends JModelBase
         $query->clear()
               ->update($db->qn('#__modules'))
               ->set($db->qn('published') . ' = 0')
-              ->where($db->qn('module') . ' = ' . $db->q('mod_menu'))
+              ->where(
+                  $db->qn('module') . ' = ' . $db->q('mod_menu')
+              )
               ->where($db->qn('language') . ' = ' . $db->q('*'))
               ->where($db->qn('client_id') . ' = ' . $db->q('0'))
               ->where($db->qn('position') . ' = ' . $db->q('position-7'));
@@ -920,10 +917,9 @@ class InstallationModelLanguages extends JModelBase
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true);
 
-        $query->clear()
-              ->update($db->qn('#__modules'))
-              ->set($db->qn('published') . ' = 1')
-              ->where($db->qn('module') . ' = ' . $db->q($moduleName));
+        $query->clear()->update($db->qn('#__modules'))->set($db->qn('published') . ' = 1')->where(
+                $db->qn('module') . ' = ' . $db->q($moduleName)
+            );
         $db->setQuery($query);
 
         if (!$db->execute()) {
@@ -1080,14 +1076,19 @@ class InstallationModelLanguages extends JModelBase
         $query = $db->getQuery(true);
 
         // Select the admin user ID
-        $query->clear()
-              ->select($db->qn('u') . '.' . $db->qn('id'))
-              ->from($db->qn('#__users', 'u'))
-              ->join('LEFT', $db->qn('#__user_usergroup_map',
-                      'map') . ' ON ' . $db->qn('map') . '.' . $db->qn('user_id') . ' = ' . $db->qn('u') . '.' . $db->qn('id'))
-              ->join('LEFT', $db->qn('#__usergroups',
-                      'g') . ' ON ' . $db->qn('map') . '.' . $db->qn('group_id') . ' = ' . $db->qn('g') . '.' . $db->qn('id'))
-              ->where($db->qn('g') . '.' . $db->qn('title') . ' = ' . $db->q('Super Users'));
+        $query->clear()->select($db->qn('u') . '.' . $db->qn('id'))->from($db->qn('#__users', 'u'))->join(
+                'LEFT',
+                $db->qn(
+                    '#__user_usergroup_map',
+                    'map'
+                ) . ' ON ' . $db->qn('map') . '.' . $db->qn('user_id') . ' = ' . $db->qn('u') . '.' . $db->qn('id')
+            )->join(
+                'LEFT',
+                $db->qn(
+                    '#__usergroups',
+                    'g'
+                ) . ' ON ' . $db->qn('map') . '.' . $db->qn('group_id') . ' = ' . $db->qn('g') . '.' . $db->qn('id')
+            )->where($db->qn('g') . '.' . $db->qn('title') . ' = ' . $db->q('Super Users'));
 
         $db->setQuery($query);
         $id = $db->loadResult();

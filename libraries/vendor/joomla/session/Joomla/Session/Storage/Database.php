@@ -44,8 +44,12 @@ class Database extends Storage
             parent::__construct($options);
             $this->db = $options['db'];
         } else {
-            throw new \RuntimeException(sprintf('The %s storage engine requires a `db` option that is an instance of Joomla\\Database\\DatabaseDriver.',
-                __CLASS__));
+            throw new \RuntimeException(
+                sprintf(
+                    'The %s storage engine requires a `db` option that is an instance of Joomla\\Database\\DatabaseDriver.',
+                    __CLASS__
+                )
+            );
         }
     }
 
@@ -64,9 +68,9 @@ class Database extends Storage
         try {
             // Get the session data from the database table.
             $query = $this->db->getQuery(true);
-            $query->select($this->db->quoteName('data'))
-                  ->from($this->db->quoteName('#__session'))
-                  ->where($this->db->quoteName('session_id') . ' = ' . $this->db->quote($id));
+            $query->select($this->db->quoteName('data'))->from($this->db->quoteName('#__session'))->where(
+                    $this->db->quoteName('session_id') . ' = ' . $this->db->quote($id)
+                );
 
             $this->db->setQuery($query);
 
@@ -79,7 +83,7 @@ class Database extends Storage
     /**
      * Write session data to the SessionHandler backend.
      *
-     * @param   string $id   The session identifier.
+     * @param   string $id The session identifier.
      * @param   string $data The session data.
      *
      * @return  boolean  True on success, false otherwise.
@@ -91,10 +95,11 @@ class Database extends Storage
     {
         try {
             $query = $this->db->getQuery(true);
-            $query->update($this->db->quoteName('#__session'))
-                  ->set($this->db->quoteName('data') . ' = ' . $this->db->quote($data))
-                  ->set($this->db->quoteName('time') . ' = ' . $this->db->quote((int)time()))
-                  ->where($this->db->quoteName('session_id') . ' = ' . $this->db->quote($id));
+            $query->update($this->db->quoteName('#__session'))->set(
+                    $this->db->quoteName('data') . ' = ' . $this->db->quote($data)
+                )->set($this->db->quoteName('time') . ' = ' . $this->db->quote((int)time()))->where(
+                    $this->db->quoteName('session_id') . ' = ' . $this->db->quote($id)
+                );
 
             // Try to update the session data in the database table.
             $this->db->setQuery($query);
@@ -126,8 +131,9 @@ class Database extends Storage
     {
         try {
             $query = $this->db->getQuery(true);
-            $query->delete($this->db->quoteName('#__session'))
-                  ->where($this->db->quoteName('session_id') . ' = ' . $this->db->quote($id));
+            $query->delete($this->db->quoteName('#__session'))->where(
+                    $this->db->quoteName('session_id') . ' = ' . $this->db->quote($id)
+                );
 
             // Remove a session from the database.
             $this->db->setQuery($query);
@@ -155,8 +161,9 @@ class Database extends Storage
 
         try {
             $query = $this->db->getQuery(true);
-            $query->delete($this->db->quoteName('#__session'))
-                  ->where($this->db->quoteName('time') . ' < ' . $this->db->quote((int)$past));
+            $query->delete($this->db->quoteName('#__session'))->where(
+                    $this->db->quoteName('time') . ' < ' . $this->db->quote((int)$past)
+                );
 
             // Remove expired sessions from the database.
             $this->db->setQuery($query);

@@ -17,7 +17,8 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 
 // Add spindle-wheel for language installation.
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 jQuery(document).ready(function($) {
 	Joomla.loadingLayer("load");
 	$("#adminForm").on("submit", function(e) {
@@ -27,7 +28,8 @@ jQuery(document).ready(function($) {
 		}
 	});
 });
-');
+'
+);
 ?>
 <div id="installer-languages" class="clearfix">
     <form action="<?php echo JRoute::_('index.php?option=com_installer&view=languages'); ?>" method="post"
@@ -40,8 +42,10 @@ jQuery(document).ready(function($) {
             <?php else : ?>
             <div id="j-main-container">
                 <?php endif; ?>
-                <?php echo JLayoutHelper::render('joomla.searchtools.default',
-                    array('view' => $this, 'options' => array('filterButton' => false))); ?>
+                <?php echo JLayoutHelper::render(
+                    'joomla.searchtools.default',
+                    array('view' => $this, 'options' => array('filterButton' => false))
+                ); ?>
                 <div class="clearfix"></div>
                 <?php if (empty($this->items)) : ?>
                     <div class="alert alert-no-items">
@@ -55,12 +59,22 @@ jQuery(document).ready(function($) {
                                 <?php echo JHtml::_('grid.checkall'); ?>
                             </th>
                             <th class="nowrap">
-                                <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'name', $listDirn,
-                                    $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'searchtools.sort',
+                                    'JGRID_HEADING_LANGUAGE',
+                                    'name',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th width="1%" class="nowrap">
-                                <?php echo JHtml::_('searchtools.sort', 'COM_INSTALLER_HEADING_LANGUAGE_TAG', 'element',
-                                    $listDirn, $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'searchtools.sort',
+                                    'COM_INSTALLER_HEADING_LANGUAGE_TAG',
+                                    'element',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th width="5%" class="center">
                                 <?php echo JText::_('JVERSION'); ?>
@@ -69,8 +83,13 @@ jQuery(document).ready(function($) {
                                 <?php echo JText::_('COM_INSTALLER_HEADING_DETAILS_URL'); ?>
                             </th>
                             <th width="1%" class="nowrap hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', 'COM_INSTALLER_HEADING_ID', 'update_id',
-                                    $listDirn, $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'searchtools.sort',
+                                    'COM_INSTALLER_HEADING_ID',
+                                    'update_id',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                         </tr>
                         </thead>
@@ -83,7 +102,7 @@ jQuery(document).ready(function($) {
                         </tfoot>
                         <tbody>
                         <?php
-                        $version             = new JVersion;
+                        $version = new JVersion;
                         $currentShortVersion = preg_replace('#^([0-9\.]+)(|.*)$#', '$1', $version->getShortVersion());
                         foreach ($this->items as $i => $language) :
                             // Get language code and language image.
@@ -105,12 +124,20 @@ jQuery(document).ready(function($) {
                                 <td class="center">
                                     <?php // Display a Note if language pack version is not equal to Joomla version 
                                     ?>
-                                    <?php if (substr($language->version, 0,
-                                            3) != $version::RELEASE || substr($language->version, 0,
-                                            5) != $currentShortVersion
+                                    <?php if (substr(
+                                                  $language->version,
+                                                  0,
+                                                  3
+                                              ) != $version::RELEASE || substr(
+                                                                            $language->version,
+                                                                            0,
+                                                                            5
+                                                                        ) != $currentShortVersion
                                     ) : ?>
                                         <span class="label label-warning hasTooltip"
-                                              title="<?php echo JText::_('JGLOBAL_LANGUAGE_VERSION_NOT_PLATFORM'); ?>"><?php echo $language->version; ?></span>
+                                              title="<?php echo JText::_(
+                                                  'JGLOBAL_LANGUAGE_VERSION_NOT_PLATFORM'
+                                              ); ?>"><?php echo $language->version; ?></span>
                                     <?php else : ?>
                                         <span class="label label-success"><?php echo $language->version; ?></span>
                                     <?php endif; ?>

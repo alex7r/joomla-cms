@@ -29,8 +29,10 @@ JHtml::_('stylesheet', 'jui/chosen.css', false, true);
 $options_str = json_encode($options, ($debug && defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : false));
 
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 		jQuery(document).ready(function (){
 			jQuery('" . $selector . "').chosen(" . $options_str . ");
 		});
-	");
+	"
+);

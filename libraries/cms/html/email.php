@@ -51,7 +51,9 @@ abstract class JHtmlEmail
         // Random number
         $rand = rand(1, 100000);
 
-        $replacement = '<span id="cloak' . $rand . '">' . JText::_('JLIB_HTML_CLOAKING') . '</span>' . "<script type='text/javascript'>";
+        $replacement = '<span id="cloak' . $rand . '">' . JText::_(
+                'JLIB_HTML_CLOAKING'
+            ) . '</span>' . "<script type='text/javascript'>";
         $replacement .= "\n //<!--";
         $replacement .= "\n document.getElementById('cloak$rand').innerHTML = '';";
         $replacement .= "\n var prefix = '&#109;a' + 'i&#108;' + '&#116;o';";
@@ -69,8 +71,10 @@ abstract class JHtmlEmail
                     // Split email by @ symbol
                     $text       = explode('@', $text);
                     $text_parts = explode('.', $text[1]);
-                    $replacement .= "\n var addy_text" . $rand . " = '" . @$text[0] . "' + '&#64;' + '" . implode("' + '&#46;' + '",
-                            @$text_parts) . "';";
+                    $replacement .= "\n var addy_text" . $rand . " = '" . @$text[0] . "' + '&#64;' + '" . implode(
+                            "' + '&#46;' + '",
+                            @$text_parts
+                        ) . "';";
                 } else {
                     $replacement .= "\n var addy_text" . $rand . " = '" . $text . "';";
                 }

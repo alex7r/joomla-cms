@@ -117,9 +117,13 @@ class RedirectModelLinks extends JModelList
                 $new_url = '';
             }
 
-            $query->insert($db->quoteName('#__redirect_links'), false)
-                  ->values($db->quote($old_url) . ', ' . $db->quote($new_url) . ' ,' . $db->quote('') . ', ' . $db->quote('') . ', 0, 0, ' . $db->quote(JFactory::getDate()
-                                                                                                                                                                ->toSql()));
+            $query->insert($db->quoteName('#__redirect_links'), false)->values(
+                    $db->quote($old_url) . ', ' . $db->quote($new_url) . ' ,' . $db->quote('') . ', ' . $db->quote(
+                        ''
+                    ) . ', 0, 0, ' . $db->quote(
+                        JFactory::getDate()->toSql()
+                    )
+                );
         }
 
         $db->setQuery($query);
@@ -143,12 +147,18 @@ class RedirectModelLinks extends JModelList
     protected function populateState($ordering = 'a.old_url', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('filter.state',
-            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'string'));
-        $this->setState('filter.http_status',
-            $this->getUserStateFromRequest($this->context . '.filter.http_status', 'filter_http_status', '', 'cmd'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.state',
+            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'string')
+        );
+        $this->setState(
+            'filter.http_status',
+            $this->getUserStateFromRequest($this->context . '.filter.http_status', 'filter_http_status', '', 'cmd')
+        );
 
         // Load the parameters.
         $params = JComponentHelper::getParams('com_redirect');
@@ -220,13 +230,25 @@ class RedirectModelLinks extends JModelList
                 $query->where($db->quoteName('a.id') . ' = ' . (int)substr($search, 3));
             } else {
                 $search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-                $query->where('(' . $db->quoteName('old_url') . ' LIKE ' . $search . ' OR ' . $db->quoteName('new_url') . ' LIKE ' . $search . ' OR ' . $db->quoteName('comment') . ' LIKE ' . $search . ' OR ' . $db->quoteName('referer') . ' LIKE ' . $search . ')');
+                $query->where(
+                    '(' . $db->quoteName('old_url') . ' LIKE ' . $search . ' OR ' . $db->quoteName(
+                        'new_url'
+                    ) . ' LIKE ' . $search . ' OR ' . $db->quoteName(
+                        'comment'
+                    ) . ' LIKE ' . $search . ' OR ' . $db->quoteName('referer') . ' LIKE ' . $search . ')'
+                );
             }
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.old_url')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.old_url'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

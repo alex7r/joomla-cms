@@ -58,12 +58,18 @@ class TemplatesModelStyles extends JModelList
     protected function populateState($ordering = 'a.template', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('filter.template',
-            $this->getUserStateFromRequest($this->context . '.filter.template', 'filter_template', '', 'string'));
-        $this->setState('filter.menuitem',
-            $this->getUserStateFromRequest($this->context . '.filter.menuitem', 'filter_menuitem', '', 'cmd'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.template',
+            $this->getUserStateFromRequest($this->context . '.filter.template', 'filter_template', '', 'string')
+        );
+        $this->setState(
+            'filter.menuitem',
+            $this->getUserStateFromRequest($this->context . '.filter.menuitem', 'filter_menuitem', '', 'cmd')
+        );
 
         // Special case for the client id.
         $clientId = (int)$this->getUserStateFromRequest($this->context . '.client_id', 'client_id', 0, 'int');
@@ -114,27 +120,41 @@ class TemplatesModelStyles extends JModelList
         $query = $db->getQuery(true);
 
         // Select the required fields from the table.
-        $query->select($this->getState('list.select',
-            'a.id, a.template, a.title, a.home, a.client_id, l.title AS language_title, l.image as image'));
-        $query->from($db->quoteName('#__template_styles', 'a'))
-              ->where($db->quoteName('a.client_id') . ' = ' . $clientId);
+        $query->select(
+            $this->getState(
+                'list.select',
+                'a.id, a.template, a.title, a.home, a.client_id, l.title AS language_title, l.image as image'
+            )
+        );
+        $query->from($db->quoteName('#__template_styles', 'a'))->where(
+                $db->quoteName('a.client_id') . ' = ' . $clientId
+            );
 
         // Join on menus.
-        $query->select('COUNT(m.template_style_id) AS assigned')
-              ->join('LEFT', $db->quoteName('#__menu',
-                      'm') . ' ON ' . $db->quoteName('m.template_style_id') . ' = ' . $db->quoteName('a.id'))
-              ->group('a.id, a.template, a.title, a.home, a.client_id, l.title, l.image, e.extension_id');
+        $query->select('COUNT(m.template_style_id) AS assigned')->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__menu',
+                    'm'
+                ) . ' ON ' . $db->quoteName('m.template_style_id') . ' = ' . $db->quoteName('a.id')
+            )->group('a.id, a.template, a.title, a.home, a.client_id, l.title, l.image, e.extension_id');
 
         // Join over the language.
-        $query->join('LEFT', $db->quoteName('#__languages',
-                'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('a.home'));
+        $query->join(
+            'LEFT',
+            $db->quoteName(
+                '#__languages',
+                'l'
+            ) . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('a.home')
+        );
 
         // Filter by extension enabled.
-        $query->select($db->quoteName('extension_id', 'e_id'))
-              ->join('LEFT',
-                  $db->quoteName('#__extensions', 'e') . ' ON e.element = a.template AND e.client_id = a.client_id')
-              ->where($db->quoteName('e.enabled') . ' = 1')
-              ->where($db->quoteName('e.type') . ' = ' . $db->quote('template'));
+        $query->select($db->quoteName('extension_id', 'e_id'))->join(
+                'LEFT',
+                $db->quoteName('#__extensions', 'e') . ' ON e.element = a.template AND e.client_id = a.client_id'
+            )->where($db->quoteName('e.enabled') . ' = 1')->where(
+                $db->quoteName('e.type') . ' = ' . $db->quote('template')
+            );
 
         // Filter by template.
         if ($template = $this->getState('filter.template')) {
@@ -148,27 +168,36 @@ class TemplatesModelStyles extends JModelList
             // If user selected the templates styles that are not assigned to any page.
             if ((int)$menuItemId === -1) {
                 // Only custom template styles overrides not assigned to any menu item.
-                $query->where($db->quoteName('a.home') . ' = ' . $db->quote(0))
-                      ->where($db->quoteName('m.id') . ' IS NULL');
+                $query->where($db->quoteName('a.home') . ' = ' . $db->quote(0))->where(
+                        $db->quoteName('m.id') . ' IS NULL'
+                    );
             } // If user selected the templates styles assigned to particular pages.
             else {
                 // Subquery to get the language of the selected menu item.
                 $menuItemLanguageSubQuery = $db->getQuery(true);
-                $menuItemLanguageSubQuery->select($db->quoteName('language'))
-                                         ->from($db->quoteName('#__menu'))
-                                         ->where($db->quoteName('id') . ' = ' . $menuItemId);
+                $menuItemLanguageSubQuery->select($db->quoteName('language'))->from($db->quoteName('#__menu'))->where(
+                        $db->quoteName('id') . ' = ' . $menuItemId
+                    );
 
                 // Subquery to get the language of the selected menu item.
                 $templateStylesMenuItemsSubQuery = $db->getQuery(true);
-                $templateStylesMenuItemsSubQuery->select($db->quoteName('id'))
-                                                ->from($db->quoteName('#__menu'))
-                                                ->where($db->quoteName('template_style_id') . ' = ' . $db->quoteName('a.id'));
+                $templateStylesMenuItemsSubQuery->select($db->quoteName('id'))->from($db->quoteName('#__menu'))->where(
+                        $db->quoteName('template_style_id') . ' = ' . $db->quoteName('a.id')
+                    );
 
                 // Main query where clause.
-                $query->where('(' . // Default template style (fallback template style to all menu items).
-                              $db->quoteName('a.home') . ' = ' . $db->quote(1) . ' OR ' . // Default template style for specific language (fallback template style to the selected menu item language).
-                              $db->quoteName('a.home') . ' IN (' . $menuItemLanguageSubQuery . ') OR ' . // Custom template styles override (only if assigned to the selected menu item).
-                              '(' . $db->quoteName('a.home') . ' = ' . $db->quote(0) . ' AND ' . $menuItemId . ' IN (' . $templateStylesMenuItemsSubQuery . '))' . ')');
+                $query->where(
+                    '(' . // Default template style (fallback template style to all menu items).
+                    $db->quoteName('a.home') . ' = ' . $db->quote(
+                        1
+                    ) . ' OR ' . // Default template style for specific language (fallback template style to the selected menu item language).
+                    $db->quoteName(
+                        'a.home'
+                    ) . ' IN (' . $menuItemLanguageSubQuery . ') OR ' . // Custom template styles override (only if assigned to the selected menu item).
+                    '(' . $db->quoteName('a.home') . ' = ' . $db->quote(
+                        0
+                    ) . ' AND ' . $menuItemId . ' IN (' . $templateStylesMenuItemsSubQuery . '))' . ')'
+                );
             }
         }
 
@@ -183,8 +212,14 @@ class TemplatesModelStyles extends JModelList
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.template')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.template'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

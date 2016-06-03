@@ -21,8 +21,13 @@ JHtml::_('behavior.formvalidator');
         </div>
     <?php endif; ?>
 
-    <?php if (($this->params->get('logindescription_show') == 1 && str_replace(' ', '',
-            $this->params->get('login_description')) != '') || $this->params->get('login_image') != '') : ?>
+    <?php if (($this->params->get('logindescription_show') == 1 && str_replace(
+                                                                       ' ',
+                                                                       '',
+                                                                       $this->params->get('login_description')
+                                                                   ) != '') || $this->params->get(
+        'login_image'
+    ) != '') : ?>
     <div class="login-description">
         <?php endif; ?>
 
@@ -35,8 +40,13 @@ JHtml::_('behavior.formvalidator');
                  alt="<?php echo JText::_('COM_USERS_LOGIN_IMAGE_ALT') ?>"/>
         <?php endif; ?>
 
-        <?php if (($this->params->get('logindescription_show') == 1 && str_replace(' ', '',
-                $this->params->get('login_description')) != '') || $this->params->get('login_image') != '') : ?>
+        <?php if (($this->params->get('logindescription_show') == 1 && str_replace(
+                                                                           ' ',
+                                                                           '',
+                                                                           $this->params->get('login_description')
+                                                                       ) != '') || $this->params->get(
+            'login_image'
+        ) != '') : ?>
     </div>
 <?php endif; ?>
 
@@ -87,12 +97,20 @@ JHtml::_('behavior.formvalidator');
 
             <?php if ($this->params->get('login_redirect_url')) : ?>
                 <input type="hidden" name="return"
-                       value="<?php echo base64_encode($this->params->get('login_redirect_url',
-                           $this->form->getValue('return'))); ?>"/>
+                       value="<?php echo base64_encode(
+                           $this->params->get(
+                               'login_redirect_url',
+                               $this->form->getValue('return')
+                           )
+                       ); ?>"/>
             <?php else : ?>
                 <input type="hidden" name="return"
-                       value="<?php echo base64_encode($this->params->get('login_redirect_menuitem',
-                           $this->form->getValue('return'))); ?>"/>
+                       value="<?php echo base64_encode(
+                           $this->params->get(
+                               'login_redirect_menuitem',
+                               $this->form->getValue('return')
+                           )
+                       ); ?>"/>
             <?php endif; ?>
             <?php echo JHtml::_('form.token'); ?>
         </fieldset>

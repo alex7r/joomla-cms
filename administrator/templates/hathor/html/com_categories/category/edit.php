@@ -19,7 +19,8 @@ $saveHistory = $this->state->get('params')->get('save_history', 0);
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidator');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'category.cancel' || document.formvalidator.isValid(document.getElementById('item-form'))) {
@@ -27,15 +28,20 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('item-form'));
 		}
 	}
-");
+"
+);
 $assoc = JLanguageAssociations::isEnabled();
 
 ?>
 
 <div class="category-edit">
     <form
-        action="<?php echo JRoute::_('index.php?option=com_categories&extension=' . $input->getCmd('extension',
-                'com_content') . '&layout=edit&id=' . (int)$this->item->id); ?>"
+        action="<?php echo JRoute::_(
+            'index.php?option=com_categories&extension=' . $input->getCmd(
+                'extension',
+                'com_content'
+            ) . '&layout=edit&id=' . (int)$this->item->id
+        ); ?>"
         method="post" name="adminForm" id="item-form" class="form-validate">
         <div class="col main-section">
             <fieldset class="adminform">
@@ -145,8 +151,11 @@ $assoc = JLanguageAssociations::isEnabled();
             <?php endforeach; ?>
 
             <?php if ($assoc) : ?>
-                <?php echo JHtml::_('sliders.panel', JText::_('COM_CATEGORIES_ITEM_ASSOCIATIONS_FIELDSET_LABEL'),
-                    '-options'); ?>
+                <?php echo JHtml::_(
+                    'sliders.panel',
+                    JText::_('COM_CATEGORIES_ITEM_ASSOCIATIONS_FIELDSET_LABEL'),
+                    '-options'
+                ); ?>
                 <?php echo $this->loadTemplate('associations'); ?>
             <?php endif; ?>
 
@@ -157,8 +166,11 @@ $assoc = JLanguageAssociations::isEnabled();
         <?php if ($this->canDo->get('core.admin')) : ?>
             <div class="col rules-section">
 
-                <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id,
-                    array('useCookie' => 1)); ?>
+                <?php echo JHtml::_(
+                    'sliders.start',
+                    'permissions-sliders-' . $this->item->id,
+                    array('useCookie' => 1)
+                ); ?>
 
                 <?php echo JHtml::_('sliders.panel', JText::_('COM_CATEGORIES_FIELDSET_RULES'), 'access-rules'); ?>
                 <fieldset class="panelform">

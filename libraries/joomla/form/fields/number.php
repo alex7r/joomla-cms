@@ -168,8 +168,10 @@ class JFormFieldNumber extends JFormField
         JHtml::_('jquery.framework');
         JHtml::_('script', 'system/html5fallback.js', false, true);
 
-        return '<input type="number" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars($value,
+        return '<input type="number" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars(
+            $value,
             ENT_COMPAT,
-            'UTF-8') . '"' . $class . $size . $disabled . $readonly . $hint . $onchange . $max . $step . $min . $required . $autocomplete . $autofocus . ' />';
+            'UTF-8'
+        ) . '"' . $class . $size . $disabled . $readonly . $hint . $onchange . $max . $step . $min . $required . $autocomplete . $autofocus . ' />';
     }
 }

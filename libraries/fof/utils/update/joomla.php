@@ -145,8 +145,11 @@ class FOFUtilsUpdateJoomla extends FOFUtilsUpdateExtension
 
             if ($update['upgrade'] == 'current') {
                 $sections[0] = 'installed';
-            } elseif (version_compare($update['version'], $currentMinVersion,
-                    'ge') && version_compare($update['version'], $currentMaxVersion, 'le')
+            } elseif (version_compare(
+                          $update['version'],
+                          $currentMinVersion,
+                          'ge'
+                      ) && version_compare($update['version'], $currentMaxVersion, 'le')
             ) {
                 $sections[0] = 'current';
             } else {
@@ -221,7 +224,9 @@ class FOFUtilsUpdateJoomla extends FOFUtilsUpdateExtension
         $platformVersionMajor  = $versionParts[0];
         $platformVersionMinor  = $platformVersionMajor . '.' . $versionParts[1];
         $platformVersionNormal = $platformVersionMinor . '.' . $versionParts[2];
-        $platformVersionFull   = (count($versionParts) > 3) ? $platformVersionNormal . '.' . $versionParts[3] : $platformVersionNormal;
+        $platformVersionFull   = (count(
+                                      $versionParts
+                                  ) > 3) ? $platformVersionNormal . '.' . $versionParts[3] : $platformVersionNormal;
 
         $ret = array();
 
@@ -358,8 +363,11 @@ class FOFUtilsUpdateJoomla extends FOFUtilsUpdateExtension
         // Find the upgrade relation of $jVersion to $currentVersion
         if (version_compare($jVersion, $currentVersion, 'eq')) {
             $ret['upgrade'] = 'current';
-        } elseif (($sts_minimum !== false) && version_compare($jVersion, $sts_minimum,
-                'ge') && version_compare($jVersion, $sts_maximum, 'le')
+        } elseif (($sts_minimum !== false) && version_compare(
+                $jVersion,
+                $sts_minimum,
+                'ge'
+            ) && version_compare($jVersion, $sts_maximum, 'le')
         ) {
             $ret['upgrade'] = 'sts';
         } elseif (($lts_minimum !== false) && version_compare($jVersion, $lts_minimum, 'ge')) {

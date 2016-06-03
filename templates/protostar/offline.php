@@ -34,15 +34,18 @@ $doc->addStyleSheetVersion($this->baseurl . '/templates/' . $this->template . '/
 // Use of Google Font
 if ($this->params->get('googleFont')) {
     $doc->addStyleSheet('//fonts.googleapis.com/css?family=' . $this->params->get('googleFontName'));
-    $doc->addStyleDeclaration("
+    $doc->addStyleDeclaration(
+        "
 	h1, h2, h3, h4, h5, h6, .site-title {
 		font-family: '" . str_replace('+', ' ', $this->params->get('googleFontName')) . "', sans-serif;
-	}");
+	}"
+    );
 }
 
 // Template color
 if ($this->params->get('templateColor')) {
-    $doc->addStyleDeclaration("
+    $doc->addStyleDeclaration(
+        "
 	body.site {
 		border-top: 3px solid " . $this->params->get('templateColor') . ";
 		background-color: " . $this->params->get('templateBackgroundColor') . ";
@@ -59,7 +62,8 @@ if ($this->params->get('templateColor')) {
 	.nav-pills > .active > a:hover,
 	.btn-primary {
 		background: " . $this->params->get('templateColor') . ";
-	}");
+	}"
+    );
 }
 
 // Check for a custom CSS file
@@ -78,7 +82,9 @@ $sitename = $app->get('sitename');
 if ($this->params->get('logoFile')) {
     $logo = '<img src="' . JUri::root() . $this->params->get('logoFile') . '" alt="' . $sitename . '" />';
 } elseif ($this->params->get('sitetitle')) {
-    $logo = '<span class="site-title" title="' . $sitename . '">' . htmlspecialchars($this->params->get('sitetitle')) . '</span>';
+    $logo = '<span class="site-title" title="' . $sitename . '">' . htmlspecialchars(
+            $this->params->get('sitetitle')
+        ) . '</span>';
 } else {
     $logo = '<span class="site-title" title="' . $sitename . '">' . $sitename . '</span>';
 }
@@ -105,8 +111,11 @@ if ($this->params->get('logoFile')) {
                     <img src="<?php echo $app->get('offline_image'); ?>"
                          alt="<?php echo htmlspecialchars($app->get('sitename')); ?>"/>
                 <?php endif; ?>
-                <?php if ($app->get('display_offline_message', 1) == 1 && str_replace(' ', '',
-                        $app->get('offline_message')) != ''
+                <?php if ($app->get('display_offline_message', 1) == 1 && str_replace(
+                                                                              ' ',
+                                                                              '',
+                                                                              $app->get('offline_message')
+                                                                          ) != ''
                 ) : ?>
                     <p><?php echo $app->get('offline_message'); ?></p>
                 <?php elseif ($app->get('display_offline_message', 1) == 2) : ?>

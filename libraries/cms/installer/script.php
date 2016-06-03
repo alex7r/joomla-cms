@@ -128,13 +128,23 @@ class JInstallerScript
 
         // Abort if the extension being installed is not newer than the currently installed version
         if (strtolower($type) == 'update' && !$this->allowDowngrades) {
-            $manifest   = $this->getItemArray('manifest_cache', '#__extensions', 'element',
-                JFactory::getDbo()->quote($this->extension));
+            $manifest   = $this->getItemArray(
+                'manifest_cache',
+                '#__extensions',
+                'element',
+                JFactory::getDbo()->quote($this->extension)
+            );
             $oldRelease = $manifest['version'];
 
             if (version_compare($this->release, $oldRelease, '<')) {
-                JFactory::getApplication()->enqueueMessage(JText::sprintf('JLIB_INSTALLER_INCORRECT_SEQUENCE',
-                    $oldRelease, $this->release), 'error');
+                JFactory::getApplication()->enqueueMessage(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_INCORRECT_SEQUENCE',
+                        $oldRelease,
+                        $this->release
+                    ),
+                    'error'
+                );
 
                 return false;
             }
@@ -163,10 +173,9 @@ class JInstallerScript
         $db = JFactory::getDbo();
 
         // Build the query
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName($element))
-                    ->from($db->quoteName($table))
-                    ->where($db->quoteName($column) . ' = ' . $identifier);
+        $query = $db->getQuery(true)->select($db->quoteName($element))->from($db->quoteName($table))->where(
+                $db->quoteName($column) . ' = ' . $identifier
+            );
         $db->setQuery($query);
 
         // Load the single cell and json_decode data
@@ -191,11 +200,13 @@ class JInstallerScript
         $query->select($db->quoteName('id'));
 
         if ($isModule) {
-            $query->from($db->quoteName('#__modules'))
-                  ->where($db->quoteName('module') . ' = ' . $db->quote($this->extension));
+            $query->from($db->quoteName('#__modules'))->where(
+                    $db->quoteName('module') . ' = ' . $db->quote($this->extension)
+                );
         } else {
-            $query->from($db->quoteName('#__extensions'))
-                  ->where($db->quoteName('element') . ' = ' . $db->quote($this->extension));
+            $query->from($db->quoteName('#__extensions'))->where(
+                    $db->quoteName('element') . ' = ' . $db->quote($this->extension)
+                );
         }
 
         // Set the query and obtain an array of id's
@@ -267,10 +278,9 @@ class JInstallerScript
         $paramsString = json_encode($params);
 
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->update($db->quoteName($this->paramTable))
-                    ->set('params = ' . $db->quote($paramsString))
-                    ->where('id = ' . $id);
+        $query = $db->getQuery(true)->update($db->quoteName($this->paramTable))->set(
+                'params = ' . $db->quote($paramsString)
+            )->where('id = ' . $id);
 
         // Update table
         $db->setQuery($query)->execute();

@@ -61,10 +61,9 @@ class InstallerViewDiscover extends InstallerViewDefault
     public function checkExtensions()
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('*')
-                    ->from($db->quoteName('#__extensions'))
-                    ->where($db->quoteName('state') . ' = -1');
+        $query = $db->getQuery(true)->select('*')->from($db->quoteName('#__extensions'))->where(
+                $db->quoteName('state') . ' = -1'
+            );
         $db->setQuery($query);
         $discoveredExtensions = $db->loadObjectList();
 

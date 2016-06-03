@@ -209,10 +209,12 @@ class JCategories
         $query = $db->getQuery(true);
 
         // Right join with c for category
-        $query->select('c.id, c.asset_id, c.access, c.alias, c.checked_out, c.checked_out_time,
+        $query->select(
+            'c.id, c.asset_id, c.access, c.alias, c.checked_out, c.checked_out_time,
 			c.created_time, c.created_user_id, c.description, c.extension, c.hits, c.language, c.level,
 			c.lft, c.metadata, c.metadesc, c.metakey, c.modified_time, c.note, c.params, c.parent_id,
-			c.path, c.published, c.rgt, c.title, c.modified_user_id, c.version');
+			c.path, c.published, c.rgt, c.title, c.modified_user_id, c.version'
+        );
         $case_when = ' CASE WHEN ';
         $case_when .= $query->charLength('c.alias', '!=', '0');
         $case_when .= ' THEN ';
@@ -220,9 +222,9 @@ class JCategories
         $case_when .= $query->concatenate(array($c_id, 'c.alias'), ':');
         $case_when .= ' ELSE ';
         $case_when .= $c_id . ' END as slug';
-        $query->select($case_when)
-              ->from('#__categories as c')
-              ->where('(c.extension=' . $db->quote($extension) . ' OR c.extension=' . $db->quote('system') . ')');
+        $query->select($case_when)->from('#__categories as c')->where(
+                '(c.extension=' . $db->quote($extension) . ' OR c.extension=' . $db->quote('system') . ')'
+            );
 
         if ($this->_options['access']) {
             $query->where('c.access IN (' . implode(',', $user->getAuthorisedViewLevels()) . ')');
@@ -231,7 +233,9 @@ class JCategories
         if ($this->_options['published'] == 1) {
             $query->where('c.published = 1');
 
-            $subQuery = ' (SELECT cat.id as id FROM #__categories AS cat JOIN #__categories AS parent ' . 'ON cat.lft BETWEEN parent.lft AND parent.rgt WHERE parent.extension = ' . $db->quote($extension) . ' AND parent.published != 1 GROUP BY cat.id) ';
+            $subQuery = ' (SELECT cat.id as id FROM #__categories AS cat JOIN #__categories AS parent ' . 'ON cat.lft BETWEEN parent.lft AND parent.rgt WHERE parent.extension = ' . $db->quote(
+                    $extension
+                ) . ' AND parent.published != 1 GROUP BY cat.id) ';
             $query->join('LEFT', $subQuery . 'AS badcats ON badcats.id = c.id')->where('badcats.id is null');
         }
 
@@ -243,17 +247,25 @@ class JCategories
             $query->where('s.id=' . (int)$id);
 
             if ($app->isSite() && JLanguageMultilang::isEnabled()) {
-                $query->join('LEFT',
-                    '#__categories AS s ON (s.lft < c.lft AND s.rgt > c.rgt AND c.language in (' . $db->quote(JFactory::getLanguage()
-                                                                                                                      ->getTag()) . ',' . $db->quote('*') . ')) OR (s.lft >= c.lft AND s.rgt <= c.rgt)');
+                $query->join(
+                    'LEFT',
+                    '#__categories AS s ON (s.lft < c.lft AND s.rgt > c.rgt AND c.language in (' . $db->quote(
+                        JFactory::getLanguage()->getTag()
+                    ) . ',' . $db->quote('*') . ')) OR (s.lft >= c.lft AND s.rgt <= c.rgt)'
+                );
             } else {
-                $query->join('LEFT',
-                    '#__categories AS s ON (s.lft <= c.lft AND s.rgt >= c.rgt) OR (s.lft > c.lft AND s.rgt < c.rgt)');
+                $query->join(
+                    'LEFT',
+                    '#__categories AS s ON (s.lft <= c.lft AND s.rgt >= c.rgt) OR (s.lft > c.lft AND s.rgt < c.rgt)'
+                );
             }
         } else {
             if ($app->isSite() && JLanguageMultilang::isEnabled()) {
-                $query->where('c.language in (' . $db->quote(JFactory::getLanguage()
-                                                                     ->getTag()) . ',' . $db->quote('*') . ')');
+                $query->where(
+                    'c.language in (' . $db->quote(
+                        JFactory::getLanguage()->getTag()
+                    ) . ',' . $db->quote('*') . ')'
+                );
             }
         }
 
@@ -266,7 +278,9 @@ class JCategories
             }
 
             if ($this->_options['currentlang'] !== 0) {
-                $queryjoin .= ' AND (i.language = ' . $db->quote('*') . ' OR i.language = ' . $db->quote($this->_options['currentlang']) . ')';
+                $queryjoin .= ' AND (i.language = ' . $db->quote('*') . ' OR i.language = ' . $db->quote(
+                        $this->_options['currentlang']
+                    ) . ')';
             }
 
             $query->join('LEFT', $queryjoin);
@@ -274,10 +288,12 @@ class JCategories
         }
 
         // Group by
-        $query->group('c.id, c.asset_id, c.access, c.alias, c.checked_out, c.checked_out_time,
+        $query->group(
+            'c.id, c.asset_id, c.access, c.alias, c.checked_out, c.checked_out_time,
 			 c.created_time, c.created_user_id, c.description, c.extension, c.hits, c.language, c.level,
 			 c.lft, c.metadata, c.metadesc, c.metakey, c.modified_time, c.note, c.params, c.parent_id,
-			 c.path, c.published, c.rgt, c.title, c.modified_user_id, c.version');
+			 c.path, c.published, c.rgt, c.title, c.modified_user_id, c.version'
+        );
 
         // Get the results
         $db->setQuery($query);

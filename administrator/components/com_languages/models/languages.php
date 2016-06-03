@@ -133,12 +133,18 @@ class LanguagesModelLanguages extends JModelList
     protected function populateState($ordering = 'a.ordering', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('filter.access',
-            $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'cmd'));
-        $this->setState('filter.published',
-            $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.access',
+            $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'cmd')
+        );
+        $this->setState(
+            'filter.published',
+            $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string')
+        );
 
         // Load the parameters.
         $params = JComponentHelper::getParams('com_languages');
@@ -191,9 +197,12 @@ class LanguagesModelLanguages extends JModelList
         $query->select('ag.title AS access_level')->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
 
         // Select the language home pages.
-        $query->select('l.home AS home')
-              ->join('LEFT',
-                  $db->quoteName('#__menu') . ' AS l  ON  l.language = a.lang_code AND l.home=1  AND l.language <> ' . $db->quote('*'));
+        $query->select('l.home AS home')->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__menu'
+                ) . ' AS l  ON  l.language = a.lang_code AND l.home=1  AND l.language <> ' . $db->quote('*')
+            );
 
         // Filter on the published state.
         $published = $this->getState('filter.published');
@@ -218,8 +227,14 @@ class LanguagesModelLanguages extends JModelList
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.ordering')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.ordering'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

@@ -88,15 +88,29 @@ class SearchViewSearch extends JViewLegacy
         $orders[] = JHtml::_('select.option', 'category', JText::_('JCATEGORY'));
 
         $lists             = array();
-        $lists['ordering'] = JHtml::_('select.genericlist', $orders, 'ordering', 'class="inputbox"', 'value', 'text',
-            $state->get('ordering'));
+        $lists['ordering'] = JHtml::_(
+            'select.genericlist',
+            $orders,
+            'ordering',
+            'class="inputbox"',
+            'value',
+            'text',
+            $state->get('ordering')
+        );
 
         $searchphrases         = array();
         $searchphrases[]       = JHtml::_('select.option', 'all', JText::_('COM_SEARCH_ALL_WORDS'));
         $searchphrases[]       = JHtml::_('select.option', 'any', JText::_('COM_SEARCH_ANY_WORDS'));
         $searchphrases[]       = JHtml::_('select.option', 'exact', JText::_('COM_SEARCH_EXACT_PHRASE'));
-        $lists['searchphrase'] = JHtml::_('select.radiolist', $searchphrases, 'searchphrase', '', 'value', 'text',
-            $state->get('match'));
+        $lists['searchphrase'] = JHtml::_(
+            'select.radiolist',
+            $searchphrases,
+            'searchphrase',
+            '',
+            'value',
+            'text',
+            $state->get('match')
+        );
 
         // Log the search
         JSearchHelper::logSearch($searchword, 'com_search');
@@ -184,8 +198,10 @@ class SearchViewSearch extends JViewLegacy
                             $posCollector[$pos] = $hlword;
                         }
                     } else {
-                        if (($pos = JString::strpos($srow,
-                                strtolower(SearchHelper::remove_accents($hlword)))) !== false
+                        if (($pos = JString::strpos(
+                                $srow,
+                                strtolower(SearchHelper::remove_accents($hlword))
+                            )) !== false
                         ) {
                             // Iconv transliterates '€' to 'EUR'
                             // TODO: add other expanding translations?
@@ -227,13 +243,21 @@ class SearchViewSearch extends JViewLegacy
                             // Set highlighter around searchword
                             if ($mbString) {
                                 $hlwordLen = mb_strlen($hlword);
-                                $row       = mb_substr($row, 0, $pos) . $hl1 . mb_substr($row, $pos,
-                                        $hlwordLen) . $hl2 . mb_substr($row, $pos + $hlwordLen);
+                                $row       = mb_substr($row, 0, $pos) . $hl1 . mb_substr(
+                                        $row,
+                                        $pos,
+                                        $hlwordLen
+                                    ) . $hl2 . mb_substr($row, $pos + $hlwordLen);
                             } else {
                                 $hlwordLen = JString::strlen($hlword);
-                                $row       = JString::substr($row, 0, $pos) . $hl1 . JString::substr($row, $pos,
-                                        JString::strlen($hlword)) . $hl2 . JString::substr($row,
-                                        $pos + JString::strlen($hlword));
+                                $row       = JString::substr($row, 0, $pos) . $hl1 . JString::substr(
+                                        $row,
+                                        $pos,
+                                        JString::strlen($hlword)
+                                    ) . $hl2 . JString::substr(
+                                        $row,
+                                        $pos + JString::strlen($hlword)
+                                    );
                             }
 
                             $cnt++;

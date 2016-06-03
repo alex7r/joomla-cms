@@ -45,7 +45,7 @@ class JDocumentXml extends JDocument
     /**
      * Render the document.
      *
-     * @param   boolean $cache  If true, cache the output
+     * @param   boolean $cache If true, cache the output
      * @param   array   $params Associative array of attributes
      *
      * @return  The rendered data
@@ -56,8 +56,11 @@ class JDocumentXml extends JDocument
     {
         parent::render();
 
-        JFactory::getApplication()
-                ->setHeader('Content-disposition', 'inline; filename="' . $this->getName() . '.xml"', true);
+        JFactory::getApplication()->setHeader(
+                'Content-disposition',
+                'inline; filename="' . $this->getName() . '.xml"',
+                true
+            );
 
         return $this->getBuffer();
     }

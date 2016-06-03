@@ -120,9 +120,11 @@ class JGithubPackageIssuesComments extends JGithubPackage
         $path = '/repos/' . $user . '/' . $repo . '/issues/comments/' . (int)$commentId;
 
         // Build the request data.
-        $data = json_encode(array(
-            'body' => $body
-        ));
+        $data = json_encode(
+            array(
+                'body' => $body
+            )
+        );
 
         // Send the request.
         return $this->processResponse($this->client->patch($this->fetchUrl($path), $data));
@@ -147,9 +149,11 @@ class JGithubPackageIssuesComments extends JGithubPackage
         $path = '/repos/' . $user . '/' . $repo . '/issues/' . (int)$issueId . '/comments';
 
         // Build the request data.
-        $data = json_encode(array(
-            'body' => $body,
-        ));
+        $data = json_encode(
+            array(
+                'body' => $body,
+            )
+        );
 
         // Send the request.
         return $this->processResponse($this->client->post($this->fetchUrl($path), $data), 201);

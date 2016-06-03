@@ -45,17 +45,19 @@ class JFormFieldContentMap extends JFormFieldGroupedList
 
         // Levels subquery.
         $levelQuery = $db->getQuery(true);
-        $levelQuery->select('title AS branch_title, 1 as level')
-                   ->select($db->quoteName('id'))
-                   ->from($db->quoteName('#__finder_taxonomy'))
-                   ->where($db->quoteName('parent_id') . ' = 1');
+        $levelQuery->select('title AS branch_title, 1 as level')->select($db->quoteName('id'))->from(
+                $db->quoteName('#__finder_taxonomy')
+            )->where($db->quoteName('parent_id') . ' = 1');
         $levelQuery2 = $db->getQuery(true);
-        $levelQuery2->select('b.title AS branch_title, 2 as level')
-                    ->select($db->quoteName('a.id'))
-                    ->from($db->quoteName('#__finder_taxonomy', 'a'))
-                    ->join('LEFT', $db->quoteName('#__finder_taxonomy',
-                            'b') . ' ON ' . $db->qn('a.parent_id') . ' = ' . $db->qn('b.id'))
-                    ->where($db->quoteName('a.parent_id') . ' NOT IN (0, 1)');
+        $levelQuery2->select('b.title AS branch_title, 2 as level')->select($db->quoteName('a.id'))->from(
+                $db->quoteName('#__finder_taxonomy', 'a')
+            )->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__finder_taxonomy',
+                    'b'
+                ) . ' ON ' . $db->qn('a.parent_id') . ' = ' . $db->qn('b.id')
+            )->where($db->quoteName('a.parent_id') . ' NOT IN (0, 1)');
 
         $levelQuery->union($levelQuery2);
 
@@ -90,7 +92,7 @@ class JFormFieldContentMap extends JFormFieldGroupedList
                     if (trim($name, '**') == 'Language') {
                         $text = FinderHelperLanguage::branchLanguageTitle($branch->text);
                     } else {
-                        $key  = FinderHelperLanguage::branchSingular($branch->text);
+                        $key = FinderHelperLanguage::branchSingular($branch->text);
                         $text = $lang->hasKey($key) ? JText::_($key) : $branch->text;
                     }
 

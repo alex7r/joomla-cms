@@ -32,10 +32,16 @@ class MenusHelper
      */
     public static function addSubmenu($vName)
     {
-        JHtmlSidebar::addEntry(JText::_('COM_MENUS_SUBMENU_MENUS'), 'index.php?option=com_menus&view=menus',
-            $vName == 'menus');
-        JHtmlSidebar::addEntry(JText::_('COM_MENUS_SUBMENU_ITEMS'), 'index.php?option=com_menus&view=items',
-            $vName == 'items');
+        JHtmlSidebar::addEntry(
+            JText::_('COM_MENUS_SUBMENU_MENUS'),
+            'index.php?option=com_menus&view=menus',
+            $vName == 'menus'
+        );
+        JHtmlSidebar::addEntry(
+            JText::_('COM_MENUS_SUBMENU_ITEMS'),
+            'index.php?option=com_menus&view=items',
+            $vName == 'items'
+        );
     }
 
     /**
@@ -51,8 +57,11 @@ class MenusHelper
     public static function getActions($parentId = 0)
     {
         // Log usage of deprecated function
-        JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Get list of actions
         $result = JHelperContent::getActions('com_menus');
@@ -138,8 +147,8 @@ class MenusHelper
         $languages = array()
     ) {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('DISTINCT(a.id) AS value,
+        $query = $db->getQuery(true)->select(
+                'DISTINCT(a.id) AS value,
 					  a.title AS text,
 					  a.alias,
 					  a.level,
@@ -149,13 +158,17 @@ class MenusHelper
 					  a.template_style_id,
 					  a.checked_out,
 					  a.language,
-					  a.lft')
-                    ->from('#__menu AS a')
-                    ->join('LEFT', $db->quoteName('#__menu') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
+					  a.lft'
+            )->from('#__menu AS a')->join(
+                'LEFT',
+                $db->quoteName('#__menu') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt'
+            );
 
         if (JLanguageMultilang::isEnabled()) {
-            $query->select('l.title AS language_title, l.image AS language_image')
-                  ->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = a.language');
+            $query->select('l.title AS language_title, l.image AS language_image')->join(
+                    'LEFT',
+                    $db->quoteName('#__languages') . ' AS l ON l.lang_code = a.language'
+                );
         }
 
         // Filter by the type
@@ -166,8 +179,9 @@ class MenusHelper
         if ($parentId) {
             if ($mode == 2) {
                 // Prevent the parent and children from showing.
-                $query->join('LEFT', '#__menu AS p ON p.id = ' . (int)$parentId)
-                      ->where('(a.lft <= p.lft OR a.rgt >= p.rgt)');
+                $query->join('LEFT', '#__menu AS p ON p.id = ' . (int)$parentId)->where(
+                        '(a.lft <= p.lft OR a.rgt >= p.rgt)'
+                    );
             }
         }
 
@@ -203,11 +217,9 @@ class MenusHelper
 
         if (empty($menuType)) {
             // If the menutype is empty, group the items by menutype.
-            $query->clear()
-                  ->select('*')
-                  ->from('#__menu_types')
-                  ->where('menutype <> ' . $db->quote(''))
-                  ->order('title, menutype');
+            $query->clear()->select('*')->from('#__menu_types')->where('menutype <> ' . $db->quote(''))->order(
+                    'title, menutype'
+                );
             $db->setQuery($query);
 
             try {
@@ -253,8 +265,15 @@ class MenusHelper
      */
     public static function getAssociations($pk)
     {
-        $langAssociations = JLanguageAssociations::getAssociations('com_menus', '#__menu', 'com_menus.item', $pk, 'id',
-            '', '');
+        $langAssociations = JLanguageAssociations::getAssociations(
+            'com_menus',
+            '#__menu',
+            'com_menus.item',
+            $pk,
+            'id',
+            '',
+            ''
+        );
         $associations     = array();
 
         foreach ($langAssociations as $langAssociation) {

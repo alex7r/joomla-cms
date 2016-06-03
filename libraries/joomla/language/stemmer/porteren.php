@@ -89,8 +89,11 @@ class JLanguageStemmerPorteren extends JLanguageStemmer
     {
         // Part a
         if (substr($word, -1) == 's') {
-            self::_replace($word, 'sses', 'ss') or self::_replace($word, 'ies', 'i') or self::_replace($word, 'ss',
-                'ss') or self::_replace($word, 's', '');
+            self::_replace($word, 'sses', 'ss') or self::_replace($word, 'ies', 'i') or self::_replace(
+                $word,
+                'ss',
+                'ss'
+            ) or self::_replace($word, 's', '');
         }
 
         // Part b
@@ -100,16 +103,34 @@ class JLanguageStemmerPorteren extends JLanguageStemmer
 
             // Check ing and ed
             // Note use of && and OR, for precedence reasons
-            if (preg_match("#$v+#", substr($word, 0, -3)) && self::_replace($word, 'ing', '') or preg_match("#$v+#",
-                    substr($word, 0, -2)) && self::_replace($word, 'ed', '')
+            if (preg_match("#$v+#", substr($word, 0, -3)) && self::_replace($word, 'ing', '') or preg_match(
+                                                                                                     "#$v+#",
+                                                                                                     substr(
+                                                                                                         $word,
+                                                                                                         0,
+                                                                                                         -2
+                                                                                                     )
+                                                                                                 ) && self::_replace(
+                    $word,
+                    'ed',
+                    ''
+                )
             ) {
                 // If one of above two test successful
-                if (!self::_replace($word, 'at', 'ate') and !self::_replace($word, 'bl',
-                        'ble') and !self::_replace($word, 'iz', 'ize')
+                if (!self::_replace($word, 'at', 'ate') and !self::_replace(
+                        $word,
+                        'bl',
+                        'ble'
+                    ) and !self::_replace($word, 'iz', 'ize')
                 ) {
                     // Double consonant ending
-                    if (self::_doubleConsonant($word) and substr($word, -2) != 'll' and substr($word,
-                            -2) != 'ss' and substr($word, -2) != 'zz'
+                    if (self::_doubleConsonant($word) and substr($word, -2) != 'll' and substr(
+                                                                                            $word,
+                                                                                            -2
+                                                                                        ) != 'ss' and substr(
+                                                                                                          $word,
+                                                                                                          -2
+                                                                                                      ) != 'zz'
                     ) {
                         $word = substr($word, 0, -1);
                     } elseif (self::_m($word) == 1 and self::_cvc($word)) {
@@ -126,10 +147,10 @@ class JLanguageStemmerPorteren extends JLanguageStemmer
      * Replaces the first string with the second, at the end of the string. If third
      * arg is given, then the preceding string must match that m count at least.
      *
-     * @param   string  &$str  String to check
+     * @param   string  &$str String to check
      * @param   string  $check Ending to check for
-     * @param   string  $repl  Replacement string
-     * @param   integer $m     Optional minimum number of m() to meet
+     * @param   string  $repl Replacement string
+     * @param   integer $m Optional minimum number of m() to meet
      *
      * @return  boolean  Whether the $check string was at the end
      *                   of the $str string. True does not necessarily mean
@@ -214,8 +235,11 @@ class JLanguageStemmerPorteren extends JLanguageStemmer
         $c = self::$_regex_consonant;
         $v = self::$_regex_vowel;
 
-        $result = preg_match("#($c$v$c)$#", $str,
-            $matches) and strlen($matches[1]) == 3 and $matches[1]{2} != 'w' and $matches[1]{2} != 'x' and $matches[1]{2} != 'y';
+        $result = preg_match(
+            "#($c$v$c)$#",
+            $str,
+            $matches
+        ) and strlen($matches[1]) == 3 and $matches[1]{2} != 'w' and $matches[1]{2} != 'x' and $matches[1]{2} != 'y';
 
         return $result;
     }
@@ -265,21 +289,41 @@ class JLanguageStemmerPorteren extends JLanguageStemmer
                 self::_replace($word, 'logi', 'log', 0);
                 break;
             case 'l':
-                self::_replace($word, 'entli', 'ent', 0) or self::_replace($word, 'ousli', 'ous',
-                    0) or self::_replace($word, 'alli', 'al', 0) or self::_replace($word, 'bli', 'ble',
-                    0) or self::_replace($word, 'eli', 'e', 0);
+                self::_replace($word, 'entli', 'ent', 0) or self::_replace(
+                    $word,
+                    'ousli',
+                    'ous',
+                    0
+                ) or self::_replace($word, 'alli', 'al', 0) or self::_replace(
+                    $word,
+                    'bli',
+                    'ble',
+                    0
+                ) or self::_replace($word, 'eli', 'e', 0);
                 break;
             case 'o':
-                self::_replace($word, 'ization', 'ize', 0) or self::_replace($word, 'ation', 'ate',
-                    0) or self::_replace($word, 'ator', 'ate', 0);
+                self::_replace($word, 'ization', 'ize', 0) or self::_replace(
+                    $word,
+                    'ation',
+                    'ate',
+                    0
+                ) or self::_replace($word, 'ator', 'ate', 0);
                 break;
             case 's':
-                self::_replace($word, 'iveness', 'ive', 0) or self::_replace($word, 'fulness', 'ful',
-                    0) or self::_replace($word, 'ousness', 'ous', 0) or self::_replace($word, 'alism', 'al', 0);
+                self::_replace($word, 'iveness', 'ive', 0) or self::_replace(
+                    $word,
+                    'fulness',
+                    'ful',
+                    0
+                ) or self::_replace($word, 'ousness', 'ous', 0) or self::_replace($word, 'alism', 'al', 0);
                 break;
             case 't':
-                self::_replace($word, 'biliti', 'ble', 0) or self::_replace($word, 'aliti', 'al',
-                    0) or self::_replace($word, 'iviti', 'ive', 0);
+                self::_replace($word, 'biliti', 'ble', 0) or self::_replace(
+                    $word,
+                    'aliti',
+                    'al',
+                    0
+                ) or self::_replace($word, 'iviti', 'ive', 0);
                 break;
         }
 
@@ -349,8 +393,12 @@ class JLanguageStemmerPorteren extends JLanguageStemmer
                 self::_replace($word, 'able', '', 1) or self::_replace($word, 'ible', '', 1);
                 break;
             case 'n':
-                self::_replace($word, 'ant', '', 1) or self::_replace($word, 'ement', '', 1) or self::_replace($word,
-                    'ment', '', 1) or self::_replace($word, 'ent', '', 1);
+                self::_replace($word, 'ant', '', 1) or self::_replace($word, 'ement', '', 1) or self::_replace(
+                    $word,
+                    'ment',
+                    '',
+                    1
+                ) or self::_replace($word, 'ent', '', 1);
                 break;
             case 'o':
                 if (substr($word, -4) == 'tion' or substr($word, -4) == 'sion') {

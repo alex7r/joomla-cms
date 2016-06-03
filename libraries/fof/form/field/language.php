@@ -74,8 +74,14 @@ class FOFFormFieldLanguage extends JFormFieldLanguage implements FOFFormField
     {
         $class = $this->element['class'] ? ' class="' . (string)$this->element['class'] . '"' : '';
 
-        return '<span id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(),
-            $this->value), ENT_COMPAT, 'UTF-8') . '</span>';
+        return '<span id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(
+            FOFFormFieldList::getOptionName(
+                $this->getOptions(),
+                $this->value
+            ),
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</span>';
     }
 
     /**
@@ -110,7 +116,13 @@ class FOFFormFieldLanguage extends JFormFieldLanguage implements FOFFormField
     {
         $class = $this->element['class'] ? (string)$this->element['class'] : '';
 
-        return '<span class="' . $this->id . ' ' . $class . '">' . htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(),
-            $this->value), ENT_COMPAT, 'UTF-8') . '</span>';
+        return '<span class="' . $this->id . ' ' . $class . '">' . htmlspecialchars(
+            FOFFormFieldList::getOptionName(
+                $this->getOptions(),
+                $this->value
+            ),
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</span>';
     }
 }

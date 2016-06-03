@@ -198,11 +198,10 @@ class UsersRouter extends JComponentRouterBase
         }
 
         if (is_numeric($userId)) {
-            $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select($db->quoteName('id'))
-                        ->from($db->quoteName('#__users'))
-                        ->where($db->quoteName('id') . ' = ' . (int)$userId);
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true)->select($db->quoteName('id'))->from($db->quoteName('#__users'))->where(
+                    $db->quoteName('id') . ' = ' . (int)$userId
+                );
             $db->setQuery($query);
             $userId = $db->loadResult();
         }

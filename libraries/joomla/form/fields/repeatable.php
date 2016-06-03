@@ -77,9 +77,13 @@ class JFormFieldRepeatable extends JFormField
         $body_row_str[] = '</div></td>';
 
         // Put all table parts together
-        $table = '<table id="' . $this->id . '_table" class="adminlist ' . $this->element['class'] . ' table table-striped">' . '<thead><tr>' . implode("\n",
-                $head_row_str) . '</tr></thead>' . '<tbody><tr>' . implode("\n",
-                $body_row_str) . '</tr></tbody>' . '</table>';
+        $table = '<table id="' . $this->id . '_table" class="adminlist ' . $this->element['class'] . ' table table-striped">' . '<thead><tr>' . implode(
+                "\n",
+                $head_row_str
+            ) . '</tr></thead>' . '<tbody><tr>' . implode(
+                     "\n",
+                     $body_row_str
+                 ) . '</tr></tbody>' . '</table>';
 
         // And finaly build a main container
         $str   = array();
@@ -100,7 +104,9 @@ class JFormFieldRepeatable extends JFormField
         $str[] = '</div>';
 
         // Button for display the modal window
-        $select = (string)$this->element['select'] ? JText::_((string)$this->element['select']) : JText::_('JLIB_FORM_BUTTON_SELECT');
+        $select = (string)$this->element['select'] ? JText::_((string)$this->element['select']) : JText::_(
+            'JLIB_FORM_BUTTON_SELECT'
+        );
         $icon   = $this->element['icon'] ? '<span class="icon-' . $this->element['icon'] . '"></span> ' : '';
         $str[]  = '<button class="open-modal btn" id="' . $this->id . '_button" >' . $icon . $select . '</button>';
 
@@ -123,8 +129,10 @@ class JFormFieldRepeatable extends JFormField
 
         // Hidden input, where the main value is
         $value = htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8');
-        $str[] = '<input type="hidden" name="' . $this->name . '" id="' . $this->id . '" value="' . $value . '"  class="form-field-repeatable" ' . implode(' ',
-                $data) . ' />';
+        $str[] = '<input type="hidden" name="' . $this->name . '" id="' . $this->id . '" value="' . $value . '"  class="form-field-repeatable" ' . implode(
+                ' ',
+                $data
+            ) . ' />';
 
         // Add scripts
         JHtml::_('bootstrap.framework');

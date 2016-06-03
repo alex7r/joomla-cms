@@ -50,12 +50,14 @@ class JGithubPackagePulls extends JGithubPackage
         $path = '/repos/' . $user . '/' . $repo . '/pulls';
 
         // Build the request data.
-        $data = json_encode(array(
-            'title' => $title,
-            'base'  => $base,
-            'head'  => $head,
-            'body'  => $body
-        ));
+        $data = json_encode(
+            array(
+                'title' => $title,
+                'base'  => $base,
+                'head'  => $head,
+                'body'  => $body
+            )
+        );
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);
@@ -93,11 +95,13 @@ class JGithubPackagePulls extends JGithubPackage
         $path = '/repos/' . $user . '/' . $repo . '/pulls';
 
         // Build the request data.
-        $data = json_encode(array(
-            'issue' => (int)$issueId,
-            'base'  => $base,
-            'head'  => $head
-        ));
+        $data = json_encode(
+            array(
+                'issue' => (int)$issueId,
+                'base'  => $base,
+                'head'  => $head
+            )
+        );
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);
@@ -348,9 +352,11 @@ class JGithubPackagePulls extends JGithubPackage
         $path = '/repos/' . $user . '/' . $repo . '/pulls/' . (int)$pullId . '/merge';
 
         // Build the request data.
-        $data = json_encode(array(
-            'commit_message' => $message
-        ));
+        $data = json_encode(
+            array(
+                'commit_message' => $message
+            )
+        );
 
         // Send the request.
         $response = $this->client->put($this->fetchUrl($path), $data);

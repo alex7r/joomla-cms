@@ -66,7 +66,9 @@ class TagsRouter extends JComponentRouterBase
         }
 
         if ($view == 'tag') {
-            $notActiveTag = is_array($mId) ? (count($mId) > 1 || $mId[0] != (int)$query['id']) : ($mId != (int)$query['id']);
+            $notActiveTag = is_array($mId) ? (count(
+                                                  $mId
+                                              ) > 1 || $mId[0] != (int)$query['id']) : ($mId != (int)$query['id']);
 
             if ($notActiveTag || $mView != $view) {
                 // ID in com_tags can be either an integer, a string or an array of IDs

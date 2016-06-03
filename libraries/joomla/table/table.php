@@ -366,7 +366,9 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 
             if ($keyCount) {
                 if ($keyCount > 1) {
-                    throw new InvalidArgumentException('Table has multiple primary keys specified, only one primary key value provided.');
+                    throw new InvalidArgumentException(
+                        'Table has multiple primary keys specified, only one primary key value provided.'
+                    );
                 }
 
                 $keys = array($this->getKeyName() => $keys);
@@ -386,8 +388,13 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
         foreach ($keys as $field => $value) {
             // Check that $field is in the table.
             if (!in_array($field, $fields)) {
-                throw new UnexpectedValueException(sprintf('Missing field in database: %s &#160; %s.', get_class($this),
-                    $field));
+                throw new UnexpectedValueException(
+                    sprintf(
+                        'Missing field in database: %s &#160; %s.',
+                        get_class($this),
+                        $field
+                    )
+                );
             }
             // Add the search tuple to the query.
             $query->where($this->_db->quoteName($field) . ' = ' . $this->_db->quote($value));
@@ -530,7 +537,9 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
         // If an ordering filter is set, attempt reorder the rows in the table based on the filter and value.
         if ($orderingFilter) {
             $filterValue = $this->$orderingFilter;
-            $this->reorder($orderingFilter ? $this->_db->quoteName($orderingFilter) . ' = ' . $this->_db->quote($filterValue) : '');
+            $this->reorder(
+                $orderingFilter ? $this->_db->quoteName($orderingFilter) . ' = ' . $this->_db->quote($filterValue) : ''
+            );
         }
 
         // Set the error to empty and return true.
@@ -647,9 +656,9 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
                         // Update the asset_id field in this table.
                         $this->asset_id = (int)$asset->id;
 
-                        $query = $this->_db->getQuery(true)
-                                           ->update($this->_db->quoteName($this->_tbl))
-                                           ->set('asset_id = ' . (int)$this->asset_id);
+                        $query = $this->_db->getQuery(true)->update($this->_db->quoteName($this->_tbl))->set(
+                                'asset_id = ' . (int)$this->asset_id
+                            );
                         $this->appendPrimaryKeys($query);
                         $this->_db->setQuery($query)->execute();
                     }
@@ -803,8 +812,11 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 
             if (!class_exists($tableClass)) {
                 // If we were unable to find the class file in the JTable include paths, raise a warning and return false.
-                JLog::add(JText::sprintf('JLIB_DATABASE_ERROR_NOT_SUPPORTED_FILE_NOT_FOUND', $type), JLog::WARNING,
-                    'jerror');
+                JLog::add(
+                    JText::sprintf('JLIB_DATABASE_ERROR_NOT_SUPPORTED_FILE_NOT_FOUND', $type),
+                    JLog::WARNING,
+                    'jerror'
+                );
 
                 return false;
             }
@@ -949,7 +961,11 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
         $query = $this->_db->getQuery(true)
                            ->update($this->_tbl)
                            ->set($this->_db->quoteName($checkedOutField) . ' = 0')
-                           ->set($this->_db->quoteName($checkedOutTimeField) . ' = ' . $this->_db->quote($this->_db->getNullDate()));
+                           ->set(
+                               $this->_db->quoteName($checkedOutTimeField) . ' = ' . $this->_db->quote(
+                                   $this->_db->getNullDate()
+                               )
+                           );
         $this->appendPrimaryKeys($query, $pk);
         $this->_db->setQuery($query);
 
@@ -1179,10 +1195,9 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
         $time = JFactory::getDate()->toSql();
 
         // Check the row out by primary key.
-        $query = $this->_db->getQuery(true)
-                           ->update($this->_tbl)
-                           ->set($this->_db->quoteName($checkedOutField) . ' = ' . (int)$userId)
-                           ->set($this->_db->quoteName($checkedOutTimeField) . ' = ' . $this->_db->quote($time));
+        $query = $this->_db->getQuery(true)->update($this->_tbl)->set(
+                $this->_db->quoteName($checkedOutField) . ' = ' . (int)$userId
+            )->set($this->_db->quoteName($checkedOutTimeField) . ' = ' . $this->_db->quote($time));
         $this->appendPrimaryKeys($query, $pk);
         $this->_db->setQuery($query);
         $this->_db->execute();
@@ -1233,9 +1248,9 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
         }
 
         // Check the row in by primary key.
-        $query = $this->_db->getQuery(true)
-                           ->update($this->_tbl)
-                           ->set($this->_db->quoteName($hitsField) . ' = (' . $this->_db->quoteName($hitsField) . ' + 1)');
+        $query = $this->_db->getQuery(true)->update($this->_tbl)->set(
+                $this->_db->quoteName($hitsField) . ' = (' . $this->_db->quoteName($hitsField) . ' + 1)'
+            );
         $this->appendPrimaryKeys($query, $pk);
         $this->_db->setQuery($query);
         $this->_db->execute();
@@ -1275,10 +1290,9 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
         }
 
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('COUNT(userid)')
-                    ->from($db->quoteName('#__session'))
-                    ->where($db->quoteName('userid') . ' = ' . (int)$against);
+        $query = $db->getQuery(true)->select('COUNT(userid)')->from($db->quoteName('#__session'))->where(
+                $db->quoteName('userid') . ' = ' . (int)$against
+            );
         $db->setQuery($query);
         $checkedOut = (boolean)$db->loadResult();
 
@@ -1474,9 +1488,9 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 
         foreach ($pks as $pk) {
             // Update the publishing state for rows with the given primary keys.
-            $query = $this->_db->getQuery(true)
-                               ->update($this->_tbl)
-                               ->set($this->_db->quoteName($publishedField) . ' = ' . (int)$state);
+            $query = $this->_db->getQuery(true)->update($this->_tbl)->set(
+                    $this->_db->quoteName($publishedField) . ' = ' . (int)$state
+                );
 
             // If publishing, set published date/time if not previously set
             if ($state && property_exists($this, 'publish_up') && (int)$this->publish_up == 0) {
@@ -1486,7 +1500,11 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 
             // Determine if there is checkin support for the table.
             if (property_exists($this, 'checked_out') || property_exists($this, 'checked_out_time')) {
-                $query->where('(' . $this->_db->quoteName($checkedOutField) . ' = 0 OR ' . $this->_db->quoteName($checkedOutField) . ' = ' . (int)$userId . ')');
+                $query->where(
+                    '(' . $this->_db->quoteName($checkedOutField) . ' = 0 OR ' . $this->_db->quoteName(
+                        $checkedOutField
+                    ) . ' = ' . (int)$userId . ')'
+                );
                 $checkin = true;
             } else {
                 $checkin = false;

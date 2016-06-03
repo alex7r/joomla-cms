@@ -223,8 +223,10 @@ class Dispatcher implements DispatcherInterface
         // We deal with a closure.
         if ($listener instanceof Closure) {
             if (empty($events)) {
-                throw new InvalidArgumentException('No event name(s) and priority
-				specified for the Closure listener.');
+                throw new InvalidArgumentException(
+                    'No event name(s) and priority
+				specified for the Closure listener.'
+                );
             }
 
             foreach ($events as $name => $priority) {

@@ -33,12 +33,21 @@ class FinderHelper
      */
     public static function addSubmenu($vName)
     {
-        JHtmlSidebar::addEntry(JText::_('COM_FINDER_SUBMENU_INDEX'), 'index.php?option=com_finder&view=index',
-            $vName == 'index');
-        JHtmlSidebar::addEntry(JText::_('COM_FINDER_SUBMENU_MAPS'), 'index.php?option=com_finder&view=maps',
-            $vName == 'maps');
-        JHtmlSidebar::addEntry(JText::_('COM_FINDER_SUBMENU_FILTERS'), 'index.php?option=com_finder&view=filters',
-            $vName == 'filters');
+        JHtmlSidebar::addEntry(
+            JText::_('COM_FINDER_SUBMENU_INDEX'),
+            'index.php?option=com_finder&view=index',
+            $vName == 'index'
+        );
+        JHtmlSidebar::addEntry(
+            JText::_('COM_FINDER_SUBMENU_MAPS'),
+            'index.php?option=com_finder&view=maps',
+            $vName == 'maps'
+        );
+        JHtmlSidebar::addEntry(
+            JText::_('COM_FINDER_SUBMENU_FILTERS'),
+            'index.php?option=com_finder&view=filters',
+            $vName == 'filters'
+        );
     }
 
     /**
@@ -52,8 +61,11 @@ class FinderHelper
     public static function getActions()
     {
         // Log usage of deprecated function
-        JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Get list of actions
         $result = JHelperContent::getActions('com_finder');

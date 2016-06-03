@@ -76,11 +76,17 @@ $listDirn     = $this->escape($this->state->get('list.direction'));
                             <?php echo JText::_('COM_WEBLINKS_LINK'); ?>
                         <?php elseif ($this->params->get('icons') == 1) : ?>
                             <?php if (!$this->params->get('link_icons')) : ?>
-                                <?php echo JHtml::_('image',
+                                <?php echo JHtml::_(
+                                    'image',
                                     'system/' . $this->params->get('link_icons', 'weblink.png'),
-                                    JText::_('COM_WEBLINKS_LINK'), null, true); ?>
+                                    JText::_('COM_WEBLINKS_LINK'),
+                                    null,
+                                    true
+                                ); ?>
                             <?php else: ?>
-                                <?php echo '<img src="' . $this->params->get('link_icons') . '" alt="' . JText::_('COM_WEBLINKS_LINK') . '" />'; ?>
+                                <?php echo '<img src="' . $this->params->get('link_icons') . '" alt="' . JText::_(
+                                        'COM_WEBLINKS_LINK'
+                                    ) . '" />'; ?>
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php
@@ -98,23 +104,35 @@ $listDirn     = $this->escape($this->state->get('list.direction'));
                         switch ($item->params->get('target', $this->params->get('target'))) {
                             case 1:
                                 // open in a new window
-                                echo '<a href="' . $link . '" target="_blank" class="' . $menuclass . '" rel="nofollow">' . $this->escape($item->title) . '</a>';
+                                echo '<a href="' . $link . '" target="_blank" class="' . $menuclass . '" rel="nofollow">' . $this->escape(
+                                        $item->title
+                                    ) . '</a>';
                                 break;
 
                             case 2:
                                 // open in a popup window
-                                $attribs = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=' . $this->escape($width) . ',height=' . $this->escape($height) . '';
-                                echo "<a href=\"$link\" onclick=\"window.open(this.href, 'targetWindow', '" . $attribs . "'); return false;\">" . $this->escape($item->title) . '</a>';
+                                $attribs = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=' . $this->escape(
+                                        $width
+                                    ) . ',height=' . $this->escape($height) . '';
+                                echo "<a href=\"$link\" onclick=\"window.open(this.href, 'targetWindow', '" . $attribs . "'); return false;\">" . $this->escape(
+                                        $item->title
+                                    ) . '</a>';
                                 break;
                             case 3:
                                 // open in a modal window
                                 JHtml::_('behavior.modal', 'a.modal');
-                                echo '<a class="modal" href="' . $link . '"  rel="{handler: \'iframe\', size: {x:' . $this->escape($width) . ', y:' . $this->escape($height) . '}}">' . $this->escape($item->title) . ' </a>';
+                                echo '<a class="modal" href="' . $link . '"  rel="{handler: \'iframe\', size: {x:' . $this->escape(
+                                        $width
+                                    ) . ', y:' . $this->escape($height) . '}}">' . $this->escape(
+                                        $item->title
+                                    ) . ' </a>';
                                 break;
 
                             default:
                                 // open in parent window
-                                echo '<a href="' . $link . '" class="' . $menuclass . '" rel="nofollow">' . $this->escape($item->title) . ' </a>';
+                                echo '<a href="' . $link . '" class="' . $menuclass . '" rel="nofollow">' . $this->escape(
+                                        $item->title
+                                    ) . ' </a>';
                                 break;
                         }
                         ?>
@@ -137,29 +155,45 @@ $listDirn     = $this->escape($this->state->get('list.direction'));
                     <?php if (($this->params->get('show_link_description')) and ($item->description != '')) : ?>
                         <?php $images = json_decode($item->images); ?>
                         <?php if (isset($images->image_first) and !empty($images->image_first)) : ?>
-                            <?php $imgfloat = (empty($images->float_first)) ? $this->params->get('float_first') : $images->float_first; ?>
+                            <?php $imgfloat = (empty($images->float_first)) ? $this->params->get(
+                                'float_first'
+                            ) : $images->float_first; ?>
                             <div class="img-intro-<?php echo htmlspecialchars($imgfloat, ENT_COMPAT, 'UTF-8'); ?>"><img
                                     <?php if ($images->image_first_caption):
-                                        echo 'class="caption"' . ' title="' . htmlspecialchars($images->image_first_caption,
-                                                ENT_COMPAT, 'UTF-8') . '"';
+                                        echo 'class="caption"' . ' title="' . htmlspecialchars(
+                                                $images->image_first_caption,
+                                                ENT_COMPAT,
+                                                'UTF-8'
+                                            ) . '"';
                                     endif; ?>
                                     src="<?php echo htmlspecialchars($images->image_first, ENT_COMPAT, 'UTF-8'); ?>"
-                                    alt="<?php echo htmlspecialchars($images->image_first_alt, ENT_COMPAT,
-                                        'UTF-8'); ?>"/>
+                                    alt="<?php echo htmlspecialchars(
+                                        $images->image_first_alt,
+                                        ENT_COMPAT,
+                                        'UTF-8'
+                                    ); ?>"/>
                             </div>
                         <?php endif; ?>
                         <?php if (isset($images->image_second) and !empty($images->image_second)) : ?>
-                            <?php $imgfloat = (empty($images->float_second)) ? $this->params->get('float_second') : $images->float_second; ?>
+                            <?php $imgfloat = (empty($images->float_second)) ? $this->params->get(
+                                'float_second'
+                            ) : $images->float_second; ?>
                             <div
                                 class="pull-<?php echo htmlspecialchars($imgfloat, ENT_COMPAT, 'UTF-8'); ?> item-image">
                                 <img
                                     <?php if ($images->image_second_caption):
-                                        echo 'class="caption"' . ' title="' . htmlspecialchars($images->image_second_caption,
-                                                ENT_COMPAT, 'UTF-8') . '"';
+                                        echo 'class="caption"' . ' title="' . htmlspecialchars(
+                                                $images->image_second_caption,
+                                                ENT_COMPAT,
+                                                'UTF-8'
+                                            ) . '"';
                                     endif; ?>
                                     src="<?php echo htmlspecialchars($images->image_second, ENT_COMPAT, 'UTF-8'); ?>"
-                                    alt="<?php echo htmlspecialchars($images->image_second_alt, ENT_COMPAT,
-                                        'UTF-8'); ?>"/>
+                                    alt="<?php echo htmlspecialchars(
+                                        $images->image_second_alt,
+                                        ENT_COMPAT,
+                                        'UTF-8'
+                                    ); ?>"/>
                             </div>
                         <?php endif; ?>
 

@@ -65,13 +65,26 @@ class ConfigModelModules extends ConfigModelForm
             if (isset($xml->positions[0])) {
                 foreach ($xml->positions[0] as $position) {
                     // Load language files
-                    $lang->load('tpl_' . $templateName . '.sys', JPATH_BASE, null, false,
-                        true) || $lang->load('tpl_' . $templateName . '.sys',
-                        JPATH_BASE . '/templates/' . $templateName, null, false, true);
+                    $lang->load(
+                        'tpl_' . $templateName . '.sys',
+                        JPATH_BASE,
+                        null,
+                        false,
+                        true
+                    ) || $lang->load(
+                        'tpl_' . $templateName . '.sys',
+                        JPATH_BASE . '/templates/' . $templateName,
+                        null,
+                        false,
+                        true
+                    );
 
                     $key   = (string)$position;
-                    $value = preg_replace('/[^a-zA-Z0-9_\-]/', '_',
-                        'TPL_' . strtoupper($templateName) . '_POSITION_' . strtoupper($key));
+                    $value = preg_replace(
+                        '/[^a-zA-Z0-9_\-]/',
+                        '_',
+                        'TPL_' . strtoupper($templateName) . '_POSITION_' . strtoupper($key)
+                    );
 
                     // Construct list of positions
                     $currentPositions[$key] = JText::_($value) . ' [' . $key . ']';
@@ -129,8 +142,13 @@ class ConfigModelModules extends ConfigModelForm
         $formFile = JPath::clean($basePath . '/modules/' . $module . '/' . $module . '.xml');
 
         // Load the core and/or local language file(s).
-        $lang->load($module, $basePath, null, false, true) || $lang->load($module, $basePath . '/modules/' . $module,
-            null, false, true);
+        $lang->load($module, $basePath, null, false, true) || $lang->load(
+            $module,
+            $basePath . '/modules/' . $module,
+            null,
+            false,
+            true
+        );
 
         if (file_exists($formFile)) {
             // Get the module form.

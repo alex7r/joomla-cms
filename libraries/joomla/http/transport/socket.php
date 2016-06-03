@@ -138,7 +138,9 @@ class JHttpTransportSocket implements JHttpTransport
 
         // Authentification, if needed
         if ($this->options->get('userauth') && $this->options->get('passwordauth')) {
-            $request[] = 'Authorization: Basic ' . base64_encode($this->options->get('userauth') . ':' . $this->options->get('passwordauth'));
+            $request[] = 'Authorization: Basic ' . base64_encode(
+                    $this->options->get('userauth') . ':' . $this->options->get('passwordauth')
+                );
         }
 
         // Send the request to the server.
@@ -155,8 +157,14 @@ class JHttpTransportSocket implements JHttpTransport
 
         // Follow Http redirects
         if ($content->code >= 301 && $content->code < 400 && isset($content->headers['Location'])) {
-            return $this->request($method, new JUri($content->headers['Location']), $data, $headers, $timeout,
-                $userAgent);
+            return $this->request(
+                $method,
+                new JUri($content->headers['Location']),
+                $data,
+                $headers,
+                $timeout,
+                $userAgent
+            );
         }
 
         return $content;

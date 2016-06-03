@@ -225,9 +225,9 @@ class FinderModelMaps extends JModelList
     public function purge()
     {
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->delete($db->quoteName('#__finder_taxonomy'))
-                    ->where($db->quoteName('parent_id') . ' > 1');
+        $query = $db->getQuery(true)->delete($db->quoteName('#__finder_taxonomy'))->where(
+                $db->quoteName('parent_id') . ' > 1'
+            );
         $db->setQuery($query);
         $db->execute();
 
@@ -252,58 +252,65 @@ class FinderModelMaps extends JModelList
         $query = $db->getQuery(true);
 
         // Select all fields from the table.
-        $query->select('a.*')
-              ->select('s.count_published')
-              ->select('s.count_unpublished')
-              ->from($db->quoteName('#__finder_taxonomy', 'a'))
-              ->where($db->quoteName('a.parent_id') . ' <> 0');
+        $query->select('a.*')->select('s.count_published')->select('s.count_unpublished')->from(
+                $db->quoteName('#__finder_taxonomy', 'a')
+            )->where($db->quoteName('a.parent_id') . ' <> 0');
 
         // Self-join to get children.
-        $query->select('COUNT(b.id) AS num_children')
-              ->join('LEFT', $db->quoteName('#__finder_taxonomy',
-                      'b') . ' ON ' . $db->qn('b.parent_id') . ' = ' . $db->qn('a.id'));
+        $query->select('COUNT(b.id) AS num_children')->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__finder_taxonomy',
+                    'b'
+                ) . ' ON ' . $db->qn('b.parent_id') . ' = ' . $db->qn('a.id')
+            );
 
         // Join to get the map links.
         $stateSubQuery1 = $db->getQuery(true);
-        $stateSubQuery1->select($db->quoteName('mp.node_id'))
-                       ->select('COUNT(mp.node_id) AS count_published')
-                       ->from($db->quoteName('#__finder_links', 'lp'))
-                       ->join('LEFT', $db->quoteName('#__finder_taxonomy_map',
-                               'mp') . ' ON ' . $db->qn('lp.link_id') . ' = ' . $db->qn('mp.link_id'))
-                       ->where($db->quoteName('lp.published') . ' = 1')
-                       ->group($db->quoteName('mp.node_id'));
+        $stateSubQuery1->select($db->quoteName('mp.node_id'))->select('COUNT(mp.node_id) AS count_published')->from(
+                $db->quoteName('#__finder_links', 'lp')
+            )->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__finder_taxonomy_map',
+                    'mp'
+                ) . ' ON ' . $db->qn('lp.link_id') . ' = ' . $db->qn('mp.link_id')
+            )->where($db->quoteName('lp.published') . ' = 1')->group($db->quoteName('mp.node_id'));
 
         $stateSubQuery2 = $db->getQuery(true);
-        $stateSubQuery2->select($db->quoteName('mu.node_id'))
-                       ->select('COUNT(mu.node_id) AS count_unpublished')
-                       ->from($db->quoteName('#__finder_links', 'lu'))
-                       ->join('LEFT', $db->quoteName('#__finder_taxonomy_map',
-                               'mu') . ' ON ' . $db->qn('lu.link_id') . ' = ' . $db->qn('mu.link_id'))
-                       ->where($db->quoteName('lu.published') . ' = 0')
-                       ->group($db->quoteName('mu.node_id'));
+        $stateSubQuery2->select($db->quoteName('mu.node_id'))->select('COUNT(mu.node_id) AS count_unpublished')->from(
+                $db->quoteName('#__finder_links', 'lu')
+            )->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__finder_taxonomy_map',
+                    'mu'
+                ) . ' ON ' . $db->qn('lu.link_id') . ' = ' . $db->qn('mu.link_id')
+            )->where($db->quoteName('lu.published') . ' = 0')->group($db->quoteName('mu.node_id'));
 
         $stateQuery = $db->getQuery(true);
-        $stateQuery->select('s1.*')
-                   ->select('s2.count_unpublished')
-                   ->from('(' . $stateSubQuery1 . ') AS s1')
-                   ->join('LEFT',
-                       '(' . $stateSubQuery2 . ') AS s2 ON ' . $db->qn('s1.node_id') . ' = ' . $db->qn('s2.node_id'));
+        $stateQuery->select('s1.*')->select('s2.count_unpublished')->from('(' . $stateSubQuery1 . ') AS s1')->join(
+                'LEFT',
+                '(' . $stateSubQuery2 . ') AS s2 ON ' . $db->qn('s1.node_id') . ' = ' . $db->qn('s2.node_id')
+            );
 
         $query->join('LEFT', '(' . $stateQuery . ') AS s ON ' . $db->qn('s.node_id') . ' = ' . $db->qn('a.id'));
 
         // Calculate levels.
         $levelQuery = $db->getQuery(true);
-        $levelQuery->select('title AS branch_title, 1 as level')
-                   ->select($db->quoteName('id'))
-                   ->from($db->quoteName('#__finder_taxonomy'))
-                   ->where($db->quoteName('parent_id') . ' = 1');
+        $levelQuery->select('title AS branch_title, 1 as level')->select($db->quoteName('id'))->from(
+                $db->quoteName('#__finder_taxonomy')
+            )->where($db->quoteName('parent_id') . ' = 1');
         $levelQuery2 = $db->getQuery(true);
-        $levelQuery2->select('b.title AS branch_title, 2 as level')
-                    ->select($db->quoteName('a.id'))
-                    ->from($db->quoteName('#__finder_taxonomy', 'a'))
-                    ->join('LEFT', $db->quoteName('#__finder_taxonomy',
-                            'b') . ' ON ' . $db->qn('a.parent_id') . ' = ' . $db->qn('b.id'))
-                    ->where($db->quoteName('a.parent_id') . ' NOT IN (0, 1)');
+        $levelQuery2->select('b.title AS branch_title, 2 as level')->select($db->quoteName('a.id'))->from(
+                $db->quoteName('#__finder_taxonomy', 'a')
+            )->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__finder_taxonomy',
+                    'b'
+                ) . ' ON ' . $db->qn('a.parent_id') . ' = ' . $db->qn('b.id')
+            )->where($db->quoteName('a.parent_id') . ' NOT IN (0, 1)');
 
         $levelQuery->union($levelQuery2);
 
@@ -314,9 +321,13 @@ class FinderModelMaps extends JModelList
         $query->group('a.id, a.parent_id, a.title, a.state, a.access, a.ordering');
 
         // Self-join to get the parent title.
-        $query->select('e.title AS parent_title')
-              ->join('LEFT', $db->quoteName('#__finder_taxonomy',
-                      'e') . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('a.parent_id'));
+        $query->select('e.title AS parent_title')->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__finder_taxonomy',
+                    'e'
+                ) . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('a.parent_id')
+            );
 
         // If the model is set to check item state, add to the query.
         $state = $this->getState('filter.state');
@@ -395,14 +406,22 @@ class FinderModelMaps extends JModelList
     protected function populateState($ordering = 'd.branch_title', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('filter.state',
-            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'cmd'));
-        $this->setState('filter.branch',
-            $this->getUserStateFromRequest($this->context . '.filter.branch', 'filter_branch', '', 'cmd'));
-        $this->setState('filter.level',
-            $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', '', 'cmd'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.state',
+            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'cmd')
+        );
+        $this->setState(
+            'filter.branch',
+            $this->getUserStateFromRequest($this->context . '.filter.branch', 'filter_branch', '', 'cmd')
+        );
+        $this->setState(
+            'filter.level',
+            $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', '', 'cmd')
+        );
 
         // Load the parameters.
         $params = JComponentHelper::getParams('com_finder');

@@ -62,8 +62,13 @@ abstract class JFolder
         // If we're using ftp and don't have streams enabled
         if ($FTPOptions['enabled'] == 1 && !$use_streams) {
             // Connect the FTP client
-            $ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'],
-                $FTPOptions['pass']);
+            $ftp = JClientFtp::getInstance(
+                $FTPOptions['host'],
+                $FTPOptions['port'],
+                array(),
+                $FTPOptions['user'],
+                $FTPOptions['pass']
+            );
 
             if (!($dh = @opendir($src))) {
                 throw new RuntimeException('Cannot open source folder', -1);
@@ -203,8 +208,13 @@ abstract class JFolder
         // Check for safe mode
         if ($FTPOptions['enabled'] == 1) {
             // Connect the FTP client
-            $ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'],
-                $FTPOptions['pass']);
+            $ftp = JClientFtp::getInstance(
+                $FTPOptions['host'],
+                $FTPOptions['port'],
+                array(),
+                $FTPOptions['user'],
+                $FTPOptions['pass']
+            );
 
             // Translate path to FTP path
             $path = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $path), '/');
@@ -238,8 +248,11 @@ abstract class JFolder
 
                 if ($inBaseDir == false) {
                     // Return false for JFolder::create because the path to be created is not in open_basedir
-                    JLog::add(__METHOD__ . ': ' . JText::_('JLIB_FILESYSTEM_ERROR_FOLDER_PATH'), JLog::WARNING,
-                        'jerror');
+                    JLog::add(
+                        __METHOD__ . ': ' . JText::_('JLIB_FILESYSTEM_ERROR_FOLDER_PATH'),
+                        JLog::WARNING,
+                        'jerror'
+                    );
 
                     return false;
                 }
@@ -251,8 +264,11 @@ abstract class JFolder
             // Create the path
             if (!$ret = @mkdir($path, $mode)) {
                 @umask($origmask);
-                JLog::add(__METHOD__ . ': ' . JText::_('JLIB_FILESYSTEM_ERROR_COULD_NOT_CREATE_DIRECTORY') . 'Path: ' . $path,
-                    JLog::WARNING, 'jerror');
+                JLog::add(
+                    __METHOD__ . ': ' . JText::_('JLIB_FILESYSTEM_ERROR_COULD_NOT_CREATE_DIRECTORY') . 'Path: ' . $path,
+                    JLog::WARNING,
+                    'jerror'
+                );
 
                 return false;
             }
@@ -281,8 +297,11 @@ abstract class JFolder
         // Sanity check
         if (!$path) {
             // Bad programmer! Bad Bad programmer!
-            JLog::add(__METHOD__ . ': ' . JText::_('JLIB_FILESYSTEM_ERROR_DELETE_BASE_DIRECTORY'), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                __METHOD__ . ': ' . JText::_('JLIB_FILESYSTEM_ERROR_DELETE_BASE_DIRECTORY'),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -331,8 +350,13 @@ abstract class JFolder
 
         if ($FTPOptions['enabled'] == 1) {
             // Connect the FTP client
-            $ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'],
-                $FTPOptions['pass']);
+            $ftp = JClientFtp::getInstance(
+                $FTPOptions['host'],
+                $FTPOptions['port'],
+                array(),
+                $FTPOptions['user'],
+                $FTPOptions['pass']
+            );
         }
 
         // In case of restricted permissions we zap it one way or the other
@@ -383,8 +407,11 @@ abstract class JFolder
 
         // Is the path a folder?
         if (!is_dir($path)) {
-            JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER_FILES', $path), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER_FILES', $path),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -436,8 +463,10 @@ abstract class JFolder
         }
 
         while (($file = readdir($handle)) !== false) {
-            if ($file != '.' && $file != '..' && !in_array($file,
-                    $exclude) && (empty($excludefilter_string) || !preg_match($excludefilter_string, $file))
+            if ($file != '.' && $file != '..' && !in_array(
+                    $file,
+                    $exclude
+                ) && (empty($excludefilter_string) || !preg_match($excludefilter_string, $file))
             ) {
                 // Compute the fullpath
                 $fullpath = $path . '/' . $file;
@@ -460,13 +489,31 @@ abstract class JFolder
                     // Search recursively
                     if (is_int($recurse)) {
                         // Until depth 0 is reached
-                        $arr = array_merge($arr,
-                            self::_items($fullpath, $filter, $recurse - 1, $full, $exclude, $excludefilter_string,
-                                $findfiles));
+                        $arr = array_merge(
+                            $arr,
+                            self::_items(
+                                $fullpath,
+                                $filter,
+                                $recurse - 1,
+                                $full,
+                                $exclude,
+                                $excludefilter_string,
+                                $findfiles
+                            )
+                        );
                     } else {
-                        $arr = array_merge($arr,
-                            self::_items($fullpath, $filter, $recurse, $full, $exclude, $excludefilter_string,
-                                $findfiles));
+                        $arr = array_merge(
+                            $arr,
+                            self::_items(
+                                $fullpath,
+                                $filter,
+                                $recurse,
+                                $full,
+                                $exclude,
+                                $excludefilter_string,
+                                $findfiles
+                            )
+                        );
                     }
                 }
             }
@@ -505,8 +552,11 @@ abstract class JFolder
 
         // Is the path a folder?
         if (!is_dir($path)) {
-            JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER_FOLDER', $path), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER_FOLDER', $path),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -568,8 +618,13 @@ abstract class JFolder
         } else {
             if ($FTPOptions['enabled'] == 1) {
                 // Connect the FTP client
-                $ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'],
-                    $FTPOptions['pass']);
+                $ftp = JClientFtp::getInstance(
+                    $FTPOptions['host'],
+                    $FTPOptions['port'],
+                    array(),
+                    $FTPOptions['user'],
+                    $FTPOptions['pass']
+                );
 
                 // Translate path for the FTP account
                 $src  = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $src), '/');

@@ -148,8 +148,11 @@ class JUri extends Uri
         if (empty(static::$base)) {
             $config    = JFactory::getConfig();
             $uri       = static::getInstance();
-            $live_site = ($uri->isSsl()) ? str_replace("http://", "https://",
-                $config->get('live_site')) : $config->get('live_site');
+            $live_site = ($uri->isSsl()) ? str_replace(
+                "http://",
+                "https://",
+                $config->get('live_site')
+            ) : $config->get('live_site');
 
             if (trim($live_site) != '') {
                 $uri                    = static::getInstance($live_site);
@@ -164,8 +167,10 @@ class JUri extends Uri
             } else {
                 static::$base['prefix'] = $uri->toString(array('scheme', 'host', 'port'));
 
-                if (strpos(php_sapi_name(),
-                        'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI'])
+                if (strpos(
+                        php_sapi_name(),
+                        'cgi'
+                    ) !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI'])
                 ) {
                     // PHP-CGI on Apache with "cgi.fix_pathinfo = 0"
 
@@ -233,11 +238,22 @@ class JUri extends Uri
         $host = $uri->toString(array('scheme', 'host', 'port'));
 
         // @see JUriTest
-        if (empty($host) && strpos($uri->path,
-                'index.php') === 0 || !empty($host) && preg_match('#' . preg_quote(static::base(), '#') . '#',
-                $base) || !empty($host) && $host === static::getInstance(static::base())->host && strpos($uri->path,
-                'index.php') !== false || !empty($host) && $base === $host && preg_match('#' . preg_quote($base,
-                    '#') . '#', static::base())
+        if (empty($host) && strpos(
+                                $uri->path,
+                                'index.php'
+                            ) === 0 || !empty($host) && preg_match(
+                '#' . preg_quote(static::base(), '#') . '#',
+                $base
+            ) || !empty($host) && $host === static::getInstance(static::base())->host && strpos(
+                                                                                             $uri->path,
+                                                                                             'index.php'
+                                                                                         ) !== false || !empty($host) && $base === $host && preg_match(
+                '#' . preg_quote(
+                    $base,
+                    '#'
+                ) . '#',
+                static::base()
+            )
         ) {
             return true;
         }

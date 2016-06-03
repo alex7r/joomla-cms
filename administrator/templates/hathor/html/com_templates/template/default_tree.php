@@ -15,9 +15,9 @@ ksort($this->files, SORT_STRING);
     <?php foreach ($this->files as $key => $value): ?>
         <?php if (is_array($value)): ?>
             <?php
-            $keyArray  = explode('/', $key);
+            $keyArray = explode('/', $key);
             $fileArray = explode('/', $this->fileName);
-            $count     = 0;
+            $count = 0;
 
             if (count($fileArray) >= count($keyArray)) {
                 for ($i = 0; $i < count($keyArray); $i++) {
@@ -47,7 +47,9 @@ ksort($this->files, SORT_STRING);
         <?php if (is_object($value)): ?>
             <li>
                 <a class="file nowrap"
-                   href='<?php echo JRoute::_('index.php?option=com_templates&view=template&id=' . $this->id . '&file=' . $value->id) ?>'>
+                   href='<?php echo JRoute::_(
+                       'index.php?option=com_templates&view=template&id=' . $this->id . '&file=' . $value->id
+                   ) ?>'>
                     <span class='icon-file'>&nbsp;<?php echo $value->name; ?></span>
                 </a>
             </li>

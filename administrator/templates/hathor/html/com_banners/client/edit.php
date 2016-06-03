@@ -13,7 +13,8 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.formvalidator');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'client.cancel' || document.formvalidator.isValid(document.getElementById('client-form')))
@@ -21,7 +22,8 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('client-form'));
 		}
 	}
-");
+"
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_banners&layout=edit&id=' . (int)$this->item->id); ?>"
@@ -29,8 +31,10 @@ JFactory::getDocument()->addScriptDeclaration("
 
     <div class="col main-section">
         <fieldset class="adminform">
-            <legend><?php echo empty($this->item->id) ? JText::_('COM_BANNERS_NEW_CLIENT') : JText::sprintf('COM_BANNERS_EDIT_CLIENT',
-                    $this->item->id); ?></legend>
+            <legend><?php echo empty($this->item->id) ? JText::_('COM_BANNERS_NEW_CLIENT') : JText::sprintf(
+                    'COM_BANNERS_EDIT_CLIENT',
+                    $this->item->id
+                ); ?></legend>
             <ul class="adminformlist">
                 <li><?php echo $this->form->getLabel('name'); ?>
                     <?php echo $this->form->getInput('name'); ?></li>

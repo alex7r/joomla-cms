@@ -76,12 +76,15 @@ class JHelperContenthistory extends JHelper
     {
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('h.version_note') . ',' . $db->quoteName('h.save_date') . ',' . $db->quoteName('u.name'))
-              ->from($db->quoteName('#__ucm_history') . ' AS h ')
-              ->leftJoin($db->quoteName('#__users') . ' AS u ON ' . $db->quoteName('u.id') . ' = ' . $db->quoteName('h.editor_user_id'))
-              ->where($db->quoteName('ucm_item_id') . ' = ' . $db->quote($id))
-              ->where($db->quoteName('ucm_type_id') . ' = ' . (int)$typeId)
-              ->order($db->quoteName('save_date') . ' DESC ');
+        $query->select(
+            $db->quoteName('h.version_note') . ',' . $db->quoteName('h.save_date') . ',' . $db->quoteName('u.name')
+        )->from($db->quoteName('#__ucm_history') . ' AS h ')->leftJoin(
+                $db->quoteName('#__users') . ' AS u ON ' . $db->quoteName('u.id') . ' = ' . $db->quoteName(
+                    'h.editor_user_id'
+                )
+            )->where($db->quoteName('ucm_item_id') . ' = ' . $db->quote($id))->where(
+                $db->quoteName('ucm_type_id') . ' = ' . (int)$typeId
+            )->order($db->quoteName('save_date') . ' DESC ');
         $db->setQuery($query);
 
         return $db->loadObjectList();

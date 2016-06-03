@@ -49,16 +49,31 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                 <?php echo JHtml::_('grid.checkall'); ?>
                             </th>
                             <th class="nowrap">
-                                <?php echo JHtml::_('searchtools.sort', 'COM_INSTALLER_HEADING_NAME', 'u.name',
-                                    $listDirn, $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'searchtools.sort',
+                                    'COM_INSTALLER_HEADING_NAME',
+                                    'u.name',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th class="nowrap">
-                                <?php echo JHtml::_('searchtools.sort', 'COM_INSTALLER_HEADING_LOCATION',
-                                    'client_translated', $listDirn, $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'searchtools.sort',
+                                    'COM_INSTALLER_HEADING_LOCATION',
+                                    'client_translated',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th class="nowrap">
-                                <?php echo JHtml::_('searchtools.sort', 'COM_INSTALLER_HEADING_TYPE', 'type_translated',
-                                    $listDirn, $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'searchtools.sort',
+                                    'COM_INSTALLER_HEADING_TYPE',
+                                    'type_translated',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th class="nowrap hidden-phone">
                                 <?php echo JText::_('COM_INSTALLER_CURRENT_VERSION'); ?>
@@ -67,8 +82,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                 <?php echo JText::_('COM_INSTALLER_NEW_VERSION'); ?>
                             </th>
                             <th class="nowrap hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', 'COM_INSTALLER_HEADING_FOLDER',
-                                    'folder_translated', $listDirn, $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'searchtools.sort',
+                                    'COM_INSTALLER_HEADING_FOLDER',
+                                    'folder_translated',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th class="nowrap hidden-phone">
                                 <?php echo JText::_('COM_INSTALLER_HEADING_INSTALLTYPE'); ?>
@@ -90,7 +110,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                             <?php
                             $client          = $item->client_id ? JText::_('JADMINISTRATOR') : JText::_('JSITE');
                             $manifest        = json_decode($item->manifest_cache);
-                            $current_version = isset($manifest->version) ? $manifest->version : JText::_('JLIB_UNKNOWN');
+                            $current_version = isset($manifest->version) ? $manifest->version : JText::_(
+                                'JLIB_UNKNOWN'
+                            );
                             ?>
                             <tr class="row<?php echo $i % 2; ?>">
                                 <td>
@@ -99,9 +121,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                 <td>
                                     <label for="cb<?php echo $i; ?>">
 								<span class="editlinktip hasTooltip"
-                                      title="<?php echo JHtml::tooltipText(JText::_('JGLOBAL_DESCRIPTION'),
-                                          $item->description ? $item->description : JText::_('COM_INSTALLER_MSG_UPDATE_NODESC'),
-                                          0); ?>">
+                                      title="<?php echo JHtml::tooltipText(
+                                          JText::_('JGLOBAL_DESCRIPTION'),
+                                          $item->description ? $item->description : JText::_(
+                                              'COM_INSTALLER_MSG_UPDATE_NODESC'
+                                          ),
+                                          0
+                                      ); ?>">
 								<?php echo $this->escape($item->name); ?>
 								</span>
                                     </label>

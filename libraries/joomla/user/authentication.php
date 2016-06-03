@@ -180,7 +180,10 @@ class JAuthentication extends JObject
 
             // Make sure we haven't already attached this array as an observer
             foreach ($this->observers as $check) {
-                if (is_array($check) && $check['event'] == $observer['event'] && $check['handler'] == $observer['handler']) {
+                if (is_array(
+                        $check
+                    ) && $check['event'] == $observer['event'] && $check['handler'] == $observer['handler']
+                ) {
                     return;
                 }
             }
@@ -284,8 +287,11 @@ class JAuthentication extends JObject
                 $plugin = new $className($this, (array)$plugin);
             } else {
                 // Bail here if the plugin can't be created
-                JLog::add(JText::sprintf('JLIB_USER_ERROR_AUTHENTICATION_FAILED_LOAD_PLUGIN', $className),
-                    JLog::WARNING, 'jerror');
+                JLog::add(
+                    JText::sprintf('JLIB_USER_ERROR_AUTHENTICATION_FAILED_LOAD_PLUGIN', $className),
+                    JLog::WARNING,
+                    'jerror'
+                );
                 continue;
             }
 

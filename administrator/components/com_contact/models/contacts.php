@@ -111,20 +111,34 @@ class ContactModelContacts extends JModelList
             $this->context .= '.' . $forcedLanguage;
         }
 
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('filter.published',
-            $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string'));
-        $this->setState('filter.category_id',
-            $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id', '', 'string'));
-        $this->setState('filter.access',
-            $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'cmd'));
-        $this->setState('filter.language',
-            $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '', 'string'));
-        $this->setState('filter.tag',
-            $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag', '', 'string'));
-        $this->setState('filter.level',
-            $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', null, 'int'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.published',
+            $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string')
+        );
+        $this->setState(
+            'filter.category_id',
+            $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id', '', 'string')
+        );
+        $this->setState(
+            'filter.access',
+            $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'cmd')
+        );
+        $this->setState(
+            'filter.language',
+            $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '', 'string')
+        );
+        $this->setState(
+            'filter.tag',
+            $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag', '', 'string')
+        );
+        $this->setState(
+            'filter.level',
+            $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', null, 'int')
+        );
 
         // List state information.
         parent::populateState($ordering, $direction);
@@ -177,74 +191,119 @@ class ContactModelContacts extends JModelList
         $user  = JFactory::getUser();
 
         // Select the required fields from the table.
-        $query->select($db->quoteName(explode(', ', $this->getState('list.select',
-            'a.id, a.name, a.alias, a.checked_out, a.checked_out_time, a.catid, a.user_id' . ', a.published, a.access, a.created, a.created_by, a.ordering, a.featured, a.language' . ', a.publish_up, a.publish_down'))));
+        $query->select(
+            $db->quoteName(
+                explode(
+                    ', ',
+                    $this->getState(
+                        'list.select',
+                        'a.id, a.name, a.alias, a.checked_out, a.checked_out_time, a.catid, a.user_id' . ', a.published, a.access, a.created, a.created_by, a.ordering, a.featured, a.language' . ', a.publish_up, a.publish_down'
+                    )
+                )
+            )
+        );
         $query->from($db->quoteName('#__contact_details', 'a'));
 
         // Join over the users for the linked user.
-        $query->select(array(
-            $db->quoteName('ul.name', 'linked_user'),
-            $db->quoteName('ul.email')
-        ))
-              ->join('LEFT', $db->quoteName('#__users',
-                      'ul') . ' ON ' . $db->quoteName('ul.id') . ' = ' . $db->quoteName('a.user_id'));
+        $query->select(
+            array(
+                $db->quoteName('ul.name', 'linked_user'),
+                $db->quoteName('ul.email')
+            )
+        )->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__users',
+                    'ul'
+                ) . ' ON ' . $db->quoteName('ul.id') . ' = ' . $db->quoteName('a.user_id')
+            );
 
         // Join over the language
         $query->select($db->quoteName('l.title', 'language_title'))
               ->select($db->quoteName('l.image', 'language_image'))
-              ->join('LEFT', $db->quoteName('#__languages',
-                      'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('a.language'));
+              ->join(
+                  'LEFT',
+                  $db->quoteName(
+                      '#__languages',
+                      'l'
+                  ) . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('a.language')
+              );
 
         // Join over the users for the checked out user.
-        $query->select($db->quoteName('uc.name', 'editor'))
-              ->join('LEFT', $db->quoteName('#__users',
-                      'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('a.checked_out'));
+        $query->select($db->quoteName('uc.name', 'editor'))->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__users',
+                    'uc'
+                ) . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('a.checked_out')
+            );
 
         // Join over the asset groups.
-        $query->select($db->quoteName('ag.title', 'access_level'))
-              ->join('LEFT', $db->quoteName('#__viewlevels',
-                      'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('a.access'));
+        $query->select($db->quoteName('ag.title', 'access_level'))->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__viewlevels',
+                    'ag'
+                ) . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('a.access')
+            );
 
         // Join over the categories.
-        $query->select($db->quoteName('c.title', 'category_title'))
-              ->join('LEFT', $db->quoteName('#__categories',
-                      'c') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('a.catid'));
+        $query->select($db->quoteName('c.title', 'category_title'))->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__categories',
+                    'c'
+                ) . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('a.catid')
+            );
 
         // Join over the associations.
         $assoc = JLanguageAssociations::isEnabled();
 
         if ($assoc) {
-            $query->select('COUNT(' . $db->quoteName('asso2.id') . ') > 1 as ' . $db->quoteName('association'))
-                  ->join('LEFT', $db->quoteName('#__associations',
-                          'asso') . ' ON ' . $db->quoteName('asso.id') . ' = ' . $db->quoteName('a.id') . ' AND ' . $db->quoteName('asso.context') . ' = ' . $db->quote('com_contact.item'))
-                  ->join('LEFT', $db->quoteName('#__associations',
-                          'asso2') . ' ON ' . $db->quoteName('asso2.key') . ' = ' . $db->quoteName('asso.key'))
-                  ->group($db->quoteName(array(
-                      'a.id',
-                      'a.name',
-                      'a.alias',
-                      'a.checked_out',
-                      'a.checked_out_time',
-                      'a.catid',
-                      'a.user_id',
-                      'a.published',
-                      'a.access',
-                      'a.created',
-                      'a.created_by',
-                      'a.ordering',
-                      'a.featured',
-                      'a.language',
-                      'a.publish_up',
-                      'a.publish_down',
-                      'ul.name',
-                      'ul.email',
-                      'l.title',
-                      'l.image',
-                      'uc.name',
-                      'ag.title',
-                      'c.title',
-                      'c.level'
-                  )));
+            $query->select('COUNT(' . $db->quoteName('asso2.id') . ') > 1 as ' . $db->quoteName('association'))->join(
+                    'LEFT',
+                    $db->quoteName(
+                        '#__associations',
+                        'asso'
+                    ) . ' ON ' . $db->quoteName('asso.id') . ' = ' . $db->quoteName('a.id') . ' AND ' . $db->quoteName(
+                        'asso.context'
+                    ) . ' = ' . $db->quote('com_contact.item')
+                )->join(
+                    'LEFT',
+                    $db->quoteName(
+                        '#__associations',
+                        'asso2'
+                    ) . ' ON ' . $db->quoteName('asso2.key') . ' = ' . $db->quoteName('asso.key')
+                )->group(
+                    $db->quoteName(
+                        array(
+                            'a.id',
+                            'a.name',
+                            'a.alias',
+                            'a.checked_out',
+                            'a.checked_out_time',
+                            'a.catid',
+                            'a.user_id',
+                            'a.published',
+                            'a.access',
+                            'a.created',
+                            'a.created_by',
+                            'a.ordering',
+                            'a.featured',
+                            'a.language',
+                            'a.publish_up',
+                            'a.publish_down',
+                            'ul.name',
+                            'ul.email',
+                            'l.title',
+                            'l.image',
+                            'uc.name',
+                            'ag.title',
+                            'c.title',
+                            'c.level'
+                        )
+                    )
+                );
         }
 
         // Filter by access level.
@@ -273,8 +332,12 @@ class ContactModelContacts extends JModelList
         if (is_numeric($categoryId)) {
             $query->where($db->quoteName('a.catid') . ' = ' . (int)$categoryId);
         } elseif (is_array($categoryId)) {
-            $query->where($db->quoteName('a.catid') . ' IN (' . implode(',',
-                    ArrayHelper::toInteger($categoryId)) . ')');
+            $query->where(
+                $db->quoteName('a.catid') . ' IN (' . implode(
+                    ',',
+                    ArrayHelper::toInteger($categoryId)
+                ) . ')'
+            );
         }
 
         // Filter by search in name.
@@ -285,7 +348,11 @@ class ContactModelContacts extends JModelList
                 $query->where('a.id = ' . (int)substr($search, 3));
             } else {
                 $search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-                $query->where('(' . $db->quoteName('a.name') . ' LIKE ' . $search . ' OR ' . $db->quoteName('a.alias') . ' LIKE ' . $search . ')');
+                $query->where(
+                    '(' . $db->quoteName('a.name') . ' LIKE ' . $search . ' OR ' . $db->quoteName(
+                        'a.alias'
+                    ) . ' LIKE ' . $search . ')'
+                );
             }
         }
 
@@ -298,9 +365,15 @@ class ContactModelContacts extends JModelList
         $tagId = $this->getState('filter.tag');
 
         if (is_numeric($tagId)) {
-            $query->where($db->quoteName('tagmap.tag_id') . ' = ' . (int)$tagId)
-                  ->join('LEFT', $db->quoteName('#__contentitem_tag_map',
-                          'tagmap') . ' ON ' . $db->quoteName('tagmap.content_item_id') . ' = ' . $db->quoteName('a.id') . ' AND ' . $db->quoteName('tagmap.type_alias') . ' = ' . $db->quote('com_contact.contact'));
+            $query->where($db->quoteName('tagmap.tag_id') . ' = ' . (int)$tagId)->join(
+                    'LEFT',
+                    $db->quoteName(
+                        '#__contentitem_tag_map',
+                        'tagmap'
+                    ) . ' ON ' . $db->quoteName('tagmap.content_item_id') . ' = ' . $db->quoteName(
+                        'a.id'
+                    ) . ' AND ' . $db->quoteName('tagmap.type_alias') . ' = ' . $db->quote('com_contact.contact')
+                );
         }
 
         // Filter on the level.

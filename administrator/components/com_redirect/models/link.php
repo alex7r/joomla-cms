@@ -115,8 +115,10 @@ class RedirectModelLink extends JModelAdmin
         JArrayHelper::toInteger($pks);
 
         // Populate default comment if necessary.
-        $comment = (!empty($comment)) ? $comment : JText::sprintf('COM_REDIRECT_REDIRECTED_ON',
-            JHtml::_('date', time()));
+        $comment = (!empty($comment)) ? $comment : JText::sprintf(
+            'COM_REDIRECT_REDIRECTED_ON',
+            JHtml::_('date', time())
+        );
 
         // Access checks.
         if (!$user->authorise('core.edit', 'com_redirect')) {
@@ -128,12 +130,11 @@ class RedirectModelLink extends JModelAdmin
 
         if (!empty($pks)) {
             // Update the link rows.
-            $query = $db->getQuery(true)
-                        ->update($db->quoteName('#__redirect_links'))
-                        ->set($db->quoteName('new_url') . ' = ' . $db->quote($url))
-                        ->set($db->quoteName('published') . ' = ' . (int)1)
-                        ->set($db->quoteName('comment') . ' = ' . $db->quote($comment))
-                        ->where($db->quoteName('id') . ' IN (' . implode(',', $pks) . ')');
+            $query = $db->getQuery(true)->update($db->quoteName('#__redirect_links'))->set(
+                    $db->quoteName('new_url') . ' = ' . $db->quote($url)
+                )->set($db->quoteName('published') . ' = ' . (int)1)->set(
+                    $db->quoteName('comment') . ' = ' . $db->quote($comment)
+                )->where($db->quoteName('id') . ' IN (' . implode(',', $pks) . ')');
             $db->setQuery($query);
 
             try {
@@ -180,11 +181,11 @@ class RedirectModelLink extends JModelAdmin
             $date = JFactory::getDate()->toSql();
 
             // Update the link rows.
-            $query = $db->getQuery(true)
-                        ->update($db->quoteName('#__redirect_links'))
-                        ->set($db->quoteName('new_url') . ' = ' . $db->quote($url))
-                        ->set($db->quoteName('modified_date') . ' = ' . $db->quote($date))
-                        ->where($db->quoteName('id') . ' IN (' . implode(',', $pks) . ')');
+            $query = $db->getQuery(true)->update($db->quoteName('#__redirect_links'))->set(
+                    $db->quoteName('new_url') . ' = ' . $db->quote($url)
+                )->set($db->quoteName('modified_date') . ' = ' . $db->quote($date))->where(
+                    $db->quoteName('id') . ' IN (' . implode(',', $pks) . ')'
+                );
 
             if (!empty($comment)) {
                 $query->set($db->quoteName('comment') . ' = ' . $db->quote($comment));

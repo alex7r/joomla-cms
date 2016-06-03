@@ -79,8 +79,10 @@ class MenusViewMenu extends JViewLegacy
 
         $isNew = ($this->item->id == 0);
 
-        JToolbarHelper::title(JText::_($isNew ? 'COM_MENUS_VIEW_NEW_MENU_TITLE' : 'COM_MENUS_VIEW_EDIT_MENU_TITLE'),
-            'list menu');
+        JToolbarHelper::title(
+            JText::_($isNew ? 'COM_MENUS_VIEW_NEW_MENU_TITLE' : 'COM_MENUS_VIEW_EDIT_MENU_TITLE'),
+            'list menu'
+        );
 
         // If a new item, can save the item.  Allow users with edit permissions to apply changes to prevent returning to grid.
         if ($isNew && $this->canDo->get('core.create')) {

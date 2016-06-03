@@ -49,13 +49,16 @@ class TemplatesModelStyle extends JModelAdmin
      */
     public function __construct($config = array())
     {
-        $config = array_merge(array(
-            'event_before_delete' => 'onExtensionBeforeDelete',
-            'event_after_delete'  => 'onExtensionAfterDelete',
-            'event_before_save'   => 'onExtensionBeforeSave',
-            'event_after_save'    => 'onExtensionAfterSave',
-            'events_map'          => array('delete' => 'extension', 'save' => 'extension')
-        ), $config);
+        $config = array_merge(
+            array(
+                'event_before_delete' => 'onExtensionBeforeDelete',
+                'event_after_delete'  => 'onExtensionAfterDelete',
+                'event_before_save'   => 'onExtensionBeforeSave',
+                'event_after_save'    => 'onExtensionAfterSave',
+                'events_map'          => array('delete' => 'extension', 'save' => 'extension')
+            ),
+            $config
+        );
 
         parent::__construct($config);
     }
@@ -90,8 +93,10 @@ class TemplatesModelStyle extends JModelAdmin
 
                 // You should not delete a default style
                 if ($table->home != '0') {
-                    JError::raiseWarning(SOME_ERROR_NUMBER,
-                        JText::_('COM_TEMPLATES_STYLE_CANNOT_DELETE_DEFAULT_STYLE'));
+                    JError::raiseWarning(
+                        SOME_ERROR_NUMBER,
+                        JText::_('COM_TEMPLATES_STYLE_CANNOT_DELETE_DEFAULT_STYLE')
+                    );
 
                     return false;
                 }
@@ -345,12 +350,14 @@ class TemplatesModelStyle extends JModelAdmin
         // Detect disabled extension
         $extension = JTable::getInstance('Extension');
 
-        if ($extension->load(array(
-            'enabled'   => 0,
-            'type'      => 'template',
-            'element'   => $data['template'],
-            'client_id' => $data['client_id']
-        ))
+        if ($extension->load(
+            array(
+                'enabled'   => 0,
+                'type'      => 'template',
+                'element'   => $data['template'],
+                'client_id' => $data['client_id']
+            )
+        )
         ) {
             $this->setError(JText::_('COM_TEMPLATES_ERROR_SAVE_DISABLED_TEMPLATE'));
 
@@ -416,12 +423,11 @@ class TemplatesModelStyle extends JModelAdmin
                 JArrayHelper::toInteger($data['assigned']);
 
                 // Update the mapping for menu items that this style IS assigned to.
-                $query = $db->getQuery(true)
-                            ->update('#__menu')
-                            ->set('template_style_id = ' . (int)$table->id)
-                            ->where('id IN (' . implode(',', $data['assigned']) . ')')
-                            ->where('template_style_id != ' . (int)$table->id)
-                            ->where('checked_out IN (0,' . (int)$user->id . ')');
+                $query = $db->getQuery(true)->update('#__menu')->set('template_style_id = ' . (int)$table->id)->where(
+                        'id IN (' . implode(',', $data['assigned']) . ')'
+                    )->where('template_style_id != ' . (int)$table->id)->where(
+                        'checked_out IN (0,' . (int)$user->id . ')'
+                    );
                 $db->setQuery($query);
                 $db->execute();
                 $n += $db->getAffectedRows();
@@ -485,18 +491,22 @@ class TemplatesModelStyle extends JModelAdmin
         // Detect disabled extension
         $extension = JTable::getInstance('Extension');
 
-        if ($extension->load(array(
-            'enabled'   => 0,
-            'type'      => 'template',
-            'element'   => $style->template,
-            'client_id' => $style->client_id
-        ))
+        if ($extension->load(
+            array(
+                'enabled'   => 0,
+                'type'      => 'template',
+                'element'   => $style->template,
+                'client_id' => $style->client_id
+            )
+        )
         ) {
             throw new Exception(JText::_('COM_TEMPLATES_ERROR_SAVE_DISABLED_TEMPLATE'));
         }
 
         // Reset the home fields for the client_id.
-        $db->setQuery('UPDATE #__template_styles' . ' SET home = \'0\'' . ' WHERE client_id = ' . (int)$style->client_id . ' AND home = \'1\'');
+        $db->setQuery(
+            'UPDATE #__template_styles' . ' SET home = \'0\'' . ' WHERE client_id = ' . (int)$style->client_id . ' AND home = \'1\''
+        );
         $db->execute();
 
         // Set the new home style.
@@ -631,8 +641,13 @@ class TemplatesModelStyle extends JModelAdmin
         $formFile = JPath::clean($client->path . '/templates/' . $template . '/templateDetails.xml');
 
         // Load the core and/or local language file(s).
-        $lang->load('tpl_' . $template, $client->path, null, false, true) || $lang->load('tpl_' . $template,
-            $client->path . '/templates/' . $template, null, false, true);
+        $lang->load('tpl_' . $template, $client->path, null, false, true) || $lang->load(
+            'tpl_' . $template,
+            $client->path . '/templates/' . $template,
+            null,
+            false,
+            true
+        );
 
         if (file_exists($formFile)) {
             // Get the template form.
@@ -643,8 +658,10 @@ class TemplatesModelStyle extends JModelAdmin
 
         // Disable home field if it is default style
 
-        if ((is_array($data) && array_key_exists('home',
-                    $data) && $data['home'] == '1') || ((is_object($data) && isset($data->home) && $data->home == '1'))
+        if ((is_array($data) && array_key_exists(
+                    'home',
+                    $data
+                ) && $data['home'] == '1') || ((is_object($data) && isset($data->home) && $data->home == '1'))
         ) {
             $form->setFieldAttribute('home', 'readonly', 'true');
         }

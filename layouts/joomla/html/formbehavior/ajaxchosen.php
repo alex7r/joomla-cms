@@ -33,7 +33,8 @@ JText::script('JGLOBAL_LOOKING_FOR');
 JHtml::_('jquery.framework');
 JHtml::_('script', 'jui/ajax-chosen.min.js', false, true, false, false, $debug);
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 		jQuery(document).ready(function ($) {
 			$('" . $selector . "').ajaxChosen({
 				type: '" . $type . "',
@@ -52,4 +53,5 @@ JFactory::getDocument()->addScriptDeclaration("
 				return results;
 			});
 		});
-	");
+	"
+);

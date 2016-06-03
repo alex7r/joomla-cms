@@ -40,16 +40,13 @@ abstract class MenusHtmlMenus
         if ($associations = MenusHelper::getAssociations($itemid)) {
             // Get the associated menu items
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select('m.id, m.title')
-                        ->select('l.sef as lang_sef')
-                        ->select('mt.title as menu_title')
-                        ->from('#__menu as m')
-                        ->join('LEFT', '#__menu_types as mt ON mt.menutype=m.menutype')
-                        ->where('m.id IN (' . implode(',', array_values($associations)) . ')')
-                        ->join('LEFT', '#__languages as l ON m.language=l.lang_code')
-                        ->select('l.image')
-                        ->select('l.title as language_title');
+            $query = $db->getQuery(true)->select('m.id, m.title')->select('l.sef as lang_sef')->select(
+                    'mt.title as menu_title'
+                )->from('#__menu as m')->join('LEFT', '#__menu_types as mt ON mt.menutype=m.menutype')->where(
+                    'm.id IN (' . implode(',', array_values($associations)) . ')'
+                )->join('LEFT', '#__languages as l ON m.language=l.lang_code')->select('l.image')->select(
+                    'l.title as language_title'
+                );
             $db->setQuery($query);
 
             try {
@@ -64,14 +61,27 @@ abstract class MenusHtmlMenus
                     $text         = strtoupper($item->lang_sef);
                     $url          = JRoute::_('index.php?option=com_menus&task=item.edit&id=' . (int)$item->id);
                     $tooltipParts = array(
-                        JHtml::_('image', 'mod_languages/' . $item->image . '.gif', $item->language_title,
-                            array('title' => $item->language_title), true),
+                        JHtml::_(
+                            'image',
+                            'mod_languages/' . $item->image . '.gif',
+                            $item->language_title,
+                            array('title' => $item->language_title),
+                            true
+                        ),
                         $item->title,
                         '(' . $item->menu_title . ')'
                     );
                     $class        = 'hasTooltip label label-association label-' . $item->lang_sef;
-                    $item->link   = JHtml::_('tooltip', implode(' ', $tooltipParts), null, null, $text, $url, null,
-                        $class);
+                    $item->link   = JHtml::_(
+                        'tooltip',
+                        implode(' ', $tooltipParts),
+                        null,
+                        null,
+                        $text,
+                        $url,
+                        null,
+                        $class
+                    );
                 }
             }
 

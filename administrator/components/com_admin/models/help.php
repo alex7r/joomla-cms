@@ -126,8 +126,10 @@ class AdminModelHelp extends JModelLegacy
             // Strip the extension
             $file = preg_replace('#\.xml$|\.html$#', '', $file);
 
-            if ($help_search && JString::strpos(JString::strtolower(strip_tags($buffer)),
-                    JString::strtolower($help_search)) === false
+            if ($help_search && JString::strpos(
+                    JString::strtolower(strip_tags($buffer)),
+                    JString::strtolower($help_search)
+                ) === false
             ) {
                 continue;
             }

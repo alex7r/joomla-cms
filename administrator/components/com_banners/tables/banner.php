@@ -66,15 +66,23 @@ class BannersTableBanner extends JTable
             $registry->loadArray($array['params']);
 
             if ((int)$registry->get('width', 0) < 0) {
-                $this->setError(JText::sprintf('JLIB_DATABASE_ERROR_NEGATIVE_NOT_PERMITTED',
-                    JText::_('COM_BANNERS_FIELD_WIDTH_LABEL')));
+                $this->setError(
+                    JText::sprintf(
+                        'JLIB_DATABASE_ERROR_NEGATIVE_NOT_PERMITTED',
+                        JText::_('COM_BANNERS_FIELD_WIDTH_LABEL')
+                    )
+                );
 
                 return false;
             }
 
             if ((int)$registry->get('height', 0) < 0) {
-                $this->setError(JText::sprintf('JLIB_DATABASE_ERROR_NEGATIVE_NOT_PERMITTED',
-                    JText::_('COM_BANNERS_FIELD_HEIGHT_LABEL')));
+                $this->setError(
+                    JText::sprintf(
+                        'JLIB_DATABASE_ERROR_NEGATIVE_NOT_PERMITTED',
+                        JText::_('COM_BANNERS_FIELD_HEIGHT_LABEL')
+                    )
+                );
 
                 return false;
             }
@@ -199,7 +207,9 @@ class BannersTableBanner extends JTable
             $this->ordering = 0;
         } elseif (empty($this->ordering)) {
             // Set ordering to last if ordering was 0
-            $this->ordering = self::getNextOrder($this->_db->quoteName('catid') . '=' . $this->_db->quote($this->catid) . ' AND state>=0');
+            $this->ordering = self::getNextOrder(
+                $this->_db->quoteName('catid') . '=' . $this->_db->quote($this->catid) . ' AND state>=0'
+            );
         }
 
         if (empty($this->publish_up)) {
@@ -277,10 +287,12 @@ class BannersTableBanner extends JTable
             /** @var BannersTableBanner $table */
             $table = JTable::getInstance('Banner', 'BannersTable');
 
-            if ($table->load(array(
-                    'alias' => $this->alias,
-                    'catid' => $this->catid
-                )) && ($table->id != $this->id || $this->id == 0)
+            if ($table->load(
+                    array(
+                        'alias' => $this->alias,
+                        'catid' => $this->catid
+                    )
+                ) && ($table->id != $this->id || $this->id == 0)
             ) {
                 $this->setError(JText::_('COM_BANNERS_ERROR_UNIQUE_ALIAS'));
 
@@ -293,7 +305,9 @@ class BannersTableBanner extends JTable
             // Need to reorder ?
             if ($oldrow->state >= 0 && ($this->state < 0 || $oldrow->catid != $this->catid)) {
                 // Reorder the oldrow
-                $this->reorder($this->_db->quoteName('catid') . '=' . $this->_db->quote($oldrow->catid) . ' AND state>=0');
+                $this->reorder(
+                    $this->_db->quoteName('catid') . '=' . $this->_db->quote($oldrow->catid) . ' AND state>=0'
+                );
             }
         }
 

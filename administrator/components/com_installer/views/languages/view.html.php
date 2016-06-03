@@ -75,8 +75,13 @@ class InstallerViewLanguages extends InstallerViewDefault
 
         if ($canDo->get('core.admin')) {
             JToolBarHelper::custom('languages.install', 'upload', 'upload', 'COM_INSTALLER_TOOLBAR_INSTALL', true);
-            JToolBarHelper::custom('languages.find', 'refresh', 'refresh', 'COM_INSTALLER_TOOLBAR_FIND_LANGUAGES',
-                false);
+            JToolBarHelper::custom(
+                'languages.find',
+                'refresh',
+                'refresh',
+                'COM_INSTALLER_TOOLBAR_FIND_LANGUAGES',
+                false
+            );
             JToolBarHelper::divider();
             parent::addToolbar();
 

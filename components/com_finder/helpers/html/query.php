@@ -32,24 +32,30 @@ abstract class JHtmlQuery
         // Process the required tokens.
         foreach ($query->included as $token) {
             if ($token->required && (!isset($token->derived) || $token->derived == false)) {
-                $parts[] = '<span class="query-required">' . JText::sprintf('COM_FINDER_QUERY_TOKEN_REQUIRED',
-                        $token->term) . '</span>';
+                $parts[] = '<span class="query-required">' . JText::sprintf(
+                        'COM_FINDER_QUERY_TOKEN_REQUIRED',
+                        $token->term
+                    ) . '</span>';
             }
         }
 
         // Process the optional tokens.
         foreach ($query->included as $token) {
             if (!$token->required && (!isset($token->derived) || $token->derived == false)) {
-                $parts[] = '<span class="query-optional">' . JText::sprintf('COM_FINDER_QUERY_TOKEN_OPTIONAL',
-                        $token->term) . '</span>';
+                $parts[] = '<span class="query-optional">' . JText::sprintf(
+                        'COM_FINDER_QUERY_TOKEN_OPTIONAL',
+                        $token->term
+                    ) . '</span>';
             }
         }
 
         // Process the excluded tokens.
         foreach ($query->excluded as $token) {
             if (!isset($token->derived) || $token->derived == false) {
-                $parts[] = '<span class="query-excluded">' . JText::sprintf('COM_FINDER_QUERY_TOKEN_EXCLUDED',
-                        $token->term) . '</span>';
+                $parts[] = '<span class="query-excluded">' . JText::sprintf(
+                        'COM_FINDER_QUERY_TOKEN_EXCLUDED',
+                        $token->term
+                    ) . '</span>';
             }
         }
 
@@ -57,16 +63,22 @@ abstract class JHtmlQuery
         if ($query->date1) {
             $date          = JFactory::getDate($query->date1)->format(JText::_('DATE_FORMAT_LC'));
             $datecondition = JText::_('COM_FINDER_QUERY_DATE_CONDITION_' . strtoupper($query->when1));
-            $parts[]       = '<span class="query-start-date">' . JText::sprintf('COM_FINDER_QUERY_START_DATE',
-                    $datecondition, $date) . '</span>';
+            $parts[]       = '<span class="query-start-date">' . JText::sprintf(
+                    'COM_FINDER_QUERY_START_DATE',
+                    $datecondition,
+                    $date
+                ) . '</span>';
         }
 
         // Process the end date.
         if ($query->date2) {
             $date          = JFactory::getDate($query->date2)->format(JText::_('DATE_FORMAT_LC'));
             $datecondition = JText::_('COM_FINDER_QUERY_DATE_CONDITION_' . strtoupper($query->when2));
-            $parts[]       = '<span class="query-end-date">' . JText::sprintf('COM_FINDER_QUERY_END_DATE',
-                    $datecondition, $date) . '</span>';
+            $parts[]       = '<span class="query-end-date">' . JText::sprintf(
+                    'COM_FINDER_QUERY_END_DATE',
+                    $datecondition,
+                    $date
+                ) . '</span>';
         }
 
         // Process the taxonomy filters.
@@ -91,15 +103,20 @@ abstract class JHtmlQuery
                     }
 
                     // Add the node to the explanation.
-                    $parts[] = '<span class="query-taxonomy">' . JText::sprintf('COM_FINDER_QUERY_TAXONOMY_NODE',
-                            $title, JText::_(FinderHelperLanguage::branchSingular($branch))) . '</span>';
+                    $parts[] = '<span class="query-taxonomy">' . JText::sprintf(
+                            'COM_FINDER_QUERY_TAXONOMY_NODE',
+                            $title,
+                            JText::_(FinderHelperLanguage::branchSingular($branch))
+                        ) . '</span>';
                 }
             }
         }
 
         // Build the interpreted query.
-        return count($parts) ? JText::sprintf('COM_FINDER_QUERY_TOKEN_INTERPRETED',
-            implode(JText::_('COM_FINDER_QUERY_TOKEN_GLUE'), $parts)) : null;
+        return count($parts) ? JText::sprintf(
+            'COM_FINDER_QUERY_TOKEN_INTERPRETED',
+            implode(JText::_('COM_FINDER_QUERY_TOKEN_GLUE'), $parts)
+        ) : null;
     }
 
     /**

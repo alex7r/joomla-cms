@@ -16,9 +16,9 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
-$user      = JFactory::getUser();
+$user = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_templates&view=templates'); ?>" method="post" name="adminForm"
@@ -27,8 +27,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <?php echo $this->sidebar; ?>
     </div>
     <div id="j-main-container" class="span10">
-        <?php echo JLayoutHelper::render('joomla.searchtools.default',
-            array('view' => $this, 'options' => array('filterButton' => false))); ?>
+        <?php echo JLayoutHelper::render(
+            'joomla.searchtools.default',
+            array('view' => $this, 'options' => array('filterButton' => false))
+        ); ?>
         <div class="clearfix"></div>
         <?php if (empty($this->items)) : ?>
             <div class="alert alert-no-items">
@@ -42,8 +44,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                         <?php echo JText::_('COM_TEMPLATES_HEADING_IMAGE'); ?>
                     </th>
                     <th>
-                        <?php echo JHtml::_('searchtools.sort', 'COM_TEMPLATES_HEADING_TEMPLATE', 'a.element',
-                            $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'COM_TEMPLATES_HEADING_TEMPLATE',
+                            'a.element',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="10%" class="hidden-phone">
                         <?php echo JText::_('JVERSION'); ?>
@@ -70,18 +77,26 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                             <?php echo JHtml::_('templates.thumb', $item->element, $item->client_id); ?>
                         </td>
                         <td class="template-name">
-                            <a href="<?php echo JRoute::_('index.php?option=com_templates&view=template&id=' . (int)$item->extension_id . '&file=' . $this->file); ?>">
-                                <?php echo JText::sprintf('COM_TEMPLATES_TEMPLATE_DETAILS',
-                                    ucfirst($item->name)); ?></a>
+                            <a href="<?php echo JRoute::_(
+                                'index.php?option=com_templates&view=template&id=' . (int)$item->extension_id . '&file=' . $this->file
+                            ); ?>">
+                                <?php echo JText::sprintf(
+                                    'COM_TEMPLATES_TEMPLATE_DETAILS',
+                                    ucfirst($item->name)
+                                ); ?></a>
                             <div>
                                 <?php if ($this->preview && $item->client_id == '0') : ?>
-                                    <a href="<?php echo JRoute::_(JUri::root() . 'index.php?tp=1&templateStyle=' . $item->element); ?>"
+                                    <a href="<?php echo JRoute::_(
+                                        JUri::root() . 'index.php?tp=1&templateStyle=' . $item->element
+                                    ); ?>"
                                        target="_blank"><?php echo JText::_('COM_TEMPLATES_TEMPLATE_PREVIEW'); ?></a>
                                 <?php elseif ($item->client_id == '1') : ?>
                                     <?php echo JText::_('COM_TEMPLATES_TEMPLATE_NO_PREVIEW_ADMIN'); ?>
                                 <?php else : ?>
                                     <span class="hasTooltip"
-                                          title="<?php echo JHtml::tooltipText('COM_TEMPLATES_TEMPLATE_NO_PREVIEW_DESC'); ?>"><?php echo JText::_('COM_TEMPLATES_TEMPLATE_NO_PREVIEW'); ?></span>
+                                          title="<?php echo JHtml::tooltipText(
+                                              'COM_TEMPLATES_TEMPLATE_NO_PREVIEW_DESC'
+                                          ); ?>"><?php echo JText::_('COM_TEMPLATES_TEMPLATE_NO_PREVIEW'); ?></span>
                                 <?php endif; ?>
                             </div>
                         </td>

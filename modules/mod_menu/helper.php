@@ -51,8 +51,10 @@ class ModMenuHelper
 
             if ($items) {
                 foreach ($items as $i => $item) {
-                    if (($start && $start > $item->level) || ($end && $item->level > $end) || (!$showAll && $item->level > 1 && !in_array($item->parent_id,
-                                $path)) || ($start > 1 && !in_array($item->tree[$start - 2], $path))
+                    if (($start && $start > $item->level) || ($end && $item->level > $end) || (!$showAll && $item->level > 1 && !in_array(
+                                $item->parent_id,
+                                $path
+                            )) || ($start > 1 && !in_array($item->tree[$start - 2], $path))
                     ) {
                         unset($items[$i]);
                         continue;
@@ -89,8 +91,10 @@ class ModMenuHelper
                             continue;
 
                         case 'url':
-                            if ((strpos($item->link, 'index.php?') === 0) && (strpos($item->link,
-                                        'Itemid=') === false)
+                            if ((strpos($item->link, 'index.php?') === 0) && (strpos(
+                                                                                  $item->link,
+                                                                                  'Itemid='
+                                                                              ) === false)
                             ) {
                                 // If this is an internal Joomla link, ensure the Itemid is set.
                                 $item->flink = $item->link . '&Itemid=' . $item->id;
@@ -106,8 +110,10 @@ class ModMenuHelper
                             break;
                     }
 
-                    if (strcasecmp(substr($item->flink, 0, 4), 'http') && (strpos($item->flink,
-                                'index.php?') !== false)
+                    if (strcasecmp(substr($item->flink, 0, 4), 'http') && (strpos(
+                                                                               $item->flink,
+                                                                               'index.php?'
+                                                                           ) !== false)
                     ) {
                         $item->flink = JRoute::_($item->flink, true, $item->params->get('secure'));
                     } else {
@@ -117,14 +123,28 @@ class ModMenuHelper
                     // We prevent the double encoding because for some reason the $item is shared for menu modules and we get double encoding
                     // when the cause of that is found the argument should be removed
                     $item->title        = htmlspecialchars($item->title, ENT_COMPAT, 'UTF-8', false);
-                    $item->anchor_css   = htmlspecialchars($item->params->get('menu-anchor_css', ''), ENT_COMPAT,
-                        'UTF-8', false);
-                    $item->anchor_title = htmlspecialchars($item->params->get('menu-anchor_title', ''), ENT_COMPAT,
-                        'UTF-8', false);
-                    $item->anchor_rel   = htmlspecialchars($item->params->get('menu-anchor_rel', ''), ENT_COMPAT,
-                        'UTF-8', false);
-                    $item->menu_image   = $item->params->get('menu_image',
-                        '') ? htmlspecialchars($item->params->get('menu_image', ''), ENT_COMPAT, 'UTF-8', false) : '';
+                    $item->anchor_css   = htmlspecialchars(
+                        $item->params->get('menu-anchor_css', ''),
+                        ENT_COMPAT,
+                        'UTF-8',
+                        false
+                    );
+                    $item->anchor_title = htmlspecialchars(
+                        $item->params->get('menu-anchor_title', ''),
+                        ENT_COMPAT,
+                        'UTF-8',
+                        false
+                    );
+                    $item->anchor_rel   = htmlspecialchars(
+                        $item->params->get('menu-anchor_rel', ''),
+                        ENT_COMPAT,
+                        'UTF-8',
+                        false
+                    );
+                    $item->menu_image   = $item->params->get(
+                        'menu_image',
+                        ''
+                    ) ? htmlspecialchars($item->params->get('menu_image', ''), ENT_COMPAT, 'UTF-8', false) : '';
                 }
 
                 if (isset($items[$lastitem])) {

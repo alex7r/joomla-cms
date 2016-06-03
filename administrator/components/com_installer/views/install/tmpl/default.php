@@ -13,7 +13,8 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.framework', true);
 JHtml::_('bootstrap.tooltip');
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	Joomla.submitbutton4 = function() {
 		var form = document.getElementById("adminForm");
 
@@ -50,9 +51,11 @@ JFactory::getDocument()->addScriptDeclaration('
 		.css("display", "none")
 		.css("margin-top", "-10px");
 	});
-	');
+	'
+);
 
-JFactory::getDocument()->addStyleDeclaration('
+JFactory::getDocument()->addStyleDeclaration(
+    '
 	#loading {
 		background: rgba(255, 255, 255, .8) url(\'' . JHtml::_('image', 'jui/ajax-loader.gif', '', null, true, true) . '\') 50% 15% no-repeat;
 		position: fixed;
@@ -67,7 +70,8 @@ JFactory::getDocument()->addStyleDeclaration('
 		line-height: 2em;
 		color:#333333;
 	}
-	');
+	'
+);
 
 ?>
 
@@ -102,11 +106,20 @@ JFactory::getDocument()->addStyleDeclaration('
                 <?php elseif ($this->showJedAndWebInstaller) : ?>
                     <div class="alert alert-info j-jed-message"
                          style="margin-bottom: 40px; line-height: 2em; color:#333333;">
-                        <?php echo JHtml::_('link',
-                            JRoute::_('index.php?option=com_config&view=component&component=com_installer&path=&return=' . urlencode(base64_encode(JUri::getInstance()))),
+                        <?php echo JHtml::_(
+                            'link',
+                            JRoute::_(
+                                'index.php?option=com_config&view=component&component=com_installer&path=&return=' . urlencode(
+                                    base64_encode(JUri::getInstance())
+                                )
+                            ),
                             '&times;',
-                            'class="close hasTooltip" data-dismiss="alert" title="' . str_replace('"', '&quot;',
-                                JText::_('COM_INSTALLER_SHOW_JED_INFORMATION_TOOLTIP')) . '"');
+                            'class="close hasTooltip" data-dismiss="alert" title="' . str_replace(
+                                '"',
+                                '&quot;',
+                                JText::_('COM_INSTALLER_SHOW_JED_INFORMATION_TOOLTIP')
+                            ) . '"'
+                        );
                         ?>
                         <p><?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_INFO'); ?>
                             <?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_TOS'); ?></p>
@@ -124,14 +137,19 @@ JFactory::getDocument()->addStyleDeclaration('
                 <?php $lastTab = JEventDispatcher::getInstance()->trigger('onInstallerViewAfterLastTab', array()); ?>
                 <?php $tabs = array_merge($firstTab, $tabs, $lastTab); ?>
                 <?php if (!$tabs) : ?>
-                    <?php JFactory::getApplication()
-                                  ->enqueueMessage(JText::_('COM_INSTALLER_NO_INSTALLATION_PLUGINS_FOUND'),
-                                      'warning'); ?>
+                    <?php JFactory::getApplication()->enqueueMessage(
+                            JText::_('COM_INSTALLER_NO_INSTALLATION_PLUGINS_FOUND'),
+                            'warning'
+                        ); ?>
                 <?php endif; ?>
 
                 <?php if ($this->ftp) : ?>
-                    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'ftp',
-                        JText::_('COM_INSTALLER_MSG_DESCFTPTITLE')); ?>
+                    <?php echo JHtml::_(
+                        'bootstrap.addTab',
+                        'myTab',
+                        'ftp',
+                        JText::_('COM_INSTALLER_MSG_DESCFTPTITLE')
+                    ); ?>
                     <?php echo $this->loadTemplate('ftp'); ?>
                     <?php echo JHtml::_('bootstrap.endTab'); ?>
                 <?php endif; ?>

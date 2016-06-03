@@ -205,9 +205,11 @@ class JFormFieldText extends JFormField
             $list = ' list="' . $this->id . '_datalist"';
         }
 
-        $html[] = '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' . $dirname . ' value="' . htmlspecialchars($this->value,
+        $html[] = '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' . $dirname . ' value="' . htmlspecialchars(
+                $this->value,
                 ENT_COMPAT,
-                'UTF-8') . '"' . $class . $size . $disabled . $readonly . $list . $hint . $onchange . $maxLength . $required . $autocomplete . $autofocus . $spellcheck . $inputmode . $pattern . ' />';
+                'UTF-8'
+            ) . '"' . $class . $size . $disabled . $readonly . $list . $hint . $onchange . $maxLength . $required . $autocomplete . $autofocus . $spellcheck . $inputmode . $pattern . ' />';
         $html[] = $datalist;
 
         return implode($html);
@@ -244,9 +246,13 @@ class JFormFieldText extends JFormField
             }
 
             // Create a new option object based on the <option /> element.
-            $options[] = JHtml::_('select.option', (string)$option['value'],
-                JText::alt(trim((string)$option), preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)), 'value',
-                'text');
+            $options[] = JHtml::_(
+                'select.option',
+                (string)$option['value'],
+                JText::alt(trim((string)$option), preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)),
+                'value',
+                'text'
+            );
         }
 
         return $options;

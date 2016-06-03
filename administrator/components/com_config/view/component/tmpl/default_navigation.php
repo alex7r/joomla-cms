@@ -24,7 +24,9 @@ defined('_JEXEC') or die;
         }
         ?>
         <li<?php echo $active; ?>>
-            <a href="index.php?option=com_config&view=component&component=<?php echo $component; ?>"><?php echo JText::_($component); ?></a>
+            <a href="index.php?option=com_config&view=component&component=<?php echo $component; ?>"><?php echo JText::_(
+                    $component
+                ); ?></a>
         </li>
     <?php endforeach; ?>
 </ul>

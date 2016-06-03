@@ -108,7 +108,10 @@ abstract class ModPopularHelper
             $title = '';
         }
 
-        return JText::plural('MOD_POPULAR_TITLE' . ($catid ? "_CATEGORY" : '') . ($who != '0' ? "_$who" : ''),
-            (int)$params->get('count'), $title);
+        return JText::plural(
+            'MOD_POPULAR_TITLE' . ($catid ? "_CATEGORY" : '') . ($who != '0' ? "_$who" : ''),
+            (int)$params->get('count'),
+            $title
+        );
     }
 }

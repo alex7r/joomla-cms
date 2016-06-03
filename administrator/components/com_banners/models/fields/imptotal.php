@@ -33,14 +33,18 @@ class JFormFieldImpTotal extends JFormField
      */
     protected function getInput()
     {
-        $class    = ' class="validate-numeric text_area"';
+        $class = ' class="validate-numeric text_area"';
         $onchange = ' onchange="document.getElementById(\'' . $this->id . '_unlimited\').checked=document.getElementById(\'' . $this->id . '\').value==\'\';"';
-        $onclick  = ' onclick="if (document.getElementById(\'' . $this->id . '_unlimited\').checked) document.getElementById(\'' . $this->id . '\').value=\'\';"';
-        $value    = empty($this->value) ? '' : $this->value;
-        $checked  = empty($this->value) ? ' checked="checked"' : '';
+        $onclick = ' onclick="if (document.getElementById(\'' . $this->id . '_unlimited\').checked) document.getElementById(\'' . $this->id . '\').value=\'\';"';
+        $value = empty($this->value) ? '' : $this->value;
+        $checked = empty($this->value) ? ' checked="checked"' : '';
 
-        return '<input type="text" name="' . $this->name . '" id="' . $this->id . '" size="9" value="' . htmlspecialchars($value,
+        return '<input type="text" name="' . $this->name . '" id="' . $this->id . '" size="9" value="' . htmlspecialchars(
+            $value,
             ENT_COMPAT,
-            'UTF-8') . '" ' . $class . $onchange . ' />' . '<fieldset class="checkboxes impunlimited"><input id="' . $this->id . '_unlimited" type="checkbox"' . $checked . $onclick . ' />' . '<label for="' . $this->id . '_unlimited" id="jform-imp" type="text">' . JText::_('COM_BANNERS_UNLIMITED') . '</label></fieldset>';
+            'UTF-8'
+        ) . '" ' . $class . $onchange . ' />' . '<fieldset class="checkboxes impunlimited"><input id="' . $this->id . '_unlimited" type="checkbox"' . $checked . $onclick . ' />' . '<label for="' . $this->id . '_unlimited" id="jform-imp" type="text">' . JText::_(
+            'COM_BANNERS_UNLIMITED'
+        ) . '</label></fieldset>';
     }
 }

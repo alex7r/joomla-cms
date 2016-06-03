@@ -9,8 +9,10 @@
 
 defined('_JEXEC') or die;
 
-JLoader::register('ContenthistoryHelper',
-    JPATH_ADMINISTRATOR . '/components/com_contenthistory/helpers/contenthistory.php');
+JLoader::register(
+    'ContenthistoryHelper',
+    JPATH_ADMINISTRATOR . '/components/com_contenthistory/helpers/contenthistory.php'
+);
 
 /**
  * Methods supporting a list of contenthistory records.
@@ -52,8 +54,10 @@ class ContenthistoryModelCompare extends JModelItem
             }
 
             // Access check
-            if (!JFactory::getUser()
-                         ->authorise('core.edit', $contentTypeTable->type_alias . '.' . (int)$table1->ucm_item_id)
+            if (!JFactory::getUser()->authorise(
+                    'core.edit',
+                    $contentTypeTable->type_alias . '.' . (int)$table1->ucm_item_id
+                )
             ) {
                 $this->setError(JText::_('JERROR_ALERTNOAUTHOR'));
 

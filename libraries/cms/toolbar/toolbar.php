@@ -232,16 +232,25 @@ class JToolbar
                     $dirs = array();
                 }
 
-                $file = JFilterInput::getInstance()->clean(str_replace('_', DIRECTORY_SEPARATOR,
-                        strtolower($type)) . '.php', 'path');
+                $file = JFilterInput::getInstance()->clean(
+                    str_replace(
+                        '_',
+                        DIRECTORY_SEPARATOR,
+                        strtolower($type)
+                    ) . '.php',
+                    'path'
+                );
 
                 jimport('joomla.filesystem.path');
 
                 if ($buttonFile = JPath::find($dirs, $file)) {
                     include_once $buttonFile;
                 } else {
-                    JLog::add(JText::sprintf('JLIB_HTML_BUTTON_NO_LOAD', $buttonClass, $buttonFile), JLog::WARNING,
-                        'jerror');
+                    JLog::add(
+                        JText::sprintf('JLIB_HTML_BUTTON_NO_LOAD', $buttonClass, $buttonFile),
+                        JLog::WARNING,
+                        'jerror'
+                    );
 
                     return false;
                 }

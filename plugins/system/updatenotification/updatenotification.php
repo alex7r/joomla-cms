@@ -59,7 +59,9 @@ class PlgSystemUpdatenotification extends JPlugin
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true)
                     ->update($db->qn('#__extensions'))
-                    ->set($db->qn('params') . ' = ' . $db->q($this->params->toString('JSON')))
+                    ->set(
+                        $db->qn('params') . ' = ' . $db->q($this->params->toString('JSON'))
+                    )
                     ->where($db->qn('type') . ' = ' . $db->q('plugin'))
                     ->where($db->qn('folder') . ' = ' . $db->q('system'))
                     ->where($db->qn('element') . ' = ' . $db->q('updatenotification'));
@@ -243,8 +245,10 @@ class PlgSystemUpdatenotification extends JPlugin
                 try {
                     $options = array(
                         'defaultgroup' => $group,
-                        'cachebase'    => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path',
-                            JPATH_SITE . '/cache')
+                        'cachebase'    => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get(
+                            'cache_path',
+                            JPATH_SITE . '/cache'
+                        )
                     );
 
                     $cache = JCache::getInstance('callback', $options);
@@ -291,10 +295,9 @@ class PlgSystemUpdatenotification extends JPlugin
         $ret = array();
 
         try {
-            $query = $db->getQuery(true)
-                        ->select($db->qn('rules'))
-                        ->from($db->qn('#__assets'))
-                        ->where($db->qn('parent_id') . ' = ' . $db->q(0));
+            $query = $db->getQuery(true)->select($db->qn('rules'))->from($db->qn('#__assets'))->where(
+                    $db->qn('parent_id') . ' = ' . $db->q(0)
+                );
             $db->setQuery($query, 0, 1);
             $rulesJSON = $db->loadResult();
             $rules     = json_decode($rulesJSON, true);
@@ -321,10 +324,9 @@ class PlgSystemUpdatenotification extends JPlugin
 
         // Get the user IDs of users belonging to the SA groups
         try {
-            $query = $db->getQuery(true)
-                        ->select($db->qn('user_id'))
-                        ->from($db->qn('#__user_usergroup_map'))
-                        ->where($db->qn('group_id') . ' IN(' . implode(',', $groups) . ')');
+            $query = $db->getQuery(true)->select($db->qn('user_id'))->from($db->qn('#__user_usergroup_map'))->where(
+                    $db->qn('group_id') . ' IN(' . implode(',', $groups) . ')'
+                );
             $db->setQuery($query);
             $rawUserIDs = $db->loadColumn(0);
 
@@ -343,15 +345,15 @@ class PlgSystemUpdatenotification extends JPlugin
 
         // Get the user information for the Super Administrator users
         try {
-            $query = $db->getQuery(true)
-                        ->select(array(
-                            $db->qn('id'),
-                            $db->qn('username'),
-                            $db->qn('email'),
-                        ))
-                        ->from($db->qn('#__users'))
-                        ->where($db->qn('id') . ' IN(' . implode(',', $userIDs) . ')')
-                        ->where($db->qn('sendEmail') . ' = ' . $db->q('1'));
+            $query = $db->getQuery(true)->select(
+                    array(
+                        $db->qn('id'),
+                        $db->qn('username'),
+                        $db->qn('email'),
+                    )
+                )->from($db->qn('#__users'))->where($db->qn('id') . ' IN(' . implode(',', $userIDs) . ')')->where(
+                    $db->qn('sendEmail') . ' = ' . $db->q('1')
+                );
 
             if (!empty($emails)) {
                 $query->where($db->qn('email') . 'IN(' . implode(',', $emails) . ')');

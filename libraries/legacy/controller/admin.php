@@ -198,8 +198,13 @@ class JControllerAdmin extends JControllerLegacy
                 if ($value == 1) {
                     if ($errors) {
                         $app = JFactory::getApplication();
-                        $app->enqueueMessage(JText::plural($this->text_prefix . '_N_ITEMS_FAILED_PUBLISHING',
-                            count($cid)), 'error');
+                        $app->enqueueMessage(
+                            JText::plural(
+                                $this->text_prefix . '_N_ITEMS_FAILED_PUBLISHING',
+                                count($cid)
+                            ),
+                            'error'
+                        );
                     } else {
                         $ntext = $this->text_prefix . '_N_ITEMS_PUBLISHED';
                     }
@@ -219,8 +224,12 @@ class JControllerAdmin extends JControllerLegacy
 
         $extension    = $this->input->get('extension');
         $extensionURL = ($extension) ? '&extension=' . $extension : '';
-        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . $extensionURL,
-            false));
+        $this->setRedirect(
+            JRoute::_(
+                'index.php?option=' . $this->option . '&view=' . $this->view_list . $extensionURL,
+                false
+            )
+        );
     }
 
     /**
@@ -244,15 +253,20 @@ class JControllerAdmin extends JControllerLegacy
         if ($return === false) {
             // Reorder failed.
             $message = JText::sprintf('JLIB_APPLICATION_ERROR_REORDER_FAILED', $model->getError());
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
-                $message, 'error');
+            $this->setRedirect(
+                JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
+                $message,
+                'error'
+            );
 
             return false;
         } else {
             // Reorder succeeded.
             $message = JText::_('JLIB_APPLICATION_SUCCESS_ITEM_REORDERED');
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
-                $message);
+            $this->setRedirect(
+                JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
+                $message
+            );
 
             return true;
         }
@@ -287,8 +301,11 @@ class JControllerAdmin extends JControllerLegacy
         if ($return === false) {
             // Reorder failed
             $message = JText::sprintf('JLIB_APPLICATION_ERROR_REORDER_FAILED', $model->getError());
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
-                $message, 'error');
+            $this->setRedirect(
+                JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
+                $message,
+                'error'
+            );
 
             return false;
         } else {
@@ -320,15 +337,20 @@ class JControllerAdmin extends JControllerLegacy
         if ($return === false) {
             // Checkin failed.
             $message = JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError());
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
-                $message, 'error');
+            $this->setRedirect(
+                JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
+                $message,
+                'error'
+            );
 
             return false;
         } else {
             // Checkin succeeded.
             $message = JText::plural($this->text_prefix . '_N_ITEMS_CHECKED_IN', count($ids));
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
-                $message);
+            $this->setRedirect(
+                JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
+                $message
+            );
 
             return true;
         }

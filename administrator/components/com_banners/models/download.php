@@ -36,8 +36,11 @@ class BannersModelDownload extends JModelForm
     public function getForm($data = array(), $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_banners.download', 'download',
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_banners.download',
+            'download',
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
 
         if (empty($form)) {
             return false;
@@ -59,10 +62,14 @@ class BannersModelDownload extends JModelForm
     {
         $input = JFactory::getApplication()->input;
 
-        $this->setState('basename',
-            $input->cookie->getString(JApplicationHelper::getHash($this->_context . '.basename'), '__SITE__'));
-        $this->setState('compressed',
-            $input->cookie->getInt(JApplicationHelper::getHash($this->_context . '.compressed'), 1));
+        $this->setState(
+            'basename',
+            $input->cookie->getString(JApplicationHelper::getHash($this->_context . '.basename'), '__SITE__')
+        );
+        $this->setState(
+            'compressed',
+            $input->cookie->getInt(JApplicationHelper::getHash($this->_context . '.compressed'), 1)
+        );
     }
 
     /**

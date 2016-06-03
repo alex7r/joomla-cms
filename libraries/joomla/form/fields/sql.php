@@ -214,8 +214,12 @@ class JFormFieldSQL extends JFormFieldList
 
         // Process the filters
         if (is_array($filters)) {
-            $html_filters = JFactory::getApplication()
-                                    ->getUserStateFromRequest($this->context . '.filter', 'filter', array(), 'array');
+            $html_filters = JFactory::getApplication()->getUserStateFromRequest(
+                    $this->context . '.filter',
+                    'filter',
+                    array(),
+                    'array'
+                );
 
             foreach ($filters as $k => $value) {
                 if (!empty($html_filters[$value])) {

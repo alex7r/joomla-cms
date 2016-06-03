@@ -22,7 +22,8 @@ if (JLanguageMultilang::isEnabled()) {
     $this->form->setFieldAttribute('language', 'readonly', 'true');
 }
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'config.cancel.modules' || document.formvalidator.isValid(document.getElementById('modules-form')))
@@ -30,7 +31,8 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('modules-form'));
 		}
 	}
-");
+"
+);
 ?>
 
 <form
@@ -111,8 +113,10 @@ JFactory::getDocument()->addScriptDeclaration("
                         <hr/>
 
                         <?php
-                        if (JFactory::getUser()
-                                    ->authorise('core.edit.state', 'com_modules.module.' . $this->item['id'])
+                        if (JFactory::getUser()->authorise(
+                                'core.edit.state',
+                                'com_modules.module.' . $this->item['id']
+                            )
                         ): ?>
                             <div class="control-group">
                                 <div class="control-label">

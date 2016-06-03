@@ -57,11 +57,9 @@ class FinderIndexerTaxonomy
 
         // Check to see if the node is in the table.
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('*')
-                    ->from($db->quoteName('#__finder_taxonomy'))
-                    ->where($db->quoteName('parent_id') . ' = ' . $db->quote($branchId))
-                    ->where($db->quoteName('title') . ' = ' . $db->quote($title));
+        $query = $db->getQuery(true)->select('*')->from($db->quoteName('#__finder_taxonomy'))->where(
+                $db->quoteName('parent_id') . ' = ' . $db->quote($branchId)
+            )->where($db->quoteName('title') . ' = ' . $db->quote($title));
         $db->setQuery($query);
 
         // Get the result.
@@ -128,11 +126,9 @@ class FinderIndexerTaxonomy
 
         // Check to see if the branch is in the table.
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('*')
-                    ->from($db->quoteName('#__finder_taxonomy'))
-                    ->where($db->quoteName('parent_id') . ' = 1')
-                    ->where($db->quoteName('title') . ' = ' . $db->quote($title));
+        $query = $db->getQuery(true)->select('*')->from($db->quoteName('#__finder_taxonomy'))->where(
+                $db->quoteName('parent_id') . ' = 1'
+            )->where($db->quoteName('title') . ' = ' . $db->quote($title));
         $db->setQuery($query);
 
         // Get the result.
@@ -293,16 +289,14 @@ class FinderIndexerTaxonomy
         $groups = implode(',', $user->getAuthorisedViewLevels());
 
         // Create a query to get the node.
-        $query = $db->getQuery(true)
-                    ->select('t1.*')
-                    ->from($db->quoteName('#__finder_taxonomy') . ' AS t1')
-                    ->join('INNER', $db->quoteName('#__finder_taxonomy') . ' AS t2 ON t2.id = t1.parent_id')
-                    ->where('t1.access IN (' . $groups . ')')
-                    ->where('t1.state = 1')
-                    ->where('t1.title LIKE ' . $db->quote($db->escape($title) . '%'))
-                    ->where('t2.access IN (' . $groups . ')')
-                    ->where('t2.state = 1')
-                    ->where('t2.title = ' . $db->quote($branch));
+        $query = $db->getQuery(true)->select('t1.*')->from($db->quoteName('#__finder_taxonomy') . ' AS t1')->join(
+                'INNER',
+                $db->quoteName('#__finder_taxonomy') . ' AS t2 ON t2.id = t1.parent_id'
+            )->where('t1.access IN (' . $groups . ')')->where('t1.state = 1')->where(
+                't1.title LIKE ' . $db->quote($db->escape($title) . '%')
+            )->where('t2.access IN (' . $groups . ')')->where('t2.state = 1')->where(
+                't2.title = ' . $db->quote($branch)
+            );
 
         // Get the node.
         $db->setQuery($query, 0, 1);
@@ -325,9 +319,9 @@ class FinderIndexerTaxonomy
     {
         // Delete the maps.
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->delete($db->quoteName('#__finder_taxonomy_map'))
-                    ->where($db->quoteName('link_id') . ' = ' . (int)$linkId);
+        $query = $db->getQuery(true)->delete($db->quoteName('#__finder_taxonomy_map'))->where(
+                $db->quoteName('link_id') . ' = ' . (int)$linkId
+            );
         $db->setQuery($query);
         $db->execute();
 
@@ -346,7 +340,11 @@ class FinderIndexerTaxonomy
     {
         // Delete all orphaned nodes.
         $db    = JFactory::getDbo();
-        $query = 'DELETE t' . ' FROM ' . $db->quoteName('#__finder_taxonomy') . ' AS t' . ' LEFT JOIN ' . $db->quoteName('#__finder_taxonomy_map') . ' AS m ON m.node_id = t.id' . ' WHERE t.parent_id > 1' . ' AND m.link_id IS NULL';
+        $query = 'DELETE t' . ' FROM ' . $db->quoteName(
+                '#__finder_taxonomy'
+            ) . ' AS t' . ' LEFT JOIN ' . $db->quoteName(
+                '#__finder_taxonomy_map'
+            ) . ' AS m ON m.node_id = t.id' . ' WHERE t.parent_id > 1' . ' AND m.link_id IS NULL';
         $db->setQuery($query);
         $db->execute();
 

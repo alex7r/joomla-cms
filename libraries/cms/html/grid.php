@@ -136,8 +136,10 @@ abstract class JHtmlGrid
             $direction = ($direction == 'desc') ? 'asc' : 'desc';
         }
 
-        $html = '<a href="#" onclick="Joomla.tableOrdering(\'' . $order . '\',\'' . $direction . '\',\'' . $task . '\');return false;"' . ' class="hasTooltip" title="' . JHtml::tooltipText(($tip ? $tip : $title),
-                'JGLOBAL_CLICK_TO_SORT_THIS_COLUMN') . '">';
+        $html = '<a href="#" onclick="Joomla.tableOrdering(\'' . $order . '\',\'' . $direction . '\',\'' . $task . '\');return false;"' . ' class="hasTooltip" title="' . JHtml::tooltipText(
+                ($tip ? $tip : $title),
+                'JGLOBAL_CLICK_TO_SORT_THIS_COLUMN'
+            ) . '">';
 
         if (isset($title['0']) && $title['0'] == '<') {
             $html .= $title;
@@ -173,7 +175,9 @@ abstract class JHtmlGrid
         JHtml::_('behavior.core');
         JHtml::_('bootstrap.tooltip');
 
-        return '<input type="checkbox" name="' . $name . '" value="" class="hasTooltip" title="' . JHtml::tooltipText($tip) . '" onclick="' . $action . '" />';
+        return '<input type="checkbox" name="' . $name . '" value="" class="hasTooltip" title="' . JHtml::tooltipText(
+            $tip
+        ) . '" onclick="' . $action . '" />';
     }
 
     /**
@@ -247,8 +251,10 @@ abstract class JHtmlGrid
             $date = JHtml::_('date', $row->checked_out_time, JText::_('DATE_FORMAT_LC1'));
             $time = JHtml::_('date', $row->checked_out_time, 'H:i');
 
-            $hover = '<span class="editlinktip hasTooltip" title="' . JHtml::tooltipText('JLIB_HTML_CHECKED_OUT',
-                    $row->editor) . '<br />' . $date . '<br />' . $time . '">';
+            $hover = '<span class="editlinktip hasTooltip" title="' . JHtml::tooltipText(
+                    'JLIB_HTML_CHECKED_OUT',
+                    $row->editor
+                ) . '<br />' . $date . '<br />' . $time . '">';
         }
 
         return $hover . JHtml::_('image', 'admin/checked_out.png', null, null, true) . '</span>';
@@ -278,8 +284,13 @@ abstract class JHtmlGrid
         $alt    = $value ? JText::_('JPUBLISHED') : JText::_('JUNPUBLISHED');
         $action = $value ? JText::_('JLIB_HTML_UNPUBLISH_ITEM') : JText::_('JLIB_HTML_PUBLISH_ITEM');
 
-        return '<a href="#" onclick="return listItemTask(\'cb' . $i . '\',\'' . $prefix . $task . '\')" title="' . $action . '">' . JHtml::_('image',
-            'admin/' . $img, $alt, null, true) . '</a>';
+        return '<a href="#" onclick="return listItemTask(\'cb' . $i . '\',\'' . $prefix . $task . '\')" title="' . $action . '">' . JHtml::_(
+            'image',
+            'admin/' . $img,
+            $alt,
+            null,
+            true
+        ) . '</a>';
     }
 
     /**
@@ -317,11 +328,16 @@ abstract class JHtmlGrid
             $state['T'] = JText::_($trashed);
         }
 
-        return JHtml::_('select.genericlist', $state, 'filter_state', array(
-            'list.attr'   => 'class="inputbox" size="1" onchange="Joomla.submitform();"',
-            'list.select' => $filter_state,
-            'option.key'  => null
-        ));
+        return JHtml::_(
+            'select.genericlist',
+            $state,
+            'filter_state',
+            array(
+                'list.attr'   => 'class="inputbox" size="1" onchange="Joomla.submitform();"',
+                'list.select' => $filter_state,
+                'option.key'  => null
+            )
+        );
     }
 
     /**
@@ -337,6 +353,10 @@ abstract class JHtmlGrid
      */
     public static function order($rows, $image = 'filesave.png', $task = 'saveorder')
     {
-        return '<a href="javascript:saveorder(' . (count($rows) - 1) . ', \'' . $task . '\')" rel="tooltip" class="saveorder btn btn-micro pull-right" title="' . JText::_('JLIB_HTML_SAVE_ORDER') . '"><span class="icon-menu-2"></span></a>';
+        return '<a href="javascript:saveorder(' . (count(
+                                                       $rows
+                                                   ) - 1) . ', \'' . $task . '\')" rel="tooltip" class="saveorder btn btn-micro pull-right" title="' . JText::_(
+            'JLIB_HTML_SAVE_ORDER'
+        ) . '"><span class="icon-menu-2"></span></a>';
     }
 }

@@ -118,8 +118,12 @@ class SimplePie_Cache_Memcache implements SimplePie_Cache_Base
             $data = $data->data;
         }
 
-        return $this->cache->set($this->name, serialize($data), MEMCACHE_COMPRESSED,
-            (int)$this->options['extras']['timeout']);
+        return $this->cache->set(
+            $this->name,
+            serialize($data),
+            MEMCACHE_COMPRESSED,
+            (int)$this->options['extras']['timeout']
+        );
     }
 
     /**

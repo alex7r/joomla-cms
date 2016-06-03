@@ -100,8 +100,11 @@ class JInstallerAdapterTemplate extends JInstallerAdapter
         // Is the template we are trying to uninstall a core one?
         // Because that is not a good idea...
         if ($row->protected) {
-            JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_TPL_UNINSTALL_WARNCORETEMPLATE', $row->name), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_INSTALLER_ERROR_TPL_UNINSTALL_WARNCORETEMPLATE', $row->name),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -150,8 +153,11 @@ class JInstallerAdapterTemplate extends JInstallerAdapter
 
             // Make sure we delete the folders
             JFolder::delete($this->parent->getPath('extension_root'));
-            JLog::add(JText::_('JLIB_INSTALLER_ERROR_TPL_UNINSTALL_INVALID_NOTFOUND_MANIFEST'), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                JText::_('JLIB_INSTALLER_ERROR_TPL_UNINSTALL_INVALID_NOTFOUND_MANIFEST'),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -169,15 +175,16 @@ class JInstallerAdapterTemplate extends JInstallerAdapter
         }
 
         // Set menu that assigned to the template back to default template
-        $query = 'UPDATE #__menu' . ' SET template_style_id = 0' . ' WHERE template_style_id in (' . '	SELECT s.id FROM #__template_styles s' . ' WHERE s.template = ' . $db->quote(strtolower($name)) . ' AND s.client_id = ' . $clientId . ')';
+        $query = 'UPDATE #__menu' . ' SET template_style_id = 0' . ' WHERE template_style_id in (' . '	SELECT s.id FROM #__template_styles s' . ' WHERE s.template = ' . $db->quote(
+                strtolower($name)
+            ) . ' AND s.client_id = ' . $clientId . ')';
 
         $db->setQuery($query);
         $db->execute();
 
-        $query = $db->getQuery(true)
-                    ->delete($db->quoteName('#__template_styles'))
-                    ->where($db->quoteName('template') . ' = ' . $db->quote($name))
-                    ->where($db->quoteName('client_id') . ' = ' . $clientId);
+        $query = $db->getQuery(true)->delete($db->quoteName('#__template_styles'))->where(
+                $db->quoteName('template') . ' = ' . $db->quote($name)
+            )->where($db->quoteName('client_id') . ' = ' . $clientId);
         $db->setQuery($query);
         $db->execute();
 
@@ -207,7 +214,9 @@ class JInstallerAdapterTemplate extends JInstallerAdapter
                     continue;
                 }
 
-                $manifest_details = JInstaller::parseXMLInstallFile(JPATH_SITE . "/templates/$template/templateDetails.xml");
+                $manifest_details = JInstaller::parseXMLInstallFile(
+                    JPATH_SITE . "/templates/$template/templateDetails.xml"
+                );
                 $extension        = JTable::getInstance('extension');
                 $extension->set('type', 'template');
                 $extension->set('client_id', $site_info->id);
@@ -228,7 +237,9 @@ class JInstallerAdapterTemplate extends JInstallerAdapter
                     continue;
                 }
 
-                $manifest_details = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . "/templates/$template/templateDetails.xml");
+                $manifest_details = JInstaller::parseXMLInstallFile(
+                    JPATH_ADMINISTRATOR . "/templates/$template/templateDetails.xml"
+                );
                 $extension        = JTable::getInstance('extension');
                 $extension->set('type', 'template');
                 $extension->set('client_id', $admin_info->id);
@@ -284,15 +295,22 @@ class JInstallerAdapterTemplate extends JInstallerAdapter
     protected function checkExistingExtension()
     {
         try {
-            $this->currentExtensionId = $this->extension->find(array(
-                'element'   => $this->element,
-                'type'      => $this->type,
-                'client_id' => $this->clientId
-            ));
+            $this->currentExtensionId = $this->extension->find(
+                array(
+                    'element'   => $this->element,
+                    'type'      => $this->type,
+                    'client_id' => $this->clientId
+                )
+            );
         } catch (RuntimeException $e) {
             // Install failed, roll back changes
-            throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_ROLLBACK',
-                JText::_('JLIB_INSTALLER_' . $this->route), $e->getMessage()), $e->getCode(), $e);
+            throw new RuntimeException(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ABORT_ROLLBACK',
+                    JText::_('JLIB_INSTALLER_' . $this->route),
+                    $e->getMessage()
+                ), $e->getCode(), $e
+            );
         }
     }
 
@@ -326,8 +344,12 @@ class JInstallerAdapterTemplate extends JInstallerAdapter
 
             if (!file_exists($path['dest']) || $this->parent->isOverwrite()) {
                 if (!$this->parent->copyFiles(array($path))) {
-                    throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_MANIFEST',
-                        JText::_('JLIB_INSTALLER_' . strtoupper($this->getRoute()))));
+                    throw new RuntimeException(
+                        JText::sprintf(
+                            'JLIB_INSTALLER_ABORT_MANIFEST',
+                            JText::_('JLIB_INSTALLER_' . strtoupper($this->getRoute()))
+                        )
+                    );
                 }
             }
         }
@@ -347,11 +369,13 @@ class JInstallerAdapterTemplate extends JInstallerAdapter
         /** @var JTableUpdate $update */
         $update = JTable::getInstance('update');
 
-        $uid = $update->find(array(
-            'element'   => $this->element,
-            'type'      => $this->type,
-            'client_id' => $this->clientId
-        ));
+        $uid = $update->find(
+            array(
+                'element'   => $this->element,
+                'type'      => $this->type,
+                'client_id' => $this->clientId
+            )
+        );
 
         if ($uid) {
             $update->delete($uid);
@@ -452,8 +476,12 @@ class JInstallerAdapterTemplate extends JInstallerAdapter
 
         // Set the template root path
         if (empty($this->element)) {
-            throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_MOD_INSTALL_NOFILE',
-                JText::_('JLIB_INSTALLER_' . strtoupper($this->route))));
+            throw new RuntimeException(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ABORT_MOD_INSTALL_NOFILE',
+                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route))
+                )
+            );
         }
 
         $this->parent->setPath('extension_root', $basePath . '/templates/' . $this->element);
@@ -518,8 +546,13 @@ class JInstallerAdapterTemplate extends JInstallerAdapter
 
         if (!$this->extension->store()) {
             // Install failed, roll back changes
-            throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_ROLLBACK',
-                JText::_('JLIB_INSTALLER_' . strtoupper($this->route)), $this->extension->getError()));
+            throw new RuntimeException(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ABORT_ROLLBACK',
+                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
+                    $this->extension->getError()
+                )
+            );
         }
     }
 }

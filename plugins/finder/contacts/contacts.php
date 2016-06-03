@@ -380,16 +380,17 @@ class PlgFinderContacts extends FinderIndexerAdapter
         $db = JFactory::getDbo();
 
         // Check if we can use the supplied SQL query.
-        $query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)
-                                                                ->select('a.id, a.name AS title, a.alias, a.con_position AS position, a.address, a.created AS start_date')
-                                                                ->select('a.created_by_alias, a.modified, a.modified_by')
-                                                                ->select('a.metakey, a.metadesc, a.metadata, a.language')
-                                                                ->select('a.sortname1, a.sortname2, a.sortname3')
-                                                                ->select('a.publish_up AS publish_start_date, a.publish_down AS publish_end_date')
-                                                                ->select('a.suburb AS city, a.state AS region, a.country, a.postcode AS zip')
-                                                                ->select('a.telephone, a.fax, a.misc AS summary, a.email_to AS email, a.mobile')
-                                                                ->select('a.webpage, a.access, a.published AS state, a.ordering, a.params, a.catid')
-                                                                ->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
+        $query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)->select(
+                'a.id, a.name AS title, a.alias, a.con_position AS position, a.address, a.created AS start_date'
+            )->select('a.created_by_alias, a.modified, a.modified_by')->select(
+                'a.metakey, a.metadesc, a.metadata, a.language'
+            )->select('a.sortname1, a.sortname2, a.sortname3')->select(
+                'a.publish_up AS publish_start_date, a.publish_down AS publish_end_date'
+            )->select('a.suburb AS city, a.state AS region, a.country, a.postcode AS zip')->select(
+                'a.telephone, a.fax, a.misc AS summary, a.email_to AS email, a.mobile'
+            )->select('a.webpage, a.access, a.published AS state, a.ordering, a.params, a.catid')->select(
+                'c.title AS category, c.published AS cat_state, c.access AS cat_access'
+            );
 
         // Handle the alias CASE WHEN portion of the query
         $case_when_item_alias = ' CASE WHEN ';
@@ -408,11 +409,10 @@ class PlgFinderContacts extends FinderIndexerAdapter
         $case_when_category_alias .= $query->concatenate(array($c_id, 'c.alias'), ':');
         $case_when_category_alias .= ' ELSE ';
         $case_when_category_alias .= $c_id . ' END as catslug';
-        $query->select($case_when_category_alias)
-              ->select('u.name')
-              ->from('#__contact_details AS a')
-              ->join('LEFT', '#__categories AS c ON c.id = a.catid')
-              ->join('LEFT', '#__users AS u ON u.id = a.user_id');
+        $query->select($case_when_category_alias)->select('u.name')->from('#__contact_details AS a')->join(
+                'LEFT',
+                '#__categories AS c ON c.id = a.catid'
+            )->join('LEFT', '#__users AS u ON u.id = a.user_id');
 
         return $query;
     }

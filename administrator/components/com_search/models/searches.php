@@ -112,12 +112,16 @@ class SearchModelSearches extends JModelList
     protected function populateState($ordering = 'a.hits', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
 
         // Special state for toggle results button.
-        $this->setState('show_results',
-            $this->getUserStateFromRequest($this->context . '.show_results', 'show_results', 1, 'int'));
+        $this->setState(
+            'show_results',
+            $this->getUserStateFromRequest($this->context . '.show_results', 'show_results', 1, 'int')
+        );
 
         // Load the parameters.
         $params = JComponentHelper::getParams('com_search');
@@ -173,8 +177,14 @@ class SearchModelSearches extends JModelList
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.hits')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.hits'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

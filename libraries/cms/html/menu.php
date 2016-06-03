@@ -50,12 +50,17 @@ abstract class JHtmlMenu
 
         $options = static::menuitems($config);
 
-        return JHtml::_('select.genericlist', $options, $name, array(
-            'id'             => isset($config['id']) ? $config['id'] : 'assetgroups_' . (++$count),
-            'list.attr'      => (is_null($attribs) ? 'class="inputbox" size="1"' : $attribs),
-            'list.select'    => (int)$selected,
-            'list.translate' => false
-        ));
+        return JHtml::_(
+            'select.genericlist',
+            $options,
+            $name,
+            array(
+                'id'             => isset($config['id']) ? $config['id'] : 'assetgroups_' . (++$count),
+                'list.attr'      => (is_null($attribs) ? 'class="inputbox" size="1"' : $attribs),
+                'list.select'    => (int)$selected,
+                'list.translate' => false
+            )
+        );
     }
 
     /**
@@ -73,11 +78,9 @@ abstract class JHtmlMenu
             $menus = static::menus();
 
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select('a.id AS value, a.title AS text, a.level, a.menutype')
-                        ->from('#__menu AS a')
-                        ->where('a.parent_id > 0')
-                        ->where('a.client_id = 0');
+            $query = $db->getQuery(true)->select('a.id AS value, a.title AS text, a.level, a.menutype')->from(
+                    '#__menu AS a'
+                )->where('a.parent_id > 0')->where('a.client_id = 0');
 
             // Filter on the published state
             if (isset($config['published'])) {
@@ -125,8 +128,11 @@ abstract class JHtmlMenu
                 static::$items[] = JHtml::_('select.optgroup', $menu->text);
 
                 // Special "Add to this Menu" option:
-                static::$items[] = JHtml::_('select.option', $menu->value . '.1',
-                    JText::_('JLIB_HTML_ADD_TO_THIS_MENU'));
+                static::$items[] = JHtml::_(
+                    'select.option',
+                    $menu->value . '.1',
+                    JText::_('JLIB_HTML_ADD_TO_THIS_MENU')
+                );
 
                 // Menu items:
                 if (isset($lookup[$menu->value])) {
@@ -155,8 +161,12 @@ abstract class JHtmlMenu
         if (is_null(static::$menus)) {
             $db = JFactory::getDbo();
 
-            $query = $db->getQuery(true)->select($db->qn(array('id', 'menutype', 'title'),
-                array('id', 'value', 'text')))->from($db->quoteName('#__menu_types'))->order('title');
+            $query = $db->getQuery(true)->select(
+                $db->qn(
+                    array('id', 'menutype', 'title'),
+                    array('id', 'value', 'text')
+                )
+            )->from($db->quoteName('#__menu_types'))->order('title');
 
             static::$menus = $db->setQuery($query)->loadObjectList();
         }
@@ -186,10 +196,16 @@ abstract class JHtmlMenu
                            ->where($db->quoteName('published') . ' != -2')
                            ->order('ordering');
             $order    = JHtml::_('list.genericordering', $query);
-            $ordering = JHtml::_('select.genericlist', $order, 'ordering',
-                array('list.attr' => 'class="inputbox" size="1"', 'list.select' => (int)$row->ordering));
+            $ordering = JHtml::_(
+                'select.genericlist',
+                $order,
+                'ordering',
+                array('list.attr' => 'class="inputbox" size="1"', 'list.select' => (int)$row->ordering)
+            );
         } else {
-            $ordering = '<input type="hidden" name="ordering" value="' . $row->ordering . '" />' . JText::_('JGLOBAL_NEWITEMSLAST_DESC');
+            $ordering = '<input type="hidden" name="ordering" value="' . $row->ordering . '" />' . JText::_(
+                    'JGLOBAL_NEWITEMSLAST_DESC'
+                );
         }
 
         return $ordering;
@@ -210,11 +226,9 @@ abstract class JHtmlMenu
         $db = JFactory::getDbo();
 
         // Get a list of the menu items
-        $query = $db->getQuery(true)
-                    ->select('m.id, m.parent_id, m.title, m.menutype')
-                    ->from($db->quoteName('#__menu') . ' AS m')
-                    ->where($db->quoteName('m.published') . ' = 1')
-                    ->order('m.menutype, m.parent_id');
+        $query = $db->getQuery(true)->select('m.id, m.parent_id, m.title, m.menutype')->from(
+                $db->quoteName('#__menu') . ' AS m'
+            )->where($db->quoteName('m.published') . ' = 1')->order('m.menutype, m.parent_id');
         $db->setQuery($query);
 
         $mitems = $db->loadObjectList();
@@ -316,8 +330,15 @@ abstract class JHtmlMenu
                 $list[$id]           = $v;
                 $list[$id]->treename = $indent . $txt;
                 $list[$id]->children = count(@$children[$id]);
-                $list                = static::treerecurse($id, $indent . $spacer, $list, $children, $maxlevel,
-                    $level + 1, $type);
+                $list                = static::treerecurse(
+                    $id,
+                    $indent . $spacer,
+                    $list,
+                    $children,
+                    $maxlevel,
+                    $level + 1,
+                    $type
+                );
             }
         }
 

@@ -125,8 +125,10 @@ class tagparse extends easyparse
     {
         if (empty(self::$combinators)) {
             self::$combinators = '(' . implode('|', array_map(array($this, 'preg_quote'), array('+', '>', '~'))) . ')';
-            self::$match_opts  = '(' . implode('|',
-                    array_map(array($this, 'preg_quote'), array('=', '~=', '|=', '$=', '*='))) . ')';
+            self::$match_opts  = '(' . implode(
+                    '|',
+                    array_map(array($this, 'preg_quote'), array('=', '~=', '|=', '$=', '*='))
+                ) . ')';
         }
 
         // crush whitespace

@@ -46,8 +46,14 @@ abstract class JSessionStorage
     public function register()
     {
         // Use this object as the session handler
-        session_set_save_handler(array($this, 'open'), array($this, 'close'), array($this, 'read'),
-            array($this, 'write'), array($this, 'destroy'), array($this, 'gc'));
+        session_set_save_handler(
+            array($this, 'open'),
+            array($this, 'close'),
+            array($this, 'read'),
+            array($this, 'write'),
+            array($this, 'destroy'),
+            array($this, 'gc')
+        );
     }
 
     /**
@@ -119,8 +125,11 @@ abstract class JSessionStorage
      */
     public static function test()
     {
-        JLog::add('JSessionStorage::test() is deprecated. Use JSessionStorage::isSupported() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JSessionStorage::test() is deprecated. Use JSessionStorage::isSupported() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return static::isSupported();
     }

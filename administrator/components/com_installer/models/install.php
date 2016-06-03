@@ -128,8 +128,13 @@ class InstallerModelInstall extends JModelLegacy
                         JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
                     }
 
-                    $app->enqueueMessage(JText::sprintf('COM_INSTALLER_UNABLE_TO_INSTALL_JOOMLA_PACKAGE',
-                        JRoute::_('index.php?option=com_joomlaupdate')), 'warning');
+                    $app->enqueueMessage(
+                        JText::sprintf(
+                            'COM_INSTALLER_UNABLE_TO_INSTALL_JOOMLA_PACKAGE',
+                            JRoute::_('index.php?option=com_joomlaupdate')
+                        ),
+                        'warning'
+                    );
 
                     return false;
                 }
@@ -150,14 +155,18 @@ class InstallerModelInstall extends JModelLegacy
         // Install the package.
         if (!$installer->install($package['dir'])) {
             // There was an error installing the package.
-            $msg     = JText::sprintf('COM_INSTALLER_INSTALL_ERROR',
-                JText::_('COM_INSTALLER_TYPE_TYPE_' . strtoupper($package['type'])));
+            $msg     = JText::sprintf(
+                'COM_INSTALLER_INSTALL_ERROR',
+                JText::_('COM_INSTALLER_TYPE_TYPE_' . strtoupper($package['type']))
+            );
             $result  = false;
             $msgType = 'error';
         } else {
             // Package installed sucessfully.
-            $msg     = JText::sprintf('COM_INSTALLER_INSTALL_SUCCESS',
-                JText::_('COM_INSTALLER_TYPE_TYPE_' . strtoupper($package['type'])));
+            $msg     = JText::sprintf(
+                'COM_INSTALLER_INSTALL_SUCCESS',
+                JText::_('COM_INSTALLER_TYPE_TYPE_' . strtoupper($package['type']))
+            );
             $result  = true;
             $msgType = 'message';
         }
@@ -259,16 +268,24 @@ class InstallerModelInstall extends JModelLegacy
 
         // Is the PHP tmp directory missing?
         if ($userfile['error'] && ($userfile['error'] == UPLOAD_ERR_NO_TMP_DIR)) {
-            JError::raiseWarning('',
-                JText::_('COM_INSTALLER_MSG_INSTALL_WARNINSTALLUPLOADERROR') . '<br />' . JText::_('COM_INSTALLER_MSG_WARNINGS_PHPUPLOADNOTSET'));
+            JError::raiseWarning(
+                '',
+                JText::_('COM_INSTALLER_MSG_INSTALL_WARNINSTALLUPLOADERROR') . '<br />' . JText::_(
+                    'COM_INSTALLER_MSG_WARNINGS_PHPUPLOADNOTSET'
+                )
+            );
 
             return false;
         }
 
         // Is the max upload size too small in php.ini?
         if ($userfile['error'] && ($userfile['error'] == UPLOAD_ERR_INI_SIZE)) {
-            JError::raiseWarning('',
-                JText::_('COM_INSTALLER_MSG_INSTALL_WARNINSTALLUPLOADERROR') . '<br />' . JText::_('COM_INSTALLER_MSG_WARNINGS_SMALLUPLOADSIZE'));
+            JError::raiseWarning(
+                '',
+                JText::_('COM_INSTALLER_MSG_INSTALL_WARNINSTALLUPLOADERROR') . '<br />' . JText::_(
+                    'COM_INSTALLER_MSG_WARNINGS_SMALLUPLOADSIZE'
+                )
+            );
 
             return false;
         }

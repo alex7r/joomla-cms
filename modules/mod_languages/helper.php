@@ -98,7 +98,10 @@ abstract class ModLanguagesHelper
                 if ($multilang) {
                     if (isset($cassociations[$language->lang_code])) {
                         $language->link = JRoute::_($cassociations[$language->lang_code] . '&lang=' . $language->sef);
-                    } elseif (isset($associations[$language->lang_code]) && $menu->getItem($associations[$language->lang_code])) {
+                    } elseif (isset($associations[$language->lang_code]) && $menu->getItem(
+                            $associations[$language->lang_code]
+                        )
+                    ) {
                         $itemid         = $associations[$language->lang_code];
                         $language->link = JRoute::_('index.php?lang=' . $language->sef . '&Itemid=' . $itemid);
                     } else {

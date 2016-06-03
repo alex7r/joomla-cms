@@ -885,8 +885,10 @@ class Session implements \IteratorAggregate
         $remoteAddr = $this->input->server->getString('REMOTE_ADDR', '');
 
         // Check for client address
-        if (in_array('fix_adress', $this->security) && !empty($remoteAddr) && filter_var($remoteAddr,
-                FILTER_VALIDATE_IP) !== false
+        if (in_array('fix_adress', $this->security) && !empty($remoteAddr) && filter_var(
+                                                                                  $remoteAddr,
+                                                                                  FILTER_VALIDATE_IP
+                                                                              ) !== false
         ) {
             $ip = $this->get('session.client.address');
 

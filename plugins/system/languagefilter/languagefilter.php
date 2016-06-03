@@ -66,8 +66,10 @@ class PlgSystemLanguageFilter extends JPlugin
             foreach ($this->sefs as $sef => $language) {
                 // @todo: In Joomla 2.5.4 and earlier access wasn't set. Non modified Content Languages got 0 as access value
                 // we also check if frontend language exists and is enabled
-                if (($language->access && !in_array($language->access,
-                            $levels)) || (!array_key_exists($language->lang_code, JLanguageMultilang::getSiteLangs()))
+                if (($language->access && !in_array(
+                            $language->access,
+                            $levels
+                        )) || (!array_key_exists($language->lang_code, JLanguageMultilang::getSiteLangs()))
                 ) {
                     unset($this->lang_codes[$language->lang_code]);
                     unset($this->sefs[$language->sef]);
@@ -166,8 +168,10 @@ class PlgSystemLanguageFilter extends JPlugin
             $sef = $this->lang_codes[$this->current_lang]->sef;
         }
 
-        if ($this->mode_sef && (!$this->params->get('remove_default_prefix',
-                    0) || $lang != $this->default_lang || $lang != $this->current_lang)
+        if ($this->mode_sef && (!$this->params->get(
+                    'remove_default_prefix',
+                    0
+                ) || $lang != $this->default_lang || $lang != $this->current_lang)
         ) {
             $uri->setPath($uri->getPath() . '/' . $sef . '/');
         }
@@ -302,7 +306,10 @@ class PlgSystemLanguageFilter extends JPlugin
 
         // We are called via POST. We don't care about the language
         // and simply set the default language as our current language.
-        if ($this->app->input->getMethod() == "POST" || count($this->app->input->post) > 0 || count($this->app->input->files) > 0) {
+        if ($this->app->input->getMethod() == "POST" || count($this->app->input->post) > 0 || count(
+                                                                                                  $this->app->input->files
+                                                                                              ) > 0
+        ) {
             $found = true;
 
             if (!isset($lang_code)) {
@@ -425,8 +432,14 @@ class PlgSystemLanguageFilter extends JPlugin
         $cookie_domain = $this->app->get('cookie_domain');
         $cookie_path   = $this->app->get('cookie_path', '/');
         $cookie_secure = $this->app->isSSLConnection();
-        $this->app->input->cookie->set(JApplicationHelper::getHash('language'), $lang_code, $cookie_expire,
-            $cookie_path, $cookie_domain, $cookie_secure);
+        $this->app->input->cookie->set(
+            JApplicationHelper::getHash('language'),
+            $lang_code,
+            $cookie_expire,
+            $cookie_path,
+            $cookie_domain,
+            $cookie_secure
+        );
     }
 
     /**
@@ -486,9 +499,12 @@ class PlgSystemLanguageFilter extends JPlugin
                 }
             } else {
                 if ($this->app->isSite()) {
-                    $this->app->setUserState('com_users.edit.profile.redirect',
-                        'index.php?Itemid=' . $this->app->getMenu()
-                                                        ->getDefault($lang_code)->id . '&lang=' . $this->lang_codes[$lang_code]->sef);
+                    $this->app->setUserState(
+                        'com_users.edit.profile.redirect',
+                        'index.php?Itemid=' . $this->app->getMenu()->getDefault(
+                                $lang_code
+                            )->id . '&lang=' . $this->lang_codes[$lang_code]->sef
+                    );
 
                     // Create a cookie.
                     $this->setLanguageCookie($lang_code);
@@ -525,8 +541,10 @@ class PlgSystemLanguageFilter extends JPlugin
 
                 // The language has been deleted/disabled or the related content language does not exist/has been unpublished
                 // or the related home page does not exist/has been unpublished
-                if (!array_key_exists($lang_code, $this->lang_codes) || !array_key_exists($lang_code,
-                        JLanguageMultilang::getSiteHomePages()) || !JFolder::exists(JPATH_SITE . '/language/' . $lang_code)
+                if (!array_key_exists($lang_code, $this->lang_codes) || !array_key_exists(
+                        $lang_code,
+                        JLanguageMultilang::getSiteHomePages()
+                    ) || !JFolder::exists(JPATH_SITE . '/language/' . $lang_code)
                 ) {
                     $lang_code = $this->current_lang;
                 }
@@ -544,8 +562,10 @@ class PlgSystemLanguageFilter extends JPlugin
                     // The login menu item contains a redirection.
                     // This will override the automatic change to the user preferred language
                     if ($active->params['login_redirect_url']) {
-                        $this->app->setUserState('users.login.form.return',
-                            JRoute::_($this->app->getUserState('users.login.form.return'), false));
+                        $this->app->setUserState(
+                            'users.login.form.return',
+                            JRoute::_($this->app->getUserState('users.login.form.return'), false)
+                        );
                     } elseif ($this->app->getUserState('users.login.form.return')) {
                         // The login module contains a menu item redirection. Try to get association from that menu item.
                         $itemid = preg_replace('/\D+/', '', $this->app->getUserState('users.login.form.return'));
@@ -556,8 +576,10 @@ class PlgSystemLanguageFilter extends JPlugin
 
                         if (isset($associations[$lang_code]) && $menu->getItem($associations[$lang_code])) {
                             $associationItemid = $associations[$lang_code];
-                            $this->app->setUserState('users.login.form.return',
-                                'index.php?Itemid=' . $associationItemid);
+                            $this->app->setUserState(
+                                'users.login.form.return',
+                                'index.php?Itemid=' . $associationItemid
+                            );
                             $foundAssociation = true;
                         }
                     } elseif (isset($associations[$lang_code]) && $menu->getItem($associations[$lang_code])) {
@@ -587,8 +609,10 @@ class PlgSystemLanguageFilter extends JPlugin
                 }
             } else {
                 if ($this->app->getUserState('users.login.form.return')) {
-                    $this->app->setUserState('users.login.form.return',
-                        JRoute::_($this->app->getUserState('users.login.form.return'), false));
+                    $this->app->setUserState(
+                        'users.login.form.return',
+                        JRoute::_($this->app->getUserState('users.login.form.return'), false)
+                    );
                 }
             }
         }
@@ -678,8 +702,12 @@ class PlgSystemLanguageFilter extends JPlugin
             if (count($languages) > 1) {
                 // Remove the sef from the default language if "Remove URL Language Code" is on
                 if (isset($languages[$this->default_lang]) && $remove_default_prefix) {
-                    $languages[$this->default_lang]->link = preg_replace('|/' . $languages[$this->default_lang]->sef . '/|',
-                        '/', $languages[$this->default_lang]->link, 1);
+                    $languages[$this->default_lang]->link = preg_replace(
+                        '|/' . $languages[$this->default_lang]->sef . '/|',
+                        '/',
+                        $languages[$this->default_lang]->link,
+                        1
+                    );
                 }
 
                 foreach ($languages as $i => &$language) {
@@ -693,7 +721,9 @@ class PlgSystemLanguageFilter extends JPlugin
 
                     if (isset($languages[$xdefault_language])) {
                         // Use a custom tag because addHeadLink is limited to one URI per tag
-                        $doc->addCustomTag('<link href="' . $server . $languages[$xdefault_language]->link . '" rel="alternate" hreflang="x-default" />');
+                        $doc->addCustomTag(
+                            '<link href="' . $server . $languages[$xdefault_language]->link . '" rel="alternate" hreflang="x-default" />'
+                        );
                     }
                 }
             }

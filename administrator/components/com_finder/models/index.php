@@ -175,8 +175,12 @@ class FinderModelIndex extends JModelList
         $query = $db->getQuery(true)
                     ->select('name, enabled')
                     ->from($db->quoteName('#__extensions'))
-                    ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
-                    ->where($db->quoteName('folder') . ' IN (' . $db->quote('system') . ',' . $db->quote('content') . ')')
+                    ->where(
+                        $db->quoteName('type') . ' = ' . $db->quote('plugin')
+                    )
+                    ->where(
+                        $db->quoteName('folder') . ' IN (' . $db->quote('system') . ',' . $db->quote('content') . ')'
+                    )
                     ->where($db->quoteName('element') . ' = ' . $db->quote('finder'));
         $db->setQuery($query);
         $db->execute();
@@ -233,9 +237,9 @@ class FinderModelIndex extends JModelList
         $db->truncateTable('#__finder_taxonomy_map');
 
         // Delete all the taxonomy nodes except the root.
-        $query = $db->getQuery(true)
-                    ->delete($db->quoteName('#__finder_taxonomy'))
-                    ->where($db->quoteName('id') . ' > 1');
+        $query = $db->getQuery(true)->delete($db->quoteName('#__finder_taxonomy'))->where(
+                $db->quoteName('id') . ' > 1'
+            );
         $db->setQuery($query);
         $db->execute();
 
@@ -333,12 +337,15 @@ class FinderModelIndex extends JModelList
     protected function getListQuery()
     {
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('l.*')
-                    ->select($db->quoteName('t.title', 't_title'))
-                    ->from($db->quoteName('#__finder_links', 'l'))
-                    ->join('INNER', $db->quoteName('#__finder_types',
-                            't') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('l.type_id'));
+        $query = $db->getQuery(true)->select('l.*')->select($db->quoteName('t.title', 't_title'))->from(
+                $db->quoteName('#__finder_links', 'l')
+            )->join(
+                'INNER',
+                $db->quoteName(
+                    '#__finder_types',
+                    't'
+                ) . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('l.type_id')
+            );
 
         // Check the type filter.
         $type = $this->getState('filter.type');
@@ -351,9 +358,13 @@ class FinderModelIndex extends JModelList
         $contentMapId = $this->getState('filter.content_map');
 
         if (is_numeric($contentMapId)) {
-            $query->join('INNER', $db->quoteName('#__finder_taxonomy_map',
-                    'm') . ' ON ' . $db->quoteName('m.link_id') . ' = ' . $db->quoteName('l.link_id'))
-                  ->where($db->quoteName('m.node_id') . ' = ' . (int)$contentMapId);
+            $query->join(
+                'INNER',
+                $db->quoteName(
+                    '#__finder_taxonomy_map',
+                    'm'
+                ) . ' ON ' . $db->quoteName('m.link_id') . ' = ' . $db->quoteName('l.link_id')
+            )->where($db->quoteName('m.node_id') . ' = ' . (int)$contentMapId);
         }
 
         // Check for state filter.
@@ -368,7 +379,9 @@ class FinderModelIndex extends JModelList
 
         if (!empty($search)) {
             $search      = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-            $orSearchSql = $db->quoteName('l.title') . ' LIKE ' . $search . ' OR ' . $db->quoteName('l.url') . ' LIKE ' . $search;
+            $orSearchSql = $db->quoteName('l.title') . ' LIKE ' . $search . ' OR ' . $db->quoteName(
+                    'l.url'
+                ) . ' LIKE ' . $search;
 
             // Filter by indexdate only if $search doesn't contains non-ascii characters
             if (!preg_match('/[^\x00-\x7F]/', $search)) {
@@ -383,7 +396,9 @@ class FinderModelIndex extends JModelList
         $listDir   = $this->getState('list.direction', 'ASC');
 
         if ($listOrder == 't.title') {
-            $ordering = $db->quoteName('t.title') . ' ' . $db->escape($listDir) . ', ' . $db->quoteName('l.title') . ' ' . $db->escape($listDir);
+            $ordering = $db->quoteName('t.title') . ' ' . $db->escape($listDir) . ', ' . $db->quoteName(
+                    'l.title'
+                ) . ' ' . $db->escape($listDir);
         } else {
             $ordering = $db->escape($listOrder) . ' ' . $db->escape($listDir);
         }
@@ -430,14 +445,22 @@ class FinderModelIndex extends JModelList
     protected function populateState($ordering = 'l.title', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('filter.state',
-            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'cmd'));
-        $this->setState('filter.type',
-            $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'cmd'));
-        $this->setState('filter.content_map',
-            $this->getUserStateFromRequest($this->context . '.filter.content_map', 'filter_content_map', '', 'cmd'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.state',
+            $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'cmd')
+        );
+        $this->setState(
+            'filter.type',
+            $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'cmd')
+        );
+        $this->setState(
+            'filter.content_map',
+            $this->getUserStateFromRequest($this->context . '.filter.content_map', 'filter_content_map', '', 'cmd')
+        );
 
         // Load the parameters.
         $params = JComponentHelper::getParams('com_finder');

@@ -138,19 +138,17 @@ class JFormFieldTemplatestyle extends JFormFieldGroupedList
         $query = $db->getQuery(true);
 
         // Build the query.
-        $query->select('s.id, s.title, e.name as name, s.template')
-              ->from('#__template_styles as s')
-              ->where('s.client_id = ' . (int)$client->id)
-              ->order('template')
-              ->order('title');
+        $query->select('s.id, s.title, e.name as name, s.template')->from('#__template_styles as s')->where(
+                's.client_id = ' . (int)$client->id
+            )->order('template')->order('title');
 
         if ($template) {
             $query->where('s.template = ' . $db->quote($template));
         }
 
-        $query->join('LEFT', '#__extensions as e on e.element=s.template')
-              ->where('e.enabled = 1')
-              ->where($db->quoteName('e.type') . ' = ' . $db->quote('template'));
+        $query->join('LEFT', '#__extensions as e on e.element=s.template')->where('e.enabled = 1')->where(
+                $db->quoteName('e.type') . ' = ' . $db->quote('template')
+            );
 
         // Set the query and load the styles.
         $db->setQuery($query);
@@ -160,9 +158,19 @@ class JFormFieldTemplatestyle extends JFormFieldGroupedList
         if ($styles) {
             foreach ($styles as $style) {
                 $template = $style->template;
-                $lang->load('tpl_' . $template . '.sys', $client->path, null, false,
-                    true) || $lang->load('tpl_' . $template . '.sys', $client->path . '/templates/' . $template, null,
-                    false, true);
+                $lang->load(
+                    'tpl_' . $template . '.sys',
+                    $client->path,
+                    null,
+                    false,
+                    true
+                ) || $lang->load(
+                    'tpl_' . $template . '.sys',
+                    $client->path . '/templates/' . $template,
+                    null,
+                    false,
+                    true
+                );
                 $name = JText::_($style->name);
 
                 // Initialize the group if necessary.

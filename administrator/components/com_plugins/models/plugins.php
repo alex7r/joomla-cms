@@ -84,8 +84,12 @@ class PluginsModelPlugins extends JModelList
         $folder = $this->getUserStateFromRequest($this->context . '.filter.folder', 'filter_folder', '', 'string');
         $this->setState('filter.folder', $folder);
 
-        $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '',
-            'string');
+        $language = $this->getUserStateFromRequest(
+            $this->context . '.filter.language',
+            'filter_language',
+            '',
+            'string'
+        );
         $this->setState('filter.language', $language);
 
         // Load the parameters.
@@ -175,8 +179,13 @@ class PluginsModelPlugins extends JModelList
         foreach ($items as &$item) {
             $source    = JPATH_PLUGINS . '/' . $item->folder . '/' . $item->element;
             $extension = 'plg_' . $item->folder . '_' . $item->element;
-            $lang->load($extension . '.sys', JPATH_ADMINISTRATOR, null, false, true) || $lang->load($extension . '.sys',
-                $source, null, false, true);
+            $lang->load($extension . '.sys', JPATH_ADMINISTRATOR, null, false, true) || $lang->load(
+                $extension . '.sys',
+                $source,
+                null,
+                false,
+                true
+            );
             $item->name = JText::_($item->name);
         }
     }
@@ -216,10 +225,14 @@ class PluginsModelPlugins extends JModelList
         $query = $db->getQuery(true);
 
         // Select the required fields from the table.
-        $query->select($this->getState('list.select',
-            'a.extension_id , a.name, a.element, a.folder, a.checked_out, a.checked_out_time,' . ' a.enabled, a.access, a.ordering'))
-              ->from($db->quoteName('#__extensions') . ' AS a')
-              ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'));
+        $query->select(
+            $this->getState(
+                'list.select',
+                'a.extension_id , a.name, a.element, a.folder, a.checked_out, a.checked_out_time,' . ' a.enabled, a.access, a.ordering'
+            )
+        )->from($db->quoteName('#__extensions') . ' AS a')->where(
+                $db->quoteName('type') . ' = ' . $db->quote('plugin')
+            );
 
         // Join over the users for the checked out user.
         $query->select('uc.name AS editor')->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');

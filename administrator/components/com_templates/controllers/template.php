@@ -130,8 +130,10 @@ class TemplatesControllerTemplate extends JControllerLegacy
             }
 
             // Call installation model
-            $this->input->set('install_directory',
-                JFactory::getConfig()->get('tmp_path') . '/' . $model->getState('tmp_prefix'));
+            $this->input->set(
+                'install_directory',
+                JFactory::getConfig()->get('tmp_path') . '/' . $model->getState('tmp_prefix')
+            );
             $installModel = $this->getModel('Install', 'InstallerModel');
             JFactory::getLanguage()->load('com_installer');
 
@@ -233,7 +235,9 @@ class TemplatesControllerTemplate extends JControllerLegacy
             }
 
             // Redirect back to the edit screen.
-            $url = 'index.php?option=com_templates&view=template&id=' . $model->getState('extension.id') . '&file=' . $fileName;
+            $url = 'index.php?option=com_templates&view=template&id=' . $model->getState(
+                    'extension.id'
+                ) . '&file=' . $fileName;
             $this->setRedirect(JRoute::_($url, false));
 
             return false;
@@ -243,7 +247,9 @@ class TemplatesControllerTemplate extends JControllerLegacy
         if (!$model->save($data)) {
             // Redirect back to the edit screen.
             $this->setMessage(JText::sprintf('JERROR_SAVE_FAILED', $model->getError()), 'warning');
-            $url = 'index.php?option=com_templates&view=template&id=' . $model->getState('extension.id') . '&file=' . $fileName;
+            $url = 'index.php?option=com_templates&view=template&id=' . $model->getState(
+                    'extension.id'
+                ) . '&file=' . $fileName;
             $this->setRedirect(JRoute::_($url, false));
 
             return false;
@@ -256,7 +262,9 @@ class TemplatesControllerTemplate extends JControllerLegacy
             case 'apply':
 
                 // Redirect back to the edit screen.
-                $url = 'index.php?option=com_templates&view=template&id=' . $model->getState('extension.id') . '&file=' . $fileName;
+                $url = 'index.php?option=com_templates&view=template&id=' . $model->getState(
+                        'extension.id'
+                    ) . '&file=' . $fileName;
                 $this->setRedirect(JRoute::_($url, false));
                 break;
 

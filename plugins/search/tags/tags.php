@@ -82,7 +82,9 @@ class PlgSearchTags extends JPlugin
                 $order = 'a.title DESC';
         }
 
-        $query->select('a.id, a.title, a.alias, a.note, a.published, a.access' . ', a.checked_out, a.checked_out_time, a.created_user_id' . ', a.path, a.parent_id, a.level, a.lft, a.rgt' . ', a.language, a.created_time AS created, a.description');
+        $query->select(
+            'a.id, a.title, a.alias, a.note, a.published, a.access' . ', a.checked_out, a.checked_out_time, a.created_user_id' . ', a.path, a.parent_id, a.level, a.lft, a.rgt' . ', a.language, a.created_time AS created, a.description'
+        );
 
         $case_when_item_alias = ' CASE WHEN ';
         $case_when_item_alias .= $query->charLength('a.alias', '!=', '0');
@@ -149,8 +151,13 @@ class PlgSearchTags extends JPlugin
                         // For 3rd party extensions we need to load the component strings from its sys.ini file
                         $parts = explode('.', $item->type_alias);
                         $comp  = array_shift($parts);
-                        $lang->load($comp, JPATH_SITE, null, false, true) || $lang->load($comp,
-                            JPATH_SITE . '/components/' . $comp, null, false, true);
+                        $lang->load($comp, JPATH_SITE, null, false, true) || $lang->load(
+                            $comp,
+                            JPATH_SITE . '/components/' . $comp,
+                            null,
+                            false,
+                            true
+                        );
 
                         // Making up the type string
                         $type = implode('_', $parts);
@@ -162,11 +169,17 @@ class PlgSearchTags extends JPlugin
                         $new_item->text  = $item->core_body;
 
                         if ($lang->hasKey($type)) {
-                            $new_item->section = JText::sprintf('PLG_SEARCH_TAGS_ITEM_TAGGED_WITH', JText::_($type),
-                                $row->title);
+                            $new_item->section = JText::sprintf(
+                                'PLG_SEARCH_TAGS_ITEM_TAGGED_WITH',
+                                JText::_($type),
+                                $row->title
+                            );
                         } else {
-                            $new_item->section = JText::sprintf('PLG_SEARCH_TAGS_ITEM_TAGGED_WITH',
-                                $item->content_type_title, $row->title);
+                            $new_item->section = JText::sprintf(
+                                'PLG_SEARCH_TAGS_ITEM_TAGGED_WITH',
+                                $item->content_type_title,
+                                $row->title
+                            );
                         }
 
                         $new_item->created    = $item->displayDate;

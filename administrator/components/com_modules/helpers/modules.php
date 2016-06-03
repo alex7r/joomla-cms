@@ -40,8 +40,11 @@ abstract class ModulesHelper
     public static function getActions($moduleId = 0)
     {
         // Log usage of deprecated function
-        JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Get list of actions
         if (empty($moduleId)) {
@@ -96,11 +99,9 @@ abstract class ModulesHelper
     public static function getPositions($clientId, $editPositions = false)
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('DISTINCT(position)')
-                    ->from('#__modules')
-                    ->where($db->quoteName('client_id') . ' = ' . (int)$clientId)
-                    ->order('position');
+        $query = $db->getQuery(true)->select('DISTINCT(position)')->from('#__modules')->where(
+                $db->quoteName('client_id') . ' = ' . (int)$clientId
+            )->order('position');
 
         $db->setQuery($query);
 
@@ -144,10 +145,9 @@ abstract class ModulesHelper
         $query = $db->getQuery(true);
 
         // Build the query.
-        $query->select('element, name, enabled')
-              ->from('#__extensions')
-              ->where('client_id = ' . (int)$clientId)
-              ->where('type = ' . $db->quote('template'));
+        $query->select('element, name, enabled')->from('#__extensions')->where('client_id = ' . (int)$clientId)->where(
+                'type = ' . $db->quote('template')
+            );
 
         if ($state != '') {
             $query->where('enabled = ' . $db->quote($state));
@@ -174,14 +174,12 @@ abstract class ModulesHelper
     public static function getModules($clientId)
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('element AS value, name AS text')
-                    ->from('#__extensions as e')
-                    ->where('e.client_id = ' . (int)$clientId)
-                    ->where('type = ' . $db->quote('module'))
-                    ->join('LEFT', '#__modules as m ON m.module=e.element AND m.client_id=e.client_id')
-                    ->where('m.module IS NOT NULL')
-                    ->group('element,name');
+        $query = $db->getQuery(true)->select('element AS value, name AS text')->from('#__extensions as e')->where(
+                'e.client_id = ' . (int)$clientId
+            )->where('type = ' . $db->quote('module'))->join(
+                'LEFT',
+                '#__modules as m ON m.module=e.element AND m.client_id=e.client_id'
+            )->where('m.module IS NOT NULL')->group('element,name');
 
         $db->setQuery($query);
         $modules = $db->loadObjectList();
@@ -191,8 +189,13 @@ abstract class ModulesHelper
             $extension = $module->value;
             $path      = $clientId ? JPATH_ADMINISTRATOR : JPATH_SITE;
             $source    = $path . "/modules/$extension";
-            $lang->load("$extension.sys", $path, null, false, true) || $lang->load("$extension.sys", $source, null,
-                false, true);
+            $lang->load("$extension.sys", $path, null, false, true) || $lang->load(
+                "$extension.sys",
+                $source,
+                null,
+                false,
+                true
+            );
             $modules[$i]->text = JText::_($module->text);
         }
 
@@ -243,11 +246,31 @@ abstract class ModulesHelper
 
         // Only load the template's language file if it hasn't been already
         if (!$loaded) {
-            $lang->load('tpl_' . $template . '.sys', $path, null, false,
-                false) || $lang->load('tpl_' . $template . '.sys', $path . '/templates/' . $template, null, false,
-                false) || $lang->load('tpl_' . $template . '.sys', $path, $lang->getDefault(), false,
-                false) || $lang->load('tpl_' . $template . '.sys', $path . '/templates/' . $template,
-                $lang->getDefault(), false, false);
+            $lang->load(
+                'tpl_' . $template . '.sys',
+                $path,
+                null,
+                false,
+                false
+            ) || $lang->load(
+                'tpl_' . $template . '.sys',
+                $path . '/templates/' . $template,
+                null,
+                false,
+                false
+            ) || $lang->load(
+                'tpl_' . $template . '.sys',
+                $path,
+                $lang->getDefault(),
+                false,
+                false
+            ) || $lang->load(
+                'tpl_' . $template . '.sys',
+                $path . '/templates/' . $template,
+                $lang->getDefault(),
+                false,
+                false
+            );
         }
 
         $langKey = strtoupper('TPL_' . $template . '_POSITION_' . $position);

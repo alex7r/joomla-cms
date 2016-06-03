@@ -37,7 +37,9 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
     {
         // PHP's `mysql` extension is not present in PHP 7, block instantiation in this environment
         if (PHP_MAJOR_VERSION >= 7) {
-            throw new JDatabaseExceptionUnsupported('This driver is unsupported in PHP 7, please use the MySQLi or PDO MySQL driver instead.');
+            throw new JDatabaseExceptionUnsupported(
+                'This driver is unsupported in PHP 7, please use the MySQLi or PDO MySQL driver instead.'
+            );
         }
 
         // Get some basic values from the options.
@@ -125,8 +127,12 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
         }
 
         // Attempt to connect to the server.
-        if (!($this->connection = @ mysql_connect($this->options['host'], $this->options['user'],
-            $this->options['password'], true))
+        if (!($this->connection = @ mysql_connect(
+            $this->options['host'],
+            $this->options['user'],
+            $this->options['password'],
+            true
+        ))
         ) {
             throw new JDatabaseExceptionConnecting('Could not connect to MySQL.');
         }
@@ -344,8 +350,11 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
         $this->connect();
 
         if (!is_resource($this->connection)) {
-            JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR,
-                'database');
+            JLog::add(
+                JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
+                JLog::ERROR,
+                'database'
+            );
             throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum);
         }
 
@@ -405,8 +414,11 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
                     $this->errorMsg = $this->getErrorMessage($query);
 
                     // Throw the normal query exception.
-                    JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
-                        JLog::ERROR, 'database-error');
+                    JLog::add(
+                        JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
+                        JLog::ERROR,
+                        'database-error'
+                    );
 
                     throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum, $e);
                 }
@@ -416,8 +428,11 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
             } // The server was not disconnected.
             else {
                 // Throw the normal query exception.
-                JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR,
-                    'database-error');
+                JLog::add(
+                    JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
+                    JLog::ERROR,
+                    'database-error'
+                );
 
                 throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum);
             }

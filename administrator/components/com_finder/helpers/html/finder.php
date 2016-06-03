@@ -33,11 +33,9 @@ abstract class JHtmlFinder
 
         // Load the finder types.
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('DISTINCT t.title AS text, t.id AS value')
-                    ->from($db->quoteName('#__finder_types') . ' AS t')
-                    ->join('LEFT', $db->quoteName('#__finder_links') . ' AS l ON l.type_id = t.id')
-                    ->order('t.title ASC');
+        $query = $db->getQuery(true)->select('DISTINCT t.title AS text, t.id AS value')->from(
+                $db->quoteName('#__finder_types') . ' AS t'
+            )->join('LEFT', $db->quoteName('#__finder_links') . ' AS l ON l.type_id = t.id')->order('t.title ASC');
         $db->setQuery($query);
 
         try {
@@ -50,7 +48,11 @@ abstract class JHtmlFinder
         $options = array();
 
         foreach ($rows as $row) {
-            $key       = $lang->hasKey(FinderHelperLanguage::branchPlural($row->text)) ? FinderHelperLanguage::branchPlural($row->text) : $row->text;
+            $key       = $lang->hasKey(
+                FinderHelperLanguage::branchPlural($row->text)
+            ) ? FinderHelperLanguage::branchPlural(
+                $row->text
+            ) : $row->text;
             $string    = JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_($key));
             $options[] = JHtml::_('select.option', $row->value, $string);
         }

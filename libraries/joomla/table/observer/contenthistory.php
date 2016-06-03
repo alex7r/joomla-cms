@@ -103,9 +103,13 @@ class JTableObserverContenthistory extends JTableObserver
         // Needed for PHP < 5.4.0 as it's not passing context $this to closure function
         static::$_myTableForPregreplaceOnly = $this->table;
 
-        $this->contenthistoryHelper->typeAlias = preg_replace_callback('/{([^}]+)}/', function ($matches) {
-            return JTableObserverContenthistory::$_myTableForPregreplaceOnly->{$matches[1]};
-        }, $this->typeAliasPattern);
+        $this->contenthistoryHelper->typeAlias = preg_replace_callback(
+            '/{([^}]+)}/',
+            function ($matches) {
+                return JTableObserverContenthistory::$_myTableForPregreplaceOnly->{$matches[1]};
+            },
+            $this->typeAliasPattern
+        );
     }
 
     /**

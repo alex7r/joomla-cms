@@ -132,8 +132,10 @@ class JFormFieldCheckbox extends JFormField
         JHtml::_('jquery.framework');
         JHtml::_('script', 'system/html5fallback.js', false, true);
 
-        return '<input type="checkbox" name="' . $this->name . '" id="' . $this->id . '" value="' . htmlspecialchars($value,
+        return '<input type="checkbox" name="' . $this->name . '" id="' . $this->id . '" value="' . htmlspecialchars(
+            $value,
             ENT_COMPAT,
-            'UTF-8') . '"' . $class . $checked . $disabled . $onclick . $onchange . $required . $autofocus . ' />';
+            'UTF-8'
+        ) . '"' . $class . $checked . $disabled . $onclick . $onchange . $required . $autofocus . ' />';
     }
 }

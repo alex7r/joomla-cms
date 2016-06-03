@@ -29,7 +29,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                    title="<?php echo JText::_('COM_SEARCH_SEARCH_IN_PHRASE'); ?>"/>
             <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
             <button type="button"
-                    onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                    onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                    'JSEARCH_FILTER_CLEAR'
+                ); ?></button>
         </div>
 
 
@@ -40,8 +42,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <thead>
         <tr>
             <th class="title">
-                <?php echo JHtml::_('grid.sort', 'COM_SEARCH_HEADING_PHRASE', 'a.search_term', $listDirn,
-                    $listOrder); ?>
+                <?php echo JHtml::_(
+                    'grid.sort',
+                    'COM_SEARCH_HEADING_PHRASE',
+                    'a.search_term',
+                    $listDirn,
+                    $listOrder
+                ); ?>
             </th>
             <th class="hits-col">
                 <?php echo JHtml::_('grid.sort', 'JGLOBAL_HITS', 'a.hits', $listDirn, $listOrder); ?>

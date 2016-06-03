@@ -156,8 +156,10 @@ class InstallationModelDatabase extends JModelBase
                     $db_version = $db->getVersion();
                 } catch (RuntimeException $e) {
                     // We did everything we could
-                    $app->enqueueMessage(JText::sprintf('INSTL_DATABASE_COULD_NOT_CONNECT', $e->getMessage()),
-                        'notice');
+                    $app->enqueueMessage(
+                        JText::sprintf('INSTL_DATABASE_COULD_NOT_CONNECT', $e->getMessage()),
+                        'notice'
+                    );
 
                     return false;
                 }
@@ -174,8 +176,13 @@ class InstallationModelDatabase extends JModelBase
         }
 
         if (!$db->isMinimumVersion()) {
-            $app->enqueueMessage(JText::sprintf('INSTL_DATABASE_INVALID_' . strtoupper($type) . '_VERSION',
-                $db_version), 'notice');
+            $app->enqueueMessage(
+                JText::sprintf(
+                    'INSTL_DATABASE_INVALID_' . strtoupper($type) . '_VERSION',
+                    $db_version
+                ),
+                'notice'
+            );
 
             return false;
         }
@@ -351,8 +358,15 @@ class InstallationModelDatabase extends JModelBase
 
         // Get a database object.
         try {
-            return InstallationHelperDatabase::getDbo($options->db_type, $options->db_host, $options->db_user,
-                $options->db_pass, $options->db_name, $options->db_prefix, $options->db_select);
+            return InstallationHelperDatabase::getDbo(
+                $options->db_type,
+                $options->db_host,
+                $options->db_user,
+                $options->db_pass,
+                $options->db_name,
+                $options->db_prefix,
+                $options->db_select
+            );
         } catch (RuntimeException $e) {
             $app->enqueueMessage(JText::sprintf('INSTL_DATABASE_COULD_NOT_CONNECT', $e->getMessage()), 'notice');
 
@@ -435,8 +449,13 @@ class InstallationModelDatabase extends JModelBase
                     try {
                         $db->dropTable($table);
                     } catch (RuntimeException $e) {
-                        JFactory::getApplication()->enqueueMessage(JText::sprintf('INSTL_DATABASE_ERROR_DELETE',
-                            $e->getMessage()), 'notice');
+                        JFactory::getApplication()->enqueueMessage(
+                            JText::sprintf(
+                                'INSTL_DATABASE_ERROR_DELETE',
+                                $e->getMessage()
+                            ),
+                            'notice'
+                        );
                         $return = false;
                     }
                 }
@@ -475,8 +494,13 @@ class InstallationModelDatabase extends JModelBase
                     try {
                         $db->dropTable($backupTable, true);
                     } catch (RuntimeException $e) {
-                        JFactory::getApplication()->enqueueMessage(JText::sprintf('INSTL_DATABASE_ERROR_BACKINGUP',
-                            $e->getMessage()), 'notice');
+                        JFactory::getApplication()->enqueueMessage(
+                            JText::sprintf(
+                                'INSTL_DATABASE_ERROR_BACKINGUP',
+                                $e->getMessage()
+                            ),
+                            'notice'
+                        );
                         $return = false;
                     }
 
@@ -484,8 +508,13 @@ class InstallationModelDatabase extends JModelBase
                     try {
                         $db->renameTable($table, $backupTable, $backup, $prefix);
                     } catch (RuntimeException $e) {
-                        JFactory::getApplication()->enqueueMessage(JText::sprintf('INSTL_DATABASE_ERROR_BACKINGUP',
-                            $e->getMessage()), 'notice');
+                        JFactory::getApplication()->enqueueMessage(
+                            JText::sprintf(
+                                'INSTL_DATABASE_ERROR_BACKINGUP',
+                                $e->getMessage()
+                            ),
+                            'notice'
+                        );
                         $return = false;
                     }
                 }
@@ -555,9 +584,9 @@ class InstallationModelDatabase extends JModelBase
         $serverType = $db->getServerType();
 
         if ($serverType === 'mysql') {
-            $query->clear()
-                  ->update($db->quoteName('#__utf8_conversion'))
-                  ->set($db->quoteName('converted') . ' = ' . ($db->hasUTF8mb4Support() ? 2 : 1));
+            $query->clear()->update($db->quoteName('#__utf8_conversion'))->set(
+                    $db->quoteName('converted') . ' = ' . ($db->hasUTF8mb4Support() ? 2 : 1)
+                );
             $db->setQuery($query);
 
             try {
@@ -596,10 +625,12 @@ class InstallationModelDatabase extends JModelBase
             }
         }
 
-        $query->clear()->insert($db->quoteName('#__schemas'))->columns(array(
-            $db->quoteName('extension_id'),
-            $db->quoteName('version_id')
-        ))->values('700, ' . $db->quote($version));
+        $query->clear()->insert($db->quoteName('#__schemas'))->columns(
+            array(
+                $db->quoteName('extension_id'),
+                $db->quoteName('version_id')
+            )
+        )->values('700, ' . $db->quote($version));
         $db->setQuery($query);
 
         try {
@@ -628,8 +659,13 @@ class InstallationModelDatabase extends JModelBase
 
         foreach ($extensions as $extension) {
             if (!$installer->refreshManifestCache($extension->extension_id)) {
-                $app->enqueueMessage(JText::sprintf('INSTL_DATABASE_COULD_NOT_REFRESH_MANIFEST_CACHE',
-                    $extension->name), 'notice');
+                $app->enqueueMessage(
+                    JText::sprintf(
+                        'INSTL_DATABASE_COULD_NOT_REFRESH_MANIFEST_CACHE',
+                        $extension->name
+                    ),
+                    'notice'
+                );
 
                 return false;
             }
@@ -673,10 +709,9 @@ class InstallationModelDatabase extends JModelBase
             $params = json_encode($params);
 
             // Update the language settings in the language manager.
-            $query->clear()
-                  ->update($db->quoteName('#__extensions'))
-                  ->set($db->quoteName('params') . ' = ' . $db->quote($params))
-                  ->where($db->quoteName('element') . ' = ' . $db->quote('com_languages'));
+            $query->clear()->update($db->quoteName('#__extensions'))->set(
+                    $db->quoteName('params') . ' = ' . $db->quote($params)
+                )->where($db->quoteName('element') . ' = ' . $db->quote('com_languages'));
             $db->setQuery($query);
 
             try {
@@ -899,7 +934,11 @@ class InstallationModelDatabase extends JModelBase
         );
 
         foreach ($updates_array as $table => $field) {
-            $db->setQuery('UPDATE ' . $db->quoteName('#__' . $table) . ' SET ' . $db->quoteName($field) . ' = ' . $db->quote($userId));
+            $db->setQuery(
+                'UPDATE ' . $db->quoteName('#__' . $table) . ' SET ' . $db->quoteName($field) . ' = ' . $db->quote(
+                    $userId
+                )
+            );
             $db->execute();
         }
     }

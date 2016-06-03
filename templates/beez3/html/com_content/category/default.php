@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 
-$app            = JFactory::getApplication();
+$app = JFactory::getApplication();
 $templateparams = $app->getTemplate(true)->params;
 
 
@@ -20,7 +20,9 @@ $pageClass = $this->params->get('pageclass_sfx');
 ?>
 <section class="category-list<?php echo $this->pageclass_sfx; ?>">
     <?php if ($this->params->get('show_page_heading')) : ?>
-<?php if ($this->params->get('show_page_heading') and ($this->params->get('show_category_title') or $this->params->get('page_subheading'))) : ?>
+<?php if ($this->params->get('show_page_heading') and ($this->params->get('show_category_title') or $this->params->get(
+        'page_subheading'
+    ))) : ?>
     <hgroup>
         <?php endif; ?>
         <h1>
@@ -32,13 +34,19 @@ $pageClass = $this->params->get('pageclass_sfx');
         <h2>
             <?php echo $this->escape($this->params->get('page_subheading')); ?>
             <?php if ($this->params->get('show_category_title')) {
-                echo '<span class="subheading-category">' . JHtml::_('content.prepare', $this->category->title, '',
-                        'com_content.category.title') . '</span>';
+                echo '<span class="subheading-category">' . JHtml::_(
+                        'content.prepare',
+                        $this->category->title,
+                        '',
+                        'com_content.category.title'
+                    ) . '</span>';
             }
             ?>
         </h2>
-        <?php if ($this->params->get('show_page_heading') and ($this->params->get('show_category_title',
-                1) or $this->params->get('page_subheading'))) : ?>
+        <?php if ($this->params->get('show_page_heading') and ($this->params->get(
+                'show_category_title',
+                1
+            ) or $this->params->get('page_subheading'))) : ?>
     </hgroup>
 <?php endif; ?>
 <?php endif; ?>
@@ -56,7 +64,10 @@ $pageClass = $this->params->get('pageclass_sfx');
     <?php endif; ?>
 
 
-    <?php if (is_array($this->children[$this->category->id]) && count($this->children[$this->category->id]) > 0 && $this->params->get('maxLevel') != 0) : ?>
+    <?php if (is_array($this->children[$this->category->id]) && count(
+                                                                    $this->children[$this->category->id]
+                                                                ) > 0 && $this->params->get('maxLevel') != 0
+    ) : ?>
         <div class="cat-children">
 
             <?php if ($this->params->get('show_category_title') or $this->params->get('page_subheading')) {

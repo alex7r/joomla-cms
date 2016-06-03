@@ -15,7 +15,11 @@ $input = JFactory::getApplication()->input;
     <div class="span12">
         <div class="span6 column-right">
             <form method="post"
-                  action="<?php echo JRoute::_('index.php?option=com_templates&task=template.createFolder&id=' . $input->getInt('id') . '&file=' . $this->file); ?>"
+                  action="<?php echo JRoute::_(
+                      'index.php?option=com_templates&task=template.createFolder&id=' . $input->getInt(
+                          'id'
+                      ) . '&file=' . $this->file
+                  ); ?>"
                   class="well">
                 <fieldset class="form-inline">
                     <label><?php echo JText::_('COM_TEMPLATES_FOLDER_NAME'); ?></label>

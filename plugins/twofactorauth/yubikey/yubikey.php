@@ -167,8 +167,10 @@ class PlgTwofactorauthYubikey extends JPlugin
         // Warn if the securitycode is empty
         if (array_key_exists('securitycode', $data) && empty($data['securitycode'])) {
             try {
-                JFactory::getApplication()
-                        ->enqueueMessage(JText::_('PLG_TWOFACTORAUTH_YUBIKEY_ERR_VALIDATIONFAILED'), 'error');
+                JFactory::getApplication()->enqueueMessage(
+                        JText::_('PLG_TWOFACTORAUTH_YUBIKEY_ERR_VALIDATIONFAILED'),
+                        'error'
+                    );
             } catch (Exception $exc) {
                 // This only happens when we are in a CLI application. We cannot
                 // enqueue a message, so just do nothing.
@@ -181,8 +183,10 @@ class PlgTwofactorauthYubikey extends JPlugin
         $check = $this->validateYubikeyOtp($data['securitycode']);
 
         if (!$check) {
-            JFactory::getApplication()
-                    ->enqueueMessage(JText::_('PLG_TWOFACTORAUTH_YUBIKEY_ERR_VALIDATIONFAILED'), 'error');
+            JFactory::getApplication()->enqueueMessage(
+                    JText::_('PLG_TWOFACTORAUTH_YUBIKEY_ERR_VALIDATIONFAILED'),
+                    'error'
+                );
 
             // Check failed. Do not change two factor authentication settings.
             return false;

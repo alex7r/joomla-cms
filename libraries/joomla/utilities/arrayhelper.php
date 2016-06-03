@@ -99,8 +99,11 @@ abstract class JArrayHelper
         if (is_array($array)) {
             $obj = ArrayHelper::toObject($array, $class, $recursive);
         } else {
-            JLog::add('This method is typehinted to be an array in \Joomla\Utilities\ArrayHelper::toObject.',
-                JLog::WARNING, 'deprecated');
+            JLog::add(
+                'This method is typehinted to be an array in \Joomla\Utilities\ArrayHelper::toObject.',
+                JLog::WARNING,
+                'deprecated'
+            );
         }
 
         return $obj;
@@ -126,8 +129,11 @@ abstract class JArrayHelper
         if (is_array($array)) {
             $output[] = ArrayHelper::toString($array, $inner_glue, $outer_glue, $keepOuterKey);
         } else {
-            JLog::add('This method is typehinted to be an array in \Joomla\Utilities\ArrayHelper::toString.',
-                JLog::WARNING, 'deprecated');
+            JLog::add(
+                'This method is typehinted to be an array in \Joomla\Utilities\ArrayHelper::toString.',
+                JLog::WARNING,
+                'deprecated'
+            );
         }
 
         return implode($outer_glue, $output);
@@ -210,8 +216,11 @@ abstract class JArrayHelper
         if (is_array($array)) {
             $result = ArrayHelper::getColumn($array, $index);
         } else {
-            JLog::add('This method is typehinted to be an array in \Joomla\Utilities\ArrayHelper::getColumn.',
-                JLog::WARNING, 'deprecated');
+            JLog::add(
+                'This method is typehinted to be an array in \Joomla\Utilities\ArrayHelper::getColumn.',
+                JLog::WARNING,
+                'deprecated'
+            );
         }
 
         return $result;

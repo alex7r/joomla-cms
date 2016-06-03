@@ -213,8 +213,12 @@ abstract class FinderIndexer
 
         // Setup the stemmer.
         if ($data->options->get('stem', 1) && $data->options->get('stemmer', 'porter_en')) {
-            FinderIndexerHelper::$stemmer = FinderIndexerStemmer::getInstance($data->options->get('stemmer',
-                'porter_en'));
+            FinderIndexerHelper::$stemmer = FinderIndexerStemmer::getInstance(
+                $data->options->get(
+                    'stemmer',
+                    'porter_en'
+                )
+            );
         }
 
         // Set the state.

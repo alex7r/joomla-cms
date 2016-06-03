@@ -45,15 +45,25 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 
                     <?php if ($this->params->get('show_articles')) : ?>
                         <th class="item-num-art" id="tableOrdering2">
-                            <?php echo JHtml::_('grid.sort', 'COM_NEWSFEEDS_NUM_ARTICLES', 'a.numarticles', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_NEWSFEEDS_NUM_ARTICLES',
+                                'a.numarticles',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     <?php endif; ?>
 
                     <?php if ($this->params->get('show_link')) : ?>
                         <th class="item-link" id="tableOrdering3">
-                            <?php echo JHtml::_('grid.sort', 'COM_NEWSFEEDS_FEED_LINK', 'a.link', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_NEWSFEEDS_FEED_LINK',
+                                'a.link',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     <?php endif; ?>
 
@@ -70,8 +80,12 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                 <?php endif; ?>
 
                 <td class="item-title">
-                    <a href="<?php echo JRoute::_(NewsFeedsHelperRoute::getNewsfeedRoute($item->slug,
-                        $item->catid)); ?>">
+                    <a href="<?php echo JRoute::_(
+                        NewsFeedsHelperRoute::getNewsfeedRoute(
+                            $item->slug,
+                            $item->catid
+                        )
+                    ); ?>">
                         <?php echo $item->name; ?></a>
                 </td>
 

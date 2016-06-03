@@ -95,10 +95,14 @@ class FOFFormHelper extends JFormHelper
             $altPrefix = 'J';
         }
 
-        $class    = JString::ucfirst($prefix, '_') . 'Form' . JString::ucfirst($entity, '_') . JString::ucfirst($type,
-                '_');
-        $altClass = JString::ucfirst($altPrefix, '_') . 'Form' . JString::ucfirst($entity,
-                '_') . JString::ucfirst($type, '_');
+        $class    = JString::ucfirst($prefix, '_') . 'Form' . JString::ucfirst($entity, '_') . JString::ucfirst(
+                $type,
+                '_'
+            );
+        $altClass = JString::ucfirst($altPrefix, '_') . 'Form' . JString::ucfirst(
+                $entity,
+                '_'
+            ) . JString::ucfirst($type, '_');
 
         if (class_exists($class)) {
             return $class;

@@ -54,7 +54,9 @@ class LanguagesModelOverrides extends JModelList
         $client = in_array($this->state->get('filter.client'), array(0, 'site')) ? 'SITE' : 'ADMINISTRATOR';
 
         // Parse the override.ini file in order to get the keys and strings.
-        $filename = constant('JPATH_' . $client) . '/language/overrides/' . $this->getState('filter.language') . '.override.ini';
+        $filename = constant('JPATH_' . $client) . '/language/overrides/' . $this->getState(
+                'filter.language'
+            ) . '.override.ini';
         $strings  = LanguagesHelper::parseFile($filename);
 
         // Delete the override.ini file if empty.
@@ -68,8 +70,10 @@ class LanguagesModelOverrides extends JModelList
         if ($search != '') {
             $search    = preg_quote($search, '~');
             $matchvals = preg_grep('~' . $search . '~i', $strings);
-            $matchkeys = array_intersect_key($strings,
-                array_flip(preg_grep('~' . $search . '~i', array_keys($strings))));
+            $matchkeys = array_intersect_key(
+                $strings,
+                array_flip(preg_grep('~' . $search . '~i', array_keys($strings)))
+            );
             $strings   = array_merge($matchvals, $matchkeys);
         }
 
@@ -146,13 +150,19 @@ class LanguagesModelOverrides extends JModelList
 
         // Create a single array of them.
         foreach ($site_languages as $tag => $language) {
-            $languages[$tag . '0'] = JText::sprintf('COM_LANGUAGES_VIEW_OVERRIDES_LANGUAGES_BOX_ITEM',
-                $language['name'], JText::_('JSITE'));
+            $languages[$tag . '0'] = JText::sprintf(
+                'COM_LANGUAGES_VIEW_OVERRIDES_LANGUAGES_BOX_ITEM',
+                $language['name'],
+                JText::_('JSITE')
+            );
         }
 
         foreach ($admin_languages as $tag => $language) {
-            $languages[$tag . '1'] = JText::sprintf('COM_LANGUAGES_VIEW_OVERRIDES_LANGUAGES_BOX_ITEM',
-                $language['name'], JText::_('JADMINISTRATOR'));
+            $languages[$tag . '1'] = JText::sprintf(
+                'COM_LANGUAGES_VIEW_OVERRIDES_LANGUAGES_BOX_ITEM',
+                $language['name'],
+                JText::_('JADMINISTRATOR')
+            );
         }
 
         // Sort it by language tag and by client after that.
@@ -189,7 +199,9 @@ class LanguagesModelOverrides extends JModelList
         $client       = $filterclient == 0 ? 'SITE' : 'ADMINISTRATOR';
 
         // Parse the override.ini file in oder to get the keys and strings.
-        $filename = constant('JPATH_' . $client) . '/language/overrides/' . $this->getState('filter.language') . '.override.ini';
+        $filename = constant('JPATH_' . $client) . '/language/overrides/' . $this->getState(
+                'filter.language'
+            ) . '.override.ini';
         $strings  = LanguagesHelper::parseFile($filename);
 
         // Unset strings that shall be deleted
@@ -208,7 +220,9 @@ class LanguagesModelOverrides extends JModelList
         $registry->loadObject($strings);
         $reg = $registry->toString('INI');
 
-        $filename = constant('JPATH_' . $client) . '/language/overrides/' . $this->getState('filter.language') . '.override.ini';
+        $filename = constant('JPATH_' . $client) . '/language/overrides/' . $this->getState(
+                'filter.language'
+            ) . '.override.ini';
 
         if (!JFile::write($filename, $reg)) {
             return false;
@@ -261,8 +275,12 @@ class LanguagesModelOverrides extends JModelList
         $default = JComponentHelper::getParams('com_languages')->get('site') . '0';
 
         $old_language_client = $app->getUserState('com_languages.overrides.filter.language_client', '');
-        $language_client     = $this->getUserStateFromRequest('com_languages.overrides.filter.language_client',
-            'filter_language_client', $default, 'cmd');
+        $language_client     = $this->getUserStateFromRequest(
+            'com_languages.overrides.filter.language_client',
+            'filter_language_client',
+            $default,
+            'cmd'
+        );
 
         if ($old_language_client != $language_client) {
             $client   = substr($language_client, -1);

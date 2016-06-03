@@ -78,8 +78,11 @@ class JFormFieldDirectories extends JFormFieldList
 
         // Convert the values to options.
         foreach ($values as $value) {
-            $options[] = JHtml::_('select.option', str_replace(JPATH_SITE . '/', '', $value),
-                str_replace(JPATH_SITE . '/', '', $values));
+            $options[] = JHtml::_(
+                'select.option',
+                str_replace(JPATH_SITE . '/', '', $value),
+                str_replace(JPATH_SITE . '/', '', $values)
+            );
         }
 
         // Add a null option.

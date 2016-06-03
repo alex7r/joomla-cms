@@ -18,7 +18,8 @@ $lang      = JFactory::getLanguage();
 JText::script('COM_FINDER_INDEX_CONFIRM_PURGE_PROMPT');
 JText::script('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(pressbutton)
 	{
 		if (pressbutton == 'index.purge')
@@ -46,7 +47,8 @@ JFactory::getDocument()->addScriptDeclaration("
 
 		Joomla.submitform(pressbutton);
 	}
-");
+"
+);
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_finder&view=index'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -60,18 +62,24 @@ JFactory::getDocument()->addScriptDeclaration("
             <?php endif; ?>
             <fieldset id="filter-bar">
                 <legend
-                    class="element-invisible"><?php echo JText::sprintf('COM_FINDER_SEARCH_LABEL',
-                        JText::_('COM_FINDER_ITEMS')); ?></legend>
+                    class="element-invisible"><?php echo JText::sprintf(
+                        'COM_FINDER_SEARCH_LABEL',
+                        JText::_('COM_FINDER_ITEMS')
+                    ); ?></legend>
                 <div class="filter-search">
                     <label class="filter-search-lbl"
-                           for="filter_search"><?php echo JText::sprintf('COM_FINDER_SEARCH_LABEL',
-                            JText::_('COM_FINDER_ITEMS')); ?></label>
+                           for="filter_search"><?php echo JText::sprintf(
+                            'COM_FINDER_SEARCH_LABEL',
+                            JText::_('COM_FINDER_ITEMS')
+                        ); ?></label>
                     <input type="text" name="filter_search" id="filter_search"
                            value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
                            title="<?php echo JText::_('COM_FINDER_FILTER_SEARCH_DESCRIPTION'); ?>"/>
                     <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
 
                 <div class="filter-select">
@@ -79,16 +87,26 @@ JFactory::getDocument()->addScriptDeclaration("
                            for="filter_type"><?php echo JText::_('COM_FINDER_INDEX_TYPE_FILTER'); ?></label>
                     <select name="filter_type" id="filter_type">
                         <option value=""><?php echo JText::_('COM_FINDER_INDEX_TYPE_FILTER'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('finder.typeslist'), 'value', 'text',
-                            $this->state->get('filter.type')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('finder.typeslist'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.type')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel"
                            for="filter_state"><?php echo JText::_('COM_FINDER_INDEX_FILTER_BY_STATE'); ?></label>
                     <select name="filter_state" id="filter_state">
                         <option value=""><?php echo JText::_('COM_FINDER_INDEX_FILTER_BY_STATE'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('finder.statelist'), 'value', 'text',
-                            $this->state->get('filter.state')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('finder.statelist'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.state')
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -111,16 +129,31 @@ JFactory::getDocument()->addScriptDeclaration("
                         <?php echo JHtml::_('grid.sort', 'JSTATUS', 'l.published', $listDirn, $listOrder); ?>
                     </th>
                     <th class="nowrap width-5">
-                        <?php echo JHtml::_('grid.sort', 'COM_FINDER_INDEX_HEADING_INDEX_TYPE', 'l.type_id', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_FINDER_INDEX_HEADING_INDEX_TYPE',
+                            'l.type_id',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap width-20">
-                        <?php echo JHtml::_('grid.sort', 'COM_FINDER_INDEX_HEADING_LINK_URL', 'l.url', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_FINDER_INDEX_HEADING_LINK_URL',
+                            'l.url',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="title date-col">
-                        <?php echo JHtml::_('grid.sort', 'COM_FINDER_INDEX_HEADING_INDEX_DATE', 'l.indexdate',
-                            $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_FINDER_INDEX_HEADING_INDEX_DATE',
+                            'l.indexdate',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                 </tr>
                 </thead>
@@ -149,9 +182,17 @@ JFactory::getDocument()->addScriptDeclaration("
                             <?php if ((int)$item->publish_start_date or (int)$item->publish_end_date or (int)$item->start_date or (int)$item->end_date) : ?>
                                 <img src="<?php echo JUri::root(); ?>/media/system/images/calendar.png"
                                      style="border:1px;float:right" class="hasTooltip"
-                                     title="<?php echo JHtml::tooltipText(JText::sprintf('COM_FINDER_INDEX_DATE_INFO',
-                                         $item->publish_start_date, $item->publish_end_date, $item->start_date,
-                                         $item->end_date), '', 0); ?>"/>
+                                     title="<?php echo JHtml::tooltipText(
+                                         JText::sprintf(
+                                             'COM_FINDER_INDEX_DATE_INFO',
+                                             $item->publish_start_date,
+                                             $item->publish_end_date,
+                                             $item->start_date,
+                                             $item->end_date
+                                         ),
+                                         '',
+                                         0
+                                     ); ?>"/>
                             <?php endif; ?>
                             <?php echo $this->escape($item->title); ?>
                         </td>

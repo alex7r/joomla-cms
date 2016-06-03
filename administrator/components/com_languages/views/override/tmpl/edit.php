@@ -23,7 +23,8 @@ JHtml::_('behavior.core');
 JHtml::_('jquery.framework');
 JHtml::_('script', 'overrider/overrider.min.js', false, true, false, true);
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	jQuery(document).ready(function($) {
 		$("#jform_searchstring").on("focus", function() {
 			if (!Joomla.overrider.states.refreshed)
@@ -45,7 +46,8 @@ JFactory::getDocument()->addScriptDeclaration('
 			Joomla.submitform(task, document.getElementById("override-form"));
 		}
 	};
-');
+'
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_languages&id=' . $this->item->key); ?>" method="post"
@@ -53,7 +55,9 @@ JFactory::getDocument()->addScriptDeclaration('
     <div class="row-fluid">
         <div class="span6">
             <fieldset>
-                <legend><?php echo empty($this->item->key) ? JText::_('COM_LANGUAGES_VIEW_OVERRIDE_EDIT_NEW_OVERRIDE_LEGEND') : JText::_('COM_LANGUAGES_VIEW_OVERRIDE_EDIT_EDIT_OVERRIDE_LEGEND'); ?></legend>
+                <legend><?php echo empty($this->item->key) ? JText::_(
+                        'COM_LANGUAGES_VIEW_OVERRIDE_EDIT_NEW_OVERRIDE_LEGEND'
+                    ) : JText::_('COM_LANGUAGES_VIEW_OVERRIDE_EDIT_EDIT_OVERRIDE_LEGEND'); ?></legend>
                 <div class="control-group">
                     <div class="control-label">
                         <?php echo $this->form->getLabel('language'); ?>

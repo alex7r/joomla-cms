@@ -46,8 +46,10 @@ class Wincache extends Storage
      */
     static public function isSupported()
     {
-        return (extension_loaded('wincache') && function_exists('wincache_ucache_get') && !strcmp(ini_get('wincache.ucenabled'),
-                "1"));
+        return (extension_loaded('wincache') && function_exists('wincache_ucache_get') && !strcmp(
+                ini_get('wincache.ucenabled'),
+                "1"
+            ));
     }
 
     /**

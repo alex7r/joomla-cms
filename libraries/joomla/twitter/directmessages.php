@@ -141,7 +141,9 @@ class JTwitterDirectmessages extends JTwitterObject
             $data['screen_name'] = $user;
         } else {
             // We don't have a valid entry
-            throw new RuntimeException('The specified username is not in the correct format; must use integer or string');
+            throw new RuntimeException(
+                'The specified username is not in the correct format; must use integer or string'
+            );
         }
 
         $data['text'] = $text;

@@ -132,8 +132,10 @@ class JFormFieldMenuitem extends JFormFieldGroupedList
 
         if ($result == true) {
             $this->menuType  = (string)$this->element['menu_type'];
-            $this->published = $this->element['published'] ? explode(',',
-                (string)$this->element['published']) : array();
+            $this->published = $this->element['published'] ? explode(
+                ',',
+                (string)$this->element['published']
+            ) : array();
             $this->disable   = $this->element['disable'] ? explode(',', (string)$this->element['disable']) : array();
             $this->language  = $this->element['language'] ? explode(',', (string)$this->element['language']) : array();
         }
@@ -161,10 +163,9 @@ class JFormFieldMenuitem extends JFormFieldGroupedList
         if ($menuType) {
             // If the menutype is empty, group the items by menutype.
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select($db->quoteName('title'))
-                        ->from($db->quoteName('#__menu_types'))
-                        ->where($db->quoteName('menutype') . ' = ' . $db->quote($menuType));
+            $query = $db->getQuery(true)->select($db->quoteName('title'))->from($db->quoteName('#__menu_types'))->where(
+                    $db->quoteName('menutype') . ' = ' . $db->quote($menuType)
+                );
             $db->setQuery($query);
 
             try {
@@ -187,8 +188,14 @@ class JFormFieldMenuitem extends JFormFieldGroupedList
                     $lang = '';
                 }
 
-                $groups[$menuTitle][] = JHtml::_('select.option', $link->value, $levelPrefix . $link->text . $lang,
-                    'value', 'text', in_array($link->type, $this->disable));
+                $groups[$menuTitle][] = JHtml::_(
+                    'select.option',
+                    $link->value,
+                    $levelPrefix . $link->text . $lang,
+                    'value',
+                    'text',
+                    in_array($link->type, $this->disable)
+                );
             }
         } // Build groups for all menu types.
         else {
@@ -208,8 +215,14 @@ class JFormFieldMenuitem extends JFormFieldGroupedList
                         $lang = '';
                     }
 
-                    $groups[$menu->title][] = JHtml::_('select.option', $link->value,
-                        $levelPrefix . $link->text . $lang, 'value', 'text', in_array($link->type, $this->disable));
+                    $groups[$menu->title][] = JHtml::_(
+                        'select.option',
+                        $link->value,
+                        $levelPrefix . $link->text . $lang,
+                        'value',
+                        'text',
+                        in_array($link->type, $this->disable)
+                    );
                 }
             }
         }

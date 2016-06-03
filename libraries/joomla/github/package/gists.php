@@ -44,11 +44,13 @@ class JGithubPackageGists extends JGithubPackage
         $path = '/gists';
 
         // Build the request data.
-        $data = json_encode(array(
-            'files'       => $this->buildFileData((array)$files),
-            'public'      => (bool)$public,
-            'description' => $description
-        ));
+        $data = json_encode(
+            array(
+                'files'       => $this->buildFileData((array)$files),
+                'public'      => (bool)$public,
+                'description' => $description
+            )
+        );
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);

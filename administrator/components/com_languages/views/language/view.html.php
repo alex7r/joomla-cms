@@ -31,8 +31,8 @@ class LanguagesViewLanguage extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $this->item  = $this->get('Item');
-        $this->form  = $this->get('Form');
+        $this->item = $this->get('Item');
+        $this->form = $this->get('Form');
         $this->state = $this->get('State');
         $this->canDo = JHelperContent::getActions('com_languages');
 
@@ -62,8 +62,12 @@ class LanguagesViewLanguage extends JViewLegacy
         $isNew = empty($this->item->lang_id);
         $canDo = $this->canDo;
 
-        JToolbarHelper::title(JText::_($isNew ? 'COM_LANGUAGES_VIEW_LANGUAGE_EDIT_NEW_TITLE' : 'COM_LANGUAGES_VIEW_LANGUAGE_EDIT_EDIT_TITLE'),
-            'comments-2 langmanager');
+        JToolbarHelper::title(
+            JText::_(
+                $isNew ? 'COM_LANGUAGES_VIEW_LANGUAGE_EDIT_NEW_TITLE' : 'COM_LANGUAGES_VIEW_LANGUAGE_EDIT_EDIT_TITLE'
+            ),
+            'comments-2 langmanager'
+        );
 
         if (($isNew && $canDo->get('core.create')) || (!$isNew && $canDo->get('core.edit'))) {
             JToolbarHelper::apply('language.apply');

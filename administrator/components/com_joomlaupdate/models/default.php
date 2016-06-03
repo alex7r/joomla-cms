@@ -66,12 +66,14 @@ class JoomlaupdateModelDefault extends JModelLegacy
         }
 
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('us') . '.*')
-                    ->from($db->quoteName('#__update_sites_extensions') . ' AS ' . $db->quoteName('map'))
-                    ->join('INNER',
-                        $db->quoteName('#__update_sites') . ' AS ' . $db->quoteName('us') . ' ON (' . 'us.update_site_id = map.update_site_id)')
-                    ->where('map.extension_id = ' . $db->quote(700));
+        $query = $db->getQuery(true)->select($db->quoteName('us') . '.*')->from(
+                $db->quoteName('#__update_sites_extensions') . ' AS ' . $db->quoteName('map')
+            )->join(
+                'INNER',
+                $db->quoteName('#__update_sites') . ' AS ' . $db->quoteName(
+                    'us'
+                ) . ' ON (' . 'us.update_site_id = map.update_site_id)'
+            )->where('map.extension_id = ' . $db->quote(700));
         $db->setQuery($query);
         $update_site = $db->loadObject();
 
@@ -82,9 +84,9 @@ class JoomlaupdateModelDefault extends JModelLegacy
             $db->updateObject('#__update_sites', $update_site, 'update_site_id');
 
             // Remove cached updates.
-            $query->clear()
-                  ->delete($db->quoteName('#__updates'))
-                  ->where($db->quoteName('extension_id') . ' = ' . $db->quote('700'));
+            $query->clear()->delete($db->quoteName('#__updates'))->where(
+                    $db->quoteName('extension_id') . ' = ' . $db->quote('700')
+                );
             $db->setQuery($query);
             $db->execute();
         }
@@ -162,9 +164,9 @@ class JoomlaupdateModelDefault extends JModelLegacy
         $update_site->update_site_id       = 1;
         $db->updateObject('#__update_sites', $update_site, 'update_site_id');
 
-        $query = $db->getQuery(true)
-                    ->delete($db->quoteName('#__updates'))
-                    ->where($db->quoteName('update_site_id') . ' = ' . $db->quote('1'));
+        $query = $db->getQuery(true)->delete($db->quoteName('#__updates'))->where(
+                $db->quoteName('update_site_id') . ' = ' . $db->quote('1')
+            );
         $db->setQuery($query);
 
         if ($db->execute()) {
@@ -234,10 +236,9 @@ class JoomlaupdateModelDefault extends JModelLegacy
 
         // Fetch the update information from the database.
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('*')
-                    ->from($db->quoteName('#__updates'))
-                    ->where($db->quoteName('extension_id') . ' = ' . $db->quote(700));
+        $query = $db->getQuery(true)->select('*')->from($db->quoteName('#__updates'))->where(
+                $db->quoteName('extension_id') . ' = ' . $db->quote(700)
+            );
         $db->setQuery($query);
         $updateObject = $db->loadObject();
 
@@ -317,8 +318,12 @@ class JoomlaupdateModelDefault extends JModelLegacy
         $app->setUserState('com_joomlaupdate.password', $password);
 
         // Do we have to use FTP?
-        $method = JFactory::getApplication()
-                          ->getUserStateFromRequest('com_joomlaupdate.method', 'method', 'direct', 'cmd');
+        $method = JFactory::getApplication()->getUserStateFromRequest(
+                'com_joomlaupdate.method',
+                'method',
+                'direct',
+                'cmd'
+            );
 
         // Get the absolute path to site's root.
         $siteroot = JPATH_SITE;
@@ -384,8 +389,13 @@ ENDDATA;
             // If the tempdir is not writable, create a new writable subdirectory.
             if (!$writable) {
                 $FTPOptions = JClientHelper::getCredentials('ftp');
-                $ftp        = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], null,
-                    $FTPOptions['user'], $FTPOptions['pass']);
+                $ftp        = JClientFtp::getInstance(
+                    $FTPOptions['host'],
+                    $FTPOptions['port'],
+                    null,
+                    $FTPOptions['user'],
+                    $FTPOptions['pass']
+                );
                 $dest       = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $tempdir . '/admintools'), '/');
 
                 if (!@mkdir($tempdir . '/admintools')) {
@@ -415,10 +425,17 @@ ENDDATA;
                 // If it exists and it is unwritable, try creating a writable admintools subdirectory.
                 if (!is_writable($tempdir)) {
                     $FTPOptions = JClientHelper::getCredentials('ftp');
-                    $ftp        = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], null,
-                        $FTPOptions['user'], $FTPOptions['pass']);
-                    $dest       = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $tempdir . '/admintools'),
-                        '/');
+                    $ftp        = JClientFtp::getInstance(
+                        $FTPOptions['host'],
+                        $FTPOptions['port'],
+                        null,
+                        $FTPOptions['user'],
+                        $FTPOptions['pass']
+                    );
+                    $dest       = JPath::clean(
+                        str_replace(JPATH_ROOT, $FTPOptions['root'], $tempdir . '/admintools'),
+                        '/'
+                    );
 
                     if (!@mkdir($tempdir . '/admintools')) {
                         $ftp->mkdir($dest);
@@ -578,8 +595,13 @@ ENDDATA;
             $db->execute();
         } catch (RuntimeException $e) {
             // Install failed, roll back changes.
-            $installer->abort(JText::sprintf('JLIB_INSTALLER_ABORT_FILE_ROLLBACK', JText::_('JLIB_INSTALLER_UPDATE'),
-                $e->getMessage()));
+            $installer->abort(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ABORT_FILE_ROLLBACK',
+                    JText::_('JLIB_INSTALLER_UPDATE'),
+                    $e->getMessage()
+                )
+            );
 
             return false;
         }
@@ -599,8 +621,13 @@ ENDDATA;
 
             if (!$row->store()) {
                 // Install failed, roll back changes.
-                $installer->abort(JText::sprintf('JLIB_INSTALLER_ABORT_FILE_ROLLBACK',
-                    JText::_('JLIB_INSTALLER_UPDATE'), $row->getError()));
+                $installer->abort(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_FILE_ROLLBACK',
+                        JText::_('JLIB_INSTALLER_UPDATE'),
+                        $row->getError()
+                    )
+                );
 
                 return false;
             }
@@ -761,14 +788,20 @@ ENDDATA;
 
         // Is the PHP tmp directory missing?
         if ($userfile['error'] && ($userfile['error'] == UPLOAD_ERR_NO_TMP_DIR)) {
-            throw new RuntimeException(JText::_('COM_INSTALLER_MSG_INSTALL_WARNINSTALLUPLOADERROR') . '<br />' . JText::_('COM_INSTALLER_MSG_WARNINGS_PHPUPLOADNOTSET'),
-                500);
+            throw new RuntimeException(
+                JText::_('COM_INSTALLER_MSG_INSTALL_WARNINSTALLUPLOADERROR') . '<br />' . JText::_(
+                    'COM_INSTALLER_MSG_WARNINGS_PHPUPLOADNOTSET'
+                ), 500
+            );
         }
 
         // Is the max upload size too small in php.ini?
         if ($userfile['error'] && ($userfile['error'] == UPLOAD_ERR_INI_SIZE)) {
-            throw new RuntimeException(JText::_('COM_INSTALLER_MSG_INSTALL_WARNINSTALLUPLOADERROR') . '<br />' . JText::_('COM_INSTALLER_MSG_WARNINGS_SMALLUPLOADSIZE'),
-                500);
+            throw new RuntimeException(
+                JText::_('COM_INSTALLER_MSG_INSTALL_WARNINSTALLUPLOADERROR') . '<br />' . JText::_(
+                    'COM_INSTALLER_MSG_WARNINGS_SMALLUPLOADSIZE'
+                ), 500
+            );
         }
 
         // Check if there was a different problem uploading the file.

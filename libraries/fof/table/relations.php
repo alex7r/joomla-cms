@@ -140,9 +140,16 @@ class FOFTableRelations
                 }
 
                 if (isset($relation['pivotTable'])) {
-                    $this->addMultipleRelation($relation['itemName'], $relation['tableClass'], $relation['localKey'],
-                        $relation['ourPivotKey'], $relation['theirPivotKey'], $relation['remoteKey'],
-                        $relation['pivotTable'], $relation['default']);
+                    $this->addMultipleRelation(
+                        $relation['itemName'],
+                        $relation['tableClass'],
+                        $relation['localKey'],
+                        $relation['ourPivotKey'],
+                        $relation['theirPivotKey'],
+                        $relation['remoteKey'],
+                        $relation['pivotTable'],
+                        $relation['default']
+                    );
                 } else {
                     $method = 'add' . ucfirst($relation['type']) . 'Relation';
 
@@ -150,8 +157,13 @@ class FOFTableRelations
                         continue;
                     }
 
-                    $this->$method($relation['itemName'], $relation['tableClass'], $relation['localKey'],
-                        $relation['remoteKey'], $relation['default']);
+                    $this->$method(
+                        $relation['itemName'],
+                        $relation['tableClass'],
+                        $relation['localKey'],
+                        $relation['remoteKey'],
+                        $relation['default']
+                    );
                 }
             }
         }
@@ -246,8 +258,16 @@ class FOFTableRelations
         $theirPivotKey = null;
         $pivotTable    = null;
 
-        $this->normaliseParameters(false, $itemName, $tableClass, $localKey, $remoteKey, $ourPivotKey, $theirPivotKey,
-            $pivotTable);
+        $this->normaliseParameters(
+            false,
+            $itemName,
+            $tableClass,
+            $localKey,
+            $remoteKey,
+            $ourPivotKey,
+            $theirPivotKey,
+            $pivotTable
+        );
 
         $this->relations[$relationType][$itemName] = array(
             'tableClass' => $tableClass,
@@ -296,7 +316,9 @@ class FOFTableRelations
                 $tableClassParts[0] = 'J';
             }
 
-            $tableClass = ucfirst($tableClassParts[0]) . 'Table' . ucfirst(FOFInflector::singularize($tableClassParts[1]));
+            $tableClass = ucfirst($tableClassParts[0]) . 'Table' . ucfirst(
+                    FOFInflector::singularize($tableClassParts[1])
+                );
         }
 
         // Make sure we have both a local and remote key
@@ -338,7 +360,9 @@ class FOFTableRelations
         }
 
         if (empty($pivotTable)) {
-            $pivotTable = '#__' . strtolower($this->componentName) . '_' . strtolower(FOFInflector::pluralize($this->tableType)) . '_';
+            $pivotTable = '#__' . strtolower($this->componentName) . '_' . strtolower(
+                    FOFInflector::pluralize($this->tableType)
+                ) . '_';
 
             $itemNameParts = explode('_', $itemName);
             $lastPart      = array_pop($itemNameParts);
@@ -376,8 +400,17 @@ class FOFTableRelations
             $localKey = $this->table->getKeyName();
         }
 
-        $this->addBespokePivotRelation('multiple', $itemName, $tableClass, $localKey, $remoteKey, $ourPivotKey,
-            $theirPivotKey, $glueTable, $default);
+        $this->addBespokePivotRelation(
+            'multiple',
+            $itemName,
+            $tableClass,
+            $localKey,
+            $remoteKey,
+            $ourPivotKey,
+            $theirPivotKey,
+            $glueTable,
+            $default
+        );
     }
 
     /**
@@ -406,8 +439,16 @@ class FOFTableRelations
         $pivotTable,
         $default
     ) {
-        $this->normaliseParameters(true, $itemName, $tableClass, $localKey, $remoteKey, $ourPivotKey, $theirPivotKey,
-            $pivotTable);
+        $this->normaliseParameters(
+            true,
+            $itemName,
+            $tableClass,
+            $localKey,
+            $remoteKey,
+            $ourPivotKey,
+            $theirPivotKey,
+            $pivotTable
+        );
 
         $this->relations[$relationType][$itemName] = array(
             'tableClass'    => $tableClass,
@@ -651,13 +692,22 @@ class FOFTableRelations
         }
 
         if (empty($itemName)) {
-            throw new RuntimeException(sprintf('Default parent relation for %s not found',
-                $this->table->getTableName()), 500);
+            throw new RuntimeException(
+                sprintf(
+                    'Default parent relation for %s not found',
+                    $this->table->getTableName()
+                ), 500
+            );
         }
 
         if (!isset($this->relations['parent'][$itemName])) {
-            throw new RuntimeException(sprintf('Parent relation %s for %s not found', $itemName,
-                $this->table->getTableName()), 500);
+            throw new RuntimeException(
+                sprintf(
+                    'Parent relation %s for %s not found',
+                    $itemName,
+                    $this->table->getTableName()
+                ), 500
+            );
         }
 
         return $this->getTableFromRelation($this->relations['parent'][$itemName]);
@@ -680,8 +730,9 @@ class FOFTableRelations
     {
         // Sanity checks
         if (!isset($relation['tableClass']) || !isset($relation['remoteKey']) || !isset($relation['localKey']) || !$relation['tableClass'] || !$relation['remoteKey'] || !$relation['localKey']) {
-            throw new InvalidArgumentException('Missing array index for the ' . __METHOD__ . ' method. Please check method signature',
-                500);
+            throw new InvalidArgumentException(
+                'Missing array index for the ' . __METHOD__ . ' method. Please check method signature', 500
+            );
         }
 
         // Get a table object from the table class name
@@ -692,8 +743,10 @@ class FOFTableRelations
             throw new InvalidArgumentException('Invalid table class named. It should be something like FooTableBar');
         }
 
-        $table = FOFTable::getInstance($tableClassParts[2],
-            ucfirst($tableClassParts[0]) . ucfirst($tableClassParts[1]));
+        $table = FOFTable::getInstance(
+            $tableClassParts[2],
+            ucfirst($tableClassParts[0]) . ucfirst($tableClassParts[1])
+        );
 
         // Get the table name
         $tableName = $table->getTableName();
@@ -707,8 +760,9 @@ class FOFTableRelations
 
         // If there's no value for the primary key, let's stop here
         if (!$value) {
-            throw new RuntimeException('Missing value for the primary key of the table ' . $this->table->getTableName(),
-                500);
+            throw new RuntimeException(
+                'Missing value for the primary key of the table ' . $this->table->getTableName(), 500
+            );
         }
 
         // This is required to prevent one relation from killing the db cursor used in a different relation...
@@ -716,17 +770,21 @@ class FOFTableRelations
         $oldDb->disconnect(); // YES, WE DO NEED TO DISCONNECT BEFORE WE CLONE THE DB OBJECT. ARGH!
         $db = clone $oldDb;
 
-        $query = $db->getQuery(true)
-                    ->select('*')
-                    ->from($db->qn($tableName))
-                    ->where($db->qn($remoteKey) . ' = ' . $db->q($value));
+        $query = $db->getQuery(true)->select('*')->from($db->qn($tableName))->where(
+                $db->qn($remoteKey) . ' = ' . $db->q($value)
+            );
         $db->setQuery($query, 0, 1);
 
         $data = $db->loadObject();
 
         if (!is_object($data)) {
-            throw new RuntimeException(sprintf('Cannot load item from relation against table %s column %s', $tableName,
-                $remoteKey), 500);
+            throw new RuntimeException(
+                sprintf(
+                    'Cannot load item from relation against table %s column %s',
+                    $tableName,
+                    $remoteKey
+                ), 500
+            );
         }
 
         $table->bind($data);
@@ -750,13 +808,19 @@ class FOFTableRelations
         }
 
         if (empty($itemName)) {
-            throw new RuntimeException(sprintf('Default child relation for %s not found', $this->table->getTableName()),
-                500);
+            throw new RuntimeException(
+                sprintf('Default child relation for %s not found', $this->table->getTableName()), 500
+            );
         }
 
         if (!isset($this->relations['child'][$itemName])) {
-            throw new RuntimeException(sprintf('Child relation %s for %s not found', $itemName,
-                $this->table->getTableName()), 500);
+            throw new RuntimeException(
+                sprintf(
+                    'Child relation %s for %s not found',
+                    $itemName,
+                    $this->table->getTableName()
+                ), 500
+            );
         }
 
         return $this->getTableFromRelation($this->relations['child'][$itemName]);
@@ -794,8 +858,9 @@ class FOFTableRelations
                 break;
 
             default:
-                throw new RuntimeException("Invalid relation type $type for returning a collection of related items",
-                    500);
+                throw new RuntimeException(
+                    "Invalid relation type $type for returning a collection of related items", 500
+                );
                 break;
         }
     }
@@ -815,13 +880,22 @@ class FOFTableRelations
             $itemName = $this->defaultRelation['children'];
         }
         if (empty($itemName)) {
-            throw new RuntimeException(sprintf('Default children relation for %s not found',
-                $this->table->getTableName()), 500);
+            throw new RuntimeException(
+                sprintf(
+                    'Default children relation for %s not found',
+                    $this->table->getTableName()
+                ), 500
+            );
         }
 
         if (!isset($this->relations['children'][$itemName])) {
-            throw new RuntimeException(sprintf('Children relation %s for %s not found', $itemName,
-                $this->table->getTableName()), 500);
+            throw new RuntimeException(
+                sprintf(
+                    'Children relation %s for %s not found',
+                    $itemName,
+                    $this->table->getTableName()
+                ), 500
+            );
         }
 
         return $this->getIteratorFromRelation($this->relations['children'][$itemName]);
@@ -847,14 +921,16 @@ class FOFTableRelations
     {
         // Sanity checks
         if (!isset($relation['tableClass']) || !isset($relation['remoteKey']) || !isset($relation['localKey']) || !$relation['tableClass'] || !$relation['remoteKey'] || !$relation['localKey']) {
-            throw new InvalidArgumentException('Missing array index for the ' . __METHOD__ . ' method. Please check method signature',
-                500);
+            throw new InvalidArgumentException(
+                'Missing array index for the ' . __METHOD__ . ' method. Please check method signature', 500
+            );
         }
 
         if (array_key_exists('pivotTable', $relation)) {
             if (!isset($relation['theirPivotKey']) || !isset($relation['ourPivotKey']) || !$relation['pivotTable'] || !$relation['theirPivotKey'] || !$relation['ourPivotKey']) {
-                throw new InvalidArgumentException('Missing array index for the ' . __METHOD__ . ' method. Please check method signature',
-                    500);
+                throw new InvalidArgumentException(
+                    'Missing array index for the ' . __METHOD__ . ' method. Please check method signature', 500
+                );
             }
         }
 
@@ -866,8 +942,10 @@ class FOFTableRelations
             throw new InvalidArgumentException('Invalid table class named. It should be something like FooTableBar');
         }
 
-        $table = FOFTable::getInstance($tableClassParts[2],
-            ucfirst($tableClassParts[0]) . ucfirst($tableClassParts[1]));
+        $table = FOFTable::getInstance(
+            $tableClassParts[2],
+            ucfirst($tableClassParts[0]) . ucfirst($tableClassParts[1])
+        );
 
         // Get the table name
         $tableName = $table->getTableName();
@@ -881,8 +959,9 @@ class FOFTableRelations
 
         // If there's no value for the primary key, let's stop here
         if (!$value) {
-            throw new RuntimeException('Missing value for the primary key of the table ' . $this->table->getTableName(),
-                500);
+            throw new RuntimeException(
+                'Missing value for the primary key of the table ' . $this->table->getTableName(), 500
+            );
         }
 
         // This is required to prevent one relation from killing the db cursor used in a different relation...
@@ -901,10 +980,9 @@ class FOFTableRelations
             $query->where($db->qn($remoteKey) . ' = ' . $db->q($value));
         } // If we have a pivot table we have to do a subquery
         else {
-            $subQuery = $db->getQuery(true)
-                           ->select($db->qn($relation['theirPivotKey']))
-                           ->from($db->qn($relation['pivotTable']))
-                           ->where($db->qn($relation['ourPivotKey']) . ' = ' . $db->q($value));
+            $subQuery = $db->getQuery(true)->select($db->qn($relation['theirPivotKey']))->from(
+                    $db->qn($relation['pivotTable'])
+                )->where($db->qn($relation['ourPivotKey']) . ' = ' . $db->q($value));
             $query->where($db->qn($remoteKey) . ' IN (' . $subQuery . ')');
         }
 
@@ -933,13 +1011,22 @@ class FOFTableRelations
         }
 
         if (empty($itemName)) {
-            throw new RuntimeException(sprintf('Default multiple relation for %s not found',
-                $this->table->getTableName()), 500);
+            throw new RuntimeException(
+                sprintf(
+                    'Default multiple relation for %s not found',
+                    $this->table->getTableName()
+                ), 500
+            );
         }
 
         if (!isset($this->relations['multiple'][$itemName])) {
-            throw new RuntimeException(sprintf('Multiple relation %s for %s not found', $itemName,
-                $this->table->getTableName()), 500);
+            throw new RuntimeException(
+                sprintf(
+                    'Multiple relation %s for %s not found',
+                    $itemName,
+                    $this->table->getTableName()
+                ), 500
+            );
         }
 
         return $this->getIteratorFromRelation($this->relations['multiple'][$itemName]);
@@ -961,20 +1048,31 @@ class FOFTableRelations
             $itemName = $this->defaultRelation['parent'];
         }
         if (empty($itemName)) {
-            throw new RuntimeException(sprintf('Default siblings relation for %s not found',
-                $this->table->getTableName()), 500);
+            throw new RuntimeException(
+                sprintf(
+                    'Default siblings relation for %s not found',
+                    $this->table->getTableName()
+                ), 500
+            );
         }
 
         if (!isset($this->relations['parent'][$itemName])) {
-            throw new RuntimeException(sprintf('Sibling relation %s for %s not found', $itemName,
-                $this->table->getTableName()), 500);
+            throw new RuntimeException(
+                sprintf(
+                    'Sibling relation %s for %s not found',
+                    $itemName,
+                    $this->table->getTableName()
+                ), 500
+            );
         }
 
         // Get my table class
         $tableName      = $this->table->getTableName();
         $tableName      = str_replace('#__', '', $tableName);
         $tableNameParts = explode('_', $tableName, 2);
-        $tableClass     = ucfirst($tableNameParts[0]) . 'Table' . ucfirst(FOFInflector::singularize($tableNameParts[1]));
+        $tableClass     = ucfirst($tableNameParts[0]) . 'Table' . ucfirst(
+                FOFInflector::singularize($tableNameParts[1])
+            );
 
         $parentRelation = $this->relations['parent'][$itemName];
         $relation       = array(

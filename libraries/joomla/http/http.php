@@ -103,8 +103,14 @@ class JHttp
             $timeout = $this->options->get('timeout');
         }
 
-        return $this->transport->request('OPTIONS', new JUri($url), null, $headers, $timeout,
-            $this->options->get('userAgent', null));
+        return $this->transport->request(
+            'OPTIONS',
+            new JUri($url),
+            null,
+            $headers,
+            $timeout,
+            $this->options->get('userAgent', null)
+        );
     }
 
     /**
@@ -134,8 +140,14 @@ class JHttp
             $timeout = $this->options->get('timeout');
         }
 
-        return $this->transport->request('HEAD', new JUri($url), null, $headers, $timeout,
-            $this->options->get('userAgent', null));
+        return $this->transport->request(
+            'HEAD',
+            new JUri($url),
+            null,
+            $headers,
+            $timeout,
+            $this->options->get('userAgent', null)
+        );
     }
 
     /**
@@ -165,8 +177,14 @@ class JHttp
             $timeout = $this->options->get('timeout');
         }
 
-        return $this->transport->request('GET', new JUri($url), null, $headers, $timeout,
-            $this->options->get('userAgent', null));
+        return $this->transport->request(
+            'GET',
+            new JUri($url),
+            null,
+            $headers,
+            $timeout,
+            $this->options->get('userAgent', null)
+        );
     }
 
     /**
@@ -197,8 +215,14 @@ class JHttp
             $timeout = $this->options->get('timeout');
         }
 
-        return $this->transport->request('POST', new JUri($url), $data, $headers, $timeout,
-            $this->options->get('userAgent', null));
+        return $this->transport->request(
+            'POST',
+            new JUri($url),
+            $data,
+            $headers,
+            $timeout,
+            $this->options->get('userAgent', null)
+        );
     }
 
     /**
@@ -229,8 +253,14 @@ class JHttp
             $timeout = $this->options->get('timeout');
         }
 
-        return $this->transport->request('PUT', new JUri($url), $data, $headers, $timeout,
-            $this->options->get('userAgent', null));
+        return $this->transport->request(
+            'PUT',
+            new JUri($url),
+            $data,
+            $headers,
+            $timeout,
+            $this->options->get('userAgent', null)
+        );
     }
 
     /**
@@ -260,8 +290,14 @@ class JHttp
             $timeout = $this->options->get('timeout');
         }
 
-        return $this->transport->request('DELETE', new JUri($url), null, $headers, $timeout,
-            $this->options->get('userAgent', null));
+        return $this->transport->request(
+            'DELETE',
+            new JUri($url),
+            null,
+            $headers,
+            $timeout,
+            $this->options->get('userAgent', null)
+        );
     }
 
     /**
@@ -291,8 +327,14 @@ class JHttp
             $timeout = $this->options->get('timeout');
         }
 
-        return $this->transport->request('TRACE', new JUri($url), null, $headers, $timeout,
-            $this->options->get('userAgent', null));
+        return $this->transport->request(
+            'TRACE',
+            new JUri($url),
+            null,
+            $headers,
+            $timeout,
+            $this->options->get('userAgent', null)
+        );
     }
 
     /**
@@ -323,7 +365,13 @@ class JHttp
             $timeout = $this->options->get('timeout');
         }
 
-        return $this->transport->request('PATCH', new JUri($url), $data, $headers, $timeout,
-            $this->options->get('userAgent', null));
+        return $this->transport->request(
+            'PATCH',
+            new JUri($url),
+            $data,
+            $headers,
+            $timeout,
+            $this->options->get('userAgent', null)
+        );
     }
 }

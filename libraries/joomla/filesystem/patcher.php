@@ -383,8 +383,13 @@ class JFilesystemPatcher
 
                         for ($l = $src_line; $l < $src_bottom; $l++) {
                             if ($src_lines[$l] != $source[$l - $src_line]) {
-                                throw new RuntimeException(JText::sprintf('JLIB_FILESYSTEM_PATCHER_FAILED_VERIFY', $src,
-                                    $l));
+                                throw new RuntimeException(
+                                    JText::sprintf(
+                                        'JLIB_FILESYSTEM_PATCHER_FAILED_VERIFY',
+                                        $src,
+                                        $l
+                                    )
+                                );
                             }
                         }
 

@@ -13,9 +13,9 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
-$user      = JFactory::getUser();
+$user = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_users&view=notes'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -44,20 +44,40 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                             <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                         </th>
                         <th class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_SUBJECT', 'a.subject', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_USERS_HEADING_SUBJECT',
+                                'a.subject',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="20%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_USER', 'u.name', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_USERS_HEADING_USER',
+                                'u.name',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone hidden-tablet">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_REVIEW', 'a.review_time',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_USERS_HEADING_REVIEW',
+                                'a.review_time',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ID',
+                                'a.id',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -71,10 +91,14 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     <tbody>
                     <?php foreach ($this->items as $i => $item) :
                         $canEdit = $user->authorise('core.edit', 'com_users.category.' . $item->catid);
-                        $canCheckin = $user->authorise('core.admin',
-                                'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
-                        $canChange = $user->authorise('core.edit.state',
-                                'com_users.category.' . $item->catid) && $canCheckin;
+                        $canCheckin = $user->authorise(
+                                'core.admin',
+                                'com_checkin'
+                            ) || $item->checked_out == $user->get('id') || $item->checked_out == 0;
+                        $canChange = $user->authorise(
+                                'core.edit.state',
+                                'com_users.category.' . $item->catid
+                            ) && $canCheckin;
                         $subject = $item->subject ? $item->subject : JText::_('COM_USERS_EMPTY_SUBJECT');
                         ?>
                         <tr class="row<?php echo $i % 2; ?>">
@@ -83,14 +107,28 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                             </td>
                             <td class="center">
                                 <div class="btn-group">
-                                    <?php echo JHtml::_('jgrid.published', $item->state, $i, 'notes.', $canChange, 'cb',
-                                        $item->publish_up, $item->publish_down); ?>
+                                    <?php echo JHtml::_(
+                                        'jgrid.published',
+                                        $item->state,
+                                        $i,
+                                        'notes.',
+                                        $canChange,
+                                        'cb',
+                                        $item->publish_up,
+                                        $item->publish_down
+                                    ); ?>
                                     <?php // Create dropdown items and render the dropdown list.
                                     if ($canChange) {
-                                        JHtml::_('actionsdropdown.' . ((int)$item->state === 2 ? 'un' : '') . 'archive',
-                                            'cb' . $i, 'notes');
-                                        JHtml::_('actionsdropdown.' . ((int)$item->state === -2 ? 'un' : '') . 'trash',
-                                            'cb' . $i, 'notes');
+                                        JHtml::_(
+                                            'actionsdropdown.' . ((int)$item->state === 2 ? 'un' : '') . 'archive',
+                                            'cb' . $i,
+                                            'notes'
+                                        );
+                                        JHtml::_(
+                                            'actionsdropdown.' . ((int)$item->state === -2 ? 'un' : '') . 'trash',
+                                            'cb' . $i,
+                                            'notes'
+                                        );
                                         echo JHtml::_('actionsdropdown.render', $this->escape($subject));
                                     }
                                     ?>
@@ -98,12 +136,22 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                             </td>
                             <td>
                                 <?php if ($item->checked_out) : ?>
-                                    <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time,
-                                        'notes.', $canCheckin); ?>
+                                    <?php echo JHtml::_(
+                                        'jgrid.checkedout',
+                                        $i,
+                                        $item->editor,
+                                        $item->checked_out_time,
+                                        'notes.',
+                                        $canCheckin
+                                    ); ?>
                                 <?php endif; ?>
-                                <?php $subject = $item->subject ? $this->escape($item->subject) : JText::_('COM_USERS_EMPTY_SUBJECT'); ?>
+                                <?php $subject = $item->subject ? $this->escape($item->subject) : JText::_(
+                                    'COM_USERS_EMPTY_SUBJECT'
+                                ); ?>
                                 <?php if ($canEdit) : ?>
-                                    <a href="<?php echo JRoute::_('index.php?option=com_users&task=note.edit&id=' . $item->id); ?>"><?php echo $this->escape($subject); ?></a>
+                                    <a href="<?php echo JRoute::_(
+                                        'index.php?option=com_users&task=note.edit&id=' . $item->id
+                                    ); ?>"><?php echo $this->escape($subject); ?></a>
                                 <?php else : ?>
                                     <?php echo $this->escape($subject); ?>
                                 <?php endif; ?>

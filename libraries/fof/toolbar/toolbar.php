@@ -319,7 +319,9 @@ class FOFToolbar
 
             //Do we have a translation for this key?
             if (strtoupper(JText::_($key)) == $key) {
-                $altview = FOFInflector::isPlural($view) ? FOFInflector::singularize($view) : FOFInflector::pluralize($view);
+                $altview = FOFInflector::isPlural($view) ? FOFInflector::singularize($view) : FOFInflector::pluralize(
+                    $view
+                );
                 $key2    = strtoupper($this->component) . '_TITLE_' . strtoupper($altview);
 
                 // Maybe we have for the alternative view?
@@ -515,14 +517,18 @@ class FOFToolbar
                 $icon       = isset($attributes['icon']) ? $attributes['icon'] : '';
                 $iconOver   = isset($attributes['icon_over']) ? $attributes['icon_over'] : '';
                 $alt        = isset($attributes['alt']) ? $attributes['alt'] : '';
-                $listSelect = isset($attributes['list_select']) ? FOFStringUtils::toBool($attributes['list_select']) : true;
+                $listSelect = isset($attributes['list_select']) ? FOFStringUtils::toBool(
+                    $attributes['list_select']
+                ) : true;
 
                 JToolbarHelper::custom($task, $icon, $iconOver, $alt, $listSelect);
                 break;
 
             case 'preview':
                 $url            = isset($attributes['url']) ? $attributes['url'] : '';
-                $update_editors = isset($attributes['update_editors']) ? FOFStringUtils::toBool($attributes['update_editors']) : false;
+                $update_editors = isset($attributes['update_editors']) ? FOFStringUtils::toBool(
+                    $attributes['update_editors']
+                ) : false;
 
                 JToolbarHelper::preview($url, $update_editors);
                 break;
@@ -724,7 +730,9 @@ class FOFToolbar
 
             case 'preferences':
                 if (!isset($attributes['component'])) {
-                    throw new InvalidArgumentException('The component attribute is missing in the preferences button type.');
+                    throw new InvalidArgumentException(
+                        'The component attribute is missing in the preferences button type.'
+                    );
                 }
 
                 $component = $attributes['component'];
@@ -781,8 +789,10 @@ class FOFToolbar
         // Set toolbar title
         $option       = $this->input->getCmd('option', 'com_foobar');
         $subtitle_key = strtoupper($option . '_TITLE_' . $this->input->getCmd('view', 'cpanel'));
-        JToolBarHelper::title(JText::_(strtoupper($option)) . ': ' . JText::_($subtitle_key),
-            str_replace('com_', '', $option));
+        JToolBarHelper::title(
+            JText::_(strtoupper($option)) . ': ' . JText::_($subtitle_key),
+            str_replace('com_', '', $option)
+        );
 
         // Add toolbar buttons
         if ($this->perms->create) {
@@ -875,8 +885,14 @@ class FOFToolbar
         $componentName = str_replace('com_', '', $option);
 
         // Set toolbar title
-        $subtitle_key = strtoupper($option . '_TITLE_' . FOFInflector::pluralize($this->input->getCmd('view',
-                    'cpanel'))) . '_EDIT';
+        $subtitle_key = strtoupper(
+                            $option . '_TITLE_' . FOFInflector::pluralize(
+                                $this->input->getCmd(
+                                    'view',
+                                    'cpanel'
+                                )
+                            )
+                        ) . '_EDIT';
         JToolBarHelper::title(JText::_(strtoupper($option)) . ': ' . JText::_($subtitle_key), $componentName);
 
         // Set toolbar icons

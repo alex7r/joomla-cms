@@ -20,7 +20,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 $colSpan   = 4 + count($this->actions);
 ?>
 <form
-    action="<?php echo JRoute::_('index.php?option=com_users&view=debuguser&user_id=' . (int)$this->state->get('user_id')); ?>"
+    action="<?php echo JRoute::_(
+        'index.php?option=com_users&view=debuguser&user_id=' . (int)$this->state->get('user_id')
+    ); ?>"
     method="post" name="adminForm" id="adminForm">
     <?php if (!empty($this->sidebar)) : ?>
     <div id="j-sidebar-container" class="span2">
@@ -36,23 +38,40 @@ $colSpan   = 4 + count($this->actions);
                 <thead>
                 <tr>
                     <th class="nowrap">
-                        <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_ASSET_TITLE', 'a.title', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'COM_USERS_HEADING_ASSET_TITLE',
+                            'a.title',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap">
-                        <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_ASSET_NAME', 'a.name', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'COM_USERS_HEADING_ASSET_NAME',
+                            'a.name',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <?php foreach ($this->actions as $key => $action) : ?>
                         <th width="5%" class="center">
 							<span class="hasTooltip"
-                                  title="<?php echo JHtml::tooltipText($key,
-                                      $action[1]); ?>"><?php echo JText::_($key); ?></span>
+                                  title="<?php echo JHtml::tooltipText(
+                                      $key,
+                                      $action[1]
+                                  ); ?>"><?php echo JText::_($key); ?></span>
                         </th>
                     <?php endforeach; ?>
                     <th width="5%" class="nowrap center">
-                        <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_LFT', 'a.lft', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'COM_USERS_HEADING_LFT',
+                            'a.lft',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="1%" class="nowrap center">
                         <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -73,8 +92,10 @@ $colSpan   = 4 + count($this->actions);
                             <?php echo $this->escape($item->title); ?>
                         </td>
                         <td class="nowrap">
-                            <?php echo JLayoutHelper::render('joomla.html.treeprefix',
-                                    array('level' => $item->level + 1)) . $this->escape($item->name); ?>
+                            <?php echo JLayoutHelper::render(
+                                    'joomla.html.treeprefix',
+                                    array('level' => $item->level + 1)
+                                ) . $this->escape($item->name); ?>
                         </td>
                         <?php foreach ($this->actions as $action) : ?>
                             <?php

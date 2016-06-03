@@ -27,8 +27,11 @@ class JoomlaupdateHelper
     public static function getActions()
     {
         // Log usage of deprecated function
-        JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Get list of actions
         $result = JHelperContent::getActions('com_joomlaupdate');

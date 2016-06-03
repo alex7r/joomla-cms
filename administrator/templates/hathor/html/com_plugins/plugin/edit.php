@@ -13,7 +13,8 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.formvalidator');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'plugin.cancel' || document.formvalidator.isValid(document.getElementById('style-form')))
@@ -21,11 +22,14 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('style-form'));
 		}
 	}
-");
+"
+);
 ?>
 
 <form
-    action="<?php echo JRoute::_('index.php?option=com_plugins&layout=edit&extension_id=' . (int)$this->item->extension_id); ?>"
+    action="<?php echo JRoute::_(
+        'index.php?option=com_plugins&layout=edit&extension_id=' . (int)$this->item->extension_id
+    ); ?>"
     method="post" name="adminForm" id="style-form" class="form-validate">
     <div class="col main-section">
         <fieldset class="adminform">

@@ -22,8 +22,10 @@ $twofactormethods = ModLoginHelper::getTwoFactorMethods();
         <?php echo JText::_('COM_JOOMLAUPDATE_VIEW_UPLOAD_CAPTIVE_INTRO_HEAD'); ?>
     </h4>
     <p>
-        <?php echo JText::sprintf('COM_JOOMLAUPDATE_VIEW_UPLOAD_CAPTIVE_INTRO_BODY',
-            JFactory::getConfig()->get('sitename')); ?>
+        <?php echo JText::sprintf(
+            'COM_JOOMLAUPDATE_VIEW_UPLOAD_CAPTIVE_INTRO_BODY',
+            JFactory::getConfig()->get('sitename')
+        ); ?>
     </p>
 </div>
 

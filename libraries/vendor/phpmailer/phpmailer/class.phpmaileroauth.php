@@ -156,8 +156,14 @@ class PHPMailerOAuth extends PHPMailer
                         $this->smtp->hello($hello);
                     }
                     if ($this->SMTPAuth) {
-                        if (!$this->smtp->authenticate($this->Username, $this->Password, $this->AuthType, $this->Realm,
-                            $this->Workstation, $this->oauth)
+                        if (!$this->smtp->authenticate(
+                            $this->Username,
+                            $this->Password,
+                            $this->AuthType,
+                            $this->Realm,
+                            $this->Workstation,
+                            $this->oauth
+                        )
                         ) {
                             throw new phpmailerException($this->lang('authenticate'));
                         }
@@ -190,8 +196,9 @@ class PHPMailerOAuth extends PHPMailer
     public function getOAUTHInstance()
     {
         if (!is_object($this->oauth)) {
-            $this->oauth = new PHPMailerOAuthGoogle($this->oauthUserEmail, $this->oauthClientSecret,
-                $this->oauthClientId, $this->oauthRefreshToken);
+            $this->oauth = new PHPMailerOAuthGoogle(
+                $this->oauthUserEmail, $this->oauthClientSecret, $this->oauthClientId, $this->oauthRefreshToken
+            );
         }
 
         return $this->oauth;

@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 
-$app            = JFactory::getApplication();
+$app = JFactory::getApplication();
 $templateparams = $app->getTemplate(true)->params;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
@@ -98,7 +98,10 @@ $cparams = JComponentHelper::getParams('com_media');
         <?php echo $this->loadTemplate('links'); ?>
     <?php endif; ?>
 
-    <?php if (is_array($this->children[$this->category->id]) && count($this->children[$this->category->id]) > 0 && $this->params->get('maxLevel') != 0) : ?>
+    <?php if (is_array($this->children[$this->category->id]) && count(
+                                                                    $this->children[$this->category->id]
+                                                                ) > 0 && $this->params->get('maxLevel') != 0
+    ) : ?>
         <div class="cat-children">
 
             <?php if ($this->params->get('show_category_heading_title_text', 1) == 1) : ?>
@@ -110,8 +113,10 @@ $cparams = JComponentHelper::getParams('com_media');
         </div>
     <?php endif; ?>
 
-    <?php if (($this->params->def('show_pagination',
-                1) == 1 || ($this->params->get('show_pagination') == 2)) && ($this->pagination->pagesTotal > 1)
+    <?php if (($this->params->def(
+                'show_pagination',
+                1
+            ) == 1 || ($this->params->get('show_pagination') == 2)) && ($this->pagination->pagesTotal > 1)
     ) : ?>
         <div class="pagination">
             <?php if ($this->params->def('show_pagination_results', 1)) : ?>

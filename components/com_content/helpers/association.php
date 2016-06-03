@@ -10,8 +10,10 @@
 defined('_JEXEC') or die;
 
 JLoader::register('ContentHelper', JPATH_ADMINISTRATOR . '/components/com_content/helpers/content.php');
-JLoader::register('CategoryHelperAssociation',
-    JPATH_ADMINISTRATOR . '/components/com_categories/helpers/association.php');
+JLoader::register(
+    'CategoryHelperAssociation',
+    JPATH_ADMINISTRATOR . '/components/com_categories/helpers/association.php'
+);
 
 /**
  * Content Component Association Helper
@@ -42,8 +44,12 @@ abstract class ContentHelperAssociation extends CategoryHelperAssociation
 
         if ($view == 'article') {
             if ($id) {
-                $associations = JLanguageAssociations::getAssociations('com_content', '#__content', 'com_content.item',
-                    $id);
+                $associations = JLanguageAssociations::getAssociations(
+                    'com_content',
+                    '#__content',
+                    'com_content.item',
+                    $id
+                );
 
                 $return = array();
 

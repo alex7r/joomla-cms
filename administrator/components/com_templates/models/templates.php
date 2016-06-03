@@ -86,10 +86,11 @@ class TemplatesModelTemplates extends JModelList
 
         // Select the required fields from the table.
         $query->select($this->getState('list.select', 'a.extension_id, a.name, a.element, a.client_id'));
-        $query->from($db->quoteName('#__extensions', 'a'))
-              ->where($db->quoteName('a.client_id') . ' = ' . (int)$this->getState('client_id'))
-              ->where($db->quoteName('a.enabled') . ' = 1')
-              ->where($db->quoteName('a.type') . ' = ' . $db->quote('template'));
+        $query->from($db->quoteName('#__extensions', 'a'))->where(
+                $db->quoteName('a.client_id') . ' = ' . (int)$this->getState('client_id')
+            )->where($db->quoteName('a.enabled') . ' = 1')->where(
+                $db->quoteName('a.type') . ' = ' . $db->quote('template')
+            );
 
         // Filter by search in title.
         if ($search = $this->getState('filter.search')) {
@@ -102,8 +103,14 @@ class TemplatesModelTemplates extends JModelList
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.element')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.element'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }
@@ -145,8 +152,10 @@ class TemplatesModelTemplates extends JModelList
     protected function populateState($ordering = 'a.element', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
 
         // Special case for the client id.
         $clientId = (int)$this->getUserStateFromRequest($this->context . '.client_id', 'client_id', 0, 'int');

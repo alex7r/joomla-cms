@@ -88,16 +88,22 @@ class ContentViewFeatured extends JViewLegacy
             // Old plugins: Use processed text as introtext
             $item->introtext = $item->text;
 
-            $results                        = $dispatcher->trigger('onContentAfterTitle',
-                array('com_content.featured', &$item, &$item->params, 0));
+            $results                        = $dispatcher->trigger(
+                'onContentAfterTitle',
+                array('com_content.featured', &$item, &$item->params, 0)
+            );
             $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-            $results                           = $dispatcher->trigger('onContentBeforeDisplay',
-                array('com_content.featured', &$item, &$item->params, 0));
+            $results                           = $dispatcher->trigger(
+                'onContentBeforeDisplay',
+                array('com_content.featured', &$item, &$item->params, 0)
+            );
             $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-            $results                          = $dispatcher->trigger('onContentAfterDisplay',
-                array('com_content.featured', &$item, &$item->params, 0));
+            $results                          = $dispatcher->trigger(
+                'onContentAfterDisplay',
+                array('com_content.featured', &$item, &$item->params, 0)
+            );
             $item->event->afterDisplayContent = trim(implode("\n", $results));
         }
 

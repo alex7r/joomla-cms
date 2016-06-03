@@ -236,8 +236,9 @@ abstract class FOFView extends FOFUtilsObject
         // Set the charset (used by the variable escaping functions)
 
         if (array_key_exists('charset', $config)) {
-            FOFPlatform::getInstance()
-                       ->logDeprecated('Setting a custom charset for escaping in FOFView\'s constructor is deprecated. Override FOFView::escape() instead.');
+            FOFPlatform::getInstance()->logDeprecated(
+                    'Setting a custom charset for escaping in FOFView\'s constructor is deprecated. Override FOFView::escape() instead.'
+                );
             $this->_charset = $config['charset'];
         }
 
@@ -261,7 +262,9 @@ abstract class FOFView extends FOFUtilsObject
             // User-defined dirs
             $this->_setPath('template', $config['template_path']);
         } else {
-            $altView = FOFInflector::isSingular($this->getName()) ? FOFInflector::pluralize($this->getName()) : FOFInflector::singularize($this->getName());
+            $altView = FOFInflector::isSingular($this->getName()) ? FOFInflector::pluralize(
+                $this->getName()
+            ) : FOFInflector::singularize($this->getName());
             $this->_setPath('template', $this->_basePath . '/views/' . $altView . '/tmpl');
             $this->_addPath('template', $this->_basePath . '/views/' . $this->getName() . '/tmpl');
         }
@@ -304,8 +307,9 @@ abstract class FOFView extends FOFUtilsObject
      */
     public function setEscape($spec)
     {
-        FOFPlatform::getInstance()
-                   ->logDeprecated(__CLASS__ . '::' . __METHOD__ . ' is deprecated. Override FOFView::escape() instead.');
+        FOFPlatform::getInstance()->logDeprecated(
+                __CLASS__ . '::' . __METHOD__ . ' is deprecated. Override FOFView::escape() instead.'
+            );
 
         $this->_escape = $spec;
     }
@@ -332,8 +336,12 @@ abstract class FOFView extends FOFUtilsObject
                 // Set the alternative template search dir
 
                 if (!FOFPlatform::getInstance()->isCli()) {
-                    $fallback = FOFPlatform::getInstance()->getTemplateOverridePath($this->input->getCmd('option',
-                            '')) . '/' . $this->getName();
+                    $fallback = FOFPlatform::getInstance()->getTemplateOverridePath(
+                            $this->input->getCmd(
+                                'option',
+                                ''
+                            )
+                        ) . '/' . $this->getName();
                     $this->_addPath('template', $fallback);
                 }
 
@@ -430,8 +438,13 @@ abstract class FOFView extends FOFUtilsObject
      */
     public function loadTemplate($tpl = null, $strict = false)
     {
-        $paths = FOFPlatform::getInstance()->getViewTemplatePaths($this->input->getCmd('option', ''),
-            $this->input->getCmd('view', ''), $this->getLayout(), $tpl, $strict);
+        $paths = FOFPlatform::getInstance()->getViewTemplatePaths(
+            $this->input->getCmd('option', ''),
+            $this->input->getCmd('view', ''),
+            $this->getLayout(),
+            $tpl,
+            $strict
+        );
 
         foreach ($paths as $path) {
             $result = $this->loadAnyTemplate($path);
@@ -667,8 +680,9 @@ abstract class FOFView extends FOFUtilsObject
      */
     public function assign()
     {
-        FOFPlatform::getInstance()
-                   ->logDeprecated(__CLASS__ . '::' . __METHOD__ . ' is deprecated. Use native PHP syntax.');
+        FOFPlatform::getInstance()->logDeprecated(
+                __CLASS__ . '::' . __METHOD__ . ' is deprecated. Use native PHP syntax.'
+            );
 
         // Get the arguments; there may be 1 or 2.
         $arg0 = @func_get_arg(0);
@@ -728,8 +742,9 @@ abstract class FOFView extends FOFUtilsObject
      */
     public function assignRef($key, &$val)
     {
-        FOFPlatform::getInstance()
-                   ->logDeprecated(__CLASS__ . '::' . __METHOD__ . ' is deprecated. Use native PHP syntax.');
+        FOFPlatform::getInstance()->logDeprecated(
+                __CLASS__ . '::' . __METHOD__ . ' is deprecated. Use native PHP syntax.'
+            );
 
         if (is_string($key) && substr($key, 0, 1) != '_') {
             $this->$key = &$val;
@@ -1012,8 +1027,10 @@ abstract class FOFView extends FOFUtilsObject
         // Load the template script using the default Joomla! features
         $filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
 
-        $helper = $filesystem->pathFind($this->_path['helper'],
-            $this->_createFileName('helper', array('name' => $file)));
+        $helper = $filesystem->pathFind(
+            $this->_path['helper'],
+            $this->_createFileName('helper', array('name' => $file))
+        );
 
         if ($helper == false) {
             $componentPaths = FOFPlatform::getInstance()->getComponentBaseDirs($this->config['option']);

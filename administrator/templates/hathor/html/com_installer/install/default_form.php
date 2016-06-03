@@ -13,7 +13,8 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.framework', true);
 JHtml::_('bootstrap.tooltip');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function()
 	{
 		var form = document.getElementById('adminForm');
@@ -67,7 +68,8 @@ JFactory::getDocument()->addScriptDeclaration("
 
 		Joomla.submitbutton4();
 	};
-");
+"
+);
 ?>
 <form enctype="multipart/form-data" action="<?php echo JRoute::_('index.php?option=com_installer&view=install'); ?>"
       method="post" name="adminForm" id="adminForm">
@@ -83,10 +85,15 @@ JFactory::getDocument()->addScriptDeclaration("
             <?php if ($this->showJedAndWebInstaller && !$this->showMessage) : ?>
                 <div class="alert j-jed-message"
                      style="margin-bottom: 20px; line-height: 2em; color:#333333; clear:both;">
-                    <a href="index.php?option=com_config&view=component&component=com_installer&path=&return=<?php echo urlencode(base64_encode(JUri::getInstance())); ?>"
+                    <a href="index.php?option=com_config&view=component&component=com_installer&path=&return=<?php echo urlencode(
+                        base64_encode(JUri::getInstance())
+                    ); ?>"
                        class="close hasTooltip" data-dismiss="alert"
-                       title="<?php echo str_replace('"', '&quot;',
-                           JText::_('COM_INSTALLER_SHOW_JED_INFORMATION_TOOLTIP')); ?>">&times;</a>
+                       title="<?php echo str_replace(
+                           '"',
+                           '&quot;',
+                           JText::_('COM_INSTALLER_SHOW_JED_INFORMATION_TOOLTIP')
+                       ); ?>">&times;</a>
                     <p><?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_INFO'); ?>
                         &nbsp;<?php echo JText::_('COM_INSTALLER_INSTALL_FROM_WEB_TOS'); ?></p>
                     <input class="btn" type="button"
@@ -117,7 +124,9 @@ JFactory::getDocument()->addScriptDeclaration("
                     <input type="text" id="install_directory" name="install_directory" class="input_box" size="70"
                            value="<?php echo $this->state->get('install.directory'); ?>"/> <input type="button"
                                                                                                   class="button"
-                                                                                                  value="<?php echo JText::_('COM_INSTALLER_INSTALL_BUTTON'); ?>"
+                                                                                                  value="<?php echo JText::_(
+                                                                                                      'COM_INSTALLER_INSTALL_BUTTON'
+                                                                                                  ); ?>"
                                                                                                   onclick="Joomla.submitbutton3()"/>
                 </fieldset>
                 <div class="clr"></div>

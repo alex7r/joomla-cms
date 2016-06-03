@@ -43,13 +43,16 @@ class PluginsModelPlugin extends JModelAdmin
      */
     public function __construct($config = array())
     {
-        $config = array_merge(array(
-            'event_after_save'  => 'onExtensionAfterSave',
-            'event_before_save' => 'onExtensionBeforeSave',
-            'events_map'        => array(
-                'save' => 'extension'
-            )
-        ), $config);
+        $config = array_merge(
+            array(
+                'event_after_save'  => 'onExtensionAfterSave',
+                'event_before_save' => 'onExtensionBeforeSave',
+                'events_map'        => array(
+                    'save' => 'extension'
+                )
+            ),
+            $config
+        );
 
         parent::__construct($config);
     }
@@ -140,7 +143,9 @@ class PluginsModelPlugin extends JModelAdmin
             $this->_cache[$pk]->params = $registry->toArray();
 
             // Get the plugin XML.
-            $path = JPath::clean(JPATH_PLUGINS . '/' . $table->folder . '/' . $table->element . '/' . $table->element . '.xml');
+            $path = JPath::clean(
+                JPATH_PLUGINS . '/' . $table->folder . '/' . $table->element . '/' . $table->element . '.xml'
+            );
 
             if (file_exists($path)) {
                 $this->_cache[$pk]->xml = simplexml_load_file($path);
@@ -259,18 +264,26 @@ class PluginsModelPlugin extends JModelAdmin
 
         // Load the core and/or local language sys file(s) for the ordering field.
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('element'))
-                    ->from($db->quoteName('#__extensions'))
-                    ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
-                    ->where($db->quoteName('folder') . ' = ' . $db->quote($folder));
+        $query = $db->getQuery(true)->select($db->quoteName('element'))->from($db->quoteName('#__extensions'))->where(
+                $db->quoteName('type') . ' = ' . $db->quote('plugin')
+            )->where($db->quoteName('folder') . ' = ' . $db->quote($folder));
         $db->setQuery($query);
         $elements = $db->loadColumn();
 
         foreach ($elements as $elementa) {
-            $lang->load('plg_' . $folder . '_' . $elementa . '.sys', JPATH_ADMINISTRATOR, null, false,
-                true) || $lang->load('plg_' . $folder . '_' . $elementa . '.sys',
-                JPATH_PLUGINS . '/' . $folder . '/' . $elementa, null, false, true);
+            $lang->load(
+                'plg_' . $folder . '_' . $elementa . '.sys',
+                JPATH_ADMINISTRATOR,
+                null,
+                false,
+                true
+            ) || $lang->load(
+                'plg_' . $folder . '_' . $elementa . '.sys',
+                JPATH_PLUGINS . '/' . $folder . '/' . $elementa,
+                null,
+                false,
+                true
+            );
         }
 
         if (empty($folder) || empty($element)) {
@@ -285,9 +298,19 @@ class PluginsModelPlugin extends JModelAdmin
         }
 
         // Load the core and/or local language file(s).
-        $lang->load('plg_' . $folder . '_' . $element, JPATH_ADMINISTRATOR, null, false,
-            true) || $lang->load('plg_' . $folder . '_' . $element, JPATH_PLUGINS . '/' . $folder . '/' . $element,
-            null, false, true);
+        $lang->load(
+            'plg_' . $folder . '_' . $element,
+            JPATH_ADMINISTRATOR,
+            null,
+            false,
+            true
+        ) || $lang->load(
+            'plg_' . $folder . '_' . $element,
+            JPATH_PLUGINS . '/' . $folder . '/' . $element,
+            null,
+            false,
+            true
+        );
 
         if (file_exists($formFile)) {
             // Get the plugin form.

@@ -9,9 +9,9 @@
 
 defined('_JEXEC') or die;
 
-$n         = count($this->items);
+$n = count($this->items);
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 
 ?>
 
@@ -21,12 +21,20 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 
     <form action="<?php echo htmlspecialchars(JUri::getInstance()->toString(), ENT_COMPAT, 'UTF-8'); ?>" method="post"
           name="adminForm" id="adminForm">
-        <?php if ((($this->params->get('filter_field') != 'hide') || ($this->params->get('filter_field') != '0')) || $this->params->get('show_pagination_limit')) : ?>
+        <?php if ((($this->params->get('filter_field') != 'hide') || ($this->params->get(
+                        'filter_field'
+                    ) != '0')) || $this->params->get('show_pagination_limit')
+        ) : ?>
             <fieldset class="filters btn-toolbar">
-                <?php if (($this->params->get('filter_field') != 'hide') || ($this->params->get('filter_field') != '0')) : ?>
+                <?php if (($this->params->get('filter_field') != 'hide') || ($this->params->get(
+                            'filter_field'
+                        ) != '0')
+                ) : ?>
                     <div class="btn-group">
                         <label class="filter-search-lbl element-invisible" for="filter-search"><span
-                                class="label label-warning"><?php echo JText::_('JUNPUBLISHED'); ?></span><?php echo JText::_('COM_NEWSFEEDS_FILTER_LABEL') . '&#160;'; ?>
+                                class="label label-warning"><?php echo JText::_(
+                                    'JUNPUBLISHED'
+                                ); ?></span><?php echo JText::_('COM_NEWSFEEDS_FILTER_LABEL') . '&#160;'; ?>
                         </label>
                         <input type="text" name="filter-search" id="filter-search"
                                value="<?php echo $this->escape($this->state->get('list.filter')); ?>" class="inputbox"
@@ -59,8 +67,12 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                 <?php endif; ?>
                 <span class="list pull-left">
 					<div class="list-title">
-						<a href="<?php echo JRoute::_(NewsFeedsHelperRoute::getNewsfeedRoute($item->slug,
-                            $item->catid)); ?>">
+						<a href="<?php echo JRoute::_(
+                            NewsFeedsHelperRoute::getNewsfeedRoute(
+                                $item->slug,
+                                $item->catid
+                            )
+                        ); ?>">
 							<?php echo $item->name; ?></a>
 					</div>
 				</span>
@@ -81,8 +93,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 
         <?php // Add pagination links ?>
         <?php if (!empty($this->items)) : ?>
-            <?php if (($this->params->def('show_pagination',
-                        2) == 1 || ($this->params->get('show_pagination') == 2)) && ($this->pagination->pagesTotal > 1)
+            <?php if (($this->params->def(
+                        'show_pagination',
+                        2
+                    ) == 1 || ($this->params->get('show_pagination') == 2)) && ($this->pagination->pagesTotal > 1)
             ) : ?>
                 <div class="pagination">
                     <?php if ($this->params->def('show_pagination_results', 1)) : ?>

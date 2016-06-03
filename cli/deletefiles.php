@@ -33,8 +33,13 @@ ini_set('display_errors', 1);
 $lang = JFactory::getLanguage();
 
 // Try the files_joomla file in the current language (without allowing the loading of the file in the default language)
-$lang->load('files_joomla.sys', JPATH_SITE, null, false,
-    false) // Fallback to the files_joomla file in the default language
+$lang->load(
+    'files_joomla.sys',
+    JPATH_SITE,
+    null,
+    false,
+    false
+) // Fallback to the files_joomla file in the default language
 || $lang->load('files_joomla.sys', JPATH_SITE, null, true);
 
 /**

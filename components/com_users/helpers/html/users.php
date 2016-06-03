@@ -104,10 +104,9 @@ abstract class JHtmlUsers
             return static::value($value);
         } else {
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select('title')
-                        ->from('#__template_styles')
-                        ->where('id = ' . $db->quote($value));
+            $query = $db->getQuery(true)->select('title')->from('#__template_styles')->where(
+                    'id = ' . $db->quote($value)
+                );
             $db->setQuery($query);
             $title = $db->loadResult();
 
@@ -197,18 +196,26 @@ abstract class JHtmlUsers
         } else {
             $db    = JFactory::getDbo();
             $lang  = JFactory::getLanguage();
-            $query = $db->getQuery(true)
-                        ->select('name')
-                        ->from('#__extensions')
-                        ->where('element = ' . $db->quote($value))
-                        ->where('folder = ' . $db->quote('editors'));
+            $query = $db->getQuery(true)->select('name')->from('#__extensions')->where(
+                    'element = ' . $db->quote($value)
+                )->where('folder = ' . $db->quote('editors'));
             $db->setQuery($query);
             $title = $db->loadResult();
 
             if ($title) {
-                $lang->load("plg_editors_$value.sys", JPATH_ADMINISTRATOR, null, false,
-                    true) || $lang->load("plg_editors_$value.sys", JPATH_PLUGINS . '/editors/' . $value, null, false,
-                    true);
+                $lang->load(
+                    "plg_editors_$value.sys",
+                    JPATH_ADMINISTRATOR,
+                    null,
+                    false,
+                    true
+                ) || $lang->load(
+                    "plg_editors_$value.sys",
+                    JPATH_PLUGINS . '/editors/' . $value,
+                    null,
+                    false,
+                    true
+                );
                 $lang->load($title . '.sys');
 
                 return JText::_($title);

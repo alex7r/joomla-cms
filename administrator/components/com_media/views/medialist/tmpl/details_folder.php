@@ -31,7 +31,8 @@ JHtml::_('bootstrap.tooltip');
     <?php if ($user->authorise('core.delete', 'com_media')): ?>
         <td>
             <a class="delete-item" target="_top"
-               href="index.php?option=com_media&amp;task=folder.delete&amp;tmpl=index&amp;folder=<?php echo $this->state->folder; ?>&amp;<?php echo JSession::getFormToken(); ?>=1&amp;rm[]=<?php echo $this->_tmp_folder->name; ?>"
+               href="index.php?option=com_media&amp;task=folder.delete&amp;tmpl=index&amp;folder=<?php echo $this->state->folder; ?>&amp;<?php echo JSession::getFormToken(
+               ); ?>=1&amp;rm[]=<?php echo $this->_tmp_folder->name; ?>"
                rel="<?php echo $this->_tmp_folder->name; ?>' :: <?php echo $this->_tmp_folder->files + $this->_tmp_folder->folders; ?>"><span
                     class="icon-remove hasTooltip"
                     title="<?php echo JHtml::tooltipText('JACTION_DELETE'); ?>"></span></a>

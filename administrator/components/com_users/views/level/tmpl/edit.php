@@ -14,7 +14,8 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.formvalidator');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'level.cancel' || document.formvalidator.isValid(document.getElementById('level-form')))
@@ -22,7 +23,8 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('level-form'));
 		}
 	};
-");
+"
+);
 /*
 window.addEvent('domready', function(){
 	document.id('user-groups').getElements('input').each(function(i){

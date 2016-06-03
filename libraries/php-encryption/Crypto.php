@@ -183,15 +183,19 @@ class Crypto
         // AES CBC mode test vector from NIST SP 800-38A
         $key        = self::hexToBytes("2b7e151628aed2a6abf7158809cf4f3c");
         $iv         = self::hexToBytes("000102030405060708090a0b0c0d0e0f");
-        $plaintext  = self::hexToBytes("6bc1bee22e409f96e93d7e117393172a" . "ae2d8a571e03ac9c9eb76fac45af8e51" . "30c81c46a35ce411e5fbc1191a0a52ef" . "f69f2445df4f9b17ad2b417be66c3710");
-        $ciphertext = self::hexToBytes("7649abac8119b246cee98e9b12e9197d" . "5086cb9b507219ee95db113a917678b2" . "73bed6b8e3c1743b7116e69e22229516" . "3ff1caa1681fac09120eca307586e1a7" . /* Block due to padding. Not from NIST test vector. 
+        $plaintext  = self::hexToBytes(
+            "6bc1bee22e409f96e93d7e117393172a" . "ae2d8a571e03ac9c9eb76fac45af8e51" . "30c81c46a35ce411e5fbc1191a0a52ef" . "f69f2445df4f9b17ad2b417be66c3710"
+        );
+        $ciphertext = self::hexToBytes(
+            "7649abac8119b246cee98e9b12e9197d" . "5086cb9b507219ee95db113a917678b2" . "73bed6b8e3c1743b7116e69e22229516" . "3ff1caa1681fac09120eca307586e1a7" . /* Block due to padding. Not from NIST test vector. 
 				Padding Block: 10101010101010101010101010101010
 				Ciphertext:    3ff1caa1681fac09120eca307586e1a7
 						   (+) 2fe1dab1780fbc19021eda206596f1b7 
 						   AES 8cb82807230e1321d3fae00d18cc2012
 			 
 			 */
-                                       "8cb82807230e1321d3fae00d18cc2012");
+            "8cb82807230e1321d3fae00d18cc2012"
+        );
 
         $computed_ciphertext = self::PlainEncrypt($plaintext, $key, $iv);
         if ($computed_ciphertext !== $ciphertext) {
@@ -374,7 +378,9 @@ class Crypto
         $salt         = self::hexToBytes("000102030405060708090a0b0c");
         $info         = self::hexToBytes("f0f1f2f3f4f5f6f7f8f9");
         $length       = 42;
-        $okm          = self::hexToBytes("3cb25f25faacd57a90434f64d0362f2a" . "2d2d0a90cf1a5a4c5db02d56ecc4c5bf" . "34007208d5b887185865");
+        $okm          = self::hexToBytes(
+            "3cb25f25faacd57a90434f64d0362f2a" . "2d2d0a90cf1a5a4c5db02d56ecc4c5bf" . "34007208d5b887185865"
+        );
         $computed_okm = self::HKDF("sha256", $ikm, $length, $info, $salt);
         if ($computed_okm !== $okm) {
             throw new CryptoTestFailedException();
@@ -383,7 +389,9 @@ class Crypto
         // Test Case 7
         $ikm          = str_repeat("\x0c", 22);
         $length       = 42;
-        $okm          = self::hexToBytes("2c91117204d745f3500d636a62f64f0a" . "b3bae548aa53d423b0d1f27ebba6f5e5" . "673a081d70cce7acfc48");
+        $okm          = self::hexToBytes(
+            "2c91117204d745f3500d636a62f64f0a" . "b3bae548aa53d423b0d1f27ebba6f5e5" . "673a081d70cce7acfc48"
+        );
         $computed_okm = self::HKDF("sha1", $ikm, $length);
         if ($computed_okm !== $okm) {
             throw new CryptoTestFailedException();

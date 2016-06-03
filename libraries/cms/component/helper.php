@@ -39,11 +39,11 @@ class JComponentHelper
     {
         $db = JFactory::getDbo();
 
-        return (int)$db->setQuery($db->getQuery(true)
-                                     ->select('COUNT(extension_id)')
-                                     ->from('#__extensions')
-                                     ->where('element = ' . $db->quote($option))
-                                     ->where('type = ' . $db->quote('component')))->loadResult();
+        return (int)$db->setQuery(
+            $db->getQuery(true)->select('COUNT(extension_id)')->from('#__extensions')->where(
+                    'element = ' . $db->quote($option)
+                )->where('type = ' . $db->quote('component'))
+        )->loadResult();
     }
 
     /**
@@ -261,10 +261,9 @@ class JComponentHelper
     protected static function load($option)
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('extension_id AS id, element AS "option", params, enabled')
-                    ->from('#__extensions')
-                    ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+        $query = $db->getQuery(true)->select('extension_id AS id, element AS "option", params, enabled')->from(
+                '#__extensions'
+            )->where($db->quoteName('type') . ' = ' . $db->quote('component'));
         $db->setQuery($query);
 
         $cache = JFactory::getCache('_system', 'callback');
@@ -283,8 +282,11 @@ class JComponentHelper
             }
         } catch (RuntimeException $e) {
             // Fatal error.
-            JLog::add(JText::sprintf('JLIB_APPLICATION_ERROR_COMPONENT_NOT_LOADING', $option, $e->getMessage()),
-                JLog::WARNING, 'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_APPLICATION_ERROR_COMPONENT_NOT_LOADING', $option, $e->getMessage()),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -292,8 +294,11 @@ class JComponentHelper
         if (empty(static::$components[$option])) {
             // Fatal error.
             $error = JText::_('JLIB_APPLICATION_ERROR_COMPONENT_NOT_FOUND');
-            JLog::add(JText::sprintf('JLIB_APPLICATION_ERROR_COMPONENT_NOT_LOADING', $option, $error), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_APPLICATION_ERROR_COMPONENT_NOT_LOADING', $option, $error),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -319,8 +324,13 @@ class JComponentHelper
         // Load template language files.
         $template = $app->getTemplate(true)->template;
         $lang     = JFactory::getLanguage();
-        $lang->load('tpl_' . $template, JPATH_BASE, null, false, true) || $lang->load('tpl_' . $template,
-            JPATH_THEMES . "/$template", null, false, true);
+        $lang->load('tpl_' . $template, JPATH_BASE, null, false, true) || $lang->load(
+            'tpl_' . $template,
+            JPATH_THEMES . "/$template",
+            null,
+            false,
+            true
+        );
 
         if (empty($option)) {
             throw new Exception(JText::_('JLIB_APPLICATION_ERROR_COMPONENT_NOT_FOUND'), 404);

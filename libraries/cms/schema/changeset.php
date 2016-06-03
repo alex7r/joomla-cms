@@ -90,8 +90,13 @@ class JSchemaChangeset
 
         if ($serverType == 'mysql') {
             // Let the update query be something harmless which should always succeed
-            $tmpSchemaChangeItem = JSchemaChangeitem::getInstance($db, 'database.php',
-                'UPDATE ' . $this->db->quoteName('#__utf8_conversion') . ' SET ' . $this->db->quoteName('converted') . ' = 0;');
+            $tmpSchemaChangeItem = JSchemaChangeitem::getInstance(
+                $db,
+                'database.php',
+                'UPDATE ' . $this->db->quoteName('#__utf8_conversion') . ' SET ' . $this->db->quoteName(
+                    'converted'
+                ) . ' = 0;'
+            );
 
             // Set to not skipped
             $tmpSchemaChangeItem->checkStatus = 0;
@@ -105,7 +110,11 @@ class JSchemaChangeset
                 $tmpSchemaChangeItem->queryType = 'UTF8_CONVERSION_UTF8';
             }
 
-            $tmpSchemaChangeItem->checkQuery = 'SELECT ' . $this->db->quoteName('converted') . ' FROM ' . $this->db->quoteName('#__utf8_conversion') . ' WHERE ' . $this->db->quoteName('converted') . ' = ' . $converted;
+            $tmpSchemaChangeItem->checkQuery = 'SELECT ' . $this->db->quoteName(
+                    'converted'
+                ) . ' FROM ' . $this->db->quoteName('#__utf8_conversion') . ' WHERE ' . $this->db->quoteName(
+                    'converted'
+                ) . ' = ' . $converted;
 
             // Set expected records from check query
             $tmpSchemaChangeItem->checkQueryExpected = 1;
@@ -139,8 +148,15 @@ class JSchemaChangeset
             $this->folder = JPATH_ADMINISTRATOR . '/components/com_admin/sql/updates/';
         }
 
-        return JFolder::files($this->folder . '/' . $sqlFolder, '\.sql$', 1, true,
-            array('.svn', 'CVS', '.DS_Store', '__MACOSX'), array('^\..*', '.*~'), true);
+        return JFolder::files(
+            $this->folder . '/' . $sqlFolder,
+            '\.sql$',
+            1,
+            true,
+            array('.svn', 'CVS', '.DS_Store', '__MACOSX'),
+            array('^\..*', '.*~'),
+            true
+        );
     }
 
     /**

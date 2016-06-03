@@ -95,8 +95,12 @@ class TagsModelTags extends JModelList
 
         // Optional filter text
         $itemid       = $pid . ':' . $app->input->getInt('Itemid', 0);
-        $filterSearch = $app->getUserStateFromRequest('com_tags.tags.list.' . $itemid . '.filter_search',
-            'filter-search', '', 'string');
+        $filterSearch = $app->getUserStateFromRequest(
+            'com_tags.tags.list.' . $itemid . '.filter_search',
+            'filter-search',
+            '',
+            'string'
+        );
         $this->setState('list.filter', $filterSearch);
     }
 
@@ -123,9 +127,9 @@ class TagsModelTags extends JModelList
         $query = $db->getQuery(true);
 
         // Select required fields from the tags.
-        $query->select('a.*')
-              ->from($db->quoteName('#__tags') . ' AS a')
-              ->where($db->quoteName('a.access') . ' IN (' . $groups . ')');
+        $query->select('a.*')->from($db->quoteName('#__tags') . ' AS a')->where(
+                $db->quoteName('a.access') . ' IN (' . $groups . ')'
+            );
 
         if (!empty($pid)) {
             $query->where($db->quoteName('a.parent_id') . ' = ' . $pid);
@@ -167,7 +171,9 @@ class TagsModelTags extends JModelList
 
         // Optionally filter on entered value
         if ($this->state->get('list.filter')) {
-            $query->where($db->quoteName('a.title') . ' LIKE ' . $db->quote('%' . $this->state->get('list.filter') . '%'));
+            $query->where(
+                $db->quoteName('a.title') . ' LIKE ' . $db->quote('%' . $this->state->get('list.filter') . '%')
+            );
         }
 
         $query->where($db->quoteName('a.published') . ' = ' . $published);

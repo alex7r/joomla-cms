@@ -154,8 +154,10 @@ abstract class JHtmlString
         }
 
         // Take care of short simple cases.
-        if ($maxLength <= 3 && substr($html, 0, 1) != '<' && strpos(substr($html, 0, $maxLength - 1),
-                '<') === false && $baseLength > $maxLength
+        if ($maxLength <= 3 && substr($html, 0, 1) != '<' && strpos(
+                                                                 substr($html, 0, $maxLength - 1),
+                                                                 '<'
+                                                             ) === false && $baseLength > $maxLength
         ) {
             return '...';
         }

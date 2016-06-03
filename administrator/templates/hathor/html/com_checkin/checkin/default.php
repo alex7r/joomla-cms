@@ -28,7 +28,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 
                 <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                 <button type="button"
-                        onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                        onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                        'JSEARCH_FILTER_CLEAR'
+                    ); ?></button>
             </div>
         </fieldset>
         <div class="clr"></div>
@@ -40,10 +42,20 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     <input type="checkbox" name="checkall-toggle" value=""
                            title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
                 </th>
-                <th class="left"><?php echo JHtml::_('grid.sort', 'COM_CHECKIN_DATABASE_TABLE', 'table', $listDirn,
-                        $listOrder); ?></th>
-                <th><?php echo JHtml::_('grid.sort', 'COM_CHECKIN_ITEMS_TO_CHECK_IN', 'count', $listDirn,
-                        $listOrder); ?></th>
+                <th class="left"><?php echo JHtml::_(
+                        'grid.sort',
+                        'COM_CHECKIN_DATABASE_TABLE',
+                        'table',
+                        $listDirn,
+                        $listOrder
+                    ); ?></th>
+                <th><?php echo JHtml::_(
+                        'grid.sort',
+                        'COM_CHECKIN_ITEMS_TO_CHECK_IN',
+                        'count',
+                        $listDirn,
+                        $listOrder
+                    ); ?></th>
             </tr>
             </thead>
             <tbody>

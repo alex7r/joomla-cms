@@ -8,8 +8,9 @@
 
 defined('_JEXEC') or die;
 
-JFactory::getDocument()->addScriptDeclaration(<<<JS
-		jQuery(document).ready(function($) {
+JFactory::getDocument()->addScriptDeclaration(
+    <<<JS
+    		jQuery(document).ready(function($) {
 		$(':input[name="jform[activateMultilanguage]"]').each(function(el){
 			$(this).click(function(){Install.toggle('installLocalisedContent', 'activateMultilanguage', 1);});
 			$(this).click(function(){Install.toggle('activatePluginLanguageCode', 'activateMultilanguage', 1);});

@@ -566,7 +566,10 @@ class lessc
                     }
 
                     foreach ($this->sortProps($mixin->props) as $subProp) {
-                        if ($suffix !== null && $subProp[0] == "assign" && is_string($subProp[1]) && $subProp[1]{0} != $this->vPrefix) {
+                        if ($suffix !== null && $subProp[0] == "assign" && is_string(
+                                $subProp[1]
+                            ) && $subProp[1]{0} != $this->vPrefix
+                        ) {
                             $subProp[2] = array(
                                 'list',
                                 ' ',
@@ -1226,8 +1229,13 @@ class lessc
             } else {
                 $matches = array();
                 foreach ($blocks as $subBlock) {
-                    $subMatches = $this->findBlocks($subBlock, array_slice($path, 1), $orderedArgs, $keywordArgs,
-                        $seen);
+                    $subMatches = $this->findBlocks(
+                        $subBlock,
+                        array_slice($path, 1),
+                        $orderedArgs,
+                        $keywordArgs,
+                        $seen
+                    );
 
                     if (!is_null($subMatches)) {
                         foreach ($subMatches as $sm) {
@@ -2663,8 +2671,10 @@ class lessc_parser
         $this->writeComments = false;
 
         if (!self::$operatorString) {
-            self::$operatorString = '(' . implode('|',
-                    array_map(array('lessc', 'preg_quote'), array_keys(self::$precedence))) . ')';
+            self::$operatorString = '(' . implode(
+                    '|',
+                    array_map(array('lessc', 'preg_quote'), array_keys(self::$precedence))
+                ) . ')';
 
             $commentSingle     = lessc::preg_quote(self::$commentSingle);
             $commentMultiLeft  = lessc::preg_quote(self::$commentMultiLeft);
@@ -2971,8 +2981,10 @@ class lessc_parser
         }
 
         // opening parametric mixin
-        if ($this->tag($tag, true) && $this->argumentDef($args,
-                $isVararg) && ($this->guards($guards) || true) && $this->literal('{')
+        if ($this->tag($tag, true) && $this->argumentDef(
+                $args,
+                $isVararg
+            ) && ($this->guards($guards) || true) && $this->literal('{')
         ) {
             $block           = $this->pushBlock($this->fixTags(array($tag)));
             $block->args     = $args;
@@ -3036,8 +3048,10 @@ class lessc_parser
         }
 
         // mixin
-        if ($this->mixinTags($tags) && ($this->argumentDef($argv,
-                    $isVararg) || true) && ($this->keyword($suffix) || true) && $this->end()
+        if ($this->mixinTags($tags) && ($this->argumentDef(
+                    $argv,
+                    $isVararg
+                ) || true) && ($this->keyword($suffix) || true) && $this->end()
         ) {
             $tags = $this->fixTags($tags);
             $this->append(array('mixin', $tags, $argv, $suffix), $s);
@@ -3547,8 +3561,10 @@ class lessc_parser
         $this->eatWhiteDefault = true;
 
         $s = $this->seek();
-        if ($this->literal("@{") && $this->openString("}", $interp, null, array("'", '"', ";")) && $this->literal("}",
-                false)
+        if ($this->literal("@{") && $this->openString("}", $interp, null, array("'", '"', ";")) && $this->literal(
+                "}",
+                false
+            )
         ) {
             $out                   = array("interpolate", $interp);
             $this->eatWhiteDefault = $oldWhite;
@@ -3582,8 +3598,10 @@ class lessc_parser
             // whitespace after the operator for it to be an expression
             $needWhite = $whiteBefore && !$this->inParens;
 
-            if ($this->match(self::$operatorString . ($needWhite ? '\s' : ''),
-                    $m) && self::$precedence[$m[1]] >= $minP
+            if ($this->match(
+                    self::$operatorString . ($needWhite ? '\s' : ''),
+                    $m
+                ) && self::$precedence[$m[1]] >= $minP
             ) {
                 if (!$this->inParens && isset($this->env->currentProperty) && $m[1] == "/" && empty($this->env->supressedDivision)) {
                     foreach (self::$supressDivisionProps as $pattern) {
@@ -3602,8 +3620,10 @@ class lessc_parser
                 }
 
                 // peek for next operator to see what to do with rhs
-                if ($this->peek(self::$operatorString,
-                        $next) && self::$precedence[$next[1]] > self::$precedence[$m[1]]
+                if ($this->peek(
+                        self::$operatorString,
+                        $next
+                    ) && self::$precedence[$next[1]] > self::$precedence[$m[1]]
                 ) {
                     $rhs = $this->expHelper($rhs, self::$precedence[$next[1]]);
                 }
@@ -4136,7 +4156,10 @@ class lessc_parser
         $expressions = null;
         $parts       = array();
 
-        if (($this->literal("only") && ($only = true) || $this->literal("not") && ($not = true) || true) && $this->keyword($mediaType)) {
+        if (($this->literal("only") && ($only = true) || $this->literal(
+                    "not"
+                ) && ($not = true) || true) && $this->keyword($mediaType)
+        ) {
             $prop = array("mediaType");
             if (isset($only)) {
                 $prop[] = "only";
@@ -4177,7 +4200,10 @@ class lessc_parser
     {
         $s     = $this->seek();
         $value = null;
-        if ($this->literal("(") && $this->keyword($feature) && ($this->literal(":") && $this->expression($value) || true) && $this->literal(")")) {
+        if ($this->literal("(") && $this->keyword($feature) && ($this->literal(":") && $this->expression(
+                    $value
+                ) || true) && $this->literal(")")
+        ) {
             $out = array("mediaExp", $feature);
             if ($value) {
                 $out[] = $value;

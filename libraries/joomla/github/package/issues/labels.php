@@ -78,10 +78,12 @@ class JGithubPackageIssuesLabels extends JGithubPackage
         $path = '/repos/' . $owner . '/' . $repo . '/labels';
 
         // Build the request data.
-        $data = json_encode(array(
-            'name'  => $name,
-            'color' => $color
-        ));
+        $data = json_encode(
+            array(
+                'name'  => $name,
+                'color' => $color
+            )
+        );
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);
@@ -116,10 +118,12 @@ class JGithubPackageIssuesLabels extends JGithubPackage
         $path = '/repos/' . $user . '/' . $repo . '/labels/' . $label;
 
         // Build the request data.
-        $data = json_encode(array(
-            'name'  => $name,
-            'color' => $color
-        ));
+        $data = json_encode(
+            array(
+                'name'  => $name,
+                'color' => $color
+            )
+        );
 
         // Send the request.
         return $this->processResponse($this->client->patch($this->fetchUrl($path), $data));

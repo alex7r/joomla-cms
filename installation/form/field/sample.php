@@ -49,17 +49,32 @@ class InstallationFormFieldSample extends JFormFieldRadio
         $files = JFolder::files(JPATH_INSTALLATION . '/sql/' . $type, '^sample.*\.sql$');
 
         // Add option to not install sample data.
-        $options[] = JHtml::_('select.option', '',
-            JHtml::_('tooltip', JText::_('INSTL_SITE_INSTALL_SAMPLE_NONE_DESC'), '', '',
-                JText::_('INSTL_SITE_INSTALL_SAMPLE_NONE')));
+        $options[] = JHtml::_(
+            'select.option',
+            '',
+            JHtml::_(
+                'tooltip',
+                JText::_('INSTL_SITE_INSTALL_SAMPLE_NONE_DESC'),
+                '',
+                '',
+                JText::_('INSTL_SITE_INSTALL_SAMPLE_NONE')
+            )
+        );
 
         // Build the options list from the list of files.
         if (is_array($files)) {
             foreach ($files as $file) {
-                $options[] = JHtml::_('select.option', $file,
-                    $lang->hasKey($key = 'INSTL_' . ($file = JFile::stripExt($file)) . '_SET') ? JHtml::_('tooltip',
-                        JText::_('INSTL_' . strtoupper($file = JFile::stripExt($file)) . '_SET_DESC'), '', '',
-                        JText::_('INSTL_' . ($file = JFile::stripExt($file)) . '_SET')) : $file);
+                $options[] = JHtml::_(
+                    'select.option',
+                    $file,
+                    $lang->hasKey($key = 'INSTL_' . ($file = JFile::stripExt($file)) . '_SET') ? JHtml::_(
+                        'tooltip',
+                        JText::_('INSTL_' . strtoupper($file = JFile::stripExt($file)) . '_SET_DESC'),
+                        '',
+                        '',
+                        JText::_('INSTL_' . ($file = JFile::stripExt($file)) . '_SET')
+                    ) : $file
+                );
             }
         }
 

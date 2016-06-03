@@ -67,10 +67,9 @@ class JFormFieldCategory extends JFormFieldList
             foreach ($options as $option) {
                 // Create a new query object.
                 $db    = JFactory::getDbo();
-                $query = $db->getQuery(true)
-                            ->select($db->quoteName('language'))
-                            ->where($db->quoteName('id') . '=' . (int)$option->value)
-                            ->from($db->quoteName('#__categories'));
+                $query = $db->getQuery(true)->select($db->quoteName('language'))->where(
+                        $db->quoteName('id') . '=' . (int)$option->value
+                    )->from($db->quoteName('#__categories'));
 
                 $db->setQuery($query);
                 $language = $db->loadResult();

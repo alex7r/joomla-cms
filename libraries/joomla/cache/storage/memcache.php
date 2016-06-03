@@ -78,8 +78,10 @@ class JCacheStorageMemcache extends JCacheStorage
 
         $memcache = new Memcache;
 
-        return @$memcache->connect($config->get('memcache_server_host', 'localhost'),
-            $config->get('memcache_server_port', 11211));
+        return @$memcache->connect(
+            $config->get('memcache_server_host', 'localhost'),
+            $config->get('memcache_server_port', 11211)
+        );
     }
 
     /**
@@ -98,8 +100,11 @@ class JCacheStorageMemcache extends JCacheStorage
 
         // Create the memcache connection
         static::$_db = new Memcache;
-        static::$_db->addserver($config->get('memcache_server_host', 'localhost'),
-            $config->get('memcache_server_port', 11211), $this->_persistent);
+        static::$_db->addserver(
+            $config->get('memcache_server_host', 'localhost'),
+            $config->get('memcache_server_port', 11211),
+            $this->_persistent
+        );
 
         $memcachetest = @static::$_db->connect($server['host'], $server['port']);
 

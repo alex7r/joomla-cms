@@ -573,8 +573,11 @@ abstract class JFactory
             throw new BadMethodCallException('JSimplepieFactory not found');
         }
 
-        JLog::add(__METHOD__ . ' is deprecated.   Use JFeedFactory() or supply SimplePie instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            __METHOD__ . ' is deprecated.   Use JFeedFactory() or supply SimplePie instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return JSimplepieFactory::getFeedParser($url, $cache_time);
     }

@@ -53,12 +53,9 @@ class JHelperTags extends JHelper
     public static function searchTags($filters = array())
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('a.id AS value')
-                    ->select('a.path AS text')
-                    ->select('a.path')
-                    ->from('#__tags AS a')
-                    ->join('LEFT', $db->quoteName('#__tags', 'b') . ' ON a.lft > b.lft AND a.rgt < b.rgt');
+        $query = $db->getQuery(true)->select('a.id AS value')->select('a.path AS text')->select('a.path')->from(
+                '#__tags AS a'
+            )->join('LEFT', $db->quoteName('#__tags', 'b') . ' ON a.lft > b.lft AND a.rgt < b.rgt');
 
         // Filter language
         if (!empty($filters['flanguage'])) {
@@ -70,7 +67,11 @@ class JHelperTags extends JHelper
 
         // Search in title or path
         if (!empty($filters['like'])) {
-            $query->where('(' . $db->quoteName('a.title') . ' LIKE ' . $db->quote('%' . $filters['like'] . '%') . ' OR ' . $db->quoteName('a.path') . ' LIKE ' . $db->quote('%' . $filters['like'] . '%') . ')');
+            $query->where(
+                '(' . $db->quoteName('a.title') . ' LIKE ' . $db->quote(
+                    '%' . $filters['like'] . '%'
+                ) . ' OR ' . $db->quoteName('a.path') . ' LIKE ' . $db->quote('%' . $filters['like'] . '%') . ')'
+            );
         }
 
         // Filter title
@@ -143,8 +144,12 @@ class JHelperTags extends JHelper
 
                 $db = JFactory::getDbo();
 
-                $query = $db->getQuery(true)->select('alias, title')->from('#__tags')->where('alias IN (' . implode(',',
-                        array_map(array($db, 'quote'), $aliases)) . ')');
+                $query = $db->getQuery(true)->select('alias, title')->from('#__tags')->where(
+                    'alias IN (' . implode(
+                        ',',
+                        array_map(array($db, 'quote'), $aliases)
+                    ) . ')'
+                );
                 $db->setQuery($query);
 
                 try {
@@ -269,14 +274,15 @@ class JHelperTags extends JHelper
     {
         // Initialize some variables.
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('m.tag_id'))
-                    ->from($db->quoteName('#__contentitem_tag_map') . ' AS m ')
-                    ->where(array(
-                        $db->quoteName('m.type_alias') . ' = ' . $db->quote($contentType),
-                        $db->quoteName('m.content_item_id') . ' = ' . (int)$id,
-                        $db->quoteName('t.published') . ' = 1'
-                    ));
+        $query = $db->getQuery(true)->select($db->quoteName('m.tag_id'))->from(
+                $db->quoteName('#__contentitem_tag_map') . ' AS m '
+            )->where(
+                array(
+                    $db->quoteName('m.type_alias') . ' = ' . $db->quote($contentType),
+                    $db->quoteName('m.content_item_id') . ' = ' . (int)$id,
+                    $db->quoteName('t.published') . ' = 1'
+                )
+            );
 
         $user   = JFactory::getUser();
         $groups = implode(',', $user->getAuthorisedViewLevels());
@@ -298,8 +304,10 @@ class JHelperTags extends JHelper
             $query->select($db->quoteName('t') . '.*');
         }
 
-        $query->join('INNER',
-            $db->quoteName('#__tags') . ' AS t ' . ' ON ' . $db->quoteName('m.tag_id') . ' = ' . $db->quoteName('t.id'));
+        $query->join(
+            'INNER',
+            $db->quoteName('#__tags') . ' AS t ' . ' ON ' . $db->quoteName('m.tag_id') . ' = ' . $db->quoteName('t.id')
+        );
 
         $db->setQuery($query);
         $this->itemTags = $db->loadObjectList();
@@ -367,24 +375,48 @@ class JHelperTags extends JHelper
         JArrayHelper::toInteger($stateFilters);
 
         // M is the mapping table. C is the core_content table. Ct is the content_types table.
-        $query->select('m.type_alias' . ', ' . 'm.content_item_id' . ', ' . 'm.core_content_id' . ', ' . 'count(m.tag_id) AS match_count' . ', ' . 'MAX(m.tag_date) as tag_date' . ', ' . 'MAX(c.core_title) AS core_title' . ', ' . 'MAX(c.core_params) AS core_params')
-              ->select('MAX(c.core_alias) AS core_alias, MAX(c.core_body) AS core_body, MAX(c.core_state) AS core_state, MAX(c.core_access) AS core_access')
-              ->select('MAX(c.core_metadata) AS core_metadata' . ', ' . 'MAX(c.core_created_user_id) AS core_created_user_id' . ', ' . 'MAX(c.core_created_by_alias) AS core_created_by_alias')
+        $query->select(
+            'm.type_alias' . ', ' . 'm.content_item_id' . ', ' . 'm.core_content_id' . ', ' . 'count(m.tag_id) AS match_count' . ', ' . 'MAX(m.tag_date) as tag_date' . ', ' . 'MAX(c.core_title) AS core_title' . ', ' . 'MAX(c.core_params) AS core_params'
+        )
+              ->select(
+                  'MAX(c.core_alias) AS core_alias, MAX(c.core_body) AS core_body, MAX(c.core_state) AS core_state, MAX(c.core_access) AS core_access'
+              )
+              ->select(
+                  'MAX(c.core_metadata) AS core_metadata' . ', ' . 'MAX(c.core_created_user_id) AS core_created_user_id' . ', ' . 'MAX(c.core_created_by_alias) AS core_created_by_alias'
+              )
               ->select('MAX(c.core_created_time) as core_created_time, MAX(c.core_images) as core_images')
-              ->select('CASE WHEN c.core_modified_time = ' . $nullDate . ' THEN c.core_created_time ELSE c.core_modified_time END as core_modified_time')
+              ->select(
+                  'CASE WHEN c.core_modified_time = ' . $nullDate . ' THEN c.core_created_time ELSE c.core_modified_time END as core_modified_time'
+              )
               ->select('MAX(c.core_language) AS core_language, MAX(c.core_catid) AS core_catid')
-              ->select('MAX(c.core_publish_up) AS core_publish_up, MAX(c.core_publish_down) as core_publish_down')
+              ->select(
+                  'MAX(c.core_publish_up) AS core_publish_up, MAX(c.core_publish_down) as core_publish_down'
+              )
               ->select('MAX(ct.type_title) AS content_type_title, MAX(ct.router) AS router')
-              ->from('#__contentitem_tag_map AS m')
-              ->join('INNER',
-                  '#__ucm_content AS c ON m.type_alias = c.core_type_alias AND m.core_content_id = c.core_content_id AND c.core_state IN (' . implode(',',
-                      $stateFilters) . ')' . (in_array('0',
-                      $stateFilters) ? '' : ' AND (c.core_publish_up = ' . $nullDate . ' OR c.core_publish_up <= ' . $nowDate . ') ' . ' AND (c.core_publish_down = ' . $nullDate . ' OR  c.core_publish_down >= ' . $nowDate . ')'))
-              ->join('INNER',
-                  '#__content_types AS ct ON ct.type_alias = m.type_alias')// Join over categoris for get only published
-              ->join('INNER',
-                '#__categories AS tc ON tc.id = c.core_catid AND tc.published = 1')// Join over the users for the author and email
-              ->select("CASE WHEN c.core_created_by_alias > ' ' THEN c.core_created_by_alias ELSE ua.name END AS author")
+              ->from(
+                  '#__contentitem_tag_map AS m'
+              )
+              ->join(
+                  'INNER',
+                  '#__ucm_content AS c ON m.type_alias = c.core_type_alias AND m.core_content_id = c.core_content_id AND c.core_state IN (' . implode(
+                      ',',
+                      $stateFilters
+                  ) . ')' . (in_array(
+                      '0',
+                      $stateFilters
+                  ) ? '' : ' AND (c.core_publish_up = ' . $nullDate . ' OR c.core_publish_up <= ' . $nowDate . ') ' . ' AND (c.core_publish_down = ' . $nullDate . ' OR  c.core_publish_down >= ' . $nowDate . ')')
+              )
+              ->join(
+                  'INNER',
+                  '#__content_types AS ct ON ct.type_alias = m.type_alias'
+              )// Join over categoris for get only published
+              ->join(
+                'INNER',
+                '#__categories AS tc ON tc.id = c.core_catid AND tc.published = 1'
+            )// Join over the users for the author and email
+              ->select(
+                "CASE WHEN c.core_created_by_alias > ' ' THEN c.core_created_by_alias ELSE ua.name END AS author"
+            )
               ->select("ua.email AS author_email")
               ->join('LEFT', '#__users AS ua ON ua.id = c.core_created_user_id')
               ->where('m.tag_id IN (' . implode(',', $tagIds) . ')');
@@ -399,7 +431,9 @@ class JHelperTags extends JHelper
                 $language = $this->getCurrentLanguage();
             }
 
-            $query->where($db->quoteName('c.core_language') . ' IN (' . $db->quote($language) . ', ' . $db->quote('*') . ')');
+            $query->where(
+                $db->quoteName('c.core_language') . ' IN (' . $db->quote($language) . ', ' . $db->quote('*') . ')'
+            );
         }
 
         // Get the type data, limited to types in the request if there are any specified.
@@ -414,8 +448,9 @@ class JHelperTags extends JHelper
         $query->where('m.type_alias IN (' . implode(',', $typeAliases) . ')');
 
         $groups = '0,' . implode(',', array_unique($user->getAuthorisedViewLevels()));
-        $query->where('c.core_access IN (' . $groups . ')')
-              ->group('m.type_alias, m.content_item_id, m.core_content_id, core_modified_time, core_created_time, core_created_by_alias, name, author_email');
+        $query->where('c.core_access IN (' . $groups . ')')->group(
+                'm.type_alias, m.content_item_id, m.core_content_id, core_modified_time, core_created_time, core_created_by_alias, name, author_email'
+            );
 
         // Use HAVING if matching all tags and we are matching more than one tag.
         if ($ntagsr > 1 && $anyOrAll != 1 && $includeChildren != 1) {
@@ -540,10 +575,9 @@ class JHelperTags extends JHelper
             JArrayHelper::toInteger($tagIds);
 
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select($db->quoteName('title'))
-                        ->from($db->quoteName('#__tags'))
-                        ->where($db->quoteName('id') . ' IN (' . implode(',', $tagIds) . ')');
+            $query = $db->getQuery(true)->select($db->quoteName('title'))->from($db->quoteName('#__tags'))->where(
+                    $db->quoteName('id') . ' IN (' . implode(',', $tagIds) . ')'
+                );
             $query->order($db->quoteName('title'));
 
             $db->setQuery($query);
@@ -592,8 +626,10 @@ class JHelperTags extends JHelper
                 $ucm     = new JUcmContent($table, $this->typeAlias);
                 $ucmData = $data ? $ucm->mapData($data) : $ucm->ucmData;
 
-                $primaryId = $ucm->getPrimaryKey($ucmData['common']['core_type_id'],
-                    $ucmData['common']['core_content_item_id']);
+                $primaryId = $ucm->getPrimaryKey(
+                    $ucmData['common']['core_type_id'],
+                    $ucmData['common']['core_content_item_id']
+                );
                 $result    = $ucmContentTable->load($primaryId);
                 $result    = $result && $ucmContentTable->bind($ucmData['common']);
                 $result    = $result && $ucmContentTable->check();
@@ -646,10 +682,9 @@ class JHelperTags extends JHelper
         $key   = $table->getKeyName();
         $id    = $table->$key;
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->delete('#__contentitem_tag_map')
-                    ->where($db->quoteName('type_alias') . ' = ' . $db->quote($this->typeAlias))
-                    ->where($db->quoteName('content_item_id') . ' = ' . (int)$id);
+        $query = $db->getQuery(true)->delete('#__contentitem_tag_map')->where(
+                $db->quoteName('type_alias') . ' = ' . $db->quote($this->typeAlias)
+            )->where($db->quoteName('content_item_id') . ' = ' . (int)$id);
 
         if (is_array($tags) && count($tags) > 0) {
             JArrayHelper::toInteger($tags);
@@ -735,12 +770,17 @@ class JHelperTags extends JHelper
         $db = JFactory::getDbo();
 
         // Load the tags.
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('t.id'))
-                    ->from($db->quoteName('#__tags') . ' AS t ')
-                    ->join('INNER',
-                        $db->quoteName('#__contentitem_tag_map') . ' AS m' . ' ON ' . $db->quoteName('m.tag_id') . ' = ' . $db->quoteName('t.id') . ' AND ' . $db->quoteName('m.type_alias') . ' = ' . $db->quote($prefix) . ' AND ' . $db->quoteName('m.content_item_id') . ' IN ( ' . implode(',',
-                            $ids) . ')');
+        $query = $db->getQuery(true)->select($db->quoteName('t.id'))->from($db->quoteName('#__tags') . ' AS t ')->join(
+                'INNER',
+                $db->quoteName('#__contentitem_tag_map') . ' AS m' . ' ON ' . $db->quoteName(
+                    'm.tag_id'
+                ) . ' = ' . $db->quoteName('t.id') . ' AND ' . $db->quoteName('m.type_alias') . ' = ' . $db->quote(
+                    $prefix
+                ) . ' AND ' . $db->quoteName('m.content_item_id') . ' IN ( ' . implode(
+                    ',',
+                    $ids
+                ) . ')'
+            );
 
         $db->setQuery($query);
 
@@ -779,17 +819,23 @@ class JHelperTags extends JHelper
 
         $query = $db->getQuery(true);
         $query->insert('#__contentitem_tag_map');
-        $query->columns(array(
-            $db->quoteName('type_alias'),
-            $db->quoteName('core_content_id'),
-            $db->quoteName('content_item_id'),
-            $db->quoteName('tag_id'),
-            $db->quoteName('tag_date'),
-            $db->quoteName('type_id')
-        ));
+        $query->columns(
+            array(
+                $db->quoteName('type_alias'),
+                $db->quoteName('core_content_id'),
+                $db->quoteName('content_item_id'),
+                $db->quoteName('tag_id'),
+                $db->quoteName('tag_date'),
+                $db->quoteName('type_id')
+            )
+        );
 
         foreach ($tags as $tag) {
-            $query->values($db->quote($this->typeAlias) . ', ' . (int)$ucmId . ', ' . (int)$item . ', ' . $db->quote($tag) . ', ' . $query->currentTimestamp() . ', ' . (int)$typeId);
+            $query->values(
+                $db->quote($this->typeAlias) . ', ' . (int)$ucmId . ', ' . (int)$item . ', ' . $db->quote(
+                    $tag
+                ) . ', ' . $query->currentTimestamp() . ', ' . (int)$typeId
+            );
         }
 
         $db->setQuery($query);
@@ -907,7 +953,10 @@ class JHelperTags extends JHelper
         }
 
         // New items with no tags bypass this step.
-        if ((!empty($newTags) && is_string($newTags) || (isset($newTags[0]) && $newTags[0] != '')) || isset($this->oldTags)) {
+        if ((!empty($newTags) && is_string(
+                    $newTags
+                ) || (isset($newTags[0]) && $newTags[0] != '')) || isset($this->oldTags)
+        ) {
             if (is_array($newTags)) {
                 $newTags = implode(',', $newTags);
             }
@@ -929,9 +978,9 @@ class JHelperTags extends JHelper
     {
         // Delete the old tag maps.
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->delete($db->quoteName('#__contentitem_tag_map'))
-                    ->where($db->quoteName('tag_id') . ' = ' . (int)$tag_id);
+        $query = $db->getQuery(true)->delete($db->quoteName('#__contentitem_tag_map'))->where(
+                $db->quoteName('tag_id') . ' = ' . (int)$tag_id
+            );
         $db->setQuery($query);
         $db->execute();
     }

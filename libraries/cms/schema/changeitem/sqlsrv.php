@@ -62,7 +62,9 @@ class JSchemaChangeitemSqlsrv extends JSchemaChangeitem
             $alterCommand = strtoupper($wordArray[3] . ' ' . $wordArray[4]);
 
             if ($alterCommand == 'ADD') {
-                $result            = 'SELECT * FROM INFORMATION_SCHEMA.Columns ' . $wordArray[2] . ' WHERE COLUMN_NAME = ' . $this->fixQuote($wordArray[5]);
+                $result            = 'SELECT * FROM INFORMATION_SCHEMA.Columns ' . $wordArray[2] . ' WHERE COLUMN_NAME = ' . $this->fixQuote(
+                        $wordArray[5]
+                    );
                 $this->queryType   = 'ADD';
                 $this->msgElements = array($this->fixQuote($wordArray[2]), $this->fixQuote($wordArray[5]));
             } elseif ($alterCommand == 'CREATE INDEX') {
@@ -71,7 +73,9 @@ class JSchemaChangeitemSqlsrv extends JSchemaChangeitem
                 $this->queryType   = 'CREATE INDEX';
                 $this->msgElements = array($this->fixQuote($wordArray[2]), $index);
             } elseif (strtoupper($wordArray[3]) == 'MODIFY' || strtoupper($wordArray[3]) == 'CHANGE') {
-                $result            = 'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS  WHERE table_name = ' . $this->fixQuote($wordArray[2]);
+                $result            = 'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS  WHERE table_name = ' . $this->fixQuote(
+                        $wordArray[2]
+                    );
                 $this->queryType   = 'ALTER COLUMN COLUMN_NAME =' . $this->fixQuote($wordArray[4]);
                 $this->msgElements = array($this->fixQuote($wordArray[2]), $this->fixQuote($wordArray[4]));
             }

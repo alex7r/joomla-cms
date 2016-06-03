@@ -113,11 +113,17 @@ class ContactModelContact extends JModelForm
                 $case_when1 .= $c_id . ' END as catslug';
 
                 $query->select($this->getState('item.select', 'a.*') . ',' . $case_when . ',' . $case_when1)
-                      ->from('#__contact_details AS a')// Join on category table.
+                      ->from(
+                          '#__contact_details AS a'
+                      )// Join on category table.
                       ->select('c.title AS category_title, c.alias AS category_alias, c.access AS category_access')
-                      ->join('LEFT',
-                          '#__categories AS c on c.id = a.catid')// Join over the categories to get parent category titles
-                      ->select('parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias')
+                      ->join(
+                          'LEFT',
+                          '#__categories AS c on c.id = a.catid'
+                      )// Join over the categories to get parent category titles
+                      ->select(
+                        'parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias'
+                    )
                       ->join('LEFT', '#__categories as parent ON parent.id = c.parent_id')
                       ->where('a.id = ' . (int)$pk);
 
@@ -142,7 +148,10 @@ class ContactModelContact extends JModelForm
                 }
 
                 // Check for published state if filter set.
-                if (((is_numeric($published)) || (is_numeric($archived))) && (($data->published != $published) && ($data->published != $archived))) {
+                if (((is_numeric($published)) || (is_numeric(
+                            $archived
+                        ))) && (($data->published != $published) && ($data->published != $archived))
+                ) {
                     JError::raiseError(404, JText::_('COM_CONTACT_ERROR_CONTACT_NOT_FOUND'));
                 }
 
@@ -172,8 +181,10 @@ class ContactModelContact extends JModelForm
                     if ($data->catid == 0 || $data->category_access === null) {
                         $data->params->set('access-view', in_array($data->access, $groups));
                     } else {
-                        $data->params->set('access-view',
-                            in_array($data->access, $groups) && in_array($data->category_access, $groups));
+                        $data->params->set(
+                            'access-view',
+                            in_array($data->access, $groups) && in_array($data->category_access, $groups)
+                        );
                     }
                 }
 
@@ -243,23 +254,26 @@ class ContactModelContact extends JModelForm
             $case_when1 .= $query->concatenate(array($c_id, 'c.alias'), ':');
             $case_when1 .= ' ELSE ';
             $case_when1 .= $c_id . ' END as catslug';
-            $query->select($case_when1 . ',' . $case_when)
-                  ->from('#__content as a')
-                  ->join('LEFT', '#__categories as c on a.catid=c.id')
-                  ->where('a.created_by = ' . (int)$contact->user_id)
-                  ->where('a.access IN (' . $groups . ')')
-                  ->order('a.state DESC, a.created DESC');
+            $query->select($case_when1 . ',' . $case_when)->from('#__content as a')->join(
+                    'LEFT',
+                    '#__categories as c on a.catid=c.id'
+                )->where('a.created_by = ' . (int)$contact->user_id)->where('a.access IN (' . $groups . ')')->order(
+                    'a.state DESC, a.created DESC'
+                );
 
             // Filter per language if plugin published
             if (JLanguageMultilang::isEnabled()) {
-                $query->where(('a.created_by = ' . (int)$contact->user_id) . ' AND ' . ('a.language=' . $db->quote(JFactory::getLanguage()
-                                                                                                                           ->getTag()) . ' OR a.language=' . $db->quote('*')));
+                $query->where(
+                    ('a.created_by = ' . (int)$contact->user_id) . ' AND ' . ('a.language=' . $db->quote(
+                            JFactory::getLanguage()->getTag()
+                        ) . ' OR a.language=' . $db->quote('*'))
+                );
             }
 
             if (is_numeric($published)) {
-                $query->where('a.state IN (1,2)')
-                      ->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')')
-                      ->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
+                $query->where('a.state IN (1,2)')->where(
+                        '(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')'
+                    )->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
             }
 
             // Number of articles to display from config/menu params
@@ -413,10 +427,11 @@ class ContactModelContact extends JModelForm
             $case_when1 .= ' ELSE ';
             $case_when1 .= $c_id . ' END as catslug';
 
-            $query->select('a.*, cc.access as category_access, cc.title as category_name, ' . $case_when . ',' . $case_when1)
-                  ->from('#__contact_details AS a')
-                  ->join('INNER', '#__categories AS cc on cc.id = a.catid')
-                  ->where('a.id = ' . (int)$pk);
+            $query->select(
+                'a.*, cc.access as category_access, cc.title as category_name, ' . $case_when . ',' . $case_when1
+            )->from('#__contact_details AS a')->join('INNER', '#__categories AS cc on cc.id = a.catid')->where(
+                    'a.id = ' . (int)$pk
+                );
 
             $published = $this->getState('filter.published');
 
@@ -454,14 +469,9 @@ class ContactModelContact extends JModelForm
                 // Get the com_content articles by the linked user
                 if ((int)$result->user_id && $this->getState('params')->get('show_articles')) {
 
-                    $query = $db->getQuery(true)
-                                ->select('a.id')
-                                ->select('a.title')
-                                ->select('a.state')
-                                ->select('a.access')
-                                ->select('a.catid')
-                                ->select('a.created')
-                                ->select('a.language');
+                    $query = $db->getQuery(true)->select('a.id')->select('a.title')->select('a.state')->select(
+                            'a.access'
+                        )->select('a.catid')->select('a.created')->select('a.language');
 
                     // SQL Server changes
                     $case_when = ' CASE WHEN ';
@@ -480,21 +490,27 @@ class ContactModelContact extends JModelForm
                     $case_when1 .= $c_id . ' END as catslug';
                     $query->select($case_when1 . ',' . $case_when)
                           ->from('#__content as a')
-                          ->join('LEFT', '#__categories as c on a.catid=c.id')
+                          ->join(
+                              'LEFT',
+                              '#__categories as c on a.catid=c.id'
+                          )
                           ->where('a.created_by = ' . (int)$result->user_id)
                           ->where('a.access IN (' . $groups . ')')
                           ->order('a.state DESC, a.created DESC');
 
                     // Filter per language if plugin published
                     if (JLanguageMultilang::isEnabled()) {
-                        $query->where('a.language IN (' . $db->quote(JFactory::getLanguage()
-                                                                             ->getTag()) . ',' . $db->quote('*') . ')');
+                        $query->where(
+                            'a.language IN (' . $db->quote(
+                                JFactory::getLanguage()->getTag()
+                            ) . ',' . $db->quote('*') . ')'
+                        );
                     }
 
                     if (is_numeric($published)) {
-                        $query->where('a.state IN (1,2)')
-                              ->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')')
-                              ->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
+                        $query->where('a.state IN (1,2)')->where(
+                                '(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')'
+                            )->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
                     }
 
                     // Number of articles to display from config/menu params
@@ -506,8 +522,10 @@ class ContactModelContact extends JModelForm
 
                         // Use global?
                         if ((string)$articles_display_num === '') {
-                            $articles_display_num = JComponentHelper::getParams('com_contact')
-                                                                    ->get('articles_display_num', 10);
+                            $articles_display_num = JComponentHelper::getParams('com_contact')->get(
+                                    'articles_display_num',
+                                    10
+                                );
                         }
                     }
 

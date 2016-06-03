@@ -45,13 +45,19 @@ defined('_JEXEC') or die;
  */
 extract($displayData);
 
-echo JHtml::_('bootstrap.renderModal', 'versionsModal', array(
-    'url'    => $link,
-    'title'  => $label,
-    'height' => '300px',
-    'width'  => '800px',
-    'footer' => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
-));
+echo JHtml::_(
+    'bootstrap.renderModal',
+    'versionsModal',
+    array(
+        'url'    => $link,
+        'title'  => $label,
+        'height' => '300px',
+        'width'  => '800px',
+        'footer' => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_(
+                "JLIB_HTML_BEHAVIOR_CLOSE"
+            ) . '</button>'
+    )
+);
 
 ?>
 <button onclick="jQuery('#versionsModal').modal('show')" class="btn" data-toggle="modal" title="<?php echo $label; ?>">

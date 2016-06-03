@@ -74,7 +74,10 @@ class InstallationFormFieldPrefix extends JFormField
         // Initialize JavaScript field attributes.
         $onchange = $this->element['onchange'] ? ' onchange="' . (string)$this->element['onchange'] . '"' : '';
 
-        return '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars($prefix,
-            ENT_COMPAT, 'UTF-8') . '"' . $class . $disabled . $readonly . $onchange . $maxLength . '/>';
+        return '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' . ' value="' . htmlspecialchars(
+            $prefix,
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '"' . $class . $disabled . $readonly . $onchange . $maxLength . '/>';
     }
 }

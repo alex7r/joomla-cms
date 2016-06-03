@@ -15,18 +15,22 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('formbehavior.chosen', 'select');
 $this->fieldsets = $this->form->getFieldsets('params');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'plugin.cancel' || document.formvalidator.isValid(document.getElementById('style-form'))) {
 			Joomla.submitform(task, document.getElementById('style-form'));
 		}
 	};
-");
+"
+);
 ?>
 
 <form
-    action="<?php echo JRoute::_('index.php?option=com_plugins&layout=edit&extension_id=' . (int)$this->item->extension_id); ?>"
+    action="<?php echo JRoute::_(
+        'index.php?option=com_plugins&layout=edit&extension_id=' . (int)$this->item->extension_id
+    ); ?>"
     method="post" name="adminForm" id="style-form" class="form-validate">
     <div class="form-horizontal">
 
@@ -49,13 +53,17 @@ JFactory::getDocument()->addScriptDeclaration("
                         </h3>
                         <div class="info-labels">
 							<span class="label hasTooltip"
-                                  title="<?php echo JHtml::tooltipText('COM_PLUGINS_FIELD_FOLDER_LABEL',
-                                      'COM_PLUGINS_FIELD_FOLDER_DESC'); ?>">
+                                  title="<?php echo JHtml::tooltipText(
+                                      'COM_PLUGINS_FIELD_FOLDER_LABEL',
+                                      'COM_PLUGINS_FIELD_FOLDER_DESC'
+                                  ); ?>">
 								<?php echo $this->form->getValue('folder'); ?>
 							</span> /
 							<span class="label hasTooltip"
-                                  title="<?php echo JHtml::tooltipText('COM_PLUGINS_FIELD_ELEMENT_LABEL',
-                                      'COM_PLUGINS_FIELD_ELEMENT_DESC'); ?>">
+                                  title="<?php echo JHtml::tooltipText(
+                                      'COM_PLUGINS_FIELD_ELEMENT_LABEL',
+                                      'COM_PLUGINS_FIELD_ELEMENT_DESC'
+                                  ); ?>">
 								<?php echo $this->form->getValue('element'); ?>
 							</span>
                         </div>
@@ -128,8 +136,12 @@ JFactory::getDocument()->addScriptDeclaration("
         <?php echo JHtml::_('bootstrap.endTab'); ?>
 
         <?php if (isset($long_description) && $long_description != '') : ?>
-            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'description',
-                JText::_('JGLOBAL_FIELDSET_DESCRIPTION')); ?>
+            <?php echo JHtml::_(
+                'bootstrap.addTab',
+                'myTab',
+                'description',
+                JText::_('JGLOBAL_FIELDSET_DESCRIPTION')
+            ); ?>
             <?php echo $long_description; ?>
             <?php echo JHtml::_('bootstrap.endTab'); ?>
         <?php endif; ?>

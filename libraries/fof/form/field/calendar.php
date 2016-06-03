@@ -99,9 +99,8 @@ class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
         $formatPHP = str_replace(array('%', 'H:M:S', 'B'), array('', 'H:i:s', 'F'), $formatJS);
 
         // Check for empty date values
-        if (empty($this->value) || $this->value == FOFPlatform::getInstance()
-                                                              ->getDbo()
-                                                              ->getNullDate() || $this->value == '0000-00-00'
+        if (empty($this->value) || $this->value == FOFPlatform::getInstance()->getDbo()->getNullDate(
+                ) || $this->value == '0000-00-00'
         ) {
             $this->value = $default;
         }
@@ -175,8 +174,11 @@ class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 
             return JHtml::_('calendar', $this->value, $this->name, $this->id, $formatJS, $attributes);
         } else {
-            return '<span class="' . $this->id . ' ' . $class . '">' . htmlspecialchars($this->value, ENT_COMPAT,
-                'UTF-8') . '</span>';
+            return '<span class="' . $this->id . ' ' . $class . '">' . htmlspecialchars(
+                $this->value,
+                ENT_COMPAT,
+                'UTF-8'
+            ) . '</span>';
         }
     }
 

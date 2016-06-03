@@ -912,8 +912,15 @@ function tln_sanitize(
             list($free_content, $curpos) = tln_fixstyle($body, $gt + 1, $trans_image_path, $block_external_images);
             if ($free_content != false) {
                 if (!empty($attary)) {
-                    $attary = tln_fixatts($tagname, $attary, $rm_attnames, $bad_attvals, $add_attr_to_tag,
-                        $trans_image_path, $block_external_images);
+                    $attary = tln_fixatts(
+                        $tagname,
+                        $attary,
+                        $rm_attnames,
+                        $bad_attvals,
+                        $add_attr_to_tag,
+                        $trans_image_path,
+                        $block_external_images
+                    );
                 }
                 $trusted .= tln_tagprint($tagname, $attary, $tagtype);
                 $trusted .= $free_content;
@@ -963,8 +970,10 @@ function tln_sanitize(
                     if ($tagtype == 1 && in_array($tagname, $rm_tags_with_content)) {
                         $skip_content = $tagname;
                     } else {
-                        if (($rm_tags == false && in_array($tagname,
-                                    $tag_list)) || ($rm_tags == true && !in_array($tagname, $tag_list))
+                        if (($rm_tags == false && in_array(
+                                    $tagname,
+                                    $tag_list
+                                )) || ($rm_tags == true && !in_array($tagname, $tag_list))
                         ) {
                             $tagname = false;
                         } else {
@@ -986,8 +995,15 @@ function tln_sanitize(
                              * This is where we run other checks.
                              */
                             if (is_array($attary) && sizeof($attary) > 0) {
-                                $attary = tln_fixatts($tagname, $attary, $rm_attnames, $bad_attvals, $add_attr_to_tag,
-                                    $trans_image_path, $block_external_images);
+                                $attary = tln_fixatts(
+                                    $tagname,
+                                    $attary,
+                                    $rm_attnames,
+                                    $bad_attvals,
+                                    $add_attr_to_tag,
+                                    $trans_image_path,
+                                    $block_external_images
+                                );
                             }
                         }
                     }
@@ -1134,8 +1150,18 @@ function HTMLFilter($body, $trans_image_path, $block_external_images = false)
         "/^a$/i" => array('target' => '"_blank"')
     );
 
-    $trusted = tln_sanitize($body, $tag_list, $rm_tags_with_content, $self_closing_tags, $force_tag_closing,
-        $rm_attnames, $bad_attvals, $add_attr_to_tag, $trans_image_path, $block_external_images);
+    $trusted = tln_sanitize(
+        $body,
+        $tag_list,
+        $rm_tags_with_content,
+        $self_closing_tags,
+        $force_tag_closing,
+        $rm_attnames,
+        $bad_attvals,
+        $add_attr_to_tag,
+        $trans_image_path,
+        $block_external_images
+    );
 
     return $trusted;
 }

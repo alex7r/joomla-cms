@@ -54,19 +54,27 @@ JFactory::getDocument()->addScriptDeclaration($script);
             <fieldset class="form-inline">
                 <div class="control-group checkbox">
                     <div
-                        class="controls"><?php echo $this->form->getInput('recurse'); ?><?php echo $this->form->getLabel('recurse'); ?></div>
+                        class="controls"><?php echo $this->form->getInput(
+                            'recurse'
+                        ); ?><?php echo $this->form->getLabel('recurse'); ?></div>
                 </div>
                 <div class="control-group checkbox">
                     <div
-                        class="control-label"><?php echo $this->form->getInput('mode'); ?><?php echo $this->form->getLabel('mode'); ?></div>
+                        class="control-label"><?php echo $this->form->getInput(
+                            'mode'
+                        ); ?><?php echo $this->form->getLabel('mode'); ?></div>
                 </div>
                 <div class="control-group checkbox">
                     <div
-                        class="control-label"><?php echo $this->form->getInput('disabled'); ?><?php echo $this->form->getLabel('disabled'); ?></div>
+                        class="control-label"><?php echo $this->form->getInput(
+                            'disabled'
+                        ); ?><?php echo $this->form->getLabel('disabled'); ?></div>
                 </div>
                 <div class="control-group checkbox">
                     <div
-                        class="control-label"><?php echo $this->form->getInput('bcc'); ?><?php echo $this->form->getLabel('bcc'); ?></div>
+                        class="control-label"><?php echo $this->form->getInput(
+                            'bcc'
+                        ); ?><?php echo $this->form->getLabel('bcc'); ?></div>
                 </div>
                 <div class="control-group">
                     <div class="control-label"><?php echo $this->form->getLabel('group'); ?></div>

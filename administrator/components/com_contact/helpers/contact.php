@@ -27,11 +27,17 @@ class ContactHelper extends JHelperContent
      */
     public static function addSubmenu($vName)
     {
-        JHtmlSidebar::addEntry(JText::_('COM_CONTACT_SUBMENU_CONTACTS'), 'index.php?option=com_contact&view=contacts',
-            $vName == 'contacts');
+        JHtmlSidebar::addEntry(
+            JText::_('COM_CONTACT_SUBMENU_CONTACTS'),
+            'index.php?option=com_contact&view=contacts',
+            $vName == 'contacts'
+        );
 
-        JHtmlSidebar::addEntry(JText::_('COM_CONTACT_SUBMENU_CATEGORIES'),
-            'index.php?option=com_categories&extension=com_contact', $vName == 'categories');
+        JHtmlSidebar::addEntry(
+            JText::_('COM_CONTACT_SUBMENU_CATEGORIES'),
+            'index.php?option=com_categories&extension=com_contact',
+            $vName == 'categories'
+        );
     }
 
     /**
@@ -53,10 +59,9 @@ class ContactHelper extends JHelperContent
             $item->count_unpublished = 0;
             $item->count_published   = 0;
             $query                   = $db->getQuery(true);
-            $query->select('published AS state, count(*) AS count')
-                  ->from($db->qn('#__contact_details'))
-                  ->where('catid = ' . (int)$item->id)
-                  ->group('published');
+            $query->select('published AS state, count(*) AS count')->from($db->qn('#__contact_details'))->where(
+                    'catid = ' . (int)$item->id
+                )->group('published');
             $db->setQuery($query);
             $contacts = $db->loadObjectList();
 

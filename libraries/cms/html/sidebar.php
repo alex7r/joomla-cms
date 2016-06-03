@@ -145,7 +145,9 @@ abstract class JHtmlSidebar
      */
     public static function addFilter($label, $name, $options, $noDefault = false)
     {
-        array_push(static::$filters,
-            array('label' => $label, 'name' => $name, 'options' => $options, 'noDefault' => $noDefault));
+        array_push(
+            static::$filters,
+            array('label' => $label, 'name' => $name, 'options' => $options, 'noDefault' => $noDefault)
+        );
     }
 }

@@ -37,8 +37,10 @@ class ConfigControllerTemplatesDisplay extends ConfigControllerDisplay
 
         // Access back-end com_config
         JLoader::register('TemplatesController', JPATH_ADMINISTRATOR . '/components/com_templates/controller.php');
-        JLoader::register('TemplatesViewStyle',
-            JPATH_ADMINISTRATOR . '/components/com_templates/views/style/view.json.php');
+        JLoader::register(
+            'TemplatesViewStyle',
+            JPATH_ADMINISTRATOR . '/components/com_templates/views/style/view.json.php'
+        );
         JLoader::register('TemplatesModelStyle', JPATH_ADMINISTRATOR . '/components/com_templates/models/style.php');
 
         $displayClass = new TemplatesController;

@@ -68,8 +68,11 @@ class JUpdaterExtension extends JUpdateAdapter
                     $byName = false;
 
                     // <client> has to be 'administrator' or 'site', numeric values are deprecated. See https://docs.joomla.org/Design_of_JUpdate
-                    JLog::add('Using numeric values for <client> in the updater xml is deprecated. Use \'administrator\' or \'site\' instead.',
-                        JLog::WARNING, 'deprecated');
+                    JLog::add(
+                        'Using numeric values for <client> in the updater xml is deprecated. Use \'administrator\' or \'site\' instead.',
+                        JLog::WARNING,
+                        'deprecated'
+                    );
                 } else {
                     $byName = true;
                 }
@@ -159,8 +162,11 @@ class JUpdaterExtension extends JUpdateAdapter
 
                 // Support for the min_dev_level and max_dev_level attributes is deprecated, a regexp should be used instead
                 if (isset($this->currentUpdate->targetplatform->min_dev_level) || isset($this->currentUpdate->targetplatform->max_dev_level)) {
-                    JLog::add('Support for the min_dev_level and max_dev_level attributes of an update\'s <targetplatform> tag is deprecated and' . ' will be removed in 4.0. The full version should be specified in the version attribute and may optionally be a regexp.',
-                        JLog::WARNING, 'deprecated');
+                    JLog::add(
+                        'Support for the min_dev_level and max_dev_level attributes of an update\'s <targetplatform> tag is deprecated and' . ' will be removed in 4.0. The full version should be specified in the version attribute and may optionally be a regexp.',
+                        JLog::WARNING,
+                        'deprecated'
+                    );
                 }
 
                 /*
@@ -168,18 +174,28 @@ class JUpdaterExtension extends JUpdateAdapter
                  *
                  * Check for optional min_dev_level and max_dev_level attributes to further specify targetplatform (e.g., 3.0.1)
                  */
-                if ($product == $this->currentUpdate->targetplatform['NAME'] && preg_match('/^' . $this->currentUpdate->targetplatform['VERSION'] . '/',
-                        JVERSION) && ((!isset($this->currentUpdate->targetplatform->min_dev_level)) || JVersion::DEV_LEVEL >= $this->currentUpdate->targetplatform->min_dev_level) && ((!isset($this->currentUpdate->targetplatform->max_dev_level)) || JVersion::DEV_LEVEL <= $this->currentUpdate->targetplatform->max_dev_level)
+                if ($product == $this->currentUpdate->targetplatform['NAME'] && preg_match(
+                        '/^' . $this->currentUpdate->targetplatform['VERSION'] . '/',
+                        JVERSION
+                    ) && ((!isset($this->currentUpdate->targetplatform->min_dev_level)) || JVersion::DEV_LEVEL >= $this->currentUpdate->targetplatform->min_dev_level) && ((!isset($this->currentUpdate->targetplatform->max_dev_level)) || JVersion::DEV_LEVEL <= $this->currentUpdate->targetplatform->max_dev_level)
                 ) {
                     // Check if PHP version supported via <php_minimum> tag, assume true if tag isn't present
-                    if (!isset($this->currentUpdate->php_minimum) || version_compare(PHP_VERSION,
-                            $this->currentUpdate->php_minimum, '>=')
+                    if (!isset($this->currentUpdate->php_minimum) || version_compare(
+                            PHP_VERSION,
+                            $this->currentUpdate->php_minimum,
+                            '>='
+                        )
                     ) {
                         $phpMatch = true;
                     } else {
                         // Notify the user of the potential update
-                        $msg = JText::sprintf('JLIB_INSTALLER_AVAILABLE_UPDATE_PHP_VERSION', $this->currentUpdate->name,
-                            $this->currentUpdate->version, $this->currentUpdate->php_minimum, PHP_VERSION);
+                        $msg = JText::sprintf(
+                            'JLIB_INSTALLER_AVAILABLE_UPDATE_PHP_VERSION',
+                            $this->currentUpdate->name,
+                            $this->currentUpdate->version,
+                            $this->currentUpdate->php_minimum,
+                            PHP_VERSION
+                        );
 
                         JFactory::getApplication()->enqueueMessage($msg, 'warning');
 

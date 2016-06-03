@@ -35,9 +35,11 @@ class JGithubPackageGistsComments extends JGithubPackage
         $path = '/gists/' . (int)$gistId . '/comments';
 
         // Build the request data.
-        $data = json_encode(array(
-            'body' => $body,
-        ));
+        $data = json_encode(
+            array(
+                'body' => $body,
+            )
+        );
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);
@@ -95,9 +97,11 @@ class JGithubPackageGistsComments extends JGithubPackage
         $path = '/gists/comments/' . (int)$commentId;
 
         // Build the request data.
-        $data = json_encode(array(
-            'body' => $body
-        ));
+        $data = json_encode(
+            array(
+                'body' => $body
+            )
+        );
 
         // Send the request.
         $response = $this->client->patch($this->fetchUrl($path), $data);

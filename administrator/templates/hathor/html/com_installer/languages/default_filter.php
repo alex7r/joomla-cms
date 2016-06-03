@@ -18,7 +18,9 @@ defined('_JEXEC') or die;
                title="<?php echo JText::_('COM_INSTALLER_LANGUAGES_FILTER_SEARCH_DESC'); ?>"/>
         <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
         <button type="button"
-                onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                'JSEARCH_FILTER_CLEAR'
+            ); ?></button>
     </div>
 </fieldset>
 <div class="clr"></div>

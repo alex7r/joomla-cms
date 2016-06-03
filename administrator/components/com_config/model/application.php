@@ -31,8 +31,11 @@ class ConfigModelApplication extends ConfigModelForm
     public function getForm($data = array(), $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_config.application', 'application',
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_config.application',
+            'application',
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
 
         if (empty($form)) {
             return false;
@@ -114,8 +117,10 @@ class ConfigModelApplication extends ConfigModelForm
         }
 
         // Check if we can set the Force SSL option
-        if ((int)$data['force_ssl'] !== 0 && (int)$data['force_ssl'] !== (int)JFactory::getConfig()
-                                                                                      ->get('force_ssl', '0')
+        if ((int)$data['force_ssl'] !== 0 && (int)$data['force_ssl'] !== (int)JFactory::getConfig()->get(
+                    'force_ssl',
+                    '0'
+                )
         ) {
             try {
                 // Make an HTTPS request to check if the site is available in HTTPS.
@@ -123,12 +128,18 @@ class ConfigModelApplication extends ConfigModelForm
                 $options = new \Joomla\Registry\Registry;
                 $options->set('userAgent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0');
                 $options->set('transport.curl', array(CURLOPT_SSL_VERIFYPEER => false));
-                $response = JHttpFactory::getHttp($options)
-                                        ->get('https://' . $host . JUri::root(true) . '/', array('Host' => $host), 10);
+                $response = JHttpFactory::getHttp($options)->get(
+                        'https://' . $host . JUri::root(true) . '/',
+                        array('Host' => $host),
+                        10
+                    );
 
                 // If available in HTTPS check also the status code.
-                if (!in_array($response->code, array(200, 503, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310),
-                    true)
+                if (!in_array(
+                    $response->code,
+                    array(200, 503, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310),
+                    true
+                )
                 ) {
                     throw new RuntimeException('HTTPS version of the site returned an invalid HTTP status code.');
                 }
@@ -350,10 +361,9 @@ class ConfigModelApplication extends ConfigModelForm
     {
         try {
             // Load the current settings for this component
-            $query = $this->db->getQuery(true)
-                              ->select($this->db->quoteName(array('name', 'rules')))
-                              ->from($this->db->quoteName('#__assets'))
-                              ->where($this->db->quoteName('name') . ' = ' . $this->db->quote($permission['component']));
+            $query = $this->db->getQuery(true)->select($this->db->quoteName(array('name', 'rules')))->from(
+                    $this->db->quoteName('#__assets')
+                )->where($this->db->quoteName('name') . ' = ' . $this->db->quote($permission['component']));
 
             $this->db->setQuery($query);
 
@@ -408,10 +418,9 @@ class ConfigModelApplication extends ConfigModelForm
 
                 // Store the new permissions
                 $temp  = json_encode($temp);
-                $query = $this->db->getQuery(true)
-                                  ->update($this->db->quoteName('#__assets'))
-                                  ->set('rules = ' . $this->db->quote($temp))
-                                  ->where($this->db->quoteName('name') . ' = ' . $this->db->quote($permission['component']));
+                $query = $this->db->getQuery(true)->update($this->db->quoteName('#__assets'))->set(
+                        'rules = ' . $this->db->quote($temp)
+                    )->where($this->db->quoteName('name') . ' = ' . $this->db->quote($permission['component']));
 
                 $this->db->setQuery($query);
 
@@ -451,16 +460,24 @@ class ConfigModelApplication extends ConfigModelForm
 
         // Prepare email and send try to send it
         $mailSubject = JText::sprintf('COM_CONFIG_SENDMAIL_SUBJECT', $app->get('sitename'));
-        $mailBody    = JText::sprintf('COM_CONFIG_SENDMAIL_BODY',
-            JText::_('COM_CONFIG_SENDMAIL_METHOD_' . strtoupper($app->get('mailer'))));
+        $mailBody    = JText::sprintf(
+            'COM_CONFIG_SENDMAIL_BODY',
+            JText::_('COM_CONFIG_SENDMAIL_METHOD_' . strtoupper($app->get('mailer')))
+        );
 
-        if (JFactory::getMailer()
-                    ->sendMail($app->get('mailfrom'), $app->get('fromname'), $app->get('mailfrom'), $mailSubject,
-                        $mailBody) === true
+        if (JFactory::getMailer()->sendMail(
+                    $app->get('mailfrom'),
+                    $app->get('fromname'),
+                    $app->get('mailfrom'),
+                    $mailSubject,
+                    $mailBody
+                ) === true
         ) {
             $methodName = JText::_('COM_CONFIG_SENDMAIL_METHOD_' . strtoupper($app->get('mailer')));
-            $app->enqueueMessage(JText::sprintf('COM_CONFIG_SENDMAIL_SUCCESS', $app->get('mailfrom'), $methodName),
-                'success');
+            $app->enqueueMessage(
+                JText::sprintf('COM_CONFIG_SENDMAIL_SUCCESS', $app->get('mailfrom'), $methodName),
+                'success'
+            );
 
             return true;
         }

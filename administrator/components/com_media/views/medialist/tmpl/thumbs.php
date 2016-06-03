@@ -13,7 +13,8 @@ $path   = 'file_path';
 
 JHtml::_('jquery.framework');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 		jQuery(document).ready(function($){
 			window.parent.document.updateUploader();
 			$('.img-preview, .preview').each(function(index, value) {
@@ -43,7 +44,8 @@ JFactory::getDocument()->addScriptDeclaration("
 				});
 			});
 		});
-	");
+	"
+);
 ?>
 <form target="_parent" action="index.php?option=com_media&amp;tmpl=index&amp;folder=<?php echo $this->state->folder; ?>"
       method="post" id="mediamanager-form" name="mediamanager-form">
@@ -51,8 +53,10 @@ JFactory::getDocument()->addScriptDeclaration("
         <p>
             <span class="icon-folder"></span>
             <?php if ($this->state->folder != '') : ?>
-                <?php echo JText::_('JGLOBAL_ROOT') . ': ' . $params->get($path,
-                        'images') . '/' . $this->state->folder; ?>
+                <?php echo JText::_('JGLOBAL_ROOT') . ': ' . $params->get(
+                        $path,
+                        'images'
+                    ) . '/' . $this->state->folder; ?>
             <?php else : ?>
                 <?php echo JText::_('JGLOBAL_ROOT') . ': ' . $params->get($path, 'images'); ?>
             <?php endif; ?>

@@ -250,7 +250,9 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
             $field['Start_Value']  = '1';
         }
 
-        return 'ALTER SEQUENCE ' . (string)$field['Name'] . ' INCREMENT BY ' . (string)$field['Increment'] . ' MINVALUE ' . (string)$field['Min_Value'] . ' MAXVALUE ' . (string)$field['Max_Value'] . ' START ' . (string)$field['Start_Value'] . ' OWNED BY ' . $this->db->quoteName((string)$field['Schema'] . '.' . (string)$field['Table'] . '.' . (string)$field['Column']);
+        return 'ALTER SEQUENCE ' . (string)$field['Name'] . ' INCREMENT BY ' . (string)$field['Increment'] . ' MINVALUE ' . (string)$field['Min_Value'] . ' MAXVALUE ' . (string)$field['Max_Value'] . ' START ' . (string)$field['Start_Value'] . ' OWNED BY ' . $this->db->quoteName(
+            (string)$field['Schema'] . '.' . (string)$field['Table'] . '.' . (string)$field['Column']
+        );
     }
 
     /**
@@ -273,7 +275,9 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
             $field['Start_Value']  = '1';
         }
 
-        return 'CREATE SEQUENCE ' . (string)$field['Name'] . ' INCREMENT BY ' . (string)$field['Increment'] . ' MINVALUE ' . $field['Min_Value'] . ' MAXVALUE ' . (string)$field['Max_Value'] . ' START ' . (string)$field['Start_Value'] . (((string)$field['Cycle_option'] == 'NO') ? ' NO' : '') . ' CYCLE' . ' OWNED BY ' . $this->db->quoteName((string)$field['Schema'] . '.' . (string)$field['Table'] . '.' . (string)$field['Column']);
+        return 'CREATE SEQUENCE ' . (string)$field['Name'] . ' INCREMENT BY ' . (string)$field['Increment'] . ' MINVALUE ' . $field['Min_Value'] . ' MAXVALUE ' . (string)$field['Max_Value'] . ' START ' . (string)$field['Start_Value'] . (((string)$field['Cycle_option'] == 'NO') ? ' NO' : '') . ' CYCLE' . ' OWNED BY ' . $this->db->quoteName(
+            (string)$field['Schema'] . '.' . (string)$field['Table'] . '.' . (string)$field['Column']
+        );
     }
 
     /**
@@ -302,8 +306,12 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
      */
     protected function getChangeColumnSql($table, SimpleXMLElement $field)
     {
-        return 'ALTER TABLE ' . $this->db->quoteName($table) . ' ALTER COLUMN ' . $this->db->quoteName((string)$field['Field']) . ' ' . $this->getAlterColumnSql($table,
-            $field);
+        return 'ALTER TABLE ' . $this->db->quoteName($table) . ' ALTER COLUMN ' . $this->db->quoteName(
+            (string)$field['Field']
+        ) . ' ' . $this->getAlterColumnSql(
+            $table,
+            $field
+        );
     }
 
     /**
@@ -324,26 +332,40 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
         $fName    = (string)$field['Field'];
         $fType    = (string)$field['Type'];
         $fNull    = (string)$field['Null'];
-        $fDefault = (isset($field['Default']) && $field['Default'] != 'NULL') ? preg_match('/^[0-9]$/',
-            $field['Default']) ? $field['Default'] : $this->db->quote((string)$field['Default']) : null;
+        $fDefault = (isset($field['Default']) && $field['Default'] != 'NULL') ? preg_match(
+            '/^[0-9]$/',
+            $field['Default']
+        ) ? $field['Default'] : $this->db->quote((string)$field['Default']) : null;
 
         $query = ' TYPE ' . $fType;
 
         if ($fNull == 'NO') {
             if (in_array($fType, $blobs) || $fDefault === null) {
-                $query .= ",\nALTER COLUMN " . $this->db->quoteName($fName) . ' SET NOT NULL' . ",\nALTER COLUMN " . $this->db->quoteName($fName) . ' DROP DEFAULT';
+                $query .= ",\nALTER COLUMN " . $this->db->quoteName(
+                        $fName
+                    ) . ' SET NOT NULL' . ",\nALTER COLUMN " . $this->db->quoteName($fName) . ' DROP DEFAULT';
             } else {
-                $query .= ",\nALTER COLUMN " . $this->db->quoteName($fName) . ' SET NOT NULL' . ",\nALTER COLUMN " . $this->db->quoteName($fName) . ' SET DEFAULT ' . $fDefault;
+                $query .= ",\nALTER COLUMN " . $this->db->quoteName(
+                        $fName
+                    ) . ' SET NOT NULL' . ",\nALTER COLUMN " . $this->db->quoteName(
+                        $fName
+                    ) . ' SET DEFAULT ' . $fDefault;
             }
         } else {
             if ($fDefault !== null) {
-                $query .= ",\nALTER COLUMN " . $this->db->quoteName($fName) . ' DROP NOT NULL' . ",\nALTER COLUMN " . $this->db->quoteName($fName) . ' SET DEFAULT ' . $fDefault;
+                $query .= ",\nALTER COLUMN " . $this->db->quoteName(
+                        $fName
+                    ) . ' DROP NOT NULL' . ",\nALTER COLUMN " . $this->db->quoteName(
+                        $fName
+                    ) . ' SET DEFAULT ' . $fDefault;
             }
         }
 
         /* sequence was created in other function, here is associated a default value but not yet owner */
         if (strpos($fDefault, 'nextval') !== false) {
-            $query .= ";\nALTER SEQUENCE " . $this->db->quoteName($table . '_' . $fName . '_seq') . ' OWNED BY ' . $this->db->quoteName($table . '.' . $fName);
+            $query .= ";\nALTER SEQUENCE " . $this->db->quoteName(
+                    $table . '_' . $fName . '_seq'
+                ) . ' OWNED BY ' . $this->db->quoteName($table . '.' . $fName);
         }
 
         return $query;
@@ -381,8 +403,10 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
         $fName    = (string)$field['Field'];
         $fType    = (string)$field['Type'];
         $fNull    = (string)$field['Null'];
-        $fDefault = (isset($field['Default']) && $field['Default'] != 'NULL') ? preg_match('/^[0-9]$/',
-            $field['Default']) ? $field['Default'] : $this->db->quote((string)$field['Default']) : null;
+        $fDefault = (isset($field['Default']) && $field['Default'] != 'NULL') ? preg_match(
+            '/^[0-9]$/',
+            $field['Default']
+        ) ? $field['Default'] : $this->db->quote((string)$field['Default']) : null;
 
         /* nextval() as default value means that type field is serial */
         if (strpos($fDefault, 'nextval') !== false) {

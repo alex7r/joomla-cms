@@ -76,8 +76,11 @@ abstract class ModArticlesCategoryHelper
 
                                 if (!$catid) {
                                     // Get an instance of the generic article model
-                                    $article = JModelLegacy::getInstance('Article', 'ContentModel',
-                                        array('ignore_request' => true));
+                                    $article = JModelLegacy::getInstance(
+                                        'Article',
+                                        'ContentModel',
+                                        array('ignore_request' => true)
+                                    );
 
                                     $article->setState('params', $appParams);
                                     $article->setState('filter.published', 1);
@@ -214,8 +217,13 @@ abstract class ModArticlesCategoryHelper
 
             if ($access || in_array($item->access, $authorised)) {
                 // We know that user has the privilege to view the article
-                $item->link = JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catid,
-                    $item->language));
+                $item->link = JRoute::_(
+                    ContentHelperRoute::getArticleRoute(
+                        $item->slug,
+                        $item->catid,
+                        $item->language
+                    )
+                );
             } else {
                 $menu      = $app->getMenu();
                 $menuitems = $menu->getItems('link', 'index.php?option=com_users&view=login');
@@ -304,8 +312,13 @@ abstract class ModArticlesCategoryHelper
             $htmlString = JHtml::_('string.truncate', $html, $maxLength, $noSplit = true, $allowHtml = true);
 
             // Now get the plain text from the html string.
-            $htmlStringToPtString = JHtml::_('string.truncate', $htmlString, $maxLength, $noSplit = true,
-                $allowHtml = false);
+            $htmlStringToPtString = JHtml::_(
+                'string.truncate',
+                $htmlString,
+                $maxLength,
+                $noSplit = true,
+                $allowHtml = false
+            );
 
             // If the new plain text string matches the original plain text string we are done.
             if ($ptString == $htmlStringToPtString) {

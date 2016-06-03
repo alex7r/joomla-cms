@@ -38,19 +38,29 @@ class JGithubPackageMarkdown extends JGithubPackage
 
         // Make sure the scope is valid
         if (!in_array($mode, $validModes)) {
-            throw new InvalidArgumentException(sprintf('The %s mode is not valid. Valid modes are "gfm" or "markdown".',
-                $mode));
+            throw new InvalidArgumentException(
+                sprintf(
+                    'The %s mode is not valid. Valid modes are "gfm" or "markdown".',
+                    $mode
+                )
+            );
         }
 
         // Build the request path.
         $path = '/markdown';
 
         // Build the request data.
-        $data = str_replace('\\/', '/', json_encode(array(
-            'text'    => $text,
-            'mode'    => $mode,
-            'context' => $context
-        )));
+        $data = str_replace(
+            '\\/',
+            '/',
+            json_encode(
+                array(
+                    'text'    => $text,
+                    'mode'    => $mode,
+                    'context' => $context
+                )
+            )
+        );
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), $data);

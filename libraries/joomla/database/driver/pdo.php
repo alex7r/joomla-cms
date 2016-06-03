@@ -354,8 +354,9 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
         $connectionString = str_replace($replace, $with, $format);
 
         try {
-            $this->connection = new PDO($connectionString, $this->options['user'], $this->options['password'],
-                $this->options['driverOptions']);
+            $this->connection = new PDO(
+                $connectionString, $this->options['user'], $this->options['password'], $this->options['driverOptions']
+            );
         } catch (PDOException $e) {
             throw new JDatabaseExceptionConnecting('Could not connect to PDO: ' . $e->getMessage(), 2, $e);
         }
@@ -558,8 +559,11 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
      */
     public function loadNextObject($class = 'stdClass')
     {
-        JLog::add(__METHOD__ . '() is deprecated. Use JDatabaseDriver::getIterator() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated. Use JDatabaseDriver::getIterator() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
         $this->connect();
 
         // Execute the query and get the result set cursor.
@@ -594,8 +598,11 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
         $this->connect();
 
         if (!is_object($this->connection)) {
-            JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR,
-                'database');
+            JLog::add(
+                JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
+                JLog::ERROR,
+                'database'
+            );
             throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum);
         }
 
@@ -669,8 +676,11 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
                     $this->errorMsg = $this->getErrorMessage($query);
 
                     // Throw the normal query exception.
-                    JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
-                        JLog::ERROR, 'database-error');
+                    JLog::add(
+                        JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
+                        JLog::ERROR,
+                        'database-error'
+                    );
 
                     throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum, $e);
                 }
@@ -684,8 +694,11 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
                 $this->errorMsg = $errorMsg;
 
                 // Throw the normal query exception.
-                JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR,
-                    'database-error');
+                JLog::add(
+                    JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
+                    JLog::ERROR,
+                    'database-error'
+                );
 
                 throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum);
             }
@@ -910,8 +923,11 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
      */
     public function loadNextRow()
     {
-        JLog::add(__METHOD__ . '() is deprecated. Use JDatabaseDriver::getIterator() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated. Use JDatabaseDriver::getIterator() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
         $this->connect();
 
         // Execute the query and get the result set cursor.

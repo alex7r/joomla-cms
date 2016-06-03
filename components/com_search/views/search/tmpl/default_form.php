@@ -33,8 +33,10 @@ $upper_limit = $lang->getUpperLimitSearchWord();
 
     <div class="searchintro<?php echo $this->params->get('pageclass_sfx'); ?>">
         <?php if (!empty($this->searchword)): ?>
-            <p><?php echo JText::plural('COM_SEARCH_SEARCH_KEYWORD_N_RESULTS',
-                    '<span class="badge badge-info">' . $this->total . '</span>'); ?></p>
+            <p><?php echo JText::plural(
+                    'COM_SEARCH_SEARCH_KEYWORD_N_RESULTS',
+                    '<span class="badge badge-info">' . $this->total . '</span>'
+                ); ?></p>
         <?php endif; ?>
     </div>
 
@@ -58,8 +60,10 @@ $upper_limit = $lang->getUpperLimitSearchWord();
         <fieldset class="only">
             <legend><?php echo JText::_('COM_SEARCH_SEARCH_ONLY'); ?></legend>
             <?php foreach ($this->searchareas['search'] as $val => $txt) :
-                $checked = is_array($this->searchareas['active']) && in_array($val,
-                    $this->searchareas['active']) ? 'checked="checked"' : '';
+                $checked = is_array($this->searchareas['active']) && in_array(
+                    $val,
+                    $this->searchareas['active']
+                ) ? 'checked="checked"' : '';
                 ?>
                 <label for="area-<?php echo $val; ?>" class="checkbox">
                     <input type="checkbox" name="areas[]" value="<?php echo $val; ?>"

@@ -109,8 +109,12 @@ class JGoogleDataPicasa extends JGoogleData
             $cat->addAttribute('term', 'http://schemas.google.com/photos/2007#album');
 
             $url   = 'https://picasaweb.google.com/data/feed/api/user/' . urlencode($userID);
-            $jdata = $this->query($url, $xml->asXml(),
-                array('GData-Version' => 2, 'Content-type' => 'application/atom+xml'), 'post');
+            $jdata = $this->query(
+                $url,
+                $xml->asXml(),
+                array('GData-Version' => 2, 'Content-type' => 'application/atom+xml'),
+                'post'
+            );
 
             $xml = $this->safeXml($jdata->body);
 

@@ -76,8 +76,14 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
     {
         $class = $this->element['class'] ? ' class="' . (string)$this->element['class'] . '"' : '';
 
-        return '<span id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(),
-            $this->value), ENT_COMPAT, 'UTF-8') . '</span>';
+        return '<span id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(
+            FOFFormFieldList::getOptionName(
+                $this->getOptions(),
+                $this->value
+            ),
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</span>';
     }
 
     /**
@@ -110,16 +116,16 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
             $client_id = $db->q($client_id);
         }
 
-        $query = $db->getQuery(true)
-                    ->select(array(
-                        $db->qn('name'),
-                        $db->qn('element'),
-                        $db->qn('client_id'),
-                        $db->qn('manifest_cache'),
-                    ))
-                    ->from($db->qn('#__extensions'))
-                    ->where($db->qn('type') . ' = ' . $db->q('component'))
-                    ->where($db->qn('client_id') . ' IN (' . implode(',', $client_ids) . ')');
+        $query = $db->getQuery(true)->select(
+                array(
+                    $db->qn('name'),
+                    $db->qn('element'),
+                    $db->qn('client_id'),
+                    $db->qn('manifest_cache'),
+                )
+            )->from($db->qn('#__extensions'))->where($db->qn('type') . ' = ' . $db->q('component'))->where(
+                $db->qn('client_id') . ' IN (' . implode(',', $client_ids) . ')'
+            );
         $db->setQuery($query);
         $components = $db->loadObjectList('element');
 
@@ -144,9 +150,12 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 
         // Reorder the components array, because the alphabetical
         // ordering changed due to the JText::_() translation
-        uasort($aComponents, function ($a, $b) {
-            return strcasecmp($a->text, $b->text);
-        });
+        uasort(
+            $aComponents,
+            function ($a, $b) {
+                return strcasecmp($a->text, $b->text);
+            }
+        );
 
         return $aComponents;
     }
@@ -187,10 +196,25 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
         switch ($type) {
             case 'component':
                 $source = JPATH_ADMINISTRATOR . '/components/' . $item->element;
-                $lang->load("$item->element.sys", JPATH_ADMINISTRATOR, null, false,
-                    false) || $lang->load("$item->element.sys", $source, null, false,
-                    false) || $lang->load("$item->element.sys", JPATH_ADMINISTRATOR, $lang->getDefault(), false,
-                    false) || $lang->load("$item->element.sys", $source, $lang->getDefault(), false, false);
+                $lang->load(
+                    "$item->element.sys",
+                    JPATH_ADMINISTRATOR,
+                    null,
+                    false,
+                    false
+                ) || $lang->load(
+                    "$item->element.sys",
+                    $source,
+                    null,
+                    false,
+                    false
+                ) || $lang->load(
+                    "$item->element.sys",
+                    JPATH_ADMINISTRATOR,
+                    $lang->getDefault(),
+                    false,
+                    false
+                ) || $lang->load("$item->element.sys", $source, $lang->getDefault(), false, false);
                 break;
         }
 
@@ -211,7 +235,13 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
     {
         $class = $this->element['class'] ? (string)$this->element['class'] : '';
 
-        return '<span class="' . $this->id . ' ' . $class . '">' . htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(),
-            $this->value), ENT_COMPAT, 'UTF-8') . '</span>';
+        return '<span class="' . $this->id . ' ' . $class . '">' . htmlspecialchars(
+            FOFFormFieldList::getOptionName(
+                $this->getOptions(),
+                $this->value
+            ),
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</span>';
     }
 }

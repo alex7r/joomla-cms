@@ -10,8 +10,10 @@
 defined('_JEXEC') or die;
 
 JLoader::register('ContactHelper', JPATH_ADMINISTRATOR . '/components/com_contact/helpers/contact.php');
-JLoader::register('CategoryHelperAssociation',
-    JPATH_ADMINISTRATOR . '/components/com_categories/helpers/association.php');
+JLoader::register(
+    'CategoryHelperAssociation',
+    JPATH_ADMINISTRATOR . '/components/com_categories/helpers/association.php'
+);
 
 /**
  * Contact Component Association Helper
@@ -42,8 +44,12 @@ abstract class ContactHelperAssociation extends CategoryHelperAssociation
 
         if ($view == 'contact') {
             if ($id) {
-                $associations = JLanguageAssociations::getAssociations('com_contact', '#__contact_details',
-                    'com_contact.item', $id);
+                $associations = JLanguageAssociations::getAssociations(
+                    'com_contact',
+                    '#__contact_details',
+                    'com_contact.item',
+                    $id
+                );
 
                 $return = array();
 

@@ -169,12 +169,9 @@ class UsersModelReset extends JModelForm
 
         // Find the user id for the given token.
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('activation')
-                    ->select('id')
-                    ->select('block')
-                    ->from($db->quoteName('#__users'))
-                    ->where($db->quoteName('username') . ' = ' . $db->quote($data['username']));
+        $query = $db->getQuery(true)->select('activation')->select('id')->select('block')->from(
+                $db->quoteName('#__users')
+            )->where($db->quoteName('username') . ' = ' . $db->quote($data['username']));
 
         // Get the user id.
         $db->setQuery($query);
@@ -288,10 +285,9 @@ class UsersModelReset extends JModelForm
 
         // Find the user id for the given email address.
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('id')
-                    ->from($db->quoteName('#__users'))
-                    ->where($db->quoteName('email') . ' = ' . $db->quote($data['email']));
+        $query = $db->getQuery(true)->select('id')->from($db->quoteName('#__users'))->where(
+                $db->quoteName('email') . ' = ' . $db->quote($data['email'])
+            );
 
         // Get the user object.
         $db->setQuery($query);
@@ -364,8 +360,12 @@ class UsersModelReset extends JModelForm
 
         $subject = JText::sprintf('COM_USERS_EMAIL_PASSWORD_RESET_SUBJECT', $data['sitename']);
 
-        $body = JText::sprintf('COM_USERS_EMAIL_PASSWORD_RESET_BODY', $data['sitename'], $data['token'],
-            $data['link_text']);
+        $body = JText::sprintf(
+            'COM_USERS_EMAIL_PASSWORD_RESET_BODY',
+            $data['sitename'],
+            $data['token'],
+            $data['link_text']
+        );
 
         // Send the password reset request email.
         $return = JFactory::getMailer()->sendMail($data['mailfrom'], $data['fromname'], $user->email, $subject, $body);
@@ -394,8 +394,11 @@ class UsersModelReset extends JModelForm
     public function getForm($data = array(), $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_users.reset_request', 'reset_request',
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_users.reset_request',
+            'reset_request',
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
 
         if (empty($form)) {
             return false;

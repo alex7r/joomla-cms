@@ -15,7 +15,8 @@ $input = JFactory::getApplication()->input;
 $tmpl = ($input->getCmd('tmpl') != '') ? '1' : '';
 
 JHtml::_('behavior.core');
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 		setmenutype = function(type) {
 			var tmpl = ' . json_encode($tmpl) . ';
 			if (tmpl)
@@ -28,7 +29,8 @@ JFactory::getDocument()->addScriptDeclaration('
 				window.location="index.php?option=com_menus&view=item&task=item.setType&layout=edit&type=" + type;
 			}
 		};
-');
+'
+);
 
 ?>
 <?php echo JHtml::_('bootstrap.startAccordion', 'collapseTypes', array('active' => 'slide1')); ?>

@@ -177,8 +177,11 @@ class JDatabaseDriverMysqli extends JDatabaseDriver
             if (!empty($matches['port'])) {
                 $port = $matches['port'];
             }
-        } elseif (preg_match('/^(?P<host>(\w+:\/{2,3})?[a-z0-9\.\-]+)(:(?P<port>[^:]+))?$/i', $this->options['host'],
-            $matches)) {
+        } elseif (preg_match(
+            '/^(?P<host>(\w+:\/{2,3})?[a-z0-9\.\-]+)(:(?P<port>[^:]+))?$/i',
+            $this->options['host'],
+            $matches
+        )) {
             // Named host (e.g example.com or localhost) with or without port
             $this->options['host'] = $matches['host'];
 
@@ -204,8 +207,14 @@ class JDatabaseDriverMysqli extends JDatabaseDriver
             throw new JDatabaseExceptionUnsupported('The MySQL adapter mysqli is not available');
         }
 
-        $this->connection = @mysqli_connect($this->options['host'], $this->options['user'], $this->options['password'],
-            null, $this->options['port'], $this->options['socket']);
+        $this->connection = @mysqli_connect(
+            $this->options['host'],
+            $this->options['user'],
+            $this->options['password'],
+            null,
+            $this->options['port'],
+            $this->options['socket']
+        );
 
         // Attempt to connect to the server.
         if (!$this->connection) {
@@ -380,8 +389,11 @@ class JDatabaseDriverMysqli extends JDatabaseDriver
         $this->connect();
 
         if (!is_object($this->connection)) {
-            JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR,
-                'database');
+            JLog::add(
+                JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
+                JLog::ERROR,
+                'database'
+            );
             throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum);
         }
 
@@ -454,8 +466,11 @@ class JDatabaseDriverMysqli extends JDatabaseDriver
                     $this->errorNum = $this->getErrorNumber();
                     $this->errorMsg = $this->getErrorMessage($query);
 
-                    JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
-                        JLog::ERROR, 'database-error');
+                    JLog::add(
+                        JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
+                        JLog::ERROR,
+                        'database-error'
+                    );
 
                     throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum, $e);
                 }
@@ -464,8 +479,11 @@ class JDatabaseDriverMysqli extends JDatabaseDriver
                 return $this->execute();
             } // The server was not disconnected.
             else {
-                JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR,
-                    'database-error');
+                JLog::add(
+                    JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
+                    JLog::ERROR,
+                    'database-error'
+                );
 
                 throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum);
             }

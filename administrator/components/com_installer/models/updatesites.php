@@ -138,41 +138,54 @@ class InstallerModelUpdatesites extends InstallerModel
         foreach ($ids as $i => $id) {
             // Don't allow to delete Joomla Core update sites.
             if (in_array((int)$id, $joomlaUpdateSitesIds)) {
-                $app->enqueueMessage(JText::sprintf('COM_INSTALLER_MSG_UPDATESITES_DELETE_CANNOT_DELETE',
-                    $updateSitesNames[$id]->name), 'error');
+                $app->enqueueMessage(
+                    JText::sprintf(
+                        'COM_INSTALLER_MSG_UPDATESITES_DELETE_CANNOT_DELETE',
+                        $updateSitesNames[$id]->name
+                    ),
+                    'error'
+                );
                 continue;
             }
 
             // Delete the update site from all tables.
             try {
-                $query = $db->getQuery(true)
-                            ->delete($db->qn('#__update_sites'))
-                            ->where($db->qn('update_site_id') . ' = ' . (int)$id);
+                $query = $db->getQuery(true)->delete($db->qn('#__update_sites'))->where(
+                        $db->qn('update_site_id') . ' = ' . (int)$id
+                    );
                 $db->setQuery($query);
                 $db->execute();
 
-                $query = $db->getQuery(true)
-                            ->delete($db->qn('#__update_sites_extensions'))
-                            ->where($db->qn('update_site_id') . ' = ' . (int)$id);
+                $query = $db->getQuery(true)->delete($db->qn('#__update_sites_extensions'))->where(
+                        $db->qn('update_site_id') . ' = ' . (int)$id
+                    );
                 $db->setQuery($query);
                 $db->execute();
 
-                $query = $db->getQuery(true)
-                            ->delete($db->qn('#__updates'))
-                            ->where($db->qn('update_site_id') . ' = ' . (int)$id);
+                $query = $db->getQuery(true)->delete($db->qn('#__updates'))->where(
+                        $db->qn('update_site_id') . ' = ' . (int)$id
+                    );
                 $db->setQuery($query);
                 $db->execute();
 
                 $count++;
             } catch (RuntimeException $e) {
-                $app->enqueueMessage(JText::sprintf('COM_INSTALLER_MSG_UPDATESITES_DELETE_ERROR',
-                    $updateSitesNames[$id]->name, $e->getMessage()), 'error');
+                $app->enqueueMessage(
+                    JText::sprintf(
+                        'COM_INSTALLER_MSG_UPDATESITES_DELETE_ERROR',
+                        $updateSitesNames[$id]->name,
+                        $e->getMessage()
+                    ),
+                    'error'
+                );
             }
         }
 
         if ($count > 0) {
-            $app->enqueueMessage(JText::plural('COM_INSTALLER_MSG_UPDATESITES_N_DELETE_UPDATESITES_DELETED', $count),
-                'message');
+            $app->enqueueMessage(
+                JText::plural('COM_INSTALLER_MSG_UPDATESITES_N_DELETE_UPDATESITES_DELETED', $count),
+                'message'
+            );
         }
     }
 
@@ -189,9 +202,9 @@ class InstallerModelUpdatesites extends InstallerModel
 
         // Fetch the Joomla core Joomla update sites ids.
         $query = $db->getQuery(true);
-        $query->select($db->qn('update_site_id'))
-              ->from($db->qn('#__update_sites'))
-              ->where($db->qn('location') . ' LIKE \'%update.joomla.org%\'');
+        $query->select($db->qn('update_site_id'))->from($db->qn('#__update_sites'))->where(
+                $db->qn('location') . ' LIKE \'%update.joomla.org%\''
+            );
         $db->setQuery($query);
 
         return $db->loadColumn();
@@ -248,21 +261,21 @@ class InstallerModelUpdatesites extends InstallerModel
         $joomlaUpdateSitesIds = implode(', ', $this->getJoomlaUpdateSitesIds());
 
         // Delete from all tables (except joomla core update sites).
-        $query = $db->getQuery(true)
-                    ->delete($db->qn('#__update_sites'))
-                    ->where($db->qn('update_site_id') . ' NOT IN (' . $joomlaUpdateSitesIds . ')');
+        $query = $db->getQuery(true)->delete($db->qn('#__update_sites'))->where(
+                $db->qn('update_site_id') . ' NOT IN (' . $joomlaUpdateSitesIds . ')'
+            );
         $db->setQuery($query);
         $db->execute();
 
-        $query = $db->getQuery(true)
-                    ->delete($db->qn('#__update_sites_extensions'))
-                    ->where($db->qn('update_site_id') . ' NOT IN (' . $joomlaUpdateSitesIds . ')');
+        $query = $db->getQuery(true)->delete($db->qn('#__update_sites_extensions'))->where(
+                $db->qn('update_site_id') . ' NOT IN (' . $joomlaUpdateSitesIds . ')'
+            );
         $db->setQuery($query);
         $db->execute();
 
-        $query = $db->getQuery(true)
-                    ->delete($db->qn('#__updates'))
-                    ->where($db->qn('update_site_id') . ' NOT IN (' . $joomlaUpdateSitesIds . ')');
+        $query = $db->getQuery(true)->delete($db->qn('#__updates'))->where(
+                $db->qn('update_site_id') . ' NOT IN (' . $joomlaUpdateSitesIds . ')'
+            );
         $db->setQuery($query);
         $db->execute();
 
@@ -307,9 +320,10 @@ class InstallerModelUpdatesites extends InstallerModel
                             JPluginHelper::importPlugin('extension', 'joomla');
 
                             // Fire the onExtensionAfterUpdate
-                            JEventDispatcher::getInstance()
-                                            ->trigger('onExtensionAfterUpdate',
-                                                array('installer' => $tmpInstaller, 'eid' => $eid));
+                            JEventDispatcher::getInstance()->trigger(
+                                    'onExtensionAfterUpdate',
+                                    array('installer' => $tmpInstaller, 'eid' => $eid)
+                                );
 
                             $count++;
                         }
@@ -340,16 +354,26 @@ class InstallerModelUpdatesites extends InstallerModel
     protected function populateState($ordering = 'name', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('filter.client_id',
-            $this->getUserStateFromRequest($this->context . '.filter.client_id', 'filter_client_id', null, 'int'));
-        $this->setState('filter.enabled',
-            $this->getUserStateFromRequest($this->context . '.filter.enabled', 'filter_enabled', '', 'string'));
-        $this->setState('filter.type',
-            $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string'));
-        $this->setState('filter.folder',
-            $this->getUserStateFromRequest($this->context . '.filter.folder', 'filter_folder', '', 'string'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.client_id',
+            $this->getUserStateFromRequest($this->context . '.filter.client_id', 'filter_client_id', null, 'int')
+        );
+        $this->setState(
+            'filter.enabled',
+            $this->getUserStateFromRequest($this->context . '.filter.enabled', 'filter_enabled', '', 'string')
+        );
+        $this->setState(
+            'filter.type',
+            $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string')
+        );
+        $this->setState(
+            'filter.folder',
+            $this->getUserStateFromRequest($this->context . '.filter.folder', 'filter_folder', '', 'string')
+        );
 
         parent::populateState($ordering, $direction);
     }
@@ -363,27 +387,25 @@ class InstallerModelUpdatesites extends InstallerModel
      */
     protected function getListQuery()
     {
-        $query = JFactory::getDbo()
-                         ->getQuery(true)
-                         ->select(array(
-                             's.update_site_id',
-                             's.name AS update_site_name',
-                             's.type AS update_site_type',
-                             's.location',
-                             's.enabled',
-                             'e.extension_id',
-                             'e.name',
-                             'e.type',
-                             'e.element',
-                             'e.folder',
-                             'e.client_id',
-                             'e.state',
-                             'e.manifest_cache',
-                         ))
-                         ->from('#__update_sites AS s')
-                         ->innerJoin('#__update_sites_extensions AS se ON (se.update_site_id = s.update_site_id)')
-                         ->innerJoin('#__extensions AS e ON (e.extension_id = se.extension_id)')
-                         ->where('state = 0');
+        $query = JFactory::getDbo()->getQuery(true)->select(
+                array(
+                    's.update_site_id',
+                    's.name AS update_site_name',
+                    's.type AS update_site_type',
+                    's.location',
+                    's.enabled',
+                    'e.extension_id',
+                    'e.name',
+                    'e.type',
+                    'e.element',
+                    'e.folder',
+                    'e.client_id',
+                    'e.state',
+                    'e.manifest_cache',
+                )
+            )->from('#__update_sites AS s')->innerJoin(
+                '#__update_sites_extensions AS se ON (se.update_site_id = s.update_site_id)'
+            )->innerJoin('#__extensions AS e ON (e.extension_id = se.extension_id)')->where('state = 0');
 
         // Process select filters.
         $enabled  = $this->getState('filter.enabled');

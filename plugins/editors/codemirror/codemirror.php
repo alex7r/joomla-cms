@@ -116,8 +116,10 @@ class PlgEditorCodemirror extends JPlugin
      */
     public function onSave($id)
     {
-        return sprintf('document.getElementById(%1$s).value = Joomla.editors.instances[%1$s].getValue();',
-            json_encode((string)$id));
+        return sprintf(
+            'document.getElementById(%1$s).value = Joomla.editors.instances[%1$s].getValue();',
+            json_encode((string)$id)
+        );
     }
 
     /**
@@ -142,8 +144,11 @@ class PlgEditorCodemirror extends JPlugin
      */
     public function onSetContent($id, $content)
     {
-        return sprintf('Joomla.editors.instances[%1$s].setValue(%2$s);', json_encode((string)$id),
-            json_encode((string)$content));
+        return sprintf(
+            'Joomla.editors.instances[%1$s].setValue(%2$s);',
+            json_encode((string)$id),
+            json_encode((string)$content)
+        );
     }
 
     /**
@@ -162,9 +167,11 @@ class PlgEditorCodemirror extends JPlugin
 
         $done = true;
 
-        JFactory::getDocument()->addScriptDeclaration("
+        JFactory::getDocument()->addScriptDeclaration(
+            "
 		;function jInsertEditorText(text, editor) { Joomla.editors.instances[editor].replaceSelection(text); }
-		");
+		"
+        );
 
         return true;
     }
@@ -239,8 +246,10 @@ class PlgEditorCodemirror extends JPlugin
         }
 
         // Do we use a marker gutter?
-        if ($options->markerGutter = (boolean)$this->params->get('markerGutter',
-            $this->params->get('marker-gutter', 0))
+        if ($options->markerGutter = (boolean)$this->params->get(
+            'markerGutter',
+            $this->params->get('marker-gutter', 0)
+        )
         ) {
             $options->gutters[] = 'CodeMirror-markergutter';
         }
@@ -252,8 +261,10 @@ class PlgEditorCodemirror extends JPlugin
         // Load the theme if specified.
         if ($theme = $this->params->get('theme')) {
             $options->theme = $theme;
-            JHtml::_('stylesheet',
-                $this->params->get('basePath', 'media/editors/codemirror/') . 'theme/' . $theme . '.css');
+            JHtml::_(
+                'stylesheet',
+                $this->params->get('basePath', 'media/editors/codemirror/') . 'theme/' . $theme . '.css'
+            );
         }
 
         // Special options for tagged modes (xml/html).
@@ -295,8 +306,12 @@ class PlgEditorCodemirror extends JPlugin
         // At this point, displayData can be modified by a plugin before going to the layout renderer.
         $results = $dispatcher->trigger('onCodeMirrorBeforeDisplay', array(&$displayData));
 
-        $results[] = JLayoutHelper::render('editors.codemirror.element', $displayData, __DIR__ . '/layouts',
-            array('debug' => JDEBUG));
+        $results[] = JLayoutHelper::render(
+            'editors.codemirror.element',
+            $displayData,
+            __DIR__ . '/layouts',
+            array('debug' => JDEBUG)
+        );
 
         foreach ($dispatcher->trigger('onCodeMirrorAfterDisplay', array(&$displayData)) as $result) {
             $results[] = $result;

@@ -59,36 +59,49 @@ abstract class ModTagssimilarHelper
 
         $tagCount = substr_count($tagsToMatch, ',') + 1;
 
-        $query = $db->getQuery(true)->select(array(
-            $db->quoteName('m.core_content_id'),
-            $db->quoteName('m.content_item_id'),
-            $db->quoteName('m.type_alias'),
-            'COUNT( ' . $db->quoteName('tag_id') . ') AS ' . $db->quoteName('count'),
-            $db->quoteName('ct.router'),
-            $db->quoteName('cc.core_title'),
-            $db->quoteName('cc.core_alias'),
-            $db->quoteName('cc.core_catid'),
-            $db->quoteName('cc.core_language'),
-            $db->quoteName('cc.core_params')
-        ));
+        $query = $db->getQuery(true)->select(
+            array(
+                $db->quoteName('m.core_content_id'),
+                $db->quoteName('m.content_item_id'),
+                $db->quoteName('m.type_alias'),
+                'COUNT( ' . $db->quoteName('tag_id') . ') AS ' . $db->quoteName('count'),
+                $db->quoteName('ct.router'),
+                $db->quoteName('cc.core_title'),
+                $db->quoteName('cc.core_alias'),
+                $db->quoteName('cc.core_catid'),
+                $db->quoteName('cc.core_language'),
+                $db->quoteName('cc.core_params')
+            )
+        );
 
         $query->from($db->quoteName('#__contentitem_tag_map', 'm'));
 
-        $query->join('INNER', $db->quoteName('#__tags', 't') . ' ON m.tag_id = t.id')
-              ->join('INNER', $db->quoteName('#__ucm_content', 'cc') . ' ON m.core_content_id = cc.core_content_id')
-              ->join('INNER', $db->quoteName('#__content_types', 'ct') . ' ON m.type_alias = ct.type_alias');
+        $query->join('INNER', $db->quoteName('#__tags', 't') . ' ON m.tag_id = t.id')->join(
+                'INNER',
+                $db->quoteName('#__ucm_content', 'cc') . ' ON m.core_content_id = cc.core_content_id'
+            )->join('INNER', $db->quoteName('#__content_types', 'ct') . ' ON m.type_alias = ct.type_alias');
 
         $query->where($db->quoteName('m.tag_id') . ' IN (' . $tagsToMatch . ')');
         $query->where('t.access IN (' . $groups . ')');
         $query->where('(cc.core_access IN (' . $groups . ') OR cc.core_access = 0)');
 
         // Don't show current item
-        $query->where('(' . $db->quoteName('m.content_item_id') . ' <> ' . $id . ' OR ' . $db->quoteName('m.type_alias') . ' <> ' . $db->quote($prefix) . ')');
+        $query->where(
+            '(' . $db->quoteName('m.content_item_id') . ' <> ' . $id . ' OR ' . $db->quoteName(
+                'm.type_alias'
+            ) . ' <> ' . $db->quote($prefix) . ')'
+        );
 
         // Only return published tags
-        $query->where($db->quoteName('cc.core_state') . ' = 1 ')
-              ->where('(' . $db->quoteName('cc.core_publish_up') . '=' . $db->quote($nullDate) . ' OR ' . $db->quoteName('cc.core_publish_up') . '<=' . $db->quote($now) . ')')
-              ->where('(' . $db->quoteName('cc.core_publish_down') . '=' . $db->quote($nullDate) . ' OR ' . $db->quoteName('cc.core_publish_down') . '>=' . $db->quote($now) . ')');
+        $query->where($db->quoteName('cc.core_state') . ' = 1 ')->where(
+                '(' . $db->quoteName('cc.core_publish_up') . '=' . $db->quote($nullDate) . ' OR ' . $db->quoteName(
+                    'cc.core_publish_up'
+                ) . '<=' . $db->quote($now) . ')'
+            )->where(
+                '(' . $db->quoteName('cc.core_publish_down') . '=' . $db->quote($nullDate) . ' OR ' . $db->quoteName(
+                    'cc.core_publish_down'
+                ) . '>=' . $db->quote($now) . ')'
+            );
 
         // Optionally filter on language
         $language = JComponentHelper::getParams('com_tags')->get('tag_list_language_filter', 'all');
@@ -98,20 +111,26 @@ abstract class ModTagssimilarHelper
                 $language = JHelperContent::getCurrentLanguage();
             }
 
-            $query->where($db->quoteName('cc.core_language') . ' IN (' . $db->quote($language) . ', ' . $db->quote('*') . ')');
+            $query->where(
+                $db->quoteName('cc.core_language') . ' IN (' . $db->quote($language) . ', ' . $db->quote('*') . ')'
+            );
         }
 
-        $query->group($db->quoteName(array(
-            'm.core_content_id',
-            'm.content_item_id',
-            'm.type_alias',
-            'ct.router',
-            'cc.core_title',
-            'cc.core_alias',
-            'cc.core_catid',
-            'cc.core_language',
-            'cc.core_params'
-        )));
+        $query->group(
+            $db->quoteName(
+                array(
+                    'm.core_content_id',
+                    'm.content_item_id',
+                    'm.type_alias',
+                    'ct.router',
+                    'cc.core_title',
+                    'cc.core_alias',
+                    'cc.core_catid',
+                    'cc.core_language',
+                    'cc.core_params'
+                )
+            )
+        );
 
         if ($matchtype == 'all' && $tagCount > 0) {
             $query->having('COUNT( ' . $db->quoteName('tag_id') . ')  = ' . $tagCount);

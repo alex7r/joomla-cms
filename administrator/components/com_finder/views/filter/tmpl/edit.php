@@ -13,7 +13,8 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	Joomla.submitbutton = function(task)
 	{
 		if (task == "filter.cancel" || document.formvalidator.isValid(document.getElementById("adminForm")))
@@ -44,20 +45,25 @@ JFactory::getDocument()->addScriptDeclaration('
 
 
 	});
-');
+'
+);
 
-JFactory::getDocument()->addStyleDeclaration("
+JFactory::getDocument()->addStyleDeclaration(
+    "
 	.accordion-inner .control-group .controls {
 		margin-left: 10px;
 	}
 	.accordion-inner > .control-group {
 		margin-bottom: 0;
 	}
-	");
+	"
+);
 ?>
 
 <form
-    action="<?php echo JRoute::_('index.php?option=com_finder&view=filter&layout=edit&filter_id=' . (int)$this->item->filter_id); ?>"
+    action="<?php echo JRoute::_(
+        'index.php?option=com_finder&view=filter&layout=edit&filter_id=' . (int)$this->item->filter_id
+    ); ?>"
     method="post" name="adminForm" id="adminForm" class="form-validate">
 
     <?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>

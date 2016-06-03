@@ -139,20 +139,24 @@ class PlgSearchNewsfeeds extends JPlugin
         $case_when1 .= ' ELSE ';
         $case_when1 .= $c_id . ' END as catslug';
 
-        $query->select('a.name AS title, \'\' AS created, a.link AS text, ' . $case_when . "," . $case_when1)
-              ->select($query->concatenate(array($db->quote($searchNewsfeeds), 'c.title'), " / ") . ' AS section')
-              ->select('\'1\' AS browsernav')
-              ->from('#__newsfeeds AS a')
-              ->join('INNER', '#__categories as c ON c.id = a.catid')
-              ->where('(' . $where . ') AND a.published IN (' . implode(',',
-                      $state) . ') AND c.published = 1 AND c.access IN (' . $groups . ')')
-              ->order($order);
+        $query->select('a.name AS title, \'\' AS created, a.link AS text, ' . $case_when . "," . $case_when1)->select(
+                $query->concatenate(array($db->quote($searchNewsfeeds), 'c.title'), " / ") . ' AS section'
+            )->select('\'1\' AS browsernav')->from('#__newsfeeds AS a')->join(
+                'INNER',
+                '#__categories as c ON c.id = a.catid'
+            )->where(
+                '(' . $where . ') AND a.published IN (' . implode(
+                    ',',
+                    $state
+                ) . ') AND c.published = 1 AND c.access IN (' . $groups . ')'
+            )->order($order);
 
         // Filter by language.
         if ($app->isSite() && JLanguageMultilang::isEnabled()) {
             $tag = JFactory::getLanguage()->getTag();
-            $query->where('a.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')')
-                  ->where('c.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')');
+            $query->where('a.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')')->where(
+                    'c.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')'
+                );
         }
 
         $db->setQuery($query, 0, $limit);

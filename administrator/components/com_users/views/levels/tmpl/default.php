@@ -16,10 +16,10 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
-$user      = JFactory::getUser();
+$user = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
-$canOrder  = $user->authorise('core.edit.state', 'com_users');
+$listDirn = $this->escape($this->state->get('list.direction'));
+$canOrder = $user->authorise('core.edit.state', 'com_users');
 $saveOrder = $listOrder == 'a.ordering';
 
 if ($saveOrder) {
@@ -38,8 +38,10 @@ if ($saveOrder) {
         <?php else : ?>
         <div id="j-main-container">
             <?php endif; ?>
-            <?php echo JLayoutHelper::render('joomla.searchtools.default',
-                array('view' => $this, 'options' => array('filterButton' => false))); ?>
+            <?php echo JLayoutHelper::render(
+                'joomla.searchtools.default',
+                array('view' => $this, 'options' => array('filterButton' => false))
+            ); ?>
             <div class="clearfix"></div>
             <?php if (empty($this->items)) : ?>
                 <div class="alert alert-no-items">
@@ -50,22 +52,41 @@ if ($saveOrder) {
                     <thead>
                     <tr>
                         <th width="1%" class="nowrap center hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null,
-                                'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                '',
+                                'a.ordering',
+                                $listDirn,
+                                $listOrder,
+                                null,
+                                'asc',
+                                'JGRID_HEADING_ORDERING',
+                                'icon-menu-2'
+                            ); ?>
                         </th>
                         <th width="1%">
                             <?php echo JHtml::_('grid.checkall'); ?>
                         </th>
                         <th>
-                            <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_LEVEL_NAME', 'a.title',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_USERS_HEADING_LEVEL_NAME',
+                                'a.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th class="nowrap hidden-phone">
                             <?php echo JText::_('COM_USERS_USER_GROUPS_HAVING_ACCESS'); ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ID',
+                                'a.id',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -91,7 +112,9 @@ if ($saveOrder) {
                                 if (!$canChange) {
                                     $iconClass = ' inactive';
                                 } elseif (!$saveOrder) {
-                                    $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+                                    $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText(
+                                            'JORDERINGDISABLED'
+                                        );
                                 }
                                 ?>
                                 <span class="sortable-handler<?php echo $iconClass ?>">
@@ -107,7 +130,9 @@ if ($saveOrder) {
                             </td>
                             <td>
                                 <?php if ($canEdit) : ?>
-                                    <a href="<?php echo JRoute::_('index.php?option=com_users&task=level.edit&id=' . $item->id); ?>">
+                                    <a href="<?php echo JRoute::_(
+                                        'index.php?option=com_users&task=level.edit&id=' . $item->id
+                                    ); ?>">
                                         <?php echo $this->escape($item->title); ?></a>
                                 <?php else : ?>
                                     <?php echo $this->escape($item->title); ?>

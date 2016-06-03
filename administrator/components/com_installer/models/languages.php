@@ -52,11 +52,11 @@ class InstallerModelLanguages extends JModelList
         $db       = $this->getDbo();
         $extQuery = $db->getQuery(true);
 
-        $extQuery->select($db->quoteName('extension_id'))
-                 ->from($db->quoteName('#__extensions'))
-                 ->where($db->quoteName('type') . ' = ' . $db->quote('package'))
-                 ->where($db->quoteName('element') . ' = ' . $db->quote('pkg_en-GB'))
-                 ->where($db->quoteName('client_id') . ' = 0');
+        $extQuery->select($db->quoteName('extension_id'))->from($db->quoteName('#__extensions'))->where(
+                $db->quoteName('type') . ' = ' . $db->quote('package')
+            )->where($db->quoteName('element') . ' = ' . $db->quote('pkg_en-GB'))->where(
+                $db->quoteName('client_id') . ' = 0'
+            );
 
         $db->setQuery($extQuery);
 
@@ -129,10 +129,9 @@ class InstallerModelLanguages extends JModelList
 
         // Try to enable the update site, return false if some RuntimeException
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->update('#__update_sites')
-                    ->set('enabled = 1')
-                    ->where('update_site_id = ' . $this->updateSiteId);
+        $query = $db->getQuery(true)->update('#__update_sites')->set('enabled = 1')->where(
+                'update_site_id = ' . $this->updateSiteId
+            );
 
         $db->setQuery($query);
 
@@ -296,8 +295,9 @@ class InstallerModelLanguages extends JModelList
         $query = $db->getQuery(true);
 
         // Select the required fields from the updates table.
-        $query->select($db->quoteName(array('update_id', 'name', 'element', 'version', 'detailsurl', 'type')))
-              ->from($db->quoteName('#__updates'));
+        $query->select($db->quoteName(array('update_id', 'name', 'element', 'version', 'detailsurl', 'type')))->from(
+                $db->quoteName('#__updates')
+            );
 
         /*
          * This where clause will limit to language updates only.
@@ -317,12 +317,20 @@ class InstallerModelLanguages extends JModelList
         // Filter by search in title and language tag.
         if ($search = $this->getState('filter.search')) {
             $search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-            $query->where('(LOWER(name) LIKE ' . strtolower($search) . ' OR LOWER(element) LIKE ' . strtolower($search) . ')');
+            $query->where(
+                '(LOWER(name) LIKE ' . strtolower($search) . ' OR LOWER(element) LIKE ' . strtolower($search) . ')'
+            );
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'name')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'name'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }
@@ -358,11 +366,15 @@ class InstallerModelLanguages extends JModelList
      */
     protected function populateState($ordering = 'name', $direction = 'asc')
     {
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
 
-        $this->setState('extension_message',
-            JFactory::getApplication()->getUserState('com_installer.extension_message'));
+        $this->setState(
+            'extension_message',
+            JFactory::getApplication()->getUserState('com_installer.extension_message')
+        );
 
         parent::populateState($ordering, $direction);
     }

@@ -29,8 +29,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <?php else : ?>
         <div id="j-main-container">
             <?php endif; ?>
-            <?php echo JLayoutHelper::render('joomla.searchtools.default',
-                array('view' => $this, 'options' => array('filterButton' => false))); ?>
+            <?php echo JLayoutHelper::render(
+                'joomla.searchtools.default',
+                array('view' => $this, 'options' => array('filterButton' => false))
+            ); ?>
             <div class="clearfix"></div>
             <?php if (empty($this->rows)) : ?>
                 <div class="alert alert-no-items">
@@ -44,36 +46,76 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                             &#160;
                         </th>
                         <th width="25%" class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_LANGUAGES_HEADING_LANGUAGE', 'name', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_LANGUAGES_HEADING_LANGUAGE',
+                                'name',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_LANGUAGES_HEADING_LANG_TAG', 'language',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_LANGUAGES_HEADING_LANG_TAG',
+                                'language',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th class="nowrap center">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_LANGUAGES_HEADING_DEFAULT', 'published',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_LANGUAGES_HEADING_DEFAULT',
+                                'published',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th class="nowrap center">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_LANGUAGES_HEADING_VERSION', 'version',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_LANGUAGES_HEADING_VERSION',
+                                'version',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th class="hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_LANGUAGES_HEADING_DATE', 'creationDate',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_LANGUAGES_HEADING_DATE',
+                                'creationDate',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th class="hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_LANGUAGES_HEADING_AUTHOR', 'author', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_LANGUAGES_HEADING_AUTHOR',
+                                'author',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th class="hidden-phone hidden-tablet">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_LANGUAGES_HEADING_AUTHOR_EMAIL', 'authorEmail',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_LANGUAGES_HEADING_AUTHOR_EMAIL',
+                                'authorEmail',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'extension_id', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ID',
+                                'extension_id',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -106,17 +148,27 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                 <?php echo $this->escape($row->language); ?>
                             </td>
                             <td class="center">
-                                <?php echo JHtml::_('jgrid.isdefault', $row->published, $i, 'installed.',
-                                    !$row->published && $canChange); ?>
+                                <?php echo JHtml::_(
+                                    'jgrid.isdefault',
+                                    $row->published,
+                                    $i,
+                                    'installed.',
+                                    !$row->published && $canChange
+                                ); ?>
                             </td>
                             <td class="center small">
                                 <?php // Display a Note if language pack version is not equal to Joomla version 
                                 ?>
-                                <?php if (substr($row->version, 0, 3) != $version::RELEASE || substr($row->version, 0,
-                                        5) != $currentShortVersion
+                                <?php if (substr($row->version, 0, 3) != $version::RELEASE || substr(
+                                                                                                  $row->version,
+                                                                                                  0,
+                                                                                                  5
+                                                                                              ) != $currentShortVersion
                                 ) : ?>
                                     <span class="label label-warning hasTooltip"
-                                          title="<?php echo JText::_('JGLOBAL_LANGUAGE_VERSION_NOT_PLATFORM'); ?>"><?php echo $row->version; ?></span>
+                                          title="<?php echo JText::_(
+                                              'JGLOBAL_LANGUAGE_VERSION_NOT_PLATFORM'
+                                          ); ?>"><?php echo $row->version; ?></span>
                                 <?php else : ?>
                                     <span class="label label-success"><?php echo $row->version; ?></span>
                                 <?php endif; ?>

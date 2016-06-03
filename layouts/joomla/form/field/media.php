@@ -131,7 +131,9 @@ if ($showPreview) {
 
     $img             = JHtml::image($src, JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT'), $imgattr);
     $previewImg      = '<div id="' . $id . '_preview_img"' . ($src ? '' : ' style="display:none"') . '>' . $img . '</div>';
-    $previewImgEmpty = '<div id="' . $id . '_preview_empty"' . ($src ? ' style="display:none"' : '') . '>' . JText::_('JLIB_FORM_MEDIA_PREVIEW_EMPTY') . '</div>';
+    $previewImgEmpty = '<div id="' . $id . '_preview_empty"' . ($src ? ' style="display:none"' : '') . '>' . JText::_(
+            'JLIB_FORM_MEDIA_PREVIEW_EMPTY'
+        ) . '</div>';
 
     if ($showAsTooltip) {
         echo '<div class="media-preview add-on">';
@@ -152,14 +154,19 @@ if ($showPreview) {
     }
 }
 
-echo '	<input type="text" name="' . $name . '" id="' . $id . '" value="' . htmlspecialchars($value, ENT_COMPAT,
-        'UTF-8') . '" readonly="readonly"' . $attr . ' data-basepath="' . JUri::root() . '"/>';
+echo '	<input type="text" name="' . $name . '" id="' . $id . '" value="' . htmlspecialchars(
+        $value,
+        ENT_COMPAT,
+        'UTF-8'
+    ) . '" readonly="readonly"' . $attr . ' data-basepath="' . JUri::root() . '"/>';
 
 ?>
 <a class="modal btn" title="<?php echo JText::_('JLIB_FORM_BUTTON_SELECT'); ?>" href="
 <?php echo ($readonly ? '' : ($link ? $link : 'index.php?option=com_media&amp;view=images&amp;tmpl=component&amp;asset=' . $asset . '&amp;author=' . $authorField) . '&amp;fieldid=' . $id . '&amp;folder=' . $folder) . '"' . ' rel="{handler: \'iframe\', size: {x: 800, y: 500}}"'; ?>>
  <?php echo JText::_('JLIB_FORM_BUTTON_SELECT'); ?></a><a class=" btn
-   hasTooltip" title="<?php echo JText::_('JLIB_FORM_BUTTON_CLEAR'); ?>" href="#" onclick="jInsertFieldValue('', '<?php echo $id; ?>'); return false;">
+   hasTooltip" title="<?php echo JText::_(
+    'JLIB_FORM_BUTTON_CLEAR'
+); ?>" href="#" onclick="jInsertFieldValue('', '<?php echo $id; ?>'); return false;">
 <i class="icon-remove"></i></a>
 
 

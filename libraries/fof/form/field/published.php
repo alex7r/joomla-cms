@@ -74,8 +74,14 @@ class FOFFormFieldPublished extends JFormFieldList implements FOFFormField
     {
         $class = $this->element['class'] ? ' class="' . (string)$this->element['class'] . '"' : '';
 
-        return '<span id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(),
-            $this->value), ENT_COMPAT, 'UTF-8') . '</span>';
+        return '<span id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(
+            FOFFormFieldList::getOptionName(
+                $this->getOptions(),
+                $this->value
+            ),
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</span>';
     }
 
     /**
@@ -194,7 +200,15 @@ class FOFFormFieldPublished extends JFormFieldList implements FOFFormField
 
         // @todo Enforce ACL checks to determine if the field should be enabled or not
         // Get the HTML
-        return JHTML::_('jgrid.published', $this->value, $this->rowid, $prefix, $enabled, $checkbox, $publish_up,
-            $publish_down);
+        return JHTML::_(
+            'jgrid.published',
+            $this->value,
+            $this->rowid,
+            $prefix,
+            $enabled,
+            $checkbox,
+            $publish_up,
+            $publish_down
+        );
     }
 }

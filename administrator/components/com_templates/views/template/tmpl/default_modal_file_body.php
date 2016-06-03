@@ -15,7 +15,11 @@ $input = JFactory::getApplication()->input;
     <div class="span12">
         <div class="span6 column-right">
             <form method="post"
-                  action="<?php echo JRoute::_('index.php?option=com_templates&task=template.createFile&id=' . $input->getInt('id') . '&file=' . $this->file); ?>"
+                  action="<?php echo JRoute::_(
+                      'index.php?option=com_templates&task=template.createFile&id=' . $input->getInt(
+                          'id'
+                      ) . '&file=' . $this->file
+                  ); ?>"
                   class="well">
                 <fieldset class="form-inline">
                     <label><?php echo JText::_('COM_TEMPLATES_FILE_NAME'); ?></label>
@@ -39,7 +43,11 @@ $input = JFactory::getApplication()->input;
                 </fieldset>
             </form>
             <form method="post"
-                  action="<?php echo JRoute::_('index.php?option=com_templates&task=template.uploadFile&id=' . $input->getInt('id') . '&file=' . $this->file); ?>"
+                  action="<?php echo JRoute::_(
+                      'index.php?option=com_templates&task=template.uploadFile&id=' . $input->getInt(
+                          'id'
+                      ) . '&file=' . $this->file
+                  ); ?>"
                   class="well" enctype="multipart/form-data">
                 <fieldset class="form-inline">
                     <input type="hidden" class="address" name="address"/>
@@ -51,7 +59,11 @@ $input = JFactory::getApplication()->input;
             </form>
             <?php if ($this->type != 'home'): ?>
                 <form method="post"
-                      action="<?php echo JRoute::_('index.php?option=com_templates&task=template.copyFile&id=' . $input->getInt('id') . '&file=' . $this->file); ?>"
+                      action="<?php echo JRoute::_(
+                          'index.php?option=com_templates&task=template.copyFile&id=' . $input->getInt(
+                              'id'
+                          ) . '&file=' . $this->file
+                      ); ?>"
                       class="well" enctype="multipart/form-data">
                     <fieldset class="form-inline">
                         <input type="hidden" class="address" name="address"/>

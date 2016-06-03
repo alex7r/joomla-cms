@@ -46,7 +46,9 @@ $component = $jinput->get('extension');
 
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
 
                 <div class="filter-select">
@@ -54,39 +56,65 @@ $component = $jinput->get('extension');
                            for="filter_level"><?php echo JText::_('JOPTION_SELECT_MAX_LEVELS'); ?></label>
                     <select name="filter_level" id="filter_level">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_MAX_LEVELS'); ?></option>
-                        <?php echo JHtml::_('select.options', $this->f_levels, 'value', 'text',
-                            $this->state->get('filter.level')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            $this->f_levels,
+                            'value',
+                            'text',
+                            $this->state->get('filter.level')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel"
                            for="filter_published"><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></label>
                     <select name="filter_published" id="filter_published">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text',
-                            $this->state->get('filter.published'), true); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('jgrid.publishedOptions'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.published'),
+                            true
+                        ); ?>
                     </select>
 
                     <label class="selectlabel"
                            for="filter_access"><?php echo JText::_('JOPTION_SELECT_ACCESS'); ?></label>
                     <select name="filter_access" id="filter_access">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_ACCESS'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text',
-                            $this->state->get('filter.access')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('access.assetgroups'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.access')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel"
                            for="filter_language"><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></label>
                     <select name="filter_language" id="filter_language">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value',
-                            'text', $this->state->get('filter.language')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('contentlanguage.existing', true, true),
+                            'value',
+                            'text',
+                            $this->state->get('filter.language')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_tag"><?php echo JText::_('JOPTION_SELECT_TAG'); ?></label>
                     <select name="filter_tag" id="filter_tag">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_TAG'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('tag.options', true, true), 'value', 'text',
-                            $this->state->get('filter.tag')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('tag.options', true, true),
+                            'value',
+                            'text',
+                            $this->state->get('filter.tag')
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -139,18 +167,33 @@ $component = $jinput->get('extension');
                         </th>
                     <?php endif; ?>
                     <th class="access-col">
-                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'JGRID_HEADING_ACCESS',
+                            'access_level',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <?php if ($this->assoc) : ?>
                         <th width="5%">
-                            <?php echo JHtml::_('grid.sort', 'COM_CATEGORY_HEADING_ASSOCIATION', 'association',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_CATEGORY_HEADING_ASSOCIATION',
+                                'association',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     <?php endif; ?>
                     <th class="language-col">
-                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language',
-                            $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'JGRID_HEADING_LANGUAGE',
+                            'language',
+                            $this->state->get('list.direction'),
+                            $this->state->get('list.ordering')
+                        ); ?>
                     </th>
                     <th class="nowrap id-col">
                         <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -163,12 +206,18 @@ $component = $jinput->get('extension');
                     <?php
                     $orderkey   = array_search($item->id, $this->ordering[$item->parent_id]);
                     $canEdit    = $user->authorise('core.edit', $extension . '.category.' . $item->id);
-                    $canCheckin = $user->authorise('core.admin',
-                            'com_checkin') || $item->checked_out == $userId || $item->checked_out == 0;
-                    $canEditOwn = $user->authorise('core.edit.own',
-                            $extension . '.category.' . $item->id) && $item->created_user_id == $userId;
-                    $canChange  = $user->authorise('core.edit.state',
-                            $extension . '.category.' . $item->id) && $canCheckin;
+                    $canCheckin = $user->authorise(
+                            'core.admin',
+                            'com_checkin'
+                        ) || $item->checked_out == $userId || $item->checked_out == 0;
+                    $canEditOwn = $user->authorise(
+                            'core.edit.own',
+                            $extension . '.category.' . $item->id
+                        ) && $item->created_user_id == $userId;
+                    $canChange  = $user->authorise(
+                            'core.edit.state',
+                            $extension . '.category.' . $item->id
+                        ) && $canCheckin;
                     ?>
                     <tr class="row<?php echo $i % 2; ?>">
                         <th class="center">
@@ -177,11 +226,19 @@ $component = $jinput->get('extension');
                         <td>
                             <?php echo str_repeat('<span class="gi">|&mdash;</span>', $item->level - 1) ?>
                             <?php if ($item->checked_out) : ?>
-                                <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time,
-                                    'categories.', $canCheckin); ?>
+                                <?php echo JHtml::_(
+                                    'jgrid.checkedout',
+                                    $i,
+                                    $item->editor,
+                                    $item->checked_out_time,
+                                    'categories.',
+                                    $canCheckin
+                                ); ?>
                             <?php endif; ?>
                             <?php if ($canEdit || $canEditOwn) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_categories&task=category.edit&id=' . $item->id . '&extension=' . $extension); ?>">
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_categories&task=category.edit&id=' . $item->id . '&extension=' . $extension
+                                ); ?>">
                                     <?php echo $this->escape($item->title); ?></a>
                             <?php else : ?>
                                 <?php echo $this->escape($item->title); ?>
@@ -191,8 +248,11 @@ $component = $jinput->get('extension');
                                 <?php if (empty($item->note)) : ?>
                                     <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
                                 <?php else : ?>
-                                    <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS_NOTE', $this->escape($item->alias),
-                                        $this->escape($item->note)); ?>
+                                    <?php echo JText::sprintf(
+                                        'JGLOBAL_LIST_ALIAS_NOTE',
+                                        $this->escape($item->alias),
+                                        $this->escape($item->note)
+                                    ); ?>
                                 <?php endif; ?></p>
                         </td>
                         <td class="center">
@@ -201,12 +261,21 @@ $component = $jinput->get('extension');
                         <td class="order">
                             <?php if ($canChange) : ?>
                                 <?php if ($saveOrder) : ?>
-                                    <span><?php echo $this->pagination->orderUpIcon($i,
+                                    <span><?php echo $this->pagination->orderUpIcon(
+                                            $i,
                                             isset($this->ordering[$item->parent_id][$orderkey - 1]),
-                                            'categories.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                                    <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total,
+                                            'categories.orderup',
+                                            'JLIB_HTML_MOVE_UP',
+                                            $ordering
+                                        ); ?></span>
+                                    <span><?php echo $this->pagination->orderDownIcon(
+                                            $i,
+                                            $this->pagination->total,
                                             isset($this->ordering[$item->parent_id][$orderkey + 1]),
-                                            'categories.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                            'categories.orderdown',
+                                            'JLIB_HTML_MOVE_DOWN',
+                                            $ordering
+                                        ); ?></span>
                                 <?php endif; ?>
                                 <?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
                                 <input type="text" name="order[]"
@@ -219,28 +288,36 @@ $component = $jinput->get('extension');
                         <?php if (isset($this->items[0]) && property_exists($this->items[0], 'count_published')) : ?>
                             <td class="center">
                                 <a title="<?php echo JText::_('COM_CATEGORY_COUNT_PUBLISHED_ITEMS'); ?>"
-                                   href="<?php echo JRoute::_('index.php?option=' . $component . '&filter[category_id]=' . (int)$item->id . '&filter[published]=1' . '&filter[level]=' . (int)$item->level); ?>">
+                                   href="<?php echo JRoute::_(
+                                       'index.php?option=' . $component . '&filter[category_id]=' . (int)$item->id . '&filter[published]=1' . '&filter[level]=' . (int)$item->level
+                                   ); ?>">
                                     <?php echo $item->count_published; ?></a>
                             </td>
                         <?php endif; ?>
                         <?php if (isset($this->items[0]) && property_exists($this->items[0], 'count_unpublished')) : ?>
                             <td class="center">
                                 <a title="<?php echo JText::_('COM_CATEGORY_COUNT_UNPUBLISHED_ITEMS'); ?>"
-                                   href="<?php echo JRoute::_('index.php?option=' . $component . '&filter[category_id]=' . (int)$item->id . '&filter[published]=0' . '&filter[level]=' . (int)$item->level); ?>">
+                                   href="<?php echo JRoute::_(
+                                       'index.php?option=' . $component . '&filter[category_id]=' . (int)$item->id . '&filter[published]=0' . '&filter[level]=' . (int)$item->level
+                                   ); ?>">
                                     <?php echo $item->count_unpublished; ?></a>
                             </td>
                         <?php endif; ?>
                         <?php if (isset($this->items[0]) && property_exists($this->items[0], 'count_archived')) : ?>
                             <td class="center">
                                 <a title="<?php echo JText::_('COM_CATEGORY_COUNT_ARCHIVED_ITEMS'); ?>"
-                                   href="<?php echo JRoute::_('index.php?option=' . $component . '&filter[category_id]=' . (int)$item->id . '&filter[published]=2' . '&filter[level]=' . (int)$item->level); ?>">
+                                   href="<?php echo JRoute::_(
+                                       'index.php?option=' . $component . '&filter[category_id]=' . (int)$item->id . '&filter[published]=2' . '&filter[level]=' . (int)$item->level
+                                   ); ?>">
                                     <?php echo $item->count_archived; ?></a>
                             </td>
                         <?php endif; ?>
                         <?php if (isset($this->items[0]) && property_exists($this->items[0], 'count_trashed')) : ?>
                             <td class="center">
                                 <a title="<?php echo JText::_('COM_CATEGORY_COUNT_TRASHED_ITEMS'); ?>"
-                                   href="<?php echo JRoute::_('index.php?option=' . $component . '&filter[category_id]=' . (int)$item->id . '&filter[published]=-2' . '&filter[level]=' . (int)$item->level); ?>">
+                                   href="<?php echo JRoute::_(
+                                       'index.php?option=' . $component . '&filter[category_id]=' . (int)$item->id . '&filter[published]=-2' . '&filter[level]=' . (int)$item->level
+                                   ); ?>">
                                     <?php echo $item->count_trashed; ?></a>
                             </td>
                         <?php endif; ?>
@@ -250,8 +327,11 @@ $component = $jinput->get('extension');
                         <?php if ($this->assoc) : ?>
                             <td class="center">
                                 <?php if ($item->association): ?>
-                                    <?php echo JHtml::_('CategoriesAdministrator.association', $item->id,
-                                        $extension); ?>
+                                    <?php echo JHtml::_(
+                                        'CategoriesAdministrator.association',
+                                        $item->id,
+                                        $extension
+                                    ); ?>
                                 <?php endif; ?>
                             </td>
                         <?php endif; ?>
@@ -259,10 +339,13 @@ $component = $jinput->get('extension');
                             <?php if ($item->language == '*'): ?>
                                 <?php echo JText::alt('JALL', 'language'); ?>
                             <?php else: ?>
-                                <?php echo $item->language_title ? JHtml::_('image',
-                                        'mod_languages/' . $item->language_image . '.gif', $item->language_title,
+                                <?php echo $item->language_title ? JHtml::_(
+                                        'image',
+                                        'mod_languages/' . $item->language_image . '.gif',
+                                        $item->language_title,
                                         array('title' => $item->language_title),
-                                        true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                        true
+                                    ) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                             <?php endif; ?>
                         </td>
                         <td class="center">
@@ -278,13 +361,20 @@ $component = $jinput->get('extension');
             <div class="clr"></div>
 
             <?php //Load the batch processing form. ?>
-            <?php if ($user->authorise('core.create', $extension) && $user->authorise('core.edit',
-                    $extension) && $user->authorise('core.edit.state', $extension)
+            <?php if ($user->authorise('core.create', $extension) && $user->authorise(
+                    'core.edit',
+                    $extension
+                ) && $user->authorise('core.edit.state', $extension)
             ) : ?>
-                <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                    'title'  => JText::_('COM_CATEGORIES_BATCH_OPTIONS'),
-                    'footer' => $this->loadTemplate('batch_footer')
-                ), $this->loadTemplate('batch_body')); ?>
+                <?php echo JHtml::_(
+                    'bootstrap.renderModal',
+                    'collapseModal',
+                    array(
+                        'title'  => JText::_('COM_CATEGORIES_BATCH_OPTIONS'),
+                        'footer' => $this->loadTemplate('batch_footer')
+                    ),
+                    $this->loadTemplate('batch_body')
+                ); ?>
             <?php endif; ?>
 
             <input type="hidden" name="extension" value="<?php echo $extension; ?>"/>

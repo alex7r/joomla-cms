@@ -350,8 +350,11 @@ class ClassLoader
         // PSR-0 lookup
         if (false !== $pos = strrpos($class, '\\')) {
             // namespaced class name
-            $logicalPathPsr0 = substr($logicalPathPsr4, 0, $pos + 1) . strtr(substr($logicalPathPsr4, $pos + 1), '_',
-                    DIRECTORY_SEPARATOR);
+            $logicalPathPsr0 = substr($logicalPathPsr4, 0, $pos + 1) . strtr(
+                    substr($logicalPathPsr4, $pos + 1),
+                    '_',
+                    DIRECTORY_SEPARATOR
+                );
         } else {
             // PEAR-like class name
             $logicalPathPsr0 = strtr($class, '_', DIRECTORY_SEPARATOR) . $ext;

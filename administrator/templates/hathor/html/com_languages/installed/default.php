@@ -96,8 +96,13 @@ $userId = $user->get('id');
                             <?php echo $this->escape($row->language); ?>
                         </td>
                         <td class="center">
-                            <?php echo JHtml::_('jgrid.isdefault', $row->published, $i, 'installed.',
-                                !$row->published && $canChange); ?>
+                            <?php echo JHtml::_(
+                                'jgrid.isdefault',
+                                $row->published,
+                                $i,
+                                'installed.',
+                                !$row->published && $canChange
+                            ); ?>
                         </td>
                         <td class="center">
                             <?php echo $this->escape($row->version); ?>

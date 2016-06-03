@@ -323,8 +323,12 @@ final class JApplicationSite extends JApplicationCms
          * $this->input->getCmd('option'); or $this->input->getCmd('view');
          * ex: due of the sef urls
          */
-        $this->checkUserRequireReset('com_users', 'profile', 'edit',
-            'com_users/profile.save,com_users/profile.apply,com_users/user.logout');
+        $this->checkUserRequireReset(
+            'com_users',
+            'profile',
+            'edit',
+            'com_users/profile.save,com_users/profile.apply,com_users/user.logout'
+        );
 
         // Dispatch the application
         $this->dispatch();
@@ -420,10 +424,13 @@ final class JApplicationSite extends JApplicationCms
          * Try the lib_joomla file in the current language (without allowing the loading of the file in the default language)
          * Fallback to the default language if necessary
          */
-        $this->getLanguage()->load('lib_joomla', JPATH_SITE, null, false, true) || $this->getLanguage()
-                                                                                        ->load('lib_joomla',
-                                                                                            JPATH_ADMINISTRATOR, null,
-                                                                                            false, true);
+        $this->getLanguage()->load('lib_joomla', JPATH_SITE, null, false, true) || $this->getLanguage()->load(
+                'lib_joomla',
+                JPATH_ADMINISTRATOR,
+                null,
+                false,
+                true
+            );
     }
 
     /**
@@ -598,8 +605,12 @@ final class JApplicationSite extends JApplicationCms
     {
         if (is_object($this->template)) {
             if (!file_exists(JPATH_THEMES . '/' . $this->template->template . '/index.php')) {
-                throw new InvalidArgumentException(JText::sprintf('JERROR_COULD_NOT_FIND_TEMPLATE',
-                    $this->template->template));
+                throw new InvalidArgumentException(
+                    JText::sprintf(
+                        'JERROR_COULD_NOT_FIND_TEMPLATE',
+                        $this->template->template
+                    )
+                );
             }
 
             if ($params) {
@@ -646,8 +657,12 @@ final class JApplicationSite extends JApplicationCms
                         ->from('#__template_styles as s')
                         ->where('s.client_id = 0')
                         ->where('e.enabled = 1')
-                        ->join('LEFT',
-                            '#__extensions as e ON e.element=s.template AND e.type=' . $db->quote('template') . ' AND e.client_id=s.client_id');
+                        ->join(
+                            'LEFT',
+                            '#__extensions as e ON e.element=s.template AND e.type=' . $db->quote(
+                                'template'
+                            ) . ' AND e.client_id=s.client_id'
+                        );
 
             $db->setQuery($query);
             $templates = $db->loadObjectList('id');

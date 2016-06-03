@@ -91,10 +91,9 @@ class ContentRouter extends JComponentRouterBase
                     // Make sure we have the id and the alias
                     if (strpos($query['id'], ':') === false) {
                         $db      = JFactory::getDbo();
-                        $dbQuery = $db->getQuery(true)
-                                      ->select('alias')
-                                      ->from('#__content')
-                                      ->where('id=' . (int)$query['id']);
+                        $dbQuery = $db->getQuery(true)->select('alias')->from('#__content')->where(
+                                'id=' . (int)$query['id']
+                            );
                         $db->setQuery($dbQuery);
                         $alias       = $db->loadResult();
                         $query['id'] = $query['id'] . ':' . $alias;
@@ -288,10 +287,9 @@ class ContentRouter extends JComponentRouterBase
 
                 return $vars;
             } else {
-                $query = $db->getQuery(true)
-                            ->select($db->quoteName(array('alias', 'catid')))
-                            ->from($db->quoteName('#__content'))
-                            ->where($db->quoteName('id') . ' = ' . (int)$id);
+                $query = $db->getQuery(true)->select($db->quoteName(array('alias', 'catid')))->from(
+                        $db->quoteName('#__content')
+                    )->where($db->quoteName('id') . ' = ' . (int)$id);
                 $db->setQuery($query);
                 $article = $db->loadObject();
 
@@ -361,11 +359,9 @@ class ContentRouter extends JComponentRouterBase
             if ($found == 0) {
                 if ($advanced) {
                     $db    = JFactory::getDbo();
-                    $query = $db->getQuery(true)
-                                ->select($db->quoteName('id'))
-                                ->from('#__content')
-                                ->where($db->quoteName('catid') . ' = ' . (int)$vars['catid'])
-                                ->where($db->quoteName('alias') . ' = ' . $db->quote($segment));
+                    $query = $db->getQuery(true)->select($db->quoteName('id'))->from('#__content')->where(
+                            $db->quoteName('catid') . ' = ' . (int)$vars['catid']
+                        )->where($db->quoteName('alias') . ' = ' . $db->quote($segment));
                     $db->setQuery($query);
                     $cid = $db->loadResult();
                 } else {

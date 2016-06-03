@@ -100,8 +100,10 @@ class TagsModelTags extends JModelList
                         }
 
                         // Check if this is the user having previously checked out the row.
-                        if ($table->checked_out > 0 && $table->checked_out != $user->get('id') && !$user->authorise('core.admin',
-                                'com_checkin')
+                        if ($table->checked_out > 0 && $table->checked_out != $user->get('id') && !$user->authorise(
+                                'core.admin',
+                                'com_checkin'
+                            )
                         ) {
                             $this->setError(JText::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH'));
 
@@ -221,22 +223,27 @@ class TagsModelTags extends JModelList
         $user  = JFactory::getUser();
 
         // Select the required fields from the table.
-        $query->select($this->getState('list.select',
-            'a.id, a.title, a.alias, a.note, a.published, a.access' . ', a.checked_out, a.checked_out_time, a.created_user_id' . ', a.path, a.parent_id, a.level, a.lft, a.rgt' . ', a.language'));
+        $query->select(
+            $this->getState(
+                'list.select',
+                'a.id, a.title, a.alias, a.note, a.published, a.access' . ', a.checked_out, a.checked_out_time, a.created_user_id' . ', a.path, a.parent_id, a.level, a.lft, a.rgt' . ', a.language'
+            )
+        );
         $query->from('#__tags AS a')->where('a.alias <> ' . $db->quote('root'));
 
         // Join over the language
-        $query->select('l.title AS language_title, l.image AS language_image')
-              ->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = a.language');
+        $query->select('l.title AS language_title, l.image AS language_image')->join(
+                'LEFT',
+                $db->quoteName('#__languages') . ' AS l ON l.lang_code = a.language'
+            );
 
         // Join over the users for the checked out user.
         $query->select('uc.name AS editor')->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 
         // Join over the users for the author.
-        $query->select('ua.name AS author_name')
-              ->join('LEFT', '#__users AS ua ON ua.id = a.created_user_id')
-              ->select('ug.title AS access_title')
-              ->join('LEFT', '#__viewlevels AS ug on ug.id = a.access');
+        $query->select('ua.name AS author_name')->join('LEFT', '#__users AS ua ON ua.id = a.created_user_id')->select(
+                'ug.title AS access_title'
+            )->join('LEFT', '#__viewlevels AS ug on ug.id = a.access');
 
         // Filter on the level.
         if ($level = $this->getState('filter.level')) {
@@ -271,7 +278,9 @@ class TagsModelTags extends JModelList
                 $query->where('a.id = ' . (int)substr($search, 3));
             } else {
                 $search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-                $query->where('(a.title LIKE ' . $search . ' OR a.alias LIKE ' . $search . ' OR a.note LIKE ' . $search . ')');
+                $query->where(
+                    '(a.title LIKE ' . $search . ' OR a.alias LIKE ' . $search . ' OR a.note LIKE ' . $search . ')'
+                );
             }
         }
 

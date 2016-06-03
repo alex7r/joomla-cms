@@ -64,8 +64,9 @@ class JFormFieldCategoryParent extends JFormFieldList
         if ($this->element['parent']) {
             // Prevent parenting to children of this item.
             if ($id = $this->form->getValue('id')) {
-                $query->join('LEFT', $db->quoteName('#__categories') . ' AS p ON p.id = ' . (int)$id)
-                      ->where('NOT(a.lft >= p.lft AND a.rgt <= p.rgt)');
+                $query->join('LEFT', $db->quoteName('#__categories') . ' AS p ON p.id = ' . (int)$id)->where(
+                        'NOT(a.lft >= p.lft AND a.rgt <= p.rgt)'
+                    );
 
                 $rowQuery = $db->getQuery(true);
                 $rowQuery->select('a.id AS value, a.title AS text, a.level, a.parent_id')
@@ -98,10 +99,9 @@ class JFormFieldCategoryParent extends JFormFieldList
 
             // Displays language code if not set to All
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select($db->quoteName('language'))
-                        ->where($db->quoteName('id') . '=' . (int)$options[$i]->value)
-                        ->from($db->quoteName('#__categories'));
+            $query = $db->getQuery(true)->select($db->quoteName('language'))->where(
+                    $db->quoteName('id') . '=' . (int)$options[$i]->value
+                )->from($db->quoteName('#__categories'));
 
             $db->setQuery($query);
             $language = $db->loadResult();
@@ -142,8 +142,10 @@ class JFormFieldCategoryParent extends JFormFieldList
                 }
                 // However, if you can edit.state you can also move this to another category for which you have
                 // create permission and you should also still be able to save in the current category.
-                elseif (($user->authorise('core.create',
-                            $extension . '.category.' . $option->value) != true) && $option->value != $oldCat
+                elseif (($user->authorise(
+                            'core.create',
+                            $extension . '.category.' . $option->value
+                        ) != true) && $option->value != $oldCat
                 ) {
                     echo 'x';
                     unset($options[$i]);

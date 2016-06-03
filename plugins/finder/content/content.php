@@ -324,13 +324,13 @@ class PlgFinderContent extends FinderIndexerAdapter
         $db = JFactory::getDbo();
 
         // Check if we can use the supplied SQL query.
-        $query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)
-                                                                ->select('a.id, a.title, a.alias, a.introtext AS summary, a.fulltext AS body')
-                                                                ->select('a.state, a.catid, a.created AS start_date, a.created_by')
-                                                                ->select('a.created_by_alias, a.modified, a.modified_by, a.attribs AS params')
-                                                                ->select('a.metakey, a.metadesc, a.metadata, a.language, a.access, a.version, a.ordering')
-                                                                ->select('a.publish_up AS publish_start_date, a.publish_down AS publish_end_date')
-                                                                ->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
+        $query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)->select(
+                'a.id, a.title, a.alias, a.introtext AS summary, a.fulltext AS body'
+            )->select('a.state, a.catid, a.created AS start_date, a.created_by')->select(
+                'a.created_by_alias, a.modified, a.modified_by, a.attribs AS params'
+            )->select('a.metakey, a.metadesc, a.metadata, a.language, a.access, a.version, a.ordering')->select(
+                'a.publish_up AS publish_start_date, a.publish_down AS publish_end_date'
+            )->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
 
         // Handle the alias CASE WHEN portion of the query
         $case_when_item_alias = ' CASE WHEN ';
@@ -349,11 +349,10 @@ class PlgFinderContent extends FinderIndexerAdapter
         $case_when_category_alias .= $query->concatenate(array($c_id, 'c.alias'), ':');
         $case_when_category_alias .= ' ELSE ';
         $case_when_category_alias .= $c_id . ' END as catslug';
-        $query->select($case_when_category_alias)
-              ->select('u.name AS author')
-              ->from('#__content AS a')
-              ->join('LEFT', '#__categories AS c ON c.id = a.catid')
-              ->join('LEFT', '#__users AS u ON u.id = a.created_by');
+        $query->select($case_when_category_alias)->select('u.name AS author')->from('#__content AS a')->join(
+                'LEFT',
+                '#__categories AS c ON c.id = a.catid'
+            )->join('LEFT', '#__users AS u ON u.id = a.created_by');
 
         return $query;
     }

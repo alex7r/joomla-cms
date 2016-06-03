@@ -43,7 +43,9 @@ $saveOrder = $listOrder == 'a.ordering';
                            title="<?php echo JText::_('COM_LANGS_SEARCH_IN_TITLE'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
 
                 <div class="filter-select">
@@ -52,8 +54,14 @@ $saveOrder = $listOrder == 'a.ordering';
                     </label>
                     <select name="filter_published" id="filter_published">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('languages.publishedOptions'), 'value', 'text',
-                            $this->state->get('filter.published'), true); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('languages.publishedOptions'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.published'),
+                            true
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -72,27 +80,52 @@ $saveOrder = $listOrder == 'a.ordering';
                         <?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
                     </th>
                     <th class="title">
-                        <?php echo JHtml::_('grid.sort', 'COM_LANGUAGES_HEADING_TITLE_NATIVE', 'a.title_native',
-                            $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_LANGUAGES_HEADING_TITLE_NATIVE',
+                            'a.title_native',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap width-5">
-                        <?php echo JHtml::_('grid.sort', 'COM_LANGUAGES_FIELD_LANG_TAG_LABEL', 'a.lang_code', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_LANGUAGES_FIELD_LANG_TAG_LABEL',
+                            'a.lang_code',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap width-5">
-                        <?php echo JHtml::_('grid.sort', 'COM_LANGUAGES_FIELD_LANG_CODE_LABEL', 'a.sef', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_LANGUAGES_FIELD_LANG_CODE_LABEL',
+                            'a.sef',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap width-5">
-                        <?php echo JHtml::_('grid.sort', 'COM_LANGUAGES_HEADING_LANG_IMAGE', 'a.image', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_LANGUAGES_HEADING_LANG_IMAGE',
+                            'a.image',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap width-5">
                         <?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
                     </th>
                     <th width="nowrap ordering-col">
-                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ORDERING', 'ordering', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'JGRID_HEADING_ORDERING',
+                            'ordering',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                         <?php if ($canOrder && $saveOrder) : ?>
                             <?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'languages.saveorder'); ?>
                         <?php endif; ?>
@@ -122,7 +155,9 @@ $saveOrder = $listOrder == 'a.ordering';
 					<span class="editlinktip hasTooltip"
                           title="<?php echo JHtml::tooltipText(JText::_('JGLOBAL_EDIT_ITEM'), $item->title, 0); ?>">
 					<?php if ($canEdit) : ?>
-                        <a href="<?php echo JRoute::_('index.php?option=com_languages&task=language.edit&lang_id=' . (int)$item->lang_id); ?>">
+                        <a href="<?php echo JRoute::_(
+                            'index.php?option=com_languages&task=language.edit&lang_id=' . (int)$item->lang_id
+                        ); ?>">
 							<?php echo $this->escape($item->title); ?></a>
                     <?php else : ?>
                         <?php echo $this->escape($item->title); ?>
@@ -140,8 +175,13 @@ $saveOrder = $listOrder == 'a.ordering';
                         </td>
                         <td class="center">
                             <?php echo $this->escape($item->image); ?>
-                            &nbsp;<?php echo JHtml::_('image', 'mod_languages/' . $item->image . '.gif', $item->image,
-                                array('title' => $item->image), true); ?>
+                            &nbsp;<?php echo JHtml::_(
+                                'image',
+                                'mod_languages/' . $item->image . '.gif',
+                                $item->image,
+                                array('title' => $item->image),
+                                true
+                            ); ?>
                         </td>
                         <td class="center">
                             <?php echo JHtml::_('jgrid.published', $item->published, $i, 'languages.', $canChange); ?>
@@ -150,16 +190,37 @@ $saveOrder = $listOrder == 'a.ordering';
                             <?php if ($canChange) : ?>
                                 <?php if ($saveOrder) : ?>
                                     <?php if ($listDirn == 'asc') : ?>
-                                        <span><?php echo $this->pagination->orderUpIcon($i, true, 'languages.orderup',
-                                                'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                                        <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total,
-                                                true, 'languages.orderdown', 'JLIB_HTML_MOVE_DOWN',
-                                                $ordering); ?></span>
+                                        <span><?php echo $this->pagination->orderUpIcon(
+                                                $i,
+                                                true,
+                                                'languages.orderup',
+                                                'JLIB_HTML_MOVE_UP',
+                                                $ordering
+                                            ); ?></span>
+                                        <span><?php echo $this->pagination->orderDownIcon(
+                                                $i,
+                                                $this->pagination->total,
+                                                true,
+                                                'languages.orderdown',
+                                                'JLIB_HTML_MOVE_DOWN',
+                                                $ordering
+                                            ); ?></span>
                                     <?php elseif ($listDirn == 'desc') : ?>
-                                        <span><?php echo $this->pagination->orderUpIcon($i, true, 'languages.orderdown',
-                                                'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                                        <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total,
-                                                true, 'languages.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                        <span><?php echo $this->pagination->orderUpIcon(
+                                                $i,
+                                                true,
+                                                'languages.orderdown',
+                                                'JLIB_HTML_MOVE_UP',
+                                                $ordering
+                                            ); ?></span>
+                                        <span><?php echo $this->pagination->orderDownIcon(
+                                                $i,
+                                                $this->pagination->total,
+                                                true,
+                                                'languages.orderup',
+                                                'JLIB_HTML_MOVE_DOWN',
+                                                $ordering
+                                            ); ?></span>
                                     <?php endif; ?>
                                 <?php endif; ?>
                                 <?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>

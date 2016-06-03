@@ -219,7 +219,9 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
         $basePath .= $component . '/';
         $altBasePath = $basePath;
         $basePath .= $view . '/';
-        $altBasePath .= (FOFInflector::isSingular($view) ? FOFInflector::pluralize($view) : FOFInflector::singularize($view)) . '/';
+        $altBasePath .= (FOFInflector::isSingular($view) ? FOFInflector::pluralize($view) : FOFInflector::singularize(
+                $view
+            )) . '/';
 
         if ($strict) {
             $paths = array(
@@ -663,10 +665,9 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
         // if we're in Joomla 2.5.18+ or 3.2.1+
         if ($response->status != JAuthentication::STATUS_SUCCESS && method_exists('JUserHelper', 'verifyPassword')) {
             $db     = JFactory::getDbo();
-            $query  = $db->getQuery(true)
-                         ->select('id, password')
-                         ->from('#__users')
-                         ->where('username=' . $db->quote($authInfo['username']));
+            $query  = $db->getQuery(true)->select('id, password')->from('#__users')->where(
+                    'username=' . $db->quote($authInfo['username'])
+                );
             $result = $db->setQuery($query)->loadObject();
 
             if ($result) {

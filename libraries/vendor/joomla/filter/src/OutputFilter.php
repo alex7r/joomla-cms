@@ -64,9 +64,13 @@ class OutputFilter
     {
         $regex = 'href="([^"]*(&(amp;){0})[^"]*)*?"';
 
-        return preg_replace_callback("#$regex#i", function ($m) {
-            return preg_replace('#&(?!amp;)#', '&amp;', $m[0]);
-        }, $input);
+        return preg_replace_callback(
+            "#$regex#i",
+            function ($m) {
+                return preg_replace('#&(?!amp;)#', '&amp;', $m[0]);
+            },
+            $input
+        );
     }
 
     /**

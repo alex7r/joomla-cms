@@ -46,11 +46,9 @@ class UsersControllerUser extends UsersController
             if (JLanguageMultilang::isEnabled()) {
 
                 $db    = JFactory::getDbo();
-                $query = $db->getQuery(true)
-                            ->select('language')
-                            ->from($db->quoteName('#__menu'))
-                            ->where('client_id = 0')
-                            ->where('id =' . $data['return']);
+                $query = $db->getQuery(true)->select('language')->from($db->quoteName('#__menu'))->where(
+                        'client_id = 0'
+                    )->where('id =' . $data['return']);
 
                 $db->setQuery($query);
 
@@ -149,11 +147,9 @@ class UsersControllerUser extends UsersController
             if (JLanguageMultilang::isEnabled()) {
 
                 $db    = JFactory::getDbo();
-                $query = $db->getQuery(true)
-                            ->select('language')
-                            ->from($db->quoteName('#__menu'))
-                            ->where('client_id = 0')
-                            ->where('id =' . $return);
+                $query = $db->getQuery(true)->select('language')->from($db->quoteName('#__menu'))->where(
+                        'client_id = 0'
+                    )->where('id =' . $return);
 
                 $db->setQuery($query);
 
@@ -201,11 +197,9 @@ class UsersControllerUser extends UsersController
         if (JLanguageMultilang::isEnabled()) {
             if ($itemid) {
                 $db    = JFactory::getDbo();
-                $query = $db->getQuery(true)
-                            ->select('language')
-                            ->from($db->quoteName('#__menu'))
-                            ->where('client_id = 0')
-                            ->where('id =' . $itemid);
+                $query = $db->getQuery(true)->select('language')->from($db->quoteName('#__menu'))->where(
+                        'client_id = 0'
+                    )->where('id =' . $itemid);
 
                 $db->setQuery($query);
 
@@ -238,7 +232,11 @@ class UsersControllerUser extends UsersController
         }
 
         // Logout and redirect
-        $this->setRedirect('index.php?option=com_users&task=user.logout&' . JSession::getFormToken() . '=1&return=' . base64_encode($url));
+        $this->setRedirect(
+            'index.php?option=com_users&task=user.logout&' . JSession::getFormToken() . '=1&return=' . base64_encode(
+                $url
+            )
+        );
     }
 
     /**
@@ -339,7 +337,9 @@ class UsersControllerUser extends UsersController
         // Check for a hard error.
         if ($return instanceof Exception) {
             // Get the error message to display.
-            $message = $app->get('error_reporting') ? $return->getMessage() : JText::_('COM_USERS_REMIND_REQUEST_ERROR');
+            $message = $app->get('error_reporting') ? $return->getMessage() : JText::_(
+                'COM_USERS_REMIND_REQUEST_ERROR'
+            );
 
             // Get the route to the next page.
             $itemid = UsersHelperRoute::getRemindRoute();

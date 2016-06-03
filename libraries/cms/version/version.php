@@ -117,15 +117,20 @@ final class JVersion
     public function __get($name)
     {
         if (defined("JVersion::$name")) {
-            JLog::add('Accessing JVersion data through class member variables is deprecated, use the corresponding constant instead.',
-                JLog::WARNING, 'deprecated');
+            JLog::add(
+                'Accessing JVersion data through class member variables is deprecated, use the corresponding constant instead.',
+                JLog::WARNING,
+                'deprecated'
+            );
 
             return constant("JVersion::$name");
         }
 
         $trace = debug_backtrace();
-        trigger_error('Undefined constant via __get(): ' . $name . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'],
-            E_USER_NOTICE);
+        trigger_error(
+            'Undefined constant via __get(): ' . $name . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'],
+            E_USER_NOTICE
+        );
     }
 
     /**

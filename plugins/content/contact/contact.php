@@ -92,8 +92,11 @@ class PlgContentContact extends JPlugin
         $query->where('contact.user_id = ' . (int)$created_by);
 
         if (JLanguageMultilang::isEnabled() == 1) {
-            $query->where('(contact.language in ' . '(' . $this->db->quote(JFactory::getLanguage()
-                                                                                   ->getTag()) . ',' . $this->db->quote('*') . ') ' . ' OR contact.language IS NULL)');
+            $query->where(
+                '(contact.language in ' . '(' . $this->db->quote(
+                    JFactory::getLanguage()->getTag()
+                ) . ',' . $this->db->quote('*') . ') ' . ' OR contact.language IS NULL)'
+            );
         }
 
         $this->db->setQuery($query);

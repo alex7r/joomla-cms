@@ -38,8 +38,12 @@ class JFormFieldTemplateName extends JFormFieldList
     public function getOptions()
     {
         // Get the client_id filter from the user state.
-        $clientId = JFactory::getApplication()
-                            ->getUserStateFromRequest('com_templates.styles.client_id', 'client_id', '0', 'string');
+        $clientId = JFactory::getApplication()->getUserStateFromRequest(
+                'com_templates.styles.client_id',
+                'client_id',
+                '0',
+                'string'
+            );
 
         // Get the templates for the selected client_id.
         $options = TemplatesHelper::getTemplateOptions($clientId);

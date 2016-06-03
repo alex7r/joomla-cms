@@ -118,10 +118,9 @@ class MenusModelItems extends JModelList
 
         if ($menuType) {
             $db    = $this->getDbo();
-            $query = $db->getQuery(true)
-                        ->select($db->qn(array('id', 'title')))
-                        ->from($db->qn('#__menu_types'))
-                        ->where($db->qn('menutype') . ' = ' . $db->q($menuType));
+            $query = $db->getQuery(true)->select($db->qn(array('id', 'title')))->from($db->qn('#__menu_types'))->where(
+                    $db->qn('menutype') . ' = ' . $db->q($menuType)
+                );
 
             $menuTypeItem = $db->setQuery($query)->loadObject();
 
@@ -198,70 +197,102 @@ class MenusModelItems extends JModelList
         $app   = JFactory::getApplication();
 
         // Select all fields from the table.
-        $query->select($this->getState('list.select', $db->quoteName(array(
-            'a.id',
-            'a.menutype',
-            'a.title',
-            'a.alias',
-            'a.note',
-            'a.path',
-            'a.link',
-            'a.type',
-            'a.parent_id',
-            'a.level',
-            'a.published',
-            'a.component_id',
-            'a.checked_out',
-            'a.checked_out_time',
-            'a.browserNav',
-            'a.access',
-            'a.img',
-            'a.template_style_id',
-            'a.params',
-            'a.lft',
-            'a.rgt',
-            'a.home',
-            'a.language',
-            'a.client_id'
-        ), array(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            'a.published',
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        ))));
-        $query->select('CASE ' . ' WHEN a.type = ' . $db->quote('component') . ' THEN a.published+2*(e.enabled-1) ' . ' WHEN a.type = ' . $db->quote('url') . 'AND a.published != -2 THEN a.published+2 ' . ' WHEN a.type = ' . $db->quote('url') . 'AND a.published = -2 THEN a.published-1 ' . ' WHEN a.type = ' . $db->quote('alias') . 'AND a.published != -2 THEN a.published+4 ' . ' WHEN a.type = ' . $db->quote('alias') . 'AND a.published = -2 THEN a.published-1 ' . ' WHEN a.type = ' . $db->quote('separator') . 'AND a.published != -2 THEN a.published+6 ' . ' WHEN a.type = ' . $db->quote('separator') . 'AND a.published = -2 THEN a.published-1 ' . ' WHEN a.type = ' . $db->quote('heading') . 'AND a.published != -2 THEN a.published+8 ' . ' WHEN a.type = ' . $db->quote('heading') . 'AND a.published = -2 THEN a.published-1 ' . ' END AS published ');
+        $query->select(
+            $this->getState(
+                'list.select',
+                $db->quoteName(
+                    array(
+                        'a.id',
+                        'a.menutype',
+                        'a.title',
+                        'a.alias',
+                        'a.note',
+                        'a.path',
+                        'a.link',
+                        'a.type',
+                        'a.parent_id',
+                        'a.level',
+                        'a.published',
+                        'a.component_id',
+                        'a.checked_out',
+                        'a.checked_out_time',
+                        'a.browserNav',
+                        'a.access',
+                        'a.img',
+                        'a.template_style_id',
+                        'a.params',
+                        'a.lft',
+                        'a.rgt',
+                        'a.home',
+                        'a.language',
+                        'a.client_id'
+                    ),
+                    array(
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        'a.published',
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    )
+                )
+            )
+        );
+        $query->select(
+            'CASE ' . ' WHEN a.type = ' . $db->quote(
+                'component'
+            ) . ' THEN a.published+2*(e.enabled-1) ' . ' WHEN a.type = ' . $db->quote(
+                'url'
+            ) . 'AND a.published != -2 THEN a.published+2 ' . ' WHEN a.type = ' . $db->quote(
+                'url'
+            ) . 'AND a.published = -2 THEN a.published-1 ' . ' WHEN a.type = ' . $db->quote(
+                'alias'
+            ) . 'AND a.published != -2 THEN a.published+4 ' . ' WHEN a.type = ' . $db->quote(
+                'alias'
+            ) . 'AND a.published = -2 THEN a.published-1 ' . ' WHEN a.type = ' . $db->quote(
+                'separator'
+            ) . 'AND a.published != -2 THEN a.published+6 ' . ' WHEN a.type = ' . $db->quote(
+                'separator'
+            ) . 'AND a.published = -2 THEN a.published-1 ' . ' WHEN a.type = ' . $db->quote(
+                'heading'
+            ) . 'AND a.published != -2 THEN a.published+8 ' . ' WHEN a.type = ' . $db->quote(
+                'heading'
+            ) . 'AND a.published = -2 THEN a.published-1 ' . ' END AS published '
+        );
         $query->from($db->quoteName('#__menu') . ' AS a');
 
         // Join over the language
-        $query->select('l.title AS language_title, l.image AS language_image')
-              ->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = a.language');
+        $query->select('l.title AS language_title, l.image AS language_image')->join(
+                'LEFT',
+                $db->quoteName('#__languages') . ' AS l ON l.lang_code = a.language'
+            );
 
         // Join over the users.
         $query->select('u.name AS editor')->join('LEFT', $db->quoteName('#__users') . ' AS u ON u.id = a.checked_out');
 
         // Join over components
-        $query->select('c.element AS componentname')
-              ->join('LEFT', $db->quoteName('#__extensions') . ' AS c ON c.extension_id = a.component_id');
+        $query->select('c.element AS componentname')->join(
+                'LEFT',
+                $db->quoteName('#__extensions') . ' AS c ON c.extension_id = a.component_id'
+            );
 
         // Join over the asset groups.
         $query->select('ag.title AS access_level')->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
@@ -270,11 +301,12 @@ class MenusModelItems extends JModelList
         $assoc = JLanguageAssociations::isEnabled();
 
         if ($assoc) {
-            $query->select('COUNT(asso2.id)>1 as association')
-                  ->join('LEFT',
-                      '#__associations AS asso ON asso.id = a.id AND asso.context=' . $db->quote('com_menus.item'))
-                  ->join('LEFT', '#__associations AS asso2 ON asso2.key = asso.key')
-                  ->group('a.id, e.enabled, l.title, l.image, u.name, c.element, ag.title, e.name');
+            $query->select('COUNT(asso2.id)>1 as association')->join(
+                    'LEFT',
+                    '#__associations AS asso ON asso.id = a.id AND asso.context=' . $db->quote('com_menus.item')
+                )->join('LEFT', '#__associations AS asso2 ON asso2.key = asso.key')->group(
+                    'a.id, e.enabled, l.title, l.image, u.name, c.element, ag.title, e.name'
+                );
         }
 
         // Join over the extensions
@@ -303,7 +335,9 @@ class MenusModelItems extends JModelList
                 }
             } else {
                 $search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-                $query->where('(' . 'a.title LIKE ' . $search . ' OR a.alias LIKE ' . $search . ' OR a.note LIKE ' . $search . ')');
+                $query->where(
+                    '(' . 'a.title LIKE ' . $search . ' OR a.alias LIKE ' . $search . ' OR a.note LIKE ' . $search . ')'
+                );
             }
         }
 
@@ -320,11 +354,9 @@ class MenusModelItems extends JModelList
         // "" means all
         if ($menuType == '') {
             // Load all menu types we have manage access
-            $query2 = $this->getDbo()
-                           ->getQuery(true)
-                           ->select($this->getDbo()->qn(array('id', 'menutype')))
-                           ->from('#__menu_types')
-                           ->order('title');
+            $query2 = $this->getDbo()->getQuery(true)->select($this->getDbo()->qn(array('id', 'menutype')))->from(
+                    '#__menu_types'
+                )->order('title');
 
             $menuTypes = $this->getDbo()->setQuery($query2)->loadObjectList();
 
@@ -367,8 +399,14 @@ class MenusModelItems extends JModelList
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.lft')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.lft'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

@@ -43,8 +43,10 @@ class ConfigControllerTemplatesSave extends JControllerBase
         $app = JFactory::getApplication();
 
         // Access back-end com_templates
-        JLoader::register('TemplatesControllerStyle',
-            JPATH_ADMINISTRATOR . '/components/com_templates/controllers/style.php');
+        JLoader::register(
+            'TemplatesControllerStyle',
+            JPATH_ADMINISTRATOR . '/components/com_templates/controllers/style.php'
+        );
         JLoader::register('TemplatesModelStyle', JPATH_ADMINISTRATOR . '/components/com_templates/models/style.php');
         JLoader::register('TemplatesTableStyle', JPATH_ADMINISTRATOR . '/components/com_templates/tables/style.php');
         $controllerClass = new TemplatesControllerStyle;
@@ -70,8 +72,11 @@ class ConfigControllerTemplatesSave extends JControllerBase
             // Save failed, go back to the screen and display a notice.
             $message = JText::sprintf('JERROR_SAVE_FAILED');
 
-            $app->redirect(JRoute::_('index.php?option=com_config&controller=config.display.templates', false),
-                $message, 'error');
+            $app->redirect(
+                JRoute::_('index.php?option=com_config&controller=config.display.templates', false),
+                $message,
+                'error'
+            );
 
             return false;
         }

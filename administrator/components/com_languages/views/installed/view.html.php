@@ -106,13 +106,22 @@ class LanguagesViewInstalled extends JViewLegacy
 
             // Switch administrator language
             if ($this->state->get('client_id', 0) == 1) {
-                JToolbarHelper::custom('installed.switchadminlanguage', 'refresh', 'refresh',
-                    'COM_LANGUAGES_SWITCH_ADMIN', false);
+                JToolbarHelper::custom(
+                    'installed.switchadminlanguage',
+                    'refresh',
+                    'refresh',
+                    'COM_LANGUAGES_SWITCH_ADMIN',
+                    false
+                );
                 JToolbarHelper::divider();
             }
 
-            $bar->appendButton('Link', 'upload', 'COM_LANGUAGES_INSTALL',
-                'index.php?option=com_installer&view=languages');
+            $bar->appendButton(
+                'Link',
+                'upload',
+                'COM_LANGUAGES_INSTALL',
+                'index.php?option=com_installer&view=languages'
+            );
             JToolbarHelper::divider();
 
             JToolbarHelper::preferences('com_languages');

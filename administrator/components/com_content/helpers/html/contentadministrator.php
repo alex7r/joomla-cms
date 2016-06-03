@@ -31,8 +31,12 @@ abstract class JHtmlContentAdministrator
         $html = '';
 
         // Get the associations
-        if ($associations = JLanguageAssociations::getAssociations('com_content', '#__content', 'com_content.item',
-            $articleid)
+        if ($associations = JLanguageAssociations::getAssociations(
+            'com_content',
+            '#__content',
+            'com_content.item',
+            $articleid
+        )
         ) {
             foreach ($associations as $tag => $associated) {
                 $associations[$tag] = (int)$associated->id;
@@ -40,16 +44,13 @@ abstract class JHtmlContentAdministrator
 
             // Get the associated menu items
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select('c.*')
-                        ->select('l.sef as lang_sef')
-                        ->from('#__content as c')
-                        ->select('cat.title as category_title')
-                        ->join('LEFT', '#__categories as cat ON cat.id=c.catid')
-                        ->where('c.id IN (' . implode(',', array_values($associations)) . ')')
-                        ->join('LEFT', '#__languages as l ON c.language=l.lang_code')
-                        ->select('l.image')
-                        ->select('l.title as language_title');
+            $query = $db->getQuery(true)->select('c.*')->select('l.sef as lang_sef')->from('#__content as c')->select(
+                    'cat.title as category_title'
+                )->join('LEFT', '#__categories as cat ON cat.id=c.catid')->where(
+                    'c.id IN (' . implode(',', array_values($associations)) . ')'
+                )->join('LEFT', '#__languages as l ON c.language=l.lang_code')->select('l.image')->select(
+                    'l.title as language_title'
+                );
             $db->setQuery($query);
 
             try {
@@ -63,14 +64,27 @@ abstract class JHtmlContentAdministrator
                     $text         = strtoupper($item->lang_sef);
                     $url          = JRoute::_('index.php?option=com_content&task=article.edit&id=' . (int)$item->id);
                     $tooltipParts = array(
-                        JHtml::_('image', 'mod_languages/' . $item->image . '.gif', $item->language_title,
-                            array('title' => $item->language_title), true),
+                        JHtml::_(
+                            'image',
+                            'mod_languages/' . $item->image . '.gif',
+                            $item->language_title,
+                            array('title' => $item->language_title),
+                            true
+                        ),
                         $item->title,
                         '(' . $item->category_title . ')'
                     );
 
-                    $item->link = JHtml::_('tooltip', implode(' ', $tooltipParts), null, null, $text, $url, null,
-                        'hasTooltip label label-association label-' . $item->lang_sef);
+                    $item->link = JHtml::_(
+                        'tooltip',
+                        implode(' ', $tooltipParts),
+                        null,
+                        null,
+                        $text,
+                        $url,
+                        null,
+                        'hasTooltip label label-association label-' . $item->lang_sef
+                    );
                 }
             }
 
@@ -102,9 +116,13 @@ abstract class JHtmlContentAdministrator
         $icon   = $state[0];
 
         if ($canChange) {
-            $html = '<a href="#" onclick="return listItemTask(\'cb' . $i . '\',\'' . $state[1] . '\')" class="btn btn-micro hasTooltip' . ($value == 1 ? ' active' : '') . '" title="' . JHtml::tooltipText($state[3]) . '"><span class="icon-' . $icon . '"></span></a>';
+            $html = '<a href="#" onclick="return listItemTask(\'cb' . $i . '\',\'' . $state[1] . '\')" class="btn btn-micro hasTooltip' . ($value == 1 ? ' active' : '') . '" title="' . JHtml::tooltipText(
+                    $state[3]
+                ) . '"><span class="icon-' . $icon . '"></span></a>';
         } else {
-            $html = '<a class="btn btn-micro hasTooltip disabled' . ($value == 1 ? ' active' : '') . '" title="' . JHtml::tooltipText($state[2]) . '"><span class="icon-' . $icon . '"></span></a>';
+            $html = '<a class="btn btn-micro hasTooltip disabled' . ($value == 1 ? ' active' : '') . '" title="' . JHtml::tooltipText(
+                    $state[2]
+                ) . '"><span class="icon-' . $icon . '"></span></a>';
         }
 
         return $html;

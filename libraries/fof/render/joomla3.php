@@ -67,15 +67,18 @@ class FOFRenderJoomla3 extends FOFRenderStrapper
             $layout = $input->getCmd('layout', '');
             $task   = $input->getCmd('task', '');
 
-            $classes = ' class="' . implode(array(
-                    'joomla-version-' . $majorVersion,
-                    'joomla-version-' . $minorVersion,
-                    'admin',
-                    $option,
-                    'view-' . $view,
-                    'layout-' . $layout,
-                    'task-' . $task,
-                ), ' ') . '"';
+            $classes = ' class="' . implode(
+                    array(
+                        'joomla-version-' . $majorVersion,
+                        'joomla-version-' . $minorVersion,
+                        'admin',
+                        $option,
+                        'view-' . $view,
+                        'layout-' . $layout,
+                        'task-' . $task,
+                    ),
+                    ' '
+                ) . '"';
         } else {
             $classes = '';
         }

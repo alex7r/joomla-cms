@@ -43,39 +43,79 @@ $loggeduser = JFactory::getUser();
                             <?php echo JHtml::_('grid.checkall'); ?>
                         </th>
                         <th class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_NAME', 'a.name', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_USERS_HEADING_NAME',
+                                'a.name',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_USERNAME', 'a.username', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGLOBAL_USERNAME',
+                                'a.username',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="5%" class="nowrap center">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_ENABLED', 'a.block', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_USERS_HEADING_ENABLED',
+                                'a.block',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="5%" class="nowrap center hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_ACTIVATED', 'a.activation',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_USERS_HEADING_ACTIVATED',
+                                'a.activation',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap">
                             <?php echo JText::_('COM_USERS_HEADING_GROUPS'); ?>
                         </th>
                         <th width="15%" class="nowrap hidden-phone hidden-tablet">
-                            <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_EMAIL', 'a.email', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGLOBAL_EMAIL',
+                                'a.email',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone hidden-tablet">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_LAST_VISIT_DATE',
-                                'a.lastvisitDate', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_USERS_HEADING_LAST_VISIT_DATE',
+                                'a.lastvisitDate',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone hidden-tablet">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_USERS_HEADING_REGISTRATION_DATE',
-                                'a.registerDate', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_USERS_HEADING_REGISTRATION_DATE',
+                                'a.registerDate',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ID',
+                                'a.id',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -106,9 +146,13 @@ $loggeduser = JFactory::getUser();
                             <td>
                                 <div class="name break-word">
                                     <?php if ($canEdit) : ?>
-                                        <a href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&id=' . (int)$item->id); ?>"
-                                           title="<?php echo JText::sprintf('COM_USERS_EDIT_USER',
-                                               $this->escape($item->name)); ?>">
+                                        <a href="<?php echo JRoute::_(
+                                            'index.php?option=com_users&task=user.edit&id=' . (int)$item->id
+                                        ); ?>"
+                                           title="<?php echo JText::sprintf(
+                                               'COM_USERS_EDIT_USER',
+                                               $this->escape($item->name)
+                                           ); ?>">
                                             <?php echo $this->escape($item->name); ?></a>
                                     <?php else : ?>
                                         <?php echo $this->escape($item->name); ?>
@@ -122,11 +166,15 @@ $loggeduser = JFactory::getUser();
                                 <?php echo JHtml::_('users.notesModal', $item->note_count, $item->id); ?>
                                 <?php if ($item->requireReset == '1') : ?>
                                     <span
-                                        class="label label-warning"><?php echo JText::_('COM_USERS_PASSWORD_RESET_REQUIRED'); ?></span>
+                                        class="label label-warning"><?php echo JText::_(
+                                            'COM_USERS_PASSWORD_RESET_REQUIRED'
+                                        ); ?></span>
                                 <?php endif; ?>
                                 <?php if (JDEBUG) : ?>
                                     <div class="small"><a
-                                            href="<?php echo JRoute::_('index.php?option=com_users&view=debuguser&user_id=' . (int)$item->id); ?>">
+                                            href="<?php echo JRoute::_(
+                                                'index.php?option=com_users&view=debuguser&user_id=' . (int)$item->id
+                                            ); ?>">
                                             <?php echo JText::_('COM_USERS_DEBUG_USER'); ?></a></div>
                                 <?php endif; ?>
                             </td>
@@ -137,8 +185,14 @@ $loggeduser = JFactory::getUser();
                                 <?php if ($canChange) : ?>
                                     <?php
                                     $self = $loggeduser->id == $item->id;
-                                    echo JHtml::_('jgrid.state', JHtmlUsers::blockStates($self), $item->block, $i,
-                                        'users.', !$self);
+                                    echo JHtml::_(
+                                        'jgrid.state',
+                                        JHtmlUsers::blockStates($self),
+                                        $item->block,
+                                        $i,
+                                        'users.',
+                                        !$self
+                                    );
                                     ?>
                                 <?php else : ?>
                                     <?php echo JText::_($item->block ? 'JNO' : 'JYES'); ?>
@@ -147,16 +201,24 @@ $loggeduser = JFactory::getUser();
                             <td class="center hidden-phone">
                                 <?php
                                 $activated = empty($item->activation) ? 0 : 1;
-                                echo JHtml::_('jgrid.state', JHtmlUsers::activateStates(), $activated, $i, 'users.',
-                                    (boolean)$activated);
+                                echo JHtml::_(
+                                    'jgrid.state',
+                                    JHtmlUsers::activateStates(),
+                                    $activated,
+                                    $i,
+                                    'users.',
+                                    (boolean)$activated
+                                );
                                 ?>
                             </td>
                             <td>
                                 <?php if (substr_count($item->group_names, "\n") > 1) : ?>
                                     <span class="hasTooltip"
-                                          title="<?php echo JHtml::tooltipText(JText::_('COM_USERS_HEADING_GROUPS'),
+                                          title="<?php echo JHtml::tooltipText(
+                                              JText::_('COM_USERS_HEADING_GROUPS'),
                                               nl2br($item->group_names),
-                                              0); ?>"><?php echo JText::_('COM_USERS_USERS_MULTIPLE_GROUPS'); ?></span>
+                                              0
+                                          ); ?>"><?php echo JText::_('COM_USERS_USERS_MULTIPLE_GROUPS'); ?></span>
                                 <?php else : ?>
                                     <?php echo nl2br($item->group_names); ?>
                                 <?php endif; ?>
@@ -182,13 +244,20 @@ $loggeduser = JFactory::getUser();
                     </tbody>
                 </table>
                 <?php // Load the batch processing form if user is allowed ?>
-                <?php if ($loggeduser->authorise('core.create', 'com_users') && $loggeduser->authorise('core.edit',
-                        'com_users') && $loggeduser->authorise('core.edit.state', 'com_users')
+                <?php if ($loggeduser->authorise('core.create', 'com_users') && $loggeduser->authorise(
+                        'core.edit',
+                        'com_users'
+                    ) && $loggeduser->authorise('core.edit.state', 'com_users')
                 ) : ?>
-                    <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                        'title'  => JText::_('COM_USERS_BATCH_OPTIONS'),
-                        'footer' => $this->loadTemplate('batch_footer')
-                    ), $this->loadTemplate('batch_body')); ?>
+                    <?php echo JHtml::_(
+                        'bootstrap.renderModal',
+                        'collapseModal',
+                        array(
+                            'title'  => JText::_('COM_USERS_BATCH_OPTIONS'),
+                            'footer' => $this->loadTemplate('batch_footer')
+                        ),
+                        $this->loadTemplate('batch_body')
+                    ); ?>
                 <?php endif; ?>
             <?php endif; ?>
 

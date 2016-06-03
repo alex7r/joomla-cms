@@ -12,7 +12,8 @@ defined('JPATH_BASE') or die;
 JHtml::_('jquery.framework');
 JHtmlBehavior::core();
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	jQuery(document).ready(function($)
 	{
 		if (window.toggleSidebar)
@@ -25,7 +26,8 @@ JFactory::getDocument()->addScriptDeclaration('
 			$("#j-toggle-button-wrapper").css("display", "none");
 		}
 	});
-');
+'
+);
 ?>
 
 <div id="j-toggle-sidebar-wrapper">

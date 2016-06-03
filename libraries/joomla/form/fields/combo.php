@@ -58,8 +58,11 @@ class JFormFieldCombo extends JFormFieldList
         $html[] = '<div class="combobox input-append">';
 
         // Build the input for the combo box.
-        $html[] = '<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="' . htmlspecialchars($this->value,
-                ENT_COMPAT, 'UTF-8') . '"' . $attr . ' autocomplete="off" />';
+        $html[] = '<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="' . htmlspecialchars(
+                $this->value,
+                ENT_COMPAT,
+                'UTF-8'
+            ) . '"' . $attr . ' autocomplete="off" />';
 
         $html[] = '<div class="btn-group">';
         $html[] = '<button type="button" class="btn dropdown-toggle">';

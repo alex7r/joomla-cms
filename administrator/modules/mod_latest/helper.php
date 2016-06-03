@@ -33,8 +33,10 @@ abstract class ModLatestHelper
         $model = JModelLegacy::getInstance('Articles', 'ContentModel', array('ignore_request' => true));
 
         // Set List SELECT
-        $model->setState('list.select',
-            'a.id, a.title, a.checked_out, a.checked_out_time, ' . ' a.access, a.created, a.created_by, a.created_by_alias, a.featured, a.state');
+        $model->setState(
+            'list.select',
+            'a.id, a.title, a.checked_out, a.checked_out_time, ' . ' a.access, a.created, a.created_by, a.created_by_alias, a.featured, a.state'
+        );
 
         // Set Ordering filter
         switch ($params->get('ordering')) {
@@ -120,7 +122,10 @@ abstract class ModLatestHelper
             $title = '';
         }
 
-        return JText::plural('MOD_LATEST_TITLE' . $type . ($catid ? "_CATEGORY" : '') . ($who != '0' ? "_$who" : ''),
-            (int)$params->get('count'), $title);
+        return JText::plural(
+            'MOD_LATEST_TITLE' . $type . ($catid ? "_CATEGORY" : '') . ($who != '0' ? "_$who" : ''),
+            (int)$params->get('count'),
+            $title
+        );
     }
 }

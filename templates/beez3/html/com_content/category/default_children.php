@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 
-$app            = JFactory::getApplication();
+$app = JFactory::getApplication();
 $templateparams = $app->getTemplate(true)->params;
 
 
@@ -21,7 +21,10 @@ $class = ' class="first"';
     <ul>
         <?php foreach ($this->children[$this->category->id] as $id => $child) : ?>
             <?php
-            if ($this->params->get('show_empty_categories') || $child->getNumItems(true) || count($child->getChildren())) :
+            if ($this->params->get('show_empty_categories') || $child->getNumItems(true) || count(
+                    $child->getChildren()
+                )
+            ) :
                 if (!isset($this->children[$this->category->id][$id + 1])) :
                     $class = ' class="last"';
                 endif;
@@ -35,8 +38,12 @@ $class = ' class="first"';
                     <?php if ($this->params->get('show_subcat_desc') == 1) : ?>
                         <?php if ($child->description and $this->params->get('show_description') != 0) : ?>
                             <div class="category-desc">
-                                <?php echo JHtml::_('content.prepare', $child->description, '',
-                                    'com_content.category'); ?>
+                                <?php echo JHtml::_(
+                                    'content.prepare',
+                                    $child->description,
+                                    '',
+                                    'com_content.category'
+                                ); ?>
                             </div>
                         <?php endif; ?>
                     <?php endif; ?>

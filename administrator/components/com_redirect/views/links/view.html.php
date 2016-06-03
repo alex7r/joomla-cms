@@ -37,13 +37,13 @@ class RedirectViewLinks extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $this->enabled              = RedirectHelper::isEnabled();
+        $this->enabled = RedirectHelper::isEnabled();
         $this->collect_urls_enabled = RedirectHelper::collectUrlsEnabled();
-        $this->items                = $this->get('Items');
-        $this->pagination           = $this->get('Pagination');
-        $this->state                = $this->get('State');
-        $this->filterForm           = $this->get('FilterForm');
-        $this->activeFilters        = $this->get('ActiveFilters');
+        $this->items = $this->get('Items');
+        $this->pagination = $this->get('Pagination');
+        $this->state = $this->get('State');
+        $this->filterForm = $this->get('FilterForm');
+        $this->activeFilters = $this->get('ActiveFilters');
 
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {
@@ -59,9 +59,13 @@ class RedirectViewLinks extends JViewLegacy
                 JFactory::getApplication()->enqueueMessage(JText::_('COM_REDIRECT_COLLECT_URLS_DISABLED'), 'warning');
             }
         } else {
-            $link = JRoute::_('index.php?option=com_plugins&task=plugin.edit&extension_id=' . RedirectHelper::getRedirectPluginId());
-            JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_REDIRECT_PLUGIN_DISABLED', $link),
-                'warning');
+            $link = JRoute::_(
+                'index.php?option=com_plugins&task=plugin.edit&extension_id=' . RedirectHelper::getRedirectPluginId()
+            );
+            JFactory::getApplication()->enqueueMessage(
+                JText::sprintf('COM_REDIRECT_PLUGIN_DISABLED', $link),
+                'warning'
+            );
         }
 
         $this->addToolbar();

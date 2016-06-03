@@ -29,8 +29,11 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
         $options['text_file'] = 'joomla_update.php';
         JLog::addLogger($options, JLog::INFO, array('Update', 'databasequery', 'jerror'));
         $user = JFactory::getUser();
-        JLog::add(JText::sprintf('COM_JOOMLAUPDATE_UPDATE_LOG_START', $user->id, $user->name, JVERSION), JLog::INFO,
-            'Update');
+        JLog::add(
+            JText::sprintf('COM_JOOMLAUPDATE_UPDATE_LOG_START', $user->id, $user->name, JVERSION),
+            JLog::INFO,
+            'Update'
+        );
 
         $this->_applyCredentials();
 
@@ -66,16 +69,26 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
         JFactory::getApplication()->getUserStateFromRequest('com_joomlaupdate.method', 'method', 'direct', 'cmd');
 
         if (!JClientHelper::hasCredentials('ftp')) {
-            $user = JFactory::getApplication()
-                            ->getUserStateFromRequest('com_joomlaupdate.ftp_user', 'ftp_user', null, 'raw');
-            $pass = JFactory::getApplication()
-                            ->getUserStateFromRequest('com_joomlaupdate.ftp_pass', 'ftp_pass', null, 'raw');
+            $user = JFactory::getApplication()->getUserStateFromRequest(
+                    'com_joomlaupdate.ftp_user',
+                    'ftp_user',
+                    null,
+                    'raw'
+                );
+            $pass = JFactory::getApplication()->getUserStateFromRequest(
+                    'com_joomlaupdate.ftp_pass',
+                    'ftp_pass',
+                    null,
+                    'raw'
+                );
 
             if ($user != '' && $pass != '') {
                 // Add credentials to the session
                 if (!JClientHelper::setCredentials('ftp', $user, $pass)) {
-                    JError::raiseWarning('SOME_ERROR_CODE',
-                        JText::_('JLIB_CLIENT_ERROR_HELPER_SETCREDENTIALSFROMREQUEST_FAILED'));
+                    JError::raiseWarning(
+                        'SOME_ERROR_CODE',
+                        JText::_('JLIB_CLIENT_ERROR_HELPER_SETCREDENTIALSFROMREQUEST_FAILED')
+                    );
                 }
             }
         }

@@ -83,8 +83,10 @@ abstract class FOFPlatformFilesystem implements FOFPlatformFilesystemInterface
 
             $fullpath = $path . '/' . $file;
 
-            if ((is_dir($fullpath) && in_array($file, $ignoreFolders)) || (is_file($fullpath) && in_array($file,
-                        $ignoreFiles))
+            if ((is_dir($fullpath) && in_array($file, $ignoreFolders)) || (is_file($fullpath) && in_array(
+                        $file,
+                        $ignoreFiles
+                    ))
             ) {
                 continue;
             }

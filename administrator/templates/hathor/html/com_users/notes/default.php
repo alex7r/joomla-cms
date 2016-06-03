@@ -9,10 +9,10 @@
 
 defined('_JEXEC') or die;
 
-$user      = JFactory::getUser();
+$user = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
-$canEdit   = $user->authorise('core.edit', 'com_users');
+$listDirn = $this->escape($this->state->get('list.direction'));
+$canEdit = $user->authorise('core.edit', 'com_users');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_users&view=notes'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -34,7 +34,9 @@ $canEdit   = $user->authorise('core.edit', 'com_users');
                            title="<?php echo JText::_('COM_USERS_SEARCH_IN_NOTE_TITLE'); ?>"/>
                     <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
 
                 <div class="filter-select">
@@ -46,8 +48,13 @@ $canEdit   = $user->authorise('core.edit', 'com_users');
                     <select name="filter_category_id" id="filter_category_id">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_CATEGORY'); ?></option>
                         <?php
-                        echo JHtml::_('select.options', JHtml::_('category.options', 'com_users'), 'value', 'text',
-                            $this->state->get('filter.category_id')); ?>
+                        echo JHtml::_(
+                            'select.options',
+                            JHtml::_('category.options', 'com_users'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.category_id')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel" for="filter_published">
@@ -56,8 +63,14 @@ $canEdit   = $user->authorise('core.edit', 'com_users');
                     <select name="filter_published" id="filter_published">
                         <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
                         <?php
-                        echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text',
-                            $this->state->get('filter.published'), true); ?>
+                        echo JHtml::_(
+                            'select.options',
+                            JHtml::_('jgrid.publishedOptions'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.published'),
+                            true
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -76,19 +89,34 @@ $canEdit   = $user->authorise('core.edit', 'com_users');
                         <?php echo JHtml::_('grid.sort', 'COM_USERS_USER_HEADING', 'u.name', $listDirn, $listOrder); ?>
                     </th>
                     <th class="title">
-                        <?php echo JHtml::_('grid.sort', 'COM_USERS_SUBJECT_HEADING', 'a.subject', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_USERS_SUBJECT_HEADING',
+                            'a.subject',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-20">
-                        <?php echo JHtml::_('grid.sort', 'COM_USERS_CATEGORY_HEADING', 'c.title', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_USERS_CATEGORY_HEADING',
+                            'c.title',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="width-5">
                         <?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                     </th>
                     <th class="width-10">
-                        <?php echo JHtml::_('grid.sort', 'COM_USERS_REVIEW_HEADING', 'a.review_time', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_USERS_REVIEW_HEADING',
+                            'a.review_time',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th class="nowrap id-col">
                         <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -107,7 +135,9 @@ $canEdit   = $user->authorise('core.edit', 'com_users');
                                 <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time); ?>
                             <?php endif; ?>
                             <?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_users&task=note.edit&id=' . $item->id); ?>">
+                                <a href="<?php echo JRoute::_(
+                                    'index.php?option=com_users&task=note.edit&id=' . $item->id
+                                ); ?>">
                                     <?php echo $this->escape($item->user_name); ?></a>
                             <?php else : ?>
                                 <?php echo $this->escape($item->user_name); ?>
@@ -127,8 +157,16 @@ $canEdit   = $user->authorise('core.edit', 'com_users');
                             <?php echo $this->escape($item->category_title); ?>
                         </td>
                         <td class="center">
-                            <?php echo JHtml::_('jgrid.published', $item->state, $i, 'notes.', $canChange, 'cb',
-                                $item->publish_up, $item->publish_down); ?>
+                            <?php echo JHtml::_(
+                                'jgrid.published',
+                                $item->state,
+                                $i,
+                                'notes.',
+                                $canChange,
+                                'cb',
+                                $item->publish_up,
+                                $item->publish_down
+                            ); ?>
                         </td>
                         <td class="center">
                             <?php if ($item->review_time !== JFactory::getDbo()->getNullDate()) : ?>

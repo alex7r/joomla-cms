@@ -17,7 +17,8 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.formvalidator');
 JHtml::_('formbehavior.chosen', 'select');
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	Joomla.submitbutton = function(task)
 	{
 		if (task === "config.cancel.component" || document.formvalidator.isValid(document.getElementById("component-form")))
@@ -30,7 +31,8 @@ JFactory::getDocument()->addScriptDeclaration('
 	// Select first tab
 	jQuery(document).ready(function() {
 		jQuery("#configTabs a:first").tab("show");
-	});');
+	});'
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" id="component-form" method="post"
@@ -56,8 +58,11 @@ JFactory::getDocument()->addScriptDeclaration('
                             <?php $showonarr[] = array(
                                 'field'  => $this->form->getFormControl() . '[' . $showon[0] . ']',
                                 'values' => explode(',', $showon[1]),
-                                'op'     => (preg_match('%\[(AND|OR)\]' . $showonfield . '%', $fieldSet->showon,
-                                    $matches)) ? $matches[1] : ''
+                                'op'     => (preg_match(
+                                    '%\[(AND|OR)\]' . $showonfield . '%',
+                                    $fieldSet->showon,
+                                    $matches
+                                )) ? $matches[1] : ''
                             ); ?>
                         <?php endforeach; ?>
                         <?php $rel = ' data-showon=\'' . json_encode($showonarr) . '\''; ?>
@@ -86,11 +91,17 @@ JFactory::getDocument()->addScriptDeclaration('
                                 foreach (preg_split('%\[AND\]|\[OR\]%', $showonstring) as $showonfield) {
                                     $showon      = explode(':', $showonfield, 2);
                                     $showonarr[] = array(
-                                        'field'  => $this->form->getFormControl() . '[' . $this->form->getFieldAttribute($showon[0],
-                                                'name') . ']',
+                                        'field'  => $this->form->getFormControl(
+                                            ) . '[' . $this->form->getFieldAttribute(
+                                                $showon[0],
+                                                'name'
+                                            ) . ']',
                                         'values' => explode(',', $showon[1]),
-                                        'op'     => (preg_match('%\[(AND|OR)\]' . $showonfield . '%', $showonstring,
-                                            $matches)) ? $matches[1] : ''
+                                        'op'     => (preg_match(
+                                            '%\[(AND|OR)\]' . $showonfield . '%',
+                                            $showonstring,
+                                            $matches
+                                        )) ? $matches[1] : ''
                                     );
                                 }
                                 $datashowon = ' data-showon=\'' . json_encode($showonarr) . '\'';

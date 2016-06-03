@@ -51,16 +51,18 @@ JHtml::_('behavior.caption');
         <?php foreach ($this->intro_items as $key => &$item) : ?>
 
             <?php
-            $key      = ($key - $leadingcount) + 1;
+            $key = ($key - $leadingcount) + 1;
             $rowcount = (((int)$key - 1) % (int)$this->columns) + 1;
-            $row      = $counter / $this->columns;
+            $row = $counter / $this->columns;
 
             if ($rowcount == 1) : ?>
 
                 <div class="items-row cols-<?php echo (int)$this->columns; ?> <?php echo 'row-' . $row; ?> row-fluid">
             <?php endif; ?>
             <div
-                class="item column-<?php echo $rowcount; ?><?php echo $item->state == 0 ? ' system-unpublished' : null; ?> span<?php echo round((12 / $this->columns)); ?>"
+                class="item column-<?php echo $rowcount; ?><?php echo $item->state == 0 ? ' system-unpublished' : null; ?> span<?php echo round(
+                    (12 / $this->columns)
+                ); ?>"
                 itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
                 <?php
                 $this->item = &$item;
@@ -83,8 +85,10 @@ JHtml::_('behavior.caption');
         </div>
     <?php endif; ?>
 
-    <?php if ($this->params->def('show_pagination',
-            2) == 1 || ($this->params->get('show_pagination') == 2 && $this->pagination->pagesTotal > 1)
+    <?php if ($this->params->def(
+            'show_pagination',
+            2
+        ) == 1 || ($this->params->get('show_pagination') == 2 && $this->pagination->pagesTotal > 1)
     ) : ?>
         <div class="pagination">
 

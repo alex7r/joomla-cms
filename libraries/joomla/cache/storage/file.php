@@ -198,8 +198,11 @@ class JCacheStorageFile extends JCacheStorage
 
         // Is the path a folder?
         if (!is_dir($path)) {
-            JLog::add(__METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER', $path),
-                JLog::WARNING, 'jerror');
+            JLog::add(
+                __METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER', $path),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -216,8 +219,10 @@ class JCacheStorageFile extends JCacheStorage
         }
 
         while (($file = readdir($handle)) !== false) {
-            if (($file != '.') && ($file != '..') && (!in_array($file,
-                    $exclude)) && (empty($excludefilter_string) || !preg_match($excludefilter_string, $file))
+            if (($file != '.') && ($file != '..') && (!in_array(
+                    $file,
+                    $exclude
+                )) && (empty($excludefilter_string) || !preg_match($excludefilter_string, $file))
             ) {
                 $dir   = $path . '/' . $file;
                 $isDir = is_dir($dir);
@@ -303,8 +308,11 @@ class JCacheStorageFile extends JCacheStorage
 
         // Is the path a folder?
         if (!is_dir($path)) {
-            JLog::add(__METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER', $path),
-                JLog::WARNING, 'jerror');
+            JLog::add(
+                __METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER', $path),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -321,8 +329,10 @@ class JCacheStorageFile extends JCacheStorage
         }
 
         while (($file = readdir($handle)) !== false) {
-            if (($file != '.') && ($file != '..') && (!in_array($file,
-                    $exclude)) && (!$excludefilter || !preg_match($excludefilter, $file))
+            if (($file != '.') && ($file != '..') && (!in_array(
+                    $file,
+                    $exclude
+                )) && (!$excludefilter || !preg_match($excludefilter, $file))
             ) {
                 $dir   = $path . '/' . $file;
                 $isDir = is_dir($dir);
@@ -467,8 +477,11 @@ class JCacheStorageFile extends JCacheStorage
         // Sanity check
         if (!$path || !is_dir($path) || empty($this->_root)) {
             // Bad programmer! Bad, bad programmer!
-            JLog::add(__METHOD__ . ' ' . JText::_('JLIB_FILESYSTEM_ERROR_DELETE_BASE_DIRECTORY'), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                __METHOD__ . ' ' . JText::_('JLIB_FILESYSTEM_ERROR_DELETE_BASE_DIRECTORY'),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -479,8 +492,11 @@ class JCacheStorageFile extends JCacheStorage
         $pos = strpos($path, $this->_cleanPath($this->_root));
 
         if ($pos === false || $pos > 0) {
-            JLog::add(__METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER', $path),
-                JLog::WARNING, 'jerror');
+            JLog::add(
+                __METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_ERROR_PATH_IS_NOT_A_FOLDER', $path),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -498,8 +514,11 @@ class JCacheStorageFile extends JCacheStorage
 
                 // In case of restricted permissions we zap it one way or the other as long as the owner is either the webserver or the ftp
                 if (@unlink($file) !== true) {
-                    JLog::add(__METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_DELETE_FAILED', basename($file)),
-                        JLog::WARNING, 'jerror');
+                    JLog::add(
+                        __METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_DELETE_FAILED', basename($file)),
+                        JLog::WARNING,
+                        'jerror'
+                    );
 
                     return false;
                 }
@@ -525,8 +544,11 @@ class JCacheStorageFile extends JCacheStorage
             return true;
         }
 
-        JLog::add(__METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_ERROR_FOLDER_DELETE', $path), JLog::WARNING,
-            'jerror');
+        JLog::add(
+            __METHOD__ . ' ' . JText::sprintf('JLIB_FILESYSTEM_ERROR_FOLDER_DELETE', $path),
+            JLog::WARNING,
+            'jerror'
+        );
 
         return false;
     }
@@ -543,8 +565,13 @@ class JCacheStorageFile extends JCacheStorage
         $result = true;
 
         // Files older than lifeTime get deleted from cache
-        $files = $this->_filesInFolder($this->_root, '', true, true,
-            array('.svn', 'CVS', '.DS_Store', '__MACOSX', 'index.html'));
+        $files = $this->_filesInFolder(
+            $this->_root,
+            '',
+            true,
+            true,
+            array('.svn', 'CVS', '.DS_Store', '__MACOSX', 'index.html')
+        );
 
         foreach ($files as $file) {
             $time = @filemtime($file);

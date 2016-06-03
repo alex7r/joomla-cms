@@ -74,8 +74,14 @@ class FOFFormFieldList extends JFormFieldList implements FOFFormField
     {
         $class = $this->element['class'] ? ' class="' . (string)$this->element['class'] . '"' : '';
 
-        return '<span id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(self::getOptionName($this->getOptions(),
-            $this->value), ENT_COMPAT, 'UTF-8') . '</span>';
+        return '<span id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(
+            self::getOptionName(
+                $this->getOptions(),
+                $this->value
+            ),
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</span>';
     }
 
     /**
@@ -172,8 +178,13 @@ class FOFFormFieldList extends JFormFieldList implements FOFFormField
         // Only order if it's set
         if ($order) {
             jimport('joomla.utilities.arrayhelper');
-            FOFUtilsArray::sortObjects($sortOptions, $order, $order_dir == 'asc' ? 1 : -1, $order_case_sensitive,
-                false);
+            FOFUtilsArray::sortObjects(
+                $sortOptions,
+                $order,
+                $order_dir == 'asc' ? 1 : -1,
+                $order_case_sensitive,
+                false
+            );
         }
 
         // Initialise the options
@@ -189,8 +200,14 @@ class FOFFormFieldList extends JFormFieldList implements FOFFormField
                 continue;
             }
 
-            $tmp = JHtml::_('select.option', (string)$option['value'], $name, 'value', 'text',
-                ((string)$option['disabled'] == 'true'));
+            $tmp = JHtml::_(
+                'select.option',
+                (string)$option['value'],
+                $name,
+                'value',
+                'text',
+                ((string)$option['disabled'] == 'true')
+            );
 
             // Set some option attributes.
             $tmp->class = (string)$option['class'];

@@ -99,8 +99,13 @@ final class ColorStyle
     {
         if ($fg) {
             if (false == array_key_exists($fg, static::$knownColors)) {
-                throw new \InvalidArgumentException(sprintf('Invalid foreground color "%1$s" [%2$s]', $fg,
-                    implode(', ', $this->getKnownColors())));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Invalid foreground color "%1$s" [%2$s]',
+                        $fg,
+                        implode(', ', $this->getKnownColors())
+                    )
+                );
             }
 
             $this->fgColor = static::$fgBase + static::$knownColors[$fg];
@@ -108,8 +113,13 @@ final class ColorStyle
 
         if ($bg) {
             if (false == array_key_exists($bg, static::$knownColors)) {
-                throw new \InvalidArgumentException(sprintf('Invalid background color "%1$s" [%2$s]', $bg,
-                    implode(', ', $this->getKnownColors())));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Invalid background color "%1$s" [%2$s]',
+                        $bg,
+                        implode(', ', $this->getKnownColors())
+                    )
+                );
             }
 
             $this->bgColor = static::$bgBase + static::$knownColors[$bg];
@@ -117,8 +127,13 @@ final class ColorStyle
 
         foreach ($options as $option) {
             if (false == array_key_exists($option, static::$knownOptions)) {
-                throw new \InvalidArgumentException(sprintf('Invalid option "%1$s" [%2$s]', $option,
-                    implode(', ', $this->getKnownOptions())));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Invalid option "%1$s" [%2$s]',
+                        $option,
+                        implode(', ', $this->getKnownOptions())
+                    )
+                );
             }
 
             $this->options[] = $option;

@@ -74,11 +74,21 @@ class SearchViewSearches extends JViewLegacy
         $showResults = $this->state->get('show_results', 1, 'int');
 
         if ($showResults === 0) {
-            JToolbarHelper::custom('searches.toggleresults', 'zoom-in.png', null, 'COM_SEARCH_SHOW_SEARCH_RESULTS',
-                false);
+            JToolbarHelper::custom(
+                'searches.toggleresults',
+                'zoom-in.png',
+                null,
+                'COM_SEARCH_SHOW_SEARCH_RESULTS',
+                false
+            );
         } else {
-            JToolbarHelper::custom('searches.toggleresults', 'zoom-out.png', null, 'COM_SEARCH_HIDE_SEARCH_RESULTS',
-                false);
+            JToolbarHelper::custom(
+                'searches.toggleresults',
+                'zoom-out.png',
+                null,
+                'COM_SEARCH_HIDE_SEARCH_RESULTS',
+                false
+            );
         }
 
         if ($canDo->get('core.edit.state')) {

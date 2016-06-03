@@ -16,7 +16,8 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::script('com_joomlaupdate/default.js', false, true, false);
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 jQuery(document).ready(function($) {
 	$('#extraction_method').change(function(e){
 		extractionMethodHandler('#extraction_method', 'row_ftp');
@@ -28,7 +29,8 @@ jQuery(document).ready(function($) {
 	$('button.submit').on('click', function() {
 		$('div.download_message').show();
 	});
-});");
+});"
+);
 ?>
 
 <div id="joomlaupdate-wrapper">
@@ -36,8 +38,12 @@ jQuery(document).ready(function($) {
 
         <?php if ($this->showUploadAndUpdate) : ?>
             <?php echo JHtml::_('bootstrap.startTabSet', 'joomlaupdate-tabs', array('active' => 'online-update')); ?>
-            <?php echo JHtml::_('bootstrap.addTab', 'joomlaupdate-tabs', 'online-update',
-                JText::_('COM_JOOMLAUPDATE_VIEW_DEFAULT_TAB_ONLINE')); ?>
+            <?php echo JHtml::_(
+                'bootstrap.addTab',
+                'joomlaupdate-tabs',
+                'online-update',
+                JText::_('COM_JOOMLAUPDATE_VIEW_DEFAULT_TAB_ONLINE')
+            ); ?>
         <?php endif; ?>
 
         <?php if (!isset($this->updateInfo['object']->downloadurl->_data) && $this->updateInfo['installed'] < $this->updateInfo['latest']) : ?>
@@ -60,8 +66,12 @@ jQuery(document).ready(function($) {
     <?php // Only Super Users have access to the Update & Install for obvious security reasons ?>
     <?php if ($this->showUploadAndUpdate) : ?>
         <?php echo JHtml::_('bootstrap.endTab'); ?>
-        <?php echo JHtml::_('bootstrap.addTab', 'joomlaupdate-tabs', 'upload-update',
-            JText::_('COM_JOOMLAUPDATE_VIEW_DEFAULT_TAB_UPLOAD')); ?>
+        <?php echo JHtml::_(
+            'bootstrap.addTab',
+            'joomlaupdate-tabs',
+            'upload-update',
+            JText::_('COM_JOOMLAUPDATE_VIEW_DEFAULT_TAB_UPLOAD')
+        ); ?>
         <?php echo $this->loadTemplate('upload'); ?>
         <?php echo JHtml::_('bootstrap.endTab'); ?>
         <?php echo JHtml::_('bootstrap.endTabSet'); ?>

@@ -211,8 +211,12 @@ class JoomlaInstallerScript
         $query = $db->getQuery(true)->select('*')->from('#__extensions');
 
         foreach ($extensions as $extension) {
-            $query->where('type=' . $db->quote($extension[0]) . ' AND element=' . $db->quote($extension[1]) . ' AND folder=' . $db->quote($extension[2]) . ' AND client_id=' . $extension[3],
-                'OR');
+            $query->where(
+                'type=' . $db->quote($extension[0]) . ' AND element=' . $db->quote(
+                    $extension[1]
+                ) . ' AND folder=' . $db->quote($extension[2]) . ' AND client_id=' . $extension[3],
+                'OR'
+            );
         }
 
         $db->setQuery($query);
@@ -229,8 +233,13 @@ class JoomlaInstallerScript
 
         foreach ($extensions as $extension) {
             if (!$installer->refreshManifestCache($extension->extension_id)) {
-                echo JText::sprintf('FILES_JOOMLA_ERROR_MANIFEST', $extension->type, $extension->element,
-                        $extension->name, $extension->client_id) . '<br />';
+                echo JText::sprintf(
+                        'FILES_JOOMLA_ERROR_MANIFEST',
+                        $extension->type,
+                        $extension->element,
+                        $extension->name,
+                        $extension->client_id
+                    ) . '<br />';
             }
         }
     }
@@ -299,20 +308,22 @@ class JoomlaInstallerScript
         $db = JFactory::getDbo();
 
         // Check if the 2.5 EOS plugin is present and uninstall it if so
-        $id = $db->setQuery($db->getQuery(true)
-                               ->select('extension_id')
-                               ->from('#__extensions')
-                               ->where('name = ' . $db->quote('PLG_EOSNOTIFY')))->loadResult();
+        $id = $db->setQuery(
+            $db->getQuery(true)->select('extension_id')->from('#__extensions')->where(
+                    'name = ' . $db->quote('PLG_EOSNOTIFY')
+                )
+        )->loadResult();
 
         if (!$id) {
             return;
         }
 
         // We need to unprotect the plugin so we can uninstall it
-        $db->setQuery($db->getQuery(true)
-                         ->update('#__extensions')
-                         ->set('protected = 0')
-                         ->where($db->quoteName('extension_id') . ' = ' . $id))->execute();
+        $db->setQuery(
+            $db->getQuery(true)->update('#__extensions')->set('protected = 0')->where(
+                    $db->quoteName('extension_id') . ' = ' . $id
+                )
+        )->execute();
 
         $installer = new JInstaller;
         $installer->uninstall('plugin', $id);
@@ -371,8 +382,12 @@ class JoomlaInstallerScript
 
             if (!$asset->store()) {
                 // Install failed, roll back changes
-                $this->parent->abort(JText::sprintf('JLIB_INSTALLER_ABORT_COMP_INSTALL_ROLLBACK',
-                    $asset->stderr(true)));
+                $this->parent->abort(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_COMP_INSTALL_ROLLBACK',
+                        $asset->stderr(true)
+                    )
+                );
 
                 return false;
             }
@@ -394,12 +409,13 @@ class JoomlaInstallerScript
 
         try {
             // Get the params for the stats plugin
-            $params = $db->setQuery($db->getQuery(true)
-                                       ->select($db->quoteName('params'))
-                                       ->from($db->quoteName('#__extensions'))
-                                       ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
-                                       ->where($db->quoteName('folder') . ' = ' . $db->quote('system'))
-                                       ->where($db->quoteName('element') . ' = ' . $db->quote('stats')))->loadResult();
+            $params = $db->setQuery(
+                $db->getQuery(true)->select($db->quoteName('params'))->from($db->quoteName('#__extensions'))->where(
+                        $db->quoteName('type') . ' = ' . $db->quote('plugin')
+                    )->where($db->quoteName('folder') . ' = ' . $db->quote('system'))->where(
+                        $db->quoteName('element') . ' = ' . $db->quote('stats')
+                    )
+            )->loadResult();
         } catch (Exception $e) {
             echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()) . '<br />';
 
@@ -415,12 +431,11 @@ class JoomlaInstallerScript
 
         $params = json_encode($params);
 
-        $query = $db->getQuery(true)
-                    ->update($db->quoteName('#__extensions'))
-                    ->set($db->quoteName('params') . ' = ' . $db->quote($params))
-                    ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
-                    ->where($db->quoteName('folder') . ' = ' . $db->quote('system'))
-                    ->where($db->quoteName('element') . ' = ' . $db->quote('stats'));
+        $query = $db->getQuery(true)->update($db->quoteName('#__extensions'))->set(
+                $db->quoteName('params') . ' = ' . $db->quote($params)
+            )->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))->where(
+                $db->quoteName('folder') . ' = ' . $db->quote('system')
+            )->where($db->quoteName('element') . ' = ' . $db->quote('stats'));
 
         try {
             $db->setQuery($query)->execute();
@@ -469,8 +484,10 @@ class JoomlaInstallerScript
 
             if ($doDbFixMsg) {
                 // Show an error message telling to check database problems
-                JFactory::getApplication()
-                        ->enqueueMessage(JText::_('JLIB_DATABASE_ERROR_DATABASE_UPGRADE_FAILED'), 'error');
+                JFactory::getApplication()->enqueueMessage(
+                        JText::_('JLIB_DATABASE_ERROR_DATABASE_UPGRADE_FAILED'),
+                        'error'
+                    );
             }
 
             return;
@@ -522,13 +539,18 @@ class JoomlaInstallerScript
 
         if ($doDbFixMsg && $converted == 0) {
             // Show an error message telling to check database problems
-            JFactory::getApplication()
-                    ->enqueueMessage(JText::_('JLIB_DATABASE_ERROR_DATABASE_UPGRADE_FAILED'), 'error');
+            JFactory::getApplication()->enqueueMessage(
+                    JText::_('JLIB_DATABASE_ERROR_DATABASE_UPGRADE_FAILED'),
+                    'error'
+                );
         }
 
         // Set flag in database if the update is done.
-        $db->setQuery('UPDATE ' . $db->quoteName('#__utf8_conversion') . ' SET ' . $db->quoteName('converted') . ' = ' . $converted . ';')
-           ->execute();
+        $db->setQuery(
+            'UPDATE ' . $db->quoteName('#__utf8_conversion') . ' SET ' . $db->quoteName(
+                'converted'
+            ) . ' = ' . $converted . ';'
+        )->execute();
     }
 
     /**
@@ -1739,7 +1761,10 @@ class JoomlaInstallerScript
          * Needed for updates post-3.4
          * If com_weblinks doesn't exist then assume we can delete the weblinks package manifest (included in the update packages)
          */
-        if (!JFile::exists(JPATH_ADMINISTRATOR . '/components/com_weblinks/weblinks.php') && JFile::exists(JPATH_MANIFESTS . '/packages/pkg_weblinks.xml')) {
+        if (!JFile::exists(JPATH_ADMINISTRATOR . '/components/com_weblinks/weblinks.php') && JFile::exists(
+                JPATH_MANIFESTS . '/packages/pkg_weblinks.xml'
+            )
+        ) {
             JFile::delete(JPATH_MANIFESTS . '/packages/pkg_weblinks.xml');
         }
     }

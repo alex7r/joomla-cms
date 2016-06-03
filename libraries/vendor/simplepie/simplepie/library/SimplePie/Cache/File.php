@@ -88,10 +88,10 @@ class SimplePie_Cache_File implements SimplePie_Cache_Base
      */
     public function __construct($location, $name, $type)
     {
-        $this->location  = $location;
-        $this->filename  = $name;
+        $this->location = $location;
+        $this->filename = $name;
         $this->extension = $type;
-        $this->name      = "$this->location/$this->filename.$this->extension";
+        $this->name = "$this->location/$this->filename.$this->extension";
     }
 
     /**
@@ -103,7 +103,10 @@ class SimplePie_Cache_File implements SimplePie_Cache_Base
      */
     public function save($data)
     {
-        if (file_exists($this->name) && is_writeable($this->name) || file_exists($this->location) && is_writeable($this->location)) {
+        if (file_exists($this->name) && is_writeable($this->name) || file_exists($this->location) && is_writeable(
+                $this->location
+            )
+        ) {
             if ($data instanceof SimplePie) {
                 $data = $data->data;
             }

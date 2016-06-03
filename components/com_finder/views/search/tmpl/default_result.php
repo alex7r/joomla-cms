@@ -21,8 +21,10 @@ if ($show_description) {
     $pad_length  = $term_length < $desc_length ? (int)floor(($desc_length - $term_length) / 2) : 0;
 
     // Find the position of the search term
-    $pos = $term_length ? JString::strpos(JString::strtolower($this->result->description),
-        JString::strtolower($this->query->input)) : false;
+    $pos = $term_length ? JString::strpos(
+        JString::strtolower($this->result->description),
+        JString::strtolower($this->query->input)
+    ) : false;
 
     // Find a potential start point
     $start = ($pos && $pos > $pad_length) ? $pos - $pad_length : 0;
@@ -37,8 +39,10 @@ if ($show_description) {
 $route = $this->result->route;
 
 // Get the route with highlighting information.
-if (!empty($this->query->highlight) && empty($this->result->mime) && $this->params->get('highlight_terms',
-        1) && JPluginHelper::isEnabled('system', 'highlight')
+if (!empty($this->query->highlight) && empty($this->result->mime) && $this->params->get(
+        'highlight_terms',
+        1
+    ) && JPluginHelper::isEnabled('system', 'highlight')
 ) {
     $route .= '&highlight=' . base64_encode(json_encode($this->query->highlight));
 }

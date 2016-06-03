@@ -37,8 +37,10 @@ $user      = JFactory::getUser();
                         <label class="checkbox small" for="link<?php echo (int)$link->value; ?>">
                             <input type="checkbox" name="jform[assigned][]" value="<?php echo (int)$link->value; ?>"
                                    id="link<?php echo (int)$link->value; ?>"<?php if ($link->template_style_id == $this->item->id) : ?> checked="checked"<?php endif; ?><?php if ($link->checked_out && $link->checked_out != $user->id) : ?> disabled="disabled"<?php else : ?> class="chk-menulink <?php echo $type->menutype; ?>"<?php endif; ?> />
-                            <?php echo JLayoutHelper::render('joomla.html.treeprefix',
-                                    array('level' => $link->level)) . $link->text; ?>
+                            <?php echo JLayoutHelper::render(
+                                    'joomla.html.treeprefix',
+                                    array('level' => $link->level)
+                                ) . $link->text; ?>
                         </label>
                     <?php endforeach; ?>
 

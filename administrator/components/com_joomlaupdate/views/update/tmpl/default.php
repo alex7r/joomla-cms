@@ -22,7 +22,8 @@ $filesize  = JFactory::getApplication()->getUserState('com_joomlaupdate.filesize
 $ajaxUrl   = JUri::base() . 'components/com_joomlaupdate/restore.php';
 $returnUrl = 'index.php?option=com_joomlaupdate&task=update.finalise';
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	var joomlaupdate_password = '$password';
 	var joomlaupdate_totalsize = '$filesize';
 	var joomlaupdate_ajax_url = '$ajaxUrl';
@@ -31,7 +32,8 @@ JFactory::getDocument()->addScriptDeclaration("
 	jQuery(document).ready(function(){
 		window.pingExtract();
 		});
-	");
+	"
+);
 ?>
 
 <p class="nowarning"><?php echo JText::_('COM_JOOMLAUPDATE_VIEW_UPDATE_INPROGRESS') ?></p>

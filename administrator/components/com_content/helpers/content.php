@@ -29,12 +29,21 @@ class ContentHelper extends JHelperContent
      */
     public static function addSubmenu($vName)
     {
-        JHtmlSidebar::addEntry(JText::_('JGLOBAL_ARTICLES'), 'index.php?option=com_content&view=articles',
-            $vName == 'articles');
-        JHtmlSidebar::addEntry(JText::_('COM_CONTENT_SUBMENU_CATEGORIES'),
-            'index.php?option=com_categories&extension=com_content', $vName == 'categories');
-        JHtmlSidebar::addEntry(JText::_('COM_CONTENT_SUBMENU_FEATURED'), 'index.php?option=com_content&view=featured',
-            $vName == 'featured');
+        JHtmlSidebar::addEntry(
+            JText::_('JGLOBAL_ARTICLES'),
+            'index.php?option=com_content&view=articles',
+            $vName == 'articles'
+        );
+        JHtmlSidebar::addEntry(
+            JText::_('COM_CONTENT_SUBMENU_CATEGORIES'),
+            'index.php?option=com_categories&extension=com_content',
+            $vName == 'categories'
+        );
+        JHtmlSidebar::addEntry(
+            JText::_('COM_CONTENT_SUBMENU_FEATURED'),
+            'index.php?option=com_content&view=featured',
+            $vName == 'featured'
+        );
     }
 
     /**
@@ -48,8 +57,11 @@ class ContentHelper extends JHelperContent
      */
     public static function filterText($text)
     {
-        JLog::add('ContentHelper::filterText() is deprecated. Use JComponentHelper::filterText() instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            'ContentHelper::filterText() is deprecated. Use JComponentHelper::filterText() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return JComponentHelper::filterText($text);
     }

@@ -108,8 +108,9 @@ class JFilterInput extends InputFilter
         $sig = md5(serialize(array($tagsArray, $attrArray, $tagsMethod, $attrMethod, $xssAuto)));
 
         if (empty(self::$instances[$sig])) {
-            self::$instances[$sig] = new JFilterInput($tagsArray, $attrArray, $tagsMethod, $attrMethod, $xssAuto,
-                $stripUSC);
+            self::$instances[$sig] = new JFilterInput(
+                $tagsArray, $attrArray, $tagsMethod, $attrMethod, $xssAuto, $stripUSC
+            );
         }
 
         return self::$instances[$sig];
@@ -193,13 +194,15 @@ class JFilterInput extends InputFilter
         $descriptors = $file;
 
         if (isset($file['name']) && isset($file['tmp_name'])) {
-            $descriptors = self::decodeFileData(array(
-                $file['name'],
-                $file['type'],
-                $file['tmp_name'],
-                $file['error'],
-                $file['size']
-            ));
+            $descriptors = self::decodeFileData(
+                array(
+                    $file['name'],
+                    $file['type'],
+                    $file['tmp_name'],
+                    $file['error'],
+                    $file['size']
+                )
+            );
         }
 
         // Handle non-nested descriptors (single files)
@@ -387,13 +390,15 @@ class JFilterInput extends InputFilter
 
         if (is_array($data[0])) {
             foreach ($data[0] as $k => $v) {
-                $result[$k] = self::decodeFileData(array(
-                    $data[0][$k],
-                    $data[1][$k],
-                    $data[2][$k],
-                    $data[3][$k],
-                    $data[4][$k]
-                ));
+                $result[$k] = self::decodeFileData(
+                    array(
+                        $data[0][$k],
+                        $data[1][$k],
+                        $data[2][$k],
+                        $data[3][$k],
+                        $data[4][$k]
+                    )
+                );
             }
 
             return $result;
@@ -837,8 +842,10 @@ class JFilterInput extends InputFilter
              * OR no tagname
              * OR remove if xssauto is on and tag is blacklisted
              */
-            if ((!preg_match("/^[a-z][a-z0-9]*$/i", $tagName)) || (!$tagName) || ((in_array(strtolower($tagName),
-                        $this->tagBlacklist)) && ($this->xssAuto))
+            if ((!preg_match("/^[a-z][a-z0-9]*$/i", $tagName)) || (!$tagName) || ((in_array(
+                        strtolower($tagName),
+                        $this->tagBlacklist
+                    )) && ($this->xssAuto))
             ) {
                 $postTag       = substr($postTag, ($tagLength + 2));
                 $tagOpen_start = strpos($postTag, '<');
@@ -865,8 +872,10 @@ class JFilterInput extends InputFilter
                 if (preg_match('#\s*=\s*\"#', $fromSpace, $matches, PREG_OFFSET_CAPTURE)) {
                     $startAtt         = $matches[0][0];
                     $startAttPosition = $matches[0][1];
-                    $closeQuotes      = strpos(substr($fromSpace, ($startAttPosition + strlen($startAtt))),
-                            '"') + $startAttPosition + strlen($startAtt);
+                    $closeQuotes      = strpos(
+                                            substr($fromSpace, ($startAttPosition + strlen($startAtt))),
+                                            '"'
+                                        ) + $startAttPosition + strlen($startAtt);
                     $nextEqual        = $startAttPosition + strpos($startAtt, '=');
                     $openQuotes       = $startAttPosition + strpos($startAtt, '"');
                     $nextSpace        = strpos(substr($fromSpace, $closeQuotes), ' ') + $closeQuotes;
@@ -1080,14 +1089,22 @@ class JFilterInput extends InputFilter
         $source = strtr($source, $ttr);
 
         // Convert decimal
-        $source = preg_replace_callback('/&#(\d+);/m', function ($m) {
-            return utf8_encode(chr($m[1]));
-        }, $source);
+        $source = preg_replace_callback(
+            '/&#(\d+);/m',
+            function ($m) {
+                return utf8_encode(chr($m[1]));
+            },
+            $source
+        );
 
         // Convert hex
-        $source = preg_replace_callback('/&#x([a-f0-9]+);/mi', function ($m) {
-            return utf8_encode(chr('0x' . $m[1]));
-        }, $source);
+        $source = preg_replace_callback(
+            '/&#x([a-f0-9]+);/mi',
+            function ($m) {
+                return utf8_encode(chr('0x' . $m[1]));
+            },
+            $source
+        );
 
         return $source;
     }

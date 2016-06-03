@@ -27,8 +27,11 @@ class MessagesHelper
      */
     public static function addSubmenu($vName)
     {
-        JHtmlSidebar::addEntry(JText::_('COM_MESSAGES_ADD'), 'index.php?option=com_messages&view=message&layout=edit',
-            $vName == 'message');
+        JHtmlSidebar::addEntry(
+            JText::_('COM_MESSAGES_ADD'),
+            'index.php?option=com_messages&view=message&layout=edit',
+            $vName == 'message'
+        );
 
         JHtmlSidebar::addEntry(JText::_('COM_MESSAGES_READ'), 'index.php?option=com_messages', $vName == 'messages');
     }
@@ -43,8 +46,11 @@ class MessagesHelper
     public static function getActions()
     {
         // Log usage of deprecated function
-        JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Get list of actions
         $result = JHelperContent::getActions('com_messages');

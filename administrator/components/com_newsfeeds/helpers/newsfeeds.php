@@ -27,11 +27,17 @@ class NewsfeedsHelper extends JHelperContent
      */
     public static function addSubmenu($vName)
     {
-        JHtmlSidebar::addEntry(JText::_('COM_NEWSFEEDS_SUBMENU_NEWSFEEDS'),
-            'index.php?option=com_newsfeeds&view=newsfeeds', $vName == 'newsfeeds');
+        JHtmlSidebar::addEntry(
+            JText::_('COM_NEWSFEEDS_SUBMENU_NEWSFEEDS'),
+            'index.php?option=com_newsfeeds&view=newsfeeds',
+            $vName == 'newsfeeds'
+        );
 
-        JHtmlSidebar::addEntry(JText::_('COM_NEWSFEEDS_SUBMENU_CATEGORIES'),
-            'index.php?option=com_categories&extension=com_newsfeeds', $vName == 'categories');
+        JHtmlSidebar::addEntry(
+            JText::_('COM_NEWSFEEDS_SUBMENU_CATEGORIES'),
+            'index.php?option=com_categories&extension=com_newsfeeds',
+            $vName == 'categories'
+        );
     }
 
     /**
@@ -53,10 +59,9 @@ class NewsfeedsHelper extends JHelperContent
             $item->count_unpublished = 0;
             $item->count_published   = 0;
             $query                   = $db->getQuery(true);
-            $query->select('published AS state, count(*) AS count')
-                  ->from($db->qn('#__newsfeeds'))
-                  ->where('catid = ' . (int)$item->id)
-                  ->group('state');
+            $query->select('published AS state, count(*) AS count')->from($db->qn('#__newsfeeds'))->where(
+                    'catid = ' . (int)$item->id
+                )->group('state');
             $db->setQuery($query);
             $newfeeds = $db->loadObjectList();
 

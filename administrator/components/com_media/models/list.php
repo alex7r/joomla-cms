@@ -72,8 +72,11 @@ class MediaModelList extends JModelLegacy
         // Iterate over the files if they exist
         if ($fileList !== false) {
             foreach ($fileList as $file) {
-                if (is_file($basePath . '/' . $file) && substr($file, 0,
-                        1) != '.' && strtolower($file) !== 'index.html'
+                if (is_file($basePath . '/' . $file) && substr(
+                                                            $file,
+                                                            0,
+                                                            1
+                                                        ) != '.' && strtolower($file) !== 'index.html'
                 ) {
                     $tmp                = new JObject;
                     $tmp->name          = $file;

@@ -92,7 +92,9 @@ class InstallationControllerRemovefolder extends JControllerBase
              * doesn't land in our JSON output.
              */
             ob_start();
-            $return = JFolder::delete($path) && (!file_exists(JPATH_ROOT . '/joomla.xml') || JFile::delete(JPATH_ROOT . '/joomla.xml'));
+            $return = JFolder::delete($path) && (!file_exists(JPATH_ROOT . '/joomla.xml') || JFile::delete(
+                        JPATH_ROOT . '/joomla.xml'
+                    ));
 
             // Rename the robots.txt.dist file if robots.txt doesn't exist
             if ($return && !file_exists(JPATH_ROOT . '/robots.txt') && file_exists(JPATH_ROOT . '/robots.txt.dist')) {

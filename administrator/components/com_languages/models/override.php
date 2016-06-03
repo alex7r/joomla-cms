@@ -31,8 +31,11 @@ class LanguagesModelOverride extends JModelAdmin
     public function getForm($data = array(), $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_languages.override', 'override',
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_languages.override',
+            'override',
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
 
         if (empty($form)) {
             return false;
@@ -50,8 +53,13 @@ class LanguagesModelOverride extends JModelAdmin
 
         $form->setValue('client', null, JText::_('COM_LANGUAGES_VIEW_OVERRIDE_CLIENT_' . strtoupper($client)));
         $form->setValue('language', null, JText::sprintf('COM_LANGUAGES_VIEW_OVERRIDE_LANGUAGE', $langName, $language));
-        $form->setValue('file', null,
-            JPath::clean(constant('JPATH_' . strtoupper($client)) . '/language/overrides/' . $language . '.override.ini'));
+        $form->setValue(
+            'file',
+            null,
+            JPath::clean(
+                constant('JPATH_' . strtoupper($client)) . '/language/overrides/' . $language . '.override.ini'
+            )
+        );
 
         return $form;
     }
@@ -169,8 +177,12 @@ class LanguagesModelOverride extends JModelAdmin
 
         $input    = JFactory::getApplication()->input;
         $pk       = (!empty($pk)) ? $pk : $input->get('id');
-        $filename = constant('JPATH_' . strtoupper($this->getState('filter.client'))) . '/language/overrides/' . $this->getState('filter.language',
-                'en-GB') . '.override.ini';
+        $filename = constant(
+                        'JPATH_' . strtoupper($this->getState('filter.client'))
+                    ) . '/language/overrides/' . $this->getState(
+                'filter.language',
+                'en-GB'
+            ) . '.override.ini';
         $strings  = LanguagesHelper::parseFile($filename);
 
         $result           = new stdClass;
@@ -198,12 +210,20 @@ class LanguagesModelOverride extends JModelAdmin
     {
         $app = JFactory::getApplication();
 
-        $client = $app->getUserStateFromRequest('com_languages.overrides.filter.client', 'filter_client', 0,
-            'int') ? 'administrator' : 'site';
+        $client = $app->getUserStateFromRequest(
+            'com_languages.overrides.filter.client',
+            'filter_client',
+            0,
+            'int'
+        ) ? 'administrator' : 'site';
         $this->setState('filter.client', $client);
 
-        $language = $app->getUserStateFromRequest('com_languages.overrides.filter.language', 'filter_language', 'en-GB',
-            'cmd');
+        $language = $app->getUserStateFromRequest(
+            'com_languages.overrides.filter.language',
+            'filter_language',
+            'en-GB',
+            'cmd'
+        );
         $this->setState('filter.language', $language);
     }
 }

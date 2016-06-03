@@ -52,18 +52,25 @@ if (!empty($this->msg)) {
 
         <!-- Show Images from Component -->
         <?php if (isset($images->image_first) and !empty($images->image_first)) : ?>
-            <?php $imgfloat = (empty($images->float_first)) ? $this->params->get('float_first') : $images->float_first; ?>
+            <?php $imgfloat = (empty($images->float_first)) ? $this->params->get(
+                'float_first'
+            ) : $images->float_first; ?>
             <div class="img-intro-<?php echo htmlspecialchars($imgfloat, ENT_COMPAT, 'UTF-8'); ?>"><img
                     <?php if ($images->image_first_caption):
-                        echo 'class="caption"' . ' title="' . htmlspecialchars($images->image_first_caption, ENT_COMPAT,
-                                'UTF-8') . '"';
+                        echo 'class="caption"' . ' title="' . htmlspecialchars(
+                                $images->image_first_caption,
+                                ENT_COMPAT,
+                                'UTF-8'
+                            ) . '"';
                     endif; ?>
                     src="<?php echo htmlspecialchars($images->image_first, ENT_COMPAT, 'UTF-8'); ?>"
                     alt="<?php echo htmlspecialchars($images->image_first_alt, ENT_COMPAT, 'UTF-8'); ?>"/></div>
         <?php endif; ?>
 
         <?php if (isset($images->image_second) and !empty($images->image_second)) : ?>
-            <?php $imgfloat = (empty($images->float_second)) ? $this->params->get('float_second') : $images->float_second; ?>
+            <?php $imgfloat = (empty($images->float_second)) ? $this->params->get(
+                'float_second'
+            ) : $images->float_second; ?>
             <div class="pull-<?php echo htmlspecialchars($imgfloat, ENT_COMPAT, 'UTF-8'); ?> item-image"><img
                     <?php if ($images->image_second_caption):
                         echo 'class="caption"' . ' title="' . htmlspecialchars($images->image_second_caption) . '"';
@@ -82,7 +89,10 @@ if (!empty($this->msg)) {
         <?php endif; ?>
 
         <!-- Show Image -->
-        <?php if (isset($this->rssDoc->image) && isset($this->rssDoc->imagetitle) && $this->params->get('show_feed_image')) : ?>
+        <?php if (isset($this->rssDoc->image) && isset($this->rssDoc->imagetitle) && $this->params->get(
+                'show_feed_image'
+            )
+        ) : ?>
             <div>
                 <img src="<?php echo $this->rssDoc->image; ?>" alt="<?php echo $this->rssDoc->image->decription; ?>"/>
             </div>
@@ -96,9 +106,13 @@ if (!empty($this->msg)) {
                         break;
                     } ?>
                     <?php
-                    $uri  = !empty($this->rssDoc[$i]->guid) || !is_null($this->rssDoc[$i]->guid) ? $this->rssDoc[$i]->guid : $this->rssDoc[$i]->uri;
+                    $uri  = !empty($this->rssDoc[$i]->guid) || !is_null(
+                        $this->rssDoc[$i]->guid
+                    ) ? $this->rssDoc[$i]->guid : $this->rssDoc[$i]->uri;
                     $uri  = substr($uri, 0, 4) != 'http' ? $this->item->link : $uri;
-                    $text = !empty($this->rssDoc[$i]->content) || !is_null($this->rssDoc[$i]->content) ? $this->rssDoc[$i]->content : $this->rssDoc[$i]->description;
+                    $text = !empty($this->rssDoc[$i]->content) || !is_null(
+                        $this->rssDoc[$i]->content
+                    ) ? $this->rssDoc[$i]->content : $this->rssDoc[$i]->description;
                     ?>
                     <li>
                         <?php if (!empty($this->rssDoc[$i]->uri)) : ?>

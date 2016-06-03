@@ -246,8 +246,10 @@ class JApplicationWeb extends JApplicationBase
             $uri = JUri::getInstance($this->get('uri.request'));
 
             // If we are working from a CGI SAPI with the 'cgi.fix_pathinfo' directive disabled we use PHP_SELF.
-            if (strpos(php_sapi_name(),
-                    'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI'])
+            if (strpos(
+                    php_sapi_name(),
+                    'cgi'
+                ) !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI'])
             ) {
                 // We aren't expecting PATH_INFO within PHP_SELF so this should work.
                 $path = dirname($_SERVER['PHP_SELF']);
@@ -274,8 +276,10 @@ class JApplicationWeb extends JApplicationBase
 
         // Set the extended (non-base) part of the request URI as the route.
         if (stripos($this->get('uri.request'), $this->get('uri.base.full')) === 0) {
-            $this->set('uri.route',
-                substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full'))));
+            $this->set(
+                'uri.route',
+                substr_replace($this->get('uri.request'), '', 0, strlen($this->get('uri.base.full')))
+            );
         }
 
         // Get an explicitly set media URI is present.
@@ -546,7 +550,10 @@ class JApplicationWeb extends JApplicationBase
         }
 
         // If gzip compression is enabled in configuration and the server is compliant, compress the output.
-        if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get('output_handler') != 'ob_gzhandler')) {
+        if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get(
+                                                                              'output_handler'
+                                                                          ) != 'ob_gzhandler')
+        ) {
             $this->compress();
         }
 
@@ -597,7 +604,9 @@ class JApplicationWeb extends JApplicationBase
             $options['directory'] = $this->get('themes.base');
         } // Fall back to constants.
         else {
-            $options['directory'] = defined('JPATH_THEMES') ? JPATH_THEMES : (defined('JPATH_BASE') ? JPATH_BASE : __DIR__) . '/themes';
+            $options['directory'] = defined('JPATH_THEMES') ? JPATH_THEMES : (defined(
+                    'JPATH_BASE'
+                ) ? JPATH_BASE : __DIR__) . '/themes';
         }
 
         // Parse the document.

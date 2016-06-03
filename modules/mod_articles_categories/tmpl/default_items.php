@@ -23,17 +23,27 @@ foreach ($list as $item) : ?>
         </h<?php echo $params->get('item_heading') + $levelup; ?>>
 
         <?php if ($params->get('show_description', 0)) : ?>
-            <?php echo JHtml::_('content.prepare', $item->description, $item->getParams(),
-                'mod_articles_categories.content'); ?>
+            <?php echo JHtml::_(
+                'content.prepare',
+                $item->description,
+                $item->getParams(),
+                'mod_articles_categories.content'
+            ); ?>
         <?php endif; ?>
-        <?php if ($params->get('show_children', 0) && (($params->get('maxlevel',
-                        0) == 0) || ($params->get('maxlevel') >= ($item->level - $startLevel))) && count($item->getChildren())
+        <?php if ($params->get('show_children', 0) && (($params->get(
+                        'maxlevel',
+                        0
+                    ) == 0) || ($params->get('maxlevel') >= ($item->level - $startLevel))) && count(
+                      $item->getChildren()
+                  )
         ) : ?>
             <?php echo '<ul>'; ?>
             <?php $temp = $list; ?>
             <?php $list = $item->getChildren(); ?>
-            <?php require JModuleHelper::getLayoutPath('mod_articles_categories',
-                $params->get('layout', 'default') . '_items'); ?>
+            <?php require JModuleHelper::getLayoutPath(
+                'mod_articles_categories',
+                $params->get('layout', 'default') . '_items'
+            ); ?>
             <?php $list = $temp; ?>
             <?php echo '</ul>'; ?>
         <?php endif; ?>

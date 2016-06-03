@@ -28,20 +28,29 @@ if ($lang->isRtl()) {
     JHtml::_('stylesheet', 'media/popup-imagemanager_rtl.css', array(), true);
 }
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 		var image_base_path = '" . $params->get('image_path', 'images') . "/';
-	");
+	"
+);
 ?>
 <div class="container-popup">
 
     <form
-        action="index.php?option=com_media&amp;asset=<?php echo $input->getCmd('asset'); ?>&amp;author=<?php echo $input->getCmd('author'); ?>"
+        action="index.php?option=com_media&amp;asset=<?php echo $input->getCmd(
+            'asset'
+        ); ?>&amp;author=<?php echo $input->getCmd('author'); ?>"
         class="form-vertical" id="imageForm" method="post" enctype="multipart/form-data">
 
         <div id="messages" style="display: none;">
 			<span
-                id="message"></span><?php echo JHtml::_('image', 'media/dots.gif', '...',
-                array('width' => 22, 'height' => 12), true) ?>
+                id="message"></span><?php echo JHtml::_(
+                'image',
+                'media/dots.gif',
+                '...',
+                array('width' => 22, 'height' => 12),
+                true
+            ) ?>
         </div>
 
         <div class="well">
@@ -53,15 +62,23 @@ JFactory::getDocument()->addScriptDeclaration("
                     <div class="controls">
                         <?php echo $this->folderList; ?>
                         <button class="btn" type="button" id="upbutton"
-                                title="<?php echo JText::_('COM_MEDIA_DIRECTORY_UP') ?>"><?php echo JText::_('COM_MEDIA_UP') ?></button>
+                                title="<?php echo JText::_('COM_MEDIA_DIRECTORY_UP') ?>"><?php echo JText::_(
+                                'COM_MEDIA_UP'
+                            ) ?></button>
                     </div>
                 </div>
                 <div class="pull-right">
                     <button class="btn btn-success button-save-selected" type="button"
-                            onclick="<?php if ($this->state->get('field.id')): ?>window.parent.jInsertFieldValue(document.getElementById('f_url').value,'<?php echo $this->state->get('field.id');?>');<?php else: ?>ImageManager.onok();<?php endif; ?>window.parent.jModalClose();window.parent.jQuery('.modal.in').modal('hide');"
+                            onclick="<?php if ($this->state->get(
+                                'field.id'
+                            )
+                            ): ?>window.parent.jInsertFieldValue(document.getElementById('f_url').value,'<?php echo $this->state->get('field.id');?>');<?php else: ?>ImageManager.onok();<?php endif; ?>window.parent.jModalClose();window.parent.jQuery('.modal.in').modal('hide');"
                             data-dismiss="modal"><?php echo JText::_('COM_MEDIA_INSERT') ?></button>
                     <button class="btn button-cancel" type="button"
-                            onclick="window.parent.jModalClose();window.parent.jQuery('.modal.in').modal('hide');<?php if (!$this->state->get('field.id')) :
+                            onclick="window.parent.jModalClose();window.parent.jQuery('.modal.in').modal('hide');<?php if (!$this->state->get(
+                                'field.id'
+                            )
+                            ) :
                                 // This is for Mootools compatibility ?>parent.jModalClose();<?php endif ?>"
                             data-dismiss="modal"><?php echo JText::_('JCANCEL') ?></button>
                 </div>
@@ -69,7 +86,9 @@ JFactory::getDocument()->addScriptDeclaration("
         </div>
 
         <iframe id="imageframe" name="imageframe"
-                src="index.php?option=com_media&amp;view=imagesList&amp;tmpl=component&amp;folder=<?php echo $this->state->folder ?>&amp;asset=<?php echo $input->getCmd('asset'); ?>&amp;author=<?php echo $input->getCmd('author'); ?>"></iframe>
+                src="index.php?option=com_media&amp;view=imagesList&amp;tmpl=component&amp;folder=<?php echo $this->state->folder ?>&amp;asset=<?php echo $input->getCmd(
+                    'asset'
+                ); ?>&amp;author=<?php echo $input->getCmd('author'); ?>"></iframe>
 
         <div class="well">
             <div class="row">
@@ -153,7 +172,12 @@ JFactory::getDocument()->addScriptDeclaration("
 
     <?php if ($user->authorise('core.create', 'com_media')) : ?>
         <form
-            action="<?php echo JUri::base(); ?>index.php?option=com_media&amp;task=file.upload&amp;tmpl=component&amp;<?php echo $this->session->getName() . '=' . $this->session->getId(); ?>&amp;<?php echo JSession::getFormToken(); ?>=1&amp;asset=<?php echo $input->getCmd('asset'); ?>&amp;author=<?php echo $input->getCmd('author'); ?>&amp;view=images"
+            action="<?php echo JUri::base(
+            ); ?>index.php?option=com_media&amp;task=file.upload&amp;tmpl=component&amp;<?php echo $this->session->getName(
+                ) . '=' . $this->session->getId(); ?>&amp;<?php echo JSession::getFormToken(
+            ); ?>=1&amp;asset=<?php echo $input->getCmd('asset'); ?>&amp;author=<?php echo $input->getCmd(
+                'author'
+            ); ?>&amp;view=images"
             id="uploadForm" class="form-horizontal" name="uploadForm" method="post" enctype="multipart/form-data">
             <div id="uploadform" class="well">
                 <fieldset id="upload-noflash" class="actions">
@@ -165,17 +189,28 @@ JFactory::getDocument()->addScriptDeclaration("
                         <div class="controls">
                             <input type="file" id="upload-file" name="Filedata[]" multiple/>
                             <button class="btn btn-primary" id="upload-submit"><span
-                                    class="icon-upload icon-white"></span> <?php echo JText::_('COM_MEDIA_START_UPLOAD'); ?>
+                                    class="icon-upload icon-white"></span> <?php echo JText::_(
+                                    'COM_MEDIA_START_UPLOAD'
+                                ); ?>
                             </button>
-                            <p class="help-block"><?php echo $this->config->get('upload_maxsize') == '0' ? JText::_('COM_MEDIA_UPLOAD_FILES_NOLIMIT') : JText::sprintf('COM_MEDIA_UPLOAD_FILES',
-                                    $this->config->get('upload_maxsize')); ?></p>
+                            <p class="help-block"><?php echo $this->config->get('upload_maxsize') == '0' ? JText::_(
+                                    'COM_MEDIA_UPLOAD_FILES_NOLIMIT'
+                                ) : JText::sprintf(
+                                    'COM_MEDIA_UPLOAD_FILES',
+                                    $this->config->get('upload_maxsize')
+                                ); ?></p>
                         </div>
                     </div>
                 </fieldset>
-                <?php JFactory::getSession()
-                              ->set('com_media.return_url',
-                                  'index.php?option=com_media&view=images&tmpl=component&fieldid=' . $input->getCmd('fieldid',
-                                      '') . '&e_name=' . $input->getCmd('e_name') . '&asset=' . $input->getCmd('asset') . '&author=' . $input->getCmd('author')); ?>
+                <?php JFactory::getSession()->set(
+                        'com_media.return_url',
+                        'index.php?option=com_media&view=images&tmpl=component&fieldid=' . $input->getCmd(
+                            'fieldid',
+                            ''
+                        ) . '&e_name=' . $input->getCmd('e_name') . '&asset=' . $input->getCmd(
+                            'asset'
+                        ) . '&author=' . $input->getCmd('author')
+                    ); ?>
             </div>
         </form>
     <?php endif; ?>

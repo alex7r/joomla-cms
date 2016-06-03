@@ -17,7 +17,8 @@ $lang      = JFactory::getLanguage();
 
 JText::script('COM_FINDER_MAPS_CONFIRM_DELETE_PROMPT');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(pressbutton)
 	{
 		if (pressbutton == 'map.delete')
@@ -33,7 +34,8 @@ JFactory::getDocument()->addScriptDeclaration("
 		}
 		Joomla.submitform(pressbutton);
 	}
-");
+"
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_finder&view=maps'); ?>" method="post" name="adminForm"
@@ -48,35 +50,53 @@ JFactory::getDocument()->addScriptDeclaration("
             <?php endif; ?>
             <fieldset id="filter-bar">
                 <legend
-                    class="element-invisible"><?php echo JText::sprintf('COM_FINDER_SEARCH_LABEL',
-                        JText::_('COM_FINDER_MAPS')); ?></legend>
+                    class="element-invisible"><?php echo JText::sprintf(
+                        'COM_FINDER_SEARCH_LABEL',
+                        JText::_('COM_FINDER_MAPS')
+                    ); ?></legend>
                 <div class="filter-search">
                     <label class="filter-search-lbl"
-                           for="filter_search"><?php echo JText::sprintf('COM_FINDER_SEARCH_LABEL',
-                            JText::_('COM_FINDER_MAPS')); ?></label>
+                           for="filter_search"><?php echo JText::sprintf(
+                            'COM_FINDER_SEARCH_LABEL',
+                            JText::_('COM_FINDER_MAPS')
+                        ); ?></label>
                     <input type="text" name="filter_search" id="filter_search"
                            value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
                            title="<?php echo JText::_('COM_FINDER_FILTER_SEARCH_DESCRIPTION'); ?>"/>
                     <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
                     <button type="button"
-                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+                            onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo JText::_(
+                            'JSEARCH_FILTER_CLEAR'
+                        ); ?></button>
                 </div>
 
                 <div class="filter-select">
                     <label class="selectlabel"
-                           for="filter_branch"><?php echo JText::sprintf('COM_FINDER_FILTER_BY',
-                            JText::_('COM_FINDER_MAPS')); ?></label>
+                           for="filter_branch"><?php echo JText::sprintf(
+                            'COM_FINDER_FILTER_BY',
+                            JText::_('COM_FINDER_MAPS')
+                        ); ?></label>
                     <select name="filter_branch" id="filter_branch">
-                        <?php echo JHtml::_('select.options', JHtml::_('finder.mapslist'), 'value', 'text',
-                            $this->state->get('filter.branch')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('finder.mapslist'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.branch')
+                        ); ?>
                     </select>
 
                     <label class="selectlabel"
                            for="filter_state"><?php echo JText::_('COM_FINDER_INDEX_FILTER_BY_STATE'); ?></label>
                     <select name="filter_state" id="filter_state">
                         <option value=""><?php echo JText::_('COM_FINDER_INDEX_FILTER_BY_STATE'); ?></option>
-                        <?php echo JHtml::_('select.options', JHtml::_('finder.statelist'), 'value', 'text',
-                            $this->state->get('filter.state')); ?>
+                        <?php echo JHtml::_(
+                            'select.options',
+                            JHtml::_('finder.statelist'),
+                            'value',
+                            'text',
+                            $this->state->get('filter.state')
+                        ); ?>
                     </select>
 
                     <button type="submit" id="filter-go">
@@ -124,7 +144,7 @@ JFactory::getDocument()->addScriptDeclaration("
                                 <span class="gi">&mdash;</span>
                             <?php endif; ?>
                             <?php
-                            $key   = FinderHelperLanguage::branchSingular($item->title);
+                            $key = FinderHelperLanguage::branchSingular($item->title);
                             $title = $lang->hasKey($key) ? JText::_($key) : $item->title;
                             echo $this->escape(($title == '*') ? JText::_('JALL_LANGUAGE') : $title);
                             ?>

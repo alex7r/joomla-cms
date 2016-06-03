@@ -102,8 +102,11 @@ class FOFFormFieldButton extends FOFFormFieldText implements FOFFormField
             $icon = '<span class="icon ' . $icon . '"></span>';
         }
 
-        return '<' . $type . ' id="' . $this->id . '" class="btn ' . $class . '" ' . $onclick . $url . $title . '>' . $icon . htmlspecialchars($this->value,
-            ENT_COMPAT, 'UTF-8') . '</' . $type . '>';
+        return '<' . $type . ' id="' . $this->id . '" class="btn ' . $class . '" ' . $onclick . $url . $title . '>' . $icon . htmlspecialchars(
+            $this->value,
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</' . $type . '>';
     }
 
     /**

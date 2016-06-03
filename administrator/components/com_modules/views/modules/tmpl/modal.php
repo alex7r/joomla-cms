@@ -25,7 +25,8 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $editor    = JFactory::getApplication()->input->get('editor', '', 'cmd');
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 moduleIns = function(type, name) {
 	var extraVal ,fieldExtra = jQuery("#extra_class");
 	extraVal = (fieldExtra.length && fieldExtra.val().length) ? "," + fieldExtra.val() : "";
@@ -37,12 +38,15 @@ modulePosIns = function(position) {
 	extraVal = (fieldExtra.length && fieldExtra.val().length) ? "," + fieldExtra.val() : "";
 	window.parent.jInsertEditorText("{loadposition " + position +  extraVal  + "}", "' . $editor . '");
 	window.parent.jModalClose();
-};');
+};'
+);
 ?>
 <div class="container-popup">
 
     <form
-        action="<?php echo JRoute::_('index.php?option=com_modules&view=modules&layout=modal&tmpl=component&' . JSession::getFormToken() . '=1'); ?>"
+        action="<?php echo JRoute::_(
+            'index.php?option=com_modules&view=modules&layout=modal&tmpl=component&' . JSession::getFormToken() . '=1'
+        ); ?>"
         method="post" name="adminForm" id="adminForm">
 
         <div class="well">
@@ -80,24 +84,49 @@ modulePosIns = function(position) {
                         <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
                     </th>
                     <th width="15%" class="nowrap hidden-phone">
-                        <?php echo JHtml::_('searchtools.sort', 'COM_MODULES_HEADING_POSITION', 'a.position', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'COM_MODULES_HEADING_POSITION',
+                            'a.position',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="10%" class="nowrap hidden-phone">
-                        <?php echo JHtml::_('searchtools.sort', 'COM_MODULES_HEADING_MODULE', 'name', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'COM_MODULES_HEADING_MODULE',
+                            'name',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="10%" class="nowrap hidden-phone hidden-tablet">
-                        <?php echo JHtml::_('searchtools.sort', 'COM_MODULES_HEADING_PAGES', 'pages', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'COM_MODULES_HEADING_PAGES',
+                            'pages',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="10%" class="nowrap hidden-phone">
-                        <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'ag.title', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'JGRID_HEADING_ACCESS',
+                            'ag.title',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="10%" class="nowrap hidden-phone">
-                        <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'l.title', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'searchtools.sort',
+                            'JGRID_HEADING_LANGUAGE',
+                            'l.title',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <th width="1%" class="nowrap hidden-phone">
                         <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -127,12 +156,18 @@ modulePosIns = function(position) {
                         </td>
                         <td class="has-context">
                             <a class="btn btn-small btn-block btn-success" href="#"
-                               onclick="moduleIns('<?php echo $this->escape($item->module); ?>', '<?php echo $this->escape($item->title); ?>');"><?php echo $this->escape($item->title); ?></a>
+                               onclick="moduleIns('<?php echo $this->escape(
+                                   $item->module
+                               ); ?>', '<?php echo $this->escape($item->title); ?>');"><?php echo $this->escape(
+                                    $item->title
+                                ); ?></a>
                         </td>
                         <td class="small hidden-phone">
                             <?php if ($item->position) : ?>
                                 <a class="btn btn-small btn-block btn-warning" href="#"
-                                   onclick="modulePosIns('<?php echo $this->escape($item->position); ?>');"><?php echo $this->escape($item->position); ?></a>
+                                   onclick="modulePosIns('<?php echo $this->escape(
+                                       $item->position
+                                   ); ?>');"><?php echo $this->escape($item->position); ?></a>
                             <?php else : ?>
                                 <span class="label"><?php echo JText::_('JNONE'); ?></span>
                             <?php endif; ?>
@@ -152,10 +187,13 @@ modulePosIns = function(position) {
                             <?php elseif ($item->language == '*') : ?>
                                 <?php echo JText::alt('JALL', 'language'); ?>
                             <?php else : ?>
-                                <?php echo $item->language_title ? JHtml::_('image',
-                                        'mod_languages/' . $item->language_image . '.gif', $item->language_title,
+                                <?php echo $item->language_title ? JHtml::_(
+                                        'image',
+                                        'mod_languages/' . $item->language_image . '.gif',
+                                        $item->language_title,
                                         array('title' => $item->language_title),
-                                        true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                        true
+                                    ) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                             <?php endif; ?>
                         </td>
                         <td class="hidden-phone">

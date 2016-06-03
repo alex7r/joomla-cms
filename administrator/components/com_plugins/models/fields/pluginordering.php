@@ -33,21 +33,21 @@ class JFormFieldPluginordering extends JFormFieldOrdering
      */
     protected function getQuery()
     {
-        $db     = JFactory::getDbo();
+        $db = JFactory::getDbo();
         $folder = $this->form->getValue('folder');
 
         // Build the query for the ordering list.
-        $query = $db->getQuery(true)
-                    ->select(array(
-                        $db->quoteName('ordering', 'value'),
-                        $db->quoteName('name', 'text'),
-                        $db->quoteName('type'),
-                        $db->quote('folder'),
-                        $db->quote('extension_id')
-                    ))
-                    ->from($db->quoteName('#__extensions'))
-                    ->where('(type =' . $db->quote('plugin') . 'AND folder=' . $db->quote($folder) . ')')
-                    ->order('ordering');
+        $query = $db->getQuery(true)->select(
+                array(
+                    $db->quoteName('ordering', 'value'),
+                    $db->quoteName('name', 'text'),
+                    $db->quoteName('type'),
+                    $db->quote('folder'),
+                    $db->quote('extension_id')
+                )
+            )->from($db->quoteName('#__extensions'))->where(
+                '(type =' . $db->quote('plugin') . 'AND folder=' . $db->quote($folder) . ')'
+            )->order('ordering');
 
         return $query;
     }

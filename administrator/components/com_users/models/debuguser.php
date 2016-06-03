@@ -132,13 +132,21 @@ class UsersModelDebugUser extends JModelList
         }
 
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('user_id',
-            $this->getUserStateFromRequest($this->context . '.user_id', 'user_id', 0, 'int', false));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'user_id',
+            $this->getUserStateFromRequest($this->context . '.user_id', 'user_id', 0, 'int', false)
+        );
 
-        $levelStart = $this->getUserStateFromRequest($this->context . '.filter.level_start', 'filter_level_start', '',
-            'cmd');
+        $levelStart = $this->getUserStateFromRequest(
+            $this->context . '.filter.level_start',
+            'filter_level_start',
+            '',
+            'cmd'
+        );
         $this->setState('filter.level_start', $levelStart);
 
         $value = $this->getUserStateFromRequest($this->context . '.filter.level_end', 'filter_level_end', '', 'cmd');
@@ -149,8 +157,10 @@ class UsersModelDebugUser extends JModelList
 
         $this->setState('filter.level_end', $value);
 
-        $this->setState('filter.component',
-            $this->getUserStateFromRequest($this->context . '.filter.component', 'filter_component', '', 'string'));
+        $this->setState(
+            'filter.component',
+            $this->getUserStateFromRequest($this->context . '.filter.component', 'filter_component', '', 'string')
+        );
 
         // Load the parameters.
         $params = JComponentHelper::getParams('com_users');
@@ -203,8 +213,13 @@ class UsersModelDebugUser extends JModelList
         // Filter the items over the search string if set.
         if ($this->getState('filter.search')) {
             // Escape the search token.
-            $search = $db->quote('%' . str_replace(' ', '%',
-                    $db->escape(trim($this->getState('filter.search')), true) . '%'));
+            $search = $db->quote(
+                '%' . str_replace(
+                    ' ',
+                    '%',
+                    $db->escape(trim($this->getState('filter.search')), true) . '%'
+                )
+            );
 
             // Compile the different search clauses.
             $searches   = array();
@@ -234,12 +249,20 @@ class UsersModelDebugUser extends JModelList
         // Filter the items over the component if set.
         if ($this->getState('filter.component')) {
             $component = $this->getState('filter.component');
-            $query->where('(a.name = ' . $db->quote($component) . ' OR a.name LIKE ' . $db->quote($component . '.%') . ')');
+            $query->where(
+                '(a.name = ' . $db->quote($component) . ' OR a.name LIKE ' . $db->quote($component . '.%') . ')'
+            );
         }
 
         // Add the list ordering clause.
-        $query->order($db->escape($this->getState('list.ordering',
-                'a.lft')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        $query->order(
+            $db->escape(
+                $this->getState(
+                    'list.ordering',
+                    'a.lft'
+                )
+            ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

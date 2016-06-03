@@ -271,8 +271,11 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
     public static function getInstance($options = array())
     {
         // Sanitize the database connector options.
-        $options['driver']   = (isset($options['driver'])) ? preg_replace('/[^A-Z0-9_\.-]/i', '',
-            $options['driver']) : 'mysqli';
+        $options['driver']   = (isset($options['driver'])) ? preg_replace(
+            '/[^A-Z0-9_\.-]/i',
+            '',
+            $options['driver']
+        ) : 'mysqli';
         $options['database'] = (isset($options['database'])) ? $options['database'] : null;
         $options['select']   = (isset($options['select'])) ? $options['select'] : true;
 
@@ -284,18 +287,26 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
 
             // If neither is supported, then the user cannot use MySQL; throw an exception
             if (!$mysqliSupported && !$pdoMysqlSupported) {
-                throw new JDatabaseExceptionUnsupported('The PHP `ext/mysql` extension is removed in PHP 7, cannot use the `mysql` driver.' . ' Also, this system does not support MySQLi or PDO MySQL.  Cannot instantiate database driver.');
+                throw new JDatabaseExceptionUnsupported(
+                    'The PHP `ext/mysql` extension is removed in PHP 7, cannot use the `mysql` driver.' . ' Also, this system does not support MySQLi or PDO MySQL.  Cannot instantiate database driver.'
+                );
             }
 
             // Prefer MySQLi as it is a closer replacement for the removed MySQL driver, otherwise use the PDO driver
             if ($mysqliSupported) {
-                JLog::add('The PHP `ext/mysql` extension is removed in PHP 7, cannot use the `mysql` driver.  Trying `mysqli` instead.',
-                    JLog::WARNING, 'deprecated');
+                JLog::add(
+                    'The PHP `ext/mysql` extension is removed in PHP 7, cannot use the `mysql` driver.  Trying `mysqli` instead.',
+                    JLog::WARNING,
+                    'deprecated'
+                );
 
                 $options['driver'] = 'mysqli';
             } else {
-                JLog::add('The PHP `ext/mysql` extension is removed in PHP 7, cannot use the `mysql` driver.  Trying `pdomysql` instead.',
-                    JLog::WARNING, 'deprecated');
+                JLog::add(
+                    'The PHP `ext/mysql` extension is removed in PHP 7, cannot use the `mysql` driver.  Trying `pdomysql` instead.',
+                    JLog::WARNING,
+                    'deprecated'
+                );
 
                 $options['driver'] = 'pdomysql';
             }
@@ -311,16 +322,24 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
 
             // If the class still doesn't exist we have nothing left to do but throw an exception.  We did our best.
             if (!class_exists($class)) {
-                throw new JDatabaseExceptionUnsupported(sprintf('Unable to load Database Driver: %s',
-                    $options['driver']));
+                throw new JDatabaseExceptionUnsupported(
+                    sprintf(
+                        'Unable to load Database Driver: %s',
+                        $options['driver']
+                    )
+                );
             }
 
             // Create our new JDatabaseDriver connector based on the options given.
             try {
                 $instance = new $class($options);
             } catch (RuntimeException $e) {
-                throw new JDatabaseExceptionConnecting(sprintf('Unable to connect to the Database: %s',
-                    $e->getMessage()), $e->getCode(), $e);
+                throw new JDatabaseExceptionConnecting(
+                    sprintf(
+                        'Unable to connect to the Database: %s',
+                        $e->getMessage()
+                    ), $e->getCode(), $e
+                );
             }
 
             // Set the new connector to the global instances based on signature.
@@ -788,8 +807,10 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
         }
 
         if (count($columnMods)) {
-            $queries[] = "ALTER TABLE $quotedTableName " . implode(',',
-                    $columnMods) . " CHARACTER SET $charset COLLATE $collation";
+            $queries[] = "ALTER TABLE $quotedTableName " . implode(
+                    ',',
+                    $columnMods
+                ) . " CHARACTER SET $charset COLLATE $collation";
         }
 
         return $queries;
@@ -985,7 +1006,9 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
             $charset   = $this->utf8mb4 ? 'utf8mb4' : 'utf8';
             $collation = $charset . '_unicode_ci';
 
-            return 'CREATE DATABASE ' . $this->quoteName($options->db_name) . ' CHARACTER SET `' . $charset . '` COLLATE `' . $collation . '`';
+            return 'CREATE DATABASE ' . $this->quoteName(
+                $options->db_name
+            ) . ' CHARACTER SET `' . $charset . '` COLLATE `' . $collation . '`';
         }
 
         return 'CREATE DATABASE ' . $this->quoteName($options->db_name);
@@ -1398,8 +1421,11 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
      */
     public function getUTFSupport()
     {
-        JLog::add('JDatabaseDriver::getUTFSupport() is deprecated. Use JDatabaseDriver::hasUTFSupport() instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            'JDatabaseDriver::getUTFSupport() is deprecated. Use JDatabaseDriver::hasUTFSupport() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return $this->hasUTFSupport();
     }
@@ -1451,8 +1477,12 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
         }
 
         // Create the base insert statement.
-        $query = $this->getQuery(true)->insert($this->quoteName($table))->columns($fields)->values(implode(',',
-            $values));
+        $query = $this->getQuery(true)->insert($this->quoteName($table))->columns($fields)->values(
+            implode(
+                ',',
+                $values
+            )
+        );
 
         // Set the query and execute the insert.
         $this->setQuery($query);
@@ -1617,8 +1647,11 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
      */
     public function loadNextObject($class = 'stdClass')
     {
-        JLog::add(__METHOD__ . '() is deprecated. Use JDatabaseDriver::getIterator() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated. Use JDatabaseDriver::getIterator() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
         $this->connect();
 
         static $cursor = null;
@@ -1665,8 +1698,11 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
      */
     public function loadNextRow()
     {
-        JLog::add(__METHOD__ . '() is deprecated. Use JDatabaseDriver::getIterator() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated. Use JDatabaseDriver::getIterator() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
         $this->connect();
 
         static $cursor = null;

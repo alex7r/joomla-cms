@@ -89,12 +89,18 @@ class NewsfeedsViewNewsfeed extends JViewLegacy
         // Since we don't track these assets at the item level, use the category id.
         $canDo = JHelperContent::getActions('com_newsfeeds', 'category', $this->item->catid);
 
-        JToolbarHelper::title($isNew ? JText::_('COM_NEWSFEEDS_MANAGER_NEWSFEED_NEW') : JText::_('COM_NEWSFEEDS_MANAGER_NEWSFEED_EDIT'),
-            'feed newsfeeds');
+        JToolbarHelper::title(
+            $isNew ? JText::_('COM_NEWSFEEDS_MANAGER_NEWSFEED_NEW') : JText::_('COM_NEWSFEEDS_MANAGER_NEWSFEED_EDIT'),
+            'feed newsfeeds'
+        );
 
         // If not checked out, can save the item.
-        if (!$checkedOut && ($canDo->get('core.edit') || count($user->getAuthorisedCategories('com_newsfeeds',
-                    'core.create')) > 0)
+        if (!$checkedOut && ($canDo->get('core.edit') || count(
+                                                             $user->getAuthorisedCategories(
+                                                                 'com_newsfeeds',
+                                                                 'core.create'
+                                                             )
+                                                         ) > 0)
         ) {
             JToolbarHelper::apply('newsfeed.apply');
             JToolbarHelper::save('newsfeed.save');

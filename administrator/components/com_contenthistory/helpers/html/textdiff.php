@@ -45,13 +45,15 @@ abstract class JHtmlTextdiff
         JHtml::_('stylesheet', 'com_contenthistory/jquery.pretty-text-diff.css', false, true, false);
 
         // Attach diff to document
-        JFactory::getDocument()->addScriptDeclaration("
+        JFactory::getDocument()->addScriptDeclaration(
+            "
 			(function ($){
 				$(document).ready(function (){
  					$('#" . $containerId . " tr').prettyTextDiff();
  				});
 			})(jQuery);
-			");
+			"
+        );
 
         // Set static array
         static::$loaded[__METHOD__] = true;

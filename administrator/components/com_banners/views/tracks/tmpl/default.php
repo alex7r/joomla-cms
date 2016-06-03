@@ -35,20 +35,40 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     <thead>
                     <tr>
                         <th class="title">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_BANNERS_HEADING_NAME', 'b.name', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_BANNERS_HEADING_NAME',
+                                'b.name',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="20%" class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_BANNERS_HEADING_CLIENT', 'cl.name', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_BANNERS_HEADING_CLIENT',
+                                'cl.name',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_BANNERS_HEADING_TYPE', 'a.track_type',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_BANNERS_HEADING_TYPE',
+                                'a.track_type',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_BANNERS_HEADING_COUNT', 'a.count', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_BANNERS_HEADING_COUNT',
+                                'a.count',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
                             <?php echo JHtml::_('searchtools.sort', 'JDATE', 'a.track_date', $listDirn, $listOrder); ?>
@@ -75,7 +95,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                 <?php echo $item->client_name; ?>
                             </td>
                             <td class="small hidden-phone">
-                                <?php echo $item->track_type == 1 ? JText::_('COM_BANNERS_IMPRESSION') : JText::_('COM_BANNERS_CLICK'); ?>
+                                <?php echo $item->track_type == 1 ? JText::_('COM_BANNERS_IMPRESSION') : JText::_(
+                                    'COM_BANNERS_CLICK'
+                                ); ?>
                             </td>
                             <td class="hidden-phone">
                                 <?php echo $item->count; ?>

@@ -239,7 +239,9 @@ class AdminModelSysInfo extends JModelLegacy
             'dbcollation'           => $db->getCollation(),
             'dbconnectioncollation' => $db->getConnectionCollation(),
             'phpversion'            => phpversion(),
-            'server'                => isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : getenv('SERVER_SOFTWARE'),
+            'server'                => isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : getenv(
+                'SERVER_SOFTWARE'
+            ),
             'sapi_name'             => php_sapi_name(),
             'version'               => $version->getLongVersion(),
             'platform'              => $platform->getLongVersion(),
@@ -383,13 +385,19 @@ class AdminModelSysInfo extends JModelLegacy
         $phpInfo = ob_get_contents();
         ob_end_clean();
         preg_match_all('#<body[^>]*>(.*)</body>#siU', $phpInfo, $output);
-        $output         = preg_replace('#<table[^>]*>#', '<table class="table table-striped adminlist">',
-            $output[1][0]);
+        $output         = preg_replace(
+            '#<table[^>]*>#',
+            '<table class="table table-striped adminlist">',
+            $output[1][0]
+        );
         $output         = preg_replace('#(\w),(\w)#', '\1, \2', $output);
         $output         = preg_replace('#<hr />#', '', $output);
         $output         = str_replace('<div class="center">', '', $output);
-        $output         = preg_replace('#<tr class="h">(.*)<\/tr>#', '<thead><tr class="h">$1</tr></thead><tbody>',
-            $output);
+        $output         = preg_replace(
+            '#<tr class="h">(.*)<\/tr>#',
+            '<thead><tr class="h">$1</tr></thead><tbody>',
+            $output
+        );
         $output         = str_replace('</table>', '</tbody></table>', $output);
         $output         = str_replace('</div>', '', $output);
         $this->php_info = $output;
@@ -468,8 +476,11 @@ class AdminModelSysInfo extends JModelLegacy
         try {
             $extensions = $db->loadObjectList();
         } catch (Exception $e) {
-            JLog::add(JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()),
-                JLog::WARNING, 'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return $installed;
         }
@@ -543,8 +554,10 @@ class AdminModelSysInfo extends JModelLegacy
                 continue;
             }
 
-            $this->addDirectory('administrator/language/' . $folder->getFilename(),
-                JPATH_ADMINISTRATOR . '/language/' . $folder->getFilename());
+            $this->addDirectory(
+                'administrator/language/' . $folder->getFilename(),
+                JPATH_ADMINISTRATOR . '/language/' . $folder->getFilename()
+            );
         }
 
         // List all manifests folders
@@ -555,8 +568,10 @@ class AdminModelSysInfo extends JModelLegacy
                 continue;
             }
 
-            $this->addDirectory('administrator/manifests/' . $folder->getFilename(),
-                JPATH_ADMINISTRATOR . '/manifests/' . $folder->getFilename());
+            $this->addDirectory(
+                'administrator/manifests/' . $folder->getFilename(),
+                JPATH_ADMINISTRATOR . '/manifests/' . $folder->getFilename()
+            );
         }
 
         $this->addDirectory('administrator/modules', JPATH_ADMINISTRATOR . '/modules');
@@ -574,8 +589,10 @@ class AdminModelSysInfo extends JModelLegacy
                 continue;
             }
 
-            $this->addDirectory('images/' . $folder->getFilename(),
-                JPATH_SITE . '/' . $cparams->get('image_path') . '/' . $folder->getFilename());
+            $this->addDirectory(
+                'images/' . $folder->getFilename(),
+                JPATH_SITE . '/' . $cparams->get('image_path') . '/' . $folder->getFilename()
+            );
         }
 
         $this->addDirectory('language', JPATH_SITE . '/language');
@@ -588,8 +605,10 @@ class AdminModelSysInfo extends JModelLegacy
                 continue;
             }
 
-            $this->addDirectory('language/' . $folder->getFilename(),
-                JPATH_SITE . '/language/' . $folder->getFilename());
+            $this->addDirectory(
+                'language/' . $folder->getFilename(),
+                JPATH_SITE . '/language/' . $folder->getFilename()
+            );
         }
 
         $this->addDirectory('libraries', JPATH_LIBRARIES);
@@ -621,14 +640,23 @@ class AdminModelSysInfo extends JModelLegacy
         }
 
         if ($public) {
-            $this->addDirectory('log', $registry->get('log_path', JPATH_ADMINISTRATOR . '/logs'),
-                'COM_ADMIN_LOG_DIRECTORY');
+            $this->addDirectory(
+                'log',
+                $registry->get('log_path', JPATH_ADMINISTRATOR . '/logs'),
+                'COM_ADMIN_LOG_DIRECTORY'
+            );
             $this->addDirectory('tmp', $registry->get('tmp_path', JPATH_ROOT . '/tmp'), 'COM_ADMIN_TEMP_DIRECTORY');
         } else {
-            $this->addDirectory($registry->get('log_path', JPATH_ADMINISTRATOR . '/logs'),
-                $registry->get('log_path', JPATH_ADMINISTRATOR . '/logs'), 'COM_ADMIN_LOG_DIRECTORY');
-            $this->addDirectory($registry->get('tmp_path', JPATH_ROOT . '/tmp'),
-                $registry->get('tmp_path', JPATH_ROOT . '/tmp'), 'COM_ADMIN_TEMP_DIRECTORY');
+            $this->addDirectory(
+                $registry->get('log_path', JPATH_ADMINISTRATOR . '/logs'),
+                $registry->get('log_path', JPATH_ADMINISTRATOR . '/logs'),
+                'COM_ADMIN_LOG_DIRECTORY'
+            );
+            $this->addDirectory(
+                $registry->get('tmp_path', JPATH_ROOT . '/tmp'),
+                $registry->get('tmp_path', JPATH_ROOT . '/tmp'),
+                'COM_ADMIN_TEMP_DIRECTORY'
+            );
         }
 
         return $this->directories;

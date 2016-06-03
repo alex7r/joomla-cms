@@ -94,8 +94,13 @@ class JSessionHandlerNative implements JSessionHandlerInterface
 
         // If we are using cookies (default true) and headers have already been started (early output),
         if (ini_get('session.use_cookies') && headers_sent($file, $line)) {
-            throw new RuntimeException(sprintf('Failed to start the session because headers have already been sent by "%s" at line %d.',
-                $file, $line));
+            throw new RuntimeException(
+                sprintf(
+                    'Failed to start the session because headers have already been sent by "%s" at line %d.',
+                    $file,
+                    $line
+                )
+            );
         }
 
         // Ok to try and start the session
@@ -218,9 +223,16 @@ class JSessionHandlerNative implements JSessionHandlerInterface
     public function save()
     {
         // Verify if the session is active
-        if ((version_compare(PHP_VERSION, '5.4',
-                    'ge') && PHP_SESSION_ACTIVE === session_status()) || (version_compare(PHP_VERSION, '5.4',
-                    'lt') && $this->started && isset($_SESSION) && $this->getId())
+        if ((version_compare(
+                 PHP_VERSION,
+                 '5.4',
+                 'ge'
+             ) && PHP_SESSION_ACTIVE === session_status()) || (version_compare(
+                                                                   PHP_VERSION,
+                                                                   '5.4',
+                                                                   'lt'
+                                                               ) && $this->started && isset($_SESSION) && $this->getId(
+                ))
         ) {
             $session = JFactory::getSession();
             $data    = $session->getData();

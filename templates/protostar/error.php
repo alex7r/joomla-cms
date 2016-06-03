@@ -44,7 +44,9 @@ JHtml::_('bootstrap.framework');
 if ($params->get('logoFile')) {
     $logo = '<img src="' . JUri::root() . $params->get('logoFile') . '" alt="' . $sitename . '" />';
 } elseif ($params->get('sitetitle')) {
-    $logo = '<span class="site-title" title="' . $sitename . '">' . htmlspecialchars($params->get('sitetitle')) . '</span>';
+    $logo = '<span class="site-title" title="' . $sitename . '">' . htmlspecialchars(
+            $params->get('sitetitle')
+        ) . '</span>';
 } else {
     $logo = '<span class="site-title" title="' . $sitename . '">' . $sitename . '</span>';
 }
@@ -53,8 +55,11 @@ if ($params->get('logoFile')) {
 <html lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">
 <head>
     <meta charset="utf-8"/>
-    <title><?php echo $this->title; ?><?php echo htmlspecialchars($this->error->getMessage(), ENT_QUOTES,
-            'UTF-8'); ?></title>
+    <title><?php echo $this->title; ?><?php echo htmlspecialchars(
+            $this->error->getMessage(),
+            ENT_QUOTES,
+            'UTF-8'
+        ); ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php // Use of Google Font ?>
     <?php if ($params->get('googleFont')) : ?>
@@ -103,7 +108,9 @@ if ($params->get('logoFile')) {
     <script src="<?php echo JUri::root(true); ?>/media/jui/js/html5.js"></script><![endif]-->
 </head>
 <body
-    class="site <?php echo $option . ' view-' . $view . ($layout ? ' layout-' . $layout : ' no-layout') . ($task ? ' task-' . $task : ' no-task') . ($itemid ? ' itemid-' . $itemid : '') . ($params->get('fluidContainer') ? ' fluid' : '');
+    class="site <?php echo $option . ' view-' . $view . ($layout ? ' layout-' . $layout : ' no-layout') . ($task ? ' task-' . $task : ' no-task') . ($itemid ? ' itemid-' . $itemid : '') . ($params->get(
+            'fluidContainer'
+        ) ? ' fluid' : '');
     ?>">
 <!-- Body -->
 <div class="body">
@@ -136,7 +143,9 @@ if ($params->get('logoFile')) {
                     <div class="row-fluid">
                         <div class="span6">
                             <p>
-                                <strong><?php echo JText::_('JERROR_LAYOUT_ERROR_HAS_OCCURRED_WHILE_PROCESSING_YOUR_REQUEST'); ?></strong>
+                                <strong><?php echo JText::_(
+                                        'JERROR_LAYOUT_ERROR_HAS_OCCURRED_WHILE_PROCESSING_YOUR_REQUEST'
+                                    ); ?></strong>
                             </p>
                             <p><?php echo JText::_('JERROR_LAYOUT_NOT_ABLE_TO_VISIT'); ?></p>
                             <ul>
@@ -162,8 +171,12 @@ if ($params->get('logoFile')) {
                     <p><?php echo JText::_('JERROR_LAYOUT_PLEASE_CONTACT_THE_SYSTEM_ADMINISTRATOR'); ?></p>
                     <blockquote>
 						<span
-                            class="label label-inverse"><?php echo $this->error->getCode(); ?></span> <?php echo htmlspecialchars($this->error->getMessage(),
-                            ENT_QUOTES, 'UTF-8'); ?>
+                            class="label label-inverse"><?php echo $this->error->getCode(
+                            ); ?></span> <?php echo htmlspecialchars(
+                            $this->error->getMessage(),
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ); ?>
                     </blockquote>
                     <?php if ($this->debug) : ?>
                         <?php echo $this->renderBacktrace(); ?>

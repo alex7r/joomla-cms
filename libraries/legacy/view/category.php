@@ -161,19 +161,27 @@ class JViewCategory extends JViewLegacy
                 $dispatcher = JEventDispatcher::getInstance();
                 JPluginHelper::importPlugin('content');
 
-                $dispatcher->trigger('onContentPrepare',
-                    array($this->extension . '.category', &$itemElement, &$itemElement->params, 0));
+                $dispatcher->trigger(
+                    'onContentPrepare',
+                    array($this->extension . '.category', &$itemElement, &$itemElement->params, 0)
+                );
 
-                $results                               = $dispatcher->trigger('onContentAfterTitle',
-                    array($this->extension . '.category', &$itemElement, &$itemElement->core_params, 0));
+                $results                               = $dispatcher->trigger(
+                    'onContentAfterTitle',
+                    array($this->extension . '.category', &$itemElement, &$itemElement->core_params, 0)
+                );
                 $itemElement->event->afterDisplayTitle = trim(implode("\n", $results));
 
-                $results                                  = $dispatcher->trigger('onContentBeforeDisplay',
-                    array($this->extension . '.category', &$itemElement, &$itemElement->core_params, 0));
+                $results                                  = $dispatcher->trigger(
+                    'onContentBeforeDisplay',
+                    array($this->extension . '.category', &$itemElement, &$itemElement->core_params, 0)
+                );
                 $itemElement->event->beforeDisplayContent = trim(implode("\n", $results));
 
-                $results                                 = $dispatcher->trigger('onContentAfterDisplay',
-                    array($this->extension . '.category', &$itemElement, &$itemElement->core_params, 0));
+                $results                                 = $dispatcher->trigger(
+                    'onContentAfterDisplay',
+                    array($this->extension . '.category', &$itemElement, &$itemElement->core_params, 0)
+                );
                 $itemElement->event->afterDisplayContent = trim(implode("\n", $results));
 
                 if ($itemElement->text) {
@@ -197,8 +205,10 @@ class JViewCategory extends JViewLegacy
         // If it is the active menu item, then the view and category id will match
         $active = $app->getMenu()->getActive();
 
-        if ((!$active) || ((strpos($active->link, 'view=category') === false) || (strpos($active->link,
-                        '&id=' . (string)$this->category->id) === false))
+        if ((!$active) || ((strpos($active->link, 'view=category') === false) || (strpos(
+                                                                                      $active->link,
+                                                                                      '&id=' . (string)$this->category->id
+                                                                                  ) === false))
         ) {
             if ($layout = $category->params->get('category_layout')) {
                 $this->setLayout($layout);

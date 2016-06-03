@@ -9,7 +9,10 @@
 
 defined('_JEXEC') or die;
 
-JLog::add('ConfigModelComponent has moved from ' . __FILE__ . ' to ' . dirname(__DIR__) . '/model/component.php.',
-    JLog::WARNING, 'deprecated');
+JLog::add(
+    'ConfigModelComponent has moved from ' . __FILE__ . ' to ' . dirname(__DIR__) . '/model/component.php.',
+    JLog::WARNING,
+    'deprecated'
+);
 
 include_once JPATH_ADMINISTRATOR . '/components/com_config/model/component.php';

@@ -46,8 +46,14 @@ JFactory::getDocument()->addScriptDeclaration($script);
 
     <div id="jform_menus" class="controls">
         <select name="jform[assignment]" id="jform_assignment">
-            <?php echo JHtml::_('select.options', ModulesHelper::getAssignmentOptions($this->item->client_id), 'value',
-                'text', $this->item->assignment, true); ?>
+            <?php echo JHtml::_(
+                'select.options',
+                ModulesHelper::getAssignmentOptions($this->item->client_id),
+                'value',
+                'text',
+                $this->item->assignment,
+                true
+            ); ?>
         </select>
     </div>
 </div>
@@ -112,11 +118,20 @@ JFactory::getDocument()->addScriptDeclaration($script);
                                            value="<?php echo (int)$link->value; ?>"<?php echo $selected ? ' checked="checked"' : ''; ?> />
                                     <label for="<?php echo $id . $link->value; ?>" class="pull-left">
                                         <?php echo $link->text; ?> <span
-                                            class="small"><?php echo JText::sprintf('JGLOBAL_LIST_ALIAS',
-                                                $this->escape($link->alias)); ?></span>
-                                        <?php if (JLanguageMultilang::isEnabled() && $link->language != '' && $link->language != '*') {
-                                            echo JHtml::_('image', 'mod_languages/' . $link->language_image . '.gif',
-                                                $link->language_title, array('title' => $link->language_title), true);
+                                            class="small"><?php echo JText::sprintf(
+                                                'JGLOBAL_LIST_ALIAS',
+                                                $this->escape($link->alias)
+                                            ); ?></span>
+                                        <?php if (JLanguageMultilang::isEnabled(
+                                            ) && $link->language != '' && $link->language != '*'
+                                        ) {
+                                            echo JHtml::_(
+                                                'image',
+                                                'mod_languages/' . $link->language_image . '.gif',
+                                                $link->language_title,
+                                                array('title' => $link->language_title),
+                                                true
+                                            );
                                         }
                                         if ($link->published == 0) {
                                             echo ' <span class="label">' . JText::_('JUNPUBLISHED') . '</span>';
@@ -152,7 +167,9 @@ JFactory::getDocument()->addScriptDeclaration($script);
                                             class="icon-checkbox"></span> <?php echo JText::_('JSELECT'); ?></a>
                                 </li>
                                 <li><a class="uncheckall" href="javascript://"><span
-                                            class="icon-checkbox-unchecked"></span> <?php echo JText::_('COM_MODULES_DESELECT'); ?>
+                                            class="icon-checkbox-unchecked"></span> <?php echo JText::_(
+                                            'COM_MODULES_DESELECT'
+                                        ); ?>
                                     </a>
                                 </li>
                                 <div class="treeselect-menu-expand">
@@ -161,7 +178,9 @@ JFactory::getDocument()->addScriptDeclaration($script);
                                                 class="icon-plus"></span> <?php echo JText::_('COM_MODULES_EXPAND'); ?>
                                         </a></li>
                                     <li><a class="collapseall" href="javascript://"><span
-                                                class="icon-minus"></span> <?php echo JText::_('COM_MODULES_COLLAPSE'); ?>
+                                                class="icon-minus"></span> <?php echo JText::_(
+                                                'COM_MODULES_COLLAPSE'
+                                            ); ?>
                                         </a></li>
                                 </div>
                             </ul>

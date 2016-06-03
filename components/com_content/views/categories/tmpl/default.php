@@ -12,7 +12,8 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
 JHtml::_('behavior.caption');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 jQuery(function($) {
 	$('.categories-list').find('[id^=category-btn-]').each(function(index, btn) {
 		var btn = $(btn);
@@ -21,7 +22,8 @@ jQuery(function($) {
 			btn.find('span').toggleClass('icon-minus');
 		});
 	});
-});");
+});"
+);
 ?>
 <div class="categories-list<?php echo $this->pageclass_sfx; ?>">
     <?php

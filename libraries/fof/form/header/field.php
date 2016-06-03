@@ -30,8 +30,14 @@ class FOFFormHeaderField extends FOFFormHeader
         if ($sortable) {
             $view = $this->form->getView();
 
-            return JHTML::_('grid.sort', $label, $this->name, $view->getLists()->order_Dir, $view->getLists()->order,
-                $this->form->getModel()->task);
+            return JHTML::_(
+                'grid.sort',
+                $label,
+                $this->name,
+                $view->getLists()->order_Dir,
+                $view->getLists()->order,
+                $this->form->getModel()->task
+            );
         } else {
             return JText::_($label);
         }

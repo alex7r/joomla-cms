@@ -9,8 +9,11 @@
 
 defined('JPATH_PLATFORM') or die;
 
-JLog::add('JDocumentRendererComponent is deprecated, use JDocumentRendererHtmlComponent instead.', JLog::WARNING,
-    'deprecated');
+JLog::add(
+    'JDocumentRendererComponent is deprecated, use JDocumentRendererHtmlComponent instead.',
+    JLog::WARNING,
+    'deprecated'
+);
 
 /**
  * Component renderer

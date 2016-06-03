@@ -53,8 +53,9 @@ abstract class JHtmlBootstrap
             $options = JHtml::getJSObject($opt);
 
             // Attach affix to document
-            JFactory::getDocument()
-                    ->addScriptDeclaration('jQuery(function($){ $(' . json_encode('#' . $selector) . ').affix(' . $options . '); });');
+            JFactory::getDocument()->addScriptDeclaration(
+                    'jQuery(function($){ $(' . json_encode('#' . $selector) . ').affix(' . $options . '); });'
+                );
 
             // Set static array
             static::$loaded[__METHOD__][$sig] = true;
@@ -116,8 +117,9 @@ abstract class JHtmlBootstrap
         static::framework();
 
         // Attach the alerts to the document
-        JFactory::getDocument()
-                ->addScriptDeclaration('jQuery(function($){ $(' . json_encode('.' . $selector) . ').alert(); });');
+        JFactory::getDocument()->addScriptDeclaration(
+                'jQuery(function($){ $(' . json_encode('.' . $selector) . ').alert(); });'
+            );
 
         static::$loaded[__METHOD__][$selector] = true;
 
@@ -144,8 +146,9 @@ abstract class JHtmlBootstrap
         static::framework();
 
         // Attach the button to the document
-        JFactory::getDocument()
-                ->addScriptDeclaration('jQuery(function($){ $(' . json_encode('.' . $selector) . ').button(); });');
+        JFactory::getDocument()->addScriptDeclaration(
+                'jQuery(function($){ $(' . json_encode('.' . $selector) . ').button(); });'
+            );
 
         static::$loaded[__METHOD__][$selector] = true;
 
@@ -182,8 +185,9 @@ abstract class JHtmlBootstrap
             $options = JHtml::getJSObject($opt);
 
             // Attach the carousel to document
-            JFactory::getDocument()
-                    ->addScriptDeclaration('jQuery(function($){ $(' . json_encode('.' . $selector) . ').carousel(' . $options . '); });');
+            JFactory::getDocument()->addScriptDeclaration(
+                    'jQuery(function($){ $(' . json_encode('.' . $selector) . ').carousel(' . $options . '); });'
+                );
 
             // Set static array
             static::$loaded[__METHOD__][$sig] = true;
@@ -212,8 +216,9 @@ abstract class JHtmlBootstrap
         static::framework();
 
         // Attach the dropdown to the document
-        JFactory::getDocument()
-                ->addScriptDeclaration('jQuery(function($){ $(' . json_encode('.' . $selector) . ').dropdown(); });');
+        JFactory::getDocument()->addScriptDeclaration(
+                'jQuery(function($){ $(' . json_encode('.' . $selector) . ').dropdown(); });'
+            );
 
         static::$loaded[__METHOD__][$selector] = true;
 
@@ -255,8 +260,9 @@ abstract class JHtmlBootstrap
             $options = JHtml::getJSObject($opt);
 
             // Attach the modal to document
-            JFactory::getDocument()
-                    ->addScriptDeclaration('jQuery(function($){ $(' . json_encode('#' . $selector) . ').modal(' . $options . '); });');
+            JFactory::getDocument()->addScriptDeclaration(
+                    'jQuery(function($){ $(' . json_encode('#' . $selector) . ').modal(' . $options . '); });'
+                );
 
             // Set static array
             static::$loaded[__METHOD__][$sig] = true;
@@ -349,8 +355,9 @@ abstract class JHtmlBootstrap
         $options = JHtml::getJSObject($opt);
 
         // Attach the popover to the document
-        JFactory::getDocument()
-                ->addScriptDeclaration('jQuery(function($){ $(' . json_encode($selector) . ').popover(' . $options . '); });');
+        JFactory::getDocument()->addScriptDeclaration(
+                'jQuery(function($){ $(' . json_encode($selector) . ').popover(' . $options . '); });'
+            );
 
         static::$loaded[__METHOD__][$selector] = true;
 
@@ -383,8 +390,9 @@ abstract class JHtmlBootstrap
             $options = JHtml::getJSObject($opt);
 
             // Attach ScrollSpy to document
-            JFactory::getDocument()
-                    ->addScriptDeclaration('jQuery(function($){ $(' . json_encode('#' . $selector) . ').scrollspy(' . $options . '); });');
+            JFactory::getDocument()->addScriptDeclaration(
+                    'jQuery(function($){ $(' . json_encode('#' . $selector) . ').scrollspy(' . $options . '); });'
+                );
 
             // Set static array
             static::$loaded[__METHOD__][$sig] = true;
@@ -431,7 +439,9 @@ abstract class JHtmlBootstrap
             $opt['selector']  = isset($params['selector']) ? (string)$params['selector'] : null;
             $opt['title']     = isset($params['title']) ? (string)$params['title'] : null;
             $opt['trigger']   = isset($params['trigger']) ? (string)$params['trigger'] : null;
-            $opt['delay']     = isset($params['delay']) ? (is_array($params['delay']) ? $params['delay'] : (int)$params['delay']) : null;
+            $opt['delay']     = isset($params['delay']) ? (is_array(
+                $params['delay']
+            ) ? $params['delay'] : (int)$params['delay']) : null;
             $opt['container'] = isset($params['container']) ? $params['container'] : 'body';
             $opt['template']  = isset($params['template']) ? (string)$params['template'] : null;
             $onShow           = isset($params['onShow']) ? (string)$params['onShow'] : null;
@@ -531,8 +541,9 @@ abstract class JHtmlBootstrap
             $options = JHtml::getJSObject($opt);
 
             // Attach typehead to document
-            JFactory::getDocument()
-                    ->addScriptDeclaration('jQuery(function($){ $(' . json_encode($selector) . ').typeahead(' . $options . '); });');
+            JFactory::getDocument()->addScriptDeclaration(
+                    'jQuery(function($){ $(' . json_encode($selector) . ').typeahead(' . $options . '); });'
+                );
 
             // Set static array
             static::$loaded[__METHOD__][$selector] = true;
@@ -683,9 +694,12 @@ abstract class JHtmlBootstrap
             $opt['active'] = (isset($params['active']) && ($params['active'])) ? (string)$params['active'] : '';
 
             // Attach tabs to document
-            JFactory::getDocument()
-                    ->addScriptDeclaration(JLayoutHelper::render('libraries.cms.html.bootstrap.starttabsetscript',
-                        array('selector' => $selector)));
+            JFactory::getDocument()->addScriptDeclaration(
+                    JLayoutHelper::render(
+                        'libraries.cms.html.bootstrap.starttabsetscript',
+                        array('selector' => $selector)
+                    )
+                );
 
             // Set static array
             static::$loaded[__METHOD__][$sig]                = true;
@@ -723,18 +737,24 @@ abstract class JHtmlBootstrap
         static $tabScriptLayout = null;
         static $tabLayout = null;
 
-        $tabScriptLayout = is_null($tabScriptLayout) ? new JLayoutFile('libraries.cms.html.bootstrap.addtabscript') : $tabScriptLayout;
+        $tabScriptLayout = is_null($tabScriptLayout) ? new JLayoutFile(
+            'libraries.cms.html.bootstrap.addtabscript'
+        ) : $tabScriptLayout;
         $tabLayout       = is_null($tabLayout) ? new JLayoutFile('libraries.cms.html.bootstrap.addtab') : $tabLayout;
 
         $active = (static::$loaded['JHtmlBootstrap::startTabSet'][$selector]['active'] == $id) ? ' active' : '';
 
         // Inject tab into UL
-        JFactory::getDocument()->addScriptDeclaration($tabScriptLayout->render(array(
-            'selector' => $selector,
-            'id'       => $id,
-            'active'   => $active,
-            'title'    => $title
-        )));
+        JFactory::getDocument()->addScriptDeclaration(
+            $tabScriptLayout->render(
+                array(
+                    'selector' => $selector,
+                    'id'       => $id,
+                    'active'   => $active,
+                    'title'    => $title
+                )
+            )
+        );
 
         return $tabLayout->render(array('id' => $id, 'active' => $active));
     }
@@ -774,12 +794,14 @@ abstract class JHtmlBootstrap
             $opt['active'] = isset($params['active']) ? (string)$params['active'] : '';
 
             // Attach tab to document
-            JFactory::getDocument()->addScriptDeclaration('jQuery(function($){
+            JFactory::getDocument()->addScriptDeclaration(
+                'jQuery(function($){
 					$(' . json_encode('#' . $selector . ' a') . ').click(function (e) {
 						e.preventDefault();
 						$(this).tab("show");
 					});
-				});');
+				});'
+            );
 
             // Set static array
             static::$loaded['JHtmlBootstrap::startTabSet'][$sig]                = true;

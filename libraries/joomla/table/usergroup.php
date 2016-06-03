@@ -46,13 +46,10 @@ class JTableUsergroup extends JTable
 
         // Check for a duplicate parent_id, title.
         // There is a unique index on the (parent_id, title) field in the table.
-        $db    = $this->_db;
-        $query = $db->getQuery(true)
-                    ->select('COUNT(title)')
-                    ->from($this->_tbl)
-                    ->where('title = ' . $db->quote(trim($this->title)))
-                    ->where('parent_id = ' . (int)$this->parent_id)
-                    ->where('id <> ' . (int)$this->id);
+        $db = $this->_db;
+        $query = $db->getQuery(true)->select('COUNT(title)')->from($this->_tbl)->where(
+                'title = ' . $db->quote(trim($this->title))
+            )->where('parent_id = ' . (int)$this->parent_id)->where('id <> ' . (int)$this->id);
         $db->setQuery($query);
 
         if ($db->loadResult() > 0) {
@@ -99,7 +96,9 @@ class JTableUsergroup extends JTable
         $db = $this->_db;
 
         // Get all children of this node
-        $db->setQuery('SELECT id FROM ' . $this->_tbl . ' WHERE parent_id=' . (int)$parent_id . ' ORDER BY parent_id, title');
+        $db->setQuery(
+            'SELECT id FROM ' . $this->_tbl . ' WHERE parent_id=' . (int)$parent_id . ' ORDER BY parent_id, title'
+        );
         $children = $db->loadColumn();
 
         // The right value of this node is the left value + 1
@@ -118,7 +117,9 @@ class JTableUsergroup extends JTable
 
         // We've got the left value, and now that we've processed
         // the children of this node we also know the right value
-        $db->setQuery('UPDATE ' . $this->_tbl . ' SET lft=' . (int)$left . ', rgt=' . (int)$right . ' WHERE id=' . (int)$parent_id);
+        $db->setQuery(
+            'UPDATE ' . $this->_tbl . ' SET lft=' . (int)$left . ', rgt=' . (int)$right . ' WHERE id=' . (int)$parent_id
+        );
 
         // If there is an update failure, return false to break out of the recursion
         if (!$db->execute()) {
@@ -161,11 +162,9 @@ class JTableUsergroup extends JTable
         $db = $this->_db;
 
         // Select the usergroup ID and its children
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('c.id'))
-                    ->from($db->quoteName($this->_tbl) . 'AS c')
-                    ->where($db->quoteName('c.lft') . ' >= ' . (int)$this->lft)
-                    ->where($db->quoteName('c.rgt') . ' <= ' . (int)$this->rgt);
+        $query = $db->getQuery(true)->select($db->quoteName('c.id'))->from($db->quoteName($this->_tbl) . 'AS c')->where(
+                $db->quoteName('c.lft') . ' >= ' . (int)$this->lft
+            )->where($db->quoteName('c.rgt') . ' <= ' . (int)$this->rgt);
         $db->setQuery($query);
         $ids = $db->loadColumn();
 
@@ -177,8 +176,12 @@ class JTableUsergroup extends JTable
         // @todo Remove all related threads, posts and subscriptions
 
         // Delete the usergroup and its children
-        $query->clear()->delete($db->quoteName($this->_tbl))->where($db->quoteName('id') . ' IN (' . implode(',',
-                $ids) . ')');
+        $query->clear()->delete($db->quoteName($this->_tbl))->where(
+            $db->quoteName('id') . ' IN (' . implode(
+                ',',
+                $ids
+            ) . ')'
+        );
         $db->setQuery($query);
         $db->execute();
 
@@ -200,8 +203,10 @@ class JTableUsergroup extends JTable
 
         foreach ($rules as $rule) {
             foreach ($ids as $id) {
-                if (strstr($rule->rules, '[' . $id) || strstr($rule->rules, ',' . $id) || strstr($rule->rules,
-                        $id . ']')
+                if (strstr($rule->rules, '[' . $id) || strstr($rule->rules, ',' . $id) || strstr(
+                        $rule->rules,
+                        $id . ']'
+                    )
                 ) {
                     $match_ids[] = $rule->id;
                 }
@@ -218,9 +223,9 @@ class JTableUsergroup extends JTable
         }
 
         // Delete the user to usergroup mappings for the group(s) from the database.
-        $query->clear()
-              ->delete($db->quoteName('#__user_usergroup_map'))
-              ->where($db->quoteName('group_id') . ' IN (' . implode(',', $ids) . ')');
+        $query->clear()->delete($db->quoteName('#__user_usergroup_map'))->where(
+                $db->quoteName('group_id') . ' IN (' . implode(',', $ids) . ')'
+            );
         $db->setQuery($query);
         $db->execute();
 

@@ -55,8 +55,10 @@ class PlgAuthenticationGMail extends JPlugin
         } catch (RuntimeException $e) {
             $response->status        = JAuthentication::STATUS_FAILURE;
             $response->type          = 'GMail';
-            $response->error_message = JText::sprintf('JGLOBAL_AUTH_FAILED',
-                JText::_('JGLOBAL_AUTH_CURL_NOT_INSTALLED'));
+            $response->error_message = JText::sprintf(
+                'JGLOBAL_AUTH_FAILED',
+                JText::_('JGLOBAL_AUTH_CURL_NOT_INSTALLED')
+            );
 
             return;
         }
@@ -156,11 +158,15 @@ class PlgAuthenticationGMail extends JPlugin
         $db                  = JFactory::getDbo();
         $localUsernameChecks = array(strstr($email, '@', true), $email);
 
-        $query = $db->getQuery(true)
-                    ->select('id, activation, username, email, block')
-                    ->from('#__users')
-                    ->where('username IN(' . implode(',', array_map(array($db, 'quote'),
-                            $localUsernameChecks)) . ')' . ' OR email = ' . $db->quote($email));
+        $query = $db->getQuery(true)->select('id, activation, username, email, block')->from('#__users')->where(
+                'username IN(' . implode(
+                    ',',
+                    array_map(
+                        array($db, 'quote'),
+                        $localUsernameChecks
+                    )
+                ) . ')' . ' OR email = ' . $db->quote($email)
+            );
 
         $db->setQuery($query);
 
@@ -169,8 +175,10 @@ class PlgAuthenticationGMail extends JPlugin
                 // Local user exists with same username but different email address
                 if ($email != $localUser->email) {
                     $response->status        = JAuthentication::STATUS_FAILURE;
-                    $response->error_message = JText::sprintf('JGLOBAL_AUTH_FAILED',
-                        JText::_('PLG_GMAIL_ERROR_LOCAL_USERNAME_CONFLICT'));
+                    $response->error_message = JText::sprintf(
+                        'JGLOBAL_AUTH_FAILED',
+                        JText::_('PLG_GMAIL_ERROR_LOCAL_USERNAME_CONFLICT')
+                    );
 
                     return;
                 } else {

@@ -72,8 +72,10 @@ class UsersViewLevel extends JViewLegacy
         $isNew = ($this->item->id == 0);
         $canDo = JHelperContent::getActions('com_users');
 
-        JToolbarHelper::title(JText::_($isNew ? 'COM_USERS_VIEW_NEW_LEVEL_TITLE' : 'COM_USERS_VIEW_EDIT_LEVEL_TITLE'),
-            'users levels-add');
+        JToolbarHelper::title(
+            JText::_($isNew ? 'COM_USERS_VIEW_NEW_LEVEL_TITLE' : 'COM_USERS_VIEW_EDIT_LEVEL_TITLE'),
+            'users levels-add'
+        );
 
         if ($canDo->get('core.edit') || $canDo->get('core.create')) {
             JToolbarHelper::apply('level.apply');

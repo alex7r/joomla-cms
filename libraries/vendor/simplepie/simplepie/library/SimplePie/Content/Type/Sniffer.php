@@ -122,9 +122,19 @@ class SimplePie_Content_Type_Sniffer
      */
     public function text_or_binary()
     {
-        if (substr($this->file->body, 0, 2) === "\xFE\xFF" || substr($this->file->body, 0,
-                2) === "\xFF\xFE" || substr($this->file->body, 0, 4) === "\x00\x00\xFE\xFF" || substr($this->file->body,
-                0, 3) === "\xEF\xBB\xBF"
+        if (substr($this->file->body, 0, 2) === "\xFE\xFF" || substr(
+                                                                  $this->file->body,
+                                                                  0,
+                                                                  2
+                                                              ) === "\xFF\xFE" || substr(
+                                                                                      $this->file->body,
+                                                                                      0,
+                                                                                      4
+                                                                                  ) === "\x00\x00\xFE\xFF" || substr(
+                                                                                                                  $this->file->body,
+                                                                                                                  0,
+                                                                                                                  3
+                                                                                                              ) === "\xEF\xBB\xBF"
         ) {
             return 'text/plain';
         } elseif (preg_match('/[\x00-\x08\x0E-\x1A\x1C-\x1F]/', $this->file->body)) {
@@ -142,8 +152,19 @@ class SimplePie_Content_Type_Sniffer
     public function unknown()
     {
         $ws = strspn($this->file->body, "\x09\x0A\x0B\x0C\x0D\x20");
-        if (strtolower(substr($this->file->body, $ws, 14)) === '<!doctype html' || strtolower(substr($this->file->body,
-                $ws, 5)) === '<html' || strtolower(substr($this->file->body, $ws, 7)) === '<script'
+        if (strtolower(substr($this->file->body, $ws, 14)) === '<!doctype html' || strtolower(
+                                                                                       substr(
+                                                                                           $this->file->body,
+                                                                                           $ws,
+                                                                                           5
+                                                                                       )
+                                                                                   ) === '<html' || strtolower(
+                                                                                                        substr(
+                                                                                                            $this->file->body,
+                                                                                                            $ws,
+                                                                                                            7
+                                                                                                        )
+                                                                                                    ) === '<script'
         ) {
             return 'text/html';
         } elseif (substr($this->file->body, 0, 5) === '%PDF-') {
@@ -233,8 +254,11 @@ class SimplePie_Content_Type_Sniffer
                 } else {
                     return 'text/html';
                 }
-            } elseif (substr($this->file->body, $pos, 3) === 'rss' || substr($this->file->body, $pos,
-                    7) === 'rdf:RDF'
+            } elseif (substr($this->file->body, $pos, 3) === 'rss' || substr(
+                                                                          $this->file->body,
+                                                                          $pos,
+                                                                          7
+                                                                      ) === 'rdf:RDF'
             ) {
                 return 'application/rss+xml';
             } elseif (substr($this->file->body, $pos, 4) === 'feed') {

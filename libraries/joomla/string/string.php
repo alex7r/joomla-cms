@@ -41,8 +41,11 @@ abstract class JString extends StringHelper
      */
     public static function splitCamelCase($string)
     {
-        JLog::add('JString::splitCamelCase has been deprecated. Use JStringNormalise::fromCamelCase.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JString::splitCamelCase has been deprecated. Use JStringNormalise::fromCamelCase.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return JStringNormalise::fromCamelCase($string, true);
     }
@@ -60,8 +63,11 @@ abstract class JString extends StringHelper
      */
     public static function parse_url($url)
     {
-        JLog::add('JString::parse_url has been deprecated. Use \\Joomla\\Uri\\UriHelper::parse_url.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JString::parse_url has been deprecated. Use \\Joomla\\Uri\\UriHelper::parse_url.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return \Joomla\Uri\UriHelper::parse_url($url);
     }

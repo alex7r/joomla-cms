@@ -399,8 +399,9 @@ class JFeedParserRss extends JFeedParser
 
         // Add any enclosures to the entry.
         foreach ($el->enclosure as $enclosure) {
-            $link = new JFeedLink((string)$enclosure['url'], null, (string)$enclosure['type'], null, null,
-                (int)$enclosure['length']);
+            $link = new JFeedLink(
+                (string)$enclosure['url'], null, (string)$enclosure['type'], null, null, (int)$enclosure['length']
+            );
 
             $entry->addLink($link);
         }

@@ -27,13 +27,16 @@ class UsersModelUser extends JModelAdmin
      */
     public function __construct($config = array())
     {
-        $config = array_merge(array(
-            'event_after_delete'  => 'onUserAfterDelete',
-            'event_after_save'    => 'onUserAfterSave',
-            'event_before_delete' => 'onUserBeforeDelete',
-            'event_before_save'   => 'onUserBeforeSave',
-            'events_map'          => array('save' => 'user', 'delete' => 'user')
-        ), $config);
+        $config = array_merge(
+            array(
+                'event_after_delete'  => 'onUserAfterDelete',
+                'event_after_save'    => 'onUserAfterSave',
+                'event_before_delete' => 'onUserBeforeDelete',
+                'event_before_save'   => 'onUserBeforeSave',
+                'events_map'          => array('save' => 'user', 'delete' => 'user')
+            ),
+            $config
+        );
 
         parent::__construct($config);
 
@@ -94,9 +97,10 @@ class UsersModelUser extends JModelAdmin
             if ($twoFactorMethod != 'none') {
                 // Run the plugins
                 FOFPlatform::getInstance()->importPlugin('twofactorauth');
-                $otpConfigReplies = FOFPlatform::getInstance()
-                                               ->runPlugins('onUserTwofactorApplyConfiguration',
-                                                   array($twoFactorMethod));
+                $otpConfigReplies = FOFPlatform::getInstance()->runPlugins(
+                        'onUserTwofactorApplyConfiguration',
+                        array($twoFactorMethod)
+                    );
 
                 // Look for a valid reply
                 foreach ($otpConfigReplies as $reply) {
@@ -175,10 +179,9 @@ class UsersModelUser extends JModelAdmin
          * be able to modify the user record before logging in the user).
          */
         $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-                    ->select('*')
-                    ->from($db->qn('#__users'))
-                    ->where($db->qn('id') . ' = ' . $db->q($user_id));
+        $query = $db->getQuery(true)->select('*')->from($db->qn('#__users'))->where(
+                $db->qn('id') . ' = ' . $db->q($user_id)
+            );
         $db->setQuery($query);
         $item = $db->loadObject();
 
@@ -385,8 +388,10 @@ class UsersModelUser extends JModelAdmin
                         return false;
                     } else {
                         // Trigger the after delete event.
-                        $dispatcher->trigger($this->event_after_delete,
-                            array($user_to_delete->getProperties(), true, $this->getError()));
+                        $dispatcher->trigger(
+                            $this->event_after_delete,
+                            array($user_to_delete->getProperties(), true, $this->getError())
+                        );
                     }
                 } else {
                     // Prune items that you can't change.
@@ -485,8 +490,10 @@ class UsersModelUser extends JModelAdmin
                         }
 
                         // Trigger the before save event.
-                        $result = $dispatcher->trigger($this->event_before_save,
-                            array($old, false, $table->getProperties()));
+                        $result = $dispatcher->trigger(
+                            $this->event_before_save,
+                            array($old, false, $table->getProperties())
+                        );
 
                         if (in_array(false, $result, true)) {
                             // Plugin will have to raise its own error or throw an exception.
@@ -501,8 +508,10 @@ class UsersModelUser extends JModelAdmin
                         }
 
                         // Trigger the after save event
-                        $dispatcher->trigger($this->event_after_save,
-                            array($table->getProperties(), false, true, null));
+                        $dispatcher->trigger(
+                            $this->event_after_save,
+                            array($table->getProperties(), false, true, null)
+                        );
                     } catch (Exception $e) {
                         $this->setError($e->getMessage());
 
@@ -570,8 +579,10 @@ class UsersModelUser extends JModelAdmin
                         }
 
                         // Trigger the before save event.
-                        $result = $dispatcher->trigger($this->event_before_save,
-                            array($old, false, $table->getProperties()));
+                        $result = $dispatcher->trigger(
+                            $this->event_before_save,
+                            array($old, false, $table->getProperties())
+                        );
 
                         if (in_array(false, $result, true)) {
                             // Plugin will have to raise it's own error or throw an exception.
@@ -586,8 +597,10 @@ class UsersModelUser extends JModelAdmin
                         }
 
                         // Fire the after save event
-                        $dispatcher->trigger($this->event_after_save,
-                            array($table->getProperties(), false, true, null));
+                        $dispatcher->trigger(
+                            $this->event_after_save,
+                            array($table->getProperties(), false, true, null)
+                        );
                     } catch (Exception $e) {
                         $this->setError($e->getMessage());
 
@@ -713,8 +726,9 @@ class UsersModelUser extends JModelAdmin
             $query = $db->getQuery(true);
 
             // Remove users from the group
-            $query->delete($db->quoteName('#__user_usergroup_map'))
-                  ->where($db->quoteName('user_id') . ' IN (' . implode(',', $user_ids) . ')');
+            $query->delete($db->quoteName('#__user_usergroup_map'))->where(
+                    $db->quoteName('user_id') . ' IN (' . implode(',', $user_ids) . ')'
+                );
 
             // Only remove users from selected group
             if ($doDelete == 'group') {
@@ -737,9 +751,9 @@ class UsersModelUser extends JModelAdmin
             $query = $db->getQuery(true);
 
             // First, we need to check if the user is already assigned to a group
-            $query->select($db->quoteName('user_id'))
-                  ->from($db->quoteName('#__user_usergroup_map'))
-                  ->where($db->quoteName('group_id') . ' = ' . (int)$group_id);
+            $query->select($db->quoteName('user_id'))->from($db->quoteName('#__user_usergroup_map'))->where(
+                    $db->quoteName('group_id') . ' = ' . (int)$group_id
+                );
             $db->setQuery($query);
             $users = $db->loadColumn();
 
@@ -761,10 +775,12 @@ class UsersModelUser extends JModelAdmin
                 return false;
             }
 
-            $query->insert($db->quoteName('#__user_usergroup_map'))->columns(array(
-                $db->quoteName('user_id'),
-                $db->quoteName('group_id')
-            ));
+            $query->insert($db->quoteName('#__user_usergroup_map'))->columns(
+                array(
+                    $db->quoteName('user_id'),
+                    $db->quoteName('group_id')
+                )
+            );
             $db->setQuery($query);
 
             try {
@@ -815,9 +831,9 @@ class UsersModelUser extends JModelAdmin
         $query = $db->getQuery(true);
 
         // Update the reset flag
-        $query->update($db->quoteName('#__users'))
-              ->set($db->quoteName('requireReset') . ' = ' . $value)
-              ->where($db->quoteName('id') . ' IN (' . implode(',', $user_ids) . ')');
+        $query->update($db->quoteName('#__users'))->set($db->quoteName('requireReset') . ' = ' . $value)->where(
+                $db->quoteName('id') . ' IN (' . implode(',', $user_ids) . ')'
+            );
 
         $db->setQuery($query);
 
@@ -1004,8 +1020,13 @@ class UsersModelUser extends JModelAdmin
             $extension = 'com_users';
             $source    = JPATH_ADMINISTRATOR . '/components/' . $extension;
 
-            $lang->load($extension, JPATH_ADMINISTRATOR, null, false, true) || $lang->load($extension, $source, null,
-                false, true);
+            $lang->load($extension, JPATH_ADMINISTRATOR, null, false, true) || $lang->load(
+                $extension,
+                $source,
+                null,
+                false,
+                true
+            );
 
             $warn        = true;
             $warnMessage = JText::_('COM_USERS_ERROR_SECRET_CODE_WITHOUT_TFA');
@@ -1046,8 +1067,10 @@ class UsersModelUser extends JModelAdmin
         // Try to validate the OTP
         FOFPlatform::getInstance()->importPlugin('twofactorauth');
 
-        $otpAuthReplies = FOFPlatform::getInstance()
-                                     ->runPlugins('onUserTwofactorAuthenticate', array($credentials, $options));
+        $otpAuthReplies = FOFPlatform::getInstance()->runPlugins(
+                'onUserTwofactorAuthenticate',
+                array($credentials, $options)
+            );
 
         $check = false;
 

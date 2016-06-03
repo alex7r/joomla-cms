@@ -166,8 +166,13 @@ class PlgEditorTinymce extends JPlugin
         if ($langMode) {
             if (file_exists(JPATH_ROOT . "/media/editors/tinymce/langs/" . $language->getTag() . ".js")) {
                 $langPrefix = $language->getTag();
-            } elseif (file_exists(JPATH_ROOT . "/media/editors/tinymce/langs/" . substr($language->getTag(), 0,
-                    strpos($language->getTag(), '-')) . ".js")) {
+            } elseif (file_exists(
+                JPATH_ROOT . "/media/editors/tinymce/langs/" . substr(
+                    $language->getTag(),
+                    0,
+                    strpos($language->getTag(), '-')
+                ) . ".js"
+            )) {
                 $langPrefix = substr($language->getTag(), 0, strpos($language->getTag(), '-'));
             } else {
                 $langPrefix = "en";
@@ -187,10 +192,9 @@ class PlgEditorTinymce extends JPlugin
          * Lets get the default template for the site application
          */
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('template')
-                    ->from('#__template_styles')
-                    ->where('client_id=0 AND home=' . $db->quote('1'));
+        $query = $db->getQuery(true)->select('template')->from('#__template_styles')->where(
+                'client_id=0 AND home=' . $db->quote('1')
+            );
 
         $db->setQuery($query);
 
@@ -212,7 +216,9 @@ class PlgEditorTinymce extends JPlugin
                 $content_css = 'content_css : "' . $content_css_custom . '",';
             } // If it is not a URL, assume it is a file name in the current template folder
             else {
-                $content_css = 'content_css : "' . JUri::root(true) . '/templates/' . $template . '/css/' . $content_css_custom . '",';
+                $content_css = 'content_css : "' . JUri::root(
+                        true
+                    ) . '/templates/' . $template . '/css/' . $content_css_custom . '",';
 
                 // Issue warning notice if the file is not found (but pass name to $content_css anyway to avoid TinyMCE error
                 if (!file_exists($templates_path . '/' . $template . '/css/' . $content_css_custom)) {
@@ -233,7 +239,9 @@ class PlgEditorTinymce extends JPlugin
                         $content_css = 'content_css : "' . JUri::root(true) . '/templates/system/css/editor.css",';
                     }
                 } else {
-                    $content_css = 'content_css : "' . JUri::root(true) . '/templates/' . $template . '/css/editor.css",';
+                    $content_css = 'content_css : "' . JUri::root(
+                            true
+                        ) . '/templates/' . $template . '/css/editor.css",';
                 }
             }
         }
@@ -544,9 +552,13 @@ class PlgEditorTinymce extends JPlugin
                     preg_match_all('/\".*\"/', $match, $values);
                     $result       = trim($values["0"]["0"], '"');
                     $final_result = explode(',', $result);
-                    $templates .= "{title: '" . trim($final_result['0'],
-                            ' " ') . "', description: '" . trim($final_result['2'],
-                            ' " ') . "', url: '" . JUri::root() . trim($final_result['1'], ' " ') . "'},";
+                    $templates .= "{title: '" . trim(
+                            $final_result['0'],
+                            ' " '
+                        ) . "', description: '" . trim(
+                                      $final_result['2'],
+                                      ' " '
+                                  ) . "', url: '" . JUri::root() . trim($final_result['1'], ' " ') . "'},";
                 }
 
                 $templates .= "],";
@@ -569,7 +581,8 @@ class PlgEditorTinymce extends JPlugin
                             $description = JText::_('PLG_TINY_TEMPLATE_' . strtoupper($filename) . '_DESC');
                         }
 
-                        $templates .= '{title: \'' . $title . '\', description: \'' . $description . '\', url:\'' . JUri::root() . 'media/editors/tinymce/templates/' . $filename . '.html\'},';
+                        $templates .= '{title: \'' . $title . '\', description: \'' . $description . '\', url:\'' . JUri::root(
+                            ) . 'media/editors/tinymce/templates/' . $filename . '.html\'},';
                     }
                 }
 
@@ -661,7 +674,9 @@ class PlgEditorTinymce extends JPlugin
             $allowImgPaste = "true";
             $isSubDir      = '';
             $session       = JFactory::getSession();
-            $uploadUrl     = JUri::base() . 'index.php?option=com_media&task=file.upload&tmpl=component&' . $session->getName() . '=' . $session->getId() . '&' . JSession::getFormToken() . '=1' . '&asset=image&format=json';
+            $uploadUrl     = JUri::base(
+                ) . 'index.php?option=com_media&task=file.upload&tmpl=component&' . $session->getName(
+                ) . '=' . $session->getId() . '&' . JSession::getFormToken() . '=1' . '&asset=image&format=json';
 
             if (JFactory::getApplication()->isSite()) {
                 $uploadUrl = htmlentities($uploadUrl, null, 'UTF-8', null);
@@ -683,11 +698,13 @@ class PlgEditorTinymce extends JPlugin
             $dragDropPlg = 'jdragdrop';
 
             JText::script('PLG_TINY_ERR_UNSUPPORTEDBROWSER');
-            JFactory::getDocument()->addScriptDeclaration("
+            JFactory::getDocument()->addScriptDeclaration(
+                "
 		var setCustomDir    = '" . $isSubDir . "';
 		var mediaUploadPath = '" . $tempPath . "';
 		var uploadUri       = '" . $uploadUrl . "';
-			");
+			"
+            );
         }
 
         // Prepare config variables
@@ -695,8 +712,10 @@ class PlgEditorTinymce extends JPlugin
         $elements = implode(',', $elements);
 
         // Prepare config variables
-        $toolbar1 = implode(' ', $toolbar1_add) . ' | ' . implode(' ', $toolbar2_add) . ' | ' . implode(' ',
-                $toolbar3_add) . ' | ' . implode(' ', $toolbar4_add) . ' | ' . implode(" | ", $btnsNames);
+        $toolbar1 = implode(' ', $toolbar1_add) . ' | ' . implode(' ', $toolbar2_add) . ' | ' . implode(
+                ' ',
+                $toolbar3_add
+            ) . ' | ' . implode(' ', $toolbar4_add) . ' | ' . implode(" | ", $btnsNames);
         $toolbar5 = implode(" | ", $btnsNames);
 
         // The buttons script
@@ -846,7 +865,8 @@ class PlgEditorTinymce extends JPlugin
 		";
 
         if (!empty($btnsNames)) {
-            JFactory::getDocument()->addScriptDeclaration("
+            JFactory::getDocument()->addScriptDeclaration(
+                "
 		if (jModalClose === undefined && typeof(jModalClose) != 'function') {
 			var jModalClose;
 			jModalClose = function() {
@@ -871,7 +891,8 @@ class PlgEditorTinymce extends JPlugin
 				tinyMCE.activeEditor.windowManager.close();
 			}
 		}
-			");
+			"
+            );
         }
 
         JFactory::getDocument()->addScriptDeclaration($script);

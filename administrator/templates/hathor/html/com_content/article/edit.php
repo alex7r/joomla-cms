@@ -45,7 +45,8 @@ endif;
 
 $assoc = JLanguageAssociations::isEnabled();
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'article.cancel' || document.formvalidator.isValid(document.getElementById('item-form')))
@@ -54,7 +55,8 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('item-form'));
 		}
 	}
-");
+"
+);
 ?>
 <div class="article-edit">
 
@@ -62,8 +64,10 @@ JFactory::getDocument()->addScriptDeclaration("
           method="post" name="adminForm" id="item-form" class="form-validate">
         <div class="col main-section">
             <fieldset class="adminform">
-                <legend><?php echo empty($this->item->id) ? JText::_('COM_CONTENT_NEW_ARTICLE') : JText::sprintf('COM_CONTENT_EDIT_ARTICLE',
-                        $this->item->id); ?></legend>
+                <legend><?php echo empty($this->item->id) ? JText::_('COM_CONTENT_NEW_ARTICLE') : JText::sprintf(
+                        'COM_CONTENT_EDIT_ARTICLE',
+                        $this->item->id
+                    ); ?></legend>
                 <ul class="adminformlist">
                     <li><?php echo $this->form->getLabel('title'); ?>
                         <?php echo $this->form->getInput('title'); ?></li>
@@ -123,8 +127,11 @@ JFactory::getDocument()->addScriptDeclaration("
             <?php echo JHtml::_('sliders.start', 'content-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
             <?php // Do not show the publishing options if the edit form is configured not to. ?>
             <?php if ($params['show_publishing_options'] || ($params['show_publishing_options'] = '' && !empty($editoroptions))) : ?>
-                <?php echo JHtml::_('sliders.panel', JText::_('COM_CONTENT_FIELDSET_PUBLISHING'),
-                    'publishing-details'); ?>
+                <?php echo JHtml::_(
+                    'sliders.panel',
+                    JText::_('COM_CONTENT_FIELDSET_PUBLISHING'),
+                    'publishing-details'
+                ); ?>
                 <fieldset class="panelform">
                     <ul class="adminformlist">
                         <li><?php echo $this->form->getLabel('created_by'); ?>
@@ -202,8 +209,11 @@ JFactory::getDocument()->addScriptDeclaration("
             // We need to make a separate space for the configuration
             // so that those fields always show to those wih permissions
             if ($this->canDo->get('core.admin')): ?>
-                <?php echo JHtml::_('sliders.panel', JText::_('COM_CONTENT_SLIDER_EDITOR_CONFIG'),
-                    'configure-sliders'); ?>
+                <?php echo JHtml::_(
+                    'sliders.panel',
+                    JText::_('COM_CONTENT_SLIDER_EDITOR_CONFIG'),
+                    'configure-sliders'
+                ); ?>
                 <fieldset class="panelform">
                     <ul class="adminformlist">
                         <?php foreach ($this->form->getFieldset('editorConfig') as $field) : ?>
@@ -217,8 +227,11 @@ JFactory::getDocument()->addScriptDeclaration("
             <?php // The url and images fields only show if the configuration is set to allow them.  ?>
             <?php // This is for legacy reasons. ?>
             <?php if ($params['show_urls_images_backend']) : ?>
-                <?php echo JHtml::_('sliders.panel', JText::_('COM_CONTENT_FIELDSET_URLS_AND_IMAGES'),
-                    'urls_and_images-options'); ?>
+                <?php echo JHtml::_(
+                    'sliders.panel',
+                    JText::_('COM_CONTENT_FIELDSET_URLS_AND_IMAGES'),
+                    'urls_and_images-options'
+                ); ?>
                 <fieldset class="panelform">
                     <ul class="adminformlist">
                         <li>
@@ -251,8 +264,11 @@ JFactory::getDocument()->addScriptDeclaration("
             </fieldset>
 
             <?php if ($assoc) : ?>
-                <?php echo JHtml::_('sliders.panel', JText::_('COM_CONTENT_ITEM_ASSOCIATIONS_FIELDSET_LABEL'),
-                    '-options'); ?>
+                <?php echo JHtml::_(
+                    'sliders.panel',
+                    JText::_('COM_CONTENT_ITEM_ASSOCIATIONS_FIELDSET_LABEL'),
+                    '-options'
+                ); ?>
                 <?php echo $this->loadTemplate('associations'); ?>
             <?php endif; ?>
 
@@ -262,8 +278,11 @@ JFactory::getDocument()->addScriptDeclaration("
         <div class="clr"></div>
         <?php if ($this->canDo->get('core.admin')) : ?>
             <div class="col rules-section">
-                <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id,
-                    array('useCookie' => 1)); ?>
+                <?php echo JHtml::_(
+                    'sliders.start',
+                    'permissions-sliders-' . $this->item->id,
+                    array('useCookie' => 1)
+                ); ?>
 
                 <?php echo JHtml::_('sliders.panel', JText::_('COM_CONTENT_FIELDSET_RULES'), 'access-rules'); ?>
                 <fieldset class="panelform">

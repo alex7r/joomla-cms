@@ -55,8 +55,13 @@ class CategoriesHelper
 
                     // Loading language file from the administrator/language directory then
                     // loading language file from the administrator/components/*extension*/language directory
-                    $lang->load($component, JPATH_BASE, null, false, true) || $lang->load($component,
-                        JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component), null, false, true);
+                    $lang->load($component, JPATH_BASE, null, false, true) || $lang->load(
+                        $component,
+                        JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component),
+                        null,
+                        false,
+                        true
+                    );
 
                     call_user_func(array($cName, 'addSubmenu'), 'categories' . (isset($section) ? '.' . $section : ''));
                 }
@@ -78,8 +83,11 @@ class CategoriesHelper
     public static function getActions($extension, $categoryId = 0)
     {
         // Log usage of deprecated function
-        JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Get list of actions
         return JHelperContent::getActions($extension, 'category', $categoryId);
@@ -95,8 +103,15 @@ class CategoriesHelper
      */
     public static function getAssociations($pk, $extension = 'com_content')
     {
-        $langAssociations = JLanguageAssociations::getAssociations($extension, '#__categories', 'com_categories.item',
-            $pk, 'id', 'alias', '');
+        $langAssociations = JLanguageAssociations::getAssociations(
+            $extension,
+            '#__categories',
+            'com_categories.item',
+            $pk,
+            'id',
+            'alias',
+            ''
+        );
         $associations     = array();
 
         foreach ($langAssociations as $langAssociation) {

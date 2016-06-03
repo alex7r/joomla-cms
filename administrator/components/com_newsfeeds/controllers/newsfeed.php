@@ -33,8 +33,12 @@ class NewsfeedsControllerNewsfeed extends JControllerForm
         $model = $this->getModel('Newsfeed', '', array());
 
         // Preset the redirect
-        $this->setRedirect(JRoute::_('index.php?option=com_newsfeeds&view=newsfeeds' . $this->getRedirectToListAppend(),
-            false));
+        $this->setRedirect(
+            JRoute::_(
+                'index.php?option=com_newsfeeds&view=newsfeeds' . $this->getRedirectToListAppend(),
+                false
+            )
+        );
 
         return parent::batch($model);
     }

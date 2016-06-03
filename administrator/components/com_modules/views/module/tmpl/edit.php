@@ -154,7 +154,9 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 ?>
 
 <form
-    action="<?php echo JRoute::_('index.php?option=com_modules&layout=' . $layout . $tmpl . '&id=' . (int)$this->item->id); ?>"
+    action="<?php echo JRoute::_(
+        'index.php?option=com_modules&layout=' . $layout . $tmpl . '&id=' . (int)$this->item->id
+    ); ?>"
     method="post" name="adminForm" id="module-form" class="form-validate">
 
     <?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
@@ -180,7 +182,9 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
                         <div class="info-labels">
 							<span class="label hasTooltip"
                                   title="<?php echo JHtml::tooltipText('COM_MODULES_FIELD_CLIENT_ID_LABEL'); ?>">
-								<?php echo $this->item->client_id == 0 ? JText::_('JSITE') : JText::_('JADMINISTRATOR'); ?>
+								<?php echo $this->item->client_id == 0 ? JText::_('JSITE') : JText::_(
+                                    'JADMINISTRATOR'
+                                ); ?>
 							</span>
                         </div>
                         <div>
@@ -252,8 +256,12 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
         <?php echo JHtml::_('bootstrap.endTab'); ?>
 
         <?php if (isset($long_description) && $long_description != '') : ?>
-            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'description',
-                JText::_('JGLOBAL_FIELDSET_DESCRIPTION')); ?>
+            <?php echo JHtml::_(
+                'bootstrap.addTab',
+                'myTab',
+                'description',
+                JText::_('JGLOBAL_FIELDSET_DESCRIPTION')
+            ); ?>
             <?php echo $long_description; ?>
             <?php echo JHtml::_('bootstrap.endTab'); ?>
         <?php endif; ?>

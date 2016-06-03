@@ -41,13 +41,11 @@ class JLanguageHelper
 
         if ($installed) {
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select('element')
-                        ->from('#__extensions')
-                        ->where('type=' . $db->quote('language'))
-                        ->where('state=0')
-                        ->where('enabled=1')
-                        ->where('client_id=' . ($basePath == JPATH_ADMINISTRATOR ? 1 : 0));
+            $query = $db->getQuery(true)->select('element')->from('#__extensions')->where(
+                    'type=' . $db->quote('language')
+                )->where('state=0')->where('enabled=1')->where(
+                    'client_id=' . ($basePath == JPATH_ADMINISTRATOR ? 1 : 0)
+                );
             $db->setQuery($query);
             $installed_languages = $db->loadObjectList('element');
         }
@@ -93,8 +91,13 @@ class JLanguageHelper
                     $Jinstall_lang = $systemLang->lang_code;
 
                     if (strlen($Jinstall_lang) < 6) {
-                        if (strtolower($browserLang) == strtolower(substr($systemLang->lang_code, 0,
-                                strlen($browserLang)))
+                        if (strtolower($browserLang) == strtolower(
+                                substr(
+                                    $systemLang->lang_code,
+                                    0,
+                                    strlen($browserLang)
+                                )
+                            )
                         ) {
                             return $systemLang->lang_code;
                         } elseif ($primary_browserLang == substr($systemLang->lang_code, 0, 2)) {
@@ -142,11 +145,9 @@ class JLanguageHelper
 
                 if (!$languages = $cache->get('languages')) {
                     $db    = JFactory::getDbo();
-                    $query = $db->getQuery(true)
-                                ->select('*')
-                                ->from('#__languages')
-                                ->where('published=1')
-                                ->order('ordering ASC');
+                    $query = $db->getQuery(true)->select('*')->from('#__languages')->where('published=1')->order(
+                            'ordering ASC'
+                        );
                     $db->setQuery($query);
 
                     $languages['default']   = $db->loadObjectList();

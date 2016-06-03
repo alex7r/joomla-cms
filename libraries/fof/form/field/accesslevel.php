@@ -98,8 +98,14 @@ class FOFFormFieldAccesslevel extends JFormFieldAccessLevel implements FOFFormFi
             array_unshift($options, JHtml::_('select.option', '', JText::_('JOPTION_ACCESS_SHOW_ALL_LEVELS')));
         }
 
-        return '<span id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(FOFFormFieldList::getOptionName($options,
-            $this->value), ENT_COMPAT, 'UTF-8') . '</span>';
+        return '<span id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(
+            FOFFormFieldList::getOptionName(
+                $options,
+                $this->value
+            ),
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</span>';
     }
 
     /**
@@ -137,7 +143,13 @@ class FOFFormFieldAccesslevel extends JFormFieldAccessLevel implements FOFFormFi
             array_unshift($options, JHtml::_('select.option', '', JText::_('JOPTION_ACCESS_SHOW_ALL_LEVELS')));
         }
 
-        return '<span class="' . $this->id . ' ' . $class . '">' . htmlspecialchars(FOFFormFieldList::getOptionName($options,
-            $this->value), ENT_COMPAT, 'UTF-8') . '</span>';
+        return '<span class="' . $this->id . ' ' . $class . '">' . htmlspecialchars(
+            FOFFormFieldList::getOptionName(
+                $options,
+                $this->value
+            ),
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</span>';
     }
 }

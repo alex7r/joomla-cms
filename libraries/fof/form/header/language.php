@@ -33,8 +33,10 @@ class FOFFormHeaderLanguage extends FOFFormHeaderFieldselectable
         }
 
         // Merge any additional options in the XML definition.
-        $options = array_merge(parent::getOptions(),
-            JLanguageHelper::createLanguageList($this->value, constant('JPATH_' . strtoupper($client)), true, true));
+        $options = array_merge(
+            parent::getOptions(),
+            JLanguageHelper::createLanguageList($this->value, constant('JPATH_' . strtoupper($client)), true, true)
+        );
 
         return $options;
     }

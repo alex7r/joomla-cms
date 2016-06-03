@@ -14,7 +14,8 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.formvalidator');
 JHtml::_('formbehavior.chosen', 'select');
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	Joomla.submitbutton = function(task)
 	{
 		if (task == "language.cancel" || document.formvalidator.isValid(document.getElementById("language-form")))
@@ -35,11 +36,14 @@ JFactory::getDocument()->addScriptDeclaration('
 			}
 			jQuery("#flag img").attr("title", flag).attr("alt", flag);
 	});
-});');
+});'
+);
 ?>
 
 <form
-    action="<?php echo JRoute::_('index.php?option=com_languages&view=language&layout=edit&lang_id=' . (int)$this->item->lang_id); ?>"
+    action="<?php echo JRoute::_(
+        'index.php?option=com_languages&view=language&layout=edit&lang_id=' . (int)$this->item->lang_id
+    ); ?>"
     method="post" name="adminForm" id="language-form" class="form-validate form-horizontal">
 
     <?php echo JLayoutHelper::render('joomla.edit.item_title', $this); ?>
@@ -59,9 +63,13 @@ JFactory::getDocument()->addScriptDeclaration('
             <div class="controls">
                 <?php echo $this->form->getInput('image'); ?>
                 <span id="flag">
-							<?php echo JHtml::_('image', 'mod_languages/' . $this->form->getValue('image') . '.gif',
-                                $this->form->getValue('image'), array('title' => $this->form->getValue('image')),
-                                true); ?>
+							<?php echo JHtml::_(
+                                'image',
+                                'mod_languages/' . $this->form->getValue('image') . '.gif',
+                                $this->form->getValue('image'),
+                                array('title' => $this->form->getValue('image')),
+                                true
+                            ); ?>
 						</span>
             </div>
         </div>
@@ -78,8 +86,12 @@ JFactory::getDocument()->addScriptDeclaration('
         <?php echo $this->form->renderFieldset('metadata'); ?>
         <?php echo JHtml::_('bootstrap.endTab'); ?>
 
-        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'site_name',
-            JText::_('COM_LANGUAGES_FIELDSET_SITE_NAME_LABEL')); ?>
+        <?php echo JHtml::_(
+            'bootstrap.addTab',
+            'myTab',
+            'site_name',
+            JText::_('COM_LANGUAGES_FIELDSET_SITE_NAME_LABEL')
+        ); ?>
         <?php echo $this->form->renderFieldset('site_name'); ?>
         <?php echo JHtml::_('bootstrap.endTab'); ?>
 

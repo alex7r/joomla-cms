@@ -13,9 +13,15 @@ defined('_JEXEC') or die;
 JLoader::import('joomla.filesystem.file');
 
 // Check modules
-$showRightColumn = ($this->countModules('position-3') or $this->countModules('position-6') or $this->countModules('position-8'));
-$showbottom      = ($this->countModules('position-9') or $this->countModules('position-10') or $this->countModules('position-11'));
-$showleft        = ($this->countModules('position-4') or $this->countModules('position-7') or $this->countModules('position-5'));
+$showRightColumn = ($this->countModules('position-3') or $this->countModules('position-6') or $this->countModules(
+        'position-8'
+    ));
+$showbottom      = ($this->countModules('position-9') or $this->countModules('position-10') or $this->countModules(
+        'position-11'
+    ));
+$showleft        = ($this->countModules('position-4') or $this->countModules('position-7') or $this->countModules(
+        'position-5'
+    ));
 
 if ($showRightColumn == 0 and $showleft == 0) {
     $showno = 0;
@@ -42,23 +48,52 @@ if (in_array($option, $bootstrap)) {
 }
 
 $doc->addStyleSheet($this->baseurl . '/templates/system/css/system.css');
-$doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/position.css', $type = 'text/css',
-    $media = 'screen,projection');
-$doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/layout.css', $type = 'text/css',
-    $media = 'screen,projection');
-$doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/print.css', $type = 'text/css',
-    $media = 'print');
-$doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/general.css', $type = 'text/css',
-    $media = 'screen,projection');
-$doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/' . htmlspecialchars($color, ENT_COMPAT,
-        'UTF-8') . '.css', $type = 'text/css', $media = 'screen,projection');
+$doc->addStyleSheet(
+    $this->baseurl . '/templates/' . $this->template . '/css/position.css',
+    $type = 'text/css',
+    $media = 'screen,projection'
+);
+$doc->addStyleSheet(
+    $this->baseurl . '/templates/' . $this->template . '/css/layout.css',
+    $type = 'text/css',
+    $media = 'screen,projection'
+);
+$doc->addStyleSheet(
+    $this->baseurl . '/templates/' . $this->template . '/css/print.css',
+    $type = 'text/css',
+    $media = 'print'
+);
+$doc->addStyleSheet(
+    $this->baseurl . '/templates/' . $this->template . '/css/general.css',
+    $type = 'text/css',
+    $media = 'screen,projection'
+);
+$doc->addStyleSheet(
+    $this->baseurl . '/templates/' . $this->template . '/css/' . htmlspecialchars(
+        $color,
+        ENT_COMPAT,
+        'UTF-8'
+    ) . '.css',
+    $type = 'text/css',
+    $media = 'screen,projection'
+);
 
 if ($this->direction == 'rtl') {
     $doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/template_rtl.css');
-    if (file_exists(JPATH_SITE . '/templates/' . $this->template . '/css/' . htmlspecialchars($color, ENT_COMPAT,
-            'UTF-8') . '_rtl.css')) {
-        $doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/' . htmlspecialchars($color,
-                ENT_COMPAT, 'UTF-8') . '_rtl.css');
+    if (file_exists(
+        JPATH_SITE . '/templates/' . $this->template . '/css/' . htmlspecialchars(
+            $color,
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '_rtl.css'
+    )) {
+        $doc->addStyleSheet(
+            $this->baseurl . '/templates/' . $this->template . '/css/' . htmlspecialchars(
+                $color,
+                ENT_COMPAT,
+                'UTF-8'
+            ) . '_rtl.css'
+        );
     }
 }
 

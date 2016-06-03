@@ -19,12 +19,15 @@ require_once JPATH_ROOT . '/components/com_content/helpers/route.php';
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-$function  = $app->input->getCmd('function', 'jSelectArticle');
+$function = $app->input->getCmd('function', 'jSelectArticle');
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 ?>
 <form
-    action="<?php echo JRoute::_('index.php?option=com_content&view=articles&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken() . '=1'); ?>"
+    action="<?php echo JRoute::_(
+        'index.php?option=com_content&view=articles&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken(
+        ) . '=1'
+    ); ?>"
     method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <legend class="element-invisible"><?php echo JText::_('JSEARCH_FILTER_LABEL'); ?></legend>
@@ -46,24 +49,40 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
             <label class="selectlabel" for="filter_access"><?php echo JText::_('JOPTION_SELECT_ACCESS'); ?></label>
             <select name="filter_access" id="filter_access">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_ACCESS'); ?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text',
-                    $this->state->get('filter.access')); ?>
+                <?php echo JHtml::_(
+                    'select.options',
+                    JHtml::_('access.assetgroups'),
+                    'value',
+                    'text',
+                    $this->state->get('filter.access')
+                ); ?>
             </select>
 
             <label class="selectlabel"
                    for="filter_published"><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></label>
             <select name="filter_published" id="filter_published">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text',
-                    $this->state->get('filter.published'), true); ?>
+                <?php echo JHtml::_(
+                    'select.options',
+                    JHtml::_('jgrid.publishedOptions'),
+                    'value',
+                    'text',
+                    $this->state->get('filter.published'),
+                    true
+                ); ?>
             </select>
 
             <label class="selectlabel"
                    for="filter_category_id"><?php echo JText::_('JOPTION_SELECT_CATEGORY'); ?></label>
             <select name="filter_category_id" id="filter_category_id">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_CATEGORY'); ?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('category.options', 'com_content'), 'value', 'text',
-                    $this->state->get('filter.category_id')); ?>
+                <?php echo JHtml::_(
+                    'select.options',
+                    JHtml::_('category.options', 'com_content'),
+                    'value',
+                    'text',
+                    $this->state->get('filter.category_id')
+                ); ?>
             </select>
             <?php if ($this->state->get('filter.forcedLanguage')) : ?>
                 <input type="hidden" name="forcedLanguage"
@@ -75,8 +94,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                        for="filter_language"><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></label>
                 <select name="filter_language" id="filter_language">
                     <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
-                    <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value',
-                        'text', $this->state->get('filter.language')); ?>
+                    <?php echo JHtml::_(
+                        'select.options',
+                        JHtml::_('contentlanguage.existing', true, true),
+                        'value',
+                        'text',
+                        $this->state->get('filter.language')
+                    ); ?>
                 </select>
             <?php endif; ?>
 
@@ -114,8 +138,17 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
             <tr class="row<?php echo $i % 2; ?>">
                 <th>
                     <a class="pointer"
-                       onclick="if (window.parent) window.parent.<?php echo $this->escape($function); ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->title)); ?>', '<?php echo $this->escape($item->catid); ?>', null, '<?php echo $this->escape(ContentHelperRoute::getArticleRoute($item->id,
-                           $item->catid, $item->language)); ?>');">
+                       onclick="if (window.parent) window.parent.<?php echo $this->escape(
+                           $function
+                       ); ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(
+                           addslashes($item->title)
+                       ); ?>', '<?php echo $this->escape($item->catid); ?>', null, '<?php echo $this->escape(
+                           ContentHelperRoute::getArticleRoute(
+                               $item->id,
+                               $item->catid,
+                               $item->language
+                           )
+                       ); ?>');">
                         <?php echo $this->escape($item->title); ?></a>
                 </th>
                 <td class="center">
@@ -128,10 +161,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     <?php if ($item->language == '*'): ?>
                         <?php echo JText::alt('JALL', 'language'); ?>
                     <?php else: ?>
-                        <?php echo $item->language_title ? JHtml::_('image',
-                                'mod_languages/' . $item->language_image . '.gif', $item->language_title,
+                        <?php echo $item->language_title ? JHtml::_(
+                                'image',
+                                'mod_languages/' . $item->language_image . '.gif',
+                                $item->language_title,
                                 array('title' => $item->language_title),
-                                true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                true
+                            ) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                     <?php endif; ?>
                 </td>
                 <td class="center nowrap">

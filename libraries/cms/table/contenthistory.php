@@ -99,7 +99,10 @@ class JTableContenthistory extends JTable
     {
         $object = (is_object($jsonData)) ? $jsonData : json_decode($jsonData);
 
-        if (isset($typeTable->content_history_options) && (is_object(json_decode($typeTable->content_history_options)))) {
+        if (isset($typeTable->content_history_options) && (is_object(
+                json_decode($typeTable->content_history_options)
+            ))
+        ) {
             $options             = json_decode($typeTable->content_history_options);
             $this->ignoreChanges = isset($options->ignoreChanges) ? $options->ignoreChanges : $this->ignoreChanges;
             $this->convertToInt  = isset($options->convertToInt) ? $options->convertToInt : $this->convertToInt;
@@ -116,7 +119,9 @@ class JTableContenthistory extends JTable
             if (is_object($value)) {
                 // Go one level down for JSON column values
                 foreach ($value as $subName => $subValue) {
-                    $object->$subName = (is_int($subValue) || is_bool($subValue) || is_null($subValue)) ? (string)$subValue : $subValue;
+                    $object->$subName = (is_int($subValue) || is_bool($subValue) || is_null(
+                            $subValue
+                        )) ? (string)$subValue : $subValue;
                 }
             } else {
                 $object->$name = (is_int($value) || is_bool($value) || is_null($value)) ? (string)$value : $value;
@@ -149,11 +154,11 @@ class JTableContenthistory extends JTable
     {
         $db    = $this->_db;
         $query = $db->getQuery(true);
-        $query->select('*')
-              ->from($db->quoteName('#__ucm_history'))
-              ->where($db->quoteName('ucm_item_id') . ' = ' . (int)$this->get('ucm_item_id'))
-              ->where($db->quoteName('ucm_type_id') . ' = ' . (int)$this->get('ucm_type_id'))
-              ->where($db->quoteName('sha1_hash') . ' = ' . $db->quote($this->get('sha1_hash')));
+        $query->select('*')->from($db->quoteName('#__ucm_history'))->where(
+                $db->quoteName('ucm_item_id') . ' = ' . (int)$this->get('ucm_item_id')
+            )->where($db->quoteName('ucm_type_id') . ' = ' . (int)$this->get('ucm_type_id'))->where(
+                $db->quoteName('sha1_hash') . ' = ' . $db->quote($this->get('sha1_hash'))
+            );
         $db->setQuery($query, 0, 1);
 
         return $db->loadObject();
@@ -175,12 +180,11 @@ class JTableContenthistory extends JTable
         // Get the list of version_id values we want to save
         $db    = $this->_db;
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('version_id'))
-              ->from($db->quoteName('#__ucm_history'))
-              ->where($db->quoteName('ucm_item_id') . ' = ' . (int)$this->get('ucm_item_id'))
-              ->where($db->quoteName('ucm_type_id') . ' = ' . (int)$this->get('ucm_type_id'))
-              ->where($db->quoteName('keep_forever') . ' != 1')
-              ->order($db->quoteName('save_date') . ' DESC ');
+        $query->select($db->quoteName('version_id'))->from($db->quoteName('#__ucm_history'))->where(
+                $db->quoteName('ucm_item_id') . ' = ' . (int)$this->get('ucm_item_id')
+            )->where($db->quoteName('ucm_type_id') . ' = ' . (int)$this->get('ucm_type_id'))->where(
+                $db->quoteName('keep_forever') . ' != 1'
+            )->order($db->quoteName('save_date') . ' DESC ');
         $db->setQuery($query, 0, (int)$maxVersions);
         $idsToSave = $db->loadColumn(0);
 
@@ -188,11 +192,11 @@ class JTableContenthistory extends JTable
         if (count($idsToSave) == (int)$maxVersions) {
             // Delete any rows not in our list and and not flagged to keep forever.
             $query = $db->getQuery(true);
-            $query->delete($db->quoteName('#__ucm_history'))
-                  ->where($db->quoteName('ucm_item_id') . ' = ' . (int)$this->get('ucm_item_id'))
-                  ->where($db->quoteName('ucm_type_id') . ' = ' . (int)$this->get('ucm_type_id'))
-                  ->where($db->quoteName('version_id') . ' NOT IN (' . implode(',', $idsToSave) . ')')
-                  ->where($db->quoteName('keep_forever') . ' != 1');
+            $query->delete($db->quoteName('#__ucm_history'))->where(
+                    $db->quoteName('ucm_item_id') . ' = ' . (int)$this->get('ucm_item_id')
+                )->where($db->quoteName('ucm_type_id') . ' = ' . (int)$this->get('ucm_type_id'))->where(
+                    $db->quoteName('version_id') . ' NOT IN (' . implode(',', $idsToSave) . ')'
+                )->where($db->quoteName('keep_forever') . ' != 1');
             $db->setQuery($query);
             $result = (boolean)$db->execute();
         }

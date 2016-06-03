@@ -13,7 +13,8 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.formvalidator');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'banner.cancel' || document.formvalidator.isValid(document.getElementById('banner-form')))
@@ -21,14 +22,17 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('banner-form'));
 		}
 	}
-");
+"
+);
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_banners&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="banner-form" class="form-validate">
     <div class="col main-section">
         <fieldset class="adminform">
-            <legend><?php echo empty($this->item->id) ? JText::_('COM_BANNERS_NEW_BANNER') : JText::sprintf('COM_BANNERS_BANNER_DETAILS',
-                    $this->item->id); ?></legend>
+            <legend><?php echo empty($this->item->id) ? JText::_('COM_BANNERS_NEW_BANNER') : JText::sprintf(
+                    'COM_BANNERS_BANNER_DETAILS',
+                    $this->item->id
+                ); ?></legend>
             <ul class="adminformlist">
                 <li><?php echo $this->form->getLabel('name'); ?>
                     <?php echo $this->form->getInput('name'); ?></li>
@@ -86,8 +90,11 @@ JFactory::getDocument()->addScriptDeclaration("
     <div class="col options-section">
         <?php echo JHtml::_('sliders.start', 'banner-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
 
-        <?php echo JHtml::_('sliders.panel', JText::_('COM_BANNERS_GROUP_LABEL_PUBLISHING_DETAILS'),
-            'publishing-details'); ?>
+        <?php echo JHtml::_(
+            'sliders.panel',
+            JText::_('COM_BANNERS_GROUP_LABEL_PUBLISHING_DETAILS'),
+            'publishing-details'
+        ); ?>
         <fieldset class="panelform">
             <legend class="element-invisible"><?php echo JText::_('JGLOBAL_FIELDSET_PUBLISHING'); ?></legend>
             <ul class="adminformlist">

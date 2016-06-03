@@ -254,9 +254,9 @@ class JApplication extends JApplicationBase
         if ($time % 2) {
             // The modulus introduces a little entropy, making the flushing less accurate
             // but fires the query less than half the time.
-            $query = $db->getQuery(true)
-                        ->delete($db->quoteName('#__session'))
-                        ->where($db->quoteName('time') . ' < ' . $db->quote((int)($time - $session->getExpire())));
+            $query = $db->getQuery(true)->delete($db->quoteName('#__session'))->where(
+                    $db->quoteName('time') . ' < ' . $db->quote((int)($time - $session->getExpire()))
+                );
 
             $db->setQuery($query);
             $db->execute();
@@ -265,7 +265,9 @@ class JApplication extends JApplicationBase
         // Check to see the the session already exists.
         $handler = $this->getCfg('session_handler');
 
-        if (($handler != 'database' && ($time % 2 || $session->isNew())) || ($handler == 'database' && $session->isNew())) {
+        if (($handler != 'database' && ($time % 2 || $session->isNew())) || ($handler == 'database' && $session->isNew(
+                ))
+        ) {
             $this->checkSession();
         }
 
@@ -309,10 +311,9 @@ class JApplication extends JApplicationBase
         $session = JFactory::getSession();
         $user    = JFactory::getUser();
 
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('session_id'))
-                    ->from($db->quoteName('#__session'))
-                    ->where($db->quoteName('session_id') . ' = ' . $db->quote($session->getId()));
+        $query = $db->getQuery(true)->select($db->quoteName('session_id'))->from($db->quoteName('#__session'))->where(
+                $db->quoteName('session_id') . ' = ' . $db->quote($session->getId())
+            );
 
         $db->setQuery($query, 0, 1);
         $exists = $db->loadResult();
@@ -322,14 +323,30 @@ class JApplication extends JApplicationBase
             $query->clear();
 
             if ($session->isNew()) {
-                $query->insert($db->quoteName('#__session'))
-                      ->columns($db->quoteName('session_id') . ', ' . $db->quoteName('client_id') . ', ' . $db->quoteName('time'))
-                      ->values($db->quote($session->getId()) . ', ' . (int)$this->getClientId() . ', ' . $db->quote((int)time()));
+                $query->insert($db->quoteName('#__session'))->columns(
+                        $db->quoteName('session_id') . ', ' . $db->quoteName('client_id') . ', ' . $db->quoteName(
+                            'time'
+                        )
+                    )->values(
+                        $db->quote($session->getId()) . ', ' . (int)$this->getClientId() . ', ' . $db->quote(
+                            (int)time()
+                        )
+                    );
                 $db->setQuery($query);
             } else {
-                $query->insert($db->quoteName('#__session'))
-                      ->columns($db->quoteName('session_id') . ', ' . $db->quoteName('client_id') . ', ' . $db->quoteName('guest') . ', ' . $db->quoteName('time') . ', ' . $db->quoteName('userid') . ', ' . $db->quoteName('username'))
-                      ->values($db->quote($session->getId()) . ', ' . (int)$this->getClientId() . ', ' . (int)$user->get('guest') . ', ' . $db->quote((int)$session->get('session.timer.start')) . ', ' . (int)$user->get('id') . ', ' . $db->quote($user->get('username')));
+                $query->insert($db->quoteName('#__session'))->columns(
+                        $db->quoteName('session_id') . ', ' . $db->quoteName('client_id') . ', ' . $db->quoteName(
+                            'guest'
+                        ) . ', ' . $db->quoteName('time') . ', ' . $db->quoteName('userid') . ', ' . $db->quoteName(
+                            'username'
+                        )
+                    )->values(
+                        $db->quote($session->getId()) . ', ' . (int)$this->getClientId() . ', ' . (int)$user->get(
+                            'guest'
+                        ) . ', ' . $db->quote((int)$session->get('session.timer.start')) . ', ' . (int)$user->get(
+                            'id'
+                        ) . ', ' . $db->quote($user->get('username'))
+                    );
 
                 $db->setQuery($query);
             }
@@ -417,8 +434,11 @@ class JApplication extends JApplicationBase
      */
     public static function isWinOs()
     {
-        JLog::add('JApplication::isWinOS() is deprecated. Use the IS_WIN constant instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JApplication::isWinOS() is deprecated. Use the IS_WIN constant instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return IS_WIN;
     }
@@ -683,8 +703,12 @@ class JApplication extends JApplicationBase
 
             if (($this->client->engine == JApplicationWebClient::TRIDENT) && !utf8_is_ascii($url)) {
                 // MSIE type browser and/or server cause issues when url contains utf8 character,so use a javascript redirect method
-                echo '<html><head><meta http-equiv="content-type" content="text/html; charset=' . $document->getCharset() . '" />' . '<script>document.location.href=\'' . str_replace("'",
-                        "&apos;", $url) . '\';</script></head></html>';
+                echo '<html><head><meta http-equiv="content-type" content="text/html; charset=' . $document->getCharset(
+                    ) . '" />' . '<script>document.location.href=\'' . str_replace(
+                         "'",
+                         "&apos;",
+                         $url
+                     ) . '\';</script></head></html>';
             } else {
                 // All other browsers, use the more efficient HTTP header method
                 header($moved ? 'HTTP/1.1 301 Moved Permanently' : 'HTTP/1.1 303 See other');

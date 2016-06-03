@@ -155,7 +155,11 @@ class JDatabaseDriverSqlsrv extends JDatabaseDriver
         $query = $this->getQuery(true);
 
         if ($ifExists) {
-            $this->setQuery('IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ' . $query->quote($tableName) . ') DROP TABLE ' . $tableName);
+            $this->setQuery(
+                'IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ' . $query->quote(
+                    $tableName
+                ) . ') DROP TABLE ' . $tableName
+            );
         } else {
             $this->setQuery('DROP TABLE ' . $tableName);
         }
@@ -273,8 +277,11 @@ class JDatabaseDriverSqlsrv extends JDatabaseDriver
         $this->connect();
 
         if (!is_resource($this->connection)) {
-            JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR,
-                'database');
+            JLog::add(
+                JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
+                JLog::ERROR,
+                'database'
+            );
             throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum);
         }
 
@@ -341,8 +348,11 @@ class JDatabaseDriverSqlsrv extends JDatabaseDriver
                     $this->errorMsg = $this->getErrorMessage($query);
 
                     // Throw the normal query exception.
-                    JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
-                        JLog::ERROR, 'database-error');
+                    JLog::add(
+                        JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
+                        JLog::ERROR,
+                        'database-error'
+                    );
 
                     throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum, $e);
                 }
@@ -356,8 +366,11 @@ class JDatabaseDriverSqlsrv extends JDatabaseDriver
                 $this->errorMsg = $errorMsg;
 
                 // Throw the normal query exception.
-                JLog::add(JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg), JLog::ERROR,
-                    'database-error');
+                JLog::add(
+                    JText::sprintf('JLIB_DATABASE_QUERY_FAILED', $this->errorNum, $this->errorMsg),
+                    JLog::ERROR,
+                    'database-error'
+                );
 
                 throw new JDatabaseExceptionExecuting($this->errorMsg, $this->errorNum);
             }
@@ -613,7 +626,11 @@ class JDatabaseDriverSqlsrv extends JDatabaseDriver
         $table_temp = $this->replacePrefix((string)$table);
 
         // Set the query to get the table fields statement.
-        $this->setQuery('SELECT column_name as Field, data_type as Type, is_nullable as \'Null\', column_default as \'Default\'' . ' FROM information_schema.columns WHERE table_name = ' . $this->quote($table_temp));
+        $this->setQuery(
+            'SELECT column_name as Field, data_type as Type, is_nullable as \'Null\', column_default as \'Default\'' . ' FROM information_schema.columns WHERE table_name = ' . $this->quote(
+                $table_temp
+            )
+        );
         $fields = $this->loadObjectList();
 
         // If we only want the type as the value add just that to the list.
@@ -979,7 +996,11 @@ class JDatabaseDriverSqlsrv extends JDatabaseDriver
 
         $query = $this->getQuery(true);
 
-        $this->setQuery('SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_NAME = ' . $query->quote($tableName));
+        $this->setQuery(
+            'SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_NAME = ' . $query->quote(
+                $tableName
+            )
+        );
 
         return $this->loadColumn();
     }

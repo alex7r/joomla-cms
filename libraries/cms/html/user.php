@@ -28,12 +28,11 @@ abstract class JHtmlUser
     public static function groups($includeSuperAdmin = false)
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level')
-                    ->from($db->quoteName('#__usergroups') . ' AS a')
-                    ->join('LEFT', $db->quoteName('#__usergroups') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt')
-                    ->group('a.id, a.title, a.lft, a.rgt')
-                    ->order('a.lft ASC');
+        $query = $db->getQuery(true)->select('a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level')->from(
+                $db->quoteName('#__usergroups') . ' AS a'
+            )->join('LEFT', $db->quoteName('#__usergroups') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt')->group(
+                'a.id, a.title, a.lft, a.rgt'
+            )->order('a.lft ASC');
         $db->setQuery($query);
         $options = $db->loadObjectList();
 
@@ -68,11 +67,9 @@ abstract class JHtmlUser
     public static function userlist()
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('a.id AS value, a.name AS text')
-                    ->from('#__users AS a')
-                    ->where('a.block = 0')
-                    ->order('a.name');
+        $query = $db->getQuery(true)->select('a.id AS value, a.name AS text')->from('#__users AS a')->where(
+                'a.block = 0'
+            )->order('a.name');
         $db->setQuery($query);
         $items = $db->loadObjectList();
 

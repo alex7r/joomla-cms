@@ -47,7 +47,9 @@ class ContentViewCategory extends JViewCategoryfeed
             // URL link to article
             $link = JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catid, $item->language));
 
-            $item->description .= '<p class="feed-readmore"><a target="_blank" href ="' . $link . '">' . JText::_('COM_CONTENT_FEED_READMORE') . '</a></p>';
+            $item->description .= '<p class="feed-readmore"><a target="_blank" href ="' . $link . '">' . JText::_(
+                    'COM_CONTENT_FEED_READMORE'
+                ) . '</a></p>';
         }
 
         $item->author = $item->created_by_alias ? $item->created_by_alias : $item->author;

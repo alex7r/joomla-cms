@@ -102,8 +102,15 @@ class JGithubPackageUsers extends JGithubPackage
         $hireable = '',
         $bio = ''
     ) {
-        return $this->edit($name = '', $email = '', $blog = '', $company = '', $location = '', $hireable = '',
-            $bio = '');
+        return $this->edit(
+            $name = '',
+            $email = '',
+            $blog = '',
+            $company = '',
+            $location = '',
+            $hireable = '',
+            $bio = ''
+        );
     }
 
     /*

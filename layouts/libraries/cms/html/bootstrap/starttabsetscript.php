@@ -11,4 +11,6 @@ defined('JPATH_BASE') or die;
 
 $selector = empty($displayData['selector']) ? '' : $displayData['selector'];
 
-echo 'jQuery(function($){ ', '$(', json_encode('#' . $selector . ' a'), ')', '.click(function (e) {', 'e.preventDefault();', '$(this).tab("show");', '});', '});';
+echo 'jQuery(function($){ ', '$(', json_encode(
+    '#' . $selector . ' a'
+), ')', '.click(function (e) {', 'e.preventDefault();', '$(this).tab("show");', '});', '});';

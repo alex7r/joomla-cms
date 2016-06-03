@@ -94,8 +94,12 @@ class JArchive
                     } else {
                         $path = JPath::clean($extractdir);
                         JFolder::create($path);
-                        $result = JFile::copy($tmpfname,
-                            $path . '/' . JFile::stripExt(basename(strtolower($archivename))), null, 1);
+                        $result = JFile::copy(
+                            $tmpfname,
+                            $path . '/' . JFile::stripExt(basename(strtolower($archivename))),
+                            null,
+                            1
+                        );
                     }
 
                     @unlink($tmpfname);
@@ -132,8 +136,12 @@ class JArchive
                     } else {
                         $path = JPath::clean($extractdir);
                         JFolder::create($path);
-                        $result = JFile::copy($tmpfname,
-                            $path . '/' . JFile::stripExt(basename(strtolower($archivename))), null, 1);
+                        $result = JFile::copy(
+                            $tmpfname,
+                            $path . '/' . JFile::stripExt(basename(strtolower($archivename))),
+                            null,
+                            1
+                        );
                     }
 
                     @unlink($tmpfname);

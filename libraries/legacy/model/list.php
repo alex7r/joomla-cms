@@ -118,8 +118,10 @@ class JModelList extends JModelLegacy
             foreach ($this->filter_fields as $filter) {
                 $filterName = 'filter.' . $filter;
 
-                if (property_exists($this->state,
-                        $filterName) && (!empty($this->state->{$filterName}) || is_numeric($this->state->{$filterName}))
+                if (property_exists(
+                        $this->state,
+                        $filterName
+                    ) && (!empty($this->state->{$filterName}) || is_numeric($this->state->{$filterName}))
                 ) {
                     $activeFilters[$filter] = $this->state->get($filterName);
                 }
@@ -346,8 +348,11 @@ class JModelList extends JModelLegacy
 
         if (!empty($this->filterFormName)) {
             // Get the form.
-            $form = $this->loadForm($this->context . '.filter', $this->filterFormName,
-                array('control' => '', 'load_data' => $loadData));
+            $form = $this->loadForm(
+                $this->context . '.filter',
+                $this->filterFormName,
+                array('control' => '', 'load_data' => $loadData)
+            );
         }
 
         return $form;

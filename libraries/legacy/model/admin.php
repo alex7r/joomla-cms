@@ -144,11 +144,14 @@ abstract class JModelAdmin extends JModelForm
 
         $config['events_map'] = isset($config['events_map']) ? $config['events_map'] : array();
 
-        $this->events_map = array_merge(array(
-            'delete'       => 'content',
-            'save'         => 'content',
-            'change_state' => 'content'
-        ), $config['events_map']);
+        $this->events_map = array_merge(
+            array(
+                'delete'       => 'content',
+                'save'         => 'content',
+                'change_state' => 'content'
+            ),
+            $config['events_map']
+        );
 
         // Guess the JText message prefix. Defaults to the option.
         if (isset($config['text_prefix'])) {
@@ -575,10 +578,18 @@ abstract class JModelAdmin extends JModelForm
                         $db    = JFactory::getDbo();
                         $query = $db->getQuery(true)
                                     ->select('COUNT(*) as count, ' . $db->quoteName('as1.key'))
-                                    ->from($db->quoteName('#__associations') . ' AS as1')
-                                    ->join('LEFT',
-                                        $db->quoteName('#__associations') . ' AS as2 ON ' . $db->quoteName('as1.key') . ' =  ' . $db->quoteName('as2.key'))
-                                    ->where($db->quoteName('as1.context') . ' = ' . $db->quote($this->associationsContext))
+                                    ->from(
+                                        $db->quoteName('#__associations') . ' AS as1'
+                                    )
+                                    ->join(
+                                        'LEFT',
+                                        $db->quoteName('#__associations') . ' AS as2 ON ' . $db->quoteName(
+                                            'as1.key'
+                                        ) . ' =  ' . $db->quoteName('as2.key')
+                                    )
+                                    ->where(
+                                        $db->quoteName('as1.context') . ' = ' . $db->quote($this->associationsContext)
+                                    )
                                     ->where($db->quoteName('as1.id') . ' = ' . (int)$pk)
                                     ->group($db->quoteName('as1.key'));
 
@@ -586,10 +597,9 @@ abstract class JModelAdmin extends JModelForm
                         $row = $db->loadAssoc();
 
                         if (!empty($row['count'])) {
-                            $query = $db->getQuery(true)
-                                        ->delete($db->quoteName('#__associations'))
-                                        ->where($db->quoteName('context') . ' = ' . $db->quote($this->associationsContext))
-                                        ->where($db->quoteName('key') . ' = ' . $db->quote($row['key']));
+                            $query = $db->getQuery(true)->delete($db->quoteName('#__associations'))->where(
+                                    $db->quoteName('context') . ' = ' . $db->quote($this->associationsContext)
+                                )->where($db->quoteName('key') . ' = ' . $db->quote($row['key']));
 
                             if ($row['count'] > 2) {
                                 $query->where($db->quoteName('id') . ' = ' . (int)$pk);
@@ -726,8 +736,10 @@ abstract class JModelAdmin extends JModelForm
                 }
 
                 // If the table is checked out by another user, drop it and report to the user trying to change its state.
-                if (property_exists($table,
-                        'checked_out') && $table->checked_out && ($table->checked_out != $user->id)
+                if (property_exists(
+                        $table,
+                        'checked_out'
+                    ) && $table->checked_out && ($table->checked_out != $user->id)
                 ) {
                     JLog::add(JText::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH'), JLog::WARNING, 'jerror');
 
@@ -1010,9 +1022,10 @@ abstract class JModelAdmin extends JModelForm
 
             // Show a notice if the item isn't assigned to a language but we have associations.
             if ($associations && ($table->language == '*')) {
-                JFactory::getApplication()
-                        ->enqueueMessage(JText::_(strtoupper($this->option) . '_ERROR_ALL_LANGUAGE_ASSOCIATED'),
-                            'notice');
+                JFactory::getApplication()->enqueueMessage(
+                        JText::_(strtoupper($this->option) . '_ERROR_ALL_LANGUAGE_ASSOCIATED'),
+                        'notice'
+                    );
             }
 
             // Adding self to the association
@@ -1020,10 +1033,9 @@ abstract class JModelAdmin extends JModelForm
 
             // Deleting old association for these items
             $db    = $this->getDbo();
-            $query = $db->getQuery(true)
-                        ->delete($db->qn('#__associations'))
-                        ->where($db->qn('context') . ' = ' . $db->quote($this->associationsContext))
-                        ->where($db->qn('id') . ' IN (' . implode(',', $associations) . ')');
+            $query = $db->getQuery(true)->delete($db->qn('#__associations'))->where(
+                    $db->qn('context') . ' = ' . $db->quote($this->associationsContext)
+                )->where($db->qn('id') . ' IN (' . implode(',', $associations) . ')');
             $db->setQuery($query);
             $db->execute();
 

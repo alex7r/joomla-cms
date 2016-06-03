@@ -51,13 +51,19 @@ class JFormFieldFilters extends JFormField
         $html[] = '			<span class="acl-action">' . JText::_('JGLOBAL_FILTER_GROUPS_LABEL') . '</span>';
         $html[] = '		</th>';
         $html[] = '		<th>';
-        $html[] = '			<span class="acl-action" title="' . JText::_('JGLOBAL_FILTER_TYPE_LABEL') . '">' . JText::_('JGLOBAL_FILTER_TYPE_LABEL') . '</span>';
+        $html[] = '			<span class="acl-action" title="' . JText::_(
+                'JGLOBAL_FILTER_TYPE_LABEL'
+            ) . '">' . JText::_('JGLOBAL_FILTER_TYPE_LABEL') . '</span>';
         $html[] = '		</th>';
         $html[] = '		<th>';
-        $html[] = '			<span class="acl-action" title="' . JText::_('JGLOBAL_FILTER_TAGS_LABEL') . '">' . JText::_('JGLOBAL_FILTER_TAGS_LABEL') . '</span>';
+        $html[] = '			<span class="acl-action" title="' . JText::_(
+                'JGLOBAL_FILTER_TAGS_LABEL'
+            ) . '">' . JText::_('JGLOBAL_FILTER_TAGS_LABEL') . '</span>';
         $html[] = '		</th>';
         $html[] = '		<th>';
-        $html[] = '			<span class="acl-action" title="' . JText::_('JGLOBAL_FILTER_ATTRIBUTES_LABEL') . '">' . JText::_('JGLOBAL_FILTER_ATTRIBUTES_LABEL') . '</span>';
+        $html[] = '			<span class="acl-action" title="' . JText::_(
+                'JGLOBAL_FILTER_ATTRIBUTES_LABEL'
+            ) . '">' . JText::_('JGLOBAL_FILTER_ATTRIBUTES_LABEL') . '</span>';
         $html[] = '		</th>';
         $html[] = '	</tr>';
         $html[] = '	</thead>';
@@ -81,23 +87,39 @@ class JFormFieldFilters extends JFormField
 
             $html[] = '	<tr>';
             $html[] = '		<td class="acl-groups left">';
-            $html[] = '			' . JLayoutHelper::render('joomla.html.treeprefix',
-                    array('level' => $group->level + 1)) . $group->text;
+            $html[] = '			' . JLayoutHelper::render(
+                    'joomla.html.treeprefix',
+                    array('level' => $group->level + 1)
+                ) . $group->text;
             $html[] = '		</td>';
             $html[] = '		<td>';
             $html[] = '				<select' . ' name="' . $this->name . '[' . $group->value . '][filter_type]"' . ' id="' . $this->id . $group->value . '_filter_type"' . ' class="novalidate"' . '>';
-            $html[] = '					<option value="BL"' . ($group_filter['filter_type'] == 'BL' ? ' selected="selected"' : '') . '>' . JText::_('COM_CONFIG_FIELD_FILTERS_DEFAULT_BLACK_LIST') . '</option>';
-            $html[] = '					<option value="CBL"' . ($group_filter['filter_type'] == 'CBL' ? ' selected="selected"' : '') . '>' . JText::_('COM_CONFIG_FIELD_FILTERS_CUSTOM_BLACK_LIST') . '</option>';
-            $html[] = '					<option value="WL"' . ($group_filter['filter_type'] == 'WL' ? ' selected="selected"' : '') . '>' . JText::_('COM_CONFIG_FIELD_FILTERS_WHITE_LIST') . '</option>';
-            $html[] = '					<option value="NH"' . ($group_filter['filter_type'] == 'NH' ? ' selected="selected"' : '') . '>' . JText::_('COM_CONFIG_FIELD_FILTERS_NO_HTML') . '</option>';
-            $html[] = '					<option value="NONE"' . ($group_filter['filter_type'] == 'NONE' ? ' selected="selected"' : '') . '>' . JText::_('COM_CONFIG_FIELD_FILTERS_NO_FILTER') . '</option>';
+            $html[] = '					<option value="BL"' . ($group_filter['filter_type'] == 'BL' ? ' selected="selected"' : '') . '>' . JText::_(
+                    'COM_CONFIG_FIELD_FILTERS_DEFAULT_BLACK_LIST'
+                ) . '</option>';
+            $html[] = '					<option value="CBL"' . ($group_filter['filter_type'] == 'CBL' ? ' selected="selected"' : '') . '>' . JText::_(
+                    'COM_CONFIG_FIELD_FILTERS_CUSTOM_BLACK_LIST'
+                ) . '</option>';
+            $html[] = '					<option value="WL"' . ($group_filter['filter_type'] == 'WL' ? ' selected="selected"' : '') . '>' . JText::_(
+                    'COM_CONFIG_FIELD_FILTERS_WHITE_LIST'
+                ) . '</option>';
+            $html[] = '					<option value="NH"' . ($group_filter['filter_type'] == 'NH' ? ' selected="selected"' : '') . '>' . JText::_(
+                    'COM_CONFIG_FIELD_FILTERS_NO_HTML'
+                ) . '</option>';
+            $html[] = '					<option value="NONE"' . ($group_filter['filter_type'] == 'NONE' ? ' selected="selected"' : '') . '>' . JText::_(
+                    'COM_CONFIG_FIELD_FILTERS_NO_FILTER'
+                ) . '</option>';
             $html[] = '				</select>';
             $html[] = '		</td>';
             $html[] = '		<td>';
-            $html[] = '				<input' . ' name="' . $this->name . '[' . $group->value . '][filter_tags]"' . ' type="text"' . ' id="' . $this->id . $group->value . '_filter_tags" class="novalidate"' . ' title="' . JText::_('JGLOBAL_FILTER_TAGS_LABEL') . '"' . ' value="' . $group_filter['filter_tags'] . '"' . '/>';
+            $html[] = '				<input' . ' name="' . $this->name . '[' . $group->value . '][filter_tags]"' . ' type="text"' . ' id="' . $this->id . $group->value . '_filter_tags" class="novalidate"' . ' title="' . JText::_(
+                    'JGLOBAL_FILTER_TAGS_LABEL'
+                ) . '"' . ' value="' . $group_filter['filter_tags'] . '"' . '/>';
             $html[] = '		</td>';
             $html[] = '		<td>';
-            $html[] = '				<input' . ' name="' . $this->name . '[' . $group->value . '][filter_attributes]"' . ' type="text"' . ' id="' . $this->id . $group->value . '_filter_attributes" class="novalidate"' . ' title="' . JText::_('JGLOBAL_FILTER_ATTRIBUTES_LABEL') . '"' . ' value="' . $group_filter['filter_attributes'] . '"' . '/>';
+            $html[] = '				<input' . ' name="' . $this->name . '[' . $group->value . '][filter_attributes]"' . ' type="text"' . ' id="' . $this->id . $group->value . '_filter_attributes" class="novalidate"' . ' title="' . JText::_(
+                    'JGLOBAL_FILTER_ATTRIBUTES_LABEL'
+                ) . '"' . ' value="' . $group_filter['filter_attributes'] . '"' . '/>';
             $html[] = '		</td>';
             $html[] = '	</tr>';
         }

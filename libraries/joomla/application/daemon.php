@@ -392,8 +392,10 @@ class JApplicationDaemon extends JApplicationCli
 
         // Write out the process id file for concurrency management.
         if (!$this->writeProcessIdFile()) {
-            JLog::add('Unable to write the pid file at: ' . $this->config->get('application_pid_file'),
-                JLog::EMERGENCY);
+            JLog::add(
+                'Unable to write the pid file at: ' . $this->config->get('application_pid_file'),
+                JLog::EMERGENCY
+            );
 
             return false;
         }

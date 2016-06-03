@@ -44,9 +44,15 @@ $cparams = JComponentHelper::getParams('com_media');
     <?php if ($this->params->get('show_contact_list') && count($this->contacts) > 1) : ?>
         <form action="#" method="get" name="selectForm" id="selectForm">
             <?php echo JText::_('COM_CONTACT_SELECT_CONTACT'); ?>
-            <?php echo JHtml::_('select.genericlist', $this->contacts, 'id',
-                'class="inputbox" onchange="document.location.href = this.value"', 'link', 'name',
-                $this->contact->link); ?>
+            <?php echo JHtml::_(
+                'select.genericlist',
+                $this->contacts,
+                'id',
+                'class="inputbox" onchange="document.location.href = this.value"',
+                'link',
+                'name',
+                $this->contact->link
+            ); ?>
         </form>
     <?php endif; ?>
 
@@ -72,8 +78,12 @@ $cparams = JComponentHelper::getParams('com_media');
 
     <?php if ($this->contact->image && $this->params->get('show_image')) : ?>
         <div class="thumbnail pull-right">
-            <?php echo JHtml::_('image', $this->contact->image, JText::_('COM_CONTACT_IMAGE_DETAILS'),
-                array('align' => 'middle')); ?>
+            <?php echo JHtml::_(
+                'image',
+                $this->contact->image,
+                JText::_('COM_CONTACT_IMAGE_DETAILS'),
+                array('align' => 'middle')
+            ); ?>
         </div>
     <?php endif; ?>
 
@@ -89,7 +99,9 @@ $cparams = JComponentHelper::getParams('com_media');
 
     <?php if ($this->params->get('allow_vcard')) : ?>
         <?php echo JText::_('COM_CONTACT_DOWNLOAD_INFORMATION_AS'); ?>
-        <a href="<?php echo JRoute::_('index.php?option=com_contact&amp;view=contact&amp;id=' . $this->contact->id . '&amp;format=vcf'); ?>">
+        <a href="<?php echo JRoute::_(
+            'index.php?option=com_contact&amp;view=contact&amp;id=' . $this->contact->id . '&amp;format=vcf'
+        ); ?>">
             <?php echo JText::_('COM_CONTACT_VCARD'); ?></a>
     <?php endif; ?>
 
@@ -128,8 +140,10 @@ $cparams = JComponentHelper::getParams('com_media');
 
     <?php endif; ?>
 
-    <?php if ($this->params->get('show_profile') && $this->contact->user_id && JPluginHelper::isEnabled('user',
-            'profile')
+    <?php if ($this->params->get('show_profile') && $this->contact->user_id && JPluginHelper::isEnabled(
+            'user',
+            'profile'
+        )
     ) : ?>
 
         <?php if ($this->params->get('presentation_style') == 'sliders') :

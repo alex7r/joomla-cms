@@ -106,9 +106,13 @@ class PlgSystemRedirect extends JPlugin
 
         $query = $db->getQuery(true);
 
-        $query->select('*')
-              ->from($db->quoteName('#__redirect_links'))
-              ->where('(' . $db->quoteName('old_url') . ' = ' . $db->quote($url) . ' OR ' . $db->quoteName('old_url') . ' = ' . $db->quote($urlRel) . ' OR ' . $db->quoteName('old_url') . ' = ' . $db->quote($urlWithoutQuery) . ' OR ' . $db->quoteName('old_url') . ' = ' . $db->quote($urlRelWithoutQuery) . ')');
+        $query->select('*')->from($db->quoteName('#__redirect_links'))->where(
+                '(' . $db->quoteName('old_url') . ' = ' . $db->quote($url) . ' OR ' . $db->quoteName(
+                    'old_url'
+                ) . ' = ' . $db->quote($urlRel) . ' OR ' . $db->quoteName('old_url') . ' = ' . $db->quote(
+                    $urlWithoutQuery
+                ) . ' OR ' . $db->quoteName('old_url') . ' = ' . $db->quote($urlRelWithoutQuery) . ')'
+            );
 
         $db->setQuery($query);
 
@@ -147,7 +151,9 @@ class PlgSystemRedirect extends JPlugin
                     $redirect->new_url .= '?' . $urlQuery;
                 }
 
-                $destination = JUri::isInternal($redirect->new_url) ? JRoute::_($redirect->new_url) : $redirect->new_url;
+                $destination = JUri::isInternal($redirect->new_url) ? JRoute::_(
+                    $redirect->new_url
+                ) : $redirect->new_url;
 
                 $app->redirect($destination, (int)$redirect->header);
             }
@@ -201,8 +207,12 @@ class PlgSystemRedirect extends JPlugin
     {
         // If this isn't a Throwable then bail out
         if (!($exception instanceof Throwable) && !($exception instanceof Exception)) {
-            throw new InvalidArgumentException(sprintf('The error handler requires an Exception or Throwable object, a "%s" object was given instead.',
-                get_class($exception)));
+            throw new InvalidArgumentException(
+                sprintf(
+                    'The error handler requires an Exception or Throwable object, a "%s" object was given instead.',
+                    get_class($exception)
+                )
+            );
         }
 
         self::doErrorHandling($exception);

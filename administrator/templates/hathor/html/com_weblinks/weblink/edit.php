@@ -15,7 +15,8 @@ $saveHistory = $this->state->get('params')->get('save_history', 0);
 
 JHtml::_('behavior.formvalidator');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'weblink.cancel' || document.formvalidator.isValid(document.id('weblink-form')))
@@ -24,7 +25,8 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('weblink-form'));
 		}
 	}
-");
+"
+);
 ?>
 <div class="weblink-edit">
 
@@ -32,8 +34,10 @@ JFactory::getDocument()->addScriptDeclaration("
           method="post" name="adminForm" id="weblink-form" class="form-validate">
         <div class="col main-section">
             <fieldset class="adminform">
-                <legend><?php echo empty($this->item->id) ? JText::_('COM_WEBLINKS_NEW_WEBLINK') : JText::sprintf('COM_WEBLINKS_EDIT_WEBLINK',
-                        $this->item->id); ?></legend>
+                <legend><?php echo empty($this->item->id) ? JText::_('COM_WEBLINKS_NEW_WEBLINK') : JText::sprintf(
+                        'COM_WEBLINKS_EDIT_WEBLINK',
+                        $this->item->id
+                    ); ?></legend>
                 <ul class="adminformlist">
                     <li><?php echo $this->form->getLabel('title'); ?>
                         <?php echo $this->form->getInput('title'); ?></li>

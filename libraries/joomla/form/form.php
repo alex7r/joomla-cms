@@ -795,7 +795,9 @@ class JForm
             }
         } elseif ($group === false) {
             // Get only field elements not in a group.
-            $fields = $this->xml->xpath('descendant::fields[not(@name)]/field | descendant::fields[not(@name)]/fieldset/field ');
+            $fields = $this->xml->xpath(
+                'descendant::fields[not(@name)]/field | descendant::fields[not(@name)]/fieldset/field '
+            );
         } else {
             // Get an array of all the <field /> elements.
             $fields = $this->xml->xpath('//field');
@@ -952,8 +954,10 @@ class JForm
                 $value = trim($value);
 
                 // Does it match the NANP pattern?
-                if (preg_match('/^(?:\+?1[-. ]?)?\(?([2-9][0-8][0-9])\)?[-. ]?([2-9][0-9]{2})[-. ]?([0-9]{4})$/',
-                        $value) == 1
+                if (preg_match(
+                        '/^(?:\+?1[-. ]?)?\(?([2-9][0-8][0-9])\)?[-. ]?([2-9][0-9]{2})[-. ]?([0-9]{4})$/',
+                        $value
+                    ) == 1
                 ) {
                     $number = (string)preg_replace('/[^\d]/', '', $value);
 
@@ -1055,8 +1059,12 @@ class JForm
     {
         // Make sure there is a valid JForm XML document.
         if (!($this->xml instanceof SimpleXMLElement)) {
-            throw new UnexpectedValueException(sprintf('%s::getFieldAttribute `xml` is not an instance of SimpleXMLElement',
-                get_class($this)));
+            throw new UnexpectedValueException(
+                sprintf(
+                    '%s::getFieldAttribute `xml` is not an instance of SimpleXMLElement',
+                    get_class($this)
+                )
+            );
         }
 
         // Find the form field element from the definition.
@@ -1544,7 +1552,9 @@ class JForm
          * the appropriate fieldset attribute. To allow repeatable elements only fields
          * which are not descendants of other fields are selected.
          */
-        $fields = $this->xml->xpath('(//fieldset[@name="' . $name . '"]//field | //field[@fieldset="' . $name . '"])[not(ancestor::field)]');
+        $fields = $this->xml->xpath(
+            '(//fieldset[@name="' . $name . '"]//field | //field[@fieldset="' . $name . '"])[not(ancestor::field)]'
+        );
 
         return $fields;
     }
@@ -1564,8 +1574,12 @@ class JForm
     {
         // Make sure there is a valid JForm XML document.
         if (!($this->xml instanceof SimpleXMLElement)) {
-            throw new UnexpectedValueException(sprintf('%s::removeField `xml` is not an instance of SimpleXMLElement',
-                get_class($this)));
+            throw new UnexpectedValueException(
+                sprintf(
+                    '%s::removeField `xml` is not an instance of SimpleXMLElement',
+                    get_class($this)
+                )
+            );
         }
 
         // Find the form field element from the definition.
@@ -1596,8 +1610,12 @@ class JForm
     {
         // Make sure there is a valid JForm XML document.
         if (!($this->xml instanceof SimpleXMLElement)) {
-            throw new UnexpectedValueException(sprintf('%s::removeGroup `xml` is not an instance of SimpleXMLElement',
-                get_class($this)));
+            throw new UnexpectedValueException(
+                sprintf(
+                    '%s::removeGroup `xml` is not an instance of SimpleXMLElement',
+                    get_class($this)
+                )
+            );
         }
 
         // Get the fields elements for a given group.
@@ -1652,8 +1670,12 @@ class JForm
     {
         // Make sure there is a valid JForm XML document.
         if (!($this->xml instanceof SimpleXMLElement)) {
-            throw new UnexpectedValueException(sprintf('%s::setFieldAttribute `xml` is not an instance of SimpleXMLElement',
-                get_class($this)));
+            throw new UnexpectedValueException(
+                sprintf(
+                    '%s::setFieldAttribute `xml` is not an instance of SimpleXMLElement',
+                    get_class($this)
+                )
+            );
         }
 
         // Find the form field element from the definition.
@@ -1691,15 +1713,23 @@ class JForm
     {
         // Make sure there is a valid JForm XML document.
         if (!($this->xml instanceof SimpleXMLElement)) {
-            throw new UnexpectedValueException(sprintf('%s::setFields `xml` is not an instance of SimpleXMLElement',
-                get_class($this)));
+            throw new UnexpectedValueException(
+                sprintf(
+                    '%s::setFields `xml` is not an instance of SimpleXMLElement',
+                    get_class($this)
+                )
+            );
         }
 
         // Make sure the elements to set are valid.
         foreach ($elements as $element) {
             if (!($element instanceof SimpleXMLElement)) {
-                throw new UnexpectedValueException(sprintf('$element not SimpleXMLElement in %s::setFields',
-                    get_class($this)));
+                throw new UnexpectedValueException(
+                    sprintf(
+                        '$element not SimpleXMLElement in %s::setFields',
+                        get_class($this)
+                    )
+                );
             }
         }
 
@@ -1736,8 +1766,12 @@ class JForm
     {
         // Make sure there is a valid JForm XML document.
         if (!($this->xml instanceof SimpleXMLElement)) {
-            throw new UnexpectedValueException(sprintf('%s::setField `xml` is not an instance of SimpleXMLElement',
-                get_class($this)));
+            throw new UnexpectedValueException(
+                sprintf(
+                    '%s::setField `xml` is not an instance of SimpleXMLElement',
+                    get_class($this)
+                )
+            );
         }
 
         // Find the form field element from the definition.
@@ -1911,8 +1945,13 @@ class JForm
 
             // If the object could not be loaded return an error message.
             if ($rule === false) {
-                throw new UnexpectedValueException(sprintf('%s::validateField() rule `%s` missing.', get_class($this),
-                    $type));
+                throw new UnexpectedValueException(
+                    sprintf(
+                        '%s::validateField() rule `%s` missing.',
+                        get_class($this),
+                        $type
+                    )
+                );
             }
 
             // Run the field validation rule test.

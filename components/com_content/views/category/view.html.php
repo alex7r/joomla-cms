@@ -105,16 +105,22 @@ class ContentViewCategory extends JViewCategory
             // Old plugins: Use processed text as introtext
             $item->introtext = $item->text;
 
-            $results                        = $dispatcher->trigger('onContentAfterTitle',
-                array('com_content.category', &$item, &$item->params, 0));
+            $results                        = $dispatcher->trigger(
+                'onContentAfterTitle',
+                array('com_content.category', &$item, &$item->params, 0)
+            );
             $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-            $results                           = $dispatcher->trigger('onContentBeforeDisplay',
-                array('com_content.category', &$item, &$item->params, 0));
+            $results                           = $dispatcher->trigger(
+                'onContentBeforeDisplay',
+                array('com_content.category', &$item, &$item->params, 0)
+            );
             $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-            $results                          = $dispatcher->trigger('onContentAfterDisplay',
-                array('com_content.category', &$item, &$item->params, 0));
+            $results                          = $dispatcher->trigger(
+                'onContentAfterDisplay',
+                array('com_content.category', &$item, &$item->params, 0)
+            );
             $item->event->afterDisplayContent = trim(implode("\n", $results));
         }
 
@@ -126,8 +132,10 @@ class ContentViewCategory extends JViewCategory
         $pathway = $app->getPathway();
         $title   = null;
 
-        if ((!$active) || ((strpos($active->link, 'view=category') === false) || (strpos($active->link,
-                        '&id=' . (string)$this->category->id) === false))
+        if ((!$active) || ((strpos($active->link, 'view=category') === false) || (strpos(
+                                                                                      $active->link,
+                                                                                      '&id=' . (string)$this->category->id
+                                                                                  ) === false))
         ) {
             // Get the layout from the merged category params
             if ($layout = $this->category->params->get('category_layout')) {

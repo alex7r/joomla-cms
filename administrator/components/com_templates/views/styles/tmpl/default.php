@@ -46,12 +46,22 @@ $colSpan   = $clientId === 1 ? 5 : 6;
                             &#160;
                         </th>
                         <th class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_TEMPLATES_HEADING_STYLE', 'a.title', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_TEMPLATES_HEADING_STYLE',
+                                'a.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap center">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_TEMPLATES_HEADING_DEFAULT', 'a.home',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_TEMPLATES_HEADING_DEFAULT',
+                                'a.home',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <?php if ($clientId === 0) : ?>
                             <th width="20%" class="nowrap hidden-phone">
@@ -59,12 +69,22 @@ $colSpan   = $clientId === 1 ? 5 : 6;
                             </th>
                         <?php endif; ?>
                         <th width="30%" class="hidden-phone hidden-tablet">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_TEMPLATES_HEADING_TEMPLATE', 'a.template',
-                                $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_TEMPLATES_HEADING_TEMPLATE',
+                                'a.template',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone hidden-tablet">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ID',
+                                'a.id',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -91,17 +111,26 @@ $colSpan   = $clientId === 1 ? 5 : 6;
                                        href="<?php echo JUri::root() . 'index.php?tp=1&template=' . (int)$item->id ?>"
                                        class="jgrid">
 										<span class="icon-eye-open hasTooltip"
-                                              title="<?php echo JHtml::tooltipText(JText::_('COM_TEMPLATES_TEMPLATE_PREVIEW'),
-                                                  $item->title, 0); ?>"></span></a>
+                                              title="<?php echo JHtml::tooltipText(
+                                                  JText::_('COM_TEMPLATES_TEMPLATE_PREVIEW'),
+                                                  $item->title,
+                                                  0
+                                              ); ?>"></span></a>
                                 <?php elseif ($item->client_id == '1') : ?>
                                     <span class="icon-eye-close disabled hasTooltip"
-                                          title="<?php echo JHtml::tooltipText('COM_TEMPLATES_TEMPLATE_NO_PREVIEW_ADMIN'); ?>"></span>
+                                          title="<?php echo JHtml::tooltipText(
+                                              'COM_TEMPLATES_TEMPLATE_NO_PREVIEW_ADMIN'
+                                          ); ?>"></span>
                                 <?php else: ?>
                                     <span class="icon-eye-close disabled hasTooltip"
-                                          title="<?php echo JHtml::tooltipText('COM_TEMPLATES_TEMPLATE_NO_PREVIEW'); ?>"></span>
+                                          title="<?php echo JHtml::tooltipText(
+                                              'COM_TEMPLATES_TEMPLATE_NO_PREVIEW'
+                                          ); ?>"></span>
                                 <?php endif; ?>
                                 <?php if ($canEdit) : ?>
-                                    <a href="<?php echo JRoute::_('index.php?option=com_templates&task=style.edit&id=' . (int)$item->id); ?>">
+                                    <a href="<?php echo JRoute::_(
+                                        'index.php?option=com_templates&task=style.edit&id=' . (int)$item->id
+                                    ); ?>">
                                         <?php echo $this->escape($item->title); ?></a>
                                 <?php else : ?>
                                     <?php echo $this->escape($item->title); ?>
@@ -109,19 +138,39 @@ $colSpan   = $clientId === 1 ? 5 : 6;
                             </td>
                             <td class="center">
                                 <?php if ($item->home == '0' || $item->home == '1'): ?>
-                                    <?php echo JHtml::_('jgrid.isdefault', $item->home != '0', $i, 'styles.',
-                                        $canChange && $item->home != '1'); ?>
+                                    <?php echo JHtml::_(
+                                        'jgrid.isdefault',
+                                        $item->home != '0',
+                                        $i,
+                                        'styles.',
+                                        $canChange && $item->home != '1'
+                                    ); ?>
                                 <?php elseif ($canChange): ?>
-                                    <a href="<?php echo JRoute::_('index.php?option=com_templates&task=styles.unsetDefault&cid[]=' . $item->id . '&' . JSession::getFormToken() . '=1'); ?>">
-                                        <?php echo JHtml::_('image', 'mod_languages/' . $item->image . '.gif',
-                                            $item->language_title, array(
-                                                'title' => JText::sprintf('COM_TEMPLATES_GRID_UNSET_LANGUAGE',
-                                                    $item->language_title)
-                                            ), true); ?>
+                                    <a href="<?php echo JRoute::_(
+                                        'index.php?option=com_templates&task=styles.unsetDefault&cid[]=' . $item->id . '&' . JSession::getFormToken(
+                                        ) . '=1'
+                                    ); ?>">
+                                        <?php echo JHtml::_(
+                                            'image',
+                                            'mod_languages/' . $item->image . '.gif',
+                                            $item->language_title,
+                                            array(
+                                                'title' => JText::sprintf(
+                                                    'COM_TEMPLATES_GRID_UNSET_LANGUAGE',
+                                                    $item->language_title
+                                                )
+                                            ),
+                                            true
+                                        ); ?>
                                     </a>
                                 <?php else: ?>
-                                    <?php echo JHtml::_('image', 'mod_languages/' . $item->image . '.gif',
-                                        $item->language_title, array('title' => $item->language_title), true); ?>
+                                    <?php echo JHtml::_(
+                                        'image',
+                                        'mod_languages/' . $item->image . '.gif',
+                                        $item->language_title,
+                                        array('title' => $item->language_title),
+                                        true
+                                    ); ?>
                                 <?php endif; ?>
                             </td>
                             <?php if ($clientId === 0) : ?>
@@ -129,11 +178,15 @@ $colSpan   = $clientId === 1 ? 5 : 6;
                                     <?php if ($item->home == '1') : ?>
                                         <?php echo JText::_('COM_TEMPLATES_STYLES_PAGES_ALL'); ?>
                                     <?php elseif ($item->home != '0' && $item->home != '1') : ?>
-                                        <?php echo JText::sprintf('COM_TEMPLATES_STYLES_PAGES_ALL_LANGUAGE',
-                                            $this->escape($item->language_title)); ?>
+                                        <?php echo JText::sprintf(
+                                            'COM_TEMPLATES_STYLES_PAGES_ALL_LANGUAGE',
+                                            $this->escape($item->language_title)
+                                        ); ?>
                                     <?php elseif ($item->assigned > 0) : ?>
-                                        <?php echo JText::sprintf('COM_TEMPLATES_STYLES_PAGES_SELECTED',
-                                            $this->escape($item->assigned)); ?>
+                                        <?php echo JText::sprintf(
+                                            'COM_TEMPLATES_STYLES_PAGES_SELECTED',
+                                            $this->escape($item->assigned)
+                                        ); ?>
                                     <?php else : ?>
                                         <?php echo JText::_('COM_TEMPLATES_STYLES_PAGES_NONE'); ?>
                                     <?php endif; ?>
@@ -141,7 +194,9 @@ $colSpan   = $clientId === 1 ? 5 : 6;
                             <?php endif; ?>
                             <td class="hidden-phone hidden-tablet">
                                 <label for="cb<?php echo $i; ?>" class="small">
-                                    <a href="<?php echo JRoute::_('index.php?option=com_templates&view=template&id=' . (int)$item->e_id); ?>  ">
+                                    <a href="<?php echo JRoute::_(
+                                        'index.php?option=com_templates&view=template&id=' . (int)$item->e_id
+                                    ); ?>  ">
                                         <?php echo ucfirst($this->escape($item->template)); ?>
                                     </a>
                                 </label>

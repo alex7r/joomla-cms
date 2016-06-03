@@ -14,13 +14,15 @@ JHtml::_('bootstrap.tooltip', '.hasTooltip', array('placement' => 'bottom'));
 $function = JFactory::getApplication()->input->getCmd('function', 'jEditContact_' . (int)$this->item->id);
 
 // Function to update input title when changed
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	function jEditContactModal() {
 		if (window.parent && document.formvalidator.isValid(document.getElementById("contact-form"))) {
 			return window.parent.' . $this->escape($function) . '(document.getElementById("jform_name").value);
 		}
 	}
-');
+'
+);
 ?>
 <button id="applyBtn" type="button" class="hidden"
         onclick="Joomla.submitbutton('contact.apply'); jEditContactModal();"></button>

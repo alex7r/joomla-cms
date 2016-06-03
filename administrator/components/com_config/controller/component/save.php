@@ -81,8 +81,12 @@ class ConfigControllerComponentSave extends JControllerBase
             $this->app->setUserState('com_config.config.global.data', $data);
 
             // Redirect back to the edit screen.
-            $this->app->redirect(JRoute::_('index.php?option=com_config&view=component&component=' . $option . $redirect,
-                false));
+            $this->app->redirect(
+                JRoute::_(
+                    'index.php?option=com_config&view=component&component=' . $option . $redirect,
+                    false
+                )
+            );
         }
 
         // Attempt to save the configuration.
@@ -100,16 +104,24 @@ class ConfigControllerComponentSave extends JControllerBase
 
             // Save failed, go back to the screen and display a notice.
             $this->app->enqueueMessage(JText::sprintf('JERROR_SAVE_FAILED', $e->getMessage()), 'error');
-            $this->app->redirect(JRoute::_('index.php?option=com_config&view=component&component=' . $option . $redirect,
-                false));
+            $this->app->redirect(
+                JRoute::_(
+                    'index.php?option=com_config&view=component&component=' . $option . $redirect,
+                    false
+                )
+            );
         }
 
         // Set the redirect based on the task.
         switch ($this->options[3]) {
             case 'apply':
                 $this->app->enqueueMessage(JText::_('COM_CONFIG_SAVE_SUCCESS'), 'message');
-                $this->app->redirect(JRoute::_('index.php?option=com_config&view=component&component=' . $option . $redirect,
-                    false));
+                $this->app->redirect(
+                    JRoute::_(
+                        'index.php?option=com_config&view=component&component=' . $option . $redirect,
+                        false
+                    )
+                );
 
                 break;
 

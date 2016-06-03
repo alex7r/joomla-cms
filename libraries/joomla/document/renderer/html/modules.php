@@ -40,8 +40,10 @@ class JDocumentRendererHtmlModules extends JDocumentRenderer
         foreach (JModuleHelper::getModules($position) as $mod) {
             $moduleHtml = $renderer->render($mod, $params, $content);
 
-            if ($frontediting && trim($moduleHtml) != '' && $user->authorise('module.edit.frontend',
-                    'com_modules.module.' . $mod->id)
+            if ($frontediting && trim($moduleHtml) != '' && $user->authorise(
+                    'module.edit.frontend',
+                    'com_modules.module.' . $mod->id
+                )
             ) {
                 $displayData = array(
                     'moduleHtml'   => &$moduleHtml,

@@ -311,9 +311,9 @@ abstract class FOFUtilsInstallscript
 
         // Fix broken #__extensions records
         $query = $db->getQuery(true);
-        $query->select('extension_id')
-              ->from('#__extensions')
-              ->where($db->qn('element') . ' = ' . $db->q($this->componentName));
+        $query->select('extension_id')->from('#__extensions')->where(
+                $db->qn('element') . ' = ' . $db->q($this->componentName)
+            );
         $db->setQuery($query);
         $ids = $db->loadColumn();
 
@@ -333,11 +333,9 @@ abstract class FOFUtilsInstallscript
 
         // Fix broken #__menu records
         $query = $db->getQuery(true);
-        $query->select('id')
-              ->from('#__menu')
-              ->where($db->qn('type') . ' = ' . $db->q('component'))
-              ->where($db->qn('menutype') . ' = ' . $db->q('main'))
-              ->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->componentName));
+        $query->select('id')->from('#__menu')->where($db->qn('type') . ' = ' . $db->q('component'))->where(
+                $db->qn('menutype') . ' = ' . $db->q('main')
+            )->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->componentName));
         $db->setQuery($query);
         $ids = $db->loadColumn();
 
@@ -365,9 +363,9 @@ abstract class FOFUtilsInstallscript
 
         // If there are multiple #__extensions record, keep one of them
         $query = $db->getQuery(true);
-        $query->select('extension_id')
-              ->from('#__extensions')
-              ->where($db->qn('element') . ' = ' . $db->q($this->componentName));
+        $query->select('extension_id')->from('#__extensions')->where(
+                $db->qn('element') . ' = ' . $db->q($this->componentName)
+            );
         $db->setQuery($query);
 
         try {
@@ -499,9 +497,11 @@ abstract class FOFUtilsInstallscript
     public function postflight($type, $parent)
     {
         // Install or update database
-        $dbInstaller = new FOFDatabaseInstaller(array(
-            'dbinstaller_directory' => ($this->schemaXmlPathRelative ? JPATH_ADMINISTRATOR . '/components/' . $this->componentName : '') . '/' . $this->schemaXmlPath
-        ));
+        $dbInstaller = new FOFDatabaseInstaller(
+            array(
+                'dbinstaller_directory' => ($this->schemaXmlPathRelative ? JPATH_ADMINISTRATOR . '/components/' . $this->componentName : '') . '/' . $this->schemaXmlPath
+            )
+        );
         $dbInstaller->updateSchema();
 
         // Install subextensions
@@ -530,8 +530,10 @@ abstract class FOFUtilsInstallscript
 
             if (isset($this->removeFilesAllVersions['files'])) {
                 if (isset($this->removeFilesFree['files'])) {
-                    $removeFiles['files'] = array_merge($this->removeFilesAllVersions['files'],
-                        $this->removeFilesFree['files']);
+                    $removeFiles['files'] = array_merge(
+                        $this->removeFilesAllVersions['files'],
+                        $this->removeFilesFree['files']
+                    );
                 } else {
                     $removeFiles['files'] = $this->removeFilesAllVersions['files'];
                 }
@@ -541,8 +543,10 @@ abstract class FOFUtilsInstallscript
 
             if (isset($this->removeFilesAllVersions['folders'])) {
                 if (isset($this->removeFilesFree['folders'])) {
-                    $removeFiles['folders'] = array_merge($this->removeFilesAllVersions['folders'],
-                        $this->removeFilesFree['folders']);
+                    $removeFiles['folders'] = array_merge(
+                        $this->removeFilesAllVersions['folders'],
+                        $this->removeFilesFree['folders']
+                    );
                 } else {
                     $removeFiles['folders'] = $this->removeFilesAllVersions['folders'];
                 }
@@ -623,10 +627,9 @@ abstract class FOFUtilsInstallscript
                         }
 
                         // Was the module already installed?
-                        $sql = $db->getQuery(true)
-                                  ->select('COUNT(*)')
-                                  ->from('#__modules')
-                                  ->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+                        $sql = $db->getQuery(true)->select('COUNT(*)')->from('#__modules')->where(
+                                $db->qn('module') . ' = ' . $db->q('mod_' . $module)
+                            );
                         $db->setQuery($sql);
 
                         try {
@@ -648,10 +651,9 @@ abstract class FOFUtilsInstallscript
                             // A. Position and state
                             list($modulePosition, $modulePublished) = $modulePreferences;
 
-                            $sql = $db->getQuery(true)
-                                      ->update($db->qn('#__modules'))
-                                      ->set($db->qn('position') . ' = ' . $db->q($modulePosition))
-                                      ->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+                            $sql = $db->getQuery(true)->update($db->qn('#__modules'))->set(
+                                    $db->qn('position') . ' = ' . $db->q($modulePosition)
+                                )->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
 
                             if ($modulePublished) {
                                 $sql->set($db->qn('published') . ' = ' . $db->q('1'));
@@ -677,9 +679,9 @@ abstract class FOFUtilsInstallscript
                                     $position++;
 
                                     $query = $db->getQuery(true);
-                                    $query->update($db->qn('#__modules'))
-                                          ->set($db->qn('ordering') . ' = ' . $db->q($position))
-                                          ->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+                                    $query->update($db->qn('#__modules'))->set(
+                                            $db->qn('ordering') . ' = ' . $db->q($position)
+                                        )->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
                                     $db->setQuery($query);
                                     $db->execute();
                                 } catch (Exception $exc) {
@@ -690,16 +692,16 @@ abstract class FOFUtilsInstallscript
                             // C. Link to all pages
                             try {
                                 $query = $db->getQuery(true);
-                                $query->select('id')
-                                      ->from($db->qn('#__modules'))
-                                      ->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+                                $query->select('id')->from($db->qn('#__modules'))->where(
+                                        $db->qn('module') . ' = ' . $db->q('mod_' . $module)
+                                    );
                                 $db->setQuery($query);
                                 $moduleid = $db->loadResult();
 
                                 $query = $db->getQuery(true);
-                                $query->select('*')
-                                      ->from($db->qn('#__modules_menu'))
-                                      ->where($db->qn('moduleid') . ' = ' . $db->q($moduleid));
+                                $query->select('*')->from($db->qn('#__modules_menu'))->where(
+                                        $db->qn('moduleid') . ' = ' . $db->q($moduleid)
+                                    );
                                 $db->setQuery($query);
                                 $assignments = $db->loadObjectList();
                                 $isAssigned  = !empty($assignments);
@@ -744,11 +746,9 @@ abstract class FOFUtilsInstallscript
                         }
 
                         // Was the plugin already installed?
-                        $query = $db->getQuery(true)
-                                    ->select('COUNT(*)')
-                                    ->from($db->qn('#__extensions'))
-                                    ->where($db->qn('element') . ' = ' . $db->q($plugin))
-                                    ->where($db->qn('folder') . ' = ' . $db->q($folder));
+                        $query = $db->getQuery(true)->select('COUNT(*)')->from($db->qn('#__extensions'))->where(
+                                $db->qn('element') . ' = ' . $db->q($plugin)
+                            )->where($db->qn('folder') . ' = ' . $db->q($folder));
                         $db->setQuery($query);
 
                         try {
@@ -763,11 +763,11 @@ abstract class FOFUtilsInstallscript
                         $status->plugins[] = array('name' => 'plg_' . $plugin, 'group' => $folder, 'result' => $result);
 
                         if ($published && !$count) {
-                            $query = $db->getQuery(true)
-                                        ->update($db->qn('#__extensions'))
-                                        ->set($db->qn('enabled') . ' = ' . $db->q('1'))
-                                        ->where($db->qn('element') . ' = ' . $db->q($plugin))
-                                        ->where($db->qn('folder') . ' = ' . $db->q($folder));
+                            $query = $db->getQuery(true)->update($db->qn('#__extensions'))->set(
+                                    $db->qn('enabled') . ' = ' . $db->q('1')
+                                )->where($db->qn('element') . ' = ' . $db->q($plugin))->where(
+                                    $db->qn('folder') . ' = ' . $db->q($folder)
+                                );
                             $db->setQuery($query);
 
                             try {
@@ -958,7 +958,8 @@ abstract class FOFUtilsInstallscript
                 'date'    => new JDate(trim($info[1]))
             );
 
-            $haveToInstallStrapper = $strapperVersion['package']['date']->toUNIX() > $strapperVersion['installed']['date']->toUNIX();
+            $haveToInstallStrapper = $strapperVersion['package']['date']->toUNIX(
+                ) > $strapperVersion['installed']['date']->toUNIX();
         }
 
         $installedStraper = false;
@@ -1028,13 +1029,10 @@ abstract class FOFUtilsInstallscript
         $option = $parent->get('element');
 
         // If a component exists with this option in the table then we don't need to add menus
-        $query = $db->getQuery(true)
-                    ->select('m.id, e.extension_id')
-                    ->from('#__menu AS m')
-                    ->join('LEFT', '#__extensions AS e ON m.component_id = e.extension_id')
-                    ->where('m.parent_id = 1')
-                    ->where('m.client_id = 1')
-                    ->where('e.element = ' . $db->quote($option));
+        $query = $db->getQuery(true)->select('m.id, e.extension_id')->from('#__menu AS m')->join(
+                'LEFT',
+                '#__extensions AS e ON m.component_id = e.extension_id'
+            )->where('m.parent_id = 1')->where('m.client_id = 1')->where('e.element = ' . $db->quote($option));
 
         $db->setQuery($query);
 
@@ -1047,10 +1045,9 @@ abstract class FOFUtilsInstallscript
         }
 
         // Let's find the extension id
-        $query->clear()
-              ->select('e.extension_id')
-              ->from('#__extensions AS e')
-              ->where('e.element = ' . $db->quote($option));
+        $query->clear()->select('e.extension_id')->from('#__extensions AS e')->where(
+                'e.element = ' . $db->quote($option)
+            );
         $db->setQuery($query);
         $component_id = $db->loadResult();
 
@@ -1060,56 +1057,53 @@ abstract class FOFUtilsInstallscript
         // We need to insert the menu item as the last child of Joomla!'s menu root node. By default this is the
         // menu item with ID=1. However, some crappy upgrade scripts enjoy screwing it up. Hey, ho, the workaround
         // way I go.
-        $query      = $db->getQuery(true)
-                         ->select($db->qn('id'))
-                         ->from($db->qn('#__menu'))
-                         ->where($db->qn('id') . ' = ' . $db->q(1));
+        $query      = $db->getQuery(true)->select($db->qn('id'))->from($db->qn('#__menu'))->where(
+                $db->qn('id') . ' = ' . $db->q(1)
+            );
         $rootItemId = $db->setQuery($query)->loadResult();
 
         if (is_null($rootItemId)) {
             // Guess what? The Problem has happened. Let's find the root node by title.
             $rootItemId = null;
-            $query      = $db->getQuery(true)
-                             ->select($db->qn('id'))
-                             ->from($db->qn('#__menu'))
-                             ->where($db->qn('title') . ' = ' . $db->q('Menu_Item_Root'));
+            $query      = $db->getQuery(true)->select($db->qn('id'))->from($db->qn('#__menu'))->where(
+                    $db->qn('title') . ' = ' . $db->q('Menu_Item_Root')
+                );
             $rootItemId = $db->setQuery($query, 0, 1)->loadResult();
         }
 
         if (is_null($rootItemId)) {
             // For crying out loud, did that idiot changed the title too?! Let's find it by alias.
             $rootItemId = null;
-            $query      = $db->getQuery(true)
-                             ->select($db->qn('id'))
-                             ->from($db->qn('#__menu'))
-                             ->where($db->qn('alias') . ' = ' . $db->q('root'));
+            $query      = $db->getQuery(true)->select($db->qn('id'))->from($db->qn('#__menu'))->where(
+                    $db->qn('alias') . ' = ' . $db->q('root')
+                );
             $rootItemId = $db->setQuery($query, 0, 1)->loadResult();
         }
 
         if (is_null($rootItemId)) {
             // Dude. Dude! Duuuuuuude! The alias is screwed up, too?! Find it by component ID.
             $rootItemId = null;
-            $query      = $db->getQuery(true)
-                             ->select($db->qn('id'))
-                             ->from($db->qn('#__menu'))
-                             ->where($db->qn('component_id') . ' = ' . $db->q('0'));
+            $query      = $db->getQuery(true)->select($db->qn('id'))->from($db->qn('#__menu'))->where(
+                    $db->qn('component_id') . ' = ' . $db->q('0')
+                );
             $rootItemId = $db->setQuery($query, 0, 1)->loadResult();
         }
 
         if (is_null($rootItemId)) {
             // Your site is more of a "shite" than a "site". Let's try with minimum lft value.
             $rootItemId = null;
-            $query      = $db->getQuery(true)
-                             ->select($db->qn('id'))
-                             ->from($db->qn('#__menu'))
-                             ->order($db->qn('lft') . ' ASC');
+            $query      = $db->getQuery(true)->select($db->qn('id'))->from($db->qn('#__menu'))->order(
+                    $db->qn('lft') . ' ASC'
+                );
             $rootItemId = $db->setQuery($query, 0, 1)->loadResult();
         }
 
         if (is_null($rootItemId)) {
             // I quit. Your site is broken. What the hell are you doing with it? I'll just throw an error.
-            throw new Exception("Your site is broken. There is no root menu item. As a result it is impossible to create menu items. The installation of this component has failed. Please fix your database and retry!",
-                500);
+            throw new Exception(
+                "Your site is broken. There is no root menu item. As a result it is impossible to create menu items. The installation of this component has failed. Please fix your database and retry!",
+                500
+            );
         }
 
         if ($menuElement) {
@@ -1123,7 +1117,8 @@ abstract class FOFUtilsInstallscript
             $data['published']    = 0;
             $data['parent_id']    = 1;
             $data['component_id'] = $component_id;
-            $data['img']          = ((string)$menuElement->attributes()->img) ? (string)$menuElement->attributes()->img : 'class:component';
+            $data['img']          = ((string)$menuElement->attributes()->img) ? (string)$menuElement->attributes(
+            )->img : 'class:component';
             $data['home']         = 0;
         } // No menu element was specified, Let's make a generic menu item
         else {
@@ -1151,15 +1146,11 @@ abstract class FOFUtilsInstallscript
 
         if (!$table->bind($data) || !$table->check() || !$table->store()) {
             // The menu item already exists. Delete it and retry instead of throwing an error.
-            $query->clear()
-                  ->select('id')
-                  ->from('#__menu')
-                  ->where('menutype = ' . $db->quote('main'))
-                  ->where('client_id = 1')
-                  ->where('link = ' . $db->quote('index.php?option=' . $option))
-                  ->where('type = ' . $db->quote('component'))
-                  ->where('parent_id = 1')
-                  ->where('home = 0');
+            $query->clear()->select('id')->from('#__menu')->where('menutype = ' . $db->quote('main'))->where(
+                    'client_id = 1'
+                )->where('link = ' . $db->quote('index.php?option=' . $option))->where(
+                    'type = ' . $db->quote('component')
+                )->where('parent_id = 1')->where('home = 0');
 
             $db->setQuery($query);
             $menu_ids_level1 = $db->loadColumn();
@@ -1172,15 +1163,11 @@ abstract class FOFUtilsInstallscript
             } else {
                 $ids = implode(',', $menu_ids_level1);
 
-                $query->clear()
-                      ->select('id')
-                      ->from('#__menu')
-                      ->where('menutype = ' . $db->quote('main'))
-                      ->where('client_id = 1')
-                      ->where('type = ' . $db->quote('component'))
-                      ->where('parent_id in (' . $ids . ')')
-                      ->where('level = 2')
-                      ->where('home = 0');
+                $query->clear()->select('id')->from('#__menu')->where('menutype = ' . $db->quote('main'))->where(
+                        'client_id = 1'
+                    )->where('type = ' . $db->quote('component'))->where('parent_id in (' . $ids . ')')->where(
+                        'level = 2'
+                    )->where('home = 0');
 
                 $db->setQuery($query);
                 $menu_ids_level2 = $db->loadColumn();
@@ -1231,7 +1218,8 @@ abstract class FOFUtilsInstallscript
             $data['published']    = 0;
             $data['parent_id']    = $parent_id;
             $data['component_id'] = $component_id;
-            $data['img']          = ((string)$child->attributes()->img) ? (string)$child->attributes()->img : 'class:component';
+            $data['img']          = ((string)$child->attributes()->img) ? (string)$child->attributes(
+            )->img : 'class:component';
             $data['home']         = 0;
 
             // Set the sub menu link
@@ -1303,13 +1291,12 @@ abstract class FOFUtilsInstallscript
         $db     = $parent->getParent()->getDbo();
         $option = $parent->get('element');
 
-        $query = $db->getQuery(true)
-                    ->update('#__menu AS m')
-                    ->join('LEFT', '#__extensions AS e ON m.component_id = e.extension_id')
-                    ->set($db->qn('published') . ' = ' . $db->q(1))
-                    ->where('m.parent_id = 1')
-                    ->where('m.client_id = 1')
-                    ->where('e.element = ' . $db->quote($option));
+        $query = $db->getQuery(true)->update('#__menu AS m')->join(
+                'LEFT',
+                '#__extensions AS e ON m.component_id = e.extension_id'
+            )->set($db->qn('published') . ' = ' . $db->q(1))->where('m.parent_id = 1')->where('m.client_id = 1')->where(
+                'e.element = ' . $db->quote($option)
+            );
 
         $db->setQuery($query);
 
@@ -1553,49 +1540,44 @@ abstract class FOFUtilsInstallscript
 
         // We need to rebuild the menu based on its root item. By default this is the menu item with ID=1. However, some
         // crappy upgrade scripts enjoy screwing it up. Hey, ho, the workaround way I go.
-        $query      = $db->getQuery(true)
-                         ->select($db->qn('id'))
-                         ->from($db->qn('#__menu'))
-                         ->where($db->qn('id') . ' = ' . $db->q(1));
+        $query      = $db->getQuery(true)->select($db->qn('id'))->from($db->qn('#__menu'))->where(
+                $db->qn('id') . ' = ' . $db->q(1)
+            );
         $rootItemId = $db->setQuery($query)->loadResult();
 
         if (is_null($rootItemId)) {
             // Guess what? The Problem has happened. Let's find the root node by title.
             $rootItemId = null;
-            $query      = $db->getQuery(true)
-                             ->select($db->qn('id'))
-                             ->from($db->qn('#__menu'))
-                             ->where($db->qn('title') . ' = ' . $db->q('Menu_Item_Root'));
+            $query      = $db->getQuery(true)->select($db->qn('id'))->from($db->qn('#__menu'))->where(
+                    $db->qn('title') . ' = ' . $db->q('Menu_Item_Root')
+                );
             $rootItemId = $db->setQuery($query, 0, 1)->loadResult();
         }
 
         if (is_null($rootItemId)) {
             // For crying out loud, did that idiot changed the title too?! Let's find it by alias.
             $rootItemId = null;
-            $query      = $db->getQuery(true)
-                             ->select($db->qn('id'))
-                             ->from($db->qn('#__menu'))
-                             ->where($db->qn('alias') . ' = ' . $db->q('root'));
+            $query      = $db->getQuery(true)->select($db->qn('id'))->from($db->qn('#__menu'))->where(
+                    $db->qn('alias') . ' = ' . $db->q('root')
+                );
             $rootItemId = $db->setQuery($query, 0, 1)->loadResult();
         }
 
         if (is_null($rootItemId)) {
             // Dude. Dude! Duuuuuuude! The alias is screwed up, too?! Find it by component ID.
             $rootItemId = null;
-            $query      = $db->getQuery(true)
-                             ->select($db->qn('id'))
-                             ->from($db->qn('#__menu'))
-                             ->where($db->qn('component_id') . ' = ' . $db->q('0'));
+            $query      = $db->getQuery(true)->select($db->qn('id'))->from($db->qn('#__menu'))->where(
+                    $db->qn('component_id') . ' = ' . $db->q('0')
+                );
             $rootItemId = $db->setQuery($query, 0, 1)->loadResult();
         }
 
         if (is_null($rootItemId)) {
             // Your site is more of a "shite" than a "site". Let's try with minimum lft value.
             $rootItemId = null;
-            $query      = $db->getQuery(true)
-                             ->select($db->qn('id'))
-                             ->from($db->qn('#__menu'))
-                             ->order($db->qn('lft') . ' ASC');
+            $query      = $db->getQuery(true)->select($db->qn('id'))->from($db->qn('#__menu'))->order(
+                    $db->qn('lft') . ' ASC'
+                );
             $rootItemId = $db->setQuery($query, 0, 1)->loadResult();
         }
 
@@ -1627,9 +1609,9 @@ abstract class FOFUtilsInstallscript
         // Get the extension ID for our component
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true);
-        $query->select('extension_id')
-              ->from('#__extensions')
-              ->where($db->qn('element') . ' = ' . $db->q($this->componentName));
+        $query->select('extension_id')->from('#__extensions')->where(
+                $db->qn('element') . ' = ' . $db->q($this->componentName)
+            );
         $db->setQuery($query);
 
         try {
@@ -1774,8 +1756,9 @@ abstract class FOFUtilsInstallscript
 
         // Make sure there's a valid type
         if (!in_array($options['type'], array('message', 'link', 'action'))) {
-            throw new Exception('Post-installation message definitions need to declare a type of message, link or action',
-                500);
+            throw new Exception(
+                'Post-installation message definitions need to declare a type of message, link or action', 500
+            );
         }
 
         // Make sure there's a title key
@@ -1790,60 +1773,76 @@ abstract class FOFUtilsInstallscript
 
         // If the type is anything other than message you need an action key
         if (($options['type'] != 'message') && empty($options['action_key'])) {
-            throw new Exception('Post-installation message definitions need an action key when they are of type "' . $options['type'] . '"',
-                500);
+            throw new Exception(
+                'Post-installation message definitions need an action key when they are of type "' . $options['type'] . '"',
+                500
+            );
         }
 
         // You must specify the language extension
         if (empty($options['language_extension'])) {
-            throw new Exception('Post-installation message definitions need to specify which extension contains their language keys',
-                500);
+            throw new Exception(
+                'Post-installation message definitions need to specify which extension contains their language keys',
+                500
+            );
         }
 
         // The action file and method are only required for the "action" type
         if ($options['type'] == 'action') {
             if (empty($options['action_file'])) {
-                throw new Exception('Post-installation message definitions need an action file when they are of type "action"',
-                    500);
+                throw new Exception(
+                    'Post-installation message definitions need an action file when they are of type "action"', 500
+                );
             }
 
             $file_path = FOFTemplateUtils::parsePath($options['action_file'], true);
 
             if (!@is_file($file_path)) {
-                throw new Exception('The action file ' . $options['action_file'] . ' of your post-installation message definition does not exist',
-                    500);
+                throw new Exception(
+                    'The action file ' . $options['action_file'] . ' of your post-installation message definition does not exist',
+                    500
+                );
             }
 
             if (empty($options['action'])) {
-                throw new Exception('Post-installation message definitions need an action (function name) when they are of type "action"',
-                    500);
+                throw new Exception(
+                    'Post-installation message definitions need an action (function name) when they are of type "action"',
+                    500
+                );
             }
         }
 
         if ($options['type'] == 'link') {
             if (empty($options['link'])) {
-                throw new Exception('Post-installation message definitions need an action (URL) when they are of type "link"',
-                    500);
+                throw new Exception(
+                    'Post-installation message definitions need an action (URL) when they are of type "link"', 500
+                );
             }
         }
 
         // The condition file and method are only required when the type is not "message"
         if ($options['type'] != 'message') {
             if (empty($options['condition_file'])) {
-                throw new Exception('Post-installation message definitions need a condition file when they are of type "' . $options['type'] . '"',
-                    500);
+                throw new Exception(
+                    'Post-installation message definitions need a condition file when they are of type "' . $options['type'] . '"',
+                    500
+                );
             }
 
             $file_path = FOFTemplateUtils::parsePath($options['condition_file'], true);
 
             if (!@is_file($file_path)) {
-                throw new Exception('The condition file ' . $options['condition_file'] . ' of your post-installation message definition does not exist',
-                    500);
+                throw new Exception(
+                    'The condition file ' . $options['condition_file'] . ' of your post-installation message definition does not exist',
+                    500
+                );
             }
 
             if (empty($options['condition_method'])) {
-                throw new Exception('Post-installation message definitions need a condition method (function name) when they are of type "' . $options['type'] . '"',
-                    500);
+                throw new Exception(
+                    'Post-installation message definitions need a condition method (function name) when they are of type "' . $options['type'] . '"',
+                    500
+                );
             }
         }
 
@@ -1851,12 +1850,11 @@ abstract class FOFUtilsInstallscript
         $tableName = '#__postinstall_messages';
 
         $db          = JFactory::getDbo();
-        $query       = $db->getQuery(true)
-                          ->select('*')
-                          ->from($db->qn($tableName))
-                          ->where($db->qn('extension_id') . ' = ' . $db->q($options['extension_id']))
-                          ->where($db->qn('type') . ' = ' . $db->q($options['type']))
-                          ->where($db->qn('title_key') . ' = ' . $db->q($options['title_key']));
+        $query       = $db->getQuery(true)->select('*')->from($db->qn($tableName))->where(
+                $db->qn('extension_id') . ' = ' . $db->q($options['extension_id'])
+            )->where($db->qn('type') . ' = ' . $db->q($options['type']))->where(
+                $db->qn('title_key') . ' = ' . $db->q($options['title_key'])
+            );
         $existingRow = $db->setQuery($query)->loadAssoc();
 
         // Is the existing definition the same as the one we're trying to save (ignore the enabled flag)?
@@ -1880,11 +1878,11 @@ abstract class FOFUtilsInstallscript
             }
 
             // Otherwise it's not the same row. Remove the old row before insert a new one.
-            $query = $db->getQuery(true)
-                        ->delete($db->qn($tableName))
-                        ->where($db->q('extension_id') . ' = ' . $db->q($options['extension_id']))
-                        ->where($db->q('type') . ' = ' . $db->q($options['type']))
-                        ->where($db->q('title_key') . ' = ' . $db->q($options['title_key']));
+            $query = $db->getQuery(true)->delete($db->qn($tableName))->where(
+                    $db->q('extension_id') . ' = ' . $db->q($options['extension_id'])
+                )->where($db->q('type') . ' = ' . $db->q($options['type']))->where(
+                    $db->q('title_key') . ' = ' . $db->q($options['title_key'])
+                );
             $db->setQuery($query)->execute();
         }
 
@@ -1901,9 +1899,11 @@ abstract class FOFUtilsInstallscript
     public function uninstall($parent)
     {
         // Uninstall database
-        $dbInstaller = new FOFDatabaseInstaller(array(
-            'dbinstaller_directory' => ($this->schemaXmlPathRelative ? JPATH_ADMINISTRATOR . '/components/' . $this->componentName : '') . '/' . $this->schemaXmlPath
-        ));
+        $dbInstaller = new FOFDatabaseInstaller(
+            array(
+                'dbinstaller_directory' => ($this->schemaXmlPathRelative ? JPATH_ADMINISTRATOR . '/components/' . $this->componentName : '') . '/' . $this->schemaXmlPath
+            )
+        );
         $dbInstaller->removeSchema();
 
         // Uninstall modules and plugins
@@ -2021,9 +2021,9 @@ abstract class FOFUtilsInstallscript
         // Get the extension ID for our component
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true);
-        $query->select('extension_id')
-              ->from('#__extensions')
-              ->where($db->qn('element') . ' = ' . $db->q($this->componentName));
+        $query->select('extension_id')->from('#__extensions')->where(
+                $db->qn('element') . ' = ' . $db->q($this->componentName)
+            );
         $db->setQuery($query);
 
         try {
@@ -2038,9 +2038,9 @@ abstract class FOFUtilsInstallscript
 
         $extension_id = array_shift($ids);
 
-        $query = $db->getQuery(true)
-                    ->delete($this->postInstallationMessages)
-                    ->where($db->qn('extension_id') . ' = ' . $db->q($extension_id));
+        $query = $db->getQuery(true)->delete($this->postInstallationMessages)->where(
+                $db->qn('extension_id') . ' = ' . $db->q($extension_id)
+            );
 
         try {
             $db->setQuery($query)->execute();

@@ -10,8 +10,10 @@
 defined('_JEXEC') or die;
 
 JLoader::register('NewsfeedsHelper', JPATH_ADMINISTRATOR . '/components/com_newsfeeds/helpers/newsfeeds.php');
-JLoader::register('CategoryHelperAssociation',
-    JPATH_ADMINISTRATOR . '/components/com_categories/helpers/association.php');
+JLoader::register(
+    'CategoryHelperAssociation',
+    JPATH_ADMINISTRATOR . '/components/com_categories/helpers/association.php'
+);
 
 /**
  * Newsfeeds Component Association Helper
@@ -42,14 +44,21 @@ abstract class NewsfeedsHelperAssociation extends CategoryHelperAssociation
 
         if ($view == 'newsfeed') {
             if ($id) {
-                $associations = JLanguageAssociations::getAssociations('com_newsfeeds', '#__newsfeeds',
-                    'com_newsfeeds.item', $id);
+                $associations = JLanguageAssociations::getAssociations(
+                    'com_newsfeeds',
+                    '#__newsfeeds',
+                    'com_newsfeeds.item',
+                    $id
+                );
 
                 $return = array();
 
                 foreach ($associations as $tag => $item) {
-                    $return[$tag] = NewsfeedsHelperRoute::getNewsfeedRoute($item->id, (int)$item->catid,
-                        $item->language);
+                    $return[$tag] = NewsfeedsHelperRoute::getNewsfeedRoute(
+                        $item->id,
+                        (int)$item->catid,
+                        $item->language
+                    );
                 }
 
                 return $return;

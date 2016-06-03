@@ -23,7 +23,8 @@ $assoc = JLanguageAssociations::isEnabled();
 // Are associations implemented for this extension?
 $extensionassoc = array_key_exists('item_associations', $this->form->getFieldsets());
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	Joomla.submitbutton = function(task)
 	{
 		if (task == "category.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
@@ -38,7 +39,8 @@ JFactory::getDocument()->addScriptDeclaration('
 			}
 		}
 	};
-');
+'
+);
 
 // Fieldsets to not automatically render by /layouts/joomla/edit/params.php
 $this->ignore_fieldsets = array('jmetadata', 'item_associations');
@@ -50,8 +52,12 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
 ?>
 
 <form
-    action="<?php echo JRoute::_('index.php?option=com_categories&extension=' . $input->getCmd('extension',
-            'com_content') . '&layout=' . $layout . $tmpl . '&id=' . (int)$this->item->id); ?>"
+    action="<?php echo JRoute::_(
+        'index.php?option=com_categories&extension=' . $input->getCmd(
+            'extension',
+            'com_content'
+        ) . '&layout=' . $layout . $tmpl . '&id=' . (int)$this->item->id
+    ); ?>"
     method="post" name="adminForm" id="item-form" class="form-validate">
 
     <?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
@@ -71,8 +77,12 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
         </div>
         <?php echo JHtml::_('bootstrap.endTab'); ?>
 
-        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing',
-            JText::_('COM_CATEGORIES_FIELDSET_PUBLISHING')); ?>
+        <?php echo JHtml::_(
+            'bootstrap.addTab',
+            'myTab',
+            'publishing',
+            JText::_('COM_CATEGORIES_FIELDSET_PUBLISHING')
+        ); ?>
         <div class="row-fluid form-horizontal-desktop">
             <div class="span6">
                 <?php echo JLayoutHelper::render('joomla.edit.publishingdata', $this); ?>
@@ -84,8 +94,12 @@ $tmpl    = $isModal ? '&tmpl=component' : '';
         <?php echo JHtml::_('bootstrap.endTab'); ?>
 
         <?php if (!$isModal && $assoc && $extensionassoc) : ?>
-            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations',
-                JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')); ?>
+            <?php echo JHtml::_(
+                'bootstrap.addTab',
+                'myTab',
+                'associations',
+                JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')
+            ); ?>
             <?php echo $this->loadTemplate('associations'); ?>
             <?php echo JHtml::_('bootstrap.endTab'); ?>
         <?php elseif ($isModal && $assoc && $extensionassoc) : ?>

@@ -130,8 +130,10 @@ abstract class ContactHelperRoute
 
         // Check if the active menuitem matches the requested language
         $active = $menus->getActive();
-        if ($active && ($language == '*' || in_array($active->language,
-                    array('*', $language)) || !JLanguageMultilang::isEnabled())
+        if ($active && ($language == '*' || in_array(
+                    $active->language,
+                    array('*', $language)
+                ) || !JLanguageMultilang::isEnabled())
         ) {
             return $active->id;
         }

@@ -44,8 +44,11 @@ class RedirectHelper
     public static function getActions()
     {
         // Log usage of deprecated function
-        JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Get list of actions
         $result = JHelperContent::getActions('com_redirect');
@@ -83,11 +86,9 @@ class RedirectHelper
     public static function isEnabled()
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('enabled'))
-                    ->from($db->quoteName('#__extensions'))
-                    ->where($db->quoteName('folder') . ' = ' . $db->quote('system'))
-                    ->where($db->quoteName('element') . ' = ' . $db->quote('redirect'));
+        $query = $db->getQuery(true)->select($db->quoteName('enabled'))->from($db->quoteName('#__extensions'))->where(
+                $db->quoteName('folder') . ' = ' . $db->quote('system')
+            )->where($db->quoteName('element') . ' = ' . $db->quote('redirect'));
         $db->setQuery($query);
 
         try {

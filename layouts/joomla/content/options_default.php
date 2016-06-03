@@ -28,11 +28,16 @@ defined('JPATH_BASE') or die;
                 foreach (preg_split('%\[AND\]|\[OR\]%', $showonstring) as $showonfield) {
                     $showon      = explode(':', $showonfield, 2);
                     $showonarr[] = array(
-                        'field'  => $displayData->form->getFormControl() . '[' . $displayData->form->getFieldAttribute($showon[0],
-                                'name') . ']',
+                        'field'  => $displayData->form->getFormControl() . '[' . $displayData->form->getFieldAttribute(
+                                $showon[0],
+                                'name'
+                            ) . ']',
                         'values' => explode(',', $showon[1]),
-                        'op'     => (preg_match('%\[(AND|OR)\]' . $showonfield . '%', $showonstring,
-                            $matches)) ? $matches[1] : ''
+                        'op'     => (preg_match(
+                            '%\[(AND|OR)\]' . $showonfield . '%',
+                            $showonstring,
+                            $matches
+                        )) ? $matches[1] : ''
                     );
                 }
 

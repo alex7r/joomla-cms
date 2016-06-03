@@ -13,14 +13,26 @@ $doc   = JFactory::getDocument();
 $color = $this->params->get('templatecolor');
 
 $doc->addStyleSheet($this->baseurl . '/templates/system/css/system.css');
-$doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/template.css', $type = 'text/css',
-    $media = 'screen,projection');
-$doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/position.css', $type = 'text/css',
-    $media = 'screen,projection');
-$doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/layout.css', $type = 'text/css',
-    $media = 'screen,projection');
-$doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/print.css', $type = 'text/css',
-    $media = 'print');
+$doc->addStyleSheet(
+    $this->baseurl . '/templates/' . $this->template . '/css/template.css',
+    $type = 'text/css',
+    $media = 'screen,projection'
+);
+$doc->addStyleSheet(
+    $this->baseurl . '/templates/' . $this->template . '/css/position.css',
+    $type = 'text/css',
+    $media = 'screen,projection'
+);
+$doc->addStyleSheet(
+    $this->baseurl . '/templates/' . $this->template . '/css/layout.css',
+    $type = 'text/css',
+    $media = 'screen,projection'
+);
+$doc->addStyleSheet(
+    $this->baseurl . '/templates/' . $this->template . '/css/print.css',
+    $type = 'text/css',
+    $media = 'print'
+);
 
 $files = JHtml::_('stylesheet', 'templates/' . $this->template . '/css/general.css', null, false, true);
 
@@ -39,10 +51,20 @@ $doc->addStyleSheet('templates/' . $this->template . '/css/' . htmlspecialchars(
 if ($this->direction == 'rtl') {
     $doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/template_rtl.css');
 
-    if (file_exists(JPATH_SITE . '/templates/' . $this->template . '/css/' . htmlspecialchars($color, ENT_COMPAT,
-            'UTF-8') . '_rtl.css')) {
-        $doc->addStyleSheet($this->baseurl . '/templates/' . $this->template . '/css/' . htmlspecialchars($color,
-                ENT_COMPAT, 'UTF-8') . '_rtl.css');
+    if (file_exists(
+        JPATH_SITE . '/templates/' . $this->template . '/css/' . htmlspecialchars(
+            $color,
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '_rtl.css'
+    )) {
+        $doc->addStyleSheet(
+            $this->baseurl . '/templates/' . $this->template . '/css/' . htmlspecialchars(
+                $color,
+                ENT_COMPAT,
+                'UTF-8'
+            ) . '_rtl.css'
+        );
     }
 }
 ?>

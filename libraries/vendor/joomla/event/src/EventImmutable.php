@@ -67,8 +67,13 @@ final class EventImmutable extends AbstractEvent
      */
     public function offsetSet($name, $value)
     {
-        throw new BadMethodCallException(sprintf('Cannot set the argument %s of the immutable event %s.', $name,
-            $this->name));
+        throw new BadMethodCallException(
+            sprintf(
+                'Cannot set the argument %s of the immutable event %s.',
+                $name,
+                $this->name
+            )
+        );
     }
 
     /**
@@ -84,7 +89,12 @@ final class EventImmutable extends AbstractEvent
      */
     public function offsetUnset($name)
     {
-        throw new BadMethodCallException(sprintf('Cannot remove the argument %s of the immutable event %s.', $name,
-            $this->name));
+        throw new BadMethodCallException(
+            sprintf(
+                'Cannot remove the argument %s of the immutable event %s.',
+                $name,
+                $this->name
+            )
+        );
     }
 }

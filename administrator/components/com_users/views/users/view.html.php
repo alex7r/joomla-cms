@@ -113,8 +113,10 @@ class UsersViewUsers extends JViewLegacy
         }
 
         // Add a batch button
-        if ($user->authorise('core.create', 'com_users') && $user->authorise('core.edit',
-                'com_users') && $user->authorise('core.edit.state', 'com_users')
+        if ($user->authorise('core.create', 'com_users') && $user->authorise(
+                'core.edit',
+                'com_users'
+            ) && $user->authorise('core.edit.state', 'com_users')
         ) {
             $title = JText::_('JTOOLBAR_BATCH');
 

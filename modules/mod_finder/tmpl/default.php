@@ -20,14 +20,21 @@ $lang = JFactory::getLanguage();
 $lang->load('com_finder', JPATH_SITE);
 
 $suffix = $params->get('moduleclass_sfx');
-$output = '<input type="text" name="q" id="mod-finder-searchword" class="search-query input-medium" size="' . $params->get('field_size',
-        20) . '" value="' . htmlspecialchars(JFactory::getApplication()->input->get('q', '', 'string'), ENT_COMPAT,
-        'UTF-8') . '"' . ' placeholder="' . JText::_('MOD_FINDER_SEARCH_VALUE') . '"/>';
+$output = '<input type="text" name="q" id="mod-finder-searchword" class="search-query input-medium" size="' . $params->get(
+        'field_size',
+        20
+    ) . '" value="' . htmlspecialchars(
+              JFactory::getApplication()->input->get('q', '', 'string'),
+              ENT_COMPAT,
+              'UTF-8'
+          ) . '"' . ' placeholder="' . JText::_('MOD_FINDER_SEARCH_VALUE') . '"/>';
 
-$showLabel  = $params->get('show_label', 1);
+$showLabel = $params->get('show_label', 1);
 $labelClass = (!$showLabel ? 'element-invisible ' : '') . 'finder' . $suffix;
-$label      = '<label for="mod-finder-searchword" class="' . $labelClass . '">' . $params->get('alt_label',
-        JText::_('JSEARCH_FILTER_SUBMIT')) . '</label>';
+$label = '<label for="mod-finder-searchword" class="' . $labelClass . '">' . $params->get(
+        'alt_label',
+        JText::_('JSEARCH_FILTER_SUBMIT')
+    ) . '</label>';
 
 switch ($params->get('label_pos', 'left')) {
     case 'top' :
@@ -49,7 +56,9 @@ switch ($params->get('label_pos', 'left')) {
 }
 
 if ($params->get('show_button')) {
-    $button = '<button class="btn btn-primary hasTooltip ' . $suffix . ' finder' . $suffix . '" type="submit" title="' . JText::_('MOD_FINDER_SEARCH_BUTTON') . '"><span class="icon-search icon-white"></span>' . JText::_('JSEARCH_FILTER_SUBMIT') . '</button>';
+    $button = '<button class="btn btn-primary hasTooltip ' . $suffix . ' finder' . $suffix . '" type="submit" title="' . JText::_(
+            'MOD_FINDER_SEARCH_BUTTON'
+        ) . '"><span class="icon-search icon-white"></span>' . JText::_('JSEARCH_FILTER_SUBMIT') . '</button>';
 
     switch ($params->get('button_pos', 'left')) {
         case 'top' :

@@ -26,8 +26,15 @@ $saveOrder = ($listOrder == 'a.lft' && strtolower($listDirn) == 'asc');
 
 if ($saveOrder) {
     $saveOrderingUrl = 'index.php?option=com_tags&task=tags.saveOrderAjax';
-    JHtml::_('sortablelist.sortable', 'categoryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false,
-        true);
+    JHtml::_(
+        'sortablelist.sortable',
+        'categoryList',
+        'adminForm',
+        strtolower($listDirn),
+        $saveOrderingUrl,
+        false,
+        true
+    );
 }
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_tags&view=tags'); ?>" method="post" name="adminForm"
@@ -53,8 +60,17 @@ if ($saveOrder) {
                     <thead>
                     <tr>
                         <th width="1%" class="nowrap hidden-phone center">
-                            <?php echo JHtml::_('searchtools.sort', '', 'a.lft', $listDirn, $listOrder, null, 'asc',
-                                'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                '',
+                                'a.lft',
+                                $listDirn,
+                                $listOrder,
+                                null,
+                                'asc',
+                                'JGRID_HEADING_ORDERING',
+                                'icon-menu-2'
+                            ); ?>
                         </th>
                         <th width="1%">
                             <?php echo JHtml::_('grid.checkall'); ?>
@@ -63,20 +79,40 @@ if ($saveOrder) {
                             <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
                         </th>
                         <th>
-                            <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGLOBAL_TITLE',
+                                'a.title',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'a.access', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ACCESS',
+                                'a.access',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'a.language',
-                                $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_LANGUAGE',
+                                'a.language',
+                                $this->state->get('list.direction'),
+                                $this->state->get('list.ordering')
+                            ); ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'JGRID_HEADING_ID',
+                                'a.id',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -93,8 +129,10 @@ if ($saveOrder) {
                         $orderkey = array_search($item->id, $this->ordering[$item->parent_id]);
                         $canCreate = $user->authorise('core.create', 'com_tags');
                         $canEdit = $user->authorise('core.edit', 'com_tags');
-                        $canCheckin = $user->authorise('core.manage',
-                                'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
+                        $canCheckin = $user->authorise(
+                                'core.manage',
+                                'com_checkin'
+                            ) || $item->checked_out == $user->get('id') || $item->checked_out == 0;
                         $canChange = $user->authorise('core.edit.state', 'com_tags') && $canCheckin;
 
                         // Get the parents of item for sorting
@@ -126,7 +164,9 @@ if ($saveOrder) {
                                 if (!$canChange) {
                                     $iconClass = ' inactive';
                                 } elseif (!$saveOrder) {
-                                    $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+                                    $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText(
+                                            'JORDERINGDISABLED'
+                                        );
                                 }
                                 ?>
                                 <span class="sortable-handler<?php echo $iconClass ?>">
@@ -142,28 +182,49 @@ if ($saveOrder) {
                             </td>
                             <td class="center">
                                 <div class="btn-group">
-                                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'tags.',
-                                        $canChange); ?>
+                                    <?php echo JHtml::_(
+                                        'jgrid.published',
+                                        $item->published,
+                                        $i,
+                                        'tags.',
+                                        $canChange
+                                    ); ?>
                                     <?php // Create dropdown items and render the dropdown list.
                                     if ($canChange) {
-                                        JHtml::_('actionsdropdown.' . ((int)$item->published === 2 ? 'un' : '') . 'archive',
-                                            'cb' . $i, 'tags');
-                                        JHtml::_('actionsdropdown.' . ((int)$item->published === -2 ? 'un' : '') . 'trash',
-                                            'cb' . $i, 'tags');
+                                        JHtml::_(
+                                            'actionsdropdown.' . ((int)$item->published === 2 ? 'un' : '') . 'archive',
+                                            'cb' . $i,
+                                            'tags'
+                                        );
+                                        JHtml::_(
+                                            'actionsdropdown.' . ((int)$item->published === -2 ? 'un' : '') . 'trash',
+                                            'cb' . $i,
+                                            'tags'
+                                        );
                                         echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
                                     }
                                     ?>
                                 </div>
                             </td>
                             <td>
-                                <?php echo JLayoutHelper::render('joomla.html.treeprefix',
-                                    array('level' => $item->level)); ?>
+                                <?php echo JLayoutHelper::render(
+                                    'joomla.html.treeprefix',
+                                    array('level' => $item->level)
+                                ); ?>
                                 <?php if ($item->checked_out) : ?>
-                                    <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time,
-                                        'tags.', $canCheckin); ?>
+                                    <?php echo JHtml::_(
+                                        'jgrid.checkedout',
+                                        $i,
+                                        $item->editor,
+                                        $item->checked_out_time,
+                                        'tags.',
+                                        $canCheckin
+                                    ); ?>
                                 <?php endif; ?>
                                 <?php if ($canEdit) : ?>
-                                    <a href="<?php echo JRoute::_('index.php?option=com_tags&task=tag.edit&id=' . $item->id); ?>">
+                                    <a href="<?php echo JRoute::_(
+                                        'index.php?option=com_tags&task=tag.edit&id=' . $item->id
+                                    ); ?>">
                                         <?php echo $this->escape($item->title); ?></a>
                                 <?php else : ?>
                                     <?php echo $this->escape($item->title); ?>
@@ -172,8 +233,11 @@ if ($saveOrder) {
 									<?php if (empty($item->note)) : ?>
                                         <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
                                     <?php else : ?>
-                                        <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS_NOTE',
-                                            $this->escape($item->alias), $this->escape($item->note)); ?>
+                                        <?php echo JText::sprintf(
+                                            'JGLOBAL_LIST_ALIAS_NOTE',
+                                            $this->escape($item->alias),
+                                            $this->escape($item->note)
+                                        ); ?>
                                     <?php endif; ?>
 								</span>
                             </td>
@@ -184,10 +248,13 @@ if ($saveOrder) {
                                 <?php if ($item->language == '*') : ?>
                                     <?php echo JText::alt('JALL', 'language'); ?>
                                 <?php else: ?>
-                                    <?php echo $item->language_title ? JHtml::_('image',
-                                            'mod_languages/' . $item->language_image . '.gif', $item->language_title,
+                                    <?php echo $item->language_title ? JHtml::_(
+                                            'image',
+                                            'mod_languages/' . $item->language_image . '.gif',
+                                            $item->language_title,
                                             array('title' => $item->language_title),
-                                            true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                            true
+                                        ) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                                 <?php endif; ?>
                             </td>
                             <td class="hidden-phone">
@@ -200,13 +267,20 @@ if ($saveOrder) {
                     </tbody>
                 </table>
                 <?php // Load the batch processing form if user is allowed ?>
-                <?php if ($user->authorise('core.create', 'com_tags') && $user->authorise('core.edit',
-                        'com_tags') && $user->authorise('core.edit.state', 'com_tags')
+                <?php if ($user->authorise('core.create', 'com_tags') && $user->authorise(
+                        'core.edit',
+                        'com_tags'
+                    ) && $user->authorise('core.edit.state', 'com_tags')
                 ) : ?>
-                    <?php echo JHtml::_('bootstrap.renderModal', 'collapseModal', array(
-                        'title'  => JText::_('COM_TAGS_BATCH_OPTIONS'),
-                        'footer' => $this->loadTemplate('batch_footer')
-                    ), $this->loadTemplate('batch_body')); ?>
+                    <?php echo JHtml::_(
+                        'bootstrap.renderModal',
+                        'collapseModal',
+                        array(
+                            'title'  => JText::_('COM_TAGS_BATCH_OPTIONS'),
+                            'footer' => $this->loadTemplate('batch_footer')
+                        ),
+                        $this->loadTemplate('batch_body')
+                    ); ?>
                 <?php endif; ?>
             <?php endif; ?>
 

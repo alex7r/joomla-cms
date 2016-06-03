@@ -36,9 +36,13 @@ class ConfigControllerModulesSave extends JControllerBase
         // Check if the user is authorized to do this.
         $user = JFactory::getUser();
 
-        if (!$user->authorise('module.edit.frontend',
-                'com_modules.module.' . $this->input->get('id')) && !$user->authorise('module.edit.frontend',
-                'com_modules')
+        if (!$user->authorise(
+                'module.edit.frontend',
+                'com_modules.module.' . $this->input->get('id')
+            ) && !$user->authorise(
+                'module.edit.frontend',
+                'com_modules'
+            )
         ) {
             $this->app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'));
             $this->app->redirect('index.php');
@@ -59,8 +63,10 @@ class ConfigControllerModulesSave extends JControllerBase
         }
 
         // Access back-end com_modules to be done
-        JLoader::register('ModulesControllerModule',
-            JPATH_ADMINISTRATOR . '/components/com_modules/controllers/module.php');
+        JLoader::register(
+            'ModulesControllerModule',
+            JPATH_ADMINISTRATOR . '/components/com_modules/controllers/module.php'
+        );
         JLoader::register('ModulesModelModule', JPATH_ADMINISTRATOR . '/components/com_modules/models/module.php');
 
         $controllerClass = new ModulesControllerModule;
@@ -84,8 +90,12 @@ class ConfigControllerModulesSave extends JControllerBase
 
             // Save failed, go back to the screen and display a notice.
             $this->app->enqueueMessage(JText::_('JERROR_SAVE_FAILED'));
-            $this->app->redirect(JRoute::_('index.php?option=com_config&controller=config.display.modules' . $moduleId . $redirect,
-                false));
+            $this->app->redirect(
+                JRoute::_(
+                    'index.php?option=com_config&controller=config.display.modules' . $moduleId . $redirect,
+                    false
+                )
+            );
         }
 
         // Redirect back to com_config display
@@ -94,8 +104,12 @@ class ConfigControllerModulesSave extends JControllerBase
         // Set the redirect based on the task.
         switch ($this->options[3]) {
             case 'apply':
-                $this->app->redirect(JRoute::_('index.php?option=com_config&controller=config.display.modules' . $moduleId . $redirect,
-                    false));
+                $this->app->redirect(
+                    JRoute::_(
+                        'index.php?option=com_config&controller=config.display.modules' . $moduleId . $redirect,
+                        false
+                    )
+                );
                 break;
 
             case 'save':

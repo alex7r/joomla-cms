@@ -171,8 +171,10 @@ class JHelperMedia
         $allowable = array_map('trim', explode(',', $params->get('upload_extensions')));
         $ignored   = array_map('trim', explode(',', $params->get('ignore_extensions')));
 
-        if ($filetype == '' || $filetype == false || (!in_array($filetype, $allowable) && !in_array($filetype,
-                    $ignored))
+        if ($filetype == '' || $filetype == false || (!in_array($filetype, $allowable) && !in_array(
+                    $filetype,
+                    $ignored
+                ))
         ) {
             $app->enqueueMessage(JText::_('JLIB_MEDIA_ERROR_WARNFILETYPE'), 'notice');
 
@@ -389,8 +391,13 @@ class JHelperMedia
             $d = dir($dir);
 
             while (false !== ($entry = $d->read())) {
-                if (substr($entry, 0, 1) != '.' && is_file($dir . DIRECTORY_SEPARATOR . $entry) && strpos($entry,
-                        '.html') === false && strpos($entry, '.php') === false
+                if (substr($entry, 0, 1) != '.' && is_file($dir . DIRECTORY_SEPARATOR . $entry) && strpos(
+                                                                                                       $entry,
+                                                                                                       '.html'
+                                                                                                   ) === false && strpos(
+                                                                                                                      $entry,
+                                                                                                                      '.php'
+                                                                                                                  ) === false
                 ) {
                     $total_file++;
                 }

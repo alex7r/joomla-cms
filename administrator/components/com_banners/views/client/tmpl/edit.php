@@ -13,7 +13,8 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.formvalidator');
 JHtml::_('formbehavior.chosen', 'select');
 
-JFactory::getDocument()->addScriptDeclaration('
+JFactory::getDocument()->addScriptDeclaration(
+    '
 	Joomla.submitbutton = function(task)
 	{
 		if (task == "client.cancel" || document.formvalidator.isValid(document.getElementById("client-form")))
@@ -21,7 +22,8 @@ JFactory::getDocument()->addScriptDeclaration('
 			Joomla.submitform(task, document.getElementById("client-form"));
 		}
 	};
-');
+'
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_banners&layout=edit&id=' . (int)$this->item->id); ?>"
@@ -32,8 +34,12 @@ JFactory::getDocument()->addScriptDeclaration('
     <div class="form-horizontal">
         <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 
-        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general',
-            empty($this->item->id) ? JText::_('COM_BANNERS_NEW_CLIENT') : JText::_('COM_BANNERS_EDIT_CLIENT')); ?>
+        <?php echo JHtml::_(
+            'bootstrap.addTab',
+            'myTab',
+            'general',
+            empty($this->item->id) ? JText::_('COM_BANNERS_NEW_CLIENT') : JText::_('COM_BANNERS_EDIT_CLIENT')
+        ); ?>
         <div class="row-fluid">
             <div class="span9">
                 <?php

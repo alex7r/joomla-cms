@@ -95,16 +95,26 @@ class ModulesModelModules extends JModelList
         }
 
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-        $this->setState('filter.position',
-            $this->getUserStateFromRequest($this->context . '.filter.position', 'filter_position', '', 'string'));
-        $this->setState('filter.module',
-            $this->getUserStateFromRequest($this->context . '.filter.module', 'filter_module', '', 'string'));
-        $this->setState('filter.menuitem',
-            $this->getUserStateFromRequest($this->context . '.filter.menuitem', 'filter_menuitem', '', 'cmd'));
-        $this->setState('filter.access',
-            $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'cmd'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
+        $this->setState(
+            'filter.position',
+            $this->getUserStateFromRequest($this->context . '.filter.position', 'filter_position', '', 'string')
+        );
+        $this->setState(
+            'filter.module',
+            $this->getUserStateFromRequest($this->context . '.filter.module', 'filter_module', '', 'string')
+        );
+        $this->setState(
+            'filter.menuitem',
+            $this->getUserStateFromRequest($this->context . '.filter.menuitem', 'filter_menuitem', '', 'cmd')
+        );
+        $this->setState(
+            'filter.access',
+            $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'cmd')
+        );
 
         // If in modal layout on the frontend, state and language are always forced.
         if ($app->isSite() && $layout === 'modal') {
@@ -112,10 +122,14 @@ class ModulesModelModules extends JModelList
             $this->setState('filter.state', 1);
         } // If in backend (modal or not) we get the same fields from the user request.
         else {
-            $this->setState('filter.language',
-                $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '', 'string'));
-            $this->setState('filter.state',
-                $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'string'));
+            $this->setState(
+                'filter.language',
+                $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '', 'string')
+            );
+            $this->setState(
+                'filter.state',
+                $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'string')
+            );
         }
 
         // Special case for the client id.
@@ -159,8 +173,13 @@ class ModulesModelModules extends JModelList
             $this->translate($result);
 
             // Sort the array of translated objects.
-            $result = ArrayHelper::sortObjects($result, $listOrder, strtolower($listDirn) == 'desc' ? -1 : 1, true,
-                true);
+            $result = ArrayHelper::sortObjects(
+                $result,
+                $listOrder,
+                strtolower($listDirn) == 'desc' ? -1 : 1,
+                true,
+                true
+            );
 
             // Process pagination.
             $total                                      = count($result);
@@ -175,11 +194,13 @@ class ModulesModelModules extends JModelList
 
         // If ordering by fields that doesn't need translate just order the query.
         if ($listOrder === 'a.ordering') {
-            $query->order($this->_db->quoteName('a.position') . ' ASC')
-                  ->order($this->_db->quoteName($listOrder) . ' ' . $this->_db->escape($listDirn));
+            $query->order($this->_db->quoteName('a.position') . ' ASC')->order(
+                    $this->_db->quoteName($listOrder) . ' ' . $this->_db->escape($listDirn)
+                );
         } elseif ($listOrder === 'a.position') {
-            $query->order($this->_db->quoteName($listOrder) . ' ' . $this->_db->escape($listDirn))
-                  ->order($this->_db->quoteName('a.ordering') . ' ASC');
+            $query->order($this->_db->quoteName($listOrder) . ' ' . $this->_db->escape($listDirn))->order(
+                    $this->_db->quoteName('a.ordering') . ' ASC'
+                );
         } else {
             $query->order($this->_db->quoteName($listOrder) . ' ' . $this->_db->escape($listDirn));
         }
@@ -208,8 +229,13 @@ class ModulesModelModules extends JModelList
         foreach ($items as $item) {
             $extension = $item->module;
             $source    = $clientPath . "/modules/$extension";
-            $lang->load("$extension.sys", $clientPath, null, false, true) || $lang->load("$extension.sys", $source,
-                null, false, true);
+            $lang->load("$extension.sys", $clientPath, null, false, true) || $lang->load(
+                "$extension.sys",
+                $source,
+                null,
+                false,
+                true
+            );
             $item->name = JText::_($item->name);
 
             if (is_null($item->pages)) {
@@ -264,8 +290,12 @@ class ModulesModelModules extends JModelList
         $query = $db->getQuery(true);
 
         // Select the required fields.
-        $query->select($this->getState('list.select',
-            'a.id, a.title, a.note, a.position, a.module, a.language,' . 'a.checked_out, a.checked_out_time, a.published AS published, e.enabled AS enabled, a.access, a.ordering, a.publish_up, a.publish_down'));
+        $query->select(
+            $this->getState(
+                'list.select',
+                'a.id, a.title, a.note, a.position, a.module, a.language,' . 'a.checked_out, a.checked_out_time, a.published AS published, e.enabled AS enabled, a.access, a.ordering, a.publish_up, a.publish_down'
+            )
+        );
 
         // From modules table.
         $query->from($db->quoteName('#__modules', 'a'));
@@ -273,35 +303,62 @@ class ModulesModelModules extends JModelList
         // Join over the language
         $query->select($db->quoteName('l.title', 'language_title'))
               ->select($db->quoteName('l.image', 'language_image'))
-              ->join('LEFT', $db->quoteName('#__languages',
-                      'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('a.language'));
+              ->join(
+                  'LEFT',
+                  $db->quoteName(
+                      '#__languages',
+                      'l'
+                  ) . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('a.language')
+              );
 
         // Join over the users for the checked out user.
-        $query->select($db->quoteName('uc.name', 'editor'))
-              ->join('LEFT', $db->quoteName('#__users',
-                      'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('a.checked_out'));
+        $query->select($db->quoteName('uc.name', 'editor'))->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__users',
+                    'uc'
+                ) . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('a.checked_out')
+            );
 
         // Join over the asset groups.
-        $query->select($db->quoteName('ag.title', 'access_level'))
-              ->join('LEFT', $db->quoteName('#__viewlevels',
-                      'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('a.access'));
+        $query->select($db->quoteName('ag.title', 'access_level'))->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__viewlevels',
+                    'ag'
+                ) . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('a.access')
+            );
 
         // Join over the module menus
-        $query->select('MIN(mm.menuid) AS pages')
-              ->join('LEFT', $db->quoteName('#__modules_menu',
-                      'mm') . ' ON ' . $db->quoteName('mm.moduleid') . ' = ' . $db->quoteName('a.id'));
+        $query->select('MIN(mm.menuid) AS pages')->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__modules_menu',
+                    'mm'
+                ) . ' ON ' . $db->quoteName('mm.moduleid') . ' = ' . $db->quoteName('a.id')
+            );
 
         // Join over the extensions
-        $query->select($db->quoteName('e.name', 'name'))
-              ->join('LEFT', $db->quoteName('#__extensions',
-                      'e') . ' ON ' . $db->quoteName('e.element') . ' = ' . $db->quoteName('a.module'));
+        $query->select($db->quoteName('e.name', 'name'))->join(
+                'LEFT',
+                $db->quoteName(
+                    '#__extensions',
+                    'e'
+                ) . ' ON ' . $db->quoteName('e.element') . ' = ' . $db->quoteName('a.module')
+            );
 
         // Group (careful with PostgreSQL)
-        $query->group('a.id, a.title, a.note, a.position, a.module, a.language, a.checked_out, ' . 'a.checked_out_time, a.published, a.access, a.ordering, l.title, l.image, uc.name, ag.title, e.name, ' . 'l.lang_code, uc.id, ag.id, mm.moduleid, e.element, a.publish_up, a.publish_down, e.enabled');
+        $query->group(
+            'a.id, a.title, a.note, a.position, a.module, a.language, a.checked_out, ' . 'a.checked_out_time, a.published, a.access, a.ordering, l.title, l.image, uc.name, ag.title, e.name, ' . 'l.lang_code, uc.id, ag.id, mm.moduleid, e.element, a.publish_up, a.publish_down, e.enabled'
+        );
 
         // Filter by client.
         $clientId = $this->getState('client_id');
-        $query->where($db->quoteName('a.client_id') . ' = ' . (int)$clientId . ' AND ' . $db->quoteName('e.client_id') . ' = ' . (int)$clientId);
+        $query->where(
+            $db->quoteName('a.client_id') . ' = ' . (int)$clientId . ' AND ' . $db->quoteName(
+                'e.client_id'
+            ) . ' = ' . (int)$clientId
+        );
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
@@ -341,22 +398,24 @@ class ModulesModelModules extends JModelList
 
                 // Modules in "Selected" pages that have the chosen menu item id.
                 $subQuery2 = $db->getQuery(true);
-                $subQuery2->select($db->quoteName('moduleid'))
-                          ->from($db->quoteName('#__modules_menu'))
-                          ->where($db->quoteName('menuid') . ' = ' . (int)$menuItemId);
+                $subQuery2->select($db->quoteName('moduleid'))->from($db->quoteName('#__modules_menu'))->where(
+                        $db->quoteName('menuid') . ' = ' . (int)$menuItemId
+                    );
 
                 // Modules in "All except selected" pages that doesn't have the chosen menu item id.
                 $subQuery3 = $db->getQuery(true);
-                $subQuery3->select($db->quoteName('moduleid'))
-                          ->from($db->quoteName('#__modules_menu'))
-                          ->where($db->quoteName('menuid') . ' = -' . (int)$menuItemId);
+                $subQuery3->select($db->quoteName('moduleid'))->from($db->quoteName('#__modules_menu'))->where(
+                        $db->quoteName('menuid') . ' = -' . (int)$menuItemId
+                    );
 
                 // Filter by modules assigned to the selected menu item.
-                $query->where('(
+                $query->where(
+                    '(
 					(' . $subQuery1 . ') = 0
 					OR ((' . $subQuery1 . ') > 0 AND ' . $db->quoteName('a.id') . ' IN (' . $subQuery2 . '))
 					OR ((' . $subQuery1 . ') < 0 AND ' . $db->quoteName('a.id') . ' NOT IN (' . $subQuery3 . '))
-					)');
+					)'
+                );
             }
         }
 
@@ -374,8 +433,11 @@ class ModulesModelModules extends JModelList
         // Filter on the language.
         if ($language = $this->getState('filter.language')) {
             if ($language === 'current') {
-                $query->where($db->quoteName('a.language') . ' IN (' . $db->quote(JFactory::getLanguage()
-                                                                                          ->getTag()) . ',' . $db->quote('*') . ')');
+                $query->where(
+                    $db->quoteName('a.language') . ' IN (' . $db->quote(
+                        JFactory::getLanguage()->getTag()
+                    ) . ',' . $db->quote('*') . ')'
+                );
             } else {
                 $query->where($db->quoteName('a.language') . ' = ' . $db->quote($language));
             }

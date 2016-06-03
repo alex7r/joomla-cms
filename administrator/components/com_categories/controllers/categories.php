@@ -77,8 +77,11 @@ class CategoriesControllerCategories extends JControllerAdmin
     {
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        JLog::add('CategoriesControllerCategories::saveorder() is deprecated. Function will be removed in 4.0',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            'CategoriesControllerCategories::saveorder() is deprecated. Function will be removed in 4.0',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Get the arrays from the Request
         $order         = $this->input->post->get('order', null, 'array');
@@ -146,8 +149,11 @@ class CategoriesControllerCategories extends JControllerAdmin
         $result = parent::checkin();
 
         // Overrride the redirect Uri.
-        $redirectUri = 'index.php?option=' . $this->option . '&view=' . $this->view_list . '&extension=' . $this->input->get('extension',
-                '', 'CMD');
+        $redirectUri = 'index.php?option=' . $this->option . '&view=' . $this->view_list . '&extension=' . $this->input->get(
+                'extension',
+                '',
+                'CMD'
+            );
         $this->setRedirect(JRoute::_($redirectUri, false), $this->message, $this->messageType);
 
         return $result;

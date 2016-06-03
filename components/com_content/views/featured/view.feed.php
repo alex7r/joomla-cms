@@ -51,10 +51,9 @@ class ContentViewFeatured extends JViewLegacy
 
             // Get row fulltext
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select($db->quoteName('fulltext'))
-                        ->from($db->quoteName('#__content'))
-                        ->where($db->quoteName('id') . ' = ' . $row->id);
+            $query = $db->getQuery(true)->select($db->quoteName('fulltext'))->from($db->quoteName('#__content'))->where(
+                    $db->quoteName('id') . ' = ' . $row->id
+                );
             $db->setQuery($query);
             $row->fulltext = $db->loadResult();
 
@@ -89,7 +88,9 @@ class ContentViewFeatured extends JViewLegacy
 
             // Add readmore link to description if introtext is shown, show_readmore is true and fulltext exists
             if (!$params->get('feed_summary', 0) && $params->get('feed_show_readmore', 0) && $row->fulltext) {
-                $description .= '<p class="feed-readmore"><a target="_blank" href ="' . $item->link . '">' . JText::_('COM_CONTENT_FEED_READMORE') . '</a></p>';
+                $description .= '<p class="feed-readmore"><a target="_blank" href ="' . $item->link . '">' . JText::_(
+                        'COM_CONTENT_FEED_READMORE'
+                    ) . '</a></p>';
             }
 
             // Load item description and add div

@@ -88,14 +88,18 @@ class JDocumentError extends JDocument
             $status = 500;
         }
 
-        JFactory::getApplication()
-                ->setHeader('status', $status . ' ' . str_replace("\n", ' ', $this->_error->getMessage()));
+        JFactory::getApplication()->setHeader(
+                'status',
+                $status . ' ' . str_replace("\n", ' ', $this->_error->getMessage())
+            );
         $file = 'error.php';
 
         // Check template
         $directory = isset($params['directory']) ? $params['directory'] : 'templates';
-        $template  = isset($params['template']) ? JFilterInput::getInstance()
-                                                              ->clean($params['template'], 'cmd') : 'system';
+        $template  = isset($params['template']) ? JFilterInput::getInstance()->clean(
+                $params['template'],
+                'cmd'
+            ) : 'system';
 
         if (!file_exists($directory . '/' . $template . '/' . $file)) {
             $template = 'system';

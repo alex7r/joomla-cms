@@ -83,8 +83,11 @@ class FOFFormFieldText extends JFormFieldText implements FOFFormField
             $this->value = JText::_($empty_replacement);
         }
 
-        return '<span id="' . $this->id . '" ' . $class . '>' . htmlspecialchars($this->value, ENT_COMPAT,
-            'UTF-8') . '</span>';
+        return '<span id="' . $this->id . '" ' . $class . '>' . htmlspecialchars(
+            $this->value,
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</span>';
     }
 
     /**

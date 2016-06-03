@@ -31,7 +31,9 @@ JHtml::_('bootstrap.framework');
 $doc->addScriptVersion($this->baseurl . '/templates/' . $this->template . '/js/template.js');
 
 // Add Stylesheets
-$doc->addStyleSheetVersion($this->baseurl . '/templates/' . $this->template . '/css/template' . ($this->direction == 'rtl' ? '-rtl' : '') . '.css');
+$doc->addStyleSheetVersion(
+    $this->baseurl . '/templates/' . $this->template . '/css/template' . ($this->direction == 'rtl' ? '-rtl' : '') . '.css'
+);
 
 // Load specific language related CSS
 $languageCss = 'language/' . $lang->getTag() . '/' . $lang->getTag() . '.css';
@@ -115,7 +117,8 @@ if ($stickyToolbar) {
 
 // Template color
 if ($navbar_color) {
-    $doc->addStyleDeclaration("
+    $doc->addStyleDeclaration(
+        "
 	.navbar-inner,
 	.navbar-inverse .navbar-inner,
 	.dropdown-menu li > a:hover,
@@ -126,33 +129,40 @@ if ($navbar_color) {
 	.navbar-inverse .nav li.dropdown.open.active > .dropdown-toggle,
 	#status.status-top {
 		background: " . $navbar_color . ";
-	}");
+	}"
+    );
 }
 
 // Template header color
 if ($header_color) {
-    $doc->addStyleDeclaration("
+    $doc->addStyleDeclaration(
+        "
 	.header {
 		background: " . $header_color . ";
-	}");
+	}"
+    );
 }
 
 // Sidebar background color
 if ($this->params->get('sidebarColor')) {
-    $doc->addStyleDeclaration("
+    $doc->addStyleDeclaration(
+        "
 	.nav-list > .active > a,
 	.nav-list > .active > a:hover {
 		background: " . $this->params->get('sidebarColor') . ";
-	}");
+	}"
+    );
 }
 
 // Link color
 if ($this->params->get('linkColor')) {
-    $doc->addStyleDeclaration("
+    $doc->addStyleDeclaration(
+        "
 	a,
 	.j-toggle-sidebar-button {
 		color: " . $this->params->get('linkColor') . ";
-	}");
+	}"
+    );
 }
 ?>
 <!DOCTYPE html>
@@ -205,11 +215,15 @@ if ($this->params->get('linkColor')) {
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="index.php?option=com_admin&amp;task=profile.edit&amp;id=<?php echo $user->id; ?>"><?php echo JText::_('TPL_ISIS_EDIT_ACCOUNT'); ?></a>
+                                    <a href="index.php?option=com_admin&amp;task=profile.edit&amp;id=<?php echo $user->id; ?>"><?php echo JText::_(
+                                            'TPL_ISIS_EDIT_ACCOUNT'
+                                        ); ?></a>
                                 </li>
                                 <li class="divider"></li>
                                 <li class="">
-                                    <a href="<?php echo JRoute::_('index.php?option=com_login&task=logout&' . JSession::getFormToken() . '=1'); ?>"><?php echo JText::_('TPL_ISIS_LOGOUT'); ?></a>
+                                    <a href="<?php echo JRoute::_(
+                                        'index.php?option=com_login&task=logout&' . JSession::getFormToken() . '=1'
+                                    ); ?>"><?php echo JText::_('TPL_ISIS_LOGOUT'); ?></a>
                                 </li>
                             <?php endif; ?>
                         </ul>

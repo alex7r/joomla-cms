@@ -24,10 +24,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <?php else : ?>
         <div id="j-main-container">
             <?php endif; ?>
-            <?php echo JLayoutHelper::render('joomla.searchtools.default', array(
-                'view'    => $this,
-                'options' => array('filterButton' => false, 'totalResults' => count($this->data))
-            )); ?>
+            <?php echo JLayoutHelper::render(
+                'joomla.searchtools.default',
+                array(
+                    'view'    => $this,
+                    'options' => array('filterButton' => false, 'totalResults' => count($this->data))
+                )
+            ); ?>
             <?php if (count($this->data) > 0) : ?>
                 <table class="table table-striped">
                     <thead>
@@ -36,12 +39,22 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                             <?php echo JHtml::_('grid.checkall'); ?>
                         </th>
                         <th class="title nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_CACHE_GROUP', 'group', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_CACHE_GROUP',
+                                'group',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="5%" class="nowrap">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_CACHE_NUMBER_OF_FILES', 'count', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'searchtools.sort',
+                                'COM_CACHE_NUMBER_OF_FILES',
+                                'count',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <th width="10%" class="nowrap">
                             <?php echo JHtml::_('searchtools.sort', 'COM_CACHE_SIZE', 'size', $listDirn, $listOrder); ?>

@@ -77,8 +77,10 @@ class JoomlaupdateViewDefault extends JViewLegacy
         // Add toolbar buttons.
         $user = JFactory::getUser();
 
-        if ($user->authorise('core.admin', 'com_joomlaupdate') || $user->authorise('core.options',
-                'com_joomlaupdate')
+        if ($user->authorise('core.admin', 'com_joomlaupdate') || $user->authorise(
+                'core.options',
+                'com_joomlaupdate'
+            )
         ) {
             JToolbarHelper::preferences('com_joomlaupdate');
         }
@@ -88,8 +90,10 @@ class JoomlaupdateViewDefault extends JViewLegacy
 
         if (!is_null($this->updateInfo['object'])) {
             // Show the message if an update is found.
-            JFactory::getApplication()
-                    ->enqueueMessage(JText::_('COM_JOOMLAUPDATE_VIEW_DEFAULT_UPDATE_NOTICE'), 'notice');
+            JFactory::getApplication()->enqueueMessage(
+                    JText::_('COM_JOOMLAUPDATE_VIEW_DEFAULT_UPDATE_NOTICE'),
+                    'notice'
+                );
         }
 
         $this->ftpFieldsDisplay = $this->ftp['enabled'] ? '' : 'style = "display: none"';

@@ -34,10 +34,14 @@ extract($displayData);
     <p><?php echo JText::_('PLG_SYSTEM_STATS_MSG_ALLOW_SENDING_DATA'); ?></p>
     <p class="actions">
         <a href="#"
-           class="btn btn-default js-pstats-btn-allow-always"><?php echo JText::_('PLG_SYSTEM_STATS_BTN_SEND_ALWAYS'); ?></a>
+           class="btn btn-default js-pstats-btn-allow-always"><?php echo JText::_(
+                'PLG_SYSTEM_STATS_BTN_SEND_ALWAYS'
+            ); ?></a>
         <a href="#"
            class="btn btn-default js-pstats-btn-allow-once"><?php echo JText::_('PLG_SYSTEM_STATS_BTN_SEND_NOW'); ?></a>
         <a href="#"
-           class="btn btn-default js-pstats-btn-allow-never"><?php echo JText::_('PLG_SYSTEM_STATS_BTN_NEVER_SEND'); ?></a>
+           class="btn btn-default js-pstats-btn-allow-never"><?php echo JText::_(
+                'PLG_SYSTEM_STATS_BTN_NEVER_SEND'
+            ); ?></a>
     </p>
 </div>

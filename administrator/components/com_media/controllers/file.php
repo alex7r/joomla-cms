@@ -87,8 +87,12 @@ class MediaControllerFile extends JControllerLegacy
         foreach ($files as &$file) {
             $file['name']     = JFile::makeSafe($file['name']);
             $file['name']     = str_replace(' ', '-', $file['name']);
-            $file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR,
-                array(COM_MEDIA_BASE, $this->folder, $file['name'])));
+            $file['filepath'] = JPath::clean(
+                implode(
+                    DIRECTORY_SEPARATOR,
+                    array(COM_MEDIA_BASE, $this->folder, $file['name'])
+                )
+            );
 
             if (($file['error'] == 1) || ($uploadMaxSize > 0 && $file['size'] > $uploadMaxSize) || ($uploadMaxFileSize > 0 && $file['size'] > $uploadMaxFileSize)) {
                 // File size exceed either 'upload_max_filesize' or 'upload_maxsize'.
@@ -133,9 +137,14 @@ class MediaControllerFile extends JControllerLegacy
 
             if (in_array(false, $result, true)) {
                 // There are some errors in the plugins
-                JError::raiseWarning(100,
-                    JText::plural('COM_MEDIA_ERROR_BEFORE_SAVE', count($errors = $object_file->getErrors()),
-                        implode('<br />', $errors)));
+                JError::raiseWarning(
+                    100,
+                    JText::plural(
+                        'COM_MEDIA_ERROR_BEFORE_SAVE',
+                        count($errors = $object_file->getErrors()),
+                        implode('<br />', $errors)
+                    )
+                );
 
                 return false;
             }
@@ -149,8 +158,12 @@ class MediaControllerFile extends JControllerLegacy
 
             // Trigger the onContentAfterSave event.
             $dispatcher->trigger('onContentAfterSave', array('com_media.file', &$object_file, true));
-            $this->setMessage(JText::sprintf('COM_MEDIA_UPLOAD_COMPLETE',
-                substr($object_file->filepath, strlen(COM_MEDIA_BASE))));
+            $this->setMessage(
+                JText::sprintf(
+                    'COM_MEDIA_UPLOAD_COMPLETE',
+                    substr($object_file->filepath, strlen(COM_MEDIA_BASE))
+                )
+            );
         }
 
         return true;
@@ -224,8 +237,13 @@ class MediaControllerFile extends JControllerLegacy
             if ($path !== JFile::makeSafe($path)) {
                 // Filename is not safe
                 $filename = htmlspecialchars($path, ENT_COMPAT, 'UTF-8');
-                JError::raiseWarning(100, JText::sprintf('COM_MEDIA_ERROR_UNABLE_TO_DELETE_FILE_WARNFILENAME',
-                    substr($filename, strlen(COM_MEDIA_BASE))));
+                JError::raiseWarning(
+                    100,
+                    JText::sprintf(
+                        'COM_MEDIA_ERROR_UNABLE_TO_DELETE_FILE_WARNFILENAME',
+                        substr($filename, strlen(COM_MEDIA_BASE))
+                    )
+                );
 
                 continue;
             }
@@ -240,8 +258,10 @@ class MediaControllerFile extends JControllerLegacy
                 if (in_array(false, $result, true)) {
                     // There are some errors in the plugins
                     $errors = $object_file->getErrors();
-                    JError::raiseWarning(100,
-                        JText::plural('COM_MEDIA_ERROR_BEFORE_DELETE', count($errors), implode('<br />', $errors)));
+                    JError::raiseWarning(
+                        100,
+                        JText::plural('COM_MEDIA_ERROR_BEFORE_DELETE', count($errors), implode('<br />', $errors))
+                    );
 
                     continue;
                 }
@@ -250,21 +270,32 @@ class MediaControllerFile extends JControllerLegacy
 
                 // Trigger the onContentAfterDelete event.
                 $dispatcher->trigger('onContentAfterDelete', array('com_media.file', &$object_file));
-                $this->setMessage(JText::sprintf('COM_MEDIA_DELETE_COMPLETE',
-                    substr($object_file->filepath, strlen(COM_MEDIA_BASE))));
+                $this->setMessage(
+                    JText::sprintf(
+                        'COM_MEDIA_DELETE_COMPLETE',
+                        substr($object_file->filepath, strlen(COM_MEDIA_BASE))
+                    )
+                );
 
                 continue;
             }
 
             if (is_dir($object_file->filepath)) {
-                $contents = JFolder::files($object_file->filepath, '.', true, false,
-                    array('.svn', 'CVS', '.DS_Store', '__MACOSX', 'index.html'));
+                $contents = JFolder::files(
+                    $object_file->filepath,
+                    '.',
+                    true,
+                    false,
+                    array('.svn', 'CVS', '.DS_Store', '__MACOSX', 'index.html')
+                );
 
                 if (!empty($contents)) {
                     // This makes no sense...
                     $folderPath = substr($object_file->filepath, strlen(COM_MEDIA_BASE));
-                    JError::raiseWarning(100,
-                        JText::sprintf('COM_MEDIA_ERROR_UNABLE_TO_DELETE_FOLDER_NOT_EMPTY', $folderPath));
+                    JError::raiseWarning(
+                        100,
+                        JText::sprintf('COM_MEDIA_ERROR_UNABLE_TO_DELETE_FOLDER_NOT_EMPTY', $folderPath)
+                    );
 
                     continue;
                 }
@@ -275,8 +306,10 @@ class MediaControllerFile extends JControllerLegacy
                 if (in_array(false, $result, true)) {
                     // There are some errors in the plugins
                     $errors = $object_file->getErrors();
-                    JError::raiseWarning(100,
-                        JText::plural('COM_MEDIA_ERROR_BEFORE_DELETE', count($errors), implode('<br />', $errors)));
+                    JError::raiseWarning(
+                        100,
+                        JText::plural('COM_MEDIA_ERROR_BEFORE_DELETE', count($errors), implode('<br />', $errors))
+                    );
 
                     continue;
                 }
@@ -285,8 +318,12 @@ class MediaControllerFile extends JControllerLegacy
 
                 // Trigger the onContentAfterDelete event.
                 $dispatcher->trigger('onContentAfterDelete', array('com_media.folder', &$object_file));
-                $this->setMessage(JText::sprintf('COM_MEDIA_DELETE_COMPLETE',
-                    substr($object_file->filepath, strlen(COM_MEDIA_BASE))));
+                $this->setMessage(
+                    JText::sprintf(
+                        'COM_MEDIA_DELETE_COMPLETE',
+                        substr($object_file->filepath, strlen(COM_MEDIA_BASE))
+                    )
+                );
             }
         }
 

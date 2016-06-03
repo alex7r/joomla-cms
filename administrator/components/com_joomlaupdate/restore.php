@@ -48,8 +48,13 @@ if (function_exists('setlocale')) {
 if (!function_exists('fnmatch')) {
     function fnmatch($pattern, $string)
     {
-        return @preg_match('/^' . strtr(addcslashes($pattern, '/\\.+^$(){}=!<>|'),
-                array('*' => '.*', '?' => '.?')) . '$/i', $string);
+        return @preg_match(
+            '/^' . strtr(
+                addcslashes($pattern, '/\\.+^$(){}=!<>|'),
+                array('*' => '.*', '?' => '.?')
+            ) . '$/i',
+            $string
+        );
     }
 }
 
@@ -299,7 +304,9 @@ if (!class_exists('Akeeba_Services_JSON')) {
                 case (0xFFFF & $bytes) == $bytes:
                     // return a 3-byte UTF-8 character
                     // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                    return chr(0xE0 | (($bytes >> 12) & 0x0F)) . chr(0x80 | (($bytes >> 6) & 0x3F)) . chr(0x80 | ($bytes & 0x3F));
+                    return chr(0xE0 | (($bytes >> 12) & 0x0F)) . chr(0x80 | (($bytes >> 6) & 0x3F)) . chr(
+                        0x80 | ($bytes & 0x3F)
+                    );
             }
 
             // ignoring UTF-32 for now, sorry
@@ -334,12 +341,16 @@ if (!class_exists('Akeeba_Services_JSON')) {
                 case 2:
                     // return a UTF-16 character from a 2-byte UTF-8 char
                     // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                    return chr(0x07 & (ord($utf8{0}) >> 2)) . chr((0xC0 & (ord($utf8{0}) << 6)) | (0x3F & ord($utf8{1})));
+                    return chr(0x07 & (ord($utf8{0}) >> 2)) . chr(
+                        (0xC0 & (ord($utf8{0}) << 6)) | (0x3F & ord($utf8{1}))
+                    );
 
                 case 3:
                     // return a UTF-16 character from a 3-byte UTF-8 char
                     // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                    return chr((0xF0 & (ord($utf8{0}) << 4)) | (0x0F & (ord($utf8{1}) >> 2))) . chr((0xC0 & (ord($utf8{1}) << 6)) | (0x7F & ord($utf8{2})));
+                    return chr((0xF0 & (ord($utf8{0}) << 4)) | (0x0F & (ord($utf8{1}) >> 2))) . chr(
+                        (0xC0 & (ord($utf8{1}) << 6)) | (0x7F & ord($utf8{2}))
+                    );
             }
 
             // ignoring UTF-32 for now, sorry
@@ -445,8 +456,14 @@ if (!class_exists('Akeeba_Services_JSON')) {
                             case (($ord_var_c & 0xFC) == 0xF8):
                                 // characters U-00200000 - U-03FFFFFF, mask 111110XX
                                 // see http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                                $char = pack('C*', $ord_var_c, ord($var{$c + 1}), ord($var{$c + 2}), ord($var{$c + 3}),
-                                    ord($var{$c + 4}));
+                                $char = pack(
+                                    'C*',
+                                    $ord_var_c,
+                                    ord($var{$c + 1}),
+                                    ord($var{$c + 2}),
+                                    ord($var{$c + 3}),
+                                    ord($var{$c + 4})
+                                );
                                 $c += 4;
                                 $utf16 = $this->utf82utf16($char);
                                 $ascii .= sprintf('\u%04s', bin2hex($utf16));
@@ -455,8 +472,15 @@ if (!class_exists('Akeeba_Services_JSON')) {
                             case (($ord_var_c & 0xFE) == 0xFC):
                                 // characters U-04000000 - U-7FFFFFFF, mask 1111110X
                                 // see http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                                $char = pack('C*', $ord_var_c, ord($var{$c + 1}), ord($var{$c + 2}), ord($var{$c + 3}),
-                                    ord($var{$c + 4}), ord($var{$c + 5}));
+                                $char = pack(
+                                    'C*',
+                                    $ord_var_c,
+                                    ord($var{$c + 1}),
+                                    ord($var{$c + 2}),
+                                    ord($var{$c + 3}),
+                                    ord($var{$c + 4}),
+                                    ord($var{$c + 5})
+                                );
                                 $c += 5;
                                 $utf16 = $this->utf82utf16($char);
                                 $ascii .= sprintf('\u%04s', bin2hex($utf16));
@@ -523,7 +547,9 @@ if (!class_exists('Akeeba_Services_JSON')) {
                     return '{' . join(',', $properties) . '}';
 
                 default:
-                    return ($this->use & SERVICES_JSON_SUPPRESS_ERRORS) ? 'null' : new Akeeba_Services_JSON_Error(gettype($var) . " can not be encoded as JSON string");
+                    return ($this->use & SERVICES_JSON_SUPPRESS_ERRORS) ? 'null' : new Akeeba_Services_JSON_Error(
+                        gettype($var) . " can not be encoded as JSON string"
+                    );
             }
         }
 
@@ -557,18 +583,22 @@ if (!class_exists('Akeeba_Services_JSON')) {
          */
         function reduce_string($str)
         {
-            $str = preg_replace(array(
+            $str = preg_replace(
+                array(
 
-                // eliminate single line comments in '// ...' form
-                '#^\s*//(.+)$#m',
+                    // eliminate single line comments in '// ...' form
+                    '#^\s*//(.+)$#m',
 
-                // eliminate multi-line comments in '/* ... */' form, at start of string
-                '#^\s*/\*(.+)\*/#Us',
+                    // eliminate multi-line comments in '/* ... */' form, at start of string
+                    '#^\s*/\*(.+)\*/#Us',
 
-                // eliminate multi-line comments in '/* ... */' form, at end of string
-                '#/\*(.+)\*/\s*$#Us'
+                    // eliminate multi-line comments in '/* ... */' form, at end of string
+                    '#/\*(.+)\*/\s*$#Us'
 
-            ), '', $str);
+                ),
+                '',
+                $str
+            );
 
             // eliminate extraneous space
             return trim($str);
@@ -658,8 +688,15 @@ if (!class_exists('Akeeba_Services_JSON')) {
 
                                 case preg_match('/\\\u[0-9A-F]{4}/i', substr($chrs, $c, 6)):
                                     // single, escaped unicode character
-                                    $utf16 = chr(hexdec(substr($chrs, ($c + 2), 2))) . chr(hexdec(substr($chrs,
-                                            ($c + 4), 2)));
+                                    $utf16 = chr(hexdec(substr($chrs, ($c + 2), 2))) . chr(
+                                            hexdec(
+                                                substr(
+                                                    $chrs,
+                                                    ($c + 4),
+                                                    2
+                                                )
+                                            )
+                                        );
                                     $utf8 .= $this->utf162utf8($utf16);
                                     $c += 5;
                                     break;
@@ -725,11 +762,14 @@ if (!class_exists('Akeeba_Services_JSON')) {
                             }
                         }
 
-                        array_push($stk, array(
-                            'what'  => SERVICES_JSON_SLICE,
-                            'where' => 0,
-                            'delim' => false
-                        ));
+                        array_push(
+                            $stk,
+                            array(
+                                'what'  => SERVICES_JSON_SLICE,
+                                'where' => 0,
+                                'delim' => false
+                            )
+                        );
 
                         $chrs = substr($str, 1, -1);
                         $chrs = $this->reduce_string($chrs);
@@ -757,8 +797,10 @@ if (!class_exists('Akeeba_Services_JSON')) {
                                 // found a comma that is not inside a string, array, etc.,
                                 // OR we've reached the end of the character list
                                 $slice = substr($chrs, $top['where'], ($c - $top['where']));
-                                array_push($stk,
-                                    array('what' => SERVICES_JSON_SLICE, 'where' => ($c + 1), 'delim' => false));
+                                array_push(
+                                    $stk,
+                                    array('what' => SERVICES_JSON_SLICE, 'where' => ($c + 1), 'delim' => false)
+                                );
                                 //print("Found split at {$c}: ".substr($chrs, $top['where'], (1 + $c - $top['where']))."\n");
 
                                 if (reset($stk) == SERVICES_JSON_IN_ARR) {
@@ -798,12 +840,28 @@ if (!class_exists('Akeeba_Services_JSON')) {
 
                             } elseif ((($chrs{$c} == '"') || ($chrs{$c} == "'")) && ($top['what'] != SERVICES_JSON_IN_STR)) {
                                 // found a quote, and we are not inside a string
-                                array_push($stk,
-                                    array('what' => SERVICES_JSON_IN_STR, 'where' => $c, 'delim' => $chrs{$c}));
+                                array_push(
+                                    $stk,
+                                    array('what' => SERVICES_JSON_IN_STR, 'where' => $c, 'delim' => $chrs{$c})
+                                );
                                 //print("Found start of string at {$c}\n");
 
-                            } elseif (($chrs{$c} == $top['delim']) && ($top['what'] == SERVICES_JSON_IN_STR) && ((strlen(substr($chrs,
-                                            0, $c)) - strlen(rtrim(substr($chrs, 0, $c), '\\'))) % 2 != 1)
+                            } elseif (($chrs{$c} == $top['delim']) && ($top['what'] == SERVICES_JSON_IN_STR) && ((strlen(
+                                                                                                                      substr(
+                                                                                                                          $chrs,
+                                                                                                                          0,
+                                                                                                                          $c
+                                                                                                                      )
+                                                                                                                  ) - strlen(
+                                                                                                                      rtrim(
+                                                                                                                          substr(
+                                                                                                                              $chrs,
+                                                                                                                              0,
+                                                                                                                              $c
+                                                                                                                          ),
+                                                                                                                          '\\'
+                                                                                                                      )
+                                                                                                                  )) % 2 != 1)
                             ) {
                                 // found a quote, we're in a string, and it's not escaped
                                 // we know that it's not escaped becase there is _not_ an
@@ -811,12 +869,16 @@ if (!class_exists('Akeeba_Services_JSON')) {
                                 array_pop($stk);
                                 //print("Found end of string at {$c}: ".substr($chrs, $top['where'], (1 + 1 + $c - $top['where']))."\n");
 
-                            } elseif (($chrs{$c} == '[') && in_array($top['what'],
-                                    array(SERVICES_JSON_SLICE, SERVICES_JSON_IN_ARR, SERVICES_JSON_IN_OBJ))
+                            } elseif (($chrs{$c} == '[') && in_array(
+                                    $top['what'],
+                                    array(SERVICES_JSON_SLICE, SERVICES_JSON_IN_ARR, SERVICES_JSON_IN_OBJ)
+                                )
                             ) {
                                 // found a left-bracket, and we are in an array, object, or slice
-                                array_push($stk,
-                                    array('what' => SERVICES_JSON_IN_ARR, 'where' => $c, 'delim' => false));
+                                array_push(
+                                    $stk,
+                                    array('what' => SERVICES_JSON_IN_ARR, 'where' => $c, 'delim' => false)
+                                );
                                 //print("Found start of array at {$c}\n");
 
                             } elseif (($chrs{$c} == ']') && ($top['what'] == SERVICES_JSON_IN_ARR)) {
@@ -824,12 +886,16 @@ if (!class_exists('Akeeba_Services_JSON')) {
                                 array_pop($stk);
                                 //print("Found end of array at {$c}: ".substr($chrs, $top['where'], (1 + $c - $top['where']))."\n");
 
-                            } elseif (($chrs{$c} == '{') && in_array($top['what'],
-                                    array(SERVICES_JSON_SLICE, SERVICES_JSON_IN_ARR, SERVICES_JSON_IN_OBJ))
+                            } elseif (($chrs{$c} == '{') && in_array(
+                                    $top['what'],
+                                    array(SERVICES_JSON_SLICE, SERVICES_JSON_IN_ARR, SERVICES_JSON_IN_OBJ)
+                                )
                             ) {
                                 // found a left-brace, and we are in an array, object, or slice
-                                array_push($stk,
-                                    array('what' => SERVICES_JSON_IN_OBJ, 'where' => $c, 'delim' => false));
+                                array_push(
+                                    $stk,
+                                    array('what' => SERVICES_JSON_IN_OBJ, 'where' => $c, 'delim' => false)
+                                );
                                 //print("Found start of object at {$c}\n");
 
                             } elseif (($chrs{$c} == '}') && ($top['what'] == SERVICES_JSON_IN_OBJ)) {
@@ -837,12 +903,16 @@ if (!class_exists('Akeeba_Services_JSON')) {
                                 array_pop($stk);
                                 //print("Found end of object at {$c}: ".substr($chrs, $top['where'], (1 + $c - $top['where']))."\n");
 
-                            } elseif (($substr_chrs_c_2 == '/*') && in_array($top['what'],
-                                    array(SERVICES_JSON_SLICE, SERVICES_JSON_IN_ARR, SERVICES_JSON_IN_OBJ))
+                            } elseif (($substr_chrs_c_2 == '/*') && in_array(
+                                    $top['what'],
+                                    array(SERVICES_JSON_SLICE, SERVICES_JSON_IN_ARR, SERVICES_JSON_IN_OBJ)
+                                )
                             ) {
                                 // found a comment start, and we are in an array, object, or slice
-                                array_push($stk,
-                                    array('what' => SERVICES_JSON_IN_CMT, 'where' => $c, 'delim' => false));
+                                array_push(
+                                    $stk,
+                                    array('what' => SERVICES_JSON_IN_CMT, 'where' => $c, 'delim' => false)
+                                );
                                 $c++;
                                 //print("Found start of comment at {$c}\n");
 
@@ -877,8 +947,10 @@ if (!class_exists('Akeeba_Services_JSON')) {
         {
             if (class_exists('pear')) {
                 return PEAR::isError($data, $code);
-            } elseif (is_object($data) && (get_class($data) == 'services_json_error' || is_subclass_of($data,
-                        'services_json_error'))
+            } elseif (is_object($data) && (get_class($data) == 'services_json_error' || is_subclass_of(
+                        $data,
+                        'services_json_error'
+                    ))
             ) {
                 return true;
             }
@@ -1683,9 +1755,23 @@ abstract class AKAbstractUnarchiver extends AKAbstractPart
                             $value = strtolower($value);
 
                             if (strlen($value) > 6) {
-                                if ((substr($value, 0, 7) == 'http://') || (substr($value, 0,
-                                            8) == 'https://') || (substr($value, 0, 6) == 'ftp://') || (substr($value,
-                                            0, 7) == 'ssh2://') || (substr($value, 0, 6) == 'ssl://')
+                                if ((substr($value, 0, 7) == 'http://') || (substr(
+                                                                                $value,
+                                                                                0,
+                                                                                8
+                                                                            ) == 'https://') || (substr(
+                                                                                                     $value,
+                                                                                                     0,
+                                                                                                     6
+                                                                                                 ) == 'ftp://') || (substr(
+                                                                                                                        $value,
+                                                                                                                        0,
+                                                                                                                        7
+                                                                                                                    ) == 'ssh2://') || (substr(
+                                                                                                                                            $value,
+                                                                                                                                            0,
+                                                                                                                                            6
+                                                                                                                                        ) == 'ssl://')
                                 ) {
                                     $this->setState('error', 'Invalid archive location');
                                 }
@@ -4130,8 +4216,13 @@ class AKUnarchiverJPA extends AKAbstractUnarchiver
                 $this->nextFile();
                 if (!$this->isEOF(false)) {
                     debugMsg('Invalid file signature before end of archive encountered');
-                    $this->setError(AKText::sprintf('INVALID_FILE_HEADER', $this->currentPartNumber,
-                        $this->currentPartOffset));
+                    $this->setError(
+                        AKText::sprintf(
+                            'INVALID_FILE_HEADER',
+                            $this->currentPartNumber,
+                            $this->currentPartOffset
+                        )
+                    );
 
                     return false;
                 }
@@ -4152,8 +4243,13 @@ class AKUnarchiverJPA extends AKAbstractUnarchiver
                 if ($screwed) {
                     debugMsg('Invalid file block signature');
                     // This is not a file block! The archive is corrupt.
-                    $this->setError(AKText::sprintf('INVALID_FILE_HEADER', $this->currentPartNumber,
-                        $this->currentPartOffset));
+                    $this->setError(
+                        AKText::sprintf(
+                            'INVALID_FILE_HEADER',
+                            $this->currentPartNumber,
+                            $this->currentPartOffset
+                        )
+                    );
 
                     return false;
                 }
@@ -4309,8 +4405,10 @@ class AKUnarchiverJPA extends AKAbstractUnarchiver
         if ($this->fileHeader->type == 'file') {
             // Regular file; ask the postproc engine to process its filename
             if ($restorePerms) {
-                $this->fileHeader->realFile = $this->postProcEngine->processFilename($this->fileHeader->file,
-                    $this->fileHeader->permissions);
+                $this->fileHeader->realFile = $this->postProcEngine->processFilename(
+                    $this->fileHeader->file,
+                    $this->fileHeader->permissions
+                );
             } else {
                 $this->fileHeader->realFile = $this->postProcEngine->processFilename($this->fileHeader->file);
             }
@@ -4474,7 +4572,9 @@ class AKUnarchiverJPA extends AKAbstractUnarchiver
                     // Yeap. Let's go to the next file
                     $this->nextFile();
                 } else {
-                    debugMsg('End of local file before reading all data with no more parts left. The archive is corrupt or truncated.');
+                    debugMsg(
+                        'End of local file before reading all data with no more parts left. The archive is corrupt or truncated.'
+                    );
                     // Nope. The archive is corrupt
                     $this->setError(AKText::_('ERR_CORRUPT_ARCHIVE'));
 
@@ -4512,8 +4612,10 @@ class AKUnarchiverJPA extends AKAbstractUnarchiver
 
         // Open the output file
         if (!AKFactory::get('kickstart.setup.dryrun', '0')) {
-            $ignore = AKFactory::get('kickstart.setup.ignoreerrors',
-                    false) || $this->isIgnoredDirectory($this->fileHeader->file);
+            $ignore = AKFactory::get(
+                    'kickstart.setup.ignoreerrors',
+                    false
+                ) || $this->isIgnoredDirectory($this->fileHeader->file);
             if ($this->dataReadLength == 0) {
                 $outfp = @fopen($this->fileHeader->realFile, 'wb');
             } else {
@@ -4603,8 +4705,10 @@ class AKUnarchiverJPA extends AKAbstractUnarchiver
             $outfp = @fopen($this->fileHeader->realFile, 'wb');
 
             // Can we write to the file?
-            $ignore = AKFactory::get('kickstart.setup.ignoreerrors',
-                    false) || $this->isIgnoredDirectory($this->fileHeader->file);
+            $ignore = AKFactory::get(
+                    'kickstart.setup.ignoreerrors',
+                    false
+                ) || $this->isIgnoredDirectory($this->fileHeader->file);
             if (($outfp === false) && (!$ignore)) {
                 // An error occured
                 debugMsg('Could not write to output file');
@@ -4637,7 +4741,9 @@ class AKUnarchiverJPA extends AKAbstractUnarchiver
                 $bytes_left = $this->fileHeader->compressed - akstringlen($zipData);
                 $zipData .= $this->fread($this->fp, $bytes_left);
             } else {
-                debugMsg('End of local file before reading all data with no more parts left. The archive is corrupt or truncated.');
+                debugMsg(
+                    'End of local file before reading all data with no more parts left. The archive is corrupt or truncated.'
+                );
                 $this->setError(AKText::_('ERR_CORRUPT_ARCHIVE'));
 
                 return false;
@@ -4774,8 +4880,10 @@ class AKUnarchiverZIP extends AKUnarchiverJPA
 
         // Get and decode Local File Header
         $headerBinary = fread($this->fp, 30);
-        $headerData   = unpack('Vsig/C2ver/vbitflag/vcompmethod/vlastmodtime/vlastmoddate/Vcrc/Vcompsize/Vuncomp/vfnamelen/veflen',
-            $headerBinary);
+        $headerData   = unpack(
+            'Vsig/C2ver/vbitflag/vcompmethod/vlastmodtime/vlastmoddate/Vcrc/Vcompsize/Vuncomp/vfnamelen/veflen',
+            $headerBinary
+        );
 
         // Check signature
         if (!($headerData['sig'] == 0x04034b50)) {
@@ -4845,8 +4953,10 @@ class AKUnarchiverZIP extends AKUnarchiverJPA
         $isDirRenamed = false;
         if (is_array($this->renameDirs) && (count($this->renameDirs) > 0)) {
             if (array_key_exists(dirname($this->fileHeader->file), $this->renameDirs)) {
-                $file         = rtrim($this->renameDirs[dirname($this->fileHeader->file)],
-                        '/') . '/' . basename($this->fileHeader->file);
+                $file         = rtrim(
+                                    $this->renameDirs[dirname($this->fileHeader->file)],
+                                    '/'
+                                ) . '/' . basename($this->fileHeader->file);
                 $isRenamed    = true;
                 $isDirRenamed = true;
             }
@@ -4857,7 +4967,11 @@ class AKUnarchiverZIP extends AKUnarchiverJPA
             $extrafield = fread($this->fp, $extraFieldLength);
         }
 
-        debugMsg('*' . ftell($this->fp) . ' IS START OF ' . $this->fileHeader->file . ' (' . $this->fileHeader->compressed . ' bytes)');
+        debugMsg(
+            '*' . ftell(
+                $this->fp
+            ) . ' IS START OF ' . $this->fileHeader->file . ' (' . $this->fileHeader->compressed . ' bytes)'
+        );
 
 
         // Decide filetype -- Check for directories
@@ -5058,8 +5172,13 @@ class AKUnarchiverJPS extends AKUnarchiverJPA
                 // This file is finished; make sure it's the last one
                 $this->nextFile();
                 if (!$this->isEOF(false)) {
-                    $this->setError(AKText::sprintf('INVALID_FILE_HEADER', $this->currentPartNumber,
-                        $this->currentPartOffset));
+                    $this->setError(
+                        AKText::sprintf(
+                            'INVALID_FILE_HEADER',
+                            $this->currentPartNumber,
+                            $this->currentPartOffset
+                        )
+                    );
 
                     return false;
                 }
@@ -5073,8 +5192,13 @@ class AKUnarchiverJPS extends AKUnarchiverJPA
                     return false;
                 }
 
-                $this->setError(AKText::sprintf('INVALID_FILE_HEADER', $this->currentPartNumber,
-                    $this->currentPartOffset));
+                $this->setError(
+                    AKText::sprintf(
+                        'INVALID_FILE_HEADER',
+                        $this->currentPartNumber,
+                        $this->currentPartOffset
+                    )
+                );
 
                 return false;
             }
@@ -5198,8 +5322,10 @@ class AKUnarchiverJPS extends AKUnarchiverJPA
         if ($this->fileHeader->type == 'file') {
             // Regular file; ask the postproc engine to process its filename
             if ($restorePerms) {
-                $this->fileHeader->realFile = $this->postProcEngine->processFilename($this->fileHeader->file,
-                    $this->fileHeader->permissions);
+                $this->fileHeader->realFile = $this->postProcEngine->processFilename(
+                    $this->fileHeader->file,
+                    $this->fileHeader->permissions
+                );
             } else {
                 $this->fileHeader->realFile = $this->postProcEngine->processFilename($this->fileHeader->file);
             }
@@ -5411,8 +5537,10 @@ class AKUnarchiverJPS extends AKUnarchiverJPA
 
         // Open the output file
         if (!AKFactory::get('kickstart.setup.dryrun', '0')) {
-            $ignore = AKFactory::get('kickstart.setup.ignoreerrors',
-                    false) || $this->isIgnoredDirectory($this->fileHeader->file);
+            $ignore = AKFactory::get(
+                    'kickstart.setup.ignoreerrors',
+                    false
+                ) || $this->isIgnoredDirectory($this->fileHeader->file);
             if ($this->dataReadLength == 0) {
                 $outfp = @fopen($this->fileHeader->realFile, 'wb');
             } else {
@@ -5438,7 +5566,9 @@ class AKUnarchiverJPS extends AKUnarchiverJPA
 
             return true;
         } else {
-            $this->setError('An uncompressed file was detected; this is not supported by this archive extraction utility');
+            $this->setError(
+                'An uncompressed file was detected; this is not supported by this archive extraction utility'
+            );
 
             return false;
         }
@@ -5462,8 +5592,10 @@ class AKUnarchiverJPS extends AKUnarchiverJPA
             $outfp = @fopen($this->fileHeader->realFile, 'wb');
 
             // Can we write to the file?
-            $ignore = AKFactory::get('kickstart.setup.ignoreerrors',
-                    false) || $this->isIgnoredDirectory($this->fileHeader->file);
+            $ignore = AKFactory::get(
+                    'kickstart.setup.ignoreerrors',
+                    false
+                ) || $this->isIgnoredDirectory($this->fileHeader->file);
             if (($outfp === false) && (!$ignore)) {
                 // An error occured
                 $this->setError(AKText::sprintf('COULDNT_WRITE_FILE', $this->fileHeader->realFile));
@@ -5803,8 +5935,10 @@ class AKUtilsLister extends AKAbstractObject
             }
 
             if (($file != '.') && ($file != '..')) {
-                $ds    = ($folder == '') || ($folder == '/') || (@substr($folder, -1) == '/') || (@substr($folder,
-                        -1) == DIRECTORY_SEPARATOR) ? '' : DIRECTORY_SEPARATOR;
+                $ds    = ($folder == '') || ($folder == '/') || (@substr($folder, -1) == '/') || (@substr(
+                        $folder,
+                        -1
+                    ) == DIRECTORY_SEPARATOR) ? '' : DIRECTORY_SEPARATOR;
                 $dir   = $folder . $ds . $file;
                 $isDir = is_dir($dir);
                 if (!$isDir) {
@@ -5841,8 +5975,10 @@ class AKUtilsLister extends AKAbstractObject
             }
 
             if (($file != '.') && ($file != '..')) {
-                $ds    = ($folder == '') || ($folder == '/') || (@substr($folder, -1) == '/') || (@substr($folder,
-                        -1) == DIRECTORY_SEPARATOR) ? '' : DIRECTORY_SEPARATOR;
+                $ds    = ($folder == '') || ($folder == '/') || (@substr($folder, -1) == '/') || (@substr(
+                        $folder,
+                        -1
+                    ) == DIRECTORY_SEPARATOR) ? '' : DIRECTORY_SEPARATOR;
                 $dir   = $folder . $ds . $file;
                 $isDir = is_dir($dir);
                 if ($isDir) {
@@ -6100,9 +6236,13 @@ class AKText extends AKAbstractObject
                 if (strstr($value, ";")) {
                     $tmp = explode(';', $value);
                     if (count($tmp) == 2) {
-                        if ((($value{0} != '"') && ($value{0} != "'")) || preg_match('/^".*"\s*;/',
-                                $value) || preg_match('/^".*;[^"]*$/', $value) || preg_match("/^'.*'\s*;/",
-                                $value) || preg_match("/^'.*;[^']*$/", $value)
+                        if ((($value{0} != '"') && ($value{0} != "'")) || preg_match(
+                                '/^".*"\s*;/',
+                                $value
+                            ) || preg_match('/^".*;[^"]*$/', $value) || preg_match(
+                                "/^'.*'\s*;/",
+                                $value
+                            ) || preg_match("/^'.*;[^']*$/", $value)
                         ) {
                             $value = $tmp[0];
                         }
@@ -6166,8 +6306,11 @@ class AKText extends AKAbstractObject
                 // slice out the part before ; on first step, the part before - on second, place into array
                 $temp_array[0] = substr($language_list, 0, strcspn($language_list, ';'));//full language
                 $temp_array[1] = substr($language_list, 0, 2);// cut out primary language
-                if ((strlen($temp_array[0]) == 5) && ((substr($temp_array[0], 2, 1) == '-') || (substr($temp_array[0],
-                                2, 1) == '_'))
+                if ((strlen($temp_array[0]) == 5) && ((substr($temp_array[0], 2, 1) == '-') || (substr(
+                                                                                                    $temp_array[0],
+                                                                                                    2,
+                                                                                                    1
+                                                                                                ) == '_'))
                 ) {
                     $langLocation  = strtoupper(substr($temp_array[0], 3, 2));
                     $temp_array[0] = $temp_array[1] . '-' . $langLocation;

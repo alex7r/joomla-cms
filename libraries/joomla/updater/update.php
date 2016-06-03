@@ -284,8 +284,11 @@ class JUpdate extends JObject
 
                 // Support for the min_dev_level and max_dev_level attributes is deprecated, a regexp should be used instead
                 if (isset($this->currentUpdate->targetplatform->min_dev_level) || isset($this->currentUpdate->targetplatform->max_dev_level)) {
-                    JLog::add('Support for the min_dev_level and max_dev_level attributes of an update\'s <targetplatform> tag is deprecated and' . ' will be removed in 4.0. The full version should be specified in the version attribute and may optionally be a regexp.',
-                        JLog::WARNING, 'deprecated');
+                    JLog::add(
+                        'Support for the min_dev_level and max_dev_level attributes of an update\'s <targetplatform> tag is deprecated and' . ' will be removed in 4.0. The full version should be specified in the version attribute and may optionally be a regexp.',
+                        JLog::WARNING,
+                        'deprecated'
+                    );
                 }
 
                 /*
@@ -293,12 +296,17 @@ class JUpdate extends JObject
                  *
                  * Check for optional min_dev_level and max_dev_level attributes to further specify targetplatform (e.g., 3.0.1)
                  */
-                if (isset($this->currentUpdate->targetplatform->name) && $product == $this->currentUpdate->targetplatform->name && preg_match('/^' . $this->currentUpdate->targetplatform->version . '/',
-                        JVERSION) && ((!isset($this->currentUpdate->targetplatform->min_dev_level)) || JVersion::DEV_LEVEL >= $this->currentUpdate->targetplatform->min_dev_level) && ((!isset($this->currentUpdate->targetplatform->max_dev_level)) || JVersion::DEV_LEVEL <= $this->currentUpdate->targetplatform->max_dev_level)
+                if (isset($this->currentUpdate->targetplatform->name) && $product == $this->currentUpdate->targetplatform->name && preg_match(
+                        '/^' . $this->currentUpdate->targetplatform->version . '/',
+                        JVERSION
+                    ) && ((!isset($this->currentUpdate->targetplatform->min_dev_level)) || JVersion::DEV_LEVEL >= $this->currentUpdate->targetplatform->min_dev_level) && ((!isset($this->currentUpdate->targetplatform->max_dev_level)) || JVersion::DEV_LEVEL <= $this->currentUpdate->targetplatform->max_dev_level)
                 ) {
                     // Check if PHP version supported via <php_minimum> tag, assume true if tag isn't present
-                    if (!isset($this->currentUpdate->php_minimum) || version_compare(PHP_VERSION,
-                            $this->currentUpdate->php_minimum->_data, '>=')
+                    if (!isset($this->currentUpdate->php_minimum) || version_compare(
+                            PHP_VERSION,
+                            $this->currentUpdate->php_minimum->_data,
+                            '>='
+                        )
                     ) {
                         $phpMatch = true;
                     } else {
@@ -314,8 +322,11 @@ class JUpdate extends JObject
 
                     if ($phpMatch && $stabilityMatch) {
                         if (isset($this->latest)) {
-                            if (version_compare($this->currentUpdate->version->_data, $this->latest->version->_data,
-                                    '>') == 1
+                            if (version_compare(
+                                    $this->currentUpdate->version->_data,
+                                    $this->latest->version->_data,
+                                    '>'
+                                ) == 1
                             ) {
                                 $this->latest = $this->currentUpdate;
                             }
@@ -442,8 +453,15 @@ class JUpdate extends JObject
         xml_set_character_data_handler($this->xmlParser, '_characterData');
 
         if (!xml_parse($this->xmlParser, $response->body)) {
-            JLog::add(sprintf("XML error: %s at line %d", xml_error_string(xml_get_error_code($this->xmlParser)),
-                xml_get_current_line_number($this->xmlParser)), JLog::WARNING, 'updater');
+            JLog::add(
+                sprintf(
+                    "XML error: %s at line %d",
+                    xml_error_string(xml_get_error_code($this->xmlParser)),
+                    xml_get_current_line_number($this->xmlParser)
+                ),
+                JLog::WARNING,
+                'updater'
+            );
 
             return false;
         }

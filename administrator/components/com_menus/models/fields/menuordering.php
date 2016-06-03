@@ -45,12 +45,10 @@ class JFormFieldMenuOrdering extends JFormFieldList
             return false;
         }
 
-        $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('a.id AS value, a.title AS text')
-                    ->from('#__menu AS a')
-                    ->where('a.published >= 0')
-                    ->where('a.parent_id =' . (int)$parent_id);
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true)->select('a.id AS value, a.title AS text')->from('#__menu AS a')->where(
+                'a.published >= 0'
+            )->where('a.parent_id =' . (int)$parent_id);
 
         if ($menuType = $this->form->getValue('menutype')) {
             $query->where('a.menutype = ' . $db->quote($menuType));
@@ -69,12 +67,16 @@ class JFormFieldMenuOrdering extends JFormFieldList
             JError::raiseWarning(500, $e->getMessage());
         }
 
-        $options = array_merge(array(
+        $options = array_merge(
             array(
-                'value' => '-1',
-                'text'  => JText::_('COM_MENUS_ITEM_FIELD_ORDERING_VALUE_FIRST')
-            )
-        ), $options, array(array('value' => '-2', 'text' => JText::_('COM_MENUS_ITEM_FIELD_ORDERING_VALUE_LAST'))));
+                array(
+                    'value' => '-1',
+                    'text'  => JText::_('COM_MENUS_ITEM_FIELD_ORDERING_VALUE_FIRST')
+                )
+            ),
+            $options,
+            array(array('value' => '-2', 'text' => JText::_('COM_MENUS_ITEM_FIELD_ORDERING_VALUE_LAST')))
+        );
 
         // Merge any additional options in the XML definition.
         $options = array_merge(parent::getOptions(), $options);

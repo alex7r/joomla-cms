@@ -78,10 +78,12 @@ abstract class JHtmlJGrid
 
             $tz = new DateTimeZone(JFactory::getUser()->getParam('timezone', JFactory::getConfig()->get('offset')));
 
-            $publish_up   = ($publish_up != $nullDate) ? JFactory::getDate($publish_up, 'UTC')
-                                                                 ->setTimeZone($tz) : false;
-            $publish_down = ($publish_down != $nullDate) ? JFactory::getDate($publish_down, 'UTC')
-                                                                   ->setTimeZone($tz) : false;
+            $publish_up   = ($publish_up != $nullDate) ? JFactory::getDate($publish_up, 'UTC')->setTimeZone(
+                    $tz
+                ) : false;
+            $publish_down = ($publish_down != $nullDate) ? JFactory::getDate($publish_down, 'UTC')->setTimeZone(
+                    $tz
+                ) : false;
 
             // Create tip text, only we have publish up or down settings
             $tips = array();
@@ -122,8 +124,15 @@ abstract class JHtmlJGrid
                 }
             }
 
-            return static::state($states, $value, $i, array('prefix' => $prefix, 'translate' => !$tip), $enabled, true,
-                $checkbox);
+            return static::state(
+                $states,
+                $value,
+                $i,
+                array('prefix' => $prefix, 'translate' => !$tip),
+                $enabled,
+                true,
+                $checkbox
+            );
         }
 
         return static::state($states, $value, $i, $prefix, $enabled, true, $checkbox);
@@ -167,21 +176,45 @@ abstract class JHtmlJGrid
 
         $state          = JArrayHelper::getValue($states, (int)$value, $states[0]);
         $task           = array_key_exists('task', $state) ? $state['task'] : $state[0];
-        $text           = array_key_exists('text', $state) ? $state['text'] : (array_key_exists(1,
-            $state) ? $state[1] : '');
-        $active_title   = array_key_exists('active_title', $state) ? $state['active_title'] : (array_key_exists(2,
-            $state) ? $state[2] : '');
-        $inactive_title = array_key_exists('inactive_title', $state) ? $state['inactive_title'] : (array_key_exists(3,
-            $state) ? $state[3] : '');
-        $tip            = array_key_exists('tip', $state) ? $state['tip'] : (array_key_exists(4,
-            $state) ? $state[4] : false);
-        $active_class   = array_key_exists('active_class', $state) ? $state['active_class'] : (array_key_exists(5,
-            $state) ? $state[5] : '');
-        $inactive_class = array_key_exists('inactive_class', $state) ? $state['inactive_class'] : (array_key_exists(6,
-            $state) ? $state[6] : '');
+        $text           = array_key_exists('text', $state) ? $state['text'] : (array_key_exists(
+            1,
+            $state
+        ) ? $state[1] : '');
+        $active_title   = array_key_exists('active_title', $state) ? $state['active_title'] : (array_key_exists(
+            2,
+            $state
+        ) ? $state[2] : '');
+        $inactive_title = array_key_exists('inactive_title', $state) ? $state['inactive_title'] : (array_key_exists(
+            3,
+            $state
+        ) ? $state[3] : '');
+        $tip            = array_key_exists('tip', $state) ? $state['tip'] : (array_key_exists(
+            4,
+            $state
+        ) ? $state[4] : false);
+        $active_class   = array_key_exists('active_class', $state) ? $state['active_class'] : (array_key_exists(
+            5,
+            $state
+        ) ? $state[5] : '');
+        $inactive_class = array_key_exists('inactive_class', $state) ? $state['inactive_class'] : (array_key_exists(
+            6,
+            $state
+        ) ? $state[6] : '');
 
-        return static::action($i, $task, $prefix, $text, $active_title, $inactive_title, $tip, $active_class,
-            $inactive_class, $enabled, $translate, $checkbox);
+        return static::action(
+            $i,
+            $task,
+            $prefix,
+            $text,
+            $active_title,
+            $inactive_title,
+            $tip,
+            $active_class,
+            $inactive_class,
+            $enabled,
+            $translate,
+            $checkbox
+        );
     }
 
     /**
@@ -221,12 +254,16 @@ abstract class JHtmlJGrid
         if (is_array($prefix)) {
             $options        = $prefix;
             $active_title   = array_key_exists('active_title', $options) ? $options['active_title'] : $active_title;
-            $inactive_title = array_key_exists('inactive_title',
-                $options) ? $options['inactive_title'] : $inactive_title;
+            $inactive_title = array_key_exists(
+                'inactive_title',
+                $options
+            ) ? $options['inactive_title'] : $inactive_title;
             $tip            = array_key_exists('tip', $options) ? $options['tip'] : $tip;
             $active_class   = array_key_exists('active_class', $options) ? $options['active_class'] : $active_class;
-            $inactive_class = array_key_exists('inactive_class',
-                $options) ? $options['inactive_class'] : $inactive_class;
+            $inactive_class = array_key_exists(
+                'inactive_class',
+                $options
+            ) ? $options['inactive_class'] : $inactive_class;
             $enabled        = array_key_exists('enabled', $options) ? $options['enabled'] : $enabled;
             $translate      = array_key_exists('translate', $options) ? $options['translate'] : $translate;
             $checkbox       = array_key_exists('checkbox', $options) ? $options['checkbox'] : $checkbox;
@@ -369,15 +406,28 @@ abstract class JHtmlJGrid
             $prefix   = array_key_exists('prefix', $options) ? $options['prefix'] : '';
         }
 
-        $text           = $editorName . '<br />' . JHtml::_('date', $time,
-                JText::_('DATE_FORMAT_LC')) . '<br />' . JHtml::_('date', $time, 'H:i');
+        $text           = $editorName . '<br />' . JHtml::_(
+                'date',
+                $time,
+                JText::_('DATE_FORMAT_LC')
+            ) . '<br />' . JHtml::_('date', $time, 'H:i');
         $active_title   = JHtml::tooltipText(JText::_('JLIB_HTML_CHECKIN'), $text, 0);
         $inactive_title = JHtml::tooltipText(JText::_('JLIB_HTML_CHECKED_OUT'), $text, 0);
 
-        return static::action($i, 'checkin', $prefix, JText::_('JLIB_HTML_CHECKED_OUT'),
+        return static::action(
+            $i,
+            'checkin',
+            $prefix,
+            JText::_('JLIB_HTML_CHECKED_OUT'),
             html_entity_decode($active_title, ENT_QUOTES, 'UTF-8'),
-            html_entity_decode($inactive_title, ENT_QUOTES, 'UTF-8'), true, 'checkedout', 'checkedout', $enabled, false,
-            $checkbox);
+            html_entity_decode($inactive_title, ENT_QUOTES, 'UTF-8'),
+            true,
+            'checkedout',
+            'checkedout',
+            $enabled,
+            false,
+            $checkbox
+        );
     }
 
     /**
@@ -410,8 +460,20 @@ abstract class JHtmlJGrid
             $prefix   = array_key_exists('prefix', $options) ? $options['prefix'] : '';
         }
 
-        return static::action($i, $task, $prefix, $text, $text, $text, false, 'uparrow', 'uparrow_disabled', $enabled,
-            true, $checkbox);
+        return static::action(
+            $i,
+            $task,
+            $prefix,
+            $text,
+            $text,
+            $text,
+            false,
+            'uparrow',
+            'uparrow_disabled',
+            $enabled,
+            true,
+            $checkbox
+        );
     }
 
     /**
@@ -444,7 +506,19 @@ abstract class JHtmlJGrid
             $prefix   = array_key_exists('prefix', $options) ? $options['prefix'] : '';
         }
 
-        return static::action($i, $task, $prefix, $text, $text, $text, false, 'downarrow', 'downarrow_disabled',
-            $enabled, true, $checkbox);
+        return static::action(
+            $i,
+            $task,
+            $prefix,
+            $text,
+            $text,
+            $text,
+            false,
+            'downarrow',
+            'downarrow_disabled',
+            $enabled,
+            true,
+            $checkbox
+        );
     }
 }

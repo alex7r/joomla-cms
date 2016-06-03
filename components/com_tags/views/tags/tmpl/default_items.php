@@ -37,11 +37,13 @@ if ($bsspans < 1) {
 
 $bscolumns = min($columns, floor(12 / $bsspans));
 $n         = count($this->items);
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 		var resetFilter = function() {
 		document.getElementById('filter-search').value = '';
 	}
-");
+"
+);
 ?>
 
 <form action="<?php echo htmlspecialchars(JUri::getInstance()->toString()); ?>" method="post" name="adminForm"
@@ -106,11 +108,15 @@ JFactory::getDocument()->addScriptDeclaration("
                 <?php $images = json_decode($item->images); ?>
                 <span class="tag-body">
 			<?php if (!empty($images->image_intro)): ?>
-                <?php $imgfloat = (empty($images->float_intro)) ? $this->params->get('float_intro') : $images->float_intro; ?>
+                <?php $imgfloat = (empty($images->float_intro)) ? $this->params->get(
+                    'float_intro'
+                ) : $images->float_intro; ?>
                 <div class="pull-<?php echo htmlspecialchars($imgfloat); ?> item-image">
 					<img
                         <?php if ($images->image_intro_caption) : ?>
-                            <?php echo 'class="caption"' . ' title="' . htmlspecialchars($images->image_intro_caption) . '"'; ?>
+                            <?php echo 'class="caption"' . ' title="' . htmlspecialchars(
+                                    $images->image_intro_caption
+                                ) . '"'; ?>
                         <?php endif; ?>
                         src="<?php echo $images->image_intro; ?>"
                         alt="<?php echo htmlspecialchars($images->image_fulltext_alt); ?>"/>
@@ -121,8 +127,11 @@ JFactory::getDocument()->addScriptDeclaration("
             <div class="caption">
                 <?php if ($this->params->get('all_tags_show_tag_description', 1)) : ?>
                     <span class="tag-body">
-					<?php echo JHtml::_('string.truncate', $item->description,
-                        $this->params->get('tag_list_item_maximum_characters')); ?>
+					<?php echo JHtml::_(
+                        'string.truncate',
+                        $item->description,
+                        $this->params->get('tag_list_item_maximum_characters')
+                    ); ?>
 				</span>
                 <?php endif; ?>
                 <?php if ($this->params->get('all_tags_show_tag_hits')) : ?>
@@ -142,8 +151,10 @@ JFactory::getDocument()->addScriptDeclaration("
 
     <?php // Add pagination links ?>
     <?php if (!empty($this->items)) : ?>
-    <?php if (($this->params->def('show_pagination',
-                2) == 1 || ($this->params->get('show_pagination') == 2)) && ($this->pagination->pagesTotal > 1)
+    <?php if (($this->params->def(
+                'show_pagination',
+                2
+            ) == 1 || ($this->params->get('show_pagination') == 2)) && ($this->pagination->pagesTotal > 1)
     ) : ?>
         <div class="pagination">
 

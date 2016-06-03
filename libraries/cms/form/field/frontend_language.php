@@ -38,17 +38,22 @@ class JFormFieldFrontend_Language extends JFormFieldList
     protected function getOptions()
     {
         // Get the database object and a new query object.
-        $db    = JFactory::getDbo();
+        $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
-        $query->select('a.lang_code AS value, a.title AS text')
-              ->from($db->quoteName('#__languages') . ' AS a')
-              ->where('a.published = 1')
-              ->order('a.title');
+        $query->select('a.lang_code AS value, a.title AS text')->from($db->quoteName('#__languages') . ' AS a')->where(
+                'a.published = 1'
+            )->order('a.title');
 
         // Select the language home pages.
         $query->select('l.home, l.language')
-              ->innerJoin($db->quoteName('#__menu') . ' AS l ON l.language=a.lang_code AND l.home=1 AND l.published=1 AND l.language <> ' . $db->quote('*'))
+              ->innerJoin(
+                  $db->quoteName(
+                      '#__menu'
+                  ) . ' AS l ON l.language=a.lang_code AND l.home=1 AND l.published=1 AND l.language <> ' . $db->quote(
+                      '*'
+                  )
+              )
               ->innerJoin($db->quoteName('#__extensions') . ' AS e ON e.element = a.lang_code')
               ->where('e.client_id = 0')
               ->where('e.enabled = 1')

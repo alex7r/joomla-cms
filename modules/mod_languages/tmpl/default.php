@@ -35,8 +35,13 @@ if ($params->get('dropdown', 1) && !$params->get('dropdownimage', 0)) {
             <?php foreach ($list as $language) : ?>
                 <?php if ($language->active) : ?>
                     <?php $flag = ''; ?>
-                    <?php $flag .= "&nbsp;" . JHtml::_('image', 'mod_languages/' . $language->image . '.gif',
-                            $language->title_native, array('title' => $language->title_native), true); ?>
+                    <?php $flag .= "&nbsp;" . JHtml::_(
+                            'image',
+                            'mod_languages/' . $language->image . '.gif',
+                            $language->title_native,
+                            array('title' => $language->title_native),
+                            true
+                        ); ?>
                     <?php $flag .= "&nbsp;" . $language->title_native; ?>
                     <a href="#" data-toggle="dropdown" class="btn dropdown-toggle"><span
                             class="caret"></span><?php echo $flag; ?></a>
@@ -48,8 +53,13 @@ if ($params->get('dropdown', 1) && !$params->get('dropdownimage', 0)) {
                     <?php if ($params->get('show_active', 0) || !$language->active) : ?>
                         <li class="<?php echo $language->active ? 'lang-active' : ''; ?>">
                             <a href="<?php echo $language->link; ?>">
-                                <?php echo JHtml::_('image', 'mod_languages/' . $language->image . '.gif',
-                                    $language->title_native, array('title' => $language->title_native), true); ?>
+                                <?php echo JHtml::_(
+                                    'image',
+                                    'mod_languages/' . $language->image . '.gif',
+                                    $language->title_native,
+                                    array('title' => $language->title_native),
+                                    true
+                                ); ?>
                                 <?php echo $language->title_native; ?>
                             </a>
                         </li>
@@ -65,11 +75,18 @@ if ($params->get('dropdown', 1) && !$params->get('dropdownimage', 0)) {
                         dir="<?php echo $language->rtl ? 'rtl' : 'ltr'; ?>">
                         <a href="<?php echo $language->link; ?>">
                             <?php if ($params->get('image', 1)) : ?>
-                                <?php echo JHtml::_('image', 'mod_languages/' . $language->image . '.gif',
-                                    $language->title_native, array('title' => $language->title_native), true); ?>
+                                <?php echo JHtml::_(
+                                    'image',
+                                    'mod_languages/' . $language->image . '.gif',
+                                    $language->title_native,
+                                    array('title' => $language->title_native),
+                                    true
+                                ); ?>
                             <?php else : ?>
-                                <?php echo $params->get('full_name',
-                                    1) ? $language->title_native : strtoupper($language->sef); ?>
+                                <?php echo $params->get(
+                                    'full_name',
+                                    1
+                                ) ? $language->title_native : strtoupper($language->sef); ?>
                             <?php endif; ?>
                         </a>
                     </li>

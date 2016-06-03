@@ -14,14 +14,16 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('formbehavior.chosen', 'select');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'config.cancel' || document.formvalidator.isValid(document.getElementById('application-form'))) {
 			Joomla.submitform(task, document.getElementById('application-form'));
 		}
 	}
-");
+"
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" id="application-form" method="post"

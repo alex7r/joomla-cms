@@ -46,15 +46,18 @@ $doc->addStyleSheetVersion($this->baseurl . '/templates/' . $this->template . '/
 // Use of Google Font
 if ($this->params->get('googleFont')) {
     $doc->addStyleSheet('//fonts.googleapis.com/css?family=' . $this->params->get('googleFontName'));
-    $doc->addStyleDeclaration("
+    $doc->addStyleDeclaration(
+        "
 	h1, h2, h3, h4, h5, h6, .site-title {
 		font-family: '" . str_replace('+', ' ', $this->params->get('googleFontName')) . "', sans-serif;
-	}");
+	}"
+    );
 }
 
 // Template color
 if ($this->params->get('templateColor')) {
-    $doc->addStyleDeclaration("
+    $doc->addStyleDeclaration(
+        "
 	body.site {
 		border-top: 3px solid " . $this->params->get('templateColor') . ";
 		background-color: " . $this->params->get('templateBackgroundColor') . ";
@@ -71,7 +74,8 @@ if ($this->params->get('templateColor')) {
 	.nav-pills > .active > a:hover,
 	.btn-primary {
 		background: " . $this->params->get('templateColor') . ";
-	}");
+	}"
+    );
 }
 
 // Check for a custom CSS file
@@ -99,8 +103,11 @@ if ($this->countModules('position-7') && $this->countModules('position-8')) {
 if ($this->params->get('logoFile')) {
     $logo = '<img src="' . JUri::root() . $this->params->get('logoFile') . '" alt="' . $sitename . '" />';
 } elseif ($this->params->get('sitetitle')) {
-    $logo = '<span class="site-title" title="' . $sitename . '">' . htmlspecialchars($this->params->get('sitetitle'),
-            ENT_COMPAT, 'UTF-8') . '</span>';
+    $logo = '<span class="site-title" title="' . $sitename . '">' . htmlspecialchars(
+            $this->params->get('sitetitle'),
+            ENT_COMPAT,
+            'UTF-8'
+        ) . '</span>';
 } else {
     $logo = '<span class="site-title" title="' . $sitename . '">' . $sitename . '</span>';
 }
@@ -114,7 +121,9 @@ if ($this->params->get('logoFile')) {
     <script src="<?php echo JUri::root(true); ?>/media/jui/js/html5.js"></script><![endif]-->
 </head>
 <body
-    class="site <?php echo $option . ' view-' . $view . ($layout ? ' layout-' . $layout : ' no-layout') . ($task ? ' task-' . $task : ' no-task') . ($itemid ? ' itemid-' . $itemid : '') . ($params->get('fluidContainer') ? ' fluid' : '');
+    class="site <?php echo $option . ' view-' . $view . ($layout ? ' layout-' . $layout : ' no-layout') . ($task ? ' task-' . $task : ' no-task') . ($itemid ? ' itemid-' . $itemid : '') . ($params->get(
+            'fluidContainer'
+        ) ? ' fluid' : '');
     echo($this->direction == 'rtl' ? ' rtl' : '');
     ?>">
 <!-- Body -->
@@ -126,8 +135,11 @@ if ($this->params->get('logoFile')) {
                 <a class="brand pull-left" href="<?php echo $this->baseurl; ?>/">
                     <?php echo $logo; ?>
                     <?php if ($this->params->get('sitedescription')) : ?>
-                        <?php echo '<div class="site-description">' . htmlspecialchars($this->params->get('sitedescription'),
-                                ENT_COMPAT, 'UTF-8') . '</div>'; ?>
+                        <?php echo '<div class="site-description">' . htmlspecialchars(
+                                $this->params->get('sitedescription'),
+                                ENT_COMPAT,
+                                'UTF-8'
+                            ) . '</div>'; ?>
                     <?php endif; ?>
                 </a>
                 <div class="header-search pull-right">

@@ -129,8 +129,10 @@ abstract class ContentHelperRoute
         // Check if the active menuitem matches the requested language
         $active = $menus->getActive();
 
-        if ($active && $active->component == 'com_content' && ($language == '*' || in_array($active->language,
-                    array('*', $language)) || !JLanguageMultilang::isEnabled())
+        if ($active && $active->component == 'com_content' && ($language == '*' || in_array(
+                    $active->language,
+                    array('*', $language)
+                ) || !JLanguageMultilang::isEnabled())
         ) {
             return $active->id;
         }

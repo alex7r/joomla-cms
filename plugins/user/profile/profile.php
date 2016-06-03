@@ -132,8 +132,10 @@ class PlgUserProfile extends JPlugin
     public function onContentPrepareData($context, $data)
     {
         // Check we are manipulating a valid form.
-        if (!in_array($context,
-            array('com_users.profile', 'com_users.user', 'com_users.registration', 'com_admin.profile'))
+        if (!in_array(
+            $context,
+            array('com_users.profile', 'com_users.user', 'com_users.registration', 'com_admin.profile')
+        )
         ) {
             return true;
         }
@@ -144,7 +146,9 @@ class PlgUserProfile extends JPlugin
             if (!isset($data->profile) and $userId > 0) {
                 // Load the profile data from the database.
                 $db = JFactory::getDbo();
-                $db->setQuery('SELECT profile_key, profile_value FROM #__user_profiles' . ' WHERE user_id = ' . (int)$userId . " AND profile_key LIKE 'profile.%'" . ' ORDER BY ordering');
+                $db->setQuery(
+                    'SELECT profile_key, profile_value FROM #__user_profiles' . ' WHERE user_id = ' . (int)$userId . " AND profile_key LIKE 'profile.%'" . ' ORDER BY ordering'
+                );
 
                 try {
                     $results = $db->loadRowList();
@@ -208,8 +212,10 @@ class PlgUserProfile extends JPlugin
         // Check we are manipulating a valid form.
         $name = $form->getName();
 
-        if (!in_array($name,
-            array('com_admin.profile', 'com_users.user', 'com_users.profile', 'com_users.registration'))
+        if (!in_array(
+            $name,
+            array('com_admin.profile', 'com_users.user', 'com_users.profile', 'com_users.registration')
+        )
         ) {
             return true;
         }
@@ -267,8 +273,10 @@ class PlgUserProfile extends JPlugin
             // Case using the users manager in admin
             if ($name == 'com_users.user') {
                 // Remove the field if it is disabled in registration and profile
-                if ($this->params->get('register-require_' . $field,
-                        1) == 0 && $this->params->get('profile-require_' . $field, 1) == 0
+                if ($this->params->get(
+                        'register-require_' . $field,
+                        1
+                    ) == 0 && $this->params->get('profile-require_' . $field, 1) == 0
                 ) {
                     $form->removeField($field, 'profile');
                 }
@@ -276,8 +284,12 @@ class PlgUserProfile extends JPlugin
             elseif ($name == 'com_users.registration') {
                 // Toggle whether the field is required.
                 if ($this->params->get('register-require_' . $field, 1) > 0) {
-                    $form->setFieldAttribute($field, 'required',
-                        ($this->params->get('register-require_' . $field) == 2) ? 'required' : '', 'profile');
+                    $form->setFieldAttribute(
+                        $field,
+                        'required',
+                        ($this->params->get('register-require_' . $field) == 2) ? 'required' : '',
+                        'profile'
+                    );
                 } else {
                     $form->removeField($field, 'profile');
                 }
@@ -285,8 +297,12 @@ class PlgUserProfile extends JPlugin
             elseif ($name == 'com_users.profile' || $name == 'com_admin.profile') {
                 // Toggle whether the field is required.
                 if ($this->params->get('profile-require_' . $field, 1) > 0) {
-                    $form->setFieldAttribute($field, 'required',
-                        ($this->params->get('profile-require_' . $field) == 2) ? 'required' : '', 'profile');
+                    $form->setFieldAttribute(
+                        $field,
+                        'required',
+                        ($this->params->get('profile-require_' . $field) == 2) ? 'required' : '',
+                        'profile'
+                    );
                 } else {
                     $form->removeField($field, 'profile');
                 }
@@ -360,10 +376,9 @@ class PlgUserProfile extends JPlugin
                 $data['profile']['dob'] = $this->date;
 
                 $db    = JFactory::getDbo();
-                $query = $db->getQuery(true)
-                            ->delete($db->quoteName('#__user_profiles'))
-                            ->where($db->quoteName('user_id') . ' = ' . (int)$userId)
-                            ->where($db->quoteName('profile_key') . ' LIKE ' . $db->quote('profile.%'));
+                $query = $db->getQuery(true)->delete($db->quoteName('#__user_profiles'))->where(
+                        $db->quoteName('user_id') . ' = ' . (int)$userId
+                    )->where($db->quoteName('profile_key') . ' LIKE ' . $db->quote('profile.%'));
                 $db->setQuery($query);
                 $db->execute();
 
@@ -371,7 +386,9 @@ class PlgUserProfile extends JPlugin
                 $order  = 1;
 
                 foreach ($data['profile'] as $k => $v) {
-                    $tuples[] = '(' . $userId . ', ' . $db->quote('profile.' . $k) . ', ' . $db->quote(json_encode($v)) . ', ' . ($order++) . ')';
+                    $tuples[] = '(' . $userId . ', ' . $db->quote('profile.' . $k) . ', ' . $db->quote(
+                            json_encode($v)
+                        ) . ', ' . ($order++) . ')';
                 }
 
                 $db->setQuery('INSERT INTO #__user_profiles VALUES ' . implode(', ', $tuples));
@@ -408,7 +425,9 @@ class PlgUserProfile extends JPlugin
         if ($userId) {
             try {
                 $db = JFactory::getDbo();
-                $db->setQuery('DELETE FROM #__user_profiles WHERE user_id = ' . $userId . " AND profile_key LIKE 'profile.%'");
+                $db->setQuery(
+                    'DELETE FROM #__user_profiles WHERE user_id = ' . $userId . " AND profile_key LIKE 'profile.%'"
+                );
 
                 $db->execute();
             } catch (Exception $e) {

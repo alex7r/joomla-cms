@@ -195,10 +195,9 @@ class JTableContent extends JTable
     {
         // Need to find the asset id by the name of the component.
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('id'))
-                    ->from($db->quoteName('#__assets'))
-                    ->where($db->quoteName('name') . ' = ' . $db->quote($component));
+        $query = $db->getQuery(true)->select($db->quoteName('id'))->from($db->quoteName('#__assets'))->where(
+                $db->quoteName('name') . ' = ' . $db->quote($component)
+            );
         $db->setQuery($query);
         $assetId = (int)$db->loadResult();
 
@@ -239,10 +238,12 @@ class JTableContent extends JTable
         // Verify that the alias is unique
         $table = JTable::getInstance('Content', 'JTable', array('dbo' => $this->getDbo()));
 
-        if ($table->load(array(
-                'alias' => $this->alias,
-                'catid' => $this->catid
-            )) && ($table->id != $this->id || $this->id == 0)
+        if ($table->load(
+                array(
+                    'alias' => $this->alias,
+                    'catid' => $this->catid
+                )
+            ) && ($table->id != $this->id || $this->id == 0)
         ) {
             $this->setError(JText::_('JLIB_DATABASE_ERROR_ARTICLE_UNIQUE_ALIAS'));
 
@@ -297,10 +298,9 @@ class JTableContent extends JTable
         // This is an article under a category.
         if ($this->catid) {
             // Build the query to get the asset id for the parent category.
-            $query = $this->_db->getQuery(true)
-                               ->select($this->_db->quoteName('asset_id'))
-                               ->from($this->_db->quoteName('#__categories'))
-                               ->where($this->_db->quoteName('id') . ' = ' . (int)$this->catid);
+            $query = $this->_db->getQuery(true)->select($this->_db->quoteName('asset_id'))->from(
+                    $this->_db->quoteName('#__categories')
+                )->where($this->_db->quoteName('id') . ' = ' . (int)$this->catid);
 
             // Get the asset id from the database.
             $this->_db->setQuery($query);

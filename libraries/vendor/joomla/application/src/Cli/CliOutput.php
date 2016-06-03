@@ -34,7 +34,9 @@ abstract class CliOutput
      */
     public function __construct(ProcessorInterface $processor = null)
     {
-        $this->setProcessor(($processor instanceof ProcessorInterface) ? $processor : new Output\Processor\ColorProcessor);
+        $this->setProcessor(
+            ($processor instanceof ProcessorInterface) ? $processor : new Output\Processor\ColorProcessor
+        );
     }
 
     /**
@@ -73,8 +75,8 @@ abstract class CliOutput
     /**
      * Write a string to an output handler.
      *
-     * @param   string  $text The text to display.
-     * @param   boolean $nl   True (default) to append a new line at the end of the output string.
+     * @param   string $text The text to display.
+     * @param   boolean $nl  True (default) to append a new line at the end of the output string.
      *
      * @return  void
      *

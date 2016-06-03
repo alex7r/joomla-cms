@@ -212,8 +212,13 @@ class MenusModelItem extends JModelAdmin
                 if (isset($args['option'])) {
                     // Load the language file for the component.
                     $lang = JFactory::getLanguage();
-                    $lang->load($args['option'], JPATH_ADMINISTRATOR, null, false, true) || $lang->load($args['option'],
-                        JPATH_ADMINISTRATOR . '/components/' . $args['option'], null, false, true);
+                    $lang->load($args['option'], JPATH_ADMINISTRATOR, null, false, true) || $lang->load(
+                        $args['option'],
+                        JPATH_ADMINISTRATOR . '/components/' . $args['option'],
+                        null,
+                        false,
+                        true
+                    );
 
                     // Determine the component id.
                     $component = JComponentHelper::getComponent($args['option']);
@@ -308,8 +313,10 @@ class MenusModelItem extends JModelAdmin
     protected function loadFormData()
     {
         // Check the session for previously entered form data.
-        $data = array_merge((array)$this->getItem(),
-            (array)JFactory::getApplication()->getUserState('com_menus.edit.item.data', array()));
+        $data = array_merge(
+            (array)$this->getItem(),
+            (array)JFactory::getApplication()->getUserState('com_menus.edit.item.data', array())
+        );
 
         // For a new menu item, pre-select some filters (Status, Language, Access) in edit form if those have been selected in Menu Manager
         if ($this->getItem()->id == 0) {
@@ -400,18 +407,22 @@ class MenusModelItem extends JModelAdmin
          * We are only interested if the module is displayed on ALL or THIS menu item (or the inverse ID number).
          * sqlsrv changes for modulelink to menu manager
          */
-        $query->select('a.id, a.title, a.position, a.published, map.menuid')
-              ->from('#__modules AS a')
-              ->join('LEFT', sprintf('#__modules_menu AS map ON map.moduleid = a.id AND map.menuid IN (0, %1$d, -%1$d)',
-                  $this->getState('item.id')))
-              ->select('(SELECT COUNT(*) FROM #__modules_menu WHERE moduleid = a.id AND menuid < 0) AS ' . $db->quoteName('except'));
+        $query->select('a.id, a.title, a.position, a.published, map.menuid')->from('#__modules AS a')->join(
+                'LEFT',
+                sprintf(
+                    '#__modules_menu AS map ON map.moduleid = a.id AND map.menuid IN (0, %1$d, -%1$d)',
+                    $this->getState('item.id')
+                )
+            )->select(
+                '(SELECT COUNT(*) FROM #__modules_menu WHERE moduleid = a.id AND menuid < 0) AS ' . $db->quoteName(
+                    'except'
+                )
+            );
 
         // Join on the asset groups table.
-        $query->select('ag.title AS access_title')
-              ->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access')
-              ->where('a.published >= 0')
-              ->where('a.client_id = 0')
-              ->order('a.position, a.ordering');
+        $query->select('ag.title AS access_title')->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access')->where(
+                'a.published >= 0'
+            )->where('a.client_id = 0')->order('a.position, a.ordering');
 
         $db->setQuery($query);
 
@@ -485,10 +496,9 @@ class MenusModelItem extends JModelAdmin
             return false;
         }
 
-        $query->select('id, params')
-              ->from('#__menu')
-              ->where('params NOT LIKE ' . $db->quote('{%'))
-              ->where('params <> ' . $db->quote(''));
+        $query->select('id, params')->from('#__menu')->where('params NOT LIKE ' . $db->quote('{%'))->where(
+                'params <> ' . $db->quote('')
+            );
         $db->setQuery($query);
 
         try {
@@ -661,10 +671,9 @@ class MenusModelItem extends JModelAdmin
 
             // Deleting old association for these items
             $db    = $this->getDbo();
-            $query = $db->getQuery(true)
-                        ->delete('#__associations')
-                        ->where('context=' . $db->quote($this->associationsContext))
-                        ->where('id IN (' . implode(',', $associations) . ')');
+            $query = $db->getQuery(true)->delete('#__associations')->where(
+                    'context=' . $db->quote($this->associationsContext)
+                )->where('id IN (' . implode(',', $associations) . ')');
             $db->setQuery($query);
 
             try {
@@ -1010,11 +1019,9 @@ class MenusModelItem extends JModelAdmin
             }
 
             // Copy is a bit tricky, because we also need to copy the children
-            $query->clear()
-                  ->select('id')
-                  ->from($db->quoteName('#__menu'))
-                  ->where('lft > ' . (int)$table->lft)
-                  ->where('rgt < ' . (int)$table->rgt);
+            $query->clear()->select('id')->from($db->quoteName('#__menu'))->where('lft > ' . (int)$table->lft)->where(
+                    'rgt < ' . (int)$table->rgt
+                );
             $db->setQuery($query);
             $childIds = $db->loadColumn();
 
@@ -1179,10 +1186,9 @@ class MenusModelItem extends JModelAdmin
             // Check if we are moving to a different menu
             if ($menuType != $table->menutype) {
                 // Add the child node ids to the children array.
-                $query->clear()
-                      ->select($db->quoteName('id'))
-                      ->from($db->quoteName('#__menu'))
-                      ->where($db->quoteName('lft') . ' BETWEEN ' . (int)$table->lft . ' AND ' . (int)$table->rgt);
+                $query->clear()->select($db->quoteName('id'))->from($db->quoteName('#__menu'))->where(
+                        $db->quoteName('lft') . ' BETWEEN ' . (int)$table->lft . ' AND ' . (int)$table->rgt
+                    );
                 $db->setQuery($query);
                 $children = array_merge($children, (array)$db->loadColumn());
             }
@@ -1216,10 +1222,9 @@ class MenusModelItem extends JModelAdmin
             JArrayHelper::toInteger($children);
 
             // Update the menutype field in all nodes where necessary.
-            $query->clear()
-                  ->update($db->quoteName('#__menu'))
-                  ->set($db->quoteName('menutype') . ' = ' . $db->quote($menuType))
-                  ->where($db->quoteName('id') . ' IN (' . implode(',', $children) . ')');
+            $query->clear()->update($db->quoteName('#__menu'))->set(
+                    $db->quoteName('menutype') . ' = ' . $db->quote($menuType)
+                )->where($db->quoteName('id') . ' IN (' . implode(',', $children) . ')');
             $db->setQuery($query);
 
             try {
@@ -1375,7 +1380,9 @@ class MenusModelItem extends JModelAdmin
                 // template folder is first part of file name -- template:folder
                 if (!$formFile && (strpos($layout, ':') > 0)) {
                     $temp         = explode(':', $layout);
-                    $templatePath = JPath::clean(JPATH_SITE . '/templates/' . $temp[0] . '/html/' . $option . '/' . $view . '/' . $temp[1] . '.xml');
+                    $templatePath = JPath::clean(
+                        JPATH_SITE . '/templates/' . $temp[0] . '/html/' . $option . '/' . $view . '/' . $temp[1] . '.xml'
+                    );
 
                     if (is_file($templatePath)) {
                         $formFile = $templatePath;
@@ -1423,8 +1430,10 @@ class MenusModelItem extends JModelAdmin
             $help = $xml->xpath('/metadata/layout/help');
         } else {
             // We don't have a component. Load the form XML to get the help path
-            $xmlFile = JPath::find(JPATH_ROOT . '/administrator/components/com_menus/models/forms',
-                'item_' . $type . '.xml');
+            $xmlFile = JPath::find(
+                JPATH_ROOT . '/administrator/components/com_menus/models/forms',
+                'item_' . $type . '.xml'
+            );
 
             // Attempt to load the xml file.
             if ($xmlFile && !$xml = simplexml_load_file($xmlFile)) {

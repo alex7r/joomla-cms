@@ -56,12 +56,18 @@ class FOFFormHeaderFieldfilterable extends FOFFormHeaderFieldsearchable
             $html = '<input type="hidden" name="' . $name . '[method]" value="' . $method . '" />';
         }
 
-        $html .= '<input type="text" name="' . $name . '[from]" id="' . $this->id . '_' . $fromName . '"' . ' value="' . htmlspecialchars($fromValue,
-                ENT_COMPAT, 'UTF-8') . '"' . $filterclass . $size . $placeholder . $onchange . $maxLength . '/>';
+        $html .= '<input type="text" name="' . $name . '[from]" id="' . $this->id . '_' . $fromName . '"' . ' value="' . htmlspecialchars(
+                $fromValue,
+                ENT_COMPAT,
+                'UTF-8'
+            ) . '"' . $filterclass . $size . $placeholder . $onchange . $maxLength . '/>';
 
         if (!$single) {
-            $html .= '<input type="text" name="' . $name . '[to]" id="' . $this->id . '_' . $toName . '"' . ' value="' . htmlspecialchars($toValue,
-                    ENT_COMPAT, 'UTF-8') . '"' . $filterclass . $size . $placeholder . $onchange . $maxLength . '/>';
+            $html .= '<input type="text" name="' . $name . '[to]" id="' . $this->id . '_' . $toName . '"' . ' value="' . htmlspecialchars(
+                    $toValue,
+                    ENT_COMPAT,
+                    'UTF-8'
+                ) . '"' . $filterclass . $size . $placeholder . $onchange . $maxLength . '/>';
         }
 
         return $html;

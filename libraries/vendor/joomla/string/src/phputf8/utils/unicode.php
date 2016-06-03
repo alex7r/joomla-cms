@@ -110,8 +110,10 @@ function utf8_to_unicode($str)
                                     /* Current octet is neither in the US-ASCII range nor a legal first
                                      * octet of a multi-octet sequence.
                                      */
-                                    trigger_error('utf8_to_unicode: Illegal sequence identifier ' . 'in UTF-8 at byte ' . $i,
-                                        E_USER_WARNING);
+                                    trigger_error(
+                                        'utf8_to_unicode: Illegal sequence identifier ' . 'in UTF-8 at byte ' . $i,
+                                        E_USER_WARNING
+                                    );
 
                                     return false;
 
@@ -149,8 +151,10 @@ function utf8_to_unicode($str)
                         ($mUcs4 > 0x10FFFF)
                     ) {
 
-                        trigger_error('utf8_to_unicode: Illegal sequence or codepoint ' . 'in UTF-8 at byte ' . $i,
-                            E_USER_WARNING);
+                        trigger_error(
+                            'utf8_to_unicode: Illegal sequence or codepoint ' . 'in UTF-8 at byte ' . $i,
+                            E_USER_WARNING
+                        );
 
                         return false;
 
@@ -172,8 +176,10 @@ function utf8_to_unicode($str)
                  *((0xC0 & (*in) != 0x80) && (mState != 0))
                  * Incomplete multi-octet sequence.
                  */
-                trigger_error('utf8_to_unicode: Incomplete multi-octet ' . '   sequence in UTF-8 at byte ' . $i,
-                    E_USER_WARNING);
+                trigger_error(
+                    'utf8_to_unicode: Incomplete multi-octet ' . '   sequence in UTF-8 at byte ' . $i,
+                    E_USER_WARNING
+                );
 
                 return false;
             }
@@ -233,8 +239,10 @@ function utf8_from_unicode($arr)
                     if ($arr[$k] >= 0xD800 && $arr[$k] <= 0xDFFF) {
 
                         // found a surrogate
-                        trigger_error('utf8_from_unicode: Illegal surrogate ' . 'at index: ' . $k . ', value: ' . $arr[$k],
-                            E_USER_WARNING);
+                        trigger_error(
+                            'utf8_from_unicode: Illegal surrogate ' . 'at index: ' . $k . ', value: ' . $arr[$k],
+                            E_USER_WARNING
+                        );
 
                         return false;
 
@@ -257,8 +265,10 @@ function utf8_from_unicode($arr)
 
                             } else {
 
-                                trigger_error('utf8_from_unicode: Codepoint out of Unicode range ' . 'at index: ' . $k . ', value: ' . $arr[$k],
-                                    E_USER_WARNING);
+                                trigger_error(
+                                    'utf8_from_unicode: Codepoint out of Unicode range ' . 'at index: ' . $k . ', value: ' . $arr[$k],
+                                    E_USER_WARNING
+                                );
 
                                 // out of range
                                 return false;

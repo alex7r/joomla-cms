@@ -69,11 +69,9 @@ class FOFUtilsFilescheck
 
         // Retrieve the date and version from the #__extensions table
         $db        = JFactory::getDbo();
-        $query     = $db->getQuery(true)
-                        ->select('*')
-                        ->from($db->qn('#__extensions'))
-                        ->where($db->qn('element') . ' = ' . $db->q($this->option))
-                        ->where($db->qn('type') . ' = ' . $db->q('component'));
+        $query     = $db->getQuery(true)->select('*')->from($db->qn('#__extensions'))->where(
+                $db->qn('element') . ' = ' . $db->q($this->option)
+            )->where($db->qn('type') . ' = ' . $db->q('component'));
         $extension = $db->setQuery($query)->loadObject();
 
         // Check the version and date against those from #__extensions. I hate heavily nested IFs as much as the next
@@ -84,7 +82,10 @@ class FOFUtilsFilescheck
             if (!empty($manifestCache)) {
                 $manifestCache = json_decode($manifestCache, true);
 
-                if (is_array($manifestCache) && isset($manifestCache['creationDate']) && isset($manifestCache['version'])) {
+                if (is_array(
+                        $manifestCache
+                    ) && isset($manifestCache['creationDate']) && isset($manifestCache['version'])
+                ) {
                     // Make sure the fileslist.php version and date match the component's version
                     if ($this->version != $manifestCache['version']) {
                         $this->wrongComponentVersion = true;

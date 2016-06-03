@@ -275,9 +275,10 @@ class ContactModelCategory extends JModelList
          *    . ' CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(\':\', a.id, a.alias) ELSE a.id END as slug, '
          *    . ' CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(\':\', c.id, c.alias) ELSE c.id END AS catslug ');
          */
-              ->from($db->quoteName('#__contact_details') . ' AS a')
-              ->join('LEFT', '#__categories AS c ON c.id = a.catid')
-              ->where('a.access IN (' . $groups . ')');
+              ->from($db->quoteName('#__contact_details') . ' AS a')->join(
+                'LEFT',
+                '#__categories AS c ON c.id = a.catid'
+            )->where('a.access IN (' . $groups . ')');
 
         // Filter by category.
         if ($categoryId = $this->getState('category.id')) {
@@ -285,10 +286,12 @@ class ContactModelCategory extends JModelList
         }
 
         // Join over the users for the author and modified_by names.
-        $query->select("CASE WHEN a.created_by_alias > ' ' THEN a.created_by_alias ELSE ua.name END AS author")
-              ->select("ua.email AS author_email")
-              ->join('LEFT', '#__users AS ua ON ua.id = a.created_by')
-              ->join('LEFT', '#__users AS uam ON uam.id = a.modified_by');
+        $query->select("CASE WHEN a.created_by_alias > ' ' THEN a.created_by_alias ELSE ua.name END AS author")->select(
+                "ua.email AS author_email"
+            )->join('LEFT', '#__users AS ua ON ua.id = a.created_by')->join(
+                'LEFT',
+                '#__users AS uam ON uam.id = a.modified_by'
+            );
 
         // Filter by state
         $state = $this->getState('filter.published');
@@ -304,8 +307,9 @@ class ContactModelCategory extends JModelList
         $nowDate  = $db->quote(JFactory::getDate()->toSql());
 
         if ($this->getState('filter.publish_date')) {
-            $query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')')
-                  ->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
+            $query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')')->where(
+                    '(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')'
+                );
         }
 
         // Filter by search in title
@@ -317,8 +321,11 @@ class ContactModelCategory extends JModelList
 
         // Filter by language
         if ($this->getState('filter.language')) {
-            $query->where('a.language in (' . $db->quote(JFactory::getLanguage()
-                                                                 ->getTag()) . ',' . $db->quote('*') . ')');
+            $query->where(
+                'a.language in (' . $db->quote(
+                    JFactory::getLanguage()->getTag()
+                ) . ',' . $db->quote('*') . ')'
+            );
         }
 
         // Set sortname ordering if selected
@@ -327,8 +334,14 @@ class ContactModelCategory extends JModelList
                   ->order($db->escape('a.sortname2') . ' ' . $db->escape($this->getState('list.direction', 'ASC')))
                   ->order($db->escape('a.sortname3') . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
         } else {
-            $query->order($db->escape($this->getState('list.ordering',
-                    'a.ordering')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+            $query->order(
+                $db->escape(
+                    $this->getState(
+                        'list.ordering',
+                        'a.ordering'
+                    )
+                ) . ' ' . $db->escape($this->getState('list.direction', 'ASC'))
+            );
         }
 
         return $query;

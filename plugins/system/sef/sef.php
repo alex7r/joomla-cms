@@ -112,8 +112,11 @@ class PlgSystemSef extends JPlugin
             preg_match_all('#href="index.php\?([^"]+)"#m', $buffer, $matches);
 
             foreach ($matches[1] as $urlQueryString) {
-                $buffer = str_replace('href="index.php?' . $urlQueryString . '"',
-                    'href="' . JRoute::_('index.php?' . $urlQueryString) . '"', $buffer);
+                $buffer = str_replace(
+                    'href="index.php?' . $urlQueryString . '"',
+                    'href="' . JRoute::_('index.php?' . $urlQueryString) . '"',
+                    $buffer
+                );
             }
 
             $this->checkBuffer($buffer);

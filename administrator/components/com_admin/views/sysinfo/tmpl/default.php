@@ -32,8 +32,12 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
             <?php echo $this->loadTemplate('config'); ?>
             <?php echo JHtml::_('bootstrap.endTab'); ?>
 
-            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'directory',
-                JText::_('COM_ADMIN_DIRECTORY_PERMISSIONS')); ?>
+            <?php echo JHtml::_(
+                'bootstrap.addTab',
+                'myTab',
+                'directory',
+                JText::_('COM_ADMIN_DIRECTORY_PERMISSIONS')
+            ); ?>
             <?php echo $this->loadTemplate('directory'); ?>
             <?php echo JHtml::_('bootstrap.endTab'); ?>
 

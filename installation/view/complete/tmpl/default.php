@@ -70,7 +70,9 @@ defined('_JEXEC') or die;
             <hr class="hr-condensed"/>
             <p><?php echo JText::_('INSTL_COMPLETE_LANGUAGE_DESC'); ?></p>
             <p><a href="#" class="btn btn-primary" id="instLangs" onclick="return Install.goToPage('languages');"><span
-                        class="icon-arrow-right icon-white"></span> <?php echo JText::_('INSTL_COMPLETE_INSTALL_LANGUAGES'); ?>
+                        class="icon-arrow-right icon-white"></span> <?php echo JText::_(
+                        'INSTL_COMPLETE_INSTALL_LANGUAGES'
+                    ); ?>
                 </a></p>
             <p><?php echo JText::_('INSTL_COMPLETE_LANGUAGE_DESC2'); ?></p>
         </div>

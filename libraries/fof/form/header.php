@@ -255,7 +255,9 @@ abstract class FOFFormHeader
         if (empty($title)) {
             $view   = $this->form->getView();
             $params = $view->getViewOptionAndName();
-            $title  = $params['option'] . '_' . FOFInflector::pluralize($params['view']) . '_FIELD_' . (string)$this->element['name'];
+            $title  = $params['option'] . '_' . FOFInflector::pluralize(
+                    $params['view']
+                ) . '_FIELD_' . (string)$this->element['name'];
             $title  = strtoupper($title);
             $result = JText::_($title);
 

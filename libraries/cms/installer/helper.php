@@ -51,8 +51,11 @@ abstract class JInstallerHelper
         try {
             $response = JHttpFactory::getHttp()->get($url, $headers);
         } catch (RuntimeException $exception) {
-            JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_DOWNLOAD_SERVER_CONNECT', $exception->getMessage()),
-                JLog::WARNING, 'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_INSTALLER_ERROR_DOWNLOAD_SERVER_CONNECT', $exception->getMessage()),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -60,15 +63,21 @@ abstract class JInstallerHelper
         if (302 == $response->code && isset($response->headers['Location'])) {
             return self::downloadPackage($response->headers['Location']);
         } elseif (200 != $response->code) {
-            JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_DOWNLOAD_SERVER_CONNECT', $response->code), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                JText::sprintf('JLIB_INSTALLER_ERROR_DOWNLOAD_SERVER_CONNECT', $response->code),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
 
         // Parse the Content-Disposition header to get the file name
-        if (isset($response->headers['Content-Disposition']) && preg_match("/\s*filename\s?=\s?(.*)/",
-                $response->headers['Content-Disposition'], $parts)
+        if (isset($response->headers['Content-Disposition']) && preg_match(
+                "/\s*filename\s?=\s?(.*)/",
+                $response->headers['Content-Disposition'],
+                $parts
+            )
         ) {
             $flds   = explode(';', $parts[1]);
             $target = trim($flds[0], '"');
@@ -295,8 +304,11 @@ abstract class JInstallerHelper
      */
     public static function splitSql($query)
     {
-        JLog::add('JInstallerHelper::splitSql() is deprecated. Use JDatabaseDriver::splitSql() instead.', JLog::WARNING,
-            'deprecated');
+        JLog::add(
+            'JInstallerHelper::splitSql() is deprecated. Use JDatabaseDriver::splitSql() instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
         $db = JFactory::getDbo();
 
         return $db->splitSql($query);

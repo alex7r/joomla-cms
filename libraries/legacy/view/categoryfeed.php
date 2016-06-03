@@ -47,8 +47,13 @@ class JViewCategoryfeed extends JViewLegacy
             $titleField   = $ucmMapCommon[0]->core_title;
         }
 
-        $document->link = JRoute::_(JHelperRoute::getCategoryRoute($app->input->getInt('id'), $language = 0,
-            $extension));
+        $document->link = JRoute::_(
+            JHelperRoute::getCategoryRoute(
+                $app->input->getInt('id'),
+                $language = 0,
+                $extension
+            )
+        );
 
         $app->input->set('limit', $app->get('feed_limit'));
         $siteEmail        = $app->get('mailfrom');

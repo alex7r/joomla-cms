@@ -47,19 +47,34 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                        onclick="Joomla.checkAll(this)"/>
                             </th>
                             <th class="title nowrap">
-                                <?php echo JHtml::_('grid.sort', 'COM_INSTALLER_HEADING_NAME', 'name', $listDirn,
-                                    $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'grid.sort',
+                                    'COM_INSTALLER_HEADING_NAME',
+                                    'name',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th>
-                                <?php echo JHtml::_('grid.sort', 'COM_INSTALLER_HEADING_LOCATION', 'client_id',
-                                    $listDirn, $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'grid.sort',
+                                    'COM_INSTALLER_HEADING_LOCATION',
+                                    'client_id',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th class="width-10 center">
                                 <?php echo JHtml::_('grid.sort', 'JSTATUS', 'status', $listDirn, $listOrder); ?>
                             </th>
                             <th class="center">
-                                <?php echo JHtml::_('grid.sort', 'COM_INSTALLER_HEADING_TYPE', 'type', $listDirn,
-                                    $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'grid.sort',
+                                    'COM_INSTALLER_HEADING_TYPE',
+                                    'type',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th class="width-10 center">
                                 <?php echo JText::_('JVERSION'); ?>
@@ -71,12 +86,22 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                 <?php echo JText::_('JAUTHOR'); ?>
                             </th>
                             <th>
-                                <?php echo JHtml::_('grid.sort', 'COM_INSTALLER_HEADING_FOLDER', 'folder', $listDirn,
-                                    $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'grid.sort',
+                                    'COM_INSTALLER_HEADING_FOLDER',
+                                    'folder',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th class="nowrap id-col">
-                                <?php echo JHtml::_('grid.sort', 'COM_INSTALLER_HEADING_ID', 'extension_id', $listDirn,
-                                    $listOrder); ?>
+                                <?php echo JHtml::_(
+                                    'grid.sort',
+                                    'COM_INSTALLER_HEADING_ID',
+                                    'extension_id',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                         </tr>
                         </thead>
@@ -103,8 +128,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                     <?php if (!$item->element) : ?>
                                         <strong>X</strong>
                                     <?php else : ?>
-                                        <?php echo JHtml::_('InstallerHtml.Manage.state', $item->status, $i,
-                                            $item->status < 2, 'cb'); ?>
+                                        <?php echo JHtml::_(
+                                            'InstallerHtml.Manage.state',
+                                            $item->status,
+                                            $i,
+                                            $item->status < 2,
+                                            'cb'
+                                        ); ?>
                                     <?php endif; ?>
                                 </td>
                                 <td class="center">
@@ -118,13 +148,18 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                 </td>
                                 <td class="center">
 					<span class="editlinktip hasTooltip"
-                          title="<?php echo JHtml::tooltipText(JText::_('COM_INSTALLER_AUTHOR_INFORMATION'),
-                              $item->author_info, 0); ?>">
+                          title="<?php echo JHtml::tooltipText(
+                              JText::_('COM_INSTALLER_AUTHOR_INFORMATION'),
+                              $item->author_info,
+                              0
+                          ); ?>">
 						<?php echo @$item->author != '' ? $item->author : '&#160;'; ?>
 					</span>
                                 </td>
                                 <td class="center">
-                                    <?php echo @$item->folder != '' ? $item->folder : JText::_('COM_INSTALLER_TYPE_NONAPPLICABLE'); ?>
+                                    <?php echo @$item->folder != '' ? $item->folder : JText::_(
+                                        'COM_INSTALLER_TYPE_NONAPPLICABLE'
+                                    ); ?>
                                 </td>
                                 <td>
                                     <?php echo $item->extension_id ?>

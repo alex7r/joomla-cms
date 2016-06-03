@@ -177,7 +177,9 @@ class uctc
             } elseif ($v < (1 << 16)) { // 3 bytes
                 $output .= chr(224 + ($v >> 12)) . chr(128 + (($v >> 6) & 63)) . chr(128 + ($v & 63));
             } elseif ($v < (1 << 21)) { // 4 bytes
-                $output .= chr(240 + ($v >> 18)) . chr(128 + (($v >> 12) & 63)) . chr(128 + (($v >> 6) & 63)) . chr(128 + ($v & 63));
+                $output .= chr(240 + ($v >> 18)) . chr(128 + (($v >> 12) & 63)) . chr(128 + (($v >> 6) & 63)) . chr(
+                        128 + ($v & 63)
+                    );
             } elseif (self::$safe_mode) {
                 $output .= self::$safe_char;
             } else {

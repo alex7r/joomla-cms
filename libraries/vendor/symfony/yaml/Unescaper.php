@@ -126,8 +126,10 @@ class Unescaper
             case 'U':
                 return self::utf8chr(hexdec(substr($value, 2, 8)));
             default:
-                @trigger_error('Not escaping a backslash in a double-quoted string is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.',
-                    E_USER_DEPRECATED);
+                @trigger_error(
+                    'Not escaping a backslash in a double-quoted string is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.',
+                    E_USER_DEPRECATED
+                );
 
                 return $value;
         }

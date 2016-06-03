@@ -43,13 +43,23 @@ $params = &$this->item->params;
                         <?php echo JText::_('JGLOBAL_NUM'); ?>
                     </th>
                     <th class="item-title">
-                        <?php echo JHtml::_('grid.sort', 'COM_CONTACT_CONTACT_EMAIL_NAME_LABEL', 'a.name', $listDirn,
-                            $listOrder); ?>
+                        <?php echo JHtml::_(
+                            'grid.sort',
+                            'COM_CONTACT_CONTACT_EMAIL_NAME_LABEL',
+                            'a.name',
+                            $listDirn,
+                            $listOrder
+                        ); ?>
                     </th>
                     <?php if ($this->params->get('show_position_headings')) : ?>
                         <th class="item-position">
-                            <?php echo JHtml::_('grid.sort', 'COM_CONTACT_POSITION', 'a.con_position', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_CONTACT_POSITION',
+                                'a.con_position',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     <?php endif; ?>
                     <?php if ($this->params->get('show_email_headings')) : ?>
@@ -77,8 +87,13 @@ $params = &$this->item->params;
 
                     <?php if ($this->params->get('show_suburb_headings')) : ?>
                         <th class="item-suburb">
-                            <?php echo JHtml::_('grid.sort', 'COM_CONTACT_SUBURB', 'a.suburb', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_CONTACT_SUBURB',
+                                'a.suburb',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     <?php endif; ?>
 
@@ -90,8 +105,13 @@ $params = &$this->item->params;
 
                     <?php if ($this->params->get('show_country_headings')) : ?>
                         <th class="item-state">
-                            <?php echo JHtml::_('grid.sort', 'COM_CONTACT_COUNTRY', 'a.country', $listDirn,
-                                $listOrder); ?>
+                            <?php echo JHtml::_(
+                                'grid.sort',
+                                'COM_CONTACT_COUNTRY',
+                                'a.country',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                     <?php endif; ?>
 
@@ -110,8 +130,12 @@ $params = &$this->item->params;
                         <?php if ($this->items[$i]->published == 0) : ?>
                             <span class="label label-warning"><?php echo JText::_('JUNPUBLISHED'); ?></span>
                         <?php endif; ?>
-                        <a href="<?php echo JRoute::_(ContactHelperRoute::getContactRoute($item->slug,
-                            $item->catid)); ?>"
+                        <a href="<?php echo JRoute::_(
+                            ContactHelperRoute::getContactRoute(
+                                $item->slug,
+                                $item->catid
+                            )
+                        ); ?>"
                            itemprop="url">
                             <span itemprop="name"><?php echo $item->name; ?></span>
                         </a>

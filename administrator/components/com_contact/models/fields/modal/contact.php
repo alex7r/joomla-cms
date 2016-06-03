@@ -84,8 +84,14 @@ class JFormFieldModal_Contact extends JFormField
 
             $script[] = '	function jClearContact(id) {';
             $script[] = '		document.getElementById(id + "_id").value = "";';
-            $script[] = '		document.getElementById(id + "_name").value = "' . htmlspecialchars(JText::_('COM_CONTACT_SELECT_A_CONTACT',
-                    true), ENT_COMPAT, 'UTF-8') . '";';
+            $script[] = '		document.getElementById(id + "_name").value = "' . htmlspecialchars(
+                    JText::_(
+                        'COM_CONTACT_SELECT_A_CONTACT',
+                        true
+                    ),
+                    ENT_COMPAT,
+                    'UTF-8'
+                ) . '";';
             $script[] = '		jQuery("#"+id + "_clear").addClass("hidden");';
             $script[] = '		if (document.getElementById(id + "_edit")) {';
             $script[] = '			jQuery("#"+id + "_edit").addClass("hidden");';
@@ -138,44 +144,66 @@ class JFormFieldModal_Contact extends JFormField
         $html[] = '<input class="input-medium" id="' . $this->id . '_name" type="text" value="' . $title . '" disabled="disabled" size="35" />';
 
         // Select contact button
-        $html[] = '<a' . ' class="btn hasTooltip"' . ' data-toggle="modal"' . ' role="button"' . ' href="#contactSelect' . $this->id . 'Modal"' . ' title="' . JHtml::tooltipText('COM_CONTACT_CHANGE_CONTACT') . '">' . '<span class="icon-file"></span> ' . JText::_('JSELECT') . '</a>';
+        $html[] = '<a' . ' class="btn hasTooltip"' . ' data-toggle="modal"' . ' role="button"' . ' href="#contactSelect' . $this->id . 'Modal"' . ' title="' . JHtml::tooltipText(
+                'COM_CONTACT_CHANGE_CONTACT'
+            ) . '">' . '<span class="icon-file"></span> ' . JText::_('JSELECT') . '</a>';
 
         // Edit contact button
         if ($allowEdit) {
-            $html[] = '<a' . ' class="btn hasTooltip' . ($value ? '' : ' hidden') . '"' . ' id="' . $this->id . '_edit"' . ' data-toggle="modal"' . ' role="button"' . ' href="#contactEdit' . $value . 'Modal"' . ' title="' . JHtml::tooltipText('COM_CONTACT_EDIT_CONTACT') . '">' . '<span class="icon-edit"></span> ' . JText::_('JACTION_EDIT') . '</a>';
+            $html[] = '<a' . ' class="btn hasTooltip' . ($value ? '' : ' hidden') . '"' . ' id="' . $this->id . '_edit"' . ' data-toggle="modal"' . ' role="button"' . ' href="#contactEdit' . $value . 'Modal"' . ' title="' . JHtml::tooltipText(
+                    'COM_CONTACT_EDIT_CONTACT'
+                ) . '">' . '<span class="icon-edit"></span> ' . JText::_('JACTION_EDIT') . '</a>';
         }
 
         // Clear contact button
         if ($allowClear) {
-            $html[] = '<button' . ' class="btn' . ($value ? '' : ' hidden') . '"' . ' id="' . $this->id . '_clear"' . ' onclick="return jClearContact(\'' . $this->id . '\')">' . '<span class="icon-remove"></span>' . JText::_('JCLEAR') . '</button>';
+            $html[] = '<button' . ' class="btn' . ($value ? '' : ' hidden') . '"' . ' id="' . $this->id . '_clear"' . ' onclick="return jClearContact(\'' . $this->id . '\')">' . '<span class="icon-remove"></span>' . JText::_(
+                    'JCLEAR'
+                ) . '</button>';
         }
 
         $html[] = '</span>';
 
         // Select contact modal
-        $html[] = JHtml::_('bootstrap.renderModal', 'contactSelect' . $this->id . 'Modal', array(
-            'title'      => JText::_('COM_CONTACT_CHANGE_CONTACT'),
-            'url'        => $urlSelect,
-            'height'     => '400px',
-            'width'      => '800px',
-            'bodyHeight' => '70',
-            'modalWidth' => '80',
-            'footer'     => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>',
-        ));
+        $html[] = JHtml::_(
+            'bootstrap.renderModal',
+            'contactSelect' . $this->id . 'Modal',
+            array(
+                'title'      => JText::_('COM_CONTACT_CHANGE_CONTACT'),
+                'url'        => $urlSelect,
+                'height'     => '400px',
+                'width'      => '800px',
+                'bodyHeight' => '70',
+                'modalWidth' => '80',
+                'footer'     => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_(
+                        "JLIB_HTML_BEHAVIOR_CLOSE"
+                    ) . '</button>',
+            )
+        );
 
         // Edit contact modal
-        $html[] = JHtml::_('bootstrap.renderModal', 'contactEdit' . $value . 'Modal', array(
-            'title'       => JText::_('COM_CONTACT_EDIT_CONTACT'),
-            'backdrop'    => 'static',
-            'keyboard'    => false,
-            'closeButton' => false,
-            'url'         => $urlEdit,
-            'height'      => '400px',
-            'width'       => '800px',
-            'bodyHeight'  => '70',
-            'modalWidth'  => '80',
-            'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"' . ' onclick="jQuery(\'#contactEdit' . $value . 'Modal iframe\').contents().find(\'#closeBtn\').click();">' . JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>' . '<button type="button" class="btn btn-primary" aria-hidden="true"' . ' onclick="jQuery(\'#contactEdit' . $value . 'Modal iframe\').contents().find(\'#saveBtn\').click();">' . JText::_("JSAVE") . '</button>' . '<button type="button" class="btn btn-success" aria-hidden="true"' . ' onclick="jQuery(\'#contactEdit' . $value . 'Modal iframe\').contents().find(\'#applyBtn\').click();">' . JText::_("JAPPLY") . '</button>',
-        ));
+        $html[] = JHtml::_(
+            'bootstrap.renderModal',
+            'contactEdit' . $value . 'Modal',
+            array(
+                'title'       => JText::_('COM_CONTACT_EDIT_CONTACT'),
+                'backdrop'    => 'static',
+                'keyboard'    => false,
+                'closeButton' => false,
+                'url'         => $urlEdit,
+                'height'      => '400px',
+                'width'       => '800px',
+                'bodyHeight'  => '70',
+                'modalWidth'  => '80',
+                'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"' . ' onclick="jQuery(\'#contactEdit' . $value . 'Modal iframe\').contents().find(\'#closeBtn\').click();">' . JText::_(
+                        "JLIB_HTML_BEHAVIOR_CLOSE"
+                    ) . '</button>' . '<button type="button" class="btn btn-primary" aria-hidden="true"' . ' onclick="jQuery(\'#contactEdit' . $value . 'Modal iframe\').contents().find(\'#saveBtn\').click();">' . JText::_(
+                        "JSAVE"
+                    ) . '</button>' . '<button type="button" class="btn btn-success" aria-hidden="true"' . ' onclick="jQuery(\'#contactEdit' . $value . 'Modal iframe\').contents().find(\'#applyBtn\').click();">' . JText::_(
+                        "JAPPLY"
+                    ) . '</button>',
+            )
+        );
 
         // Note: class='required' for client side validation.
         $class = $this->required ? ' class="required modal-value"' : '';

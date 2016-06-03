@@ -19,8 +19,11 @@ class ComposerAutoloaderInit205c915b9c7d3e718e7c95793ee67ffe
             return self::$loader;
         }
 
-        spl_autoload_register(array('ComposerAutoloaderInit205c915b9c7d3e718e7c95793ee67ffe', 'loadClassLoader'), true,
-            true);
+        spl_autoload_register(
+            array('ComposerAutoloaderInit205c915b9c7d3e718e7c95793ee67ffe', 'loadClassLoader'),
+            true,
+            true
+        );
         self::$loader = $loader = new \Composer\Autoload\ClassLoader();
         spl_autoload_unregister(array('ComposerAutoloaderInit205c915b9c7d3e718e7c95793ee67ffe', 'loadClassLoader'));
 

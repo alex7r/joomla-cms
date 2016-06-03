@@ -66,8 +66,14 @@ class JMediawikiHttp extends JHttp
             $timeout = $this->options->get('api.timeout');
         }
 
-        return $this->transport->request('GET', new JUri($url), null, $headers, $timeout,
-            $this->options->get('api.useragent'));
+        return $this->transport->request(
+            'GET',
+            new JUri($url),
+            null,
+            $headers,
+            $timeout,
+            $this->options->get('api.useragent')
+        );
     }
 
     /**
@@ -98,7 +104,13 @@ class JMediawikiHttp extends JHttp
             $timeout = $this->options->get('api.timeout');
         }
 
-        return $this->transport->request('POST', new JUri($url), $data, $headers, $timeout,
-            $this->options->get('api.useragent'));
+        return $this->transport->request(
+            'POST',
+            new JUri($url),
+            $data,
+            $headers,
+            $timeout,
+            $this->options->get('api.useragent')
+        );
     }
 }

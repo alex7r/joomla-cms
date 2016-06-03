@@ -94,8 +94,13 @@ class LanguagesViewOverrides extends JViewLegacy
         }
 
         if (JFactory::getUser()->authorise('core.admin')) {
-            JToolbarHelper::custom('overrides.purge', 'refresh.png', 'refresh_f2.png',
-                'COM_LANGUAGES_VIEW_OVERRIDES_PURGE', false);
+            JToolbarHelper::custom(
+                'overrides.purge',
+                'refresh.png',
+                'refresh_f2.png',
+                'COM_LANGUAGES_VIEW_OVERRIDES_PURGE',
+                false
+            );
         }
 
         if ($canDo->get('core.admin')) {
@@ -108,9 +113,11 @@ class LanguagesViewOverrides extends JViewLegacy
         JHtmlSidebar::setAction('index.php?option=com_languages&view=overrides');
 
         JHtmlSidebar::addFilter(// @todo need a label here
-            '', 'filter_language_client',
+            '',
+            'filter_language_client',
             JHtml::_('select.options', $this->languages, null, 'text', $this->state->get('filter.language_client')),
-            true);
+            true
+        );
 
         $this->sidebar = JHtmlSidebar::render();
     }

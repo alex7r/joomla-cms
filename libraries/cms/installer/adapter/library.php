@@ -195,8 +195,11 @@ class JInstallerAdapterLibrary extends JInstallerAdapter
             // Remove this row entry since its invalid
             $row->delete($row->extension_id);
             unset($row);
-            JLog::add(JText::_('JLIB_INSTALLER_ERROR_LIB_UNINSTALL_INVALID_NOTFOUND_MANIFEST'), JLog::WARNING,
-                'jerror');
+            JLog::add(
+                JText::_('JLIB_INSTALLER_ERROR_LIB_UNINSTALL_INVALID_NOTFOUND_MANIFEST'),
+                JLog::WARNING,
+                'jerror'
+            );
 
             return false;
         }
@@ -337,10 +340,12 @@ class JInstallerAdapterLibrary extends JInstallerAdapter
         // Clobber any possible pending updates
         /** @var JTableUpdate $update */
         $update = JTable::getInstance('update');
-        $uid    = $update->find(array(
-            'element' => $this->element,
-            'type'    => $this->type,
-        ));
+        $uid    = $update->find(
+            array(
+                'element' => $this->element,
+                'type'    => $this->type,
+            )
+        );
 
         if ($uid) {
             $update->delete($uid);
@@ -365,8 +370,12 @@ class JInstallerAdapterLibrary extends JInstallerAdapter
                 if (!file_exists($path['dest']) || $this->parent->isOverwrite()) {
                     if (!$this->parent->copyFiles(array($path))) {
                         // Install failed, rollback changes
-                        throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_MANIFEST',
-                            JText::_('JLIB_INSTALLER_' . strtoupper($this->route))));
+                        throw new RuntimeException(
+                            JText::sprintf(
+                                'JLIB_INSTALLER_ABORT_MANIFEST',
+                                JText::_('JLIB_INSTALLER_' . strtoupper($this->route))
+                            )
+                        );
                     }
                 }
             }
@@ -402,8 +411,10 @@ class JInstallerAdapterLibrary extends JInstallerAdapter
             throw new RuntimeException(JText::_('JLIB_INSTALLER_ABORT_LIB_INSTALL_NOFILE'));
         }
 
-        $this->parent->setPath('extension_root',
-            JPATH_PLATFORM . '/' . implode(DIRECTORY_SEPARATOR, explode('/', $group)));
+        $this->parent->setPath(
+            'extension_root',
+            JPATH_PLATFORM . '/' . implode(DIRECTORY_SEPARATOR, explode('/', $group))
+        );
     }
 
     /**
@@ -455,8 +466,12 @@ class JInstallerAdapterLibrary extends JInstallerAdapter
 
         if (!$this->extension->store()) {
             // Install failed, roll back changes
-            throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_LIB_INSTALL_ROLLBACK',
-                $this->extension->getError()));
+            throw new RuntimeException(
+                JText::sprintf(
+                    'JLIB_INSTALLER_ABORT_LIB_INSTALL_ROLLBACK',
+                    $this->extension->getError()
+                )
+            );
         }
 
         // Since we have created a library item, we add it to the installation step stack

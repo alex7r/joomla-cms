@@ -370,8 +370,10 @@ abstract class StringHelper
                 return strcoll(utf8_strtolower($str1), utf8_strtolower($str2));
             }
 
-            return strcoll(static::transcode(utf8_strtolower($str1), 'UTF-8', $encoding),
-                static::transcode(utf8_strtolower($str2), 'UTF-8', $encoding));
+            return strcoll(
+                static::transcode(utf8_strtolower($str1), 'UTF-8', $encoding),
+                static::transcode(utf8_strtolower($str2), 'UTF-8', $encoding)
+            );
         }
 
         return utf8_strcasecmp($str1, $str2);
@@ -748,9 +750,13 @@ abstract class StringHelper
     public static function unicode_to_utf8($str)
     {
         if (extension_loaded('mbstring')) {
-            return preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($match) {
-                return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UCS-2BE');
-            }, $str);
+            return preg_replace_callback(
+                '/\\\\u([0-9a-fA-F]{4})/',
+                function ($match) {
+                    return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UCS-2BE');
+                },
+                $str
+            );
         }
 
         return $str;
@@ -768,9 +774,13 @@ abstract class StringHelper
     public static function unicode_to_utf16($str)
     {
         if (extension_loaded('mbstring')) {
-            return preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($match) {
-                return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UTF-16BE');
-            }, $str);
+            return preg_replace_callback(
+                '/\\\\u([0-9a-fA-F]{4})/',
+                function ($match) {
+                    return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UTF-16BE');
+                },
+                $str
+            );
         }
 
         return $str;

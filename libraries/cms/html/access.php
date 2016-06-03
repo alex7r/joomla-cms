@@ -60,11 +60,16 @@ abstract class JHtmlAccess
             array_unshift($options, JHtml::_('select.option', '', JText::_('JOPTION_ACCESS_SHOW_ALL_LEVELS')));
         }
 
-        return JHtml::_('select.genericlist', $options, $name, array(
-            'list.attr'   => $attribs,
-            'list.select' => $selected,
-            'id'          => $id
-        ));
+        return JHtml::_(
+            'select.genericlist',
+            $options,
+            $name,
+            array(
+                'list.attr'   => $attribs,
+                'list.select' => $selected,
+                'id'          => $id
+            )
+        );
     }
 
     /**
@@ -84,12 +89,11 @@ abstract class JHtmlAccess
     public static function usergroup($name, $selected, $attribs = '', $allowAll = true, $id = false)
     {
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level')
-                    ->from($db->quoteName('#__usergroups') . ' AS a')
-                    ->join('LEFT', $db->quoteName('#__usergroups') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt')
-                    ->group('a.id, a.title, a.lft, a.rgt')
-                    ->order('a.lft ASC');
+        $query = $db->getQuery(true)->select('a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level')->from(
+                $db->quoteName('#__usergroups') . ' AS a'
+            )->join('LEFT', $db->quoteName('#__usergroups') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt')->group(
+                'a.id, a.title, a.lft, a.rgt'
+            )->order('a.lft ASC');
         $db->setQuery($query);
         $options = $db->loadObjectList();
 
@@ -102,8 +106,12 @@ abstract class JHtmlAccess
             array_unshift($options, JHtml::_('select.option', '', JText::_('JOPTION_ACCESS_SHOW_ALL_GROUPS')));
         }
 
-        return JHtml::_('select.genericlist', $options, $name,
-            array('list.attr' => $attribs, 'list.select' => $selected, 'id' => $id));
+        return JHtml::_(
+            'select.genericlist',
+            $options,
+            $name,
+            array('list.attr' => $attribs, 'list.select' => $selected, 'id' => $id)
+        );
     }
 
     /**
@@ -126,12 +134,11 @@ abstract class JHtmlAccess
         $isSuperAdmin = JFactory::getUser()->authorise('core.admin');
 
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select('a.*, COUNT(DISTINCT b.id) AS level')
-                    ->from($db->quoteName('#__usergroups') . ' AS a')
-                    ->join('LEFT', $db->quoteName('#__usergroups') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt')
-                    ->group('a.id, a.title, a.lft, a.rgt, a.parent_id')
-                    ->order('a.lft ASC');
+        $query = $db->getQuery(true)->select('a.*, COUNT(DISTINCT b.id) AS level')->from(
+                $db->quoteName('#__usergroups') . ' AS a'
+            )->join('LEFT', $db->quoteName('#__usergroups') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt')->group(
+                'a.id, a.title, a.lft, a.rgt, a.parent_id'
+            )->order('a.lft ASC');
         $db->setQuery($query);
         $groups = $db->loadObjectList();
 
@@ -160,8 +167,10 @@ abstract class JHtmlAccess
                 $html[] = '			<label class="checkbox" for="' . $eid . '">';
                 $html[] = '			<input type="checkbox" name="' . $name . '[]" value="' . $item->id . '" id="' . $eid . '"';
                 $html[] = '					' . $checked . $rel . ' />';
-                $html[] = '			' . JLayoutHelper::render('joomla.html.treeprefix',
-                        array('level' => $item->level + 1)) . $item->title;
+                $html[] = '			' . JLayoutHelper::render(
+                        'joomla.html.treeprefix',
+                        array('level' => $item->level + 1)
+                    ) . $item->title;
                 $html[] = '			</label>';
                 $html[] = '		</div>';
                 $html[] = '	</div>';
@@ -190,8 +199,10 @@ abstract class JHtmlAccess
 
         $count++;
 
-        $actions = JAccess::getActionsFromFile(JPATH_ADMINISTRATOR . '/components/' . $component . '/access.xml',
-            "/access/section[@name='" . $section . "']/");
+        $actions = JAccess::getActionsFromFile(
+            JPATH_ADMINISTRATOR . '/components/' . $component . '/access.xml',
+            "/access/section[@name='" . $section . "']/"
+        );
 
         $html   = array();
         $html[] = '<ul class="checklist access-actions">';
@@ -240,11 +251,16 @@ abstract class JHtmlAccess
             array_unshift($options, JHtml::_('select.option', '', $config['title']));
         }
 
-        return JHtml::_('select.genericlist', $options, $name, array(
-            'id'          => isset($config['id']) ? $config['id'] : 'assetgroups_' . (++$count),
-            'list.attr'   => (is_null($attribs) ? 'class="inputbox" size="3"' : $attribs),
-            'list.select' => (int)$selected
-        ));
+        return JHtml::_(
+            'select.genericlist',
+            $options,
+            $name,
+            array(
+                'id'          => isset($config['id']) ? $config['id'] : 'assetgroups_' . (++$count),
+                'list.attr'   => (is_null($attribs) ? 'class="inputbox" size="3"' : $attribs),
+                'list.select' => (int)$selected
+            )
+        );
     }
 
     /**
@@ -258,11 +274,9 @@ abstract class JHtmlAccess
     {
         if (empty(static::$asset_groups)) {
             $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select('a.id AS value, a.title AS text')
-                        ->from($db->quoteName('#__viewlevels') . ' AS a')
-                        ->group('a.id, a.title, a.ordering')
-                        ->order('a.ordering ASC');
+            $query = $db->getQuery(true)->select('a.id AS value, a.title AS text')->from(
+                    $db->quoteName('#__viewlevels') . ' AS a'
+                )->group('a.id, a.title, a.ordering')->order('a.ordering ASC');
 
             $db->setQuery($query);
             static::$asset_groups = $db->loadObjectList();

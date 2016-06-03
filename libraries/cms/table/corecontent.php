@@ -169,10 +169,9 @@ class JTableCorecontent extends JTable
 
         $db    = $this->getDbo();
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('core_content_id'))
-              ->from($db->quoteName('#__ucm_content'))
-              ->where($db->quoteName('core_content_item_id') . ' = ' . (int)$contentItemId)
-              ->where($db->quoteName('core_type_alias') . ' = ' . $db->quote($typeAlias));
+        $query->select($db->quoteName('core_content_id'))->from($db->quoteName('#__ucm_content'))->where(
+                $db->quoteName('core_content_item_id') . ' = ' . (int)$contentItemId
+            )->where($db->quoteName('core_type_alias') . ' = ' . $db->quote($typeAlias));
         $db->setQuery($query);
 
         if ($ucmId = $db->loadResult()) {
@@ -266,20 +265,24 @@ class JTableCorecontent extends JTable
         }
 
         if ($isNew) {
-            $query->insert($db->quoteName('#__ucm_base'))
-                  ->columns(array(
-                      $db->quoteName('ucm_id'),
-                      $db->quoteName('ucm_item_id'),
-                      $db->quoteName('ucm_type_id'),
-                      $db->quoteName('ucm_language_id')
-                  ))
-                  ->values($db->quote($this->core_content_id) . ', ' . $db->quote($this->core_content_item_id) . ', ' . $db->quote($this->core_type_id) . ', ' . $db->quote($languageId));
+            $query->insert($db->quoteName('#__ucm_base'))->columns(
+                    array(
+                        $db->quoteName('ucm_id'),
+                        $db->quoteName('ucm_item_id'),
+                        $db->quoteName('ucm_type_id'),
+                        $db->quoteName('ucm_language_id')
+                    )
+                )->values(
+                    $db->quote($this->core_content_id) . ', ' . $db->quote(
+                        $this->core_content_item_id
+                    ) . ', ' . $db->quote($this->core_type_id) . ', ' . $db->quote($languageId)
+                );
         } else {
-            $query->update($db->quoteName('#__ucm_base'))
-                  ->set($db->quoteName('ucm_item_id') . ' = ' . $db->quote($this->core_content_item_id))
-                  ->set($db->quoteName('ucm_type_id') . ' = ' . $db->quote($this->core_type_id))
-                  ->set($db->quoteName('ucm_language_id') . ' = ' . $db->quote($languageId))
-                  ->where($db->quoteName('ucm_id') . ' = ' . $db->quote($this->core_content_id));
+            $query->update($db->quoteName('#__ucm_base'))->set(
+                    $db->quoteName('ucm_item_id') . ' = ' . $db->quote($this->core_content_item_id)
+                )->set($db->quoteName('ucm_type_id') . ' = ' . $db->quote($this->core_type_id))->set(
+                    $db->quoteName('ucm_language_id') . ' = ' . $db->quote($languageId)
+                )->where($db->quoteName('ucm_id') . ' = ' . $db->quote($this->core_content_id));
         }
 
         $db->setQuery($query);
@@ -327,16 +330,20 @@ class JTableCorecontent extends JTable
         $query = $this->_db->getQuery(true);
 
         // Update the publishing state for rows with the given primary keys.
-        $query->update($this->_db->quoteName($this->_tbl))
-              ->set($this->_db->quoteName('core_state') . ' = ' . (int)$state)
-              ->where($this->_db->quoteName($k) . 'IN (' . $pksImploded . ')');
+        $query->update($this->_db->quoteName($this->_tbl))->set(
+                $this->_db->quoteName('core_state') . ' = ' . (int)$state
+            )->where($this->_db->quoteName($k) . 'IN (' . $pksImploded . ')');
 
         // Determine if there is checkin support for the table.
         $checkin = false;
 
         if (property_exists($this, 'core_checked_out_user_id') && property_exists($this, 'core_checked_out_time')) {
             $checkin = true;
-            $query->where(' (' . $this->_db->quoteName('core_checked_out_user_id') . ' = 0 OR ' . $this->_db->quoteName('core_checked_out_user_id') . ' = ' . (int)$userId . ')');
+            $query->where(
+                ' (' . $this->_db->quoteName('core_checked_out_user_id') . ' = 0 OR ' . $this->_db->quoteName(
+                    'core_checked_out_user_id'
+                ) . ' = ' . (int)$userId . ')'
+            );
         }
 
         $this->_db->setQuery($query);

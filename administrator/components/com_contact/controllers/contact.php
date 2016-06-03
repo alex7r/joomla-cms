@@ -36,8 +36,12 @@ class ContactControllerContact extends JControllerForm
         $model = $this->getModel('Contact', '', array());
 
         // Preset the redirect
-        $this->setRedirect(JRoute::_('index.php?option=com_contact&view=contacts' . $this->getRedirectToListAppend(),
-            false));
+        $this->setRedirect(
+            JRoute::_(
+                'index.php?option=com_contact&view=contacts' . $this->getRedirectToListAppend(),
+                false
+            )
+        );
 
         return parent::batch($model);
     }

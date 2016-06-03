@@ -194,7 +194,9 @@ class JHelperRoute
 
         $active = $menus->getActive();
 
-        if ($active && $active->component == $this->extension && ($active->language == '*' || !JLanguageMultilang::isEnabled())) {
+        if ($active && $active->component == $this->extension && ($active->language == '*' || !JLanguageMultilang::isEnabled(
+                ))
+        ) {
             return $active->id;
         }
 

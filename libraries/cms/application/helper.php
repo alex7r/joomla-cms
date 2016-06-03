@@ -198,8 +198,11 @@ class JApplicationHelper
      */
     public static function parseXMLInstallFile($path)
     {
-        JLog::add('JApplicationHelper::parseXMLInstallFile is deprecated. Use JInstaller::parseXMLInstallFile instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            'JApplicationHelper::parseXMLInstallFile is deprecated. Use JInstaller::parseXMLInstallFile instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         return JInstaller::parseXMLInstallFile($path);
     }
@@ -218,8 +221,11 @@ class JApplicationHelper
      */
     public static function parseXMLLangMetaFile($path)
     {
-        JLog::add('JApplicationHelper::parseXMLLangMetaFile is deprecated. Use JInstaller::parseXMLInstallFile instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            'JApplicationHelper::parseXMLLangMetaFile is deprecated. Use JInstaller::parseXMLInstallFile instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Check if meta file exists.
         if (!file_exists($path)) {

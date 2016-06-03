@@ -84,8 +84,10 @@ class ContentModelForm extends ContentModelArticle
             $catId = (int)$this->getState('article.catid');
 
             if ($catId) {
-                $value->params->set('access-change',
-                    $user->authorise('core.edit.state', 'com_content.category.' . $catId));
+                $value->params->set(
+                    'access-change',
+                    $user->authorise('core.edit.state', 'com_content.category.' . $catId)
+                );
                 $value->catid = $catId;
             } else {
                 $value->params->set('access-change', $user->authorise('core.edit.state', 'com_content'));
@@ -137,8 +139,12 @@ class ContentModelForm extends ContentModelArticle
     {
         // Associations are not edited in frontend ATM so we have to inherit them
         if (JLanguageAssociations::isEnabled() && !empty($data['id'])) {
-            if ($associations = JLanguageAssociations::getAssociations('com_content', '#__content', 'com_content.item',
-                $data['id'])
+            if ($associations = JLanguageAssociations::getAssociations(
+                'com_content',
+                '#__content',
+                'com_content.item',
+                $data['id']
+            )
             ) {
                 foreach ($associations as $tag => $associated) {
                     $associations[$tag] = (int)$associated->id;

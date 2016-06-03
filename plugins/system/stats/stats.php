@@ -203,12 +203,11 @@ class PlgSystemStats extends JPlugin
         $interval = (int)$this->params->get('interval', 12);
         $this->params->set('interval', $interval ? $interval : 12);
 
-        $query = $this->db->getQuery(true)
-                          ->update($this->db->quoteName('#__extensions'))
-                          ->set($this->db->quoteName('params') . ' = ' . $this->db->quote($this->params->toString('JSON')))
-                          ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('plugin'))
-                          ->where($this->db->quoteName('folder') . ' = ' . $this->db->quote('system'))
-                          ->where($this->db->quoteName('element') . ' = ' . $this->db->quote('stats'));
+        $query = $this->db->getQuery(true)->update($this->db->quoteName('#__extensions'))->set(
+                $this->db->quoteName('params') . ' = ' . $this->db->quote($this->params->toString('JSON'))
+            )->where($this->db->quoteName('type') . ' = ' . $this->db->quote('plugin'))->where(
+                $this->db->quoteName('folder') . ' = ' . $this->db->quote('system')
+            )->where($this->db->quoteName('element') . ' = ' . $this->db->quote('stats'));
 
         try {
             // Lock the tables to prevent multiple plugin executions causing a race condition
@@ -250,8 +249,10 @@ class PlgSystemStats extends JPlugin
     private function getUniqueId()
     {
         if (null === $this->uniqueId) {
-            $this->uniqueId = $this->params->get('unique_id',
-                hash('sha1', JUserHelper::genRandomPassword(28) . time()));
+            $this->uniqueId = $this->params->get(
+                'unique_id',
+                hash('sha1', JUserHelper::genRandomPassword(28) . time())
+            );
         }
 
         return $this->uniqueId;
@@ -276,8 +277,10 @@ class PlgSystemStats extends JPlugin
                 try {
                     $options = array(
                         'defaultgroup' => $group,
-                        'cachebase'    => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path',
-                            JPATH_SITE . '/cache')
+                        'cachebase'    => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get(
+                            'cache_path',
+                            JPATH_SITE . '/cache'
+                        )
                     );
 
                     $cache = JCache::getInstance('callback', $options);
@@ -317,8 +320,9 @@ class PlgSystemStats extends JPlugin
         if ($response->code !== 200) {
             $data = json_decode($response->body);
 
-            throw new RuntimeException('Could not send site statistics to remote server: ' . $data->message,
-                $response->code);
+            throw new RuntimeException(
+                'Could not send site statistics to remote server: ' . $data->message, $response->code
+            );
         }
 
         return true;

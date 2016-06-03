@@ -28,8 +28,12 @@ class AdminControllerProfile extends JControllerForm
      */
     public function save($key = null, $urlVar = null)
     {
-        $this->setRedirect(JRoute::_('index.php?option=com_admin&view=profile&layout=edit&id=' . JFactory::getUser()->id,
-            false));
+        $this->setRedirect(
+            JRoute::_(
+                'index.php?option=com_admin&view=profile&layout=edit&id=' . JFactory::getUser()->id,
+                false
+            )
+        );
 
         $return = parent::save();
 

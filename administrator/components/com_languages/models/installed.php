@@ -152,11 +152,11 @@ class LanguagesModelInstalled extends JModelList
             $query = $db->getQuery(true);
 
             // Select languages installed from the extensions table.
-            $query->select($db->quoteName(array('a.element', 'a.client_id', 'a.extension_id')))
-                  ->from($db->quoteName('#__extensions', 'a'))
-                  ->where($db->quoteName('a.type') . ' = ' . $db->quote('language'))
-                  ->where($db->quoteName('state') . ' = 0')
-                  ->where($db->quoteName('enabled') . ' = 1');
+            $query->select($db->quoteName(array('a.element', 'a.client_id', 'a.extension_id')))->from(
+                    $db->quoteName('#__extensions', 'a')
+                )->where($db->quoteName('a.type') . ' = ' . $db->quote('language'))->where(
+                    $db->quoteName('state') . ' = 0'
+                )->where($db->quoteName('enabled') . ' = 1');
 
             // For client_id = 1 do we need to check language table also?
             $db->setQuery($query);
@@ -171,8 +171,14 @@ class LanguagesModelInstalled extends JModelList
                 $info = JApplicationHelper::parseXMLLangMetaFile($metafilePath);
                 if (!is_array($info)) {
                     $app = JFactory::getApplication();
-                    $app->enqueueMessage(JText::sprintf('COM_LANGUAGES_ERROR_LANGUAGE_METAFILE_MISSING', $lang->element,
-                        $metafilePath), 'warning');
+                    $app->enqueueMessage(
+                        JText::sprintf(
+                            'COM_LANGUAGES_ERROR_LANGUAGE_METAFILE_MISSING',
+                            $lang->element,
+                            $metafilePath
+                        ),
+                        'warning'
+                    );
 
                     continue;
                 }
@@ -222,8 +228,10 @@ class LanguagesModelInstalled extends JModelList
             }
             // Filter by search term.
             if (!empty($search)) {
-                if (stripos($installedLanguage->name, $search) === false && stripos($installedLanguage->language,
-                        $search) === false
+                if (stripos($installedLanguage->name, $search) === false && stripos(
+                                                                                $installedLanguage->language,
+                                                                                $search
+                                                                            ) === false
                 ) {
                     unset($installedLanguages[$key]);
                     continue;
@@ -234,8 +242,13 @@ class LanguagesModelInstalled extends JModelList
         // Process ordering.
         $listOrder          = $this->getState('list.ordering', 'name');
         $listDirn           = $this->getState('list.direction', 'ASC');
-        $installedLanguages = ArrayHelper::sortObjects($installedLanguages, $listOrder,
-            strtolower($listDirn) === 'desc' ? -1 : 1, true, true);
+        $installedLanguages = ArrayHelper::sortObjects(
+            $installedLanguages,
+            $listOrder,
+            strtolower($listDirn) === 'desc' ? -1 : 1,
+            true,
+            true
+        );
 
         // Process pagination.
         $limit = (int)$this->getState('list.limit', 25);
@@ -361,8 +374,10 @@ class LanguagesModelInstalled extends JModelList
     protected function populateState($ordering = 'name', $direction = 'asc')
     {
         // Load the filter state.
-        $this->setState('filter.search',
-            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
+        $this->setState(
+            'filter.search',
+            $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string')
+        );
 
         // Special case for client id.
         $clientId = (int)$this->getUserStateFromRequest($this->context . '.client_id', 'client_id', 0, 'int');
@@ -420,10 +435,9 @@ class LanguagesModelInstalled extends JModelList
         $query->select($this->getState('list.select', 'a.element'))->from('#__extensions AS a');
 
         $type = $db->quote($type);
-        $query->where('(a.type = ' . $type . ')')
-              ->where('state = 0')
-              ->where('enabled = 1')
-              ->where('client_id=' . (int)$client);
+        $query->where('(a.type = ' . $type . ')')->where('state = 0')->where('enabled = 1')->where(
+                'client_id=' . (int)$client
+            );
 
         // For client_id = 1 do we need to check language table also?
         $db->setQuery($query);
@@ -445,8 +459,13 @@ class LanguagesModelInstalled extends JModelList
         if (is_null($this->folders)) {
             $path = $this->getPath();
             jimport('joomla.filesystem.folder');
-            $this->folders = JFolder::folders($path, '.', false, false,
-                array('.svn', 'CVS', '.DS_Store', '__MACOSX', 'pdf_fonts', 'overrides'));
+            $this->folders = JFolder::folders(
+                $path,
+                '.',
+                false,
+                false,
+                array('.svn', 'CVS', '.DS_Store', '__MACOSX', 'pdf_fonts', 'overrides')
+            );
         }
 
         return $this->folders;

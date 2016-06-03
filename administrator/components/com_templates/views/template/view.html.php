@@ -183,8 +183,13 @@ class TemplatesViewTemplate extends JViewLegacy
                 JToolbarHelper::modal('resizeModal', 'icon-refresh', 'COM_TEMPLATES_BUTTON_RESIZE');
             } // Add an extract button
             elseif ($this->type == 'archive') {
-                JToolbarHelper::custom('template.extractArchive', 'arrow-down', 'arrow-down',
-                    'COM_TEMPLATES_BUTTON_EXTRACT_ARCHIVE', false);
+                JToolbarHelper::custom(
+                    'template.extractArchive',
+                    'arrow-down',
+                    'arrow-down',
+                    'COM_TEMPLATES_BUTTON_EXTRACT_ARCHIVE',
+                    false
+                );
             }
 
             // Add a copy template button (Hathor override doesn't need the button)
@@ -195,8 +200,14 @@ class TemplatesViewTemplate extends JViewLegacy
 
         // Add a Template preview button
         if ($this->preview->client_id == 0) {
-            $bar->appendButton('Popup', 'picture', 'COM_TEMPLATES_BUTTON_PREVIEW',
-                JUri::root() . 'index.php?tp=1&templateStyle=' . $this->preview->id, 800, 520);
+            $bar->appendButton(
+                'Popup',
+                'picture',
+                'COM_TEMPLATES_BUTTON_PREVIEW',
+                JUri::root() . 'index.php?tp=1&templateStyle=' . $this->preview->id,
+                800,
+                520
+            );
         }
 
         // Only show file manage buttons for global SuperUser

@@ -67,16 +67,22 @@ class ContentViewArchive extends JViewLegacy
             // Old plugins: Use processed text as introtext
             $item->introtext = $item->text;
 
-            $results                        = $dispatcher->trigger('onContentAfterTitle',
-                array('com_content.archive', &$item, &$item->params, 0));
+            $results                        = $dispatcher->trigger(
+                'onContentAfterTitle',
+                array('com_content.archive', &$item, &$item->params, 0)
+            );
             $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-            $results                           = $dispatcher->trigger('onContentBeforeDisplay',
-                array('com_content.archive', &$item, &$item->params, 0));
+            $results                           = $dispatcher->trigger(
+                'onContentBeforeDisplay',
+                array('com_content.archive', &$item, &$item->params, 0)
+            );
             $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-            $results                          = $dispatcher->trigger('onContentAfterDisplay',
-                array('com_content.archive', &$item, &$item->params, 0));
+            $results                          = $dispatcher->trigger(
+                'onContentAfterDisplay',
+                array('com_content.archive', &$item, &$item->params, 0)
+            );
             $item->event->afterDisplayContent = trim(implode("\n", $results));
         }
 
@@ -98,11 +104,16 @@ class ContentViewArchive extends JViewLegacy
             '11' => JText::_('NOVEMBER_SHORT'),
             '12' => JText::_('DECEMBER_SHORT')
         );
-        $form->monthField = JHtml::_('select.genericlist', $months, 'month', array(
-            'list.attr'   => 'size="1" class="inputbox"',
-            'list.select' => $state->get('filter.month'),
-            'option.key'  => null
-        ));
+        $form->monthField = JHtml::_(
+            'select.genericlist',
+            $months,
+            'month',
+            array(
+                'list.attr'   => 'size="1" class="inputbox"',
+                'list.select' => $state->get('filter.month'),
+                'option.key'  => null
+            )
+        );
 
         // Year Field
         $this->years = $this->getModel()->getYears();
@@ -113,8 +124,12 @@ class ContentViewArchive extends JViewLegacy
             $years[] = JHtml::_('select.option', $this->years[$i], $this->years[$i]);
         }
 
-        $form->yearField  = JHtml::_('select.genericlist', $years, 'year',
-            array('list.attr' => 'size="1" class="inputbox"', 'list.select' => $state->get('filter.year')));
+        $form->yearField  = JHtml::_(
+            'select.genericlist',
+            $years,
+            'year',
+            array('list.attr' => 'size="1" class="inputbox"', 'list.select' => $state->get('filter.year'))
+        );
         $form->limitField = $pagination->getLimitBox();
 
         // Escape strings for HTML output

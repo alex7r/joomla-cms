@@ -40,16 +40,26 @@ class ConfigModelComponent extends ConfigModelForm
         }
 
         // Get the form.
-        $form = $this->loadForm('com_config.component', 'config', array('control' => 'jform', 'load_data' => $loadData),
-            false, '/config');
+        $form = $this->loadForm(
+            'com_config.component',
+            'config',
+            array('control' => 'jform', 'load_data' => $loadData),
+            false,
+            '/config'
+        );
 
         if (empty($form)) {
             return false;
         }
 
         $lang = JFactory::getLanguage();
-        $lang->load($option, JPATH_BASE, null, false, true) || $lang->load($option, JPATH_BASE . "/components/$option",
-            null, false, true);
+        $lang->load($option, JPATH_BASE, null, false, true) || $lang->load(
+            $option,
+            JPATH_BASE . "/components/$option",
+            null,
+            false,
+            true
+        );
 
         return $form;
     }
@@ -68,8 +78,13 @@ class ConfigModelComponent extends ConfigModelForm
 
         // Load common and local language files.
         $lang = JFactory::getLanguage();
-        $lang->load($option, JPATH_BASE, null, false, true) || $lang->load($option, JPATH_BASE . "/components/$option",
-            null, false, true);
+        $lang->load($option, JPATH_BASE, null, false, true) || $lang->load(
+            $option,
+            JPATH_BASE . "/components/$option",
+            null,
+            false,
+            true
+        );
 
         $result = JComponentHelper::getComponent($option);
 

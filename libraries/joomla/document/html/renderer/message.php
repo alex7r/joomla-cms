@@ -9,8 +9,11 @@
 
 defined('JPATH_PLATFORM') or die;
 
-JLog::add('JDocumentRendererMessage is deprecated, use JDocumentRendererHtmlMessage instead.', JLog::WARNING,
-    'deprecated');
+JLog::add(
+    'JDocumentRendererMessage is deprecated, use JDocumentRendererHtmlMessage instead.',
+    JLog::WARNING,
+    'deprecated'
+);
 
 /**
  * JDocument system message renderer

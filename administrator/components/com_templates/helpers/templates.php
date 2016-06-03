@@ -25,10 +25,16 @@ class TemplatesHelper
      */
     public static function addSubmenu($vName)
     {
-        JHtmlSidebar::addEntry(JText::_('COM_TEMPLATES_SUBMENU_STYLES'), 'index.php?option=com_templates&view=styles',
-            $vName == 'styles');
-        JHtmlSidebar::addEntry(JText::_('COM_TEMPLATES_SUBMENU_TEMPLATES'),
-            'index.php?option=com_templates&view=templates', $vName == 'templates');
+        JHtmlSidebar::addEntry(
+            JText::_('COM_TEMPLATES_SUBMENU_STYLES'),
+            'index.php?option=com_templates&view=styles',
+            $vName == 'styles'
+        );
+        JHtmlSidebar::addEntry(
+            JText::_('COM_TEMPLATES_SUBMENU_TEMPLATES'),
+            'index.php?option=com_templates&view=templates',
+            $vName == 'templates'
+        );
     }
 
     /**
@@ -41,8 +47,11 @@ class TemplatesHelper
     public static function getActions()
     {
         // Log usage of deprecated function
-        JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Get list of actions
         $result = JHelperContent::getActions('com_templates');
@@ -80,7 +89,9 @@ class TemplatesHelper
 
         $query->select($db->quoteName('element', 'value'))
               ->select($db->quoteName('name', 'text'))
-              ->select($db->quoteName('extension_id', 'e_id'))
+              ->select(
+                  $db->quoteName('extension_id', 'e_id')
+              )
               ->from($db->quoteName('#__extensions'))
               ->where($db->quoteName('type') . ' = ' . $db->quote('template'))
               ->where($db->quoteName('enabled') . ' = 1')

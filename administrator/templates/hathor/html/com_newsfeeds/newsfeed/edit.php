@@ -22,7 +22,8 @@ $saveHistory = $this->state->get('params')->get('save_history', 0);
 
 $assoc = JLanguageAssociations::isEnabled();
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'newsfeed.cancel' || document.formvalidator.isValid(document.getElementById('newsfeed-form')))
@@ -30,15 +31,18 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('newsfeed-form'));
 		}
 	}
-");
+"
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_newsfeeds&id=' . (int)$this->item->id); ?>" method="post"
       name="adminForm" id="newsfeed-form" class="form-validate">
     <div class="col main-section">
         <fieldset class="adminform">
-            <legend><?php echo empty($this->item->id) ? JText::_('COM_NEWSFEEDS_NEW_NEWSFEED') : JText::sprintf('COM_NEWSFEEDS_EDIT_NEWSFEED',
-                    $this->item->id); ?></legend>
+            <legend><?php echo empty($this->item->id) ? JText::_('COM_NEWSFEEDS_NEW_NEWSFEED') : JText::sprintf(
+                    'COM_NEWSFEEDS_EDIT_NEWSFEED',
+                    $this->item->id
+                ); ?></legend>
             <ul class="adminformlist">
                 <li><?php echo $this->form->getLabel('name'); ?>
                     <?php echo $this->form->getInput('name'); ?></li>
@@ -133,8 +137,11 @@ JFactory::getDocument()->addScriptDeclaration("
         </fieldset>
 
         <?php if ($assoc) : ?>
-            <?php echo JHtml::_('sliders.panel', JText::_('COM_NEWSFEEDS_ITEM_ASSOCIATIONS_FIELDSET_LABEL'),
-                '-options'); ?>
+            <?php echo JHtml::_(
+                'sliders.panel',
+                JText::_('COM_NEWSFEEDS_ITEM_ASSOCIATIONS_FIELDSET_LABEL'),
+                '-options'
+            ); ?>
             <?php echo $this->loadTemplate('associations'); ?>
         <?php endif; ?>
 

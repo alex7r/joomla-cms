@@ -178,7 +178,9 @@ class JDatabaseImporterPdomysql extends JDatabaseImporter
      */
     protected function getChangeColumnSql($table, SimpleXMLElement $field)
     {
-        $sql = 'ALTER TABLE ' . $this->db->quoteName($table) . ' CHANGE COLUMN ' . $this->db->quoteName((string)$field['Field']) . ' ' . $this->getColumnSql($field);
+        $sql = 'ALTER TABLE ' . $this->db->quoteName($table) . ' CHANGE COLUMN ' . $this->db->quoteName(
+                (string)$field['Field']
+            ) . ' ' . $this->getColumnSql($field);
 
         return $sql;
     }
@@ -364,8 +366,10 @@ class JDatabaseImporterPdomysql extends JDatabaseImporter
             }
         }
 
-        $sql = $prefix . 'KEY ' . ($kName != 'PRIMARY' ? $this->db->quoteName($kName) : '') . ' (' . implode(',',
-                $kColumns) . ')';
+        $sql = $prefix . 'KEY ' . ($kName != 'PRIMARY' ? $this->db->quoteName($kName) : '') . ' (' . implode(
+                ',',
+                $kColumns
+            ) . ')';
 
         return $sql;
     }

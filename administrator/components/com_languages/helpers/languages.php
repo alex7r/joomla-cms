@@ -28,12 +28,21 @@ class LanguagesHelper
      */
     public static function addSubmenu($vName, $client = 0)
     {
-        JHtmlSidebar::addEntry(JText::_('COM_LANGUAGES_SUBMENU_INSTALLED'),
-            'index.php?option=com_languages&view=installed', $vName == 'installed');
-        JHtmlSidebar::addEntry(JText::_('COM_LANGUAGES_SUBMENU_CONTENT'),
-            'index.php?option=com_languages&view=languages', $vName == 'languages');
-        JHtmlSidebar::addEntry(JText::_('COM_LANGUAGES_SUBMENU_OVERRIDES'),
-            'index.php?option=com_languages&view=overrides', $vName == 'overrides');
+        JHtmlSidebar::addEntry(
+            JText::_('COM_LANGUAGES_SUBMENU_INSTALLED'),
+            'index.php?option=com_languages&view=installed',
+            $vName == 'installed'
+        );
+        JHtmlSidebar::addEntry(
+            JText::_('COM_LANGUAGES_SUBMENU_CONTENT'),
+            'index.php?option=com_languages&view=languages',
+            $vName == 'languages'
+        );
+        JHtmlSidebar::addEntry(
+            JText::_('COM_LANGUAGES_SUBMENU_OVERRIDES'),
+            'index.php?option=com_languages&view=overrides',
+            $vName == 'overrides'
+        );
     }
 
     /**
@@ -46,8 +55,11 @@ class LanguagesHelper
     public static function getActions()
     {
         // Log usage of deprecated function.
-        JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
-            JLog::WARNING, 'deprecated');
+        JLog::add(
+            __METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.',
+            JLog::WARNING,
+            'deprecated'
+        );
 
         // Get list of actions.
         $result = JHelperContent::getActions('com_languages');

@@ -48,8 +48,10 @@ class MediaViewMediaList extends JViewLegacy
 
             if (!empty($dirname)) {
                 $dirname = htmlspecialchars($dirname, ENT_COMPAT, 'UTF-8');
-                JError::raiseWarning(100,
-                    JText::sprintf('COM_MEDIA_ERROR_UNABLE_TO_BROWSE_FOLDER_WARNDIRNAME', $dirname));
+                JError::raiseWarning(
+                    100,
+                    JText::sprintf('COM_MEDIA_ERROR_UNABLE_TO_BROWSE_FOLDER_WARNDIRNAME', $dirname)
+                );
             }
         }
 

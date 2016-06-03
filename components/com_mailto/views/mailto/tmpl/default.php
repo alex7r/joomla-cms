@@ -13,7 +13,8 @@ JHtml::_('behavior.keepalive');
 
 $data = $this->get('data');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(pressbutton)
 	{
 		var form = document.getElementById('mailtoForm');
@@ -26,7 +27,8 @@ JFactory::getDocument()->addScriptDeclaration("
 		}
 		form.submit();
 	}
-");
+"
+);
 ?>
 
 <div id="mailto-window">

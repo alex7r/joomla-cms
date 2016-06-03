@@ -140,10 +140,9 @@ class FinderTableFilter extends JTable
         }
 
         // Update the publishing state for rows with the given primary keys.
-        $query = $this->_db->getQuery(true)
-                           ->update($this->_db->quoteName($this->_tbl))
-                           ->set($this->_db->quoteName('state') . ' = ' . (int)$state)
-                           ->where($where);
+        $query = $this->_db->getQuery(true)->update($this->_db->quoteName($this->_tbl))->set(
+                $this->_db->quoteName('state') . ' = ' . (int)$state
+            )->where($where);
         $this->_db->setQuery($query . $checkin);
 
         try {
@@ -218,7 +217,10 @@ class FinderTableFilter extends JTable
         // Verify that the alias is unique
         $table = JTable::getInstance('Filter', 'FinderTable');
 
-        if ($table->load(array('alias' => $this->alias)) && ($table->filter_id != $this->filter_id || $this->filter_id == 0)) {
+        if ($table->load(
+                array('alias' => $this->alias)
+            ) && ($table->filter_id != $this->filter_id || $this->filter_id == 0)
+        ) {
             $this->setError(JText::_('JLIB_DATABASE_ERROR_ARTICLE_UNIQUE_ALIAS'));
 
             return false;

@@ -382,8 +382,11 @@ class JMail extends PHPMailer
                         }
                     } catch (phpmailerException $e) {
                         // The parent method will have already called the logging callback, just log our deprecated error handling message
-                        JLog::add(__METHOD__ . '() will not catch phpmailerException objects as of 4.0.', JLog::WARNING,
-                            'deprecated');
+                        JLog::add(
+                            __METHOD__ . '() will not catch phpmailerException objects as of 4.0.',
+                            JLog::WARNING,
+                            'deprecated'
+                        );
 
                         return false;
                     }
@@ -402,8 +405,11 @@ class JMail extends PHPMailer
                         }
                     } catch (phpmailerException $e) {
                         // The parent method will have already called the logging callback, just log our deprecated error handling message
-                        JLog::add(__METHOD__ . '() will not catch phpmailerException objects as of 4.0.', JLog::WARNING,
-                            'deprecated');
+                        JLog::add(
+                            __METHOD__ . '() will not catch phpmailerException objects as of 4.0.',
+                            JLog::WARNING,
+                            'deprecated'
+                        );
 
                         return false;
                     }
@@ -420,8 +426,11 @@ class JMail extends PHPMailer
                 }
             } catch (phpmailerException $e) {
                 // The parent method will have already called the logging callback, just log our deprecated error handling message
-                JLog::add(__METHOD__ . '() will not catch phpmailerException objects as of 4.0.', JLog::WARNING,
-                    'deprecated');
+                JLog::add(
+                    __METHOD__ . '() will not catch phpmailerException objects as of 4.0.',
+                    JLog::WARNING,
+                    'deprecated'
+                );
 
                 return false;
             }
@@ -497,7 +506,9 @@ class JMail extends PHPMailer
             try {
                 if (is_array($path)) {
                     if (!empty($name) && count($path) != count($name)) {
-                        throw new InvalidArgumentException("The number of attachments must be equal with the number of name");
+                        throw new InvalidArgumentException(
+                            "The number of attachments must be equal with the number of name"
+                        );
                     }
 
                     foreach ($path as $key => $file) {
@@ -517,8 +528,11 @@ class JMail extends PHPMailer
                 }
             } catch (phpmailerException $e) {
                 // The parent method will have already called the logging callback, just log our deprecated error handling message
-                JLog::add(__METHOD__ . '() will not catch phpmailerException objects as of 4.0.', JLog::WARNING,
-                    'deprecated');
+                JLog::add(
+                    __METHOD__ . '() will not catch phpmailerException objects as of 4.0.',
+                    JLog::WARNING,
+                    'deprecated'
+                );
 
                 return false;
             }
@@ -562,8 +576,11 @@ class JMail extends PHPMailer
                 // If $from is an array we assume it has an address and a name
                 if (isset($from[2])) {
                     // If it is an array with entries, use them
-                    $result = $this->setFrom(JMailHelper::cleanLine($from[0]), JMailHelper::cleanLine($from[1]),
-                        (bool)$from[2]);
+                    $result = $this->setFrom(
+                        JMailHelper::cleanLine($from[0]),
+                        JMailHelper::cleanLine($from[1]),
+                        (bool)$from[2]
+                    );
                 } else {
                     $result = $this->setFrom(JMailHelper::cleanLine($from[0]), JMailHelper::cleanLine($from[1]));
                 }
@@ -583,8 +600,11 @@ class JMail extends PHPMailer
             }
         } catch (phpmailerException $e) {
             // The parent method will have already called the logging callback, just log our deprecated error handling message
-            JLog::add(__METHOD__ . '() will not catch phpmailerException objects as of 4.0.', JLog::WARNING,
-                'deprecated');
+            JLog::add(
+                __METHOD__ . '() will not catch phpmailerException objects as of 4.0.',
+                JLog::WARNING,
+                'deprecated'
+            );
 
             return false;
         }
@@ -611,8 +631,11 @@ class JMail extends PHPMailer
             }
         } catch (phpmailerException $e) {
             // The parent method will have already called the logging callback, just log our deprecated error handling message
-            JLog::add(__METHOD__ . '() will not catch phpmailerException objects as of 4.0.', JLog::WARNING,
-                'deprecated');
+            JLog::add(
+                __METHOD__ . '() will not catch phpmailerException objects as of 4.0.',
+                JLog::WARNING,
+                'deprecated'
+            );
 
             return false;
         }
@@ -689,8 +712,17 @@ class JMail extends PHPMailer
     {
         $subject = JText::sprintf('JLIB_MAIL_USER_SUBMITTED', $type);
 
-        $message = sprintf(JText::_('JLIB_MAIL_MSG_ADMIN'), $adminName, $type, $title, $author, $url, $url,
-            'administrator', $type);
+        $message = sprintf(
+            JText::_('JLIB_MAIL_MSG_ADMIN'),
+            $adminName,
+            $type,
+            $title,
+            $author,
+            $url,
+            $url,
+            'administrator',
+            $type
+        );
         $message .= JText::_('JLIB_MAIL_MSG') . "\n";
 
         if ($this->addRecipient($adminEmail) === false) {

@@ -37,8 +37,10 @@ class JDocumentJson extends JDocument
         parent::__construct($options);
 
         // Set mime type
-        if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'],
-                'application/json') === false && strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false
+        if (isset($_SERVER['HTTP_ACCEPT']) && strpos(
+                                                  $_SERVER['HTTP_ACCEPT'],
+                                                  'application/json'
+                                              ) === false && strpos($_SERVER['HTTP_ACCEPT'], 'text/html') !== false
         ) {
             // Internet Explorer < 10
             $this->_mime = 'text/plain';

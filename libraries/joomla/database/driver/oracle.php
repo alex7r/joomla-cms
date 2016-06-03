@@ -271,10 +271,10 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
         $this->connect();
 
         $result = array();
-        $query  = $this->getQuery(true)
-                       ->select('dbms_metadata.get_ddl(:type, :tableName)')
-                       ->from('dual')
-                       ->bind(':type', 'TABLE');
+        $query  = $this->getQuery(true)->select('dbms_metadata.get_ddl(:type, :tableName)')->from('dual')->bind(
+                ':type',
+                'TABLE'
+            );
 
         // Sanitize input to an array and iterate over the list.
         settype($tables, 'array');

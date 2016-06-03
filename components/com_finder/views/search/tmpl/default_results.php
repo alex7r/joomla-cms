@@ -11,8 +11,10 @@ defined('_JEXEC') or die;
 
 ?>
 <?php // Display the suggested search if it is different from the current search. ?>
-<?php if (($this->suggested && $this->params->get('show_suggested_query',
-            1)) || ($this->explained && $this->params->get('show_explained_query', 1))
+<?php if (($this->suggested && $this->params->get(
+            'show_suggested_query',
+            1
+        )) || ($this->explained && $this->params->get('show_explained_query', 1))
 ) : ?>
     <div id="search-query-explained">
         <?php // Display the suggested search query. ?>
@@ -39,8 +41,10 @@ defined('_JEXEC') or die;
     <div id="search-result-empty">
         <h2><?php echo JText::_('COM_FINDER_SEARCH_NO_RESULTS_HEADING'); ?></h2>
         <?php $multilang = JFactory::getApplication()->getLanguageFilter() ? '_MULTILANG' : ''; ?>
-        <p><?php echo JText::sprintf('COM_FINDER_SEARCH_NO_RESULTS_BODY' . $multilang,
-                $this->escape($this->query->input)); ?></p>
+        <p><?php echo JText::sprintf(
+                'COM_FINDER_SEARCH_NO_RESULTS_BODY' . $multilang,
+                $this->escape($this->query->input)
+            ); ?></p>
     </div>
 
     <?php // Exit this template. ?>

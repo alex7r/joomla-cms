@@ -16,13 +16,15 @@ $object2  = $version2->data;
 JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html');
 JHtml::_('textdiff.textdiff', 'diff');
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	(function ($){
 		$(document).ready(function (){
             jQuery('.diffhtml, .diffhtml-header').hide();
         });
 	})(jQuery);
-");
+"
+);
 
 ?>
 <fieldset>
@@ -60,10 +62,16 @@ JFactory::getDocument()->addScriptDeclaration("
             <th width="25%"><?php echo JText::_('COM_CONTENTHISTORY_PREVIEW_FIELD'); ?></th>
             <th style="display:none"/>
             <th style="display:none"/>
-            <th><?php echo JText::sprintf('COM_CONTENTHISTORY_COMPARE_VALUE1', $version1->save_date,
-                    $version1->version_note); ?></th>
-            <th><?php echo JText::sprintf('COM_CONTENTHISTORY_COMPARE_VALUE2', $version2->save_date,
-                    $version2->version_note); ?></th>
+            <th><?php echo JText::sprintf(
+                    'COM_CONTENTHISTORY_COMPARE_VALUE1',
+                    $version1->save_date,
+                    $version1->version_note
+                ); ?></th>
+            <th><?php echo JText::sprintf(
+                    'COM_CONTENTHISTORY_COMPARE_VALUE2',
+                    $version2->save_date,
+                    $version2->version_note
+                ); ?></th>
             <th class="diff-header"><?php echo JText::_('COM_CONTENTHISTORY_COMPARE_DIFF'); ?></th>
             <th class="diffhtml-header"><?php echo JText::_('COM_CONTENTHISTORY_COMPARE_DIFF'); ?></th>
         </tr>
@@ -84,11 +92,17 @@ JFactory::getDocument()->addScriptDeclaration("
                         <tr class="<?php echo $rowClass; ?>">
                             <td><i>&nbsp;&nbsp;<?php echo $subValue->label; ?></i></td>
                             <td class="originalhtml"
-                                style="display:none"><?php echo htmlspecialchars($subValue->value, ENT_COMPAT,
-                                    'UTF-8'); ?></td>
+                                style="display:none"><?php echo htmlspecialchars(
+                                    $subValue->value,
+                                    ENT_COMPAT,
+                                    'UTF-8'
+                                ); ?></td>
                             <td class="changedhtml"
-                                style="display:none"><?php echo htmlspecialchars($newSubValue, ENT_COMPAT,
-                                    'UTF-8'); ?></td>
+                                style="display:none"><?php echo htmlspecialchars(
+                                    $newSubValue,
+                                    ENT_COMPAT,
+                                    'UTF-8'
+                                ); ?></td>
                             <td class="original"><?php echo $subValue->value; ?></td>
                             <td class="changed"><?php echo $newSubValue; ?></td>
                             <td class="diff"/>
@@ -99,10 +113,15 @@ JFactory::getDocument()->addScriptDeclaration("
             <?php else: ?>
                 <td><strong><?php echo $value->label; ?></strong></td>
                 <td class="originalhtml" style="display:none"><?php echo htmlspecialchars($value->value); ?></td>
-                <?php $object2->$name->value = is_object($object2->$name->value) ? json_encode($object2->$name->value) : $object2->$name->value; ?>
+                <?php $object2->$name->value = is_object($object2->$name->value) ? json_encode(
+                    $object2->$name->value
+                ) : $object2->$name->value; ?>
                 <td class="changedhtml"
-                    style="display:none"><?php echo htmlspecialchars($object2->$name->value, ENT_COMPAT,
-                        'UTF-8'); ?></td>
+                    style="display:none"><?php echo htmlspecialchars(
+                        $object2->$name->value,
+                        ENT_COMPAT,
+                        'UTF-8'
+                    ); ?></td>
                 <td class="original"><?php echo $value->value; ?></td>
                 <td class="changed"><?php echo $object2->$name->value; ?></td>
                 <td class="diff"/>

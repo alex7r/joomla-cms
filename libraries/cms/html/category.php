@@ -42,10 +42,9 @@ abstract class JHtmlCategory
         if (!isset(static::$items[$hash])) {
             $config = (array)$config;
             $db     = JFactory::getDbo();
-            $query  = $db->getQuery(true)
-                         ->select('a.id, a.title, a.level')
-                         ->from('#__categories AS a')
-                         ->where('a.parent_id > 0');
+            $query  = $db->getQuery(true)->select('a.id, a.title, a.level')->from('#__categories AS a')->where(
+                    'a.parent_id > 0'
+                );
 
             // Filter on extension.
             $query->where('extension = ' . $db->quote($extension));

@@ -77,8 +77,11 @@ class JPathway
                     $path = $info->path . '/includes/pathway.php';
 
                     if (file_exists($path)) {
-                        JLog::add('Non-autoloadable JPathway subclasses are deprecated, support will be removed in 4.0.',
-                            JLog::WARNING, 'deprecated');
+                        JLog::add(
+                            'Non-autoloadable JPathway subclasses are deprecated, support will be removed in 4.0.',
+                            JLog::WARNING,
+                            'deprecated'
+                        );
                         include_once $path;
                     }
                 }

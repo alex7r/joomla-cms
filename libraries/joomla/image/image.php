@@ -222,7 +222,9 @@ class JImage
 
             default:
                 JLog::add('Attempting to load an image of unsupported type: ' . $properties->mime, JLog::ERROR);
-                throw new InvalidArgumentException('Attempting to load an image of unsupported type: ' . $properties->mime);
+                throw new InvalidArgumentException(
+                    'Attempting to load an image of unsupported type: ' . $properties->mime
+                );
                 break;
         }
 
@@ -784,11 +786,31 @@ class JImage
             imagecolortransparent($handle, $color);
             imagefill($handle, 0, 0, $color);
 
-            imagecopyresized($handle, $this->handle, $offset->x, $offset->y, 0, 0, $dimensions->width,
-                $dimensions->height, $this->getWidth(), $this->getHeight());
+            imagecopyresized(
+                $handle,
+                $this->handle,
+                $offset->x,
+                $offset->y,
+                0,
+                0,
+                $dimensions->width,
+                $dimensions->height,
+                $this->getWidth(),
+                $this->getHeight()
+            );
         } else {
-            imagecopyresampled($handle, $this->handle, $offset->x, $offset->y, 0, 0, $dimensions->width,
-                $dimensions->height, $this->getWidth(), $this->getHeight());
+            imagecopyresampled(
+                $handle,
+                $this->handle,
+                $offset->x,
+                $offset->y,
+                0,
+                0,
+                $dimensions->width,
+                $dimensions->height,
+                $this->getWidth(),
+                $this->getHeight()
+            );
         }
 
         // If we are resizing to a new image, create a new JImage object.
@@ -1058,14 +1080,20 @@ class JImage
                 break;
 
             case IMAGETYPE_PNG:
-                return imagepng($this->handle, $path,
-                    (array_key_exists('quality', $options)) ? $options['quality'] : 0);
+                return imagepng(
+                    $this->handle,
+                    $path,
+                    (array_key_exists('quality', $options)) ? $options['quality'] : 0
+                );
                 break;
 
             case IMAGETYPE_JPEG:
             default:
-                return imagejpeg($this->handle, $path,
-                    (array_key_exists('quality', $options)) ? $options['quality'] : 100);
+                return imagejpeg(
+                    $this->handle,
+                    $path,
+                    (array_key_exists('quality', $options)) ? $options['quality'] : 100
+                );
         }
     }
 

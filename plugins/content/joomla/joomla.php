@@ -48,11 +48,9 @@ class PlgContentJoomla extends JPlugin
         }
 
         $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-                    ->select($db->quoteName('id'))
-                    ->from($db->quoteName('#__users'))
-                    ->where($db->quoteName('sendEmail') . ' = 1')
-                    ->where($db->quoteName('block') . ' = 0');
+        $query = $db->getQuery(true)->select($db->quoteName('id'))->from($db->quoteName('#__users'))->where(
+                $db->quoteName('sendEmail') . ' = 1'
+            )->where($db->quoteName('block') . ' = 0');
         $db->setQuery($query);
         $users = (array)$db->loadColumn();
 
@@ -137,8 +135,10 @@ class PlgContentJoomla extends JPlugin
             } else {
                 // Show error if items are found in the category
                 if ($count > 0) {
-                    $msg = JText::sprintf('COM_CATEGORIES_DELETE_NOT_ALLOWED',
-                            $data->get('title')) . JText::plural('COM_CATEGORIES_N_ITEMS_ASSIGNED', $count);
+                    $msg = JText::sprintf(
+                            'COM_CATEGORIES_DELETE_NOT_ALLOWED',
+                            $data->get('title')
+                        ) . JText::plural('COM_CATEGORIES_N_ITEMS_ASSIGNED', $count);
                     JError::raiseWarning(403, $msg);
                     $result = false;
                 }
@@ -150,8 +150,10 @@ class PlgContentJoomla extends JPlugin
                     if ($count === false) {
                         $result = false;
                     } elseif ($count > 0) {
-                        $msg = JText::sprintf('COM_CATEGORIES_DELETE_NOT_ALLOWED',
-                                $data->get('title')) . JText::plural('COM_CATEGORIES_HAS_SUBCATEGORY_ITEMS', $count);
+                        $msg = JText::sprintf(
+                                'COM_CATEGORIES_DELETE_NOT_ALLOWED',
+                                $data->get('title')
+                            ) . JText::plural('COM_CATEGORIES_HAS_SUBCATEGORY_ITEMS', $count);
                         JError::raiseWarning(403, $msg);
                         $result = false;
                     }
@@ -221,8 +223,12 @@ class PlgContentJoomla extends JPlugin
         // Make sure we only do the query if we have some categories to look in
         if (count($childCategoryIds)) {
             // Count the items in this category
-            $query = $db->getQuery(true)->select('COUNT(id)')->from($table)->where('catid IN (' . implode(',',
-                    $childCategoryIds) . ')');
+            $query = $db->getQuery(true)->select('COUNT(id)')->from($table)->where(
+                'catid IN (' . implode(
+                    ',',
+                    $childCategoryIds
+                ) . ')'
+            );
             $db->setQuery($query);
 
             try {

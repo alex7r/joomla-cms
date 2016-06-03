@@ -17,7 +17,8 @@ JHtml::_('behavior.formvalidator');
 // Get the form fieldsets.
 $fieldsets = $this->form->getFieldsets();
 
-JFactory::getDocument()->addScriptDeclaration("
+JFactory::getDocument()->addScriptDeclaration(
+    "
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'profile.cancel' || document.formvalidator.isValid(document.getElementById('profile-form')))
@@ -25,7 +26,8 @@ JFactory::getDocument()->addScriptDeclaration("
 			Joomla.submitform(task, document.getElementById('profile-form'));
 		}
 	}
-");
+"
+);
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_admin&view=profile&layout=edit&id=' . $this->item->id); ?>"
       method="post" name="adminForm" id="profile-form" class="form-validate" enctype="multipart/form-data">

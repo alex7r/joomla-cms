@@ -62,8 +62,10 @@ JFactory::getDocument()->addStyleDeclaration($css);
 <div class="alert alert-info">
     <p>
         <span class="icon icon-info"></span>
-        <?php echo JText::sprintf('COM_JOOMLAUPDATE_VIEW_DEFAULT_UPLOAD_INTRO',
-            'https://www.joomla.org/download.html') ?>
+        <?php echo JText::sprintf(
+            'COM_JOOMLAUPDATE_VIEW_DEFAULT_UPLOAD_INTRO',
+            'https://www.joomla.org/download.html'
+        ) ?>
     </p>
 </div>
 
@@ -80,8 +82,12 @@ JFactory::getDocument()->addStyleDeclaration($css);
             <?php echo $message['description']; ?>
             <?php echo JHtml::_('bootstrap.endSlide'); ?>
         <?php endforeach; ?>
-        <?php echo JHtml::_('bootstrap.addSlide', 'warnings', JText::_('COM_INSTALLER_MSG_WARNINGFURTHERINFO'),
-            'furtherinfo'); ?>
+        <?php echo JHtml::_(
+            'bootstrap.addSlide',
+            'warnings',
+            JText::_('COM_INSTALLER_MSG_WARNINGFURTHERINFO'),
+            'furtherinfo'
+        ); ?>
         <?php echo JText::_('COM_INSTALLER_MSG_WARNINGFURTHERINFODESC'); ?>
         <?php echo JHtml::_('bootstrap.endSlide'); ?>
         <?php echo JHtml::_('bootstrap.endAccordion'); ?>
@@ -157,7 +163,9 @@ JFactory::getDocument()->addStyleDeclaration($css);
                 </td>
                 <td>
                     <button class="btn btn-primary" type="button"
-                            onclick="Joomla.submitbuttonUpload()"><?php echo JText::_('COM_INSTALLER_UPLOAD_AND_INSTALL'); ?></button>
+                            onclick="Joomla.submitbuttonUpload()"><?php echo JText::_(
+                            'COM_INSTALLER_UPLOAD_AND_INSTALL'
+                        ); ?></button>
                 </td>
             </tr>
             </tfoot>

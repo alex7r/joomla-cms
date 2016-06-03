@@ -429,16 +429,13 @@ class JUser extends JObject
         // TODO: Modify the way permissions are stored in the db to allow for faster implementation and better scaling
         $db = JFactory::getDbo();
 
-        $subQuery = $db->getQuery(true)
-                       ->select('id,asset_id')
-                       ->from('#__categories')
-                       ->where('extension = ' . $db->quote($component))
-                       ->where('published = 1');
+        $subQuery = $db->getQuery(true)->select('id,asset_id')->from('#__categories')->where(
+                'extension = ' . $db->quote($component)
+            )->where('published = 1');
 
-        $query = $db->getQuery(true)
-                    ->select('c.id AS id, a.name AS asset_name')
-                    ->from('(' . (string)$subQuery . ') AS c')
-                    ->join('INNER', '#__assets AS a ON c.asset_id = a.id');
+        $query = $db->getQuery(true)->select('c.id AS id, a.name AS asset_name')->from(
+                '(' . (string)$subQuery . ') AS c'
+            )->join('INNER', '#__assets AS a ON c.asset_id = a.id');
         $db->setQuery($query);
         $allCategories     = $db->loadObjectList('id');
         $allowedCategories = array();
@@ -640,8 +637,10 @@ class JUser extends JObject
                 $this->password_clear = JArrayHelper::getValue($array, 'password', '', 'string');
 
                 // Check if the user is reusing the current password if required to reset their password
-                if ($this->requireReset == 1 && $this->userHelper->verifyPassword($this->password_clear,
-                        $this->password)
+                if ($this->requireReset == 1 && $this->userHelper->verifyPassword(
+                        $this->password_clear,
+                        $this->password
+                    )
                 ) {
                     $this->setError(JText::_('JLIB_USER_ERROR_CANNOT_REUSE_PASSWORD'));
 
@@ -736,7 +735,10 @@ class JUser extends JObject
 
             $iAmRehashingSuperadmin = false;
 
-            if (($my->id == 0 && !$isNew) && $this->id == $oldUser->id && $oldUser->authorise('core.admin') && $oldUser->password != $this->password) {
+            if (($my->id == 0 && !$isNew) && $this->id == $oldUser->id && $oldUser->authorise(
+                    'core.admin'
+                ) && $oldUser->password != $this->password
+            ) {
                 $iAmRehashingSuperadmin = true;
             }
 
@@ -761,8 +763,10 @@ class JUser extends JObject
             JPluginHelper::importPlugin('user');
             $dispatcher = JEventDispatcher::getInstance();
 
-            $result = $dispatcher->trigger('onUserBeforeSave',
-                array($oldUser->getProperties(), $isNew, $this->getProperties()));
+            $result = $dispatcher->trigger(
+                'onUserBeforeSave',
+                array($oldUser->getProperties(), $isNew, $this->getProperties())
+            );
 
             if (in_array(false, $result, true)) {
                 // Plugin will have to raise its own error or throw an exception.

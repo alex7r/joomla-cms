@@ -111,8 +111,10 @@ class ModulesViewModules extends JViewLegacy
         }
 
         // Add a batch button
-        if ($user->authorise('core.create', 'com_modules') && $user->authorise('core.edit',
-                'com_modules') && $user->authorise('core.edit.state', 'com_modules')
+        if ($user->authorise('core.create', 'com_modules') && $user->authorise(
+                'core.edit',
+                'com_modules'
+            ) && $user->authorise('core.edit.state', 'com_modules')
         ) {
             JHtml::_('bootstrap.modal', 'collapseModal');
             $title = JText::_('JTOOLBAR_BATCH');

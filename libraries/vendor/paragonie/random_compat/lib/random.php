@@ -79,13 +79,15 @@ if (PHP_VERSION_ID < 70000) {
         if (DIRECTORY_SEPARATOR === '/') {
             // DIRECTORY_SEPARATOR === '/' on Unix-like OSes -- this is a fast
             // way to exclude Windows.
-            $RandomCompatUrandom  = true;
+            $RandomCompatUrandom = true;
             $RandomCompat_basedir = ini_get('open_basedir');
 
             if (!empty($RandomCompat_basedir)) {
                 $RandomCompat_open_basedir = explode(PATH_SEPARATOR, strtolower($RandomCompat_basedir));
-                $RandomCompatUrandom       = (array() !== array_intersect(array('/dev', '/dev/', '/dev/urandom'),
-                        $RandomCompat_open_basedir));
+                $RandomCompatUrandom       = (array() !== array_intersect(
+                        array('/dev', '/dev/', '/dev/urandom'),
+                        $RandomCompat_open_basedir
+                    ));
                 $RandomCompat_open_basedir = null;
             }
 
@@ -108,7 +110,10 @@ if (PHP_VERSION_ID < 70000) {
         /**
          * mcrypt_create_iv()
          */
-        if (!function_exists('random_bytes') && PHP_VERSION_ID >= 50307 && extension_loaded('mcrypt') && (DIRECTORY_SEPARATOR !== '/' || $RandomCompatUrandom)) {
+        if (!function_exists('random_bytes') && PHP_VERSION_ID >= 50307 && extension_loaded(
+                'mcrypt'
+            ) && (DIRECTORY_SEPARATOR !== '/' || $RandomCompatUrandom)
+        ) {
             // Prevent this code from hanging indefinitely on non-Windows;
             // see https://bugs.php.net/bug.php?id=69833
             if (DIRECTORY_SEPARATOR !== '/' || (PHP_VERSION_ID <= 50609 || PHP_VERSION_ID >= 50613)) {

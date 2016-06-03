@@ -37,8 +37,11 @@ JHtml::_('behavior.caption');
         <div class="category-desc clearfix">
             <?php if ($this->params->get('show_description_image') && $this->category->getParams()->get('image')) : ?>
                 <img src="<?php echo $this->category->getParams()->get('image'); ?>"
-                     alt="<?php echo htmlspecialchars($this->category->getParams()->get('image_alt'), ENT_COMPAT,
-                         'UTF-8'); ?>"/>
+                     alt="<?php echo htmlspecialchars(
+                         $this->category->getParams()->get('image_alt'),
+                         ENT_COMPAT,
+                         'UTF-8'
+                     ); ?>"/>
             <?php endif; ?>
             <?php if ($this->params->get('show_description') && $this->category->description) : ?>
                 <?php echo JHtml::_('content.prepare', $this->category->description, '', 'com_content.category'); ?>
@@ -112,8 +115,10 @@ JHtml::_('behavior.caption');
             <?php endif; ?>
             <?php echo $this->loadTemplate('children'); ?> </div>
     <?php endif; ?>
-    <?php if (($this->params->def('show_pagination',
-                1) == 1 || ($this->params->get('show_pagination') == 2)) && ($this->pagination->get('pages.total') > 1)
+    <?php if (($this->params->def(
+                'show_pagination',
+                1
+            ) == 1 || ($this->params->get('show_pagination') == 2)) && ($this->pagination->get('pages.total') > 1)
     ) : ?>
         <div class="pagination">
             <?php if ($this->params->def('show_pagination_results', 1)) : ?>

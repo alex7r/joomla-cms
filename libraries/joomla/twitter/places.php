@@ -131,7 +131,9 @@ class JTwitterPlaces extends JTwitterObject
 
         // At least one of the following parameters must be provided: lat, long, ip, or query.
         if ($lat == null && $long == null && $ip == null && $query == null) {
-            throw new RuntimeException('At least one of the following parameters must be provided: lat, long, ip, or query.');
+            throw new RuntimeException(
+                'At least one of the following parameters must be provided: lat, long, ip, or query.'
+            );
         }
 
         // Check if lat is specified.
