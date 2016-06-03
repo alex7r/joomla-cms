@@ -63,21 +63,33 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $options  List of options used to configure the connection
+	 * @param   array $options List of options used to configure the connection
 	 *
 	 * @since   12.1
 	 */
 	public function __construct($options)
 	{
-		$options['driver'] = 'oci';
-		$options['charset']    = (isset($options['charset'])) ? $options['charset']   : 'AL32UTF8';
+		$options['driver']     = 'oci';
+		$options['charset']    = (isset($options['charset'])) ? $options['charset'] : 'AL32UTF8';
 		$options['dateformat'] = (isset($options['dateformat'])) ? $options['dateformat'] : 'RRRR-MM-DD HH24:MI:SS';
 
-		$this->charset = $options['charset'];
+		$this->charset    = $options['charset'];
 		$this->dateformat = $options['dateformat'];
 
 		// Finalize initialisation
 		parent::__construct($options);
+	}
+
+	/**
+	 * Test to see if the PDO ODBC connector is available.
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		return class_exists('PDO') && in_array('oci', PDO::getAvailableDrivers());
 	}
 
 	/**
@@ -89,6 +101,47 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	{
 		$this->freeResult();
 		unset($this->connection);
+	}
+
+	/**
+	 * Disconnects the database.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	public function disconnect()
+	{
+		// Close the connection.
+		$this->freeResult();
+		unset($this->connection);
+	}
+
+	/**
+	 * Drops a table from the database.
+	 *
+	 * Note: The IF EXISTS flag is unused in the Oracle driver.
+	 *
+	 * @param   string  $tableName The name of the database table to drop.
+	 * @param   boolean $ifExists  Optionally specify that the table must exist before it is dropped.
+	 *
+	 * @return  JDatabaseDriverOracle  Returns this object to support chaining.
+	 *
+	 * @since   12.1
+	 */
+	public function dropTable($tableName, $ifExists = true)
+	{
+		$this->connect();
+
+		$query = $this->getQuery(true)
+			->setQuery('DROP TABLE :tableName');
+		$query->bind(':tableName', $tableName);
+
+		$this->setQuery($query);
+
+		$this->execute();
+
+		return $this;
 	}
 
 	/**
@@ -114,47 +167,6 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		}
 
 		$this->setDateFormat($this->dateformat);
-	}
-
-	/**
-	 * Disconnects the database.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	public function disconnect()
-	{
-		// Close the connection.
-		$this->freeResult();
-		unset($this->connection);
-	}
-
-	/**
-	 * Drops a table from the database.
-	 *
-	 * Note: The IF EXISTS flag is unused in the Oracle driver.
-	 *
-	 * @param   string   $tableName  The name of the database table to drop.
-	 * @param   boolean  $ifExists   Optionally specify that the table must exist before it is dropped.
-	 *
-	 * @return  JDatabaseDriverOracle  Returns this object to support chaining.
-	 *
-	 * @since   12.1
-	 */
-	public function dropTable($tableName, $ifExists = true)
-	{
-		$this->connect();
-
-		$query = $this->getQuery(true)
-			->setQuery('DROP TABLE :tableName');
-		$query->bind(':tableName', $tableName);
-
-		$this->setQuery($query);
-
-		$this->execute();
-
-		return $this;
 	}
 
 	/**
@@ -209,12 +221,49 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	}
 
 	/**
+	 * Sets the Oracle Date Format for the session
+	 * Default date format for Oracle is = DD-MON-RR
+	 * The default date format for this driver is:
+	 * 'RRRR-MM-DD HH24:MI:SS' since it is the format
+	 * that matches the MySQL one used within most Joomla
+	 * tables.
+	 *
+	 * @param   string $dateFormat Oracle Date Format String
+	 *
+	 * @return boolean
+	 *
+	 * @since  12.1
+	 */
+	public function setDateFormat($dateFormat = 'DD-MON-RR')
+	{
+		$this->connect();
+
+		$this->setQuery("ALTER SESSION SET NLS_DATE_FORMAT = '$dateFormat'");
+
+		if (!$this->execute())
+		{
+			return false;
+		}
+
+		$this->setQuery("ALTER SESSION SET NLS_TIMESTAMP_FORMAT = '$dateFormat'");
+
+		if (!$this->execute())
+		{
+			return false;
+		}
+
+		$this->dateformat = $dateFormat;
+
+		return true;
+	}
+
+	/**
 	 * Shows the table CREATE statement that creates the given tables.
 	 *
 	 * Note: You must have the correct privileges before this method
 	 * will return usable results!
 	 *
-	 * @param   mixed  $tables  A table name or a list of table names.
+	 * @param   mixed $tables A table name or a list of table names.
 	 *
 	 * @return  array  A list of the create SQL for the tables.
 	 *
@@ -226,7 +275,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		$this->connect();
 
 		$result = array();
-		$query = $this->getQuery(true)
+		$query  = $this->getQuery(true)
 			->select('dbms_metadata.get_ddl(:type, :tableName)')
 			->from('dual')
 			->bind(':type', 'TABLE');
@@ -238,7 +287,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		{
 			$query->bind(':tableName', $table);
 			$this->setQuery($query);
-			$statement = (string) $this->loadResult();
+			$statement      = (string) $this->loadResult();
 			$result[$table] = $statement;
 		}
 
@@ -248,8 +297,8 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	/**
 	 * Retrieves field information about a given table.
 	 *
-	 * @param   string   $table     The name of the database table.
-	 * @param   boolean  $typeOnly  True to only return field types.
+	 * @param   string  $table    The name of the database table.
+	 * @param   boolean $typeOnly True to only return field types.
 	 *
 	 * @return  array  An array of fields for the database table.
 	 *
@@ -261,7 +310,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		$this->connect();
 
 		$columns = array();
-		$query = $this->getQuery(true);
+		$query   = $this->getQuery(true);
 
 		$fieldCasing = $this->getOption(PDO::ATTR_CASE);
 
@@ -289,7 +338,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		{
 			foreach ($fields as $field)
 			{
-				$columns[$field->COLUMN_NAME] = $field;
+				$columns[$field->COLUMN_NAME]          = $field;
 				$columns[$field->COLUMN_NAME]->Default = null;
 			}
 		}
@@ -302,7 +351,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	/**
 	 * Get the details list of keys for a table.
 	 *
-	 * @param   string  $table  The name of the table.
+	 * @param   string $table The name of the table.
 	 *
 	 * @return  array  An array of the column specification for the table.
 	 *
@@ -336,8 +385,8 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	/**
 	 * Method to get an array of all tables in the database (schema).
 	 *
-	 * @param   string   $databaseName         The database (schema) name
-	 * @param   boolean  $includeDatabaseName  Whether to include the schema name in the results
+	 * @param   string  $databaseName        The database (schema) name
+	 * @param   boolean $includeDatabaseName Whether to include the schema name in the results
 	 *
 	 * @return  array    An array of all the tables in the database.
 	 *
@@ -402,7 +451,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	/**
 	 * Select a database for use.
 	 *
-	 * @param   string  $database  The name of the database to select for use.
+	 * @param   string $database The name of the database to select for use.
 	 *
 	 * @return  boolean  True if the database was successfully selected.
 	 *
@@ -412,43 +461,6 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	public function select($database)
 	{
 		$this->connect();
-
-		return true;
-	}
-
-	/**
-	 * Sets the Oracle Date Format for the session
-	 * Default date format for Oracle is = DD-MON-RR
-	 * The default date format for this driver is:
-	 * 'RRRR-MM-DD HH24:MI:SS' since it is the format
-	 * that matches the MySQL one used within most Joomla
-	 * tables.
-	 *
-	 * @param   string  $dateFormat  Oracle Date Format String
-	 *
-	 * @return boolean
-	 *
-	 * @since  12.1
-	 */
-	public function setDateFormat($dateFormat = 'DD-MON-RR')
-	{
-		$this->connect();
-
-		$this->setQuery("ALTER SESSION SET NLS_DATE_FORMAT = '$dateFormat'");
-
-		if (!$this->execute())
-		{
-			return false;
-		}
-
-		$this->setQuery("ALTER SESSION SET NLS_TIMESTAMP_FORMAT = '$dateFormat'");
-
-		if (!$this->execute())
-		{
-			return false;
-		}
-
-		$this->dateformat = $dateFormat;
 
 		return true;
 	}
@@ -472,7 +484,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	/**
 	 * Locks a table in the database.
 	 *
-	 * @param   string  $table  The name of the table to unlock.
+	 * @param   string $table The name of the table to unlock.
 	 *
 	 * @return  JDatabaseDriverOracle  Returns this object to support chaining.
 	 *
@@ -489,10 +501,10 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	/**
 	 * Renames a table in the database.
 	 *
-	 * @param   string  $oldTable  The name of the table to be renamed
-	 * @param   string  $newTable  The new name for the table.
-	 * @param   string  $backup    Not used by Oracle.
-	 * @param   string  $prefix    Not used by Oracle.
+	 * @param   string $oldTable The name of the table to be renamed
+	 * @param   string $newTable The new name for the table.
+	 * @param   string $backup   Not used by Oracle.
+	 * @param   string $prefix   Not used by Oracle.
 	 *
 	 * @return  JDatabaseDriverOracle  Returns this object to support chaining.
 	 *
@@ -522,23 +534,11 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	}
 
 	/**
-	 * Test to see if the PDO ODBC connector is available.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		return class_exists('PDO') && in_array('oci', PDO::getAvailableDrivers());
-	}
-
-	/**
 	 * This function replaces a string identifier <var>$prefix</var> with the string held is the
 	 * <var>tablePrefix</var> class variable.
 	 *
-	 * @param   string  $query   The SQL statement to prepare.
-	 * @param   string  $prefix  The common table prefix.
+	 * @param   string $query  The SQL statement to prepare.
+	 * @param   string $prefix The common table prefix.
 	 *
 	 * @return  string  The processed SQL statement.
 	 *
@@ -546,12 +546,12 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	 */
 	public function replacePrefix($query, $prefix = '#__')
 	{
-		$startPos = 0;
+		$startPos  = 0;
 		$quoteChar = "'";
-		$literal = '';
+		$literal   = '';
 
 		$query = trim($query);
-		$n = strlen($query);
+		$n     = strlen($query);
 
 		while ($startPos < $n)
 		{
@@ -582,7 +582,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 			// Quote comes first, find end of quote
 			while (true)
 			{
-				$k = strpos($query, $quoteChar, $j);
+				$k       = strpos($query, $quoteChar, $j);
 				$escaped = false;
 
 				if ($k === false)
@@ -628,7 +628,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	/**
 	 * Method to commit a transaction.
 	 *
-	 * @param   boolean  $toSavepoint  If true, commit to the last savepoint.
+	 * @param   boolean $toSavepoint If true, commit to the last savepoint.
 	 *
 	 * @return  void
 	 *
@@ -652,7 +652,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	/**
 	 * Method to roll back a transaction.
 	 *
-	 * @param   boolean  $toSavepoint  If true, rollback to the last savepoint.
+	 * @param   boolean $toSavepoint If true, rollback to the last savepoint.
 	 *
 	 * @return  void
 	 *
@@ -682,7 +682,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	/**
 	 * Method to initialize a transaction.
 	 *
-	 * @param   boolean  $asSavepoint  If true and a transaction is already active, a savepoint will be created.
+	 * @param   boolean $asSavepoint If true and a transaction is already active, a savepoint will be created.
 	 *
 	 * @return  void
 	 *
@@ -710,7 +710,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	/**
 	 * Get the query strings to alter the character set and collation of a table.
 	 *
-	 * @param   string  $tableName  The name of the table
+	 * @param   string $tableName The name of the table
 	 *
 	 * @return  string[]  The queries required to alter the table's character set and collation
 	 *
@@ -725,9 +725,9 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	 * Return the query string to create new Database.
 	 * Each database driver, other than MySQL, need to override this member to return correct string.
 	 *
-	 * @param   stdClass  $options  Object used to pass user and database name to database driver.
-	 *                   This object must have "db_name" and "db_user" set.
-	 * @param   boolean   $utf      True if the database supports the UTF-8 character set.
+	 * @param   stdClass $options Object used to pass user and database name to database driver.
+	 *                            This object must have "db_name" and "db_user" set.
+	 * @param   boolean  $utf     True if the database supports the UTF-8 character set.
 	 *
 	 * @return  string  The query that creates database
 	 *

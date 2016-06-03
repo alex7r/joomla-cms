@@ -33,7 +33,7 @@ class FOFViewHtml extends FOFViewRaw
 		// Make sure $config is an array
 		if (is_object($config))
 		{
-			$config = (array)$config;
+			$config = (array) $config;
 		}
 		elseif (!is_array($config))
 		{
@@ -42,7 +42,7 @@ class FOFViewHtml extends FOFViewRaw
 
 		if (isset($config['setFrontendPageTitle']))
 		{
-			$this->setFrontendPageTitle = (bool)$config['setFrontendPageTitle'];
+			$this->setFrontendPageTitle = (bool) $config['setFrontendPageTitle'];
 		}
 
 		if (isset($config['defaultPageTitle']))
@@ -68,7 +68,7 @@ class FOFViewHtml extends FOFViewRaw
 
 		if (!FOFPlatform::getInstance()->isCli())
 		{
-			$toolbar = FOFToolbar::getAnInstance($this->input->getCmd('option', 'com_foobar'), $this->config);
+			$toolbar        = FOFToolbar::getAnInstance($this->input->getCmd('option', 'com_foobar'), $this->config);
 			$toolbar->perms = $this->perms;
 			$toolbar->renderToolbar($view, $task, $this->input);
 		}
@@ -85,36 +85,17 @@ class FOFViewHtml extends FOFViewRaw
 		$renderer->preRender($view, $task, $this->input, $this->config);
 	}
 
-	/**
-	 * Runs after rendering the view template, echoing HTML to put after the
-	 * view template's generated HTML
-	 *
-	 * @return  void
-	 */
-	protected function postRender()
-	{
-		$view = $this->input->getCmd('view', 'cpanel');
-		$task = $this->getModel()->getState('task', 'browse');
-
-		$renderer = $this->getRenderer();
-
-		if ($renderer instanceof FOFRenderAbstract)
-		{
-			$renderer->postRender($view, $task, $this->input, $this->config);
-		}
-	}
-
 	public function setPageTitle()
 	{
 		$document = JFactory::getDocument();
-		$app = JFactory::getApplication();
-		$menus = $app->getMenu();
-		$menu = $menus->getActive();
-		$title = null;
+		$app      = JFactory::getApplication();
+		$menus    = $app->getMenu();
+		$menu     = $menus->getActive();
+		$title    = null;
 
 		// Get the option and view name
 		$option = empty($this->option) ? $this->input->getCmd('option', 'com_foobar') : $this->option;
-		$view = empty($this->view) ? $this->input->getCmd('view', $this->getName()) : $this->view;
+		$view   = empty($this->view) ? $this->input->getCmd('view', $this->getName()) : $this->view;
 
 		// Get the default page title translation key
 		$default = empty($this->defaultPageTitle) ? $option . '_TITLE_' . $view : $this->defaultPageTitle;
@@ -132,7 +113,7 @@ class FOFViewHtml extends FOFViewRaw
 		}
 
 		// Set the document title
-		$title = $params->get('page_title', '');
+		$title    = $params->get('page_title', '');
 		$sitename = $app->getCfg('sitename');
 
 		if ($title == $sitename)
@@ -172,5 +153,24 @@ class FOFViewHtml extends FOFViewRaw
 		}
 
 		return $title;
+	}
+
+	/**
+	 * Runs after rendering the view template, echoing HTML to put after the
+	 * view template's generated HTML
+	 *
+	 * @return  void
+	 */
+	protected function postRender()
+	{
+		$view = $this->input->getCmd('view', 'cpanel');
+		$task = $this->getModel()->getState('task', 'browse');
+
+		$renderer = $this->getRenderer();
+
+		if ($renderer instanceof FOFRenderAbstract)
+		{
+			$renderer->postRender($view, $task, $this->input, $this->config);
+		}
 	}
 }

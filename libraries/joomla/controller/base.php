@@ -35,16 +35,40 @@ abstract class JControllerBase implements JController
 	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   JInput            $input  The input object.
-	 * @param   JApplicationBase  $app    The application object.
+	 * @param   JInput           $input The input object.
+	 * @param   JApplicationBase $app   The application object.
 	 *
 	 * @since  12.1
 	 */
 	public function __construct(JInput $input = null, JApplicationBase $app = null)
 	{
 		// Setup dependencies.
-		$this->app = isset($app) ? $app : $this->loadApplication();
+		$this->app   = isset($app) ? $app : $this->loadApplication();
 		$this->input = isset($input) ? $input : $this->loadInput();
+	}
+
+	/**
+	 * Load the application object.
+	 *
+	 * @return  JApplicationBase  The application object.
+	 *
+	 * @since   12.1
+	 */
+	protected function loadApplication()
+	{
+		return JFactory::getApplication();
+	}
+
+	/**
+	 * Load the input object.
+	 *
+	 * @return  JInput  The input object.
+	 *
+	 * @since   12.1
+	 */
+	protected function loadInput()
+	{
+		return $this->app->input;
 	}
 
 	/**
@@ -86,7 +110,7 @@ abstract class JControllerBase implements JController
 	/**
 	 * Unserialize the controller.
 	 *
-	 * @param   string  $input  The serialized controller.
+	 * @param   string $input The serialized controller.
 	 *
 	 * @return  JController  Supports chaining.
 	 *
@@ -107,29 +131,5 @@ abstract class JControllerBase implements JController
 		}
 
 		return $this;
-	}
-
-	/**
-	 * Load the application object.
-	 *
-	 * @return  JApplicationBase  The application object.
-	 *
-	 * @since   12.1
-	 */
-	protected function loadApplication()
-	{
-		return JFactory::getApplication();
-	}
-
-	/**
-	 * Load the input object.
-	 *
-	 * @return  JInput  The input object.
-	 *
-	 * @since   12.1
-	 */
-	protected function loadInput()
-	{
-		return $this->app->input;
 	}
 }

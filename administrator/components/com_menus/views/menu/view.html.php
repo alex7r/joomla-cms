@@ -40,7 +40,7 @@ class MenusViewMenu extends JViewLegacy
 	/**
 	 * Display the view
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 *
@@ -48,8 +48,8 @@ class MenusViewMenu extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->form	 = $this->get('Form');
-		$this->item	 = $this->get('Item');
+		$this->form  = $this->get('Form');
+		$this->item  = $this->get('Item');
 		$this->state = $this->get('State');
 
 		$this->canDo = JHelperContent::getActions('com_menus', 'menu', $this->item->id);

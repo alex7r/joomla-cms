@@ -16,7 +16,7 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-$app = JFactory::getApplication();
+$app   = JFactory::getApplication();
 $input = $app->input;
 
 $assoc = JLanguageAssociations::isEnabled();
@@ -45,11 +45,13 @@ $this->ignore_fieldsets = array('jmetadata', 'item_associations');
 
 // In case of modal
 $isModal = $input->get('layout') == 'modal' ? true : false;
-$layout = $isModal ? 'modal' : 'edit';
-$tmpl = $isModal ? '&tmpl=component' : '';
+$layout  = $isModal ? 'modal' : 'edit';
+$tmpl    = $isModal ? '&tmpl=component' : '';
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_categories&extension=' . $input->getCmd('extension', 'com_content') . '&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
+<form
+	action="<?php echo JRoute::_('index.php?option=com_categories&extension=' . $input->getCmd('extension', 'com_content') . '&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
+	method="post" name="adminForm" id="item-form" class="form-validate">
 
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
@@ -79,7 +81,7 @@ $tmpl = $isModal ? '&tmpl=component' : '';
 		</div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
 
-		<?php if ( ! $isModal && $assoc && $extensionassoc) : ?>
+		<?php if (!$isModal && $assoc && $extensionassoc) : ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations', JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS')); ?>
 			<?php echo $this->loadTemplate('associations'); ?>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
@@ -98,7 +100,7 @@ $tmpl = $isModal ? '&tmpl=component' : '';
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 
 		<?php echo $this->form->getInput('extension'); ?>
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="task" value=""/>
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>

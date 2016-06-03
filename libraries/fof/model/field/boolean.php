@@ -19,7 +19,7 @@ class FOFModelFieldBoolean extends FOFModelFieldNumber
 	/**
 	 * Is it a null or otherwise empty value?
 	 *
-	 * @param   mixed  $value  The value to test for emptiness
+	 * @param   mixed $value The value to test for emptiness
 	 *
 	 * @return  boolean
 	 */

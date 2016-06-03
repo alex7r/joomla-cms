@@ -168,10 +168,10 @@ class FinderIndexerResult
 	 */
 	protected $instructions = array(
 		FinderIndexer::TITLE_CONTEXT => array('title', 'subtitle', 'id'),
-		FinderIndexer::TEXT_CONTEXT => array('summary', 'body'),
-		FinderIndexer::META_CONTEXT => array('meta', 'list_price', 'sale_price'),
-		FinderIndexer::PATH_CONTEXT => array('path', 'alias'),
-		FinderIndexer::MISC_CONTEXT => array('comments')
+		FinderIndexer::TEXT_CONTEXT  => array('summary', 'body'),
+		FinderIndexer::META_CONTEXT  => array('meta', 'list_price', 'sale_price'),
+		FinderIndexer::PATH_CONTEXT  => array('path', 'alias'),
+		FinderIndexer::MISC_CONTEXT  => array('comments')
 	);
 
 	/**
@@ -198,7 +198,7 @@ class FinderIndexerResult
 	 * The magic get method is used to retrieve additional element values
 	 * from the elements array.
 	 *
-	 * @param   string  $name  The name of the element.
+	 * @param   string $name The name of the element.
 	 *
 	 * @return  mixed  The value of the element if set, null otherwise.
 	 *
@@ -221,8 +221,8 @@ class FinderIndexerResult
 	 * The magic set method is used to push additional values into the elements
 	 * array in order to preserve the cleanliness of the object.
 	 *
-	 * @param   string  $name   The name of the element.
-	 * @param   mixed   $value  The value of the element.
+	 * @param   string $name  The name of the element.
+	 * @param   mixed  $value The value of the element.
 	 *
 	 * @return  void
 	 *
@@ -237,7 +237,7 @@ class FinderIndexerResult
 	 * The magic isset method is used to check the state of additional element
 	 * values in the elements array.
 	 *
-	 * @param   string  $name  The name of the element.
+	 * @param   string $name The name of the element.
 	 *
 	 * @return  boolean  True if set, false otherwise.
 	 *
@@ -252,7 +252,7 @@ class FinderIndexerResult
 	 * The magic unset method is used to unset additional element values in the
 	 * elements array.
 	 *
-	 * @param   string  $name  The name of the element.
+	 * @param   string $name The name of the element.
 	 *
 	 * @return  void
 	 *
@@ -266,7 +266,7 @@ class FinderIndexerResult
 	/**
 	 * Method to retrieve additional element values from the elements array.
 	 *
-	 * @param   string  $name  The name of the element.
+	 * @param   string $name The name of the element.
 	 *
 	 * @return  mixed  The value of the element if set, null otherwise.
 	 *
@@ -288,8 +288,8 @@ class FinderIndexerResult
 	/**
 	 * Method to set additional element values in the elements array.
 	 *
-	 * @param   string  $name   The name of the element.
-	 * @param   mixed   $value  The value of the element.
+	 * @param   string $name  The name of the element.
+	 * @param   mixed  $value The value of the element.
 	 *
 	 * @return  void
 	 *
@@ -315,8 +315,8 @@ class FinderIndexerResult
 	/**
 	 * Method to add a processing instruction for an item property.
 	 *
-	 * @param   string  $group     The group to associate the property with.
-	 * @param   string  $property  The property to process.
+	 * @param   string $group    The group to associate the property with.
+	 * @param   string $property The property to process.
 	 *
 	 * @return  void
 	 *
@@ -339,8 +339,8 @@ class FinderIndexerResult
 	/**
 	 * Method to remove a processing instruction for an item property.
 	 *
-	 * @param   string  $group     The group to associate the property with.
-	 * @param   string  $property  The property to process.
+	 * @param   string $group    The group to associate the property with.
+	 * @param   string $property The property to process.
 	 *
 	 * @return  void
 	 *
@@ -365,7 +365,7 @@ class FinderIndexerResult
 	/**
 	 * Method to get the taxonomy maps for an item.
 	 *
-	 * @param   string  $branch  The taxonomy branch to get. [optional]
+	 * @param   string $branch The taxonomy branch to get. [optional]
 	 *
 	 * @return  array  An array of taxonomy maps.
 	 *
@@ -388,10 +388,10 @@ class FinderIndexerResult
 	/**
 	 * Method to add a taxonomy map for an item.
 	 *
-	 * @param   string   $branch  The title of the taxonomy branch to add the node to.
-	 * @param   string   $title   The title of the taxonomy node.
-	 * @param   integer  $state   The published state of the taxonomy node. [optional]
-	 * @param   integer  $access  The access level of the taxonomy node. [optional]
+	 * @param   string  $branch The title of the taxonomy branch to add the node to.
+	 * @param   string  $title  The title of the taxonomy node.
+	 * @param   integer $state  The published state of the taxonomy node. [optional]
+	 * @param   integer $access The access level of the taxonomy node. [optional]
 	 *
 	 * @return  void
 	 *
@@ -403,9 +403,9 @@ class FinderIndexerResult
 		$branch = preg_replace('#[^\pL\pM\pN\p{Pi}\p{Pf}\'+-.,_]+#mui', ' ', $branch);
 
 		// Create the taxonomy node.
-		$node = new JObject;
-		$node->title = $title;
-		$node->state = (int) $state;
+		$node         = new JObject;
+		$node->title  = $title;
+		$node->state  = (int) $state;
 		$node->access = (int) $access;
 
 		// Add the node to the taxonomy branch.

@@ -51,214 +51,16 @@ class ContactModelContact extends JModelAdmin
 	 */
 	protected $batch_commands = array(
 		'assetgroup_id' => 'batchAccess',
-		'language_id' => 'batchLanguage',
-		'tag' => 'batchTag',
-		'user_id' => 'batchUser'
+		'language_id'   => 'batchLanguage',
+		'tag'           => 'batchTag',
+		'user_id'       => 'batchUser'
 	);
-
-	/**
-	 * Batch copy items to a new category or current.
-	 *
-	 * @param   integer  $value     The new category.
-	 * @param   array    $pks       An array of row IDs.
-	 * @param   array    $contexts  An array of item contexts.
-	 *
-	 * @return  mixed  An array of new IDs on success, boolean false on failure.
-	 *
-	 * @since   11.1
-	 */
-	protected function batchCopy($value, $pks, $contexts)
-	{
-		$categoryId = (int) $value;
-
-		$newIds = array();
-
-		if (!parent::checkCategoryId($categoryId))
-		{
-			return false;
-		}
-
-		// Parent exists so we proceed
-		while (!empty($pks))
-		{
-			// Pop the first ID off the stack
-			$pk = array_shift($pks);
-
-			$this->table->reset();
-
-			// Check that the row actually exists
-			if (!$this->table->load($pk))
-			{
-				if ($error = $this->table->getError())
-				{
-					// Fatal error
-					$this->setError($error);
-
-					return false;
-				}
-				else
-				{
-					// Not fatal error
-					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
-					continue;
-				}
-			}
-
-			// Alter the title & alias
-			$data = $this->generateNewTitle($categoryId, $this->table->alias, $this->table->name);
-			$this->table->name = $data['0'];
-			$this->table->alias = $data['1'];
-
-			// Reset the ID because we are making a copy
-			$this->table->id = 0;
-
-			// New category ID
-			$this->table->catid = $categoryId;
-
-			// Unpublish because we are making a copy
-			$this->table->published = 0;
-
-			// TODO: Deal with ordering?
-
-			// Check the row.
-			if (!$this->table->check())
-			{
-				$this->setError($this->table->getError());
-
-				return false;
-			}
-
-			$this->createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
-
-			// Store the row.
-			if (!$this->table->store())
-			{
-				$this->setError($this->table->getError());
-
-				return false;
-			}
-
-			// Get the new item ID
-			$newId = $this->table->get('id');
-
-			// Add the new ID to the array
-			$newIds[$pk] = $newId;
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return $newIds;
-	}
-
-	/**
-	 * Batch change a linked user.
-	 *
-	 * @param   integer  $value     The new value matching a User ID.
-	 * @param   array    $pks       An array of row IDs.
-	 * @param   array    $contexts  An array of item contexts.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	protected function batchUser($value, $pks, $contexts)
-	{
-		foreach ($pks as $pk)
-		{
-			if ($this->user->authorise('core.edit', $contexts[$pk]))
-			{
-				$this->table->reset();
-				$this->table->load($pk);
-				$this->table->user_id = (int) $value;
-
-				$this->createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
-
-				if (!$this->table->store())
-				{
-					$this->setError($this->table->getError());
-
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-				return false;
-			}
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Method to test whether a record can be deleted.
-	 *
-	 * @param   object  $record  A record object.
-	 *
-	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
-	 */
-	protected function canDelete($record)
-	{
-		if (!empty($record->id))
-		{
-			if ($record->published != -2)
-			{
-				return;
-			}
-
-			return JFactory::getUser()->authorise('core.delete', 'com_contact.category.' . (int) $record->catid);
-		}
-	}
-
-	/**
-	 * Method to test whether a record can have its state edited.
-	 *
-	 * @param   object  $record  A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
-	 *
-	 * @since   1.6
-	 */
-	protected function canEditState($record)
-	{
-		// Check against the category.
-		if (!empty($record->catid))
-		{
-			return JFactory::getUser()->authorise('core.edit.state', 'com_contact.category.' . (int) $record->catid);
-		}
-
-		// Default to component settings if category not known.
-		return parent::canEditState($record);
-	}
-
-	/**
-	 * Returns a Table object, always creating it
-	 *
-	 * @param   string  $type    The table type to instantiate
-	 * @param   string  $prefix  A prefix for the table class name. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A database object
-	 *
-	 * @since   1.6
-	 */
-	public function getTable($type = 'Contact', $prefix = 'ContactTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
 
 	/**
 	 * Method to get the row form.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  JForm|boolean  A JForm object on success, false on failure
 	 *
@@ -295,86 +97,30 @@ class ContactModelContact extends JModelAdmin
 	}
 
 	/**
-	 * Method to get a single record.
+	 * Method to test whether a record can have its state edited.
 	 *
-	 * @param   integer  $pk  The id of the primary key.
+	 * @param   object $record A record object.
 	 *
-	 * @return  mixed  Object on success, false on failure.
-	 *
-	 * @since   1.6
-	 */
-	public function getItem($pk = null)
-	{
-		if ($item = parent::getItem($pk))
-		{
-			// Convert the metadata field to an array.
-			$registry = new Registry;
-			$registry->loadString($item->metadata);
-			$item->metadata = $registry->toArray();
-		}
-
-		// Load associated contact items
-		$assoc = JLanguageAssociations::isEnabled();
-
-		if ($assoc)
-		{
-			$item->associations = array();
-
-			if ($item->id != null)
-			{
-				$associations = JLanguageAssociations::getAssociations('com_contact', '#__contact_details', 'com_contact.item', $item->id);
-
-				foreach ($associations as $tag => $association)
-				{
-					$item->associations[$tag] = $association->id;
-				}
-			}
-		}
-
-		// Load item tags
-		if (!empty($item->id))
-		{
-			$item->tags = new JHelperTags;
-			$item->tags->getTagIds($item->id, 'com_contact.contact');
-		}
-
-		return $item;
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
 	 *
 	 * @since   1.6
 	 */
-	protected function loadFormData()
+	protected function canEditState($record)
 	{
-		$app = JFactory::getApplication();
-
-		// Check the session for previously entered form data.
-		$data = $app->getUserState('com_contact.edit.contact.data', array());
-
-		if (empty($data))
+		// Check against the category.
+		if (!empty($record->catid))
 		{
-			$data = $this->getItem();
-
-			// Prime some default values.
-			if ($this->getState('contact.id') == 0)
-			{
-				$data->set('catid', $app->input->get('catid', $app->getUserState('com_contact.contacts.filter.category_id'), 'int'));
-			}
+			return JFactory::getUser()->authorise('core.edit.state', 'com_contact.category.' . (int) $record->catid);
 		}
 
-		$this->preprocessData('com_contact.contact', $data);
-
-		return $data;
+		// Default to component settings if category not known.
+		return parent::canEditState($record);
 	}
 
 	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array  $data  The form data.
+	 * @param   array $data The form data.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -398,11 +144,11 @@ class ContactModelContact extends JModelAdmin
 		// Save New Category
 		if ($catid == 0)
 		{
-			$table = array();
-			$table['title'] = $data['catid'];
+			$table              = array();
+			$table['title']     = $data['catid'];
 			$table['parent_id'] = 1;
 			$table['extension'] = 'com_contact';
-			$table['language'] = $data['language'];
+			$table['language']  = $data['language'];
 			$table['published'] = 1;
 
 			// Create new category and get catid back
@@ -418,7 +164,7 @@ class ContactModelContact extends JModelAdmin
 			if ($data['name'] == $origTable->name)
 			{
 				list($name, $alias) = $this->generateNewTitle($data['catid'], $data['alias'], $data['name']);
-				$data['name'] = $name;
+				$data['name']  = $name;
 				$data['alias'] = $alias;
 			}
 			else
@@ -445,120 +191,10 @@ class ContactModelContact extends JModelAdmin
 	}
 
 	/**
-	 * Prepare and sanitise the table prior to saving.
-	 *
-	 * @param   JTable  $table  The JTable object
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function prepareTable($table)
-	{
-		$date = JFactory::getDate()->toSql();
-
-		$table->name = htmlspecialchars_decode($table->name, ENT_QUOTES);
-
-		$table->generateAlias();
-
-		if (empty($table->id))
-		{
-			// Set the values
-			$table->created = $date;
-
-			// Set ordering to the last item if not set
-			if (empty($table->ordering))
-			{
-				$db = $this->getDbo();
-				$query = $db->getQuery(true)
-					->select('MAX(ordering)')
-					->from($db->quoteName('#__contact_details'));
-				$db->setQuery($query);
-				$max = $db->loadResult();
-
-				$table->ordering = $max + 1;
-			}
-		}
-		else
-		{
-			// Set the values
-			$table->modified = $date;
-			$table->modified_by = JFactory::getUser()->id;
-		}
-
-		// Increment the content version number.
-		$table->version++;
-	}
-
-	/**
-	 * A protected method to get a set of ordering conditions.
-	 *
-	 * @param   JTable  $table  A record object.
-	 *
-	 * @return  array  An array of conditions to add to add to ordering queries.
-	 *
-	 * @since   1.6
-	 */
-	protected function getReorderConditions($table)
-	{
-		return array('catid = ' . (int) $table->catid);
-	}
-
-	/**
-	 * Preprocess the form.
-	 *
-	 * @param   JForm   $form   Form object.
-	 * @param   object  $data   Data object.
-	 * @param   string  $group  Group name.
-	 *
-	 * @return  void
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
-	{
-		// Association content items
-		$assoc = JLanguageAssociations::isEnabled();
-
-		if ($assoc)
-		{
-			$languages = JLanguageHelper::getLanguages('lang_code');
-			$addform = new SimpleXMLElement('<form />');
-			$fields = $addform->addChild('fields');
-			$fields->addAttribute('name', 'associations');
-			$fieldset = $fields->addChild('fieldset');
-			$fieldset->addAttribute('name', 'item_associations');
-			$fieldset->addAttribute('description', 'COM_CONTACT_ITEM_ASSOCIATIONS_FIELDSET_DESC');
-			$add = false;
-
-			foreach ($languages as $tag => $language)
-			{
-				if (empty($data->language) || $tag != $data->language)
-				{
-					$add = true;
-					$field = $fieldset->addChild('field');
-					$field->addAttribute('name', $tag);
-					$field->addAttribute('type', 'modal_contact');
-					$field->addAttribute('language', $tag);
-					$field->addAttribute('label', $language->title);
-					$field->addAttribute('translate_label', 'false');
-					$field->addAttribute('edit', 'true');
-					$field->addAttribute('clear', 'true');
-				}
-			}
-
-			if ($add)
-			{
-				$form->load($addform, false);
-			}
-		}
-
-		parent::preprocessForm($form, $data, $group);
-	}
-
-	/**
 	 * Method to toggle the featured setting of contacts.
 	 *
-	 * @param   array    $pks    The ids of the items to toggle.
-	 * @param   integer  $value  The value to toggle to.
+	 * @param   array   $pks   The ids of the items to toggle.
+	 * @param   integer $value The value to toggle to.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -606,11 +242,106 @@ class ContactModelContact extends JModelAdmin
 	}
 
 	/**
+	 * Batch copy items to a new category or current.
+	 *
+	 * @param   integer $value    The new category.
+	 * @param   array   $pks      An array of row IDs.
+	 * @param   array   $contexts An array of item contexts.
+	 *
+	 * @return  mixed  An array of new IDs on success, boolean false on failure.
+	 *
+	 * @since   11.1
+	 */
+	protected function batchCopy($value, $pks, $contexts)
+	{
+		$categoryId = (int) $value;
+
+		$newIds = array();
+
+		if (!parent::checkCategoryId($categoryId))
+		{
+			return false;
+		}
+
+		// Parent exists so we proceed
+		while (!empty($pks))
+		{
+			// Pop the first ID off the stack
+			$pk = array_shift($pks);
+
+			$this->table->reset();
+
+			// Check that the row actually exists
+			if (!$this->table->load($pk))
+			{
+				if ($error = $this->table->getError())
+				{
+					// Fatal error
+					$this->setError($error);
+
+					return false;
+				}
+				else
+				{
+					// Not fatal error
+					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+					continue;
+				}
+			}
+
+			// Alter the title & alias
+			$data               = $this->generateNewTitle($categoryId, $this->table->alias, $this->table->name);
+			$this->table->name  = $data['0'];
+			$this->table->alias = $data['1'];
+
+			// Reset the ID because we are making a copy
+			$this->table->id = 0;
+
+			// New category ID
+			$this->table->catid = $categoryId;
+
+			// Unpublish because we are making a copy
+			$this->table->published = 0;
+
+			// TODO: Deal with ordering?
+
+			// Check the row.
+			if (!$this->table->check())
+			{
+				$this->setError($this->table->getError());
+
+				return false;
+			}
+
+			$this->createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
+
+			// Store the row.
+			if (!$this->table->store())
+			{
+				$this->setError($this->table->getError());
+
+				return false;
+			}
+
+			// Get the new item ID
+			$newId = $this->table->get('id');
+
+			// Add the new ID to the array
+			$newIds[$pk] = $newId;
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return $newIds;
+	}
+
+	/**
 	 * Method to change the title & alias.
 	 *
-	 * @param   integer  $category_id  The id of the parent.
-	 * @param   string   $alias        The alias.
-	 * @param   string   $name         The title.
+	 * @param   integer $category_id The id of the parent.
+	 * @param   string  $alias       The alias.
+	 * @param   string  $name        The title.
 	 *
 	 * @return  array  Contains the modified title and alias.
 	 *
@@ -632,5 +363,274 @@ class ContactModelContact extends JModelAdmin
 		}
 
 		return array($name, $alias);
+	}
+
+	/**
+	 * Returns a Table object, always creating it
+	 *
+	 * @param   string $type   The table type to instantiate
+	 * @param   string $prefix A prefix for the table class name. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A database object
+	 *
+	 * @since   1.6
+	 */
+	public function getTable($type = 'Contact', $prefix = 'ContactTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
+	 * Batch change a linked user.
+	 *
+	 * @param   integer $value    The new value matching a User ID.
+	 * @param   array   $pks      An array of row IDs.
+	 * @param   array   $contexts An array of item contexts.
+	 *
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
+	 */
+	protected function batchUser($value, $pks, $contexts)
+	{
+		foreach ($pks as $pk)
+		{
+			if ($this->user->authorise('core.edit', $contexts[$pk]))
+			{
+				$this->table->reset();
+				$this->table->load($pk);
+				$this->table->user_id = (int) $value;
+
+				$this->createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
+
+				if (!$this->table->store())
+				{
+					$this->setError($this->table->getError());
+
+					return false;
+				}
+			}
+			else
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+				return false;
+			}
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object $record A record object.
+	 *
+	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
+	 *
+	 * @since   1.6
+	 */
+	protected function canDelete($record)
+	{
+		if (!empty($record->id))
+		{
+			if ($record->published != -2)
+			{
+				return;
+			}
+
+			return JFactory::getUser()->authorise('core.delete', 'com_contact.category.' . (int) $record->catid);
+		}
+	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		$app = JFactory::getApplication();
+
+		// Check the session for previously entered form data.
+		$data = $app->getUserState('com_contact.edit.contact.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+
+			// Prime some default values.
+			if ($this->getState('contact.id') == 0)
+			{
+				$data->set('catid', $app->input->get('catid', $app->getUserState('com_contact.contacts.filter.category_id'), 'int'));
+			}
+		}
+
+		$this->preprocessData('com_contact.contact', $data);
+
+		return $data;
+	}
+
+	/**
+	 * Method to get a single record.
+	 *
+	 * @param   integer $pk The id of the primary key.
+	 *
+	 * @return  mixed  Object on success, false on failure.
+	 *
+	 * @since   1.6
+	 */
+	public function getItem($pk = null)
+	{
+		if ($item = parent::getItem($pk))
+		{
+			// Convert the metadata field to an array.
+			$registry = new Registry;
+			$registry->loadString($item->metadata);
+			$item->metadata = $registry->toArray();
+		}
+
+		// Load associated contact items
+		$assoc = JLanguageAssociations::isEnabled();
+
+		if ($assoc)
+		{
+			$item->associations = array();
+
+			if ($item->id != null)
+			{
+				$associations = JLanguageAssociations::getAssociations('com_contact', '#__contact_details', 'com_contact.item', $item->id);
+
+				foreach ($associations as $tag => $association)
+				{
+					$item->associations[$tag] = $association->id;
+				}
+			}
+		}
+
+		// Load item tags
+		if (!empty($item->id))
+		{
+			$item->tags = new JHelperTags;
+			$item->tags->getTagIds($item->id, 'com_contact.contact');
+		}
+
+		return $item;
+	}
+
+	/**
+	 * Prepare and sanitise the table prior to saving.
+	 *
+	 * @param   JTable $table The JTable object
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function prepareTable($table)
+	{
+		$date = JFactory::getDate()->toSql();
+
+		$table->name = htmlspecialchars_decode($table->name, ENT_QUOTES);
+
+		$table->generateAlias();
+
+		if (empty($table->id))
+		{
+			// Set the values
+			$table->created = $date;
+
+			// Set ordering to the last item if not set
+			if (empty($table->ordering))
+			{
+				$db    = $this->getDbo();
+				$query = $db->getQuery(true)
+					->select('MAX(ordering)')
+					->from($db->quoteName('#__contact_details'));
+				$db->setQuery($query);
+				$max = $db->loadResult();
+
+				$table->ordering = $max + 1;
+			}
+		}
+		else
+		{
+			// Set the values
+			$table->modified    = $date;
+			$table->modified_by = JFactory::getUser()->id;
+		}
+
+		// Increment the content version number.
+		$table->version++;
+	}
+
+	/**
+	 * A protected method to get a set of ordering conditions.
+	 *
+	 * @param   JTable $table A record object.
+	 *
+	 * @return  array  An array of conditions to add to add to ordering queries.
+	 *
+	 * @since   1.6
+	 */
+	protected function getReorderConditions($table)
+	{
+		return array('catid = ' . (int) $table->catid);
+	}
+
+	/**
+	 * Preprocess the form.
+	 *
+	 * @param   JForm  $form  Form object.
+	 * @param   object $data  Data object.
+	 * @param   string $group Group name.
+	 *
+	 * @return  void
+	 */
+	protected function preprocessForm(JForm $form, $data, $group = 'content')
+	{
+		// Association content items
+		$assoc = JLanguageAssociations::isEnabled();
+
+		if ($assoc)
+		{
+			$languages = JLanguageHelper::getLanguages('lang_code');
+			$addform   = new SimpleXMLElement('<form />');
+			$fields    = $addform->addChild('fields');
+			$fields->addAttribute('name', 'associations');
+			$fieldset = $fields->addChild('fieldset');
+			$fieldset->addAttribute('name', 'item_associations');
+			$fieldset->addAttribute('description', 'COM_CONTACT_ITEM_ASSOCIATIONS_FIELDSET_DESC');
+			$add = false;
+
+			foreach ($languages as $tag => $language)
+			{
+				if (empty($data->language) || $tag != $data->language)
+				{
+					$add   = true;
+					$field = $fieldset->addChild('field');
+					$field->addAttribute('name', $tag);
+					$field->addAttribute('type', 'modal_contact');
+					$field->addAttribute('language', $tag);
+					$field->addAttribute('label', $language->title);
+					$field->addAttribute('translate_label', 'false');
+					$field->addAttribute('edit', 'true');
+					$field->addAttribute('clear', 'true');
+				}
+			}
+
+			if ($add)
+			{
+				$form->load($addform, false);
+			}
+		}
+
+		parent::preprocessForm($form, $data, $group);
 	}
 }

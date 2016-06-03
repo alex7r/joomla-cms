@@ -58,7 +58,9 @@ JFactory::getDocument()->addStyleDeclaration(
 );
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_finder&view=filter&layout=edit&filter_id=' . (int) $this->item->filter_id); ?>" method="post" name="adminForm" id="adminForm" class="form-validate">
+<form
+	action="<?php echo JRoute::_('index.php?option=com_finder&view=filter&layout=edit&filter_id=' . (int) $this->item->filter_id); ?>"
+	method="post" name="adminForm" id="adminForm" class="form-validate">
 
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
@@ -72,10 +74,13 @@ JFactory::getDocument()->addStyleDeclaration(
 					<div class="well">
 						<?php echo $this->form->getControlGroup('map_count'); ?>
 					</div>
-					<button class="btn btn-default" type="button" class="jform-rightbtn" onclick="jQuery('.filter-node').each(function () { this.click(); });">
-						<span class="icon-checkbox-partial"></span> <?php echo JText::_('JGLOBAL_SELECTION_INVERT'); ?></button>
+					<button class="btn btn-default" type="button" class="jform-rightbtn"
+					        onclick="jQuery('.filter-node').each(function () { this.click(); });">
+						<span class="icon-checkbox-partial"></span> <?php echo JText::_('JGLOBAL_SELECTION_INVERT'); ?>
+					</button>
 
-					<button class="btn btn-default pull-right" type="button" id="rightbtn" ><?php echo JText::_('COM_FINDER_FILTER_SHOW_ALL'); ?></button>
+					<button class="btn btn-default pull-right" type="button"
+					        id="rightbtn"><?php echo JText::_('COM_FINDER_FILTER_SHOW_ALL'); ?></button>
 					<hr>
 				<?php endif; ?>
 
@@ -98,7 +103,8 @@ JFactory::getDocument()->addStyleDeclaration(
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 	</div>
 
-	<input type="hidden" name="task" value="" />
-	<input type="hidden" name="return" value="<?php echo JFactory::getApplication()->input->get('return', '', 'cmd');?>" />
+	<input type="hidden" name="task" value=""/>
+	<input type="hidden" name="return"
+	       value="<?php echo JFactory::getApplication()->input->get('return', '', 'cmd'); ?>"/>
 	<?php echo JHtml::_('form.token'); ?>
 </form>

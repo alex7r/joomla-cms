@@ -21,8 +21,8 @@ class PlgInstallerPackageInstaller extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An optional associative array of configuration settings.
+	 * @param   object &$subject   The object to observe
+	 * @param   array  $config     An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 *
@@ -49,13 +49,15 @@ class PlgInstallerPackageInstaller extends JPlugin
 		<fieldset class="uploadform">
 			<legend><?php echo JText::_('PLG_INSTALLER_PACKAGEINSTALLER_UPLOAD_INSTALL_JOOMLA_EXTENSION'); ?></legend>
 			<div class="control-group">
-				<label for="install_package" class="control-label"><?php echo JText::_('PLG_INSTALLER_PACKAGEINSTALLER_EXTENSION_PACKAGE_FILE'); ?></label>
+				<label for="install_package"
+				       class="control-label"><?php echo JText::_('PLG_INSTALLER_PACKAGEINSTALLER_EXTENSION_PACKAGE_FILE'); ?></label>
 				<div class="controls">
-					<input class="input_box" id="install_package" name="install_package" type="file" size="57" />
+					<input class="input_box" id="install_package" name="install_package" type="file" size="57"/>
 				</div>
 			</div>
 			<div class="form-actions">
-				<button class="btn btn-primary" type="button" id="installbutton_package" onclick="Joomla.submitbuttonpackage()">
+				<button class="btn btn-primary" type="button" id="installbutton_package"
+				        onclick="Joomla.submitbuttonpackage()">
 					<?php echo JText::_('PLG_INSTALLER_PACKAGEINSTALLER_UPLOAD_AND_INSTALL'); ?></button>
 			</div>
 		</fieldset>

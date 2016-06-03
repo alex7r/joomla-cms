@@ -61,7 +61,7 @@ class ContactViewContacts extends JViewLegacy
 	/**
 	 * Display the view.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -156,7 +156,8 @@ class ContactViewContacts extends JViewLegacy
 		// Add a batch button
 		if ($user->authorise('core.create', 'com_contacts')
 			&& $user->authorise('core.edit', 'com_contacts')
-			&& $user->authorise('core.edit.state', 'com_contacts'))
+			&& $user->authorise('core.edit.state', 'com_contacts')
+		)
 		{
 			$title = JText::_('JTOOLBAR_BATCH');
 
@@ -196,15 +197,15 @@ class ContactViewContacts extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-			'a.published' => JText::_('JSTATUS'),
-			'a.name' => JText::_('JGLOBAL_TITLE'),
+			'a.ordering'     => JText::_('JGRID_HEADING_ORDERING'),
+			'a.published'    => JText::_('JSTATUS'),
+			'a.name'         => JText::_('JGLOBAL_TITLE'),
 			'category_title' => JText::_('JCATEGORY'),
-			'ul.name' => JText::_('COM_CONTACT_FIELD_LINKED_USER_LABEL'),
-			'a.featured' => JText::_('JFEATURED'),
-			'a.access' => JText::_('JGRID_HEADING_ACCESS'),
-			'a.language' => JText::_('JGRID_HEADING_LANGUAGE'),
-			'a.id' => JText::_('JGRID_HEADING_ID')
+			'ul.name'        => JText::_('COM_CONTACT_FIELD_LINKED_USER_LABEL'),
+			'a.featured'     => JText::_('JFEATURED'),
+			'a.access'       => JText::_('JGRID_HEADING_ACCESS'),
+			'a.language'     => JText::_('JGRID_HEADING_LANGUAGE'),
+			'a.id'           => JText::_('JGRID_HEADING_ID')
 		);
 	}
 }

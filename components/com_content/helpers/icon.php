@@ -21,10 +21,10 @@ abstract class JHtmlIcon
 	/**
 	 * Method to generate a link to the create item page for the given category
 	 *
-	 * @param   object    $category  The category information
-	 * @param   Registry  $params    The item parameters
-	 * @param   array     $attribs   Optional attributes for the link
-	 * @param   boolean   $legacy    True to use legacy images, false to use icomoon based graphic
+	 * @param   object   $category The category information
+	 * @param   Registry $params   The item parameters
+	 * @param   array    $attribs  Optional attributes for the link
+	 * @param   boolean  $legacy   True to use legacy images, false to use icomoon based graphic
 	 *
 	 * @return  string  The HTML markup for the create item link
 	 */
@@ -72,10 +72,10 @@ abstract class JHtmlIcon
 	/**
 	 * Method to generate a link to the email item page for the given article
 	 *
-	 * @param   object    $article  The article information
-	 * @param   Registry  $params   The item parameters
-	 * @param   array     $attribs  Optional attributes for the link
-	 * @param   boolean   $legacy   True to use legacy images, false to use icomoon based graphic
+	 * @param   object   $article The article information
+	 * @param   Registry $params  The item parameters
+	 * @param   array    $attribs Optional attributes for the link
+	 * @param   boolean  $legacy  True to use legacy images, false to use icomoon based graphic
 	 *
 	 * @return  string  The HTML markup for the email item link
 	 */
@@ -122,12 +122,12 @@ abstract class JHtmlIcon
 	 * This icon will not display in a popup window, nor if the article is trashed.
 	 * Edit access checks must be performed in the calling code.
 	 *
-	 * @param   object    $article  The article information
-	 * @param   Registry  $params   The item parameters
-	 * @param   array     $attribs  Optional attributes for the link
-	 * @param   boolean   $legacy   True to use legacy images, false to use icomoon based graphic
+	 * @param   object   $article The article information
+	 * @param   Registry $params  The item parameters
+	 * @param   array    $attribs Optional attributes for the link
+	 * @param   boolean  $legacy  True to use legacy images, false to use icomoon based graphic
 	 *
-	 * @return  string	The HTML for the article edit icon.
+	 * @return  string    The HTML for the article edit icon.
 	 *
 	 * @since   1.6
 	 */
@@ -154,7 +154,8 @@ abstract class JHtmlIcon
 		if (property_exists($article, 'checked_out')
 			&& property_exists($article, 'checked_out_time')
 			&& $article->checked_out > 0
-			&& $article->checked_out != $user->get('id'))
+			&& $article->checked_out != $user->get('id')
+		)
 		{
 			$checkoutUser = JFactory::getUser($article->checked_out);
 			$date         = JHtml::_('date', $article->checked_out_time);
@@ -202,7 +203,8 @@ abstract class JHtmlIcon
 			$icon = $article->state ? 'edit.png' : 'edit_unpublished.png';
 
 			if (strtotime($article->publish_up) > strtotime(JFactory::getDate())
-				|| ((strtotime($article->publish_down) < strtotime(JFactory::getDate())) && $article->publish_down != JFactory::getDbo()->getNullDate()))
+				|| ((strtotime($article->publish_down) < strtotime(JFactory::getDate())) && $article->publish_down != JFactory::getDbo()->getNullDate())
+			)
 			{
 				$icon = 'edit_unpublished.png';
 			}
@@ -214,7 +216,8 @@ abstract class JHtmlIcon
 			$icon = $article->state ? 'edit' : 'eye-close';
 
 			if (strtotime($article->publish_up) > strtotime(JFactory::getDate())
-				|| ((strtotime($article->publish_down) < strtotime(JFactory::getDate())) && $article->publish_down != JFactory::getDbo()->getNullDate()))
+				|| ((strtotime($article->publish_down) < strtotime(JFactory::getDate())) && $article->publish_down != JFactory::getDbo()->getNullDate())
+			)
 			{
 				$icon = 'eye-close';
 			}
@@ -224,8 +227,8 @@ abstract class JHtmlIcon
 				. JText::_('JGLOBAL_EDIT');
 		}
 
-		$attribs['title']   = JText::_('JGLOBAL_EDIT_TITLE');
-		$output = JHtml::_('link', JRoute::_($url), $text, $attribs);
+		$attribs['title'] = JText::_('JGLOBAL_EDIT_TITLE');
+		$output           = JHtml::_('link', JRoute::_($url), $text, $attribs);
 
 		return $output;
 	}
@@ -233,20 +236,20 @@ abstract class JHtmlIcon
 	/**
 	 * Method to generate a popup link to print an article
 	 *
-	 * @param   object    $article  The article information
-	 * @param   Registry  $params   The item parameters
-	 * @param   array     $attribs  Optional attributes for the link
-	 * @param   boolean   $legacy   True to use legacy images, false to use icomoon based graphic
+	 * @param   object   $article The article information
+	 * @param   Registry $params  The item parameters
+	 * @param   array    $attribs Optional attributes for the link
+	 * @param   boolean  $legacy  True to use legacy images, false to use icomoon based graphic
 	 *
 	 * @return  string  The HTML markup for the popup link
 	 */
 	public static function print_popup($article, $params, $attribs = array(), $legacy = false)
 	{
-		$app = JFactory::getApplication();
-		$input = $app->input;
+		$app     = JFactory::getApplication();
+		$input   = $app->input;
 		$request = $input->request;
 
-		$url  = ContentHelperRoute::getArticleRoute($article->slug, $article->catid, $article->language);
+		$url = ContentHelperRoute::getArticleRoute($article->slug, $article->catid, $article->language);
 		$url .= '&tmpl=component&print=1&layout=default&page=' . @ $request->limitstart;
 
 		$status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
@@ -278,10 +281,10 @@ abstract class JHtmlIcon
 	/**
 	 * Method to generate a link to print an article
 	 *
-	 * @param   object    $article  Not used, @deprecated for 4.0
-	 * @param   Registry  $params   The item parameters
-	 * @param   array     $attribs  Not used, @deprecated for 4.0
-	 * @param   boolean   $legacy   True to use legacy images, false to use icomoon based graphic
+	 * @param   object   $article Not used, @deprecated for 4.0
+	 * @param   Registry $params  The item parameters
+	 * @param   array    $attribs Not used, @deprecated for 4.0
+	 * @param   boolean  $legacy  True to use legacy images, false to use icomoon based graphic
 	 *
 	 * @return  string  The HTML markup for the popup link
 	 */

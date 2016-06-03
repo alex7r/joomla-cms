@@ -25,7 +25,7 @@ class ContentViewArticles extends JViewLegacy
 	/**
 	 * Display the view
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -110,7 +110,7 @@ class ContentViewArticles extends JViewLegacy
 
 		JToolbarHelper::title(JText::_('COM_CONTENT_ARTICLES_TITLE'), 'stack article');
 
-		if ($canDo->get('core.create') || (count($user->getAuthorisedCategories('com_content', 'core.create'))) > 0 )
+		if ($canDo->get('core.create') || (count($user->getAuthorisedCategories('com_content', 'core.create'))) > 0)
 		{
 			JToolbarHelper::addNew('article.add');
 		}
@@ -133,7 +133,8 @@ class ContentViewArticles extends JViewLegacy
 		// Add a batch button
 		if ($user->authorise('core.create', 'com_content')
 			&& $user->authorise('core.edit', 'com_content')
-			&& $user->authorise('core.edit.state', 'com_content'))
+			&& $user->authorise('core.edit.state', 'com_content')
+		)
 		{
 
 			$title = JText::_('JTOOLBAR_BATCH');

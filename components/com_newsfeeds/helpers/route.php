@@ -21,16 +21,16 @@ abstract class NewsfeedsHelperRoute
 	/**
 	 * getNewsfeedRoute
 	 *
-	 * @param   int  $id        menu itemid
-	 * @param   int  $catid     category id
-	 * @param   int  $language  language
+	 * @param   int $id       menu itemid
+	 * @param   int $catid    category id
+	 * @param   int $language language
 	 *
 	 * @return string
 	 */
 	public static function getNewsfeedRoute($id, $catid, $language = 0)
 	{
 		$needles = array(
-			'newsfeed'  => array((int) $id)
+			'newsfeed' => array((int) $id)
 		);
 
 		// Create the link
@@ -39,12 +39,12 @@ abstract class NewsfeedsHelperRoute
 		if ((int) $catid > 1)
 		{
 			$categories = JCategories::getInstance('Newsfeeds');
-			$category = $categories->get((int) $catid);
+			$category   = $categories->get((int) $catid);
 
 			if ($category)
 			{
 				// TODO Throw error that the category either not exists or is unpublished
-				$needles['category'] = array_reverse($category->getPath());
+				$needles['category']   = array_reverse($category->getPath());
 				$needles['categories'] = $needles['category'];
 				$link .= '&catid=' . $catid;
 			}
@@ -65,60 +65,9 @@ abstract class NewsfeedsHelperRoute
 	}
 
 	/**
-	 * getCategoryRoute
-	 *
-	 * @param   int  $catid     category id
-	 * @param   int  $language  language
-	 *
-	 * @return string
-	 */
-	public static function getCategoryRoute($catid, $language = 0)
-	{
-		if ($catid instanceof JCategoryNode)
-		{
-			$id = $catid->id;
-			$category = $catid;
-		}
-		else
-		{
-			$id = (int) $catid;
-			$category = JCategories::getInstance('Newsfeeds')->get($id);
-		}
-
-		if ($id < 1 || !($category instanceof JCategoryNode))
-		{
-			$link = '';
-		}
-		else
-		{
-			$needles = array();
-
-			// Create the link
-			$link = 'index.php?option=com_newsfeeds&view=category&id=' . $id;
-
-			$catids = array_reverse($category->getPath());
-			$needles['category'] = $catids;
-			$needles['categories'] = $catids;
-
-			if ($language && $language != "*" && JLanguageMultilang::isEnabled())
-			{
-				$link .= '&lang=' . $language;
-				$needles['language'] = $language;
-			}
-
-			if ($item = self::_findItem($needles))
-			{
-				$link .= '&Itemid=' . $item;
-			}
-		}
-
-		return $link;
-	}
-
-	/**
 	 * finditem
 	 *
-	 * @param   null  $needles  what we are searching for
+	 * @param   null $needles what we are searching for
 	 *
 	 * @return  int  menu itemid
 	 *
@@ -138,12 +87,12 @@ abstract class NewsfeedsHelperRoute
 			$component = JComponentHelper::getComponent('com_newsfeeds');
 
 			$attributes = array('component_id');
-			$values = array($component->id);
+			$values     = array($component->id);
 
 			if ($language != '*')
 			{
 				$attributes[] = 'language';
-				$values[] = array($needles['language'], '*');
+				$values[]     = array($needles['language'], '*');
 			}
 
 			$items = $menus->getItems($attributes, $values);
@@ -202,5 +151,56 @@ abstract class NewsfeedsHelperRoute
 		$default = $menus->getDefault($language);
 
 		return !empty($default->id) ? $default->id : null;
+	}
+
+	/**
+	 * getCategoryRoute
+	 *
+	 * @param   int $catid    category id
+	 * @param   int $language language
+	 *
+	 * @return string
+	 */
+	public static function getCategoryRoute($catid, $language = 0)
+	{
+		if ($catid instanceof JCategoryNode)
+		{
+			$id       = $catid->id;
+			$category = $catid;
+		}
+		else
+		{
+			$id       = (int) $catid;
+			$category = JCategories::getInstance('Newsfeeds')->get($id);
+		}
+
+		if ($id < 1 || !($category instanceof JCategoryNode))
+		{
+			$link = '';
+		}
+		else
+		{
+			$needles = array();
+
+			// Create the link
+			$link = 'index.php?option=com_newsfeeds&view=category&id=' . $id;
+
+			$catids                = array_reverse($category->getPath());
+			$needles['category']   = $catids;
+			$needles['categories'] = $catids;
+
+			if ($language && $language != "*" && JLanguageMultilang::isEnabled())
+			{
+				$link .= '&lang=' . $language;
+				$needles['language'] = $language;
+			}
+
+			if ($item = self::_findItem($needles))
+			{
+				$link .= '&Itemid=' . $item;
+			}
+		}
+
+		return $link;
 	}
 }

@@ -21,9 +21,9 @@ class JGithubPackageMarkdown extends JGithubPackage
 	/**
 	 * Method to render a markdown document.
 	 *
-	 * @param   string  $text     The text object being parsed.
-	 * @param   string  $mode     The parsing mode; valid options are 'markdown' or 'gfm'.
-	 * @param   string  $context  An optional repository context, only used in 'gfm' mode.
+	 * @param   string $text    The text object being parsed.
+	 * @param   string $mode    The parsing mode; valid options are 'markdown' or 'gfm'.
+	 * @param   string $context An optional repository context, only used in 'gfm' mode.
 	 *
 	 * @since   3.3 (CMS)
 	 * @throws  DomainException
@@ -62,7 +62,7 @@ class JGithubPackageMarkdown extends JGithubPackage
 		if ($response->code != 200)
 		{
 			// Decode the error response and throw an exception.
-			$error = json_decode($response->body);
+			$error   = json_decode($response->body);
 			$message = (isset($error->message)) ? $error->message : 'Error: ' . $response->code;
 			throw new DomainException($message, $response->code);
 		}

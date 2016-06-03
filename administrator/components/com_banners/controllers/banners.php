@@ -29,7 +29,7 @@ class BannersControllerBanners extends JControllerAdmin
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JControllerLegacy
 	 * @since   1.6
@@ -39,22 +39,6 @@ class BannersControllerBanners extends JControllerAdmin
 		parent::__construct($config);
 
 		$this->registerTask('sticky_unpublish', 'sticky_publish');
-	}
-
-	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  JModelLegacy  The model.
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'Banner', $prefix = 'BannersModel', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
 	}
 
 	/**
@@ -105,5 +89,21 @@ class BannersControllerBanners extends JControllerAdmin
 		}
 
 		$this->setRedirect('index.php?option=com_banners&view=banners');
+	}
+
+	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return  JModelLegacy  The model.
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'Banner', $prefix = 'BannersModel', $config = array('ignore_request' => true))
+	{
+		return parent::getModel($name, $prefix, $config);
 	}
 }

@@ -75,7 +75,7 @@ class JFormFieldDirectories extends JFormFieldList
 			if (is_array($return))
 			{
 				$values[] = $dir;
-				$values = array_merge($values, $return);
+				$values   = array_merge($values, $return);
 			}
 		}
 

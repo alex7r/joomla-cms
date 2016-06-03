@@ -53,8 +53,8 @@ class JFormHelper
 	/**
 	 * Method to load a form field object given a type.
 	 *
-	 * @param   string   $type  The field type.
-	 * @param   boolean  $new   Flag to toggle whether we should get a new instance of the object.
+	 * @param   string  $type The field type.
+	 * @param   boolean $new  Flag to toggle whether we should get a new instance of the object.
 	 *
 	 * @return  JFormField|boolean  JFormField object on success, false otherwise.
 	 *
@@ -66,28 +66,13 @@ class JFormHelper
 	}
 
 	/**
-	 * Method to load a form rule object given a type.
-	 *
-	 * @param   string   $type  The rule type.
-	 * @param   boolean  $new   Flag to toggle whether we should get a new instance of the object.
-	 *
-	 * @return  JFormRule|boolean  JFormRule object on success, false otherwise.
-	 *
-	 * @since   11.1
-	 */
-	public static function loadRuleType($type, $new = true)
-	{
-		return self::loadType('rule', $type, $new);
-	}
-
-	/**
 	 * Method to load a form entity object given a type.
 	 * Each type is loaded only once and then used as a prototype for other objects of same type.
 	 * Please, use this method only with those entities which support types (forms don't support them).
 	 *
-	 * @param   string   $entity  The entity.
-	 * @param   string   $type    The entity type.
-	 * @param   boolean  $new     Flag to toggle whether we should get a new instance of the object.
+	 * @param   string  $entity The entity.
+	 * @param   string  $type   The entity type.
+	 * @param   boolean $new    Flag to toggle whether we should get a new instance of the object.
 	 *
 	 * @return  mixed  Entity object on success, false otherwise.
 	 *
@@ -120,42 +105,12 @@ class JFormHelper
 	}
 
 	/**
-	 * Attempt to import the JFormField class file if it isn't already imported.
-	 * You can use this method outside of JForm for loading a field for inheritance or composition.
-	 *
-	 * @param   string  $type  Type of a field whose class should be loaded.
-	 *
-	 * @return  string|boolean  Class name on success or false otherwise.
-	 *
-	 * @since   11.1
-	 */
-	public static function loadFieldClass($type)
-	{
-		return self::loadClass('field', $type);
-	}
-
-	/**
-	 * Attempt to import the JFormRule class file if it isn't already imported.
-	 * You can use this method outside of JForm for loading a rule for inheritance or composition.
-	 *
-	 * @param   string  $type  Type of a rule whose class should be loaded.
-	 *
-	 * @return  string|boolean  Class name on success or false otherwise.
-	 *
-	 * @since   11.1
-	 */
-	public static function loadRuleClass($type)
-	{
-		return self::loadClass('rule', $type);
-	}
-
-	/**
 	 * Load a class for one of the form's entities of a particular type.
 	 * Currently, it makes sense to use this method for the "field" and "rule" entities
 	 * (but you can support more entities in your subclass).
 	 *
-	 * @param   string  $entity  One of the form entities (field or rule).
-	 * @param   string  $type    Type of an entity.
+	 * @param   string $entity One of the form entities (field or rule).
+	 * @param   string $type   Type of an entity.
 	 *
 	 * @return  string|boolean  Class name on success or false otherwise.
 	 *
@@ -223,53 +178,11 @@ class JFormHelper
 	}
 
 	/**
-	 * Method to add a path to the list of field include paths.
-	 *
-	 * @param   mixed  $new  A path or array of paths to add.
-	 *
-	 * @return  array  The list of paths that have been added.
-	 *
-	 * @since   11.1
-	 */
-	public static function addFieldPath($new = null)
-	{
-		return self::addPath('field', $new);
-	}
-
-	/**
-	 * Method to add a path to the list of form include paths.
-	 *
-	 * @param   mixed  $new  A path or array of paths to add.
-	 *
-	 * @return  array  The list of paths that have been added.
-	 *
-	 * @since   11.1
-	 */
-	public static function addFormPath($new = null)
-	{
-		return self::addPath('form', $new);
-	}
-
-	/**
-	 * Method to add a path to the list of rule include paths.
-	 *
-	 * @param   mixed  $new  A path or array of paths to add.
-	 *
-	 * @return  array  The list of paths that have been added.
-	 *
-	 * @since   11.1
-	 */
-	public static function addRulePath($new = null)
-	{
-		return self::addPath('rule', $new);
-	}
-
-	/**
 	 * Method to add a path to the list of include paths for one of the form's entities.
 	 * Currently supported entities: field, rule and form. You are free to support your own in a subclass.
 	 *
-	 * @param   string  $entity  Form's entity name for which paths will be added.
-	 * @param   mixed   $new     A path or array of paths to add.
+	 * @param   string $entity Form's entity name for which paths will be added.
+	 * @param   mixed  $new    A path or array of paths to add.
 	 *
 	 * @return  array  The list of paths that have been added.
 	 *
@@ -313,5 +226,92 @@ class JFormHelper
 		}
 
 		return $paths;
+	}
+
+	/**
+	 * Method to load a form rule object given a type.
+	 *
+	 * @param   string  $type The rule type.
+	 * @param   boolean $new  Flag to toggle whether we should get a new instance of the object.
+	 *
+	 * @return  JFormRule|boolean  JFormRule object on success, false otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public static function loadRuleType($type, $new = true)
+	{
+		return self::loadType('rule', $type, $new);
+	}
+
+	/**
+	 * Attempt to import the JFormField class file if it isn't already imported.
+	 * You can use this method outside of JForm for loading a field for inheritance or composition.
+	 *
+	 * @param   string $type Type of a field whose class should be loaded.
+	 *
+	 * @return  string|boolean  Class name on success or false otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public static function loadFieldClass($type)
+	{
+		return self::loadClass('field', $type);
+	}
+
+	/**
+	 * Attempt to import the JFormRule class file if it isn't already imported.
+	 * You can use this method outside of JForm for loading a rule for inheritance or composition.
+	 *
+	 * @param   string $type Type of a rule whose class should be loaded.
+	 *
+	 * @return  string|boolean  Class name on success or false otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public static function loadRuleClass($type)
+	{
+		return self::loadClass('rule', $type);
+	}
+
+	/**
+	 * Method to add a path to the list of field include paths.
+	 *
+	 * @param   mixed $new A path or array of paths to add.
+	 *
+	 * @return  array  The list of paths that have been added.
+	 *
+	 * @since   11.1
+	 */
+	public static function addFieldPath($new = null)
+	{
+		return self::addPath('field', $new);
+	}
+
+	/**
+	 * Method to add a path to the list of form include paths.
+	 *
+	 * @param   mixed $new A path or array of paths to add.
+	 *
+	 * @return  array  The list of paths that have been added.
+	 *
+	 * @since   11.1
+	 */
+	public static function addFormPath($new = null)
+	{
+		return self::addPath('form', $new);
+	}
+
+	/**
+	 * Method to add a path to the list of rule include paths.
+	 *
+	 * @param   mixed $new A path or array of paths to add.
+	 *
+	 * @return  array  The list of paths that have been added.
+	 *
+	 * @since   11.1
+	 */
+	public static function addRulePath($new = null)
+	{
+		return self::addPath('rule', $new);
 	}
 }

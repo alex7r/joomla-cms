@@ -110,14 +110,14 @@ class JFormFieldModal_Category extends JFormField
 			. '&amp;extension=' . $extension
 			. '&amp;function=jSelectCategory_' . $this->id;
 
-		$linkCategory   = 'index.php?option=com_categories&amp;view=category&amp;layout=modal&amp;tmpl=component'
+		$linkCategory = 'index.php?option=com_categories&amp;view=category&amp;layout=modal&amp;tmpl=component'
 			. '&amp;task=category.edit'
 			. '&amp;function=jEditCategory_' . $value;
 
 		if (isset($this->element['language']))
 		{
 			$linkCategories .= '&amp;forcedLanguage=' . $this->element['language'];
-			$linkCategory   .= '&amp;forcedLanguage=' . $this->element['language'];
+			$linkCategory .= '&amp;forcedLanguage=' . $this->element['language'];
 		}
 
 		$urlSelect = $linkCategories . '&amp;' . JSession::getFormToken() . '=1';
@@ -195,14 +195,14 @@ class JFormFieldModal_Category extends JFormField
 			'bootstrap.renderModal',
 			'categorySelect' . $this->id . 'Modal',
 			array(
-				'title'       => JText::_('COM_CATEGORIES_SELECT_A_CATEGORY'),
-				'url'         => $urlSelect,
-				'height'      => '400px',
-				'width'       => '800px',
-				'bodyHeight'  => '70',
-				'modalWidth'  => '80',
-				'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">'
-						. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>',
+				'title'      => JText::_('COM_CATEGORIES_SELECT_A_CATEGORY'),
+				'url'        => $urlSelect,
+				'height'     => '400px',
+				'width'      => '800px',
+				'bodyHeight' => '70',
+				'modalWidth' => '80',
+				'footer'     => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">'
+					. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>',
 			)
 		);
 
@@ -221,14 +221,14 @@ class JFormFieldModal_Category extends JFormField
 				'bodyHeight'  => '70',
 				'modalWidth'  => '80',
 				'footer'      => '<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"'
-						. ' onclick="jQuery(\'#categoryEdit' . $value . 'Modal iframe\').contents().find(\'#closeBtn\').click();">'
-						. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
-						. '<button type="button" class="btn btn-primary" aria-hidden="true"'
-						. ' onclick="jQuery(\'#categoryEdit' . $value . 'Modal iframe\').contents().find(\'#saveBtn\').click();">'
-						. JText::_("JSAVE") . '</button>'
-						. '<button type="button" class="btn btn-success" aria-hidden="true"'
-						. ' onclick="jQuery(\'#categoryEdit' . $value . 'Modal iframe\').contents().find(\'#applyBtn\').click();">'
-						. JText::_("JAPPLY") . '</button>',
+					. ' onclick="jQuery(\'#categoryEdit' . $value . 'Modal iframe\').contents().find(\'#closeBtn\').click();">'
+					. JText::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
+					. '<button type="button" class="btn btn-primary" aria-hidden="true"'
+					. ' onclick="jQuery(\'#categoryEdit' . $value . 'Modal iframe\').contents().find(\'#saveBtn\').click();">'
+					. JText::_("JSAVE") . '</button>'
+					. '<button type="button" class="btn btn-success" aria-hidden="true"'
+					. ' onclick="jQuery(\'#categoryEdit' . $value . 'Modal iframe\').contents().find(\'#applyBtn\').click();">'
+					. JText::_("JAPPLY") . '</button>',
 			)
 		);
 

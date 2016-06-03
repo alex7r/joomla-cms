@@ -110,9 +110,9 @@ class JSession implements IteratorAggregate
 	/**
 	 * Constructor
 	 *
-	 * @param   string                    $store             The type of storage for the session.
-	 * @param   array                     $options           Optional parameters
-	 * @param   JSessionHandlerInterface  $handlerInterface  The session handler
+	 * @param   string                   $store            The type of storage for the session.
+	 * @param   array                    $options          Optional parameters
+	 * @param   JSessionHandlerInterface $handlerInterface The session handler
 	 *
 	 * @since   11.1
 	 */
@@ -143,7 +143,7 @@ class JSession implements IteratorAggregate
 	/**
 	 * Set additional session options
 	 *
-	 * @param   array  $options  List of parameter
+	 * @param   array $options List of parameter
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -184,9 +184,9 @@ class JSession implements IteratorAggregate
 	/**
 	 * Returns the global Session object, only creating it if it doesn't already exist.
 	 *
-	 * @param   string                    $store             The type of storage for the session.
-	 * @param   array                     $options           An array of configuration options.
-	 * @param   JSessionHandlerInterface  $handlerInterface  The session handler
+	 * @param   string                   $store            The type of storage for the session.
+	 * @param   array                    $options          An array of configuration options.
+	 * @param   JSessionHandlerInterface $handlerInterface The session handler
 	 *
 	 * @return  JSession  The Session object.
 	 *
@@ -207,7 +207,7 @@ class JSession implements IteratorAggregate
 	 *
 	 * Use in conjunction with JHtml::_('form.token') or JSession::getFormToken.
 	 *
-	 * @param   string  $method  The request method in which to look for the token key.
+	 * @param   string $method The request method in which to look for the token key.
 	 *
 	 * @return  boolean  True if found and valid, false otherwise.
 	 *
@@ -216,7 +216,7 @@ class JSession implements IteratorAggregate
 	public static function checkToken($method = 'post')
 	{
 		$token = self::getFormToken();
-		$app = JFactory::getApplication();
+		$app   = JFactory::getApplication();
 
 		if (!$app->input->$method->get($token, '', 'alnum'))
 		{
@@ -244,7 +244,7 @@ class JSession implements IteratorAggregate
 	/**
 	 * Method to determine a hash for anti-spoofing variable names
 	 *
-	 * @param   boolean  $forceNew  If true, force a new token to be created
+	 * @param   boolean $forceNew If true, force a new token to be created
 	 *
 	 * @return  string  Hashed var name
 	 *
@@ -265,7 +265,7 @@ class JSession implements IteratorAggregate
 	 * has been generated the system will check the post request to see if
 	 * it is present, if not it will invalidate the session.
 	 *
-	 * @param   boolean  $forceNew  If true, force a new token to be created
+	 * @param   boolean $forceNew If true, force a new token to be created
 	 *
 	 * @return  string  The session token
 	 *
@@ -286,9 +286,36 @@ class JSession implements IteratorAggregate
 	}
 
 	/**
+	 * Get data from the session store
+	 *
+	 * @param   string $name      Name of a variable
+	 * @param   mixed  $default   Default value of a variable if not set
+	 * @param   string $namespace Namespace to use, default to 'default'
+	 *
+	 * @return  mixed  Value of a variable
+	 *
+	 * @since   11.1
+	 */
+	public function get($name, $default = null, $namespace = 'default')
+	{
+		// Add prefix to namespace to avoid collisions
+		$namespace = '__' . $namespace;
+
+		if ($this->_state === 'destroyed')
+		{
+			// @TODO :: generated error here
+			$error = null;
+
+			return $error;
+		}
+
+		return $this->data->get($namespace . '.' . $name, $default);
+	}
+
+	/**
 	 * Create a token-string
 	 *
-	 * @param   integer  $length  Length of string
+	 * @param   integer $length Length of string
 	 *
 	 * @return  string  Generated token
 	 *
@@ -302,9 +329,9 @@ class JSession implements IteratorAggregate
 	/**
 	 * Set data into the session store.
 	 *
-	 * @param   string  $name       Name of a variable.
-	 * @param   mixed   $value      Value of a variable.
-	 * @param   string  $namespace  Namespace to use, default to 'default'.
+	 * @param   string $name      Name of a variable.
+	 * @param   mixed  $value     Value of a variable.
+	 * @param   string $namespace Namespace to use, default to 'default'.
 	 *
 	 * @return  mixed  Old value of a variable.
 	 *
@@ -389,7 +416,7 @@ class JSession implements IteratorAggregate
 	/**
 	 * Magic method to get read-only access to properties.
 	 *
-	 * @param   string  $name  Name of property to retrieve
+	 * @param   string $name Name of property to retrieve
 	 *
 	 * @return  mixed   The value of the property
 	 *
@@ -438,8 +465,8 @@ class JSession implements IteratorAggregate
 	 * Method to determine if a token exists in the session. If not the
 	 * session will be set to expired
 	 *
-	 * @param   string   $tCheck       Hashed token to be verified
-	 * @param   boolean  $forceExpire  If true, expires the session
+	 * @param   string  $tCheck      Hashed token to be verified
+	 * @param   boolean $forceExpire If true, expires the session
 	 *
 	 * @return  boolean
 	 *
@@ -462,33 +489,6 @@ class JSession implements IteratorAggregate
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get data from the session store
-	 *
-	 * @param   string  $name       Name of a variable
-	 * @param   mixed   $default    Default value of a variable if not set
-	 * @param   string  $namespace  Namespace to use, default to 'default'
-	 *
-	 * @return  mixed  Value of a variable
-	 *
-	 * @since   11.1
-	 */
-	public function get($name, $default = null, $namespace = 'default')
-	{
-		// Add prefix to namespace to avoid collisions
-		$namespace = '__' . $namespace;
-
-		if ($this->_state === 'destroyed')
-		{
-			// @TODO :: generated error here
-			$error = null;
-
-			return $error;
-		}
-
-		return $this->data->get($namespace . '.' . $name, $default);
 	}
 
 	/**
@@ -564,8 +564,8 @@ class JSession implements IteratorAggregate
 	/**
 	 * Check whether this session is currently created
 	 *
-	 * @param   JInput            $input       JInput object for the session to use.
-	 * @param   JEventDispatcher  $dispatcher  Dispatcher object for the session to use.
+	 * @param   JInput           $input      JInput object for the session to use.
+	 * @param   JEventDispatcher $dispatcher Dispatcher object for the session to use.
 	 *
 	 * @return  void.
 	 *
@@ -575,7 +575,7 @@ class JSession implements IteratorAggregate
 	{
 		// With the introduction of the handler class this variable is no longer required
 		// however we keep setting it for b/c
-		$this->_input      = $input;
+		$this->_input = $input;
 
 		// Nasty workaround to deal in a b/c way with JInput being required in the 3.4+ Handler class.
 		if ($this->_handler instanceof JSessionHandlerJoomla)
@@ -589,8 +589,8 @@ class JSession implements IteratorAggregate
 	/**
 	 * Unset data from the session store
 	 *
-	 * @param   string  $name       Name of variable
-	 * @param   string  $namespace  Namespace to use, default to 'default'
+	 * @param   string $name      Name of variable
+	 * @param   string $namespace Namespace to use, default to 'default'
 	 *
 	 * @return  mixed   The value from session or NULL if not set
 	 *
@@ -752,8 +752,8 @@ class JSession implements IteratorAggregate
 	/**
 	 * Check whether data exists in the session store
 	 *
-	 * @param   string  $name       Name of variable
-	 * @param   string  $namespace  Namespace to use, default to 'default'
+	 * @param   string $name      Name of variable
+	 * @param   string $namespace Namespace to use, default to 'default'
 	 *
 	 * @return  boolean  True if the variable exists
 	 *
@@ -782,7 +782,7 @@ class JSession implements IteratorAggregate
 	 *
 	 * If one check failed, session data has to be cleaned.
 	 *
-	 * @param   boolean  $restart  Reactivate session
+	 * @param   boolean $restart Reactivate session
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -819,7 +819,8 @@ class JSession implements IteratorAggregate
 
 		// Check for client address
 		if (in_array('fix_adress', $this->_security) && isset($_SERVER['REMOTE_ADDR'])
-			&& filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) !== false)
+			&& filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) !== false
+		)
 		{
 			$ip = $this->get('session.client.address');
 
@@ -974,7 +975,7 @@ class JSession implements IteratorAggregate
 	/**
 	 * Set the session handler
 	 *
-	 * @param   JSessionHandlerInterface  $handler  The session handler
+	 * @param   JSessionHandlerInterface $handler The session handler
 	 *
 	 * @return  void
 	 */

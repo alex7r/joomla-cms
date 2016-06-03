@@ -20,7 +20,7 @@ abstract class FOFStringUtils
 	 * Convert a string into a slug (alias), suitable for use in URLs. Please
 	 * note that transliteration suupport is rudimentary at this stage.
 	 *
-	 * @param   string  $value  A string to convert to slug
+	 * @param   string $value A string to convert to slug
 	 *
 	 * @return  string  The slug
 	 */
@@ -51,7 +51,7 @@ abstract class FOFStringUtils
 	 * Convert common norhern European languages' letters into plain ASCII. This
 	 * is a rudimentary transliteration.
 	 *
-	 * @param   string  $value  The value to convert to ASCII
+	 * @param   string $value The value to convert to ASCII
 	 *
 	 * @return  string  The converted string
 	 */
@@ -68,7 +68,7 @@ abstract class FOFStringUtils
 	/**
 	 * Convert a string to a boolean.
 	 *
-	 * @param   string  $string  The string.
+	 * @param   string $string The string.
 	 *
 	 * @return  boolean  The converted string
 	 */

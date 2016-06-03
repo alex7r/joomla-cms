@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -26,7 +26,7 @@ class FOFFormFieldModel extends FOFFormFieldList implements FOFFormField
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -72,8 +72,88 @@ class FOFFormFieldModel extends FOFFormFieldList implements FOFFormField
 		$class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
 
 		return '<span id="' . $this->id . '" ' . $class . '>' .
-			htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(), $this->value), ENT_COMPAT, 'UTF-8') .
-			'</span>';
+		htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(), $this->value), ENT_COMPAT, 'UTF-8') .
+		'</span>';
+	}
+
+	/**
+	 * Method to get the field options.
+	 *
+	 * @return  array  The field option objects.
+	 */
+	protected function getOptions()
+	{
+		$options = array();
+
+		// Initialize some field attributes.
+		$key             = $this->element['key_field'] ? (string) $this->element['key_field'] : 'value';
+		$value           = $this->element['value_field'] ? (string) $this->element['value_field'] : (string) $this->element['name'];
+		$translate       = $this->element['translate'] ? (string) $this->element['translate'] : false;
+		$applyAccess     = $this->element['apply_access'] ? (string) $this->element['apply_access'] : 'false';
+		$modelName       = (string) $this->element['model'];
+		$nonePlaceholder = (string) $this->element['none'];
+
+		if (!empty($nonePlaceholder))
+		{
+			$options[] = JHtml::_('select.option', null, JText::_($nonePlaceholder));
+		}
+
+		// Process field atrtibutes
+		$applyAccess = strtolower($applyAccess);
+		$applyAccess = in_array($applyAccess, array('yes', 'on', 'true', '1'));
+
+		// Explode model name into model name and prefix
+		$parts   = FOFInflector::explode($modelName);
+		$mName   = ucfirst(array_pop($parts));
+		$mPrefix = FOFInflector::implode($parts);
+
+		// Get the model object
+		$config = array('savestate' => 0);
+		$model  = FOFModel::getTmpInstance($mName, $mPrefix, $config);
+
+		if ($applyAccess)
+		{
+			$model->applyAccessFiltering();
+		}
+
+		// Process state variables
+		foreach ($this->element->children() as $stateoption)
+		{
+			// Only add <option /> elements.
+			if ($stateoption->getName() != 'state')
+			{
+				continue;
+			}
+
+			$stateKey   = (string) $stateoption['key'];
+			$stateValue = (string) $stateoption;
+
+			$model->setState($stateKey, $stateValue);
+		}
+
+		// Set the query and get the result list.
+		$items = $model->getItemList(true);
+
+		// Build the field options.
+		if (!empty($items))
+		{
+			foreach ($items as $item)
+			{
+				if ($translate == true)
+				{
+					$options[] = JHtml::_('select.option', $item->$key, JText::_($item->$value));
+				}
+				else
+				{
+					$options[] = JHtml::_('select.option', $item->$key, $item->$value);
+				}
+			}
+		}
+
+		// Merge any additional options in the XML definition.
+		$options = array_merge(parent::getOptions(), $options);
+
+		return $options;
 	}
 
 	/**
@@ -86,11 +166,11 @@ class FOFFormFieldModel extends FOFFormFieldList implements FOFFormField
 	 */
 	public function getRepeatable()
 	{
-		$class				= $this->id;
-		$format_string		= '';
-		$show_link			= false;
-		$link_url			= '';
-		$empty_replacement	= '';
+		$class             = $this->id;
+		$format_string     = '';
+		$show_link         = false;
+		$link_url          = '';
+		$empty_replacement = '';
 
 		// Get field parameters
 		if ($this->element['class'])
@@ -169,89 +249,9 @@ class FOFFormFieldModel extends FOFFormFieldList implements FOFFormField
 	}
 
 	/**
-	 * Method to get the field options.
-	 *
-	 * @return  array  The field option objects.
-	 */
-	protected function getOptions()
-	{
-		$options = array();
-
-		// Initialize some field attributes.
-		$key = $this->element['key_field'] ? (string) $this->element['key_field'] : 'value';
-		$value = $this->element['value_field'] ? (string) $this->element['value_field'] : (string) $this->element['name'];
-		$translate = $this->element['translate'] ? (string) $this->element['translate'] : false;
-		$applyAccess = $this->element['apply_access'] ? (string) $this->element['apply_access'] : 'false';
-		$modelName = (string) $this->element['model'];
-		$nonePlaceholder = (string) $this->element['none'];
-
-		if (!empty($nonePlaceholder))
-		{
-			$options[] = JHtml::_('select.option', null, JText::_($nonePlaceholder));
-		}
-
-		// Process field atrtibutes
-		$applyAccess = strtolower($applyAccess);
-		$applyAccess = in_array($applyAccess, array('yes', 'on', 'true', '1'));
-
-		// Explode model name into model name and prefix
-		$parts = FOFInflector::explode($modelName);
-		$mName = ucfirst(array_pop($parts));
-		$mPrefix = FOFInflector::implode($parts);
-
-		// Get the model object
-		$config = array('savestate' => 0);
-		$model = FOFModel::getTmpInstance($mName, $mPrefix, $config);
-
-		if ($applyAccess)
-		{
-			$model->applyAccessFiltering();
-		}
-
-		// Process state variables
-		foreach ($this->element->children() as $stateoption)
-		{
-			// Only add <option /> elements.
-			if ($stateoption->getName() != 'state')
-			{
-				continue;
-			}
-
-			$stateKey = (string) $stateoption['key'];
-			$stateValue = (string) $stateoption;
-
-			$model->setState($stateKey, $stateValue);
-		}
-
-		// Set the query and get the result list.
-		$items = $model->getItemList(true);
-
-		// Build the field options.
-		if (!empty($items))
-		{
-			foreach ($items as $item)
-			{
-				if ($translate == true)
-				{
-					$options[] = JHtml::_('select.option', $item->$key, JText::_($item->$value));
-				}
-				else
-				{
-					$options[] = JHtml::_('select.option', $item->$key, $item->$value);
-				}
-			}
-		}
-
-		// Merge any additional options in the XML definition.
-		$options = array_merge(parent::getOptions(), $options);
-
-		return $options;
-	}
-
-	/**
 	 * Replace string with tags that reference fields
 	 *
-	 * @param   string  $text  Text to process
+	 * @param   string $text Text to process
 	 *
 	 * @return  string         Text with tags replace
 	 */
@@ -263,7 +263,7 @@ class FOFFormFieldModel extends FOFFormFieldList implements FOFFormField
 		// the auto-incrementing numeric ID)
 		$keyfield = $this->item->getKeyName();
 		$replace  = $this->item->$keyfield;
-		$ret = str_replace('[ITEM:ID]', $replace, $ret);
+		$ret      = str_replace('[ITEM:ID]', $replace, $ret);
 
 		// Replace the [ITEMID] in the URL with the current Itemid parameter
 		$ret = str_replace('[ITEMID]', JFactory::getApplication()->input->getInt('Itemid', 0), $ret);
@@ -280,9 +280,9 @@ class FOFFormFieldModel extends FOFFormFieldList implements FOFFormField
 				$fieldname = $fielddata->column_name;
 			}
 
-			$search    = '[ITEM:' . strtoupper($fieldname) . ']';
-			$replace   = $this->item->$fieldname;
-			$ret  = str_replace($search, $replace, $ret);
+			$search  = '[ITEM:' . strtoupper($fieldname) . ']';
+			$replace = $this->item->$fieldname;
+			$ret     = str_replace($search, $replace, $ret);
 		}
 
 		return $ret;

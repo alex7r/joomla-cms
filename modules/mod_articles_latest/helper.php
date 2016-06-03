@@ -25,7 +25,7 @@ abstract class ModArticlesLatestHelper
 	/**
 	 * Retrieve a list of article
 	 *
-	 * @param   \Joomla\Registry\Registry  &$params  module parameters
+	 * @param   \Joomla\Registry\Registry &$params module parameters
 	 *
 	 * @return  mixed
 	 *
@@ -97,14 +97,14 @@ abstract class ModArticlesLatestHelper
 
 		// Set ordering
 		$order_map = array(
-			'm_dsc' => 'a.modified DESC, a.created',
+			'm_dsc'  => 'a.modified DESC, a.created',
 			'mc_dsc' => 'CASE WHEN (a.modified = ' . $db->quote($db->getNullDate()) . ') THEN a.created ELSE a.modified END',
-			'c_dsc' => 'a.created',
-			'p_dsc' => 'a.publish_up',
+			'c_dsc'  => 'a.created',
+			'p_dsc'  => 'a.publish_up',
 			'random' => $db->getQuery(true)->Rand(),
 		);
-		$ordering = JArrayHelper::getValue($order_map, $params->get('ordering'), 'a.publish_up');
-		$dir      = 'DESC';
+		$ordering  = JArrayHelper::getValue($order_map, $params->get('ordering'), 'a.publish_up');
+		$dir       = 'DESC';
 
 		$model->setState('list.ordering', $ordering);
 		$model->setState('list.direction', $dir);

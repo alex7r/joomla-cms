@@ -25,7 +25,7 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
 	 */
 	public function download()
 	{
-		$options['format'] = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
+		$options['format']    = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
 		$options['text_file'] = 'joomla_update.php';
 		JLog::addLogger($options, JLog::INFO, array('Update', 'databasequery', 'jerror'));
 		$user = JFactory::getUser();
@@ -35,9 +35,9 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
 
 		/** @var JoomlaupdateModelDefault $model */
 		$model = $this->getModel('Default');
-		$file = $model->download();
+		$file  = $model->download();
 
-		$message = null;
+		$message     = null;
 		$messageType = null;
 
 		if ($file)
@@ -49,7 +49,7 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
 		else
 		{
 			JFactory::getApplication()->setUserState('com_joomlaupdate.file', null);
-			$url = 'index.php?option=com_joomlaupdate';
+			$url     = 'index.php?option=com_joomlaupdate';
 			$message = JText::_('COM_JOOMLAUPDATE_VIEW_UPDATE_DOWNLOADFAILED');
 		}
 
@@ -92,7 +92,7 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
 	 */
 	public function install()
 	{
-		$options['format'] = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
+		$options['format']    = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
 		$options['text_file'] = 'joomla_update.php';
 		JLog::addLogger($options, JLog::INFO, array('Update', 'databasequery', 'jerror'));
 		JLog::add(JText::_('COM_JOOMLAUPDATE_UPDATE_LOG_INSTALL'), JLog::INFO, 'Update');
@@ -111,8 +111,8 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
 	/**
 	 * Method to display a view.
 	 *
-	 * @param   boolean  $cachable   If true, the view output will be cached
-	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean $cachable  If true, the view output will be cached
+	 * @param   array   $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  JoomlaupdateControllerUpdate  This object to support chaining.
 	 *
@@ -156,7 +156,7 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
 	 */
 	public function finalise()
 	{
-		$options['format'] = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
+		$options['format']    = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
 		$options['text_file'] = 'joomla_update.php';
 		JLog::addLogger($options, JLog::INFO, array('Update', 'databasequery', 'jerror'));
 		JLog::add(JText::_('COM_JOOMLAUPDATE_UPDATE_LOG_FINALISE'), JLog::INFO, 'Update');
@@ -180,7 +180,7 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
 	 */
 	public function cleanup()
 	{
-		$options['format'] = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
+		$options['format']    = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
 		$options['text_file'] = 'joomla_update.php';
 		JLog::addLogger($options, JLog::INFO, array('Update', 'databasequery', 'jerror'));
 		JLog::add(JText::_('COM_JOOMLAUPDATE_UPDATE_LOG_CLEANUP'), JLog::INFO, 'Update');
@@ -248,7 +248,7 @@ class JoomlaupdateControllerUpdate extends JControllerLegacy
 		}
 
 		$token = JSession::getFormToken();
-		$url = 'index.php?option=com_joomlaupdate&task=update.captive&' . $token . '=1';
+		$url   = 'index.php?option=com_joomlaupdate&task=update.captive&' . $token . '=1';
 		$this->setRedirect($url);
 	}
 

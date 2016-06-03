@@ -21,48 +21,15 @@ class NewsfeedsModelNewsfeed extends JModelItem
 	/**
 	 * Model context string.
 	 *
-	 * @var		string
+	 * @var        string
 	 * @since   1.6
 	 */
 	protected $_context = 'com_newsfeeds.newsfeed';
 
 	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication('site');
-
-		// Load state from the request.
-		$pk = $app->input->getInt('id');
-		$this->setState('newsfeed.id', $pk);
-
-		$offset = $app->input->get('limitstart', 0, 'uint');
-		$this->setState('list.offset', $offset);
-
-		// Load the parameters.
-		$params = $app->getParams();
-		$this->setState('params', $params);
-
-		$user = JFactory::getUser();
-
-		if ((!$user->authorise('core.edit.state', 'com_newsfeeds')) && (!$user->authorise('core.edit', 'com_newsfeeds')))
-		{
-			$this->setState('filter.published', 1);
-			$this->setState('filter.archived', 2);
-		}
-	}
-
-	/**
 	 * Method to get newsfeed data.
 	 *
-	 * @param   integer  $pk  The id of the newsfeed.
+	 * @param   integer $pk The id of the newsfeed.
 	 *
 	 * @return  mixed  Menu item data object on success, false on failure.
 	 *
@@ -81,7 +48,7 @@ class NewsfeedsModelNewsfeed extends JModelItem
 		{
 			try
 			{
-				$db = $this->getDbo();
+				$db    = $this->getDbo();
 				$query = $db->getQuery(true)
 					->select($this->getState('item.select', 'a.*'))
 					->from('#__newsfeeds AS a');
@@ -97,16 +64,15 @@ class NewsfeedsModelNewsfeed extends JModelItem
 				// Join over the categories to get parent category titles
 				$query->select('parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias')
 					->join('LEFT', '#__categories as parent ON parent.id = c.parent_id')
-
 					->where('a.id = ' . (int) $pk);
 
 				// Filter by start and end dates.
 				$nullDate = $db->quote($db->getNullDate());
-				$nowDate = $db->quote(JFactory::getDate()->toSql());
+				$nowDate  = $db->quote(JFactory::getDate()->toSql());
 
 				// Filter by published state.
 				$published = $this->getState('filter.published');
-				$archived = $this->getState('filter.archived');
+				$archived  = $this->getState('filter.archived');
 
 				if (is_numeric($published))
 				{
@@ -172,7 +138,7 @@ class NewsfeedsModelNewsfeed extends JModelItem
 	/**
 	 * Increment the hit counter for the newsfeed.
 	 *
-	 * @param   int  $pk  Optional primary key of the item to increment.
+	 * @param   int $pk Optional primary key of the item to increment.
 	 *
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 *
@@ -180,7 +146,7 @@ class NewsfeedsModelNewsfeed extends JModelItem
 	 */
 	public function hit($pk = 0)
 	{
-		$input = JFactory::getApplication()->input;
+		$input    = JFactory::getApplication()->input;
 		$hitcount = $input->getInt('hitcount', 1);
 
 		if ($hitcount)
@@ -193,5 +159,38 @@ class NewsfeedsModelNewsfeed extends JModelItem
 		}
 
 		return true;
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('site');
+
+		// Load state from the request.
+		$pk = $app->input->getInt('id');
+		$this->setState('newsfeed.id', $pk);
+
+		$offset = $app->input->get('limitstart', 0, 'uint');
+		$this->setState('list.offset', $offset);
+
+		// Load the parameters.
+		$params = $app->getParams();
+		$this->setState('params', $params);
+
+		$user = JFactory::getUser();
+
+		if ((!$user->authorise('core.edit.state', 'com_newsfeeds')) && (!$user->authorise('core.edit', 'com_newsfeeds')))
+		{
+			$this->setState('filter.published', 1);
+			$this->setState('filter.archived', 2);
+		}
 	}
 }

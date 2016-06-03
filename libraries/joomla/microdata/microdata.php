@@ -83,8 +83,8 @@ class JMicrodata
 	/**
 	 * Initialize the class and setup the default $Type
 	 *
-	 * @param   string   $type  Optional, fallback to 'Thing' Type
-	 * @param   boolean  $flag  Enable or disable the library output
+	 * @param   string  $type Optional, fallback to 'Thing' Type
+	 * @param   boolean $flag Enable or disable the library output
 	 *
 	 * @since   3.2
 	 */
@@ -117,6 +117,23 @@ class JMicrodata
 	}
 
 	/**
+	 * Load all available Types and Properties from the http://schema.org vocabulary contained in the types.json file
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected static function loadTypes()
+	{
+		// Load the JSON
+		if (!static::$types)
+		{
+			$path          = JPATH_PLATFORM . '/joomla/microdata/types.json';
+			static::$types = json_decode(file_get_contents($path), true);
+		}
+	}
+
+	/**
 	 * Return an array with all available Types from the http://schema.org vocabulary
 	 *
 	 * @return  array
@@ -133,7 +150,7 @@ class JMicrodata
 	/**
 	 * Enable or Disable the library output
 	 *
-	 * @param   boolean  $flag  Enable or disable the library output
+	 * @param   boolean $flag Enable or disable the library output
 	 *
 	 * @return  JMicrodata  Instance of $this
 	 *
@@ -173,7 +190,7 @@ class JMicrodata
 	/**
 	 * Set a new http://schema.org Type
 	 *
-	 * @param   string  $type  The $Type to be setup
+	 * @param   string $type The $Type to be setup
 	 *
 	 * @return  JMicrodata  Instance of $this
 	 *
@@ -201,7 +218,7 @@ class JMicrodata
 	/**
 	 * Setup a $Property
 	 *
-	 * @param   string  $property  The Property
+	 * @param   string $property The Property
 	 *
 	 * @return  JMicrodata  Instance of $this
 	 *
@@ -229,7 +246,7 @@ class JMicrodata
 	/**
 	 * Return the sanitized $Property
 	 *
-	 * @param   string  $property  The Property to sanitize
+	 * @param   string $property The Property to sanitize
 	 *
 	 * @return  string
 	 *
@@ -243,8 +260,8 @@ class JMicrodata
 	/**
 	 * Recursive function, control if the given Type has the given Property
 	 *
-	 * @param   string  $type      The Type where to check
-	 * @param   string  $property  The Property to check
+	 * @param   string $type     The Type where to check
+	 * @param   string $property The Property to check
 	 *
 	 * @return  boolean
 	 *
@@ -277,7 +294,7 @@ class JMicrodata
 	/**
 	 * Control if the given Type class is available
 	 *
-	 * @param   string  $type  The Type to check
+	 * @param   string $type The Type to check
 	 *
 	 * @return  boolean
 	 *
@@ -288,23 +305,6 @@ class JMicrodata
 		static::loadTypes();
 
 		return (array_key_exists($type, static::$types)) ? true : false;
-	}
-
-	/**
-	 * Load all available Types and Properties from the http://schema.org vocabulary contained in the types.json file
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected static function loadTypes()
-	{
-		// Load the JSON
-		if (!static::$types)
-		{
-			$path = JPATH_PLATFORM . '/joomla/microdata/types.json';
-			static::$types = json_decode(file_get_contents($path), true);
-		}
 	}
 
 	/**
@@ -322,8 +322,8 @@ class JMicrodata
 	/**
 	 * Setup a Human content or content for the Machines
 	 *
-	 * @param   string  $content         The human content or machine content to be used
-	 * @param   string  $machineContent  The machine content
+	 * @param   string $content        The human content or machine content to be used
+	 * @param   string $machineContent The machine content
 	 *
 	 * @return  JMicrodata  Instance of $this
 	 *
@@ -331,7 +331,7 @@ class JMicrodata
 	 */
 	public function content($content, $machineContent = null)
 	{
-		$this->content = $content;
+		$this->content        = $content;
 		$this->machineContent = $machineContent;
 
 		return $this;
@@ -364,8 +364,8 @@ class JMicrodata
 	/**
 	 * Setup a Fallback Type and Property
 	 *
-	 * @param   string  $type      The Fallback Type
-	 * @param   string  $property  The Fallback Property
+	 * @param   string $type     The Fallback Type
+	 * @param   string $property The Fallback Property
 	 *
 	 * @return  JMicrodata  Instance of $this
 	 *
@@ -403,7 +403,7 @@ class JMicrodata
 	/**
 	 * Return the sanitized $Type
 	 *
-	 * @param   string  $type  The Type to sanitize
+	 * @param   string $type The Type to sanitize
 	 *
 	 * @return  string
 	 *
@@ -443,8 +443,8 @@ class JMicrodata
 	 * It checks if the Type, Property are available, if not check for a Fallback,
 	 * then reset all params for the next use and return the HTML.
 	 *
-	 * @param   string   $displayType  Optional, 'inline', available options ['inline'|'span'|'div'|meta]
-	 * @param   boolean  $emptyOutput  Return an empty string if the library output is disabled and there is a $content value
+	 * @param   string  $displayType Optional, 'inline', available options ['inline'|'span'|'div'|meta]
+	 * @param   boolean $emptyOutput Return an empty string if the library output is disabled and there is a $content value
 	 *
 	 * @return  string
 	 *
@@ -502,7 +502,7 @@ class JMicrodata
 				{
 					case 'nested':
 						// Retrieve the expected 'nested' Type of the $Property
-						$nestedType = static::getExpectedTypes($this->type, $this->property);
+						$nestedType     = static::getExpectedTypes($this->type, $this->property);
 						$nestedProperty = '';
 
 						// If there is a Fallback Type then probably it could be the expectedType
@@ -682,10 +682,10 @@ class JMicrodata
 	/**
 	 * Return Microdata semantics in a `<span>` tag.
 	 *
-	 * @param   string   $content   The human content
-	 * @param   string   $property  Optional, the human content to display
-	 * @param   string   $scope     Optional, the Type scope to display
-	 * @param   boolean  $invert    Optional, default = false, invert the $scope with the $property
+	 * @param   string  $content  The human content
+	 * @param   string  $property Optional, the human content to display
+	 * @param   string  $scope    Optional, the Type scope to display
+	 * @param   boolean $invert   Optional, default = false, invert the $scope with the $property
 	 *
 	 * @return  string
 	 *
@@ -699,11 +699,11 @@ class JMicrodata
 	/**
 	 * Return Microdata semantics in a specified tag.
 	 *
-	 * @param   string   $tag       The HTML tag
-	 * @param   string   $content   The human content
-	 * @param   string   $property  Optional, the human content to display
-	 * @param   string   $scope     Optional, the Type scope to display
-	 * @param   boolean  $invert    Optional, default = false, invert the $scope with the $property
+	 * @param   string  $tag      The HTML tag
+	 * @param   string  $content  The human content
+	 * @param   string  $property Optional, the human content to display
+	 * @param   string  $scope    Optional, the Type scope to display
+	 * @param   boolean $invert   Optional, default = false, invert the $scope with the $property
 	 *
 	 * @return  string
 	 *
@@ -748,7 +748,7 @@ class JMicrodata
 	/**
 	 * Return the HTML Property
 	 *
-	 * @param   string  $property  The Property to process
+	 * @param   string $property The Property to process
 	 *
 	 * @return  string
 	 *
@@ -762,7 +762,7 @@ class JMicrodata
 	/**
 	 * Return the HTML Scope
 	 *
-	 * @param   string  $scope  The Scope to process
+	 * @param   string $scope The Scope to process
 	 *
 	 * @return  string
 	 *
@@ -776,10 +776,10 @@ class JMicrodata
 	/**
 	 * Return Microdata semantics in a `<div>` tag.
 	 *
-	 * @param   string   $content   The human content
-	 * @param   string   $property  Optional, the human content to display
-	 * @param   string   $scope     Optional, the Type scope to display
-	 * @param   boolean  $invert    Optional, default = false, invert the $scope with the $property
+	 * @param   string  $content  The human content
+	 * @param   string  $property Optional, the human content to display
+	 * @param   string  $scope    Optional, the Type scope to display
+	 * @param   boolean $invert   Optional, default = false, invert the $scope with the $property
 	 *
 	 * @return  string
 	 *
@@ -793,10 +793,10 @@ class JMicrodata
 	/**
 	 * Return Microdata semantics in a `<meta>` tag with content for machines.
 	 *
-	 * @param   string   $content   The machine content to display
-	 * @param   string   $property  The Property
-	 * @param   string   $scope     Optional, the Type scope to display
-	 * @param   boolean  $invert    Optional, default = false, invert the $scope with the $property
+	 * @param   string  $content  The machine content to display
+	 * @param   string  $property The Property
+	 * @param   string  $scope    Optional, the Type scope to display
+	 * @param   boolean $invert   Optional, default = false, invert the $scope with the $property
 	 *
 	 * @return  string
 	 *
@@ -814,8 +814,8 @@ class JMicrodata
 	 * nested -> itemprop="director" itemscope itemtype="https://schema.org/Person"
 	 * meta   -> `<meta itemprop="datePublished" content="1991-05-01">`
 	 *
-	 * @param   string  $type      The Type where to find the Property
-	 * @param   string  $property  The Property to process
+	 * @param   string $type     The Type where to find the Property
+	 * @param   string $property The Property to process
 	 *
 	 * @return  string
 	 *
@@ -847,8 +847,8 @@ class JMicrodata
 	/**
 	 * Return the expected Types of the given Property
 	 *
-	 * @param   string  $type      The Type to process
-	 * @param   string  $property  The Property to process
+	 * @param   string $type     The Type to process
+	 * @param   string $property The Property to process
 	 *
 	 * @return  array
 	 *

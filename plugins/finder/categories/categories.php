@@ -79,8 +79,8 @@ class PlgFinderCategories extends FinderIndexerAdapter
 	/**
 	 * Method to remove the link information for items that have been deleted.
 	 *
-	 * @param   string  $context  The context of the action being performed.
-	 * @param   JTable  $table    A JTable object containing the record to be deleted
+	 * @param   string $context The context of the action being performed.
+	 * @param   JTable $table   A JTable object containing the record to be deleted
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -111,9 +111,9 @@ class PlgFinderCategories extends FinderIndexerAdapter
 	 * Reindexes the link information for a category that has been saved.
 	 * It also makes adjustments if the access level of the category has changed.
 	 *
-	 * @param   string   $context  The context of the category passed to the plugin.
-	 * @param   JTable   $row      A JTable object.
-	 * @param   boolean  $isNew    True if the category has just been created.
+	 * @param   string  $context The context of the category passed to the plugin.
+	 * @param   JTable  $row     A JTable object.
+	 * @param   boolean $isNew   True if the category has just been created.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -149,9 +149,9 @@ class PlgFinderCategories extends FinderIndexerAdapter
 	 * Smart Search before content save method.
 	 * This event is fired before the data is actually saved.
 	 *
-	 * @param   string   $context  The context of the category passed to the plugin.
-	 * @param   JTable   $row      A JTable object.
-	 * @param   boolean  $isNew    True if the category is just about to be created.
+	 * @param   string  $context The context of the category passed to the plugin.
+	 * @param   JTable  $row     A JTable object.
+	 * @param   boolean $isNew   True if the category is just about to be created.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -179,9 +179,9 @@ class PlgFinderCategories extends FinderIndexerAdapter
 	 * from outside the edit screen. This is fired when the item is published,
 	 * unpublished, archived, or unarchived from the list view.
 	 *
-	 * @param   string   $context  The context for the category passed to the plugin.
-	 * @param   array    $pks      An array of primary key ids of the category that has changed state.
-	 * @param   integer  $value    The value of the state that the category has been changed to.
+	 * @param   string  $context The context for the category passed to the plugin.
+	 * @param   array   $pks     An array of primary key ids of the category that has changed state.
+	 * @param   integer $value   The value of the state that the category has been changed to.
 	 *
 	 * @return  void
 	 *
@@ -231,10 +231,31 @@ class PlgFinderCategories extends FinderIndexerAdapter
 	}
 
 	/**
+	 * Method to get a SQL query to load the published and access states for
+	 * a category and its parents.
+	 *
+	 * @return  JDatabaseQuery  A database object.
+	 *
+	 * @since   2.5
+	 */
+	protected function getStateQuery()
+	{
+		$query = $this->db->getQuery(true)
+			->select($this->db->quoteName('a.id'))
+			->select($this->db->quoteName('a.parent_id'))
+			->select('a.' . $this->state_field . ' AS state, c.published AS cat_state')
+			->select('a.access, c.access AS cat_access')
+			->from($this->db->quoteName('#__categories') . ' AS a')
+			->join('LEFT', '#__categories AS c ON c.id = a.parent_id');
+
+		return $query;
+	}
+
+	/**
 	 * Method to index an item. The item must be a FinderIndexerResult object.
 	 *
-	 * @param   FinderIndexerResult  $item    The item to index as an FinderIndexerResult object.
-	 * @param   string               $format  The item format.  Not used.
+	 * @param   FinderIndexerResult $item   The item to index as an FinderIndexerResult object.
+	 * @param   string              $format The item format.  Not used.
 	 *
 	 * @return  void
 	 *
@@ -349,7 +370,7 @@ class PlgFinderCategories extends FinderIndexerAdapter
 	/**
 	 * Method to get the SQL query used to retrieve the list of content items.
 	 *
-	 * @param   mixed  $query  A JDatabaseQuery object or null.
+	 * @param   mixed $query A JDatabaseQuery object or null.
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *
@@ -377,27 +398,6 @@ class PlgFinderCategories extends FinderIndexerAdapter
 		$query->select($case_when_item_alias)
 			->from('#__categories AS a')
 			->where($db->quoteName('a.id') . ' > 1');
-
-		return $query;
-	}
-
-	/**
-	 * Method to get a SQL query to load the published and access states for
-	 * a category and its parents.
-	 *
-	 * @return  JDatabaseQuery  A database object.
-	 *
-	 * @since   2.5
-	 */
-	protected function getStateQuery()
-	{
-		$query = $this->db->getQuery(true)
-			->select($this->db->quoteName('a.id'))
-			->select($this->db->quoteName('a.parent_id'))
-			->select('a.' . $this->state_field . ' AS state, c.published AS cat_state')
-			->select('a.access, c.access AS cat_access')
-			->from($this->db->quoteName('#__categories') . ' AS a')
-			->join('LEFT', '#__categories AS c ON c.id = a.parent_id');
 
 		return $query;
 	}

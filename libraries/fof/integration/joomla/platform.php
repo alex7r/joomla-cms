@@ -30,34 +30,34 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 	 */
 	public function __construct()
 	{
-		$this->name = 'joomla';
+		$this->name              = 'joomla';
 		$this->humanReadableName = 'Joomla!';
-		$this->version = defined('JVERSION') ? JVERSION : '0.0';
+		$this->version           = defined('JVERSION') ? JVERSION : '0.0';
 	}
 
-    /**
-     * Checks if the current script is run inside a valid CMS execution
-     *
-     * @see FOFPlatformInterface::checkExecution()
-     *
-     * @return bool
-     */
-    public function checkExecution()
-    {
-        return defined('_JEXEC');
-    }
+	/**
+	 * Checks if the current script is run inside a valid CMS execution
+	 *
+	 * @see FOFPlatformInterface::checkExecution()
+	 *
+	 * @return bool
+	 */
+	public function checkExecution()
+	{
+		return defined('_JEXEC');
+	}
 
-    public function raiseError($code, $message)
-    {
-        if (version_compare($this->version, '3.0', 'ge'))
-        {
-            throw new Exception($message, $code);
-        }
-        else
-        {
-            return JError::raiseError($code, $message);
-        }
-    }
+	public function raiseError($code, $message)
+	{
+		if (version_compare($this->version, '3.0', 'ge'))
+		{
+			throw new Exception($message, $code);
+		}
+		else
+		{
+			return JError::raiseError($code, $message);
+		}
+	}
 
 	/**
 	 * Is this platform enabled?
@@ -114,13 +114,76 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 	}
 
 	/**
+	 * Returns absolute path to directories used by the CMS.
+	 *
+	 * @see FOFPlatformInterface::getPlatformBaseDirs()
+	 *
+	 * @return  array  A hash array with keys root, public, admin, tmp and log.
+	 */
+	public function getPlatformBaseDirs()
+	{
+		return array(
+			'root'   => JPATH_ROOT,
+			'public' => JPATH_SITE,
+			'admin'  => JPATH_ADMINISTRATOR,
+			'tmp'    => JFactory::getConfig()->get('tmp_dir'),
+			'log'    => JFactory::getConfig()->get('log_dir')
+		);
+	}
+
+	/**
+	 * Returns the base (root) directories for a given component.
+	 *
+	 * @param   string $component   The name of the component. For Joomla! this
+	 *                              is something like "com_example"
+	 *
+	 * @see FOFPlatformInterface::getComponentBaseDirs()
+	 *
+	 * @return  array  A hash array with keys main, alt, site and admin.
+	 */
+	public function getComponentBaseDirs($component)
+	{
+		if ($this->isFrontend())
+		{
+			$mainPath = JPATH_SITE . '/components/' . $component;
+			$altPath  = JPATH_ADMINISTRATOR . '/components/' . $component;
+		}
+		else
+		{
+			$mainPath = JPATH_ADMINISTRATOR . '/components/' . $component;
+			$altPath  = JPATH_SITE . '/components/' . $component;
+		}
+
+		return array(
+			'main'  => $mainPath,
+			'alt'   => $altPath,
+			'site'  => JPATH_SITE . '/components/' . $component,
+			'admin' => JPATH_ADMINISTRATOR . '/components/' . $component,
+		);
+	}
+
+	/**
+	 * Is this the public section of the component?
+	 *
+	 * @see FOFPlatformInterface::isFrontend()
+	 *
+	 * @return  boolean
+	 */
+	public function isFrontend()
+	{
+		list ($isCli, $isAdmin) = $this->isCliAdmin();
+
+		return !$isAdmin && !$isCli;
+	}
+
+	/**
 	 * Main function to detect if we're running in a CLI environment and we're admin
 	 *
 	 * @return  array  isCLI and isAdmin. It's not an associtive array, so we can use list.
 	 */
 	protected function isCliAdmin()
 	{
-		static $isCLI   = null;
+		static $isCLI = null;
 		static $isAdmin = null;
 
 		if (is_null($isCLI) && is_null($isAdmin))
@@ -133,7 +196,7 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 				}
 				else
 				{
-                    $app = JFactory::getApplication();
+					$app   = JFactory::getApplication();
 					$isCLI = $app instanceof JException || $app instanceof JApplicationCli;
 				}
 			}
@@ -155,65 +218,16 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 		return array($isCLI, $isAdmin);
 	}
 
-    /**
-     * Returns absolute path to directories used by the CMS.
-     *
-     * @see FOFPlatformInterface::getPlatformBaseDirs()
-     *
-     * @return  array  A hash array with keys root, public, admin, tmp and log.
-     */
-    public function getPlatformBaseDirs()
-    {
-        return array(
-            'root'   => JPATH_ROOT,
-            'public' => JPATH_SITE,
-            'admin'  => JPATH_ADMINISTRATOR,
-            'tmp'    => JFactory::getConfig()->get('tmp_dir'),
-            'log'    => JFactory::getConfig()->get('log_dir')
-        );
-    }
-
-	/**
-	 * Returns the base (root) directories for a given component.
-	 *
-	 * @param   string  $component  The name of the component. For Joomla! this
-	 *                              is something like "com_example"
-	 *
-	 * @see FOFPlatformInterface::getComponentBaseDirs()
-	 *
-	 * @return  array  A hash array with keys main, alt, site and admin.
-	 */
-	public function getComponentBaseDirs($component)
-	{
-		if ($this->isFrontend())
-		{
-			$mainPath	= JPATH_SITE . '/components/' . $component;
-			$altPath	= JPATH_ADMINISTRATOR . '/components/' . $component;
-		}
-		else
-		{
-			$mainPath	= JPATH_ADMINISTRATOR . '/components/' . $component;
-			$altPath	= JPATH_SITE . '/components/' . $component;
-		}
-
-		return array(
-			'main'	=> $mainPath,
-			'alt'	=> $altPath,
-			'site'	=> JPATH_SITE . '/components/' . $component,
-			'admin'	=> JPATH_ADMINISTRATOR . '/components/' . $component,
-		);
-	}
-
 	/**
 	 * Return a list of the view template paths for this component.
 	 *
-	 * @param   string   $component  The name of the component. For Joomla! this
+	 * @param   string  $component   The name of the component. For Joomla! this
 	 *                               is something like "com_example"
-	 * @param   string   $view       The name of the view you're looking a
+	 * @param   string  $view        The name of the view you're looking a
 	 *                               template for
-	 * @param   string   $layout     The layout name to load, e.g. 'default'
-	 * @param   string   $tpl        The sub-template name to load (null by default)
-	 * @param   boolean  $strict     If true, only the specified layout will be searched for.
+	 * @param   string  $layout      The layout name to load, e.g. 'default'
+	 * @param   string  $tpl         The sub-template name to load (null by default)
+	 * @param   boolean $strict      If true, only the specified layout will be searched for.
 	 *                               Otherwise we'll fall back to the 'default' layout if the
 	 *                               specified layout is not found.
 	 *
@@ -257,6 +271,20 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 	}
 
 	/**
+	 * Is this the administrative section of the component?
+	 *
+	 * @see FOFPlatformInterface::isBackend()
+	 *
+	 * @return  boolean
+	 */
+	public function isBackend()
+	{
+		list ($isCli, $isAdmin) = $this->isCliAdmin();
+
+		return $isAdmin && !$isCli;
+	}
+
+	/**
 	 * Get application-specific suffixes to use with template paths. This allows
 	 * you to look for view template overrides based on the application version.
 	 *
@@ -264,10 +292,10 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 	 */
 	public function getTemplateSuffixes()
 	{
-		$jversion = new JVersion;
+		$jversion     = new JVersion;
 		$versionParts = explode('.', $jversion->RELEASE);
 		$majorVersion = array_shift($versionParts);
-		$suffixes = array(
+		$suffixes     = array(
 			'.j' . str_replace('.', '', $jversion->getHelpVersion()),
 			'.j' . $majorVersion,
 		);
@@ -281,8 +309,8 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 	 * files instead of the regular component directorues. If the application
 	 * does not have such a thing as template overrides return an empty string.
 	 *
-	 * @param   string   $component  The name of the component for which to fetch the overrides
-	 * @param   boolean  $absolute   Should I return an absolute or relative path?
+	 * @param   string  $component The name of the component for which to fetch the overrides
+	 * @param   boolean $absolute  Should I return an absolute or relative path?
 	 *
 	 * @return  string  The path to the template overrides directory
 	 */
@@ -324,7 +352,7 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 	/**
 	 * Load the translation files for a given component.
 	 *
-	 * @param   string  $component  The name of the component. For Joomla! this
+	 * @param   string $component   The name of the component. For Joomla! this
 	 *                              is something like "com_example"
 	 *
 	 * @see FOFPlatformInterface::loadTranslations()
@@ -352,7 +380,7 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 	/**
 	 * Authorise access to the component in the back-end.
 	 *
-	 * @param   string  $component  The name of the component.
+	 * @param   string $component The name of the component.
 	 *
 	 * @see FOFPlatformInterface::authorizeAdmin()
 	 *
@@ -366,28 +394,14 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 			$user = JFactory::getUser();
 
 			if (!$user->authorise('core.manage', $component)
-				&& !$user->authorise('core.admin', $component))
+				&& !$user->authorise('core.admin', $component)
+			)
 			{
 				return false;
 			}
 		}
 
 		return true;
-	}
-
-	/**
-	 * Return a user object.
-	 *
-	 * @param   integer  $id  The user ID to load. Skip or use null to retrieve
-	 *                        the object for the currently logged in user.
-	 *
-	 * @see FOFPlatformInterface::getUser()
-	 *
-	 * @return  JUser  The JUser object for the specified user
-	 */
-	public function getUser($id = null)
-	{
-		return JFactory::getUser($id);
 	}
 
 	/**
@@ -416,46 +430,60 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 		return $document;
 	}
 
-    /**
-     * Returns an object to handle dates
-     *
-     * @param   mixed   $time       The initial time
-     * @param   null    $tzOffest   The timezone offset
-     * @param   bool    $locale     Should I try to load a specific class for current language?
-     *
-     * @return  JDate object
-     */
-    public function getDate($time = 'now', $tzOffest = null, $locale = true)
-    {
-        if($locale)
-        {
-            return JFactory::getDate($time, $tzOffest);
-        }
-        else
-        {
-            return new JDate($time, $tzOffest);
-        }
-    }
+	/**
+	 * Is this a component running in a CLI application?
+	 *
+	 * @see FOFPlatformInterface::isCli()
+	 *
+	 * @return  boolean
+	 */
+	public function isCli()
+	{
+		list ($isCli, $isAdmin) = $this->isCliAdmin();
 
-    public function getLanguage()
-    {
-        return JFactory::getLanguage();
-    }
+		return !$isAdmin && $isCli;
+	}
 
-    public function getDbo()
-    {
-        return JFactory::getDbo();
-    }
+	/**
+	 * Returns an object to handle dates
+	 *
+	 * @param   mixed $time     The initial time
+	 * @param   null  $tzOffest The timezone offset
+	 * @param   bool  $locale   Should I try to load a specific class for current language?
+	 *
+	 * @return  JDate object
+	 */
+	public function getDate($time = 'now', $tzOffest = null, $locale = true)
+	{
+		if ($locale)
+		{
+			return JFactory::getDate($time, $tzOffest);
+		}
+		else
+		{
+			return new JDate($time, $tzOffest);
+		}
+	}
+
+	public function getLanguage()
+	{
+		return JFactory::getLanguage();
+	}
+
+	public function getDbo()
+	{
+		return JFactory::getDbo();
+	}
 
 	/**
 	 * This method will try retrieving a variable from the request (input) data.
 	 *
-	 * @param   string    $key           The user state key for the variable
-	 * @param   string    $request       The request variable name for the variable
-	 * @param   FOFInput  $input         The FOFInput object with the request (input) data
-	 * @param   mixed     $default       The default value. Default: null
-	 * @param   string    $type          The filter type for the variable data. Default: none (no filtering)
-	 * @param   boolean   $setUserState  Should I set the user state with the fetched value?
+	 * @param   string   $key          The user state key for the variable
+	 * @param   string   $request      The request variable name for the variable
+	 * @param   FOFInput $input        The FOFInput object with the request (input) data
+	 * @param   mixed    $default      The default value. Default: null
+	 * @param   string   $type         The filter type for the variable data. Default: none (no filtering)
+	 * @param   boolean  $setUserState Should I set the user state with the fetched value?
 	 *
 	 * @see FOFPlatformInterface::getUserStateFromRequest()
 	 *
@@ -505,63 +533,10 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 	}
 
 	/**
-	 * Load plugins of a specific type. Obviously this seems to only be required
-	 * in the Joomla! CMS.
-	 *
-	 * @param   string  $type  The type of the plugins to be loaded
-	 *
-	 * @see FOFPlatformInterface::importPlugin()
-	 *
-	 * @return void
-	 */
-	public function importPlugin($type)
-	{
-		if (!$this->isCli())
-		{
-            JLoader::import('joomla.plugin.helper');
-			JPluginHelper::importPlugin($type);
-		}
-	}
-
-	/**
-	 * Execute plugins (system-level triggers) and fetch back an array with
-	 * their return values.
-	 *
-	 * @param   string  $event  The event (trigger) name, e.g. onBeforeScratchMyEar
-	 * @param   array   $data   A hash array of data sent to the plugins as part of the trigger
-	 *
-	 * @see FOFPlatformInterface::runPlugins()
-	 *
-	 * @return  array  A simple array containing the results of the plugins triggered
-	 */
-	public function runPlugins($event, $data)
-	{
-		if (!$this->isCli())
-		{
-			// IMPORTANT: DO NOT REPLACE THIS INSTANCE OF JDispatcher WITH ANYTHING ELSE. WE NEED JOOMLA!'S PLUGIN EVENT
-			// DISPATCHER HERE, NOT OUR GENERIC EVENTS DISPATCHER
-			if (version_compare($this->version, '3.0', 'ge'))
-			{
-				$dispatcher = JEventDispatcher::getInstance();
-			}
-			else
-			{
-				$dispatcher = JDispatcher::getInstance();
-			}
-
-			return $dispatcher->trigger($event, $data);
-		}
-		else
-		{
-			return array();
-		}
-	}
-
-	/**
 	 * Perform an ACL check.
 	 *
-	 * @param   string  $action     The ACL privilege to check, e.g. core.edit
-	 * @param   string  $assetname  The asset name to check, typically the component's name
+	 * @param   string $action    The ACL privilege to check, e.g. core.edit
+	 * @param   string $assetname The asset name to check, typically the component's name
 	 *
 	 * @see FOFPlatformInterface::authorise()
 	 *
@@ -575,48 +550,6 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 		}
 
 		return JFactory::getUser()->authorise($action, $assetname);
-	}
-
-	/**
-	 * Is this the administrative section of the component?
-	 *
-	 * @see FOFPlatformInterface::isBackend()
-	 *
-	 * @return  boolean
-	 */
-	public function isBackend()
-	{
-		list ($isCli, $isAdmin) = $this->isCliAdmin();
-
-		return $isAdmin && !$isCli;
-	}
-
-	/**
-	 * Is this the public section of the component?
-	 *
-	 * @see FOFPlatformInterface::isFrontend()
-	 *
-	 * @return  boolean
-	 */
-	public function isFrontend()
-	{
-		list ($isCli, $isAdmin) = $this->isCliAdmin();
-
-		return !$isAdmin && !$isCli;
-	}
-
-	/**
-	 * Is this a component running in a CLI application?
-	 *
-	 * @see FOFPlatformInterface::isCli()
-	 *
-	 * @return  boolean
-	 */
-	public function isCli()
-	{
-		list ($isCli, $isAdmin) = $this->isCliAdmin();
-
-		return !$isAdmin && $isCli;
 	}
 
 	/**
@@ -643,11 +576,27 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 	}
 
 	/**
+	 * Retrieves data from the cache. This is supposed to be used for system-side
+	 * FOF data, not application data.
+	 *
+	 * @param   string $key     The key of the data to retrieve
+	 * @param   string $default The default value to return if the key is not found or the cache is not populated
+	 *
+	 * @return  string  The cached value
+	 */
+	public function getCache($key, $default = null)
+	{
+		$registry = $this->getCacheObject();
+
+		return $registry->get($key, $default);
+	}
+
+	/**
 	 * Saves something to the cache. This is supposed to be used for system-wide
 	 * FOF data, not application data.
 	 *
-	 * @param   string  $key      The key of the data to save
-	 * @param   string  $content  The actual data to save
+	 * @param   string $key     The key of the data to save
+	 * @param   string $content The actual data to save
 	 *
 	 * @return  boolean  True on success
 	 */
@@ -661,26 +610,10 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 	}
 
 	/**
-	 * Retrieves data from the cache. This is supposed to be used for system-side
-	 * FOF data, not application data.
-	 *
-	 * @param   string  $key      The key of the data to retrieve
-	 * @param   string  $default  The default value to return if the key is not found or the cache is not populated
-	 *
-	 * @return  string  The cached value
-	 */
-	public function getCache($key, $default = null)
-	{
-		$registry = $this->getCacheObject();
-
-		return $registry->get($key, $default);
-	}
-
-	/**
 	 * Gets a reference to the cache object, loading it from the disk if
 	 * needed.
 	 *
-	 * @param   boolean  $force  Should I forcibly reload the registry?
+	 * @param   boolean $force Should I forcibly reload the registry?
 	 *
 	 * @return  JRegistry
 	 */
@@ -695,7 +628,7 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 
 			// Try to get data from Joomla!'s cache
 			$cache = JFactory::getCache('fof', '');
-			$data = $cache->get('cache', 'fof');
+			$data  = $cache->get('cache', 'fof');
 
 			// If data is not found, fall back to the legacy (FOF 2.1.rc3 and earlier) method
 			if ($data === false)
@@ -703,7 +636,7 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 				// Find the path to the file
 				$cachePath  = JPATH_CACHE . '/fof';
 				$filename   = $cachePath . '/cache.php';
-                $filesystem = $this->getIntegrationObject('filesystem');
+				$filesystem = $this->getIntegrationObject('filesystem');
 
 				// Load the cache file if it exists. JRegistryFormatPHP fails
 				// miserably, so I have to work around it.
@@ -747,6 +680,7 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 		$registry = $this->getCacheObject();
 
 		$cache = JFactory::getCache('fof', '');
+
 		return $cache->store($registry, 'cache', 'fof');
 	}
 
@@ -766,64 +700,64 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 		$cache->store($false, 'cache', 'fof');
 	}
 
-    public function getConfig()
-    {
-        return JFactory::getConfig();
-    }
+	public function getConfig()
+	{
+		return JFactory::getConfig();
+	}
 
 	/**
 	 * logs in a user
 	 *
-	 * @param   array  $authInfo  authentification information
+	 * @param   array $authInfo authentification information
 	 *
 	 * @return  boolean  True on success
 	 */
 	public function loginUser($authInfo)
 	{
 		JLoader::import('joomla.user.authentication');
-		$options = array('remember'		 => false);
+		$options      = array('remember' => false);
 		$authenticate = JAuthentication::getInstance();
-		$response = $authenticate->authenticate($authInfo, $options);
+		$response     = $authenticate->authenticate($authInfo, $options);
 
-        // User failed to authenticate: maybe he enabled two factor authentication?
-        // Let's try again "manually", skipping the check vs two factor auth
-        // Due the big mess with encryption algorithms and libraries, we are doing this extra check only
-        // if we're in Joomla 2.5.18+ or 3.2.1+
-        if($response->status != JAuthentication::STATUS_SUCCESS && method_exists('JUserHelper', 'verifyPassword'))
-        {
-            $db    = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                        ->select('id, password')
-                        ->from('#__users')
-                        ->where('username=' . $db->quote($authInfo['username']));
-            $result = $db->setQuery($query)->loadObject();
+		// User failed to authenticate: maybe he enabled two factor authentication?
+		// Let's try again "manually", skipping the check vs two factor auth
+		// Due the big mess with encryption algorithms and libraries, we are doing this extra check only
+		// if we're in Joomla 2.5.18+ or 3.2.1+
+		if ($response->status != JAuthentication::STATUS_SUCCESS && method_exists('JUserHelper', 'verifyPassword'))
+		{
+			$db     = JFactory::getDbo();
+			$query  = $db->getQuery(true)
+				->select('id, password')
+				->from('#__users')
+				->where('username=' . $db->quote($authInfo['username']));
+			$result = $db->setQuery($query)->loadObject();
 
-            if ($result)
-            {
+			if ($result)
+			{
 
-                $match = JUserHelper::verifyPassword($authInfo['password'], $result->password, $result->id);
+				$match = JUserHelper::verifyPassword($authInfo['password'], $result->password, $result->id);
 
-                if ($match === true)
-                {
-                    // Bring this in line with the rest of the system
-                    $user = JUser::getInstance($result->id);
-                    $response->email = $user->email;
-                    $response->fullname = $user->name;
+				if ($match === true)
+				{
+					// Bring this in line with the rest of the system
+					$user               = JUser::getInstance($result->id);
+					$response->email    = $user->email;
+					$response->fullname = $user->name;
 
-                    if (JFactory::getApplication()->isAdmin())
-                    {
-                        $response->language = $user->getParam('admin_language');
-                    }
-                    else
-                    {
-                        $response->language = $user->getParam('language');
-                    }
+					if (JFactory::getApplication()->isAdmin())
+					{
+						$response->language = $user->getParam('admin_language');
+					}
+					else
+					{
+						$response->language = $user->getParam('language');
+					}
 
-                    $response->status = JAuthentication::STATUS_SUCCESS;
-                    $response->error_message = '';
-                }
-            }
-        }
+					$response->status        = JAuthentication::STATUS_SUCCESS;
+					$response->error_message = '';
+				}
+			}
+		}
 
 		if ($response->status == JAuthentication::STATUS_SUCCESS)
 		{
@@ -832,7 +766,7 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 
 			JLoader::import('joomla.user.helper');
 			$userid = JUserHelper::getUserId($response->username);
-			$user = $this->getUser($userid);
+			$user   = $this->getUser($userid);
 
 			$session = JFactory::getSession();
 			$session->set('user', $user);
@@ -844,6 +778,74 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 	}
 
 	/**
+	 * Load plugins of a specific type. Obviously this seems to only be required
+	 * in the Joomla! CMS.
+	 *
+	 * @param   string $type The type of the plugins to be loaded
+	 *
+	 * @see FOFPlatformInterface::importPlugin()
+	 *
+	 * @return void
+	 */
+	public function importPlugin($type)
+	{
+		if (!$this->isCli())
+		{
+			JLoader::import('joomla.plugin.helper');
+			JPluginHelper::importPlugin($type);
+		}
+	}
+
+	/**
+	 * Execute plugins (system-level triggers) and fetch back an array with
+	 * their return values.
+	 *
+	 * @param   string $event The event (trigger) name, e.g. onBeforeScratchMyEar
+	 * @param   array  $data  A hash array of data sent to the plugins as part of the trigger
+	 *
+	 * @see FOFPlatformInterface::runPlugins()
+	 *
+	 * @return  array  A simple array containing the results of the plugins triggered
+	 */
+	public function runPlugins($event, $data)
+	{
+		if (!$this->isCli())
+		{
+			// IMPORTANT: DO NOT REPLACE THIS INSTANCE OF JDispatcher WITH ANYTHING ELSE. WE NEED JOOMLA!'S PLUGIN EVENT
+			// DISPATCHER HERE, NOT OUR GENERIC EVENTS DISPATCHER
+			if (version_compare($this->version, '3.0', 'ge'))
+			{
+				$dispatcher = JEventDispatcher::getInstance();
+			}
+			else
+			{
+				$dispatcher = JDispatcher::getInstance();
+			}
+
+			return $dispatcher->trigger($event, $data);
+		}
+		else
+		{
+			return array();
+		}
+	}
+
+	/**
+	 * Return a user object.
+	 *
+	 * @param   integer $id   The user ID to load. Skip or use null to retrieve
+	 *                        the object for the currently logged in user.
+	 *
+	 * @see FOFPlatformInterface::getUser()
+	 *
+	 * @return  JUser  The JUser object for the specified user
+	 */
+	public function getUser($id = null)
+	{
+		return JFactory::getUser($id);
+	}
+
+	/**
 	 * logs out a user
 	 *
 	 * @return  boolean  True on success
@@ -851,23 +853,23 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 	public function logoutUser()
 	{
 		JLoader::import('joomla.user.authentication');
-		$app = JFactory::getApplication();
-		$options = array('remember'	 => false);
-		$parameters = array('username'	 => $this->getUser()->username);
+		$app        = JFactory::getApplication();
+		$options    = array('remember' => false);
+		$parameters = array('username' => $this->getUser()->username);
 
 		return $app->triggerEvent('onLogoutUser', array($parameters, $options));
 	}
 
-    public function logAddLogger($file)
-    {
-        JLog::addLogger(array('text_file' => $file), JLog::ALL, array('fof'));
-    }
+	public function logAddLogger($file)
+	{
+		JLog::addLogger(array('text_file' => $file), JLog::ALL, array('fof'));
+	}
 
 	/**
 	 * Logs a deprecated practice. In Joomla! this results in the $message being output in the
 	 * deprecated log file, found in your site's log directory.
 	 *
-	 * @param   string  $message  The deprecated practice log message
+	 * @param   string $message The deprecated practice log message
 	 *
 	 * @return  void
 	 */
@@ -876,52 +878,53 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 		JLog::add($message, JLog::WARNING, 'deprecated');
 	}
 
-    public function logDebug($message)
-    {
-        JLog::add($message, JLog::DEBUG, 'fof');
-    }
+	public function logDebug($message)
+	{
+		JLog::add($message, JLog::DEBUG, 'fof');
+	}
 
-    /**
-     * Returns the root URI for the request.
-     *
-     * @param   boolean  $pathonly  If false, prepend the scheme, host and port information. Default is false.
-     * @param   string   $path      The path
-     *
-     * @return  string  The root URI string.
-     */
-    public function URIroot($pathonly = false, $path = null)
-    {
-        JLoader::import('joomla.environment.uri');
+	/**
+	 * Returns the root URI for the request.
+	 *
+	 * @param   boolean $pathonly If false, prepend the scheme, host and port information. Default is false.
+	 * @param   string  $path     The path
+	 *
+	 * @return  string  The root URI string.
+	 */
+	public function URIroot($pathonly = false, $path = null)
+	{
+		JLoader::import('joomla.environment.uri');
 
-        return JUri::root($pathonly, $path);
-    }
+		return JUri::root($pathonly, $path);
+	}
 
-    /**
-     * Returns the base URI for the request.
-     *
-     * @param   boolean  $pathonly  If false, prepend the scheme, host and port information. Default is false.
-     * |
-     * @return  string  The base URI string
-     */
-    public function URIbase($pathonly = false)
-    {
-        JLoader::import('joomla.environment.uri');
+	/**
+	 * Returns the base URI for the request.
+	 *
+	 * @param   boolean $pathonly If false, prepend the scheme, host and port information. Default is false.
+	 *                            |
+	 *
+	 * @return  string  The base URI string
+	 */
+	public function URIbase($pathonly = false)
+	{
+		JLoader::import('joomla.environment.uri');
 
-        return JUri::base($pathonly);
-    }
+		return JUri::base($pathonly);
+	}
 
-    /**
-     * Method to set a response header.  If the replace flag is set then all headers
-     * with the given name will be replaced by the new one (only if the current platform supports header caching)
-     *
-     * @param   string   $name     The name of the header to set.
-     * @param   string   $value    The value of the header to set.
-     * @param   boolean  $replace  True to replace any headers with the same name.
-     *
-     * @return  void
-     */
-    public function setHeader($name, $value, $replace = false)
-    {
+	/**
+	 * Method to set a response header.  If the replace flag is set then all headers
+	 * with the given name will be replaced by the new one (only if the current platform supports header caching)
+	 *
+	 * @param   string  $name    The name of the header to set.
+	 * @param   string  $value   The value of the header to set.
+	 * @param   boolean $replace True to replace any headers with the same name.
+	 *
+	 * @return  void
+	 */
+	public function setHeader($name, $value, $replace = false)
+	{
 		if (version_compare($this->version, '3.2', 'ge'))
 		{
 			JFactory::getApplication()->setHeader($name, $value, $replace);
@@ -930,11 +933,11 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 		{
 			JResponse::setHeader($name, $value, $replace);
 		}
-    }
+	}
 
-    public function sendHeaders()
-    {
-    	if (version_compare($this->version, '3.2', 'ge'))
+	public function sendHeaders()
+	{
+		if (version_compare($this->version, '3.2', 'ge'))
 		{
 			JFactory::getApplication()->sendHeaders();
 		}
@@ -942,5 +945,5 @@ class FOFIntegrationJoomlaPlatform extends FOFPlatform implements FOFPlatformInt
 		{
 			JResponse::sendHeaders();
 		}
-    }
+	}
 }

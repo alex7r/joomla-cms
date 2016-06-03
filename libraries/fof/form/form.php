@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -35,12 +35,12 @@ class FOFForm extends JForm
 	/**
 	 * Method to get an instance of a form.
 	 *
-	 * @param   string  	$name		The name of the form.
-	 * @param   string  	$data		The name of an XML file or string to load as the form definition.
-	 * @param   array   	$options	An array of form options.
-	 * @param   bool  		$replace	Flag to toggle whether form fields should be replaced if a field
-	 *                      	      	already exists with the same group/name.
-	 * @param   bool|string $xpath		An optional xpath to search for the fields.
+	 * @param   string      $name     The name of the form.
+	 * @param   string      $data     The name of an XML file or string to load as the form definition.
+	 * @param   array       $options  An array of form options.
+	 * @param   bool        $replace  Flag to toggle whether form fields should be replaced if a field
+	 *                                already exists with the same group/name.
+	 * @param   bool|string $xpath    An optional xpath to search for the fields.
 	 *
 	 * @return  object  FOFForm instance.
 	 *
@@ -87,27 +87,61 @@ class FOFForm extends JForm
 	}
 
 	/**
-	 * Returns the value of an attribute of the form itself
+	 * Proxy for {@link FOFFormHelper::addFieldPath()}.
 	 *
-	 * @param   string  $attribute  The name of the attribute
-	 * @param   mixed   $default    Optional default value to return
+	 * @param   mixed $new A path or array of paths to add.
 	 *
-	 * @return  mixed
+	 * @return  array  The list of paths that have been added.
 	 *
-	 * @since 2.0
+	 * @since   2.0
 	 */
-	public function getAttribute($attribute, $default = null)
+	public static function addFieldPath($new = null)
 	{
-		$value = $this->xml->attributes()->$attribute;
+		return FOFFormHelper::addFieldPath($new);
+	}
 
-		if (is_null($value))
-		{
-			return $default;
-		}
-		else
-		{
-			return (string) $value;
-		}
+	/**
+	 * Proxy for {@link FOFFormHelper::addHeaderPath()}.
+	 *
+	 * @param   mixed $new A path or array of paths to add.
+	 *
+	 * @return  array  The list of paths that have been added.
+	 *
+	 * @since   2.0
+	 */
+	public static function addHeaderPath($new = null)
+	{
+		return FOFFormHelper::addHeaderPath($new);
+	}
+
+	/**
+	 * Proxy for FOFFormHelper::addFormPath().
+	 *
+	 * @param   mixed $new A path or array of paths to add.
+	 *
+	 * @return  array  The list of paths that have been added.
+	 *
+	 * @see     FOFFormHelper::addFormPath()
+	 * @since   2.0
+	 */
+	public static function addFormPath($new = null)
+	{
+		return FOFFormHelper::addFormPath($new);
+	}
+
+	/**
+	 * Proxy for FOFFormHelper::addRulePath().
+	 *
+	 * @param   mixed $new A path or array of paths to add.
+	 *
+	 * @return  array  The list of paths that have been added.
+	 *
+	 * @see     FOFFormHelper::addRulePath()
+	 * @since   2.0
+	 */
+	public static function addRulePath($new = null)
+	{
+		return FOFFormHelper::addRulePath($new);
 	}
 
 	/**
@@ -141,11 +175,35 @@ class FOFForm extends JForm
 
 			foreach ($lessfiles as $def)
 			{
-				$parts = explode('||', $def, 2);
+				$parts    = explode('||', $def, 2);
 				$lessfile = $parts[0];
-				$alt = (count($parts) > 1) ? trim($parts[1]) : null;
+				$alt      = (count($parts) > 1) ? trim($parts[1]) : null;
 				FOFTemplateUtils::addLESS(trim($lessfile), $alt);
 			}
+		}
+	}
+
+	/**
+	 * Returns the value of an attribute of the form itself
+	 *
+	 * @param   string $attribute The name of the attribute
+	 * @param   mixed  $default   Optional default value to return
+	 *
+	 * @return  mixed
+	 *
+	 * @since 2.0
+	 */
+	public function getAttribute($attribute, $default = null)
+	{
+		$value = $this->xml->attributes()->$attribute;
+
+		if (is_null($value))
+		{
+			return $default;
+		}
+		else
+		{
+			return (string) $value;
 		}
 	}
 
@@ -187,18 +245,6 @@ class FOFForm extends JForm
 	}
 
 	/**
-	 * Attaches a FOFModel to this form
-	 *
-	 * @param   FOFModel  &$model  The model to attach to the form
-	 *
-	 * @return  void
-	 */
-	public function setModel(FOFModel &$model)
-	{
-		$this->model = $model;
-	}
-
-	/**
 	 * Returns the FOFModel attached to this form
 	 *
 	 * @return FOFModel
@@ -209,15 +255,15 @@ class FOFForm extends JForm
 	}
 
 	/**
-	 * Attaches a FOFView to this form
+	 * Attaches a FOFModel to this form
 	 *
-	 * @param   FOFView  &$view  The view to attach to the form
+	 * @param   FOFModel &$model The model to attach to the form
 	 *
 	 * @return  void
 	 */
-	public function setView(FOFView &$view)
+	public function setModel(FOFModel &$model)
 	{
-		$this->view = $view;
+		$this->model = $model;
 	}
 
 	/**
@@ -228,6 +274,18 @@ class FOFForm extends JForm
 	public function &getView()
 	{
 		return $this->view;
+	}
+
+	/**
+	 * Attaches a FOFView to this form
+	 *
+	 * @param   FOFView &$view The view to attach to the form
+	 *
+	 * @return  void
+	 */
+	public function setView(FOFView &$view)
+	{
+		$this->view = $view;
 	}
 
 	/**
@@ -255,9 +313,9 @@ class FOFForm extends JForm
 		foreach ($elements as $element)
 		{
 			// Get the field groups for the element.
-			$attrs = $element->xpath('ancestor::headers[@name]/@name');
+			$attrs  = $element->xpath('ancestor::headers[@name]/@name');
 			$groups = array_map('strval', $attrs ? $attrs : array());
-			$group = implode('.', $groups);
+			$group  = implode('.', $groups);
 
 			// If the field is successfully loaded add it to the result array.
 			if ($field = $this->loadHeader($element, $group))
@@ -273,9 +331,9 @@ class FOFForm extends JForm
 	 * Method to get an array of <header /> elements from the form XML document which are
 	 * in a control group by name.
 	 *
-	 * @param   mixed    $group   The optional dot-separated form group path on which to find the fields.
+	 * @param   mixed   $group    The optional dot-separated form group path on which to find the fields.
 	 *                            Null will return all fields. False will return fields not in a group.
-	 * @param   boolean  $nested  True to also include fields in nested groups that are inside of the
+	 * @param   boolean $nested   True to also include fields in nested groups that are inside of the
 	 *                            group for which to find fields.
 	 *
 	 * @return  mixed  Boolean false on error or array of SimpleXMLElement objects.
@@ -284,7 +342,7 @@ class FOFForm extends JForm
 	 */
 	protected function &findHeadersByGroup($group = null, $nested = false)
 	{
-		$false = false;
+		$false  = false;
 		$fields = array();
 
 		// Make sure there is a valid JForm XML document.
@@ -347,41 +405,10 @@ class FOFForm extends JForm
 	}
 
 	/**
-	 * Method to get a header field represented as a FOFFormHeader object.
-	 *
-	 * @param   string  $name   The name of the header field.
-	 * @param   string  $group  The optional dot-separated form group path on which to find the field.
-	 * @param   mixed   $value  The optional value to use as the default for the field.
-	 *
-	 * @return  mixed  The FOFFormHeader object for the field or boolean false on error.
-	 *
-	 * @since   2.0
-	 */
-	public function getHeader($name, $group = null, $value = null)
-	{
-		// Make sure there is a valid FOFForm XML document.
-		if (!($this->xml instanceof SimpleXMLElement))
-		{
-			return false;
-		}
-
-		// Attempt to find the field by name and group.
-		$element = $this->findHeader($name, $group);
-
-		// If the field element was not found return false.
-		if (!$element)
-		{
-			return false;
-		}
-
-		return $this->loadHeader($element, $group, $value);
-	}
-
-	/**
 	 * Method to get a header field represented as an XML element object.
 	 *
-	 * @param   string  $name   The name of the form field.
-	 * @param   string  $group  The optional dot-separated form group path on which to find the field.
+	 * @param   string $name  The name of the form field.
+	 * @param   string $group The optional dot-separated form group path on which to find the field.
 	 *
 	 * @return  mixed  The XML element object for the field or boolean false on error.
 	 *
@@ -390,7 +417,7 @@ class FOFForm extends JForm
 	protected function findHeader($name, $group = null)
 	{
 		$element = false;
-		$fields = array();
+		$fields  = array();
 
 		// Make sure there is a valid JForm XML document.
 		if (!($this->xml instanceof SimpleXMLElement))
@@ -472,9 +499,9 @@ class FOFForm extends JForm
 	/**
 	 * Method to load, setup and return a FOFFormHeader object based on field data.
 	 *
-	 * @param   string  $element  The XML element object representation of the form field.
-	 * @param   string  $group    The optional dot-separated form group path on which to find the field.
-	 * @param   mixed   $value    The optional value to use as the default for the field.
+	 * @param   string $element The XML element object representation of the form field.
+	 * @param   string $group   The optional dot-separated form group path on which to find the field.
+	 * @param   mixed  $value   The optional value to use as the default for the field.
 	 *
 	 * @return  mixed  The FOFFormHeader object for the field or boolean false on error.
 	 *
@@ -514,25 +541,10 @@ class FOFForm extends JForm
 	}
 
 	/**
-	 * Proxy for {@link FOFFormHelper::loadFieldType()}.
-	 *
-	 * @param   string   $type  The field type.
-	 * @param   boolean  $new   Flag to toggle whether we should get a new instance of the object.
-	 *
-	 * @return  mixed  FOFFormField object on success, false otherwise.
-	 *
-	 * @since   2.0
-	 */
-	protected function loadFieldType($type, $new = true)
-	{
-		return FOFFormHelper::loadFieldType($type, $new);
-	}
-
-	/**
 	 * Proxy for {@link FOFFormHelper::loadHeaderType()}.
 	 *
-	 * @param   string   $type  The field type.
-	 * @param   boolean  $new   Flag to toggle whether we should get a new instance of the object.
+	 * @param   string  $type The field type.
+	 * @param   boolean $new  Flag to toggle whether we should get a new instance of the object.
 	 *
 	 * @return  mixed  FOFFormHeader object on success, false otherwise.
 	 *
@@ -544,10 +556,56 @@ class FOFForm extends JForm
 	}
 
 	/**
+	 * Method to get a header field represented as a FOFFormHeader object.
+	 *
+	 * @param   string $name  The name of the header field.
+	 * @param   string $group The optional dot-separated form group path on which to find the field.
+	 * @param   mixed  $value The optional value to use as the default for the field.
+	 *
+	 * @return  mixed  The FOFFormHeader object for the field or boolean false on error.
+	 *
+	 * @since   2.0
+	 */
+	public function getHeader($name, $group = null, $value = null)
+	{
+		// Make sure there is a valid FOFForm XML document.
+		if (!($this->xml instanceof SimpleXMLElement))
+		{
+			return false;
+		}
+
+		// Attempt to find the field by name and group.
+		$element = $this->findHeader($name, $group);
+
+		// If the field element was not found return false.
+		if (!$element)
+		{
+			return false;
+		}
+
+		return $this->loadHeader($element, $group, $value);
+	}
+
+	/**
+	 * Proxy for {@link FOFFormHelper::loadFieldType()}.
+	 *
+	 * @param   string  $type The field type.
+	 * @param   boolean $new  Flag to toggle whether we should get a new instance of the object.
+	 *
+	 * @return  mixed  FOFFormField object on success, false otherwise.
+	 *
+	 * @since   2.0
+	 */
+	protected function loadFieldType($type, $new = true)
+	{
+		return FOFFormHelper::loadFieldType($type, $new);
+	}
+
+	/**
 	 * Proxy for {@link FOFFormHelper::loadRuleType()}.
 	 *
-	 * @param   string   $type  The rule type.
-	 * @param   boolean  $new   Flag to toggle whether we should get a new instance of the object.
+	 * @param   string  $type The rule type.
+	 * @param   boolean $new  Flag to toggle whether we should get a new instance of the object.
 	 *
 	 * @return  mixed  JFormRule object on success, false otherwise.
 	 *
@@ -557,63 +615,5 @@ class FOFForm extends JForm
 	protected function loadRuleType($type, $new = true)
 	{
 		return FOFFormHelper::loadRuleType($type, $new);
-	}
-
-	/**
-	 * Proxy for {@link FOFFormHelper::addFieldPath()}.
-	 *
-	 * @param   mixed  $new  A path or array of paths to add.
-	 *
-	 * @return  array  The list of paths that have been added.
-	 *
-	 * @since   2.0
-	 */
-	public static function addFieldPath($new = null)
-	{
-		return FOFFormHelper::addFieldPath($new);
-	}
-
-	/**
-	 * Proxy for {@link FOFFormHelper::addHeaderPath()}.
-	 *
-	 * @param   mixed  $new  A path or array of paths to add.
-	 *
-	 * @return  array  The list of paths that have been added.
-	 *
-	 * @since   2.0
-	 */
-	public static function addHeaderPath($new = null)
-	{
-		return FOFFormHelper::addHeaderPath($new);
-	}
-
-	/**
-	 * Proxy for FOFFormHelper::addFormPath().
-	 *
-	 * @param   mixed  $new  A path or array of paths to add.
-	 *
-	 * @return  array  The list of paths that have been added.
-	 *
-	 * @see     FOFFormHelper::addFormPath()
-	 * @since   2.0
-	 */
-	public static function addFormPath($new = null)
-	{
-		return FOFFormHelper::addFormPath($new);
-	}
-
-	/**
-	 * Proxy for FOFFormHelper::addRulePath().
-	 *
-	 * @param   mixed  $new  A path or array of paths to add.
-	 *
-	 * @return  array  The list of paths that have been added.
-	 *
-	 * @see FOFFormHelper::addRulePath()
-	 * @since   2.0
-	 */
-	public static function addRulePath($new = null)
-	{
-		return FOFFormHelper::addRulePath($new);
 	}
 }

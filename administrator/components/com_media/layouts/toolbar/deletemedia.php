@@ -13,18 +13,18 @@ $title = JText::_('JTOOLBAR_DELETE');
 JText::script("JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST");
 ?>
 <script type="text/javascript">
-(function($){
-	// if any media is selected then only allow to submit otherwise show message
-	deleteMedia = function(){
-		if ( $('#folderframe').contents().find('input:checked[name="rm[]"]').length == 0){
-			alert(Joomla.JText._('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'));
-			return false;
-		}
+	(function ($) {
+		// if any media is selected then only allow to submit otherwise show message
+		deleteMedia = function () {
+			if ($('#folderframe').contents().find('input:checked[name="rm[]"]').length == 0) {
+				alert(Joomla.JText._('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'));
+				return false;
+			}
 
-	MediaManager.submit('folder.delete');
-	};
+			MediaManager.submit('folder.delete');
+		};
 
-})(jQuery);
+	})(jQuery);
 </script>
 
 <button onclick="deleteMedia()" class="btn btn-small">

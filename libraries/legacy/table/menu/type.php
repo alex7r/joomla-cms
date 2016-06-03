@@ -19,7 +19,7 @@ class JTableMenuType extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  $db  Database driver object.
+	 * @param   JDatabaseDriver $db Database driver object.
 	 *
 	 * @since  11.1
 	 */
@@ -78,7 +78,7 @@ class JTableMenuType extends JTable
 	 * a new row will be inserted into the database with the properties from the
 	 * JTable instance.
 	 *
-	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 * @param   boolean $updateNulls True to update fields even if they are null.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -145,9 +145,9 @@ class JTableMenuType extends JTable
 			$query->clear()
 				->update('#__modules')
 				->set(
-				'params=REPLACE(params,' . $this->_db->quote('"menutype":' . json_encode($table->menutype)) . ',' .
-				$this->_db->quote('"menutype":' . json_encode($this->menutype)) . ')'
-			);
+					'params=REPLACE(params,' . $this->_db->quote('"menutype":' . json_encode($table->menutype)) . ',' .
+					$this->_db->quote('"menutype":' . json_encode($this->menutype)) . ')'
+				);
 			$query->where('module=' . $this->_db->quote('mod_menu'))
 				->where('params LIKE ' . $this->_db->quote('%"menutype":' . json_encode($table->menutype) . '%'));
 			$this->_db->setQuery($query);
@@ -160,7 +160,7 @@ class JTableMenuType extends JTable
 	/**
 	 * Method to delete a row from the database table by primary key value.
 	 *
-	 * @param   mixed  $pk  An optional primary key value to delete.  If not set the instance property value is used.
+	 * @param   mixed $pk An optional primary key value to delete.  If not set the instance property value is used.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -169,7 +169,7 @@ class JTableMenuType extends JTable
 	 */
 	public function delete($pk = null)
 	{
-		$k = $this->_tbl_key;
+		$k  = $this->_tbl_key;
 		$pk = (is_null($pk)) ? $this->$k : $pk;
 
 		// If no primary key is given, return false.
@@ -268,8 +268,8 @@ class JTableMenuType extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable   $table  A JTable object for the asset parent.
-	 * @param   integer  $id     Id to look up
+	 * @param   JTable  $table A JTable object for the asset parent.
+	 * @param   integer $id    Id to look up
 	 *
 	 * @return  integer
 	 *
@@ -278,7 +278,7 @@ class JTableMenuType extends JTable
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
 		$assetId = null;
-		$asset = JTable::getInstance('asset');
+		$asset   = JTable::getInstance('asset');
 
 		if ($asset->loadByName('com_menus'))
 		{

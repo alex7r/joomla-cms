@@ -107,11 +107,11 @@ final class JVersion
 	/**
 	 * Magic getter providing access to constants previously defined as class member vars.
 	 *
-	 * @param   string  $name  The name of the property.
+	 * @param   string $name The name of the property.
 	 *
 	 * @return  mixed   A value if the property name is valid.
 	 *
-	 * @since   3.5
+	 * @since       3.5
 	 * @deprecated  4.0  Access the constants directly
 	 */
 	public function __get($name)
@@ -149,7 +149,7 @@ final class JVersion
 	/**
 	 * Compares two a "PHP standardized" version number against the current Joomla version.
 	 *
-	 * @param   string  $minimum  The minimum version of the Joomla which is compatible.
+	 * @param   string $minimum The minimum version of the Joomla which is compatible.
 	 *
 	 * @return  boolean True if the version is compatible.
 	 *
@@ -186,25 +186,11 @@ final class JVersion
 	}
 
 	/**
-	 * Gets a version string for the current Joomla with all release information.
-	 *
-	 * @return  string  Complete version string.
-	 *
-	 * @since   1.5
-	 */
-	public function getLongVersion()
-	{
-		return self::PRODUCT . ' ' . self::RELEASE . '.' . self::DEV_LEVEL . ' '
-			. self::DEV_STATUS . ' [ ' . self::CODENAME . ' ] ' . self::RELDATE . ' '
-			. self::RELTIME . ' ' . self::RELTZ;
-	}
-
-	/**
 	 * Returns the user agent.
 	 *
-	 * @param   string  $component    Name of the component.
-	 * @param   bool    $mask         Mask as Mozilla/5.0 or not.
-	 * @param   bool    $add_version  Add version afterwards to component.
+	 * @param   string $component   Name of the component.
+	 * @param   bool   $mask        Mask as Mozilla/5.0 or not.
+	 * @param   bool   $add_version Add version afterwards to component.
 	 *
 	 * @return  string  User Agent.
 	 *
@@ -234,22 +220,6 @@ final class JVersion
 	}
 
 	/**
-	 * Generate a media version string for assets
-	 * Public to allow third party developers to use it
-	 *
-	 * @return  string
-	 *
-	 * @since   3.2
-	 */
-	public function generateMediaVersion()
-	{
-		$date   = new JDate;
-		$config = JFactory::getConfig();
-
-		return md5($this->getLongVersion() . $config->get('secret') . $date->toSql());
-	}
-
-	/**
 	 * Gets a media version which is used to append to Joomla core media files.
 	 *
 	 * This media version is used to append to Joomla core media in order to trick browsers into
@@ -267,7 +237,7 @@ final class JVersion
 
 		if ($mediaVersion === null)
 		{
-			$config = JFactory::getConfig();
+			$config       = JFactory::getConfig();
 			$debugEnabled = $config->get('debug', 0);
 
 			// Get the joomla library params
@@ -289,23 +259,39 @@ final class JVersion
 	}
 
 	/**
-	 * Function to refresh the media version
+	 * Generate a media version string for assets
+	 * Public to allow third party developers to use it
 	 *
-	 * @return  JVersion  Instance of $this to allow chaining.
+	 * @return  string
 	 *
 	 * @since   3.2
 	 */
-	public function refreshMediaVersion()
+	public function generateMediaVersion()
 	{
-		$newMediaVersion = $this->generateMediaVersion();
+		$date   = new JDate;
+		$config = JFactory::getConfig();
 
-		return $this->setMediaVersion($newMediaVersion);
+		return md5($this->getLongVersion() . $config->get('secret') . $date->toSql());
+	}
+
+	/**
+	 * Gets a version string for the current Joomla with all release information.
+	 *
+	 * @return  string  Complete version string.
+	 *
+	 * @since   1.5
+	 */
+	public function getLongVersion()
+	{
+		return self::PRODUCT . ' ' . self::RELEASE . '.' . self::DEV_LEVEL . ' '
+		. self::DEV_STATUS . ' [ ' . self::CODENAME . ' ] ' . self::RELDATE . ' '
+		. self::RELTIME . ' ' . self::RELTZ;
 	}
 
 	/**
 	 * Sets the media version which is used to append to Joomla core media files.
 	 *
-	 * @param   string  $mediaVersion  The media version.
+	 * @param   string $mediaVersion The media version.
 	 *
 	 * @return  JVersion  Instance of $this to allow chaining.
 	 *
@@ -326,5 +312,19 @@ final class JVersion
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Function to refresh the media version
+	 *
+	 * @return  JVersion  Instance of $this to allow chaining.
+	 *
+	 * @since   3.2
+	 */
+	public function refreshMediaVersion()
+	{
+		$newMediaVersion = $this->generateMediaVersion();
+
+		return $this->setMediaVersion($newMediaVersion);
 	}
 }

@@ -29,7 +29,7 @@ class BannersModelTracks extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JControllerLegacy
 	 * @since   1.6
@@ -199,7 +199,7 @@ class BannersModelTracks extends JModelList
 			{
 				$app = JFactory::getApplication('administrator');
 
-				$files = array(
+				$files   = array(
 					'track' => array(
 						'name' => $this->getBasename() . '.csv',
 						'data' => $this->content,
@@ -270,7 +270,7 @@ class BannersModelTracks extends JModelList
 				}
 
 				$categoryName = $this->getCategoryName();
-				$basename = str_replace('__CATNAME__', $categoryName, $basename);
+				$basename     = str_replace('__CATNAME__', $categoryName, $basename);
 			}
 			else
 			{
@@ -291,7 +291,7 @@ class BannersModelTracks extends JModelList
 				}
 
 				$clientName = $this->getClientName();
-				$basename = str_replace('__CLIENTNAME__', $clientName, $basename);
+				$basename   = str_replace('__CLIENTNAME__', $clientName, $basename);
 			}
 			else
 			{
@@ -418,8 +418,8 @@ class BannersModelTracks extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -453,7 +453,7 @@ class BannersModelTracks extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the required fields from the table.

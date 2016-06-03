@@ -52,8 +52,8 @@ class BannersModelBanner extends JModelAdmin
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array    $data      Data for the form. [optional]
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not. [optional]
+	 * @param   array   $data     Data for the form. [optional]
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not. [optional]
 	 *
 	 * @return  JForm|boolean  A JForm object on success, false on failure
 	 *
@@ -106,7 +106,7 @@ class BannersModelBanner extends JModelAdmin
 	/**
 	 * Method to test whether a record can have its state changed.
 	 *
-	 * @param   object  $record  A record object.
+	 * @param   object $record A record object.
 	 *
 	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
 	 *
@@ -127,8 +127,8 @@ class BannersModelBanner extends JModelAdmin
 	/**
 	 * Method to stick records.
 	 *
-	 * @param   array    &$pks   The ids of the items to publish.
-	 * @param   integer  $value  The value of the published state
+	 * @param   array   &$pks  The ids of the items to publish.
+	 * @param   integer $value The value of the published state
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -168,9 +168,9 @@ class BannersModelBanner extends JModelAdmin
 	/**
 	 * Returns a JTable object, always creating it.
 	 *
-	 * @param   string  $type    The table type to instantiate. [optional]
-	 * @param   string  $prefix  A prefix for the table class name. [optional]
-	 * @param   array   $config  Configuration array for model. [optional]
+	 * @param   string $type   The table type to instantiate. [optional]
+	 * @param   string $prefix A prefix for the table class name. [optional]
+	 * @param   array  $config Configuration array for model. [optional]
 	 *
 	 * @return  JTable  A database object
 	 *
@@ -184,7 +184,7 @@ class BannersModelBanner extends JModelAdmin
 	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array  $data  The form data.
+	 * @param   array $data The form data.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -229,8 +229,8 @@ class BannersModelBanner extends JModelAdmin
 			if ($data['name'] == $origTable->name)
 			{
 				list($name, $alias) = $this->generateNewTitle($data['catid'], $data['alias'], $data['name']);
-				$data['name']       = $name;
-				$data['alias']      = $alias;
+				$data['name']  = $name;
+				$data['alias'] = $alias;
 			}
 			else
 			{
@@ -249,9 +249,9 @@ class BannersModelBanner extends JModelAdmin
 	/**
 	 * Batch client changes for a group of banners.
 	 *
-	 * @param   string  $value     The new value matching a client.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
+	 * @param   string $value    The new value matching a client.
+	 * @param   array  $pks      An array of row IDs.
+	 * @param   array  $contexts An array of item contexts.
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
@@ -295,13 +295,13 @@ class BannersModelBanner extends JModelAdmin
 	/**
 	 * Batch copy items to a new category or current.
 	 *
-	 * @param   integer  $value     The new category.
-	 * @param   array    $pks       An array of row IDs.
-	 * @param   array    $contexts  An array of item contexts.
+	 * @param   integer $value    The new category.
+	 * @param   array   $pks      An array of row IDs.
+	 * @param   array   $contexts An array of item contexts.
 	 *
 	 * @return  mixed  An array of new IDs on success, boolean false on failure.
 	 *
-	 * @since	2.5
+	 * @since    2.5
 	 */
 	protected function batchCopy($value, $pks, $contexts)
 	{
@@ -420,7 +420,7 @@ class BannersModelBanner extends JModelAdmin
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
-	 * @param   object  $record  A record object.
+	 * @param   object $record A record object.
 	 *
 	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
 	 *
@@ -479,7 +479,7 @@ class BannersModelBanner extends JModelAdmin
 	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
-	 * @param   JTable  $table  A record object.
+	 * @param   JTable $table A record object.
 	 *
 	 * @return  array  An array of conditions to add to add to ordering queries.
 	 *
@@ -496,7 +496,7 @@ class BannersModelBanner extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   JTable  $table  A JTable object.
+	 * @param   JTable $table A JTable object.
 	 *
 	 * @return  void
 	 *
@@ -516,7 +516,7 @@ class BannersModelBanner extends JModelAdmin
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db = $this->getDbo();
+				$db    = $this->getDbo();
 				$query = $db->getQuery(true)
 					->select('MAX(ordering)')
 					->from('#__banners');

@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -24,11 +24,11 @@ class FOFFormHeaderPublished extends FOFFormHeaderFieldselectable
 	protected function getOptions()
 	{
 		$config = array(
-			'published'		 => 1,
-			'unpublished'	 => 1,
-			'archived'		 => 0,
-			'trash'			 => 0,
-			'all'			 => 0,
+			'published'   => 1,
+			'unpublished' => 1,
+			'archived'    => 0,
+			'trash'       => 0,
+			'all'         => 0,
 		);
 
 		$stack = array();

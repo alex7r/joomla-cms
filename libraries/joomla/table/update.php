@@ -22,7 +22,7 @@ class JTableUpdate extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  $db  Database driver object.
+	 * @param   JDatabaseDriver $db Database driver object.
 	 *
 	 * @since   11.1
 	 */
@@ -55,8 +55,8 @@ class JTableUpdate extends JTable
 	/**
 	 * Overloaded bind function
 	 *
-	 * @param   array  $array   Named array
-	 * @param   mixed  $ignore  An optional array or space separated list of properties
+	 * @param   array $array    Named array
+	 * @param   mixed $ignore   An optional array or space separated list of properties
 	 *                          to ignore while binding.
 	 *
 	 * @return  mixed  Null if operation was satisfactory, otherwise returns an error
@@ -86,7 +86,7 @@ class JTableUpdate extends JTable
 	/**
 	 * Method to create and execute a SELECT WHERE query.
 	 *
-	 * @param   array  $options  Array of options
+	 * @param   array $options Array of options
 	 *
 	 * @return  string  Results of query
 	 *

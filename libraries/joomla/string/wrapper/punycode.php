@@ -23,7 +23,7 @@ class JStringWrapperPunycode
 	/**
 	 * Helper wrapper method for toPunycode
 	 *
-	 * @param   string  $utfString  The UTF-8 string to transform.
+	 * @param   string $utfString The UTF-8 string to transform.
 	 *
 	 * @return string  The punycode string.
 	 *
@@ -38,7 +38,7 @@ class JStringWrapperPunycode
 	/**
 	 * Helper wrapper method for fromPunycode
 	 *
-	 * @param   string  $punycodeString  The Punycode string to transform.
+	 * @param   string $punycodeString The Punycode string to transform.
 	 *
 	 * @return string  The UF-8 URL.
 	 *
@@ -53,7 +53,7 @@ class JStringWrapperPunycode
 	/**
 	 * Helper wrapper method for urlToPunycode
 	 *
-	 * @param   string  $uri  The UTF-8 URL to transform.
+	 * @param   string $uri The UTF-8 URL to transform.
 	 *
 	 * @return string  The punycode URL.
 	 *
@@ -68,7 +68,7 @@ class JStringWrapperPunycode
 	/**
 	 * Helper wrapper method for urlToUTF8
 	 *
-	 * @param   string  $uri  The Punycode URL to transform.
+	 * @param   string $uri The Punycode URL to transform.
 	 *
 	 * @return string  The UTF-8 URL.
 	 *
@@ -83,7 +83,7 @@ class JStringWrapperPunycode
 	/**
 	 * Helper wrapper method for emailToPunycode
 	 *
-	 * @param   string  $email  The UTF-8 e-mail to transform.
+	 * @param   string $email The UTF-8 e-mail to transform.
 	 *
 	 * @return string  The punycode e-mail.
 	 *
@@ -98,7 +98,7 @@ class JStringWrapperPunycode
 	/**
 	 * Helper wrapper method for emailToUTF8
 	 *
-	 * @param   string  $email  The punycode e-mail to transform.
+	 * @param   string $email The punycode e-mail to transform.
 	 *
 	 * @return string  The punycode e-mail.
 	 *

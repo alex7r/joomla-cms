@@ -36,7 +36,7 @@ class JCacheStorageCachelite extends JCacheStorage
 	/**
 	 * Constructor
 	 *
-	 * @param   array  $options  Optional parameters.
+	 * @param   array $options Optional parameters.
 	 *
 	 * @since   11.1
 	 */
@@ -65,7 +65,7 @@ class JCacheStorageCachelite extends JCacheStorage
 	/**
 	 * Instantiates the Cache_Lite object. Only initializes the engine if it does not already exist.
 	 *
-	 * @param   array  $cloptions  optional parameters
+	 * @param   array $cloptions optional parameters
 	 *
 	 * @return  Cache_Lite
 	 *
@@ -84,11 +84,25 @@ class JCacheStorageCachelite extends JCacheStorage
 	}
 
 	/**
+	 * Test to see if the storage handler is available.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		@include_once 'Cache/Lite.php';
+
+		return class_exists('Cache_Lite');
+	}
+
+	/**
 	 * Get cached data by ID and group
 	 *
-	 * @param   string   $id         The cache data ID
-	 * @param   string   $group      The cache data group
-	 * @param   boolean  $checkTime  True to verify cache time expiration threshold
+	 * @param   string  $id        The cache data ID
+	 * @param   string  $group     The cache data group
+	 * @param   boolean $checkTime True to verify cache time expiration threshold
 	 *
 	 * @return  mixed  Boolean false on failure or a cached data object
 	 *
@@ -150,9 +164,9 @@ class JCacheStorageCachelite extends JCacheStorage
 	/**
 	 * Store the data to cache by ID and group
 	 *
-	 * @param   string  $id     The cache data ID
-	 * @param   string  $group  The cache data group
-	 * @param   string  $data   The data to store in cache
+	 * @param   string $id    The cache data ID
+	 * @param   string $group The cache data group
+	 * @param   string $data  The data to store in cache
 	 *
 	 * @return  boolean
 	 *
@@ -187,8 +201,8 @@ class JCacheStorageCachelite extends JCacheStorage
 	/**
 	 * Remove a cached data entry by ID and group
 	 *
-	 * @param   string  $id     The cache data ID
-	 * @param   string  $group  The cache data group
+	 * @param   string $id    The cache data ID
+	 * @param   string $group The cache data group
 	 *
 	 * @return  boolean
 	 *
@@ -210,8 +224,8 @@ class JCacheStorageCachelite extends JCacheStorage
 	 * group mode    : cleans all cache in the group
 	 * notgroup mode : cleans all cache not in the group
 	 *
-	 * @param   string  $group  The cache data group
-	 * @param   string  $mode   The mode for cleaning cache [group|notgroup]
+	 * @param   string $group The cache data group
+	 * @param   string $mode  The mode for cleaning cache [group|notgroup]
 	 *
 	 * @return  boolean
 	 *
@@ -314,19 +328,5 @@ class JCacheStorageCachelite extends JCacheStorage
 		$success = ($success1 && $result);
 
 		return $success;
-	}
-
-	/**
-	 * Test to see if the storage handler is available.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		@include_once 'Cache/Lite.php';
-
-		return class_exists('Cache_Lite');
 	}
 }

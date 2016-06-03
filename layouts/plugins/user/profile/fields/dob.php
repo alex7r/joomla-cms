@@ -18,4 +18,5 @@ extract($displayData);
 </div></div>
 <div class="controls"><?php echo $text; ?></div>
 <?php // Creating new .control-group and .control-label for the actual field ?>
-<div class="control-group"><div class="control-label">
+<div class="control-group">
+	<div class="control-label">

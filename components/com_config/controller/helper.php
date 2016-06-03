@@ -26,7 +26,7 @@ class ConfigControllerHelper
 	 * not prefixed with Config.
 	 * Additional options maybe added to parameterise the controller.
 	 *
-	 * @param   JApplicationBase  $app  An application object
+	 * @param   JApplicationBase $app An application object
 	 *
 	 * @return  JController  A JController object
 	 *
@@ -111,7 +111,7 @@ class ConfigControllerHelper
 			return false;
 		}
 
-		$controller = new $controllerName;
+		$controller          = new $controllerName;
 		$controller->options = array();
 		$controller->options = $tasks;
 

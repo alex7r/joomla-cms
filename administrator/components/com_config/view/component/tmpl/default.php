@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 
-$app = JFactory::getApplication();
+$app      = JFactory::getApplication();
 $template = $app->getTemplate();
 
 // Load the tooltip behavior.
@@ -35,7 +35,8 @@ JFactory::getDocument()->addScriptDeclaration(
 );
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" id="component-form" method="post" name="adminForm" autocomplete="off" class="form-validate form-horizontal">
+<form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" id="component-form" method="post"
+      name="adminForm" autocomplete="off" class="form-validate form-horizontal">
 	<div class="row-fluid">
 		<!-- Begin Sidebar -->
 		<div id="sidebar" class="span2">
@@ -53,7 +54,7 @@ JFactory::getDocument()->addScriptDeclaration(
 						<?php JHtml::_('script', 'jui/cms.js', false, true); ?>
 						<?php $showonarr = array(); ?>
 						<?php foreach (preg_split('%\[AND\]|\[OR\]%', $fieldSet->showon) as $showonfield) : ?>
-							<?php $showon   = explode(':', $showonfield, 2); ?>
+							<?php $showon = explode(':', $showonfield, 2); ?>
 							<?php $showonarr[] = array(
 								'field'  => $this->form->getFormControl() . '[' . $showon[0] . ']',
 								'values' => explode(',', $showon[1]),
@@ -63,7 +64,8 @@ JFactory::getDocument()->addScriptDeclaration(
 						<?php $rel = ' data-showon=\'' . json_encode($showonarr) . '\''; ?>
 					<?php endif; ?>
 					<?php $label = empty($fieldSet->label) ? 'COM_CONFIG_' . $name . '_FIELDSET_LABEL' : $fieldSet->label; ?>
-					<li<?php echo $rel; ?>><a href="#<?php echo $name; ?>" data-toggle="tab"><?php echo JText::_($label); ?></a></li>
+					<li<?php echo $rel; ?>><a href="#<?php echo $name; ?>"
+					                          data-toggle="tab"><?php echo JText::_($label); ?></a></li>
 				<?php endforeach; ?>
 			</ul>
 			<div class="tab-content">
@@ -78,14 +80,15 @@ JFactory::getDocument()->addScriptDeclaration(
 						<?php foreach ($this->form->getFieldset($name) as $field) : ?>
 							<?php
 							$datashowon = '';
-							if ($showonstring = $field->getAttribute('showon'))							{
+							if ($showonstring = $field->getAttribute('showon'))
+							{
 								JHtml::_('jquery.framework');
 								JHtml::_('script', 'jui/cms.js', false, true);
 								$showonarr = array();
 
 								foreach (preg_split('%\[AND\]|\[OR\]%', $showonstring) as $showonfield)
 								{
-									$showon   = explode(':', $showonfield, 2);
+									$showon      = explode(':', $showonfield, 2);
 									$showonarr[] = array(
 										'field'  => $this->form->getFormControl() . '[' . $this->form->getFieldAttribute($showon[0], 'name') . ']',
 										'values' => explode(',', $showon[1]),
@@ -112,10 +115,10 @@ JFactory::getDocument()->addScriptDeclaration(
 		</div>
 	</div>
 	<div>
-		<input type="hidden" name="id" value="<?php echo $this->component->id; ?>" />
-		<input type="hidden" name="component" value="<?php echo $this->component->option; ?>" />
-		<input type="hidden" name="return" value="<?php echo $this->return; ?>" />
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="id" value="<?php echo $this->component->id; ?>"/>
+		<input type="hidden" name="component" value="<?php echo $this->component->option; ?>"/>
+		<input type="hidden" name="return" value="<?php echo $this->return; ?>"/>
+		<input type="hidden" name="task" value=""/>
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>

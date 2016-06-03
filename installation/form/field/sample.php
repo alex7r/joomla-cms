@@ -20,7 +20,7 @@ class InstallationFormFieldSample extends JFormFieldRadio
 	/**
 	 * The form field type.
 	 *
-	 * @var		string
+	 * @var        string
 	 * @since   1.6
 	 */
 	protected $type = 'Sample';
@@ -34,9 +34,9 @@ class InstallationFormFieldSample extends JFormFieldRadio
 	 */
 	protected function getOptions()
 	{
-		$lang = JFactory::getLanguage();
+		$lang    = JFactory::getLanguage();
 		$options = array();
-		$type = $this->form->getValue('db_type');
+		$type    = $this->form->getValue('db_type');
 
 		// Some database drivers share DDLs; point these drivers to the correct parent
 		if ($type == 'mysqli' || $type == 'pdomysql')
@@ -78,7 +78,7 @@ class InstallationFormFieldSample extends JFormFieldRadio
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @return  string	The field input markup.
+	 * @return  string    The field input markup.
 	 *
 	 * @since   1.6
 	 */

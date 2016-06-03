@@ -53,17 +53,17 @@ function modChrome_well($module, &$params, &$attribs)
 		$headerTag     = htmlspecialchars($params->get('header_tag', 'h2'), ENT_COMPAT, 'UTF-8');
 
 		// Temporarily store header class in variable
-		$headerClass   = $params->get('header_class');
-		$headerClass   = ($headerClass) ? ' ' . htmlspecialchars($headerClass, ENT_COMPAT, 'UTF-8') : '';
+		$headerClass = $params->get('header_class');
+		$headerClass = ($headerClass) ? ' ' . htmlspecialchars($headerClass, ENT_COMPAT, 'UTF-8') : '';
 
 		echo '<' . $moduleTag . ' class="well well-small' . $moduleClass . '">';
 
-			if ($module->showtitle)
-			{
-				echo '<' . $headerTag . ' class="module-title nav-header' . $headerClass . '">' . $module->title . '</' . $headerTag . '>';
-			}
+		if ($module->showtitle)
+		{
+			echo '<' . $headerTag . ' class="module-title nav-header' . $headerClass . '">' . $module->title . '</' . $headerTag . '>';
+		}
 
-			echo $module->content;
+		echo $module->content;
 		echo '</' . $moduleTag . '>';
 	}
 }

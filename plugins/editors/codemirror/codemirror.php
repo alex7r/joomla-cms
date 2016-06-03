@@ -31,9 +31,9 @@ class PlgEditorCodemirror extends JPlugin
 	 * @var array
 	 */
 	protected $modeAlias = array(
-			'html' => 'htmlmixed',
-			'ini'  => 'properties'
-		);
+		'html' => 'htmlmixed',
+		'ini'  => 'properties'
+	);
 
 	/**
 	 * Initialises the Editor.
@@ -56,20 +56,20 @@ class PlgEditorCodemirror extends JPlugin
 		$doc = JFactory::getDocument();
 
 		// Codemirror shall have its own group of plugins to modify and extend its behavior
-		$result = JPluginHelper::importPlugin('editors_codemirror');
-		$dispatcher	= JEventDispatcher::getInstance();
+		$result     = JPluginHelper::importPlugin('editors_codemirror');
+		$dispatcher = JEventDispatcher::getInstance();
 
 		// At this point, params can be modified by a plugin before going to the layout renderer.
 		$dispatcher->trigger('onCodeMirrorBeforeInit', array(&$this->params));
 
-		$displayData = (object) array('params'  => $this->params);
+		$displayData = (object) array('params' => $this->params);
 
 		// We need to do output buffering here because layouts may actually 'echo' things which we do not want.
 		ob_start();
 		JLayoutHelper::render('editors.codemirror.init', $displayData, __DIR__ . '/layouts');
 		ob_end_clean();
 
-		$font = $this->params->get('fontFamily', 0);
+		$font     = $this->params->get('fontFamily', 0);
 		$fontInfo = $this->getFontInfo($font);
 
 		if (isset($fontInfo))
@@ -94,9 +94,28 @@ class PlgEditorCodemirror extends JPlugin
 	}
 
 	/**
+	 * Gets font info from the json data file
+	 *
+	 * @param   string $font A key from the $fonts array.
+	 *
+	 * @return  object
+	 */
+	protected function getFontInfo($font)
+	{
+		static $fonts;
+
+		if (!$fonts)
+		{
+			$fonts = json_decode(JFile::read(__DIR__ . '/fonts.json'), true);
+		}
+
+		return isset($fonts[$font]) ? (object) $fonts[$font] : null;
+	}
+
+	/**
 	 * Copy editor content to form field.
 	 *
-	 * @param   string  $id  The id of the editor field.
+	 * @param   string $id The id of the editor field.
 	 *
 	 * @return  string  Javascript
 	 */
@@ -108,7 +127,7 @@ class PlgEditorCodemirror extends JPlugin
 	/**
 	 * Get the editor content.
 	 *
-	 * @param   string  $id  The id of the editor field.
+	 * @param   string $id The id of the editor field.
 	 *
 	 * @return  string  Javascript
 	 */
@@ -120,8 +139,8 @@ class PlgEditorCodemirror extends JPlugin
 	/**
 	 * Set the editor content.
 	 *
-	 * @param   string  $id       The id of the editor field.
-	 * @param   string  $content  The content to set.
+	 * @param   string $id      The id of the editor field.
+	 * @param   string $content The content to set.
 	 *
 	 * @return  string  Javascript
 	 */
@@ -157,17 +176,17 @@ class PlgEditorCodemirror extends JPlugin
 	/**
 	 * Display the editor area.
 	 *
-	 * @param   string   $name     The control name.
-	 * @param   string   $content  The contents of the text area.
-	 * @param   string   $width    The width of the text area (px or %).
-	 * @param   string   $height   The height of the text area (px or %).
-	 * @param   int      $col      The number of columns for the textarea.
-	 * @param   int      $row      The number of rows for the textarea.
-	 * @param   boolean  $buttons  True and the editor buttons will be displayed.
-	 * @param   string   $id       An optional ID for the textarea (note: since 1.6). If not supplied the name is used.
-	 * @param   string   $asset    Not used.
-	 * @param   object   $author   Not used.
-	 * @param   array    $params   Associative array of editor parameters.
+	 * @param   string  $name    The control name.
+	 * @param   string  $content The contents of the text area.
+	 * @param   string  $width   The width of the text area (px or %).
+	 * @param   string  $height  The height of the text area (px or %).
+	 * @param   int     $col     The number of columns for the textarea.
+	 * @param   int     $row     The number of rows for the textarea.
+	 * @param   boolean $buttons True and the editor buttons will be displayed.
+	 * @param   string  $id      An optional ID for the textarea (note: since 1.6). If not supplied the name is used.
+	 * @param   string  $asset   Not used.
+	 * @param   object  $author  Not used.
+	 * @param   array   $params  Associative array of editor parameters.
 	 *
 	 * @return  string  HTML
 	 */
@@ -199,9 +218,9 @@ class PlgEditorCodemirror extends JPlugin
 		if ($this->params->get('selectionMatches', false))
 		{
 			$options->highlightSelectionMatches = array(
-					'showToken' => true,
-					'annotateScrollbar' => true,
-				);
+				'showToken'         => true,
+				'annotateScrollbar' => true,
+			);
 		}
 
 		// Do we use line numbering?
@@ -223,7 +242,7 @@ class PlgEditorCodemirror extends JPlugin
 		}
 
 		// Load the syntax mode.
-		$syntax = $this->params->get('syntax', 'html');
+		$syntax        = $this->params->get('syntax', 'html');
 		$options->mode = isset($this->modeAlias[$syntax]) ? $this->modeAlias[$syntax] : $syntax;
 
 		// Load the theme if specified.
@@ -259,15 +278,15 @@ class PlgEditorCodemirror extends JPlugin
 		$options->vimMode = (boolean) $this->params->get('vimKeyBinding', 0);
 
 		$displayData = (object) array(
-				'options' => $options,
-				'params'  => $this->params,
-				'name'    => $name,
-				'id'      => $id,
-				'cols'    => $col,
-				'rows'    => $row,
-				'content' => $content,
-				'buttons' => $buttons
-			);
+			'options' => $options,
+			'params'  => $this->params,
+			'name'    => $name,
+			'id'      => $id,
+			'cols'    => $col,
+			'rows'    => $row,
+			'content' => $content,
+			'buttons' => $buttons
+		);
 
 		$dispatcher = JEventDispatcher::getInstance();
 
@@ -287,10 +306,10 @@ class PlgEditorCodemirror extends JPlugin
 	/**
 	 * Displays the editor buttons.
 	 *
-	 * @param   string  $name     Button name.
-	 * @param   mixed   $buttons  [array with button objects | boolean true to display buttons]
-	 * @param   mixed   $asset    Unused.
-	 * @param   mixed   $author   Unused.
+	 * @param   string $name    Button name.
+	 * @param   mixed  $buttons [array with button objects | boolean true to display buttons]
+	 * @param   mixed  $asset   Unused.
+	 * @param   mixed  $author  Unused.
 	 *
 	 * @return  string  HTML
 	 */
@@ -324,24 +343,5 @@ class PlgEditorCodemirror extends JPlugin
 		}
 
 		return $return;
-	}
-
-	/**
-	 * Gets font info from the json data file
-	 *
-	 * @param   string  $font  A key from the $fonts array.
-	 *
-	 * @return  object
-	 */
-	protected function getFontInfo($font)
-	{
-		static $fonts;
-
-		if (!$fonts)
-		{
-			$fonts = json_decode(JFile::read(__DIR__ . '/fonts.json'), true);
-		}
-
-		return isset($fonts[$font]) ? (object) $fonts[$font] : null;
 	}
 }

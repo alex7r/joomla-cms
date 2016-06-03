@@ -44,68 +44,9 @@ class JLayoutBase implements JLayout
 	protected $debugMessages = array();
 
 	/**
-	 * Set the options
-	 *
-	 * @param   array|Registry  $options  Array / Registry object with the options to load
-	 *
-	 * @return  JLayoutBase  Instance of $this to allow chaining.
-	 *
-	 * @since   3.2
-	 */
-	public function setOptions($options = null)
-	{
-		// Received Registry
-		if ($options instanceof Registry)
-		{
-			$this->options = $options;
-		}
-		// Received array
-		elseif (is_array($options))
-		{
-			$this->options = new Registry($options);
-		}
-		else
-		{
-			$this->options = new Registry;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Get the options
-	 *
-	 * @return  Registry  Object with the options
-	 *
-	 * @since   3.2
-	 */
-	public function getOptions()
-	{
-		// Always return a Registry instance
-		if (!($this->options instanceof Registry))
-		{
-			$this->resetOptions();
-		}
-
-		return $this->options;
-	}
-
-	/**
-	 * Function to empty all the options
-	 *
-	 * @return  JLayoutBase  Instance of $this to allow chaining.
-	 *
-	 * @since   3.2
-	 */
-	public function resetOptions()
-	{
-		return $this->setOptions(null);
-	}
-
-	/**
 	 * Method to escape output.
 	 *
-	 * @param   string  $output  The output to escape.
+	 * @param   string $output The output to escape.
 	 *
 	 * @return  string  The escaped output.
 	 *
@@ -129,26 +70,6 @@ class JLayoutBase implements JLayout
 	}
 
 	/**
-	 * Method to render the layout.
-	 *
-	 * @param   array  $displayData  Array of properties available for use inside the layout file to build the displayed output
-	 *
-	 * @return  string  The necessary HTML to display the layout
-	 *
-	 * @since   3.0
-	 */
-	public function render($displayData)
-	{
-		// Automatically merge any previously data set if $displayData is an array
-		if (is_array($displayData))
-		{
-			$displayData = array_merge($this->data, $displayData);
-		}
-
-		return '';
-	}
-
-	/**
 	 * Render the list of debug messages
 	 *
 	 * @return  string  Output text/HTML code
@@ -163,7 +84,7 @@ class JLayoutBase implements JLayout
 	/**
 	 * Add a debug message to the debug messages array
 	 *
-	 * @param   string  $message  Message to save
+	 * @param   string $message Message to save
 	 *
 	 * @return  self
 	 *
@@ -193,7 +114,7 @@ class JLayoutBase implements JLayout
 	/**
 	 * Render a layout with debug info
 	 *
-	 * @param   mixed  $data  Data passed to the layout
+	 * @param   mixed $data Data passed to the layout
 	 *
 	 * @return  string
 	 *
@@ -211,10 +132,46 @@ class JLayoutBase implements JLayout
 	}
 
 	/**
+	 * Change the debug mode
+	 *
+	 * @param   boolean $debug Enable / Disable debug
+	 *
+	 * @return  self
+	 *
+	 * @since   3.5
+	 */
+	public function setDebug($debug)
+	{
+		$this->options->set('debug', (boolean) $debug);
+
+		return $this;
+	}
+
+	/**
+	 * Method to render the layout.
+	 *
+	 * @param   array $displayData Array of properties available for use inside the layout file to build the displayed output
+	 *
+	 * @return  string  The necessary HTML to display the layout
+	 *
+	 * @since   3.0
+	 */
+	public function render($displayData)
+	{
+		// Automatically merge any previously data set if $displayData is an array
+		if (is_array($displayData))
+		{
+			$displayData = array_merge($this->data, $displayData);
+		}
+
+		return '';
+	}
+
+	/**
 	 * Method to get the value from the data array
 	 *
-	 * @param   string  $key           Key to search for in the data array
-	 * @param   mixed   $defaultValue  Default value to return if the key is not set
+	 * @param   string $key          Key to search for in the data array
+	 * @param   mixed  $defaultValue Default value to return if the key is not set
 	 *
 	 * @return  mixed   Value from the data array | defaultValue if doesn't exist
 	 *
@@ -238,38 +195,9 @@ class JLayoutBase implements JLayout
 	}
 
 	/**
-	 * Check if debug mode is enabled
-	 *
-	 * @return  boolean
-	 *
-	 * @since   3.5
-	 */
-	public function isDebugEnabled()
-	{
-		return $this->getOptions()->get('debug', false) === true;
-	}
-
-	/**
-	 * Method to set a value in the data array. Example: $layout->set('items', $items);
-	 *
-	 * @param   string  $key    Key for the data array
-	 * @param   mixed   $value  Value to assign to the key
-	 *
-	 * @return  self
-	 *
-	 * @since   3.5
-	 */
-	public function set($key, $value)
-	{
-		$this->data[(string) $key] = $value;
-
-		return $this;
-	}
-
-	/**
 	 * Set the the data passed the layout
 	 *
-	 * @param   array  $data  Array with the data for the layout
+	 * @param   array $data Array with the data for the layout
 	 *
 	 * @return  self
 	 *
@@ -283,17 +211,89 @@ class JLayoutBase implements JLayout
 	}
 
 	/**
-	 * Change the debug mode
+	 * Check if debug mode is enabled
 	 *
-	 * @param   boolean  $debug  Enable / Disable debug
+	 * @return  boolean
+	 *
+	 * @since   3.5
+	 */
+	public function isDebugEnabled()
+	{
+		return $this->getOptions()->get('debug', false) === true;
+	}
+
+	/**
+	 * Get the options
+	 *
+	 * @return  Registry  Object with the options
+	 *
+	 * @since   3.2
+	 */
+	public function getOptions()
+	{
+		// Always return a Registry instance
+		if (!($this->options instanceof Registry))
+		{
+			$this->resetOptions();
+		}
+
+		return $this->options;
+	}
+
+	/**
+	 * Set the options
+	 *
+	 * @param   array|Registry $options Array / Registry object with the options to load
+	 *
+	 * @return  JLayoutBase  Instance of $this to allow chaining.
+	 *
+	 * @since   3.2
+	 */
+	public function setOptions($options = null)
+	{
+		// Received Registry
+		if ($options instanceof Registry)
+		{
+			$this->options = $options;
+		}
+		// Received array
+		elseif (is_array($options))
+		{
+			$this->options = new Registry($options);
+		}
+		else
+		{
+			$this->options = new Registry;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Function to empty all the options
+	 *
+	 * @return  JLayoutBase  Instance of $this to allow chaining.
+	 *
+	 * @since   3.2
+	 */
+	public function resetOptions()
+	{
+		return $this->setOptions(null);
+	}
+
+	/**
+	 * Method to set a value in the data array. Example: $layout->set('items', $items);
+	 *
+	 * @param   string $key   Key for the data array
+	 * @param   mixed  $value Value to assign to the key
 	 *
 	 * @return  self
 	 *
 	 * @since   3.5
 	 */
-	public function setDebug($debug)
+	public function set($key, $value)
 	{
-		$this->options->set('debug', (boolean) $debug);
+		$this->data[(string) $key] = $value;
 
 		return $this;
 	}

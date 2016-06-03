@@ -21,9 +21,9 @@ class JGithubPackageDataTrees extends JGithubPackage
 	/**
 	 * Get a Tree
 	 *
-	 * @param   string  $owner  The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
-	 * @param   string  $sha    The SHA1 value to set the reference to.
+	 * @param   string $owner The name of the owner of the GitHub repository.
+	 * @param   string $repo  The name of the GitHub repository.
+	 * @param   string $sha   The SHA1 value to set the reference to.
 	 *
 	 * @since   3.3 (CMS)
 	 *
@@ -42,9 +42,9 @@ class JGithubPackageDataTrees extends JGithubPackage
 	/**
 	 * Get a Tree Recursively
 	 *
-	 * @param   string  $owner  The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
-	 * @param   string  $sha    The SHA1 value to set the reference to.
+	 * @param   string $owner The name of the owner of the GitHub repository.
+	 * @param   string $repo  The name of the GitHub repository.
+	 * @param   string $sha   The SHA1 value to set the reference to.
 	 *
 	 * @since   3.3 (CMS)
 	 *
@@ -83,11 +83,11 @@ class JGithubPackageDataTrees extends JGithubPackage
 	 *     String of content you want this file to have - GitHub will write this blob out and use
 	 *     that SHA for this entry. Use either this or tree.sha
 	 *
-	 * @param   string  $owner      The name of the owner of the GitHub repository.
-	 * @param   string  $repo       The name of the GitHub repository.
-	 * @param   array   $tree       Array of Hash objects (of path, mode, type and sha) specifying
+	 * @param   string $owner       The name of the owner of the GitHub repository.
+	 * @param   string $repo        The name of the GitHub repository.
+	 * @param   array  $tree        Array of Hash objects (of path, mode, type and sha) specifying
 	 *                              a tree structure
-	 * @param   string  $base_tree  The SHA1 of the tree you want to update with new data.
+	 * @param   string $base_tree   The SHA1 of the tree you want to update with new data.
 	 *
 	 * @since   3.3 (CMS)
 	 *

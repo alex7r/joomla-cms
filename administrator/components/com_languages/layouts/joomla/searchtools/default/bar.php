@@ -15,11 +15,11 @@ if ($data['view'] instanceof LanguagesViewInstalled)
 {
 	// We will get the client filter & remove it from the form filters
 	$clientIdField = $data['view']->filterForm->getField('client_id');
-?>
+	?>
 	<div class="js-stools-field-filter js-stools-client_id">
 		<?php echo $clientIdField->input; ?>
 	</div>
-<?php
+	<?php
 }
 
 // Display the main joomla layout

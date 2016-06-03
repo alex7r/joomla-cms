@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -32,7 +32,7 @@ class FOFFormFieldCheckboxes extends JFormFieldCheckboxes implements FOFFormFiel
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -92,7 +92,8 @@ class FOFFormFieldCheckboxes extends JFormFieldCheckboxes implements FOFFormFiel
 		$translate = $this->element['translate'] ? (string) $this->element['translate'] : false;
 
 		$html = '<span class="' . $class . '">';
-		foreach ($this->value as $value) {
+		foreach ($this->value as $value)
+		{
 
 			$html .= '<span>';
 

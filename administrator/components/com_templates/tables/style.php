@@ -21,7 +21,7 @@ class TemplatesTableStyle extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  &$db  A database connector object
+	 * @param   JDatabaseDriver &$db A database connector object
 	 *
 	 * @since   1.6
 	 */
@@ -33,10 +33,10 @@ class TemplatesTableStyle extends JTable
 	/**
 	 * Overloaded bind function to pre-process the params.
 	 *
-	 * @param   array  $array   Named array
-	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @param   array $array  Named array
+	 * @param   mixed $ignore An optional array or space separated list of properties to ignore while binding.
 	 *
-	 * @return  null|string	null if operation was satisfactory, otherwise returns an error
+	 * @return  null|string    null if operation was satisfactory, otherwise returns an error
 	 *
 	 * @since   1.6
 	 */
@@ -82,7 +82,7 @@ class TemplatesTableStyle extends JTable
 	/**
 	 * Overloaded store method to ensure unicity of default style.
 	 *
-	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 * @param   boolean $updateNulls True to update fields even if they are null.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -107,7 +107,7 @@ class TemplatesTableStyle extends JTable
 	/**
 	 * Overloaded store method to unsure existence of a default style for a template.
 	 *
-	 * @param   mixed  $pk  An optional primary key value to delete.  If not set the instance property value is used.
+	 * @param   mixed $pk An optional primary key value to delete.  If not set the instance property value is used.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -115,7 +115,7 @@ class TemplatesTableStyle extends JTable
 	 */
 	public function delete($pk = null)
 	{
-		$k = $this->_tbl_key;
+		$k  = $this->_tbl_key;
 		$pk = (is_null($pk)) ? $this->$k : $pk;
 
 		if (!is_null($pk))

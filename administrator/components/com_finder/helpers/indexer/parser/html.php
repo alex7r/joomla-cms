@@ -24,7 +24,7 @@ class FinderIndexerParserHtml extends FinderIndexerParser
 	 * batch out its parsing functionality to deal with the inefficiencies of
 	 * regular expressions. We will parse recursively in 2KB chunks.
 	 *
-	 * @param   string  $input  The input to parse.
+	 * @param   string $input The input to parse.
 	 *
 	 * @return  string  The plain text input.
 	 *
@@ -37,7 +37,7 @@ class FinderIndexerParserHtml extends FinderIndexerParser
 
 		// Convert <style>, <noscript> and <head> tags to <script> tags
 		// so we can remove them efficiently.
-		$search = array(
+		$search  = array(
 			'<style', '</style',
 			'<noscript', '</noscript',
 			'<head', '</head',
@@ -47,7 +47,7 @@ class FinderIndexerParserHtml extends FinderIndexerParser
 			'<script', '</script',
 			'<script', '</script',
 		);
-		$input = str_replace($search, $replace, $input);
+		$input   = str_replace($search, $replace, $input);
 
 		// Strip all script blocks.
 		$input = $this->removeBlocks($input, '<script', '</script>');
@@ -76,19 +76,19 @@ class FinderIndexerParserHtml extends FinderIndexerParser
 	 * Note: Blocks must not be nested.
 	 * Note: This method will function correctly with multi-byte strings.
 	 *
-	 * @param   string  $input     String to be processed.
-	 * @param   string  $startTag  String representing the start tag.
-	 * @param   string  $endTag    String representing the end tag.
+	 * @param   string $input    String to be processed.
+	 * @param   string $startTag String representing the start tag.
+	 * @param   string $endTag   String representing the end tag.
 	 *
 	 * @return  string with blocks removed.
 	 */
 	private function removeBlocks($input, $startTag, $endTag)
 	{
-		$return = '';
-		$blocks = array();
-		$offset = 0;
+		$return         = '';
+		$blocks         = array();
+		$offset         = 0;
 		$startTagLength = strlen($startTag);
-		$endTagLength = strlen($endTag);
+		$endTagLength   = strlen($endTag);
 
 		// Find the first start tag.
 		$start = stripos($input, $startTag);
@@ -132,7 +132,7 @@ class FinderIndexerParserHtml extends FinderIndexerParser
 	/**
 	 * Method to process HTML input and extract the plain text.
 	 *
-	 * @param   string  $input  The input to process.
+	 * @param   string $input The input to process.
 	 *
 	 * @return  string  The plain text input.
 	 *

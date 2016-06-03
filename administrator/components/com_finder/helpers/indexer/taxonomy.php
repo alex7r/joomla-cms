@@ -35,10 +35,10 @@ class FinderIndexerTaxonomy
 	/**
 	 * Method to add a node to the taxonomy tree.
 	 *
-	 * @param   string   $branch  The title of the branch to store the node in.
-	 * @param   string   $title   The title of the node.
-	 * @param   integer  $state   The published state of the node. [optional]
-	 * @param   integer  $access  The access state of the node. [optional]
+	 * @param   string  $branch The title of the branch to store the node in.
+	 * @param   string  $title  The title of the node.
+	 * @param   integer $state  The published state of the node. [optional]
+	 * @param   integer $access The access state of the node. [optional]
 	 *
 	 * @return  integer  The id of the node.
 	 *
@@ -57,7 +57,7 @@ class FinderIndexerTaxonomy
 		$branchId = self::addBranch($branch);
 
 		// Check to see if the node is in the table.
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('*')
 			->from($db->quoteName('#__finder_taxonomy'))
@@ -88,19 +88,19 @@ class FinderIndexerTaxonomy
 		{
 			// Prepare the node object.
 			$node->parent_id = (int) $branchId;
-			$node->title = $title;
-			$node->state = (int) $state;
-			$node->access = (int) $access;
+			$node->title     = $title;
+			$node->state     = (int) $state;
+			$node->access    = (int) $access;
 		}
 		else
 		{
 			// Prepare the node object.
-			$node->id = (int) $result->id;
+			$node->id        = (int) $result->id;
 			$node->parent_id = (int) $result->parent_id;
-			$node->title = $result->title;
-			$node->state = (int) $result->title;
-			$node->access = (int) $result->access;
-			$node->ordering = (int) $result->ordering;
+			$node->title     = $result->title;
+			$node->state     = (int) $result->title;
+			$node->access    = (int) $result->access;
+			$node->ordering  = (int) $result->ordering;
 		}
 
 		// Store the node.
@@ -115,9 +115,9 @@ class FinderIndexerTaxonomy
 	/**
 	 * Method to add a branch to the taxonomy tree.
 	 *
-	 * @param   string   $title   The title of the branch.
-	 * @param   integer  $state   The published state of the branch. [optional]
-	 * @param   integer  $access  The access state of the branch. [optional]
+	 * @param   string  $title  The title of the branch.
+	 * @param   integer $state  The published state of the branch. [optional]
+	 * @param   integer $access The access state of the branch. [optional]
 	 *
 	 * @return  integer  The id of the branch.
 	 *
@@ -133,7 +133,7 @@ class FinderIndexerTaxonomy
 		}
 
 		// Check to see if the branch is in the table.
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('*')
 			->from($db->quoteName('#__finder_taxonomy'))
@@ -164,19 +164,19 @@ class FinderIndexerTaxonomy
 		{
 			// Prepare the branch object.
 			$branch->parent_id = 1;
-			$branch->title = $title;
-			$branch->state = (int) $state;
-			$branch->access = (int) $access;
+			$branch->title     = $title;
+			$branch->state     = (int) $state;
+			$branch->access    = (int) $access;
 		}
 		else
 		{
 			// Prepare the branch object.
-			$branch->id = (int) $result->id;
+			$branch->id        = (int) $result->id;
 			$branch->parent_id = (int) $result->parent_id;
-			$branch->title = $result->title;
-			$branch->state = (int) $result->title;
-			$branch->access = (int) $result->access;
-			$branch->ordering = (int) $result->ordering;
+			$branch->title     = $result->title;
+			$branch->state     = (int) $result->title;
+			$branch->access    = (int) $result->access;
+			$branch->ordering  = (int) $result->ordering;
 		}
 
 		// Store the branch.
@@ -191,7 +191,7 @@ class FinderIndexerTaxonomy
 	/**
 	 * Method to store a node to the database.  This method will accept either a branch or a node.
 	 *
-	 * @param   object  $item  The item to store.
+	 * @param   object $item The item to store.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -220,8 +220,8 @@ class FinderIndexerTaxonomy
 	/**
 	 * Method to add a map entry between a link and a taxonomy node.
 	 *
-	 * @param   integer  $linkId  The link to map to.
-	 * @param   integer  $nodeId  The node to map to.
+	 * @param   integer $linkId The link to map to.
+	 * @param   integer $nodeId The node to map to.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -242,7 +242,7 @@ class FinderIndexerTaxonomy
 		$db->execute();
 		$id = (int) $db->loadResult();
 
-		$map = new JObject;
+		$map          = new JObject;
 		$map->link_id = (int) $linkId;
 		$map->node_id = (int) $nodeId;
 
@@ -271,7 +271,7 @@ class FinderIndexerTaxonomy
 		$db = JFactory::getDbo();
 
 		// Set user variables
-		$user = JFactory::getUser();
+		$user   = JFactory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		// Create a query to get the taxonomy branch titles.
@@ -292,8 +292,8 @@ class FinderIndexerTaxonomy
 	/**
 	 * Method to find a taxonomy node in a branch.
 	 *
-	 * @param   string  $branch  The branch to search.
-	 * @param   string  $title   The title of the node.
+	 * @param   string $branch The branch to search.
+	 * @param   string $title  The title of the node.
 	 *
 	 * @return  mixed  Integer id on success, null on no match.
 	 *
@@ -305,7 +305,7 @@ class FinderIndexerTaxonomy
 		$db = JFactory::getDbo();
 
 		// Set user variables
-		$user = JFactory::getUser();
+		$user   = JFactory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		// Create a query to get the node.
@@ -330,7 +330,7 @@ class FinderIndexerTaxonomy
 	/**
 	 * Method to remove map entries for a link.
 	 *
-	 * @param   integer  $linkId  The link to remove.
+	 * @param   integer $linkId The link to remove.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -340,7 +340,7 @@ class FinderIndexerTaxonomy
 	public static function removeMaps($linkId)
 	{
 		// Delete the maps.
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->delete($db->quoteName('#__finder_taxonomy_map'))
 			->where($db->quoteName('link_id') . ' = ' . (int) $linkId);
@@ -361,7 +361,7 @@ class FinderIndexerTaxonomy
 	public static function removeOrphanNodes()
 	{
 		// Delete all orphaned nodes.
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = 'DELETE t' .
 			' FROM ' . $db->quoteName('#__finder_taxonomy') . ' AS t' .
 			' LEFT JOIN ' . $db->quoteName('#__finder_taxonomy_map') . ' AS m ON m.node_id = t.id' .

@@ -25,17 +25,17 @@ JLoader::register('FinderIndexerQuery', FINDER_PATH_INDEXER . '/query.php');
 // Check for OpenSearch
 if ($params->get('opensearch', 1))
 {
-/*
-This code intentionally commented
-	$doc = JFactory::getDocument();
-	$app = JFactory::getApplication();
-
-	$ostitle = $params->get('opensearch_title', JText::_('MOD_FINDER_SEARCHBUTTON_TEXT') . ' ' . $app->get('sitename'));
-	$doc->addHeadLink(
-						JUri::getInstance()->toString(array('scheme', 'host', 'port')) . JRoute::_('&option=com_finder&format=opensearch'),
-						'search', 'rel', array('title' => $ostitle, 'type' => 'application/opensearchdescription+xml')
-					);
-*/
+	/*
+	This code intentionally commented
+		$doc = JFactory::getDocument();
+		$app = JFactory::getApplication();
+	
+		$ostitle = $params->get('opensearch_title', JText::_('MOD_FINDER_SEARCHBUTTON_TEXT') . ' ' . $app->get('sitename'));
+		$doc->addHeadLink(
+							JUri::getInstance()->toString(array('scheme', 'host', 'port')) . JRoute::_('&option=com_finder&format=opensearch'),
+							'search', 'rel', array('title' => $ostitle, 'type' => 'application/opensearchdescription+xml')
+						);
+	*/
 }
 
 // Initialize module parameters.

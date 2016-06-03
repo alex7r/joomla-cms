@@ -19,14 +19,14 @@ class JCryptPasswordSimple implements JCryptPassword
 {
 	/**
 	 * @var    integer  The cost parameter for hashing algorithms.
-	 * @since  12.2
+	 * @since       12.2
 	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
 	 */
 	protected $cost = 10;
 
 	/**
 	 * @var    string   The default hash type
-	 * @since  12.3
+	 * @since       12.3
 	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
 	 */
 	protected $defaultType = '$2y$';
@@ -34,12 +34,12 @@ class JCryptPasswordSimple implements JCryptPassword
 	/**
 	 * Creates a password hash
 	 *
-	 * @param   string  $password  The password to hash.
-	 * @param   string  $type      The hash type.
+	 * @param   string $password The password to hash.
+	 * @param   string $type     The hash type.
 	 *
 	 * @return  mixed  The hashed password or false if the password is too long.
 	 *
-	 * @since   12.2
+	 * @since       12.2
 	 * @throws  InvalidArgumentException
 	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
 	 */
@@ -85,28 +85,13 @@ class JCryptPasswordSimple implements JCryptPassword
 	}
 
 	/**
-	 * Sets the cost parameter for the generated hash for algorithms that use a cost factor.
-	 *
-	 * @param   integer  $cost  The new cost value.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.2
-	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
-	 */
-	public function setCost($cost)
-	{
-		$this->cost = $cost;
-	}
-
-	/**
 	 * Generates a salt of specified length. The salt consists of characters in the set [./0-9A-Za-z].
 	 *
-	 * @param   integer  $length  The number of characters to return.
+	 * @param   integer $length The number of characters to return.
 	 *
 	 * @return  string  The string of random characters.
 	 *
-	 * @since   12.2
+	 * @since       12.2
 	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
 	 */
 	protected function getSalt($length)
@@ -119,14 +104,29 @@ class JCryptPasswordSimple implements JCryptPassword
 	}
 
 	/**
+	 * Sets the cost parameter for the generated hash for algorithms that use a cost factor.
+	 *
+	 * @param   integer $cost The new cost value.
+	 *
+	 * @return  void
+	 *
+	 * @since       12.2
+	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
+	 */
+	public function setCost($cost)
+	{
+		$this->cost = $cost;
+	}
+
+	/**
 	 * Verifies a password hash
 	 *
-	 * @param   string  $password  The password to verify.
-	 * @param   string  $hash      The password hash to check.
+	 * @param   string $password The password to verify.
+	 * @param   string $hash     The password hash to check.
 	 *
 	 * @return  boolean  True if the password is valid, false otherwise.
 	 *
-	 * @since   12.2
+	 * @since       12.2
 	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
 	 */
 	public function verify($password, $hash)
@@ -168,13 +168,26 @@ class JCryptPasswordSimple implements JCryptPassword
 	}
 
 	/**
+	 * Gets the default type
+	 *
+	 * @return   string  $type  The default type
+	 *
+	 * @since       12.3
+	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
+	 */
+	public function getDefaultType()
+	{
+		return $this->defaultType;
+	}
+
+	/**
 	 * Sets a default type
 	 *
-	 * @param   string  $type  The value to set as default.
+	 * @param   string $type The value to set as default.
 	 *
 	 * @return  void
 	 *
-	 * @since   12.3
+	 * @since       12.3
 	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
 	 */
 	public function setDefaultType($type)
@@ -183,18 +196,5 @@ class JCryptPasswordSimple implements JCryptPassword
 		{
 			$this->defaultType = $type;
 		}
-	}
-
-	/**
-	 * Gets the default type
-	 *
-	 * @return   string  $type  The default type
-	 *
-	 * @since   12.3
-	 * @deprecated  4.0  Use PHP 5.5's native password hashing API
-	 */
-	public function getDefaultType()
-	{
-		return $this->defaultType;
 	}
 }

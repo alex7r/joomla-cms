@@ -12,17 +12,17 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Class to encapsulate a feed entry for the Joomla Platform.
  *
- * @property  JFeedPerson  $author         Person responsible for feed entry content.
- * @property  array        $categories     Categories to which the feed entry belongs.
- * @property  string       $content        The content of the feed entry.
- * @property  array        $contributors   People who contributed to the feed entry content.
- * @property  string       $copyright      Information about rights, e.g. copyrights, held in and over the feed entry.
- * @property  array        $links          Links associated with the feed entry.
- * @property  JDate        $publishedDate  The publication date for the feed entry.
- * @property  JFeed        $source         The feed from which the entry is sourced.
- * @property  string       $title          A human readable title for the feed entry.
- * @property  JDate        $updatedDate    The last time the content of the feed entry changed.
- * @property  string       $uri            Universal, permanent identifier for the feed entry.
+ * @property  JFeedPerson $author         Person responsible for feed entry content.
+ * @property  array       $categories     Categories to which the feed entry belongs.
+ * @property  string      $content        The content of the feed entry.
+ * @property  array       $contributors   People who contributed to the feed entry content.
+ * @property  string      $copyright      Information about rights, e.g. copyrights, held in and over the feed entry.
+ * @property  array       $links          Links associated with the feed entry.
+ * @property  JDate       $publishedDate  The publication date for the feed entry.
+ * @property  JFeed       $source         The feed from which the entry is sourced.
+ * @property  string      $title          A human readable title for the feed entry.
+ * @property  JDate       $updatedDate    The last time the content of the feed entry changed.
+ * @property  string      $uri            Universal, permanent identifier for the feed entry.
  *
  * @since  12.3
  */
@@ -33,19 +33,19 @@ class JFeedEntry
 	 * @since  12.3
 	 */
 	protected $properties = array(
-		'uri'  => '',
-		'title' => '',
-		'updatedDate' => '',
-		'content' => '',
-		'categories' => array(),
+		'uri'          => '',
+		'title'        => '',
+		'updatedDate'  => '',
+		'content'      => '',
+		'categories'   => array(),
 		'contributors' => array(),
-		'links' => array()
+		'links'        => array()
 	);
 
 	/**
 	 * Magic method to return values for feed entry properties.
 	 *
-	 * @param   string  $name  The name of the property.
+	 * @param   string $name The name of the property.
 	 *
 	 * @return  mixed
 	 *
@@ -59,8 +59,8 @@ class JFeedEntry
 	/**
 	 * Magic method to set values for feed properties.
 	 *
-	 * @param   string  $name   The name of the property.
-	 * @param   mixed   $value  The value to set for the property.
+	 * @param   string $name  The name of the property.
+	 * @param   mixed  $value The value to set for the property.
 	 *
 	 * @return  void
 	 *
@@ -98,8 +98,8 @@ class JFeedEntry
 	/**
 	 * Method to add a category to the feed entry object.
 	 *
-	 * @param   string  $name  The name of the category to add.
-	 * @param   string  $uri   The optional URI for the category to add.
+	 * @param   string $name The name of the category to add.
+	 * @param   string $uri  The optional URI for the category to add.
 	 *
 	 * @return  JFeedEntry
 	 *
@@ -115,10 +115,10 @@ class JFeedEntry
 	/**
 	 * Method to add a contributor to the feed entry object.
 	 *
-	 * @param   string  $name   The full name of the person to add.
-	 * @param   string  $email  The email address of the person to add.
-	 * @param   string  $uri    The optional URI for the person to add.
-	 * @param   string  $type   The optional type of person to add.
+	 * @param   string $name  The full name of the person to add.
+	 * @param   string $email The email address of the person to add.
+	 * @param   string $uri   The optional URI for the person to add.
+	 * @param   string $type  The optional type of person to add.
 	 *
 	 * @return  JFeedEntry
 	 *
@@ -146,7 +146,7 @@ class JFeedEntry
 	/**
 	 * Method to add a link to the feed entry object.
 	 *
-	 * @param   JFeedLink  $link  The link object to add.
+	 * @param   JFeedLink $link The link object to add.
 	 *
 	 * @return  JFeedEntry
 	 *
@@ -172,7 +172,7 @@ class JFeedEntry
 	/**
 	 * Method to remove a category from the feed entry object.
 	 *
-	 * @param   string  $name  The name of the category to remove.
+	 * @param   string $name The name of the category to remove.
 	 *
 	 * @return  JFeedEntry
 	 *
@@ -188,7 +188,7 @@ class JFeedEntry
 	/**
 	 * Method to remove a contributor from the feed entry object.
 	 *
-	 * @param   JFeedPerson  $contributor  The person object to remove.
+	 * @param   JFeedPerson $contributor The person object to remove.
 	 *
 	 * @return  JFeedEntry
 	 *
@@ -214,7 +214,7 @@ class JFeedEntry
 	/**
 	 * Method to remove a link from the feed entry object.
 	 *
-	 * @param   JFeedLink  $link  The link object to remove.
+	 * @param   JFeedLink $link The link object to remove.
 	 *
 	 * @return  JFeedEntry
 	 *
@@ -240,10 +240,10 @@ class JFeedEntry
 	/**
 	 * Shortcut method to set the author for the feed entry object.
 	 *
-	 * @param   string  $name   The full name of the person to set.
-	 * @param   string  $email  The email address of the person to set.
-	 * @param   string  $uri    The optional URI for the person to set.
-	 * @param   string  $type   The optional type of person to set.
+	 * @param   string $name  The full name of the person to set.
+	 * @param   string $email The email address of the person to set.
+	 * @param   string $uri   The optional URI for the person to set.
+	 * @param   string $type  The optional type of person to set.
 	 *
 	 * @return  JFeedEntry
 	 *

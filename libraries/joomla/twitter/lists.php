@@ -19,9 +19,9 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to get all lists the authenticating or specified user subscribes to, including their own.
 	 *
-	 * @param   mixed    $user     Either an integer containing the user ID or a string containing the screen name.
-	 * @param   boolean  $reverse  Set this to true if you would like owned lists to be returned first. See description
-	 * 					 above for information on how this parameter works.
+	 * @param   mixed   $user    Either an integer containing the user ID or a string containing the screen name.
+	 * @param   boolean $reverse Set this to true if you would like owned lists to be returned first. See description
+	 *                           above for information on how this parameter works.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -64,15 +64,15 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to get tweet timeline for members of the specified list
 	 *
-	 * @param   mixed    $list         Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed    $owner        Either an integer containing the user ID or a string containing the screen name.
-	 * @param   integer  $since_id     Returns results with an ID greater than (that is, more recent than) the specified ID.
-	 * @param   integer  $max_id       Returns results with an ID less than (that is, older than) or equal to the specified ID.
-	 * @param   integer  $count        Specifies the number of results to retrieve per "page."
-	 * @param   boolean  $entities     When set to either true, t or 1, each tweet will include a node called "entities". This node offers a variety
-	 * 								   of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
-	 * @param   boolean  $include_rts  When set to either true, t or 1, the list timeline will contain native retweets (if they exist) in addition
-	 * 								   to the standard stream of tweets.
+	 * @param   mixed   $list            Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed   $owner           Either an integer containing the user ID or a string containing the screen name.
+	 * @param   integer $since_id        Returns results with an ID greater than (that is, more recent than) the specified ID.
+	 * @param   integer $max_id          Returns results with an ID less than (that is, older than) or equal to the specified ID.
+	 * @param   integer $count           Specifies the number of results to retrieve per "page."
+	 * @param   boolean $entities        When set to either true, t or 1, each tweet will include a node called "entities". This node offers a variety
+	 *                                   of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
+	 * @param   boolean $include_rts     When set to either true, t or 1, the list timeline will contain native retweets (if they exist) in addition
+	 *                                   to the standard stream of tweets.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -154,12 +154,12 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to get the subscribers of the specified list.
 	 *
-	 * @param   mixed    $list         Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed    $owner        Either an integer containing the user ID or a string containing the screen name.
-	 * @param   integer  $cursor       Breaks the results into pages. A single page contains 20 lists. Provide a value of -1 to begin paging.
-	 * @param   boolean  $entities     When set to either true, t or 1, each tweet will include a node called "entities". This node offers a variety
-	 * 								   of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
-	 * @param   boolean  $skip_status  When set to either true, t or 1 statuses will not be included in the returned user objects.
+	 * @param   mixed   $list            Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed   $owner           Either an integer containing the user ID or a string containing the screen name.
+	 * @param   integer $cursor          Breaks the results into pages. A single page contains 20 lists. Provide a value of -1 to begin paging.
+	 * @param   boolean $entities        When set to either true, t or 1, each tweet will include a node called "entities". This node offers a variety
+	 *                                   of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
+	 * @param   boolean $skip_status     When set to either true, t or 1 statuses will not be included in the returned user objects.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -229,10 +229,10 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to remove multiple members from a list, by specifying a comma-separated list of member ids or screen names.
 	 *
-	 * @param   mixed   $list         Either an integer containing the list ID or a string containing the list slug.
-	 * @param   string  $user_id      A comma separated list of user IDs, up to 100 are allowed in a single request.
-	 * @param   string  $screen_name  A comma separated list of screen names, up to 100 are allowed in a single request.
-	 * @param   mixed   $owner        Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   mixed  $list        Either an integer containing the list ID or a string containing the list slug.
+	 * @param   string $user_id     A comma separated list of user IDs, up to 100 are allowed in a single request.
+	 * @param   string $screen_name A comma separated list of screen names, up to 100 are allowed in a single request.
+	 * @param   mixed  $owner       Either an integer containing the user ID or a string containing the screen name of the owner.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -297,8 +297,8 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to subscribe the authenticated user to the specified list.
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name of the owner.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -350,12 +350,12 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to check if the specified user is a member of the specified list.
 	 *
-	 * @param   mixed    $list         Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed    $user         Either an integer containing the user ID or a string containing the screen name of the user to remove.
-	 * @param   mixed    $owner        Either an integer containing the user ID or a string containing the screen name of the owner.
-	 * @param   boolean  $entities     When set to either true, t or 1, each tweet will include a node called "entities". This node offers a
-	 * 								   variety of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
-	 * @param   boolean  $skip_status  When set to either true, t or 1 statuses will not be included in the returned user objects.
+	 * @param   mixed   $list            Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed   $user            Either an integer containing the user ID or a string containing the screen name of the user to remove.
+	 * @param   mixed   $owner           Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   boolean $entities        When set to either true, t or 1, each tweet will include a node called "entities". This node offers a
+	 *                                   variety of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
+	 * @param   boolean $skip_status     When set to either true, t or 1 statuses will not be included in the returned user objects.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -433,12 +433,12 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to check if the specified user is a subscriber of the specified list.
 	 *
-	 * @param   mixed    $list         Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed    $user         Either an integer containing the user ID or a string containing the screen name of the user to remove.
-	 * @param   mixed    $owner        Either an integer containing the user ID or a string containing the screen name of the owner.
-	 * @param   boolean  $entities     When set to either true, t or 1, each tweet will include a node called "entities". This node offers a
-	 * 								   variety of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
-	 * @param   boolean  $skip_status  When set to either true, t or 1 statuses will not be included in the returned user objects.
+	 * @param   mixed   $list            Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed   $user            Either an integer containing the user ID or a string containing the screen name of the user to remove.
+	 * @param   mixed   $owner           Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   boolean $entities        When set to either true, t or 1, each tweet will include a node called "entities". This node offers a
+	 *                                   variety of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
+	 * @param   boolean $skip_status     When set to either true, t or 1 statuses will not be included in the returned user objects.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -516,8 +516,8 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to unsubscribe the authenticated user from the specified list.
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name of the owner.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -569,10 +569,10 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to add multiple members to a list, by specifying a comma-separated list of member ids or screen names.
 	 *
-	 * @param   mixed   $list         Either an integer containing the list ID or a string containing the list slug.
-	 * @param   string  $user_id      A comma separated list of user IDs, up to 100 are allowed in a single request.
-	 * @param   string  $screen_name  A comma separated list of screen names, up to 100 are allowed in a single request.
-	 * @param   mixed   $owner        Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   mixed  $list        Either an integer containing the list ID or a string containing the list slug.
+	 * @param   string $user_id     A comma separated list of user IDs, up to 100 are allowed in a single request.
+	 * @param   string $screen_name A comma separated list of screen names, up to 100 are allowed in a single request.
+	 * @param   mixed  $owner       Either an integer containing the user ID or a string containing the screen name of the owner.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -640,11 +640,11 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to get the members of the specified list.
 	 *
-	 * @param   mixed    $list         Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed    $owner        Either an integer containing the user ID or a string containing the screen name.
-	 * @param   boolean  $entities     When set to either true, t or 1, each tweet will include a node called "entities". This node offers a variety
-	 * 								   of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
-	 * @param   boolean  $skip_status  When set to either true, t or 1 statuses will not be included in the returned user objects.
+	 * @param   mixed   $list            Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed   $owner           Either an integer containing the user ID or a string containing the screen name.
+	 * @param   boolean $entities        When set to either true, t or 1, each tweet will include a node called "entities". This node offers a variety
+	 *                                   of metadata about the tweet in a discreet structure, including: user_mentions, urls, and hashtags.
+	 * @param   boolean $skip_status     When set to either true, t or 1 statuses will not be included in the returned user objects.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -708,8 +708,8 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to get the specified list.
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -761,9 +761,9 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to get a collection of the lists the specified user is subscribed to, 20 lists per page by default. Does not include the user's own lists.
 	 *
-	 * @param   mixed    $user    Either an integer containing the user ID or a string containing the screen name.
-	 * @param   integer  $count   The amount of results to return per page. Defaults to 20. Maximum of 1,000 when using cursors.
-	 * @param   integer  $cursor  Breaks the results into pages. Provide a value of -1 to begin paging.
+	 * @param   mixed   $user   Either an integer containing the user ID or a string containing the screen name.
+	 * @param   integer $count  The amount of results to return per page. Defaults to 20. Maximum of 1,000 when using cursors.
+	 * @param   integer $cursor Breaks the results into pages. Provide a value of -1 to begin paging.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -812,12 +812,12 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to update the specified list
 	 *
-	 * @param   mixed   $list         Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed   $owner        Either an integer containing the user ID or a string containing the screen name of the owner.
-	 * @param   string  $name         The name of the list.
-	 * @param   string  $mode         Whether your list is public or private. Values can be public or private. If no mode is
-	 * 								  specified the list will be public.
-	 * @param   string  $description  The description to give the list.
+	 * @param   mixed  $list            Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed  $owner           Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   string $name            The name of the list.
+	 * @param   string $mode            Whether your list is public or private. Values can be public or private. If no mode is
+	 *                                  specified the list will be public.
+	 * @param   string $description     The description to give the list.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -887,10 +887,10 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to create a new list for the authenticated user.
 	 *
-	 * @param   string  $name         The name of the list.
-	 * @param   string  $mode         Whether your list is public or private. Values can be public or private. If no mode is
-	 * 								  specified the list will be public.
-	 * @param   string  $description  The description to give the list.
+	 * @param   string $name            The name of the list.
+	 * @param   string $mode            Whether your list is public or private. Values can be public or private. If no mode is
+	 *                                  specified the list will be public.
+	 * @param   string $description     The description to give the list.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -929,8 +929,8 @@ class JTwitterLists extends JTwitterObject
 	/**
 	 * Method to delete a specified list.
 	 *
-	 * @param   mixed  $list   Either an integer containing the list ID or a string containing the list slug.
-	 * @param   mixed  $owner  Either an integer containing the user ID or a string containing the screen name of the owner.
+	 * @param   mixed $list  Either an integer containing the list ID or a string containing the list slug.
+	 * @param   mixed $owner Either an integer containing the user ID or a string containing the screen name of the owner.
 	 *
 	 * @return  array  The decoded JSON response
 	 *

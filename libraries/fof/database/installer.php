@@ -1,10 +1,10 @@
 <?php
-/**
- * @package		fof
- * @copyright	2014 Nicholas K. Dionysopoulos / Akeeba Ltd
- * @license		GNU GPL version 3 or later
- */
 
+/**
+ * @package        fof
+ * @copyright      2014 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @license        GNU GPL version 3 or later
+ */
 class FOFDatabaseInstaller
 {
 	/** @var  array  A list of the base names of the XML schema files */
@@ -24,7 +24,7 @@ class FOFDatabaseInstaller
 	/**
 	 * Public constructor
 	 *
-	 * @param   array  $config  The configuration array
+	 * @param   array $config The configuration array
 	 */
 	public function __construct($config = array())
 	{
@@ -113,7 +113,7 @@ class FOFDatabaseInstaller
 	/**
 	 * Sets the directory where XML schema files are stored
 	 *
-	 * @param   string  $xmlDirectory
+	 * @param   string $xmlDirectory
 	 */
 	public function setXmlDirectory($xmlDirectory)
 	{
@@ -174,7 +174,7 @@ class FOFDatabaseInstaller
 				if ($node->getName() == 'condition')
 				{
 					// Get the operator
-					$operator = $node->attributes()->operator ? (string)$node->attributes()->operator : 'and';
+					$operator = $node->attributes()->operator ? (string) $node->attributes()->operator : 'and';
 					$operator = empty($operator) ? 'and' : $operator;
 
 					$condition = $this->conditionMet($table, $node);
@@ -232,14 +232,14 @@ class FOFDatabaseInstaller
 					{
 						if (version_compare(JVERSION, '3.1', 'lt'))
 						{
-							$handlers = array(
-								E_NOTICE 	=> JError::getErrorHandling(E_NOTICE),
-								E_WARNING	=> JError::getErrorHandling(E_WARNING),
-								E_ERROR		=> JError::getErrorHandling(E_ERROR),
+							$handlers                       = array(
+								E_NOTICE  => JError::getErrorHandling(E_NOTICE),
+								E_WARNING => JError::getErrorHandling(E_WARNING),
+								E_ERROR   => JError::getErrorHandling(E_ERROR),
 							);
-							$handlers[E_NOTICE]['options'] = isset($handlers[E_NOTICE]['options']) ? $handlers[E_NOTICE]['options'] : null;
+							$handlers[E_NOTICE]['options']  = isset($handlers[E_NOTICE]['options']) ? $handlers[E_NOTICE]['options'] : null;
 							$handlers[E_WARNING]['options'] = isset($handlers[E_WARNING]['options']) ? $handlers[E_WARNING]['options'] : null;
-							$handlers[E_ERROR]['options'] = isset($handlers[E_ERROR]['options']) ? $handlers[E_ERROR]['options'] : null;
+							$handlers[E_ERROR]['options']   = isset($handlers[E_ERROR]['options']) ? $handlers[E_ERROR]['options'] : null;
 							JError::setErrorHandling(E_NOTICE, 'ignore');
 							JError::setErrorHandling(E_WARNING, 'ignore');
 							JError::setErrorHandling(E_ERROR, 'ignore');
@@ -284,7 +284,7 @@ class FOFDatabaseInstaller
 	protected function findSchemaXml()
 	{
 		$driverType = $this->db->name;
-		$xml = null;
+		$xml        = null;
 
 		// And now look for the file
 		foreach ($this->xmlFiles as $baseName)
@@ -337,7 +337,7 @@ class FOFDatabaseInstaller
 			// Strict driver name match
 			foreach ($drivers->children() as $driverTypeTag)
 			{
-				$thisDriverType = (string)$driverTypeTag;
+				$thisDriverType = (string) $driverTypeTag;
 
 				if ($thisDriverType == $driverType)
 				{
@@ -348,7 +348,7 @@ class FOFDatabaseInstaller
 			// Some custom database drivers use a non-standard $name variable. Let try a relaxed match.
 			foreach ($drivers->children() as $driverTypeTag)
 			{
-				$thisDriverType = (string)$driverTypeTag;
+				$thisDriverType = (string) $driverTypeTag;
 
 				if (
 					// e.g. $driverType = 'mysqlistupid', $thisDriverType = 'mysqli' => driver matched
@@ -370,8 +370,8 @@ class FOFDatabaseInstaller
 	/**
 	 * Checks if a condition is met
 	 *
-	 * @param   string            $table  The table we're operating on
-	 * @param   SimpleXMLElement  $node   The condition definition node
+	 * @param   string           $table The table we're operating on
+	 * @param   SimpleXMLElement $node  The condition definition node
 	 *
 	 * @return  bool
 	 */
@@ -393,15 +393,15 @@ class FOFDatabaseInstaller
 
 		// Get the condition's attributes
 		$attributes = $node->attributes();
-		$type = $attributes->type ? $attributes->type : null;
-		$value = $attributes->value ? (string) $attributes->value : null;
+		$type       = $attributes->type ? $attributes->type : null;
+		$value      = $attributes->value ? (string) $attributes->value : null;
 
 		switch ($type)
 		{
 			// Check if a table or column is missing
 			case 'missing':
-				$tableName = (string)$table;
-				$fieldName = (string)$value;
+				$tableName = (string) $table;
+				$fieldName = (string) $value;
 
 				if (empty($fieldName))
 				{
@@ -410,14 +410,14 @@ class FOFDatabaseInstaller
 				else
 				{
 					$tableColumns = $this->db->getTableColumns($tableNormal, true);
-					$condition = !array_key_exists($fieldName, $tableColumns);
+					$condition    = !array_key_exists($fieldName, $tableColumns);
 				}
 				break;
 
 			// Check if a column type matches the "coltype" attribute
 			case 'type':
 				$tableColumns = $this->db->getTableColumns($table, false);
-				$condition = false;
+				$condition    = false;
 
 				if (array_key_exists($value, $tableColumns))
 				{
@@ -425,7 +425,7 @@ class FOFDatabaseInstaller
 
 					if (!empty($coltype))
 					{
-						$coltype = strtolower($coltype);
+						$coltype     = strtolower($coltype);
 						$currentType = strtolower($tableColumns[$value]->Type);
 
 						$condition = ($coltype == $currentType);
@@ -436,12 +436,12 @@ class FOFDatabaseInstaller
 
 			// Check if the result of a query matches our expectation
 			case 'equals':
-				$query = (string)$node;
+				$query = (string) $node;
 				$this->db->setQuery($query);
 
 				try
 				{
-					$result = $this->db->loadResult();
+					$result    = $this->db->loadResult();
 					$condition = ($result == $value);
 				}
 				catch (Exception $e)
@@ -494,7 +494,7 @@ class FOFDatabaseInstaller
 		foreach ($actions as $action)
 		{
 			$attributes = $action->attributes();
-			$tables[] = (string)$attributes->table;
+			$tables[]   = (string) $attributes->table;
 		}
 
 		// Simplify the tables list

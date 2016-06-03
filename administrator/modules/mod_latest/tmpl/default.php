@@ -36,7 +36,8 @@ JHtml::_('bootstrap.tooltip');
 				</div>
 				<div class="span3">
 					<span class="small">
-						<span class="icon-calendar"></span> <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
+						<span
+							class="icon-calendar"></span> <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
 					</span>
 				</div>
 			</div>
@@ -44,7 +45,7 @@ JHtml::_('bootstrap.tooltip');
 	<?php else : ?>
 		<div class="row-fluid">
 			<div class="span12">
-				<div class="alert"><?php echo JText::_('MOD_LATEST_NO_MATCHING_RESULTS');?></div>
+				<div class="alert"><?php echo JText::_('MOD_LATEST_NO_MATCHING_RESULTS'); ?></div>
 			</div>
 		</div>
 	<?php endif; ?>

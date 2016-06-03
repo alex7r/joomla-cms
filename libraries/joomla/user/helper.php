@@ -22,8 +22,8 @@ abstract class JUserHelper
 	/**
 	 * Method to add a user to a group.
 	 *
-	 * @param   integer  $userId   The id of the user.
-	 * @param   integer  $groupId  The id of the group.
+	 * @param   integer $userId  The id of the user.
+	 * @param   integer $groupId The id of the group.
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -39,7 +39,7 @@ abstract class JUserHelper
 		if (!in_array($groupId, $user->groups))
 		{
 			// Get the title of the group.
-			$db = JFactory::getDbo();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select($db->quoteName('title'))
 				->from($db->quoteName('#__usergroups'))
@@ -81,7 +81,7 @@ abstract class JUserHelper
 	/**
 	 * Method to get a list of groups a user is in.
 	 *
-	 * @param   integer  $userId  The id of the user.
+	 * @param   integer $userId The id of the user.
 	 *
 	 * @return  array    List of groups
 	 *
@@ -98,8 +98,8 @@ abstract class JUserHelper
 	/**
 	 * Method to remove a user from a group.
 	 *
-	 * @param   integer  $userId   The id of the user.
-	 * @param   integer  $groupId  The id of the group.
+	 * @param   integer $userId  The id of the user.
+	 * @param   integer $groupId The id of the group.
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -123,7 +123,7 @@ abstract class JUserHelper
 		}
 
 		// Set the group data for any preloaded user objects.
-		$temp = JFactory::getUser((int) $userId);
+		$temp         = JFactory::getUser((int) $userId);
 		$temp->groups = $user->groups;
 
 		// Set the group data for the user object in the session.
@@ -140,8 +140,8 @@ abstract class JUserHelper
 	/**
 	 * Method to set the groups for a user.
 	 *
-	 * @param   integer  $userId  The id of the user.
-	 * @param   array    $groups  An array of group ids to put the user in.
+	 * @param   integer $userId The id of the user.
+	 * @param   array   $groups An array of group ids to put the user in.
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -157,7 +157,7 @@ abstract class JUserHelper
 		$user->groups = $groups;
 
 		// Get the titles for the user groups.
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select($db->quoteName('id') . ', ' . $db->quoteName('title'))
 			->from($db->quoteName('#__usergroups'))
@@ -177,7 +177,7 @@ abstract class JUserHelper
 		if (session_id())
 		{
 			// Set the group data for any preloaded user objects.
-			$temp = JFactory::getUser((int) $userId);
+			$temp         = JFactory::getUser((int) $userId);
 			$temp->groups = $user->groups;
 
 			// Set the group data for the user object in the session.
@@ -195,7 +195,7 @@ abstract class JUserHelper
 	/**
 	 * Gets the user profile information
 	 *
-	 * @param   integer  $userId  The id of the user.
+	 * @param   integer $userId The id of the user.
 	 *
 	 * @return  object
 	 *
@@ -213,7 +213,7 @@ abstract class JUserHelper
 		$dispatcher = JEventDispatcher::getInstance();
 		JPluginHelper::importPlugin('user');
 
-		$data = new JObject;
+		$data     = new JObject;
 		$data->id = $userId;
 
 		// Trigger the data preparation event.
@@ -225,7 +225,7 @@ abstract class JUserHelper
 	/**
 	 * Method to activate a user
 	 *
-	 * @param   string  $activation  Activation string
+	 * @param   string $activation Activation string
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -274,7 +274,7 @@ abstract class JUserHelper
 	/**
 	 * Returns userid if a user exists
 	 *
-	 * @param   string  $username  The username to search on.
+	 * @param   string $username The username to search on.
 	 *
 	 * @return  integer  The user id or 0 if not found.
 	 *
@@ -283,7 +283,7 @@ abstract class JUserHelper
 	public static function getUserId($username)
 	{
 		// Initialise some variables
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select($db->quoteName('id'))
 			->from($db->quoteName('#__users'))
@@ -294,30 +294,13 @@ abstract class JUserHelper
 	}
 
 	/**
-	 * Hashes a password using the current encryption.
-	 *
-	 * @param   string  $password  The plaintext password to encrypt.
-	 *
-	 * @return  string  The encrypted password.
-	 *
-	 * @since   3.2.1
-	 */
-	public static function hashPassword($password)
-	{
-		// JCrypt::hasStrongPasswordSupport() includes a fallback for us in the worst case
-		JCrypt::hasStrongPasswordSupport();
-
-		return password_hash($password, PASSWORD_DEFAULT);
-	}
-
-	/**
 	 * Formats a password using the current encryption. If the user ID is given
 	 * and the hash does not fit the current hashing algorithm, it automatically
 	 * updates the hash.
 	 *
-	 * @param   string   $password  The plaintext password to check.
-	 * @param   string   $hash      The hash to verify against.
-	 * @param   integer  $user_id   ID of the user if the password hash should be updated
+	 * @param   string  $password The plaintext password to check.
+	 * @param   string  $hash     The hash to verify against.
+	 * @param   integer $user_id  ID of the user if the password hash should be updated
 	 *
 	 * @return  boolean  True if the password and hash match, false otherwise
 	 *
@@ -326,7 +309,7 @@ abstract class JUserHelper
 	public static function verifyPassword($password, $hash, $user_id = 0)
 	{
 		$rehash = false;
-		$match = false;
+		$match  = false;
 
 		// If we are using phpass
 		if (strpos($hash, '$P$') === 0)
@@ -378,7 +361,7 @@ abstract class JUserHelper
 		// If we have a match and rehash = true, rehash the password with the current algorithm.
 		if ((int) $user_id > 0 && $match && $rehash)
 		{
-			$user = new JUser($user_id);
+			$user           = new JUser($user_id);
 			$user->password = static::hashPassword($password);
 			$user->save();
 		}
@@ -389,19 +372,19 @@ abstract class JUserHelper
 	/**
 	 * Formats a password using the current encryption.
 	 *
-	 * @param   string   $plaintext     The plaintext password to encrypt.
-	 * @param   string   $salt          The salt to use to encrypt the password. []
+	 * @param   string  $plaintext      The plaintext password to encrypt.
+	 * @param   string  $salt           The salt to use to encrypt the password. []
 	 *                                  If not present, a new salt will be
 	 *                                  generated.
-	 * @param   string   $encryption    The kind of password encryption to use.
+	 * @param   string  $encryption     The kind of password encryption to use.
 	 *                                  Defaults to md5-hex.
-	 * @param   boolean  $show_encrypt  Some password systems prepend the kind of
+	 * @param   boolean $show_encrypt   Some password systems prepend the kind of
 	 *                                  encryption to the crypted password ({SHA},
 	 *                                  etc). Defaults to false.
 	 *
 	 * @return  string  The encrypted password.
 	 *
-	 * @since   11.1
+	 * @since       11.1
 	 * @deprecated  4.0
 	 */
 	public static function getCryptedPassword($plaintext, $salt = '', $encryption = 'md5-hex', $show_encrypt = false)
@@ -442,9 +425,9 @@ abstract class JUserHelper
 				return ($show_encrypt) ? '{SMD5}' . $encrypted : $encrypted;
 
 			case 'aprmd5':
-				$length = strlen($plaintext);
+				$length  = strlen($plaintext);
 				$context = $plaintext . '$apr1$' . $salt;
-				$binary = static::_bin(md5($plaintext . $salt . $plaintext));
+				$binary  = static::_bin(md5($plaintext . $salt . $plaintext));
 
 				for ($i = $length; $i > 0; $i -= 16)
 				{
@@ -512,17 +495,17 @@ abstract class JUserHelper
 	 * of an existing password, or for encryption types that use the plaintext
 	 * in the generation of the salt.
 	 *
-	 * @param   string  $encryption  The kind of password encryption to use.
+	 * @param   string $encryption   The kind of password encryption to use.
 	 *                               Defaults to md5-hex.
-	 * @param   string  $seed        The seed to get the salt from (probably a
+	 * @param   string $seed         The seed to get the salt from (probably a
 	 *                               previously generated password). Defaults to
 	 *                               generating a new seed.
-	 * @param   string  $plaintext   The plaintext password that we're generating
+	 * @param   string $plaintext    The plaintext password that we're generating
 	 *                               a salt for. Defaults to none.
 	 *
 	 * @return  string  The generated or extracted salt.
 	 *
-	 * @since   11.1
+	 * @since       11.1
 	 * @deprecated  4.0
 	 */
 	public static function getSalt($encryption = 'md5-hex', $seed = '', $plaintext = '')
@@ -633,7 +616,7 @@ abstract class JUserHelper
 	/**
 	 * Generate a random password
 	 *
-	 * @param   integer  $length  Length of the password to generate
+	 * @param   integer $length Length of the password to generate
 	 *
 	 * @return  string  Random Password
 	 *
@@ -641,8 +624,8 @@ abstract class JUserHelper
 	 */
 	public static function genRandomPassword($length = 8)
 	{
-		$salt = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		$base = strlen($salt);
+		$salt     = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		$base     = strlen($salt);
 		$makepass = '';
 
 		/*
@@ -653,7 +636,7 @@ abstract class JUserHelper
 		 * predictable.
 		 */
 		$random = JCrypt::genRandomBytes($length + 1);
-		$shift = ord($random[0]);
+		$shift  = ord($random[0]);
 
 		for ($i = 1; $i <= $length; ++$i)
 		{
@@ -665,36 +648,9 @@ abstract class JUserHelper
 	}
 
 	/**
-	 * Converts to allowed 64 characters for APRMD5 passwords.
-	 *
-	 * @param   string   $value  The value to convert.
-	 * @param   integer  $count  The number of characters to convert.
-	 *
-	 * @return  string  $value converted to the 64 MD5 characters.
-	 *
-	 * @since   11.1
-	 */
-	protected static function _toAPRMD5($value, $count)
-	{
-		/* 64 characters that are valid for APRMD5 passwords. */
-		$APRMD5 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
-		$aprmd5 = '';
-		$count = abs($count);
-
-		while (--$count)
-		{
-			$aprmd5 .= $APRMD5[$value & 0x3f];
-			$value >>= 6;
-		}
-
-		return $aprmd5;
-	}
-
-	/**
 	 * Converts hexadecimal string to binary data.
 	 *
-	 * @param   string  $hex  Hex data.
+	 * @param   string $hex Hex data.
 	 *
 	 * @return  string  Binary data.
 	 *
@@ -702,7 +658,7 @@ abstract class JUserHelper
 	 */
 	private static function _bin($hex)
 	{
-		$bin = '';
+		$bin    = '';
 		$length = strlen($hex);
 
 		for ($i = 0; $i < $length; $i += 2)
@@ -715,19 +671,63 @@ abstract class JUserHelper
 	}
 
 	/**
+	 * Converts to allowed 64 characters for APRMD5 passwords.
+	 *
+	 * @param   string  $value The value to convert.
+	 * @param   integer $count The number of characters to convert.
+	 *
+	 * @return  string  $value converted to the 64 MD5 characters.
+	 *
+	 * @since   11.1
+	 */
+	protected static function _toAPRMD5($value, $count)
+	{
+		/* 64 characters that are valid for APRMD5 passwords. */
+		$APRMD5 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+		$aprmd5 = '';
+		$count  = abs($count);
+
+		while (--$count)
+		{
+			$aprmd5 .= $APRMD5[$value & 0x3f];
+			$value >>= 6;
+		}
+
+		return $aprmd5;
+	}
+
+	/**
+	 * Hashes a password using the current encryption.
+	 *
+	 * @param   string $password The plaintext password to encrypt.
+	 *
+	 * @return  string  The encrypted password.
+	 *
+	 * @since   3.2.1
+	 */
+	public static function hashPassword($password)
+	{
+		// JCrypt::hasStrongPasswordSupport() includes a fallback for us in the worst case
+		JCrypt::hasStrongPasswordSupport();
+
+		return password_hash($password, PASSWORD_DEFAULT);
+	}
+
+	/**
 	 * Method to remove a cookie record from the database and the browser
 	 *
-	 * @param   string  $userId      User ID for this user
-	 * @param   string  $cookieName  Series id (cookie name decoded)
+	 * @param   string $userId     User ID for this user
+	 * @param   string $cookieName Series id (cookie name decoded)
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   3.2
+	 * @since       3.2
 	 * @deprecated  4.0  This is handled in the authentication plugin itself. The 'invalid' column in the db should be removed as well
 	 */
 	public static function invalidateCookie($userId, $cookieName)
 	{
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
 		// Invalidate cookie in the database
@@ -750,17 +750,17 @@ abstract class JUserHelper
 	 *
 	 * @return  mixed  Database query result
 	 *
-	 * @since   3.2
+	 * @since       3.2
 	 * @deprecated  4.0  This is handled in the authentication plugin itself
 	 */
 	public static function clearExpiredTokens()
 	{
 		$now = time();
 
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
-		->delete('#__user_keys')
-		->where($db->quoteName('time') . ' < ' . $db->quote($now));
+			->delete('#__user_keys')
+			->where($db->quoteName('time') . ' < ' . $db->quote($now));
 
 		return $db->setQuery($query)->execute();
 	}
@@ -770,7 +770,7 @@ abstract class JUserHelper
 	 *
 	 * @return  mixed  An array of information from an authentication cookie or false if there is no cookie
 	 *
-	 * @since   3.2
+	 * @since       3.2
 	 * @deprecated  4.0  This is handled in the authentication plugin itself
 	 */
 	public static function getRememberCookieData()
@@ -779,7 +779,7 @@ abstract class JUserHelper
 		$cookieName = static::getShortHashedUserAgent();
 
 		// Fetch the cookie value
-		$app = JFactory::getApplication();
+		$app         = JFactory::getApplication();
 		$cookieValue = $app->input->cookie->get($cookieName);
 
 		if (!empty($cookieValue))
@@ -802,10 +802,10 @@ abstract class JUserHelper
 	 */
 	public static function getShortHashedUserAgent()
 	{
-		$ua = JFactory::getApplication()->client;
-		$uaString = $ua->userAgent;
+		$ua             = JFactory::getApplication()->client;
+		$uaString       = $ua->userAgent;
 		$browserVersion = $ua->browserVersion;
-		$uaShort = str_replace($browserVersion, 'abcd', $uaString);
+		$uaShort        = str_replace($browserVersion, 'abcd', $uaString);
 
 		return md5(JUri::base() . $uaShort);
 	}

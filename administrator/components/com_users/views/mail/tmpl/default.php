@@ -33,7 +33,8 @@ JHtml::_('formbehavior.chosen', 'select');
 JFactory::getDocument()->addScriptDeclaration($script);
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_users&view=mail'); ?>" name="adminForm" method="post" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_users&view=mail'); ?>" name="adminForm" method="post"
+      id="adminForm">
 	<div class="row-fluid">
 		<div class="span9">
 			<fieldset class="adminform">
@@ -46,22 +47,26 @@ JFactory::getDocument()->addScriptDeclaration($script);
 					<div class="controls"><?php echo $this->form->getInput('message'); ?></div>
 				</div>
 			</fieldset>
-			<input type="hidden" name="task" value="" />
+			<input type="hidden" name="task" value=""/>
 			<?php echo JHtml::_('form.token'); ?>
 		</div>
 		<div class="span3">
 			<fieldset class="form-inline">
 				<div class="control-group checkbox">
-					<div class="controls"><?php echo $this->form->getInput('recurse'); ?> <?php echo $this->form->getLabel('recurse'); ?></div>
+					<div
+						class="controls"><?php echo $this->form->getInput('recurse'); ?><?php echo $this->form->getLabel('recurse'); ?></div>
 				</div>
 				<div class="control-group checkbox">
-					<div class="control-label"><?php echo $this->form->getInput('mode'); ?> <?php echo $this->form->getLabel('mode'); ?></div>
+					<div
+						class="control-label"><?php echo $this->form->getInput('mode'); ?><?php echo $this->form->getLabel('mode'); ?></div>
 				</div>
 				<div class="control-group checkbox">
-					<div class="control-label"><?php echo $this->form->getInput('disabled'); ?> <?php echo $this->form->getLabel('disabled'); ?></div>
+					<div
+						class="control-label"><?php echo $this->form->getInput('disabled'); ?><?php echo $this->form->getLabel('disabled'); ?></div>
 				</div>
 				<div class="control-group checkbox">
-					<div class="control-label"><?php echo $this->form->getInput('bcc'); ?> <?php echo $this->form->getLabel('bcc'); ?></div>
+					<div
+						class="control-label"><?php echo $this->form->getInput('bcc'); ?><?php echo $this->form->getLabel('bcc'); ?></div>
 				</div>
 				<div class="control-group">
 					<div class="control-label"><?php echo $this->form->getLabel('group'); ?></div>

@@ -19,8 +19,8 @@ class AdminControllerProfile extends JControllerForm
 	/**
 	 * Overrides parent save method to check the submitted passwords match.
 	 *
-	 * @param   string  $key     The name of the primary key of the URL variable.
-	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   string $key    The name of the primary key of the URL variable.
+	 * @param   string $urlVar The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return  boolean  True if successful, false otherwise.
 	 *
@@ -44,7 +44,7 @@ class AdminControllerProfile extends JControllerForm
 	/**
 	 * Method to cancel an edit.
 	 *
-	 * @param   string  $key  The name of the primary key of the URL variable.
+	 * @param   string $key The name of the primary key of the URL variable.
 	 *
 	 * @return  boolean  True if access level checks pass, false otherwise.
 	 *
@@ -65,8 +65,8 @@ class AdminControllerProfile extends JControllerForm
 	 *
 	 * Extended classes can override this if necessary.
 	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
+	 * @param   array  $data An array of input data.
+	 * @param   string $key  The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *

@@ -39,8 +39,8 @@ class JGithubHttp extends JHttp
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry        $options    Client options object.
-	 * @param   JHttpTransport  $transport  The HTTP transport object.
+	 * @param   Registry       $options   Client options object.
+	 * @param   JHttpTransport $transport The HTTP transport object.
 	 *
 	 * @since   11.3
 	 */

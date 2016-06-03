@@ -32,7 +32,7 @@ abstract class JHtmlFinder
 		$lang = JFactory::getLanguage();
 
 		// Load the finder types.
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('DISTINCT t.title AS text, t.id AS value')
 			->from($db->quoteName('#__finder_types') . ' AS t')
@@ -54,9 +54,9 @@ abstract class JHtmlFinder
 
 		foreach ($rows as $row)
 		{
-			$key = $lang->hasKey(FinderHelperLanguage::branchPlural($row->text))
-					? FinderHelperLanguage::branchPlural($row->text) : $row->text;
-			$string = JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_($key));
+			$key       = $lang->hasKey(FinderHelperLanguage::branchPlural($row->text))
+				? FinderHelperLanguage::branchPlural($row->text) : $row->text;
+			$string    = JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_($key));
 			$options[] = JHtml::_('select.option', $row->value, $string);
 		}
 
@@ -75,7 +75,7 @@ abstract class JHtmlFinder
 		$lang = JFactory::getLanguage();
 
 		// Load the finder types.
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select($db->quoteName('title', 'text'))
 			->select($db->quoteName('id', 'value'))
@@ -95,7 +95,7 @@ abstract class JHtmlFinder
 		// Translate.
 		foreach ($branches as $branch)
 		{
-			$key = FinderHelperLanguage::branchPlural($branch->text);
+			$key                    = FinderHelperLanguage::branchPlural($branch->text);
 			$branch->translatedText = $lang->hasKey($key) ? JText::_($key) : $branch->text;
 		}
 
@@ -103,7 +103,7 @@ abstract class JHtmlFinder
 		$branches = ArrayHelper::sortObjects($branches, 'translatedText', 1, true, true);
 
 		// Compile the options.
-		$options = array();
+		$options   = array();
 		$options[] = JHtml::_('select.option', '', JText::_('COM_FINDER_MAPS_SELECT_BRANCH'));
 
 		// Convert the values to options.
@@ -124,7 +124,7 @@ abstract class JHtmlFinder
 	 */
 	public static function statelist()
 	{
-		$options = array();
+		$options   = array();
 		$options[] = JHtml::_('select.option', '1', JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_('JPUBLISHED')));
 		$options[] = JHtml::_('select.option', '0', JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_('JUNPUBLISHED')));
 

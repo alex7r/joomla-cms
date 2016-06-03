@@ -36,7 +36,7 @@ class InstallerViewLanguages extends InstallerViewDefault
 	/**
 	 * Display the view.
 	 *
-	 * @param   null  $tpl  template to display
+	 * @param   null $tpl template to display
 	 *
 	 * @return mixed|void
 	 */

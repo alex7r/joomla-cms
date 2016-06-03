@@ -21,9 +21,9 @@ class JFilterWrapperOutput
 	/**
 	 * Helper wrapper method for objectHTMLSafe
 	 *
-	 * @param   object   &$mixed        An object to be parsed.
-	 * @param   integer  $quote_style   The optional quote style for the htmlspecialchars function.
-	 * @param   mixed    $exclude_keys  An optional string single field name or array of field names not.
+	 * @param   object  &$mixed       An object to be parsed.
+	 * @param   integer $quote_style  The optional quote style for the htmlspecialchars function.
+	 * @param   mixed   $exclude_keys An optional string single field name or array of field names not.
 	 *
 	 * @return void
 	 *
@@ -38,7 +38,7 @@ class JFilterWrapperOutput
 	/**
 	 * Helper wrapper method for linkXHTMLSafe
 	 *
-	 * @param   string  $input  String to process.
+	 * @param   string $input String to process.
 	 *
 	 * @return string  Processed string.
 	 *
@@ -53,7 +53,7 @@ class JFilterWrapperOutput
 	/**
 	 * Helper wrapper method for stringURLSafe
 	 *
-	 * @param   string  $string  String to process.
+	 * @param   string $string String to process.
 	 *
 	 * @return string  Processed string.
 	 *
@@ -68,7 +68,7 @@ class JFilterWrapperOutput
 	/**
 	 * Helper wrapper method for stringURLUnicodeSlug
 	 *
-	 * @param   string  $string  String to process.
+	 * @param   string $string String to process.
 	 *
 	 * @return string  Processed string.
 	 *
@@ -83,7 +83,7 @@ class JFilterWrapperOutput
 	/**
 	 * Helper wrapper method for ampReplace
 	 *
-	 * @param   string  $text  Text to process.
+	 * @param   string $text Text to process.
 	 *
 	 * @return string  Processed string.
 	 *
@@ -98,7 +98,7 @@ class JFilterWrapperOutput
 	/**
 	 * Helper wrapper method for _ampReplaceCallback
 	 *
-	 * @param   string  $m  String to process.
+	 * @param   string $m String to process.
 	 *
 	 * @return string  Replaced string.
 	 *
@@ -113,7 +113,7 @@ class JFilterWrapperOutput
 	/**
 	 * Helper wrapper method for cleanText
 	 *
-	 * @param   string  &$text  Text to clean.
+	 * @param   string &$text Text to clean.
 	 *
 	 * @return string  Cleaned text.
 	 *
@@ -128,7 +128,7 @@ class JFilterWrapperOutput
 	/**
 	 * Helper wrapper method for stripImages
 	 *
-	 * @param   string  $string  Sting to be cleaned.
+	 * @param   string $string Sting to be cleaned.
 	 *
 	 * @return string  Cleaned string.
 	 *
@@ -143,7 +143,7 @@ class JFilterWrapperOutput
 	/**
 	 * Helper wrapper method for stripIframes
 	 *
-	 * @param   string  $string  Sting to be cleaned.
+	 * @param   string $string Sting to be cleaned.
 	 *
 	 * @return string  Cleaned string.
 	 *

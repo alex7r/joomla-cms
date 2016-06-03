@@ -21,7 +21,7 @@ class ContactModelContacts extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JControllerLegacy
 	 * @since   1.6
@@ -68,8 +68,8 @@ class ContactModelContacts extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -118,7 +118,7 @@ class ContactModelContacts extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string  $id  A prefix for the store id.
+	 * @param   string $id A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -148,9 +148,9 @@ class ContactModelContacts extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user = JFactory::getUser();
+		$user  = JFactory::getUser();
 
 		// Select the required fields from the table.
 		$query->select(
@@ -160,7 +160,7 @@ class ContactModelContacts extends JModelList
 					'a.id, a.name, a.alias, a.checked_out, a.checked_out_time, a.catid, a.user_id' .
 					', a.published, a.access, a.created, a.created_by, a.ordering, a.featured, a.language' .
 					', a.publish_up, a.publish_down'
-					)
+				)
 				)
 			)
 		);
@@ -168,11 +168,11 @@ class ContactModelContacts extends JModelList
 
 		// Join over the users for the linked user.
 		$query->select(
-				array(
-					$db->quoteName('ul.name', 'linked_user'),
-					$db->quoteName('ul.email')
-				)
+			array(
+				$db->quoteName('ul.name', 'linked_user'),
+				$db->quoteName('ul.email')
 			)
+		)
 			->join(
 				'LEFT',
 				$db->quoteName('#__users', 'ul') . ' ON ' . $db->quoteName('ul.id') . ' = ' . $db->quoteName('a.user_id')
@@ -241,12 +241,12 @@ class ContactModelContacts extends JModelList
 							'a.language',
 							'a.publish_up',
 							'a.publish_down',
-							'ul.name' ,
+							'ul.name',
 							'ul.email',
-							'l.title' ,
-							'l.image' ,
-							'uc.name' ,
-							'ag.title' ,
+							'l.title',
+							'l.image',
+							'uc.name',
+							'ag.title',
 							'c.title',
 							'c.level'
 						)
@@ -336,7 +336,7 @@ class ContactModelContacts extends JModelList
 		}
 
 		// Add the list ordering clause.
-		$orderCol = $this->state->get('list.ordering', 'a.name');
+		$orderCol  = $this->state->get('list.ordering', 'a.name');
 		$orderDirn = $this->state->get('list.direction', 'asc');
 
 		if ($orderCol == 'a.ordering' || $orderCol == 'category_title')

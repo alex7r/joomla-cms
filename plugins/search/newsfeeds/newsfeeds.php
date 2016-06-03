@@ -25,31 +25,15 @@ class PlgSearchNewsfeeds extends JPlugin
 	protected $autoloadLanguage = true;
 
 	/**
-	 * Determine areas searchable by this plugin.
-	 *
-	 * @return  array  An array of search areas.
-	 *
-	 * @since   1.6
-	 */
-	public function onContentSearchAreas()
-	{
-		static $areas = array(
-			'newsfeeds' => 'PLG_SEARCH_NEWSFEEDS_NEWSFEEDS'
-		);
-
-		return $areas;
-	}
-
-	/**
 	 * Search content (newsfeeds).
 	 *
 	 * The SQL must return the following fields that are used in a common display
 	 * routine: href, title, section, created, text, browsernav.
 	 *
-	 * @param   string  $text      Target search string.
-	 * @param   string  $phrase    Matching option (possible values: exact|any|all).  Default is "any".
-	 * @param   string  $ordering  Ordering option (possible values: newest|oldest|popular|alpha|category).  Default is "newest".
-	 * @param   mixed   $areas     An array if the search it to be restricted to areas or null to search all areas.
+	 * @param   string $text     Target search string.
+	 * @param   string $phrase   Matching option (possible values: exact|any|all).  Default is "any".
+	 * @param   string $ordering Ordering option (possible values: newest|oldest|popular|alpha|category).  Default is "newest".
+	 * @param   mixed  $areas    An array if the search it to be restricted to areas or null to search all areas.
 	 *
 	 * @return  array  Search results.
 	 *
@@ -57,9 +41,9 @@ class PlgSearchNewsfeeds extends JPlugin
 	 */
 	public function onContentSearch($text, $phrase = '', $ordering = '', $areas = null)
 	{
-		$db = JFactory::getDbo();
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
+		$db     = JFactory::getDbo();
+		$app    = JFactory::getApplication();
+		$user   = JFactory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		if (is_array($areas))
@@ -70,10 +54,10 @@ class PlgSearchNewsfeeds extends JPlugin
 			}
 		}
 
-		$sContent = $this->params->get('search_content', 1);
+		$sContent  = $this->params->get('search_content', 1);
 		$sArchived = $this->params->get('search_archived', 1);
-		$limit = $this->params->def('search_limit', 50);
-		$state = array();
+		$limit     = $this->params->def('search_limit', 50);
+		$state     = array();
 
 		if ($sContent)
 		{
@@ -100,26 +84,26 @@ class PlgSearchNewsfeeds extends JPlugin
 		switch ($phrase)
 		{
 			case 'exact':
-				$text = $db->quote('%' . $db->escape($text, true) . '%', false);
-				$wheres2 = array();
+				$text      = $db->quote('%' . $db->escape($text, true) . '%', false);
+				$wheres2   = array();
 				$wheres2[] = 'a.name LIKE ' . $text;
 				$wheres2[] = 'a.link LIKE ' . $text;
-				$where = '(' . implode(') OR (', $wheres2) . ')';
+				$where     = '(' . implode(') OR (', $wheres2) . ')';
 				break;
 
 			case 'all':
 			case 'any':
 			default:
-				$words = explode(' ', $text);
+				$words  = explode(' ', $text);
 				$wheres = array();
 
 				foreach ($words as $word)
 				{
-					$word = $db->quote('%' . $db->escape($word, true) . '%', false);
-					$wheres2 = array();
+					$word      = $db->quote('%' . $db->escape($word, true) . '%', false);
+					$wheres2   = array();
 					$wheres2[] = 'a.name LIKE ' . $word;
 					$wheres2[] = 'a.link LIKE ' . $word;
-					$wheres[] = implode(' OR ', $wheres2);
+					$wheres[]  = implode(' OR ', $wheres2);
 				}
 
 				$where = '(' . implode(($phrase == 'all' ? ') AND (' : ') OR ('), $wheres) . ')';
@@ -148,18 +132,18 @@ class PlgSearchNewsfeeds extends JPlugin
 		$query = $db->getQuery(true);
 
 		// SQLSRV changes.
-		$case_when  = ' CASE WHEN ';
+		$case_when = ' CASE WHEN ';
 		$case_when .= $query->charLength('a.alias', '!=', '0');
 		$case_when .= ' THEN ';
-		$a_id       = $query->castAsChar('a.id');
+		$a_id = $query->castAsChar('a.id');
 		$case_when .= $query->concatenate(array($a_id, 'a.alias'), ':');
 		$case_when .= ' ELSE ';
 		$case_when .= $a_id . ' END as slug';
 
-		$case_when1  = ' CASE WHEN ';
+		$case_when1 = ' CASE WHEN ';
 		$case_when1 .= $query->charLength('c.alias', '!=', '0');
 		$case_when1 .= ' THEN ';
-		$c_id        = $query->castAsChar('c.id');
+		$c_id = $query->castAsChar('c.id');
 		$case_when1 .= $query->concatenate(array($c_id, 'c.alias'), ':');
 		$case_when1 .= ' ELSE ';
 		$case_when1 .= $c_id . ' END as catslug';
@@ -201,5 +185,21 @@ class PlgSearchNewsfeeds extends JPlugin
 		}
 
 		return $rows;
+	}
+
+	/**
+	 * Determine areas searchable by this plugin.
+	 *
+	 * @return  array  An array of search areas.
+	 *
+	 * @since   1.6
+	 */
+	public function onContentSearchAreas()
+	{
+		static $areas = array(
+			'newsfeeds' => 'PLG_SEARCH_NEWSFEEDS_NEWSFEEDS'
+		);
+
+		return $areas;
 	}
 }

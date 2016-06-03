@@ -12,12 +12,12 @@ defined('_JEXEC') or die;
 // Include the tags_popular functions only once
 require_once __DIR__ . '/helper.php';
 
-$cacheparams = new stdClass;
-$cacheparams->cachemode = 'safeuri';
-$cacheparams->class = 'ModTagsPopularHelper';
-$cacheparams->method = 'getList';
+$cacheparams               = new stdClass;
+$cacheparams->cachemode    = 'safeuri';
+$cacheparams->class        = 'ModTagsPopularHelper';
+$cacheparams->method       = 'getList';
 $cacheparams->methodparams = $params;
-$cacheparams->modeparams = array('id' => 'array', 'Itemid' => 'int');
+$cacheparams->modeparams   = array('id' => 'array', 'Itemid' => 'int');
 
 $list = JModuleHelper::moduleCache($module, $params, $cacheparams);
 

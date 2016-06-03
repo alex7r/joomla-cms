@@ -27,16 +27,16 @@ class PlgContentVote extends JPlugin
 	/**
 	 * Displays the voting area if in an article
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin
-	 * @param   object   &$row     The article object
-	 * @param   object   &$params  The article params
-	 * @param   integer  $page     The 'page' number
+	 * @param   string  $context The context of the content being passed to the plugin
+	 * @param   object  &$row    The article object
+	 * @param   object  &$params The article params
+	 * @param   integer $page    The 'page' number
 	 *
 	 * @return  mixed  html string containing code for the votes if in com_content else boolean false
 	 *
 	 * @since   1.6
 	 */
-	public function onContentBeforeDisplay($context, &$row, &$params, $page=0)
+	public function onContentBeforeDisplay($context, &$row, &$params, $page = 0)
 	{
 		$parts = explode(".", $context);
 
@@ -52,7 +52,7 @@ class PlgContentVote extends JPlugin
 			$rating = (int) @$row->rating;
 
 			$view = JFactory::getApplication()->input->getString('view', '');
-			$img = '';
+			$img  = '';
 
 			// Look for images in template if available
 			$starImageOn  = JHtml::_('image', 'system/rating_star.png', JText::_('PLG_VOTE_STAR_ACTIVE'), null, true);
@@ -70,10 +70,10 @@ class PlgContentVote extends JPlugin
 
 			$html .= '<div class="content_rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">';
 			$html .= '<p class="unseen element-invisible">'
-					. JText::sprintf('PLG_VOTE_USER_RATING', '<span itemprop="ratingValue">' . $rating . '</span>', '<span itemprop="bestRating">5</span>')
-					. '<meta itemprop="ratingCount" content="' . (int) $row->rating_count . '" />'
-					. '<meta itemprop="worstRating" content="0" />'
-					. '</p>';
+				. JText::sprintf('PLG_VOTE_USER_RATING', '<span itemprop="ratingValue">' . $rating . '</span>', '<span itemprop="bestRating">5</span>')
+				. '<meta itemprop="ratingCount" content="' . (int) $row->rating_count . '" />'
+				. '<meta itemprop="worstRating" content="0" />'
+				. '</p>';
 			$html .= $img;
 			$html .= '</div>';
 

@@ -33,18 +33,7 @@ class FOFUtilsCacheCleaner
 	 */
 	public static function clearPluginsCache()
 	{
-		self::clearCacheGroups(array('com_plugins'), array(0,1));
-	}
-
-	/**
-	 * Clears the com_modules cache. You need to call this whenever you alter the publish state or parameters of a
-	 * module from your code.
-	 *
-	 * @return  void
-	 */
-	public static function clearModulesCache()
-	{
-		self::clearCacheGroups(array('com_modules'), array(0,1));
+		self::clearCacheGroups(array('com_plugins'), array(0, 1));
 	}
 
 	/**
@@ -52,7 +41,7 @@ class FOFUtilsCacheCleaner
 	 *
 	 * @param   array $clearGroups    Which cache groups to clear. Usually this is com_yourcomponent to clear your
 	 *                                component's cache.
-	 * @param   array   $cacheClients Which cache clients to clear. 0 is the back-end, 1 is the front-end. If you do not
+	 * @param   array $cacheClients   Which cache clients to clear. 0 is the back-end, 1 is the front-end. If you do not
 	 *                                specify anything, both cache clients will be cleared.
 	 *
 	 * @return  void
@@ -69,7 +58,7 @@ class FOFUtilsCacheCleaner
 				{
 					$options = array(
 						'defaultgroup' => $group,
-						'cachebase' => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path', JPATH_SITE . '/cache')
+						'cachebase'    => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path', JPATH_SITE . '/cache')
 					);
 
 					$cache = JCache::getInstance('callback', $options);
@@ -81,5 +70,16 @@ class FOFUtilsCacheCleaner
 				}
 			}
 		}
+	}
+
+	/**
+	 * Clears the com_modules cache. You need to call this whenever you alter the publish state or parameters of a
+	 * module from your code.
+	 *
+	 * @return  void
+	 */
+	public static function clearModulesCache()
+	{
+		self::clearCacheGroups(array('com_modules'), array(0, 1));
 	}
 } 

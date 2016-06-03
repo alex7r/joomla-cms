@@ -19,7 +19,7 @@ class InstallerHelper
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string  $vName  The name of the active view.
+	 * @param   string $vName The name of the active view.
 	 *
 	 * @return  void
 	 */
@@ -51,7 +51,7 @@ class InstallerHelper
 			$vName == 'database'
 		);
 		JHtmlSidebar::addEntry(
-		JText::_('COM_INSTALLER_SUBMENU_WARNINGS'),
+			JText::_('COM_INSTALLER_SUBMENU_WARNINGS'),
 			'index.php?option=com_installer&view=warnings',
 			$vName == 'warnings'
 		);
@@ -102,7 +102,7 @@ class InstallerHelper
 	 */
 	public static function getExtensionGroupes()
 	{
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('DISTINCT folder')
 			->from('#__extensions')
@@ -126,7 +126,7 @@ class InstallerHelper
 	 *
 	 * @return  JObject
 	 *
-	 * @since   1.6
+	 * @since       1.6
 	 * @deprecated  3.2  Use JHelperContent::getActions() instead
 	 */
 	public static function getActions()

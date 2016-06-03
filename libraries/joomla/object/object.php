@@ -24,8 +24,8 @@ class JObject
 	 * An array of error messages or Exception objects.
 	 *
 	 * @var    array
-	 * @since  11.1
-	 * @see    JError
+	 * @since       11.1
+	 * @see         JError
 	 * @deprecated  12.3  JError has been deprecated
 	 */
 	protected $_errors = array();
@@ -33,7 +33,7 @@ class JObject
 	/**
 	 * Class constructor, overridden in descendant classes.
 	 *
-	 * @param   mixed  $properties  Either and associative array or another
+	 * @param   mixed $properties   Either and associative array or another
 	 *                              object to set the initial properties of the object.
 	 *
 	 * @since   11.1
@@ -47,11 +47,56 @@ class JObject
 	}
 
 	/**
+	 * Set the object properties based on a named array/hash.
+	 *
+	 * @param   mixed $properties Either an associative array or another object.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 *
+	 * @see     JObject::set()
+	 */
+	public function setProperties($properties)
+	{
+		if (is_array($properties) || is_object($properties))
+		{
+			foreach ((array) $properties as $k => $v)
+			{
+				// Use the set function which might be overridden.
+				$this->set($k, $v);
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Modifies a property of the object, creating it if it does not already exist.
+	 *
+	 * @param   string $property The name of the property.
+	 * @param   mixed  $value    The value of the property to set.
+	 *
+	 * @return  mixed  Previous value of the property.
+	 *
+	 * @since   11.1
+	 */
+	public function set($property, $value = null)
+	{
+		$previous        = isset($this->$property) ? $this->$property : null;
+		$this->$property = $value;
+
+		return $previous;
+	}
+
+	/**
 	 * Magic method to convert the object to a string gracefully.
 	 *
 	 * @return  string  The classname.
 	 *
-	 * @since   11.1
+	 * @since      11.1
 	 * @deprecated 12.3  Classes should provide their own __toString() implementation.
 	 */
 	public function __toString()
@@ -62,8 +107,8 @@ class JObject
 	/**
 	 * Sets a default value if not already assigned
 	 *
-	 * @param   string  $property  The name of the property.
-	 * @param   mixed   $default   The default value.
+	 * @param   string $property The name of the property.
+	 * @param   mixed  $default  The default value.
 	 *
 	 * @return  mixed
 	 *
@@ -79,8 +124,8 @@ class JObject
 	/**
 	 * Returns a property of the object or the default value if the property is not set.
 	 *
-	 * @param   string  $property  The name of the property.
-	 * @param   mixed   $default   The default value.
+	 * @param   string $property The name of the property.
+	 * @param   mixed  $default  The default value.
 	 *
 	 * @return  mixed    The value of the property.
 	 *
@@ -101,7 +146,7 @@ class JObject
 	/**
 	 * Returns an associative array of object properties.
 	 *
-	 * @param   boolean  $public  If true, returns only the public properties.
+	 * @param   boolean $public If true, returns only the public properties.
 	 *
 	 * @return  array
 	 *
@@ -130,13 +175,13 @@ class JObject
 	/**
 	 * Get the most recent error message.
 	 *
-	 * @param   integer  $i         Option error index.
-	 * @param   boolean  $toString  Indicates if JError objects should return their error message.
+	 * @param   integer $i        Option error index.
+	 * @param   boolean $toString Indicates if JError objects should return their error message.
 	 *
 	 * @return  string   Error message
 	 *
-	 * @since   11.1
-	 * @see     JError
+	 * @since      11.1
+	 * @see        JError
 	 * @deprecated 12.3  JError has been deprecated
 	 */
 	public function getError($i = null, $toString = true)
@@ -171,8 +216,8 @@ class JObject
 	 *
 	 * @return  array  Array of error messages or JErrors.
 	 *
-	 * @since   11.1
-	 * @see     JError
+	 * @since      11.1
+	 * @see        JError
 	 * @deprecated 12.3  JError has been deprecated
 	 */
 	public function getErrors()
@@ -181,59 +226,14 @@ class JObject
 	}
 
 	/**
-	 * Modifies a property of the object, creating it if it does not already exist.
-	 *
-	 * @param   string  $property  The name of the property.
-	 * @param   mixed   $value     The value of the property to set.
-	 *
-	 * @return  mixed  Previous value of the property.
-	 *
-	 * @since   11.1
-	 */
-	public function set($property, $value = null)
-	{
-		$previous = isset($this->$property) ? $this->$property : null;
-		$this->$property = $value;
-
-		return $previous;
-	}
-
-	/**
-	 * Set the object properties based on a named array/hash.
-	 *
-	 * @param   mixed  $properties  Either an associative array or another object.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 *
-	 * @see     JObject::set()
-	 */
-	public function setProperties($properties)
-	{
-		if (is_array($properties) || is_object($properties))
-		{
-			foreach ((array) $properties as $k => $v)
-			{
-				// Use the set function which might be overridden.
-				$this->set($k, $v);
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Add an error message.
 	 *
-	 * @param   string  $error  Error message.
+	 * @param   string $error Error message.
 	 *
 	 * @return  void
 	 *
-	 * @since   11.1
-	 * @see     JError
+	 * @since      11.1
+	 * @see        JError
 	 * @deprecated 12.3  JError has been deprecated
 	 */
 	public function setError($error)

@@ -44,7 +44,7 @@ class InstallationControllerInstallDatabase_backup extends JControllerBase
 		// Attempt to create the database tables.
 		$return = $db->handleOldDatabase($options);
 
-		$r = new stdClass;
+		$r       = new stdClass;
 		$r->view = 'install';
 
 		// Check if the database was initialised.

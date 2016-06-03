@@ -22,7 +22,7 @@ class JFacebookPhoto extends JFacebookObject
 	/**
 	 * Method to get a photo. Requires authentication and user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string  $photo  The photo id.
+	 * @param   string $photo The photo id.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -36,11 +36,11 @@ class JFacebookPhoto extends JFacebookObject
 	/**
 	 * Method to get a photo's comments. Requires authentication and user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string   $photo   The photo id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
-	 * @param   string   $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $photo  The photo id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
+	 * @param   string  $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -54,8 +54,8 @@ class JFacebookPhoto extends JFacebookObject
 	/**
 	 * Method to comment on a photo. Requires authentication and publish_stream permission, user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string  $photo    The photo id.
-	 * @param   string  $message  The comment's text.
+	 * @param   string $photo   The photo id.
+	 * @param   string $message The comment's text.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -72,7 +72,7 @@ class JFacebookPhoto extends JFacebookObject
 	/**
 	 * Method to delete a comment. Requires authentication and publish_stream permission, user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string  $comment  The comment's id.
+	 * @param   string $comment The comment's id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -86,11 +86,11 @@ class JFacebookPhoto extends JFacebookObject
 	/**
 	 * Method to get photo's likes. Requires authentication and user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string   $photo   The photo id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
-	 * @param   string   $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $photo  The photo id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
+	 * @param   string  $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -104,7 +104,7 @@ class JFacebookPhoto extends JFacebookObject
 	/**
 	 * Method to like a photo. Requires authentication and publish_stream permission, user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string  $photo  The photo id.
+	 * @param   string $photo The photo id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -118,7 +118,7 @@ class JFacebookPhoto extends JFacebookObject
 	/**
 	 * Method to unlike a photo. Requires authentication and publish_stream permission, user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string  $photo  The photo id.
+	 * @param   string $photo The photo id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -132,11 +132,11 @@ class JFacebookPhoto extends JFacebookObject
 	/**
 	 * Method to get the Users tagged in the photo. Requires authentication and user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string   $photo   The photo id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
-	 * @param   string   $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $photo  The photo id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
+	 * @param   string  $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -151,11 +151,11 @@ class JFacebookPhoto extends JFacebookObject
 	 * Method to tag one or more Users in a photo. $to or $tag_text required.
 	 * Requires authentication and publish_stream permission, user_photos permission for private photos.
 	 *
-	 * @param   string   $photo     The photo id.
-	 * @param   mixed    $to        ID of the User or an array of Users to tag in the photo: [{"id":"1234"}, {"id":"12345"}].
-	 * @param   string   $tag_text  A text string to tag.
-	 * @param   integer  $x         x coordinate of tag, as a percentage offset from the left edge of the picture.
-	 * @param   integer  $y         y coordinate of tag, as a percentage offset from the top edge of the picture.
+	 * @param   string  $photo    The photo id.
+	 * @param   mixed   $to       ID of the User or an array of Users to tag in the photo: [{"id":"1234"}, {"id":"12345"}].
+	 * @param   string  $tag_text A text string to tag.
+	 * @param   integer $x        x coordinate of tag, as a percentage offset from the left edge of the picture.
+	 * @param   integer $y        y coordinate of tag, as a percentage offset from the top edge of the picture.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -195,10 +195,10 @@ class JFacebookPhoto extends JFacebookObject
 	 * Method to update the position of the tag for a particular Users in a photo.
 	 * Requires authentication and publish_stream permission, user_photos permission for private photos.
 	 *
-	 * @param   string   $photo  The photo id.
-	 * @param   string   $to     ID of the User to update tag in the photo.
-	 * @param   integer  $x      x coordinate of tag, as a percentage offset from the left edge of the picture.
-	 * @param   integer  $y      y coordinate of tag, as a percentage offset from the top edge of the picture.
+	 * @param   string  $photo The photo id.
+	 * @param   string  $to    ID of the User to update tag in the photo.
+	 * @param   integer $x     x coordinate of tag, as a percentage offset from the left edge of the picture.
+	 * @param   integer $y     y coordinate of tag, as a percentage offset from the top edge of the picture.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -225,8 +225,8 @@ class JFacebookPhoto extends JFacebookObject
 	/**
 	 * Method to get the album-sized view of the photo. Requires authentication and user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string   $photo     The photo id.
-	 * @param   boolean  $redirect  If false this will return the URL of the picture without a 302 redirect.
+	 * @param   string  $photo    The photo id.
+	 * @param   boolean $redirect If false this will return the URL of the picture without a 302 redirect.
 	 *
 	 * @return  string  URL of the picture.
 	 *

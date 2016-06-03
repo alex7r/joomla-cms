@@ -37,7 +37,7 @@ class JCache
 	/**
 	 * Constructor
 	 *
-	 * @param   array  $options  Cache options
+	 * @param   array $options Cache options
 	 *
 	 * @since   11.1
 	 */
@@ -75,8 +75,8 @@ class JCache
 	/**
 	 * Returns a reference to a cache adapter object, always creating it
 	 *
-	 * @param   string  $type     The cache object type to instantiate
-	 * @param   array   $options  The array of options
+	 * @param   string $type    The cache object type to instantiate
+	 * @param   array  $options The array of options
 	 *
 	 * @return  JCacheController
 	 *
@@ -133,346 +133,10 @@ class JCache
 	}
 
 	/**
-	 * Set caching enabled state
-	 *
-	 * @param   boolean  $enabled  True to enable caching
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	public function setCaching($enabled)
-	{
-		$this->_options['caching'] = $enabled;
-	}
-
-	/**
-	 * Get caching state
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 */
-	public function getCaching()
-	{
-		return $this->_options['caching'];
-	}
-
-	/**
-	 * Set cache lifetime
-	 *
-	 * @param   integer  $lt  Cache lifetime
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	public function setLifeTime($lt)
-	{
-		$this->_options['lifetime'] = $lt;
-	}
-
-	/**
-	 * Get cached data by ID and group
-	 *
-	 * @param   string  $id     The cache data ID
-	 * @param   string  $group  The cache data group
-	 *
-	 * @return  mixed  Boolean false on failure or a cached data object
-	 *
-	 * @since   11.1
-	 */
-	public function get($id, $group = null)
-	{
-		// Get the default group
-		$group = ($group) ? $group : $this->_options['defaultgroup'];
-
-		// Get the storage
-		$handler = $this->_getStorage();
-
-		if (!($handler instanceof Exception) && $this->_options['caching'])
-		{
-			return $handler->get($id, $group, $this->_options['checkTime']);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Get a list of all cached data
-	 *
-	 * @return  mixed  Boolean false on failure or an object with a list of cache groups and data
-	 *
-	 * @since   11.1
-	 */
-	public function getAll()
-	{
-		// Get the storage
-		$handler = $this->_getStorage();
-
-		if (!($handler instanceof Exception) && $this->_options['caching'])
-		{
-			return $handler->getAll();
-		}
-
-		return false;
-	}
-
-	/**
-	 * Store the cached data by ID and group
-	 *
-	 * @param   mixed   $data   The data to store
-	 * @param   string  $id     The cache data ID
-	 * @param   string  $group  The cache data group
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 */
-	public function store($data, $id, $group = null)
-	{
-		// Get the default group
-		$group = ($group) ? $group : $this->_options['defaultgroup'];
-
-		// Get the storage and store the cached data
-		$handler = $this->_getStorage();
-
-		if (!($handler instanceof Exception) && $this->_options['caching'])
-		{
-			return $handler->store($id, $group, $data);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Remove a cached data entry by ID and group
-	 *
-	 * @param   string  $id     The cache data ID
-	 * @param   string  $group  The cache data group
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 */
-	public function remove($id, $group = null)
-	{
-		// Get the default group
-		$group = ($group) ? $group : $this->_options['defaultgroup'];
-
-		// Get the storage
-		$handler = $this->_getStorage();
-
-		if (!($handler instanceof Exception))
-		{
-			return $handler->remove($id, $group);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Clean cache for a group given a mode.
-	 *
-	 * group mode    : cleans all cache in the group
-	 * notgroup mode : cleans all cache not in the group
-	 *
-	 * @param   string  $group  The cache data group
-	 * @param   string  $mode   The mode for cleaning cache [group|notgroup]
-	 *
-	 * @return  boolean  True on success, false otherwise
-	 *
-	 * @since   11.1
-	 */
-	public function clean($group = null, $mode = 'group')
-	{
-		// Get the default group
-		$group = ($group) ? $group : $this->_options['defaultgroup'];
-
-		// Get the storage handler
-		$handler = $this->_getStorage();
-
-		if (!($handler instanceof Exception))
-		{
-			return $handler->clean($group, $mode);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Garbage collect expired cache data
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 */
-	public function gc()
-	{
-		// Get the storage handler
-		$handler = $this->_getStorage();
-
-		if (!($handler instanceof Exception))
-		{
-			return $handler->gc();
-		}
-
-		return false;
-	}
-
-	/**
-	 * Set lock flag on cached item
-	 *
-	 * @param   string  $id        The cache data ID
-	 * @param   string  $group     The cache data group
-	 * @param   string  $locktime  The default locktime for locking the cache.
-	 *
-	 * @return  stdClass  Object with properties of lock and locklooped
-	 *
-	 * @since   11.1
-	 */
-	public function lock($id, $group = null, $locktime = null)
-	{
-		$returning = new stdClass;
-		$returning->locklooped = false;
-
-		// Get the default group
-		$group = ($group) ? $group : $this->_options['defaultgroup'];
-
-		// Get the default locktime
-		$locktime = ($locktime) ? $locktime : $this->_options['locktime'];
-
-		/*
-		 * Allow storage handlers to perform locking on their own
-		 * NOTE drivers with lock need also unlock or unlocking will fail because of false $id
-		 */
-		$handler = $this->_getStorage();
-
-		if (!($handler instanceof Exception) && $this->_options['locking'] == true && $this->_options['caching'] == true)
-		{
-			$locked = $handler->lock($id, $group, $locktime);
-
-			if ($locked !== false)
-			{
-				return $locked;
-			}
-		}
-
-		// Fallback
-		$curentlifetime = $this->_options['lifetime'];
-
-		// Set lifetime to locktime for storing in children
-		$this->_options['lifetime'] = $locktime;
-
-		$looptime = $locktime * 10;
-		$id2      = $id . '_lock';
-
-		if ($this->_options['locking'] == true && $this->_options['caching'] == true)
-		{
-			$data_lock = $this->get($id2, $group);
-		}
-		else
-		{
-			$data_lock         = false;
-			$returning->locked = false;
-		}
-
-		if ($data_lock !== false)
-		{
-			$lock_counter = 0;
-
-			// Loop until you find that the lock has been released. That implies that data get from other thread has finished
-			while ($data_lock !== false)
-			{
-				if ($lock_counter > $looptime)
-				{
-					$returning->locked = false;
-					$returning->locklooped = true;
-					break;
-				}
-
-				usleep(100);
-				$data_lock = $this->get($id2, $group);
-				$lock_counter++;
-			}
-		}
-
-		if ($this->_options['locking'] == true && $this->_options['caching'] == true)
-		{
-			$returning->locked = $this->store(1, $id2, $group);
-		}
-
-		// Revert lifetime to previous one
-		$this->_options['lifetime'] = $curentlifetime;
-
-		return $returning;
-	}
-
-	/**
-	 * Unset lock flag on cached item
-	 *
-	 * @param   string  $id     The cache data ID
-	 * @param   string  $group  The cache data group
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 */
-	public function unlock($id, $group = null)
-	{
-		$unlock = false;
-
-		// Get the default group
-		$group = ($group) ? $group : $this->_options['defaultgroup'];
-
-		// Allow handlers to perform unlocking on their own
-		$handler = $this->_getStorage();
-
-		if (!($handler instanceof Exception) && $this->_options['caching'])
-		{
-			$unlocked = $handler->unlock($id, $group);
-
-			if ($unlocked !== false)
-			{
-				return $unlocked;
-			}
-		}
-
-		// Fallback
-		if ($this->_options['caching'])
-		{
-			$unlock = $this->remove($id . '_lock', $group);
-		}
-
-		return $unlock;
-	}
-
-	/**
-	 * Get the cache storage handler
-	 *
-	 * @return  JCacheStorage
-	 *
-	 * @since   11.1
-	 */
-	public function &_getStorage()
-	{
-		$hash = md5(serialize($this->_options));
-
-		if (isset(self::$_handler[$hash]))
-		{
-			return self::$_handler[$hash];
-		}
-
-		self::$_handler[$hash] = JCacheStorage::getInstance($this->_options['storage'], $this->_options);
-
-		return self::$_handler[$hash];
-	}
-
-	/**
 	 * Perform workarounds on retrieved cached data
 	 *
-	 * @param   string  $data     Cached data
-	 * @param   array   $options  Array of options
+	 * @param   string $data    Cached data
+	 * @param   array  $options Array of options
 	 *
 	 * @return  string  Body of cached data
 	 *
@@ -486,7 +150,8 @@ class JCache
 
 		// Get the document head out of the cache.
 		if (isset($options['mergehead']) && $options['mergehead'] == 1 && isset($data['head']) && !empty($data['head'])
-			&& method_exists($document, 'mergeHeadData'))
+			&& method_exists($document, 'mergeHeadData')
+		)
 		{
 			$document->mergeHeadData($data['head']);
 		}
@@ -546,8 +211,8 @@ class JCache
 	/**
 	 * Create workarounds for data to be cached
 	 *
-	 * @param   string  $data     Cached data
-	 * @param   array   $options  Array of options
+	 * @param   string $data    Cached data
+	 * @param   array  $options Array of options
 	 *
 	 * @return  string  Data to be cached
 	 *
@@ -783,7 +448,7 @@ class JCache
 	/**
 	 * Add a directory where JCache should search for handlers. You may either pass a string or an array of directories.
 	 *
-	 * @param   array|string  $path  A path to search.
+	 * @param   array|string $path A path to search.
 	 *
 	 * @return  array   An array with directory elements
 	 *
@@ -805,5 +470,341 @@ class JCache
 		}
 
 		return $paths;
+	}
+
+	/**
+	 * Set caching enabled state
+	 *
+	 * @param   boolean $enabled True to enable caching
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public function setCaching($enabled)
+	{
+		$this->_options['caching'] = $enabled;
+	}
+
+	/**
+	 * Get caching state
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 */
+	public function getCaching()
+	{
+		return $this->_options['caching'];
+	}
+
+	/**
+	 * Set cache lifetime
+	 *
+	 * @param   integer $lt Cache lifetime
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public function setLifeTime($lt)
+	{
+		$this->_options['lifetime'] = $lt;
+	}
+
+	/**
+	 * Get a list of all cached data
+	 *
+	 * @return  mixed  Boolean false on failure or an object with a list of cache groups and data
+	 *
+	 * @since   11.1
+	 */
+	public function getAll()
+	{
+		// Get the storage
+		$handler = $this->_getStorage();
+
+		if (!($handler instanceof Exception) && $this->_options['caching'])
+		{
+			return $handler->getAll();
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the cache storage handler
+	 *
+	 * @return  JCacheStorage
+	 *
+	 * @since   11.1
+	 */
+	public function &_getStorage()
+	{
+		$hash = md5(serialize($this->_options));
+
+		if (isset(self::$_handler[$hash]))
+		{
+			return self::$_handler[$hash];
+		}
+
+		self::$_handler[$hash] = JCacheStorage::getInstance($this->_options['storage'], $this->_options);
+
+		return self::$_handler[$hash];
+	}
+
+	/**
+	 * Clean cache for a group given a mode.
+	 *
+	 * group mode    : cleans all cache in the group
+	 * notgroup mode : cleans all cache not in the group
+	 *
+	 * @param   string $group The cache data group
+	 * @param   string $mode  The mode for cleaning cache [group|notgroup]
+	 *
+	 * @return  boolean  True on success, false otherwise
+	 *
+	 * @since   11.1
+	 */
+	public function clean($group = null, $mode = 'group')
+	{
+		// Get the default group
+		$group = ($group) ? $group : $this->_options['defaultgroup'];
+
+		// Get the storage handler
+		$handler = $this->_getStorage();
+
+		if (!($handler instanceof Exception))
+		{
+			return $handler->clean($group, $mode);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Garbage collect expired cache data
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 */
+	public function gc()
+	{
+		// Get the storage handler
+		$handler = $this->_getStorage();
+
+		if (!($handler instanceof Exception))
+		{
+			return $handler->gc();
+		}
+
+		return false;
+	}
+
+	/**
+	 * Set lock flag on cached item
+	 *
+	 * @param   string $id       The cache data ID
+	 * @param   string $group    The cache data group
+	 * @param   string $locktime The default locktime for locking the cache.
+	 *
+	 * @return  stdClass  Object with properties of lock and locklooped
+	 *
+	 * @since   11.1
+	 */
+	public function lock($id, $group = null, $locktime = null)
+	{
+		$returning             = new stdClass;
+		$returning->locklooped = false;
+
+		// Get the default group
+		$group = ($group) ? $group : $this->_options['defaultgroup'];
+
+		// Get the default locktime
+		$locktime = ($locktime) ? $locktime : $this->_options['locktime'];
+
+		/*
+		 * Allow storage handlers to perform locking on their own
+		 * NOTE drivers with lock need also unlock or unlocking will fail because of false $id
+		 */
+		$handler = $this->_getStorage();
+
+		if (!($handler instanceof Exception) && $this->_options['locking'] == true && $this->_options['caching'] == true)
+		{
+			$locked = $handler->lock($id, $group, $locktime);
+
+			if ($locked !== false)
+			{
+				return $locked;
+			}
+		}
+
+		// Fallback
+		$curentlifetime = $this->_options['lifetime'];
+
+		// Set lifetime to locktime for storing in children
+		$this->_options['lifetime'] = $locktime;
+
+		$looptime = $locktime * 10;
+		$id2      = $id . '_lock';
+
+		if ($this->_options['locking'] == true && $this->_options['caching'] == true)
+		{
+			$data_lock = $this->get($id2, $group);
+		}
+		else
+		{
+			$data_lock         = false;
+			$returning->locked = false;
+		}
+
+		if ($data_lock !== false)
+		{
+			$lock_counter = 0;
+
+			// Loop until you find that the lock has been released. That implies that data get from other thread has finished
+			while ($data_lock !== false)
+			{
+				if ($lock_counter > $looptime)
+				{
+					$returning->locked     = false;
+					$returning->locklooped = true;
+					break;
+				}
+
+				usleep(100);
+				$data_lock = $this->get($id2, $group);
+				$lock_counter++;
+			}
+		}
+
+		if ($this->_options['locking'] == true && $this->_options['caching'] == true)
+		{
+			$returning->locked = $this->store(1, $id2, $group);
+		}
+
+		// Revert lifetime to previous one
+		$this->_options['lifetime'] = $curentlifetime;
+
+		return $returning;
+	}
+
+	/**
+	 * Get cached data by ID and group
+	 *
+	 * @param   string $id    The cache data ID
+	 * @param   string $group The cache data group
+	 *
+	 * @return  mixed  Boolean false on failure or a cached data object
+	 *
+	 * @since   11.1
+	 */
+	public function get($id, $group = null)
+	{
+		// Get the default group
+		$group = ($group) ? $group : $this->_options['defaultgroup'];
+
+		// Get the storage
+		$handler = $this->_getStorage();
+
+		if (!($handler instanceof Exception) && $this->_options['caching'])
+		{
+			return $handler->get($id, $group, $this->_options['checkTime']);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Store the cached data by ID and group
+	 *
+	 * @param   mixed  $data  The data to store
+	 * @param   string $id    The cache data ID
+	 * @param   string $group The cache data group
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 */
+	public function store($data, $id, $group = null)
+	{
+		// Get the default group
+		$group = ($group) ? $group : $this->_options['defaultgroup'];
+
+		// Get the storage and store the cached data
+		$handler = $this->_getStorage();
+
+		if (!($handler instanceof Exception) && $this->_options['caching'])
+		{
+			return $handler->store($id, $group, $data);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Unset lock flag on cached item
+	 *
+	 * @param   string $id    The cache data ID
+	 * @param   string $group The cache data group
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 */
+	public function unlock($id, $group = null)
+	{
+		$unlock = false;
+
+		// Get the default group
+		$group = ($group) ? $group : $this->_options['defaultgroup'];
+
+		// Allow handlers to perform unlocking on their own
+		$handler = $this->_getStorage();
+
+		if (!($handler instanceof Exception) && $this->_options['caching'])
+		{
+			$unlocked = $handler->unlock($id, $group);
+
+			if ($unlocked !== false)
+			{
+				return $unlocked;
+			}
+		}
+
+		// Fallback
+		if ($this->_options['caching'])
+		{
+			$unlock = $this->remove($id . '_lock', $group);
+		}
+
+		return $unlock;
+	}
+
+	/**
+	 * Remove a cached data entry by ID and group
+	 *
+	 * @param   string $id    The cache data ID
+	 * @param   string $group The cache data group
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 */
+	public function remove($id, $group = null)
+	{
+		// Get the default group
+		$group = ($group) ? $group : $this->_options['defaultgroup'];
+
+		// Get the storage
+		$handler = $this->_getStorage();
+
+		if (!($handler instanceof Exception))
+		{
+			return $handler->remove($id, $group);
+		}
+
+		return false;
 	}
 }

@@ -13,46 +13,46 @@ defined('_JEXEC') or die;
  * This is a file to add template specific chrome to pagination rendering.
  *
  * pagination_list_footer
- * 	Input variable $list is an array with offsets:
- * 		$list[limit]		: int
- * 		$list[limitstart]	: int
- * 		$list[total]		: int
- * 		$list[limitfield]	: string
- * 		$list[pagescounter]	: string
- * 		$list[pageslinks]	: string
+ *    Input variable $list is an array with offsets:
+ *        $list[limit]        : int
+ *        $list[limitstart]    : int
+ *        $list[total]        : int
+ *        $list[limitfield]    : string
+ *        $list[pagescounter]    : string
+ *        $list[pageslinks]    : string
  *
  * pagination_list_render
- * 	Input variable $list is an array with offsets:
- * 		$list[all]
- * 			[data]		: string
- * 			[active]	: boolean
- * 		$list[start]
- * 			[data]		: string
- * 			[active]	: boolean
- * 		$list[previous]
- * 			[data]		: string
- * 			[active]	: boolean
- * 		$list[next]
- * 			[data]		: string
- * 			[active]	: boolean
- * 		$list[end]
- * 			[data]		: string
- * 			[active]	: boolean
- * 		$list[pages]
- * 			[{PAGE}][data]		: string
- * 			[{PAGE}][active]	: boolean
+ *    Input variable $list is an array with offsets:
+ *        $list[all]
+ *            [data]        : string
+ *            [active]    : boolean
+ *        $list[start]
+ *            [data]        : string
+ *            [active]    : boolean
+ *        $list[previous]
+ *            [data]        : string
+ *            [active]    : boolean
+ *        $list[next]
+ *            [data]        : string
+ *            [active]    : boolean
+ *        $list[end]
+ *            [data]        : string
+ *            [active]    : boolean
+ *        $list[pages]
+ *            [{PAGE}][data]        : string
+ *            [{PAGE}][active]    : boolean
  *
  * pagination_item_active
- * 	Input variable $item is an object with fields:
- * 		$item->base	: integer
- * 		$item->link	: string
- * 		$item->text	: string
+ *    Input variable $item is an object with fields:
+ *        $item->base    : integer
+ *        $item->link    : string
+ *        $item->text    : string
  *
  * pagination_item_inactive
- * 	Input variable $item is an object with fields:
- * 		$item->base	: integer
- * 		$item->link	: string
- * 		$item->text	: string
+ *    Input variable $item is an object with fields:
+ *        $item->base    : integer
+ *        $item->link    : string
+ *        $item->text    : string
  *
  * This gives template designers ultimate control over how pagination is rendered.
  *
@@ -62,7 +62,7 @@ defined('_JEXEC') or die;
 /**
  * Renders the pagination footer
  *
- * @param   array  $list  Array containing pagination footer
+ * @param   array $list Array containing pagination footer
  *
  * @return  string  HTML markup for the full pagination footer
  *
@@ -81,7 +81,7 @@ function pagination_list_footer($list)
 /**
  * Renders the pagination list
  *
- * @param   array  $list  Array containing pagination information
+ * @param   array $list Array containing pagination information
  *
  * @return  string  HTML markup for the full pagination object
  *
@@ -91,8 +91,8 @@ function pagination_list_render($list)
 {
 	// Calculate to display range of pages
 	$currentPage = 1;
-	$range = 1;
-	$step = 5;
+	$range       = 1;
+	$step        = 5;
 	foreach ($list['pages'] as $k => $page)
 	{
 		if (!$page['active'])
@@ -125,13 +125,14 @@ function pagination_list_render($list)
 	$html .= $list['end']['data'];
 
 	$html .= '</ul>';
+
 	return $html;
 }
 
 /**
  * Renders an active item in the pagination block
  *
- * @param   JPaginationObject  $item  The current pagination object
+ * @param   JPaginationObject $item The current pagination object
  *
  * @return  string  HTML markup for active item
  *
@@ -151,7 +152,7 @@ function pagination_item_active(&$item)
 	if ($item->text == JText::_('JPREV'))
 	{
 		$item->text = JText::_('JPREVIOUS');
-		$display = '<span class="icon-previous"></span>';
+		$display    = '<span class="icon-previous"></span>';
 	}
 
 	// Check for "Next" item
@@ -195,7 +196,7 @@ function pagination_item_active(&$item)
 /**
  * Renders an inactive item in the pagination block
  *
- * @param   JPaginationObject  $item  The current pagination object
+ * @param   JPaginationObject $item The current pagination object
  *
  * @return  string  HTML markup for inactive item
  *

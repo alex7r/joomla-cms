@@ -1,9 +1,9 @@
 <?php
 /**
- *  @package     FrameworkOnFramework
- *  @subpackage  config
+ * @package     FrameworkOnFramework
+ * @subpackage  config
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- *  @license     GNU General Public License version 2, or later
+ * @license     GNU General Public License version 2, or later
  */
 
 defined('FOF_INCLUDED') or die();
@@ -21,8 +21,8 @@ interface FOFConfigDomainInterface
 	/**
 	 * Parse the XML data, adding them to the $ret array
 	 *
-	 * @param   SimpleXMLElement  $xml   The XML data of the component's configuration area
-	 * @param   array             &$ret  The parsed data, in the form of a hash array
+	 * @param   SimpleXMLElement $xml  The XML data of the component's configuration area
+	 * @param   array            &$ret The parsed data, in the form of a hash array
 	 *
 	 * @return  void
 	 */
@@ -31,9 +31,9 @@ interface FOFConfigDomainInterface
 	/**
 	 * Return a configuration variable
 	 *
-	 * @param   string  &$configuration  Configuration variables (hashed array)
-	 * @param   string  $var             The variable we want to fetch
-	 * @param   mixed   $default         Default value
+	 * @param   string &$configuration Configuration variables (hashed array)
+	 * @param   string $var            The variable we want to fetch
+	 * @param   mixed  $default        Default value
 	 *
 	 * @return  mixed  The variable's value
 	 */

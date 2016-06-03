@@ -50,7 +50,7 @@ class FOFDownload
 			/** @var FOFDownloadAdapterAbstract $adapter */
 			$adapter = new $adapterInfo['classname'];
 
-			if ( !$adapter->isSupported())
+			if (!$adapter->isSupported())
 			{
 				continue;
 			}
@@ -64,6 +64,89 @@ class FOFDownload
 
 		// Load the language strings
 		FOFPlatform::getInstance()->loadTranslations('lib_fof');
+	}
+
+	/**
+	 * This method will crawl a starting directory and get all the valid files
+	 * that will be analyzed by __construct. Then it organizes them into an
+	 * associative array.
+	 *
+	 * @param   string $path          Folder where we should start looking
+	 * @param   array  $ignoreFolders Folder ignore list
+	 * @param   array  $ignoreFiles   File ignore list
+	 *
+	 * @return  array   Associative array, where the `fullpath` key contains the path to the file,
+	 *                  and the `classname` key contains the name of the class
+	 */
+	protected static function getFiles($path, array $ignoreFolders = array(), array $ignoreFiles = array())
+	{
+		$return = array();
+
+		$files = self::scanDirectory($path, $ignoreFolders, $ignoreFiles);
+
+		// Ok, I got the files, now I have to organize them
+		foreach ($files as $file)
+		{
+			$clean = str_replace($path, '', $file);
+			$clean = trim(str_replace('\\', '/', $clean), '/');
+
+			$parts = explode('/', $clean);
+
+			$return[] = array(
+				'fullpath'  => $file,
+				'classname' => 'FOFDownloadAdapter' . ucfirst(basename($parts[0], '.php'))
+			);
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Recursive function that will scan every directory unless it's in the
+	 * ignore list. Files that aren't in the ignore list are returned.
+	 *
+	 * @param   string $path          Folder where we should start looking
+	 * @param   array  $ignoreFolders Folder ignore list
+	 * @param   array  $ignoreFiles   File ignore list
+	 *
+	 * @return  array   List of all the files
+	 */
+	protected static function scanDirectory($path, array $ignoreFolders = array(), array $ignoreFiles = array())
+	{
+		$return = array();
+
+		$handle = @opendir($path);
+
+		if (!$handle)
+		{
+			return $return;
+		}
+
+		while (($file = readdir($handle)) !== false)
+		{
+			if ($file == '.' || $file == '..')
+			{
+				continue;
+			}
+
+			$fullpath = $path . '/' . $file;
+
+			if ((is_dir($fullpath) && in_array($file, $ignoreFolders)) || (is_file($fullpath) && in_array($file, $ignoreFiles)))
+			{
+				continue;
+			}
+
+			if (is_dir($fullpath))
+			{
+				$return = array_merge(self::scanDirectory($fullpath, $ignoreFolders, $ignoreFiles), $return);
+			}
+			else
+			{
+				$return[] = $path . '/' . $file;
+			}
+		}
+
+		return $return;
 	}
 
 	/**
@@ -99,7 +182,7 @@ class FOFDownload
 	 */
 	public function getAdapterName()
 	{
-		if(is_object($this->adapter))
+		if (is_object($this->adapter))
 		{
 			$class = get_class($this->adapter);
 
@@ -107,16 +190,6 @@ class FOFDownload
 		}
 
 		return '';
-	}
-
-	/**
-	 * Sets the additional options for the adapter
-	 *
-	 * @param array $options
-	 */
-	public function setAdapterOptions(array $options)
-	{
-		$this->adapterOptions = $options;
 	}
 
 	/**
@@ -130,23 +203,13 @@ class FOFDownload
 	}
 
 	/**
-	 * Used to decode the $params array
+	 * Sets the additional options for the adapter
 	 *
-	 * @param   string $key     The parameter key you want to retrieve the value for
-	 * @param   mixed  $default The default value, if none is specified
-	 *
-	 * @return  mixed  The value for this parameter key
+	 * @param array $options
 	 */
-	private function getParam($key, $default = null)
+	public function setAdapterOptions(array $options)
 	{
-		if (array_key_exists($key, $this->params))
-		{
-			return $this->params[$key];
-		}
-		else
-		{
-			return $default;
-		}
+		$this->adapterOptions = $options;
 	}
 
 	/**
@@ -173,22 +236,22 @@ class FOFDownload
 	 * basename of the URL as a filename
 	 *
 	 * The $params array can have any of the following keys
-	 * url			The file being downloaded
-	 * frag			Rolling counter of the file fragment being downloaded
-	 * totalSize	The total size of the file being downloaded, in bytes
-	 * doneSize		How many bytes we have already downloaded
-	 * maxExecTime	Maximum execution time downloading file fragments, in seconds
-	 * length		How many bytes to download at once
+	 * url            The file being downloaded
+	 * frag            Rolling counter of the file fragment being downloaded
+	 * totalSize    The total size of the file being downloaded, in bytes
+	 * doneSize        How many bytes we have already downloaded
+	 * maxExecTime    Maximum execution time downloading file fragments, in seconds
+	 * length        How many bytes to download at once
 	 *
 	 * The array returned is in the following format:
 	 *
-	 * status		True if there are no errors, false if there are errors
-	 * error		A string with the error message if there are errors
-	 * frag			The next file fragment to download
-	 * totalSize	The total size of the downloaded file in bytes, if the server supports HEAD requests
-	 * doneSize		How many bytes have already been downloaded
-	 * percent		% of the file already downloaded (if totalSize could be determined)
-	 * localfile	The name of the local file, without the path
+	 * status        True if there are no errors, false if there are errors
+	 * error        A string with the error message if there are errors
+	 * frag            The next file fragment to download
+	 * totalSize    The total size of the downloaded file in bytes, if the server supports HEAD requests
+	 * doneSize        How many bytes have already been downloaded
+	 * percent        % of the file already downloaded (if totalSize could be determined)
+	 * localfile    The name of the local file, without the path
 	 *
 	 * @param   array $params A parameters array, as sent by the user interface
 	 *
@@ -199,14 +262,14 @@ class FOFDownload
 		$this->params = $params;
 
 		// Fetch data
-		$url         	= $this->getParam('url');
-		$localFilename	= $this->getParam('localFilename');
-		$frag        	= $this->getParam('frag', -1);
-		$totalSize   	= $this->getParam('totalSize', -1);
-		$doneSize    	= $this->getParam('doneSize', -1);
-		$maxExecTime 	= $this->getParam('maxExecTime', 5);
-		$runTimeBias 	= $this->getParam('runTimeBias', 75);
-		$length      	= $this->getParam('length', 1048576);
+		$url           = $this->getParam('url');
+		$localFilename = $this->getParam('localFilename');
+		$frag          = $this->getParam('frag', -1);
+		$totalSize     = $this->getParam('totalSize', -1);
+		$doneSize      = $this->getParam('doneSize', -1);
+		$maxExecTime   = $this->getParam('maxExecTime', 5);
+		$runTimeBias   = $this->getParam('runTimeBias', 75);
+		$length        = $this->getParam('length', 1048576);
 
 		if (empty($localFilename))
 		{
@@ -214,13 +277,13 @@ class FOFDownload
 
 			if (strpos($localFilename, '?') !== false)
 			{
-				$paramsPos = strpos($localFilename, '?');
+				$paramsPos     = strpos($localFilename, '?');
 				$localFilename = substr($localFilename, 0, $paramsPos - 1);
 			}
 		}
 
-		$tmpDir        = JFactory::getConfig()->get('tmp_path', JPATH_ROOT . '/tmp');
-		$tmpDir        = rtrim($tmpDir, '/\\');
+		$tmpDir = JFactory::getConfig()->get('tmp_path', JPATH_ROOT . '/tmp');
+		$tmpDir = rtrim($tmpDir, '/\\');
 
 		// Init retArray
 		$retArray = array(
@@ -230,7 +293,7 @@ class FOFDownload
 			"totalSize" => $totalSize,
 			"doneSize"  => $doneSize,
 			"percent"   => 0,
-			"localfile"	=> $localFilename
+			"localfile" => $localFilename
 		);
 
 		try
@@ -411,85 +474,22 @@ class FOFDownload
 	}
 
 	/**
-	 * This method will crawl a starting directory and get all the valid files
-	 * that will be analyzed by __construct. Then it organizes them into an
-	 * associative array.
+	 * Used to decode the $params array
 	 *
-	 * @param   string $path          Folder where we should start looking
-	 * @param   array  $ignoreFolders Folder ignore list
-	 * @param   array  $ignoreFiles   File ignore list
+	 * @param   string $key     The parameter key you want to retrieve the value for
+	 * @param   mixed  $default The default value, if none is specified
 	 *
-	 * @return  array   Associative array, where the `fullpath` key contains the path to the file,
-	 *                  and the `classname` key contains the name of the class
+	 * @return  mixed  The value for this parameter key
 	 */
-	protected static function getFiles($path, array $ignoreFolders = array(), array $ignoreFiles = array())
+	private function getParam($key, $default = null)
 	{
-		$return = array();
-
-		$files = self::scanDirectory($path, $ignoreFolders, $ignoreFiles);
-
-		// Ok, I got the files, now I have to organize them
-		foreach ($files as $file)
+		if (array_key_exists($key, $this->params))
 		{
-			$clean = str_replace($path, '', $file);
-			$clean = trim(str_replace('\\', '/', $clean), '/');
-
-			$parts = explode('/', $clean);
-
-			$return[] = array(
-				'fullpath'  => $file,
-				'classname' => 'FOFDownloadAdapter' . ucfirst(basename($parts[0], '.php'))
-			);
+			return $this->params[$key];
 		}
-
-		return $return;
-	}
-
-	/**
-	 * Recursive function that will scan every directory unless it's in the
-	 * ignore list. Files that aren't in the ignore list are returned.
-	 *
-	 * @param   string $path          Folder where we should start looking
-	 * @param   array  $ignoreFolders Folder ignore list
-	 * @param   array  $ignoreFiles   File ignore list
-	 *
-	 * @return  array   List of all the files
-	 */
-	protected static function scanDirectory($path, array $ignoreFolders = array(), array $ignoreFiles = array())
-	{
-		$return = array();
-
-		$handle = @opendir($path);
-
-		if ( !$handle)
+		else
 		{
-			return $return;
+			return $default;
 		}
-
-		while (($file = readdir($handle)) !== false)
-		{
-			if ($file == '.' || $file == '..')
-			{
-				continue;
-			}
-
-			$fullpath = $path . '/' . $file;
-
-			if ((is_dir($fullpath) && in_array($file, $ignoreFolders)) || (is_file($fullpath) && in_array($file, $ignoreFiles)))
-			{
-				continue;
-			}
-
-			if (is_dir($fullpath))
-			{
-				$return = array_merge(self::scanDirectory($fullpath, $ignoreFolders, $ignoreFiles), $return);
-			}
-			else
-			{
-				$return[] = $path . '/' . $file;
-			}
-		}
-
-		return $return;
 	}
 }

@@ -33,8 +33,8 @@ abstract class JGithubObject
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry     $options  GitHub options object.
-	 * @param   JGithubHttp  $client   The HTTP client object.
+	 * @param   Registry    $options GitHub options object.
+	 * @param   JGithubHttp $client  The HTTP client object.
 	 *
 	 * @since   11.3
 	 */
@@ -49,9 +49,9 @@ abstract class JGithubObject
 	 * add appropriate pagination details if necessary and also prepend the API url
 	 * to have a complete URL for the request.
 	 *
-	 * @param   string   $path   URL to inflect
-	 * @param   integer  $page   Page to request
-	 * @param   integer  $limit  Number of results to return per page
+	 * @param   string  $path  URL to inflect
+	 * @param   integer $page  Page to request
+	 * @param   integer $limit Number of results to return per page
 	 *
 	 * @return  string   The request URL.
 	 *
@@ -103,9 +103,9 @@ abstract class JGithubObject
 	/**
 	 * Process the response and decode it.
 	 *
-	 * @param   JHttpResponse  $response      The response.
-	 * @param   integer        $expectedCode  The expected "good" code.
-	 * @param   boolean        $decode        If the should be response be JSON decoded.
+	 * @param   JHttpResponse $response     The response.
+	 * @param   integer       $expectedCode The expected "good" code.
+	 * @param   boolean       $decode       If the should be response be JSON decoded.
 	 *
 	 * @throws DomainException
 	 * @since  12.4

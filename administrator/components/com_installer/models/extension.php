@@ -21,7 +21,7 @@ class InstallerModel extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -47,9 +47,9 @@ class InstallerModel extends JModelList
 	/**
 	 * Returns an object list
 	 *
-	 * @param   string  $query       The query
-	 * @param   int     $limitstart  Offset
-	 * @param   int     $limit       The number of records
+	 * @param   string $query      The query
+	 * @param   int    $limitstart Offset
+	 * @param   int    $limit      The number of records
 	 *
 	 * @return  array
 	 */
@@ -113,7 +113,7 @@ class InstallerModel extends JModelList
 			$result = ArrayHelper::sortObjects($result, $listOrder, strtolower($listDirn) == 'desc' ? -1 : 1, false, true);
 
 			// Process pagination.
-			$total = count($result);
+			$total                                      = count($result);
 			$this->cache[$this->getStoreId('getTotal')] = $total;
 
 			if ($total < $limitstart)
@@ -136,7 +136,7 @@ class InstallerModel extends JModelList
 	/**
 	 * Translate a list of objects
 	 *
-	 * @param   array  &$items  The array of objects
+	 * @param   array &$items The array of objects
 	 *
 	 * @return  array The array of translated objects
 	 */
@@ -172,41 +172,41 @@ class InstallerModel extends JModelList
 			{
 				case 'component':
 					$extension = $item->element;
-					$source = JPATH_ADMINISTRATOR . '/components/' . $extension;
-						$lang->load("$extension.sys", JPATH_ADMINISTRATOR, null, false, true)
-					||	$lang->load("$extension.sys", $source, null, false, true);
-				break;
+					$source    = JPATH_ADMINISTRATOR . '/components/' . $extension;
+					$lang->load("$extension.sys", JPATH_ADMINISTRATOR, null, false, true)
+					|| $lang->load("$extension.sys", $source, null, false, true);
+					break;
 				case 'file':
 					$extension = 'files_' . $item->element;
-						$lang->load("$extension.sys", JPATH_SITE, null, false, true);
-				break;
+					$lang->load("$extension.sys", JPATH_SITE, null, false, true);
+					break;
 				case 'library':
 					$extension = 'lib_' . $item->element;
-						$lang->load("$extension.sys", JPATH_SITE, null, false, true);
-				break;
+					$lang->load("$extension.sys", JPATH_SITE, null, false, true);
+					break;
 				case 'module':
 					$extension = $item->element;
-					$source = $path . '/modules/' . $extension;
-						$lang->load("$extension.sys", $path, null, false, true)
-					||	$lang->load("$extension.sys", $source, null, false, true);
-				break;
+					$source    = $path . '/modules/' . $extension;
+					$lang->load("$extension.sys", $path, null, false, true)
+					|| $lang->load("$extension.sys", $source, null, false, true);
+					break;
 				case 'plugin':
 					$extension = 'plg_' . $item->folder . '_' . $item->element;
-					$source = JPATH_PLUGINS . '/' . $item->folder . '/' . $item->element;
-						$lang->load("$extension.sys", JPATH_ADMINISTRATOR, null, false, true)
-					||	$lang->load("$extension.sys", $source, null, false, true);
-				break;
+					$source    = JPATH_PLUGINS . '/' . $item->folder . '/' . $item->element;
+					$lang->load("$extension.sys", JPATH_ADMINISTRATOR, null, false, true)
+					|| $lang->load("$extension.sys", $source, null, false, true);
+					break;
 				case 'template':
 					$extension = 'tpl_' . $item->element;
-					$source = $path . '/templates/' . $item->element;
-						$lang->load("$extension.sys", $path, null, false, true)
-					||	$lang->load("$extension.sys", $source, null, false, true);
-				break;
+					$source    = $path . '/templates/' . $item->element;
+					$lang->load("$extension.sys", $path, null, false, true)
+					|| $lang->load("$extension.sys", $source, null, false, true);
+					break;
 				case 'package':
 				default:
 					$extension = $item->element;
-						$lang->load("$extension.sys", JPATH_SITE, null, false, true);
-				break;
+					$lang->load("$extension.sys", JPATH_SITE, null, false, true);
+					break;
 			}
 
 			if (!in_array($item->type, array('language', 'template', 'library')))

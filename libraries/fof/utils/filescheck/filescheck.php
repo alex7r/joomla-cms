@@ -56,22 +56,22 @@ class FOFUtilsFilescheck
 	/**
 	 * Create and initialise the object
 	 *
-	 * @param string $option Component name, e.g. com_foobar
+	 * @param string $option  Component name, e.g. com_foobar
 	 * @param string $version The current component version, as reported by the component
-	 * @param string $date The current component release date, as reported by the component
+	 * @param string $date    The current component release date, as reported by the component
 	 */
 	public function __construct($option, $version, $date)
 	{
 		// Initialise from parameters
-		$this->option = $option;
+		$this->option  = $option;
 		$this->version = $version;
-		$this->date = $date;
+		$this->date    = $date;
 
 		// Retrieve the date and version from the #__extensions table
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true)->select('*')->from($db->qn('#__extensions'))
-					->where($db->qn('element') . ' = ' . $db->q($this->option))
-					->where($db->qn('type') . ' = ' . $db->q('component'));
+		$db        = JFactory::getDbo();
+		$query     = $db->getQuery(true)->select('*')->from($db->qn('#__extensions'))
+			->where($db->qn('element') . ' = ' . $db->q($this->option))
+			->where($db->qn('type') . ' = ' . $db->q('component'));
 		$extension = $db->setQuery($query)->loadObject();
 
 		// Check the version and date against those from #__extensions. I hate heavily nested IFs as much as the next
@@ -123,7 +123,7 @@ class FOFUtilsFilescheck
 
 		// Initialise the files and directories lists
 		$this->fileList = $phpFileChecker['files'];
-		$this->dirList = $phpFileChecker['directories'];
+		$this->dirList  = $phpFileChecker['directories'];
 	}
 
 	/**
@@ -196,15 +196,15 @@ class FOFUtilsFilescheck
 	public function slowCheck($idx = 0)
 	{
 		$ret = array(
-			'done'	=> false,
-			'files'	=> array(),
-			'folders'	=> array(),
-			'idx'	=> $idx
+			'done'    => false,
+			'files'   => array(),
+			'folders' => array(),
+			'idx'     => $idx
 		);
 
-		$totalFiles = count($this->fileList);
+		$totalFiles   = count($this->fileList);
 		$totalFolders = count($this->dirList);
-		$fileKeys = array_keys($this->fileList);
+		$fileKeys     = array_keys($this->fileList);
 
 		$timer = new FOFUtilsTimer(3.0, 75.0);
 
@@ -222,7 +222,7 @@ class FOFUtilsFilescheck
 
 			if ($idx < $totalFiles)
 			{
-				$fileKey = $fileKeys[$idx];
+				$fileKey  = $fileKeys[$idx];
 				$filePath = JPATH_ROOT . '/' . $fileKey;
 				$fileData = $this->fileList[$fileKey];
 

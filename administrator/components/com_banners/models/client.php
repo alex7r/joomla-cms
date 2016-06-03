@@ -27,11 +27,11 @@ class BannersModelClient extends JModelAdmin
 	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
-	 * @param   string  $type    The table type to instantiate
-	 * @param   string  $prefix  A prefix for the table class name. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
+	 * @param   string $type   The table type to instantiate
+	 * @param   string $prefix A prefix for the table class name. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
 	 *
-	 * @return  JTable	A JTable object
+	 * @return  JTable    A JTable object
 	 *
 	 * @since   1.6
 	 */
@@ -43,8 +43,8 @@ class BannersModelClient extends JModelAdmin
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  JForm|boolean  A JForm object on success, false on failure
 	 *
@@ -66,7 +66,7 @@ class BannersModelClient extends JModelAdmin
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
-	 * @param   object  $record  A record object.
+	 * @param   object $record A record object.
 	 *
 	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
 	 *
@@ -95,7 +95,7 @@ class BannersModelClient extends JModelAdmin
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
-	 * @param   object  $record  A record object.
+	 * @param   object $record A record object.
 	 *
 	 * @return  boolean  True if allowed to change the state of the record.
 	 *                   Defaults to the permission set in the component.
@@ -139,7 +139,7 @@ class BannersModelClient extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   JTable  $table  A JTable object.
+	 * @param   JTable $table A JTable object.
 	 *
 	 * @return  void
 	 *

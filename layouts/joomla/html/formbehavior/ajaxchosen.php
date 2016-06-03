@@ -13,15 +13,15 @@ defined('JPATH_BASE') or die;
  * Layout variables
  * ---------------------
  *
- * @var  string   $selector        The id of the field
- * @var  array    $options         The options array
- * @var  boolean  $debug           Are we in debug mode?
- * @var  string   $type            Get or Post
- * @var  string   $url             The URL
- * @var  string   $dataType        Data type returned
- * @var  string   $jsonTermKey     Extra JSON terminator key
- * @var  integer  $afterTypeDelay  Delay for the execution
- * @var  integer  $minTermLength   The minimum characters required
+ * @var  string  $selector       The id of the field
+ * @var  array   $options        The options array
+ * @var  boolean $debug          Are we in debug mode?
+ * @var  string  $type           Get or Post
+ * @var  string  $url            The URL
+ * @var  string  $dataType       Data type returned
+ * @var  string  $jsonTermKey    Extra JSON terminator key
+ * @var  integer $afterTypeDelay Delay for the execution
+ * @var  integer $minTermLength  The minimum characters required
  */
 
 extract($displayData);

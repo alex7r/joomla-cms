@@ -39,7 +39,7 @@ class InstallationControllerSite extends JControllerBase
 		$model->checkForm('site');
 
 		// Redirect to the page.
-		$r = new stdClass;
+		$r       = new stdClass;
 		$r->view = 'database';
 		$app->sendJsonResponse($r);
 	}

@@ -17,30 +17,6 @@ defined('_JEXEC') or die;
 class MessagesModelConfig extends JModelForm
 {
 	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * This method should only be called once per instantiation and is designed
-	 * to be called on the first call to the getState() method unless the model
-	 * configuration flag to ignore the request is set.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState()
-	{
-		$user = JFactory::getUser();
-
-		$this->setState('user.id', $user->get('id'));
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_messages');
-		$this->setState('params', $params);
-	}
-
-	/**
 	 * Method to get a single record.
 	 *
 	 * @return  mixed  Object on success, false on failure.
@@ -51,7 +27,7 @@ class MessagesModelConfig extends JModelForm
 	{
 		$item = new JObject;
 
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select('cfg_name, cfg_value')
 			->from('#__messages_cfg')
@@ -83,10 +59,10 @@ class MessagesModelConfig extends JModelForm
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return  JForm	 A JForm object on success, false on failure
+	 * @return  JForm     A JForm object on success, false on failure
 	 *
 	 * @since   1.6
 	 */
@@ -106,7 +82,7 @@ class MessagesModelConfig extends JModelForm
 	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array  $data  The form data.
+	 * @param   array $data The form data.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -167,5 +143,29 @@ class MessagesModelConfig extends JModelForm
 
 			return false;
 		}
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * This method should only be called once per instantiation and is designed
+	 * to be called on the first call to the getState() method unless the model
+	 * configuration flag to ignore the request is set.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState()
+	{
+		$user = JFactory::getUser();
+
+		$this->setState('user.id', $user->get('id'));
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_messages');
+		$this->setState('params', $params);
 	}
 }

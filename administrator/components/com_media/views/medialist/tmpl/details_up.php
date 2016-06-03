@@ -12,18 +12,20 @@ defined('_JEXEC') or die;
 $user = JFactory::getUser();
 ?>
 <?php if ($this->state->folder != '') : ?>
-<tr>
-	<td class="imgTotal">
-		<a href="index.php?option=com_media&amp;view=mediaList&amp;tmpl=component&amp;folder=<?php echo $this->state->parent; ?>" target="folderframe">
-			<span class="icon-arrow-up"></span></a>
-	</td>
-	<td class="description">
-		<a href="index.php?option=com_media&amp;view=mediaList&amp;tmpl=component&amp;folder=<?php echo $this->state->parent; ?>" target="folderframe">..</a>
-	</td>
-	<td>&#160;</td>
-	<td>&#160;</td>
-	<?php if ($user->authorise('core.delete', 'com_media')):?>
+	<tr>
+		<td class="imgTotal">
+			<a href="index.php?option=com_media&amp;view=mediaList&amp;tmpl=component&amp;folder=<?php echo $this->state->parent; ?>"
+			   target="folderframe">
+				<span class="icon-arrow-up"></span></a>
+		</td>
+		<td class="description">
+			<a href="index.php?option=com_media&amp;view=mediaList&amp;tmpl=component&amp;folder=<?php echo $this->state->parent; ?>"
+			   target="folderframe">..</a>
+		</td>
 		<td>&#160;</td>
-	<?php endif;?>
-</tr>
+		<td>&#160;</td>
+		<?php if ($user->authorise('core.delete', 'com_media')): ?>
+			<td>&#160;</td>
+		<?php endif; ?>
+	</tr>
 <?php endif; ?>

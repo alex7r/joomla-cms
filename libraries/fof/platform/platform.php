@@ -24,6 +24,20 @@ defined('FOF_INCLUDED') or die;
 abstract class FOFPlatform implements FOFPlatformInterface
 {
 	/**
+	 * The list of paths where platform class files will be looked for
+	 *
+	 * @var  array
+	 */
+	protected static $paths = array();
+
+	/**
+	 * The platform class instance which will be returned by getInstance
+	 *
+	 * @var  FOFPlatformInterface
+	 */
+	protected static $instance = null;
+
+	/**
 	 * The ordering for this platform class. The lower this number is, the more
 	 * important this class becomes. Most important enabled class ends up being
 	 * used.
@@ -68,28 +82,14 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 */
 	protected $isEnabled = null;
 
-    /**
-     * Filesystem integration objects cache
-     *
-     * @var  object
+	/**
+	 * Filesystem integration objects cache
+	 *
+	 * @var  object
 	 *
 	 * @since  2.1.2
-     */
-    protected $objectCache = array();
-
-	/**
-	 * The list of paths where platform class files will be looked for
-	 *
-	 * @var  array
 	 */
-	protected static $paths = array();
-
-	/**
-	 * The platform class instance which will be returned by getInstance
-	 *
-	 * @var  FOFPlatformInterface
-	 */
-	protected static $instance = null;
+	protected $objectCache = array();
 
 	// ========================================================================
 	// Public API for platform integration handling
@@ -99,7 +99,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 * Register a path where platform files will be looked for. These take
 	 * precedence over the built-in platform files.
 	 *
-	 * @param   string  $path  The path to add
+	 * @param   string $path The path to add
 	 *
 	 * @return  void
 	 */
@@ -107,7 +107,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	{
 		if (!in_array($path, self::$paths))
 		{
-			self::$paths[] = $path;
+			self::$paths[]  = $path;
 			self::$instance = null;
 		}
 	}
@@ -115,7 +115,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	/**
 	 * Unregister a path where platform files will be looked for.
 	 *
-	 * @param   string  $path  The path to remove
+	 * @param   string $path The path to remove
 	 *
 	 * @return  void
 	 */
@@ -133,7 +133,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	/**
 	 * Force a specific platform object to be used. If null, nukes the cache
 	 *
-	 * @param   FOFPlatformInterface|null  $instance  The Platform object to be used
+	 * @param   FOFPlatformInterface|null $instance The Platform object to be used
 	 *
 	 * @return  void
 	 */
@@ -172,7 +172,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 					continue;
 				}
 
-				$di = new DirectoryIterator($path);
+				$di   = new DirectoryIterator($path);
 				$temp = array();
 
 				foreach ($di as $fileSpec)
@@ -197,8 +197,8 @@ abstract class FOFPlatform implements FOFPlatformInterface
 					}
 
 					$temp[] = array(
-						'classname'		=> 'FOFIntegration' . ucfirst($fileName) . 'Platform',
-						'fullpath'		=> $path . '/' . $fileName . '/platform.php',
+						'classname' => 'FOFIntegration' . ucfirst($fileName) . 'Platform',
+						'fullpath'  => $path . '/' . $fileName . '/platform.php',
 					);
 				}
 
@@ -244,7 +244,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 					// Replace self::$instance if this object has a
 					// lower order number
 					$current_order = self::$instance->getOrdering();
-					$new_order = $o->getOrdering();
+					$new_order     = $o->getOrdering();
 
 					if ($new_order < $current_order)
 					{
@@ -296,7 +296,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	/**
 	 * Returns a platform integration object
 	 *
-	 * @param   string  $key  The key name of the platform integration object, e.g. 'filesystem'
+	 * @param   string $key The key name of the platform integration object, e.g. 'filesystem'
 	 *
 	 * @return  object
 	 *
@@ -317,7 +317,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 		if (!$hasObject)
 		{
 			// Instantiate a new platform integration object
-			$className = 'FOFIntegration' . ucfirst($this->getPlatformName()) . ucfirst($key);
+			$className               = 'FOFIntegration' . ucfirst($this->getPlatformName()) . ucfirst($key);
 			$this->objectCache[$key] = new $className;
 		}
 
@@ -325,10 +325,29 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	}
 
 	/**
+	 * Returns the (internal) name of the platform implementation, e.g.
+	 * "joomla", "foobar123" etc. This MUST be the last part of the platform
+	 * class name. For example, if you have a plaform implementation class
+	 * FOFPlatformFoobar you MUST return "foobar" (all lowercase).
+	 *
+	 * @return  string
+	 *
+	 * @since  2.1.2
+	 */
+	public function getPlatformName()
+	{
+		return $this->name;
+	}
+
+	// ========================================================================
+	// Default implementation
+	// ========================================================================
+
+	/**
 	 * Forces a platform integration object instance
 	 *
-	 * @param   string  $key     The key name of the platform integration object, e.g. 'filesystem'
-	 * @param   object  $object  The object to force for this key
+	 * @param   string $key    The key name of the platform integration object, e.g. 'filesystem'
+	 * @param   object $object The object to force for this key
 	 *
 	 * @return  object
 	 *
@@ -339,22 +358,18 @@ abstract class FOFPlatform implements FOFPlatformInterface
 		$this->objectCache[$key] = $object;
 	}
 
-	// ========================================================================
-	// Default implementation
-	// ========================================================================
-
 	/**
 	 * Set the error Handling, if possible
 	 *
-	 * @param   integer  $level      PHP error level (E_ALL)
-	 * @param   string   $log_level  What to do with the error (ignore, callback)
-	 * @param   array    $options    Options for the error handler
+	 * @param   integer $level     PHP error level (E_ALL)
+	 * @param   string  $log_level What to do with the error (ignore, callback)
+	 * @param   array   $options   Options for the error handler
 	 *
 	 * @return  void
 	 */
 	public function setErrorHandling($level, $log_level, $options = array())
 	{
-		if (version_compare(JVERSION, '3.0', 'lt') )
+		if (version_compare(JVERSION, '3.0', 'lt'))
 		{
 			return JError::setErrorHandling($level, $log_level, $options);
 		}
@@ -363,7 +378,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	/**
 	 * Returns the base (root) directories for a given component.
 	 *
-	 * @param   string  $component  The name of the component. For Joomla! this
+	 * @param   string $component   The name of the component. For Joomla! this
 	 *                              is something like "com_example"
 	 *
 	 * @see FOFPlatformInterface::getComponentBaseDirs()
@@ -373,23 +388,23 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	public function getComponentBaseDirs($component)
 	{
 		return array(
-			'main'	=> '',
-			'alt'	=> '',
-			'site'	=> '',
-			'admin'	=> '',
+			'main'  => '',
+			'alt'   => '',
+			'site'  => '',
+			'admin' => '',
 		);
 	}
 
 	/**
 	 * Return a list of the view template directories for this component.
 	 *
-	 * @param   string   $component  The name of the component. For Joomla! this
+	 * @param   string  $component   The name of the component. For Joomla! this
 	 *                               is something like "com_example"
-	 * @param   string   $view       The name of the view you're looking a
+	 * @param   string  $view        The name of the view you're looking a
 	 *                               template for
-	 * @param   string   $layout     The layout name to load, e.g. 'default'
-	 * @param   string   $tpl        The sub-template name to load (null by default)
-	 * @param   boolean  $strict     If true, only the specified layout will be
+	 * @param   string  $layout      The layout name to load, e.g. 'default'
+	 * @param   string  $tpl         The sub-template name to load (null by default)
+	 * @param   boolean $strict      If true, only the specified layout will be
 	 *                               searched for. Otherwise we'll fall back to
 	 *                               the 'default' layout if the specified layout
 	 *                               is not found.
@@ -420,8 +435,8 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 * files instead of the regular component directorues. If the application
 	 * does not have such a thing as template overrides return an empty string.
 	 *
-	 * @param   string   $component  The name of the component for which to fetch the overrides
-	 * @param   boolean  $absolute   Should I return an absolute or relative path?
+	 * @param   string  $component The name of the component for which to fetch the overrides
+	 * @param   boolean $absolute  Should I return an absolute or relative path?
 	 *
 	 * @return  string  The path to the template overrides directory
 	 */
@@ -433,7 +448,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	/**
 	 * Load the translation files for a given component.
 	 *
-	 * @param   string  $component  The name of the component. For Joomla! this
+	 * @param   string $component   The name of the component. For Joomla! this
 	 *                              is something like "com_example"
 	 *
 	 * @see FOFPlatformInterface::loadTranslations()
@@ -448,7 +463,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	/**
 	 * Authorise access to the component in the back-end.
 	 *
-	 * @param   string  $component  The name of the component.
+	 * @param   string $component The name of the component.
 	 *
 	 * @see FOFPlatformInterface::authorizeAdmin()
 	 *
@@ -462,7 +477,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	/**
 	 * Returns the JUser object for the current user
 	 *
-	 * @param   integer  $id  The ID of the user to fetch
+	 * @param   integer $id The ID of the user to fetch
 	 *
 	 * @see FOFPlatformInterface::getUser()
 	 *
@@ -488,12 +503,12 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	/**
 	 * This method will try retrieving a variable from the request (input) data.
 	 *
-	 * @param   string    $key           The user state key for the variable
-	 * @param   string    $request       The request variable name for the variable
-	 * @param   FOFInput  $input         The FOFInput object with the request (input) data
-	 * @param   mixed     $default       The default value. Default: null
-	 * @param   string    $type          The filter type for the variable data. Default: none (no filtering)
-	 * @param   boolean   $setUserState  Should I set the user state with the fetched value?
+	 * @param   string   $key          The user state key for the variable
+	 * @param   string   $request      The request variable name for the variable
+	 * @param   FOFInput $input        The FOFInput object with the request (input) data
+	 * @param   mixed    $default      The default value. Default: null
+	 * @param   string   $type         The filter type for the variable data. Default: none (no filtering)
+	 * @param   boolean  $setUserState Should I set the user state with the fetched value?
 	 *
 	 * @see FOFPlatformInterface::getUserStateFromRequest()
 	 *
@@ -508,7 +523,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 * Load plugins of a specific type. Obviously this seems to only be required
 	 * in the Joomla! CMS.
 	 *
-	 * @param   string  $type  The type of the plugins to be loaded
+	 * @param   string $type The type of the plugins to be loaded
 	 *
 	 * @see FOFPlatformInterface::importPlugin()
 	 *
@@ -522,8 +537,8 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 * Execute plugins (system-level triggers) and fetch back an array with
 	 * their return values.
 	 *
-	 * @param   string  $event  The event (trigger) name, e.g. onBeforeScratchMyEar
-	 * @param   array   $data   A hash array of data sent to the plugins as part of the trigger
+	 * @param   string $event The event (trigger) name, e.g. onBeforeScratchMyEar
+	 * @param   array  $data  A hash array of data sent to the plugins as part of the trigger
 	 *
 	 * @see FOFPlatformInterface::runPlugins()
 	 *
@@ -537,8 +552,8 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	/**
 	 * Perform an ACL check.
 	 *
-	 * @param   string  $action     The ACL privilege to check, e.g. core.edit
-	 * @param   string  $assetname  The asset name to check, typically the component's name
+	 * @param   string $action    The ACL privilege to check, e.g. core.edit
+	 * @param   string $assetname The asset name to check, typically the component's name
 	 *
 	 * @see FOFPlatformInterface::authorise()
 	 *
@@ -602,9 +617,9 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 * Performs a check between two versions. Use this function instead of PHP version_compare
 	 * so we can mock it while testing
 	 *
-	 * @param   string  $version1  First version number
-	 * @param   string  $version2  Second version number
-	 * @param   string  $operator  Operator (see version_compare for valid operators)
+	 * @param   string $version1 First version number
+	 * @param   string $version2 Second version number
+	 * @param   string $operator Operator (see version_compare for valid operators)
 	 *
 	 * @return  boolean
 	 */
@@ -617,8 +632,8 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 * Saves something to the cache. This is supposed to be used for system-wide
 	 * FOF data, not application data.
 	 *
-	 * @param   string  $key      The key of the data to save
-	 * @param   string  $content  The actual data to save
+	 * @param   string $key     The key of the data to save
+	 * @param   string $content The actual data to save
 	 *
 	 * @return  boolean  True on success
 	 */
@@ -631,8 +646,8 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	 * Retrieves data from the cache. This is supposed to be used for system-side
 	 * FOF data, not application data.
 	 *
-	 * @param   string  $key      The key of the data to retrieve
-	 * @param   string  $default  The default value to return if the key is not found or the cache is not populated
+	 * @param   string $key     The key of the data to retrieve
+	 * @param   string $default The default value to return if the key is not found or the cache is not populated
 	 *
 	 * @return  string  The cached value
 	 */
@@ -668,7 +683,7 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	/**
 	 * logs in a user
 	 *
-	 * @param   array  $authInfo  authentification information
+	 * @param   array $authInfo authentification information
 	 *
 	 * @return  boolean  True on success
 	 */
@@ -698,21 +713,6 @@ abstract class FOFPlatform implements FOFPlatformInterface
 	public function logDeprecated($message)
 	{
 		// The default implementation does nothing. Override this in your platform classes.
-	}
-
-	/**
-	 * Returns the (internal) name of the platform implementation, e.g.
-	 * "joomla", "foobar123" etc. This MUST be the last part of the platform
-	 * class name. For example, if you have a plaform implementation class
-	 * FOFPlatformFoobar you MUST return "foobar" (all lowercase).
-	 *
-	 * @return  string
-	 *
-	 * @since  2.1.2
-	 */
-	public function getPlatformName()
-	{
-		return $this->name;
 	}
 
 	/**

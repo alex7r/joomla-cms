@@ -24,32 +24,6 @@ class InstallerModelDatabase extends InstallerModel
 	protected $_context = 'com_installer.discover';
 
 	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState($ordering = null, $direction = null)
-	{
-		$app = JFactory::getApplication();
-		$this->setState('message', $app->getUserState('com_installer.message'));
-		$this->setState('extension_message', $app->getUserState('com_installer.extension_message'));
-		$app->setUserState('com_installer.message', '');
-		$app->setUserState('com_installer.extension_message', '');
-
-		// Prepare the utf8mb4 conversion check table
-		$this->prepareUtf8mb4StatusTable();
-
-		parent::populateState('name', 'asc');
-	}
-
-	/**
 	 * Fixes database problems.
 	 *
 	 * @return  void
@@ -99,45 +73,14 @@ class InstallerModelDatabase extends InstallerModel
 
 			return false;
 		}
+
 		return $changeSet;
-	}
-
-	/**
-	 * Method to get a JPagination object for the data set.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.2
-	 */
-	public function getPagination()
-	{
-		return true;
-	}
-
-	/**
-	 * Get version from #__schemas table.
-	 *
-	 * @return  mixed  the return value from the query, or null if the query fails.
-	 *
-	 * @throws Exception
-	 */
-	public function getSchemaVersion()
-	{
-		$db = $this->getDbo();
-		$query = $db->getQuery(true)
-			->select('version_id')
-			->from($db->quoteName('#__schemas'))
-			->where('extension_id = 700');
-		$db->setQuery($query);
-		$result = $db->loadResult();
-
-		return $result;
 	}
 
 	/**
 	 * Fix schema version if wrong.
 	 *
-	 * @param   JSchemaChangeSet  $changeSet  Schema change set.
+	 * @param   JSchemaChangeSet $changeSet Schema change set.
 	 *
 	 * @return   mixed  string schema version if success, false if fail.
 	 */
@@ -153,7 +96,7 @@ class InstallerModelDatabase extends InstallerModel
 		}
 
 		// Delete old row.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true)
 			->delete($db->quoteName('#__schemas'))
 			->where($db->quoteName('extension_id') . ' = 700');
@@ -176,18 +119,23 @@ class InstallerModelDatabase extends InstallerModel
 	}
 
 	/**
-	 * Get current version from #__extensions table.
+	 * Get version from #__schemas table.
 	 *
-	 * @return  mixed   version if successful, false if fail.
+	 * @return  mixed  the return value from the query, or null if the query fails.
+	 *
+	 * @throws Exception
 	 */
-
-	public function getUpdateVersion()
+	public function getSchemaVersion()
 	{
-		$table = JTable::getInstance('Extension');
-		$table->load('700');
-		$cache = new Registry($table->manifest_cache);
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true)
+			->select('version_id')
+			->from($db->quoteName('#__schemas'))
+			->where('extension_id = 700');
+		$db->setQuery($query);
+		$result = $db->loadResult();
 
-		return $cache->get('version');
+		return $result;
 	}
 
 	/**
@@ -199,9 +147,9 @@ class InstallerModelDatabase extends InstallerModel
 	{
 		$table = JTable::getInstance('Extension');
 		$table->load('700');
-		$cache = new Registry($table->manifest_cache);
+		$cache         = new Registry($table->manifest_cache);
 		$updateVersion = $cache->get('version');
-		$cmsVersion = new JVersion;
+		$cmsVersion    = new JVersion;
 
 		if ($updateVersion == $cmsVersion->getShortVersion())
 		{
@@ -217,20 +165,6 @@ class InstallerModelDatabase extends InstallerModel
 		}
 
 		return false;
-	}
-
-	/**
-	 * For version 2.5.x only
-	 * Check if com_config parameters are blank.
-	 *
-	 * @return  string  default text filters (if any).
-	 */
-	public function getDefaultTextFilters()
-	{
-		$table = JTable::getInstance('Extension');
-		$table->load($table->find(array('name' => 'com_config')));
-
-		return $table->params;
 	}
 
 	/**
@@ -260,6 +194,73 @@ class InstallerModelDatabase extends InstallerModel
 				return true;
 			}
 		}
+	}
+
+	/**
+	 * Method to get a JPagination object for the data set.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   12.2
+	 */
+	public function getPagination()
+	{
+		return true;
+	}
+
+	/**
+	 * Get current version from #__extensions table.
+	 *
+	 * @return  mixed   version if successful, false if fail.
+	 */
+
+	public function getUpdateVersion()
+	{
+		$table = JTable::getInstance('Extension');
+		$table->load('700');
+		$cache = new Registry($table->manifest_cache);
+
+		return $cache->get('version');
+	}
+
+	/**
+	 * For version 2.5.x only
+	 * Check if com_config parameters are blank.
+	 *
+	 * @return  string  default text filters (if any).
+	 */
+	public function getDefaultTextFilters()
+	{
+		$table = JTable::getInstance('Extension');
+		$table->load($table->find(array('name' => 'com_config')));
+
+		return $table->params;
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		$app = JFactory::getApplication();
+		$this->setState('message', $app->getUserState('com_installer.message'));
+		$this->setState('extension_message', $app->getUserState('com_installer.extension_message'));
+		$app->setUserState('com_installer.message', '');
+		$app->setUserState('com_installer.extension_message', '');
+
+		// Prepare the utf8mb4 conversion check table
+		$this->prepareUtf8mb4StatusTable();
+
+		parent::populateState('name', 'asc');
 	}
 
 	/**

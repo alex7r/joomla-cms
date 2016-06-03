@@ -28,8 +28,8 @@ class JArchive
 	/**
 	 * Extract an archive file to a directory.
 	 *
-	 * @param   string  $archivename  The name of the archive file
-	 * @param   string  $extractdir   Directory to unpack into
+	 * @param   string $archivename The name of the archive file
+	 * @param   string $extractdir  Directory to unpack into
 	 *
 	 * @return  boolean  True for success
 	 *
@@ -38,9 +38,9 @@ class JArchive
 	 */
 	public static function extract($archivename, $extractdir)
 	{
-		$untar = false;
+		$untar  = false;
 		$result = false;
-		$ext = JFile::getExt(strtolower($archivename));
+		$ext    = JFile::getExt(strtolower($archivename));
 
 		// Check if a tar is embedded...gzip/bzip2 can just be plain files!
 		if (JFile::getExt(JFile::stripExt(strtolower($archivename))) == 'tar')
@@ -79,7 +79,7 @@ class JArchive
 
 				if ($adapter)
 				{
-					$config = JFactory::getConfig();
+					$config   = JFactory::getConfig();
 					$tmpfname = $config->get('tmp_path') . '/' . uniqid('gzip');
 					$gzresult = $adapter->extract($archivename, $tmpfname);
 
@@ -122,7 +122,7 @@ class JArchive
 
 				if ($adapter)
 				{
-					$config = JFactory::getConfig();
+					$config   = JFactory::getConfig();
 					$tmpfname = $config->get('tmp_path') . '/' . uniqid('bzip2');
 					$bzresult = $adapter->extract($archivename, $tmpfname);
 
@@ -169,7 +169,7 @@ class JArchive
 	/**
 	 * Get a file compression adapter.
 	 *
-	 * @param   string  $type  The type of adapter (bzip2|gzip|tar|zip).
+	 * @param   string $type The type of adapter (bzip2|gzip|tar|zip).
 	 *
 	 * @return  JArchiveExtractable  Adapter for the requested type
 	 *

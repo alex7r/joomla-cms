@@ -20,6 +20,7 @@ class JNode extends JObject
 {
 	/**
 	 * Parent node
+	 *
 	 * @var    object
 	 *
 	 * @since  11.1
@@ -51,7 +52,7 @@ class JNode extends JObject
 	 *
 	 * If the child already has a parent, the link is unset
 	 *
-	 * @param   JNode  &$child  The child to be added
+	 * @param   JNode &$child The child to be added
 	 *
 	 * @return  void
 	 *
@@ -68,39 +69,6 @@ class JNode extends JObject
 	}
 
 	/**
-	 * Set the parent of a this node
-	 *
-	 * If the node already has a parent, the link is unset
-	 *
-	 * @param   mixed  &$parent  The JNode for parent to be set or null
-	 *
-	 * @return  void
-	 *
-	 * @since    11.1
-	 */
-	public function setParent(&$parent)
-	{
-		JLog::add('JNode::setParent() is deprecated.', JLog::WARNING, 'deprecated');
-
-		if ($parent instanceof JNode || is_null($parent))
-		{
-			$hash = spl_object_hash($this);
-
-			if (!is_null($this->_parent))
-			{
-				unset($this->_parent->children[$hash]);
-			}
-
-			if (!is_null($parent))
-			{
-				$parent->_children[$hash] = & $this;
-			}
-
-			$this->_parent = & $parent;
-		}
-	}
-
-	/**
 	 * Get the children of this node
 	 *
 	 * @return  array    The children
@@ -112,20 +80,6 @@ class JNode extends JObject
 		JLog::add('JNode::getChildren() is deprecated.', JLog::WARNING, 'deprecated');
 
 		return $this->_children;
-	}
-
-	/**
-	 * Get the parent of this node
-	 *
-	 * @return  mixed   JNode object with the parent or null for no parent
-	 *
-	 * @since   11.1
-	 */
-	public function &getParent()
-	{
-		JLog::add('JNode::getParent() is deprecated.', JLog::WARNING, 'deprecated');
-
-		return $this->_parent;
 	}
 
 	/**
@@ -154,5 +108,52 @@ class JNode extends JObject
 		JLog::add('JNode::hasParent() is deprecated.', JLog::WARNING, 'deprecated');
 
 		return $this->getParent() != null;
+	}
+
+	/**
+	 * Get the parent of this node
+	 *
+	 * @return  mixed   JNode object with the parent or null for no parent
+	 *
+	 * @since   11.1
+	 */
+	public function &getParent()
+	{
+		JLog::add('JNode::getParent() is deprecated.', JLog::WARNING, 'deprecated');
+
+		return $this->_parent;
+	}
+
+	/**
+	 * Set the parent of a this node
+	 *
+	 * If the node already has a parent, the link is unset
+	 *
+	 * @param   mixed &$parent The JNode for parent to be set or null
+	 *
+	 * @return  void
+	 *
+	 * @since    11.1
+	 */
+	public function setParent(&$parent)
+	{
+		JLog::add('JNode::setParent() is deprecated.', JLog::WARNING, 'deprecated');
+
+		if ($parent instanceof JNode || is_null($parent))
+		{
+			$hash = spl_object_hash($this);
+
+			if (!is_null($this->_parent))
+			{
+				unset($this->_parent->children[$hash]);
+			}
+
+			if (!is_null($parent))
+			{
+				$parent->_children[$hash] = &$this;
+			}
+
+			$this->_parent = &$parent;
+		}
 	}
 }

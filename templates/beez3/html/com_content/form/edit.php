@@ -27,25 +27,24 @@ endif;
 ?>
 
 <script type="text/javascript">
-	Joomla.submitbutton = function(task)
-	{
-		if (task == 'article.cancel' || document.formvalidator.isValid(document.getElementById('adminForm')))
-		{
+	Joomla.submitbutton = function (task) {
+		if (task == 'article.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
 			<?php echo $this->form->getField('articletext')->save(); ?>
 			Joomla.submitform(task);
 		}
 	}
 </script>
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
-<?php if ($params->get('show_page_heading')) : ?>
-<h1>
-	<?php echo $this->escape($params->get('page_heading')); ?>
-</h1>
-<?php endif; ?>
+	<?php if ($params->get('show_page_heading')) : ?>
+		<h1>
+			<?php echo $this->escape($params->get('page_heading')); ?>
+		</h1>
+	<?php endif; ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_content&a_id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm" class="form-validate">
-	<fieldset>
-		<legend><?php echo JText::_('COM_CONTENT_ARTICLE_CONTENT'); ?></legend>
+	<form action="<?php echo JRoute::_('index.php?option=com_content&a_id=' . (int) $this->item->id); ?>" method="post"
+	      name="adminForm" id="adminForm" class="form-validate">
+		<fieldset>
+			<legend><?php echo JText::_('COM_CONTENT_ARTICLE_CONTENT'); ?></legend>
 
 			<div class="control-group">
 				<div class="control-label">
@@ -56,16 +55,16 @@ endif;
 				</div>
 			</div>
 
-		<?php if (is_null($this->item->id)):?>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('alias'); ?>
+			<?php if (is_null($this->item->id)): ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('alias'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('alias'); ?>
+					</div>
 				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('alias'); ?>
-				</div>
-			</div>
-		<?php endif; ?>
+			<?php endif; ?>
 
 			<div class="btn-group">
 				<button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('article.save')">
@@ -78,140 +77,140 @@ endif;
 
 			<?php echo $this->form->getInput('articletext'); ?>
 
-	</fieldset>
-	<?php if ($params->get('show_urls_images_frontend')  ) : ?>
-	<fieldset>
-		<legend><?php echo JText::_('COM_CONTENT_IMAGES_AND_URLS'); ?></legend>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('image_intro', 'images'); ?>
-					<?php echo $this->form->getInput('image_intro', 'images'); ?>
+		</fieldset>
+		<?php if ($params->get('show_urls_images_frontend')) : ?>
+			<fieldset>
+				<legend><?php echo JText::_('COM_CONTENT_IMAGES_AND_URLS'); ?></legend>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('image_intro', 'images'); ?>
+						<?php echo $this->form->getInput('image_intro', 'images'); ?>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('image_intro_alt', 'images'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('image_intro_alt', 'images'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('image_intro_alt', 'images'); ?>
+					</div>
 				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('image_intro_alt', 'images'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('image_intro_caption', 'images'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('image_intro_caption', 'images'); ?>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('image_intro_caption', 'images'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('float_intro', 'images'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('float_intro', 'images'); ?>
+					</div>
 				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('image_intro_caption', 'images'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('image_fulltext', 'images'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('image_fulltext', 'images'); ?>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('float_intro', 'images'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('image_fulltext_alt', 'images'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('image_fulltext_alt', 'images'); ?>
+					</div>
 				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('float_intro', 'images'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('image_fulltext_caption', 'images'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('image_fulltext_caption', 'images'); ?>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('image_fulltext', 'images'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('float_fulltext', 'images'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('float_fulltext', 'images'); ?>
+					</div>
 				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('image_fulltext', 'images'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('urla', 'urls'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('urla', 'urls'); ?>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('image_fulltext_alt', 'images'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('urlatext', 'urls'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('urlatext', 'urls'); ?>
+					</div>
 				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('image_fulltext_alt', 'images'); ?>
+				<div class="control-group">
+					<div class="controls">
+						<?php echo $this->form->getInput('targeta', 'urls'); ?>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('image_fulltext_caption', 'images'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('urlb', 'urls'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('urlb', 'urls'); ?>
+					</div>
 				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('image_fulltext_caption', 'images'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('urlbtext', 'urls'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('urlbtext', 'urls'); ?>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('float_fulltext', 'images'); ?>
+				<div class="control-group">
+					<div class="controls">
+						<?php echo $this->form->getInput('targetb', 'urls'); ?>
+					</div>
 				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('float_fulltext', 'images'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('urlc', 'urls'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('urlc', 'urls'); ?>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('urla', 'urls'); ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('urlctext', 'urls'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('urlctext', 'urls'); ?>
+					</div>
 				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('urla', 'urls'); ?>
+				<div class="control-group">
+					<div class="controls">
+						<?php echo $this->form->getInput('targetc', 'urls'); ?>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('urlatext', 'urls'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('urlatext', 'urls'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="controls">
-					<?php echo $this->form->getInput('targeta', 'urls'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('urlb', 'urls'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('urlb', 'urls'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('urlbtext', 'urls'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('urlbtext', 'urls'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="controls">
-					<?php echo $this->form->getInput('targetb', 'urls'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('urlc', 'urls'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('urlc', 'urls'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('urlctext', 'urls'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('urlctext', 'urls'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="controls">
-					<?php echo $this->form->getInput('targetc', 'urls'); ?>
-				</div>
-			</div>
-	</fieldset>
-	<?php endif; ?>
+			</fieldset>
+		<?php endif; ?>
 
-	<fieldset>
-		<legend><?php echo JText::_('COM_CONTENT_PUBLISHING'); ?></legend>
+		<fieldset>
+			<legend><?php echo JText::_('COM_CONTENT_PUBLISHING'); ?></legend>
 			<div class="control-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('catid'); ?>
@@ -279,7 +278,7 @@ endif;
 					<?php echo $this->form->getInput('access'); ?>
 				</div>
 			</div>
-			<?php if (is_null($this->item->id)):?>
+			<?php if (is_null($this->item->id)): ?>
 				<div class="control-group">
 					<div class="control-label">
 					</div>
@@ -288,10 +287,10 @@ endif;
 					</div>
 				</div>
 			<?php endif; ?>
-	</fieldset>
+		</fieldset>
 
-	<fieldset>
-		<legend><?php echo JText::_('JFIELD_LANGUAGE_LABEL'); ?></legend>
+		<fieldset>
+			<legend><?php echo JText::_('JFIELD_LANGUAGE_LABEL'); ?></legend>
 			<div class="control-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('language'); ?>
@@ -300,10 +299,10 @@ endif;
 					<?php echo $this->form->getInput('language'); ?>
 				</div>
 			</div>
-	</fieldset>
+		</fieldset>
 
-	<fieldset>
-		<legend><?php echo JText::_('COM_CONTENT_METADATA'); ?></legend>
+		<fieldset>
+			<legend><?php echo JText::_('COM_CONTENT_METADATA'); ?></legend>
 			<div class="control-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('metadesc'); ?>
@@ -321,12 +320,12 @@ endif;
 				</div>
 			</div>
 
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="return" value="<?php echo $this->return_page;?>" />
-		<?php if ($this->params->get('enable_category', 0) == 1) : ?>
-			<input type="hidden" name="jform[catid]" value="<?php echo $this->params->get('catid', 1);?>"/>
-		<?php endif;?>
-		<?php echo JHtml::_('form.token'); ?>
-	</fieldset>
-</form>
+			<input type="hidden" name="task" value=""/>
+			<input type="hidden" name="return" value="<?php echo $this->return_page; ?>"/>
+			<?php if ($this->params->get('enable_category', 0) == 1) : ?>
+				<input type="hidden" name="jform[catid]" value="<?php echo $this->params->get('catid', 1); ?>"/>
+			<?php endif; ?>
+			<?php echo JHtml::_('form.token'); ?>
+		</fieldset>
+	</form>
 </div>

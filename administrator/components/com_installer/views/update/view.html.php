@@ -42,7 +42,7 @@ class InstallerViewUpdate extends InstallerViewDefault
 	/**
 	 * Display the view.
 	 *
-	 * @param   string  $tpl  Template
+	 * @param   string $tpl Template
 	 *
 	 * @return  void
 	 *
@@ -57,7 +57,7 @@ class InstallerViewUpdate extends InstallerViewDefault
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 
-		$paths = new stdClass;
+		$paths        = new stdClass;
 		$paths->first = '';
 
 		$this->paths = &$paths;

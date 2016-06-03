@@ -25,7 +25,7 @@ class LanguagesViewLanguage extends JViewLegacy
 	/**
 	 * Display the view.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse.
+	 * @param   string $tpl The name of the template file to parse.
 	 *
 	 * @return  void
 	 */

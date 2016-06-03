@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- * 	* Redistributions of source code must retain the above copyright notice, this list of
- * 	  conditions and the following disclaimer.
+ *    * Redistributions of source code must retain the above copyright notice, this list of
+ *      conditions and the following disclaimer.
  *
- * 	* Redistributions in binary form must reproduce the above copyright notice, this list
- * 	  of conditions and the following disclaimer in the documentation and/or other materials
- * 	  provided with the distribution.
+ *    * Redistributions in binary form must reproduce the above copyright notice, this list
+ *      of conditions and the following disclaimer in the documentation and/or other materials
+ *      provided with the distribution.
  *
- * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
- * 	  to endorse or promote products derived from this software without specific prior
- * 	  written permission.
+ *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
+ *      to endorse or promote products derived from this software without specific prior
+ *      written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,14 +32,14 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package SimplePie
- * @version 1.3.1
+ * @package   SimplePie
+ * @version   1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author Ryan Parman
- * @author Geoffrey Sneddon
- * @author Ryan McCue
- * @link http://simplepie.org/ SimplePie
- * @license http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author    Ryan Parman
+ * @author    Geoffrey Sneddon
+ * @author    Ryan McCue
+ * @link      http://simplepie.org/ SimplePie
+ * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 /**
@@ -53,23 +53,34 @@
 class SimplePie_Locator
 {
 	var $useragent;
+
 	var $timeout;
+
 	var $file;
+
 	var $local = array();
+
 	var $elsewhere = array();
+
 	var $cached_entities = array();
+
 	var $http_base;
+
 	var $base;
+
 	var $base_location = 0;
+
 	var $checked_feeds = 0;
+
 	var $max_checked_feeds = 10;
+
 	protected $registry;
 
 	public function __construct(SimplePie_File $file, $timeout = 10, $useragent = null, $max_checked_feeds = 10)
 	{
-		$this->file = $file;
-		$this->useragent = $useragent;
-		$this->timeout = $timeout;
+		$this->file              = $file;
+		$this->useragent         = $useragent;
+		$this->timeout           = $timeout;
 		$this->max_checked_feeds = $max_checked_feeds;
 
 		if (class_exists('DOMDocument'))
@@ -139,6 +150,7 @@ class SimplePie_Locator
 				return $working;
 			}
 		}
+
 		return null;
 	}
 
@@ -174,8 +186,8 @@ class SimplePie_Locator
 			throw new SimplePie_Exception('DOMDocument not found, unable to use locator');
 		}
 		$this->http_base = $this->file->url;
-		$this->base = $this->http_base;
-		$elements = $this->dom->getElementsByTagName('base');
+		$this->base      = $this->http_base;
+		$elements        = $this->dom->getElementsByTagName('base');
 		foreach ($elements as $element)
 		{
 			if ($element->hasAttribute('href'))
@@ -185,7 +197,7 @@ class SimplePie_Locator
 				{
 					continue;
 				}
-				$this->base = $base;
+				$this->base          = $base;
 				$this->base_location = method_exists($element, 'getLineNo') ? $element->getLineNo() : 0;
 				break;
 			}
@@ -194,7 +206,7 @@ class SimplePie_Locator
 
 	public function autodiscovery()
 	{
-		$done = array();
+		$done  = array();
 		$feeds = array();
 		$feeds = array_merge($feeds, $this->search_elements_by_tag('link', $done, $feeds));
 		$feeds = array_merge($feeds, $this->search_elements_by_tag('a', $done, $feeds));
@@ -226,7 +238,7 @@ class SimplePie_Locator
 			}
 			if ($link->hasAttribute('href') && $link->hasAttribute('rel'))
 			{
-				$rel = array_unique($this->registry->call('Misc', 'space_seperated_tokens', array(strtolower($link->getAttribute('rel')))));
+				$rel  = array_unique($this->registry->call('Misc', 'space_seperated_tokens', array(strtolower($link->getAttribute('rel')))));
 				$line = method_exists($link, 'getLineNo') ? $link->getLineNo() : 1;
 
 				if ($this->base_location < $line)
@@ -248,7 +260,7 @@ class SimplePie_Locator
 					$headers = array(
 						'Accept' => 'application/atom+xml, application/rss+xml, application/rdf+xml;q=0.9, application/xml;q=0.8, text/xml;q=0.8, text/html;q=0.7, unknown/unknown;q=0.1, application/unknown;q=0.1, */*;q=0.1',
 					);
-					$feed = $this->registry->create('File', array($href, $this->timeout, 5, $headers, $this->useragent));
+					$feed    = $this->registry->create('File', array($href, $this->timeout, 5, $headers, $this->useragent));
 					if ($feed->success && ($feed->method & SIMPLEPIE_FILE_SOURCE_REMOTE === 0 || ($feed->status_code === 200 || $feed->status_code > 206 && $feed->status_code < 300)) && $this->is_feed($feed))
 					{
 						$feeds[$href] = $feed;
@@ -273,7 +285,7 @@ class SimplePie_Locator
 		{
 			if ($link->hasAttribute('href'))
 			{
-				$href = trim($link->getAttribute('href'));
+				$href   = trim($link->getAttribute('href'));
 				$parsed = $this->registry->call('Misc', 'parse_url', array($href));
 				if ($parsed['scheme'] === '' || preg_match('/^(http(s)|feed)?$/i', $parsed['scheme']))
 				{
@@ -303,12 +315,13 @@ class SimplePie_Locator
 				}
 			}
 		}
-		$this->local = array_unique($this->local);
+		$this->local     = array_unique($this->local);
 		$this->elsewhere = array_unique($this->elsewhere);
 		if (!empty($this->local) || !empty($this->elsewhere))
 		{
 			return true;
 		}
+
 		return null;
 	}
 
@@ -327,7 +340,7 @@ class SimplePie_Locator
 				$headers = array(
 					'Accept' => 'application/atom+xml, application/rss+xml, application/rdf+xml;q=0.9, application/xml;q=0.8, text/xml;q=0.8, text/html;q=0.7, unknown/unknown;q=0.1, application/unknown;q=0.1, */*;q=0.1',
 				);
-				$feed = $this->registry->create('File', array($value, $this->timeout, 5, $headers, $this->useragent));
+				$feed    = $this->registry->create('File', array($value, $this->timeout, 5, $headers, $this->useragent));
 				if ($feed->success && ($feed->method & SIMPLEPIE_FILE_SOURCE_REMOTE === 0 || ($feed->status_code === 200 || $feed->status_code > 206 && $feed->status_code < 300)) && $this->is_feed($feed))
 				{
 					return $feed;
@@ -338,6 +351,7 @@ class SimplePie_Locator
 				}
 			}
 		}
+
 		return null;
 	}
 
@@ -355,7 +369,7 @@ class SimplePie_Locator
 				$headers = array(
 					'Accept' => 'application/atom+xml, application/rss+xml, application/rdf+xml;q=0.9, application/xml;q=0.8, text/xml;q=0.8, text/html;q=0.7, unknown/unknown;q=0.1, application/unknown;q=0.1, */*;q=0.1',
 				);
-				$feed = $this->registry->create('File', array($value, $this->timeout, 5, null, $this->useragent));
+				$feed    = $this->registry->create('File', array($value, $this->timeout, 5, null, $this->useragent));
 				if ($feed->success && ($feed->method & SIMPLEPIE_FILE_SOURCE_REMOTE === 0 || ($feed->status_code === 200 || $feed->status_code > 206 && $feed->status_code < 300)) && $this->is_feed($feed))
 				{
 					return $feed;
@@ -366,6 +380,7 @@ class SimplePie_Locator
 				}
 			}
 		}
+
 		return null;
 	}
 }

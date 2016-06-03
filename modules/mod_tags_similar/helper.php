@@ -23,15 +23,15 @@ abstract class ModTagssimilarHelper
 	/**
 	 * Get a list of tags
 	 *
-	 * @param   Registry  &$params  Module parameters
+	 * @param   Registry &$params Module parameters
 	 *
 	 * @return  mixed  Results array / null
 	 */
 	public static function getList(&$params)
 	{
-		$app        = JFactory::getApplication();
-		$option     = $app->input->get('option');
-		$view       = $app->input->get('view');
+		$app    = JFactory::getApplication();
+		$option = $app->input->get('option');
+		$view   = $app->input->get('view');
 
 		// For now assume com_tags and com_users do not have tags.
 		// This module does not apply to list views in general at this point.
@@ -63,19 +63,19 @@ abstract class ModTagssimilarHelper
 
 		$query = $db->getQuery(true)
 			->select(
-			array(
-				$db->quoteName('m.core_content_id'),
-				$db->quoteName('m.content_item_id'),
-				$db->quoteName('m.type_alias'),
+				array(
+					$db->quoteName('m.core_content_id'),
+					$db->quoteName('m.content_item_id'),
+					$db->quoteName('m.type_alias'),
 					'COUNT( ' . $db->quoteName('tag_id') . ') AS ' . $db->quoteName('count'),
-				$db->quoteName('ct.router'),
-				$db->quoteName('cc.core_title'),
-				$db->quoteName('cc.core_alias'),
-				$db->quoteName('cc.core_catid'),
-				$db->quoteName('cc.core_language'),
-				$db->quoteName('cc.core_params')
+					$db->quoteName('ct.router'),
+					$db->quoteName('cc.core_title'),
+					$db->quoteName('cc.core_alias'),
+					$db->quoteName('cc.core_catid'),
+					$db->quoteName('cc.core_language'),
+					$db->quoteName('cc.core_params')
 				)
-		);
+			);
 
 		$query->from($db->quoteName('#__contentitem_tag_map', 'm'));
 
@@ -114,7 +114,7 @@ abstract class ModTagssimilarHelper
 		$query->group(
 			$db->quoteName(
 				array('m.core_content_id', 'm.content_item_id', 'm.type_alias', 'ct.router', 'cc.core_title',
-				'cc.core_alias', 'cc.core_catid', 'cc.core_language', 'cc.core_params')
+					'cc.core_alias', 'cc.core_catid', 'cc.core_language', 'cc.core_params')
 			)
 		);
 
@@ -153,7 +153,7 @@ abstract class ModTagssimilarHelper
 		foreach ($results as $result)
 		{
 			$explodedAlias = explode('.', $result->type_alias);
-			$result->link = 'index.php?option=' . $explodedAlias[0] . '&view=' . $explodedAlias[1]
+			$result->link  = 'index.php?option=' . $explodedAlias[0] . '&view=' . $explodedAlias[1]
 				. '&id=' . $result->content_item_id . '-' . $result->core_alias;
 
 			$result->core_params = new Registry($result->core_params);

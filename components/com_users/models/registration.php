@@ -25,7 +25,7 @@ class UsersModelRegistration extends JModelForm
 	/**
 	 * Method to activate a user account.
 	 *
-	 * @param   string  $token  The activation token.
+	 * @param   string $token The activation token.
 	 *
 	 * @return  mixed    False on failure, user object on success.
 	 *
@@ -33,9 +33,9 @@ class UsersModelRegistration extends JModelForm
 	 */
 	public function activate($token)
 	{
-		$config = JFactory::getConfig();
+		$config     = JFactory::getConfig();
 		$userParams = JComponentHelper::getParams('com_users');
-		$db = $this->getDbo();
+		$db         = $this->getDbo();
 
 		// Get the user id based on the token.
 		$query = $db->getQuery(true);
@@ -77,11 +77,11 @@ class UsersModelRegistration extends JModelForm
 			$uri = JUri::getInstance();
 
 			// Compile the admin notification mail values.
-			$data = $user->getProperties();
+			$data               = $user->getProperties();
 			$data['activation'] = JApplicationHelper::getHash(JUserHelper::genRandomPassword());
 			$user->set('activation', $data['activation']);
-			$data['siteurl'] = JUri::base();
-			$base = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
+			$data['siteurl']  = JUri::base();
+			$base             = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
 			$data['activate'] = $base . JRoute::_('index.php?option=com_users&task=registration.activate&token=' . $data['activation'], false);
 
 			// Remove administrator/ from activate url in case this method is called from admin
@@ -160,8 +160,8 @@ class UsersModelRegistration extends JModelForm
 			$data['fromname'] = $config->get('fromname');
 			$data['mailfrom'] = $config->get('mailfrom');
 			$data['sitename'] = $config->get('sitename');
-			$data['siteurl'] = JUri::base();
-			$emailSubject = JText::sprintf(
+			$data['siteurl']  = JUri::base();
+			$emailSubject     = JText::sprintf(
 				'COM_USERS_EMAIL_ACTIVATED_BY_ADMIN_ACTIVATION_SUBJECT',
 				$data['name'],
 				$data['sitename']
@@ -207,8 +207,8 @@ class UsersModelRegistration extends JModelForm
 	 * The base form is loaded from XML and then an event is fired
 	 * for users plugins to extend the form with extra fields.
 	 *
-	 * @param   array    $data      An optional array of data for the form to interogate.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data     An optional array of data for the form to interogate.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  JForm  A JForm object on success, false on failure
 	 *
@@ -236,7 +236,7 @@ class UsersModelRegistration extends JModelForm
 	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array  $temp  The form data.
+	 * @param   array $temp The form data.
 	 *
 	 * @return  mixed  The user id on success, false on failure.
 	 *
@@ -257,16 +257,16 @@ class UsersModelRegistration extends JModelForm
 		}
 
 		// Prepare the data for the user object.
-		$data['email'] = JStringPunycode::emailToPunycode($data['email1']);
+		$data['email']    = JStringPunycode::emailToPunycode($data['email1']);
 		$data['password'] = $data['password1'];
-		$useractivation = $params->get('useractivation');
-		$sendpassword = $params->get('sendpassword', 1);
+		$useractivation   = $params->get('useractivation');
+		$sendpassword     = $params->get('sendpassword', 1);
 
 		// Check if the user needs to activate their account.
 		if (($useractivation == 1) || ($useractivation == 2))
 		{
 			$data['activation'] = JApplicationHelper::getHash(JUserHelper::genRandomPassword());
-			$data['block'] = 1;
+			$data['block']      = 1;
 		}
 
 		// Bind the data.
@@ -289,22 +289,22 @@ class UsersModelRegistration extends JModelForm
 		}
 
 		$config = JFactory::getConfig();
-		$db = $this->getDbo();
-		$query = $db->getQuery(true);
+		$db     = $this->getDbo();
+		$query  = $db->getQuery(true);
 
 		// Compile the notification mail values.
-		$data = $user->getProperties();
+		$data             = $user->getProperties();
 		$data['fromname'] = $config->get('fromname');
 		$data['mailfrom'] = $config->get('mailfrom');
 		$data['sitename'] = $config->get('sitename');
-		$data['siteurl'] = JUri::root();
+		$data['siteurl']  = JUri::root();
 
 		// Handle account activation/confirmation emails.
 		if ($useractivation == 2)
 		{
 			// Set the link to confirm the user email.
-			$uri = JUri::getInstance();
-			$base = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
+			$uri              = JUri::getInstance();
+			$base             = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
 			$data['activate'] = $base . JRoute::_('index.php?option=com_users&task=registration.activate&token=' . $data['activation'], false);
 
 			// Remove administrator/ from activate url in case this method is called from admin
@@ -347,8 +347,8 @@ class UsersModelRegistration extends JModelForm
 		elseif ($useractivation == 1)
 		{
 			// Set the link to activate the user account.
-			$uri = JUri::getInstance();
-			$base = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
+			$uri              = JUri::getInstance();
+			$base             = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
 			$data['activate'] = $base . JRoute::_('index.php?option=com_users&task=registration.activate&token=' . $data['activation'], false);
 
 			// Remove administrator/ from activate url in case this method is called from admin
@@ -547,22 +547,6 @@ class UsersModelRegistration extends JModelForm
 	}
 
 	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed  The data for the form.
-	 *
-	 * @since   1.6
-	 */
-	protected function loadFormData()
-	{
-		$data = $this->getData();
-
-		$this->preprocessData('com_users.registration', $data);
-
-		return $data;
-	}
-
-	/**
 	 * Method to get the registration form data.
 	 *
 	 * The base form data is loaded and then an event is fired
@@ -577,8 +561,8 @@ class UsersModelRegistration extends JModelForm
 		if ($this->data === null)
 		{
 			$this->data = new stdClass;
-			$app = JFactory::getApplication();
-			$params = JComponentHelper::getParams('com_users');
+			$app        = JFactory::getApplication();
+			$params     = JComponentHelper::getParams('com_users');
 
 			// Override the base user data with any data in the session.
 			$temp = (array) $app->getUserState('com_users.registration.data', array());
@@ -619,11 +603,27 @@ class UsersModelRegistration extends JModelForm
 	}
 
 	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed  The data for the form.
+	 *
+	 * @since   1.6
+	 */
+	protected function loadFormData()
+	{
+		$data = $this->getData();
+
+		$this->preprocessData('com_users.registration', $data);
+
+		return $data;
+	}
+
+	/**
 	 * Override preprocessForm to load the user plugin group instead of content.
 	 *
-	 * @param   JForm   $form   A JForm object.
-	 * @param   mixed   $data   The data expected for the form.
-	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
+	 * @param   JForm  $form  A JForm object.
+	 * @param   mixed  $data  The data expected for the form.
+	 * @param   string $group The name of the plugin group to import (defaults to "content").
 	 *
 	 * @return  void
 	 *
@@ -655,7 +655,7 @@ class UsersModelRegistration extends JModelForm
 	protected function populateState()
 	{
 		// Get the application object.
-		$app = JFactory::getApplication();
+		$app    = JFactory::getApplication();
 		$params = $app->getParams('com_users');
 
 		// Load the parameters.

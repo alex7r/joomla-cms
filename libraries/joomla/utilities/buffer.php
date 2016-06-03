@@ -46,11 +46,11 @@ class JBuffer
 	/**
 	 * Function to open file or url
 	 *
-	 * @param   string   $path          The URL that was passed
-	 * @param   string   $mode          Mode used to open the file @see fopen
-	 * @param   integer  $options       Flags used by the API, may be STREAM_USE_PATH and
+	 * @param   string  $path           The URL that was passed
+	 * @param   string  $mode           Mode used to open the file @see fopen
+	 * @param   integer $options        Flags used by the API, may be STREAM_USE_PATH and
 	 *                                  STREAM_REPORT_ERRORS
-	 * @param   string   &$opened_path  Full path of the resource. Used with STREAN_USE_PATH option
+	 * @param   string  &$opened_path   Full path of the resource. Used with STREAN_USE_PATH option
 	 *
 	 * @return  boolean
 	 *
@@ -59,10 +59,10 @@ class JBuffer
 	 */
 	public function stream_open($path, $mode, $options, &$opened_path)
 	{
-		$url = parse_url($path);
-		$this->name = $url['host'];
+		$url                        = parse_url($path);
+		$this->name                 = $url['host'];
 		$this->buffers[$this->name] = null;
-		$this->position = 0;
+		$this->position             = 0;
 
 		return true;
 	}
@@ -70,7 +70,7 @@ class JBuffer
 	/**
 	 * Read stream
 	 *
-	 * @param   integer  $count  How many bytes of data from the current position should be returned.
+	 * @param   integer $count How many bytes of data from the current position should be returned.
 	 *
 	 * @return  mixed    The data from the stream up to the specified number of bytes (all data if
 	 *                   the total number of bytes in the stream is less than $count. Null if
@@ -90,7 +90,7 @@ class JBuffer
 	/**
 	 * Write stream
 	 *
-	 * @param   string  $data  The data to write to the stream.
+	 * @param   string $data The data to write to the stream.
 	 *
 	 * @return  integer
 	 *
@@ -99,8 +99,8 @@ class JBuffer
 	 */
 	public function stream_write($data)
 	{
-		$left = substr($this->buffers[$this->name], 0, $this->position);
-		$right = substr($this->buffers[$this->name], $this->position + strlen($data));
+		$left                       = substr($this->buffers[$this->name], 0, $this->position);
+		$right                      = substr($this->buffers[$this->name], $this->position + strlen($data));
 		$this->buffers[$this->name] = $left . $data . $right;
 		$this->position += strlen($data);
 
@@ -136,8 +136,8 @@ class JBuffer
 	/**
 	 * The read write position updates in response to $offset and $whence
 	 *
-	 * @param   integer  $offset  The offset in bytes
-	 * @param   integer  $whence  Position the offset is added to
+	 * @param   integer $offset   The offset in bytes
+	 * @param   integer $whence   Position the offset is added to
 	 *                            Options are SEEK_SET, SEEK_CUR, and SEEK_END
 	 *
 	 * @return  boolean  True if updated
@@ -167,7 +167,7 @@ class JBuffer
 	/**
 	 * Set the position to the offset
 	 *
-	 * @param   integer  $offset  The offset in bytes
+	 * @param   integer $offset The offset in bytes
 	 *
 	 * @return bool
 	 */
@@ -186,7 +186,7 @@ class JBuffer
 	/**
 	 * Adds the offset to current position
 	 *
-	 * @param   integer  $offset  The offset in bytes
+	 * @param   integer $offset The offset in bytes
 	 *
 	 * @return bool
 	 */
@@ -205,7 +205,7 @@ class JBuffer
 	/**
 	 * Sets the position to the end of the current buffer + offset
 	 *
-	 * @param   integer  $offset  The offset in bytes
+	 * @param   integer $offset The offset in bytes
 	 *
 	 * @return bool
 	 */
@@ -222,5 +222,6 @@ class JBuffer
 		return true;
 	}
 }
+
 // Register the stream
 stream_wrapper_register('buffer', 'JBuffer');

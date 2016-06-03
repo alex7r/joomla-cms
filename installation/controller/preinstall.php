@@ -33,7 +33,7 @@ class InstallationControllerPreinstall extends JControllerBase
 		JSession::checkToken() or $app->sendJsonResponse(new Exception(JText::_('JINVALID_TOKEN'), 403));
 
 		// Redirect to the page.
-		$r = new stdClass;
+		$r       = new stdClass;
 		$r->view = 'preinstall';
 		$app->sendJsonResponse($r);
 	}

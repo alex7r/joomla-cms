@@ -23,7 +23,7 @@ class JFilesystemWrapperFile
 	/**
 	 * Helper wrapper method for getExt
 	 *
-	 * @param   string  $file  The file name.
+	 * @param   string $file The file name.
 	 *
 	 * @return  string  The file extension.
 	 *
@@ -38,7 +38,7 @@ class JFilesystemWrapperFile
 	/**
 	 * Helper wrapper method for stripExt
 	 *
-	 * @param   string  $file  The file name.
+	 * @param   string $file The file name.
 	 *
 	 * @return  string  The file name without the extension.
 	 *
@@ -53,7 +53,7 @@ class JFilesystemWrapperFile
 	/**
 	 * Helper wrapper method for makeSafe
 	 *
-	 * @param   string  $file  The name of the file [not full path].
+	 * @param   string $file The name of the file [not full path].
 	 *
 	 * @return  string  The sanitised string.
 	 *
@@ -68,10 +68,10 @@ class JFilesystemWrapperFile
 	/**
 	 * Helper wrapper method for copy
 	 *
-	 * @param   string   $src          The path to the source file.
-	 * @param   string   $dest         The path to the destination file.
-	 * @param   string   $path         An optional base path to prefix to the file names.
-	 * @param   boolean  $use_streams  True to use streams.
+	 * @param   string  $src         The path to the source file.
+	 * @param   string  $dest        The path to the destination file.
+	 * @param   string  $path        An optional base path to prefix to the file names.
+	 * @param   boolean $use_streams True to use streams.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -86,7 +86,7 @@ class JFilesystemWrapperFile
 	/**
 	 * Helper wrapper method for delete
 	 *
-	 * @param   mixed  $file  The file name or an array of file names
+	 * @param   mixed $file The file name or an array of file names
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -101,10 +101,10 @@ class JFilesystemWrapperFile
 	/**
 	 * Helper wrapper method for move
 	 *
-	 * @param   string   $src          The path to the source file.
-	 * @param   string   $dest         The path to the destination file.
-	 * @param   string   $path         An optional base path to prefix to the file names.
-	 * @param   boolean  $use_streams  True to use streams.
+	 * @param   string  $src         The path to the source file.
+	 * @param   string  $dest        The path to the destination file.
+	 * @param   string  $path        An optional base path to prefix to the file names.
+	 * @param   boolean $use_streams True to use streams.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -119,11 +119,11 @@ class JFilesystemWrapperFile
 	/**
 	 * Helper wrapper method for read
 	 *
-	 * @param   string   $filename   The full file path.
-	 * @param   boolean  $incpath    Use include path.
-	 * @param   integer  $amount     Amount of file to read.
-	 * @param   integer  $chunksize  Size of chunks to read.
-	 * @param   integer  $offset     Offset of the file.
+	 * @param   string  $filename  The full file path.
+	 * @param   boolean $incpath   Use include path.
+	 * @param   integer $amount    Amount of file to read.
+	 * @param   integer $chunksize Size of chunks to read.
+	 * @param   integer $offset    Offset of the file.
 	 *
 	 * @return mixed  Returns file contents or boolean False if failed.
 	 *
@@ -138,9 +138,9 @@ class JFilesystemWrapperFile
 	/**
 	 * Helper wrapper method for write
 	 *
-	 * @param   string   $file         The full file path.
-	 * @param   string   &$buffer      The buffer to write.
-	 * @param   boolean  $use_streams  Use streams.
+	 * @param   string  $file        The full file path.
+	 * @param   string  &$buffer     The buffer to write.
+	 * @param   boolean $use_streams Use streams.
 	 *
 	 * @return boolean  True on success.
 	 *
@@ -155,9 +155,9 @@ class JFilesystemWrapperFile
 	/**
 	 * Helper wrapper method for upload
 	 *
-	 * @param   string   $src          The name of the php (temporary) uploaded file.
-	 * @param   string   $dest         The path (including filename) to move the uploaded file to.
-	 * @param   boolean  $use_streams  True to use streams.
+	 * @param   string  $src         The name of the php (temporary) uploaded file.
+	 * @param   string  $dest        The path (including filename) to move the uploaded file to.
+	 * @param   boolean $use_streams True to use streams.
 	 *
 	 * @return boolean  True on success.
 	 *
@@ -172,7 +172,7 @@ class JFilesystemWrapperFile
 	/**
 	 * Helper wrapper method for exists
 	 *
-	 * @param   string  $file  File path.
+	 * @param   string $file File path.
 	 *
 	 * @return boolean  True if path is a file.
 	 *
@@ -187,7 +187,7 @@ class JFilesystemWrapperFile
 	/**
 	 * Helper wrapper method for getName
 	 *
-	 * @param   string  $file  File path.
+	 * @param   string $file File path.
 	 *
 	 * @return string  filename.
 	 *

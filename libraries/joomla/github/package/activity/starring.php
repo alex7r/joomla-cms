@@ -21,8 +21,8 @@ class JGithubPackageActivityStarring extends JGithubPackage
 	/**
 	 * List Stargazers.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -43,7 +43,7 @@ class JGithubPackageActivityStarring extends JGithubPackage
 	 *
 	 * List repositories being starred by a user.
 	 *
-	 * @param   string  $user  User name.
+	 * @param   string $user User name.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -66,8 +66,8 @@ class JGithubPackageActivityStarring extends JGithubPackage
 	 *
 	 * Requires for the user to be authenticated.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @throws UnexpectedValueException
 	 * @since 3.3 (CMS)
@@ -102,8 +102,8 @@ class JGithubPackageActivityStarring extends JGithubPackage
 	 *
 	 * Requires for the user to be authenticated.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -125,8 +125,8 @@ class JGithubPackageActivityStarring extends JGithubPackage
 	 *
 	 * Requires for the user to be authenticated.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @since 3.3 (CMS)
 	 *

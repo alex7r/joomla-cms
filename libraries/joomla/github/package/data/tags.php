@@ -23,9 +23,9 @@ class JGithubPackageDataTags extends JGithubPackage
 	/**
 	 * Get a Tag.
 	 *
-	 * @param   string  $owner  The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
-	 * @param   string  $sha    The SHA1 value to set the reference to.
+	 * @param   string $owner The name of the owner of the GitHub repository.
+	 * @param   string $repo  The name of the GitHub repository.
+	 * @param   string $sha   The SHA1 value to set the reference to.
 	 *
 	 * @since   3.3 (CMS)
 	 *
@@ -49,16 +49,16 @@ class JGithubPackageDataTags extends JGithubPackage
 	 * and then create the refs/tags/[tag] reference. If you want to create a lightweight tag,
 	 * you simply have to create the reference - this call would be unnecessary.
 	 *
-	 * @param   string  $owner         The name of the owner of the GitHub repository.
-	 * @param   string  $repo          The name of the GitHub repository.
-	 * @param   string  $tag           The tag string.
-	 * @param   string  $message       The tag message.
-	 * @param   string  $object        The SHA of the git object this is tagging.
-	 * @param   string  $type          The type of the object we’re tagging. Normally this is a commit
+	 * @param   string $owner          The name of the owner of the GitHub repository.
+	 * @param   string $repo           The name of the GitHub repository.
+	 * @param   string $tag            The tag string.
+	 * @param   string $message        The tag message.
+	 * @param   string $object         The SHA of the git object this is tagging.
+	 * @param   string $type           The type of the object we’re tagging. Normally this is a commit
 	 *                                 but it can also be a tree or a blob.
-	 * @param   string  $tagger_name   The name of the author of the tag.
-	 * @param   string  $tagger_email  The email of the author of the tag.
-	 * @param   string  $tagger_date   Timestamp of when this object was tagged.
+	 * @param   string $tagger_name    The name of the author of the tag.
+	 * @param   string $tagger_email   The email of the author of the tag.
+	 * @param   string $tagger_date    Timestamp of when this object was tagged.
 	 *
 	 * @since   3.3 (CMS)
 	 *

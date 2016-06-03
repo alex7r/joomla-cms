@@ -12,9 +12,9 @@ defined('JPATH_BASE') or die;
 $class = ' class="first"';
 JHtml::_('bootstrap.tooltip');
 
-$item = $displayData->item;
-$items = $displayData->get('items');
-$params = $displayData->params;
+$item      = $displayData->item;
+$items     = $displayData->get('items');
+$params    = $displayData->params;
 $extension = $displayData->get('extension');
 $className = substr($extension, 4);
 // This will work for the core components but not necessarily for other components

@@ -33,9 +33,9 @@ class JDatabaseQueryMysqli extends JDatabaseQuery implements JDatabaseQueryLimit
 	 * additions to make the query limited to a particular number of
 	 * results, or start at a particular offset.
 	 *
-	 * @param   string   $query   The query in string format
-	 * @param   integer  $limit   The limit for the result set
-	 * @param   integer  $offset  The offset for the result set
+	 * @param   string  $query  The query in string format
+	 * @param   integer $limit  The limit for the result set
+	 * @param   integer $offset The offset for the result set
 	 *
 	 * @return string
 	 *
@@ -58,8 +58,8 @@ class JDatabaseQueryMysqli extends JDatabaseQuery implements JDatabaseQueryLimit
 	/**
 	 * Concatenates an array of column names or values.
 	 *
-	 * @param   array   $values     An array of values to concatenate.
-	 * @param   string  $separator  As separator to place between each value.
+	 * @param   array  $values    An array of values to concatenate.
+	 * @param   string $separator As separator to place between each value.
 	 *
 	 * @return  string  The concatenated values.
 	 *
@@ -91,8 +91,8 @@ class JDatabaseQueryMysqli extends JDatabaseQuery implements JDatabaseQueryLimit
 	 * $query->setLimit(100, 0); (retrieve 100 rows, starting at first record)
 	 * $query->setLimit(50, 50); (retrieve 50 rows, starting at 50th record)
 	 *
-	 * @param   integer  $limit   The limit for the result set
-	 * @param   integer  $offset  The offset for the result set
+	 * @param   integer $limit  The limit for the result set
+	 * @param   integer $offset The offset for the result set
 	 *
 	 * @return  JDatabaseQuery  Returns this object to allow chaining.
 	 *
@@ -114,7 +114,7 @@ class JDatabaseQueryMysqli extends JDatabaseQuery implements JDatabaseQueryLimit
 	 * Usage:
 	 * $query->where('field ' . $query->regexp($search));
 	 *
-	 * @param   string  $value  The regex pattern.
+	 * @param   string $value The regex pattern.
 	 *
 	 * @return  string  Returns the regex operator.
 	 *
@@ -129,10 +129,10 @@ class JDatabaseQueryMysqli extends JDatabaseQuery implements JDatabaseQueryLimit
 	 * Return correct rand() function for Mysql.
 	 *
 	 * Ensure that the rand() function is Mysql compatible.
-	 * 
+	 *
 	 * Usage:
 	 * $query->Rand();
-	 * 
+	 *
 	 * @return  string  The correct rand function.
 	 *
 	 * @since   3.5

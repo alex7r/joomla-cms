@@ -73,9 +73,9 @@ class PlgFinderContent extends FinderIndexerAdapter
 	 * changed. This is fired when the item category is published or unpublished
 	 * from the list view.
 	 *
-	 * @param   string   $extension  The extension whose category has been updated.
-	 * @param   array    $pks        A list of primary key ids of the content that has changed state.
-	 * @param   integer  $value      The value of the state that the content has been changed to.
+	 * @param   string  $extension The extension whose category has been updated.
+	 * @param   array   $pks       A list of primary key ids of the content that has changed state.
+	 * @param   integer $value     The value of the state that the content has been changed to.
 	 *
 	 * @return  void
 	 *
@@ -93,8 +93,8 @@ class PlgFinderContent extends FinderIndexerAdapter
 	/**
 	 * Method to remove the link information for items that have been deleted.
 	 *
-	 * @param   string  $context  The context of the action being performed.
-	 * @param   JTable  $table    A JTable object containing the record to be deleted
+	 * @param   string $context The context of the action being performed.
+	 * @param   JTable $table   A JTable object containing the record to be deleted
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -126,9 +126,9 @@ class PlgFinderContent extends FinderIndexerAdapter
 	 * It also makes adjustments if the access level of an item or the
 	 * category to which it belongs has changed.
 	 *
-	 * @param   string   $context  The context of the content passed to the plugin.
-	 * @param   JTable   $row      A JTable object.
-	 * @param   boolean  $isNew    True if the content has just been created.
+	 * @param   string  $context The context of the content passed to the plugin.
+	 * @param   JTable  $row     A JTable object.
+	 * @param   boolean $isNew   True if the content has just been created.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -168,9 +168,9 @@ class PlgFinderContent extends FinderIndexerAdapter
 	 * Smart Search before content save method.
 	 * This event is fired before the data is actually saved.
 	 *
-	 * @param   string   $context  The context of the content passed to the plugin.
-	 * @param   JTable   $row      A JTable object.
-	 * @param   boolean  $isNew    If the content is just about to be created.
+	 * @param   string  $context The context of the content passed to the plugin.
+	 * @param   JTable  $row     A JTable object.
+	 * @param   boolean $isNew   If the content is just about to be created.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -207,9 +207,9 @@ class PlgFinderContent extends FinderIndexerAdapter
 	 * from outside the edit screen. This is fired when the item is published,
 	 * unpublished, archived, or unarchived from the list view.
 	 *
-	 * @param   string   $context  The context for the content passed to the plugin.
-	 * @param   array    $pks      An array of primary key ids of the content that has changed state.
-	 * @param   integer  $value    The value of the state that the content has been changed to.
+	 * @param   string  $context The context for the content passed to the plugin.
+	 * @param   array   $pks     An array of primary key ids of the content that has changed state.
+	 * @param   integer $value   The value of the state that the content has been changed to.
 	 *
 	 * @return  void
 	 *
@@ -233,8 +233,8 @@ class PlgFinderContent extends FinderIndexerAdapter
 	/**
 	 * Method to index an item. The item must be a FinderIndexerResult object.
 	 *
-	 * @param   FinderIndexerResult  $item    The item to index as an FinderIndexerResult object.
-	 * @param   string               $format  The item format.  Not used.
+	 * @param   FinderIndexerResult $item   The item to index as an FinderIndexerResult object.
+	 * @param   string              $format The item format.  Not used.
 	 *
 	 * @return  void
 	 *
@@ -263,12 +263,12 @@ class PlgFinderContent extends FinderIndexerAdapter
 
 		// Trigger the onContentPrepare event.
 		$item->summary = FinderIndexerHelper::prepareContent($item->summary, $item->params);
-		$item->body = FinderIndexerHelper::prepareContent($item->body, $item->params);
+		$item->body    = FinderIndexerHelper::prepareContent($item->body, $item->params);
 
 		// Build the necessary route and path information.
-		$item->url = $this->getUrl($item->id, $this->extension, $this->layout);
+		$item->url   = $this->getUrl($item->id, $this->extension, $this->layout);
 		$item->route = ContentHelperRoute::getArticleRoute($item->slug, $item->catid, $item->language);
-		$item->path = FinderIndexerHelper::getContentPath($item->route);
+		$item->path  = FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
 		$title = $this->getItemMenuTitle($item->url);
@@ -332,7 +332,7 @@ class PlgFinderContent extends FinderIndexerAdapter
 	/**
 	 * Method to get the SQL query used to retrieve the list of content items.
 	 *
-	 * @param   mixed  $query  A JDatabaseQuery object or null.
+	 * @param   mixed $query A JDatabaseQuery object or null.
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *
@@ -369,7 +369,6 @@ class PlgFinderContent extends FinderIndexerAdapter
 		$case_when_category_alias .= ' ELSE ';
 		$case_when_category_alias .= $c_id . ' END as catslug';
 		$query->select($case_when_category_alias)
-
 			->select('u.name AS author')
 			->from('#__content AS a')
 			->join('LEFT', '#__categories AS c ON c.id = a.catid')

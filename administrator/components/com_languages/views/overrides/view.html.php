@@ -19,31 +19,31 @@ class LanguagesViewOverrides extends JViewLegacy
 	/**
 	 * The items to list.
 	 *
-	 * @var		array
-	 * @since	2.5
+	 * @var        array
+	 * @since    2.5
 	 */
 	protected $items;
 
 	/**
 	 * The pagination object.
 	 *
-	 * @var		object
-	 * @since	2.5
+	 * @var        object
+	 * @since    2.5
 	 */
 	protected $pagination;
 
 	/**
 	 * The model state.
 	 *
-	 * @var		object
-	 * @since	2.5
+	 * @var        object
+	 * @since    2.5
 	 */
 	protected $state;
 
 	/**
 	 * Displays the view.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse.
+	 * @param   string $tpl The name of the template file to parse.
 	 *
 	 * @return  void
 	 *
@@ -113,7 +113,7 @@ class LanguagesViewOverrides extends JViewLegacy
 		JHtmlSidebar::setAction('index.php?option=com_languages&view=overrides');
 
 		JHtmlSidebar::addFilter(
-			// @todo need a label here
+		// @todo need a label here
 			'',
 			'filter_language_client',
 			JHtml::_('select.options', $this->languages, null, 'text', $this->state->get('filter.language_client')),

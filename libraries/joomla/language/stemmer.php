@@ -17,6 +17,12 @@ defined('JPATH_PLATFORM') or die;
 abstract class JLanguageStemmer
 {
 	/**
+	 * @var    array  JLanguageStemmer instances.
+	 * @since  12.1
+	 */
+	protected static $instances = array();
+
+	/**
 	 * An internal cache of stemmed tokens.
 	 *
 	 * @var    array
@@ -25,15 +31,9 @@ abstract class JLanguageStemmer
 	protected $cache = array();
 
 	/**
-	 * @var    array  JLanguageStemmer instances.
-	 * @since  12.1
-	 */
-	protected static $instances = array();
-
-	/**
 	 * Method to get a stemmer, creating it if necessary.
 	 *
-	 * @param   string  $adapter  The type of stemmer to load.
+	 * @param   string $adapter The type of stemmer to load.
 	 *
 	 * @return  JLanguageStemmer  A JLanguageStemmer instance.
 	 *
@@ -66,8 +66,8 @@ abstract class JLanguageStemmer
 	/**
 	 * Method to stem a token and return the root.
 	 *
-	 * @param   string  $token  The token to stem.
-	 * @param   string  $lang   The language of the token.
+	 * @param   string $token The token to stem.
+	 * @param   string $lang  The language of the token.
 	 *
 	 * @return  string  The root token.
 	 *

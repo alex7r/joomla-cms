@@ -27,7 +27,8 @@ JFactory::getDocument()->addScriptDeclaration("
 $this->ignore_fieldsets = array('jmetadata');
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_tags&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_tags&layout=edit&id=' . (int) $this->item->id); ?>"
+      method="post" name="adminForm" id="item-form" class="form-validate">
 
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
@@ -60,6 +61,6 @@ $this->ignore_fieldsets = array('jmetadata');
 
 		<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 	</div>
-	<input type="hidden" name="task" value="" />
+	<input type="hidden" name="task" value=""/>
 	<?php echo JHtml::_('form.token'); ?>
 </form>

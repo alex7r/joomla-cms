@@ -23,13 +23,13 @@ class JFormRulePassword extends JFormRule
 	 * XML needs a validate attribute of equals and a field attribute
 	 * that is equal to the field to test against.
 	 *
-	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
-	 * @param   mixed             $value    The form field value to validate.
-	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
+	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed            $value     The form field value to validate.
+	 * @param   string           $group     The field name group control value. This acts as as an array container for the field.
 	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
-	 * @param   Registry          $input    An optional Registry object with the entire data set to validate against the entire form.
-	 * @param   JForm             $form     The form object for which the field is being tested.
+	 * @param   Registry         $input     An optional Registry object with the entire data set to validate against the entire form.
+	 * @param   JForm            $form      The form object for which the field is being tested.
 	 *
 	 * @return  boolean  True if the value is valid, false otherwise.
 	 *
@@ -39,7 +39,7 @@ class JFormRulePassword extends JFormRule
 	 */
 	public function test(SimpleXMLElement $element, $value, $group = null, Registry $input = null, JForm $form = null)
 	{
-		$meter            = isset($element['strengthmeter'])  ? ' meter="0"' : '1';
+		$meter            = isset($element['strengthmeter']) ? ' meter="0"' : '1';
 		$threshold        = isset($element['threshold']) ? (int) $element['threshold'] : 66;
 		$minimumLength    = isset($element['minimum_length']) ? (int) $element['minimum_length'] : 4;
 		$minimumIntegers  = isset($element['minimum_integers']) ? (int) $element['minimum_integers'] : 0;
@@ -59,12 +59,12 @@ class JFormRulePassword extends JFormRule
 			$meterp            = $params->get('meter');
 			$thresholdp        = $params->get('threshold');
 
-			empty($minimumLengthp) ? : $minimumLength = (int) $minimumLengthp;
-			empty($minimumIntegersp) ? : $minimumIntegers = (int) $minimumIntegersp;
-			empty($minimumSymbolsp) ? : $minimumSymbols = (int) $minimumSymbolsp;
-			empty($minimumUppercasep) ? : $minimumUppercase = (int) $minimumUppercasep;
-			empty($meterp) ? : $meter = $meterp;
-			empty($thresholdp) ? : $threshold = $thresholdp;
+			empty($minimumLengthp) ?: $minimumLength = (int) $minimumLengthp;
+			empty($minimumIntegersp) ?: $minimumIntegers = (int) $minimumIntegersp;
+			empty($minimumSymbolsp) ?: $minimumSymbols = (int) $minimumSymbolsp;
+			empty($minimumUppercasep) ?: $minimumUppercase = (int) $minimumUppercasep;
+			empty($meterp) ?: $meter = $meterp;
+			empty($thresholdp) ?: $threshold = $thresholdp;
 		}
 
 		// If the field is empty and not required, the field is valid.
@@ -94,7 +94,7 @@ class JFormRulePassword extends JFormRule
 			JFactory::getApplication()->enqueueMessage(
 				JText::_('COM_USERS_MSG_SPACES_IN_PASSWORD'),
 				'warning'
-				);
+			);
 
 			$validPassword = false;
 		}
@@ -141,7 +141,7 @@ class JFormRulePassword extends JFormRule
 				JFactory::getApplication()->enqueueMessage(
 					JText::plural('COM_USERS_MSG_NOT_ENOUGH_UPPERCASE_LETTERS_N', $minimumUppercase),
 					'warning'
-			);
+				);
 
 				$validPassword = false;
 			}
@@ -155,7 +155,7 @@ class JFormRulePassword extends JFormRule
 				JFactory::getApplication()->enqueueMessage(
 					JText::plural('COM_USERS_MSG_PASSWORD_TOO_SHORT_N', $minimumLength),
 					'warning'
-					);
+				);
 
 				$validPassword = false;
 			}

@@ -57,16 +57,16 @@ class JSchemaChangeset
 	 * Constructor: builds array of $changeItems by processing the .sql files in a folder.
 	 * The folder for the Joomla core updates is `administrator/components/com_admin/sql/updates/<database>`.
 	 *
-	 * @param   JDatabaseDriver  $db      The current database object
-	 * @param   string           $folder  The full path to the folder containing the update queries
+	 * @param   JDatabaseDriver $db     The current database object
+	 * @param   string          $folder The full path to the folder containing the update queries
 	 *
 	 * @since   2.5
 	 */
 	public function __construct($db, $folder = null)
 	{
-		$this->db = $db;
-		$this->folder = $folder;
-		$updateFiles = $this->getUpdateFiles();
+		$this->db      = $db;
+		$this->folder  = $folder;
+		$updateFiles   = $this->getUpdateFiles();
 		$updateQueries = $this->getUpdateQueries($updateFiles);
 
 		foreach ($updateQueries as $obj)
@@ -110,12 +110,12 @@ class JSchemaChangeset
 			// Set the check query
 			if ($this->db->hasUTF8mb4Support())
 			{
-				$converted = 2;
+				$converted                      = 2;
 				$tmpSchemaChangeItem->queryType = 'UTF8_CONVERSION_UTF8MB4';
 			}
 			else
 			{
-				$converted = 1;
+				$converted                      = 1;
 				$tmpSchemaChangeItem->queryType = 'UTF8_CONVERSION_UTF8';
 			}
 
@@ -168,7 +168,7 @@ class JSchemaChangeset
 	/**
 	 * Get array of SQL queries
 	 *
-	 * @param   array  $sqlfiles  Array of .sql update filenames.
+	 * @param   array $sqlfiles Array of .sql update filenames.
 	 *
 	 * @return  array  Array of stdClass objects where:
 	 *                    file=filename,
@@ -190,10 +190,10 @@ class JSchemaChangeset
 
 			foreach ($queries as $query)
 			{
-				$fileQueries = new stdClass;
-				$fileQueries->file = $file;
+				$fileQueries              = new stdClass;
+				$fileQueries->file        = $file;
 				$fileQueries->updateQuery = $query;
-				$result[] = $fileQueries;
+				$result[]                 = $fileQueries;
 			}
 		}
 
@@ -203,8 +203,8 @@ class JSchemaChangeset
 	/**
 	 * Returns a reference to the JSchemaChangeset object, only creating it if it doesn't already exist.
 	 *
-	 * @param   JDatabaseDriver  $db      The current database object
-	 * @param   string           $folder  The full path to the folder containing the update queries
+	 * @param   JDatabaseDriver $db     The current database object
+	 * @param   string          $folder The full path to the folder containing the update queries
 	 *
 	 * @return  JSchemaChangeset
 	 *
@@ -308,7 +308,7 @@ class JSchemaChangeset
 	public function getSchema()
 	{
 		$updateFiles = $this->getUpdateFiles();
-		$result = new SplFileInfo(array_pop($updateFiles));
+		$result      = new SplFileInfo(array_pop($updateFiles));
 
 		return $result->getBasename('.sql');
 	}

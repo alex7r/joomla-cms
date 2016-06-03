@@ -19,9 +19,9 @@ class FOFTableBehaviorTags extends FOFTableBehavior
 	/**
 	 * The event which runs after binding data to the table
 	 *
-	 * @param   FOFTable  		&$table  	The table which calls this event
-	 * @param   object|array  	&$src  		The data to bind
-	 * @param  	array 			$options 	The options of the table
+	 * @param   FOFTable     &$table  The table which calls this event
+	 * @param   object|array &$src    The data to bind
+	 * @param    array       $options The options of the table
 	 *
 	 * @return  boolean  True on success
 	 */
@@ -40,7 +40,7 @@ class FOFTableBehaviorTags extends FOFTableBehavior
 
 			$tagsTable = clone($table);
 
-			$tagsHelper = new JHelperTags();
+			$tagsHelper            = new JHelperTags();
 			$tagsHelper->typeAlias = $table->getContentType();
 
 			// TODO: This little guy here fails because JHelperTags
@@ -50,6 +50,7 @@ class FOFTableBehaviorTags extends FOFTableBehavior
 			if (!$tagsHelper->postStoreProcess($tagsTable))
 			{
 				$table->setError('Error storing tags');
+
 				return false;
 			}
 		}
@@ -60,8 +61,8 @@ class FOFTableBehaviorTags extends FOFTableBehavior
 	/**
 	 * The event which runs before storing (saving) data to the database
 	 *
-	 * @param   FOFTable  &$table  The table which calls this event
-	 * @param   boolean  $updateNulls  Should nulls be saved as nulls (true) or just skipped over (false)?
+	 * @param   FOFTable &$table      The table which calls this event
+	 * @param   boolean  $updateNulls Should nulls be saved as nulls (true) or just skipped over (false)?
 	 *
 	 * @return  boolean  True to allow saving
 	 */
@@ -69,7 +70,7 @@ class FOFTableBehaviorTags extends FOFTableBehavior
 	{
 		if ($table->hasTags())
 		{
-			$tagsHelper = new JHelperTags();
+			$tagsHelper            = new JHelperTags();
 			$tagsHelper->typeAlias = $table->getContentType();
 
 			// TODO: JHelperTags sucks in Joomla! 3.1, it requires that tags are
@@ -85,8 +86,8 @@ class FOFTableBehaviorTags extends FOFTableBehavior
 	/**
 	 * The event which runs after deleting a record
 	 *
-	 * @param   FOFTable &$table  The table which calls this event
-	 * @param   integer  $oid  The PK value of the record which was deleted
+	 * @param   FOFTable &$table The table which calls this event
+	 * @param   integer  $oid    The PK value of the record which was deleted
 	 *
 	 * @return  boolean  True to allow the deletion without errors
 	 */
@@ -95,12 +96,13 @@ class FOFTableBehaviorTags extends FOFTableBehavior
 		// If this resource has tags, delete the tags first
 		if ($table->hasTags())
 		{
-			$tagsHelper = new JHelperTags();
+			$tagsHelper            = new JHelperTags();
 			$tagsHelper->typeAlias = $table->getContentType();
 
 			if (!$tagsHelper->deleteTagData($table, $oid))
 			{
 				$table->setError('Error deleting Tags');
+
 				return false;
 			}
 		}

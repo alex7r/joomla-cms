@@ -19,11 +19,11 @@ class JoomlaupdateViewUpdate extends JViewLegacy
 	/**
 	 * Renders the view.
 	 *
-	 * @param   string  $tpl  Template name.
+	 * @param   string $tpl Template name.
 	 *
 	 * @return void
 	 */
-	public function display($tpl=null)
+	public function display($tpl = null)
 	{
 		// Set the toolbar information.
 		JToolbarHelper::title(JText::_('COM_JOOMLAUPDATE_OVERVIEW'), 'loop install');

@@ -69,21 +69,21 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	public function prepareDiscoverInstall()
 	{
 		// Need to find to find where the XML file is since we don't store this normally
-		$client = JApplicationHelper::getClientInfo($this->extension->client_id);
-		$short_element = str_replace('com_', '', $this->extension->element);
-		$manifestPath = $client->path . '/components/' . $this->extension->element . '/' . $short_element . '.xml';
+		$client                 = JApplicationHelper::getClientInfo($this->extension->client_id);
+		$short_element          = str_replace('com_', '', $this->extension->element);
+		$manifestPath           = $client->path . '/components/' . $this->extension->element . '/' . $short_element . '.xml';
 		$this->parent->manifest = $this->parent->isManifest($manifestPath);
 		$this->parent->setPath('manifest', $manifestPath);
 		$this->parent->setPath('source', $client->path . '/components/' . $this->extension->element);
 		$this->parent->setPath('extension_root', $this->parent->getPath('source'));
 		$this->setManifest($this->parent->getManifest());
 
-		$manifest_details = JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
+		$manifest_details                = JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
 		$this->extension->manifest_cache = json_encode($manifest_details);
-		$this->extension->state = 0;
-		$this->extension->name = $manifest_details['name'];
-		$this->extension->enabled = 1;
-		$this->extension->params = $this->parent->getParams();
+		$this->extension->state          = 0;
+		$this->extension->name           = $manifest_details['name'];
+		$this->extension->enabled        = 1;
+		$this->extension->params         = $this->parent->getParams();
 
 		$stored = false;
 
@@ -137,9 +137,59 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	}
 
 	/**
+	 * Method to remove admin menu references to a component
+	 *
+	 * @param   int $id The ID of the extension whose admin menus will be removed
+	 *
+	 * @return  boolean  True if successful.
+	 *
+	 * @since   3.1
+	 */
+	protected function _removeAdminMenus($id)
+	{
+		$db = $this->parent->getDbo();
+
+		/** @var  JTableMenu $table */
+		$table = JTable::getInstance('menu');
+
+		// Get the ids of the menu items
+		$query = $db->getQuery(true)
+			->select('id')
+			->from('#__menu')
+			->where($db->quoteName('client_id') . ' = 1')
+			->where($db->quoteName('component_id') . ' = ' . (int) $id);
+
+		$db->setQuery($query);
+
+		$ids = $db->loadColumn();
+
+		$result = true;
+
+		// Check for error
+		if (!empty($ids))
+		{
+			// Iterate the items to delete each one.
+			foreach ($ids as $menuid)
+			{
+				if (!$table->delete((int) $menuid))
+				{
+					$this->setError($table->getError());
+
+					$result = false;
+				}
+			}
+
+			// Rebuild the whole tree
+			$table->rebuild();
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Custom uninstall method for components
 	 *
-	 * @param   integer  $id  The unique extension id of the component to uninstall
+	 * @param   integer $id The unique extension id of the component to uninstall
 	 *
 	 * @return  mixed  Return value for uninstall method in component uninstall file
 	 *
@@ -263,8 +313,8 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 
 		// Remove the schema version
 		$query = $db->getQuery(true)
-					->delete('#__schemas')
-					->where('extension_id = ' . $id);
+			->delete('#__schemas')
+			->where('extension_id = ' . $id);
 		$db->setQuery($query);
 		$db->execute();
 
@@ -286,7 +336,7 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 
 		// Clobber any possible pending updates
 		$update = JTable::getInstance('update');
-		$uid = $update->find(
+		$uid    = $update->find(
 			array(
 				'element'   => $this->extension->element,
 				'type'      => 'component',
@@ -340,7 +390,7 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	/**
 	 * Get the filtered extension element from the manifest
 	 *
-	 * @param   string  $element  Optional element name to be converted
+	 * @param   string $element Optional element name to be converted
 	 *
 	 * @return  string  The filtered element
 	 *
@@ -361,7 +411,7 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	/**
 	 * Custom loadLanguage method
 	 *
-	 * @param   string  $path  The path language files are on.
+	 * @param   string $path The path language files are on.
 	 *
 	 * @return  void
 	 *
@@ -415,8 +465,8 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	 */
 	public function discover()
 	{
-		$results = array();
-		$site_components = JFolder::folders(JPATH_SITE . '/components');
+		$results          = array();
+		$site_components  = JFolder::folders(JPATH_SITE . '/components');
 		$admin_components = JFolder::folders(JPATH_ADMINISTRATOR . '/components');
 
 		foreach ($site_components as $component)
@@ -426,7 +476,7 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 				$manifest_details = JInstaller::parseXMLInstallFile(
 					JPATH_SITE . '/components/' . $component . '/' . str_replace('com_', '', $component) . '.xml'
 				);
-				$extension = JTable::getInstance('extension');
+				$extension        = JTable::getInstance('extension');
 				$extension->set('type', 'component');
 				$extension->set('client_id', 0);
 				$extension->set('element', $component);
@@ -446,7 +496,7 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 				$manifest_details = JInstaller::parseXMLInstallFile(
 					JPATH_ADMINISTRATOR . '/components/' . $component . '/' . str_replace('com_', '', $component) . '.xml'
 				);
-				$extension = JTable::getInstance('extension');
+				$extension        = JTable::getInstance('extension');
 				$extension->set('type', 'component');
 				$extension->set('client_id', 1);
 				$extension->set('element', $component);
@@ -472,15 +522,15 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	public function refreshManifestCache()
 	{
 		// Need to find to find where the XML file is since we don't store this normally
-		$client = JApplicationHelper::getClientInfo($this->parent->extension->client_id);
-		$short_element = str_replace('com_', '', $this->parent->extension->element);
-		$manifestPath = $client->path . '/components/' . $this->parent->extension->element . '/' . $short_element . '.xml';
+		$client                 = JApplicationHelper::getClientInfo($this->parent->extension->client_id);
+		$short_element          = str_replace('com_', '', $this->parent->extension->element);
+		$manifestPath           = $client->path . '/components/' . $this->parent->extension->element . '/' . $short_element . '.xml';
 		$this->parent->manifest = $this->parent->isManifest($manifestPath);
 		$this->parent->setPath('manifest', $manifestPath);
 
-		$manifest_details = JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
+		$manifest_details                        = JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
 		$this->parent->extension->manifest_cache = json_encode($manifest_details);
-		$this->parent->extension->name = $manifest_details['name'];
+		$this->parent->extension->name           = $manifest_details['name'];
 
 		try
 		{
@@ -515,7 +565,8 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 
 			// Upgrade manually set or update function available or update tag detected
 			if ($this->parent->isUpgrade() || ($this->parent->manifestClass && method_exists($this->parent->manifestClass, 'update'))
-				|| $updateElement)
+				|| $updateElement
+			)
 			{
 				// If there is a matching extension mark this as an update
 				$this->setRoute('update');
@@ -782,7 +833,7 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	/**
 	 * Method to build menu database entries for a component
 	 *
-	 * @param   int|null  $component_id  The component ID for which I'm building menus
+	 * @param   int|null $component_id The component ID for which I'm building menus
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -790,18 +841,18 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	 */
 	protected function _buildAdminMenus($component_id = null)
 	{
-		$db     = $this->parent->getDbo();
+		$db = $this->parent->getDbo();
 
 		$option = $this->get('element');
 
 		// If a component exists with this option in the table then we don't need to add menus
 		$query = $db->getQuery(true)
-					->select('m.id, e.extension_id')
-					->from('#__menu AS m')
-					->join('LEFT', '#__extensions AS e ON m.component_id = e.extension_id')
-					->where('m.parent_id = 1')
-					->where('m.client_id = 1')
-					->where('e.element = ' . $db->quote($option));
+			->select('m.id, e.extension_id')
+			->from('#__menu AS m')
+			->join('LEFT', '#__extensions AS e ON m.component_id = e.extension_id')
+			->where('m.parent_id = 1')
+			->where('m.client_id = 1')
+			->where('e.element = ' . $db->quote($option));
 
 		$db->setQuery($query);
 
@@ -864,37 +915,37 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 		if ($menuElement)
 		{
 			// I have a menu element, use this information
-			$data['menutype'] = 'main';
-			$data['client_id'] = 1;
-			$data['title'] = (string) trim($menuElement);
-			$data['alias'] = (string) $menuElement;
-			$data['link'] = 'index.php?option=' . $option;
-			$data['type'] = 'component';
-			$data['published'] = 0;
-			$data['parent_id'] = 1;
+			$data['menutype']     = 'main';
+			$data['client_id']    = 1;
+			$data['title']        = (string) trim($menuElement);
+			$data['alias']        = (string) $menuElement;
+			$data['link']         = 'index.php?option=' . $option;
+			$data['type']         = 'component';
+			$data['published']    = 0;
+			$data['parent_id']    = 1;
 			$data['component_id'] = $component_id;
-			$data['img'] = ((string) $menuElement->attributes()->img) ? (string) $menuElement->attributes()->img : 'class:component';
-			$data['home'] = 0;
-			$data['path'] = '';
-			$data['params'] = '';
+			$data['img']          = ((string) $menuElement->attributes()->img) ? (string) $menuElement->attributes()->img : 'class:component';
+			$data['home']         = 0;
+			$data['path']         = '';
+			$data['params']       = '';
 		}
 		else
 		{
 			// No menu element was specified, Let's make a generic menu item
-			$data = array();
-			$data['menutype'] = 'main';
-			$data['client_id'] = 1;
-			$data['title'] = $option;
-			$data['alias'] = $option;
-			$data['link'] = 'index.php?option=' . $option;
-			$data['type'] = 'component';
-			$data['published'] = 0;
-			$data['parent_id'] = 1;
+			$data                 = array();
+			$data['menutype']     = 'main';
+			$data['client_id']    = 1;
+			$data['title']        = $option;
+			$data['alias']        = $option;
+			$data['link']         = 'index.php?option=' . $option;
+			$data['type']         = 'component';
+			$data['published']    = 0;
+			$data['parent_id']    = 1;
 			$data['component_id'] = $component_id;
-			$data['img'] = 'class:component';
-			$data['home'] = 0;
-			$data['path'] = '';
-			$data['params'] = '';
+			$data['img']          = 'class:component';
+			$data['home']         = 0;
+			$data['path']         = '';
+			$data['params']       = '';
 		}
 
 		// Try to create the menu item in the database
@@ -917,17 +968,17 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 
 		foreach ($this->getManifest()->administration->submenu->menu as $child)
 		{
-			$data = array();
-			$data['menutype'] = 'main';
-			$data['client_id'] = 1;
-			$data['title'] = (string) trim($child);
-			$data['alias'] = (string) $child;
-			$data['type'] = 'component';
-			$data['published'] = 0;
-			$data['parent_id'] = $parent_id;
+			$data                 = array();
+			$data['menutype']     = 'main';
+			$data['client_id']    = 1;
+			$data['title']        = (string) trim($child);
+			$data['alias']        = (string) $child;
+			$data['type']         = 'component';
+			$data['published']    = 0;
+			$data['parent_id']    = $parent_id;
 			$data['component_id'] = $component_id;
-			$data['img'] = ((string) $child->attributes()->img) ? (string) $child->attributes()->img : 'class:component';
-			$data['home'] = 0;
+			$data['img']          = ((string) $child->attributes()->img) ? (string) $child->attributes()->img : 'class:component';
+			$data['home']         = 0;
 
 			// Set the sub menu link
 			if ((string) $child->attributes()->link)
@@ -968,7 +1019,7 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 					$request[] = 'sub=' . $child->attributes()->sub;
 				}
 
-				$qstring = (count($request)) ? '&' . implode('&', $request) : '';
+				$qstring      = (count($request)) ? '&' . implode('&', $request) : '';
 				$data['link'] = 'index.php?option=' . $option . $qstring;
 			}
 
@@ -990,60 +1041,10 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	}
 
 	/**
-	 * Method to remove admin menu references to a component
-	 *
-	 * @param   int  $id  The ID of the extension whose admin menus will be removed
-	 *
-	 * @return  boolean  True if successful.
-	 *
-	 * @since   3.1
-	 */
-	protected function _removeAdminMenus($id)
-	{
-		$db = $this->parent->getDbo();
-
-		/** @var  JTableMenu  $table */
-		$table = JTable::getInstance('menu');
-
-		// Get the ids of the menu items
-		$query = $db->getQuery(true)
-					->select('id')
-					->from('#__menu')
-					->where($db->quoteName('client_id') . ' = 1')
-					->where($db->quoteName('component_id') . ' = ' . (int) $id);
-
-		$db->setQuery($query);
-
-		$ids = $db->loadColumn();
-
-		$result = true;
-
-		// Check for error
-		if (!empty($ids))
-		{
-			// Iterate the items to delete each one.
-			foreach ($ids as $menuid)
-			{
-				if (!$table->delete((int) $menuid))
-				{
-					$this->setError($table->getError());
-
-					$result = false;
-				}
-			}
-
-			// Rebuild the whole tree
-			$table->rebuild();
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Creates the menu item in the database. If the item already exists it tries to remove it and create it afresh.
 	 *
-	 * @param   array    &$data     The menu item data to create
-	 * @param   integer  $parentId  The parent menu item ID
+	 * @param   array   &$data    The menu item data to create
+	 * @param   integer $parentId The parent menu item ID
 	 *
 	 * @return  bool|int  Menu item ID on success, false on failure
 	 */
@@ -1051,8 +1052,8 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	{
 		$db = $this->parent->getDbo();
 
-		/** @var  JTableMenu  $table */
-		$table  = JTable::getInstance('menu');
+		/** @var  JTableMenu $table */
+		$table = JTable::getInstance('menu');
 
 		try
 		{
@@ -1065,23 +1066,23 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 			return false;
 		}
 
-		if ( !$table->bind($data) || !$table->check() || !$table->store())
+		if (!$table->bind($data) || !$table->check() || !$table->store())
 		{
 			// The menu item already exists. Delete it and retry instead of throwing an error.
 			$query = $db->getQuery(true)
-						->select('id')
-						->from('#__menu')
-						->where('menutype = ' . $db->q($data['menutype']))
-						->where('client_id = 1')
-						->where('link = ' . $db->q($data['link']))
-						->where('type = ' . $db->q($data['type']))
-						->where('parent_id = ' . $db->q($data['parent_id']))
-						->where('home = ' . $db->q($data['home']));
+				->select('id')
+				->from('#__menu')
+				->where('menutype = ' . $db->q($data['menutype']))
+				->where('client_id = 1')
+				->where('link = ' . $db->q($data['link']))
+				->where('type = ' . $db->q($data['type']))
+				->where('parent_id = ' . $db->q($data['parent_id']))
+				->where('home = ' . $db->q($data['home']));
 
 			$db->setQuery($query);
 			$menu_id = $db->loadResult();
 
-			if ( !$menu_id)
+			if (!$menu_id)
 			{
 				// Oops! Could not get the menu ID. Go back and rollback changes.
 				JError::raiseWarning(1, $table->getError());
@@ -1098,7 +1099,7 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 				// Retry creating the menu item
 				$table->setLocation($parentId, 'last-child');
 
-				if ( !$table->bind($data) || !$table->check() || !$table->store())
+				if (!$table->bind($data) || !$table->check() || !$table->store())
 				{
 					// Install failed, warn user and rollback changes
 					JError::raiseWarning(1, $table->getError());
@@ -1114,7 +1115,7 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	/**
 	 * Method to update menu database entries for a component in case if the component has been uninstalled before.
 	 *
-	 * @param   int|null  $component_id  The component ID.
+	 * @param   int|null $component_id The component ID.
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -1128,12 +1129,12 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 		// Update all menu items which contain 'index.php?option=com_extension' or 'index.php?option=com_extension&...'
 		// to use the new component id.
 		$query = $db->getQuery(true)
-					->update('#__menu')
-					->set('component_id = ' . $db->quote($component_id))
-					->where("type = " . $db->quote('component'))
-					->where('client_id = 0')
-					->where('link LIKE ' . $db->quote('index.php?option=' . $option)
-							. " OR link LIKE '" . $db->escape('index.php?option=' . $option . '&') . "%'");
+			->update('#__menu')
+			->set('component_id = ' . $db->quote($component_id))
+			->where("type = " . $db->quote('component'))
+			->where('client_id = 0')
+			->where('link LIKE ' . $db->quote('index.php?option=' . $option)
+				. " OR link LIKE '" . $db->escape('index.php?option=' . $option . '&') . "%'");
 
 		$db->setQuery($query);
 
@@ -1222,14 +1223,14 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 		if ($old_manifest)
 		{
 			$this->oldAdminFiles = $old_manifest->administration->files;
-			$this->oldFiles = $old_manifest->files;
+			$this->oldFiles      = $old_manifest->files;
 		}
 	}
 
 	/**
 	 * Method to store the extension to the database
 	 *
-	 * @param   bool  $deleteExisting  Should I try to delete existing records of the same component?
+	 * @param   bool $deleteExisting Should I try to delete existing records of the same component?
 	 *
 	 * @return  void
 	 *
@@ -1255,11 +1256,11 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 			$db = $this->parent->getDbo();
 
 			$query = $db->getQuery(true)
-						->select($db->qn('extension_id'))
-						->from($db->qn('#__extensions'))
-						->where($db->qn('name') . ' = ' . $db->q($this->extension->name))
-						->where($db->qn('type') . ' = ' . $db->q($this->extension->type))
-						->where($db->qn('element') . ' = ' . $db->q($this->extension->element));
+				->select($db->qn('extension_id'))
+				->from($db->qn('#__extensions'))
+				->where($db->qn('name') . ' = ' . $db->q($this->extension->name))
+				->where($db->qn('type') . ' = ' . $db->q($this->extension->type))
+				->where($db->qn('element') . ' = ' . $db->q($this->extension->element));
 
 			$db->setQuery($query);
 
@@ -1283,12 +1284,12 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 		// If there is not already a row, generate a heap of defaults
 		if (!$this->currentExtensionId)
 		{
-			$this->extension->folder    = '';
-			$this->extension->enabled   = 1;
-			$this->extension->protected = 0;
-			$this->extension->access    = 0;
-			$this->extension->client_id = 1;
-			$this->extension->params    = $this->parent->getParams();
+			$this->extension->folder      = '';
+			$this->extension->enabled     = 1;
+			$this->extension->protected   = 0;
+			$this->extension->access      = 0;
+			$this->extension->client_id   = 1;
+			$this->extension->params      = $this->parent->getParams();
 			$this->extension->custom_data = '';
 			$this->extension->system_data = '';
 		}
@@ -1319,7 +1320,7 @@ class JInstallerAdapterComponent extends JInstallerAdapter
 	 * Custom rollback method
 	 * - Roll back the component menu item
 	 *
-	 * @param   array  $step  Installation step to rollback.
+	 * @param   array $step Installation step to rollback.
 	 *
 	 * @return  boolean  True on success
 	 *

@@ -17,6 +17,14 @@ defined('_JEXEC') or die;
 class PlgExtensionJoomla extends JPlugin
 {
 	/**
+	 * Load the language file on instantiation.
+	 *
+	 * @var    boolean
+	 * @since  3.1
+	 */
+	protected $autoloadLanguage = true;
+
+	/**
 	 * @var    integer Extension Identifier
 	 * @since  1.6
 	 */
@@ -29,20 +37,75 @@ class PlgExtensionJoomla extends JPlugin
 	private $installer = null;
 
 	/**
-	 * Load the language file on instantiation.
+	 * Handle post extension install update sites
 	 *
-	 * @var    boolean
-	 * @since  3.1
+	 * @param   JInstaller $installer Installer object
+	 * @param   integer    $eid       Extension Identifier
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
 	 */
-	protected $autoloadLanguage = true;
+	public function onExtensionAfterInstall($installer, $eid)
+	{
+		if ($eid)
+		{
+			$this->installer = $installer;
+			$this->eid       = $eid;
+
+			// After an install we only need to do update sites
+			$this->processUpdateSites();
+		}
+	}
+
+	/**
+	 * Processes the list of update sites for an extension.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	private function processUpdateSites()
+	{
+		$manifest      = $this->installer->getManifest();
+		$updateservers = $manifest->updateservers;
+
+		if ($updateservers)
+		{
+			$children = $updateservers->children();
+		}
+		else
+		{
+			$children = array();
+		}
+
+		if (count($children))
+		{
+			foreach ($children as $child)
+			{
+				$attrs = $child->attributes();
+				$this->addUpdateSite($attrs['name'], $attrs['type'], trim($child), true);
+			}
+		}
+		else
+		{
+			$data = trim((string) $updateservers);
+
+			if (strlen($data))
+			{
+				// We have a single entry in the update server line, let us presume this is an extension line
+				$this->addUpdateSite(JText::_('PLG_EXTENSION_JOOMLA_UNKNOWN_SITE'), 'extension', $data, true);
+			}
+		}
+	}
 
 	/**
 	 * Adds an update site to the table if it doesn't exist.
 	 *
-	 * @param   string   $name      The friendly name of the site
-	 * @param   string   $type      The type of site (e.g. collection or extension)
-	 * @param   string   $location  The URI for the site
-	 * @param   boolean  $enabled   If this site is enabled
+	 * @param   string  $name     The friendly name of the site
+	 * @param   string  $type     The type of site (e.g. collection or extension)
+	 * @param   string  $location The URI for the site
+	 * @param   boolean $enabled  If this site is enabled
 	 *
 	 * @return  void
 	 *
@@ -102,33 +165,11 @@ class PlgExtensionJoomla extends JPlugin
 	}
 
 	/**
-	 * Handle post extension install update sites
-	 *
-	 * @param   JInstaller  $installer  Installer object
-	 * @param   integer     $eid        Extension Identifier
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	public function onExtensionAfterInstall($installer, $eid )
-	{
-		if ($eid)
-		{
-			$this->installer = $installer;
-			$this->eid = $eid;
-
-			// After an install we only need to do update sites
-			$this->processUpdateSites();
-		}
-	}
-
-	/**
 	 * Handle extension uninstall
 	 *
-	 * @param   JInstaller  $installer  Installer instance
-	 * @param   integer     $eid        Extension id
-	 * @param   integer     $result     Installation result
+	 * @param   JInstaller $installer Installer instance
+	 * @param   integer    $eid       Extension id
+	 * @param   integer    $result    Installation result
 	 *
 	 * @return  void
 	 *
@@ -139,7 +180,7 @@ class PlgExtensionJoomla extends JPlugin
 		if ($eid)
 		{
 			// Wipe out any update_sites_extensions links
-			$db = JFactory::getDbo();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->delete('#__update_sites_extensions')
 				->where('extension_id = ' . $eid);
@@ -201,8 +242,8 @@ class PlgExtensionJoomla extends JPlugin
 	/**
 	 * After update of an extension
 	 *
-	 * @param   JInstaller  $installer  Installer object
-	 * @param   integer     $eid        Extension identifier
+	 * @param   JInstaller $installer Installer object
+	 * @param   integer    $eid       Extension identifier
 	 *
 	 * @return  void
 	 *
@@ -213,51 +254,10 @@ class PlgExtensionJoomla extends JPlugin
 		if ($eid)
 		{
 			$this->installer = $installer;
-			$this->eid = $eid;
+			$this->eid       = $eid;
 
 			// Handle any update sites
 			$this->processUpdateSites();
-		}
-	}
-
-	/**
-	 * Processes the list of update sites for an extension.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	private function processUpdateSites()
-	{
-		$manifest      = $this->installer->getManifest();
-		$updateservers = $manifest->updateservers;
-
-		if ($updateservers)
-		{
-			$children = $updateservers->children();
-		}
-		else
-		{
-			$children = array();
-		}
-
-		if (count($children))
-		{
-			foreach ($children as $child)
-			{
-				$attrs = $child->attributes();
-				$this->addUpdateSite($attrs['name'], $attrs['type'], trim($child), true);
-			}
-		}
-		else
-		{
-			$data = trim((string) $updateservers);
-
-			if (strlen($data))
-			{
-				// We have a single entry in the update server line, let us presume this is an extension line
-				$this->addUpdateSite(JText::_('PLG_EXTENSION_JOOMLA_UNKNOWN_SITE'), 'extension', $data, true);
-			}
 		}
 	}
 }

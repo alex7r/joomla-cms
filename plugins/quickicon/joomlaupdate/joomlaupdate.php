@@ -29,7 +29,7 @@ class PlgQuickiconJoomlaupdate extends JPlugin
 	 * of icons. You can return an array which defines a single icon and it will
 	 * be rendered right after the stock Quick Icons.
 	 *
-	 * @param   string  $context  The calling context
+	 * @param   string $context The calling context
 	 *
 	 * @return  array  A list of icon definition associative arrays, consisting of the
 	 *                 keys link, image, text and access.
@@ -48,9 +48,9 @@ class PlgQuickiconJoomlaupdate extends JPlugin
 		$cur_template = JFactory::getApplication()->getTemplate();
 
 		$token    = JSession::getFormToken() . '=' . 1;
-		$url = JUri::base() . 'index.php?option=com_joomlaupdate';
+		$url      = JUri::base() . 'index.php?option=com_joomlaupdate';
 		$ajax_url = JUri::base() . 'index.php?option=com_installer&view=update&task=update.ajax&' . $token;
-		$script = array();
+		$script   = array();
 		$script[] = 'var plg_quickicon_joomlaupdate_url = \'' . $url . '\';';
 		$script[] = 'var plg_quickicon_joomlaupdate_ajax_url = \'' . $ajax_url . '\';';
 		$script[] = 'var plg_quickicon_jupdatecheck_jversion = \'' . JVERSION . '\'';
@@ -71,11 +71,11 @@ class PlgQuickiconJoomlaupdate extends JPlugin
 
 		return array(
 			array(
-				'link' => 'index.php?option=com_joomlaupdate',
+				'link'  => 'index.php?option=com_joomlaupdate',
 				'image' => 'joomla',
-				'icon' => 'header/icon-48-download.png',
-				'text' => JText::_('PLG_QUICKICON_JOOMLAUPDATE_CHECKING'),
-				'id' => 'plg_quickicon_joomlaupdate',
+				'icon'  => 'header/icon-48-download.png',
+				'text'  => JText::_('PLG_QUICKICON_JOOMLAUPDATE_CHECKING'),
+				'id'    => 'plg_quickicon_joomlaupdate',
 				'group' => 'MOD_QUICKICON_MAINTENANCE'
 			)
 		);

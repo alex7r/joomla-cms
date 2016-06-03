@@ -21,8 +21,8 @@ class LanguagesModelOverride extends JModelAdmin
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed A JForm object on success, false on failure.
 	 *
@@ -57,64 +57,10 @@ class LanguagesModelOverride extends JModelAdmin
 	}
 
 	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  mixed The data for the form.
-	 *
-	 * @since   2.5
-	 */
-	protected function loadFormData()
-	{
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_languages.edit.override.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
-		}
-
-		$this->preprocessData('com_languages.override', $data);
-
-		return $data;
-	}
-
-	/**
-	 * Method to get a single record.
-	 *
-	 * @param   string  $pk  The key name.
-	 *
-	 * @return  mixed  	Object on success, false otherwise.
-	 *
-	 * @since   2.5
-	 */
-	public function getItem($pk = null)
-	{
-		require_once JPATH_COMPONENT . '/helpers/languages.php';
-
-		$input    = JFactory::getApplication()->input;
-		$pk       = (!empty($pk)) ? $pk : $input->get('id');
-		$filename = constant('JPATH_' . strtoupper($this->getState('filter.client')))
-			. '/language/overrides/' . $this->getState('filter.language', 'en-GB') . '.override.ini';
-		$strings = LanguagesHelper::parseFile($filename);
-
-		$result = new stdClass;
-		$result->key      = '';
-		$result->override = '';
-
-		if (isset($strings[$pk]))
-		{
-			$result->key      = $pk;
-			$result->override = $strings[$pk];
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array    $data             The form data.
-	 * @param   boolean  $opposite_client  Indicates whether the override should not be created for the current client.
+	 * @param   array   $data            The form data.
+	 * @param   boolean $opposite_client Indicates whether the override should not be created for the current client.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
@@ -196,6 +142,60 @@ class LanguagesModelOverride extends JModelAdmin
 		}
 
 		return true;
+	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return  mixed The data for the form.
+	 *
+	 * @since   2.5
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_languages.edit.override.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+
+		$this->preprocessData('com_languages.override', $data);
+
+		return $data;
+	}
+
+	/**
+	 * Method to get a single record.
+	 *
+	 * @param   string $pk The key name.
+	 *
+	 * @return  mixed    Object on success, false otherwise.
+	 *
+	 * @since   2.5
+	 */
+	public function getItem($pk = null)
+	{
+		require_once JPATH_COMPONENT . '/helpers/languages.php';
+
+		$input    = JFactory::getApplication()->input;
+		$pk       = (!empty($pk)) ? $pk : $input->get('id');
+		$filename = constant('JPATH_' . strtoupper($this->getState('filter.client')))
+			. '/language/overrides/' . $this->getState('filter.language', 'en-GB') . '.override.ini';
+		$strings  = LanguagesHelper::parseFile($filename);
+
+		$result           = new stdClass;
+		$result->key      = '';
+		$result->override = '';
+
+		if (isset($strings[$pk]))
+		{
+			$result->key      = $pk;
+			$result->override = $strings[$pk];
+		}
+
+		return $result;
 	}
 
 	/**

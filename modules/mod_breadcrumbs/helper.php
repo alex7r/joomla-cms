@@ -21,7 +21,7 @@ class ModBreadCrumbsHelper
 	/**
 	 * Retrieve breadcrumb items
 	 *
-	 * @param   \Joomla\Registry\Registry  &$params  module parameters
+	 * @param   \Joomla\Registry\Registry &$params module parameters
 	 *
 	 * @return array
 	 */
@@ -41,7 +41,7 @@ class ModBreadCrumbsHelper
 		}
 		else
 		{
-			$home  = $menu->getDefault();
+			$home = $menu->getDefault();
 		}
 
 		$count = count($items);
@@ -49,7 +49,7 @@ class ModBreadCrumbsHelper
 		// Don't use $items here as it references JPathway properties directly
 		$crumbs = array();
 
-		for ($i = 0; $i < $count; $i ++)
+		for ($i = 0; $i < $count; $i++)
 		{
 			$crumbs[$i]       = new stdClass;
 			$crumbs[$i]->name = stripslashes(htmlspecialchars($items[$i]->name, ENT_COMPAT, 'UTF-8'));
@@ -70,10 +70,10 @@ class ModBreadCrumbsHelper
 	/**
 	 * Set the breadcrumbs separator for the breadcrumbs display.
 	 *
-	 * @param   string  $custom  Custom xhtml complient string to separate the
-	 * items of the breadcrumbs
+	 * @param   string $custom Custom xhtml complient string to separate the
+	 *                         items of the breadcrumbs
 	 *
-	 * @return  string	Separator string
+	 * @return  string    Separator string
 	 *
 	 * @since   1.5
 	 */
@@ -96,7 +96,7 @@ class ModBreadCrumbsHelper
 		}
 		else
 		{
-			$_separator     = htmlspecialchars($custom, ENT_COMPAT, 'UTF-8');
+			$_separator = htmlspecialchars($custom, ENT_COMPAT, 'UTF-8');
 		}
 
 		return $_separator;

@@ -21,8 +21,8 @@ class JGoogleDataPlusComments extends JGoogleData
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry     $options  Google options object
-	 * @param   JGoogleAuth  $auth     Google data http client object
+	 * @param   Registry    $options Google options object
+	 * @param   JGoogleAuth $auth    Google data http client object
 	 *
 	 * @since   12.3
 	 */
@@ -39,13 +39,13 @@ class JGoogleDataPlusComments extends JGoogleData
 	/**
 	 * List all of the comments for an activity.
 	 *
-	 * @param   string   $activityId  The ID of the activity to get comments for.
-	 * @param   string   $fields      Used to specify the fields you want returned.
-	 * @param   integer  $max         The maximum number of people to include in the response, used for paging.
-	 * @param   string   $order       The order in which to sort the list of comments. Acceptable values are "ascending" and "descending".
-	 * @param   string   $token       The continuation token, used to page through large result sets. To get the next page of results, set this
-	 * 								  parameter to the value of "nextPageToken" from the previous response. This token may be of any length.
-	 * @param   string   $alt         Specifies an alternative representation type. Acceptable values are: "json" - Use JSON format (default)
+	 * @param   string  $activityId     The ID of the activity to get comments for.
+	 * @param   string  $fields         Used to specify the fields you want returned.
+	 * @param   integer $max            The maximum number of people to include in the response, used for paging.
+	 * @param   string  $order          The order in which to sort the list of comments. Acceptable values are "ascending" and "descending".
+	 * @param   string  $token          The continuation token, used to page through large result sets. To get the next page of results, set this
+	 *                                  parameter to the value of "nextPageToken" from the previous response. This token may be of any length.
+	 * @param   string  $alt            Specifies an alternative representation type. Acceptable values are: "json" - Use JSON format (default)
 	 *
 	 * @return  mixed  Data from Google
 	 *
@@ -104,8 +104,8 @@ class JGoogleDataPlusComments extends JGoogleData
 	/**
 	 * Get a comment.
 	 *
-	 * @param   string  $id      The ID of the comment to get.
-	 * @param   string  $fields  Used to specify the fields you want returned.
+	 * @param   string $id     The ID of the comment to get.
+	 * @param   string $fields Used to specify the fields you want returned.
 	 *
 	 * @return  mixed  Data from Google
 	 *

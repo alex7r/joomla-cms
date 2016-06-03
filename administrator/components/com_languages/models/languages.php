@@ -19,7 +19,7 @@ class LanguagesModelLanguages extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -48,8 +48,8 @@ class LanguagesModelLanguages extends JModelList
 	/**
 	 * Set the published language(s).
 	 *
-	 * @param   array    $cid    An array of language IDs.
-	 * @param   integer  $value  The value of the published state.
+	 * @param   array   $cid   An array of language IDs.
+	 * @param   integer $value The value of the published state.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
@@ -63,7 +63,7 @@ class LanguagesModelLanguages extends JModelList
 	/**
 	 * Method to delete records.
 	 *
-	 * @param   array  $pks  An array of item primary keys.
+	 * @param   array $pks An array of item primary keys.
 	 *
 	 * @return  boolean  Returns true on success, false on failure.
 	 *
@@ -97,8 +97,8 @@ class LanguagesModelLanguages extends JModelList
 	/**
 	 * Custom clean cache method, 2 places for 2 clients.
 	 *
-	 * @param   string   $group      Optional cache group name.
-	 * @param   integer  $client_id  Application client id.
+	 * @param   string  $group     Optional cache group name.
+	 * @param   integer $client_id Application client id.
 	 *
 	 * @return  void
 	 *
@@ -115,8 +115,8 @@ class LanguagesModelLanguages extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -144,7 +144,7 @@ class LanguagesModelLanguages extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string  $id  A prefix for the store id.
+	 * @param   string $id A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -170,7 +170,7 @@ class LanguagesModelLanguages extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select all fields from the languages table.

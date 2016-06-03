@@ -23,6 +23,12 @@ defined('JPATH_PLATFORM') or die;
 class JBrowser
 {
 	/**
+	 * @var    array  JBrowser instances container.
+	 * @since  11.3
+	 */
+	protected static $instances = array();
+
+	/**
 	 * @var    integer  Major version number
 	 * @since  12.1
 	 */
@@ -139,16 +145,10 @@ class JBrowser
 	protected $images = array('jpeg', 'gif', 'png', 'pjpeg', 'x-png', 'bmp');
 
 	/**
-	 * @var    array  JBrowser instances container.
-	 * @since  11.3
-	 */
-	protected static $instances = array();
-
-	/**
 	 * Create a browser instance (constructor).
 	 *
-	 * @param   string  $userAgent  The browser string to parse.
-	 * @param   string  $accept     The HTTP_ACCEPT settings to use.
+	 * @param   string $userAgent The browser string to parse.
+	 * @param   string $accept    The HTTP_ACCEPT settings to use.
 	 *
 	 * @since   11.1
 	 */
@@ -158,34 +158,11 @@ class JBrowser
 	}
 
 	/**
-	 * Returns the global Browser object, only creating it
-	 * if it doesn't already exist.
-	 *
-	 * @param   string  $userAgent  The browser string to parse.
-	 * @param   string  $accept     The HTTP_ACCEPT settings to use.
-	 *
-	 * @return  JBrowser  The Browser object.
-	 *
-	 * @since   11.1
-	 */
-	public static function getInstance($userAgent = null, $accept = null)
-	{
-		$signature = serialize(array($userAgent, $accept));
-
-		if (empty(self::$instances[$signature]))
-		{
-			self::$instances[$signature] = new JBrowser($userAgent, $accept);
-		}
-
-		return self::$instances[$signature];
-	}
-
-	/**
 	 * Parses the user agent string and inititializes the object with
 	 * all the known features and quirks for the given browser.
 	 *
-	 * @param   string  $userAgent  The browser string to parse.
-	 * @param   string  $accept     The HTTP_ACCEPT settings to use.
+	 * @param   string $userAgent The browser string to parse.
+	 * @param   string $accept    The HTTP_ACCEPT settings to use.
 	 *
 	 * @return  void
 	 *
@@ -229,7 +206,8 @@ class JBrowser
 				|| strpos($this->lowerAgent, 'openwave') !== false
 				|| strpos($this->lowerAgent, 'opera mini') !== false
 				|| strpos($this->lowerAgent, 'opera mobi') !== false
-				|| strpos($this->lowerAgent, 'operamini') !== false)
+				|| strpos($this->lowerAgent, 'operamini') !== false
+			)
 			{
 				$this->mobile = true;
 			}
@@ -270,7 +248,8 @@ class JBrowser
 			}
 			elseif (strpos($this->lowerAgent, 'elaine/') !== false
 				|| strpos($this->lowerAgent, 'palmsource') !== false
-				|| strpos($this->lowerAgent, 'digital paths') !== false)
+				|| strpos($this->lowerAgent, 'digital paths') !== false
+			)
 			{
 				$this->setBrowser('palm');
 				$this->mobile = true;
@@ -408,6 +387,63 @@ class JBrowser
 	}
 
 	/**
+	 * Set browser version, not by engine version
+	 * Fallback to use when no other method identify the engine version
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function identifyBrowserVersion()
+	{
+		if (preg_match('|Version[/ ]([0-9.]+)|', $this->agent, $version))
+		{
+			list ($this->majorVersion, $this->minorVersion) = explode('.', $version[1]);
+
+			return;
+		}
+
+		// Can't identify browser version
+		$this->majorVersion = 0;
+		$this->minorVersion = 0;
+	}
+
+	/**
+	 * Returns the global Browser object, only creating it
+	 * if it doesn't already exist.
+	 *
+	 * @param   string $userAgent The browser string to parse.
+	 * @param   string $accept    The HTTP_ACCEPT settings to use.
+	 *
+	 * @return  JBrowser  The Browser object.
+	 *
+	 * @since   11.1
+	 */
+	public static function getInstance($userAgent = null, $accept = null)
+	{
+		$signature = serialize(array($userAgent, $accept));
+
+		if (empty(self::$instances[$signature]))
+		{
+			self::$instances[$signature] = new JBrowser($userAgent, $accept);
+		}
+
+		return self::$instances[$signature];
+	}
+
+	/**
+	 * Return the currently matched platform.
+	 *
+	 * @return  string  The user's platform.
+	 *
+	 * @since   11.1
+	 */
+	public function getPlatform()
+	{
+		return $this->platform;
+	}
+
+	/**
 	 * Match the platform of the browser.
 	 *
 	 * This is a pretty simplistic implementation, but it's intended
@@ -435,54 +471,6 @@ class JBrowser
 	}
 
 	/**
-	 * Return the currently matched platform.
-	 *
-	 * @return  string  The user's platform.
-	 *
-	 * @since   11.1
-	 */
-	public function getPlatform()
-	{
-		return $this->platform;
-	}
-
-	/**
-	 * Set browser version, not by engine version
-	 * Fallback to use when no other method identify the engine version
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function identifyBrowserVersion()
-	{
-		if (preg_match('|Version[/ ]([0-9.]+)|', $this->agent, $version))
-		{
-			list ($this->majorVersion, $this->minorVersion) = explode('.', $version[1]);
-
-			return;
-		}
-
-		// Can't identify browser version
-		$this->majorVersion = 0;
-		$this->minorVersion = 0;
-	}
-
-	/**
-	 * Sets the current browser.
-	 *
-	 * @param   string  $browser  The browser to set as current.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	public function setBrowser($browser)
-	{
-		$this->browser = $browser;
-	}
-
-	/**
 	 * Retrieve the current browser.
 	 *
 	 * @return  string  The current browser.
@@ -492,6 +480,20 @@ class JBrowser
 	public function getBrowser()
 	{
 		return $this->browser;
+	}
+
+	/**
+	 * Sets the current browser.
+	 *
+	 * @param   string $browser The browser to set as current.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public function setBrowser($browser)
+	{
+		$this->browser = $browser;
 	}
 
 	/**
@@ -569,7 +571,7 @@ class JBrowser
 	 * entity, but Mozilla doesn't seem to want to accept the latter.
 	 * For our purposes, we will treat them the same.
 	 *
-	 * @param   string  $mimetype  The MIME type to check.
+	 * @param   string $mimetype The MIME type to check.
 	 *
 	 * @return  boolean  True if the browser can display the MIME type.
 	 *
@@ -622,7 +624,7 @@ class JBrowser
 	/**
 	 * Determine if the given browser is the same as the current.
 	 *
-	 * @param   string  $browser  The browser to check.
+	 * @param   string $browser The browser to check.
 	 *
 	 * @return  boolean  Is the given browser the same as the current?
 	 *
@@ -670,7 +672,7 @@ class JBrowser
 	 *
 	 * @return  boolean  True if using SSL, false if not.
 	 *
-	 * @since   11.1
+	 * @since       11.1
 	 * @deprecated  13.3 (Platform) & 4.0 (CMS) - Use the isSSLConnection method on the application object.
 	 */
 	public function isSSLConnection()

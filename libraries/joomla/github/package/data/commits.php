@@ -21,9 +21,9 @@ class JGithubPackageDataCommits extends JGithubPackage
 	/**
 	 * Get a single commit.
 	 *
-	 * @param   string  $owner  The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
-	 * @param   string  $sha    The commit SHA.
+	 * @param   string $owner The name of the owner of the GitHub repository.
+	 * @param   string $repo  The name of the GitHub repository.
+	 * @param   string $sha   The commit SHA.
 	 *
 	 * @return object
 	 */
@@ -40,11 +40,11 @@ class JGithubPackageDataCommits extends JGithubPackage
 	/**
 	 * Method to create a commit.
 	 *
-	 * @param   string  $owner    The name of the owner of the GitHub repository.
-	 * @param   string  $repo     The name of the GitHub repository.
-	 * @param   string  $message  The commit message.
-	 * @param   string  $tree     SHA of the tree object this commit points to.
-	 * @param   array   $parents  Array of the SHAs of the commits that were the parents of this commit.
+	 * @param   string $owner     The name of the owner of the GitHub repository.
+	 * @param   string $repo      The name of the GitHub repository.
+	 * @param   string $message   The commit message.
+	 * @param   string $tree      SHA of the tree object this commit points to.
+	 * @param   array  $parents   Array of the SHAs of the commits that were the parents of this commit.
 	 *                            If omitted or empty, the commit will be written as a root commit.
 	 *                            For a single parent, an array of one SHA should be provided.
 	 *                            For a merge commit, an array of more than one should be provided.

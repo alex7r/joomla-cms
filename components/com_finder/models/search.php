@@ -108,7 +108,7 @@ class FinderModelSearch extends JModelList
 		}
 
 		// Create the query to get the search results.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select($db->quoteName('link_id') . ', ' . $db->quoteName('object'))
 			->from($db->quoteName('#__finder_links'))
@@ -125,8 +125,8 @@ class FinderModelSearch extends JModelList
 		foreach ($rows as $rk => $row)
 		{
 			// Build the result object.
-			$result = unserialize($row->object);
-			$result->weight = $results[$rk];
+			$result          = unserialize($row->object);
+			$result->weight  = $results[$rk];
 			$result->link_id = $rk;
 
 			// Add the result back to the stack.
@@ -144,44 +144,44 @@ class FinderModelSearch extends JModelList
 	}
 
 	/**
-	 * Method to get the total number of results.
+	 * Method to get a store id based on model the configuration state.
 	 *
-	 * @return  integer  The total number of results.
+	 * This is necessary because the model is used by the component and
+	 * different modules that might need different sets of data or different
+	 * ordering requirements.
+	 *
+	 * @param   string  $id   An identifier string to generate the store id. [optional]
+	 * @param   boolean $page True to store the data paged, false to store all data. [optional]
+	 *
+	 * @return  string  A store id.
 	 *
 	 * @since   2.5
-	 * @throws  Exception on database error.
 	 */
-	public function getTotal()
+	protected function getStoreId($id = '', $page = true)
 	{
-		// Check if the search query is valid.
-		if (empty($this->query->search))
+		// Get the query object.
+		$query = $this->getQuery();
+
+		// Add the search query state.
+		$id .= ':' . $query->input;
+		$id .= ':' . $query->language;
+		$id .= ':' . $query->filter;
+		$id .= ':' . serialize($query->filters);
+		$id .= ':' . $query->date1;
+		$id .= ':' . $query->date2;
+		$id .= ':' . $query->when1;
+		$id .= ':' . $query->when2;
+
+		if ($page)
 		{
-			return null;
+			// Add the list state for page specific data.
+			$id .= ':' . $this->getState('list.start');
+			$id .= ':' . $this->getState('list.limit');
+			$id .= ':' . $this->getState('list.ordering');
+			$id .= ':' . $this->getState('list.direction');
 		}
 
-		// Check if we should return results.
-		if (empty($this->includedTerms) && (empty($this->query->filters) || !$this->query->empty))
-		{
-			return null;
-		}
-
-		// Get the store id.
-		$store = $this->getStoreId('getTotal');
-
-		// Use the cached data if possible.
-		if ($this->retrieve($store))
-		{
-			return $this->retrieve($store);
-		}
-
-		// Get the results total.
-		$total = $this->getResultsTotal();
-
-		// Push the total into cache.
-		$this->store($store, $total);
-
-		// Return the total.
-		return $this->retrieve($store);
+		return parent::getStoreId($id);
 	}
 
 	/**
@@ -198,392 +198,39 @@ class FinderModelSearch extends JModelList
 	}
 
 	/**
-	 * Method to build a database query to load the list data.
+	 * Method to retrieve data from cache.
 	 *
-	 * @return  JDatabaseQuery  A database query.
+	 * @param   string  $id         The cache store id.
+	 * @param   boolean $persistent Flag to enable the use of external cache. [optional]
+	 *
+	 * @return  mixed  The cached data if found, null otherwise.
 	 *
 	 * @since   2.5
 	 */
-	protected function getListQuery()
+	protected function retrieve($id, $persistent = true)
 	{
-		// Get the store id.
-		$store = $this->getStoreId('getListQuery');
+		$data = null;
 
-		// Use the cached data if possible.
-		if ($this->retrieve($store, false))
+		// Use the internal cache if possible.
+		if (isset($this->cache[$id]))
 		{
-			return clone($this->retrieve($store, false));
+			return $this->cache[$id];
 		}
 
-		// Set variables
-		$user = JFactory::getUser();
-		$groups = implode(',', $user->getAuthorisedViewLevels());
-
-		// Create a new query object.
-		$db = $this->getDbo();
-		$query = $db->getQuery(true)
-			->select('l.link_id')
-			->from($db->quoteName('#__finder_links') . ' AS l')
-			->where('l.access IN (' . $groups . ')')
-			->where('l.state = 1')
-			->where('l.published = 1');
-
-		// Get the null date and the current date, minus seconds.
-		$nullDate = $db->quote($db->getNullDate());
-		$nowDate = $db->quote(substr_replace(JFactory::getDate()->toSql(), '00', -2));
-
-		// Add the publish up and publish down filters.
-		$query->where('(l.publish_start_date = ' . $nullDate . ' OR l.publish_start_date <= ' . $nowDate . ')')
-			->where('(l.publish_end_date = ' . $nullDate . ' OR l.publish_end_date >= ' . $nowDate . ')');
-
-		/*
-		 * Add the taxonomy filters to the query. We have to join the taxonomy
-		 * map table for each group so that we can use AND clauses across
-		 * groups. Within each group there can be an array of values that will
-		 * use OR clauses.
-		 */
-		if (!empty($this->query->filters))
+		// Use the external cache if data is persistent.
+		if ($persistent)
 		{
-			// Convert the associative array to a numerically indexed array.
-			$groups = array_values($this->query->filters);
-
-			// Iterate through each taxonomy group and add the join and where.
-			for ($i = 0, $c = count($groups); $i < $c; $i++)
-			{
-				// We use the offset because each join needs a unique alias.
-				$query->join('INNER', $db->quoteName('#__finder_taxonomy_map') . ' AS t' . $i . ' ON t' . $i . '.link_id = l.link_id')
-					->where('t' . $i . '.node_id IN (' . implode(',', $groups[$i]) . ')');
-			}
+			$data = JFactory::getCache($this->context, 'output')->get($id);
+			$data = $data ? unserialize($data) : null;
 		}
 
-		// Add the start date filter to the query.
-		if (!empty($this->query->date1))
+		// Store the data in internal cache.
+		if ($data)
 		{
-			// Escape the date.
-			$date1 = $db->quote($this->query->date1);
-
-			// Add the appropriate WHERE condition.
-			if ($this->query->when1 == 'before')
-			{
-				$query->where($db->quoteName('l.start_date') . ' <= ' . $date1);
-			}
-			elseif ($this->query->when1 == 'after')
-			{
-				$query->where($db->quoteName('l.start_date') . ' >= ' . $date1);
-			}
-			else
-			{
-				$query->where($db->quoteName('l.start_date') . ' = ' . $date1);
-			}
+			$this->cache[$id] = $data;
 		}
 
-		// Add the end date filter to the query.
-		if (!empty($this->query->date2))
-		{
-			// Escape the date.
-			$date2 = $db->quote($this->query->date2);
-
-			// Add the appropriate WHERE condition.
-			if ($this->query->when2 == 'before')
-			{
-				$query->where($db->quoteName('l.start_date') . ' <= ' . $date2);
-			}
-			elseif ($this->query->when2 == 'after')
-			{
-				$query->where($db->quoteName('l.start_date') . ' >= ' . $date2);
-			}
-			else
-			{
-				$query->where($db->quoteName('l.start_date') . ' = ' . $date2);
-			}
-		}
-		// Filter by language
-		if ($this->getState('filter.language'))
-		{
-			$query->where('l.language IN (' . $db->quote(JFactory::getLanguage()->getTag()) . ', ' . $db->quote('*') . ')');
-		}
-		// Push the data into cache.
-		$this->store($store, $query, false);
-
-		// Return a copy of the query object.
-		return clone($this->retrieve($store, false));
-	}
-
-	/**
-	 * Method to get the total number of results for the search query.
-	 *
-	 * @return  integer  The results total.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	protected function getResultsTotal()
-	{
-		// Get the store id.
-		$store = $this->getStoreId('getResultsTotal', false);
-
-		// Use the cached data if possible.
-		if ($this->retrieve($store))
-		{
-			return $this->retrieve($store);
-		}
-
-		// Get the base query and add the ordering information.
-		$base = $this->getListQuery();
-		$base->select('0 AS ordering');
-
-		// Get the maximum number of results.
-		$limit = (int) $this->getState('match.limit');
-
-		/*
-		 * If there are no optional or required search terms in the query,
-		 * we can get the result total in one relatively simple database query.
-		 */
-		if (empty($this->includedTerms))
-		{
-			// Adjust the query to join on the appropriate mapping table.
-			$query = clone($base);
-			$query->clear('select')
-				->select('COUNT(DISTINCT l.link_id)');
-
-			// Get the total from the database.
-			$this->_db->setQuery($query);
-			$total = $this->_db->loadResult();
-
-			// Push the total into cache.
-			$this->store($store, min($total, $limit));
-
-			// Return the total.
-			return $this->retrieve($store);
-		}
-
-		/*
-		 * If there are optional or required search terms in the query, the
-		 * process of getting the result total is more complicated.
-		 */
-		$start = 0;
-		$items = array();
-		$sorted = array();
-		$maps = array();
-		$excluded = $this->getExcludedLinkIds();
-
-		/*
-		 * Iterate through the included search terms and group them by mapping
-		 * table suffix. This ensures that we never have to do more than 16
-		 * queries to get a batch. This may seem like a lot but it is rarely
-		 * anywhere near 16 because of the improved mapping algorithm.
-		 */
-		foreach ($this->includedTerms as $token => $ids)
-		{
-			// Get the mapping table suffix.
-			$suffix = JString::substr(md5(JString::substr($token, 0, 1)), 0, 1);
-
-			// Initialize the mapping group.
-			if (!array_key_exists($suffix, $maps))
-			{
-				$maps[$suffix] = array();
-			}
-			// Add the terms to the mapping group.
-			$maps[$suffix] = array_merge($maps[$suffix], $ids);
-		}
-
-		/*
-		 * When the query contains search terms we need to find and process the
-		 * result total iteratively using a do-while loop.
-		 */
-		do
-		{
-			// Create a container for the fetched results.
-			$results = array();
-			$more = false;
-
-			/*
-			 * Iterate through the mapping groups and load the total from each
-			 * mapping table.
-			 */
-			foreach ($maps as $suffix => $ids)
-			{
-				// Create a storage key for this set.
-				$setId = $this->getStoreId('getResultsTotal:' . serialize(array_values($ids)) . ':' . $start . ':' . $limit);
-
-				// Use the cached data if possible.
-				if ($this->retrieve($setId))
-				{
-					$temp = $this->retrieve($setId);
-				}
-				// Load the data from the database.
-				else
-				{
-					// Adjust the query to join on the appropriate mapping table.
-					$query = clone($base);
-					$query->join('INNER', '#__finder_links_terms' . $suffix . ' AS m ON m.link_id = l.link_id')
-						->where('m.term_id IN (' . implode(',', $ids) . ')');
-
-					// Load the results from the database.
-					$this->_db->setQuery($query, $start, $limit);
-					$temp = $this->_db->loadObjectList();
-
-					// Set the more flag to true if any of the sets equal the limit.
-					$more = (count($temp) === $limit) ? true : false;
-
-					// We loaded the data unkeyed but we need it to be keyed for later.
-					$junk = $temp;
-					$temp = array();
-
-					// Convert to an associative array.
-					for ($i = 0, $c = count($junk); $i < $c; $i++)
-					{
-						$temp[$junk[$i]->link_id] = $junk[$i];
-					}
-
-					// Store this set in cache.
-					$this->store($setId, $temp);
-				}
-
-				// Merge the results.
-				$results = array_merge($results, $temp);
-			}
-
-			// Check if there are any excluded terms to deal with.
-			if (count($excluded))
-			{
-				// Remove any results that match excluded terms.
-				for ($i = 0, $c = count($results); $i < $c; $i++)
-				{
-					if (in_array($results[$i]->link_id, $excluded))
-					{
-						unset($results[$i]);
-					}
-				}
-
-				// Reset the array keys.
-				$results = array_values($results);
-			}
-
-			// Iterate through the set to extract the unique items.
-			for ($i = 0, $c = count($results); $i < $c; $i++)
-			{
-				if (!isset($sorted[$results[$i]->link_id]))
-				{
-					$sorted[$results[$i]->link_id] = $results[$i]->ordering;
-				}
-			}
-
-			/*
-			 * If the query contains just optional search terms and we have
-			 * enough items for the page, we can stop here.
-			 */
-			if (empty($this->requiredTerms))
-			{
-				// If we need more items and they're available, make another pass.
-				if ($more && count($sorted) < $limit)
-				{
-					// Increment the batch starting point and continue.
-					$start += $limit;
-					continue;
-				}
-
-				// Push the total into cache.
-				$this->store($store, min(count($sorted), $limit));
-
-				// Return the total.
-				return $this->retrieve($store);
-			}
-
-			/*
-			 * The query contains required search terms so we have to iterate
-			 * over the items and remove any items that do not match all of the
-			 * required search terms. This is one of the most expensive steps
-			 * because a required token could theoretically eliminate all of
-			 * current terms which means we would have to loop through all of
-			 * the possibilities.
-			 */
-			foreach ($this->requiredTerms as $token => $required)
-			{
-				// Create a storage key for this set.
-				$setId = $this->getStoreId('getResultsTotal:required:' . serialize(array_values($required)) . ':' . $start . ':' . $limit);
-
-				// Use the cached data if possible.
-				if ($this->retrieve($setId))
-				{
-					$reqTemp = $this->retrieve($setId);
-				}
-					// Check if the token was matched.
-				elseif (empty($required))
-				{
-					return null;
-				}
-					// Load the data from the database.
-				else
-				{
-					// Setup containers in case we have to make multiple passes.
-					$reqStart = 0;
-					$reqTemp = array();
-
-					do
-					{
-						// Get the map table suffix.
-						$suffix = JString::substr(md5(JString::substr($token, 0, 1)), 0, 1);
-
-						// Adjust the query to join on the appropriate mapping table.
-						$query = clone($base);
-						$query->join('INNER', '#__finder_links_terms' . $suffix . ' AS m ON m.link_id = l.link_id')
-							->where('m.term_id IN (' . implode(',', $required) . ')');
-
-						// Load the results from the database.
-						$this->_db->setQuery($query, $reqStart, $limit);
-						$temp = $this->_db->loadObjectList('link_id');
-
-						// Set the required token more flag to true if the set equal the limit.
-						$reqMore = (count($temp) === $limit) ? true : false;
-
-						// Merge the matching set for this token.
-						$reqTemp = $reqTemp + $temp;
-
-						// Increment the term offset.
-						$reqStart += $limit;
-					}
-					while ($reqMore == true);
-
-					// Store this set in cache.
-					$this->store($setId, $reqTemp);
-				}
-
-				// Remove any items that do not match the required term.
-				$sorted = array_intersect_key($sorted, $reqTemp);
-			}
-
-			// If we need more items and they're available, make another pass.
-			if ($more && count($sorted) < $limit)
-			{
-				// Increment the batch starting point.
-				$start += $limit;
-
-				// Merge the found items.
-				$items = $items + $sorted;
-
-				continue;
-			}
-			// Otherwise, end the loop.
-			{
-				// Merge the found items.
-				$items = $items + $sorted;
-
-				$more = false;
-			}
-			// End do-while loop.
-		}
-		while ($more === true);
-
-		// Set the total.
-		$total = count($items);
-		$total = min($total, $limit);
-
-		// Push the total into cache.
-		$this->store($store, $total);
-
-		// Return the total.
-		return $this->retrieve($store);
+		return $data;
 	}
 
 	/**
@@ -606,7 +253,7 @@ class FinderModelSearch extends JModelList
 		}
 
 		// Get the result ordering and direction.
-		$ordering = $this->getState('list.ordering', 'l.start_date');
+		$ordering  = $this->getState('list.ordering', 'l.start_date');
 		$direction = $this->getState('list.direction', 'DESC');
 
 		// Get the base query and add the ordering information.
@@ -638,11 +285,11 @@ class FinderModelSearch extends JModelList
 		 * If there are optional or required search terms in the query, the
 		 * process of getting the results is more complicated.
 		 */
-		$start = 0;
-		$limit = (int) $this->getState('match.limit');
-		$items = array();
-		$sorted = array();
-		$maps = array();
+		$start    = 0;
+		$limit    = (int) $this->getState('match.limit');
+		$items    = array();
+		$sorted   = array();
+		$maps     = array();
 		$excluded = $this->getExcludedLinkIds();
 
 		/*
@@ -674,7 +321,7 @@ class FinderModelSearch extends JModelList
 		{
 			// Create a container for the fetched results.
 			$results = array();
-			$more = false;
+			$more    = false;
 
 			/*
 			 * Iterate through the mapping groups and load the results from each
@@ -839,7 +486,7 @@ class FinderModelSearch extends JModelList
 				{
 					// Setup containers in case we have to make multiple passes.
 					$reqStart = 0;
-					$reqTemp = array();
+					$reqTemp  = array();
 
 					do
 					{
@@ -863,8 +510,7 @@ class FinderModelSearch extends JModelList
 
 						// Increment the term offset.
 						$reqStart += $limit;
-					}
-					while ($reqMore == true);
+					} while ($reqMore == true);
 
 					// Store this set in cache.
 					$this->store($setId, $reqTemp);
@@ -893,15 +539,151 @@ class FinderModelSearch extends JModelList
 
 				$more = false;
 			}
-		// End do-while loop.
-		}
-		while ($more === true);
+			// End do-while loop.
+		} while ($more === true);
 
 		// Push the results into cache.
 		$this->store($store, $items);
 
 		// Return the requested set.
 		return array_slice($this->retrieve($store), (int) $this->getState('list.start'), (int) $this->getState('list.limit'), true);
+	}
+
+	/**
+	 * Method to build a database query to load the list data.
+	 *
+	 * @return  JDatabaseQuery  A database query.
+	 *
+	 * @since   2.5
+	 */
+	protected function getListQuery()
+	{
+		// Get the store id.
+		$store = $this->getStoreId('getListQuery');
+
+		// Use the cached data if possible.
+		if ($this->retrieve($store, false))
+		{
+			return clone($this->retrieve($store, false));
+		}
+
+		// Set variables
+		$user   = JFactory::getUser();
+		$groups = implode(',', $user->getAuthorisedViewLevels());
+
+		// Create a new query object.
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true)
+			->select('l.link_id')
+			->from($db->quoteName('#__finder_links') . ' AS l')
+			->where('l.access IN (' . $groups . ')')
+			->where('l.state = 1')
+			->where('l.published = 1');
+
+		// Get the null date and the current date, minus seconds.
+		$nullDate = $db->quote($db->getNullDate());
+		$nowDate  = $db->quote(substr_replace(JFactory::getDate()->toSql(), '00', -2));
+
+		// Add the publish up and publish down filters.
+		$query->where('(l.publish_start_date = ' . $nullDate . ' OR l.publish_start_date <= ' . $nowDate . ')')
+			->where('(l.publish_end_date = ' . $nullDate . ' OR l.publish_end_date >= ' . $nowDate . ')');
+
+		/*
+		 * Add the taxonomy filters to the query. We have to join the taxonomy
+		 * map table for each group so that we can use AND clauses across
+		 * groups. Within each group there can be an array of values that will
+		 * use OR clauses.
+		 */
+		if (!empty($this->query->filters))
+		{
+			// Convert the associative array to a numerically indexed array.
+			$groups = array_values($this->query->filters);
+
+			// Iterate through each taxonomy group and add the join and where.
+			for ($i = 0, $c = count($groups); $i < $c; $i++)
+			{
+				// We use the offset because each join needs a unique alias.
+				$query->join('INNER', $db->quoteName('#__finder_taxonomy_map') . ' AS t' . $i . ' ON t' . $i . '.link_id = l.link_id')
+					->where('t' . $i . '.node_id IN (' . implode(',', $groups[$i]) . ')');
+			}
+		}
+
+		// Add the start date filter to the query.
+		if (!empty($this->query->date1))
+		{
+			// Escape the date.
+			$date1 = $db->quote($this->query->date1);
+
+			// Add the appropriate WHERE condition.
+			if ($this->query->when1 == 'before')
+			{
+				$query->where($db->quoteName('l.start_date') . ' <= ' . $date1);
+			}
+			elseif ($this->query->when1 == 'after')
+			{
+				$query->where($db->quoteName('l.start_date') . ' >= ' . $date1);
+			}
+			else
+			{
+				$query->where($db->quoteName('l.start_date') . ' = ' . $date1);
+			}
+		}
+
+		// Add the end date filter to the query.
+		if (!empty($this->query->date2))
+		{
+			// Escape the date.
+			$date2 = $db->quote($this->query->date2);
+
+			// Add the appropriate WHERE condition.
+			if ($this->query->when2 == 'before')
+			{
+				$query->where($db->quoteName('l.start_date') . ' <= ' . $date2);
+			}
+			elseif ($this->query->when2 == 'after')
+			{
+				$query->where($db->quoteName('l.start_date') . ' >= ' . $date2);
+			}
+			else
+			{
+				$query->where($db->quoteName('l.start_date') . ' = ' . $date2);
+			}
+		}
+		// Filter by language
+		if ($this->getState('filter.language'))
+		{
+			$query->where('l.language IN (' . $db->quote(JFactory::getLanguage()->getTag()) . ', ' . $db->quote('*') . ')');
+		}
+		// Push the data into cache.
+		$this->store($store, $query, false);
+
+		// Return a copy of the query object.
+		return clone($this->retrieve($store, false));
+	}
+
+	/**
+	 * Method to store data in cache.
+	 *
+	 * @param   string  $id         The cache store id.
+	 * @param   mixed   $data       The data to cache.
+	 * @param   boolean $persistent Flag to enable the use of external cache. [optional]
+	 *
+	 * @return  boolean  True on success, false on failure.
+	 *
+	 * @since   2.5
+	 */
+	protected function store($id, $data, $persistent = true)
+	{
+		// Store the data in internal cache.
+		$this->cache[$id] = $data;
+
+		// Store the data in external cache if data is persistent.
+		if ($persistent)
+		{
+			return JFactory::getCache($this->context, 'output')->store(serialize($data), $id);
+		}
+
+		return true;
 	}
 
 	/**
@@ -931,7 +713,7 @@ class FinderModelSearch extends JModelList
 
 		// Initialize containers.
 		$links = array();
-		$maps = array();
+		$maps  = array();
 
 		/*
 		 * Iterate through the excluded search terms and group them by mapping
@@ -959,7 +741,7 @@ class FinderModelSearch extends JModelList
 		 * from each mapping table.
 		 */
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 		foreach ($maps as $suffix => $ids)
 		{
@@ -990,10 +772,326 @@ class FinderModelSearch extends JModelList
 	}
 
 	/**
+	 * Method to get the total number of results.
+	 *
+	 * @return  integer  The total number of results.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
+	 */
+	public function getTotal()
+	{
+		// Check if the search query is valid.
+		if (empty($this->query->search))
+		{
+			return null;
+		}
+
+		// Check if we should return results.
+		if (empty($this->includedTerms) && (empty($this->query->filters) || !$this->query->empty))
+		{
+			return null;
+		}
+
+		// Get the store id.
+		$store = $this->getStoreId('getTotal');
+
+		// Use the cached data if possible.
+		if ($this->retrieve($store))
+		{
+			return $this->retrieve($store);
+		}
+
+		// Get the results total.
+		$total = $this->getResultsTotal();
+
+		// Push the total into cache.
+		$this->store($store, $total);
+
+		// Return the total.
+		return $this->retrieve($store);
+	}
+
+	/**
+	 * Method to get the total number of results for the search query.
+	 *
+	 * @return  integer  The results total.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
+	 */
+	protected function getResultsTotal()
+	{
+		// Get the store id.
+		$store = $this->getStoreId('getResultsTotal', false);
+
+		// Use the cached data if possible.
+		if ($this->retrieve($store))
+		{
+			return $this->retrieve($store);
+		}
+
+		// Get the base query and add the ordering information.
+		$base = $this->getListQuery();
+		$base->select('0 AS ordering');
+
+		// Get the maximum number of results.
+		$limit = (int) $this->getState('match.limit');
+
+		/*
+		 * If there are no optional or required search terms in the query,
+		 * we can get the result total in one relatively simple database query.
+		 */
+		if (empty($this->includedTerms))
+		{
+			// Adjust the query to join on the appropriate mapping table.
+			$query = clone($base);
+			$query->clear('select')
+				->select('COUNT(DISTINCT l.link_id)');
+
+			// Get the total from the database.
+			$this->_db->setQuery($query);
+			$total = $this->_db->loadResult();
+
+			// Push the total into cache.
+			$this->store($store, min($total, $limit));
+
+			// Return the total.
+			return $this->retrieve($store);
+		}
+
+		/*
+		 * If there are optional or required search terms in the query, the
+		 * process of getting the result total is more complicated.
+		 */
+		$start    = 0;
+		$items    = array();
+		$sorted   = array();
+		$maps     = array();
+		$excluded = $this->getExcludedLinkIds();
+
+		/*
+		 * Iterate through the included search terms and group them by mapping
+		 * table suffix. This ensures that we never have to do more than 16
+		 * queries to get a batch. This may seem like a lot but it is rarely
+		 * anywhere near 16 because of the improved mapping algorithm.
+		 */
+		foreach ($this->includedTerms as $token => $ids)
+		{
+			// Get the mapping table suffix.
+			$suffix = JString::substr(md5(JString::substr($token, 0, 1)), 0, 1);
+
+			// Initialize the mapping group.
+			if (!array_key_exists($suffix, $maps))
+			{
+				$maps[$suffix] = array();
+			}
+			// Add the terms to the mapping group.
+			$maps[$suffix] = array_merge($maps[$suffix], $ids);
+		}
+
+		/*
+		 * When the query contains search terms we need to find and process the
+		 * result total iteratively using a do-while loop.
+		 */
+		do
+		{
+			// Create a container for the fetched results.
+			$results = array();
+			$more    = false;
+
+			/*
+			 * Iterate through the mapping groups and load the total from each
+			 * mapping table.
+			 */
+			foreach ($maps as $suffix => $ids)
+			{
+				// Create a storage key for this set.
+				$setId = $this->getStoreId('getResultsTotal:' . serialize(array_values($ids)) . ':' . $start . ':' . $limit);
+
+				// Use the cached data if possible.
+				if ($this->retrieve($setId))
+				{
+					$temp = $this->retrieve($setId);
+				}
+				// Load the data from the database.
+				else
+				{
+					// Adjust the query to join on the appropriate mapping table.
+					$query = clone($base);
+					$query->join('INNER', '#__finder_links_terms' . $suffix . ' AS m ON m.link_id = l.link_id')
+						->where('m.term_id IN (' . implode(',', $ids) . ')');
+
+					// Load the results from the database.
+					$this->_db->setQuery($query, $start, $limit);
+					$temp = $this->_db->loadObjectList();
+
+					// Set the more flag to true if any of the sets equal the limit.
+					$more = (count($temp) === $limit) ? true : false;
+
+					// We loaded the data unkeyed but we need it to be keyed for later.
+					$junk = $temp;
+					$temp = array();
+
+					// Convert to an associative array.
+					for ($i = 0, $c = count($junk); $i < $c; $i++)
+					{
+						$temp[$junk[$i]->link_id] = $junk[$i];
+					}
+
+					// Store this set in cache.
+					$this->store($setId, $temp);
+				}
+
+				// Merge the results.
+				$results = array_merge($results, $temp);
+			}
+
+			// Check if there are any excluded terms to deal with.
+			if (count($excluded))
+			{
+				// Remove any results that match excluded terms.
+				for ($i = 0, $c = count($results); $i < $c; $i++)
+				{
+					if (in_array($results[$i]->link_id, $excluded))
+					{
+						unset($results[$i]);
+					}
+				}
+
+				// Reset the array keys.
+				$results = array_values($results);
+			}
+
+			// Iterate through the set to extract the unique items.
+			for ($i = 0, $c = count($results); $i < $c; $i++)
+			{
+				if (!isset($sorted[$results[$i]->link_id]))
+				{
+					$sorted[$results[$i]->link_id] = $results[$i]->ordering;
+				}
+			}
+
+			/*
+			 * If the query contains just optional search terms and we have
+			 * enough items for the page, we can stop here.
+			 */
+			if (empty($this->requiredTerms))
+			{
+				// If we need more items and they're available, make another pass.
+				if ($more && count($sorted) < $limit)
+				{
+					// Increment the batch starting point and continue.
+					$start += $limit;
+					continue;
+				}
+
+				// Push the total into cache.
+				$this->store($store, min(count($sorted), $limit));
+
+				// Return the total.
+				return $this->retrieve($store);
+			}
+
+			/*
+			 * The query contains required search terms so we have to iterate
+			 * over the items and remove any items that do not match all of the
+			 * required search terms. This is one of the most expensive steps
+			 * because a required token could theoretically eliminate all of
+			 * current terms which means we would have to loop through all of
+			 * the possibilities.
+			 */
+			foreach ($this->requiredTerms as $token => $required)
+			{
+				// Create a storage key for this set.
+				$setId = $this->getStoreId('getResultsTotal:required:' . serialize(array_values($required)) . ':' . $start . ':' . $limit);
+
+				// Use the cached data if possible.
+				if ($this->retrieve($setId))
+				{
+					$reqTemp = $this->retrieve($setId);
+				}
+				// Check if the token was matched.
+				elseif (empty($required))
+				{
+					return null;
+				}
+				// Load the data from the database.
+				else
+				{
+					// Setup containers in case we have to make multiple passes.
+					$reqStart = 0;
+					$reqTemp  = array();
+
+					do
+					{
+						// Get the map table suffix.
+						$suffix = JString::substr(md5(JString::substr($token, 0, 1)), 0, 1);
+
+						// Adjust the query to join on the appropriate mapping table.
+						$query = clone($base);
+						$query->join('INNER', '#__finder_links_terms' . $suffix . ' AS m ON m.link_id = l.link_id')
+							->where('m.term_id IN (' . implode(',', $required) . ')');
+
+						// Load the results from the database.
+						$this->_db->setQuery($query, $reqStart, $limit);
+						$temp = $this->_db->loadObjectList('link_id');
+
+						// Set the required token more flag to true if the set equal the limit.
+						$reqMore = (count($temp) === $limit) ? true : false;
+
+						// Merge the matching set for this token.
+						$reqTemp = $reqTemp + $temp;
+
+						// Increment the term offset.
+						$reqStart += $limit;
+					} while ($reqMore == true);
+
+					// Store this set in cache.
+					$this->store($setId, $reqTemp);
+				}
+
+				// Remove any items that do not match the required term.
+				$sorted = array_intersect_key($sorted, $reqTemp);
+			}
+
+			// If we need more items and they're available, make another pass.
+			if ($more && count($sorted) < $limit)
+			{
+				// Increment the batch starting point.
+				$start += $limit;
+
+				// Merge the found items.
+				$items = $items + $sorted;
+
+				continue;
+			}
+			// Otherwise, end the loop.
+			{
+				// Merge the found items.
+				$items = $items + $sorted;
+
+				$more = false;
+			}
+			// End do-while loop.
+		} while ($more === true);
+
+		// Set the total.
+		$total = count($items);
+		$total = min($total, $limit);
+
+		// Push the total into cache.
+		$this->store($store, $total);
+
+		// Return the total.
+		return $this->retrieve($store);
+	}
+
+	/**
 	 * Method to get a subquery for filtering link ids mapped to specific
 	 * terms ids.
 	 *
-	 * @param   array  $terms  An array of search term ids.
+	 * @param   array $terms An array of search term ids.
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *
@@ -1003,7 +1101,7 @@ class FinderModelSearch extends JModelList
 	{
 		// Create the SQL query to get the matching link ids.
 		// TODO: Impact of removing SQL_NO_CACHE?
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select('SQL_NO_CACHE link_id')
 			->from('#__finder_links_terms')
@@ -1013,51 +1111,10 @@ class FinderModelSearch extends JModelList
 	}
 
 	/**
-	 * Method to get a store id based on model the configuration state.
-	 *
-	 * This is necessary because the model is used by the component and
-	 * different modules that might need different sets of data or different
-	 * ordering requirements.
-	 *
-	 * @param   string   $id    An identifier string to generate the store id. [optional]
-	 * @param   boolean  $page  True to store the data paged, false to store all data. [optional]
-	 *
-	 * @return  string  A store id.
-	 *
-	 * @since   2.5
-	 */
-	protected function getStoreId($id = '', $page = true)
-	{
-		// Get the query object.
-		$query = $this->getQuery();
-
-		// Add the search query state.
-		$id .= ':' . $query->input;
-		$id .= ':' . $query->language;
-		$id .= ':' . $query->filter;
-		$id .= ':' . serialize($query->filters);
-		$id .= ':' . $query->date1;
-		$id .= ':' . $query->date2;
-		$id .= ':' . $query->when1;
-		$id .= ':' . $query->when2;
-
-		if ($page)
-		{
-			// Add the list state for page specific data.
-			$id .= ':' . $this->getState('list.start');
-			$id .= ':' . $this->getState('list.limit');
-			$id .= ':' . $this->getState('list.ordering');
-			$id .= ':' . $this->getState('list.direction');
-		}
-
-		return parent::getStoreId($id);
-	}
-
-	/**
 	 * Method to auto-populate the model state.  Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field. [optional]
-	 * @param   string  $direction  An optional direction. [optional]
+	 * @param   string $ordering  An optional ordering field. [optional]
+	 * @param   string $direction An optional direction. [optional]
 	 *
 	 * @return  void
 	 *
@@ -1066,10 +1123,10 @@ class FinderModelSearch extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Get the configuration options.
-		$app = JFactory::getApplication();
-		$input = $app->input;
+		$app    = JFactory::getApplication();
+		$input  = $app->input;
 		$params = $app->getParams();
-		$user = JFactory::getUser();
+		$user   = JFactory::getUser();
 		$filter = JFilterInput::getInstance();
 
 		$this->setState('filter.language', JLanguageMultilang::isEnabled());
@@ -1178,66 +1235,5 @@ class FinderModelSearch extends JModelList
 		// Load the user state.
 		$this->setState('user.id', (int) $user->get('id'));
 		$this->setState('user.groups', $user->getAuthorisedViewLevels());
-	}
-
-	/**
-	 * Method to retrieve data from cache.
-	 *
-	 * @param   string   $id          The cache store id.
-	 * @param   boolean  $persistent  Flag to enable the use of external cache. [optional]
-	 *
-	 * @return  mixed  The cached data if found, null otherwise.
-	 *
-	 * @since   2.5
-	 */
-	protected function retrieve($id, $persistent = true)
-	{
-		$data = null;
-
-		// Use the internal cache if possible.
-		if (isset($this->cache[$id]))
-		{
-			return $this->cache[$id];
-		}
-
-		// Use the external cache if data is persistent.
-		if ($persistent)
-		{
-			$data = JFactory::getCache($this->context, 'output')->get($id);
-			$data = $data ? unserialize($data) : null;
-		}
-
-		// Store the data in internal cache.
-		if ($data)
-		{
-			$this->cache[$id] = $data;
-		}
-
-		return $data;
-	}
-
-	/**
-	 * Method to store data in cache.
-	 *
-	 * @param   string   $id          The cache store id.
-	 * @param   mixed    $data        The data to cache.
-	 * @param   boolean  $persistent  Flag to enable the use of external cache. [optional]
-	 *
-	 * @return  boolean  True on success, false on failure.
-	 *
-	 * @since   2.5
-	 */
-	protected function store($id, $data, $persistent = true)
-	{
-		// Store the data in internal cache.
-		$this->cache[$id] = $data;
-
-		// Store the data in external cache if data is persistent.
-		if ($persistent)
-		{
-			return JFactory::getCache($this->context, 'output')->store(serialize($data), $id);
-		}
-
-		return true;
 	}
 }

@@ -36,15 +36,19 @@
 class JReCaptchaResponse
 {
 	public $success;
+
 	public $errorCodes;
 }
 
 class JReCaptcha
 {
 	private static $_signupUrl = "https://www.google.com/recaptcha/admin";
+
 	private static $_siteVerifyUrl = "https://www.google.com/recaptcha/api/siteverify";
-	private $_secret;
+
 	private static $_version = "php_1.0";
+
+	private $_secret;
 
 	/**
 	 * Constructor.
@@ -59,6 +63,69 @@ class JReCaptcha
 				. self::$_signupUrl . "'>" . self::$_signupUrl . "</a>");
 		}
 		$this->_secret = $secret;
+	}
+
+	/**
+	 * Calls the reCAPTCHA siteverify API to verify whether the user passes
+	 * CAPTCHA test.
+	 *
+	 * @param string $remoteIp IP address of end user.
+	 * @param string $response response string from recaptcha verification.
+	 *
+	 * @return JReCaptchaResponse
+	 */
+	public function verifyResponse($remoteIp, $response)
+	{
+		// Discard empty solution submissions
+		if ($response == null || strlen($response) == 0)
+		{
+			$recaptchaResponse             = new JReCaptchaResponse();
+			$recaptchaResponse->success    = false;
+			$recaptchaResponse->errorCodes = 'missing-input';
+
+			return $recaptchaResponse;
+		}
+
+		$getResponse       = $this->_submitHttpGet(
+			self::$_siteVerifyUrl,
+			array(
+				'secret'   => $this->_secret,
+				'remoteip' => $remoteIp,
+				'v'        => self::$_version,
+				'response' => $response
+			)
+		);
+		$answers           = json_decode($getResponse, true);
+		$recaptchaResponse = new JReCaptchaResponse();
+
+		if (trim($answers['success']) == true)
+		{
+			$recaptchaResponse->success = true;
+		}
+		else
+		{
+			$recaptchaResponse->success    = false;
+			$recaptchaResponse->errorCodes = isset($answers['error-codes']) ? $answers['error-codes'] : '';
+		}
+
+		return $recaptchaResponse;
+	}
+
+	/**
+	 * Submits an HTTP GET to a reCAPTCHA server.
+	 *
+	 * @param string $path url path to recaptcha server.
+	 * @param array  $data array of parameters to be sent.
+	 *
+	 * @return array response
+	 */
+	private function _submitHTTPGet($path, $data)
+	{
+		$req      = $this->_encodeQS($data);
+		$http     = JHttpFactory::getHttp();
+		$response = $http->get($path . '?' . $req)->body;
+
+		return $response;
 	}
 
 	/**
@@ -80,68 +147,5 @@ class JReCaptcha
 		$req = substr($req, 0, strlen($req) - 1);
 
 		return $req;
-	}
-
-	/**
-	 * Submits an HTTP GET to a reCAPTCHA server.
-	 *
-	 * @param string $path url path to recaptcha server.
-	 * @param array  $data array of parameters to be sent.
-	 *
-	 * @return array response
-	 */
-	private function _submitHTTPGet($path, $data)
-	{
-		$req = $this->_encodeQS($data);
-		$http = JHttpFactory::getHttp();
-		$response = $http->get($path . '?' . $req)->body;
-
-		return $response;
-	}
-
-	/**
-	 * Calls the reCAPTCHA siteverify API to verify whether the user passes
-	 * CAPTCHA test.
-	 *
-	 * @param string $remoteIp IP address of end user.
-	 * @param string $response response string from recaptcha verification.
-	 *
-	 * @return JReCaptchaResponse
-	 */
-	public function verifyResponse($remoteIp, $response)
-	{
-		// Discard empty solution submissions
-		if ($response == null || strlen($response) == 0)
-		{
-			$recaptchaResponse = new JReCaptchaResponse();
-			$recaptchaResponse->success = false;
-			$recaptchaResponse->errorCodes = 'missing-input';
-
-			return $recaptchaResponse;
-		}
-
-		$getResponse = $this->_submitHttpGet(
-			self::$_siteVerifyUrl,
-			array(
-				'secret'   => $this->_secret,
-				'remoteip' => $remoteIp,
-				'v'        => self::$_version,
-				'response' => $response
-			)
-		);
-		$answers = json_decode($getResponse, true);
-		$recaptchaResponse = new JReCaptchaResponse();
-
-		if (trim($answers['success']) == true)
-		{
-			$recaptchaResponse->success = true;
-		}
-		else
-		{
-			$recaptchaResponse->success = false;
-			$recaptchaResponse->errorCodes = isset($answers['error-codes']) ? $answers['error-codes'] : '';
-		}
-
-		return $recaptchaResponse;
 	}
 }

@@ -43,7 +43,7 @@ class UsersViewGroups extends JViewLegacy
 	/**
 	 * Display the view
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -119,8 +119,8 @@ class UsersViewGroups extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-				'a.title' => JText::_('COM_USERS_HEADING_GROUP_TITLE'),
-				'a.id' => JText::_('JGRID_HEADING_ID')
+			'a.title' => JText::_('COM_USERS_HEADING_GROUP_TITLE'),
+			'a.id'    => JText::_('JGRID_HEADING_ID')
 		);
 	}
 }

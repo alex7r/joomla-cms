@@ -32,7 +32,7 @@ class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -83,9 +83,9 @@ class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 	/**
 	 * Method to get the calendar input markup.
 	 *
-	 * @param   string  $display  The display to render ('static' or 'repeatable')
+	 * @param   string $display The display to render ('static' or 'repeatable')
 	 *
-	 * @return  string	The field input markup.
+	 * @return  string    The field input markup.
 	 *
 	 * @since   2.1.rc4
 	 */
@@ -114,7 +114,7 @@ class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 		// Format date if exists
 		if (!empty($this->value))
 		{
-			$date   = FOFPlatform::getInstance()->getDate($this->value, 'UTC');
+			$date = FOFPlatform::getInstance()->getDate($this->value, 'UTC');
 
 			// If a known filter is given use it.
 			switch (strtoupper((string) $this->element['filter']))
@@ -182,7 +182,7 @@ class FOFFormFieldCalendar extends JFormFieldCalendar implements FOFFormField
 
 			if ($this->required)
 			{
-				$attributes['required'] = 'required';
+				$attributes['required']      = 'required';
 				$attributes['aria-required'] = 'true';
 			}
 

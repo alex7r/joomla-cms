@@ -54,7 +54,7 @@ class ConfigControllerApplicationSave extends JControllerBase
 
 		// Complete data array if needed
 		$oldData = $model->getData();
-		$data = array_replace($oldData, $data);
+		$data    = array_replace($oldData, $data);
 
 		// Get request type
 		$saveFormat = JFactory::getDocument()->getType();

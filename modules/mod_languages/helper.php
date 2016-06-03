@@ -24,7 +24,7 @@ abstract class ModLanguagesHelper
 	/**
 	 * Gets a list of available languages
 	 *
-	 * @param   \Joomla\Registry\Registry  &$params  module params
+	 * @param   \Joomla\Registry\Registry &$params module params
 	 *
 	 * @return  array
 	 */
@@ -37,7 +37,7 @@ abstract class ModLanguagesHelper
 		$menu      = $app->getMenu();
 
 		// Get menu home items
-		$homes = array();
+		$homes      = array();
 		$homes['*'] = $menu->getDefault('*');
 
 		foreach ($languages as $item)
@@ -119,7 +119,7 @@ abstract class ModLanguagesHelper
 					}
 					elseif (isset($associations[$language->lang_code]) && $menu->getItem($associations[$language->lang_code]))
 					{
-						$itemid = $associations[$language->lang_code];
+						$itemid         = $associations[$language->lang_code];
 						$language->link = JRoute::_('index.php?lang=' . $language->sef . '&Itemid=' . $itemid);
 					}
 					else
@@ -130,7 +130,7 @@ abstract class ModLanguagesHelper
 						}
 						else
 						{
-							$itemid = isset($homes[$language->lang_code]) ? $homes[$language->lang_code]->id : $homes['*']->id;
+							$itemid         = isset($homes[$language->lang_code]) ? $homes[$language->lang_code]->id : $homes['*']->id;
 							$language->link = JRoute::_('index.php?lang=' . $language->sef . '&Itemid=' . $itemid);
 						}
 					}

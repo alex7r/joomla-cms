@@ -27,7 +27,7 @@ abstract class FinderIndexerStemmer
 	/**
 	 * Method to get a stemmer, creating it if necessary.
 	 *
-	 * @param   string  $adapter  The type of stemmer to load.
+	 * @param   string $adapter The type of stemmer to load.
 	 *
 	 * @return  FinderIndexerStemmer  A FinderIndexerStemmer instance.
 	 *
@@ -52,8 +52,8 @@ abstract class FinderIndexerStemmer
 
 		// Setup the adapter for the stemmer.
 		$adapter = JFilterInput::getInstance()->clean($adapter, 'cmd');
-		$path = __DIR__ . '/stemmer/' . $adapter . '.php';
-		$class = 'FinderIndexerStemmer' . ucfirst($adapter);
+		$path    = __DIR__ . '/stemmer/' . $adapter . '.php';
+		$class   = 'FinderIndexerStemmer' . ucfirst($adapter);
 
 		// Check if a stemmer exists for the adapter.
 		if (file_exists($path))
@@ -74,8 +74,8 @@ abstract class FinderIndexerStemmer
 	/**
 	 * Method to stem a token and return the root.
 	 *
-	 * @param   string  $token  The token to stem.
-	 * @param   string  $lang   The language of the token.
+	 * @param   string $token The token to stem.
+	 * @param   string $lang  The language of the token.
 	 *
 	 * @return  string  The root token.
 	 *

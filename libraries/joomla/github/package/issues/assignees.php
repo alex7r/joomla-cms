@@ -23,8 +23,8 @@ class JGithubPackageIssuesAssignees extends JGithubPackage
 	 *
 	 * This call lists all the available assignees (owner + collaborators) to which issues may be assigned.
 	 *
-	 * @param   string  $owner  The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
+	 * @param   string $owner The name of the owner of the GitHub repository.
+	 * @param   string $repo  The name of the GitHub repository.
 	 *
 	 * @return object
 	 */
@@ -46,9 +46,9 @@ class JGithubPackageIssuesAssignees extends JGithubPackage
 	 * with no content is returned.
 	 * Otherwise a 404 status code is returned.
 	 *
-	 * @param   string  $owner     The name of the owner of the GitHub repository.
-	 * @param   string  $repo      The name of the GitHub repository.
-	 * @param   string  $assignee  The assinees login name.
+	 * @param   string $owner    The name of the owner of the GitHub repository.
+	 * @param   string $repo     The name of the GitHub repository.
+	 * @param   string $assignee The assinees login name.
 	 *
 	 * @throws DomainException|Exception
 	 * @return boolean

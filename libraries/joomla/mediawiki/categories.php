@@ -19,20 +19,20 @@ class JMediawikiCategories extends JMediawikiObject
 	/**
 	 * Method to list all categories the page(s) belong to.
 	 *
-	 * @param   array    $titles        Page titles to retrieve categories.
-	 * @param   array    $clprop        List of additional properties to get.
-	 * @param   array    $clshow        Type of categories to show.
-	 * @param   integer  $cllimit       Number of categories to return.
-	 * @param   boolean  $clcontinue    Continue when more results are available.
-	 * @param   array    $clcategories  Only list these categories.
-	 * @param   string   $cldir         Direction of listing.
+	 * @param   array   $titles       Page titles to retrieve categories.
+	 * @param   array   $clprop       List of additional properties to get.
+	 * @param   array   $clshow       Type of categories to show.
+	 * @param   integer $cllimit      Number of categories to return.
+	 * @param   boolean $clcontinue   Continue when more results are available.
+	 * @param   array   $clcategories Only list these categories.
+	 * @param   string  $cldir        Direction of listing.
 	 *
 	 * @return  object
 	 *
 	 * @since   12.1
 	 */
 	public function getCategories(array $titles, array $clprop = null, array $clshow = null, $cllimit = null, $clcontinue = false,
-		array $clcategories = null, $cldir = null)
+	                              array $clcategories = null, $cldir = null)
 	{
 		// Build the request.
 		$path = '?action=query&prop=categories';
@@ -79,7 +79,7 @@ class JMediawikiCategories extends JMediawikiObject
 	/**
 	 * Method to get information about all categories used.
 	 *
-	 * @param   array  $titles  Page titles to retrieve categories.
+	 * @param   array $titles Page titles to retrieve categories.
 	 *
 	 * @return  object
 	 *
@@ -102,8 +102,8 @@ class JMediawikiCategories extends JMediawikiObject
 	/**
 	 * Method to get information about the given categories.
 	 *
-	 * @param   array    $titles      Page titles to retrieve categories.
-	 * @param   boolean  $clcontinue  Continue when more results are available.
+	 * @param   array   $titles     Page titles to retrieve categories.
+	 * @param   boolean $clcontinue Continue when more results are available.
 	 *
 	 * @return  object
 	 *
@@ -131,23 +131,23 @@ class JMediawikiCategories extends JMediawikiObject
 	/**
 	 * Method to get information about the pages within a category
 	 *
-	 * @param   string  $cmtitle               The category title, must contain 'Category:' prefix, cannot be used together with $cmpageid
-	 * @param   string  $cmpageid              The category's page ID, cannot be used together with $cmtitle
-	 * @param   string  $cmlimit               Maximum number of pages to retrieve
-	 * @param   array   $cmprop                Array of properties to retrieve
-	 * @param   array   $cmnamespace           Namespaces to retrieve pages from
-	 * @param   array   $cmtype                Array of category members to include, ignored if $cmsort is set to 'timestamp'
-	 * @param   string  $cmstart               Timestamp to start listing from, only used if $cmsort is set to 'timestamp'
-	 * @param   string  $cmend                 Timestamp to end listing at, only used if $cmsort is set to 'timestamp'
-	 * @param   string  $cmstartsortkey        Hexadecimal key to start listing from, only used if $cmsort is set to 'sortkey'
-	 * @param   string  $cmendsortkey          Hexadecimal key to end listing at, only used if $cmsort is set to 'sortkey'
-	 * @param   string  $cmstartsortkeyprefix  Hexadecimal key prefix to start listing from, only used if $cmsort is set to 'sortkey',
+	 * @param   string $cmtitle                The category title, must contain 'Category:' prefix, cannot be used together with $cmpageid
+	 * @param   string $cmpageid               The category's page ID, cannot be used together with $cmtitle
+	 * @param   string $cmlimit                Maximum number of pages to retrieve
+	 * @param   array  $cmprop                 Array of properties to retrieve
+	 * @param   array  $cmnamespace            Namespaces to retrieve pages from
+	 * @param   array  $cmtype                 Array of category members to include, ignored if $cmsort is set to 'timestamp'
+	 * @param   string $cmstart                Timestamp to start listing from, only used if $cmsort is set to 'timestamp'
+	 * @param   string $cmend                  Timestamp to end listing at, only used if $cmsort is set to 'timestamp'
+	 * @param   string $cmstartsortkey         Hexadecimal key to start listing from, only used if $cmsort is set to 'sortkey'
+	 * @param   string $cmendsortkey           Hexadecimal key to end listing at, only used if $cmsort is set to 'sortkey'
+	 * @param   string $cmstartsortkeyprefix   Hexadecimal key prefix to start listing from, only used if $cmsort is set to 'sortkey',
 	 *                                         overrides $cmstartsortkey
-	 * @param   string  $cmendsortkeyprefix    Hexadecimal key prefix to end listing before, only used if $cmsort is set to 'sortkey',
+	 * @param   string $cmendsortkeyprefix     Hexadecimal key prefix to end listing before, only used if $cmsort is set to 'sortkey',
 	 *                                         overrides $cmendsortkey
-	 * @param   string  $cmsort                Property to sort by
-	 * @param   string  $cmdir                 Direction to sort in
-	 * @param   string  $cmcontinue            Used to continue a previous request
+	 * @param   string $cmsort                 Property to sort by
+	 * @param   string $cmdir                  Direction to sort in
+	 * @param   string $cmcontinue             Used to continue a previous request
 	 *
 	 * @return  object
 	 *
@@ -155,8 +155,8 @@ class JMediawikiCategories extends JMediawikiObject
 	 * @throws  RuntimeException
 	 */
 	public function getCategoryMembers($cmtitle = null, $cmpageid = null, $cmlimit = null, array $cmprop = null, array $cmnamespace = null,
-		array $cmtype = null, $cmstart = null, $cmend = null, $cmstartsortkey = null, $cmendsortkey = null, $cmstartsortkeyprefix = null,
-		$cmendsortkeyprefix = null, $cmsort = null, $cmdir = null, $cmcontinue = null)
+	                                   array $cmtype = null, $cmstart = null, $cmend = null, $cmstartsortkey = null, $cmendsortkey = null, $cmstartsortkeyprefix = null,
+	                                   $cmendsortkeyprefix = null, $cmsort = null, $cmdir = null, $cmcontinue = null)
 	{
 		// Build the request.
 		$path = '?action=query&list=categorymembers';
@@ -257,21 +257,21 @@ class JMediawikiCategories extends JMediawikiObject
 	/**
 	 * Method to enumerate all categories.
 	 *
-	 * @param   string   $acfrom    The category to start enumerating from.
-	 * @param   string   $acto      The category to stop enumerating at.
-	 * @param   string   $acprefix  Search for all category titles that begin with this value.
-	 * @param   string   $acdir     Direction to sort in.
-	 * @param   integer  $acmin     Minimum number of category members.
-	 * @param   integer  $acmax     Maximum number of category members.
-	 * @param   integer  $aclimit   How many categories to return.
-	 * @param   array    $acprop    Which properties to get.
+	 * @param   string  $acfrom   The category to start enumerating from.
+	 * @param   string  $acto     The category to stop enumerating at.
+	 * @param   string  $acprefix Search for all category titles that begin with this value.
+	 * @param   string  $acdir    Direction to sort in.
+	 * @param   integer $acmin    Minimum number of category members.
+	 * @param   integer $acmax    Maximum number of category members.
+	 * @param   integer $aclimit  How many categories to return.
+	 * @param   array   $acprop   Which properties to get.
 	 *
 	 * @return  object
 	 *
 	 * @since   12.3
 	 */
 	public function enumerateCategories($acfrom = null, $acto = null, $acprefix = null, $acdir = null, $acmin = null,
-		$acmax = null, $aclimit = null, array $acprop = null)
+	                                    $acmax = null, $aclimit = null, array $acprop = null)
 	{
 		// Build the request.
 		$path = '?action=query&list=allcategories';
@@ -330,8 +330,8 @@ class JMediawikiCategories extends JMediawikiObject
 	/**
 	 * Method to list change tags.
 	 *
-	 * @param   array   $tgprop   List of properties to get.
-	 * @param   string  $tglimit  The maximum number of tags to limit.
+	 * @param   array  $tgprop  List of properties to get.
+	 * @param   string $tglimit The maximum number of tags to limit.
 	 *
 	 * @return  object
 	 *

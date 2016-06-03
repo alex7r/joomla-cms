@@ -12,8 +12,8 @@ ksort($this->files, SORT_STRING);
 ?>
 
 <ul class='nav nav-list directory-tree'>
-	<?php foreach($this->files as $key => $value): ?>
-		<?php if(is_array($value)): ?>
+	<?php foreach ($this->files as $key => $value): ?>
+		<?php if (is_array($value)): ?>
 			<?php
 			$keyArray  = explode('/', $key);
 			$fileArray = explode('/', $this->fileName);
@@ -46,14 +46,16 @@ ksort($this->files, SORT_STRING);
 			?>
 			<li class="<?php echo $class; ?>">
 				<a class='folder-url nowrap' href=''>
-					<span class='icon-folder-close'>&nbsp;<?php $explodeArray = explode('/', $key); echo end($explodeArray); ?></span>
+					<span class='icon-folder-close'>&nbsp;<?php $explodeArray = explode('/', $key);
+						echo end($explodeArray); ?></span>
 				</a>
 				<?php echo $this->directoryTree($value); ?>
 			</li>
 		<?php endif; ?>
-		<?php if(is_object($value)): ?>
+		<?php if (is_object($value)): ?>
 			<li>
-				<a class="file nowrap" href='<?php echo JRoute::_('index.php?option=com_templates&view=template&id=' . $this->id . '&file=' . $value->id) ?>'>
+				<a class="file nowrap"
+				   href='<?php echo JRoute::_('index.php?option=com_templates&view=template&id=' . $this->id . '&file=' . $value->id) ?>'>
 					<span class='icon-file'>&nbsp;<?php echo $value->name; ?></span>
 				</a>
 			</li>

@@ -25,7 +25,7 @@ abstract class JHtmlTextdiff
 	/**
 	 * Method to load Javascript text diff
 	 *
-	 * @param   string  $containerId  DOM id of the element where the diff will be rendered
+	 * @param   string $containerId DOM id of the element where the diff will be rendered
 	 *
 	 * @return  void
 	 *

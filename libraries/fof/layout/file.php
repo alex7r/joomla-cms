@@ -47,8 +47,8 @@ class FOFLayoutFile extends JLayoutFile
 
 			$files[] = $file . '.php';
 
-            $platformDirs = FOFPlatform::getInstance()->getPlatformBaseDirs();
-            $prefix       = FOFPlatform::getInstance()->isBackend() ? $platformDirs['admin'] : $platformDirs['root'];
+			$platformDirs = FOFPlatform::getInstance()->getPlatformBaseDirs();
+			$prefix       = FOFPlatform::getInstance()->isBackend() ? $platformDirs['admin'] : $platformDirs['root'];
 
 			$possiblePaths = array(
 				$prefix . '/templates/' . JFactory::getApplication()->getTemplate() . '/html/layouts/' . $filePath,
@@ -59,7 +59,7 @@ class FOFLayoutFile extends JLayoutFile
 
 			while ((list(, $fileName) = each($files)) && is_null($this->fullPath))
 			{
-				$r = $filesystem->pathFind($possiblePaths, $fileName);
+				$r              = $filesystem->pathFind($possiblePaths, $fileName);
 				$this->fullPath = $r === false ? null : $r;
 			}
 		}

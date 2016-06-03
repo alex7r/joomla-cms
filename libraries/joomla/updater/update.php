@@ -187,11 +187,11 @@ class JUpdate extends JObject
 
 	/**
 	 * The minimum stability required for updates to be taken into account. The possible values are:
-	 * 0	dev			Development snapshots, nightly builds, pre-release versions and so on
-	 * 1	alpha		Alpha versions (work in progress, things are likely to be broken)
-	 * 2	beta		Beta versions (major functionality in place, show-stopper bugs are likely to be present)
-	 * 3	rc			Release Candidate versions (almost stable, minor bugs might be present)
-	 * 4	stable		Stable versions (production quality code)
+	 * 0    dev            Development snapshots, nightly builds, pre-release versions and so on
+	 * 1    alpha        Alpha versions (work in progress, things are likely to be broken)
+	 * 2    beta        Beta versions (major functionality in place, show-stopper bugs are likely to be present)
+	 * 3    rc            Release Candidate versions (almost stable, minor bugs might be present)
+	 * 4    stable        Stable versions (production quality code)
 	 *
 	 * @var    int
 	 * @since  14.1
@@ -201,35 +201,11 @@ class JUpdate extends JObject
 	protected $minimum_stability = JUpdater::STABILITY_STABLE;
 
 	/**
-	 * Gets the reference to the current direct parent
-	 *
-	 * @return  object
-	 *
-	 * @since   11.1
-	 */
-	protected function _getStackLocation()
-	{
-		return implode('->', $this->stack);
-	}
-
-	/**
-	 * Get the last position in stack count
-	 *
-	 * @return  string
-	 *
-	 * @since   11.1
-	 */
-	protected function _getLastTag()
-	{
-		return $this->stack[count($this->stack) - 1];
-	}
-
-	/**
 	 * XML Start Element callback
 	 *
-	 * @param   object  $parser  Parser object
-	 * @param   string  $name    Name of the tag found
-	 * @param   array   $attrs   Attributes of the tag
+	 * @param   object $parser Parser object
+	 * @param   string $name   Name of the tag found
+	 * @param   array  $attrs  Attributes of the tag
 	 *
 	 * @return  void
 	 *
@@ -271,7 +247,7 @@ class JUpdate extends JObject
 
 				foreach ($attrs as $key => $data)
 				{
-					$key = strtolower($key);
+					$key                              = strtolower($key);
 					$this->currentUpdate->$name->$key = $data;
 				}
 				break;
@@ -279,10 +255,22 @@ class JUpdate extends JObject
 	}
 
 	/**
+	 * Gets the reference to the current direct parent
+	 *
+	 * @return  object
+	 *
+	 * @since   11.1
+	 */
+	protected function _getStackLocation()
+	{
+		return implode('->', $this->stack);
+	}
+
+	/**
 	 * Callback for closing the element
 	 *
-	 * @param   object  $parser  Parser object
-	 * @param   string  $name    Name of element that was closed
+	 * @param   object $parser Parser object
+	 * @param   string $name   Name of element that was closed
 	 *
 	 * @return  void
 	 *
@@ -319,7 +307,8 @@ class JUpdate extends JObject
 					&& $product == $this->currentUpdate->targetplatform->name
 					&& preg_match('/^' . $this->currentUpdate->targetplatform->version . '/', JVERSION)
 					&& ((!isset($this->currentUpdate->targetplatform->min_dev_level)) || JVersion::DEV_LEVEL >= $this->currentUpdate->targetplatform->min_dev_level)
-					&& ((!isset($this->currentUpdate->targetplatform->max_dev_level)) || JVersion::DEV_LEVEL <= $this->currentUpdate->targetplatform->max_dev_level))
+					&& ((!isset($this->currentUpdate->targetplatform->max_dev_level)) || JVersion::DEV_LEVEL <= $this->currentUpdate->targetplatform->max_dev_level)
+				)
 				{
 					// Check if PHP version supported via <php_minimum> tag, assume true if tag isn't present
 					if (!isset($this->currentUpdate->php_minimum) || version_compare(PHP_VERSION, $this->currentUpdate->php_minimum->_data, '>='))
@@ -379,8 +368,8 @@ class JUpdate extends JObject
 	/**
 	 * Character Parser Function
 	 *
-	 * @param   object  $parser  Parser object.
-	 * @param   object  $data    The data.
+	 * @param   object $parser Parser object.
+	 * @param   object $data   The data.
 	 *
 	 * @return  void
 	 *
@@ -411,10 +400,44 @@ class JUpdate extends JObject
 	}
 
 	/**
+	 * Get the last position in stack count
+	 *
+	 * @return  string
+	 *
+	 * @since   11.1
+	 */
+	protected function _getLastTag()
+	{
+		return $this->stack[count($this->stack) - 1];
+	}
+
+	/**
+	 * Converts a tag to numeric stability representation. If the tag doesn't represent a known stability level (one of
+	 * dev, alpha, beta, rc, stable) it is ignored.
+	 *
+	 * @param   string $tag The tag string, e.g. dev, alpha, beta, rc, stable
+	 *
+	 * @return  integer
+	 *
+	 * @since   3.4
+	 */
+	protected function stabilityTagToInteger($tag)
+	{
+		$constant = 'JUpdater::STABILITY_' . strtoupper($tag);
+
+		if (defined($constant))
+		{
+			return constant($constant);
+		}
+
+		return JUpdater::STABILITY_STABLE;
+	}
+
+	/**
 	 * Loads an XML file from a URL.
 	 *
-	 * @param   string  $url                The URL.
-	 * @param   int     $minimum_stability  The minimum stability required for updating the extension {@see JUpdater}
+	 * @param   string $url               The URL.
+	 * @param   int    $minimum_stability The minimum stability required for updating the extension {@see JUpdater}
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -464,27 +487,5 @@ class JUpdate extends JObject
 		xml_parser_free($this->xmlParser);
 
 		return true;
-	}
-
-	/**
-	 * Converts a tag to numeric stability representation. If the tag doesn't represent a known stability level (one of
-	 * dev, alpha, beta, rc, stable) it is ignored.
-	 *
-	 * @param   string  $tag  The tag string, e.g. dev, alpha, beta, rc, stable
-	 *
-	 * @return  integer
-	 *
-	 * @since   3.4
-	 */
-	protected function stabilityTagToInteger($tag)
-	{
-		$constant = 'JUpdater::STABILITY_' . strtoupper($tag);
-
-		if (defined($constant))
-		{
-			return constant($constant);
-		}
-
-		return JUpdater::STABILITY_STABLE;
 	}
 }

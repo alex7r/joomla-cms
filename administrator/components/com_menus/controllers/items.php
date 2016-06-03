@@ -19,30 +19,14 @@ class MenusControllerItems extends JControllerAdmin
 	/**
 	 * Constructor
 	 *
-	 * @param   array  $config  Optional configuration array
+	 * @param   array $config Optional configuration array
 	 *
 	 * @since   1.6
 	 */
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
-		$this->registerTask('unsetDefault',	'setDefault');
-	}
-
-	/**
-	 * Proxy for getModel.
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  object  The model.
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'Item', $prefix = 'MenusModel', $config = array())
-	{
-		return parent::getModel($name, $prefix, array('ignore_request' => true));
+		$this->registerTask('unsetDefault', 'setDefault');
 	}
 
 	/**
@@ -77,6 +61,22 @@ class MenusControllerItems extends JControllerAdmin
 	}
 
 	/**
+	 * Proxy for getModel.
+	 *
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return  object  The model.
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'Item', $prefix = 'MenusModel', $config = array())
+	{
+		return parent::getModel($name, $prefix, array('ignore_request' => true));
+	}
+
+	/**
 	 * Save the manual order inputs from the menu items list view
 	 *
 	 * @return      void
@@ -91,7 +91,7 @@ class MenusControllerItems extends JControllerAdmin
 		JLog::add('MenusControllerItems::saveorder() is deprecated. Function will be removed in 4.0', JLog::WARNING, 'deprecated');
 
 		// Get the arrays from the Request
-		$order = $this->input->post->get('order', null, 'array');
+		$order         = $this->input->post->get('order', null, 'array');
 		$originalOrder = explode(',', $this->input->getString('original_order_values'));
 
 		// Make sure something has changed
@@ -161,11 +161,11 @@ class MenusControllerItems extends JControllerAdmin
 		}
 
 		$this->setRedirect(
-				JRoute::_(
-						'index.php?option=' . $this->option . '&view=' . $this->view_list
-						. '&menutype=' . $app->getUserState('com_menus.items.menutype'), false
-						)
-				);
+			JRoute::_(
+				'index.php?option=' . $this->option . '&view=' . $this->view_list
+				. '&menutype=' . $app->getUserState('com_menus.items.menutype'), false
+			)
+		);
 	}
 
 	/**
@@ -181,9 +181,9 @@ class MenusControllerItems extends JControllerAdmin
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to publish from the request.
-		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
-		$data = array('publish' => 1, 'unpublish' => 0, 'trash' => -2, 'report' => -3);
-		$task = $this->getTask();
+		$cid   = JFactory::getApplication()->input->get('cid', array(), 'array');
+		$data  = array('publish' => 1, 'unpublish' => 0, 'trash' => -2, 'report' => -3);
+		$task  = $this->getTask();
 		$value = JArrayHelper::getValue($data, $task, 0, 'int');
 
 		if (empty($cid))
@@ -256,7 +256,7 @@ class MenusControllerItems extends JControllerAdmin
 
 		$ids = JFactory::getApplication()->input->post->get('cid', array(), 'array');
 
-		$model = $this->getModel();
+		$model  = $this->getModel();
 		$return = $model->checkin($ids);
 
 		if ($return === false)

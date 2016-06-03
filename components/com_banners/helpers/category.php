@@ -19,7 +19,7 @@ class BannersCategories extends JCategories
 	/**
 	 * Constructor
 	 *
-	 * @param   array  $options  Array of options
+	 * @param   array $options Array of options
 	 *
 	 * @since   1.6
 	 */

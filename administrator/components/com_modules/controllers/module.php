@@ -58,7 +58,7 @@ class ModulesControllerModule extends JControllerForm
 	/**
 	 * Override parent cancel method to reset the add module state.
 	 *
-	 * @param   string  $key  The name of the primary key of the URL variable.
+	 * @param   string $key The name of the primary key of the URL variable.
 	 *
 	 * @return  boolean  True if access level checks pass, false otherwise.
 	 *
@@ -77,10 +77,76 @@ class ModulesControllerModule extends JControllerForm
 	}
 
 	/**
+	 * Method to run batch operations.
+	 *
+	 * @param   string $model The model
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   1.7
+	 */
+	public function batch($model = null)
+	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		// Set the model
+		$model = $this->getModel('Module', '', array());
+
+		// Preset the redirect
+		$redirectUrl = 'index.php?option=com_modules&view=modules' . $this->getRedirectToListAppend();
+
+		$this->setRedirect(JRoute::_($redirectUrl, false));
+
+		return parent::batch($model);
+	}
+
+	/**
+	 * Method to save a record.
+	 *
+	 * @param   string $key    The name of the primary key of the URL variable.
+	 * @param   string $urlVar The name of the URL variable if different from the primary key
+	 *
+	 * @return  boolean  True if successful, false otherwise.
+	 */
+	public function save($key = null, $urlVar = null)
+	{
+		if (!JSession::checkToken())
+		{
+			JFactory::getApplication()->redirect('index.php', JText::_('JINVALID_TOKEN'));
+		}
+
+		if (JFactory::getDocument()->getType() == 'json')
+		{
+			$model      = $this->getModel();
+			$data       = $this->input->post->get('jform', array(), 'array');
+			$item       = $model->getItem($this->input->get('id'));
+			$properties = $item->getProperties();
+
+			// Replace changed properties
+			$data = array_replace_recursive($properties, $data);
+
+			if (!empty($data['assigned']))
+			{
+				$data['assigned'] = array_map('abs', $data['assigned']);
+			}
+
+			// Add new data to input before process by parent save()
+			$this->input->post->set('jform', $data);
+
+			// Add path of forms directory
+			JForm::addFormPath(JPATH_ADMINISTRATOR . '/components/com_modules/models/forms');
+
+		}
+
+		parent::save($key, $urlVar);
+
+	}
+
+	/**
 	 * Override parent allowSave method.
 	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
+	 * @param   array  $data An array of input data.
+	 * @param   string $key  The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *
@@ -105,8 +171,8 @@ class ModulesControllerModule extends JControllerForm
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
+	 * @param   array  $data An array of input data.
+	 * @param   string $key  The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *
@@ -116,8 +182,8 @@ class ModulesControllerModule extends JControllerForm
 	{
 		// Initialise variables.
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-		$user = JFactory::getUser();
-		$userId = $user->get('id');
+		$user     = JFactory::getUser();
+		$userId   = $user->get('id');
 
 		// Check general edit permission first.
 		if ($user->authorise('core.edit', 'com_modules.module.' . $recordId))
@@ -130,34 +196,10 @@ class ModulesControllerModule extends JControllerForm
 	}
 
 	/**
-	 * Method to run batch operations.
-	 *
-	 * @param   string  $model  The model
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   1.7
-	 */
-	public function batch($model = null)
-	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-		// Set the model
-		$model = $this->getModel('Module', '', array());
-
-		// Preset the redirect
-		$redirectUrl = 'index.php?option=com_modules&view=modules' . $this->getRedirectToListAppend();
-
-		$this->setRedirect(JRoute::_($redirectUrl, false));
-
-		return parent::batch($model);
-	}
-
-	/**
 	 * Function that allows child controller access to model data after the data has been saved.
 	 *
-	 * @param   JModelLegacy  $model      The data model object.
-	 * @param   array         $validData  The validated data.
+	 * @param   JModelLegacy $model     The data model object.
+	 * @param   array        $validData The validated data.
 	 *
 	 * @return  void
 	 *
@@ -165,7 +207,7 @@ class ModulesControllerModule extends JControllerForm
 	 */
 	protected function postSaveHook(JModelLegacy $model, $validData = array())
 	{
-		$app = JFactory::getApplication();
+		$app  = JFactory::getApplication();
 		$task = $this->getTask();
 
 		switch ($task)
@@ -180,48 +222,6 @@ class ModulesControllerModule extends JControllerForm
 		}
 
 		$app->setUserState('com_modules.add.module.params', null);
-	}
-
-	/**
-	 * Method to save a record.
-	 *
-	 * @param   string  $key     The name of the primary key of the URL variable.
-	 * @param   string  $urlVar  The name of the URL variable if different from the primary key
-	 *
-	 * @return  boolean  True if successful, false otherwise.
-	 */
-	public function save($key = null, $urlVar = null)
-	{
-		if (!JSession::checkToken())
-		{
-			JFactory::getApplication()->redirect('index.php', JText::_('JINVALID_TOKEN'));
-		}
-
-		if (JFactory::getDocument()->getType() == 'json')
-		{
-			$model = $this->getModel();
-			$data  = $this->input->post->get('jform', array(), 'array');
-			$item = $model->getItem($this->input->get('id'));
-			$properties = $item->getProperties();
-
-			// Replace changed properties
-			$data = array_replace_recursive($properties, $data);
-
-			if (!empty($data['assigned']))
-			{
-				$data['assigned'] = array_map('abs', $data['assigned']);
-			}
-
-			// Add new data to input before process by parent save()
-			$this->input->post->set('jform', $data);
-
-			// Add path of forms directory
-			JForm::addFormPath(JPATH_ADMINISTRATOR . '/components/com_modules/models/forms');
-
-		}
-
-		parent::save($key, $urlVar);
-
 	}
 
 }

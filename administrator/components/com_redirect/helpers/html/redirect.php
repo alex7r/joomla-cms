@@ -19,9 +19,9 @@ class JHtmlRedirect
 	/**
 	 * Display the published or unpublished state of an item.
 	 *
-	 * @param   int      $value      The state value.
-	 * @param   int      $i          The ID of the item.
-	 * @param   boolean  $canChange  An optional prefix for the task.
+	 * @param   int     $value     The state value.
+	 * @param   int     $i         The ID of the item.
+	 * @param   boolean $canChange An optional prefix for the task.
 	 *
 	 * @return  string
 	 *
@@ -51,7 +51,7 @@ class JHtmlRedirect
 		if ($canChange)
 		{
 			$html = '<a href="#" onclick="return listItemTask(\'cb' . $i . '\',\'' . $state[1] . '\')" class="btn btn-micro hasTooltip'
-				. ($value == 1 ? ' active' : '') . '" title="' . JHtml::tooltipText($state[3]) . '"><span class="icon-'	. $icon . '"></span></a>';
+				. ($value == 1 ? ' active' : '') . '" title="' . JHtml::tooltipText($state[3]) . '"><span class="icon-' . $icon . '"></span></a>';
 		}
 
 		return $html;

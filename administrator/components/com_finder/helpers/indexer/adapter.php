@@ -125,8 +125,8 @@ abstract class FinderIndexerAdapter extends JPlugin
 	/**
 	 * Method to instantiate the indexer adapter.
 	 *
-	 * @param   object  &$subject  The object to observe.
-	 * @param   array   $config    An array that holds the plugin configuration.
+	 * @param   object &$subject The object to observe.
+	 * @param   array  $config   An array that holds the plugin configuration.
 	 *
 	 * @since   2.5
 	 */
@@ -158,6 +158,27 @@ abstract class FinderIndexerAdapter extends JPlugin
 	}
 
 	/**
+	 * Method to get the type id for the adapter content.
+	 *
+	 * @return  integer  The numeric type id for the content.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
+	 */
+	protected function getTypeId()
+	{
+		// Get the type id from the database.
+		$query = $this->db->getQuery(true)
+			->select($this->db->quoteName('id'))
+			->from($this->db->quoteName('#__finder_types'))
+			->where($this->db->quoteName('title') . ' = ' . $this->db->quote($this->type_title));
+		$this->db->setQuery($query);
+		$result = (int) $this->db->loadResult();
+
+		return $result;
+	}
+
+	/**
 	 * Method to get the adapter state and push it into the indexer.
 	 *
 	 * @return  boolean  True on success.
@@ -177,322 +198,11 @@ abstract class FinderIndexerAdapter extends JPlugin
 		$iState->totalItems += $total;
 
 		// Populate the indexer state information for the adapter.
-		$iState->pluginState[$this->context]['total'] = $total;
+		$iState->pluginState[$this->context]['total']  = $total;
 		$iState->pluginState[$this->context]['offset'] = 0;
 
 		// Set the indexer state.
 		FinderIndexer::setState($iState);
-	}
-
-	/**
-	 * Method to prepare for the indexer to be run. This method will often
-	 * be used to include dependencies and things of that nature.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on error.
-	 */
-	public function onBeforeIndex()
-	{
-		// Get the indexer and adapter state.
-		$iState = FinderIndexer::getState();
-		$aState = $iState->pluginState[$this->context];
-
-		// Check the progress of the indexer and the adapter.
-		if ($iState->batchOffset == $iState->batchSize || $aState['offset'] == $aState['total'])
-		{
-			return true;
-		}
-
-		// Run the setup method.
-		return $this->setup();
-	}
-
-	/**
-	 * Method to index a batch of content items. This method can be called by
-	 * the indexer many times throughout the indexing process depending on how
-	 * much content is available for indexing. It is important to track the
-	 * progress correctly so we can display it to the user.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on error.
-	 */
-	public function onBuildIndex()
-	{
-		// Get the indexer and adapter state.
-		$iState = FinderIndexer::getState();
-		$aState = $iState->pluginState[$this->context];
-
-		// Check the progress of the indexer and the adapter.
-		if ($iState->batchOffset == $iState->batchSize || $aState['offset'] == $aState['total'])
-		{
-			return true;
-		}
-
-		// Get the batch offset and size.
-		$offset = (int) $aState['offset'];
-		$limit = (int) ($iState->batchSize - $iState->batchOffset);
-
-		// Get the content items to index.
-		$items = $this->getItems($offset, $limit);
-
-		// Iterate through the items and index them.
-		for ($i = 0, $n = count($items); $i < $n; $i++)
-		{
-			// Index the item.
-			$this->index($items[$i]);
-
-			// Adjust the offsets.
-			$offset++;
-			$iState->batchOffset++;
-			$iState->totalItems--;
-		}
-
-		// Update the indexer state.
-		$aState['offset'] = $offset;
-		$iState->pluginState[$this->context] = $aState;
-		FinderIndexer::setState($iState);
-
-		return true;
-	}
-
-	/**
-	 * Method to change the value of a content item's property in the links
-	 * table. This is used to synchronize published and access states that
-	 * are changed when not editing an item directly.
-	 *
-	 * @param   string   $id        The ID of the item to change.
-	 * @param   string   $property  The property that is being changed.
-	 * @param   integer  $value     The new value of that property.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 * @throws    Exception on database error.
-	 */
-	protected function change($id, $property, $value)
-	{
-		// Check for a property we know how to handle.
-		if ($property !== 'state' && $property !== 'access')
-		{
-			return true;
-		}
-
-		// Get the url for the content id.
-		$item = $this->db->quote($this->getUrl($id, $this->extension, $this->layout));
-
-		// Update the content items.
-		$query = $this->db->getQuery(true)
-			->update($this->db->quoteName('#__finder_links'))
-			->set($this->db->quoteName($property) . ' = ' . (int) $value)
-			->where($this->db->quoteName('url') . ' = ' . $item);
-		$this->db->setQuery($query);
-		$this->db->execute();
-
-		return true;
-	}
-
-	/**
-	 * Method to index an item.
-	 *
-	 * @param   FinderIndexerResult  $item  The item to index as a FinderIndexerResult object.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	abstract protected function index(FinderIndexerResult $item);
-
-	/**
-	 * Method to reindex an item.
-	 *
-	 * @param   integer  $id  The ID of the item to reindex.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	protected function reindex($id)
-	{
-		// Run the setup method.
-		$this->setup();
-
-		// Remove the old item.
-		$this->remove($id);
-
-		// Get the item.
-		$item = $this->getItem($id);
-
-		// Index the item.
-		$this->index($item);
-	}
-
-	/**
-	 * Method to remove an item from the index.
-	 *
-	 * @param   string  $id  The ID of the item to remove.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	protected function remove($id)
-	{
-		// Get the item's URL
-		$url = $this->db->quote($this->getUrl($id, $this->extension, $this->layout));
-
-		// Get the link ids for the content items.
-		$query = $this->db->getQuery(true)
-			->select($this->db->quoteName('link_id'))
-			->from($this->db->quoteName('#__finder_links'))
-			->where($this->db->quoteName('url') . ' = ' . $url);
-		$this->db->setQuery($query);
-		$items = $this->db->loadColumn();
-
-		// Check the items.
-		if (empty($items))
-		{
-			return true;
-		}
-
-		// Remove the items.
-		foreach ($items as $item)
-		{
-			$this->indexer->remove($item);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Method to setup the adapter before indexing.
-	 *
-	 * @return  boolean  True on success, false on failure.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	abstract protected function setup();
-
-	/**
-	 * Method to update index data on category access level changes
-	 *
-	 * @param   JTable  $row  A JTable object
-	 *
-	 * @return  void
-	 *
-	 * @since   2.5
-	 */
-	protected function categoryAccessChange($row)
-	{
-		$query = clone $this->getStateQuery();
-		$query->where('c.id = ' . (int) $row->id);
-
-		// Get the access level.
-		$this->db->setQuery($query);
-		$items = $this->db->loadObjectList();
-
-		// Adjust the access level for each item within the category.
-		foreach ($items as $item)
-		{
-			// Set the access level.
-			$temp = max($item->access, $row->access);
-
-			// Update the item.
-			$this->change((int) $item->id, 'access', $temp);
-
-			// Reindex the item
-			$this->reindex($row->id);
-		}
-	}
-
-	/**
-	 * Method to update index data on category access level changes
-	 *
-	 * @param   array    $pks    A list of primary key ids of the content that has changed state.
-	 * @param   integer  $value  The value of the state that the content has been changed to.
-	 *
-	 * @return  void
-	 *
-	 * @since   2.5
-	 */
-	protected function categoryStateChange($pks, $value)
-	{
-		/*
-		 * The item's published state is tied to the category
-		 * published state so we need to look up all published states
-		 * before we change anything.
-		 */
-		foreach ($pks as $pk)
-		{
-			$query = clone $this->getStateQuery();
-			$query->where('c.id = ' . (int) $pk);
-
-			// Get the published states.
-			$this->db->setQuery($query);
-			$items = $this->db->loadObjectList();
-
-			// Adjust the state for each item within the category.
-			foreach ($items as $item)
-			{
-				// Translate the state.
-				$temp = $this->translateState($item->state, $value);
-
-				// Update the item.
-				$this->change($item->id, 'state', $temp);
-
-				// Reindex the item
-				$this->reindex($item->id);
-			}
-		}
-	}
-
-	/**
-	 * Method to check the existing access level for categories
-	 *
-	 * @param   JTable  $row  A JTable object
-	 *
-	 * @return  void
-	 *
-	 * @since   2.5
-	 */
-	protected function checkCategoryAccess($row)
-	{
-		$query = $this->db->getQuery(true)
-			->select($this->db->quoteName('access'))
-			->from($this->db->quoteName('#__categories'))
-			->where($this->db->quoteName('id') . ' = ' . (int) $row->id);
-		$this->db->setQuery($query);
-
-		// Store the access level to determine if it changes
-		$this->old_cataccess = $this->db->loadResult();
-	}
-
-	/**
-	 * Method to check the existing access level for items
-	 *
-	 * @param   JTable  $row  A JTable object
-	 *
-	 * @return  void
-	 *
-	 * @since   2.5
-	 */
-	protected function checkItemAccess($row)
-	{
-		$query = $this->db->getQuery(true)
-			->select($this->db->quoteName('access'))
-			->from($this->db->quoteName($this->table))
-			->where($this->db->quoteName('id') . ' = ' . (int) $row->id);
-		$this->db->setQuery($query);
-
-		// Store the access level to determine if it changes
-		$this->old_access = $this->db->loadResult();
 	}
 
 	/**
@@ -533,43 +243,113 @@ abstract class FinderIndexerAdapter extends JPlugin
 	}
 
 	/**
-	 * Method to get a content item to index.
+	 * Method to get the SQL query used to retrieve the list of content items.
 	 *
-	 * @param   integer  $id  The id of the content item.
+	 * @param   mixed $query A JDatabaseQuery object. [optional]
 	 *
-	 * @return  FinderIndexerResult  A FinderIndexerResult object.
+	 * @return  JDatabaseQuery  A database object.
+	 *
+	 * @since   2.5
+	 */
+	protected function getListQuery($query = null)
+	{
+		// Check if we can use the supplied SQL query.
+		$query = $query instanceof JDatabaseQuery ? $query : $this->db->getQuery(true);
+
+		return $query;
+	}
+
+	/**
+	 * Method to prepare for the indexer to be run. This method will often
+	 * be used to include dependencies and things of that nature.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on error.
+	 */
+	public function onBeforeIndex()
+	{
+		// Get the indexer and adapter state.
+		$iState = FinderIndexer::getState();
+		$aState = $iState->pluginState[$this->context];
+
+		// Check the progress of the indexer and the adapter.
+		if ($iState->batchOffset == $iState->batchSize || $aState['offset'] == $aState['total'])
+		{
+			return true;
+		}
+
+		// Run the setup method.
+		return $this->setup();
+	}
+
+	/**
+	 * Method to setup the adapter before indexing.
+	 *
+	 * @return  boolean  True on success, false on failure.
 	 *
 	 * @since   2.5
 	 * @throws  Exception on database error.
 	 */
-	protected function getItem($id)
+	abstract protected function setup();
+
+	/**
+	 * Method to index a batch of content items. This method can be called by
+	 * the indexer many times throughout the indexing process depending on how
+	 * much content is available for indexing. It is important to track the
+	 * progress correctly so we can display it to the user.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on error.
+	 */
+	public function onBuildIndex()
 	{
-		// Get the list query and add the extra WHERE clause.
-		$query = $this->getListQuery();
-		$query->where('a.id = ' . (int) $id);
+		// Get the indexer and adapter state.
+		$iState = FinderIndexer::getState();
+		$aState = $iState->pluginState[$this->context];
 
-		// Get the item to index.
-		$this->db->setQuery($query);
-		$row = $this->db->loadAssoc();
+		// Check the progress of the indexer and the adapter.
+		if ($iState->batchOffset == $iState->batchSize || $aState['offset'] == $aState['total'])
+		{
+			return true;
+		}
 
-		// Convert the item to a result object.
-		$item = ArrayHelper::toObject((array) $row, 'FinderIndexerResult');
+		// Get the batch offset and size.
+		$offset = (int) $aState['offset'];
+		$limit  = (int) ($iState->batchSize - $iState->batchOffset);
 
-		// Set the item type.
-		$item->type_id = $this->type_id;
+		// Get the content items to index.
+		$items = $this->getItems($offset, $limit);
 
-		// Set the item layout.
-		$item->layout = $this->layout;
+		// Iterate through the items and index them.
+		for ($i = 0, $n = count($items); $i < $n; $i++)
+		{
+			// Index the item.
+			$this->index($items[$i]);
 
-		return $item;
+			// Adjust the offsets.
+			$offset++;
+			$iState->batchOffset++;
+			$iState->totalItems--;
+		}
+
+		// Update the indexer state.
+		$aState['offset']                    = $offset;
+		$iState->pluginState[$this->context] = $aState;
+		FinderIndexer::setState($iState);
+
+		return true;
 	}
 
 	/**
 	 * Method to get a list of content items to index.
 	 *
-	 * @param   integer         $offset  The list offset.
-	 * @param   integer         $limit   The list limit.
-	 * @param   JDatabaseQuery  $query   A JDatabaseQuery object. [optional]
+	 * @param   integer        $offset The list offset.
+	 * @param   integer        $limit  The list limit.
+	 * @param   JDatabaseQuery $query  A JDatabaseQuery object. [optional]
 	 *
 	 * @return  array  An array of FinderIndexerResult objects.
 	 *
@@ -613,42 +393,47 @@ abstract class FinderIndexerAdapter extends JPlugin
 	}
 
 	/**
-	 * Method to get the SQL query used to retrieve the list of content items.
+	 * Method to index an item.
 	 *
-	 * @param   mixed  $query  A JDatabaseQuery object. [optional]
+	 * @param   FinderIndexerResult $item The item to index as a FinderIndexerResult object.
 	 *
-	 * @return  JDatabaseQuery  A database object.
+	 * @return  boolean  True on success.
 	 *
 	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
-	protected function getListQuery($query = null)
-	{
-		// Check if we can use the supplied SQL query.
-		$query = $query instanceof JDatabaseQuery ? $query : $this->db->getQuery(true);
-
-		return $query;
-	}
+	abstract protected function index(FinderIndexerResult $item);
 
 	/**
-	 * Method to get the plugin type
+	 * Method to update index data on category access level changes
 	 *
-	 * @param   integer  $id  The plugin ID
+	 * @param   JTable $row A JTable object
 	 *
-	 * @return  string  The plugin type
+	 * @return  void
 	 *
 	 * @since   2.5
 	 */
-	protected function getPluginType($id)
+	protected function categoryAccessChange($row)
 	{
-		// Prepare the query
-		$query = $this->db->getQuery(true)
-			->select($this->db->quoteName('element'))
-			->from($this->db->quoteName('#__extensions'))
-			->where($this->db->quoteName('extension_id') . ' = ' . (int) $id);
-		$this->db->setQuery($query);
-		$type = $this->db->loadResult();
+		$query = clone $this->getStateQuery();
+		$query->where('c.id = ' . (int) $row->id);
 
-		return $type;
+		// Get the access level.
+		$this->db->setQuery($query);
+		$items = $this->db->loadObjectList();
+
+		// Adjust the access level for each item within the category.
+		foreach ($items as $item)
+		{
+			// Set the access level.
+			$temp = max($item->access, $row->access);
+
+			// Update the item.
+			$this->change((int) $item->id, 'access', $temp);
+
+			// Reindex the item
+			$this->reindex($row->id);
+		}
 	}
 
 	/**
@@ -678,9 +463,277 @@ abstract class FinderIndexerAdapter extends JPlugin
 	}
 
 	/**
+	 * Method to change the value of a content item's property in the links
+	 * table. This is used to synchronize published and access states that
+	 * are changed when not editing an item directly.
+	 *
+	 * @param   string  $id       The ID of the item to change.
+	 * @param   string  $property The property that is being changed.
+	 * @param   integer $value    The new value of that property.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws    Exception on database error.
+	 */
+	protected function change($id, $property, $value)
+	{
+		// Check for a property we know how to handle.
+		if ($property !== 'state' && $property !== 'access')
+		{
+			return true;
+		}
+
+		// Get the url for the content id.
+		$item = $this->db->quote($this->getUrl($id, $this->extension, $this->layout));
+
+		// Update the content items.
+		$query = $this->db->getQuery(true)
+			->update($this->db->quoteName('#__finder_links'))
+			->set($this->db->quoteName($property) . ' = ' . (int) $value)
+			->where($this->db->quoteName('url') . ' = ' . $item);
+		$this->db->setQuery($query);
+		$this->db->execute();
+
+		return true;
+	}
+
+	/**
+	 * Method to get the URL for the item. The URL is how we look up the link
+	 * in the Finder index.
+	 *
+	 * @param   integer $id        The id of the item.
+	 * @param   string  $extension The extension the category is in.
+	 * @param   string  $view      The view for the URL.
+	 *
+	 * @return  string  The URL of the item.
+	 *
+	 * @since   2.5
+	 */
+	protected function getUrl($id, $extension, $view)
+	{
+		return 'index.php?option=' . $extension . '&view=' . $view . '&id=' . $id;
+	}
+
+	/**
+	 * Method to reindex an item.
+	 *
+	 * @param   integer $id The ID of the item to reindex.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
+	 */
+	protected function reindex($id)
+	{
+		// Run the setup method.
+		$this->setup();
+
+		// Remove the old item.
+		$this->remove($id);
+
+		// Get the item.
+		$item = $this->getItem($id);
+
+		// Index the item.
+		$this->index($item);
+	}
+
+	/**
+	 * Method to remove an item from the index.
+	 *
+	 * @param   string $id The ID of the item to remove.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
+	 */
+	protected function remove($id)
+	{
+		// Get the item's URL
+		$url = $this->db->quote($this->getUrl($id, $this->extension, $this->layout));
+
+		// Get the link ids for the content items.
+		$query = $this->db->getQuery(true)
+			->select($this->db->quoteName('link_id'))
+			->from($this->db->quoteName('#__finder_links'))
+			->where($this->db->quoteName('url') . ' = ' . $url);
+		$this->db->setQuery($query);
+		$items = $this->db->loadColumn();
+
+		// Check the items.
+		if (empty($items))
+		{
+			return true;
+		}
+
+		// Remove the items.
+		foreach ($items as $item)
+		{
+			$this->indexer->remove($item);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Method to get a content item to index.
+	 *
+	 * @param   integer $id The id of the content item.
+	 *
+	 * @return  FinderIndexerResult  A FinderIndexerResult object.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
+	 */
+	protected function getItem($id)
+	{
+		// Get the list query and add the extra WHERE clause.
+		$query = $this->getListQuery();
+		$query->where('a.id = ' . (int) $id);
+
+		// Get the item to index.
+		$this->db->setQuery($query);
+		$row = $this->db->loadAssoc();
+
+		// Convert the item to a result object.
+		$item = ArrayHelper::toObject((array) $row, 'FinderIndexerResult');
+
+		// Set the item type.
+		$item->type_id = $this->type_id;
+
+		// Set the item layout.
+		$item->layout = $this->layout;
+
+		return $item;
+	}
+
+	/**
+	 * Method to update index data on category access level changes
+	 *
+	 * @param   array   $pks   A list of primary key ids of the content that has changed state.
+	 * @param   integer $value The value of the state that the content has been changed to.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	protected function categoryStateChange($pks, $value)
+	{
+		/*
+		 * The item's published state is tied to the category
+		 * published state so we need to look up all published states
+		 * before we change anything.
+		 */
+		foreach ($pks as $pk)
+		{
+			$query = clone $this->getStateQuery();
+			$query->where('c.id = ' . (int) $pk);
+
+			// Get the published states.
+			$this->db->setQuery($query);
+			$items = $this->db->loadObjectList();
+
+			// Adjust the state for each item within the category.
+			foreach ($items as $item)
+			{
+				// Translate the state.
+				$temp = $this->translateState($item->state, $value);
+
+				// Update the item.
+				$this->change($item->id, 'state', $temp);
+
+				// Reindex the item
+				$this->reindex($item->id);
+			}
+		}
+	}
+
+	/**
+	 * Method to translate the native content states into states that the
+	 * indexer can use.
+	 *
+	 * @param   integer $item     The item state.
+	 * @param   integer $category The category state. [optional]
+	 *
+	 * @return  integer  The translated indexer state.
+	 *
+	 * @since   2.5
+	 */
+	protected function translateState($item, $category = null)
+	{
+		// If category is present, factor in its states as well
+		if ($category !== null)
+		{
+			if ($category == 0)
+			{
+				$item = 0;
+			}
+		}
+
+		// Translate the state
+		switch ($item)
+		{
+			// Published and archived items only should return a published state
+			case 1;
+			case 2:
+				return 1;
+
+			// All other states should return an unpublished state
+			default:
+			case 0:
+				return 0;
+		}
+	}
+
+	/**
+	 * Method to check the existing access level for categories
+	 *
+	 * @param   JTable $row A JTable object
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	protected function checkCategoryAccess($row)
+	{
+		$query = $this->db->getQuery(true)
+			->select($this->db->quoteName('access'))
+			->from($this->db->quoteName('#__categories'))
+			->where($this->db->quoteName('id') . ' = ' . (int) $row->id);
+		$this->db->setQuery($query);
+
+		// Store the access level to determine if it changes
+		$this->old_cataccess = $this->db->loadResult();
+	}
+
+	/**
+	 * Method to check the existing access level for items
+	 *
+	 * @param   JTable $row A JTable object
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	protected function checkItemAccess($row)
+	{
+		$query = $this->db->getQuery(true)
+			->select($this->db->quoteName('access'))
+			->from($this->db->quoteName($this->table))
+			->where($this->db->quoteName('id') . ' = ' . (int) $row->id);
+		$this->db->setQuery($query);
+
+		// Store the access level to determine if it changes
+		$this->old_access = $this->db->loadResult();
+	}
+
+	/**
 	 * Method to get the query clause for getting items to update by time.
 	 *
-	 * @param   string  $time  The modified timestamp.
+	 * @param   string $time The modified timestamp.
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *
@@ -698,7 +751,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 	/**
 	 * Method to get the query clause for getting items to update by id.
 	 *
-	 * @param   array  $ids  The ids to load.
+	 * @param   array $ids The ids to load.
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *
@@ -714,48 +767,10 @@ abstract class FinderIndexerAdapter extends JPlugin
 	}
 
 	/**
-	 * Method to get the type id for the adapter content.
-	 *
-	 * @return  integer  The numeric type id for the content.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	protected function getTypeId()
-	{
-		// Get the type id from the database.
-		$query = $this->db->getQuery(true)
-			->select($this->db->quoteName('id'))
-			->from($this->db->quoteName('#__finder_types'))
-			->where($this->db->quoteName('title') . ' = ' . $this->db->quote($this->type_title));
-		$this->db->setQuery($query);
-		$result = (int) $this->db->loadResult();
-
-		return $result;
-	}
-
-	/**
-	 * Method to get the URL for the item. The URL is how we look up the link
-	 * in the Finder index.
-	 *
-	 * @param   integer  $id         The id of the item.
-	 * @param   string   $extension  The extension the category is in.
-	 * @param   string   $view       The view for the URL.
-	 *
-	 * @return  string  The URL of the item.
-	 *
-	 * @since   2.5
-	 */
-	protected function getUrl($id, $extension, $view)
-	{
-		return 'index.php?option=' . $extension . '&view=' . $view . '&id=' . $id;
-	}
-
-	/**
 	 * Method to get the page title of any menu item that is linked to the
 	 * content item, if it exists and is set.
 	 *
-	 * @param   string  $url  The url of the item.
+	 * @param   string $url The url of the item.
 	 *
 	 * @return  mixed  The title on success, null if not found.
 	 *
@@ -767,7 +782,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 		$return = null;
 
 		// Set variables
-		$user = JFactory::getUser();
+		$user   = JFactory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		// Build a query to get the menu params.
@@ -803,7 +818,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 	/**
 	 * Method to update index data on access level changes
 	 *
-	 * @param   JTable  $row  A JTable object
+	 * @param   JTable $row A JTable object
 	 *
 	 * @return  void
 	 *
@@ -828,8 +843,8 @@ abstract class FinderIndexerAdapter extends JPlugin
 	/**
 	 * Method to update index data on published state changes
 	 *
-	 * @param   array    $pks    A list of primary key ids of the content that has changed state.
-	 * @param   integer  $value  The value of the state that the content has been changed to.
+	 * @param   array   $pks   A list of primary key ids of the content that has changed state.
+	 * @param   integer $value The value of the state that the content has been changed to.
 	 *
 	 * @return  void
 	 *
@@ -865,7 +880,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 	/**
 	 * Method to update index data when a plugin is disabled
 	 *
-	 * @param   array  $pks  A list of primary key ids of the content that has changed state.
+	 * @param   array $pks A list of primary key ids of the content that has changed state.
 	 *
 	 * @return  void
 	 *
@@ -894,39 +909,24 @@ abstract class FinderIndexerAdapter extends JPlugin
 	}
 
 	/**
-	 * Method to translate the native content states into states that the
-	 * indexer can use.
+	 * Method to get the plugin type
 	 *
-	 * @param   integer  $item      The item state.
-	 * @param   integer  $category  The category state. [optional]
+	 * @param   integer $id The plugin ID
 	 *
-	 * @return  integer  The translated indexer state.
+	 * @return  string  The plugin type
 	 *
 	 * @since   2.5
 	 */
-	protected function translateState($item, $category = null)
+	protected function getPluginType($id)
 	{
-		// If category is present, factor in its states as well
-		if ($category !== null)
-		{
-			if ($category == 0)
-			{
-				$item = 0;
-			}
-		}
+		// Prepare the query
+		$query = $this->db->getQuery(true)
+			->select($this->db->quoteName('element'))
+			->from($this->db->quoteName('#__extensions'))
+			->where($this->db->quoteName('extension_id') . ' = ' . (int) $id);
+		$this->db->setQuery($query);
+		$type = $this->db->loadResult();
 
-		// Translate the state
-		switch ($item)
-		{
-			// Published and archived items only should return a published state
-			case 1;
-			case 2:
-				return 1;
-
-			// All other states should return an unpublished state
-			default:
-			case 0:
-				return 0;
-		}
+		return $type;
 	}
 }

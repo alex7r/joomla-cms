@@ -16,16 +16,16 @@ defined('JPATH_PLATFORM') or die;
  *
  * @documentation  http://developer.github.com/v3/repos
  *
- * @property-read  JGithubPackageRepositoriesCollaborators  $collaborators  GitHub API object for collaborators.
- * @property-read  JGithubPackageRepositoriesComments       $comments       GitHub API object for comments.
- * @property-read  JGithubPackageRepositoriesCommits        $commits        GitHub API object for commits.
- * @property-read  JGithubPackageRepositoriesContents       $contents       GitHub API object for contents.
- * @property-read  JGithubPackageRepositoriesDownloads      $downloads      GitHub API object for downloads.
- * @property-read  JGithubPackageRepositoriesForks          $forks          GitHub API object for forks.
- * @property-read  JGithubPackageRepositoriesHooks          $hooks          GitHub API object for hooks.
- * @property-read  JGithubPackageRepositoriesKeys           $keys           GitHub API object for keys.
- * @property-read  JGithubPackageRepositoriesMerging        $merging        GitHub API object for merging.
- * @property-read  JGithubPackageRepositoriesStatuses       $statuses       GitHub API object for statuses.
+ * @property-read  JGithubPackageRepositoriesCollaborators $collaborators  GitHub API object for collaborators.
+ * @property-read  JGithubPackageRepositoriesComments      $comments       GitHub API object for comments.
+ * @property-read  JGithubPackageRepositoriesCommits       $commits        GitHub API object for commits.
+ * @property-read  JGithubPackageRepositoriesContents      $contents       GitHub API object for contents.
+ * @property-read  JGithubPackageRepositoriesDownloads     $downloads      GitHub API object for downloads.
+ * @property-read  JGithubPackageRepositoriesForks         $forks          GitHub API object for forks.
+ * @property-read  JGithubPackageRepositoriesHooks         $hooks          GitHub API object for hooks.
+ * @property-read  JGithubPackageRepositoriesKeys          $keys           GitHub API object for keys.
+ * @property-read  JGithubPackageRepositoriesMerging       $merging        GitHub API object for merging.
+ * @property-read  JGithubPackageRepositoriesStatuses      $statuses       GitHub API object for statuses.
  */
 class JGithubPackageRepositories extends JGithubPackage
 {
@@ -40,9 +40,9 @@ class JGithubPackageRepositories extends JGithubPackage
 	 *
 	 * List repositories for the authenticated user.
 	 *
-	 * @param   string  $type       Sort type. all, owner, public, private, member. Default: all.
-	 * @param   string  $sort       Sort field. created, updated, pushed, full_name, default: full_name.
-	 * @param   string  $direction  Sort direction. asc or desc, default: when using full_name: asc, otherwise desc.
+	 * @param   string $type      Sort type. all, owner, public, private, member. Default: all.
+	 * @param   string $sort      Sort field. created, updated, pushed, full_name, default: full_name.
+	 * @param   string $direction Sort direction. asc or desc, default: when using full_name: asc, otherwise desc.
 	 *
 	 * @throws RuntimeException
 	 *
@@ -61,7 +61,7 @@ class JGithubPackageRepositories extends JGithubPackage
 		}
 
 		// Sort direction default: when using full_name: asc, otherwise desc.
-		$direction = ($direction) ? : (('full_name' == $sort) ? 'asc' : 'desc');
+		$direction = ($direction) ?: (('full_name' == $sort) ? 'asc' : 'desc');
 
 		if (false == in_array($direction, array('asc', 'desc')))
 		{
@@ -85,10 +85,10 @@ class JGithubPackageRepositories extends JGithubPackage
 	 *
 	 * List public repositories for the specified user.
 	 *
-	 * @param   string  $user       The user name.
-	 * @param   string  $type       Sort type. all, owner, member. Default: all.
-	 * @param   string  $sort       Sort field. created, updated, pushed, full_name, default: full_name.
-	 * @param   string  $direction  Sort direction. asc or desc, default: when using full_name: asc, otherwise desc.
+	 * @param   string $user      The user name.
+	 * @param   string $type      Sort type. all, owner, member. Default: all.
+	 * @param   string $sort      Sort field. created, updated, pushed, full_name, default: full_name.
+	 * @param   string $direction Sort direction. asc or desc, default: when using full_name: asc, otherwise desc.
 	 *
 	 * @throws RuntimeException
 	 *
@@ -107,7 +107,7 @@ class JGithubPackageRepositories extends JGithubPackage
 		}
 
 		// Sort direction default: when using full_name: asc, otherwise desc.
-		$direction = ($direction) ? : (('full_name' == $sort) ? 'asc' : 'desc');
+		$direction = ($direction) ?: (('full_name' == $sort) ? 'asc' : 'desc');
 
 		if (false == in_array($direction, array('asc', 'desc')))
 		{
@@ -131,8 +131,8 @@ class JGithubPackageRepositories extends JGithubPackage
 	 *
 	 * List repositories for the specified org.
 	 *
-	 * @param   string  $org   The name of the organization.
-	 * @param   string  $type  Sort type. all, public, private, forks, sources, member. Default: all.
+	 * @param   string $org  The name of the organization.
+	 * @param   string $type Sort type. all, public, private, forks, sources, member. Default: all.
 	 *
 	 * @throws RuntimeException
 	 *
@@ -160,7 +160,7 @@ class JGithubPackageRepositories extends JGithubPackage
 	 *
 	 * This provides a dump of every repository, in the order that they were created.
 	 *
-	 * @param   integer  $id  The integer ID of the last Repository that you’ve seen.
+	 * @param   integer $id The integer ID of the last Repository that you’ve seen.
 	 *
 	 * @throws RuntimeException
 	 *
@@ -182,26 +182,26 @@ class JGithubPackageRepositories extends JGithubPackage
 	 * Create a new repository for the authenticated user or an organization.
 	 * OAuth users must supply repo scope.
 	 *
-	 * @param   string   $name                The repository name.
-	 * @param   string   $org                 The organization name (if needed).
-	 * @param   string   $description         The repository description.
-	 * @param   string   $homepage            The repository homepage.
-	 * @param   boolean  $private             Set true to create a private repository, false to create a public one.
+	 * @param   string  $name                   The repository name.
+	 * @param   string  $org                    The organization name (if needed).
+	 * @param   string  $description            The repository description.
+	 * @param   string  $homepage               The repository homepage.
+	 * @param   boolean $private                Set true to create a private repository, false to create a public one.
 	 *                                          Creating private repositories requires a paid GitHub account.
-	 * @param   boolean  $has_issues          Set true to enable issues for this repository, false to disable them.
-	 * @param   boolean  $has_wiki            Set true to enable the wiki for this repository, false to disable it.
-	 * @param   boolean  $has_downloads       Set true to enable downloads for this repository, false to disable them.
-	 * @param   integer  $team_id             The id of the team that will be granted access to this repository.
-	 *                                        This is only valid when creating a repo in an organization.
-	 * @param   boolean  $auto_init           true to create an initial commit with empty README.
-	 * @param   string   $gitignore_template  Desired language or platform .gitignore template to apply.
-	 *                                         Use the name of the template without the extension. For example,
-	 *                                        “Haskell” Ignored if auto_init parameter is not provided.
+	 * @param   boolean $has_issues             Set true to enable issues for this repository, false to disable them.
+	 * @param   boolean $has_wiki               Set true to enable the wiki for this repository, false to disable it.
+	 * @param   boolean $has_downloads          Set true to enable downloads for this repository, false to disable them.
+	 * @param   integer $team_id                The id of the team that will be granted access to this repository.
+	 *                                          This is only valid when creating a repo in an organization.
+	 * @param   boolean $auto_init              true to create an initial commit with empty README.
+	 * @param   string  $gitignore_template     Desired language or platform .gitignore template to apply.
+	 *                                          Use the name of the template without the extension. For example,
+	 *                                          “Haskell” Ignored if auto_init parameter is not provided.
 	 *
 	 * @return object
 	 */
 	public function create($name, $org = '', $description = '', $homepage = '', $private = false, $has_issues = false,
-		$has_wiki = false, $has_downloads = false, $team_id = 0, $auto_init = false, $gitignore_template = '')
+	                       $has_wiki = false, $has_downloads = false, $team_id = 0, $auto_init = false, $gitignore_template = '')
 	{
 		$path = ($org)
 			// Create a repository for an organization
@@ -232,8 +232,8 @@ class JGithubPackageRepositories extends JGithubPackage
 	/**
 	 * Get a repository.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @return object
 	 */
@@ -251,22 +251,22 @@ class JGithubPackageRepositories extends JGithubPackage
 	/**
 	 * Edit a repository.
 	 *
-	 * @param   string   $owner           Repository owner.
-	 * @param   string   $repo            Repository name.
-	 * @param   string   $name            The repository name.
-	 * @param   string   $description     The repository description.
-	 * @param   string   $homepage        The repository homepage.
-	 * @param   boolean  $private         Set true to create a private repository, false to create a public one.
+	 * @param   string  $owner            Repository owner.
+	 * @param   string  $repo             Repository name.
+	 * @param   string  $name             The repository name.
+	 * @param   string  $description      The repository description.
+	 * @param   string  $homepage         The repository homepage.
+	 * @param   boolean $private          Set true to create a private repository, false to create a public one.
 	 *                                    Creating private repositories requires a paid GitHub account.
-	 * @param   boolean  $has_issues      Set true to enable issues for this repository, false to disable them.
-	 * @param   boolean  $has_wiki        Set true to enable the wiki for this repository, false to disable it.
-	 * @param   boolean  $has_downloads   Set true to enable downloads for this repository, false to disable them.
-	 * @param   string   $default_branch  Update the default branch for this repository
+	 * @param   boolean $has_issues       Set true to enable issues for this repository, false to disable them.
+	 * @param   boolean $has_wiki         Set true to enable the wiki for this repository, false to disable it.
+	 * @param   boolean $has_downloads    Set true to enable downloads for this repository, false to disable them.
+	 * @param   string  $default_branch   Update the default branch for this repository
 	 *
 	 * @return object
 	 */
 	public function edit($owner, $repo, $name, $description = '', $homepage = '', $private = false, $has_issues = false,
-		$has_wiki = false, $has_downloads = false, $default_branch = '')
+	                     $has_wiki = false, $has_downloads = false, $default_branch = '')
 	{
 		$path = '/repos/' . $owner . '/' . $repo;
 
@@ -290,9 +290,9 @@ class JGithubPackageRepositories extends JGithubPackage
 	/**
 	 * List contributors.
 	 *
-	 * @param   string   $owner  Repository owner.
-	 * @param   string   $repo   Repository name.
-	 * @param   boolean  $anon   Set to 1 or true to include anonymous contributors in results.
+	 * @param   string  $owner Repository owner.
+	 * @param   string  $repo  Repository name.
+	 * @param   boolean $anon  Set to 1 or true to include anonymous contributors in results.
 	 *
 	 * @return object
 	 */
@@ -315,8 +315,8 @@ class JGithubPackageRepositories extends JGithubPackage
 	 * List languages for the specified repository. The value on the right of a language is the number of bytes of code
 	 * written in that language.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @return object
 	 */
@@ -334,8 +334,8 @@ class JGithubPackageRepositories extends JGithubPackage
 	/**
 	 * List Teams
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @return object
 	 */
@@ -353,8 +353,8 @@ class JGithubPackageRepositories extends JGithubPackage
 	/**
 	 * List Tags.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @return object
 	 */
@@ -372,8 +372,8 @@ class JGithubPackageRepositories extends JGithubPackage
 	/**
 	 * List Branches.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @return object
 	 */
@@ -391,9 +391,9 @@ class JGithubPackageRepositories extends JGithubPackage
 	/**
 	 * Get a Branch.
 	 *
-	 * @param   string  $owner   Repository owner.
-	 * @param   string  $repo    Repository name.
-	 * @param   string  $branch  Branch name.
+	 * @param   string $owner  Repository owner.
+	 * @param   string $repo   Repository name.
+	 * @param   string $branch Branch name.
 	 *
 	 * @return object
 	 */
@@ -413,8 +413,8 @@ class JGithubPackageRepositories extends JGithubPackage
 	 *
 	 * Deleting a repository requires admin access. If OAuth is used, the delete_repo scope is required.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @return object
 	 */

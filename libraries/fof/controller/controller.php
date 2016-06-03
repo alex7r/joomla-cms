@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage controller
+ * @package     FrameworkOnFramework
+ * @subpackage  controller
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 // Protect from unauthorized access
@@ -73,10 +73,10 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Set to true to enable CSRF protection on selected tasks. The possible
 	 * values are:
-	 * 0	Disabled; no token checks are performed
-	 * 1	Enabled; token checks are always performed
-	 * 2	Only on HTML requests and backend; token checks are always performed in the back-end and in the front-end only when format is 'html'
-	 * 3	Only on back-end; token checks are performer only in the back-end
+	 * 0    Disabled; no token checks are performed
+	 * 1    Enabled; token checks are always performed
+	 * 2    Only on HTML requests and backend; token checks are always performed in the back-end and in the front-end only when format is 'html'
+	 * 3    Only on back-end; token checks are performer only in the back-end
 	 *
 	 * @var    integer
 	 */
@@ -225,7 +225,7 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Public constructor of the Controller class
 	 *
-	 * @param   array  $config  Optional configuration parameters
+	 * @param   array $config Optional configuration parameters
 	 */
 	public function __construct($config = array())
 	{
@@ -239,12 +239,12 @@ class FOFController extends FOFUtilsObject
 			$config = array();
 		}
 
-		$this->methods = array();
-		$this->message = null;
+		$this->methods     = array();
+		$this->message     = null;
 		$this->messageType = 'message';
-		$this->paths = array();
-		$this->redirect = null;
-		$this->taskMap = array();
+		$this->paths       = array();
+		$this->redirect    = null;
+		$this->taskMap     = array();
 
 		// Cache the config
 		$this->config = $config;
@@ -291,7 +291,7 @@ class FOFController extends FOFUtilsObject
 			'saveorder', 'unpublish', 'display', 'archive', 'trash', 'loadhistory');
 
 		// Get the public methods in this class using reflection.
-		$r = new ReflectionClass($this);
+		$r        = new ReflectionClass($this);
 		$rMethods = $r->getMethods(ReflectionMethod::IS_PUBLIC);
 
 		foreach ($rMethods as $rMethod)
@@ -314,17 +314,17 @@ class FOFController extends FOFUtilsObject
 		if (count($classNameParts) == 3)
 		{
 			$defComponent = "com_" . $classNameParts[0];
-			$defView = $classNameParts[2];
+			$defView      = $classNameParts[2];
 		}
 		else
 		{
 			$defComponent = 'com_foobar';
-			$defView = 'cpanel';
+			$defView      = 'cpanel';
 		}
 
 		$this->component = $this->input->get('option', $defComponent, 'cmd');
-		$this->view = $this->input->get('view', $defView, 'cmd');
-		$this->layout = $this->input->get('layout', null, 'cmd');
+		$this->view      = $this->input->get('view', $defView, 'cmd');
+		$this->layout    = $this->input->get('layout', null, 'cmd');
 
 		// Overrides from the config
 		if (array_key_exists('option', $config))
@@ -354,7 +354,7 @@ class FOFController extends FOFUtilsObject
 
 		// Set the basePath variable
 		$componentPaths = FOFPlatform::getInstance()->getComponentBaseDirs($this->component);
-		$basePath = $componentPaths['main'];
+		$basePath       = $componentPaths['main'];
 
 		if (array_key_exists('base_path', $config))
 		{
@@ -368,7 +368,7 @@ class FOFController extends FOFUtilsObject
 
 		if (!is_null($altBasePath))
 		{
-            $platformDirs = FOFPlatform::getInstance()->getPlatformBaseDirs();
+			$platformDirs = FOFPlatform::getInstance()->getPlatformBaseDirs();
 			$basePath     = $platformDirs['public'] . '/' . $altBasePath;
 		}
 
@@ -417,7 +417,7 @@ class FOFController extends FOFUtilsObject
 		}
 		else
 		{
-			$modelPath = $this->basePath . '/models';
+			$modelPath    = $this->basePath . '/models';
 			$altModelPath = $this->configProvider->get(
 				$this->component . '.views.' .
 				FOFInflector::singularize($this->view) . '.config.model_path', null
@@ -439,7 +439,7 @@ class FOFController extends FOFUtilsObject
 		}
 		else
 		{
-			$viewPath = $this->basePath . '/views';
+			$viewPath    = $this->basePath . '/views';
 			$altViewPath = $this->configProvider->get(
 				$this->component . '.views.' .
 				FOFInflector::singularize($this->view) . '.config.view_path', null
@@ -546,7 +546,7 @@ class FOFController extends FOFUtilsObject
 						$temp[] = trim($t);
 					}
 
-					$temp = array_unique($temp);
+					$temp                 = array_unique($temp);
 					$this->cacheableTasks = $temp;
 				}
 			}
@@ -581,7 +581,7 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Register the default task to perform if a mapping is not found.
 	 *
-	 * @param   string  $method  The name of the method in the derived class to perform if a named task is not found.
+	 * @param   string $method The name of the method in the derived class to perform if a named task is not found.
 	 *
 	 * @return  FOFController  A FOFController object to support chaining.
 	 */
@@ -595,8 +595,8 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Register (map) a task to a method in the class.
 	 *
-	 * @param   string  $task    The task.
-	 * @param   string  $method  The name of the method in the derived class to perform for this task.
+	 * @param   string $task   The task.
+	 * @param   string $method The name of the method in the derived class to perform for this task.
 	 *
 	 * @return  FOFController  A FOFController object to support chaining.
 	 */
@@ -613,8 +613,8 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Adds to the stack of model paths in LIFO order.
 	 *
-	 * @param   mixed   $path    The directory (string) , or list of directories (array) to add.
-	 * @param   string  $prefix  A prefix for models
+	 * @param   mixed  $path   The directory (string) , or list of directories (array) to add.
+	 * @param   string $prefix A prefix for models
 	 *
 	 * @return  void
 	 */
@@ -626,8 +626,8 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Sets an entire array of search paths for resources.
 	 *
-	 * @param   string  $type  The type of path to set, typically 'view' or 'model'.
-	 * @param   string  $path  The new set of search paths. If null or false, resets to the current directory only.
+	 * @param   string $type The type of path to set, typically 'view' or 'model'.
+	 * @param   string $path The new set of search paths. If null or false, resets to the current directory only.
 	 *
 	 * @return  void
 	 */
@@ -643,8 +643,8 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Adds to the search path for templates and resources.
 	 *
-	 * @param   string  $type  The path type (e.g. 'model', 'view').
-	 * @param   mixed   $path  The directory string  or stream array to search.
+	 * @param   string $type The path type (e.g. 'model', 'view').
+	 * @param   mixed  $path The directory string  or stream array to search.
 	 *
 	 * @return  FOFController  A FOFController object to support chaining.
 	 */
@@ -653,7 +653,7 @@ class FOFController extends FOFUtilsObject
 		// Just force path to array
 		settype($path, 'array');
 
-        $filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
+		$filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
 
 		if (!isset($this->paths[$type]))
 		{
@@ -673,16 +673,16 @@ class FOFController extends FOFUtilsObject
 		return $this;
 	}
 
-    /**
-     * Method to get the controller name
-     *
-     * The dispatcher name is set by default parsed using the classname, or it can be set
-     * by passing a $config['name'] in the class constructor
-     *
-     * @throws Exception
-     *
-     * @return  string  The name of the dispatcher
-     */
+	/**
+	 * Method to get the controller name
+	 *
+	 * The dispatcher name is set by default parsed using the classname, or it can be set
+	 * by passing a $config['name'] in the class constructor
+	 *
+	 * @throws Exception
+	 *
+	 * @return  string  The name of the dispatcher
+	 */
 	public function getName()
 	{
 		if (empty($this->name))
@@ -710,7 +710,7 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Set the name of the view to be used by this Controller
 	 *
-	 * @param   string  $viewName  The name of the view
+	 * @param   string $viewName The name of the view
 	 *
 	 * @return  void
 	 */
@@ -722,7 +722,7 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Set the name of the model to be used by this Controller
 	 *
-	 * @param   string  $modelName  The name of the model
+	 * @param   string $modelName The name of the model
 	 *
 	 * @return  void
 	 */
@@ -736,9 +736,9 @@ class FOFController extends FOFUtilsObject
 	 * relevant controller file from the component's directory or, if it doesn't
 	 * exist, creates a new controller object out of thin air.
 	 *
-	 * @param   string  $option  Component name, e.g. com_foobar
-	 * @param   string  $view    The view name, also used for the controller name
-	 * @param   array   $config  Configuration parameters
+	 * @param   string $option Component name, e.g. com_foobar
+	 * @param   string $view   The view name, also used for the controller name
+	 * @param   array  $config Configuration parameters
 	 *
 	 * @return  FOFController
 	 */
@@ -770,9 +770,9 @@ class FOFController extends FOFUtilsObject
 	 * Gets a temporary instance of a controller object. A temporary instance is
 	 * not a Singleton and can be disposed off after use.
 	 *
-	 * @param   string  $option  The component name, e.g. com_foobar
-	 * @param   string  $view    The view name, e.g. cpanel
-	 * @param   array   $config  Configuration parameters
+	 * @param   string $option The component name, e.g. com_foobar
+	 * @param   string $view   The view name, e.g. cpanel
+	 * @param   array  $config Configuration parameters
 	 *
 	 * @return  \FOFController  A disposable class instance
 	 */
@@ -814,7 +814,7 @@ class FOFController extends FOFUtilsObject
 
 		// Determine the option (component name) and view
 		$config['option'] = !is_null($option) ? $option : $input->getCmd('option', 'com_foobar');
-		$config['view'] = !is_null($view) ? $view : $input->getCmd('view', 'cpanel');
+		$config['view']   = !is_null($view) ? $view : $input->getCmd('view', 'cpanel');
 
 		// Get the class base name, e.g. FoobarController
 		$classBaseName = ucfirst(str_replace('com_', '', $config['option'])) . 'Controller';
@@ -828,7 +828,7 @@ class FOFController extends FOFUtilsObject
 
 		// Get the path names for the component
 		$componentPaths = FOFPlatform::getInstance()->getComponentBaseDirs($config['option']);
-        $filesystem     = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
+		$filesystem     = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
 
 		// Look for the best classname match
 		foreach ($classSuffixes as $suffix)
@@ -856,7 +856,7 @@ class FOFController extends FOFUtilsObject
 			else
 			{
 				$configProvider = new FOFConfigProvider;
-				$searchPath = $configProvider->get($config['option'] . '.views.' . FOFInflector::singularize($config['view']) . '.config.searchpath', null);
+				$searchPath     = $configProvider->get($config['option'] . '.views.' . FOFInflector::singularize($config['view']) . '.config.searchpath', null);
 
 				if ($searchPath)
 				{
@@ -872,7 +872,7 @@ class FOFController extends FOFUtilsObject
 			 */
 
 			$format = $input->getCmd('format', 'html');
-			$path = null;
+			$path   = null;
 
 			if (!empty($format))
 			{
@@ -884,7 +884,7 @@ class FOFController extends FOFUtilsObject
 			if (!$path)
 			{
 				$path = $filesystem->pathFind(
-						$searchPaths, strtolower($suffix) . '.php'
+					$searchPaths, strtolower($suffix) . '.php'
 				);
 			}
 
@@ -916,7 +916,7 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Add one or more view paths to the controller's stack, in LIFO order.
 	 *
-	 * @param   mixed  $path  The directory (string) or list of directories (array) to add.
+	 * @param   mixed $path The directory (string) or list of directories (array) to add.
 	 *
 	 * @return  FOFController  This object to support chaining.
 	 */
@@ -930,7 +930,7 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Authorisation check
 	 *
-	 * @param   string  $task  The ACO Section Value to check access on.
+	 * @param   string $task The ACO Section Value to check access on.
 	 *
 	 * @return  boolean  True if authorised
 	 *
@@ -938,21 +938,21 @@ class FOFController extends FOFUtilsObject
 	 */
 	public function authorise($task)
 	{
-		FOFPlatform::getInstance()->logDeprecated(__CLASS__ . '::' .__METHOD__ . ' is deprecated. Use checkACL() instead.');
+		FOFPlatform::getInstance()->logDeprecated(__CLASS__ . '::' . __METHOD__ . ' is deprecated. Use checkACL() instead.');
 
 		return true;
 	}
 
-    /**
-     * Executes a given controller task. The onBefore<task> and onAfter<task>
-     * methods are called automatically if they exist.
-     *
-     * @param   string $task The task to execute, e.g. "browse"
-     *
-     * @throws  Exception   Exception thrown if the onBefore<task> returns false
-     *
-     * @return  null|bool  False on execution failure
-     */
+	/**
+	 * Executes a given controller task. The onBefore<task> and onAfter<task>
+	 * methods are called automatically if they exist.
+	 *
+	 * @param   string $task The task to execute, e.g. "browse"
+	 *
+	 * @throws  Exception   Exception thrown if the onBefore<task> returns false
+	 *
+	 * @return  null|bool  False on execution failure
+	 */
 	public function execute($task)
 	{
 		$this->task = $task;
@@ -1006,7 +1006,7 @@ class FOFController extends FOFUtilsObject
 
 		if ($doTask == 'display')
 		{
-            FOFPlatform::getInstance()->setHeader('Status', '400 Bad Request', true);
+			FOFPlatform::getInstance()->setHeader('Status', '400 Bad Request', true);
 
 			throw new Exception('Bad Request', 400);
 		}
@@ -1028,7 +1028,7 @@ class FOFController extends FOFUtilsObject
 
 		if ($result)
 		{
-			$plugin_event = FOFInflector::camelize('on after ' . $this->bareComponent . ' controller ' . $this->view . ' ' . $task);
+			$plugin_event  = FOFInflector::camelize('on after ' . $this->bareComponent . ' controller ' . $this->view . ' ' . $task);
 			$plugin_result = FOFPlatform::getInstance()->runPlugins($plugin_event, array(&$this, &$this->input, &$ret));
 
 			if (in_array(false, $plugin_result, true))
@@ -1049,7 +1049,7 @@ class FOFController extends FOFUtilsObject
 	 * A catch-all method for all tasks without a corresponding onBefore
 	 * method. Applies the ACL preferences defined in fof.xml.
 	 *
-	 * @param   string  $task  The task being executed
+	 * @param   string $task The task being executed
 	 *
 	 * @return  boolean  True to allow execution of the task
 	 */
@@ -1067,18 +1067,18 @@ class FOFController extends FOFUtilsObject
 	 * Checks if the current user has enough privileges for the requested ACL
 	 * area.
 	 *
-	 * @param   string  $area  The ACL area, e.g. core.manage.
+	 * @param   string $area The ACL area, e.g. core.manage.
 	 *
 	 * @return  boolean  True if the user has the ACL privilege specified
 	 */
 	protected function checkACL($area)
 	{
-		if (in_array(strtolower($area), array('false','0','no','403')))
+		if (in_array(strtolower($area), array('false', '0', 'no', '403')))
 		{
 			return false;
 		}
 
-		if (in_array(strtolower($area), array('true','1','yes')))
+		if (in_array(strtolower($area), array('true', '1', 'yes')))
 		{
 			return true;
 		}
@@ -1112,7 +1112,7 @@ class FOFController extends FOFUtilsObject
 					$ids = array($ids);
 				}
 
-				$resource = FOFInflector::singularize($this->view);
+				$resource    = FOFInflector::singularize($this->view);
 				$isEditState = ($area == 'core.edit.state');
 
 				foreach ($ids as $id)
@@ -1121,7 +1121,7 @@ class FOFController extends FOFUtilsObject
 
 					// Dedicated permission found, check it!
 
-					if (FOFPlatform::getInstance()->authorise($area, $asset) )
+					if (FOFPlatform::getInstance()->authorise($area, $asset))
 					{
 						return true;
 					}
@@ -1131,9 +1131,9 @@ class FOFController extends FOFUtilsObject
 					if ((!$isEditState) && (FOFPlatform::getInstance()->authorise('core.edit.own', $asset)))
 					{
 						$table = $this->getThisModel()->getTable();
-                        $table->load($id);
+						$table->load($id);
 
-                        $created_by = $table->getColumnAlias('created_by');
+						$created_by = $table->getColumnAlias('created_by');
 
 						if ($table && isset($table->$created_by))
 						{
@@ -1165,7 +1165,7 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Returns the default model associated with the current view
 	 *
-	 * @param   array  $config  Configuration variables for the model
+	 * @param   array $config Configuration variables for the model
 	 *
 	 * @return  FOFModel  The global instance of the model (singleton)
 	 */
@@ -1185,13 +1185,13 @@ class FOFController extends FOFUtilsObject
 
 			if (!empty($this->modelName))
 			{
-				$parts = FOFInflector::explode($this->modelName);
+				$parts     = FOFInflector::explode($this->modelName);
 				$modelName = ucfirst(array_pop($parts));
-				$prefix = FOFInflector::implode($parts);
+				$prefix    = FOFInflector::implode($parts);
 			}
 			else
 			{
-				$prefix = ucfirst($this->bareComponent) . 'Model';
+				$prefix    = ucfirst($this->bareComponent) . 'Model';
 				$modelName = ucfirst(FOFInflector::pluralize($this->view));
 			}
 
@@ -1209,9 +1209,9 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Method to get a model object, loading it if required.
 	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
 	 *
 	 * @return  object  The model.
 	 */
@@ -1246,7 +1246,7 @@ class FOFController extends FOFUtilsObject
 			// Let's get the application object and set menu information if it's available
 			if (!FOFPlatform::getInstance()->isCli())
 			{
-				$app = JFactory::getApplication();
+				$app  = JFactory::getApplication();
 				$menu = $app->getMenu();
 
 				if (is_object($menu))
@@ -1268,9 +1268,9 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Creates a new model object
 	 *
-	 * @param   string  $name    The name of the model class, e.g. Items
-	 * @param   string  $prefix  The prefix of the model class, e.g. FoobarModel
-	 * @param   array   $config  The configuration parameters for the model class
+	 * @param   string $name   The name of the model class, e.g. Items
+	 * @param   string $prefix The prefix of the model class, e.g. FoobarModel
+	 * @param   array  $config The configuration parameters for the model class
 	 *
 	 * @return  FOFModel  The model object
 	 */
@@ -1290,7 +1290,7 @@ class FOFController extends FOFUtilsObject
 		$result = null;
 
 		// Clean the model name
-		$modelName = preg_replace('/[^A-Z0-9_]/i', '', $name);
+		$modelName   = preg_replace('/[^A-Z0-9_]/i', '', $name);
 		$classPrefix = preg_replace('/[^A-Z0-9_]/i', '', $prefix);
 
 		$result = FOFModel::getAnInstance($modelName, $classPrefix, $config);
@@ -1344,9 +1344,9 @@ class FOFController extends FOFUtilsObject
 	 * YOU MUST NOT USETHIS TASK DIRECTLY IN A URL. It is supposed to be
 	 * used ONLY inside your code. In the URL, use task=browse instead.
 	 *
-	 * @param   bool    $cachable   Is this view cacheable?
-	 * @param   bool    $urlparams  Add your safe URL parameters (see further down in the code)
-	 * @param   string  $tpl        The name of the template file to parse
+	 * @param   bool   $cachable  Is this view cacheable?
+	 * @param   bool   $urlparams Add your safe URL parameters (see further down in the code)
+	 * @param   string $tpl       The name of the template file to parse
 	 *
 	 * @return  bool
 	 */
@@ -1383,7 +1383,7 @@ class FOFController extends FOFUtilsObject
 		{
 			// Get a JCache object
 			$option = $this->input->get('option', 'com_foobar', 'cmd');
-			$cache = JFactory::getCache($option, 'view');
+			$cache  = JFactory::getCache($option, 'view');
 
 			// Set up a cache ID based on component, view, task and user group assignment
 			$user = FOFPlatform::getInstance()->getUser();
@@ -1402,12 +1402,12 @@ class FOFController extends FOFUtilsObject
 			if (!is_array($urlparams))
 			{
 				$urlparams = array(
-					'option'		=> 'CMD',
-					'view'			=> 'CMD',
-					'task'			=> 'CMD',
-					'format'		=> 'CMD',
-					'layout'		=> 'CMD',
-					'id'			=> 'INT',
+					'option' => 'CMD',
+					'view'   => 'CMD',
+					'task'   => 'CMD',
+					'format' => 'CMD',
+					'layout' => 'CMD',
+					'id'     => 'INT',
 				);
 			}
 
@@ -1468,7 +1468,7 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Returns current view object
 	 *
-	 * @param   array  $config  Configuration variables for the model
+	 * @param   array $config Configuration variables for the model
 	 *
 	 * @return  FOFView  The global instance of the view object (singleton)
 	 */
@@ -1487,19 +1487,19 @@ class FOFController extends FOFUtilsObject
 				$config = array_merge($this->config);
 			}
 
-			$prefix = null;
+			$prefix   = null;
 			$viewName = null;
 			$viewType = null;
 
 			if (!empty($this->viewName))
 			{
-				$parts = FOFInflector::explode($this->viewName);
+				$parts    = FOFInflector::explode($this->viewName);
 				$viewName = ucfirst(array_pop($parts));
-				$prefix = FOFInflector::implode($parts);
+				$prefix   = FOFInflector::implode($parts);
 			}
 			else
 			{
-				$prefix = ucfirst($this->bareComponent) . 'View';
+				$prefix   = ucfirst($this->bareComponent) . 'View';
 				$viewName = ucfirst($this->view);
 			}
 
@@ -1532,18 +1532,18 @@ class FOFController extends FOFUtilsObject
 		return $this->_viewObject;
 	}
 
-    /**
-     * Method to get a reference to the current view and load it if necessary.
-     *
-     * @param   string  $name   The view name. Optional, defaults to the controller name.
-     * @param   string  $type   The view type. Optional.
-     * @param   string  $prefix The class prefix. Optional.
-     * @param   array   $config Configuration array for view. Optional.
-     *
-     * @throws Exception
-     *
-     * @return  FOFView  Reference to the view or an error.
-     */
+	/**
+	 * Method to get a reference to the current view and load it if necessary.
+	 *
+	 * @param   string $name   The view name. Optional, defaults to the controller name.
+	 * @param   string $type   The view type. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config Configuration array for view. Optional.
+	 *
+	 * @throws Exception
+	 *
+	 * @return  FOFView  Reference to the view or an error.
+	 */
 	public function getView($name = '', $type = '', $prefix = '', $config = array())
 	{
 		// Make sure $config is an array
@@ -1572,7 +1572,7 @@ class FOFController extends FOFUtilsObject
 		{
 			if ($view = $this->createView($name, $prefix, $type, $config))
 			{
-				$this->viewsCache[$signature] = & $view;
+				$this->viewsCache[$signature] = &$view;
 			}
 			else
 			{
@@ -1586,10 +1586,10 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Creates a View object instance and returns it
 	 *
-	 * @param   string  $name    The name of the view, e.g. Items
-	 * @param   string  $prefix  The prefix of the view, e.g. FoobarView
-	 * @param   string  $type    The type of the view, usually one of Html, Raw, Json or Csv
-	 * @param   array   $config  The configuration variables to use for creating the view
+	 * @param   string $name   The name of the view, e.g. Items
+	 * @param   string $prefix The prefix of the view, e.g. FoobarView
+	 * @param   string $type   The type of the view, usually one of Html, Raw, Json or Csv
+	 * @param   array  $config The configuration variables to use for creating the view
 	 *
 	 * @return  FOFView
 	 */
@@ -1609,9 +1609,9 @@ class FOFController extends FOFUtilsObject
 		$result = null;
 
 		// Clean the view name
-		$viewName = preg_replace('/[^A-Z0-9_]/i', '', $name);
+		$viewName    = preg_replace('/[^A-Z0-9_]/i', '', $name);
 		$classPrefix = preg_replace('/[^A-Z0-9_]/i', '', $prefix);
-		$viewType = preg_replace('/[^A-Z0-9_]/i', '', $type);
+		$viewType    = preg_replace('/[^A-Z0-9_]/i', '', $type);
 
 		if (!isset($config['input']))
 		{
@@ -1697,7 +1697,7 @@ class FOFController extends FOFUtilsObject
 			'default'
 		);
 
-        $filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
+		$filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
 
 		foreach ($suffixes as $suffix)
 		{
@@ -1711,8 +1711,8 @@ class FOFController extends FOFUtilsObject
 			}
 
 			// The class is not loaded. Let's load it!
-			$viewPath = $this->createFileName('view', array('name'	 => $suffix, 'type'	 => $viewType));
-			$path = $filesystem->pathFind($basePaths, $viewPath);
+			$viewPath = $this->createFileName('view', array('name' => $suffix, 'type' => $viewType));
+			$path     = $filesystem->pathFind($basePaths, $viewPath);
 
 			if ($path)
 			{
@@ -1786,7 +1786,7 @@ class FOFController extends FOFUtilsObject
 
 		if ($setFrontendPageTitle)
 		{
-			$setFrontendPageTitle = strtolower($setFrontendPageTitle);
+			$setFrontendPageTitle             = strtolower($setFrontendPageTitle);
 			$config['setFrontendPageTitle'][] = in_array($setFrontendPageTitle, array('1', 'yes', 'true', 'on'));
 		}
 
@@ -1808,7 +1808,8 @@ class FOFController extends FOFUtilsObject
 		{
 			$style = $this->configProvider->get($config['option'] . '.views.' . $config['view'] . '.config.linkbar_style', false);
 
-			if ($style) {
+			if ($style)
+			{
 				$config['linkbar_style'] = $style;
 			}
 		}
@@ -1821,7 +1822,7 @@ class FOFController extends FOFUtilsObject
 		 */
 		if (!class_exists($viewClass) && ($type != 'html'))
 		{
-			$type = 'html';
+			$type   = 'html';
 			$result = $this->createView($name, $prefix, $type, $config);
 		}
 		else
@@ -1835,8 +1836,8 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Create the filename for a resource.
 	 *
-	 * @param   string  $type   The resource type to create the filename for.
-	 * @param   array   $parts  An associative array of filename information. Optional.
+	 * @param   string $type  The resource type to create the filename for.
+	 * @param   array  $parts An associative array of filename information. Optional.
 	 *
 	 * @return  string  The filename.
 	 */
@@ -1923,7 +1924,7 @@ class FOFController extends FOFUtilsObject
 		}
 
 		$formData = is_object($item) ? $item->getData() : array();
-		$form = $model->getForm($formData);
+		$form     = $model->getForm($formData);
 
 		if ($form !== false)
 		{
@@ -1965,7 +1966,7 @@ class FOFController extends FOFUtilsObject
 		}
 
 		$formData = is_object($item) ? $item->getData() : array();
-		$form = $model->getForm($formData);
+		$form     = $model->getForm($formData);
 
 		if ($form !== false)
 		{
@@ -2034,7 +2035,7 @@ class FOFController extends FOFUtilsObject
 		}
 
 		$formData = is_object($item) ? $item->getData() : array();
-		$form = $model->getForm($formData);
+		$form     = $model->getForm($formData);
 
 		if ($form !== false)
 		{
@@ -2069,9 +2070,9 @@ class FOFController extends FOFUtilsObject
 	 * Registers a redirection with an optional message. The redirection is
 	 * carried out when you use the redirect method.
 	 *
-	 * @param   string  $url   The URL to redirect to
-	 * @param   string  $msg   The message to be pushed to the application
-	 * @param   string  $type  The message type to be pushed to the application, e.g. 'error'
+	 * @param   string $url  The URL to redirect to
+	 * @param   string $msg  The message to be pushed to the application
+	 * @param   string $type The message type to be pushed to the application, e.g. 'error'
 	 *
 	 * @return  FOFController  This object to support chaining
 	 */
@@ -2081,7 +2082,7 @@ class FOFController extends FOFUtilsObject
 		if (strpos($url, 'index.php') === 0)
 		{
 			$isAdmin = FOFPlatform::getInstance()->isBackend();
-			$auto = false;
+			$auto    = false;
 
 			if (($this->autoRouting == 2 || $this->autoRouting == 3) && $isAdmin)
 			{
@@ -2136,13 +2137,13 @@ class FOFController extends FOFUtilsObject
 			$this->_csrfProtection();
 		}
 
-		$model = $this->getThisModel();
+		$model  = $this->getThisModel();
 		$result = $this->applySave();
 
 		// Redirect to the edit task
 		if ($result)
 		{
-			$id = $this->input->get('id', 0, 'int');
+			$id      = $this->input->get('id', 0, 'int');
 			$textkey = strtoupper($this->component) . '_LBL_' . strtoupper($this->view) . '_SAVED';
 
 			if ($customURL = $this->input->get('returnurl', '', 'string'))
@@ -2150,7 +2151,7 @@ class FOFController extends FOFUtilsObject
 				$customURL = base64_decode($customURL);
 			}
 
-			$url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . $this->view . '&task=edit&id=' . $id  . $this->getItemidURLSuffix();
+			$url = !empty($customURL) ? $customURL : 'index.php?option=' . $this->component . '&view=' . $this->view . '&task=edit&id=' . $id . $this->getItemidURLSuffix();
 			$this->setRedirect($url, JText::_($textkey));
 		}
 
@@ -2161,8 +2162,8 @@ class FOFController extends FOFUtilsObject
 	 * Applies CSRF protection by means of a standard Joomla! token (nonce) check.
 	 * Raises a 403 Access Forbidden error through the platform if the check fails.
 	 *
-     * TODO Move this check inside the platform
-     *
+	 * TODO Move this check inside the platform
+	 *
 	 * @return  boolean  True if the CSRF check is successful
 	 *
 	 * @throws Exception
@@ -2256,7 +2257,7 @@ class FOFController extends FOFUtilsObject
 
 		if (!$hasToken)
 		{
-            FOFPlatform::getInstance()->raiseError(403, JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'));
+			FOFPlatform::getInstance()->raiseError(403, JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'));
 
 			return false;
 		}
@@ -2300,7 +2301,7 @@ class FOFController extends FOFUtilsObject
 
 		if ($status && ($id != 0))
 		{
-            FOFPlatform::getInstance()->setHeader('Status', '201 Created', true);
+			FOFPlatform::getInstance()->setHeader('Status', '201 Created', true);
 
 			// Try to check-in the record if it's not a new one
 			$status = $model->checkin();
@@ -2353,7 +2354,7 @@ class FOFController extends FOFUtilsObject
 	 * Execute something before applySave is called. Return false to prevent
 	 * applySave from executing.
 	 *
-	 * @param   array  &$data  The data upon which applySave will act
+	 * @param   array &$data The data upon which applySave will act
 	 *
 	 * @return  boolean  True to allow applySave to run
 	 */
@@ -2410,7 +2411,7 @@ class FOFController extends FOFUtilsObject
 		}
 		else
 		{
-			if(!FOFPlatform::getInstance()->isCli())
+			if (!FOFPlatform::getInstance()->isCli())
 			{
 				FOFPlatform::getInstance()->setHeader('Status', '201 Created', true);
 			}
@@ -2527,13 +2528,13 @@ class FOFController extends FOFUtilsObject
 	 */
 	public function loadhistory()
 	{
-		$app = JFactory::getApplication();
-		$lang  = JFactory::getLanguage();
-		$model = $this->getThisModel();
-		$table = $model->getTable();
+		$app       = JFactory::getApplication();
+		$lang      = JFactory::getLanguage();
+		$model     = $this->getThisModel();
+		$table     = $model->getTable();
 		$historyId = $app->input->get('version_id', null, 'integer');
-		$status = $model->checkout();
-		$alias = $this->component . '.' . $this->view;
+		$status    = $model->checkout();
+		$alias     = $this->component . '.' . $this->view;
 
 		if (!$model->loadhistory($historyId, $table, $alias))
 		{
@@ -2586,15 +2587,15 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Sets the internal message that is passed with a redirect
 	 *
-	 * @param   string  $text  Message to display on redirect.
-	 * @param   string  $type  Message type. Optional, defaults to 'message'.
+	 * @param   string $text Message to display on redirect.
+	 * @param   string $type Message type. Optional, defaults to 'message'.
 	 *
 	 * @return  string  Previous message
 	 */
 	public function setMessage($text, $type = 'message')
 	{
-		$previous = $this->message;
-		$this->message = $text;
+		$previous          = $this->message;
+		$this->message     = $text;
 		$this->messageType = $type;
 
 		return $previous;
@@ -2622,7 +2623,7 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Sets the access level of the selected item(s).
 	 *
-	 * @param   integer  $level  The desired viewing access level ID
+	 * @param   integer $level The desired viewing access level ID
 	 *
 	 * @return  bool
 	 */
@@ -2650,7 +2651,7 @@ class FOFController extends FOFUtilsObject
 		if ($id == $loadedid)
 		{
 			$item->$accessField = $level;
-			$status = $model->save($item);
+			$status             = $model->save($item);
 		}
 		else
 		{
@@ -2734,7 +2735,7 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Sets the published state (the enabled field) of the selected item(s)
 	 *
-	 * @param   integer  $state  The desired state. 0 is unpublished, 1 is published.
+	 * @param   integer $state The desired state. 0 is unpublished, 1 is published.
 	 *
 	 * @return  bool
 	 */
@@ -2837,7 +2838,7 @@ class FOFController extends FOFUtilsObject
 			$model->setIDsFromRequest();
 		}
 
-        $ordering = $model->getTable()->getColumnAlias('ordering');
+		$ordering = $model->getTable()->getColumnAlias('ordering');
 		$ids      = $model->getIds();
 		$orders   = $this->input->get('order', array(), 'array');
 
@@ -3037,7 +3038,7 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Unregister (unmap) a task in the class.
 	 *
-	 * @param   string  $task  The task.
+	 * @param   string $task The task.
 	 *
 	 * @return  FOFController  This object to support chaining.
 	 */
@@ -3071,15 +3072,15 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Method to load and return a model object.
 	 *
-	 * @param   string  $name    The name of the model.
-	 * @param   string  $prefix  Optional model prefix.
-	 * @param   array   $config  Configuration array for the model. Optional.
+	 * @param   string $name   The name of the model.
+	 * @param   string $prefix Optional model prefix.
+	 * @param   array  $config Configuration array for the model. Optional.
 	 *
 	 * @return  mixed   Model object on success; otherwise null
 	 */
 	protected function &_createModel($name, $prefix = '', $config = array())
 	{
-		FOFPlatform::getInstance()->logDeprecated(__CLASS__ . '::' .__METHOD__ . ' is deprecated. Use createModel() instead.');
+		FOFPlatform::getInstance()->logDeprecated(__CLASS__ . '::' . __METHOD__ . ' is deprecated. Use createModel() instead.');
 
 		return $this->createModel($name, $prefix, $config);
 	}
@@ -3087,14 +3088,14 @@ class FOFController extends FOFUtilsObject
 	/**
 	 * Deprecated function to create a View object instance
 	 *
-	 * @param   string  $name    The name of the view, e.g. 'Items'
-	 * @param   string  $prefix  The prefix of the view, e.g. 'FoobarView'
-	 * @param   string  $type    The view type, e.g. 'html'
-	 * @param   array   $config  The configuration array for the view
+	 * @param   string $name   The name of the view, e.g. 'Items'
+	 * @param   string $prefix The prefix of the view, e.g. 'FoobarView'
+	 * @param   string $type   The view type, e.g. 'html'
+	 * @param   array  $config The configuration array for the view
 	 *
 	 * @return  FOFView
 	 *
-	 * @see FOFController::createView
+	 * @see        FOFController::createView
 	 *
 	 * @deprecated since version 2.0
 	 */
@@ -3171,23 +3172,23 @@ class FOFController extends FOFUtilsObject
 	 */
 	protected function onBeforeApply()
 	{
-        $model = $this->getThisModel();
+		$model = $this->getThisModel();
 
-        if (!$model->getId())
-        {
-            $model->setIDsFromRequest();
-        }
+		if (!$model->getId())
+		{
+			$model->setIDsFromRequest();
+		}
 
-        $id = $model->getId();
+		$id = $model->getId();
 
-        if(!$id)
-        {
-            $defaultPrivilege = 'core.create';
-        }
-        else
-        {
-            $defaultPrivilege = 'core.edit';
-        }
+		if (!$id)
+		{
+			$defaultPrivilege = 'core.create';
+		}
+		else
+		{
+			$defaultPrivilege = 'core.edit';
+		}
 
 		$privilege = $this->configProvider->get(
 			$this->component . '.views.' .
@@ -3221,23 +3222,23 @@ class FOFController extends FOFUtilsObject
 	 */
 	protected function onBeforeCancel()
 	{
-        $model = $this->getThisModel();
+		$model = $this->getThisModel();
 
-        if (!$model->getId())
-        {
-            $model->setIDsFromRequest();
-        }
+		if (!$model->getId())
+		{
+			$model->setIDsFromRequest();
+		}
 
-        $id = $model->getId();
+		$id = $model->getId();
 
-        if(!$id)
-        {
-            $defaultPrivilege = 'core.create';
-        }
-        else
-        {
-            $defaultPrivilege = 'core.edit';
-        }
+		if (!$id)
+		{
+			$defaultPrivilege = 'core.create';
+		}
+		else
+		{
+			$defaultPrivilege = 'core.edit';
+		}
 
 		$privilege = $this->configProvider->get(
 			$this->component . '.views.' .
@@ -3338,7 +3339,7 @@ class FOFController extends FOFUtilsObject
 
 		$id = $model->getId();
 
-		if(!$id)
+		if (!$id)
 		{
 			$defaultPrivilege = 'core.create';
 		}

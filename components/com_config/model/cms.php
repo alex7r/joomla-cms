@@ -53,7 +53,7 @@ abstract class ConfigModelCms extends JModelDatabase
 	/**
 	 * Constructor
 	 *
-	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   array $config An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 *
 	 * @since   3.2
 	 * @throws  Exception
@@ -155,30 +155,9 @@ abstract class ConfigModelCms extends JModelDatabase
 	}
 
 	/**
-	 * Method to get model state variables
-	 *
-	 * @return  object  The property where specified, the state object where omitted
-	 *
-	 * @since   3.2
-	 */
-	public function getState()
-	{
-		if (!$this->__state_set)
-		{
-			// Protected method to auto-populate the model state.
-			$this->populateState();
-
-			// Set the model state set flag to true.
-			$this->__state_set = true;
-		}
-
-		return $this->state;
-	}
-
-	/**
 	 * Method to register paths for tables
 	 *
-	 * @param   array  $config  Configuration array
+	 * @param   array $config Configuration array
 	 *
 	 * @return  object  The property where specified, the state object where omitted
 	 *
@@ -203,29 +182,24 @@ abstract class ConfigModelCms extends JModelDatabase
 	}
 
 	/**
-	 * Clean the cache
+	 * Method to get model state variables
 	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
-	 *
-	 * @return  void
+	 * @return  object  The property where specified, the state object where omitted
 	 *
 	 * @since   3.2
 	 */
-	protected function cleanCache($group = null, $client_id = 0)
+	public function getState()
 	{
-		$conf = JFactory::getConfig();
-		$dispatcher = JEventDispatcher::getInstance();
+		if (!$this->__state_set)
+		{
+			// Protected method to auto-populate the model state.
+			$this->populateState();
 
-		$options = array(
-			'defaultgroup' => ($group) ? $group : (isset($this->option) ? $this->option : JFactory::getApplication()->input->get('option')),
-			'cachebase' => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path', JPATH_SITE . '/cache'));
+			// Set the model state set flag to true.
+			$this->__state_set = true;
+		}
 
-		$cache = JCache::getInstance('callback', $options);
-		$cache->clean();
-
-		// Trigger the onContentCleanCache event.
-		$dispatcher->trigger($this->event_clean_cache, $options);
+		return $this->state;
 	}
 
 	/**
@@ -246,9 +220,35 @@ abstract class ConfigModelCms extends JModelDatabase
 	}
 
 	/**
+	 * Clean the cache
+	 *
+	 * @param   string  $group     The cache group
+	 * @param   integer $client_id The ID of the client
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		$conf       = JFactory::getConfig();
+		$dispatcher = JEventDispatcher::getInstance();
+
+		$options = array(
+			'defaultgroup' => ($group) ? $group : (isset($this->option) ? $this->option : JFactory::getApplication()->input->get('option')),
+			'cachebase'    => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path', JPATH_SITE . '/cache'));
+
+		$cache = JCache::getInstance('callback', $options);
+		$cache->clean();
+
+		// Trigger the onContentCleanCache event.
+		$dispatcher->trigger($this->event_clean_cache, $options);
+	}
+
+	/**
 	 * Method to test whether a record can be deleted.
 	 *
-	 * @param   object  $record  A record object.
+	 * @param   object $record A record object.
 	 *
 	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
 	 *
@@ -272,7 +272,7 @@ abstract class ConfigModelCms extends JModelDatabase
 	/**
 	 * Method to test whether a record can have its state changed.
 	 *
-	 * @param   object  $record  A record object.
+	 * @param   object $record A record object.
 	 *
 	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
 	 *

@@ -96,8 +96,8 @@ class JInstallerScript
 	/**
 	 * Function called before extension installation/update/removal procedure commences
 	 *
-	 * @param   string             $type    The type of change (install, update or discover_install, not uninstall)
-	 * @param   JInstallerAdapter  $parent  The class calling this method
+	 * @param   string            $type   The type of change (install, update or discover_install, not uninstall)
+	 * @param   JInstallerAdapter $parent The class calling this method
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -134,7 +134,7 @@ class JInstallerScript
 		// Abort if the extension being installed is not newer than the currently installed version
 		if (strtolower($type) == 'update' && !$this->allowDowngrades)
 		{
-			$manifest = $this->getItemArray('manifest_cache', '#__extensions', 'element', JFactory::getDbo()->quote($this->extension));
+			$manifest   = $this->getItemArray('manifest_cache', '#__extensions', 'element', JFactory::getDbo()->quote($this->extension));
 			$oldRelease = $manifest['version'];
 
 			if (version_compare($this->release, $oldRelease, '<'))
@@ -149,9 +149,39 @@ class JInstallerScript
 	}
 
 	/**
+	 * Builds a standard select query to produce better DRY code in this script.
+	 * This should produce a single unique cell which is json encoded - it will then
+	 * return an associated array with this data in.
+	 *
+	 * @param   string $element    The element to get from the query
+	 * @param   string $table      The table to search for the data in
+	 * @param   string $column     The column of the database to search from
+	 * @param   mixed  $identifier The integer id or the already quoted string
+	 *
+	 * @return  array  Associated array containing data from the cell
+	 *
+	 * @since   3.6
+	 */
+	public function getItemArray($element, $table, $column, $identifier)
+	{
+		// Get the DB and query objects
+		$db = JFactory::getDbo();
+
+		// Build the query
+		$query = $db->getQuery(true)
+			->select($db->quoteName($element))
+			->from($db->quoteName($table))
+			->where($db->quoteName($column) . ' = ' . $identifier);
+		$db->setQuery($query);
+
+		// Load the single cell and json_decode data
+		return json_decode($db->loadResult(), true);
+	}
+
+	/**
 	 * Gets each instance of a module in the #__modules table
 	 *
-	 * @param   boolean  $isModule  True if the extension is a module as this can have multiple instances
+	 * @param   boolean $isModule True if the extension is a module as this can have multiple instances
 	 *
 	 * @return  array  An array of ID's of the extension
 	 *
@@ -159,7 +189,7 @@ class JInstallerScript
 	 */
 	public function getInstances($isModule)
 	{
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the item(s) and retrieve the id
@@ -183,8 +213,8 @@ class JInstallerScript
 	/**
 	 * Gets parameter value in the extensions row of the extension table
 	 *
-	 * @param   string   $name  The name of the parameter to be retrieved
-	 * @param   integer  $id    The id of the item in the Param Table
+	 * @param   string  $name The name of the parameter to be retrieved
+	 * @param   integer $id   The id of the item in the Param Table
 	 *
 	 * @return  string  The parameter desired
 	 *
@@ -208,9 +238,9 @@ class JInstallerScript
 	 * this must be called separately for deleting and editing. Note if edit is called as a
 	 * type then if the param doesn't exist it will be created
 	 *
-	 * @param   array    $param_array  The array of parameters to be added/edited/removed
-	 * @param   string   $type         The type of change to be made to the param (edit/remove)
-	 * @param   integer  $id           The id of the item in the relevant table
+	 * @param   array   $param_array The array of parameters to be added/edited/removed
+	 * @param   string  $type        The type of change to be made to the param (edit/remove)
+	 * @param   integer $id          The id of the item in the relevant table
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -254,7 +284,7 @@ class JInstallerScript
 		// Store the combined new and existing values back as a JSON string
 		$paramsString = json_encode($params);
 
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->update($db->quoteName($this->paramTable))
 			->set('params = ' . $db->quote($paramsString))
@@ -264,36 +294,6 @@ class JInstallerScript
 		$db->setQuery($query)->execute();
 
 		return true;
-	}
-
-	/**
-	 * Builds a standard select query to produce better DRY code in this script.
-	 * This should produce a single unique cell which is json encoded - it will then
-	 * return an associated array with this data in.
-	 *
-	 * @param   string  $element     The element to get from the query
-	 * @param   string  $table       The table to search for the data in
-	 * @param   string  $column      The column of the database to search from
-	 * @param   mixed   $identifier  The integer id or the already quoted string
-	 *
-	 * @return  array  Associated array containing data from the cell
-	 *
-	 * @since   3.6
-	 */
-	public function getItemArray($element, $table, $column, $identifier)
-	{
-		// Get the DB and query objects
-		$db = JFactory::getDbo();
-
-		// Build the query
-		$query = $db->getQuery(true)
-			->select($db->quoteName($element))
-			->from($db->quoteName($table))
-			->where($db->quoteName($column) . ' = ' . $identifier);
-		$db->setQuery($query);
-
-		// Load the single cell and json_decode data
-		return json_decode($db->loadResult(), true);
 	}
 
 	/**

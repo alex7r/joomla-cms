@@ -74,7 +74,7 @@ class JRouter
 	 * The rewrite mode
 	 *
 	 * @var    integer
-	 * @since  1.5
+	 * @since       1.5
 	 * @deprecated  4.0 Will convert to $mode
 	 */
 	protected $_mode = null;
@@ -91,7 +91,7 @@ class JRouter
 	 * An array of variables
 	 *
 	 * @var     array
-	 * @since  1.5
+	 * @since       1.5
 	 * @deprecated  4.0 Will convert to $vars
 	 */
 	protected $_vars = array();
@@ -103,11 +103,11 @@ class JRouter
 	 * @since  1.5
 	 */
 	protected $rules = array(
-		'buildpreprocess' => array(),
-		'build' => array(),
+		'buildpreprocess'  => array(),
+		'build'            => array(),
 		'buildpostprocess' => array(),
-		'parsepreprocess' => array(),
-		'parse' => array(),
+		'parsepreprocess'  => array(),
+		'parse'            => array(),
 		'parsepostprocess' => array()
 	);
 
@@ -115,15 +115,15 @@ class JRouter
 	 * An array of rules
 	 *
 	 * @var    array
-	 * @since  1.5
+	 * @since       1.5
 	 * @deprecated  4.0 Will convert to $rules
 	 */
 	protected $_rules = array(
-		'buildpreprocess' => array(),
-		'build' => array(),
+		'buildpreprocess'  => array(),
+		'build'            => array(),
 		'buildpostprocess' => array(),
-		'parsepreprocess' => array(),
-		'parse' => array(),
+		'parsepreprocess'  => array(),
+		'parse'            => array(),
 		'parsepostprocess' => array()
 	);
 
@@ -138,7 +138,7 @@ class JRouter
 	/**
 	 * Class constructor
 	 *
-	 * @param   array  $options  Array of options
+	 * @param   array $options Array of options
 	 *
 	 * @since   1.5
 	 */
@@ -158,8 +158,8 @@ class JRouter
 	 * Returns the global JRouter object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @param   string  $client   The name of the client
-	 * @param   array   $options  An associative array of options
+	 * @param   string $client  The name of the client
+	 * @param   array  $options An associative array of options
 	 *
 	 * @return  JRouter  A JRouter object.
 	 *
@@ -207,7 +207,7 @@ class JRouter
 	/**
 	 * Function to convert a route to an internal URI
 	 *
-	 * @param   JUri  &$uri  The uri.
+	 * @param   JUri &$uri The uri.
 	 *
 	 * @return  array
 	 *
@@ -243,8 +243,8 @@ class JRouter
 	/**
 	 * Process the parsed router variables based on custom defined rules
 	 *
-	 * @param   JUri    &$uri   The URI to parse
-	 * @param   string  $stage  The stage that should be processed.
+	 * @param   JUri   &$uri    The URI to parse
+	 * @param   string $stage   The stage that should be processed.
 	 *                          Possible values: 'preprocess', 'postprocess'
 	 *                          and '' for the main parse stage
 	 *
@@ -272,11 +272,11 @@ class JRouter
 	/**
 	 * Process the parsed router variables based on custom defined rules
 	 *
-	 * @param   JUri  &$uri  The URI to parse
+	 * @param   JUri &$uri The URI to parse
 	 *
 	 * @return  array  The array of processed URI variables
 	 *
-	 * @since   1.5
+	 * @since       1.5
 	 * @deprecated  4.0  Use processParseRules() instead
 	 */
 	protected function _processParseRules(&$uri)
@@ -287,11 +287,11 @@ class JRouter
 	/**
 	 * Function to convert a raw route to an internal URI
 	 *
-	 * @param   JUri  &$uri  The raw route
+	 * @param   JUri &$uri The raw route
 	 *
 	 * @return  boolean
 	 *
-	 * @since   1.5
+	 * @since       1.5
 	 * @deprecated  4.0  Attach your logic as rule to the main parse stage
 	 */
 	protected function _parseRawRoute(&$uri)
@@ -302,11 +302,11 @@ class JRouter
 	/**
 	 * Function to convert a raw route to an internal URI
 	 *
-	 * @param   JUri  &$uri  The raw route
+	 * @param   JUri &$uri The raw route
 	 *
 	 * @return  array  Array of variables
 	 *
-	 * @since   3.2
+	 * @since       3.2
 	 * @deprecated  4.0  Attach your logic as rule to the main parse stage
 	 */
 	protected function parseRawRoute(&$uri)
@@ -317,11 +317,11 @@ class JRouter
 	/**
 	 * Function to convert a sef route to an internal URI
 	 *
-	 * @param   JUri  &$uri  The sef URI
+	 * @param   JUri &$uri The sef URI
 	 *
 	 * @return  string  Internal URI
 	 *
-	 * @since   1.5
+	 * @since       1.5
 	 * @deprecated  4.0  Attach your logic as rule to the main parse stage
 	 */
 	protected function _parseSefRoute(&$uri)
@@ -332,11 +332,11 @@ class JRouter
 	/**
 	 * Function to convert a sef route to an internal URI
 	 *
-	 * @param   JUri  &$uri  The sef URI
+	 * @param   JUri &$uri The sef URI
 	 *
 	 * @return  array  Array of variables
 	 *
-	 * @since   3.2
+	 * @since       3.2
 	 * @deprecated  4.0  Attach your logic as rule to the main parse stage
 	 */
 	protected function parseSefRoute(&$uri)
@@ -359,8 +359,8 @@ class JRouter
 	/**
 	 * Set the router variable array
 	 *
-	 * @param   array    $vars   An associative array with variables
-	 * @param   boolean  $merge  If True, the array will be merged instead of overwritten
+	 * @param   array   $vars  An associative array with variables
+	 * @param   boolean $merge If True, the array will be merged instead of overwritten
 	 *
 	 * @return  void
 	 *
@@ -381,7 +381,7 @@ class JRouter
 	/**
 	 * Function to convert an internal URI to a route
 	 *
-	 * @param   string  $url  The internal URL or an associative array
+	 * @param   string $url The internal URL or an associative array
 	 *
 	 * @return  string  The absolute search engine friendly URL
 	 *
@@ -429,7 +429,7 @@ class JRouter
 	/**
 	 * Create a uri based on a full or partial url string
 	 *
-	 * @param   string  $url  The URI or an associative array
+	 * @param   string $url The URI or an associative array
 	 *
 	 * @return  JUri
 	 *
@@ -478,8 +478,8 @@ class JRouter
 	/**
 	 * Process the build uri query data based on custom defined rules
 	 *
-	 * @param   JUri    &$uri   The URI
-	 * @param   string  $stage  The stage that should be processed.
+	 * @param   JUri   &$uri    The URI
+	 * @param   string $stage   The stage that should be processed.
 	 *                          Possible values: 'preprocess', 'postprocess'
 	 *                          and '' for the main build stage
 	 *
@@ -503,11 +503,11 @@ class JRouter
 	/**
 	 * Process the build uri query data based on custom defined rules
 	 *
-	 * @param   JUri  &$uri  The URI
+	 * @param   JUri &$uri The URI
 	 *
 	 * @return  void
 	 *
-	 * @since   1.5
+	 * @since       1.5
 	 * @deprecated  4.0  Use processBuildRules() instead
 	 */
 	protected function _processBuildRules(&$uri)
@@ -518,11 +518,11 @@ class JRouter
 	/**
 	 * Function to build a raw route
 	 *
-	 * @param   JUri  &$uri  The internal URL
+	 * @param   JUri &$uri The internal URL
 	 *
 	 * @return  string  Raw Route
 	 *
-	 * @since   1.5
+	 * @since       1.5
 	 * @deprecated  4.0  Attach your logic as rule to the main build stage
 	 */
 	protected function _buildRawRoute(&$uri)
@@ -533,11 +533,11 @@ class JRouter
 	/**
 	 * Function to build a raw route
 	 *
-	 * @param   JUri  &$uri  The internal URL
+	 * @param   JUri &$uri The internal URL
 	 *
 	 * @return  string  Raw Route
 	 *
-	 * @since   3.2
+	 * @since       3.2
 	 * @deprecated  4.0  Attach your logic as rule to the main build stage
 	 */
 	protected function buildRawRoute(&$uri)
@@ -547,11 +547,11 @@ class JRouter
 	/**
 	 * Function to build a sef route
 	 *
-	 * @param   JUri  &$uri  The uri
+	 * @param   JUri &$uri The uri
 	 *
 	 * @return  string  The SEF route
 	 *
-	 * @since   1.5
+	 * @since       1.5
 	 * @deprecated  4.0  Attach your logic as rule to the main build stage
 	 */
 	protected function _buildSefRoute(&$uri)
@@ -562,11 +562,11 @@ class JRouter
 	/**
 	 * Function to build a sef route
 	 *
-	 * @param   JUri  &$uri  The uri
+	 * @param   JUri &$uri The uri
 	 *
 	 * @return  string  The SEF route
 	 *
-	 * @since   3.2
+	 * @since       3.2
 	 * @deprecated  4.0  Attach your logic as rule to the main build stage
 	 */
 	protected function buildSefRoute(&$uri)
@@ -588,7 +588,7 @@ class JRouter
 	/**
 	 * Set the router mode
 	 *
-	 * @param   integer  $mode  The routing mode.
+	 * @param   integer $mode The routing mode.
 	 *
 	 * @return  void
 	 *
@@ -602,9 +602,9 @@ class JRouter
 	/**
 	 * Set a router variable, creating it if it doesn't exist
 	 *
-	 * @param   string   $key     The name of the variable
-	 * @param   mixed    $value   The value of the variable
-	 * @param   boolean  $create  If True, the variable will be created if it doesn't exist yet
+	 * @param   string  $key    The name of the variable
+	 * @param   mixed   $value  The value of the variable
+	 * @param   boolean $create If True, the variable will be created if it doesn't exist yet
 	 *
 	 * @return  void
 	 *
@@ -621,7 +621,7 @@ class JRouter
 	/**
 	 * Get a router variable
 	 *
-	 * @param   string  $key  The name of the variable
+	 * @param   string $key The name of the variable
 	 *
 	 * @return  mixed  Value of the variable
 	 *
@@ -642,8 +642,8 @@ class JRouter
 	/**
 	 * Attach a build rule
 	 *
-	 * @param   callable  $callback  The function to be called
-	 * @param   string    $stage     The stage of the build process that
+	 * @param   callable $callback   The function to be called
+	 * @param   string   $stage      The stage of the build process that
 	 *                               this should be added to. Possible values:
 	 *                               'preprocess', '' for the main build process,
 	 *                               'postprocess'
@@ -665,8 +665,8 @@ class JRouter
 	/**
 	 * Attach a parse rule
 	 *
-	 * @param   callable  $callback  The function to be called.
-	 * @param   string    $stage     The stage of the parse process that
+	 * @param   callable $callback   The function to be called.
+	 * @param   string   $stage      The stage of the parse process that
 	 *                               this should be added to. Possible values:
 	 *                               'preprocess', '' for the main parse process,
 	 *                               'postprocess'
@@ -688,11 +688,11 @@ class JRouter
 	/**
 	 * Create a uri based on a full or partial url string
 	 *
-	 * @param   string  $url  The URI
+	 * @param   string $url The URI
 	 *
 	 * @return  JUri
 	 *
-	 * @since   1.5
+	 * @since       1.5
 	 * @deprecated  4.0  Use createUri() instead
 	 * @codeCoverageIgnore
 	 */
@@ -704,11 +704,11 @@ class JRouter
 	/**
 	 * Encode route segments
 	 *
-	 * @param   array  $segments  An array of route segments
+	 * @param   array $segments An array of route segments
 	 *
 	 * @return  array  Array of encoded route segments
 	 *
-	 * @since   1.5
+	 * @since       1.5
 	 * @deprecated  4.0  This should be performed in the component router instead
 	 * @codeCoverageIgnore
 	 */
@@ -720,11 +720,11 @@ class JRouter
 	/**
 	 * Encode route segments
 	 *
-	 * @param   array  $segments  An array of route segments
+	 * @param   array $segments An array of route segments
 	 *
 	 * @return  array  Array of encoded route segments
 	 *
-	 * @since   3.2
+	 * @since       3.2
 	 * @deprecated  4.0  This should be performed in the component router instead
 	 */
 	protected function encodeSegments($segments)
@@ -742,11 +742,11 @@ class JRouter
 	/**
 	 * Decode route segments
 	 *
-	 * @param   array  $segments  An array of route segments
+	 * @param   array $segments An array of route segments
 	 *
 	 * @return  array  Array of decoded route segments
 	 *
-	 * @since   1.5
+	 * @since       1.5
 	 * @deprecated  4.0  This should be performed in the component router instead
 	 * @codeCoverageIgnore
 	 */
@@ -758,11 +758,11 @@ class JRouter
 	/**
 	 * Decode route segments
 	 *
-	 * @param   array  $segments  An array of route segments
+	 * @param   array $segments An array of route segments
 	 *
 	 * @return  array  Array of decoded route segments
 	 *
-	 * @since   3.2
+	 * @since       3.2
 	 * @deprecated  4.0  This should be performed in the component router instead
 	 */
 	protected function decodeSegments($segments)

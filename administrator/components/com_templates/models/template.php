@@ -128,7 +128,7 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Get the directory tree.
 	 *
-	 * @param   string  $dir  The path of the directory to scan
+	 * @param   string $dir The path of the directory to scan
 	 *
 	 * @return  array
 	 *
@@ -146,7 +146,7 @@ class TemplatesModelTemplate extends JModelForm
 			{
 				if (is_dir($dir . $value))
 				{
-					$relativePath = str_replace($this->element, '', $dir . $value);
+					$relativePath                = str_replace($this->element, '', $dir . $value);
 					$result['/' . $relativePath] = $this->getDirectoryTree($dir . $value . '/');
 				}
 				else
@@ -157,8 +157,8 @@ class TemplatesModelTemplate extends JModelForm
 					if ($allowedFormat == true)
 					{
 						$relativePath = str_replace($this->element, '', $dir);
-						$info = $this->getFile('/' . $relativePath, $value);
-						$result[] = $info;
+						$info         = $this->getFile('/' . $relativePath, $value);
+						$result[]     = $info;
 					}
 				}
 			}
@@ -168,14 +168,14 @@ class TemplatesModelTemplate extends JModelForm
 	}
 
 	/**
- 	* Check if the extension is allowed and will be shown in the template manager
- 	*
-	* @param   string  $ext  The extension to check if it is allowed
- 	*
- 	* @return  boolean  true if the extension is allowed false otherwise
- 	*
- 	* @since   3.6.0
-	*/
+	 * Check if the extension is allowed and will be shown in the template manager
+	 *
+	 * @param   string $ext The extension to check if it is allowed
+	 *
+	 * @return  boolean  true if the extension is allowed false otherwise
+	 *
+	 * @since   3.6.0
+	 */
 	protected function checkFormat($ext)
 	{
 		if (!isset($this->allowedFormats))
@@ -195,8 +195,8 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Internal method to get file properties.
 	 *
-	 * @param   string  $path  The base path.
-	 * @param   string  $name  The file name.
+	 * @param   string $path The base path.
+	 * @param   string $name The file name.
 	 *
 	 * @return  object
 	 *
@@ -209,7 +209,7 @@ class TemplatesModelTemplate extends JModelForm
 		if ($template = $this->getTemplate())
 		{
 			$temp->name = $name;
-			$temp->id = urlencode(base64_encode($path . $name));
+			$temp->id   = urlencode(base64_encode($path . $name));
 
 			return $temp;
 		}
@@ -220,11 +220,11 @@ class TemplatesModelTemplate extends JModelForm
 	 *
 	 * @return  boolean   true if name is not used, false otherwise
 	 *
-	 * @since	2.5
+	 * @since    2.5
 	 */
 	public function checkNewName()
 	{
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select('COUNT(*)')
 			->from('#__extensions')
@@ -239,7 +239,7 @@ class TemplatesModelTemplate extends JModelForm
 	 *
 	 * @return  string     name of current template
 	 *
-	 * @since	2.5
+	 * @since    2.5
 	 */
 	public function getFromName()
 	{
@@ -251,7 +251,7 @@ class TemplatesModelTemplate extends JModelForm
 	 *
 	 * @return  boolean   true if name is not used, false otherwise
 	 *
-	 * @since	2.5
+	 * @since    2.5
 	 */
 	public function copy()
 	{
@@ -260,7 +260,7 @@ class TemplatesModelTemplate extends JModelForm
 		if ($template = $this->getTemplate())
 		{
 			jimport('joomla.filesystem.folder');
-			$client = JApplicationHelper::getClientInfo($template->client_id);
+			$client   = JApplicationHelper::getClientInfo($template->client_id);
 			$fromPath = JPath::clean($client->path . '/templates/' . $template->element . '/');
 
 			// Delete new folder if it exists
@@ -297,7 +297,7 @@ class TemplatesModelTemplate extends JModelForm
 	 *
 	 * @return  boolean  true if successful, false otherwise
 	 *
-	 * @since	2.5
+	 * @since    2.5
 	 */
 	protected function fixTemplateName()
 	{
@@ -315,7 +315,7 @@ class TemplatesModelTemplate extends JModelForm
 		foreach ($files as $file)
 		{
 			$newFile = str_replace($oldName, $newName, $file);
-			$result = JFile::move($file, $newFile) && $result;
+			$result  = JFile::move($file, $newFile) && $result;
 		}
 
 		// Edit XML file
@@ -323,13 +323,13 @@ class TemplatesModelTemplate extends JModelForm
 
 		if (JFile::exists($xmlFile))
 		{
-			$contents = file_get_contents($xmlFile);
+			$contents  = file_get_contents($xmlFile);
 			$pattern[] = '#<name>\s*' . $manifest->name . '\s*</name>#i';
 			$replace[] = '<name>' . $newName . '</name>';
 			$pattern[] = '#<language(.*)' . $oldName . '(.*)</language>#';
 			$replace[] = '<language${1}' . $newName . '${2}</language>';
-			$contents = preg_replace($pattern, $replace, $contents);
-			$result = JFile::write($xmlFile, $contents) && $result;
+			$contents  = preg_replace($pattern, $replace, $contents);
+			$result    = JFile::write($xmlFile, $contents) && $result;
 		}
 
 		return $result;
@@ -340,7 +340,7 @@ class TemplatesModelTemplate extends JModelForm
 	 *
 	 * @return  boolean   true if delete successful, false otherwise
 	 *
-	 * @since	2.5
+	 * @since    2.5
 	 */
 	public function cleanup()
 	{
@@ -356,8 +356,8 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  JForm    A JForm object on success, false on failure
 	 *
@@ -368,7 +368,7 @@ class TemplatesModelTemplate extends JModelForm
 		$app = JFactory::getApplication();
 
 		// Codemirror or Editor None should be enabled
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select('COUNT(*)')
 			->from('#__extensions as a')
@@ -400,7 +400,7 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Method to store the source file contents.
 	 *
-	 * @param   array  $data  The source data to save.
+	 * @param   array $data The source data to save.
 	 *
 	 * @return  boolean  True on success, false otherwise and internal error set.
 	 *
@@ -418,9 +418,9 @@ class TemplatesModelTemplate extends JModelForm
 			return false;
 		}
 
-		$app = JFactory::getApplication();
+		$app      = JFactory::getApplication();
 		$fileName = base64_decode($app->input->get('file'));
-		$client = JApplicationHelper::getClientInfo($template->client_id);
+		$client   = JApplicationHelper::getClientInfo($template->client_id);
 		$filePath = JPath::clean($client->path . '/templates/' . $template->element . '/' . $fileName);
 
 		// Include the extension plugins for the save events.
@@ -458,7 +458,7 @@ class TemplatesModelTemplate extends JModelForm
 
 		// Get the extension of the changed file.
 		$explodeArray = explode('.', $fileName);
-		$ext = end($explodeArray);
+		$ext          = end($explodeArray);
 
 		if ($ext == 'less')
 		{
@@ -539,16 +539,16 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Get overrides folder.
 	 *
-	 * @param   string  $name  The name of override.
-	 * @param   string  $path  Location of override.
+	 * @param   string $name The name of override.
+	 * @param   string $path Location of override.
 	 *
 	 * @return  object  containing override name and path.
 	 *
 	 * @since   3.2
 	 */
-	public function getOverridesFolder($name,$path)
+	public function getOverridesFolder($name, $path)
 	{
-		$folder = new stdClass;
+		$folder       = new stdClass;
 		$folder->name = $name;
 		$folder->path = base64_encode($path . $name);
 
@@ -558,7 +558,7 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Create overrides.
 	 *
-	 * @param   string  $override  The override location.
+	 * @param   string $override The override location.
 	 *
 	 * @return   boolean  true if override creation is successful, false otherwise
 	 *
@@ -570,19 +570,19 @@ class TemplatesModelTemplate extends JModelForm
 
 		if ($template = $this->getTemplate())
 		{
-			$app            = JFactory::getApplication();
-			$explodeArray   = explode(DIRECTORY_SEPARATOR, $override);
-			$name           = end($explodeArray);
-			$client 	    = JApplicationHelper::getClientInfo($template->client_id);
+			$app          = JFactory::getApplication();
+			$explodeArray = explode(DIRECTORY_SEPARATOR, $override);
+			$name         = end($explodeArray);
+			$client       = JApplicationHelper::getClientInfo($template->client_id);
 
 			if (stristr($name, 'mod_') != false)
 			{
-				$htmlPath   = JPath::clean($client->path . '/templates/' . $template->element . '/html/' . $name);
+				$htmlPath = JPath::clean($client->path . '/templates/' . $template->element . '/html/' . $name);
 			}
 			elseif (stristr($override, 'com_') != false)
 			{
 				$folderExplode = explode(DIRECTORY_SEPARATOR, $override);
-				$size = count($folderExplode);
+				$size          = count($folderExplode);
 
 				$url = JPath::clean($folderExplode[$size - 3] . '/' . $folderExplode[$size - 1]);
 
@@ -590,7 +590,7 @@ class TemplatesModelTemplate extends JModelForm
 			}
 			else
 			{
-				$htmlPath   = JPath::clean($client->path . '/templates/' . $template->element . '/html/layouts/joomla/' . $name);
+				$htmlPath = JPath::clean($client->path . '/templates/' . $template->element . '/html/layouts/joomla/' . $name);
 			}
 
 			// Check Html folder, create if not exist
@@ -635,8 +635,8 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Create override folder & file
 	 *
-	 * @param   string  $overridePath  The override location
-	 * @param   string  $htmlPath      The html location
+	 * @param   string $overridePath The override location
+	 * @param   string $htmlPath     The html location
 	 *
 	 * @return  boolean                True on success. False otherwise.
 	 */
@@ -676,12 +676,12 @@ class TemplatesModelTemplate extends JModelForm
 		foreach ($files as $file)
 		{
 			$overrideFilePath = str_replace($overridePath, '', $file);
-			$htmlFilePath = $htmlPath . $overrideFilePath;
+			$htmlFilePath     = $htmlPath . $overrideFilePath;
 
 			if (JFile::exists($htmlFilePath))
 			{
 				// Generate new unique file name base on current time
-				$today = JFactory::getDate();
+				$today        = JFactory::getDate();
 				$htmlFilePath = JFile::stripExt($htmlFilePath) . '-' . $today->format('Ymd-His') . '.' . JFile::getExt($htmlFilePath);
 			}
 
@@ -694,7 +694,7 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Compile less using the less compiler under /build.
 	 *
-	 * @param   string  $input  The relative location of the less file.
+	 * @param   string $input The relative location of the less file.
 	 *
 	 * @return  boolean  true if compilation is successful, false otherwise
 	 *
@@ -731,7 +731,7 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Delete a particular file.
 	 *
-	 * @param   string  $file  The relative location of the file.
+	 * @param   string $file The relative location of the file.
 	 *
 	 * @return   boolean  True if file deletion is successful, false otherwise
 	 *
@@ -762,9 +762,9 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Create new file.
 	 *
-	 * @param   string  $name      The name of file.
-	 * @param   string  $type      The extension of the file.
-	 * @param   string  $location  Location for the new file.
+	 * @param   string $name     The name of file.
+	 * @param   string $type     The extension of the file.
+	 * @param   string $location Location for the new file.
 	 *
 	 * @return  boolean  true if file created successfully, false otherwise
 	 *
@@ -807,8 +807,8 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Upload new file.
 	 *
-	 * @param   string  $file      The name of the file.
-	 * @param   string  $location  Location for the new file.
+	 * @param   string $file     The name of the file.
+	 * @param   string $location Location for the new file.
 	 *
 	 * @return   boolean  True if file uploaded successfully, false otherwise
 	 *
@@ -857,8 +857,8 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Create new folder.
 	 *
-	 * @param   string  $name      The name of the new folder.
-	 * @param   string  $location  Location for the new folder.
+	 * @param   string $name     The name of the new folder.
+	 * @param   string $location Location for the new folder.
 	 *
 	 * @return   boolean  True if override folder is created successfully, false otherwise
 	 *
@@ -895,7 +895,7 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Delete a folder.
 	 *
-	 * @param   string  $location  The name and location of the folder.
+	 * @param   string $location The name and location of the folder.
 	 *
 	 * @return  boolean  True if override folder is deleted successfully, false otherwise
 	 *
@@ -934,8 +934,8 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Rename a file.
 	 *
-	 * @param   string  $file  The name and location of the old file
-	 * @param   string  $name  The new name of the file.
+	 * @param   string $file The name and location of the old file
+	 * @param   string $name The new name of the file.
 	 *
 	 * @return  string  Encoded string containing the new file location.
 	 *
@@ -1001,7 +1001,7 @@ class TemplatesModelTemplate extends JModelForm
 
 			if (file_exists(JPath::clean($path . $fileName)))
 			{
-				$JImage = new JImage(JPath::clean($path . $fileName));
+				$JImage           = new JImage(JPath::clean($path . $fileName));
 				$image['address'] = $uri . $fileName;
 				$image['path']    = $fileName;
 				$image['height']  = $JImage->getHeight();
@@ -1022,11 +1022,11 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Crop an image.
 	 *
-	 * @param   string  $file  The name and location of the file
-	 * @param   string  $w     width.
-	 * @param   string  $h     height.
-	 * @param   string  $x     x-coordinate.
-	 * @param   string  $y     y-coordinate.
+	 * @param   string $file The name and location of the file
+	 * @param   string $w    width.
+	 * @param   string $h    height.
+	 * @param   string $x    x-coordinate.
+	 * @param   string $y    y-coordinate.
 	 *
 	 * @return  boolean     true if image cropped successfully, false otherwise.
 	 *
@@ -1036,11 +1036,11 @@ class TemplatesModelTemplate extends JModelForm
 	{
 		if ($template = $this->getTemplate())
 		{
-			$app      = JFactory::getApplication();
-			$client   = JApplicationHelper::getClientInfo($template->client_id);
-			$relPath  = base64_decode($file);
-			$path     = JPath::clean($client->path . '/templates/' . $template->element . '/' . $relPath);
-			$JImage   = new JImage($path);
+			$app     = JFactory::getApplication();
+			$client  = JApplicationHelper::getClientInfo($template->client_id);
+			$relPath = base64_decode($file);
+			$path    = JPath::clean($client->path . '/templates/' . $template->element . '/' . $relPath);
+			$JImage  = new JImage($path);
 
 			try
 			{
@@ -1059,9 +1059,9 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Resize an image.
 	 *
-	 * @param   string  $file    The name and location of the file
-	 * @param   string  $width   The new width of the image.
-	 * @param   string  $height  The new height of the image.
+	 * @param   string $file   The name and location of the file
+	 * @param   string $width  The new width of the image.
+	 * @param   string $height The new height of the image.
 	 *
 	 * @return   boolean  true if image resize successful, false otherwise.
 	 *
@@ -1101,8 +1101,8 @@ class TemplatesModelTemplate extends JModelForm
 	 */
 	public function getPreview()
 	{
-		$app = JFactory::getApplication();
-		$db = $this->getDbo();
+		$app   = JFactory::getApplication();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		$query->select('id, client_id');
@@ -1182,9 +1182,9 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Copy a file.
 	 *
-	 * @param   string  $newName   The name of the copied file
-	 * @param   string  $location  The final location where the file is to be copied
-	 * @param   string  $file      The name and location of the file
+	 * @param   string $newName  The name of the copied file
+	 * @param   string $location The final location where the file is to be copied
+	 * @param   string $file     The name and location of the file
 	 *
 	 * @return   boolean  true if image resize successful, false otherwise.
 	 *
@@ -1241,13 +1241,13 @@ class TemplatesModelTemplate extends JModelForm
 			if (file_exists(JPath::clean($path)))
 			{
 				$files = array();
-				$zip = new ZipArchive;
+				$zip   = new ZipArchive;
 
 				if ($zip->open($path) === true)
 				{
 					for ($i = 0; $i < $zip->numFiles; $i++)
 					{
-						$entry = $zip->getNameIndex($i);
+						$entry   = $zip->getNameIndex($i);
 						$files[] = $entry;
 					}
 				}
@@ -1272,7 +1272,7 @@ class TemplatesModelTemplate extends JModelForm
 	/**
 	 * Extract contents of an archive file.
 	 *
-	 * @param   string  $file  The name and location of the file
+	 * @param   string $file The name and location of the file
 	 *
 	 * @return  boolean  true if image extraction is successful, false otherwise.
 	 *
@@ -1376,7 +1376,7 @@ class TemplatesModelTemplate extends JModelForm
 	 */
 	public function &getSource()
 	{
-		$app = JFactory::getApplication();
+		$app  = JFactory::getApplication();
 		$item = new stdClass;
 
 		if (!$this->template)
@@ -1397,14 +1397,15 @@ class TemplatesModelTemplate extends JModelForm
 			catch (Exception $e)
 			{
 				$app->enqueueMessage(JText::_('COM_TEMPLATES_ERROR_SOURCE_FILE_NOT_FOUND'), 'error');
+
 				return;
 			}
 
 			if (file_exists($filePath))
 			{
 				$item->extension_id = $this->getState('extension.id');
-				$item->filename = $fileName;
-				$item->source = file_get_contents($filePath);
+				$item->filename     = $fileName;
+				$item->source       = file_get_contents($filePath);
 			}
 			else
 			{

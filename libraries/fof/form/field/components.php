@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -34,7 +34,7 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -80,8 +80,8 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 		$class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
 
 		return '<span id="' . $this->id . '" ' . $class . '>' .
-			htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(), $this->value), ENT_COMPAT, 'UTF-8') .
-			'</span>';
+		htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(), $this->value), ENT_COMPAT, 'UTF-8') .
+		'</span>';
 	}
 
 	/**
@@ -93,7 +93,7 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 	 *
 	 * @since    2.1
 	 *
-	 * @return 	array	An array of JHtml options.
+	 * @return    array    An array of JHtml options.
 	 */
 	protected function getOptions()
 	{
@@ -136,7 +136,7 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 		// Convert to array of objects, so we can use sortObjects()
 		// Also translate component names with JText::_()
 		$aComponents = array();
-		$user = JFactory::getUser();
+		$user        = JFactory::getUser();
 
 		foreach ($components as $component)
 		{
@@ -147,9 +147,9 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 				continue;
 			}
 
-			$oData = (object) array(
-				'value'	=> $component->element,
-				'text' 	=> $this->translate($component, 'component')
+			$oData                            = (object) array(
+				'value' => $component->element,
+				'text'  => $this->translate($component, 'component')
 			);
 			$aComponents[$component->element] = $oData;
 		}
@@ -158,7 +158,8 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 		// ordering changed due to the JText::_() translation
 		uasort(
 			$aComponents,
-			function ($a, $b) {
+			function ($a, $b)
+			{
 				return strcasecmp($a->text, $b->text);
 			}
 		);
@@ -169,18 +170,18 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 	/**
 	 * Translate a list of objects with JText::_().
 	 *
-	 * @param   array   $item  The array of objects
-	 * @param   string  $type  The extension type (e.g. component)
+	 * @param   array  $item The array of objects
+	 * @param   string $type The extension type (e.g. component)
 	 *
 	 * @since   2.1
 	 *
 	 * @return  string  $text  The translated name of the extension
 	 *
-	 * @see administrator/com_installer/models/extension.php
+	 * @see     administrator/com_installer/models/extension.php
 	 */
 	public function translate($item, $type)
 	{
-        $platform = FOFPlatform::getInstance();
+		$platform = FOFPlatform::getInstance();
 
 		// Map the manifest cache to $item. This is needed to get the name from the
 		// manifest_cache and NOT from the name column, else some JText::_() translations fails.
@@ -207,9 +208,9 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 			case 'component':
 				$source = JPATH_ADMINISTRATOR . '/components/' . $item->element;
 				$lang->load("$item->element.sys", JPATH_ADMINISTRATOR, null, false, false)
-					||	$lang->load("$item->element.sys", $source, null, false, false)
-					||	$lang->load("$item->element.sys", JPATH_ADMINISTRATOR, $lang->getDefault(), false, false)
-					||	$lang->load("$item->element.sys", $source, $lang->getDefault(), false, false);
+				|| $lang->load("$item->element.sys", $source, null, false, false)
+				|| $lang->load("$item->element.sys", JPATH_ADMINISTRATOR, $lang->getDefault(), false, false)
+				|| $lang->load("$item->element.sys", $source, $lang->getDefault(), false, false);
 				break;
 		}
 
@@ -231,7 +232,7 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 		$class = $this->element['class'] ? (string) $this->element['class'] : '';
 
 		return '<span class="' . $this->id . ' ' . $class . '">' .
-			htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(), $this->value), ENT_COMPAT, 'UTF-8') .
-			'</span>';
+		htmlspecialchars(FOFFormFieldList::getOptionName($this->getOptions(), $this->value), ENT_COMPAT, 'UTF-8') .
+		'</span>';
 	}
 }

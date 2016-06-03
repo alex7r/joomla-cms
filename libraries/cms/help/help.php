@@ -19,10 +19,10 @@ class JHelp
 	/**
 	 * Create a URL for a given help key reference
 	 *
-	 * @param   string   $ref           The name of the help screen (its key reference)
-	 * @param   boolean  $useComponent  Use the help file in the component directory
-	 * @param   string   $override      Use this URL instead of any other
-	 * @param   string   $component     Name of component (or null for current component)
+	 * @param   string  $ref          The name of the help screen (its key reference)
+	 * @param   boolean $useComponent Use the help file in the component directory
+	 * @param   string  $override     Use this URL instead of any other
+	 * @param   string  $component    Name of component (or null for current component)
 	 *
 	 * @return  string
 	 *
@@ -165,7 +165,7 @@ class JHelp
 	/**
 	 * Builds a list of the help sites which can be used in a select option.
 	 *
-	 * @param   string  $pathToXml  Path to an XML file.
+	 * @param   string $pathToXml Path to an XML file.
 	 *
 	 * @return  array  An array of arrays (text, value, selected).
 	 *

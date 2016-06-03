@@ -17,41 +17,12 @@ defined('_JEXEC') or die;
 class UsersController extends JControllerLegacy
 {
 	/**
-	 * Checks whether a user can see this view.
-	 *
-	 * @param   string  $view  The view name.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   1.6
-	 */
-	protected function canView($view)
-	{
-		$canDo = JHelperContent::getActions('com_users');
-
-		switch ($view)
-		{
-			// Special permissions.
-			case 'groups':
-			case 'group':
-			case 'levels':
-			case 'level':
-				return $canDo->get('core.admin');
-				break;
-
-			// Default permissions.
-			default:
-				return true;
-		}
-	}
-
-	/**
 	 * Method to display a view.
 	 *
-	 * @param   boolean  $cachable   If true, the view output will be cached
-	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean $cachable  If true, the view output will be cached
+	 * @param   array   $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
-	 * @return  JController	 This object to support chaining.
+	 * @return  JController     This object to support chaining.
 	 *
 	 * @since   1.5
 	 */
@@ -107,5 +78,34 @@ class UsersController extends JControllerLegacy
 		}
 
 		return parent::display();
+	}
+
+	/**
+	 * Checks whether a user can see this view.
+	 *
+	 * @param   string $view The view name.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   1.6
+	 */
+	protected function canView($view)
+	{
+		$canDo = JHelperContent::getActions('com_users');
+
+		switch ($view)
+		{
+			// Special permissions.
+			case 'groups':
+			case 'group':
+			case 'levels':
+			case 'level':
+				return $canDo->get('core.admin');
+				break;
+
+			// Default permissions.
+			default:
+				return true;
+		}
 	}
 }

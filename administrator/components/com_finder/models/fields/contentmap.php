@@ -100,7 +100,7 @@ class JFormFieldContentMap extends JFormFieldGroupedList
 					}
 					else
 					{
-						$key = FinderHelperLanguage::branchSingular($branch->text);
+						$key  = FinderHelperLanguage::branchSingular($branch->text);
 						$text = $lang->hasKey($key) ? JText::_($key) : $branch->text;
 					}
 

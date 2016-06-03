@@ -43,8 +43,8 @@ class JGithubPackageGitignore extends JGithubPackage
 	/**
 	 * Get a single template
 	 *
-	 * @param   string   $name  The name of the template
-	 * @param   boolean  $raw   Raw output
+	 * @param   string  $name The name of the template
+	 * @param   boolean $raw  Raw output
 	 *
 	 * @throws DomainException
 	 * @since  3.3 (CMS)

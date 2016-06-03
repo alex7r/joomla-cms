@@ -48,10 +48,10 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	/**
 	 * Class constructor.
 	 *
-	 * @param   Input     $input   An optional argument to provide dependency injection for the application's
+	 * @param   Input    $input    An optional argument to provide dependency injection for the application's
 	 *                             input object.  If the argument is an InputCli object that object will become
 	 *                             the application's input object, otherwise a default input object is created.
-	 * @param   Registry  $config  An optional argument to provide dependency injection for the application's
+	 * @param   Registry $config   An optional argument to provide dependency injection for the application's
 	 *                             config object.  If the argument is a Registry object that object will become
 	 *                             the application's config object, otherwise a default config object is created.
 	 *
@@ -59,7 +59,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	 */
 	public function __construct(Input $input = null, Registry $config = null)
 	{
-		$this->input = $input instanceof Input ? $input : new Input;
+		$this->input  = $input instanceof Input ? $input : new Input;
 		$this->config = $config instanceof Registry ? $config : new Registry;
 
 		// Set the execution datetime and timestamp;
@@ -73,7 +73,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	/**
 	 * Method to close the application.
 	 *
-	 * @param   integer  $code  The exit code (optional; default is 0).
+	 * @param   integer $code The exit code (optional; default is 0).
 	 *
 	 * @return  void
 	 *
@@ -115,8 +115,8 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	/**
 	 * Returns a property of the object or the default value if the property is not set.
 	 *
-	 * @param   string  $key      The name of the property.
-	 * @param   mixed   $default  The default value (optional) if none is set.
+	 * @param   string $key     The name of the property.
+	 * @param   mixed  $default The default value (optional) if none is set.
 	 *
 	 * @return  mixed   The value of the configuration.
 	 *
@@ -137,7 +137,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	public function getLogger()
 	{
 		// If a logger hasn't been set, use NullLogger
-		if (! ($this->logger instanceof LoggerInterface))
+		if (!($this->logger instanceof LoggerInterface))
 		{
 			$this->logger = new NullLogger;
 		}
@@ -163,8 +163,8 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	/**
 	 * Modifies a property of the object, creating it if it does not already exist.
 	 *
-	 * @param   string  $key    The name of the property.
-	 * @param   mixed   $value  The value of the property to set (optional).
+	 * @param   string $key   The name of the property.
+	 * @param   mixed  $value The value of the property to set (optional).
 	 *
 	 * @return  mixed   Previous value of the property
 	 *
@@ -181,7 +181,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	/**
 	 * Sets the configuration for the application.
 	 *
-	 * @param   Registry  $config  A registry object holding the configuration.
+	 * @param   Registry $config A registry object holding the configuration.
 	 *
 	 * @return  AbstractApplication  Returns itself to support chaining.
 	 *
@@ -197,7 +197,7 @@ abstract class AbstractApplication implements LoggerAwareInterface
 	/**
 	 * Set the logger.
 	 *
-	 * @param   LoggerInterface  $logger  The logger.
+	 * @param   LoggerInterface $logger The logger.
 	 *
 	 * @return  AbstractApplication  Returns itself to support chaining.
 	 *

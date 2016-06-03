@@ -17,12 +17,12 @@ use Joomla\Filter;
  *
  * @since  1.0
  *
- * @property-read    Input   $get
- * @property-read    Input   $post
- * @property-read    Input   $request
- * @property-read    Input   $server
- * @property-read    Files   $files
- * @property-read    Cookie  $cookie
+ * @property-read    Input  $get
+ * @property-read    Input  $post
+ * @property-read    Input  $request
+ * @property-read    Input  $server
+ * @property-read    Files  $files
+ * @property-read    Cookie $cookie
  *
  * @method      integer  getInt($name, $default = null)       Get a signed integer.
  * @method      integer  getUint($name, $default = null)      Get an unsigned integer.
@@ -39,6 +39,14 @@ use Joomla\Filter;
  */
 class Input implements \Serializable, \Countable
 {
+	/**
+	 * Is all GLOBAL added
+	 *
+	 * @var    boolean
+	 * @since  1.1.4
+	 */
+	protected static $loaded = false;
+
 	/**
 	 * Options array for the Input instance.
 	 *
@@ -72,18 +80,10 @@ class Input implements \Serializable, \Countable
 	protected $inputs = array();
 
 	/**
-	 * Is all GLOBAL added
-	 *
-	 * @var    boolean
-	 * @since  1.1.4
-	 */
-	protected static $loaded = false;
-
-	/**
 	 * Constructor.
 	 *
-	 * @param   array  $source   Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-	 * @param   array  $options  An optional associative array of configuration parameters:
+	 * @param   array $source    Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+	 * @param   array $options   An optional associative array of configuration parameters:
 	 *                           filter: An instance of Filter\Input. If omitted, a default filter is initialised.
 	 *
 	 * @since   1.0
@@ -115,7 +115,7 @@ class Input implements \Serializable, \Countable
 	/**
 	 * Magic method to get an input object
 	 *
-	 * @param   mixed  $name  Name of the input object to retrieve.
+	 * @param   mixed $name Name of the input object to retrieve.
 	 *
 	 * @return  Input  The request input object
 	 *
@@ -163,34 +163,12 @@ class Input implements \Serializable, \Countable
 	}
 
 	/**
-	 * Gets a value from the input data.
-	 *
-	 * @param   string  $name     Name of the value to get.
-	 * @param   mixed   $default  Default value to return if variable does not exist.
-	 * @param   string  $filter   Filter to apply to the value.
-	 *
-	 * @return  mixed  The filtered input value.
-	 *
-	 * @see     \Joomla\Filter\InputFilter::clean()
-	 * @since   1.0
-	 */
-	public function get($name, $default = null, $filter = 'cmd')
-	{
-		if (isset($this->data[$name]))
-		{
-			return $this->filter->clean($this->data[$name], $filter);
-		}
-
-		return $default;
-	}
-
-	/**
 	 * Gets an array of values from the request.
 	 *
-	 * @param   array  $vars        Associative array of keys and filter types to apply.
+	 * @param   array $vars         Associative array of keys and filter types to apply.
 	 *                              If empty and datasource is null, all the input data will be returned
 	 *                              but filtered using the default case in JFilterInput::clean.
-	 * @param   mixed  $datasource  Array to retrieve data from, or null
+	 * @param   mixed $datasource   Array to retrieve data from, or null
 	 *
 	 * @return  mixed  The filtered input data.
 	 *
@@ -239,10 +217,32 @@ class Input implements \Serializable, \Countable
 	}
 
 	/**
+	 * Gets a value from the input data.
+	 *
+	 * @param   string $name    Name of the value to get.
+	 * @param   mixed  $default Default value to return if variable does not exist.
+	 * @param   string $filter  Filter to apply to the value.
+	 *
+	 * @return  mixed  The filtered input value.
+	 *
+	 * @see     \Joomla\Filter\InputFilter::clean()
+	 * @since   1.0
+	 */
+	public function get($name, $default = null, $filter = 'cmd')
+	{
+		if (isset($this->data[$name]))
+		{
+			return $this->filter->clean($this->data[$name], $filter);
+		}
+
+		return $default;
+	}
+
+	/**
 	 * Sets a value
 	 *
-	 * @param   string  $name   Name of the value to set.
-	 * @param   mixed   $value  Value to assign to the input.
+	 * @param   string $name  Name of the value to set.
+	 * @param   mixed  $value Value to assign to the input.
 	 *
 	 * @return  void
 	 *
@@ -256,8 +256,8 @@ class Input implements \Serializable, \Countable
 	/**
 	 * Define a value. The value will only be set if there's no value for the name or if it is null.
 	 *
-	 * @param   string  $name   Name of the value to define.
-	 * @param   mixed   $value  Value to assign to the input.
+	 * @param   string $name  Name of the value to define.
+	 * @param   mixed  $value Value to assign to the input.
 	 *
 	 * @return  void
 	 *
@@ -276,7 +276,7 @@ class Input implements \Serializable, \Countable
 	/**
 	 * Check if a value name exists.
 	 *
-	 * @param   string  $path  Value name
+	 * @param   string $path Value name
 	 *
 	 * @return  boolean
 	 *
@@ -290,8 +290,8 @@ class Input implements \Serializable, \Countable
 	/**
 	 * Magic method to get filtered input data.
 	 *
-	 * @param   string  $name       Name of the filter type prefixed with 'get'.
-	 * @param   array   $arguments  [0] The name of the variable [1] The default value.
+	 * @param   string $name      Name of the filter type prefixed with 'get'.
+	 * @param   array  $arguments [0] The name of the variable [1] The default value.
 	 *
 	 * @return  mixed   The filtered input value.
 	 *
@@ -350,31 +350,6 @@ class Input implements \Serializable, \Countable
 	}
 
 	/**
-	 * Method to unserialize the input.
-	 *
-	 * @param   string  $input  The serialized input.
-	 *
-	 * @return  Input  The input object.
-	 *
-	 * @since   1.0
-	 */
-	public function unserialize($input)
-	{
-		// Unserialize the options, data, and inputs.
-		list($this->options, $this->data, $this->inputs) = unserialize($input);
-
-		// Load the filter.
-		if (isset($this->options['filter']))
-		{
-			$this->filter = $this->options['filter'];
-		}
-		else
-		{
-			$this->filter = new Filter\InputFilter;
-		}
-	}
-
-	/**
 	 * Method to load all of the global inputs.
 	 *
 	 * @return  void
@@ -401,6 +376,31 @@ class Input implements \Serializable, \Countable
 			}
 
 			self::$loaded = true;
+		}
+	}
+
+	/**
+	 * Method to unserialize the input.
+	 *
+	 * @param   string $input The serialized input.
+	 *
+	 * @return  Input  The input object.
+	 *
+	 * @since   1.0
+	 */
+	public function unserialize($input)
+	{
+		// Unserialize the options, data, and inputs.
+		list($this->options, $this->data, $this->inputs) = unserialize($input);
+
+		// Load the filter.
+		if (isset($this->options['filter']))
+		{
+			$this->filter = $this->options['filter'];
+		}
+		else
+		{
+			$this->filter = new Filter\InputFilter;
 		}
 	}
 }

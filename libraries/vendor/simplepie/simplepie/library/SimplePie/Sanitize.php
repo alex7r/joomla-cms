@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- * 	* Redistributions of source code must retain the above copyright notice, this list of
- * 	  conditions and the following disclaimer.
+ *    * Redistributions of source code must retain the above copyright notice, this list of
+ *      conditions and the following disclaimer.
  *
- * 	* Redistributions in binary form must reproduce the above copyright notice, this list
- * 	  of conditions and the following disclaimer in the documentation and/or other materials
- * 	  provided with the distribution.
+ *    * Redistributions in binary form must reproduce the above copyright notice, this list
+ *      of conditions and the following disclaimer in the documentation and/or other materials
+ *      provided with the distribution.
  *
- * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
- * 	  to endorse or promote products derived from this software without specific prior
- * 	  written permission.
+ *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
+ *      to endorse or promote products derived from this software without specific prior
+ *      written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,14 +32,14 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package SimplePie
- * @version 1.3.1
+ * @package   SimplePie
+ * @version   1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author Ryan Parman
- * @author Geoffrey Sneddon
- * @author Ryan McCue
- * @link http://simplepie.org/ SimplePie
- * @license http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author    Ryan Parman
+ * @author    Geoffrey Sneddon
+ * @author    Ryan McCue
+ * @link      http://simplepie.org/ SimplePie
+ * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 /**
@@ -49,7 +49,7 @@
  * This class can be overloaded with {@see SimplePie::set_sanitize_class()}
  *
  * @package SimplePie
- * @todo Move to using an actual HTML parser (this will allow tags to be properly stripped, and to switch between HTML and XHTML), this will also make it easier to shorten a string while preserving HTML tags
+ * @todo    Move to using an actual HTML parser (this will allow tags to be properly stripped, and to switch between HTML and XHTML), this will also make it easier to shorten a string while preserving HTML tags
  */
 class SimplePie_Sanitize
 {
@@ -58,24 +58,71 @@ class SimplePie_Sanitize
 
 	// Options
 	var $remove_div = true;
+
 	var $image_handler = '';
+
 	var $strip_htmltags = array('base', 'blink', 'body', 'doctype', 'embed', 'font', 'form', 'frame', 'frameset', 'html', 'iframe', 'input', 'marquee', 'meta', 'noscript', 'object', 'param', 'script', 'style');
+
 	var $encode_instead_of_strip = false;
+
 	var $strip_attributes = array('bgsound', 'class', 'expr', 'id', 'style', 'onclick', 'onerror', 'onfinish', 'onmouseover', 'onmouseout', 'onfocus', 'onblur', 'lowsrc', 'dynsrc');
+
 	var $strip_comments = false;
+
 	var $output_encoding = 'UTF-8';
+
 	var $enable_cache = true;
+
 	var $cache_location = './cache';
+
 	var $cache_name_function = 'md5';
+
 	var $timeout = 10;
+
 	var $useragent = '';
+
 	var $force_fsockopen = false;
+
 	var $replace_url_attributes = null;
 
 	public function __construct()
 	{
 		// Set defaults
 		$this->set_url_replacements(null);
+	}
+
+	/**
+	 * Set element/attribute key/value pairs of HTML attributes
+	 * containing URLs that need to be resolved relative to the feed
+	 *
+	 * Defaults to |a|@href, |area|@href, |blockquote|@cite, |del|@cite,
+	 * |form|@action, |img|@longdesc, |img|@src, |input|@src, |ins|@cite,
+	 * |q|@cite
+	 *
+	 * @since 1.0
+	 *
+	 * @param array|null $element_attribute Element/attribute key/value pairs, null for default
+	 */
+	public function set_url_replacements($element_attribute = null)
+	{
+		if ($element_attribute === null)
+		{
+			$element_attribute = array(
+				'a'          => 'href',
+				'area'       => 'href',
+				'blockquote' => 'cite',
+				'del'        => 'cite',
+				'form'       => 'action',
+				'img'        => array(
+					'longdesc',
+					'src'
+				),
+				'input'      => 'src',
+				'ins'        => 'cite',
+				'q'          => 'cite'
+			);
+		}
+		$this->replace_url_attributes = (array) $element_attribute;
 	}
 
 	public function remove_div($enable = true)
@@ -189,39 +236,6 @@ class SimplePie_Sanitize
 		$this->output_encoding = (string) $encoding;
 	}
 
-	/**
-	 * Set element/attribute key/value pairs of HTML attributes
-	 * containing URLs that need to be resolved relative to the feed
-	 *
-	 * Defaults to |a|@href, |area|@href, |blockquote|@cite, |del|@cite,
-	 * |form|@action, |img|@longdesc, |img|@src, |input|@src, |ins|@cite,
-	 * |q|@cite
-	 *
-	 * @since 1.0
-	 * @param array|null $element_attribute Element/attribute key/value pairs, null for default
-	 */
-	public function set_url_replacements($element_attribute = null)
-	{
-		if ($element_attribute === null)
-		{
-			$element_attribute = array(
-				'a' => 'href',
-				'area' => 'href',
-				'blockquote' => 'cite',
-				'del' => 'cite',
-				'form' => 'action',
-				'img' => array(
-					'longdesc',
-					'src'
-				),
-				'input' => 'src',
-				'ins' => 'cite',
-				'q' => 'cite'
-			);
-		}
-		$this->replace_url_attributes = (array) $element_attribute;
-	}
-
 	public function sanitize($data, $type, $base = '')
 	{
 		$data = trim($data);
@@ -247,9 +261,9 @@ class SimplePie_Sanitize
 			if ($type & (SIMPLEPIE_CONSTRUCT_HTML | SIMPLEPIE_CONSTRUCT_XHTML))
 			{
 
-				$document = new DOMDocument();
+				$document           = new DOMDocument();
 				$document->encoding = 'UTF-8';
-				$data = $this->preprocess($data, $type);
+				$data               = $this->preprocess($data, $type);
 
 				set_error_handler(array('SimplePie_Misc', 'silence_errors'));
 				$document->loadHTML($data);
@@ -258,7 +272,7 @@ class SimplePie_Sanitize
 				// Strip comments
 				if ($this->strip_comments)
 				{
-					$xpath = new DOMXPath($document);
+					$xpath    = new DOMXPath($document);
 					$comments = $xpath->query('//comment()');
 
 					foreach ($comments as $comment)
@@ -302,7 +316,7 @@ class SimplePie_Sanitize
 						if ($img->hasAttribute('src'))
 						{
 							$image_url = call_user_func($this->cache_name_function, $img->getAttribute('src'));
-							$cache = $this->registry->call('Cache', 'get_handler', array($this->cache_location, $image_url, 'spi'));
+							$cache     = $this->registry->call('Cache', 'get_handler', array($this->cache_location, $image_url, 'spi'));
 
 							if ($cache->load())
 							{
@@ -310,7 +324,7 @@ class SimplePie_Sanitize
 							}
 							else
 							{
-								$file = $this->registry->create('File', array($img['attribs']['src']['data'], $this->timeout, 5, array('X-FORWARDED-FOR' => $_SERVER['REMOTE_ADDR']), $this->useragent, $this->force_fsockopen));
+								$file    = $this->registry->create('File', array($img['attribs']['src']['data'], $this->timeout, 5, array('X-FORWARDED-FOR' => $_SERVER['REMOTE_ADDR']), $this->useragent, $this->force_fsockopen));
 								$headers = $file->headers;
 
 								if ($file->success && ($file->method & SIMPLEPIE_FILE_SOURCE_REMOTE === 0 || ($file->status_code === 200 || $file->status_code > 206 && $file->status_code < 300)))
@@ -373,6 +387,7 @@ class SimplePie_Sanitize
 				$data = $this->registry->call('Misc', 'change_encoding', array($data, 'UTF-8', $this->output_encoding));
 			}
 		}
+
 		return $data;
 	}
 
@@ -396,64 +411,13 @@ class SimplePie_Sanitize
 		$ret .= '<html><head>';
 		$ret .= '<meta http-equiv="Content-Type" content="' . $content_type . '; charset=utf-8" />';
 		$ret .= '</head><body>' . $html . '</body></html>';
+
 		return $ret;
-	}
-
-	public function replace_urls($document, $tag, $attributes)
-	{
-		if (!is_array($attributes))
-		{
-			$attributes = array($attributes);
-		}
-
-		if (!is_array($this->strip_htmltags) || !in_array($tag, $this->strip_htmltags))
-		{
-			$elements = $document->getElementsByTagName($tag);
-			foreach ($elements as $element)
-			{
-				foreach ($attributes as $attribute)
-				{
-					if ($element->hasAttribute($attribute))
-					{
-						$value = $this->registry->call('Misc', 'absolutize_url', array($element->getAttribute($attribute), $this->base));
-						if ($value !== false)
-						{
-							$element->setAttribute($attribute, $value);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	public function do_strip_htmltags($match)
-	{
-		if ($this->encode_instead_of_strip)
-		{
-			if (isset($match[4]) && !in_array(strtolower($match[1]), array('script', 'style')))
-			{
-				$match[1] = htmlspecialchars($match[1], ENT_COMPAT, 'UTF-8');
-				$match[2] = htmlspecialchars($match[2], ENT_COMPAT, 'UTF-8');
-				return "&lt;$match[1]$match[2]&gt;$match[3]&lt;/$match[1]&gt;";
-			}
-			else
-			{
-				return htmlspecialchars($match[0], ENT_COMPAT, 'UTF-8');
-			}
-		}
-		elseif (isset($match[4]) && !in_array(strtolower($match[1]), array('script', 'style')))
-		{
-			return $match[4];
-		}
-		else
-		{
-			return '';
-		}
 	}
 
 	protected function strip_tag($tag, $document, $type)
 	{
-		$xpath = new DOMXPath($document);
+		$xpath    = new DOMXPath($document);
 		$elements = $xpath->query('body//' . $tag);
 		if ($this->encode_instead_of_strip)
 		{
@@ -524,7 +488,7 @@ class SimplePie_Sanitize
 			foreach ($elements as $element)
 			{
 				$fragment = $document->createDocumentFragment();
-				$number = $element->childNodes->length;
+				$number   = $element->childNodes->length;
 				for ($i = $number; $i > 0; $i--)
 				{
 					$child = $element->childNodes->item(0);
@@ -538,12 +502,65 @@ class SimplePie_Sanitize
 
 	protected function strip_attr($attrib, $document)
 	{
-		$xpath = new DOMXPath($document);
+		$xpath    = new DOMXPath($document);
 		$elements = $xpath->query('//*[@' . $attrib . ']');
 
 		foreach ($elements as $element)
 		{
 			$element->removeAttribute($attrib);
+		}
+	}
+
+	public function replace_urls($document, $tag, $attributes)
+	{
+		if (!is_array($attributes))
+		{
+			$attributes = array($attributes);
+		}
+
+		if (!is_array($this->strip_htmltags) || !in_array($tag, $this->strip_htmltags))
+		{
+			$elements = $document->getElementsByTagName($tag);
+			foreach ($elements as $element)
+			{
+				foreach ($attributes as $attribute)
+				{
+					if ($element->hasAttribute($attribute))
+					{
+						$value = $this->registry->call('Misc', 'absolutize_url', array($element->getAttribute($attribute), $this->base));
+						if ($value !== false)
+						{
+							$element->setAttribute($attribute, $value);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public function do_strip_htmltags($match)
+	{
+		if ($this->encode_instead_of_strip)
+		{
+			if (isset($match[4]) && !in_array(strtolower($match[1]), array('script', 'style')))
+			{
+				$match[1] = htmlspecialchars($match[1], ENT_COMPAT, 'UTF-8');
+				$match[2] = htmlspecialchars($match[2], ENT_COMPAT, 'UTF-8');
+
+				return "&lt;$match[1]$match[2]&gt;$match[3]&lt;/$match[1]&gt;";
+			}
+			else
+			{
+				return htmlspecialchars($match[0], ENT_COMPAT, 'UTF-8');
+			}
+		}
+		elseif (isset($match[4]) && !in_array(strtolower($match[1]), array('script', 'style')))
+		{
+			return $match[4];
+		}
+		else
+		{
+			return '';
 		}
 	}
 }

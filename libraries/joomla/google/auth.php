@@ -43,10 +43,10 @@ abstract class JGoogleAuth
 	/**
 	 * Abstract method to retrieve data from Google
 	 *
-	 * @param   string  $url      The URL for the request.
-	 * @param   mixed   $data     The data to include in the request.
-	 * @param   array   $headers  The headers to send with the request.
-	 * @param   string  $method   The type of http request to send.
+	 * @param   string $url     The URL for the request.
+	 * @param   mixed  $data    The data to include in the request.
+	 * @param   array  $headers The headers to send with the request.
+	 * @param   string $method  The type of http request to send.
 	 *
 	 * @return  mixed  Data from Google.
 	 *
@@ -57,7 +57,7 @@ abstract class JGoogleAuth
 	/**
 	 * Get an option from the JGoogleAuth object.
 	 *
-	 * @param   string  $key  The name of the option to get.
+	 * @param   string $key The name of the option to get.
 	 *
 	 * @return  mixed  The option value.
 	 *
@@ -71,8 +71,8 @@ abstract class JGoogleAuth
 	/**
 	 * Set an option for the JGoogleAuth object.
 	 *
-	 * @param   string  $key    The name of the option to set.
-	 * @param   mixed   $value  The option value to set.
+	 * @param   string $key   The name of the option to set.
+	 * @param   mixed  $value The option value to set.
 	 *
 	 * @return  JGoogleAuth  This object for method chaining.
 	 *

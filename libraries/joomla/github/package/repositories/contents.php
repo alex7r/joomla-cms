@@ -54,9 +54,9 @@ class JGithubPackageRepositoriesContents extends JGithubPackage
 	 * "sha": "3d21ec53a331a6f037a91c368710b99387d012c1"
 	 * }
 	 *
-	 * @param   string  $owner  The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
-	 * @param   string  $ref    The String name of the Commit/Branch/Tag. Defaults to master.
+	 * @param   string $owner The name of the owner of the GitHub repository.
+	 * @param   string $repo  The name of the GitHub repository.
+	 * @param   string $ref   The String name of the Commit/Branch/Tag. Defaults to master.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -113,10 +113,10 @@ class JGithubPackageRepositoriesContents extends JGithubPackage
 	 * "sha": "3d21ec53a331a6f037a91c368710b99387d012c1"
 	 * }
 	 *
-	 * @param   string  $owner  The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
-	 * @param   string  $path   The content path.
-	 * @param   string  $ref    The String name of the Commit/Branch/Tag. Defaults to master.
+	 * @param   string $owner The name of the owner of the GitHub repository.
+	 * @param   string $repo  The name of the GitHub repository.
+	 * @param   string $path  The content path.
+	 * @param   string $ref   The String name of the Commit/Branch/Tag. Defaults to master.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -166,10 +166,10 @@ class JGithubPackageRepositoriesContents extends JGithubPackage
 	 *
 	 * curl -L https://api.github.com/repos/pengwynn/octokit/tarball > octokit.tar.gz
 	 *
-	 * @param   string  $owner           The name of the owner of the GitHub repository.
-	 * @param   string  $repo            The name of the GitHub repository.
-	 * @param   string  $archive_format  Either tarball or zipball.
-	 * @param   string  $ref             The String name of the Commit/Branch/Tag. Defaults to master.
+	 * @param   string $owner          The name of the owner of the GitHub repository.
+	 * @param   string $repo           The name of the GitHub repository.
+	 * @param   string $archive_format Either tarball or zipball.
+	 * @param   string $ref            The String name of the Commit/Branch/Tag. Defaults to master.
 	 *
 	 * @throws UnexpectedValueException
 	 * @since 3.3 (CMS)

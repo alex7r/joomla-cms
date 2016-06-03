@@ -46,7 +46,7 @@ class JControllerAdmin extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JControllerLegacy
 	 * @since   12.2
@@ -147,8 +147,8 @@ class JControllerAdmin extends JControllerLegacy
 	 * Function that allows child controller access to model data
 	 * after the item has been deleted.
 	 *
-	 * @param   JModelLegacy  $model  The data model object.
-	 * @param   integer       $id     The validated data.
+	 * @param   JModelLegacy $model The data model object.
+	 * @param   integer      $id    The validated data.
 	 *
 	 * @return  void
 	 *
@@ -161,8 +161,8 @@ class JControllerAdmin extends JControllerLegacy
 	/**
 	 * Display is not supported by this controller.
 	 *
-	 * @param   boolean  $cachable   If true, the view output will be cached
-	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean $cachable  If true, the view output will be cached
+	 * @param   array   $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  JControllerLegacy  A JControllerLegacy object to support chaining.
 	 *
@@ -186,9 +186,9 @@ class JControllerAdmin extends JControllerLegacy
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to publish from the request.
-		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
-		$data = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
-		$task = $this->getTask();
+		$cid   = JFactory::getApplication()->input->get('cid', array(), 'array');
+		$data  = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
+		$task  = $this->getTask();
 		$value = JArrayHelper::getValue($data, $task, 0, 'int');
 
 		if (empty($cid))
@@ -242,7 +242,7 @@ class JControllerAdmin extends JControllerLegacy
 			}
 		}
 
-		$extension = $this->input->get('extension');
+		$extension    = $this->input->get('extension');
 		$extensionURL = ($extension) ? '&extension=' . $extension : '';
 		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . $extensionURL, false));
 	}
@@ -262,7 +262,7 @@ class JControllerAdmin extends JControllerLegacy
 		$ids = JFactory::getApplication()->input->post->get('cid', array(), 'array');
 		$inc = ($this->getTask() == 'orderup') ? -1 : 1;
 
-		$model = $this->getModel();
+		$model  = $this->getModel();
 		$return = $model->reorder($ids, $inc);
 
 		if ($return === false)
@@ -296,7 +296,7 @@ class JControllerAdmin extends JControllerLegacy
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Get the input
-		$pks = $this->input->post->get('cid', array(), 'array');
+		$pks   = $this->input->post->get('cid', array(), 'array');
 		$order = $this->input->post->get('order', array(), 'array');
 
 		// Sanitize the input
@@ -341,7 +341,7 @@ class JControllerAdmin extends JControllerLegacy
 
 		$ids = JFactory::getApplication()->input->post->get('cid', array(), 'array');
 
-		$model = $this->getModel();
+		$model  = $this->getModel();
 		$return = $model->checkin($ids);
 
 		if ($return === false)
@@ -372,7 +372,7 @@ class JControllerAdmin extends JControllerLegacy
 	public function saveOrderAjax()
 	{
 		// Get the input
-		$pks = $this->input->post->get('cid', array(), 'array');
+		$pks   = $this->input->post->get('cid', array(), 'array');
 		$order = $this->input->post->get('order', array(), 'array');
 
 		// Sanitize the input

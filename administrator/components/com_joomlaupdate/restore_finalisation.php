@@ -21,8 +21,8 @@ if (!function_exists('jimport'))
 	/**
 	 * We don't use it but the post-update script is using it anyway, so LET'S FAKE IT!
 	 *
-	 * @param   string  $path  A dot syntax path.
-	 * @param   string  $base  Search this directory for the class.
+	 * @param   string $path A dot syntax path.
+	 * @param   string $base Search this directory for the class.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -47,7 +47,7 @@ if (!class_exists('JFile'))
 		/**
 		 * Proxies checking a folder exists to the native php version
 		 *
-		 * @param   string  $fileName  The path to the file to be checked
+		 * @param   string $fileName The path to the file to be checked
 		 *
 		 * @return  bool
 		 *
@@ -61,7 +61,7 @@ if (!class_exists('JFile'))
 		/**
 		 * Proxies deleting a file to the restore.php version
 		 *
-		 * @param   string  $fileName  The path to the file to be deleted
+		 * @param   string $fileName The path to the file to be deleted
 		 *
 		 * @return  bool
 		 *
@@ -88,7 +88,7 @@ if (!class_exists('JFolder'))
 		/**
 		 * Proxies checking a folder exists to the native php version
 		 *
-		 * @param   string  $folderName  The path to the folder to be checked
+		 * @param   string $folderName The path to the folder to be checked
 		 *
 		 * @return  bool
 		 *
@@ -102,7 +102,7 @@ if (!class_exists('JFolder'))
 		/**
 		 * Proxies deleting a folder to the restore.php version
 		 *
-		 * @param   string  $folderName  The path to the folder to be deleted
+		 * @param   string $folderName The path to the folder to be deleted
 		 *
 		 * @return  void
 		 *
@@ -128,7 +128,7 @@ if (!class_exists('JText'))
 		/**
 		 * No need for translations in a non-interactive script, so always return an empty string here
 		 *
-		 * @param   string  $text  A language constant
+		 * @param   string $text A language constant
 		 *
 		 * @return  string
 		 *
@@ -146,8 +146,8 @@ if (!function_exists('finalizeRestore'))
 	/**
 	 * Run part of the Joomla! finalisation script, namely the part that cleans up unused files/folders
 	 *
-	 * @param   string  $siteRoot     The root to the Joomla! site
-	 * @param   string  $restorePath  The base path to restore.php
+	 * @param   string $siteRoot    The root to the Joomla! site
+	 * @param   string $restorePath The base path to restore.php
 	 *
 	 * @return  void
 	 *
@@ -164,7 +164,7 @@ if (!function_exists('finalizeRestore'))
 
 		if (file_exists($filePath))
 		{
-			require_once ($filePath);
+			require_once($filePath);
 		}
 
 		// Make sure Joomla!'s code can figure out which files exist and need be removed

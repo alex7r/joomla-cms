@@ -21,7 +21,7 @@ class InstallerViewInstall extends InstallerViewDefault
 	/**
 	 * Display the view
 	 *
-	 * @param   string  $tpl  Template
+	 * @param   string $tpl Template
 	 *
 	 * @return  void
 	 *
@@ -29,9 +29,9 @@ class InstallerViewInstall extends InstallerViewDefault
 	 */
 	public function display($tpl = null)
 	{
-		$paths = new stdClass;
+		$paths        = new stdClass;
 		$paths->first = '';
-		$state = $this->get('state');
+		$state        = $this->get('state');
 
 		$this->paths = &$paths;
 		$this->state = &$state;

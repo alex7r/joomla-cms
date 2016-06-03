@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- * 	* Redistributions of source code must retain the above copyright notice, this list of
- * 	  conditions and the following disclaimer.
+ *    * Redistributions of source code must retain the above copyright notice, this list of
+ *      conditions and the following disclaimer.
  *
- * 	* Redistributions in binary form must reproduce the above copyright notice, this list
- * 	  of conditions and the following disclaimer in the documentation and/or other materials
- * 	  provided with the distribution.
+ *    * Redistributions in binary form must reproduce the above copyright notice, this list
+ *      of conditions and the following disclaimer in the documentation and/or other materials
+ *      provided with the distribution.
  *
- * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
- * 	  to endorse or promote products derived from this software without specific prior
- * 	  written permission.
+ *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
+ *      to endorse or promote products derived from this software without specific prior
+ *      written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,14 +32,14 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package SimplePie
- * @version 1.3.1
+ * @package   SimplePie
+ * @version   1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author Ryan Parman
- * @author Geoffrey Sneddon
- * @author Ryan McCue
- * @link http://simplepie.org/ SimplePie
- * @license http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author    Ryan Parman
+ * @author    Geoffrey Sneddon
+ * @author    Ryan McCue
+ * @link      http://simplepie.org/ SimplePie
+ * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 /**
@@ -49,13 +49,15 @@
  *
  * This class can be overloaded with {@see SimplePie::set_source_class()}
  *
- * @package SimplePie
+ * @package    SimplePie
  * @subpackage API
  */
 class SimplePie_Source
 {
 	var $item;
+
 	var $data = array();
+
 	protected $registry;
 
 	public function __construct($item, $data)
@@ -72,28 +74,6 @@ class SimplePie_Source
 	public function __toString()
 	{
 		return md5(serialize($this->data));
-	}
-
-	public function get_source_tags($namespace, $tag)
-	{
-		if (isset($this->data['child'][$namespace][$tag]))
-		{
-			return $this->data['child'][$namespace][$tag];
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	public function get_base($element = array())
-	{
-		return $this->item->get_base($element);
-	}
-
-	public function sanitize($data, $type, $base = '')
-	{
-		return $this->item->sanitize($data, $type, $base);
 	}
 
 	public function get_item()
@@ -137,6 +117,28 @@ class SimplePie_Source
 		}
 	}
 
+	public function get_source_tags($namespace, $tag)
+	{
+		if (isset($this->data['child'][$namespace][$tag]))
+		{
+			return $this->data['child'][$namespace][$tag];
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	public function sanitize($data, $type, $base = '')
+	{
+		return $this->item->sanitize($data, $type, $base);
+	}
+
+	public function get_base($element = array())
+	{
+		return $this->item->get_base($element);
+	}
+
 	public function get_category($key = 0)
 	{
 		$categories = $this->get_categories();
@@ -156,9 +158,9 @@ class SimplePie_Source
 
 		foreach ((array) $this->get_source_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'category') as $category)
 		{
-			$term = null;
+			$term   = null;
 			$scheme = null;
-			$label = null;
+			$label  = null;
 			if (isset($category['attribs']['']['term']))
 			{
 				$term = $this->sanitize($category['attribs']['']['term'], SIMPLEPIE_CONSTRUCT_TEXT);
@@ -225,8 +227,8 @@ class SimplePie_Source
 		$authors = array();
 		foreach ((array) $this->get_source_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'author') as $author)
 		{
-			$name = null;
-			$uri = null;
+			$name  = null;
+			$uri   = null;
 			$email = null;
 			if (isset($author['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']))
 			{
@@ -247,8 +249,8 @@ class SimplePie_Source
 		}
 		if ($author = $this->get_source_tags(SIMPLEPIE_NAMESPACE_ATOM_03, 'author'))
 		{
-			$name = null;
-			$url = null;
+			$name  = null;
+			$url   = null;
 			$email = null;
 			if (isset($author[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_03]['name'][0]['data']))
 			{
@@ -308,8 +310,8 @@ class SimplePie_Source
 		$contributors = array();
 		foreach ((array) $this->get_source_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'contributor') as $contributor)
 		{
-			$name = null;
-			$uri = null;
+			$name  = null;
+			$uri   = null;
 			$email = null;
 			if (isset($contributor['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']))
 			{
@@ -330,8 +332,8 @@ class SimplePie_Source
 		}
 		foreach ((array) $this->get_source_tags(SIMPLEPIE_NAMESPACE_ATOM_03, 'contributor') as $contributor)
 		{
-			$name = null;
-			$url = null;
+			$name  = null;
+			$url   = null;
 			$email = null;
 			if (isset($contributor['child'][SIMPLEPIE_NAMESPACE_ATOM_03]['name'][0]['data']))
 			{
@@ -361,6 +363,14 @@ class SimplePie_Source
 		}
 	}
 
+	/**
+	 * Added for parity between the parent-level and the item/entry-level.
+	 */
+	public function get_permalink()
+	{
+		return $this->get_link(0);
+	}
+
 	public function get_link($key = 0, $rel = 'alternate')
 	{
 		$links = $this->get_links($rel);
@@ -374,14 +384,6 @@ class SimplePie_Source
 		}
 	}
 
-	/**
-	 * Added for parity between the parent-level and the item/entry-level.
-	 */
-	public function get_permalink()
-	{
-		return $this->get_link(0);
-	}
-
 	public function get_links($rel = 'alternate')
 	{
 		if (!isset($this->data['links']))
@@ -393,7 +395,7 @@ class SimplePie_Source
 				{
 					if (isset($link['attribs']['']['href']))
 					{
-						$link_rel = (isset($link['attribs']['']['rel'])) ? $link['attribs']['']['rel'] : 'alternate';
+						$link_rel                         = (isset($link['attribs']['']['rel'])) ? $link['attribs']['']['rel'] : 'alternate';
 						$this->data['links'][$link_rel][] = $this->sanitize($link['attribs']['']['href'], SIMPLEPIE_CONSTRUCT_IRI, $this->get_base($link));
 					}
 				}
@@ -404,7 +406,7 @@ class SimplePie_Source
 				{
 					if (isset($link['attribs']['']['href']))
 					{
-						$link_rel = (isset($link['attribs']['']['rel'])) ? $link['attribs']['']['rel'] : 'alternate';
+						$link_rel                         = (isset($link['attribs']['']['rel'])) ? $link['attribs']['']['rel'] : 'alternate';
 						$this->data['links'][$link_rel][] = $this->sanitize($link['attribs']['']['href'], SIMPLEPIE_CONSTRUCT_IRI, $this->get_base($link));
 
 					}
@@ -431,7 +433,7 @@ class SimplePie_Source
 					if (isset($this->data['links'][SIMPLEPIE_IANA_LINK_RELATIONS_REGISTRY . $key]))
 					{
 						$this->data['links'][SIMPLEPIE_IANA_LINK_RELATIONS_REGISTRY . $key] = array_merge($this->data['links'][$key], $this->data['links'][SIMPLEPIE_IANA_LINK_RELATIONS_REGISTRY . $key]);
-						$this->data['links'][$key] =& $this->data['links'][SIMPLEPIE_IANA_LINK_RELATIONS_REGISTRY . $key];
+						$this->data['links'][$key]                                          =& $this->data['links'][SIMPLEPIE_IANA_LINK_RELATIONS_REGISTRY . $key];
 					}
 					else
 					{

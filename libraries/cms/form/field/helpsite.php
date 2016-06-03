@@ -55,7 +55,7 @@ class JFormFieldHelpsite extends JFormFieldList
 
 		$showDefault = $this->getAttribute('showDefault') === 'false' ? 'false' : 'true';
 
-		$html = parent::getInput();
+		$html   = parent::getInput();
 		$button = '<button
 						type="button"
 						class="btn btn-small"

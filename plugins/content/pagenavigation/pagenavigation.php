@@ -19,10 +19,10 @@ class PlgContentPagenavigation extends JPlugin
 	/**
 	 * If in the article view and the parameter is enabled shows the page navigation
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin
-	 * @param   object   &$row     The article object
-	 * @param   mixed    &$params  The article params
-	 * @param   integer  $page     The 'page' number
+	 * @param   string  $context The context of the content being passed to the plugin
+	 * @param   object  &$row    The article object
+	 * @param   mixed   &$params The article params
+	 * @param   integer $page    The 'page' number
 	 *
 	 * @return  mixed  void or true
 	 *
@@ -57,7 +57,7 @@ class PlgContentPagenavigation extends JPlugin
 			 * The following is needed as different menu items types utilise a different param to control ordering.
 			 * For Blogs the `orderby_sec` param is the order controlling param.
 			 * For Table and List views it is the `orderby` param.
-			**/
+			 **/
 			$params_list = $params->toArray();
 
 			if (array_key_exists('orderby_sec', $params_list))
@@ -126,12 +126,12 @@ class PlgContentPagenavigation extends JPlugin
 
 			// Sqlsrv changes
 			$case_when = ' CASE WHEN ' . $query->charLength('a.alias', '!=', '0');
-			$a_id = $query->castAsChar('a.id');
+			$a_id      = $query->castAsChar('a.id');
 			$case_when .= ' THEN ' . $query->concatenate(array($a_id, 'a.alias'), ':');
 			$case_when .= ' ELSE ' . $a_id . ' END as slug';
 
 			$case_when1 = ' CASE WHEN ' . $query->charLength('cc.alias', '!=', '0');
-			$c_id = $query->castAsChar('cc.id');
+			$c_id       = $query->castAsChar('cc.id');
 			$case_when1 .= ' THEN ' . $query->concatenate(array($c_id, 'cc.alias'), ':');
 			$case_when1 .= ' ELSE ' . $c_id . ' END as catslug';
 			$query->select('a.id, a.title, a.catid, a.language,' . $case_when . ',' . $case_when1)
@@ -139,7 +139,7 @@ class PlgContentPagenavigation extends JPlugin
 				->join('LEFT', '#__categories AS cc ON cc.id = a.catid')
 				->where(
 					'a.catid = ' . (int) $row->catid . ' AND a.state = ' . (int) $row->state
-						. ($canPublish ? '' : ' AND a.access IN (' . implode(",", JAccess::getAuthorisedViewLevels($user->id)) . ') ') . $xwhere
+					. ($canPublish ? '' : ' AND a.access IN (' . implode(",", JAccess::getAuthorisedViewLevels($user->id)) . ') ') . $xwhere
 				);
 			$query->order($orderby);
 
@@ -181,23 +181,23 @@ class PlgContentPagenavigation extends JPlugin
 			if ($row->prev)
 			{
 				$row->prev_label = ($this->params->get('display', 0) == 0) ? JText::_('JPREV') : $row->prev->title;
-				$row->prev = JRoute::_(ContentHelperRoute::getArticleRoute($row->prev->slug, $row->prev->catid, $row->prev->language));
+				$row->prev       = JRoute::_(ContentHelperRoute::getArticleRoute($row->prev->slug, $row->prev->catid, $row->prev->language));
 			}
 			else
 			{
 				$row->prev_label = '';
-				$row->prev = '';
+				$row->prev       = '';
 			}
 
 			if ($row->next)
 			{
 				$row->next_label = ($this->params->get('display', 0) == 0) ? JText::_('JNEXT') : $row->next->title;
-				$row->next = JRoute::_(ContentHelperRoute::getArticleRoute($row->next->slug, $row->next->catid, $row->next->language));
+				$row->next       = JRoute::_(ContentHelperRoute::getArticleRoute($row->next->slug, $row->next->catid, $row->next->language));
 			}
 			else
 			{
 				$row->next_label = '';
-				$row->next = '';
+				$row->next       = '';
 			}
 
 			// Output.
@@ -224,7 +224,7 @@ class PlgContentPagenavigation extends JPlugin
 	/**
 	 * Translate an order code to a field for primary ordering.
 	 *
-	 * @param   string  $orderDate  The ordering code.
+	 * @param   string $orderDate The ordering code.
 	 *
 	 * @return  string  The SQL field(s) to order by.
 	 *

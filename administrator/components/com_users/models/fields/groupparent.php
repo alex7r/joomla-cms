@@ -37,8 +37,8 @@ class JFormFieldGroupParent extends JFormFieldList
 	{
 		$options = array();
 
-		$db = JFactory::getDbo();
-		$user = JFactory::getUser();
+		$db    = JFactory::getDbo();
+		$user  = JFactory::getUser();
 		$query = $db->getQuery(true)
 			->select('a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level')
 			->from('#__usergroups AS a')

@@ -19,8 +19,8 @@ class ModulesController extends JControllerLegacy
 	/**
 	 * Method to display a view.
 	 *
-	 * @param   boolean        $cachable   If true, the view output will be cached
-	 * @param   array|boolean  $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}
+	 * @param   boolean       $cachable  If true, the view output will be cached
+	 * @param   array|boolean $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}
 	 *
 	 * @return  JController    This object to support chaining.
 	 *
@@ -28,7 +28,7 @@ class ModulesController extends JControllerLegacy
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{
-		$id     = $this->input->getInt('id');
+		$id = $this->input->getInt('id');
 
 		$document = JFactory::getDocument();
 
@@ -45,6 +45,7 @@ class ModulesController extends JControllerLegacy
 				if (!$model->checkout($id))
 				{
 					JFactory::getApplication()->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH'), 'error');
+
 					return false;
 				}
 

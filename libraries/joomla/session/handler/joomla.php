@@ -35,7 +35,7 @@ class JSessionHandlerJoomla extends JSessionHandlerNative
 	/**
 	 * Public constructor
 	 *
-	 * @param   array  $options  An array of configuration options
+	 * @param   array $options An array of configuration options
 	 *
 	 * @since   3.5
 	 */
@@ -50,6 +50,56 @@ class JSessionHandlerJoomla extends JSessionHandlerNative
 		// Set options
 		$this->setOptions($options);
 		$this->setCookieParams();
+	}
+
+	/**
+	 * Set additional session options
+	 *
+	 * @param   array $options List of parameter
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   3.5
+	 */
+	protected function setOptions(array $options)
+	{
+		if (isset($options['force_ssl']))
+		{
+			$this->force_ssl = (bool) $options['force_ssl'];
+		}
+
+		return true;
+	}
+
+	/**
+	 * Set session cookie parameters
+	 *
+	 * @return  void
+	 *
+	 * @since   3.5
+	 */
+	protected function setCookieParams()
+	{
+		$cookie = session_get_cookie_params();
+
+		if ($this->force_ssl)
+		{
+			$cookie['secure'] = true;
+		}
+
+		$config = JFactory::getConfig();
+
+		if ($config->get('cookie_domain', '') != '')
+		{
+			$cookie['domain'] = $config->get('cookie_domain');
+		}
+
+		if ($config->get('cookie_path', '') != '')
+		{
+			$cookie['path'] = $config->get('cookie_path');
+		}
+
+		session_set_cookie_params($cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], true);
 	}
 
 	/**
@@ -106,55 +156,5 @@ class JSessionHandlerJoomla extends JSessionHandlerNative
 		}
 
 		parent::clear();
-	}
-
-	/**
-	 * Set session cookie parameters
-	 *
-	 * @return  void
-	 *
-	 * @since   3.5
-	 */
-	protected function setCookieParams()
-	{
-		$cookie = session_get_cookie_params();
-
-		if ($this->force_ssl)
-		{
-			$cookie['secure'] = true;
-		}
-
-		$config = JFactory::getConfig();
-
-		if ($config->get('cookie_domain', '') != '')
-		{
-			$cookie['domain'] = $config->get('cookie_domain');
-		}
-
-		if ($config->get('cookie_path', '') != '')
-		{
-			$cookie['path'] = $config->get('cookie_path');
-		}
-
-		session_set_cookie_params($cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], true);
-	}
-
-	/**
-	 * Set additional session options
-	 *
-	 * @param   array  $options  List of parameter
-	 *
-	 * @return  boolean  True on success
-	 *
-	 * @since   3.5
-	 */
-	protected function setOptions(array $options)
-	{
-		if (isset($options['force_ssl']))
-		{
-			$this->force_ssl = (bool) $options['force_ssl'];
-		}
-
-		return true;
 	}
 }

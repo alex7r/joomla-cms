@@ -54,7 +54,7 @@ class JFormFieldCalendar extends JFormField
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -76,8 +76,8 @@ class JFormFieldCalendar extends JFormField
 	/**
 	 * Method to set certain otherwise inaccessible properties of the form field object.
 	 *
-	 * @param   string  $name   The property name for which to the the value.
-	 * @param   mixed   $value  The value of the property.
+	 * @param   string $name  The property name for which to the the value.
+	 * @param   mixed  $value The value of the property.
 	 *
 	 * @return  void
 	 *
@@ -102,9 +102,9 @@ class JFormFieldCalendar extends JFormField
 	/**
 	 * Method to attach a JForm object to the field.
 	 *
-	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
-	 * @param   mixed             $value    The form field value to validate.
-	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
+	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed            $value     The form field value to validate.
+	 * @param   string           $group     The field name group control value. This acts as as an array container for the field.
 	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
 	 *
@@ -145,19 +145,19 @@ class JFormFieldCalendar extends JFormField
 		// Build the attributes array.
 		$attributes = array();
 
-		empty($this->size)      ? null : $attributes['size'] = $this->size;
+		empty($this->size) ? null : $attributes['size'] = $this->size;
 		empty($this->maxlength) ? null : $attributes['maxlength'] = $this->maxlength;
-		empty($this->class)     ? null : $attributes['class'] = $this->class;
-		!$this->readonly        ? null : $attributes['readonly'] = 'readonly';
-		!$this->disabled        ? null : $attributes['disabled'] = 'disabled';
-		empty($this->onchange)  ? null : $attributes['onchange'] = $this->onchange;
-		empty($hint)            ? null : $attributes['placeholder'] = $hint;
-		$this->autocomplete     ? null : $attributes['autocomplete'] = 'off';
-		!$this->autofocus       ? null : $attributes['autofocus'] = '';
+		empty($this->class) ? null : $attributes['class'] = $this->class;
+		!$this->readonly ? null : $attributes['readonly'] = 'readonly';
+		!$this->disabled ? null : $attributes['disabled'] = 'disabled';
+		empty($this->onchange) ? null : $attributes['onchange'] = $this->onchange;
+		empty($hint) ? null : $attributes['placeholder'] = $hint;
+		$this->autocomplete ? null : $attributes['autocomplete'] = 'off';
+		!$this->autofocus ? null : $attributes['autofocus'] = '';
 
 		if ($this->required)
 		{
-			$attributes['required'] = '';
+			$attributes['required']      = '';
 			$attributes['aria-required'] = 'true';
 		}
 
@@ -169,7 +169,7 @@ class JFormFieldCalendar extends JFormField
 
 		// Get some system objects.
 		$config = JFactory::getConfig();
-		$user = JFactory::getUser();
+		$user   = JFactory::getUser();
 
 		// If a known filter is given use it.
 		switch (strtoupper($this->filter))

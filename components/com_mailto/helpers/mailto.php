@@ -21,7 +21,7 @@ abstract class MailtoHelper
 	/**
 	 * Adds a URL to the mailto system and returns the hash
 	 *
-	 * @param   string  $url  Url
+	 * @param   string $url Url
 	 *
 	 * @return  string  URL hash
 	 */
@@ -46,32 +46,9 @@ abstract class MailtoHelper
 	}
 
 	/**
-	 * Checks if a URL is a Flash file
-	 *
-	 * @param   string  $hash  File hash
-	 *
-	 * @return URL
-	 */
-	public static function validateHash($hash)
-	{
-		$retval  = false;
-		$session = JFactory::getSession();
-
-		self::cleanHashes();
-		$mailto_links = $session->get('com_mailto.links', array());
-
-		if (isset($mailto_links[$hash]))
-		{
-			$retval = $mailto_links[$hash]->link;
-		}
-
-		return $retval;
-	}
-
-	/**
 	 * Cleans out old hashes
 	 *
-	 * @param   integer  $lifetime  How old are the hashes we want to remove
+	 * @param   integer $lifetime How old are the hashes we want to remove
 	 *
 	 * @return  void
 	 *
@@ -99,5 +76,28 @@ abstract class MailtoHelper
 			$session->set('com_mailto.links', $mailto_links);
 			$cleaned = true;
 		}
+	}
+
+	/**
+	 * Checks if a URL is a Flash file
+	 *
+	 * @param   string $hash File hash
+	 *
+	 * @return URL
+	 */
+	public static function validateHash($hash)
+	{
+		$retval  = false;
+		$session = JFactory::getSession();
+
+		self::cleanHashes();
+		$mailto_links = $session->get('com_mailto.links', array());
+
+		if (isset($mailto_links[$hash]))
+		{
+			$retval = $mailto_links[$hash]->link;
+		}
+
+		return $retval;
 	}
 }

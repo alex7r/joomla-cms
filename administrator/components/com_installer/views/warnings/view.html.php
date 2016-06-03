@@ -21,7 +21,7 @@ class InstallerViewWarnings extends InstallerViewDefault
 	/**
 	 * Display the view
 	 *
-	 * @param   string  $tpl  Template
+	 * @param   string $tpl Template
 	 *
 	 * @return  void
 	 *
@@ -29,7 +29,7 @@ class InstallerViewWarnings extends InstallerViewDefault
 	 */
 	public function display($tpl = null)
 	{
-		$items = $this->get('Items');
+		$items          = $this->get('Items');
 		$this->messages = &$items;
 		parent::display($tpl);
 

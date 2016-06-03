@@ -29,7 +29,7 @@ class JFormFieldUserGroupList extends JFormFieldList
 	/**
 	 * The form field type.
 	 *
-	 * @var		string
+	 * @var        string
 	 * @since   3.2
 	 */
 	protected $type = 'UserGroupList';
@@ -52,7 +52,7 @@ class JFormFieldUserGroupList extends JFormFieldList
 
 			$options = array();
 
-			$db = JFactory::getDbo();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select('a.id AS value')
 				->select('a.title AS text')

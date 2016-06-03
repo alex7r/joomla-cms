@@ -15,7 +15,7 @@ defined('JPATH_PLATFORM') or die;
  * @see    http://www.rssboard.org/rss-specification
  * @since  3.5
  *
- * @property-read  JDocumentFeed  $_doc  Reference to the JDocument object that instantiated the renderer
+ * @property-read  JDocumentFeed $_doc  Reference to the JDocument object that instantiated the renderer
  */
 class JDocumentRendererFeedRss extends JDocumentRenderer
 {
@@ -30,9 +30,9 @@ class JDocumentRendererFeedRss extends JDocumentRenderer
 	/**
 	 * Render the feed.
 	 *
-	 * @param   string  $name     The name of the element to render
-	 * @param   array   $params   Array of values
-	 * @param   string  $content  Override the output of the renderer
+	 * @param   string $name    The name of the element to render
+	 * @param   array  $params  Array of values
+	 * @param   string $content Override the output of the renderer
 	 *
 	 * @return  string  The output of the script
 	 *
@@ -50,7 +50,7 @@ class JDocumentRendererFeedRss extends JDocumentRenderer
 
 		$data = $this->_doc;
 
-		$url = JUri::getInstance()->toString(array('scheme', 'user', 'pass', 'host', 'port'));
+		$url            = JUri::getInstance()->toString(array('scheme', 'user', 'pass', 'host', 'port'));
 		$syndicationURL = JRoute::_('&format=feed&type=rss');
 
 		$title = $data->getTitle();

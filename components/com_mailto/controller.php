@@ -19,21 +19,6 @@ defined('_JEXEC') or die;
 class MailtoController extends JControllerLegacy
 {
 	/**
-	 * Show the form so that the user can send the link to someone.
-	 *
-	 * @return  void
-	 *
-	 * @since 1.5
-	 */
-	public function mailto()
-	{
-		$session = JFactory::getSession();
-		$session->set('com_mailto.formtime', time());
-		$this->input->set('view', 'mailto');
-		$this->display();
-	}
-
-	/**
 	 * Send the message and display a notice
 	 *
 	 * @return  void
@@ -69,7 +54,7 @@ class MailtoController extends JControllerLegacy
 		}
 
 		// An array of email headers we do not want to allow as input
-		$headers = array (
+		$headers = array(
 			'Content-Type:',
 			'MIME-Version:',
 			'Content-Transfer-Encoding:',
@@ -156,6 +141,21 @@ class MailtoController extends JControllerLegacy
 		}
 
 		$this->input->set('view', 'sent');
+		$this->display();
+	}
+
+	/**
+	 * Show the form so that the user can send the link to someone.
+	 *
+	 * @return  void
+	 *
+	 * @since 1.5
+	 */
+	public function mailto()
+	{
+		$session = JFactory::getSession();
+		$session->set('com_mailto.formtime', time());
+		$this->input->set('view', 'mailto');
 		$this->display();
 	}
 }

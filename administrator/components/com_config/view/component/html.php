@@ -32,14 +32,14 @@ class ConfigViewComponentHtml extends ConfigViewCmsHtml
 	 */
 	public function render()
 	{
-		$form = null;
+		$form      = null;
 		$component = null;
 
 		try
 		{
-			$form = $this->model->getForm();
+			$form      = $this->model->getForm();
 			$component = $this->model->getComponent();
-			$user = JFactory::getUser();
+			$user      = JFactory::getUser();
 		}
 		catch (Exception $e)
 		{
@@ -62,14 +62,14 @@ class ConfigViewComponentHtml extends ConfigViewCmsHtml
 			unset($this->fieldsets['permissions']);
 		}
 
-		$this->form = &$form;
+		$this->form      = &$form;
 		$this->component = &$component;
 
 		$this->components = ConfigHelperConfig::getComponentsWithConfig();
 
 		$this->userIsSuperAdmin = $user->authorise('core.admin');
 		$this->currentComponent = JFactory::getApplication()->input->get('component');
-		$this->return = JFactory::getApplication()->input->get('return', '', 'base64');
+		$this->return           = JFactory::getApplication()->input->get('return', '', 'base64');
 
 		$this->addToolbar();
 

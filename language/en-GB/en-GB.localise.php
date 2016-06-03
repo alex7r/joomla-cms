@@ -18,7 +18,7 @@ abstract class En_GBLocalise
 	/**
 	 * Returns the potential suffixes for a specific number of items
 	 *
-	 * @param   integer  $count  The number of items.
+	 * @param   integer $count The number of items.
 	 *
 	 * @return  array  An array of potential suffixes.
 	 *

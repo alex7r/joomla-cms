@@ -37,9 +37,9 @@ class PlgAuthenticationCookie extends JPlugin
 	/**
 	 * This method should handle any authentication and report back to the subject
 	 *
-	 * @param   array   $credentials  Array holding the user credentials
-	 * @param   array   $options      Array of extra options
-	 * @param   object  &$response    Authentication response object
+	 * @param   array  $credentials Array holding the user credentials
+	 * @param   array  $options     Array of extra options
+	 * @param   object &$response   Authentication response object
 	 *
 	 * @return  boolean
 	 *
@@ -210,7 +210,7 @@ class PlgAuthenticationCookie extends JPlugin
 	 * We set a new cookie either for a user with no cookies or one
 	 * where the user used a cookie to authenticate.
 	 *
-	 * @param   array  $options  Array holding options
+	 * @param   array $options Array holding options
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -284,9 +284,7 @@ class PlgAuthenticationCookie extends JPlugin
 						return false;
 					}
 				}
-			}
-
-			while ($unique === false);
+			} while ($unique === false);
 		}
 		else
 		{
@@ -350,7 +348,7 @@ class PlgAuthenticationCookie extends JPlugin
 	/**
 	 * This is where we delete any authentication cookie when a user logs out
 	 *
-	 * @param   array  $options  Array holding options (length, timeToExpiration)
+	 * @param   array $options Array holding options (length, timeToExpiration)
 	 *
 	 * @return  boolean  True on success
 	 *

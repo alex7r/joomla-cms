@@ -39,10 +39,10 @@ class FOFViewCsv extends FOFViewHtml
 	protected $csvFields = array();
 
 	/**
-	* Public constructor. Instantiates a FOFViewCsv object.
-	*
-	* @param   array  $config  The configuration data array
-	*/
+	 * Public constructor. Instantiates a FOFViewCsv object.
+	 *
+	 * @param   array $config The configuration data array
+	 */
 	public function __construct($config = array())
 	{
 		// Make sure $config is an array
@@ -89,21 +89,21 @@ class FOFViewCsv extends FOFViewHtml
 	}
 
 	/**
-	* Executes before rendering a generic page, default to actions necessary for the Browse task.
-	*
-	* @param   string  $tpl  Subtemplate to use
-	*
-	* @return  boolean  Return true to allow rendering of the page
-	*/
+	 * Executes before rendering a generic page, default to actions necessary for the Browse task.
+	 *
+	 * @param   string $tpl Subtemplate to use
+	 *
+	 * @return  boolean  Return true to allow rendering of the page
+	 */
 	protected function onDisplay($tpl = null)
 	{
 		// Load the model
 		$model = $this->getModel();
 
-		$items = $model->getItemList();
+		$items       = $model->getItemList();
 		$this->items = $items;
 
-        $platform = FOFPlatform::getInstance();
+		$platform = FOFPlatform::getInstance();
 		$document = $platform->getDocument();
 
 		if ($document instanceof JDocument)
@@ -112,11 +112,11 @@ class FOFViewCsv extends FOFViewHtml
 		}
 
 		$platform->setHeader('Pragma', 'public');
-        $platform->setHeader('Expires', '0');
-        $platform->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
-        $platform->setHeader('Cache-Control', 'public', false);
-        $platform->setHeader('Content-Description', 'File Transfer');
-        $platform->setHeader('Content-Disposition', 'attachment; filename="' . $this->csvFilename . '"');
+		$platform->setHeader('Expires', '0');
+		$platform->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
+		$platform->setHeader('Cache-Control', 'public', false);
+		$platform->setHeader('Content-Description', 'File Transfer');
+		$platform->setHeader('Content-Disposition', 'attachment; filename="' . $this->csvFilename . '"');
 
 		if (is_null($tpl))
 		{

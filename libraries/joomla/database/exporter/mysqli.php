@@ -17,6 +17,31 @@ defined('JPATH_PLATFORM') or die;
 class JDatabaseExporterMysqli extends JDatabaseExporter
 {
 	/**
+	 * Checks if all data and options are in order prior to exporting.
+	 *
+	 * @return  JDatabaseExporterMysqli  Method supports chaining.
+	 *
+	 * @since   11.1
+	 * @throws  Exception if an error is encountered.
+	 */
+	public function check()
+	{
+		// Check if the db connector has been set.
+		if (!($this->db instanceof JDatabaseDriverMysqli))
+		{
+			throw new Exception('JPLATFORM_ERROR_DATABASE_CONNECTOR_WRONG_TYPE');
+		}
+
+		// Check if the tables have been specified.
+		if (empty($this->from))
+		{
+			throw new Exception('JPLATFORM_ERROR_NO_TABLES_SPECIFIED');
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Builds the XML data for the tables to export.
 	 *
 	 * @return  string  An XML string
@@ -59,7 +84,7 @@ class JDatabaseExporterMysqli extends JDatabaseExporter
 
 			// Get the details columns information.
 			$fields = $this->db->getTableColumns($table, false);
-			$keys = $this->db->getTableKeys($table);
+			$keys   = $this->db->getTableKeys($table);
 
 			$buffer[] = '  <table_structure name="' . $table . '">';
 
@@ -82,30 +107,5 @@ class JDatabaseExporterMysqli extends JDatabaseExporter
 		}
 
 		return $buffer;
-	}
-
-	/**
-	 * Checks if all data and options are in order prior to exporting.
-	 *
-	 * @return  JDatabaseExporterMysqli  Method supports chaining.
-	 *
-	 * @since   11.1
-	 * @throws  Exception if an error is encountered.
-	 */
-	public function check()
-	{
-		// Check if the db connector has been set.
-		if (!($this->db instanceof JDatabaseDriverMysqli))
-		{
-			throw new Exception('JPLATFORM_ERROR_DATABASE_CONNECTOR_WRONG_TYPE');
-		}
-
-		// Check if the tables have been specified.
-		if (empty($this->from))
-		{
-			throw new Exception('JPLATFORM_ERROR_NO_TABLES_SPECIFIED');
-		}
-
-		return $this;
 	}
 }

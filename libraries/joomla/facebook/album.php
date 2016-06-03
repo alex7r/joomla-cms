@@ -22,7 +22,7 @@ class JFacebookAlbum extends JFacebookObject
 	/**
 	 * Method to get an album. Requires authentication and user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string  $album  The album id.
+	 * @param   string $album The album id.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -36,11 +36,11 @@ class JFacebookAlbum extends JFacebookObject
 	/**
 	 * Method to get the photos contained in this album. Requires authentication and user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string   $album   The album id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
-	 * @param   string   $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $album  The album id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
+	 * @param   string  $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -54,9 +54,9 @@ class JFacebookAlbum extends JFacebookObject
 	/**
 	 * Method to add photos to an album. Note: check can_upload flag first. Requires authentication and publish_stream  permission.
 	 *
-	 * @param   string  $album    The album id.
-	 * @param   string  $source   Path to photo.
-	 * @param   string  $message  Photo description.
+	 * @param   string $album   The album id.
+	 * @param   string $source  Path to photo.
+	 * @param   string $message Photo description.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -65,7 +65,7 @@ class JFacebookAlbum extends JFacebookObject
 	public function createPhoto($album, $source, $message = null)
 	{
 		// Set POST request parameters.
-		$data = array();
+		$data                    = array();
 		$data[basename($source)] = '@' . realpath($source);
 
 		if ($message)
@@ -79,11 +79,11 @@ class JFacebookAlbum extends JFacebookObject
 	/**
 	 * Method to get an album's comments. Requires authentication and user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string   $album   The album id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
-	 * @param   string   $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $album  The album id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
+	 * @param   string  $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -97,8 +97,8 @@ class JFacebookAlbum extends JFacebookObject
 	/**
 	 * Method to comment on an album. Requires authentication and publish_stream  permission.
 	 *
-	 * @param   string  $album    The album id.
-	 * @param   string  $message  The comment's text.
+	 * @param   string $album   The album id.
+	 * @param   string $message The comment's text.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -107,7 +107,7 @@ class JFacebookAlbum extends JFacebookObject
 	public function createComment($album, $message)
 	{
 		// Set POST request parameters.
-		$data = array();
+		$data            = array();
 		$data['message'] = $message;
 
 		return $this->createConnection($album, 'comments', $data);
@@ -116,7 +116,7 @@ class JFacebookAlbum extends JFacebookObject
 	/**
 	 * Method to delete a comment. Requires authentication and publish_stream  permission.
 	 *
-	 * @param   string  $comment  The comment's id.
+	 * @param   string $comment The comment's id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -130,11 +130,11 @@ class JFacebookAlbum extends JFacebookObject
 	/**
 	 * Method to get album's likes. Requires authentication and user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string   $album   The album id.
-	 * @param   integer  $limit   The number of objects per page.
-	 * @param   integer  $offset  The object's number on the page.
-	 * @param   string   $until   A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $album  The album id.
+	 * @param   integer $limit  The number of objects per page.
+	 * @param   integer $offset The object's number on the page.
+	 * @param   string  $until  A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since  A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -148,7 +148,7 @@ class JFacebookAlbum extends JFacebookObject
 	/**
 	 * Method to like an album. Requires authentication and publish_stream  permission.
 	 *
-	 * @param   string  $album  The album id.
+	 * @param   string $album The album id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -162,7 +162,7 @@ class JFacebookAlbum extends JFacebookObject
 	/**
 	 * Method to unlike an album. Requires authentication and publish_stream  permission.
 	 *
-	 * @param   string  $album  The album id.
+	 * @param   string $album The album id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -177,8 +177,8 @@ class JFacebookAlbum extends JFacebookObject
 	 * Method to get the album's cover photo, the first picture uploaded to an album becomes the cover photo for the album.
 	 * Requires authentication and user_photos or friends_photos permission for private photos.
 	 *
-	 * @param   string   $album     The album id.
-	 * @param   boolean  $redirect  If false this will return the URL of the picture without a 302 redirect.
+	 * @param   string  $album    The album id.
+	 * @param   boolean $redirect If false this will return the URL of the picture without a 302 redirect.
 	 *
 	 * @return  string  URL of the picture.
 	 *

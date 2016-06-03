@@ -20,6 +20,13 @@ defined('FOF_INCLUDED') or die;
 abstract class FOFView extends FOFUtilsObject
 {
 	/**
+	 * The available renderer objects we can use to render views
+	 *
+	 * @var    array  Contains objects of the FOFRenderAbstract class
+	 */
+	public static $renderers = array();
+
+	/**
 	 * The name of the view
 	 *
 	 * @var    array
@@ -43,7 +50,7 @@ abstract class FOFView extends FOFUtilsObject
 	/**
 	 * The default model
 	 *
-	 * @var	string
+	 * @var    string
 	 */
 	protected $_defaultModel = null;
 
@@ -105,13 +112,6 @@ abstract class FOFView extends FOFUtilsObject
 	protected $_charset = 'UTF-8';
 
 	/**
-	 * The available renderer objects we can use to render views
-	 *
-	 * @var    array  Contains objects of the FOFRenderAbstract class
-	 */
-	public static $renderers = array();
-
-	/**
 	 * Cache of the configuration array
 	 *
 	 * @var    array
@@ -149,7 +149,7 @@ abstract class FOFView extends FOFUtilsObject
 	/**
 	 * Public constructor. Instantiates a FOFView object.
 	 *
-	 * @param   array  $config  The configuration data array
+	 * @param   array $config The configuration data array
 	 */
 	public function __construct($config = array())
 	{
@@ -251,8 +251,8 @@ abstract class FOFView extends FOFUtilsObject
 
 		$tmpInput->set('view', $this->_name);
 		$config['input'] = $tmpInput;
-		$config['name'] = $this->_name;
-		$config['view'] = $this->_name;
+		$config['name']  = $this->_name;
+		$config['view']  = $this->_name;
 
 		// Get the component directories
 		$componentPaths = FOFPlatform::getInstance()->getComponentBaseDirs($config['option']);
@@ -332,6 +332,212 @@ abstract class FOFView extends FOFUtilsObject
 	}
 
 	/**
+	 * Sets the _escape() callback.
+	 *
+	 * @param   mixed $spec The callback for _escape() to use.
+	 *
+	 * @return  void
+	 *
+	 * @deprecated  2.1  Override FOFView::escape() instead.
+	 */
+	public function setEscape($spec)
+	{
+		FOFPlatform::getInstance()->logDeprecated(__CLASS__ . '::' . __METHOD__ . ' is deprecated. Override FOFView::escape() instead.');
+
+		$this->_escape = $spec;
+	}
+
+	/**
+	 * Sets an entire array of search paths for templates or resources.
+	 *
+	 * @param   string $type The type of path to set, typically 'template'.
+	 * @param   mixed  $path The new search path, or an array of search paths.  If null or false, resets to the current directory only.
+	 *
+	 * @return  void
+	 */
+	protected function _setPath($type, $path)
+	{
+		// Clear out the prior search dirs
+		$this->_path[$type] = array();
+
+		// Actually add the user-specified directories
+		$this->_addPath($type, $path);
+
+		// Always add the fallback directories as last resort
+		switch (strtolower($type))
+		{
+			case 'template':
+				// Set the alternative template search dir
+
+				if (!FOFPlatform::getInstance()->isCli())
+				{
+					$fallback = FOFPlatform::getInstance()->getTemplateOverridePath($this->input->getCmd('option', '')) . '/' . $this->getName();
+					$this->_addPath('template', $fallback);
+				}
+
+				break;
+		}
+	}
+
+	/**
+	 * Adds to the search path for templates and resources.
+	 *
+	 * @param   string $type The type of path to add.
+	 * @param   mixed  $path The directory or stream, or an array of either, to search.
+	 *
+	 * @return  void
+	 */
+	protected function _addPath($type, $path)
+	{
+		// Just force to array
+		settype($path, 'array');
+
+		// Loop through the path directories
+		foreach ($path as $dir)
+		{
+			// No surrounding spaces allowed!
+			$dir = trim($dir);
+
+			// Add trailing separators as needed
+			if (substr($dir, -1) != DIRECTORY_SEPARATOR)
+			{
+				// Directory
+				$dir .= DIRECTORY_SEPARATOR;
+			}
+
+			// Add to the top of the search dirs
+			array_unshift($this->_path[$type], $dir);
+		}
+	}
+
+	/**
+	 * Method to get the view name
+	 *
+	 * The model name by default parsed using the classname, or it can be set
+	 * by passing a $config['name'] in the class constructor
+	 *
+	 * @return  string  The name of the model
+	 */
+	public function getName()
+	{
+		if (empty($this->_name))
+		{
+			$classname = get_class($this);
+			$viewpos   = strpos($classname, 'View');
+
+			if ($viewpos === false)
+			{
+				throw new Exception(JText::_('JLIB_APPLICATION_ERROR_VIEW_GET_NAME'), 500);
+			}
+
+			$this->_name = strtolower(substr($classname, $viewpos + 4));
+		}
+
+		return $this->_name;
+	}
+
+	/**
+	 * Overrides the default method to execute and display a template script.
+	 * Instead of loadTemplate is uses loadAnyTemplate which allows for automatic
+	 * Joomla! version overrides. A little slice of awesome pie!
+	 *
+	 * @param   string $tpl The name of the template file to parse
+	 *
+	 * @return  mixed  A string if successful, otherwise a JError object.
+	 */
+	public function display($tpl = null)
+	{
+		FOFPlatform::getInstance()->setErrorHandling(E_ALL, 'ignore');
+
+		$result = $this->loadTemplate($tpl);
+
+		if ($result instanceof Exception)
+		{
+			FOFPlatform::getInstance()->raiseError($result->getCode(), $result->getMessage());
+
+			return $result;
+		}
+
+		echo $result;
+	}
+
+	/**
+	 * Overrides the built-in loadTemplate function with an FOF-specific one.
+	 * Our overriden function uses loadAnyTemplate to provide smarter view
+	 * template loading.
+	 *
+	 * @param   string  $tpl    The name of the template file to parse
+	 * @param   boolean $strict Should we use strict naming, i.e. force a non-empty $tpl?
+	 *
+	 * @return  mixed  A string if successful, otherwise a JError object
+	 */
+	public function loadTemplate($tpl = null, $strict = false)
+	{
+		$paths = FOFPlatform::getInstance()->getViewTemplatePaths(
+			$this->input->getCmd('option', ''),
+			$this->input->getCmd('view', ''),
+			$this->getLayout(),
+			$tpl,
+			$strict
+		);
+
+		foreach ($paths as $path)
+		{
+			$result = $this->loadAnyTemplate($path);
+
+			if (!($result instanceof Exception))
+			{
+				break;
+			}
+		}
+
+		if ($result instanceof Exception)
+		{
+			FOFPlatform::getInstance()->raiseError($result->getCode(), $result->getMessage());
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Get the layout.
+	 *
+	 * @return  string  The layout name
+	 */
+	public function getLayout()
+	{
+		return $this->_layout;
+	}
+
+	/**
+	 * Sets the layout name to use
+	 *
+	 * @param   string $layout The layout name or a string in format <template>:<layout file>
+	 *
+	 * @return  string  Previous value.
+	 */
+	public function setLayout($layout)
+	{
+		$previous = $this->_layout;
+
+		if (strpos($layout, ':') === false)
+		{
+			$this->_layout = $layout;
+		}
+		else
+		{
+			// Convert parameter to array based on :
+			$temp          = explode(':', $layout);
+			$this->_layout = $temp[1];
+
+			// Set layout template
+			$this->_layoutTemplate = $temp[0];
+		}
+
+		return $previous;
+	}
+
+	/**
 	 * Loads a template given any path. The path is in the format:
 	 * [admin|site]:com_foobar/viewname/templatename
 	 * e.g. admin:com_foobar/myview/default
@@ -342,8 +548,8 @@ abstract class FOFView extends FOFUtilsObject
 	 * template files default.j30.php, default.j3.php and default.php, in this
 	 * order.
 	 *
-	 * @param   string  $path         See above
-	 * @param   array   $forceParams  A hash array of variables to be extracted in the local scope of the template file
+	 * @param   string $path        See above
+	 * @param   array  $forceParams A hash array of variables to be extracted in the local scope of the template file
 	 *
 	 * @return  boolean  False if loading failed
 	 */
@@ -386,7 +592,7 @@ abstract class FOFView extends FOFUtilsObject
 		$templatePath   = FOFPlatform::getInstance()->getTemplateOverridePath($templateParts['component']);
 
 		// Get the default paths
-		$paths = array();
+		$paths   = array();
 		$paths[] = $templatePath . '/' . $templateParts['view'];
 		$paths[] = ($templateParts['admin'] ? $componentPaths['admin'] : $componentPaths['site']) . '/views/' . $templateParts['view'] . '/tmpl';
 
@@ -408,7 +614,7 @@ abstract class FOFView extends FOFUtilsObject
 		}
 
 		$filetofind = $templateParts['template'] . '.php';
-        $filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
+		$filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
 
 		$this->_tempFilePath = $filesystem->pathFind($paths, $filetofind);
 
@@ -459,28 +665,64 @@ abstract class FOFView extends FOFUtilsObject
 	}
 
 	/**
-	 * Overrides the default method to execute and display a template script.
-	 * Instead of loadTemplate is uses loadAnyTemplate which allows for automatic
-	 * Joomla! version overrides. A little slice of awesome pie!
+	 * Get the layout template.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse
-	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  string  The layout template name
 	 */
-	public function display($tpl = null)
+	public function getLayoutTemplate()
 	{
-		FOFPlatform::getInstance()->setErrorHandling(E_ALL, 'ignore');
+		return $this->_layoutTemplate;
+	}
 
-		$result = $this->loadTemplate($tpl);
+	/**
+	 * Parses a template path in the form of admin:/component/view/layout or
+	 * site:/component/view/layout to an array which can be used by
+	 * loadAnyTemplate to locate and load the view template file.
+	 *
+	 * @param   string $path The template path to parse
+	 *
+	 * @return  array  A hash array with the parsed path parts
+	 */
+	private function _parseTemplatePath($path = '')
+	{
+		$parts = array(
+			'admin'     => 0,
+			'component' => $this->config['option'],
+			'view'      => $this->config['view'],
+			'template'  => 'default'
+		);
 
-		if ($result instanceof Exception)
+		if (substr($path, 0, 6) == 'admin:')
 		{
-            FOFPlatform::getInstance()->raiseError($result->getCode(), $result->getMessage());
-
-			return $result;
+			$parts['admin'] = 1;
+			$path           = substr($path, 6);
+		}
+		elseif (substr($path, 0, 5) == 'site:')
+		{
+			$path = substr($path, 5);
 		}
 
-		echo $result;
+		if (empty($path))
+		{
+			return;
+		}
+
+		$pathparts = explode('/', $path, 3);
+
+		switch (count($pathparts))
+		{
+			case 3:
+				$parts['component'] = array_shift($pathparts);
+
+			case 2:
+				$parts['view'] = array_shift($pathparts);
+
+			case 1:
+				$parts['template'] = array_shift($pathparts);
+				break;
+		}
+
+		return $parts;
 	}
 
 	/**
@@ -557,8 +799,8 @@ abstract class FOFView extends FOFUtilsObject
 	 * these are either private properties for FOFView or private variables
 	 * within the template script itself.
 	 *
-	 * @param   string  $key   The name for the reference in the view.
-	 * @param   mixed   &$val  The referenced variable.
+	 * @param   string $key  The name for the reference in the view.
+	 * @param   mixed  &$val The referenced variable.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *
@@ -584,7 +826,7 @@ abstract class FOFView extends FOFUtilsObject
 	 * If escaping mechanism is either htmlspecialchars or htmlentities, uses
 	 * {@link $_encoding} setting.
 	 *
-	 * @param   mixed  $var  The output to escape.
+	 * @param   mixed $var The output to escape.
 	 *
 	 * @return  mixed  The escaped value.
 	 */
@@ -601,8 +843,8 @@ abstract class FOFView extends FOFUtilsObject
 	/**
 	 * Method to get data from a registered model or a property of the view
 	 *
-	 * @param   string  $property  The name of the method to call on the model or the property to get
-	 * @param   string  $default   The name of the model to reference or the default value [optional]
+	 * @param   string $property The name of the method to call on the model or the property to get
+	 * @param   string $default  The name of the model to reference or the default value [optional]
 	 *
 	 * @return  mixed  The return value of the method
 	 */
@@ -643,7 +885,7 @@ abstract class FOFView extends FOFUtilsObject
 	/**
 	 * Method to get the model object
 	 *
-	 * @param   string  $name  The name of the model (optional)
+	 * @param   string $name The name of the model (optional)
 	 *
 	 * @return  mixed  FOFModel object
 	 */
@@ -658,57 +900,11 @@ abstract class FOFView extends FOFUtilsObject
 	}
 
 	/**
-	 * Get the layout.
-	 *
-	 * @return  string  The layout name
-	 */
-	public function getLayout()
-	{
-		return $this->_layout;
-	}
-
-	/**
-	 * Get the layout template.
-	 *
-	 * @return  string  The layout template name
-	 */
-	public function getLayoutTemplate()
-	{
-		return $this->_layoutTemplate;
-	}
-
-	/**
-	 * Method to get the view name
-	 *
-	 * The model name by default parsed using the classname, or it can be set
-	 * by passing a $config['name'] in the class constructor
-	 *
-	 * @return  string  The name of the model
-	 */
-	public function getName()
-	{
-		if (empty($this->_name))
-		{
-			$classname = get_class($this);
-			$viewpos = strpos($classname, 'View');
-
-			if ($viewpos === false)
-			{
-				throw new Exception(JText::_('JLIB_APPLICATION_ERROR_VIEW_GET_NAME'), 500);
-			}
-
-			$this->_name = strtolower(substr($classname, $viewpos + 4));
-		}
-
-		return $this->_name;
-	}
-
-	/**
 	 * Method to add a model to the view.
 	 *
-	 * @param   FOFMOdel  $model    The model to add to the view.
-     * @param   boolean   $default  Is this the default model?
-     * @param   String    $name     optional index name to store the model
+	 * @param   FOFMOdel $model   The model to add to the view.
+	 * @param   boolean  $default Is this the default model?
+	 * @param   String   $name    optional index name to store the model
 	 *
 	 * @return  object   The added model.
 	 */
@@ -732,37 +928,9 @@ abstract class FOFView extends FOFUtilsObject
 	}
 
 	/**
-	 * Sets the layout name to use
-	 *
-	 * @param   string  $layout  The layout name or a string in format <template>:<layout file>
-	 *
-	 * @return  string  Previous value.
-	 */
-	public function setLayout($layout)
-	{
-		$previous = $this->_layout;
-
-		if (strpos($layout, ':') === false)
-		{
-			$this->_layout = $layout;
-		}
-		else
-		{
-			// Convert parameter to array based on :
-			$temp = explode(':', $layout);
-			$this->_layout = $temp[1];
-
-			// Set layout template
-			$this->_layoutTemplate = $temp[0];
-		}
-
-		return $previous;
-	}
-
-	/**
 	 * Allows a different extension for the layout files to be used
 	 *
-	 * @param   string  $value  The extension.
+	 * @param   string $value The extension.
 	 *
 	 * @return  string   Previous value
 	 */
@@ -779,25 +947,9 @@ abstract class FOFView extends FOFUtilsObject
 	}
 
 	/**
-	 * Sets the _escape() callback.
-	 *
-	 * @param   mixed  $spec  The callback for _escape() to use.
-	 *
-	 * @return  void
-	 *
-	 * @deprecated  2.1  Override FOFView::escape() instead.
-	 */
-	public function setEscape($spec)
-	{
-		FOFPlatform::getInstance()->logDeprecated(__CLASS__ . '::' . __METHOD__ . ' is deprecated. Override FOFView::escape() instead.');
-
-		$this->_escape = $spec;
-	}
-
-	/**
 	 * Adds to the stack of view script paths in LIFO order.
 	 *
-	 * @param   mixed  $path  A directory path or an array of paths.
+	 * @param   mixed $path A directory path or an array of paths.
 	 *
 	 * @return  void
 	 */
@@ -809,102 +961,13 @@ abstract class FOFView extends FOFUtilsObject
 	/**
 	 * Adds to the stack of helper script paths in LIFO order.
 	 *
-	 * @param   mixed  $path  A directory path or an array of paths.
+	 * @param   mixed $path A directory path or an array of paths.
 	 *
 	 * @return  void
 	 */
 	public function addHelperPath($path)
 	{
 		$this->_addPath('helper', $path);
-	}
-
-	/**
-	 * Overrides the built-in loadTemplate function with an FOF-specific one.
-	 * Our overriden function uses loadAnyTemplate to provide smarter view
-	 * template loading.
-	 *
-	 * @param   string   $tpl     The name of the template file to parse
-	 * @param   boolean  $strict  Should we use strict naming, i.e. force a non-empty $tpl?
-	 *
-	 * @return  mixed  A string if successful, otherwise a JError object
-	 */
-	public function loadTemplate($tpl = null, $strict = false)
-	{
-		$paths = FOFPlatform::getInstance()->getViewTemplatePaths(
-			$this->input->getCmd('option', ''),
-			$this->input->getCmd('view', ''),
-			$this->getLayout(),
-			$tpl,
-			$strict
-		);
-
-		foreach ($paths as $path)
-		{
-			$result = $this->loadAnyTemplate($path);
-
-			if (!($result instanceof Exception))
-			{
-				break;
-			}
-		}
-
-		if ($result instanceof Exception)
-		{
-            FOFPlatform::getInstance()->raiseError($result->getCode(), $result->getMessage());
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Parses a template path in the form of admin:/component/view/layout or
-	 * site:/component/view/layout to an array which can be used by
-	 * loadAnyTemplate to locate and load the view template file.
-	 *
-	 * @param   string  $path  The template path to parse
-	 *
-	 * @return  array  A hash array with the parsed path parts
-	 */
-	private function _parseTemplatePath($path = '')
-	{
-		$parts = array(
-			'admin'		 => 0,
-			'component'	 => $this->config['option'],
-			'view'		 => $this->config['view'],
-			'template'	 => 'default'
-		);
-
-		if (substr($path, 0, 6) == 'admin:')
-		{
-			$parts['admin'] = 1;
-			$path = substr($path, 6);
-		}
-		elseif (substr($path, 0, 5) == 'site:')
-		{
-			$path = substr($path, 5);
-		}
-
-		if (empty($path))
-		{
-			return;
-		}
-
-		$pathparts = explode('/', $path, 3);
-
-		switch (count($pathparts))
-		{
-			case 3:
-				$parts['component'] = array_shift($pathparts);
-
-			case 2:
-				$parts['view'] = array_shift($pathparts);
-
-			case 1:
-				$parts['template'] = array_shift($pathparts);
-				break;
-		}
-
-		return $parts;
 	}
 
 	/**
@@ -923,31 +986,19 @@ abstract class FOFView extends FOFUtilsObject
 	}
 
 	/**
-	 * Sets the renderer object for this view
-	 *
-	 * @param   FOFRenderAbstract  &$renderer  The render class to use
-	 *
-	 * @return  void
-	 */
-	public function setRenderer(FOFRenderAbstract &$renderer)
-	{
-		$this->rendererObject = $renderer;
-	}
-
-	/**
 	 * Finds a suitable renderer
 	 *
 	 * @return  FOFRenderAbstract
 	 */
 	protected function findRenderer()
 	{
-        $filesystem     = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
+		$filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
 
 		// Try loading the stock renderers shipped with FOF
 
 		if (empty(self::$renderers) || !class_exists('FOFRenderJoomla', false))
 		{
-			$path = dirname(__FILE__) . '/../render/';
+			$path        = dirname(__FILE__) . '/../render/';
 			$renderFiles = $filesystem->folderFiles($path, '.php');
 
 			if (!empty($renderFiles))
@@ -961,9 +1012,9 @@ abstract class FOFView extends FOFUtilsObject
 
 					@include_once $path . '/' . $filename;
 
-					$camel = FOFInflector::camelize($filename);
+					$camel     = FOFInflector::camelize($filename);
 					$className = 'FOFRender' . ucfirst(FOFInflector::getPart($camel, 0));
-					$o = new $className;
+					$o         = new $className;
 
 					self::registerRenderer($o);
 				}
@@ -971,7 +1022,7 @@ abstract class FOFView extends FOFUtilsObject
 		}
 
 		// Try to detect the most suitable renderer
-		$o = null;
+		$o        = null;
 		$priority = 0;
 
 		if (!empty(self::$renderers))
@@ -988,7 +1039,7 @@ abstract class FOFView extends FOFUtilsObject
 				if ($info->priority > $priority)
 				{
 					$priority = $info->priority;
-					$o = $r;
+					$o        = $r;
 				}
 			}
 		}
@@ -1000,7 +1051,7 @@ abstract class FOFView extends FOFUtilsObject
 	/**
 	 * Registers a renderer object with the view
 	 *
-	 * @param   FOFRenderAbstract  &$renderer  The render object to register
+	 * @param   FOFRenderAbstract &$renderer The render object to register
 	 *
 	 * @return  void
 	 */
@@ -1010,9 +1061,21 @@ abstract class FOFView extends FOFUtilsObject
 	}
 
 	/**
+	 * Sets the renderer object for this view
+	 *
+	 * @param   FOFRenderAbstract &$renderer The render class to use
+	 *
+	 * @return  void
+	 */
+	public function setRenderer(FOFRenderAbstract &$renderer)
+	{
+		$this->rendererObject = $renderer;
+	}
+
+	/**
 	 * Sets the pre-render flag
 	 *
-	 * @param   boolean  $value  True to enable the pre-render step
+	 * @param   boolean $value True to enable the pre-render step
 	 *
 	 * @return  void
 	 */
@@ -1024,7 +1087,7 @@ abstract class FOFView extends FOFUtilsObject
 	/**
 	 * Sets the post-render flag
 	 *
-	 * @param   boolean  $value  True to enable the post-render step
+	 * @param   boolean $value True to enable the post-render step
 	 *
 	 * @return  void
 	 */
@@ -1036,7 +1099,7 @@ abstract class FOFView extends FOFUtilsObject
 	/**
 	 * Load a helper file
 	 *
-	 * @param   string  $hlp  The name of the helper source file automatically searches the helper paths and compiles as needed.
+	 * @param   string $hlp The name of the helper source file automatically searches the helper paths and compiles as needed.
 	 *
 	 * @return  void
 	 */
@@ -1046,19 +1109,19 @@ abstract class FOFView extends FOFUtilsObject
 		$file = preg_replace('/[^A-Z0-9_\.-]/i', '', $hlp);
 
 		// Load the template script using the default Joomla! features
-        $filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
+		$filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
 
 		$helper = $filesystem->pathFind($this->_path['helper'], $this->_createFileName('helper', array('name' => $file)));
 
 		if ($helper == false)
 		{
 			$componentPaths = FOFPlatform::getInstance()->getComponentBaseDirs($this->config['option']);
-			$path = $componentPaths['main'] . '/helpers';
-			$helper = $filesystem->pathFind($path, $this->_createFileName('helper', array('name' => $file)));
+			$path           = $componentPaths['main'] . '/helpers';
+			$helper         = $filesystem->pathFind($path, $this->_createFileName('helper', array('name' => $file)));
 
 			if ($helper == false)
 			{
-				$path = $path = $componentPaths['alt'] . '/helpers';
+				$path   = $path = $componentPaths['alt'] . '/helpers';
 				$helper = $filesystem->pathFind($path, $this->_createFileName('helper', array('name' => $file)));
 			}
 		}
@@ -1071,87 +1134,10 @@ abstract class FOFView extends FOFUtilsObject
 	}
 
 	/**
-	 * Returns the view's option (component name) and view name in an
-	 * associative array.
-	 *
-	 * @return  array
-	 */
-	public function getViewOptionAndName()
-	{
-		return array(
-			'option' => $this->config['option'],
-			'view'	 => $this->config['view'],
-		);
-	}
-
-	/**
-	 * Sets an entire array of search paths for templates or resources.
-	 *
-	 * @param   string  $type  The type of path to set, typically 'template'.
-	 * @param   mixed   $path  The new search path, or an array of search paths.  If null or false, resets to the current directory only.
-	 *
-	 * @return  void
-	 */
-	protected function _setPath($type, $path)
-	{
-		// Clear out the prior search dirs
-		$this->_path[$type] = array();
-
-		// Actually add the user-specified directories
-		$this->_addPath($type, $path);
-
-		// Always add the fallback directories as last resort
-		switch (strtolower($type))
-		{
-			case 'template':
-				// Set the alternative template search dir
-
-				if (!FOFPlatform::getInstance()->isCli())
-				{
-					$fallback = FOFPlatform::getInstance()->getTemplateOverridePath($this->input->getCmd('option', '')) . '/' . $this->getName();
-					$this->_addPath('template', $fallback);
-				}
-
-				break;
-		}
-	}
-
-	/**
-	 * Adds to the search path for templates and resources.
-	 *
-	 * @param   string  $type  The type of path to add.
-	 * @param   mixed   $path  The directory or stream, or an array of either, to search.
-	 *
-	 * @return  void
-	 */
-	protected function _addPath($type, $path)
-	{
-		// Just force to array
-		settype($path, 'array');
-
-		// Loop through the path directories
-		foreach ($path as $dir)
-		{
-			// No surrounding spaces allowed!
-			$dir = trim($dir);
-
-			// Add trailing separators as needed
-			if (substr($dir, -1) != DIRECTORY_SEPARATOR)
-			{
-				// Directory
-				$dir .= DIRECTORY_SEPARATOR;
-			}
-
-			// Add to the top of the search dirs
-			array_unshift($this->_path[$type], $dir);
-		}
-	}
-
-	/**
 	 * Create the filename for a resource
 	 *
-	 * @param   string  $type   The resource type to create the filename for
-	 * @param   array   $parts  An associative array of filename information
+	 * @param   string $type  The resource type to create the filename for
+	 * @param   array  $parts An associative array of filename information
 	 *
 	 * @return  string  The filename
 	 */
@@ -1171,5 +1157,19 @@ abstract class FOFView extends FOFUtilsObject
 		}
 
 		return $filename;
+	}
+
+	/**
+	 * Returns the view's option (component name) and view name in an
+	 * associative array.
+	 *
+	 * @return  array
+	 */
+	public function getViewOptionAndName()
+	{
+		return array(
+			'option' => $this->config['option'],
+			'view'   => $this->config['view'],
+		);
 	}
 }

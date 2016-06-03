@@ -22,13 +22,13 @@ class ContactViewCategory extends JViewCategory
 	 * @var    string  The name of the extension for the category
 	 * @since  3.2
 	 */
-	protected  $extension = 'com_contact';
+	protected $extension = 'com_contact';
 
 	/**
 	 * @var    string  Default title to use for page title
 	 * @since  3.2
 	 */
-	protected  $defaultPageTitle = 'COM_CONTACT_DEFAULT_PAGE_TITLE';
+	protected $defaultPageTitle = 'COM_CONTACT_DEFAULT_PAGE_TITLE';
 
 	/**
 	 * @var    string  The name of the view to link individual items to
@@ -47,7 +47,7 @@ class ContactViewCategory extends JViewCategory
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -93,16 +93,16 @@ class ContactViewCategory extends JViewCategory
 		parent::prepareDocument();
 
 		$menu = $this->menu;
-		$id = (int) @$menu->query['id'];
+		$id   = (int) @$menu->query['id'];
 
 		if ($menu && ($menu->query['option'] != $this->extension || $menu->query['view'] == $this->viewName || $id != $this->category->id))
 		{
-			$path = array(array('title' => $this->category->title, 'link' => ''));
+			$path     = array(array('title' => $this->category->title, 'link' => ''));
 			$category = $this->category->getParent();
 
 			while (($menu->query['option'] != 'com_contact' || $menu->query['view'] == 'contact' || $id != $category->id) && $category->id > 1)
 			{
-				$path[] = array('title' => $category->title, 'link' => ContactHelperRoute::getCategoryRoute($category->id));
+				$path[]   = array('title' => $category->title, 'link' => ContactHelperRoute::getCategoryRoute($category->id));
 				$category = $category->getParent();
 			}
 

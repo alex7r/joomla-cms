@@ -29,7 +29,7 @@ class UsersViewRegistration extends JViewLegacy
 	/**
 	 * Method to display the view.
 	 *
-	 * @param   string  $tpl  The template file to include
+	 * @param   string $tpl The template file to include
 	 *
 	 * @return  mixed
 	 *

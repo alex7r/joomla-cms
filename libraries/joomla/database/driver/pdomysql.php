@@ -20,6 +20,14 @@ defined('JPATH_PLATFORM') or die;
 class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 {
 	/**
+	 * The minimum supported database version.
+	 *
+	 * @var    string
+	 * @since  3.4
+	 */
+	protected static $dbMinimum = '5.0.4';
+
+	/**
 	 * The name of the database driver.
 	 *
 	 * @var    string
@@ -56,24 +64,16 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	protected $nullDate = '0000-00-00 00:00:00';
 
 	/**
-	 * The minimum supported database version.
-	 *
-	 * @var    string
-	 * @since  3.4
-	 */
-	protected static $dbMinimum = '5.0.4';
-
-	/**
 	 * Constructor.
 	 *
-	 * @param   array  $options  Array of database options with keys: host, user, password, database, select.
+	 * @param   array $options Array of database options with keys: host, user, password, database, select.
 	 *
 	 * @since   3.4
 	 */
 	public function __construct($options)
 	{
 		// Get some basic values from the options.
-		$options['driver']  = 'mysql';
+		$options['driver'] = 'mysql';
 
 		if (!isset($options['charset']) || $options['charset'] == 'utf8')
 		{
@@ -90,6 +90,44 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 
 		// Finalize initialisation.
 		parent::__construct($options);
+	}
+
+	/**
+	 * Test to see if the MySQL connector is available.
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   3.4
+	 */
+	public static function isSupported()
+	{
+		return class_exists('PDO') && in_array('mysql', PDO::getAvailableDrivers());
+	}
+
+	/**
+	 * Drops a table from the database.
+	 *
+	 * @param   string  $tableName The name of the database table to drop.
+	 * @param   boolean $ifExists  Optionally specify that the table must exist before it is dropped.
+	 *
+	 * @return  JDatabaseDriverPdomysql  Returns this object to support chaining.
+	 *
+	 * @since   3.4
+	 * @throws  RuntimeException
+	 */
+	public function dropTable($tableName, $ifExists = true)
+	{
+		$this->connect();
+
+		$query = $this->getQuery(true);
+
+		$query->setQuery('DROP TABLE ' . ($ifExists ? 'IF EXISTS ' : '') . $this->quoteName($tableName));
+
+		$this->setQuery($query);
+
+		$this->execute();
+
+		return $this;
 	}
 
 	/**
@@ -126,7 +164,7 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 			 * connection succeeds, then we will have learned that the
 			 * client end of the connection does not support utf8mb4.
   			 */
-			$this->utf8mb4 = false;
+			$this->utf8mb4            = false;
 			$this->options['charset'] = 'utf8';
 
 			parent::connect();
@@ -158,47 +196,9 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	}
 
 	/**
-	 * Test to see if the MySQL connector is available.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since   3.4
-	 */
-	public static function isSupported()
-	{
-		return class_exists('PDO') && in_array('mysql', PDO::getAvailableDrivers());
-	}
-
-	/**
-	 * Drops a table from the database.
-	 *
-	 * @param   string   $tableName  The name of the database table to drop.
-	 * @param   boolean  $ifExists   Optionally specify that the table must exist before it is dropped.
-	 *
-	 * @return  JDatabaseDriverPdomysql  Returns this object to support chaining.
-	 *
-	 * @since   3.4
-	 * @throws  RuntimeException
-	 */
-	public function dropTable($tableName, $ifExists = true)
-	{
-		$this->connect();
-
-		$query = $this->getQuery(true);
-
-		$query->setQuery('DROP TABLE ' . ($ifExists ? 'IF EXISTS ' : '') . $this->quoteName($tableName));
-
-		$this->setQuery($query);
-
-		$this->execute();
-
-		return $this;
-	}
-
-	/**
 	 * Select a database for use.
 	 *
-	 * @param   string  $database  The name of the database to select for use.
+	 * @param   string $database The name of the database to select for use.
 	 *
 	 * @return  boolean  True if the database was successfully selected.
 	 *
@@ -269,7 +269,7 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	/**
 	 * Shows the table CREATE statement that creates the given tables.
 	 *
-	 * @param   mixed  $tables  A table name or a list of table names.
+	 * @param   mixed $tables A table name or a list of table names.
 	 *
 	 * @return  array  A list of the create SQL for the tables.
 	 *
@@ -302,8 +302,8 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	/**
 	 * Retrieves field information about a given table.
 	 *
-	 * @param   string   $table     The name of the database table.
-	 * @param   boolean  $typeOnly  True to only return field types.
+	 * @param   string  $table    The name of the database table.
+	 * @param   boolean $typeOnly True to only return field types.
 	 *
 	 * @return  array  An array of fields for the database table.
 	 *
@@ -344,7 +344,7 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	/**
 	 * Get the details list of keys for a table.
 	 *
-	 * @param   string  $table  The name of the table.
+	 * @param   string $table The name of the table.
 	 *
 	 * @return  array  An array of the column specification for the table.
 	 *
@@ -399,7 +399,7 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	/**
 	 * Locks a table in the database.
 	 *
-	 * @param   string  $table  The name of the table to unlock.
+	 * @param   string $table The name of the table to unlock.
 	 *
 	 * @return  JDatabaseDriverPdomysql  Returns this object to support chaining.
 	 *
@@ -416,10 +416,10 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	/**
 	 * Renames a table in the database.
 	 *
-	 * @param   string  $oldTable  The name of the table to be renamed
-	 * @param   string  $newTable  The new name for the table.
-	 * @param   string  $backup    Not used by MySQL.
-	 * @param   string  $prefix    Not used by MySQL.
+	 * @param   string $oldTable The name of the table to be renamed
+	 * @param   string $newTable The new name for the table.
+	 * @param   string $backup   Not used by MySQL.
+	 * @param   string $prefix   Not used by MySQL.
 	 *
 	 * @return  JDatabaseDriverPdomysql  Returns this object to support chaining.
 	 *
@@ -449,8 +449,8 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	 * Note: Using query objects with bound variables is
 	 * preferable to the below.
 	 *
-	 * @param   string   $text   The string to be escaped.
-	 * @param   boolean  $extra  Unused optional parameter to provide extra escaping.
+	 * @param   string  $text  The string to be escaped.
+	 * @param   boolean $extra Unused optional parameter to provide extra escaping.
 	 *
 	 * @return  string  The escaped string.
 	 *
@@ -493,7 +493,7 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	/**
 	 * Method to commit a transaction.
 	 *
-	 * @param   boolean  $toSavepoint  If true, commit to the last savepoint.
+	 * @param   boolean $toSavepoint If true, commit to the last savepoint.
 	 *
 	 * @return  void
 	 *
@@ -517,7 +517,7 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	/**
 	 * Method to roll back a transaction.
 	 *
-	 * @param   boolean  $toSavepoint  If true, rollback to the last savepoint.
+	 * @param   boolean $toSavepoint If true, rollback to the last savepoint.
 	 *
 	 * @return  void
 	 *
@@ -547,7 +547,7 @@ class JDatabaseDriverPdomysql extends JDatabaseDriverPdo
 	/**
 	 * Method to initialize a transaction.
 	 *
-	 * @param   boolean  $asSavepoint  If true and a transaction is already active, a savepoint will be created.
+	 * @param   boolean $asSavepoint If true and a transaction is already active, a savepoint will be created.
 	 *
 	 * @return  void
 	 *

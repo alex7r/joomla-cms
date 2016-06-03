@@ -66,36 +66,6 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 	protected $executed = false;
 
 	/**
-	 * Constructor.
-	 *
-	 * @param   array  $options  List of options used to configure the connection
-	 *
-	 * @since   12.1
-	 */
-	public function __construct($options)
-	{
-		// Get some basic values from the options.
-		$options['driver'] = (isset($options['driver'])) ? $options['driver'] : 'odbc';
-		$options['dsn'] = (isset($options['dsn'])) ? $options['dsn'] : '';
-		$options['host'] = (isset($options['host'])) ? $options['host'] : 'localhost';
-		$options['database'] = (isset($options['database'])) ? $options['database'] : '';
-		$options['user'] = (isset($options['user'])) ? $options['user'] : '';
-		$options['password'] = (isset($options['password'])) ? $options['password'] : '';
-		$options['driverOptions'] = (isset($options['driverOptions'])) ? $options['driverOptions'] : array();
-
-		$hostParts = explode(':', $options['host']);
-
-		if (!empty($hostParts[1]))
-		{
-			$options['host'] = $hostParts[0];
-			$options['port'] = $hostParts[1];
-		}
-
-		// Finalize initialisation
-		parent::__construct($options);
-	}
-
-	/**
 	 * Destructor.
 	 *
 	 * @since   12.1
@@ -103,6 +73,102 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 	public function __destruct()
 	{
 		$this->disconnect();
+	}
+
+	/**
+	 * Disconnects the database.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	public function disconnect()
+	{
+		foreach ($this->disconnectHandlers as $h)
+		{
+			call_user_func_array($h, array(&$this));
+		}
+
+		$this->freeResult();
+		$this->connection = null;
+	}
+
+	/**
+	 * Method to free up the memory used for the result set.
+	 *
+	 * @param   mixed $cursor The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	protected function freeResult($cursor = null)
+	{
+		$this->executed = false;
+
+		if ($cursor instanceof PDOStatement)
+		{
+			$cursor->closeCursor();
+			$cursor = null;
+		}
+
+		if ($this->prepared instanceof PDOStatement)
+		{
+			$this->prepared->closeCursor();
+			$this->prepared = null;
+		}
+	}
+
+	/**
+	 * Method to escape a string for usage in an SQL statement.
+	 *
+	 * Oracle escaping reference:
+	 * http://www.orafaq.com/wiki/SQL_FAQ#How_does_one_escape_special_characters_when_writing_SQL_queries.3F
+	 *
+	 * SQLite escaping notes:
+	 * http://www.sqlite.org/faq.html#q14
+	 *
+	 * Method body is as implemented by the Zend Framework
+	 *
+	 * Note: Using query objects with bound variables is
+	 * preferable to the below.
+	 *
+	 * @param   string  $text  The string to be escaped.
+	 * @param   boolean $extra Unused optional parameter to provide extra escaping.
+	 *
+	 * @return  string  The escaped string.
+	 *
+	 * @since   12.1
+	 */
+	public function escape($text, $extra = false)
+	{
+		if (is_int($text) || is_float($text))
+		{
+			return $text;
+		}
+
+		$text = str_replace("'", "''", $text);
+
+		return addcslashes($text, "\000\n\r\\\032");
+	}
+
+	/**
+	 * Retrieve a PDO database connection attribute
+	 * http://www.php.net/manual/en/pdo.getattribute.php
+	 *
+	 * Usage: $db->getOption(PDO::ATTR_CASE);
+	 *
+	 * @param   mixed $key One of the PDO::ATTR_* Constants
+	 *
+	 * @return mixed
+	 *
+	 * @since  12.1
+	 */
+	public function getOption($key)
+	{
+		$this->connect();
+
+		return $this->connection->getAttribute($key);
 	}
 
 	/**
@@ -127,7 +193,7 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 		}
 
 		$replace = array();
-		$with = array();
+		$with    = array();
 
 		// Find the correct PDO DSN Format to use:
 		switch ($this->options['driver'])
@@ -138,7 +204,7 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 				$format = 'cubrid:host=#HOST#;port=#PORT#;dbname=#DBNAME#';
 
 				$replace = array('#HOST#', '#PORT#', '#DBNAME#');
-				$with = array($this->options['host'], $this->options['port'], $this->options['database']);
+				$with    = array($this->options['host'], $this->options['port'], $this->options['database']);
 
 				break;
 
@@ -148,7 +214,7 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 				$format = 'dblib:host=#HOST#;port=#PORT#;dbname=#DBNAME#';
 
 				$replace = array('#HOST#', '#PORT#', '#DBNAME#');
-				$with = array($this->options['host'], $this->options['port'], $this->options['database']);
+				$with    = array($this->options['host'], $this->options['port'], $this->options['database']);
 
 				break;
 
@@ -158,7 +224,7 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 				$format = 'firebird:dbname=#DBNAME#';
 
 				$replace = array('#DBNAME#');
-				$with = array($this->options['database']);
+				$with    = array($this->options['database']);
 
 				break;
 
@@ -170,20 +236,20 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 					$format = 'ibm:DSN=#DSN#';
 
 					$replace = array('#DSN#');
-					$with = array($this->options['dsn']);
+					$with    = array($this->options['dsn']);
 				}
 				else
 				{
 					$format = 'ibm:hostname=#HOST#;port=#PORT#;database=#DBNAME#';
 
 					$replace = array('#HOST#', '#PORT#', '#DBNAME#');
-					$with = array($this->options['host'], $this->options['port'], $this->options['database']);
+					$with    = array($this->options['host'], $this->options['port'], $this->options['database']);
 				}
 
 				break;
 
 			case 'informix':
-				$this->options['port'] = (isset($this->options['port'])) ? $this->options['port'] : 1526;
+				$this->options['port']     = (isset($this->options['port'])) ? $this->options['port'] : 1526;
 				$this->options['protocol'] = (isset($this->options['protocol'])) ? $this->options['protocol'] : 'onsoctcp';
 
 				if (!empty($this->options['dsn']))
@@ -191,14 +257,14 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 					$format = 'informix:DSN=#DSN#';
 
 					$replace = array('#DSN#');
-					$with = array($this->options['dsn']);
+					$with    = array($this->options['dsn']);
 				}
 				else
 				{
 					$format = 'informix:host=#HOST#;service=#PORT#;database=#DBNAME#;server=#SERVER#;protocol=#PROTOCOL#';
 
 					$replace = array('#HOST#', '#PORT#', '#DBNAME#', '#SERVER#', '#PROTOCOL#');
-					$with = array($this->options['host'], $this->options['port'], $this->options['database'], $this->options['server'], $this->options['protocol']);
+					$with    = array($this->options['host'], $this->options['port'], $this->options['database'], $this->options['server'], $this->options['protocol']);
 				}
 
 				break;
@@ -209,7 +275,7 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 				$format = 'mssql:host=#HOST#;port=#PORT#;dbname=#DBNAME#';
 
 				$replace = array('#HOST#', '#PORT#', '#DBNAME#');
-				$with = array($this->options['host'], $this->options['port'], $this->options['database']);
+				$with    = array($this->options['host'], $this->options['port'], $this->options['database']);
 
 				break;
 
@@ -221,12 +287,12 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 				$format = 'mysql:host=#HOST#;port=#PORT#;dbname=#DBNAME#;charset=#CHARSET#';
 
 				$replace = array('#HOST#', '#PORT#', '#DBNAME#', '#CHARSET#');
-				$with = array($this->options['host'], $this->options['port'], $this->options['database'], $this->options['charset']);
+				$with    = array($this->options['host'], $this->options['port'], $this->options['database'], $this->options['charset']);
 
 				break;
 
 			case 'oci':
-				$this->options['port'] = (isset($this->options['port'])) ? $this->options['port'] : 1521;
+				$this->options['port']    = (isset($this->options['port'])) ? $this->options['port'] : 1521;
 				$this->options['charset'] = (isset($this->options['charset'])) ? $this->options['charset'] : 'AL32UTF8';
 
 				if (!empty($this->options['dsn']))
@@ -234,14 +300,14 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 					$format = 'oci:dbname=#DSN#';
 
 					$replace = array('#DSN#');
-					$with = array($this->options['dsn']);
+					$with    = array($this->options['dsn']);
 				}
 				else
 				{
 					$format = 'oci:dbname=//#HOST#:#PORT#/#DBNAME#';
 
 					$replace = array('#HOST#', '#PORT#', '#DBNAME#');
-					$with = array($this->options['host'], $this->options['port'], $this->options['database']);
+					$with    = array($this->options['host'], $this->options['port'], $this->options['database']);
 				}
 
 				$format .= ';charset=' . $this->options['charset'];
@@ -252,7 +318,7 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 				$format = 'odbc:DSN=#DSN#;UID:#USER#;PWD=#PASSWORD#';
 
 				$replace = array('#DSN#', '#USER#', '#PASSWORD#');
-				$with = array($this->options['dsn'], $this->options['user'], $this->options['password']);
+				$with    = array($this->options['dsn'], $this->options['user'], $this->options['password']);
 
 				break;
 
@@ -262,7 +328,7 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 				$format = 'pgsql:host=#HOST#;port=#PORT#;dbname=#DBNAME#';
 
 				$replace = array('#HOST#', '#PORT#', '#DBNAME#');
-				$with = array($this->options['host'], $this->options['port'], $this->options['database']);
+				$with    = array($this->options['host'], $this->options['port'], $this->options['database']);
 
 				break;
 
@@ -277,7 +343,7 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 				}
 
 				$replace = array('#DBNAME#');
-				$with = array($this->options['database']);
+				$with    = array($this->options['database']);
 
 				break;
 
@@ -287,7 +353,7 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 				$format = 'mssql:host=#HOST#;port=#PORT#;dbname=#DBNAME#';
 
 				$replace = array('#HOST#', '#PORT#', '#DBNAME#');
-				$with = array($this->options['host'], $this->options['port'], $this->options['database']);
+				$with    = array($this->options['host'], $this->options['port'], $this->options['database']);
 
 				break;
 		}
@@ -311,54 +377,235 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 	}
 
 	/**
-	 * Disconnects the database.
+	 * Test to see if the PDO extension is available.
+	 * Override as needed to check for specific PDO Drivers.
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		return defined('PDO::ATTR_DRIVER_NAME');
+	}
+
+	/**
+	 * Sets an attribute on the PDO database handle.
+	 * http://www.php.net/manual/en/pdo.setattribute.php
+	 *
+	 * Usage: $db->setOption(PDO::ATTR_CASE, PDO::CASE_UPPER);
+	 *
+	 * @param   integer $key     One of the PDO::ATTR_* Constants
+	 * @param   mixed   $value   One of the associated PDO Constants
+	 *                           related to the particular attribute
+	 *                           key.
+	 *
+	 * @return boolean
+	 *
+	 * @since  12.1
+	 */
+	public function setOption($key, $value)
+	{
+		$this->connect();
+
+		return $this->connection->setAttribute($key, $value);
+	}
+
+	/**
+	 * Get the number of affected rows for the previous executed SQL statement.
+	 * Only applicable for DELETE, INSERT, or UPDATE statements.
+	 *
+	 * @return  integer  The number of affected rows.
+	 *
+	 * @since   12.1
+	 */
+	public function getAffectedRows()
+	{
+		$this->connect();
+
+		if ($this->prepared instanceof PDOStatement)
+		{
+			return $this->prepared->rowCount();
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	/**
+	 * Get the number of returned rows for the previous executed SQL statement.
+	 * Only applicable for DELETE, INSERT, or UPDATE statements.
+	 *
+	 * @param   resource $cursor An optional database cursor resource to extract the row count from.
+	 *
+	 * @return  integer   The number of returned rows.
+	 *
+	 * @since   12.1
+	 */
+	public function getNumRows($cursor = null)
+	{
+		$this->connect();
+
+		if ($cursor instanceof PDOStatement)
+		{
+			return $cursor->rowCount();
+		}
+		elseif ($this->prepared instanceof PDOStatement)
+		{
+			return $this->prepared->rowCount();
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	/**
+	 * Method to get the auto-incremented value from the last INSERT statement.
+	 *
+	 * @return  string  The value of the auto-increment field from the last inserted row.
+	 *
+	 * @since   12.1
+	 */
+	public function insertid()
+	{
+		$this->connect();
+
+		// Error suppress this to prevent PDO warning us that the driver doesn't support this operation.
+		return @$this->connection->lastInsertId();
+	}
+
+	/**
+	 * Select a database for use.
+	 *
+	 * @param   string $database The name of the database to select for use.
+	 *
+	 * @return  boolean  True if the database was successfully selected.
+	 *
+	 * @since   12.1
+	 * @throws  RuntimeException
+	 */
+	public function select($database)
+	{
+		$this->connect();
+
+		return true;
+	}
+
+	/**
+	 * Set the connection to use UTF-8 character encoding.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   12.1
+	 */
+	public function setUtf()
+	{
+		return false;
+	}
+
+	/**
+	 * Method to commit a transaction.
+	 *
+	 * @param   boolean $toSavepoint If true, commit to the last savepoint.
 	 *
 	 * @return  void
 	 *
 	 * @since   12.1
+	 * @throws  RuntimeException
 	 */
-	public function disconnect()
+	public function transactionCommit($toSavepoint = false)
 	{
-		foreach ($this->disconnectHandlers as $h)
+		$this->connect();
+
+		if (!$toSavepoint || $this->transactionDepth == 1)
 		{
-			call_user_func_array($h, array( &$this));
+			$this->connection->commit();
 		}
 
-		$this->freeResult();
-		$this->connection = null;
+		$this->transactionDepth--;
 	}
 
 	/**
-	 * Method to escape a string for usage in an SQL statement.
+	 * Method to roll back a transaction.
 	 *
-	 * Oracle escaping reference:
-	 * http://www.orafaq.com/wiki/SQL_FAQ#How_does_one_escape_special_characters_when_writing_SQL_queries.3F
+	 * @param   boolean $toSavepoint If true, rollback to the last savepoint.
 	 *
-	 * SQLite escaping notes:
-	 * http://www.sqlite.org/faq.html#q14
-	 *
-	 * Method body is as implemented by the Zend Framework
-	 *
-	 * Note: Using query objects with bound variables is
-	 * preferable to the below.
-	 *
-	 * @param   string   $text   The string to be escaped.
-	 * @param   boolean  $extra  Unused optional parameter to provide extra escaping.
-	 *
-	 * @return  string  The escaped string.
+	 * @return  void
 	 *
 	 * @since   12.1
+	 * @throws  RuntimeException
 	 */
-	public function escape($text, $extra = false)
+	public function transactionRollback($toSavepoint = false)
 	{
-		if (is_int($text) || is_float($text))
+		$this->connect();
+
+		if (!$toSavepoint || $this->transactionDepth == 1)
 		{
-			return $text;
+			$this->connection->rollBack();
 		}
 
-		$text = str_replace("'", "''", $text);
+		$this->transactionDepth--;
+	}
 
-		return addcslashes($text, "\000\n\r\\\032");
+	/**
+	 * Method to initialize a transaction.
+	 *
+	 * @param   boolean $asSavepoint If true and a transaction is already active, a savepoint will be created.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 * @throws  RuntimeException
+	 */
+	public function transactionStart($asSavepoint = false)
+	{
+		$this->connect();
+
+		if (!$asSavepoint || !$this->transactionDepth)
+		{
+			$this->connection->beginTransaction();
+		}
+
+		$this->transactionDepth++;
+	}
+
+	/**
+	 * Method to get the next row in the result set from the database query as an object.
+	 *
+	 * @param   string $class The class name to use for the returned row object.
+	 *
+	 * @return  mixed   The result of the query as an array, false if there are no more rows.
+	 *
+	 * @since       12.1
+	 * @throws  RuntimeException
+	 * @deprecated  4.0 (CMS)  Use getIterator() instead
+	 */
+	public function loadNextObject($class = 'stdClass')
+	{
+		JLog::add(__METHOD__ . '() is deprecated. Use JDatabaseDriver::getIterator() instead.', JLog::WARNING, 'deprecated');
+		$this->connect();
+
+		// Execute the query and get the result set cursor.
+		if (!$this->executed)
+		{
+			if (!($this->execute()))
+			{
+				return $this->errorNum ? null : false;
+			}
+		}
+
+		// Get the next row from the result set as an object of type $class.
+		if ($row = $this->fetchObject(null, $class))
+		{
+			return $row;
+		}
+
+		// Free up system resources and return.
+		$this->freeResult();
+
+		return false;
 	}
 
 	/**
@@ -456,7 +703,7 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 					$this->connection = null;
 					$this->connect();
 				}
-				// If connect fails, ignore that exception and throw the normal exception.
+					// If connect fails, ignore that exception and throw the normal exception.
 				catch (RuntimeException $e)
 				{
 					// Get the error number and message.
@@ -490,69 +737,40 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 	}
 
 	/**
-	 * Retrieve a PDO database connection attribute
-	 * http://www.php.net/manual/en/pdo.getattribute.php
+	 * Return the actual SQL Error number
 	 *
-	 * Usage: $db->getOption(PDO::ATTR_CASE);
+	 * @return  integer  The SQL Error number
 	 *
-	 * @param   mixed  $key  One of the PDO::ATTR_* Constants
-	 *
-	 * @return mixed
-	 *
-	 * @since  12.1
+	 * @since   3.4.6
 	 */
-	public function getOption($key)
+	protected function getErrorNumber()
 	{
-		$this->connect();
-
-		return $this->connection->getAttribute($key);
+		return (int) $this->connection->errorCode();
 	}
 
 	/**
-	 * Get a query to run and verify the database is operational.
+	 * Return the actual SQL Error message
 	 *
-	 * @return  string  The query to check the health of the DB.
+	 * @param   string $query The SQL Query that fails
 	 *
-	 * @since   12.2
+	 * @return  string  The SQL Error message
+	 *
+	 * @since   3.4.6
 	 */
-	public function getConnectedQuery()
+	protected function getErrorMessage($query)
 	{
-		return 'SELECT 1';
-	}
+		// Note we ignoring $query here as it not used in the original code.
 
-	/**
-	 * Sets an attribute on the PDO database handle.
-	 * http://www.php.net/manual/en/pdo.setattribute.php
-	 *
-	 * Usage: $db->setOption(PDO::ATTR_CASE, PDO::CASE_UPPER);
-	 *
-	 * @param   integer  $key    One of the PDO::ATTR_* Constants
-	 * @param   mixed    $value  One of the associated PDO Constants
-	 *                           related to the particular attribute
-	 *                           key.
-	 *
-	 * @return boolean
-	 *
-	 * @since  12.1
-	 */
-	public function setOption($key, $value)
-	{
-		$this->connect();
+		// The SQL Error Information
+		$errorInfo = implode(", ", $this->connection->errorInfo());
 
-		return $this->connection->setAttribute($key, $value);
-	}
+		// Replace the Databaseprefix with `#__` if we are not in Debug
+		if (!$this->debug)
+		{
+			$errorInfo = str_replace($this->tablePrefix, '#__', $errorInfo);
+		}
 
-	/**
-	 * Test to see if the PDO extension is available.
-	 * Override as needed to check for specific PDO Drivers.
-	 *
-	 * @return  boolean  True on success, false otherwise.
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		return defined('PDO::ATTR_DRIVER_NAME');
+		return 'SQL: ' . $errorInfo;
 	}
 
 	/**
@@ -575,9 +793,9 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 		}
 
 		// Backup the query state.
-		$query = $this->sql;
-		$limit = $this->limit;
-		$offset = $this->offset;
+		$query    = $this->sql;
+		$limit    = $this->limit;
+		$offset   = $this->offset;
 		$prepared = $this->prepared;
 
 		try
@@ -589,111 +807,29 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 			$this->setQuery($this->getConnectedQuery());
 			$status = (bool) $this->loadResult();
 		}
-		// If we catch an exception here, we must not be connected.
+			// If we catch an exception here, we must not be connected.
 		catch (Exception $e)
 		{
 			$status = false;
 		}
 
 		// Restore the query state.
-		$this->sql = $query;
-		$this->limit = $limit;
-		$this->offset = $offset;
-		$this->prepared = $prepared;
+		$this->sql         = $query;
+		$this->limit       = $limit;
+		$this->offset      = $offset;
+		$this->prepared    = $prepared;
 		$checkingConnected = false;
 
 		return $status;
 	}
 
 	/**
-	 * Get the number of affected rows for the previous executed SQL statement.
-	 * Only applicable for DELETE, INSERT, or UPDATE statements.
-	 *
-	 * @return  integer  The number of affected rows.
-	 *
-	 * @since   12.1
-	 */
-	public function getAffectedRows()
-	{
-		$this->connect();
-
-		if ($this->prepared instanceof PDOStatement)
-		{
-			return $this->prepared->rowCount();
-		}
-		else
-		{
-			return 0;
-		}
-	}
-
-	/**
-	 * Get the number of returned rows for the previous executed SQL statement.
-	 * Only applicable for DELETE, INSERT, or UPDATE statements.
-	 *
-	 * @param   resource  $cursor  An optional database cursor resource to extract the row count from.
-	 *
-	 * @return  integer   The number of returned rows.
-	 *
-	 * @since   12.1
-	 */
-	public function getNumRows($cursor = null)
-	{
-		$this->connect();
-
-		if ($cursor instanceof PDOStatement)
-		{
-			return $cursor->rowCount();
-		}
-		elseif ($this->prepared instanceof PDOStatement)
-		{
-			return $this->prepared->rowCount();
-		}
-		else
-		{
-			return 0;
-		}
-	}
-
-	/**
-	 * Method to get the auto-incremented value from the last INSERT statement.
-	 *
-	 * @return  string  The value of the auto-increment field from the last inserted row.
-	 *
-	 * @since   12.1
-	 */
-	public function insertid()
-	{
-		$this->connect();
-
-		// Error suppress this to prevent PDO warning us that the driver doesn't support this operation.
-		return @$this->connection->lastInsertId();
-	}
-
-	/**
-	 * Select a database for use.
-	 *
-	 * @param   string  $database  The name of the database to select for use.
-	 *
-	 * @return  boolean  True if the database was successfully selected.
-	 *
-	 * @since   12.1
-	 * @throws  RuntimeException
-	 */
-	public function select($database)
-	{
-		$this->connect();
-
-		return true;
-	}
-
-	/**
 	 * Sets the SQL statement string for later execution.
 	 *
-	 * @param   mixed    $query          The SQL statement to set either as a JDatabaseQuery object or a string.
-	 * @param   integer  $offset         The affected row offset to set.
-	 * @param   integer  $limit          The maximum affected rows to set.
-	 * @param   array    $driverOptions  The optional PDO driver options.
+	 * @param   mixed   $query         The SQL statement to set either as a JDatabaseQuery object or a string.
+	 * @param   integer $offset        The affected row offset to set.
+	 * @param   integer $limit         The maximum affected rows to set.
+	 * @param   array   $driverOptions The optional PDO driver options.
 	 *
 	 * @return  JDatabaseDriver  This object to support method chaining.
 	 *
@@ -730,132 +866,22 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 	}
 
 	/**
-	 * Set the connection to use UTF-8 character encoding.
+	 * Get a query to run and verify the database is operational.
 	 *
-	 * @return  boolean  True on success.
+	 * @return  string  The query to check the health of the DB.
 	 *
-	 * @since   12.1
+	 * @since   12.2
 	 */
-	public function setUtf()
+	public function getConnectedQuery()
 	{
-		return false;
-	}
-
-	/**
-	 * Method to commit a transaction.
-	 *
-	 * @param   boolean  $toSavepoint  If true, commit to the last savepoint.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 * @throws  RuntimeException
-	 */
-	public function transactionCommit($toSavepoint = false)
-	{
-		$this->connect();
-
-		if (!$toSavepoint || $this->transactionDepth == 1)
-		{
-			$this->connection->commit();
-		}
-
-		$this->transactionDepth--;
-	}
-
-	/**
-	 * Method to roll back a transaction.
-	 *
-	 * @param   boolean  $toSavepoint  If true, rollback to the last savepoint.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 * @throws  RuntimeException
-	 */
-	public function transactionRollback($toSavepoint = false)
-	{
-		$this->connect();
-
-		if (!$toSavepoint || $this->transactionDepth == 1)
-		{
-			$this->connection->rollBack();
-		}
-
-		$this->transactionDepth--;
-	}
-
-	/**
-	 * Method to initialize a transaction.
-	 *
-	 * @param   boolean  $asSavepoint  If true and a transaction is already active, a savepoint will be created.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 * @throws  RuntimeException
-	 */
-	public function transactionStart($asSavepoint = false)
-	{
-		$this->connect();
-
-		if (!$asSavepoint || !$this->transactionDepth)
-		{
-			$this->connection->beginTransaction();
-		}
-
-		$this->transactionDepth++;
-	}
-
-	/**
-	 * Method to fetch a row from the result set cursor as an array.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
-	 *
-	 * @since   12.1
-	 */
-	protected function fetchArray($cursor = null)
-	{
-		if (!empty($cursor) && $cursor instanceof PDOStatement)
-		{
-			return $cursor->fetch(PDO::FETCH_NUM);
-		}
-
-		if ($this->prepared instanceof PDOStatement)
-		{
-			return $this->prepared->fetch(PDO::FETCH_NUM);
-		}
-	}
-
-	/**
-	 * Method to fetch a row from the result set cursor as an associative array.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
-	 *
-	 * @since   12.1
-	 */
-	protected function fetchAssoc($cursor = null)
-	{
-		if (!empty($cursor) && $cursor instanceof PDOStatement)
-		{
-			return $cursor->fetch(PDO::FETCH_ASSOC);
-		}
-
-		if ($this->prepared instanceof PDOStatement)
-		{
-			return $this->prepared->fetch(PDO::FETCH_ASSOC);
-		}
+		return 'SELECT 1';
 	}
 
 	/**
 	 * Method to fetch a row from the result set cursor as an object.
 	 *
-	 * @param   mixed   $cursor  The optional result set cursor from which to fetch the row.
-	 * @param   string  $class   Unused, only necessary so method signature will be the same as parent.
+	 * @param   mixed  $cursor The optional result set cursor from which to fetch the row.
+	 * @param   string $class  Unused, only necessary so method signature will be the same as parent.
 	 *
 	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
 	 *
@@ -872,69 +898,6 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 		{
 			return $this->prepared->fetchObject($class);
 		}
-	}
-
-	/**
-	 * Method to free up the memory used for the result set.
-	 *
-	 * @param   mixed  $cursor  The optional result set cursor from which to fetch the row.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	protected function freeResult($cursor = null)
-	{
-		$this->executed = false;
-
-		if ($cursor instanceof PDOStatement)
-		{
-			$cursor->closeCursor();
-			$cursor = null;
-		}
-
-		if ($this->prepared instanceof PDOStatement)
-		{
-			$this->prepared->closeCursor();
-			$this->prepared = null;
-		}
-	}
-
-	/**
-	 * Method to get the next row in the result set from the database query as an object.
-	 *
-	 * @param   string  $class  The class name to use for the returned row object.
-	 *
-	 * @return  mixed   The result of the query as an array, false if there are no more rows.
-	 *
-	 * @since   12.1
-	 * @throws  RuntimeException
-	 * @deprecated  4.0 (CMS)  Use getIterator() instead
-	 */
-	public function loadNextObject($class = 'stdClass')
-	{
-		JLog::add(__METHOD__ . '() is deprecated. Use JDatabaseDriver::getIterator() instead.', JLog::WARNING, 'deprecated');
-		$this->connect();
-
-		// Execute the query and get the result set cursor.
-		if (!$this->executed)
-		{
-			if (!($this->execute()))
-			{
-				return $this->errorNum ? null : false;
-			}
-		}
-
-		// Get the next row from the result set as an object of type $class.
-		if ($row = $this->fetchObject(null, $class))
-		{
-			return $row;
-		}
-
-		// Free up system resources and return.
-		$this->freeResult();
-
-		return false;
 	}
 
 	/**
@@ -971,11 +934,33 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 	}
 
 	/**
+	 * Method to fetch a row from the result set cursor as an associative array.
+	 *
+	 * @param   mixed $cursor The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
+	 *
+	 * @since   12.1
+	 */
+	protected function fetchAssoc($cursor = null)
+	{
+		if (!empty($cursor) && $cursor instanceof PDOStatement)
+		{
+			return $cursor->fetch(PDO::FETCH_ASSOC);
+		}
+
+		if ($this->prepared instanceof PDOStatement)
+		{
+			return $this->prepared->fetch(PDO::FETCH_ASSOC);
+		}
+	}
+
+	/**
 	 * Method to get the next row in the result set from the database query as an array.
 	 *
 	 * @return  mixed  The result of the query as an array, false if there are no more rows.
 	 *
-	 * @since   12.1
+	 * @since       12.1
 	 * @throws  RuntimeException
 	 * @deprecated  4.0 (CMS)  Use getIterator() instead
 	 */
@@ -1003,6 +988,28 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 		$this->freeResult();
 
 		return false;
+	}
+
+	/**
+	 * Method to fetch a row from the result set cursor as an array.
+	 *
+	 * @param   mixed $cursor The optional result set cursor from which to fetch the row.
+	 *
+	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
+	 *
+	 * @since   12.1
+	 */
+	protected function fetchArray($cursor = null)
+	{
+		if (!empty($cursor) && $cursor instanceof PDOStatement)
+		{
+			return $cursor->fetch(PDO::FETCH_NUM);
+		}
+
+		if ($this->prepared instanceof PDOStatement)
+		{
+			return $this->prepared->fetch(PDO::FETCH_NUM);
+		}
 	}
 
 	/**
@@ -1047,39 +1054,32 @@ abstract class JDatabaseDriverPdo extends JDatabaseDriver
 	}
 
 	/**
-	 * Return the actual SQL Error number
+	 * Constructor.
 	 *
-	 * @return  integer  The SQL Error number
+	 * @param   array $options List of options used to configure the connection
 	 *
-	 * @since   3.4.6
+	 * @since   12.1
 	 */
-	protected function getErrorNumber()
+	public function __construct($options)
 	{
-		return (int) $this->connection->errorCode();
-	}
+		// Get some basic values from the options.
+		$options['driver']        = (isset($options['driver'])) ? $options['driver'] : 'odbc';
+		$options['dsn']           = (isset($options['dsn'])) ? $options['dsn'] : '';
+		$options['host']          = (isset($options['host'])) ? $options['host'] : 'localhost';
+		$options['database']      = (isset($options['database'])) ? $options['database'] : '';
+		$options['user']          = (isset($options['user'])) ? $options['user'] : '';
+		$options['password']      = (isset($options['password'])) ? $options['password'] : '';
+		$options['driverOptions'] = (isset($options['driverOptions'])) ? $options['driverOptions'] : array();
 
-	/**
-	 * Return the actual SQL Error message
-	 *
-	 * @param   string  $query  The SQL Query that fails
-	 *
-	 * @return  string  The SQL Error message
-	 *
-	 * @since   3.4.6
-	 */
-	protected function getErrorMessage($query)
-	{
-		// Note we ignoring $query here as it not used in the original code.
+		$hostParts = explode(':', $options['host']);
 
-		// The SQL Error Information
-		$errorInfo = implode(", ", $this->connection->errorInfo());
-
-		// Replace the Databaseprefix with `#__` if we are not in Debug
-		if (!$this->debug)
+		if (!empty($hostParts[1]))
 		{
-			$errorInfo = str_replace($this->tablePrefix, '#__', $errorInfo);
+			$options['host'] = $hostParts[0];
+			$options['port'] = $hostParts[1];
 		}
 
-		return 'SQL: ' . $errorInfo;
+		// Finalize initialisation
+		parent::__construct($options);
 	}
 }

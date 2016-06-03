@@ -9,6 +9,6 @@
 
 defined('_JEXEC') or die;
 
-$this->name = JText::_('COM_CONFIG_SITE_SETTINGS');
+$this->name       = JText::_('COM_CONFIG_SITE_SETTINGS');
 $this->fieldsname = 'site';
 echo JLayoutHelper::render('joomla.content.options_default', $this);

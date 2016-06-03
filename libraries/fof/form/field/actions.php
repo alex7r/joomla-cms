@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -32,7 +32,7 @@ class FOFFormFieldActions extends JFormFieldList implements FOFFormField
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
-	 * @param   string  $name  The property name for which to the the value.
+	 * @param   string $name The property name for which to the the value.
 	 *
 	 * @return  mixed  The property value or null.
 	 *
@@ -118,7 +118,7 @@ class FOFFormFieldActions extends JFormFieldList implements FOFFormField
 
 			if ($config['archived'])
 			{
-				$archived	= $this->item->{$publishedFieldName} == 2 ? true : false;
+				$archived = $this->item->{$publishedFieldName} == 2 ? true : false;
 
 				// Create dropdown items
 				$action = $archived ? 'unarchive' : 'archive';
@@ -127,7 +127,7 @@ class FOFFormFieldActions extends JFormFieldList implements FOFFormField
 
 			if ($config['trash'])
 			{
-				$trashed	= $this->item->{$publishedFieldName} == -2 ? true : false;
+				$trashed = $this->item->{$publishedFieldName} == -2 ? true : false;
 
 				$action = $trashed ? 'untrash' : 'trash';
 				JHtml::_('actionsdropdown.' . $action, 'cb' . $this->rowid, $prefix);
@@ -155,11 +155,11 @@ class FOFFormFieldActions extends JFormFieldList implements FOFFormField
 		// If no custom options were defined let's figure out which ones of the
 		// defaults we shall use...
 		$config = array(
-			'published'		 => 1,
-			'unpublished'	 => 1,
-			'archived'		 => 0,
-			'trash'			 => 0,
-			'all'			 => 0,
+			'published'   => 1,
+			'unpublished' => 1,
+			'archived'    => 0,
+			'trash'       => 0,
+			'all'         => 0,
 		);
 
 		$stack = array();
@@ -195,7 +195,7 @@ class FOFFormFieldActions extends JFormFieldList implements FOFFormField
 	/**
 	 * Method to get a
 	 *
-	 * @param   string  $enabledFieldName  Name of the enabled/published field
+	 * @param   string $enabledFieldName Name of the enabled/published field
 	 *
 	 * @return  FOFFormFieldPublished  Field
 	 */
@@ -229,7 +229,7 @@ class FOFFormFieldActions extends JFormFieldList implements FOFFormField
 		$publishedField = new FOFFormFieldPublished($this->form);
 
 		// Pass required objects to the field
-		$publishedField->item = $this->item;
+		$publishedField->item  = $this->item;
 		$publishedField->rowid = $this->rowid;
 		$publishedField->setup($publishedXml, $this->item->{$enabledFieldName});
 

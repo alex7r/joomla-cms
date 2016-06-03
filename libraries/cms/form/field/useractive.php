@@ -21,7 +21,7 @@ class JFormFieldUserActive extends JFormFieldPredefinedList
 	/**
 	 * The form field type.
 	 *
-	 * @var		string
+	 * @var        string
 	 * @since   3.2
 	 */
 	protected $type = 'UserActive';
@@ -33,14 +33,14 @@ class JFormFieldUserActive extends JFormFieldPredefinedList
 	 * @since  3.2
 	 */
 	protected $predefinedOptions = array(
-		'0'  => 'COM_USERS_ACTIVATED',
-		'1'  => 'COM_USERS_UNACTIVATED'
+		'0' => 'COM_USERS_ACTIVATED',
+		'1' => 'COM_USERS_UNACTIVATED'
 	);
 
 	/**
 	 * Method to instantiate the form field object.
 	 *
-	 * @param   JForm  $form  The form to attach to the form field object.
+	 * @param   JForm $form The form to attach to the form field object.
 	 *
 	 * @since   11.1
 	 */

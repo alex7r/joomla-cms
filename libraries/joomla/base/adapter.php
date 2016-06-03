@@ -28,13 +28,14 @@ class JAdapter extends JObject
 
 	/**
 	 * Adapter Folder
+	 *
 	 * @var    string
 	 * @since  11.1
 	 */
 	protected $_adapterfolder = 'adapters';
 
 	/**
-	 * @var    string	Adapter Class Prefix
+	 * @var    string    Adapter Class Prefix
 	 * @since  11.1
 	 */
 	protected $_classprefix = 'J';
@@ -58,16 +59,16 @@ class JAdapter extends JObject
 	/**
 	 * Constructor
 	 *
-	 * @param   string  $basepath       Base Path of the adapters
-	 * @param   string  $classprefix    Class prefix of adapters
-	 * @param   string  $adapterfolder  Name of folder to append to base path
+	 * @param   string $basepath      Base Path of the adapters
+	 * @param   string $classprefix   Class prefix of adapters
+	 * @param   string $adapterfolder Name of folder to append to base path
 	 *
 	 * @since   11.1
 	 */
 	public function __construct($basepath, $classprefix = null, $adapterfolder = null)
 	{
-		$this->_basepath = $basepath;
-		$this->_classprefix = $classprefix ? $classprefix : 'J';
+		$this->_basepath      = $basepath;
+		$this->_classprefix   = $classprefix ? $classprefix : 'J';
 		$this->_adapterfolder = $adapterfolder ? $adapterfolder : 'adapters';
 
 		$this->_db = JFactory::getDbo();
@@ -88,8 +89,8 @@ class JAdapter extends JObject
 	/**
 	 * Return an adapter.
 	 *
-	 * @param   string  $name     Name of adapter to return
-	 * @param   array   $options  Adapter options
+	 * @param   string $name    Name of adapter to return
+	 * @param   array  $options Adapter options
 	 *
 	 * @return  object  Adapter of type 'name' or false
 	 *
@@ -113,9 +114,9 @@ class JAdapter extends JObject
 	/**
 	 * Set an adapter by name
 	 *
-	 * @param   string  $name      Adapter name
-	 * @param   object  &$adapter  Adapter object
-	 * @param   array   $options   Adapter options
+	 * @param   string $name     Adapter name
+	 * @param   object &$adapter Adapter object
+	 * @param   array  $options  Adapter options
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -155,7 +156,7 @@ class JAdapter extends JObject
 	/**
 	 * Loads all adapters.
 	 *
-	 * @param   array  $options  Adapter options
+	 * @param   array $options Adapter options
 	 *
 	 * @return  void
 	 *
@@ -180,7 +181,7 @@ class JAdapter extends JObject
 			require_once $this->_basepath . '/' . $this->_adapterfolder . '/' . $fileName;
 
 			// Derive the class name from the filename.
-			$name = str_ireplace('.php', '', ucfirst(trim($fileName)));
+			$name  = str_ireplace('.php', '', ucfirst(trim($fileName)));
 			$class = $this->_classprefix . ucfirst($name);
 
 			if (!class_exists($class))
@@ -189,7 +190,7 @@ class JAdapter extends JObject
 				continue;
 			}
 
-			$adapter = new $class($this, $this->_db, $options);
+			$adapter                = new $class($this, $this->_db, $options);
 			$this->_adapters[$name] = clone $adapter;
 		}
 	}

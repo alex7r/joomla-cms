@@ -680,17 +680,17 @@ class idna_convert
 
 	protected $_lcount = 19;
 
-		protected $_vcount = 21;   // _vcount * _tcount
+	protected $_vcount = 21;   // _vcount * _tcount
 
-		protected $_tcount = 28; // _lcount * _tcount * _vcount
+	protected $_tcount = 28; // _lcount * _tcount * _vcount
 
-protected $_ncount = 588;
+	protected $_ncount = 588;
 
-protected $_scount = 11172;
+	protected $_scount = 11172;
 
 	// See {@link set_paramter()} for details of how to change the following
 	// settings from within your script / application
-	
+
 	protected $_error = false;   // Default input charset is UTF-8
 
 	protected $_api_encoding = 'utf8';  // Overlong UTF-8 encodings are forbidden
@@ -699,7 +699,7 @@ protected $_scount = 11172;
 
 	protected $_strict_mode = false;      // Can be either 2003 (old, default) or 2008
 
-protected $_idn_version = 2003;
+	protected $_idn_version = 2003;
 
 	/**
 	 * the constructor

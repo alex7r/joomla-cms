@@ -24,15 +24,15 @@ class JSimplepieFactory
 	/**
 	 * Get a parsed XML Feed Source
 	 *
-	 * @param   string   $url         Url for feed source.
-	 * @param   integer  $cache_time  Time to cache feed for (using internal cache mechanism).
+	 * @param   string  $url        Url for feed source.
+	 * @param   integer $cache_time Time to cache feed for (using internal cache mechanism).
 	 *
 	 * @return  mixed  SimplePie parsed object on success, false on failure.
 	 *
-	 * @since   12.2
+	 * @since       12.2
 	 * @deprecated  4.0   Use JFeedFactory($url) instead.
 	 *
-	 * @note  In 3.2 will be proxied to JFeedFactory()
+	 * @note        In 3.2 will be proxied to JFeedFactory()
 	 */
 	public static function getFeedParser($url, $cache_time = 0)
 	{

@@ -76,7 +76,7 @@ class FOFDispatcher extends FOFUtilsObject
 	/**
 	 * Public constructor
 	 *
-	 * @param   array  $config  The configuration variables
+	 * @param   array $config The configuration variables
 	 */
 	public function __construct($config = array())
 	{
@@ -97,7 +97,7 @@ class FOFDispatcher extends FOFUtilsObject
 		$this->component = $this->input->getCmd('option', 'com_foobar');
 
 		// Load the component's fof.xml configuration file
-		$configProvider = new FOFConfigProvider;
+		$configProvider    = new FOFConfigProvider;
 		$this->defaultView = $configProvider->get($this->component . '.dispatcher.default_view', $this->defaultView);
 
 		// Get the default values for the view name
@@ -151,9 +151,9 @@ class FOFDispatcher extends FOFUtilsObject
 	/**
 	 * Get a static (Singleton) instance of a particular Dispatcher
 	 *
-	 * @param   string  $option  The component name
-	 * @param   string  $view    The View name
-	 * @param   array   $config  Configuration data
+	 * @param   string $option The component name
+	 * @param   string $view   The View name
+	 * @param   array  $config Configuration data
 	 *
 	 * @staticvar  array  $instances  Holds the array of Dispatchers FOF knows about
 	 *
@@ -176,9 +176,9 @@ class FOFDispatcher extends FOFUtilsObject
 	/**
 	 * Gets a temporary instance of a Dispatcher
 	 *
-	 * @param   string  $option  The component name
-	 * @param   string  $view    The View name
-	 * @param   array   $config  Configuration data
+	 * @param   string $option The component name
+	 * @param   string $view   The View name
+	 * @param   array  $config Configuration data
 	 *
 	 * @return FOFDispatcher
 	 */
@@ -198,7 +198,7 @@ class FOFDispatcher extends FOFUtilsObject
 				}
 
 				$config['input'] = array_merge($_REQUEST, $config['input']);
-				$input = new FOFInput($config['input']);
+				$input           = new FOFInput($config['input']);
 			}
 		}
 		else
@@ -206,8 +206,8 @@ class FOFDispatcher extends FOFUtilsObject
 			$input = new FOFInput;
 		}
 
-		$config['option']   = !is_null($option) ? $option : $input->getCmd('option', 'com_foobar');
-		$config['view']     = !is_null($view) ? $view : $input->getCmd('view', '');
+		$config['option'] = !is_null($option) ? $option : $input->getCmd('option', 'com_foobar');
+		$config['view']   = !is_null($view) ? $view : $input->getCmd('view', '');
 
 		$input->set('option', $config['option']);
 		$input->set('view', $config['view']);
@@ -235,7 +235,7 @@ class FOFDispatcher extends FOFUtilsObject
 			$filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
 
 			$path = $filesystem->pathFind(
-					$searchPaths, 'dispatcher.php'
+				$searchPaths, 'dispatcher.php'
 			);
 
 			if ($path)
@@ -261,7 +261,7 @@ class FOFDispatcher extends FOFUtilsObject
 	 */
 	public static function isCliAdmin()
 	{
-		static $isCLI   = null;
+		static $isCLI = null;
 		static $isAdmin = null;
 
 		if (is_null($isCLI) && is_null($isAdmin))
@@ -273,21 +273,21 @@ class FOFDispatcher extends FOFUtilsObject
 		return array($isCLI, $isAdmin);
 	}
 
-    /**
-     * The main code of the Dispatcher. It spawns the necessary controller and
-     * runs it.
-     *
-     * @throws Exception
-     *
-     * @return  void|Exception
-     */
+	/**
+	 * The main code of the Dispatcher. It spawns the necessary controller and
+	 * runs it.
+	 *
+	 * @throws Exception
+	 *
+	 * @return  void|Exception
+	 */
 	public function dispatch()
 	{
-        $platform = FOFPlatform::getInstance();
+		$platform = FOFPlatform::getInstance();
 
 		if (!$platform->authorizeAdmin($this->input->getCmd('option', 'com_foobar')))
 		{
-            return $platform->raiseError(403, JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'));
+			return $platform->raiseError(403, JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'));
 		}
 
 		$this->transparentAuthentication();
@@ -306,13 +306,13 @@ class FOFDispatcher extends FOFUtilsObject
 
 		if (!$canDispatch)
 		{
-            // We can set header only if we're not in CLI
-            if(!$platform->isCli())
-            {
-                $platform->setHeader('Status', '403 Forbidden', true);
-            }
+			// We can set header only if we're not in CLI
+			if (!$platform->isCli())
+			{
+				$platform->setHeader('Status', '403 Forbidden', true);
+			}
 
-            return $platform->raiseError(403, JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'));
+			return $platform->raiseError(403, JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'));
 		}
 
 		// Get and execute the controller
@@ -338,21 +338,21 @@ class FOFDispatcher extends FOFUtilsObject
 		$this->input->set('view', $view);
 		$this->input->set('task', $task);
 
-		$config = $this->config;
+		$config          = $this->config;
 		$config['input'] = $this->input;
 
 		$controller = FOFController::getTmpInstance($option, $view, $config);
-		$status = $controller->execute($task);
+		$status     = $controller->execute($task);
 
 		if (!$this->onAfterDispatch())
 		{
-            // We can set header only if we're not in CLI
-            if(!$platform->isCli())
-            {
-                $platform->setHeader('Status', '403 Forbidden', true);
-            }
+			// We can set header only if we're not in CLI
+			if (!$platform->isCli())
+			{
+				$platform->setHeader('Status', '403 Forbidden', true);
+			}
 
-            return $platform->raiseError(403, JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'));
+			return $platform->raiseError(403, JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'));
 		}
 
 		$format = $this->input->get('format', 'html', 'cmd');
@@ -448,8 +448,8 @@ class FOFDispatcher extends FOFUtilsObject
 					}
 
 					$authInfo = array(
-						'username'	 => $_SERVER['PHP_AUTH_USER'],
-						'password'	 => $_SERVER['PHP_AUTH_PW']
+						'username' => $_SERVER['PHP_AUTH_USER'],
+						'password' => $_SERVER['PHP_AUTH_PW']
 					);
 					break;
 
@@ -475,8 +475,8 @@ class FOFDispatcher extends FOFUtilsObject
 
 				case 'SplitQueryString_Plaintext':
 					$authInfo = array(
-						'username'	 => $this->input->get('_fofauthentication_username', '', 'raw'),
-						'password'	 => $this->input->get('_fofauthentication_password', '', 'raw'),
+						'username' => $this->input->get('_fofauthentication_username', '', 'raw'),
+						'password' => $this->input->get('_fofauthentication_password', '', 'raw'),
 					);
 
 					if (empty($authInfo['username']))
@@ -505,9 +505,9 @@ class FOFDispatcher extends FOFUtilsObject
 	/**
 	 * Decrypts a transparent authentication message using a TOTP
 	 *
-	 * @param   string  $encryptedData  The encrypted data
+	 * @param   string $encryptedData The encrypted data
 	 *
-     * @codeCoverageIgnore
+	 * @codeCoverageIgnore
 	 * @return  array  The decrypted data
 	 */
 	private function _decryptWithTOTP($encryptedData)
@@ -519,14 +519,14 @@ class FOFDispatcher extends FOFUtilsObject
 			return null;
 		}
 
-		$totp = new FOFEncryptTotp($this->fofAuth_timeStep);
+		$totp   = new FOFEncryptTotp($this->fofAuth_timeStep);
 		$period = $totp->getPeriod();
 		$period--;
 
 		for ($i = 0; $i <= 2; $i++)
 		{
-			$time = ($period + $i) * $this->fofAuth_timeStep;
-			$otp = $totp->getCode($this->fofAuth_Key, $time);
+			$time                     = ($period + $i) * $this->fofAuth_timeStep;
+			$otp                      = $totp->getCode($this->fofAuth_Key, $time);
 			$this->_fofAuth_CryptoKey = hash('sha256', $this->fofAuth_Key . $otp);
 
 			$aes = new FOFEncryptAes($this->_fofAuth_CryptoKey);
@@ -614,7 +614,7 @@ class FOFDispatcher extends FOFUtilsObject
 	 * Tries to guess the controller task to execute based on the view name and
 	 * the HTTP request method.
 	 *
-	 * @param   string  $view  The name of the view
+	 * @param   string $view The name of the view
 	 *
 	 * @return  string  The best guess of the task to execute
 	 */
@@ -622,7 +622,7 @@ class FOFDispatcher extends FOFUtilsObject
 	{
 		// Get a default task based on plural/singular view
 		$request_task = $this->input->getCmd('task', null);
-		$task = FOFInflector::isPlural($view) ? 'browse' : 'edit';
+		$task         = FOFInflector::isPlural($view) ? 'browse' : 'edit';
 
 		// Get a potential ID, we might need it later
 		$id = $this->input->get('id', null, 'int');
@@ -701,15 +701,15 @@ class FOFDispatcher extends FOFUtilsObject
 	/**
 	 * Creates a decryption key for use with the TOTP decryption method
 	 *
-	 * @param   integer  $time  The timestamp used for TOTP calculation, leave empty to use current timestamp
+	 * @param   integer $time The timestamp used for TOTP calculation, leave empty to use current timestamp
 	 *
-     * @codeCoverageIgnore
+	 * @codeCoverageIgnore
 	 * @return  string  THe encryption key
 	 */
 	private function _createDecryptionKey($time = null)
 	{
 		$totp = new FOFEncryptTotp($this->fofAuth_timeStep);
-		$otp = $totp->getCode($this->fofAuth_Key, $time);
+		$otp  = $totp->getCode($this->fofAuth_Key, $time);
 
 		$key = hash('sha256', $this->fofAuth_Key . $otp);
 

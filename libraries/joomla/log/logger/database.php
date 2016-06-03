@@ -65,7 +65,7 @@ class JLogLoggerDatabase extends JLogLogger
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  &$options  Log object options.
+	 * @param   array &$options Log object options.
 	 *
 	 * @since   11.1
 	 */
@@ -77,23 +77,23 @@ class JLogLoggerDatabase extends JLogLogger
 		// If both the database object and driver options are empty we want to use the system database connection.
 		if (empty($this->options['db_driver']))
 		{
-			$this->db = JFactory::getDbo();
-			$this->driver = null;
-			$this->host = null;
-			$this->user = null;
+			$this->db       = JFactory::getDbo();
+			$this->driver   = null;
+			$this->host     = null;
+			$this->user     = null;
 			$this->password = null;
 			$this->database = null;
-			$this->prefix = null;
+			$this->prefix   = null;
 		}
 		else
 		{
-			$this->db = null;
-			$this->driver = (empty($this->options['db_driver'])) ? 'mysqli' : $this->options['db_driver'];
-			$this->host = (empty($this->options['db_host'])) ? '127.0.0.1' : $this->options['db_host'];
-			$this->user = (empty($this->options['db_user'])) ? 'root' : $this->options['db_user'];
+			$this->db       = null;
+			$this->driver   = (empty($this->options['db_driver'])) ? 'mysqli' : $this->options['db_driver'];
+			$this->host     = (empty($this->options['db_host'])) ? '127.0.0.1' : $this->options['db_host'];
+			$this->user     = (empty($this->options['db_user'])) ? 'root' : $this->options['db_user'];
 			$this->password = (empty($this->options['db_pass'])) ? '' : $this->options['db_pass'];
 			$this->database = (empty($this->options['db_database'])) ? 'logging' : $this->options['db_database'];
-			$this->prefix = (empty($this->options['db_prefix'])) ? 'jos_' : $this->options['db_prefix'];
+			$this->prefix   = (empty($this->options['db_prefix'])) ? 'jos_' : $this->options['db_prefix'];
 		}
 
 		// The table name is independent of how we arrived at the connection object.
@@ -103,7 +103,7 @@ class JLogLoggerDatabase extends JLogLogger
 	/**
 	 * Method to add an entry to the log.
 	 *
-	 * @param   JLogEntry  $entry  The log entry object to add to the log.
+	 * @param   JLogEntry $entry The log entry object to add to the log.
 	 *
 	 * @return  void
 	 *
@@ -135,12 +135,12 @@ class JLogLoggerDatabase extends JLogLogger
 	{
 		// Build the configuration object to use for JDatabaseDriver.
 		$options = array(
-			'driver' => $this->driver,
-			'host' => $this->host,
-			'user' => $this->user,
+			'driver'   => $this->driver,
+			'host'     => $this->host,
+			'user'     => $this->user,
 			'password' => $this->password,
 			'database' => $this->database,
-			'prefix' => $this->prefix);
+			'prefix'   => $this->prefix);
 
 		$db = JDatabaseDriver::getInstance($options);
 

@@ -21,8 +21,8 @@ class JFormWrapperHelper
 	/**
 	 * Helper wrapper method for loadFieldType
 	 *
-	 * @param   string   $type  The field type.
-	 * @param   boolean  $new   Flag to toggle whether we should get a new instance of the object.
+	 * @param   string  $type The field type.
+	 * @param   boolean $new  Flag to toggle whether we should get a new instance of the object.
 	 *
 	 * @return mixed  JFormField object on success, false otherwise.
 	 *
@@ -37,8 +37,8 @@ class JFormWrapperHelper
 	/**
 	 * Helper wrapper method for loadRuleType
 	 *
-	 * @param   string   $type  The field type.
-	 * @param   boolean  $new   Flag to toggle whether we should get a new instance of the object.
+	 * @param   string  $type The field type.
+	 * @param   boolean $new  Flag to toggle whether we should get a new instance of the object.
 	 *
 	 * @return mixed  JFormField object on success, false otherwise.
 	 *
@@ -53,7 +53,7 @@ class JFormWrapperHelper
 	/**
 	 * Helper wrapper method for loadFieldClass
 	 *
-	 * @param   string  $type  Type of a field whose class should be loaded.
+	 * @param   string $type Type of a field whose class should be loaded.
 	 *
 	 * @return mixed  Class name on success or false otherwise.
 	 *
@@ -68,7 +68,7 @@ class JFormWrapperHelper
 	/**
 	 * Helper wrapper method for loadRuleClass
 	 *
-	 * @param   string  $type  Type of a rule whose class should be loaded.
+	 * @param   string $type Type of a rule whose class should be loaded.
 	 *
 	 * @return mixed  Class name on success or false otherwise.
 	 *
@@ -83,7 +83,7 @@ class JFormWrapperHelper
 	/**
 	 * Helper wrapper method for addFieldPath
 	 *
-	 * @param   mixed  $new  A path or array of paths to add.
+	 * @param   mixed $new A path or array of paths to add.
 	 *
 	 * @return array  The list of paths that have been added.
 	 *
@@ -98,7 +98,7 @@ class JFormWrapperHelper
 	/**
 	 * Helper wrapper method for addFormPath
 	 *
-	 * @param   mixed  $new  A path or array of paths to add.
+	 * @param   mixed $new A path or array of paths to add.
 	 *
 	 * @return array  The list of paths that have been added.
 	 *
@@ -113,7 +113,7 @@ class JFormWrapperHelper
 	/**
 	 * Helper wrapper method for addRulePath
 	 *
-	 * @param   mixed  $new  A path or array of paths to add.
+	 * @param   mixed $new A path or array of paths to add.
 	 *
 	 * @return array  The list of paths that have been added.
 	 *

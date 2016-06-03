@@ -19,9 +19,9 @@ class JOpenstreetmapInfo extends JOpenstreetmapObject
 	/**
 	 * Method to get capabilities of the API
 	 *
-	 * @return	array  The XML response
+	 * @return    array  The XML response
 	 *
-	 * @since	13.1
+	 * @since    13.1
 	 */
 	public function getCapabilities()
 	{
@@ -42,10 +42,10 @@ class JOpenstreetmapInfo extends JOpenstreetmapObject
 	/**
 	 * Method to retrieve map data of a bounding box
 	 *
-	 * @param   float  $left    Left boundary
-	 * @param   float  $bottom  Bottom boundary
-	 * @param   float  $right   Right boundary
-	 * @param   float  $top     Top boundary
+	 * @param   float $left   Left boundary
+	 * @param   float $bottom Bottom boundary
+	 * @param   float $right  Right boundary
+	 * @param   float $top    Top boundary
 	 *
 	 * @return  array  The XML response
 	 *

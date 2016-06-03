@@ -39,7 +39,7 @@ class InstallationControllerSummary extends JControllerBase
 		$model->checkForm('summary');
 
 		// Redirect to the page.
-		$r = new stdClass;
+		$r       = new stdClass;
 		$r->view = 'install';
 		$app->sendJsonResponse($r);
 	}

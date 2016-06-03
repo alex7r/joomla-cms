@@ -23,8 +23,8 @@ abstract class JHtmlCategoriesAdministrator
 	/**
 	 * Render the list of associated items
 	 *
-	 * @param   integer  $catid      Category identifier to search its associations
-	 * @param   string   $extension  Category Extension
+	 * @param   integer $catid     Category identifier to search its associations
+	 * @param   string  $extension Category Extension
 	 *
 	 * @return  string   The language HTML
 	 *
@@ -42,7 +42,7 @@ abstract class JHtmlCategoriesAdministrator
 			$associations = ArrayHelper::toInteger($associations);
 
 			// Get the associated categories
-			$db = JFactory::getDbo();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->select('c.id, c.title')
 				->select('l.sef as lang_sef')
@@ -66,8 +66,8 @@ abstract class JHtmlCategoriesAdministrator
 			{
 				foreach ($items as &$item)
 				{
-					$text = strtoupper($item->lang_sef);
-					$url = JRoute::_('index.php?option=com_categories&task=category.edit&id=' . (int) $item->id . '&extension=' . $extension);
+					$text         = strtoupper($item->lang_sef);
+					$url          = JRoute::_('index.php?option=com_categories&task=category.edit&id=' . (int) $item->id . '&extension=' . $extension);
 					$tooltipParts = array(
 						JHtml::_(
 							'image',

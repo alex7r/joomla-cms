@@ -19,15 +19,15 @@ class JGithubAccount extends JGithubObject
 	/**
 	 * Method to create an authorisation.
 	 *
-	 * @param   array   $scopes  A list of scopes that this authorisation is in.
-	 * @param   string  $note    A note to remind you what the OAuth token is for.
-	 * @param   string  $url     A URL to remind you what app the OAuth token is for.
+	 * @param   array  $scopes A list of scopes that this authorisation is in.
+	 * @param   string $note   A note to remind you what the OAuth token is for.
+	 * @param   string $url    A URL to remind you what app the OAuth token is for.
 	 *
 	 * @deprecated  use authorization->create()
 	 *
 	 * @return  object
 	 *
-	 * @since   12.3
+	 * @since       12.3
 	 * @throws  DomainException
 	 */
 	public function createAuthorisation(array $scopes = array(), $note = '', $url = '')
@@ -56,13 +56,13 @@ class JGithubAccount extends JGithubObject
 	/**
 	 * Method to delete an authorisation
 	 *
-	 * @param   integer  $id  ID of the authorisation to delete
+	 * @param   integer $id ID of the authorisation to delete
 	 *
 	 * @deprecated  use authorization->delete()
 	 *
 	 * @return  object
 	 *
-	 * @since   12.3
+	 * @since       12.3
 	 * @throws  DomainException
 	 */
 	public function deleteAuthorisation($id)
@@ -87,18 +87,18 @@ class JGithubAccount extends JGithubObject
 	/**
 	 * Method to edit an authorisation.
 	 *
-	 * @param   integer  $id            ID of the authorisation to edit
-	 * @param   array    $scopes        Replaces the authorisation scopes with these.
-	 * @param   array    $addScopes     A list of scopes to add to this authorisation.
-	 * @param   array    $removeScopes  A list of scopes to remove from this authorisation.
-	 * @param   string   $note          A note to remind you what the OAuth token is for.
-	 * @param   string   $url           A URL to remind you what app the OAuth token is for.
+	 * @param   integer $id           ID of the authorisation to edit
+	 * @param   array   $scopes       Replaces the authorisation scopes with these.
+	 * @param   array   $addScopes    A list of scopes to add to this authorisation.
+	 * @param   array   $removeScopes A list of scopes to remove from this authorisation.
+	 * @param   string  $note         A note to remind you what the OAuth token is for.
+	 * @param   string  $url          A URL to remind you what app the OAuth token is for.
 	 *
 	 * @deprecated  use authorization->edit()
 	 *
 	 * @return  object
 	 *
-	 * @since   12.3
+	 * @since       12.3
 	 * @throws  DomainException
 	 * @throws  RuntimeException
 	 */
@@ -109,21 +109,21 @@ class JGithubAccount extends JGithubObject
 
 		if (!empty($scopes))
 		{
-			$scope = 'scopes';
+			$scope     = 'scopes';
 			$scopeData = $scopes;
 			$scopesCount++;
 		}
 
 		if (!empty($addScopes))
 		{
-			$scope = 'add_scopes';
+			$scope     = 'add_scopes';
 			$scopeData = $addScopes;
 			$scopesCount++;
 		}
 
 		if (!empty($removeScopes))
 		{
-			$scope = 'remove_scopes';
+			$scope     = 'remove_scopes';
 			$scopeData = $removeScopes;
 			$scopesCount++;
 		}
@@ -139,8 +139,8 @@ class JGithubAccount extends JGithubObject
 
 		$data = json_encode(
 			array(
-				$scope => $scopeData,
-				'note' => $note,
+				$scope     => $scopeData,
+				'note'     => $note,
 				'note_url' => $url
 			)
 		);
@@ -162,14 +162,14 @@ class JGithubAccount extends JGithubObject
 	/**
 	 * Method to get details about an authorised application for the authenticated user.
 	 *
-	 * @param   integer  $id  ID of the authorisation to retrieve
+	 * @param   integer $id ID of the authorisation to retrieve
 	 *
 	 * @deprecated  use authorization->get()
 	 *
 	 * @return  object
 	 *
-	 * @since   12.3
-	 * @note    This method will only accept Basic Authentication
+	 * @since       12.3
+	 * @note        This method will only accept Basic Authentication
 	 * @throws  DomainException
 	 */
 	public function getAuthorisation($id)
@@ -198,9 +198,9 @@ class JGithubAccount extends JGithubObject
 	 *
 	 * @return  object
 	 *
-	 * @since   12.3
+	 * @since       12.3
 	 * @throws  DomainException
-	 * @note    This method will only accept Basic Authentication
+	 * @note        This method will only accept Basic Authentication
 	 */
 	public function getAuthorisations()
 	{
@@ -228,7 +228,7 @@ class JGithubAccount extends JGithubObject
 	 *
 	 * @return  object
 	 *
-	 * @since   12.3
+	 * @since       12.3
 	 * @throws  DomainException
 	 */
 	public function getRateLimit()

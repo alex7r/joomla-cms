@@ -19,7 +19,7 @@ class InstallationModelFtp extends JModelBase
 	/**
 	 * Find the ftp filesystem root for a given user/pass pair.
 	 *
-	 * @param   array  $options  Configuration options.
+	 * @param   array $options Configuration options.
 	 *
 	 * @return  mixed  FTP root for given FTP user, or boolean false if not found.
 	 *
@@ -92,7 +92,7 @@ class InstallationModelFtp extends JModelBase
 
 		// Search through the segments of JPATH_SITE looking for root possibilities.
 		$parts = explode(DIRECTORY_SEPARATOR, JPATH_SITE);
-		$tmp = '';
+		$tmp   = '';
 
 		for ($i = count($parts) - 1; $i >= 0; $i--)
 		{
@@ -105,13 +105,13 @@ class InstallationModelFtp extends JModelBase
 		}
 
 		// Check all possible paths for the real Joomla installation by comparing version files.
-		$rootPath = false;
+		$rootPath   = false;
 		$checkValue = file_get_contents(JPATH_LIBRARIES . '/cms/version/version.php');
 
 		foreach ($paths as $tmp)
 		{
 			$filePath = rtrim($tmp, '/') . '/libraries/cms/version/version.php';
-			$buffer = null;
+			$buffer   = null;
 			@ $ftp->read($filePath, $buffer);
 
 			if ($buffer == $checkValue)
@@ -138,7 +138,7 @@ class InstallationModelFtp extends JModelBase
 	/**
 	 * Verify the FTP settings as being functional and correct.
 	 *
-	 * @param   array  $options  Configuration options.
+	 * @param   array $options Configuration options.
 	 *
 	 * @return  mixed  FTP root for given FTP user, or boolean false if not found.
 	 *

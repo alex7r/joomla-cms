@@ -19,7 +19,7 @@ class JoomlaInstallerScript
 	/**
 	 * Method to update Joomla!
 	 *
-	 * @param   JInstallerAdapterFile  $installer  The class calling this method
+	 * @param   JInstallerAdapterFile $installer The class calling this method
 	 *
 	 * @return  void
 	 */
@@ -185,9 +185,9 @@ class JoomlaInstallerScript
 			array('plugin', 'updatenotification', 'system', 0),
 			array('plugin', 'module', 'editors-xtd', 0),
 			array('plugin', 'stats', 'system', 0),
-			array('plugin', 'packageinstaller','installer',0),
-			array('plugin', 'folderinstaller','installer', 0),
-			array('plugin', 'urlinstaller','installer', 0),
+			array('plugin', 'packageinstaller', 'installer', 0),
+			array('plugin', 'folderinstaller', 'installer', 0),
+			array('plugin', 'urlinstaller', 'installer', 0),
 
 			// Templates
 			array('template', 'beez3', '', 0),
@@ -207,7 +207,7 @@ class JoomlaInstallerScript
 		);
 
 		// Attempt to refresh manifest caches
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('*')
 			->from('#__extensions');
@@ -391,10 +391,10 @@ class JoomlaInstallerScript
 				continue;
 			}
 
-			$asset->name = $component;
+			$asset->name      = $component;
 			$asset->parent_id = 1;
-			$asset->rules = '{}';
-			$asset->title = $component;
+			$asset->rules     = '{}';
+			$asset->title     = $component;
 			$asset->setLocation(1, 'last-child');
 
 			if (!$asset->store())
@@ -471,7 +471,7 @@ class JoomlaInstallerScript
 	/**
 	 * Converts the site's database tables to support UTF-8 Multibyte.
 	 *
-	 * @param   boolean  $doDbFixMsg  Flag if message to be shown to check db fix
+	 * @param   boolean $doDbFixMsg Flag if message to be shown to check db fix
 	 *
 	 * @return  void
 	 *
@@ -502,7 +502,7 @@ class JoomlaInstallerScript
 		// Check conversion status in database
 		$db->setQuery('SELECT ' . $db->quoteName('converted')
 			. ' FROM ' . $db->quoteName('#__utf8_conversion')
-			);
+		);
 
 		try
 		{
@@ -534,7 +534,7 @@ class JoomlaInstallerScript
 		if (is_file($fileName1))
 		{
 			$fileContents1 = @file_get_contents($fileName1);
-			$queries1 = $db->splitSql($fileContents1);
+			$queries1      = $db->splitSql($fileContents1);
 
 			if (!empty($queries1))
 			{
@@ -558,7 +558,7 @@ class JoomlaInstallerScript
 		if (is_file($fileName2))
 		{
 			$fileContents2 = @file_get_contents($fileName2);
-			$queries2 = $db->splitSql($fileContents2);
+			$queries2      = $db->splitSql($fileContents2);
 
 			if (!empty($queries2))
 			{
@@ -1810,7 +1810,8 @@ class JoomlaInstallerScript
 		 * If com_weblinks doesn't exist then assume we can delete the weblinks package manifest (included in the update packages)
 		 */
 		if (!JFile::exists(JPATH_ADMINISTRATOR . '/components/com_weblinks/weblinks.php')
-			&& JFile::exists(JPATH_MANIFESTS . '/packages/pkg_weblinks.xml'))
+			&& JFile::exists(JPATH_MANIFESTS . '/packages/pkg_weblinks.xml')
+		)
 		{
 			JFile::delete(JPATH_MANIFESTS . '/packages/pkg_weblinks.xml');
 		}

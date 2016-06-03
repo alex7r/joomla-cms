@@ -18,129 +18,140 @@ namespace Symfony\Component\Yaml\Exception;
  */
 class ParseException extends RuntimeException
 {
-    private $parsedFile;
-    private $parsedLine;
-    private $snippet;
-    private $rawMessage;
+	private $parsedFile;
 
-    /**
-     * Constructor.
-     *
-     * @param string     $message    The error message
-     * @param int        $parsedLine The line where the error occurred
-     * @param int        $snippet    The snippet of code near the problem
-     * @param string     $parsedFile The file name where the error occurred
-     * @param \Exception $previous   The previous exception
-     */
-    public function __construct($message, $parsedLine = -1, $snippet = null, $parsedFile = null, \Exception $previous = null)
-    {
-        $this->parsedFile = $parsedFile;
-        $this->parsedLine = $parsedLine;
-        $this->snippet = $snippet;
-        $this->rawMessage = $message;
+	private $parsedLine;
 
-        $this->updateRepr();
+	private $snippet;
 
-        parent::__construct($this->message, 0, $previous);
-    }
+	private $rawMessage;
 
-    /**
-     * Gets the snippet of code near the error.
-     *
-     * @return string The snippet of code
-     */
-    public function getSnippet()
-    {
-        return $this->snippet;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param string     $message    The error message
+	 * @param int        $parsedLine The line where the error occurred
+	 * @param int        $snippet    The snippet of code near the problem
+	 * @param string     $parsedFile The file name where the error occurred
+	 * @param \Exception $previous   The previous exception
+	 */
+	public function __construct($message, $parsedLine = -1, $snippet = null, $parsedFile = null, \Exception $previous = null)
+	{
+		$this->parsedFile = $parsedFile;
+		$this->parsedLine = $parsedLine;
+		$this->snippet    = $snippet;
+		$this->rawMessage = $message;
 
-    /**
-     * Sets the snippet of code near the error.
-     *
-     * @param string $snippet The code snippet
-     */
-    public function setSnippet($snippet)
-    {
-        $this->snippet = $snippet;
+		$this->updateRepr();
 
-        $this->updateRepr();
-    }
+		parent::__construct($this->message, 0, $previous);
+	}
 
-    /**
-     * Gets the filename where the error occurred.
-     *
-     * This method returns null if a string is parsed.
-     *
-     * @return string The filename
-     */
-    public function getParsedFile()
-    {
-        return $this->parsedFile;
-    }
+	private function updateRepr()
+	{
+		$this->message = $this->rawMessage;
 
-    /**
-     * Sets the filename where the error occurred.
-     *
-     * @param string $parsedFile The filename
-     */
-    public function setParsedFile($parsedFile)
-    {
-        $this->parsedFile = $parsedFile;
+		$dot = false;
+		if ('.' === substr($this->message, -1))
+		{
+			$this->message = substr($this->message, 0, -1);
+			$dot           = true;
+		}
 
-        $this->updateRepr();
-    }
+		if (null !== $this->parsedFile)
+		{
+			if (PHP_VERSION_ID >= 50400)
+			{
+				$jsonOptions = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+			}
+			else
+			{
+				$jsonOptions = 0;
+			}
+			$this->message .= sprintf(' in %s', json_encode($this->parsedFile, $jsonOptions));
+		}
 
-    /**
-     * Gets the line where the error occurred.
-     *
-     * @return int The file line
-     */
-    public function getParsedLine()
-    {
-        return $this->parsedLine;
-    }
+		if ($this->parsedLine >= 0)
+		{
+			$this->message .= sprintf(' at line %d', $this->parsedLine);
+		}
 
-    /**
-     * Sets the line where the error occurred.
-     *
-     * @param int $parsedLine The file line
-     */
-    public function setParsedLine($parsedLine)
-    {
-        $this->parsedLine = $parsedLine;
+		if ($this->snippet)
+		{
+			$this->message .= sprintf(' (near "%s")', $this->snippet);
+		}
 
-        $this->updateRepr();
-    }
+		if ($dot)
+		{
+			$this->message .= '.';
+		}
+	}
 
-    private function updateRepr()
-    {
-        $this->message = $this->rawMessage;
+	/**
+	 * Gets the snippet of code near the error.
+	 *
+	 * @return string The snippet of code
+	 */
+	public function getSnippet()
+	{
+		return $this->snippet;
+	}
 
-        $dot = false;
-        if ('.' === substr($this->message, -1)) {
-            $this->message = substr($this->message, 0, -1);
-            $dot = true;
-        }
+	/**
+	 * Sets the snippet of code near the error.
+	 *
+	 * @param string $snippet The code snippet
+	 */
+	public function setSnippet($snippet)
+	{
+		$this->snippet = $snippet;
 
-        if (null !== $this->parsedFile) {
-            if (PHP_VERSION_ID >= 50400) {
-                $jsonOptions = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
-            } else {
-                $jsonOptions = 0;
-            }
-            $this->message .= sprintf(' in %s', json_encode($this->parsedFile, $jsonOptions));
-        }
+		$this->updateRepr();
+	}
 
-        if ($this->parsedLine >= 0) {
-            $this->message .= sprintf(' at line %d', $this->parsedLine);
-        }
+	/**
+	 * Gets the filename where the error occurred.
+	 *
+	 * This method returns null if a string is parsed.
+	 *
+	 * @return string The filename
+	 */
+	public function getParsedFile()
+	{
+		return $this->parsedFile;
+	}
 
-        if ($this->snippet) {
-            $this->message .= sprintf(' (near "%s")', $this->snippet);
-        }
+	/**
+	 * Sets the filename where the error occurred.
+	 *
+	 * @param string $parsedFile The filename
+	 */
+	public function setParsedFile($parsedFile)
+	{
+		$this->parsedFile = $parsedFile;
 
-        if ($dot) {
-            $this->message .= '.';
-        }
-    }
+		$this->updateRepr();
+	}
+
+	/**
+	 * Gets the line where the error occurred.
+	 *
+	 * @return int The file line
+	 */
+	public function getParsedLine()
+	{
+		return $this->parsedLine;
+	}
+
+	/**
+	 * Sets the line where the error occurred.
+	 *
+	 * @param int $parsedLine The file line
+	 */
+	public function setParsedLine($parsedLine)
+	{
+		$this->parsedLine = $parsedLine;
+
+		$this->updateRepr();
+	}
 }

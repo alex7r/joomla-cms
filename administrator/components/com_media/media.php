@@ -16,9 +16,10 @@ $author = $input->get('author');
 
 // Access check.
 if (!$user->authorise('core.manage', 'com_media') && (!$asset or (!$user->authorise('core.edit', $asset)
-	&& !$user->authorise('core.create', $asset)
-	&& count($user->getAuthorisedCategories($asset, 'core.create')) == 0)
-	&& !($user->id == $author && $user->authorise('core.edit.own', $asset))))
+			&& !$user->authorise('core.create', $asset)
+			&& count($user->getAuthorisedCategories($asset, 'core.create')) == 0)
+		&& !($user->id == $author && $user->authorise('core.edit.own', $asset)))
+)
 {
 	return JError::raiseWarning(403, JText::_('JERROR_ALERTNOAUTHOR'));
 }

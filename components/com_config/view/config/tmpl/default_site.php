@@ -13,12 +13,12 @@ defined('_JEXEC') or die;
 	<legend><?php echo JText::_('COM_CONFIG_SITE_SETTINGS'); ?></legend>
 	<?php
 	foreach ($this->form->getFieldset('site') as $field):
-	?>
+		?>
 		<div class="control-group">
 			<div class="control-label"><?php echo $field->label; ?></div>
 			<div class="controls"><?php echo $field->input; ?></div>
 		</div>
-	<?php
+		<?php
 	endforeach;
 	?>
 </fieldset>

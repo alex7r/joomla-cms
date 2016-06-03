@@ -24,7 +24,7 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	/**
 	 * List teams.
 	 *
-	 * @param   string  $org  The name of the organization.
+	 * @param   string $org The name of the organization.
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -43,7 +43,7 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	/**
 	 * Get team.
 	 *
-	 * @param   integer  $id  The team id.
+	 * @param   integer $id The team id.
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -64,10 +64,10 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	 *
 	 * In order to create a team, the authenticated user must be an owner of the organization.
 	 *
-	 * @param   string  $org         The name of the organization.
-	 * @param   string  $name        The name of the team.
-	 * @param   array   $repoNames   Repository names.
-	 * @param   string  $permission  The permission.
+	 * @param   string $org          The name of the organization.
+	 * @param   string $name         The name of the team.
+	 * @param   array  $repoNames    Repository names.
+	 * @param   string $permission   The permission.
 	 *                               pull - team members can pull, but not push to or administer these repositories. Default
 	 *                               push - team members can pull and push, but not administer these repositories.
 	 *                               admin - team members can pull, push and administer these repositories.
@@ -113,9 +113,9 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	 *
 	 * In order to edit a team, the authenticated user must be an owner of the org that the team is associated with.
 	 *
-	 * @param   integer  $id          The team id.
-	 * @param   string   $name        The name of the team.
-	 * @param   string   $permission  The permission.
+	 * @param   integer $id           The team id.
+	 * @param   string  $name         The name of the team.
+	 * @param   string  $permission   The permission.
 	 *                                pull - team members can pull, but not push to or administer these repositories. Default
 	 *                                push - team members can pull and push, but not administer these repositories.
 	 *                                admin - team members can pull, push and administer these repositories.
@@ -154,7 +154,7 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	 *
 	 * In order to delete a team, the authenticated user must be an owner of the org that the team is associated with.
 	 *
-	 * @param   integer  $id  The team id.
+	 * @param   integer $id The team id.
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -176,7 +176,7 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	 *
 	 * In order to list members in a team, the authenticated user must be a member of the team.
 	 *
-	 * @param   integer  $id  The team id.
+	 * @param   integer $id The team id.
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -197,8 +197,8 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	 *
 	 * In order to get if a user is a member of a team, the authenticated user must be a member of the team.
 	 *
-	 * @param   integer  $id    The team id.
-	 * @param   string   $user  The name of the user.
+	 * @param   integer $id   The team id.
+	 * @param   string  $user The name of the user.
 	 *
 	 * @throws UnexpectedValueException
 	 * @since    3.3 (CMS)
@@ -236,8 +236,8 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	 * In order to add a user to a team, the authenticated user must have ‘admin’ permissions
 	 * to the team or be an owner of the org that the team is associated with.
 	 *
-	 * @param   integer  $id    The team id.
-	 * @param   string   $user  The name of the user.
+	 * @param   integer $id   The team id.
+	 * @param   string  $user The name of the user.
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -261,8 +261,8 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	 * to the team or be an owner of the org that the team is associated with.
 	 * NOTE: This does not delete the user, it just remove them from the team.
 	 *
-	 * @param   integer  $id    The team id.
-	 * @param   string   $user  The name of the user.
+	 * @param   integer $id   The team id.
+	 * @param   string  $user The name of the user.
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -282,7 +282,7 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	/**
 	 * List team repos.
 	 *
-	 * @param   integer  $id  The team id.
+	 * @param   integer $id The team id.
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -301,8 +301,8 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	/**
 	 * Check if the repo is managed by this team.
 	 *
-	 * @param   integer  $id    The team id.
-	 * @param   string   $repo  The name of the GitHub repository.
+	 * @param   integer $id   The team id.
+	 * @param   string  $repo The name of the GitHub repository.
 	 *
 	 * @throws UnexpectedValueException
 	 * @since    3.3 (CMS)
@@ -344,9 +344,9 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	 * If you attempt to add a repo to a team that is not owned by the organization, you get:
 	 * Status: 422 Unprocessable Entity
 	 *
-	 * @param   integer  $id     The team id.
-	 * @param   string   $owner  The name of the owner of the GitHub repository.
-	 * @param   string   $repo   The name of the GitHub repository.
+	 * @param   integer $id    The team id.
+	 * @param   string  $owner The name of the owner of the GitHub repository.
+	 * @param   string  $repo  The name of the GitHub repository.
 	 *
 	 * @since    3.3 (CMS)
 	 *
@@ -370,9 +370,9 @@ class JGithubPackageOrgsTeams extends JGithubPackage
 	 * of the org that the team is associated with. NOTE: This does not delete the
 	 * repo, it just removes it from the team.
 	 *
-	 * @param   integer  $id     The team id.
-	 * @param   string   $owner  The name of the owner of the GitHub repository.
-	 * @param   string   $repo   The name of the GitHub repository.
+	 * @param   integer $id    The team id.
+	 * @param   string  $owner The name of the owner of the GitHub repository.
+	 * @param   string  $repo  The name of the GitHub repository.
 	 *
 	 * @since    3.3 (CMS)
 	 *

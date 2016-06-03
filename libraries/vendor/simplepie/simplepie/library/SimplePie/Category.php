@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- * 	* Redistributions of source code must retain the above copyright notice, this list of
- * 	  conditions and the following disclaimer.
+ *    * Redistributions of source code must retain the above copyright notice, this list of
+ *      conditions and the following disclaimer.
  *
- * 	* Redistributions in binary form must reproduce the above copyright notice, this list
- * 	  of conditions and the following disclaimer in the documentation and/or other materials
- * 	  provided with the distribution.
+ *    * Redistributions in binary form must reproduce the above copyright notice, this list
+ *      of conditions and the following disclaimer in the documentation and/or other materials
+ *      provided with the distribution.
  *
- * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
- * 	  to endorse or promote products derived from this software without specific prior
- * 	  written permission.
+ *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
+ *      to endorse or promote products derived from this software without specific prior
+ *      written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,14 +32,14 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package SimplePie
- * @version 1.3.1
+ * @package   SimplePie
+ * @version   1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author Ryan Parman
- * @author Geoffrey Sneddon
- * @author Ryan McCue
- * @link http://simplepie.org/ SimplePie
- * @license http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author    Ryan Parman
+ * @author    Geoffrey Sneddon
+ * @author    Ryan McCue
+ * @link      http://simplepie.org/ SimplePie
+ * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 /**
@@ -49,7 +49,7 @@
  *
  * This class can be overloaded with {@see SimplePie::set_category_class()}
  *
- * @package SimplePie
+ * @package    SimplePie
  * @subpackage API
  */
 class SimplePie_Category
@@ -87,9 +87,9 @@ class SimplePie_Category
 	 */
 	public function __construct($term = null, $scheme = null, $label = null)
 	{
-		$this->term = $term;
+		$this->term   = $term;
 		$this->scheme = $scheme;
-		$this->label = $label;
+		$this->label  = $label;
 	}
 
 	/**
@@ -101,23 +101,6 @@ class SimplePie_Category
 	{
 		// There is no $this->data here
 		return md5(serialize($this));
-	}
-
-	/**
-	 * Get the category identifier
-	 *
-	 * @return string|null
-	 */
-	public function get_term()
-	{
-		if ($this->term !== null)
-		{
-			return $this->term;
-		}
-		else
-		{
-			return null;
-		}
 	}
 
 	/**
@@ -151,6 +134,23 @@ class SimplePie_Category
 		else
 		{
 			return $this->get_term();
+		}
+	}
+
+	/**
+	 * Get the category identifier
+	 *
+	 * @return string|null
+	 */
+	public function get_term()
+	{
+		if ($this->term !== null)
+		{
+			return $this->term;
+		}
+		else
+		{
+			return null;
 		}
 	}
 }

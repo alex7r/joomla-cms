@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 
-$app = JFactory::getApplication();
+$app      = JFactory::getApplication();
 $template = $app->getTemplate();
 
 JHtml::_('behavior.formvalidator');
@@ -24,7 +24,8 @@ JFactory::getDocument()->addScriptDeclaration("
 	}
 ");
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" id="component-form" method="post" name="adminForm" autocomplete="off" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_config'); ?>" id="component-form" method="post"
+      name="adminForm" autocomplete="off" class="form-validate">
 	<?php
 	echo JHtml::_('tabs.start', 'config-tabs-' . $this->component->option . '_configuration', array('useCookie' => 1));
 	$fieldSets = $this->form->getFieldsets();
@@ -35,7 +36,7 @@ JFactory::getDocument()->addScriptDeclaration("
 		echo JHtml::_('tabs.panel', JText::_($label), 'publishing-details');
 		if (isset($fieldSet->description) && !empty($fieldSet->description))
 		{
-		echo '<p class="tab-description">' . JText::_($fieldSet->description) . '</p>';
+			echo '<p class="tab-description">' . JText::_($fieldSet->description) . '</p>';
 		}
 		?>
 		<ul class="config-option-list">
@@ -53,10 +54,10 @@ JFactory::getDocument()->addScriptDeclaration("
 	<?php endforeach; ?>
 	<?php echo JHtml::_('tabs.end'); ?>
 	<div>
-		<input type="hidden" name="id" value="<?php echo $this->component->id; ?>" />
-		<input type="hidden" name="component" value="<?php echo $this->component->option; ?>" />
-		<input type="hidden" name="return" value="<?php echo $this->return; ?>" />
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="id" value="<?php echo $this->component->id; ?>"/>
+		<input type="hidden" name="component" value="<?php echo $this->component->option; ?>"/>
+		<input type="hidden" name="return" value="<?php echo $this->return; ?>"/>
+		<input type="hidden" name="task" value=""/>
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>

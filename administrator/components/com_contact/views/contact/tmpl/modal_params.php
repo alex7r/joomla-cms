@@ -18,11 +18,11 @@ foreach ($fieldSets as $name => $fieldSet) :
 		echo '<p class="alert alert-info">' . $this->escape(JText::_($fieldSet->description)) . '</p>';
 	endif;
 	?>
-		<?php foreach ($this->form->getFieldset($name) as $field) : ?>
-			<div class="control-group">
-				<div class="control-label"><?php echo $field->label; ?></div>
-				<div class="controls"><?php echo $field->input; ?></div>
-			</div>
-		<?php endforeach; ?>
+	<?php foreach ($this->form->getFieldset($name) as $field) : ?>
+	<div class="control-group">
+		<div class="control-label"><?php echo $field->label; ?></div>
+		<div class="controls"><?php echo $field->input; ?></div>
+	</div>
+<?php endforeach; ?>
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
 <?php endforeach; ?>

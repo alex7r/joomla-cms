@@ -25,8 +25,8 @@ class JGithubPackageRepositoriesCollaborators extends JGithubPackage
 	 * owners are included in the list of collaborators. Otherwise, only users with access to the repository
 	 * are returned in the collaborators list.
 	 *
-	 * @param   string  $owner  The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
+	 * @param   string $owner The name of the owner of the GitHub repository.
+	 * @param   string $repo  The name of the GitHub repository.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -45,9 +45,9 @@ class JGithubPackageRepositoriesCollaborators extends JGithubPackage
 	/**
 	 * Test if a user is a collaborator.
 	 *
-	 * @param   string  $owner  The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
-	 * @param   string  $user   The name of the GitHub user.
+	 * @param   string $owner The name of the owner of the GitHub repository.
+	 * @param   string $repo  The name of the GitHub repository.
+	 * @param   string $user  The name of the GitHub user.
 	 *
 	 * @throws UnexpectedValueException
 	 * @since 3.3 (CMS)
@@ -80,9 +80,9 @@ class JGithubPackageRepositoriesCollaborators extends JGithubPackage
 	/**
 	 * Add collaborator.
 	 *
-	 * @param   string  $owner  The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
-	 * @param   string  $user   The name of the GitHub user.
+	 * @param   string $owner The name of the owner of the GitHub repository.
+	 * @param   string $repo  The name of the GitHub repository.
+	 * @param   string $user  The name of the GitHub user.
 	 *
 	 * @since 3.3 (CMS)
 	 *
@@ -102,9 +102,9 @@ class JGithubPackageRepositoriesCollaborators extends JGithubPackage
 	/**
 	 * Remove collaborator.
 	 *
-	 * @param   string  $owner  The name of the owner of the GitHub repository.
-	 * @param   string  $repo   The name of the GitHub repository.
-	 * @param   string  $user   The name of the GitHub user.
+	 * @param   string $owner The name of the owner of the GitHub repository.
+	 * @param   string $repo  The name of the GitHub repository.
+	 * @param   string $user  The name of the GitHub user.
 	 *
 	 * @since 3.3 (CMS)
 	 *

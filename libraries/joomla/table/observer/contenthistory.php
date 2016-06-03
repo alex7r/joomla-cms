@@ -18,6 +18,17 @@ defined('JPATH_PLATFORM') or die;
 class JTableObserverContenthistory extends JTableObserver
 {
 	/**
+	 * Not public, so marking private and deprecated, but needed internally in parseTypeAlias for
+	 * PHP < 5.4.0 as it's not passing context $this to closure function.
+	 *
+	 * @var         JTableObserverContenthistory
+	 * @since       3.2
+	 * @deprecated  Never use this
+	 * @private
+	 */
+	public static $_myTableForPregreplaceOnly;
+
+	/**
 	 * Helper object for storing and deleting version history information associated with this table observer
 	 *
 	 * @var    JHelperContenthistory
@@ -34,23 +45,12 @@ class JTableObserverContenthistory extends JTableObserver
 	protected $typeAliasPattern = null;
 
 	/**
-	 * Not public, so marking private and deprecated, but needed internally in parseTypeAlias for
-	 * PHP < 5.4.0 as it's not passing context $this to closure function.
-	 *
-	 * @var         JTableObserverContenthistory
-	 * @since       3.2
-	 * @deprecated  Never use this
-	 * @private
-	 */
-	public static $_myTableForPregreplaceOnly;
-
-	/**
 	 * Creates the associated observer instance and attaches it to the $observableObject
 	 * Creates the associated content history helper class instance
 	 * $typeAlias can be of the form "{variableName}.type", automatically replacing {variableName} with table-instance variables variableName
 	 *
-	 * @param   JObservableInterface  $observableObject  The subject object to be observed
-	 * @param   array                 $params            ( 'typeAlias' => $typeAlias )
+	 * @param   JObservableInterface $observableObject The subject object to be observed
+	 * @param   array                $params           ( 'typeAlias' => $typeAlias )
 	 *
 	 * @return  JTableObserverContenthistory
 	 *
@@ -63,7 +63,7 @@ class JTableObserverContenthistory extends JTableObserver
 		$observer = new self($observableObject);
 
 		$observer->contenthistoryHelper = new JHelperContenthistory($typeAlias);
-		$observer->typeAliasPattern = $typeAlias;
+		$observer->typeAliasPattern     = $typeAlias;
 
 		return $observer;
 	}
@@ -71,7 +71,7 @@ class JTableObserverContenthistory extends JTableObserver
 	/**
 	 * Post-processor for $table->store($updateNulls)
 	 *
-	 * @param   boolean  &$result  The result of the load
+	 * @param   boolean &$result The result of the load
 	 *
 	 * @return  void
 	 *
@@ -92,9 +92,32 @@ class JTableObserverContenthistory extends JTableObserver
 	}
 
 	/**
+	 * Internal method
+	 * Parses a TypeAlias of the form "{variableName}.type", replacing {variableName} with table-instance variables variableName
+	 * Storing result into $this->contenthistoryHelper->typeAlias
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	protected function parseTypeAlias()
+	{
+		// Needed for PHP < 5.4.0 as it's not passing context $this to closure function
+		static::$_myTableForPregreplaceOnly = $this->table;
+
+		$this->contenthistoryHelper->typeAlias = preg_replace_callback('/{([^}]+)}/',
+			function ($matches)
+			{
+				return JTableObserverContenthistory::$_myTableForPregreplaceOnly->{$matches[1]};
+			},
+			$this->typeAliasPattern
+		);
+	}
+
+	/**
 	 * Pre-processor for $table->delete($pk)
 	 *
-	 * @param   mixed  $pk  An optional primary key value to delete.  If not set the instance property value is used.
+	 * @param   mixed $pk An optional primary key value to delete.  If not set the instance property value is used.
 	 *
 	 * @return  void
 	 *
@@ -111,28 +134,5 @@ class JTableObserverContenthistory extends JTableObserver
 			$this->parseTypeAlias();
 			$this->contenthistoryHelper->deleteHistory($this->table);
 		}
-	}
-
-	/**
-	 * Internal method
-	 * Parses a TypeAlias of the form "{variableName}.type", replacing {variableName} with table-instance variables variableName
-	 * Storing result into $this->contenthistoryHelper->typeAlias
-	 *
-	 * @return  void
-	 *
-	 * @since   3.2
-	 */
-	protected function parseTypeAlias()
-	{
-		// Needed for PHP < 5.4.0 as it's not passing context $this to closure function
-		static::$_myTableForPregreplaceOnly = $this->table;
-
-		$this->contenthistoryHelper->typeAlias = preg_replace_callback('/{([^}]+)}/',
-			function($matches)
-			{
-				return JTableObserverContenthistory::$_myTableForPregreplaceOnly->{$matches[1]};
-			},
-			$this->typeAliasPattern
-		);
 	}
 }

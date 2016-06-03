@@ -19,7 +19,7 @@ class JFile
 	/**
 	 * Gets the extension of a file name
 	 *
-	 * @param   string  $file  The file name
+	 * @param   string $file The file name
 	 *
 	 * @return  string  The file extension
 	 *
@@ -35,7 +35,7 @@ class JFile
 	/**
 	 * Strips the last extension off of a file name
 	 *
-	 * @param   string  $file  The file name
+	 * @param   string $file The file name
 	 *
 	 * @return  string  The file name without the extension
 	 *
@@ -49,7 +49,7 @@ class JFile
 	/**
 	 * Makes file name safe to use
 	 *
-	 * @param   string  $file  The name of the file [not full path]
+	 * @param   string $file The name of the file [not full path]
 	 *
 	 * @return  string  The sanitised string
 	 *
@@ -68,10 +68,10 @@ class JFile
 	/**
 	 * Copies a file
 	 *
-	 * @param   string   $src          The path to the source file
-	 * @param   string   $dest         The path to the destination file
-	 * @param   string   $path         An optional base path to prefix to the file names
-	 * @param   boolean  $use_streams  True to use streams
+	 * @param   string  $src         The path to the source file
+	 * @param   string  $dest        The path to the destination file
+	 * @param   string  $path        An optional base path to prefix to the file names
+	 * @param   boolean $use_streams True to use streams
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -84,7 +84,7 @@ class JFile
 		// Prepend a base path if it exists
 		if ($path)
 		{
-			$src = $pathObject->clean($path . '/' . $src);
+			$src  = $pathObject->clean($path . '/' . $src);
 			$dest = $pathObject->clean($path . '/' . $dest);
 		}
 
@@ -155,7 +155,7 @@ class JFile
 	/**
 	 * Delete a file or array of files
 	 *
-	 * @param   mixed  $file  The file name or an array of file names
+	 * @param   mixed $file The file name or an array of file names
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -227,10 +227,10 @@ class JFile
 	/**
 	 * Moves a file
 	 *
-	 * @param   string   $src          The path to the source file
-	 * @param   string   $dest         The path to the destination file
-	 * @param   string   $path         An optional base path to prefix to the file names
-	 * @param   boolean  $use_streams  True to use streams
+	 * @param   string  $src         The path to the source file
+	 * @param   string  $dest        The path to the destination file
+	 * @param   string  $path        An optional base path to prefix to the file names
+	 * @param   boolean $use_streams True to use streams
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -242,7 +242,7 @@ class JFile
 
 		if ($path)
 		{
-			$src = $pathObject->clean($path . '/' . $src);
+			$src  = $pathObject->clean($path . '/' . $src);
 			$dest = $pathObject->clean($path . '/' . $dest);
 		}
 
@@ -277,7 +277,7 @@ class JFile
 				$ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'], $FTPOptions['pass']);
 
 				// Translate path for the FTP account
-				$src = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $src), '/');
+				$src  = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $src), '/');
 				$dest = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $dest), '/');
 
 				// Use FTP rename to simulate move
@@ -305,15 +305,15 @@ class JFile
 	/**
 	 * Read the contents of a file
 	 *
-	 * @param   string   $filename   The full file path
-	 * @param   boolean  $incpath    Use include path
-	 * @param   integer  $amount     Amount of file to read
-	 * @param   integer  $chunksize  Size of chunks to read
-	 * @param   integer  $offset     Offset of the file
+	 * @param   string  $filename  The full file path
+	 * @param   boolean $incpath   Use include path
+	 * @param   integer $amount    Amount of file to read
+	 * @param   integer $chunksize Size of chunks to read
+	 * @param   integer $offset    Offset of the file
 	 *
 	 * @return  mixed  Returns file contents or boolean False if failed
 	 *
-	 * @since   11.1
+	 * @since       11.1
 	 * @deprecated  13.3 (Platform) & 4.0 (CMS) - Use the native file_get_contents() instead.
 	 */
 	public static function read($filename, $incpath = false, $amount = 0, $chunksize = 8192, $offset = 0)
@@ -374,11 +374,73 @@ class JFile
 	}
 
 	/**
+	 * Append contents to a file
+	 *
+	 * @param   string  $file        The full file path
+	 * @param   string  &$buffer     The buffer to write
+	 * @param   boolean $use_streams Use streams
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   3.6.0
+	 */
+	public static function append($file, &$buffer, $use_streams = false)
+	{
+		@set_time_limit(ini_get('max_execution_time'));
+
+		// If the file doesn't exist, just write instead of append
+		if (!file_exists($file))
+		{
+			return self::write($file, $buffer, $use_streams);
+		}
+
+		if ($use_streams)
+		{
+			$stream = JFactory::getStream();
+
+			// Beef up the chunk size to a meg
+			$stream->set('chunksize', (1024 * 1024));
+
+			if ($stream->open($file, 'ab') && $stream->write($buffer) && $stream->close())
+			{
+				return true;
+			}
+
+			JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_WRITE_STREAMS', $file, $stream->getError()), JLog::WARNING, 'jerror');
+
+			return false;
+		}
+		else
+		{
+			// Initialise variables.
+			$FTPOptions = JClientHelper::getCredentials('ftp');
+
+			if ($FTPOptions['enabled'] == 1)
+			{
+				// Connect the FTP client
+				jimport('joomla.client.ftp');
+				$ftp = JFTP::getInstance($FTPOptions['host'], $FTPOptions['port'], null, $FTPOptions['user'], $FTPOptions['pass']);
+
+				// Translate path for the FTP account and use FTP write buffer to file
+				$file = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $file), '/');
+				$ret  = $ftp->append($file, $buffer);
+			}
+			else
+			{
+				$file = JPath::clean($file);
+				$ret  = is_int(file_put_contents($file, $buffer, FILE_APPEND));
+			}
+
+			return $ret;
+		}
+	}
+
+	/**
 	 * Write contents to a file
 	 *
-	 * @param   string   $file         The full file path
-	 * @param   string   &$buffer      The buffer to write
-	 * @param   boolean  $use_streams  Use streams
+	 * @param   string  $file        The full file path
+	 * @param   string  &$buffer     The buffer to write
+	 * @param   boolean $use_streams Use streams
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -427,74 +489,12 @@ class JFile
 
 				// Translate path for the FTP account and use FTP write buffer to file
 				$file = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $file), '/');
-				$ret = $ftp->write($file, $buffer);
+				$ret  = $ftp->write($file, $buffer);
 			}
 			else
 			{
 				$file = $pathObject->clean($file);
-				$ret = is_int(file_put_contents($file, $buffer)) ? true : false;
-			}
-
-			return $ret;
-		}
-	}
-
-	/**
-	 * Append contents to a file
-	 *
-	 * @param   string   $file         The full file path
-	 * @param   string   &$buffer      The buffer to write
-	 * @param   boolean  $use_streams  Use streams
-	 *
-	 * @return  boolean  True on success
-	 *
-	 * @since   3.6.0
-	 */
-	public static function append($file, &$buffer, $use_streams = false)
-	{
-		@set_time_limit(ini_get('max_execution_time'));
-
-		// If the file doesn't exist, just write instead of append
-		if (!file_exists($file))
-		{
-			return self::write($file, $buffer, $use_streams);
-		}
-
-		if ($use_streams)
-		{
-			$stream = JFactory::getStream();
-
-			// Beef up the chunk size to a meg
-			$stream->set('chunksize', (1024 * 1024));
-
-			if ($stream->open($file, 'ab') && $stream->write($buffer) && $stream->close())
-			{
-				return true;
-			}
-
-			JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_WRITE_STREAMS', $file, $stream->getError()), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-		else
-		{
-			// Initialise variables.
-			$FTPOptions = JClientHelper::getCredentials('ftp');
-
-			if ($FTPOptions['enabled'] == 1)
-			{
-				// Connect the FTP client
-				jimport('joomla.client.ftp');
-				$ftp = JFTP::getInstance($FTPOptions['host'], $FTPOptions['port'], null, $FTPOptions['user'], $FTPOptions['pass']);
-
-				// Translate path for the FTP account and use FTP write buffer to file
-				$file = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $file), '/');
-				$ret = $ftp->append($file, $buffer);
-			}
-			else
-			{
-				$file = JPath::clean($file);
-				$ret = is_int(file_put_contents($file, $buffer, FILE_APPEND));
+				$ret  = is_int(file_put_contents($file, $buffer)) ? true : false;
 			}
 
 			return $ret;
@@ -504,11 +504,11 @@ class JFile
 	/**
 	 * Moves an uploaded file to a destination folder
 	 *
-	 * @param   string   $src              The name of the php (temporary) uploaded file
-	 * @param   string   $dest             The path (including filename) to move the uploaded file to
-	 * @param   boolean  $use_streams      True to use streams
-	 * @param   boolean  $allow_unsafe     Allow the upload of unsafe files
-	 * @param   boolean  $safeFileOptions  Options to JFilterInput::isSafeFile
+	 * @param   string  $src             The name of the php (temporary) uploaded file
+	 * @param   string  $dest            The path (including filename) to move the uploaded file to
+	 * @param   boolean $use_streams     True to use streams
+	 * @param   boolean $allow_unsafe    Allow the upload of unsafe files
+	 * @param   boolean $safeFileOptions Options to JFilterInput::isSafeFile
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -538,7 +538,7 @@ class JFile
 
 		// Ensure that the path is valid and clean
 		$pathObject = new JFilesystemWrapperPath;
-		$dest = $pathObject->clean($dest);
+		$dest       = $pathObject->clean($dest);
 
 		// Create the destination directory if it does not exist
 		$baseDir = dirname($dest);
@@ -565,7 +565,7 @@ class JFile
 		else
 		{
 			$FTPOptions = JClientHelper::getCredentials('ftp');
-			$ret = false;
+			$ret        = false;
 
 			if ($FTPOptions['enabled'] == 1)
 			{
@@ -613,7 +613,7 @@ class JFile
 	/**
 	 * Wrapper for the standard file_exists function
 	 *
-	 * @param   string  $file  File path
+	 * @param   string $file File path
 	 *
 	 * @return  boolean  True if path is a file
 	 *
@@ -629,11 +629,11 @@ class JFile
 	/**
 	 * Returns the name, without any path.
 	 *
-	 * @param   string  $file  File path
+	 * @param   string $file File path
 	 *
 	 * @return  string  filename
 	 *
-	 * @since   11.1
+	 * @since       11.1
 	 * @deprecated  13.3 (Platform) & 4.0 (CMS) - Use basename() instead.
 	 */
 	public static function getName($file)
@@ -641,7 +641,7 @@ class JFile
 		JLog::add(__METHOD__ . ' is deprecated. Use native basename() syntax.', JLog::WARNING, 'deprecated');
 
 		// Convert back slashes to forward slashes
-		$file = str_replace('\\', '/', $file);
+		$file  = str_replace('\\', '/', $file);
 		$slash = strrpos($file, '/');
 
 		if ($slash !== false)

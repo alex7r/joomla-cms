@@ -38,7 +38,7 @@ class InstallerControllerInstall extends JControllerLegacy
 			// TODO: Reset the users acl here as well to kill off any missing bits.
 		}
 
-		$app = JFactory::getApplication();
+		$app          = JFactory::getApplication();
 		$redirect_url = $app->getUserState('com_installer.redirect_url');
 
 		// Don't redirect to an external URL.

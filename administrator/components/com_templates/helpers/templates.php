@@ -19,7 +19,7 @@ class TemplatesHelper
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param   string  $vName  The name of the active view.
+	 * @param   string $vName The name of the active view.
 	 *
 	 * @return  void
 	 */
@@ -63,7 +63,7 @@ class TemplatesHelper
 	public static function getClientOptions()
 	{
 		// Build the filter options.
-		$options = array();
+		$options   = array();
 		$options[] = JHtml::_('select.option', '0', JText::_('JSITE'));
 		$options[] = JHtml::_('select.option', '1', JText::_('JADMINISTRATOR'));
 
@@ -73,14 +73,14 @@ class TemplatesHelper
 	/**
 	 * Get a list of filter options for the templates with styles.
 	 *
-	 * @param   mixed  $clientId  The CMS client id (0:site | 1:administrator) or '*' for all.
+	 * @param   mixed $clientId The CMS client id (0:site | 1:administrator) or '*' for all.
 	 *
 	 * @return  array  An array of JHtmlOption elements.
 	 */
 	public static function getTemplateOptions($clientId = '*')
 	{
 		// Build the filter options.
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
 		$query->select($db->quoteName('element', 'value'))
@@ -106,8 +106,8 @@ class TemplatesHelper
 	/**
 	 * TODO
 	 *
-	 * @param   string  $templateBaseDir  TODO
-	 * @param   string  $templateDir      TODO
+	 * @param   string $templateBaseDir TODO
+	 * @param   string $templateDir     TODO
 	 *
 	 * @return  boolean|JObject
 	 */
@@ -139,8 +139,8 @@ class TemplatesHelper
 	/**
 	 * TODO
 	 *
-	 * @param   integer  $clientId     TODO
-	 * @param   string   $templateDir  TODO
+	 * @param   integer $clientId    TODO
+	 * @param   string  $templateDir TODO
 	 *
 	 * @return  boolean|array
 	 *
@@ -151,7 +151,7 @@ class TemplatesHelper
 		$positions = array();
 
 		$templateBaseDir = $clientId ? JPATH_ADMINISTRATOR : JPATH_SITE;
-		$filePath = JPath::clean($templateBaseDir . '/templates/' . $templateDir . '/templateDetails.xml');
+		$filePath        = JPath::clean($templateBaseDir . '/templates/' . $templateDir . '/templateDetails.xml');
 
 		if (is_file($filePath))
 		{

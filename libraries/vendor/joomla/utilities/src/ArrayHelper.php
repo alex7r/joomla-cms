@@ -27,8 +27,8 @@ final class ArrayHelper
 	/**
 	 * Function to convert array to integer values
 	 *
-	 * @param   array  $array    The source array to convert
-	 * @param   mixed  $default  A default value (int|array) to assign if $array is not an array
+	 * @param   array $array   The source array to convert
+	 * @param   mixed $default A default value (int|array) to assign if $array is not an array
 	 *
 	 * @return  array The converted array
 	 *
@@ -62,9 +62,9 @@ final class ArrayHelper
 	/**
 	 * Utility function to map an array to a stdClass object.
 	 *
-	 * @param   array    $array      The array to map.
-	 * @param   string   $class      Name of the class to create
-	 * @param   boolean  $recursive  Convert also any array inside the main array
+	 * @param   array   $array     The array to map.
+	 * @param   string  $class     Name of the class to create
+	 * @param   boolean $recursive Convert also any array inside the main array
 	 *
 	 * @return  object   The object mapped from the given array
 	 *
@@ -92,10 +92,10 @@ final class ArrayHelper
 	/**
 	 * Utility function to map an array to a string.
 	 *
-	 * @param   array    $array         The array to map.
-	 * @param   string   $inner_glue    The glue (optional, defaults to '=') between the key and the value.
-	 * @param   string   $outer_glue    The glue (optional, defaults to ' ') between array elements.
-	 * @param   boolean  $keepOuterKey  True if final key should be kept.
+	 * @param   array   $array        The array to map.
+	 * @param   string  $inner_glue   The glue (optional, defaults to '=') between the key and the value.
+	 * @param   string  $outer_glue   The glue (optional, defaults to ' ') between array elements.
+	 * @param   boolean $keepOuterKey True if final key should be kept.
 	 *
 	 * @return  string   The string mapped from the given array
 	 *
@@ -129,9 +129,9 @@ final class ArrayHelper
 	/**
 	 * Utility function to map an object to an array
 	 *
-	 * @param   object   $p_obj    The source object
-	 * @param   boolean  $recurse  True to recurse through multi-level objects
-	 * @param   string   $regex    An optional regular expression to match on field names
+	 * @param   object  $p_obj   The source object
+	 * @param   boolean $recurse True to recurse through multi-level objects
+	 * @param   string  $regex   An optional regular expression to match on field names
 	 *
 	 * @return  array    The array mapped from the given object
 	 *
@@ -152,9 +152,9 @@ final class ArrayHelper
 	/**
 	 * Utility function to map an object or array to an array
 	 *
-	 * @param   mixed    $item     The source object or array
-	 * @param   boolean  $recurse  True to recurse through multi-level objects
-	 * @param   string   $regex    An optional regular expression to match on field names
+	 * @param   mixed   $item    The source object or array
+	 * @param   boolean $recurse True to recurse through multi-level objects
+	 * @param   string  $regex   An optional regular expression to match on field names
 	 *
 	 * @return  array  The array mapped from the given object
 	 *
@@ -201,9 +201,9 @@ final class ArrayHelper
 	/**
 	 * Extracts a column from an array of arrays or objects
 	 *
-	 * @param   array   $array     The source array
-	 * @param   string  $valueCol  The index of the column or name of object property to be used as value
-	 * @param   string  $keyCol    The index of the column or name of object property to be used as key
+	 * @param   array  $array    The source array
+	 * @param   string $valueCol The index of the column or name of object property to be used as value
+	 * @param   string $keyCol   The index of the column or name of object property to be used as key
 	 *
 	 * @return  array  Column of values from the source array
 	 *
@@ -242,10 +242,10 @@ final class ArrayHelper
 	/**
 	 * Utility function to return a value from a named array or a specified default
 	 *
-	 * @param   array|\ArrayAccess  $array    A named array or object that implements ArrayAccess
-	 * @param   string              $name     The key to search for
-	 * @param   mixed               $default  The default value to give if no key found
-	 * @param   string              $type     Return type for the variable (INT, FLOAT, STRING, WORD, BOOLEAN, ARRAY)
+	 * @param   array|\ArrayAccess $array   A named array or object that implements ArrayAccess
+	 * @param   string             $name    The key to search for
+	 * @param   mixed              $default The default value to give if no key found
+	 * @param   string             $type    Return type for the variable (INT, FLOAT, STRING, WORD, BOOLEAN, ARRAY)
 	 *
 	 * @return  mixed  The value from the source array
 	 *
@@ -340,7 +340,7 @@ final class ArrayHelper
 	 *     '6000' => 'Used'
 	 * );
 	 *
-	 * @param   array  $array  The source array.
+	 * @param   array $array The source array.
 	 *
 	 * @return  array  The inverted array.
 	 *
@@ -373,7 +373,7 @@ final class ArrayHelper
 	/**
 	 * Method to determine if an array is an associative array.
 	 *
-	 * @param   array  $array  An array to test.
+	 * @param   array $array An array to test.
 	 *
 	 * @return  boolean  True if the array is an associative array.
 	 *
@@ -398,8 +398,8 @@ final class ArrayHelper
 	/**
 	 * Pivots an array to create a reverse lookup of an array of scalars, arrays or objects.
 	 *
-	 * @param   array   $source  The source array.
-	 * @param   string  $key     Where the elements of the source array are objects or arrays, the key to pivot on.
+	 * @param   array  $source The source array.
+	 * @param   string $key    Where the elements of the source array are objects or arrays, the key to pivot on.
 	 *
 	 * @return  array  An array of arrays pivoted either on the value of the keys, or an individual key of an object or array.
 	 *
@@ -446,7 +446,7 @@ final class ArrayHelper
 			if (empty($counter[$resultKey]))
 			{
 				// The first time around we just assign the value to the key.
-				$result[$resultKey] = $resultValue;
+				$result[$resultKey]  = $resultValue;
 				$counter[$resultKey] = 1;
 			}
 			elseif ($counter[$resultKey] == 1)
@@ -473,11 +473,11 @@ final class ArrayHelper
 	/**
 	 * Utility function to sort an array of objects on a given field
 	 *
-	 * @param   array  $a              An array of objects
-	 * @param   mixed  $k              The key (string) or an array of keys to sort on
-	 * @param   mixed  $direction      Direction (integer) or an array of direction to sort in [1 = Ascending] [-1 = Descending]
-	 * @param   mixed  $caseSensitive  Boolean or array of booleans to let sort occur case sensitive or insensitive
-	 * @param   mixed  $locale         Boolean or array of booleans to let sort occur using the locale language or not
+	 * @param   array $a             An array of objects
+	 * @param   mixed $k             The key (string) or an array of keys to sort on
+	 * @param   mixed $direction     Direction (integer) or an array of direction to sort in [1 = Ascending] [-1 = Descending]
+	 * @param   mixed $caseSensitive Boolean or array of booleans to let sort occur case sensitive or insensitive
+	 * @param   mixed $locale        Boolean or array of booleans to let sort occur using the locale language or not
 	 *
 	 * @return  array  The sorted array of objects
 	 *
@@ -496,54 +496,54 @@ final class ArrayHelper
 		$sortLocale    = $locale;
 
 		usort(
-			$a, function($a, $b) use($sortCase, $sortDirection, $key, $sortLocale)
+			$a, function ($a, $b) use ($sortCase, $sortDirection, $key, $sortLocale)
+		{
+			for ($i = 0, $count = count($key); $i < $count; $i++)
 			{
-				for ($i = 0, $count = count($key); $i < $count; $i++)
+				if (isset($sortDirection[$i]))
 				{
-					if (isset($sortDirection[$i]))
-					{
-						$direction = $sortDirection[$i];
-					}
-
-					if (isset($sortCase[$i]))
-					{
-						$caseSensitive = $sortCase[$i];
-					}
-
-					if (isset($sortLocale[$i]))
-					{
-						$locale = $sortLocale[$i];
-					}
-
-					$va = $a->{$key[$i]};
-					$vb = $b->{$key[$i]};
-
-					if ((is_bool($va) || is_numeric($va)) && (is_bool($vb) || is_numeric($vb)))
-					{
-						$cmp = $va - $vb;
-					}
-					elseif ($caseSensitive)
-					{
-						$cmp = StringHelper::strcmp($va, $vb, $locale);
-					}
-					else
-					{
-						$cmp = StringHelper::strcasecmp($va, $vb, $locale);
-					}
-
-					if ($cmp > 0)
-					{
-						return $direction;
-					}
-
-					if ($cmp < 0)
-					{
-						return -$direction;
-					}
+					$direction = $sortDirection[$i];
 				}
 
-				return 0;
+				if (isset($sortCase[$i]))
+				{
+					$caseSensitive = $sortCase[$i];
+				}
+
+				if (isset($sortLocale[$i]))
+				{
+					$locale = $sortLocale[$i];
+				}
+
+				$va = $a->{$key[$i]};
+				$vb = $b->{$key[$i]};
+
+				if ((is_bool($va) || is_numeric($va)) && (is_bool($vb) || is_numeric($vb)))
+				{
+					$cmp = $va - $vb;
+				}
+				elseif ($caseSensitive)
+				{
+					$cmp = StringHelper::strcmp($va, $vb, $locale);
+				}
+				else
+				{
+					$cmp = StringHelper::strcasecmp($va, $vb, $locale);
+				}
+
+				if ($cmp > 0)
+				{
+					return $direction;
+				}
+
+				if ($cmp < 0)
+				{
+					return -$direction;
+				}
 			}
+
+			return 0;
+		}
 		);
 
 		return $a;
@@ -552,7 +552,7 @@ final class ArrayHelper
 	/**
 	 * Multidimensional array safe unique test
 	 *
-	 * @param   array  $array  The array to make unique.
+	 * @param   array $array The array to make unique.
 	 *
 	 * @return  array
 	 *
@@ -572,9 +572,9 @@ final class ArrayHelper
 	 * An improved array_search that allows for partial matching
 	 * of strings values in associative arrays.
 	 *
-	 * @param   string   $needle         The text to search for within the array.
-	 * @param   array    $haystack       Associative array to search in to find $needle.
-	 * @param   boolean  $caseSensitive  True to search case sensitive, false otherwise.
+	 * @param   string  $needle        The text to search for within the array.
+	 * @param   array   $haystack      Associative array to search in to find $needle.
+	 * @param   boolean $caseSensitive True to search case sensitive, false otherwise.
 	 *
 	 * @return  mixed    Returns the matching array $key if found, otherwise false.
 	 *
@@ -598,9 +598,9 @@ final class ArrayHelper
 	/**
 	 * Method to recursively convert data to a one dimension array.
 	 *
-	 * @param   array|object  $array      The array or object to convert.
-	 * @param   string        $separator  The key separator.
-	 * @param   string        $prefix     Last level key prefix.
+	 * @param   array|object $array     The array or object to convert.
+	 * @param   string       $separator The key separator.
+	 * @param   string       $prefix    Last level key prefix.
 	 *
 	 * @return  array
 	 *

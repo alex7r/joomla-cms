@@ -19,7 +19,7 @@ class PostinstallViewMessages extends FOFViewHtml
 	/**
 	 * Executes before rendering the page for the Browse task.
 	 *
-	 * @param   string  $tpl  Subtemplate to use
+	 * @param   string $tpl Subtemplate to use
 	 *
 	 * @return  boolean  Return true to allow rendering of the page
 	 *
@@ -37,7 +37,7 @@ class PostinstallViewMessages extends FOFViewHtml
 			$this->eid = 700;
 		}
 
-		$this->token = JFactory::getSession()->getFormToken();
+		$this->token             = JFactory::getSession()->getFormToken();
 		$this->extension_options = $model->getComponentOptions();
 
 		$extension_name = JText::_('COM_POSTINSTALL_TITLE_JOOMLA');

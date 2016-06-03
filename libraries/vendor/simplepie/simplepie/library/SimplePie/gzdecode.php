@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- * 	* Redistributions of source code must retain the above copyright notice, this list of
- * 	  conditions and the following disclaimer.
+ *    * Redistributions of source code must retain the above copyright notice, this list of
+ *      conditions and the following disclaimer.
  *
- * 	* Redistributions in binary form must reproduce the above copyright notice, this list
- * 	  of conditions and the following disclaimer in the documentation and/or other materials
- * 	  provided with the distribution.
+ *    * Redistributions in binary form must reproduce the above copyright notice, this list
+ *      of conditions and the following disclaimer in the documentation and/or other materials
+ *      provided with the distribution.
  *
- * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
- * 	  to endorse or promote products derived from this software without specific prior
- * 	  written permission.
+ *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
+ *      to endorse or promote products derived from this software without specific prior
+ *      written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,23 +32,23 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package SimplePie
- * @version 1.3.1
+ * @package   SimplePie
+ * @version   1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author Ryan Parman
- * @author Geoffrey Sneddon
- * @author Ryan McCue
- * @link http://simplepie.org/ SimplePie
- * @license http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author    Ryan Parman
+ * @author    Geoffrey Sneddon
+ * @author    Ryan McCue
+ * @link      http://simplepie.org/ SimplePie
+ * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 
 /**
  * Decode 'gzip' encoded HTTP data
  *
- * @package SimplePie
+ * @package    SimplePie
  * @subpackage HTTP
- * @link http://www.gzip.org/format.txt
+ * @link       http://www.gzip.org/format.txt
  */
 class SimplePie_gzdecode
 {
@@ -57,7 +57,7 @@ class SimplePie_gzdecode
 	 *
 	 * @access private
 	 * @var string
-	 * @see gzdecode::$data
+	 * @see    gzdecode::$data
 	 */
 	var $compressed_data;
 
@@ -97,7 +97,7 @@ class SimplePie_gzdecode
 	 * Uncompressed data
 	 *
 	 * @access public
-	 * @see gzdecode::$compressed_data
+	 * @see    gzdecode::$compressed_data
 	 * @var string
 	 */
 	var $data;
@@ -130,8 +130,8 @@ class SimplePie_gzdecode
 	 * Subfield ID 1
 	 *
 	 * @access public
-	 * @see gzdecode::$extra_field
-	 * @see gzdecode::$SI2
+	 * @see    gzdecode::$extra_field
+	 * @see    gzdecode::$SI2
 	 * @var string
 	 */
 	var $SI1;
@@ -140,8 +140,8 @@ class SimplePie_gzdecode
 	 * Subfield ID 2
 	 *
 	 * @access public
-	 * @see gzdecode::$extra_field
-	 * @see gzdecode::$SI1
+	 * @see    gzdecode::$extra_field
+	 * @see    gzdecode::$SI1
 	 * @var string
 	 */
 	var $SI2;
@@ -150,8 +150,8 @@ class SimplePie_gzdecode
 	 * Extra field content
 	 *
 	 * @access public
-	 * @see gzdecode::$SI1
-	 * @see gzdecode::$SI2
+	 * @see    gzdecode::$SI1
+	 * @see    gzdecode::$SI2
 	 * @var string
 	 */
 	var $extra_field;
@@ -173,17 +173,6 @@ class SimplePie_gzdecode
 	var $comment;
 
 	/**
-	 * Don't allow anything to be set
-	 *
-	 * @param string $name
-	 * @param mixed $value
-	 */
-	public function __set($name, $value)
-	{
-		trigger_error("Cannot write property $name", E_USER_ERROR);
-	}
-
-	/**
 	 * Set the compressed string and related properties
 	 *
 	 * @param string $data
@@ -192,6 +181,17 @@ class SimplePie_gzdecode
 	{
 		$this->compressed_data = $data;
 		$this->compressed_size = strlen($data);
+	}
+
+	/**
+	 * Don't allow anything to be set
+	 *
+	 * @param string $name
+	 * @param mixed  $value
+	 */
+	public function __set($name, $value)
+	{
+		trigger_error("Cannot write property $name", E_USER_ERROR);
 	}
 
 	/**

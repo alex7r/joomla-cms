@@ -111,15 +111,15 @@ class JFacebook
 	/**
 	 * Constructor.
 	 *
-	 * @param   JFacebookOAuth  $oauth    OAuth client.
-	 * @param   Registry        $options  Facebook options object.
-	 * @param   JHttp           $client   The HTTP client object.
+	 * @param   JFacebookOAuth $oauth   OAuth client.
+	 * @param   Registry       $options Facebook options object.
+	 * @param   JHttp          $client  The HTTP client object.
 	 *
 	 * @since   13.1
 	 */
 	public function __construct(JFacebookOAuth $oauth = null, Registry $options = null, JHttp $client = null)
 	{
-		$this->oauth = $oauth;
+		$this->oauth   = $oauth;
 		$this->options = isset($options) ? $options : new Registry;
 		$this->client  = isset($client) ? $client : new JHttp($this->options);
 
@@ -130,7 +130,7 @@ class JFacebook
 	/**
 	 * Magic method to lazily create API objects
 	 *
-	 * @param   string  $name  Name of property to retrieve
+	 * @param   string $name Name of property to retrieve
 	 *
 	 * @return  JFacebookObject  Facebook API object (status, user, friends etc).
 	 *
@@ -157,7 +157,7 @@ class JFacebook
 	/**
 	 * Get an option from the JFacebook instance.
 	 *
-	 * @param   string  $key  The name of the option to get.
+	 * @param   string $key The name of the option to get.
 	 *
 	 * @return  mixed  The option value.
 	 *
@@ -171,8 +171,8 @@ class JFacebook
 	/**
 	 * Set an option for the JFacebook instance.
 	 *
-	 * @param   string  $key    The name of the option to set.
-	 * @param   mixed   $value  The option value to set.
+	 * @param   string $key   The name of the option to set.
+	 * @param   mixed  $value The option value to set.
 	 *
 	 * @return  JFacebook  This object for method chaining.
 	 *

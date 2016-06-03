@@ -18,11 +18,31 @@ defined('JPATH_PLATFORM') or die;
 class JCacheStorageApc extends JCacheStorage
 {
 	/**
+	 * Test to see if the storage handler is available.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   12.1
+	 */
+	public static function isSupported()
+	{
+		$supported = extension_loaded('apc') && ini_get('apc.enabled');
+
+		// If on the CLI interface, the `apc.enable_cli` option must also be enabled
+		if ($supported && php_sapi_name() === 'cli')
+		{
+			$supported = ini_get('apc.enable_cli');
+		}
+
+		return (bool) $supported;
+	}
+
+	/**
 	 * Get cached data by ID and group
 	 *
-	 * @param   string   $id         The cache data ID
-	 * @param   string   $group      The cache data group
-	 * @param   boolean  $checkTime  True to verify cache time expiration threshold
+	 * @param   string  $id        The cache data ID
+	 * @param   string  $group     The cache data group
+	 * @param   boolean $checkTime True to verify cache time expiration threshold
 	 *
 	 * @return  mixed  Boolean false on failure or a cached data object
 	 *
@@ -79,9 +99,9 @@ class JCacheStorageApc extends JCacheStorage
 	/**
 	 * Store the data to cache by ID and group
 	 *
-	 * @param   string  $id     The cache data ID
-	 * @param   string  $group  The cache data group
-	 * @param   string  $data   The data to store in cache
+	 * @param   string $id    The cache data ID
+	 * @param   string $group The cache data group
+	 * @param   string $data  The data to store in cache
 	 *
 	 * @return  boolean
 	 *
@@ -95,8 +115,8 @@ class JCacheStorageApc extends JCacheStorage
 	/**
 	 * Remove a cached data entry by ID and group
 	 *
-	 * @param   string  $id     The cache data ID
-	 * @param   string  $group  The cache data group
+	 * @param   string $id    The cache data ID
+	 * @param   string $group The cache data group
 	 *
 	 * @return  boolean
 	 *
@@ -113,8 +133,8 @@ class JCacheStorageApc extends JCacheStorage
 	 * group mode    : cleans all cache in the group
 	 * notgroup mode : cleans all cache not in the group
 	 *
-	 * @param   string  $group  The cache data group
-	 * @param   string  $mode   The mode for cleaning cache [group|notgroup]
+	 * @param   string $group The cache data group
+	 * @param   string $mode  The mode for cleaning cache [group|notgroup]
 	 *
 	 * @return  boolean
 	 *
@@ -166,31 +186,11 @@ class JCacheStorageApc extends JCacheStorage
 	}
 
 	/**
-	 * Test to see if the storage handler is available.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   12.1
-	 */
-	public static function isSupported()
-	{
-		$supported = extension_loaded('apc') && ini_get('apc.enabled');
-
-		// If on the CLI interface, the `apc.enable_cli` option must also be enabled
-		if ($supported && php_sapi_name() === 'cli')
-		{
-			$supported = ini_get('apc.enable_cli');
-		}
-
-		return (bool) $supported;
-	}
-
-	/**
 	 * Lock cached item
 	 *
-	 * @param   string   $id        The cache data ID
-	 * @param   string   $group     The cache data group
-	 * @param   integer  $locktime  Cached item max lock time
+	 * @param   string  $id       The cache data ID
+	 * @param   string  $group    The cache data group
+	 * @param   integer $locktime Cached item max lock time
 	 *
 	 * @return  mixed  Boolean false if locking failed or an object containing properties lock and locklooped
 	 *
@@ -235,8 +235,8 @@ class JCacheStorageApc extends JCacheStorage
 	/**
 	 * Unlock cached item
 	 *
-	 * @param   string  $id     The cache data ID
-	 * @param   string  $group  The cache data group
+	 * @param   string $id    The cache data ID
+	 * @param   string $group The cache data group
 	 *
 	 * @return  boolean
 	 *

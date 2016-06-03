@@ -15,7 +15,7 @@ jimport('joomla.base.adapterinstance');
  * Abstract adapter for the installer.
  *
  * @method         JInstaller  getParent()  Retrieves the parent object.
- * @property-read  JInstaller  $parent      Parent object
+ * @property-read  JInstaller $parent      Parent object
  *
  * @since  3.4
  * @note   As of 4.0, this class will no longer extend from JAdapterInstance
@@ -109,9 +109,9 @@ abstract class JInstallerAdapter extends JAdapterInstance
 	/**
 	 * Constructor
 	 *
-	 * @param   JInstaller       $parent   Parent object
-	 * @param   JDatabaseDriver  $db       Database object
-	 * @param   array            $options  Configuration Options
+	 * @param   JInstaller      $parent  Parent object
+	 * @param   JDatabaseDriver $db      Database object
+	 * @param   array           $options Configuration Options
 	 *
 	 * @since   3.4
 	 */
@@ -288,7 +288,7 @@ abstract class JInstallerAdapter extends JAdapterInstance
 	/**
 	 * Set the manifest object.
 	 *
-	 * @param   object  $manifest  The manifest object
+	 * @param   object $manifest The manifest object
 	 *
 	 * @return  JInstallerAdapter  Instance of this class to support chaining
 	 *
@@ -322,7 +322,7 @@ abstract class JInstallerAdapter extends JAdapterInstance
 	/**
 	 * Get the filtered extension element from the manifest
 	 *
-	 * @param   string  $element  Optional element name to be converted
+	 * @param   string $element Optional element name to be converted
 	 *
 	 * @return  string  The filtered element
 	 *
@@ -410,7 +410,7 @@ abstract class JInstallerAdapter extends JAdapterInstance
 	/**
 	 * Executes a custom install script method
 	 *
-	 * @param   string  $method  The install method to execute
+	 * @param   string $method The install method to execute
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -610,7 +610,7 @@ abstract class JInstallerAdapter extends JAdapterInstance
 	/**
 	 * Set the install route being followed
 	 *
-	 * @param   string  $route  The install route being followed
+	 * @param   string $route The install route being followed
 	 *
 	 * @return  JInstallerAdapter  Instance of this class to support chaining
 	 *
@@ -927,7 +927,8 @@ abstract class JInstallerAdapter extends JAdapterInstance
 
 			// Upgrade manually set or update function available or update tag detected
 			if ($this->parent->isUpgrade() || ($this->parent->manifestClass && method_exists($this->parent->manifestClass, 'update'))
-				|| $updateElement)
+				|| $updateElement
+			)
 			{
 				// Force this one
 				$this->parent->setOverwrite(true);
@@ -1035,9 +1036,9 @@ abstract class JInstallerAdapter extends JAdapterInstance
 	/**
 	 * Load language files
 	 *
-	 * @param   string  $extension  The name of the extension
-	 * @param   string  $source     Path to the extension
-	 * @param   string  $base       Base path for the extension language
+	 * @param   string $extension The name of the extension
+	 * @param   string $source    Path to the extension
+	 * @param   string $base      Base path for the extension language
 	 *
 	 * @return  void
 	 *

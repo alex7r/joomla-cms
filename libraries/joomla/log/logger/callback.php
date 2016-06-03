@@ -28,7 +28,7 @@ class JLogLoggerCallback extends JLogLogger
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  &$options  Log object options.
+	 * @param   array &$options Log object options.
 	 *
 	 * @since   12.2
 	 * @throws  RuntimeException
@@ -50,7 +50,7 @@ class JLogLoggerCallback extends JLogLogger
 	/**
 	 * Method to add an entry to the log.
 	 *
-	 * @param   JLogEntry  $entry  The log entry object to add to the log.
+	 * @param   JLogEntry $entry The log entry object to add to the log.
 	 *
 	 * @return  boolean  True on success.
 	 *

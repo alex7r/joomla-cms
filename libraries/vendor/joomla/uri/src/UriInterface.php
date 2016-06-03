@@ -29,7 +29,7 @@ interface UriInterface
 	/**
 	 * Returns full uri string.
 	 *
-	 * @param   array  $parts  An array specifying the parts to render.
+	 * @param   array $parts An array specifying the parts to render.
 	 *
 	 * @return  string  The rendered URI string.
 	 *
@@ -40,7 +40,7 @@ interface UriInterface
 	/**
 	 * Checks if variable exists.
 	 *
-	 * @param   string  $name  Name of the query variable to check.
+	 * @param   string $name Name of the query variable to check.
 	 *
 	 * @return  boolean  True if the variable exists.
 	 *
@@ -51,8 +51,8 @@ interface UriInterface
 	/**
 	 * Returns a query variable by name.
 	 *
-	 * @param   string  $name     Name of the query variable to get.
-	 * @param   string  $default  Default value to return if the variable is not set.
+	 * @param   string $name    Name of the query variable to get.
+	 * @param   string $default Default value to return if the variable is not set.
 	 *
 	 * @return  array   Query variables.
 	 *
@@ -63,7 +63,7 @@ interface UriInterface
 	/**
 	 * Returns flat query string.
 	 *
-	 * @param   boolean  $toArray  True to return the query as a key => value pair array.
+	 * @param   boolean $toArray True to return the query as a key => value pair array.
 	 *
 	 * @return  string   Query string.
 	 *

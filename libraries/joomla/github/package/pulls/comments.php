@@ -21,13 +21,13 @@ class JGithubPackagePullsComments extends JGithubPackage
 	/**
 	 * Method to create a comment on a pull request.
 	 *
-	 * @param   string   $user      The name of the owner of the GitHub repository.
-	 * @param   string   $repo      The name of the GitHub repository.
-	 * @param   integer  $pullId    The pull request number.
-	 * @param   string   $body      The comment body text.
-	 * @param   string   $commitId  The SHA1 hash of the commit to comment on.
-	 * @param   string   $filePath  The Relative path of the file to comment on.
-	 * @param   string   $position  The line index in the diff to comment on.
+	 * @param   string  $user     The name of the owner of the GitHub repository.
+	 * @param   string  $repo     The name of the GitHub repository.
+	 * @param   integer $pullId   The pull request number.
+	 * @param   string  $body     The comment body text.
+	 * @param   string  $commitId The SHA1 hash of the commit to comment on.
+	 * @param   string  $filePath The Relative path of the file to comment on.
+	 * @param   string  $position The line index in the diff to comment on.
 	 *
 	 * @throws DomainException
 	 * @since   11.3
@@ -42,10 +42,10 @@ class JGithubPackagePullsComments extends JGithubPackage
 		// Build the request data.
 		$data = json_encode(
 			array(
-				'body' => $body,
+				'body'      => $body,
 				'commit_id' => $commitId,
-				'path' => $filePath,
-				'position' => $position
+				'path'      => $filePath,
+				'position'  => $position
 			)
 		);
 
@@ -59,11 +59,11 @@ class JGithubPackagePullsComments extends JGithubPackage
 	/**
 	 * Method to create a comment in reply to another comment.
 	 *
-	 * @param   string   $user       The name of the owner of the GitHub repository.
-	 * @param   string   $repo       The name of the GitHub repository.
-	 * @param   integer  $pullId     The pull request number.
-	 * @param   string   $body       The comment body text.
-	 * @param   integer  $inReplyTo  The id of the comment to reply to.
+	 * @param   string  $user      The name of the owner of the GitHub repository.
+	 * @param   string  $repo      The name of the GitHub repository.
+	 * @param   integer $pullId    The pull request number.
+	 * @param   string  $body      The comment body text.
+	 * @param   integer $inReplyTo The id of the comment to reply to.
 	 *
 	 * @throws DomainException
 	 * @since   11.3
@@ -78,7 +78,7 @@ class JGithubPackagePullsComments extends JGithubPackage
 		// Build the request data.
 		$data = json_encode(
 			array(
-				'body' => $body,
+				'body'        => $body,
 				'in_reply_to' => (int) $inReplyTo
 			)
 		);
@@ -93,9 +93,9 @@ class JGithubPackagePullsComments extends JGithubPackage
 	/**
 	 * Method to delete a comment on a pull request.
 	 *
-	 * @param   string   $user       The name of the owner of the GitHub repository.
-	 * @param   string   $repo       The name of the GitHub repository.
-	 * @param   integer  $commentId  The id of the comment to delete.
+	 * @param   string  $user      The name of the owner of the GitHub repository.
+	 * @param   string  $repo      The name of the GitHub repository.
+	 * @param   integer $commentId The id of the comment to delete.
 	 *
 	 * @throws DomainException
 	 * @since   11.3
@@ -117,10 +117,10 @@ class JGithubPackagePullsComments extends JGithubPackage
 	/**
 	 * Method to update a comment on a pull request.
 	 *
-	 * @param   string   $user       The name of the owner of the GitHub repository.
-	 * @param   string   $repo       The name of the GitHub repository.
-	 * @param   integer  $commentId  The id of the comment to update.
-	 * @param   string   $body       The new body text for the comment.
+	 * @param   string  $user      The name of the owner of the GitHub repository.
+	 * @param   string  $repo      The name of the GitHub repository.
+	 * @param   integer $commentId The id of the comment to update.
+	 * @param   string  $body      The new body text for the comment.
 	 *
 	 * @throws DomainException
 	 * @since   11.3
@@ -148,9 +148,9 @@ class JGithubPackagePullsComments extends JGithubPackage
 	/**
 	 * Method to get a specific comment on a pull request.
 	 *
-	 * @param   string   $user       The name of the owner of the GitHub repository.
-	 * @param   string   $repo       The name of the GitHub repository.
-	 * @param   integer  $commentId  The comment id to get.
+	 * @param   string  $user      The name of the owner of the GitHub repository.
+	 * @param   string  $repo      The name of the GitHub repository.
+	 * @param   integer $commentId The comment id to get.
 	 *
 	 * @throws DomainException
 	 * @since   11.3
@@ -171,11 +171,11 @@ class JGithubPackagePullsComments extends JGithubPackage
 	/**
 	 * Method to get the list of comments on a pull request.
 	 *
-	 * @param   string   $user    The name of the owner of the GitHub repository.
-	 * @param   string   $repo    The name of the GitHub repository.
-	 * @param   integer  $pullId  The pull request number.
-	 * @param   integer  $page    The page number from which to get items.
-	 * @param   integer  $limit   The number of items on a page.
+	 * @param   string  $user   The name of the owner of the GitHub repository.
+	 * @param   string  $repo   The name of the GitHub repository.
+	 * @param   integer $pullId The pull request number.
+	 * @param   integer $page   The page number from which to get items.
+	 * @param   integer $limit  The number of items on a page.
 	 *
 	 * @throws DomainException
 	 * @since   11.3

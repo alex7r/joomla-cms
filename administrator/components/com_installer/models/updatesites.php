@@ -23,7 +23,7 @@ class InstallerModelUpdatesites extends InstallerModel
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   3.4
@@ -49,34 +49,10 @@ class InstallerModelUpdatesites extends InstallerModel
 	}
 
 	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	protected function populateState($ordering = 'name', $direction = 'asc')
-	{
-		// Load the filter state.
-		$this->setState('filter.search', $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-		$this->setState('filter.client_id', $this->getUserStateFromRequest($this->context . '.filter.client_id', 'filter_client_id', null, 'int'));
-		$this->setState('filter.enabled', $this->getUserStateFromRequest($this->context . '.filter.enabled', 'filter_enabled', '', 'string'));
-		$this->setState('filter.type', $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string'));
-		$this->setState('filter.folder', $this->getUserStateFromRequest($this->context . '.filter.folder', 'filter_folder', '', 'string'));
-
-		parent::populateState($ordering, $direction);
-	}
-
-	/**
 	 * Enable/Disable an extension.
 	 *
-	 * @param   array  &$eid   Extension ids to un/publish
-	 * @param   int    $value  Publish value
+	 * @param   array &$eid  Extension ids to un/publish
+	 * @param   int   $value Publish value
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -123,7 +99,7 @@ class InstallerModelUpdatesites extends InstallerModel
 	/**
 	 * Deletes an update site.
 	 *
-	 * @param   array  $ids  Extension ids to delete.
+	 * @param   array $ids Extension ids to delete.
 	 *
 	 * @return  void
 	 *
@@ -205,6 +181,27 @@ class InstallerModelUpdatesites extends InstallerModel
 		{
 			$app->enqueueMessage(JText::plural('COM_INSTALLER_MSG_UPDATESITES_N_DELETE_UPDATESITES_DELETED', $count), 'message');
 		}
+	}
+
+	/**
+	 * Fetch the Joomla update sites ids.
+	 *
+	 * @return  array  Array with joomla core update site ids.
+	 *
+	 * @since   3.6
+	 */
+	protected function getJoomlaUpdateSitesIds()
+	{
+		$db = JFactory::getDbo();
+
+		// Fetch the Joomla core Joomla update sites ids.
+		$query = $db->getQuery(true);
+		$query->select($db->qn('update_site_id'))
+			->from($db->qn('#__update_sites'))
+			->where($db->qn('location') . ' LIKE \'%update.joomla.org%\'');
+		$db->setQuery($query);
+
+		return $db->loadColumn();
 	}
 
 	/**
@@ -296,7 +293,7 @@ class InstallerModelUpdatesites extends InstallerModel
 			$parentXmlfiles = JFolder::files($tmpInstaller->getPath('source'), '.xml$', false, true);
 
 			// Search for children manifests (lower priority)
-			$allXmlFiles    = JFolder::files($tmpInstaller->getPath('source'), '.xml$', 1, true);
+			$allXmlFiles = JFolder::files($tmpInstaller->getPath('source'), '.xml$', 1, true);
 
 			// Create an unique array of files ordered by priority
 			$xmlfiles = array_unique(array_merge($parentXmlfiles, $allXmlFiles));
@@ -349,24 +346,27 @@ class InstallerModelUpdatesites extends InstallerModel
 	}
 
 	/**
-	 * Fetch the Joomla update sites ids.
+	 * Method to auto-populate the model state.
 	 *
-	 * @return  array  Array with joomla core update site ids.
+	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since   3.6
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
+	 *
+	 * @return  void
+	 *
+	 * @since   3.4
 	 */
-	protected function getJoomlaUpdateSitesIds()
+	protected function populateState($ordering = 'name', $direction = 'asc')
 	{
-		$db  = JFactory::getDbo();
+		// Load the filter state.
+		$this->setState('filter.search', $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
+		$this->setState('filter.client_id', $this->getUserStateFromRequest($this->context . '.filter.client_id', 'filter_client_id', null, 'int'));
+		$this->setState('filter.enabled', $this->getUserStateFromRequest($this->context . '.filter.enabled', 'filter_enabled', '', 'string'));
+		$this->setState('filter.type', $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string'));
+		$this->setState('filter.folder', $this->getUserStateFromRequest($this->context . '.filter.folder', 'filter_folder', '', 'string'));
 
-		// Fetch the Joomla core Joomla update sites ids.
-		$query = $db->getQuery(true);
-		$query->select($db->qn('update_site_id'))
-			->from($db->qn('#__update_sites'))
-			->where($db->qn('location') . ' LIKE \'%update.joomla.org%\'');
-		$db->setQuery($query);
-
-		return $db->loadColumn();
+		parent::populateState($ordering, $direction);
 	}
 
 	/**

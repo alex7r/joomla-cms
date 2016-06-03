@@ -39,30 +39,35 @@ class FOFModel extends FOFUtilsObject
 
 	/**
 	 * The event to trigger after deleting the data.
+	 *
 	 * @var    string
 	 */
 	protected $event_after_delete = 'onContentAfterDelete';
 
 	/**
 	 * The event to trigger after saving the data.
+	 *
 	 * @var    string
 	 */
 	protected $event_after_save = 'onContentAfterSave';
 
 	/**
 	 * The event to trigger before deleting the data.
+	 *
 	 * @var    string
 	 */
 	protected $event_before_delete = 'onContentBeforeDelete';
 
 	/**
 	 * The event to trigger before saving the data.
+	 *
 	 * @var    string
 	 */
 	protected $event_before_save = 'onContentBeforeSave';
 
 	/**
 	 * The event to trigger after changing the published state of the data.
+	 *
 	 * @var    string
 	 */
 	protected $event_change_state = 'onContentChangeState';
@@ -77,24 +82,28 @@ class FOFModel extends FOFUtilsObject
 
 	/**
 	 * Stores a list of IDs passed to the model's state
+	 *
 	 * @var array
 	 */
 	protected $id_list = array();
 
 	/**
 	 * The first row ID passed to the model's state
+	 *
 	 * @var int
 	 */
 	protected $id = null;
 
 	/**
 	 * Input variables, passed on from the controller, in an associative array
+	 *
 	 * @var FOFInput
 	 */
 	protected $input = array();
 
 	/**
 	 * The list of records made available through getList
+	 *
 	 * @var array
 	 */
 	protected $list = null;
@@ -117,18 +126,21 @@ class FOFModel extends FOFUtilsObject
 
 	/**
 	 * The table object, populated when saving data
+	 *
 	 * @var FOFTable
 	 */
 	protected $otable = null;
 
 	/**
 	 * Pagination object
+	 *
 	 * @var JPagination
 	 */
 	protected $pagination = null;
 
 	/**
 	 * The table object, populated when retrieving data
+	 *
 	 * @var FOFTable
 	 */
 	protected $record = null;
@@ -143,18 +155,21 @@ class FOFModel extends FOFUtilsObject
 
 	/**
 	 * The name of the table to use
+	 *
 	 * @var string
 	 */
 	protected $table = null;
 
 	/**
 	 * Total rows based on the filters set in the model's state
+	 *
 	 * @var int
 	 */
 	protected $total = null;
 
 	/**
 	 * Should I save the model's state in the session?
+	 *
 	 * @var bool
 	 */
 	protected $_savestate = null;
@@ -190,9 +205,9 @@ class FOFModel extends FOFUtilsObject
 	protected $modelDispatcher = null;
 
 	/**
-	 *	Default behaviors to apply to the model
+	 *    Default behaviors to apply to the model
 	 *
-	 * @var  	array
+	 * @var    array
 	 */
 	protected $default_behaviors = array('filters');
 
@@ -203,11 +218,11 @@ class FOFModel extends FOFUtilsObject
 	 */
 	protected $_behaviorParams = array();
 
-    /**
-     * Public class constructor
-     *
-     * @param array $config The configuration array
-     */
+	/**
+	 * Public class constructor
+	 *
+	 * @param array $config The configuration array
+	 */
 	public function __construct($config = array())
 	{
 		// Make sure $config is an array
@@ -280,16 +295,16 @@ class FOFModel extends FOFUtilsObject
 		}
 		else
 		{
-            if (array_key_exists('view', $config))
-            {
-                $view = $config['view'];
-            }
+			if (array_key_exists('view', $config))
+			{
+				$view = $config['view'];
+			}
 
-            if (empty($view))
-            {
-                $eliminatePart = ucfirst($bareComponent) . 'Model';
-                $view = strtolower(str_replace($eliminatePart, '', $className));
-            }
+			if (empty($view))
+			{
+				$eliminatePart = ucfirst($bareComponent) . 'Model';
+				$view          = strtolower(str_replace($eliminatePart, '', $className));
+			}
 		}
 
 		if (array_key_exists('name', $config))
@@ -301,7 +316,7 @@ class FOFModel extends FOFUtilsObject
 			$name = $view;
 		}
 
-		$this->name = $name;
+		$this->name   = $name;
 		$this->option = $component;
 
 		// Set the model state
@@ -333,7 +348,7 @@ class FOFModel extends FOFUtilsObject
 		{
 			$componentPaths = FOFPlatform::getInstance()->getComponentBaseDirs($this->option);
 
-			$path = $componentPaths['admin'] . '/tables';
+			$path    = $componentPaths['admin'] . '/tables';
 			$altPath = $this->configProvider->get($this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.table_path', null);
 
 			if ($altPath)
@@ -351,7 +366,7 @@ class FOFModel extends FOFUtilsObject
 		}
 		else
 		{
-			$table = $this->configProvider->get(
+			$table       = $this->configProvider->get(
 				$this->option . '.views.' . FOFInflector::singularize($this->name) .
 				'.config.table', FOFInflector::singularize($view)
 			);
@@ -365,7 +380,8 @@ class FOFModel extends FOFUtilsObject
 					$this->option . '.views.' . FOFInflector::singularize($this->name) .
 					'.config.ignore_request', null
 				)
-		))
+			)
+		)
 		{
 			$this->__state_set = true;
 		}
@@ -376,7 +392,7 @@ class FOFModel extends FOFUtilsObject
 
 		if (FOFPlatform::getInstance()->isCli())
 		{
-			$limit = 20;
+			$limit      = 20;
 			$limitstart = 0;
 		}
 		else
@@ -392,7 +408,7 @@ class FOFModel extends FOFUtilsObject
 				$default_limit = 20;
 			}
 
-			$limit = $this->getUserStateFromRequest($component . '.' . $view . '.limit', 'limit', $default_limit, 'int', $this->_savestate);
+			$limit      = $this->getUserStateFromRequest($component . '.' . $view . '.limit', 'limit', $default_limit, 'int', $this->_savestate);
 			$limitstart = $this->getUserStateFromRequest($component . '.' . $view . '.limitstart', 'limitstart', 0, 'int', $this->_savestate);
 		}
 
@@ -406,8 +422,8 @@ class FOFModel extends FOFUtilsObject
 			$cid = $config['cid'];
 		}
 		elseif ($cid = $this->configProvider->get(
-				$this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.cid', null
-			)
+			$this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.cid', null
+		)
 		)
 		{
 			$cid = explode(',', $cid);
@@ -422,8 +438,8 @@ class FOFModel extends FOFUtilsObject
 			$id = $config['id'];
 		}
 		elseif ($id = $this->configProvider->get(
-				$this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.id', null
-			)
+			$this->option . '.views.' . FOFInflector::singularize($this->name) . '.config.id', null
+		)
 		)
 		{
 			$id = explode(',', $id);
@@ -557,7 +573,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Adds to the stack of model table paths in LIFO order.
 	 *
-	 * @param   mixed  $path  The directory as a string or directories as an array to add.
+	 * @param   mixed $path The directory as a string or directories as an array to add.
 	 *
 	 * @return  void
 	 *
@@ -571,7 +587,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Initialises the _savestate variable
 	 *
-	 * @param   integer  $defaultSaveState  The default value for the savestate
+	 * @param   integer $defaultSaveState The default value for the savestate
 	 *
 	 * @return  void
 	 */
@@ -591,13 +607,28 @@ class FOFModel extends FOFUtilsObject
 	}
 
 	/**
+	 * Sets the model state auto-save status. By default the model is set up to
+	 * save its state to the session.
+	 *
+	 * @param   boolean $newState True to save the state, false to not save it.
+	 *
+	 * @return  FOFModel  Reference to self
+	 */
+	public function &savestate($newState)
+	{
+		$this->_savestate = $newState ? true : false;
+
+		return $this;
+	}
+
+	/**
 	 * Gets the value of a user state variable.
 	 *
-	 * @param   string   $key           The key of the user state variable.
-	 * @param   string   $request       The name of the variable passed in a request.
-	 * @param   string   $default       The default value for the variable if not found. Optional.
-	 * @param   string   $type          Filter for the variable, for valid values see {@link JFilterInput::clean()}. Optional.
-	 * @param   boolean  $setUserState  Should I save the variable in the user state? Default: true. Optional.
+	 * @param   string  $key          The key of the user state variable.
+	 * @param   string  $request      The name of the variable passed in a request.
+	 * @param   string  $default      The default value for the variable if not found. Optional.
+	 * @param   string  $type         Filter for the variable, for valid values see {@link JFilterInput::clean()}. Optional.
+	 * @param   boolean $setUserState Should I save the variable in the user state? Default: true. Optional.
 	 *
 	 * @return  string   The request user state.
 	 */
@@ -609,7 +640,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Sets a list of IDs for batch operations from an array and resets the model
 	 *
-	 * @param   array  $idlist  An array of item IDs to be set to the model's state
+	 * @param   array $idlist An array of item IDs to be set to the model's state
 	 *
 	 * @return  FOFModel
 	 */
@@ -617,24 +648,42 @@ class FOFModel extends FOFUtilsObject
 	{
 		$this->reset();
 		$this->id_list = array();
-		$this->id = 0;
+		$this->id      = 0;
 
 		if (is_array($idlist) && !empty($idlist))
 		{
 			foreach ($idlist as $value)
 			{
-                // Protect vs fatal error (objects) and wrong behavior (nested array)
-                if(!is_object($value) && !is_array($value))
-                {
-                    $this->id_list[] = (int) $value;
-                }
+				// Protect vs fatal error (objects) and wrong behavior (nested array)
+				if (!is_object($value) && !is_array($value))
+				{
+					$this->id_list[] = (int) $value;
+				}
 			}
 
-            if(count($this->id_list))
-            {
-                $this->id = $this->id_list[0];
-            }
+			if (count($this->id_list))
+			{
+				$this->id = $this->id_list[0];
+			}
 		}
+
+		return $this;
+	}
+
+	/**
+	 * Resets the model, like it was freshly loaded
+	 *
+	 * @return  FOFModel
+	 */
+	public function reset()
+	{
+		$this->id         = 0;
+		$this->id_list    = null;
+		$this->record     = null;
+		$this->list       = null;
+		$this->pagination = null;
+		$this->total      = null;
+		$this->otable     = null;
 
 		return $this;
 	}
@@ -642,8 +691,8 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Adds a behavior to the model
 	 *
-	 * @param   string  $name    The name of the behavior
-	 * @param   array   $config  Optional Behavior configuration
+	 * @param   string $name   The name of the behavior
+	 * @param   array  $config Optional Behavior configuration
 	 *
 	 * @return  boolean  True if the behavior is found and added
 	 */
@@ -662,7 +711,7 @@ class FOFModel extends FOFUtilsObject
 		}
 
 		// First look for ComponentnameModelViewnameBehaviorName (e.g. FoobarModelItemsBehaviorFilter)
-		$option_name = str_replace('com_', '', $this->option);
+		$option_name   = str_replace('com_', '', $this->option);
 		$behaviorClass = ucfirst($option_name) . 'Model' . FOFInflector::pluralize($this->name) . 'Behavior' . ucfirst(strtolower($name));
 
 		if (class_exists($behaviorClass))
@@ -673,7 +722,7 @@ class FOFModel extends FOFUtilsObject
 		}
 
 		// Then look for ComponentnameModelBehaviorName (e.g. FoobarModelBehaviorFilter)
-		$option_name = str_replace('com_', '', $this->option);
+		$option_name   = str_replace('com_', '', $this->option);
 		$behaviorClass = ucfirst($option_name) . 'ModelBehavior' . ucfirst(strtolower($name));
 
 		if (class_exists($behaviorClass))
@@ -701,9 +750,9 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Returns a new instance of a model, with the state reset to defaults
 	 *
-	 * @param   string  $type    Model type, e.g. 'Items'
-	 * @param   string  $prefix  Model prefix, e.g. 'FoobarModel'
-	 * @param   array   $config  Model configuration variables
+	 * @param   string $type   Model type, e.g. 'Items'
+	 * @param   string $prefix Model prefix, e.g. 'FoobarModel'
+	 * @param   array  $config Model configuration variables
 	 *
 	 * @return FOFModel
 	 */
@@ -737,46 +786,13 @@ class FOFModel extends FOFUtilsObject
 	}
 
 	/**
-	 * Sets the model state auto-save status. By default the model is set up to
-	 * save its state to the session.
-	 *
-	 * @param   boolean  $newState  True to save the state, false to not save it.
-	 *
-	 * @return  FOFModel  Reference to self
-	 */
-	public function &savestate($newState)
-	{
-		$this->_savestate = $newState ? true : false;
-
-		return $this;
-	}
-
-	/**
-	 * Resets the model, like it was freshly loaded
-	 *
-	 * @return  FOFModel
-	 */
-	public function reset()
-	{
-		$this->id = 0;
-		$this->id_list = null;
-		$this->record = null;
-		$this->list = null;
-		$this->pagination = null;
-		$this->total = null;
-		$this->otable = null;
-
-		return $this;
-	}
-
-	/**
 	 * Clears the input array.
 	 *
 	 * @return  FOFModel
 	 */
 	public function clearInput()
 	{
-		$defSource = array();
+		$defSource   = array();
 		$this->input = new FOFInput($defSource);
 
 		return $this;
@@ -812,9 +828,9 @@ class FOFModel extends FOFUtilsObject
 	 * Returns a new model object. Unless overriden by the $config array, it will
 	 * try to automatically populate its state from the request variables.
 	 *
-	 * @param   string  $type    Model type, e.g. 'Items'
-	 * @param   string  $prefix  Model prefix, e.g. 'FoobarModel'
-	 * @param   array   $config  Model configuration variables
+	 * @param   string $type   Model type, e.g. 'Items'
+	 * @param   string $prefix Model prefix, e.g. 'FoobarModel'
+	 * @param   array  $config Model configuration variables
 	 *
 	 * @return  FOFModel
 	 */
@@ -830,9 +846,9 @@ class FOFModel extends FOFUtilsObject
 			$config = array();
 		}
 
-		$type = preg_replace('/[^A-Z0-9_\.-]/i', '', $type);
+		$type       = preg_replace('/[^A-Z0-9_\.-]/i', '', $type);
 		$modelClass = $prefix . ucfirst($type);
-		$result = false;
+		$result     = false;
 
 		// Guess the component name and include path
 		if (!empty($prefix))
@@ -889,7 +905,7 @@ class FOFModel extends FOFUtilsObject
 
 		// Get the component directories
 		$componentPaths = FOFPlatform::getInstance()->getComponentBaseDirs($component);
-        $filesystem     = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
+		$filesystem     = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
 
 		// Try to load the requested model class
 		if (!class_exists($modelClass))
@@ -905,7 +921,7 @@ class FOFModel extends FOFUtilsObject
 
 			// Try to load the model file
 			$path = $filesystem->pathFind(
-					$include_paths, self::_createFileName('model', array('name' => $type))
+				$include_paths, self::_createFileName('model', array('name' => $type))
 			);
 
 			if ($path)
@@ -932,7 +948,7 @@ class FOFModel extends FOFUtilsObject
 
 				// Try to load the model file
 				$path = $filesystem->pathFind(
-						$include_paths, self::_createFileName('model', array('name' => 'default'))
+					$include_paths, self::_createFileName('model', array('name' => 'default'))
 				);
 
 				if ($path)
@@ -958,8 +974,8 @@ class FOFModel extends FOFUtilsObject
 	 * Add a directory where FOFModel should search for models. You may
 	 * either pass a string or an array of directories.
 	 *
-	 * @param   mixed   $path    A path or array[sting] of paths to search.
-	 * @param   string  $prefix  A prefix for models.
+	 * @param   mixed  $path   A path or array[sting] of paths to search.
+	 * @param   string $prefix A prefix for models.
 	 *
 	 * @return  array  An array with directory elements. If prefix is equal to '', all directories are returned.
 	 *
@@ -986,7 +1002,7 @@ class FOFModel extends FOFUtilsObject
 
 		if (!empty($path))
 		{
-            $filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
+			$filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
 
 			if (!in_array($path, $paths[$prefix]))
 			{
@@ -1005,8 +1021,8 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Create the filename for a resource
 	 *
-	 * @param   string  $type   The resource type to create the filename for.
-	 * @param   array   $parts  An associative array of filename information.
+	 * @param   string $type  The resource type to create the filename for.
+	 * @param   array  $parts An associative array of filename information.
 	 *
 	 * @return  string  The filename
 	 *
@@ -1035,7 +1051,7 @@ class FOFModel extends FOFUtilsObject
 	{
 		// Get the ID or list of IDs from the request or the configuration
 		$cid = $this->input->get('cid', array(), 'array');
-		$id = $this->input->getInt('id', 0);
+		$id  = $this->input->getInt('id', 0);
 		$kid = $this->input->getInt($this->getTable($this->table)->getKeyName(), 0);
 
 		if (is_array($cid) && !empty($cid))
@@ -1057,17 +1073,17 @@ class FOFModel extends FOFUtilsObject
 		return $this;
 	}
 
-    /**
-     * Method to get a table object, load it if necessary.
-     *
-     * @param   string  $name The table name. Optional.
-     * @param   string  $prefix The class prefix. Optional.
-     * @param   array   $options Configuration array for model. Optional.
-     *
-     * @throws Exception
-     *
-     * @return  FOFTable  A FOFTable object
-     */
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string $name    The table name. Optional.
+	 * @param   string $prefix  The class prefix. Optional.
+	 * @param   array  $options Configuration array for model. Optional.
+	 *
+	 * @throws Exception
+	 *
+	 * @return  FOFTable  A FOFTable object
+	 */
 	public function getTable($name = '', $prefix = null, $options = array())
 	{
 		if (empty($name))
@@ -1096,7 +1112,7 @@ class FOFModel extends FOFUtilsObject
 			return $table;
 		}
 
-        FOFPlatform::getInstance()->raiseError(0, JText::sprintf('JLIB_APPLICATION_ERROR_TABLE_NAME_NOT_SUPPORTED', $name));
+		FOFPlatform::getInstance()->raiseError(0, JText::sprintf('JLIB_APPLICATION_ERROR_TABLE_NAME_NOT_SUPPORTED', $name));
 
 		return null;
 	}
@@ -1131,9 +1147,9 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Method to load and return a model object.
 	 *
-	 * @param   string  $name    The name of the view
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  The configuration array to pass to the table
+	 * @param   string $name   The name of the view
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config The configuration array to pass to the table
 	 *
 	 * @return  FOFTable  Table object or boolean false if failed
 	 */
@@ -1233,7 +1249,7 @@ class FOFModel extends FOFUtilsObject
 	public function getHash()
 	{
 		$option = $this->input->getCmd('option', 'com_foobar');
-		$view = FOFInflector::pluralize($this->input->getCmd('view', 'cpanel'));
+		$view   = FOFInflector::pluralize($this->input->getCmd('view', 'cpanel'));
 
 		return "$option.$view.";
 	}
@@ -1241,9 +1257,9 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Method to load a row for editing from the version history table.
 	 *
-	 * @param   integer    $version_id  Key to the version history table.
-	 * @param   FOFTable   &$table      Content table object being loaded.
-	 * @param   string     $alias       The type_alias in #__content_types
+	 * @param   integer  $version_id Key to the version history table.
+	 * @param   FOFTable &$table     Content table object being loaded.
+	 * @param   string   $alias      The type_alias in #__content_types
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -1294,7 +1310,7 @@ class FOFModel extends FOFUtilsObject
 	 * Returns a single item. It uses the id set with setId, or the first ID in
 	 * the list of IDs for batch operations
 	 *
-	 * @param   integer  $id  Force a primary key ID to the model. Use null to use the id from the state.
+	 * @param   integer $id Force a primary key ID to the model. Use null to use the id from the state.
 	 *
 	 * @return  FOFTable  A copy of the item's FOFTable array
 	 */
@@ -1353,7 +1369,7 @@ class FOFModel extends FOFUtilsObject
 	 * operation. You can modify it before it's returned to the MVC triad for
 	 * further processing.
 	 *
-	 * @param   FOFTable  &$record  The table instance we fetched
+	 * @param   FOFTable &$record The table instance we fetched
 	 *
 	 * @return  void
 	 */
@@ -1374,10 +1390,11 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Alias for getItemList
 	 *
-	 * @param   boolean  $overrideLimits  Should I override set limits?
-	 * @param   string   $group           The group by clause
+	 * @param   boolean $overrideLimits Should I override set limits?
+	 * @param   string  $group          The group by clause
+	 *
 	 * @codeCoverageIgnore
-     *
+	 *
 	 * @return  array
 	 */
 	public function &getList($overrideLimits = false, $group = '')
@@ -1388,10 +1405,10 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Returns an object list
 	 *
-	 * @param   string   $query       The query
-	 * @param   integer  $limitstart  Offset from start
-	 * @param   integer  $limit       The number of records
-	 * @param   string   $group       The group by clause
+	 * @param   string  $query      The query
+	 * @param   integer $limitstart Offset from start
+	 * @param   integer $limit      The number of records
+	 * @param   string  $group      The group by clause
 	 *
 	 * @return  array  Array of objects
 	 */
@@ -1408,8 +1425,8 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Returns a list of items
 	 *
-	 * @param   boolean  $overrideLimits  Should I override set limits?
-	 * @param   string   $group           The group by clause
+	 * @param   boolean $overrideLimits Should I override set limits?
+	 * @param   string  $group          The group by clause
 	 *
 	 * @return  array
 	 */
@@ -1422,7 +1439,7 @@ class FOFModel extends FOFUtilsObject
 			if (!$overrideLimits)
 			{
 				$limitstart = $this->getState('limitstart');
-				$limit = $this->getState('limit');
+				$limit      = $this->getState('limit');
 				$this->list = $this->_getList((string) $query, $limitstart, $limit, $group);
 			}
 			else
@@ -1437,16 +1454,16 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Builds the SELECT query
 	 *
-	 * @param   boolean  $overrideLimits  Are we requested to override the set limits?
+	 * @param   boolean $overrideLimits Are we requested to override the set limits?
 	 *
 	 * @return  JDatabaseQuery
 	 */
 	public function buildQuery($overrideLimits = false)
 	{
-		$table = $this->getTable();
+		$table     = $this->getTable();
 		$tableName = $table->getTableName();
-		$tableKey = $table->getKeyName();
-		$db = $this->getDbo();
+		$tableKey  = $table->getKeyName();
+		$db        = $this->getDbo();
 
 		$query = $db->getQuery(true);
 
@@ -1503,7 +1520,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Get the alias set for this model's table
 	 *
-	 * @return  string 	The table alias
+	 * @return  string    The table alias
 	 */
 	public function getTableAlias()
 	{
@@ -1513,9 +1530,9 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Get a filtered state variable
 	 *
-	 * @param   string  $key          The name of the state variable
-	 * @param   mixed   $default      The default value to use
-	 * @param   string  $filter_type  Filter type
+	 * @param   string $key         The name of the state variable
+	 * @param   mixed  $default     The default value to use
+	 * @param   string $filter_type Filter type
 	 *
 	 * @return  mixed  The variable's value
 	 */
@@ -1555,8 +1572,8 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Method to set model state variables
 	 *
-	 * @param   string  $property  The name of the property.
-	 * @param   mixed   $value     The value of the property to set or null.
+	 * @param   string $property The name of the property.
+	 * @param   mixed  $value    The value of the property to set or null.
 	 *
 	 * @return  mixed  The previous value of the property or null if not set.
 	 */
@@ -1568,8 +1585,8 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Method to get model state variables
 	 *
-	 * @param   string  $property  Optional parameter name
-	 * @param   mixed   $default   Optional default value
+	 * @param   string $property Optional parameter name
+	 * @param   mixed  $default  Optional default value
 	 *
 	 * @return  object  The property where specified, the state object where omitted
 	 *
@@ -1606,6 +1623,19 @@ class FOFModel extends FOFUtilsObject
 	}
 
 	/**
+	 * This method can be overriden to automatically do something with the
+	 * list results array. You are supposed to modify the list which was passed
+	 * in the parameters; DO NOT return a new array!
+	 *
+	 * @param   array &$resultArray An array of objects, each row representing a record
+	 *
+	 * @return  void
+	 */
+	protected function onProcessList(&$resultArray)
+	{
+	}
+
+	/**
 	 * Returns a FOFDatabaseIterator over a list of items.
 	 *
 	 * THERE BE DRAGONS. Unlike the getItemList() you have a few restrictions:
@@ -1617,8 +1647,8 @@ class FOFModel extends FOFUtilsObject
 	 * in memory since it only keeps one record in PHP memory at a time. It works best with simple models, returning
 	 * all the contents of a single database table.
 	 *
-	 * @param   boolean  $overrideLimits  Should I ignore set limits?
-	 * @param   string   $tableClass      The table class for the iterator, e.g. FoobarTableBar. Leave empty to use
+	 * @param   boolean $overrideLimits   Should I ignore set limits?
+	 * @param   string  $tableClass       The table class for the iterator, e.g. FoobarTableBar. Leave empty to use
 	 *                                    the default Table class for this Model.
 	 *
 	 * @return  FOFDatabaseIterator
@@ -1648,7 +1678,7 @@ class FOFModel extends FOFUtilsObject
 		if ($overrideLimits)
 		{
 			$limitStart = 0;
-			$limit = 0;
+			$limit      = 0;
 		}
 		else
 		{
@@ -1677,7 +1707,7 @@ class FOFModel extends FOFUtilsObject
 	 * objects, it binds the data from the first item fetched on the list to an
 	 * instance of the table object and returns that table object instead.
 	 *
-	 * @param   boolean  $overrideLimits  Should I override set limits?
+	 * @param   boolean $overrideLimits Should I override set limits?
 	 *
 	 * @return  FOFTable
 	 */
@@ -1705,7 +1735,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Binds the data to the model and tries to save it
 	 *
-	 * @param   array|object  $data  The source data array or object
+	 * @param   array|object $data The source data array or object
 	 *
 	 * @return  boolean  True on success
 	 */
@@ -1725,7 +1755,7 @@ class FOFModel extends FOFUtilsObject
 		if (array_key_exists($key, (array) $data))
 		{
 			$aData = (array) $data;
-			$oid = $aData[$key];
+			$oid   = $aData[$key];
 			$table->load($oid);
 		}
 
@@ -1783,7 +1813,7 @@ class FOFModel extends FOFUtilsObject
 				if ($this->_savestate)
 				{
 					$session = JFactory::getSession();
-					$hash = $this->getHash() . 'savedata';
+					$hash    = $this->getHash() . 'savedata';
 					$session->set($hash, serialize($allData));
 				}
 
@@ -1796,7 +1826,7 @@ class FOFModel extends FOFUtilsObject
 			if ($this->_savestate)
 			{
 				$session = JFactory::getSession();
-				$hash = $this->getHash() . 'savedata';
+				$hash    = $this->getHash() . 'savedata';
 				$session->set($hash, serialize($allData));
 			}
 
@@ -1826,7 +1856,7 @@ class FOFModel extends FOFUtilsObject
 				if (!empty($error))
 				{
 					$this->setError($error);
-					$session = JFactory::getSession();
+					$session    = JFactory::getSession();
 					$tableprops = $table->getProperties(true);
 
 					unset($tableprops['input']);
@@ -1866,9 +1896,9 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * A method for getting the form from the model.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 * @param   boolean  $source    The name of the form. If not set we'll try the form_name state variable or fall back to default.
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 * @param   boolean $source   The name of the form. If not set we'll try the form_name state variable or fall back to default.
 	 *
 	 * @return  mixed  A FOFForm object on success, false on failure
 	 *
@@ -1891,8 +1921,8 @@ class FOFModel extends FOFUtilsObject
 		$name = $this->input->getCmd('option', 'com_foobar') . '.' . $this->name . '.' . $source;
 
 		$options = array(
-			'control'	 => false,
-			'load_data'	 => $loadData,
+			'control'   => false,
+			'load_data' => $loadData,
 		);
 
 		$this->onBeforeLoadForm($name, $source, $options);
@@ -1910,33 +1940,34 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Allows the manipulation before the form is loaded
 	 *
-	 * @param   string  &$name     The name of the form.
-	 * @param   string  &$source   The form source. Can be XML string if file flag is set to false.
-	 * @param   array   &$options  Optional array of options for the form creation.
+	 * @param   string &$name    The name of the form.
+	 * @param   string &$source  The form source. Can be XML string if file flag is set to false.
+	 * @param   array  &$options Optional array of options for the form creation.
+	 *
 	 * @codeCoverageIgnore
-     *
+	 *
 	 * @return  void
 	 */
 	public function onBeforeLoadForm(&$name, &$source, &$options)
 	{
 	}
 
-    /**
-     * Method to get a form object.
-     *
-     * @param   string          $name       The name of the form.
-     * @param   string          $source     The form filename (e.g. form.browse)
-     * @param   array           $options    Optional array of options for the form creation.
-     * @param   boolean         $clear      Optional argument to force load a new form.
-     * @param   bool|string     $xpath      An optional xpath to search for the fields.
-     *
-     * @return  mixed  FOFForm object on success, False on error.
+	/**
+	 * Method to get a form object.
+	 *
+	 * @param   string      $name    The name of the form.
+	 * @param   string      $source  The form filename (e.g. form.browse)
+	 * @param   array       $options Optional array of options for the form creation.
+	 * @param   boolean     $clear   Optional argument to force load a new form.
+	 * @param   bool|string $xpath   An optional xpath to search for the fields.
+	 *
+	 * @return  mixed  FOFForm object on success, False on error.
 	 *
 	 * @throws  Exception
-     *
-     * @see     FOFForm
-     * @since   2.0
-     */
+	 *
+	 * @see     FOFForm
+	 * @since   2.0
+	 */
 	protected function loadForm($name, $source, $options = array(), $clear = false, $xpath = false)
 	{
 		// Handle the optional arguments.
@@ -2011,17 +2042,17 @@ class FOFModel extends FOFUtilsObject
 		}
 		catch (Exception $e)
 		{
-            // The above try-catch statement will catch EVERYTHING, even PhpUnit exceptions while testing
-            if(stripos(get_class($e), 'phpunit') !== false)
-            {
-                throw $e;
-            }
-            else
-            {
-                $this->setError($e->getMessage());
+			// The above try-catch statement will catch EVERYTHING, even PhpUnit exceptions while testing
+			if (stripos(get_class($e), 'phpunit') !== false)
+			{
+				throw $e;
+			}
+			else
+			{
+				$this->setError($e->getMessage());
 
-                return false;
-            }
+				return false;
+			}
 		}
 
 		// Store the form for later.
@@ -2033,8 +2064,8 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Guesses the best candidate for the path to use for a particular form.
 	 *
-	 * @param   string  $source  The name of the form file to load, without the .xml extension.
-	 * @param   array   $paths   The paths to look into. You can declare this to override the default FOF paths.
+	 * @param   string $source The name of the form file to load, without the .xml extension.
+	 * @param   array  $paths  The paths to look into. You can declare this to override the default FOF paths.
 	 *
 	 * @return  mixed  A string if the path and filename of the form to load is found, false otherwise.
 	 *
@@ -2042,9 +2073,9 @@ class FOFModel extends FOFUtilsObject
 	 */
 	public function findFormFilename($source, $paths = array())
 	{
-        // TODO Should we read from internal variables instead of the input? With a temp instance we have no input
+		// TODO Should we read from internal variables instead of the input? With a temp instance we have no input
 		$option = $this->input->getCmd('option', 'com_foobar');
-		$view 	= $this->name;
+		$view   = $this->name;
 
 		$componentPaths = FOFPlatform::getInstance()->getComponentBaseDirs($option);
 		$file_root      = $componentPaths['main'];
@@ -2054,8 +2085,8 @@ class FOFModel extends FOFUtilsObject
 		if (empty($paths))
 		{
 			// Set up the paths to look into
-            // PLEASE NOTE: If you ever change this, please update Model Unit tests, too, since we have to
-            // copy these default folders (we have to add the protocol for the virtual filesystem)
+			// PLEASE NOTE: If you ever change this, please update Model Unit tests, too, since we have to
+			// copy these default folders (we have to add the protocol for the virtual filesystem)
 			$paths = array(
 				// In the template override
 				$template_root . '/' . $view,
@@ -2076,10 +2107,10 @@ class FOFModel extends FOFUtilsObject
 			);
 		}
 
-        $paths = array_unique($paths);
+		$paths = array_unique($paths);
 
 		// Set up the suffixes to look into
-		$suffixes = array();
+		$suffixes      = array();
 		$temp_suffixes = FOFPlatform::getInstance()->getTemplateSuffixes();
 
 		if (!empty($temp_suffixes))
@@ -2094,7 +2125,7 @@ class FOFModel extends FOFUtilsObject
 
 		// Look for all suffixes in all paths
 		$result     = false;
-        $filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
+		$filesystem = FOFPlatform::getInstance()->getIntegrationObject('filesystem');
 
 		foreach ($paths as $path)
 		{
@@ -2140,10 +2171,11 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Allows data and form manipulation before preprocessing the form
 	 *
-	 * @param   FOFForm  $form    A FOFForm object.
-	 * @param   array    &$data   The data expected for the form.
+	 * @param   FOFForm $form  A FOFForm object.
+	 * @param   array   &$data The data expected for the form.
+	 *
 	 * @codeCoverageIgnore
-     *
+	 *
 	 * @return  void
 	 */
 	public function onBeforePreprocessForm(FOFForm &$form, &$data)
@@ -2153,9 +2185,9 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Method to allow derived classes to preprocess the form.
 	 *
-	 * @param   FOFForm  $form   A FOFForm object.
-	 * @param   mixed    &$data  The data expected for the form.
-	 * @param   string   $group  The name of the plugin group to import (defaults to "content").
+	 * @param   FOFForm $form  A FOFForm object.
+	 * @param   mixed   &$data The data expected for the form.
+	 * @param   string  $group The name of the plugin group to import (defaults to "content").
 	 *
 	 * @return  void
 	 *
@@ -2176,7 +2208,7 @@ class FOFModel extends FOFUtilsObject
 		{
 			// Get the last error.
 			$dispatcher = FOFUtilsObservableDispatcher::getInstance();
-			$error = $dispatcher->getError();
+			$error      = $dispatcher->getError();
 
 			if (!($error instanceof Exception))
 			{
@@ -2188,10 +2220,11 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Allows data and form manipulation after preprocessing the form
 	 *
-	 * @param   FOFForm  $form    A FOFForm object.
-	 * @param   array    &$data   The data expected for the form.
+	 * @param   FOFForm $form  A FOFForm object.
+	 * @param   array   &$data The data expected for the form.
+	 *
 	 * @codeCoverageIgnore
-     *
+	 *
 	 * @return  void
 	 */
 	public function onAfterPreprocessForm(FOFForm &$form, &$data)
@@ -2201,12 +2234,13 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Allows the manipulation after the form is loaded
 	 *
-	 * @param   FOFForm  $form      A FOFForm object.
-	 * @param   string   &$name     The name of the form.
-	 * @param   string   &$source   The form source. Can be XML string if file flag is set to false.
-	 * @param   array    &$options  Optional array of options for the form creation.
+	 * @param   FOFForm $form     A FOFForm object.
+	 * @param   string  &$name    The name of the form.
+	 * @param   string  &$source  The form source. Can be XML string if file flag is set to false.
+	 * @param   array   &$options Optional array of options for the form creation.
+	 *
 	 * @codeCoverageIgnore
-     *
+	 *
 	 * @return  void
 	 */
 	public function onAfterLoadForm(FOFForm &$form, &$name, &$source, &$options)
@@ -2216,9 +2250,9 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Method to validate the form data.
 	 *
-	 * @param   FOFForm  $form   The form to validate against.
-	 * @param   array    $data   The data to validate.
-	 * @param   string   $group  The name of the field group to validate.
+	 * @param   FOFForm $form  The form to validate against.
+	 * @param   array   $data  The data to validate.
+	 * @param   string  $group The name of the field group to validate.
 	 *
 	 * @return  mixed   Array of filtered data if valid, false otherwise.
 	 *
@@ -2266,8 +2300,8 @@ class FOFModel extends FOFUtilsObject
 	 * This method runs before the $data is saved to the $table. Return false to
 	 * stop saving.
 	 *
-	 * @param   array     &$data   The data to save
-	 * @param   FOFTable  &$table  The table to save the data to
+	 * @param   array    &$data  The data to save
+	 * @param   FOFTable &$table The table to save the data to
 	 *
 	 * @return  boolean  Return false to prevent saving, true to allow it
 	 */
@@ -2298,7 +2332,7 @@ class FOFModel extends FOFUtilsObject
 			}
 
 			// Call the plugin
-			$name = $this->name;
+			$name   = $this->name;
 			$result = FOFPlatform::getInstance()->runPlugins($this->event_before_save, array($this->option . '.' . $name, &$table, $this->_isNewRecord));
 
 			if (in_array(false, $result, true))
@@ -2323,7 +2357,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * This method runs after the data is saved to the $table.
 	 *
-	 * @param   FOFTable  &$table  The table which was saved
+	 * @param   FOFTable &$table The table which was saved
 	 *
 	 * @return  boolean
 	 */
@@ -2395,7 +2429,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * This method runs before a record is copied
 	 *
-	 * @param   FOFTable  &$table  The table instance of the record being copied
+	 * @param   FOFTable &$table The table instance of the record being copied
 	 *
 	 * @return  boolean  True to allow the copy
 	 */
@@ -2416,7 +2450,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * This method runs after a record has been copied
 	 *
-	 * @param   FOFTable  &$table  The table instance of the record which was copied
+	 * @param   FOFTable &$table The table instance of the record which was copied
 	 *
 	 * @return  boolean  True to allow the copy
 	 */
@@ -2481,8 +2515,8 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * This method runs before the record with key value of $id is deleted from $table
 	 *
-	 * @param   integer   &$id     The ID of the record being deleted
-	 * @param   FOFTable  &$table  The table instance used to delete the record
+	 * @param   integer  &$id    The ID of the record being deleted
+	 * @param   FOFTable &$table The table instance used to delete the record
 	 *
 	 * @return  boolean
 	 */
@@ -2505,9 +2539,9 @@ class FOFModel extends FOFUtilsObject
 				return false;
 			}
 
-			$name = $this->name;
+			$name    = $this->name;
 			$context = $this->option . '.' . $name;
-			$result = FOFPlatform::getInstance()->runPlugins($this->event_before_delete, array($context, $table));
+			$result  = FOFPlatform::getInstance()->runPlugins($this->event_before_delete, array($context, $table));
 
 			if (in_array(false, $result, true))
 			{
@@ -2526,13 +2560,14 @@ class FOFModel extends FOFUtilsObject
 
 			return false;
 		}
+
 		return true;
 	}
 
 	/**
 	 * This method runs after a record with key value $id is deleted
 	 *
-	 * @param   integer  $id  The id of the record which was deleted
+	 * @param   integer $id The id of the record which was deleted
 	 *
 	 * @return  boolean  Return false to raise an error, true otherwise
 	 */
@@ -2551,9 +2586,9 @@ class FOFModel extends FOFUtilsObject
 
 		try
 		{
-			$name = $this->name;
+			$name    = $this->name;
 			$context = $this->option . '.' . $name;
-			$result = FOFPlatform::getInstance()->runPlugins($this->event_after_delete, array($context, $this->_recordForDeletion));
+			$result  = FOFPlatform::getInstance()->runPlugins($this->event_after_delete, array($context, $this->_recordForDeletion));
 			unset($this->_recordForDeletion);
 		}
 		catch (Exception $e)
@@ -2568,8 +2603,8 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Toggles the published state of one or several items
 	 *
-	 * @param   integer  $publish  The publishing state to set (e.g. 0 is unpublished)
-	 * @param   integer  $user     The user ID performing this action
+	 * @param   integer $publish The publishing state to set (e.g. 0 is unpublished)
+	 * @param   integer $user    The user ID performing this action
 	 *
 	 * @return  boolean True on success
 	 */
@@ -2580,7 +2615,7 @@ class FOFModel extends FOFUtilsObject
 			if (empty($user))
 			{
 				$oUser = FOFPlatform::getInstance()->getUser();
-				$user = $oUser->id;
+				$user  = $oUser->id;
 			}
 
 			$table = $this->getTable($this->table);
@@ -2603,11 +2638,11 @@ class FOFModel extends FOFUtilsObject
 
 				// Call the plugin events
 				FOFPlatform::getInstance()->importPlugin('content');
-				$name = $this->name;
+				$name    = $this->name;
 				$context = $this->option . '.' . $name;
 
-                // @TODO should we do anything with this return value?
-				$result  = FOFPlatform::getInstance()->runPlugins($this->event_change_state, array($context, $this->id_list, $publish));
+				// @TODO should we do anything with this return value?
+				$result = FOFPlatform::getInstance()->runPlugins($this->event_change_state, array($context, $this->id_list, $publish));
 			}
 		}
 
@@ -2617,7 +2652,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * This method runs before a record is published
 	 *
-	 * @param   FOFTable  &$table  The table instance of the record being published
+	 * @param   FOFTable &$table The table instance of the record being published
 	 *
 	 * @return  boolean  True to allow the operation
 	 */
@@ -2638,7 +2673,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * This method runs after a record has been published
 	 *
-	 * @param   FOFTable  &$table  The table instance of the record which was published
+	 * @param   FOFTable &$table The table instance of the record which was published
 	 *
 	 * @return  boolean  True to allow the operation
 	 */
@@ -2741,7 +2776,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * This method runs before a record is hit
 	 *
-	 * @param   FOFTable  &$table  The table instance of the record being hit
+	 * @param   FOFTable &$table The table instance of the record being hit
 	 *
 	 * @return  boolean  True to allow the operation
 	 */
@@ -2762,7 +2797,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * This method runs after a record has been hit
 	 *
-	 * @param   FOFTable  &$table  The table instance of the record which was hit
+	 * @param   FOFTable &$table The table instance of the record which was hit
 	 *
 	 * @return  boolean  True to allow the operation
 	 */
@@ -2783,7 +2818,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Moves the current item up or down in the ordering list
 	 *
-	 * @param   string  $dirn  The direction and magnitude to use (2 means move up by 2 positions, -3 means move down three positions)
+	 * @param   string $dirn The direction and magnitude to use (2 means move up by 2 positions, -3 means move down three positions)
 	 *
 	 * @return  boolean  True on success
 	 */
@@ -2791,7 +2826,7 @@ class FOFModel extends FOFUtilsObject
 	{
 		$table = $this->getTable($this->table);
 
-		$id = $this->getId();
+		$id     = $this->getId();
 		$status = $table->load($id);
 
 		if (!$status)
@@ -2858,7 +2893,7 @@ class FOFModel extends FOFUtilsObject
 		}
 
 		$this->reset();
-		$this->id = (int) $id;
+		$this->id      = (int) $id;
 		$this->id_list = array($this->id);
 
 		return $this;
@@ -2867,7 +2902,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * This method runs before a record is moved
 	 *
-	 * @param   FOFTable  &$table  The table instance of the record being moved
+	 * @param   FOFTable &$table The table instance of the record being moved
 	 *
 	 * @return  boolean  True to allow the operation
 	 */
@@ -2888,7 +2923,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * This method runs after a record has been moved
 	 *
-	 * @param   FOFTable  &$table  The table instance of the record which was moved
+	 * @param   FOFTable &$table The table instance of the record which was moved
 	 *
 	 * @return  boolean  True to allow the operation
 	 */
@@ -2940,7 +2975,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * This method runs before a table is reordered
 	 *
-	 * @param   FOFTable  &$table  The table instance being reordered
+	 * @param   FOFTable &$table The table instance being reordered
 	 *
 	 * @return  boolean  True to allow the operation
 	 */
@@ -2971,7 +3006,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * This method runs after a table is reordered
 	 *
-	 * @param   FOFTable  &$table  The table instance which was reordered
+	 * @param   FOFTable &$table The table instance which was reordered
 	 *
 	 * @return  boolean  True to allow the operation
 	 */
@@ -3002,9 +3037,9 @@ class FOFModel extends FOFUtilsObject
 			JLoader::import('joomla.html.pagination');
 
 			// Prepare pagination values
-			$total = $this->getTotal();
+			$total      = $this->getTotal();
 			$limitstart = $this->getState('limitstart');
-			$limit = $this->getState('limit');
+			$limit      = $this->getState('limit');
 
 			// Create the pagination object
 			$this->pagination = new JPagination($total, $limitstart, $limit);
@@ -3067,7 +3102,7 @@ class FOFModel extends FOFUtilsObject
 		else
 		{
 			$fieldsArray = $this->getDbo()->getTableFields($tableName, true);
-			$fields = array_shift($fieldsArray);
+			$fields      = array_shift($fieldsArray);
 		}
 
 		return $fields;
@@ -3076,7 +3111,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Magic getter; allows to use the name of model state keys as properties
 	 *
-	 * @param   string  $name  The name of the variable to get
+	 * @param   string $name The name of the variable to get
 	 *
 	 * @return  mixed  The value of the variable
 	 */
@@ -3088,8 +3123,8 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Magic setter; allows to use the name of model state keys as properties
 	 *
-	 * @param   string  $name   The name of the variable
-	 * @param   mixed   $value  The value to set the variable to
+	 * @param   string $name  The name of the variable
+	 * @param   mixed  $value The value to set the variable to
 	 *
 	 * @return  void
 	 */
@@ -3102,8 +3137,8 @@ class FOFModel extends FOFUtilsObject
 	 * Magic caller; allows to use the name of model state keys as methods to
 	 * set their values.
 	 *
-	 * @param   string  $name       The name of the state variable to set
-	 * @param   mixed   $arguments  The value to set the state variable to
+	 * @param   string $name      The name of the state variable to set
+	 * @param   mixed  $arguments The value to set the state variable to
 	 *
 	 * @return  FOFModel  Reference to self
 	 */
@@ -3119,7 +3154,7 @@ class FOFModel extends FOFUtilsObject
 	 * Applies view access level filtering for the specified user. Useful to
 	 * filter a front-end items listing.
 	 *
-	 * @param   integer  $userID  The user ID to use. Skip it to use the currently logged in user.
+	 * @param   integer $userID The user ID to use. Skip it to use the currently logged in user.
 	 *
 	 * @return  FOFModel  Reference to self
 	 */
@@ -3127,7 +3162,7 @@ class FOFModel extends FOFUtilsObject
 	{
 		$user = FOFPlatform::getInstance()->getUser($userID);
 
-		$table = $this->getTable();
+		$table       = $this->getTable();
 		$accessField = $table->getColumnAlias('access');
 
 		$this->setState($accessField, $user->getAuthorisedViewLevels());
@@ -3138,7 +3173,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Method to set the database driver object
 	 *
-	 * @param   JDatabaseDriver  $db  A JDatabaseDriver based object
+	 * @param   JDatabaseDriver $db A JDatabaseDriver based object
 	 *
 	 * @return  void
 	 */
@@ -3150,8 +3185,8 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Set or get the backlisted filters
 	 *
-	 * @param   mixed    $list    A filter or list of filters to backlist. If null return the list of backlisted filter
-	 * @param   boolean  $reset   Reset the blacklist if true
+	 * @param   mixed   $list  A filter or list of filters to backlist. If null return the list of backlisted filter
+	 * @param   boolean $reset Reset the blacklist if true
 	 *
 	 * @return  void|array  Return an array of value if $list is null
 	 */
@@ -3178,8 +3213,8 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Get a behavior param
 	 *
-	 * @param   string  $name     The name of the param
-	 * @param   mixed   $default  The default value returned if not set
+	 * @param   string $name    The name of the param
+	 * @param   mixed  $default The default value returned if not set
 	 *
 	 * @return  mixed
 	 */
@@ -3191,8 +3226,8 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Set a behavior param
 	 *
-	 * @param   string  $name     The name of the param
-	 * @param   mixed   $value    The param value to set
+	 * @param   string $name  The name of the param
+	 * @param   mixed  $value The param value to set
 	 *
 	 * @return  FOFModel
 	 */
@@ -3206,7 +3241,7 @@ class FOFModel extends FOFUtilsObject
 	/**
 	 * Returns a record count for the query
 	 *
-	 * @param   string  $query  The query.
+	 * @param   string $query The query.
 	 *
 	 * @return  integer  Number of rows for query
 	 *
@@ -3218,30 +3253,17 @@ class FOFModel extends FOFUtilsObject
 	}
 
 	/**
-	 * This method can be overriden to automatically do something with the
-	 * list results array. You are supposed to modify the list which was passed
-	 * in the parameters; DO NOT return a new array!
-	 *
-	 * @param   array  &$resultArray  An array of objects, each row representing a record
-	 *
-	 * @return  void
-	 */
-	protected function onProcessList(&$resultArray)
-	{
-	}
-
-	/**
 	 * Clean the cache
 	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
+	 * @param   string  $group     The cache group
+	 * @param   integer $client_id The ID of the client
 	 *
 	 * @return  void
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
 		$conf         = JFactory::getConfig();
-        $platformDirs = FOFPlatform::getInstance()->getPlatformBaseDirs();
+		$platformDirs = FOFPlatform::getInstance()->getPlatformBaseDirs();
 
 		$options = array(
 			'defaultgroup' => ($group) ? $group : (isset($this->option) ? $this->option : JFactory::getApplication()->input->get('option')),

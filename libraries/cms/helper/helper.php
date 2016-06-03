@@ -19,7 +19,7 @@ class JHelper
 	/**
 	 * Gets the current language
 	 *
-	 * @param   boolean  $detectBrowser  Flag indicating whether to use the browser language as a fallback.
+	 * @param   boolean $detectBrowser Flag indicating whether to use the browser language as a fallback.
 	 *
 	 * @return  string  The language string
 	 *
@@ -27,7 +27,7 @@ class JHelper
 	 */
 	public function getCurrentLanguage($detectBrowser = true)
 	{
-		$app = JFactory::getApplication();
+		$app      = JFactory::getApplication();
 		$langCode = $app->input->cookie->getString(JApplicationHelper::getHash('language'));
 
 		// No cookie - let's try to detect browser language or use site default
@@ -49,7 +49,7 @@ class JHelper
 	/**
 	 * Gets the associated language ID
 	 *
-	 * @param   string  $langCode  The language code to look up
+	 * @param   string $langCode The language code to look up
 	 *
 	 * @return  integer  The language ID
 	 *
@@ -72,7 +72,7 @@ class JHelper
 	/**
 	 * Gets a row of data from a table
 	 *
-	 * @param   JTableInterface  $table  JTable instance for a row.
+	 * @param   JTableInterface $table JTable instance for a row.
 	 *
 	 * @return  array  Associative array of all columns and values for a row in a table.
 	 *
@@ -81,12 +81,12 @@ class JHelper
 	public function getRowData(JTableInterface $table)
 	{
 		$fields = $table->getFields();
-		$data = array();
+		$data   = array();
 
 		foreach ($fields as &$field)
 		{
-			$columnName = $field->Field;
-			$value = $table->$columnName;
+			$columnName        = $field->Field;
+			$value             = $table->$columnName;
 			$data[$columnName] = $value;
 		}
 
@@ -96,7 +96,7 @@ class JHelper
 	/**
 	 * Method to get an object containing all of the table columns and values.
 	 *
-	 * @param   JTableInterface  $table  JTable object.
+	 * @param   JTableInterface $table JTable object.
 	 *
 	 * @return  stdClass  Contains all of the columns and values.
 	 *
@@ -104,12 +104,12 @@ class JHelper
 	 */
 	public function getDataObject(JTableInterface $table)
 	{
-		$fields = $table->getFields();
+		$fields     = $table->getFields();
 		$dataObject = new stdClass;
 
 		foreach ($fields as $field)
 		{
-			$fieldName = $field->Field;
+			$fieldName              = $field->Field;
 			$dataObject->$fieldName = $table->get($fieldName);
 		}
 

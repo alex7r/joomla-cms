@@ -20,7 +20,7 @@ class InstallationFormFieldLanguage extends JFormFieldList
 	/**
 	 * The form field type.
 	 *
-	 * @var		string
+	 * @var        string
 	 * @since   1.6
 	 */
 	protected $type = 'Language';
@@ -73,7 +73,7 @@ class InstallationFormFieldLanguage extends JFormFieldList
 			}
 		}
 
-		if (!$options || $options  instanceof Exception)
+		if (!$options || $options instanceof Exception)
 		{
 			$options = array();
 		}
@@ -95,8 +95,8 @@ class InstallationFormFieldLanguage extends JFormFieldList
 	/**
 	 * Method to sort languages by name.
 	 *
-	 * @param   string  $a  The first value to determine sort
-	 * @param   string  $b  The second value to determine sort
+	 * @param   string $a The first value to determine sort
+	 * @param   string $b The second value to determine sort
 	 *
 	 * @return  string
 	 *

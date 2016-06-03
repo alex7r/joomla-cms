@@ -22,7 +22,7 @@ class JFacebookComment extends JFacebookObject
 	/**
 	 * Method to get a comment. Requires authentication.
 	 *
-	 * @param   string  $comment  The comment id.
+	 * @param   string $comment The comment id.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -36,7 +36,7 @@ class JFacebookComment extends JFacebookObject
 	/**
 	 * Method to delete a comment. Requires authentication and publish_stream permission.
 	 *
-	 * @param   string  $comment  The comment id.
+	 * @param   string $comment The comment id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -50,17 +50,17 @@ class JFacebookComment extends JFacebookObject
 	/**
 	 * Method to get a comment's comments. Requires authentication.
 	 *
-	 * @param   string   $comment  The comment id.
-	 * @param   integer  $limit    The number of objects per page.
-	 * @param   integer  $offset   The object's number on the page.
-	 * @param   string   $until    A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since    A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $comment The comment id.
+	 * @param   integer $limit   The number of objects per page.
+	 * @param   integer $offset  The object's number on the page.
+	 * @param   string  $until   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since   A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
 	 * @since   13.1
 	 */
-	public function getComments($comment, $limit=0, $offset=0, $until=null, $since=null)
+	public function getComments($comment, $limit = 0, $offset = 0, $until = null, $since = null)
 	{
 		return $this->getConnection($comment, 'comments', '', $limit, $offset, $until, $since);
 	}
@@ -68,8 +68,8 @@ class JFacebookComment extends JFacebookObject
 	/**
 	 * Method to comment on a comment. Requires authentication with publish_stream permission.
 	 *
-	 * @param   string  $comment  The comment id.
-	 * @param   string  $message  The comment's text.
+	 * @param   string $comment The comment id.
+	 * @param   string $message The comment's text.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
@@ -78,7 +78,7 @@ class JFacebookComment extends JFacebookObject
 	public function createComment($comment, $message)
 	{
 		// Set POST request parameters.
-		$data = array();
+		$data            = array();
 		$data['message'] = $message;
 
 		return $this->createConnection($comment, 'comments', $data);
@@ -87,17 +87,17 @@ class JFacebookComment extends JFacebookObject
 	/**
 	 * Method to get comment's likes. Requires authentication.
 	 *
-	 * @param   string   $comment  The comment id.
-	 * @param   integer  $limit    The number of objects per page.
-	 * @param   integer  $offset   The object's number on the page.
-	 * @param   string   $until    A unix timestamp or any date accepted by strtotime.
-	 * @param   string   $since    A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $comment The comment id.
+	 * @param   integer $limit   The number of objects per page.
+	 * @param   integer $offset  The object's number on the page.
+	 * @param   string  $until   A unix timestamp or any date accepted by strtotime.
+	 * @param   string  $since   A unix timestamp or any date accepted by strtotime.
 	 *
 	 * @return  mixed   The decoded JSON response or false if the client is not authenticated.
 	 *
 	 * @since   13.1
 	 */
-	public function getLikes($comment, $limit=0, $offset=0, $until=null, $since=null)
+	public function getLikes($comment, $limit = 0, $offset = 0, $until = null, $since = null)
 	{
 		return $this->getConnection($comment, 'likes', '', $limit, $offset, $until, $since);
 	}
@@ -105,7 +105,7 @@ class JFacebookComment extends JFacebookObject
 	/**
 	 * Method to like a comment. Requires authentication and publish_stram permission.
 	 *
-	 * @param   string  $comment  The comment id.
+	 * @param   string $comment The comment id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *
@@ -119,7 +119,7 @@ class JFacebookComment extends JFacebookObject
 	/**
 	 * Method to unlike a comment. Requires authentication and publish_stram permission.
 	 *
-	 * @param   string  $comment  The comment id.
+	 * @param   string $comment The comment id.
 	 *
 	 * @return  boolean Returns true if successful, and false otherwise.
 	 *

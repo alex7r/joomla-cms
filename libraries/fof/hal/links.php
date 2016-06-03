@@ -24,50 +24,11 @@ class FOFHalLinks
 	private $_links = array();
 
 	/**
-	 * Add a single link to the links collection
-	 *
-	 * @param   string      $rel        The relation of the link to the document. See RFC 5988
-	 *                                  http://tools.ietf.org/html/rfc5988#section-6.2.2 A document
-	 *                                  MUST always have a "self" link.
-	 * @param   FOFHalLink  $link       The actual link object
-	 * @param   boolean     $overwrite  When false and a link of $rel relation exists, an array of
-	 *                                  links is created. Otherwise the existing link is overwriten
-	 *                                  with the new one
-	 *
-	 * @return  boolean  True if the link was added to the collection
-	 */
-	public function addLink($rel, FOFHalLink $link, $overwrite = true)
-	{
-		if (!$link->check())
-		{
-			return false;
-		}
-
-		if (!array_key_exists($rel, $this->_links) || $overwrite)
-		{
-			$this->_links[$rel] = $link;
-		}
-		elseif (array_key_exists($rel, $this->_links) && !$overwrite)
-		{
-			if (!is_array($this->_links[$rel]))
-			{
-				$this->_links[$rel] = array($this->_links[$rel]);
-			}
-
-			$this->_links[$rel][] = $link;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	/**
 	 * Add multiple links to the links collection
 	 *
-	 * @param   string   $rel        The relation of the links to the document. See RFC 5988.
-	 * @param   array    $links      An array of FOFHalLink objects
-	 * @param   boolean  $overwrite  When false and a link of $rel relation exists, an array
+	 * @param   string  $rel         The relation of the links to the document. See RFC 5988.
+	 * @param   array   $links       An array of FOFHalLink objects
+	 * @param   boolean $overwrite   When false and a link of $rel relation exists, an array
 	 *                               of links is created. Otherwise the existing link is
 	 *                               overwriten with the new one
 	 *
@@ -100,9 +61,48 @@ class FOFHalLinks
 	}
 
 	/**
+	 * Add a single link to the links collection
+	 *
+	 * @param   string     $rel         The relation of the link to the document. See RFC 5988
+	 *                                  http://tools.ietf.org/html/rfc5988#section-6.2.2 A document
+	 *                                  MUST always have a "self" link.
+	 * @param   FOFHalLink $link        The actual link object
+	 * @param   boolean    $overwrite   When false and a link of $rel relation exists, an array of
+	 *                                  links is created. Otherwise the existing link is overwriten
+	 *                                  with the new one
+	 *
+	 * @return  boolean  True if the link was added to the collection
+	 */
+	public function addLink($rel, FOFHalLink $link, $overwrite = true)
+	{
+		if (!$link->check())
+		{
+			return false;
+		}
+
+		if (!array_key_exists($rel, $this->_links) || $overwrite)
+		{
+			$this->_links[$rel] = $link;
+		}
+		elseif (array_key_exists($rel, $this->_links) && !$overwrite)
+		{
+			if (!is_array($this->_links[$rel]))
+			{
+				$this->_links[$rel] = array($this->_links[$rel]);
+			}
+
+			$this->_links[$rel][] = $link;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/**
 	 * Returns the collection of links
 	 *
-	 * @param   string  $rel  Optional; the relation to return the links for
+	 * @param   string $rel Optional; the relation to return the links for
 	 *
 	 * @return  array|FOFHalLink
 	 */

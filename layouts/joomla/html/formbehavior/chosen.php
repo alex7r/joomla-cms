@@ -13,9 +13,9 @@ defined('JPATH_BASE') or die;
  * Layout variables
  * ---------------------
  *
- * @var  string   $selector       The id of the field
- * @var  array    $options        The options array
- * @var  boolean  $debug          Are we in debug mode?
+ * @var  string  $selector The id of the field
+ * @var  array   $options  The options array
+ * @var  boolean $debug    Are we in debug mode?
  */
 
 extract($displayData);

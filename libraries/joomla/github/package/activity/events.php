@@ -37,8 +37,8 @@ class JGithubPackageActivityEvents extends JGithubPackage
 	/**
 	 * List repository events.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @since   12.3
 	 *
@@ -57,8 +57,8 @@ class JGithubPackageActivityEvents extends JGithubPackage
 	/**
 	 * List issue events for a repository.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @since   12.3
 	 * @return  object
@@ -76,8 +76,8 @@ class JGithubPackageActivityEvents extends JGithubPackage
 	/**
 	 * List public events for a network of repositories.
 	 *
-	 * @param   string  $owner  Repository owner.
-	 * @param   string  $repo   Repository name.
+	 * @param   string $owner Repository owner.
+	 * @param   string $repo  Repository name.
 	 *
 	 * @since   12.3
 	 * @return  object
@@ -95,7 +95,7 @@ class JGithubPackageActivityEvents extends JGithubPackage
 	/**
 	 * List public events for an organization.
 	 *
-	 * @param   string  $org  Organisation.
+	 * @param   string $org Organisation.
 	 *
 	 * @since   12.3
 	 * @return  object
@@ -117,7 +117,7 @@ class JGithubPackageActivityEvents extends JGithubPackage
 	 * If you are authenticated as the given user, you will see private events.
 	 * Otherwise, you’ll only see public events.
 	 *
-	 * @param   string  $user  User name.
+	 * @param   string $user User name.
 	 *
 	 * @since   12.3
 	 * @return  object
@@ -135,7 +135,7 @@ class JGithubPackageActivityEvents extends JGithubPackage
 	/**
 	 * List public events that a user has received.
 	 *
-	 * @param   string  $user  User name.
+	 * @param   string $user User name.
 	 *
 	 * @since   12.3
 	 * @return  object
@@ -156,7 +156,7 @@ class JGithubPackageActivityEvents extends JGithubPackage
 	 * If you are authenticated as the given user, you will see your private events.
 	 * Otherwise, you’ll only see public events.
 	 *
-	 * @param   string  $user  User name.
+	 * @param   string $user User name.
 	 *
 	 * @since   12.3
 	 * @return  object
@@ -174,7 +174,7 @@ class JGithubPackageActivityEvents extends JGithubPackage
 	/**
 	 * List public events performed by a user.
 	 *
-	 * @param   string  $user  User name.
+	 * @param   string $user User name.
 	 *
 	 * @since   12.3
 	 * @return  object
@@ -195,8 +195,8 @@ class JGithubPackageActivityEvents extends JGithubPackage
 	 * This is the user’s organization dashboard.
 	 * You must be authenticated as the user to view this.
 	 *
-	 * @param   string  $user  User name.
-	 * @param   string  $org   Organisation.
+	 * @param   string $user User name.
+	 * @param   string $org  Organisation.
 	 *
 	 * @since   12.3
 	 * @return  object

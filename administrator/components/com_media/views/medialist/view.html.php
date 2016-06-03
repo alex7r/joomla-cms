@@ -19,7 +19,7 @@ class MediaViewMediaList extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 *
@@ -68,7 +68,7 @@ class MediaViewMediaList extends JViewLegacy
 	/**
 	 * Set the active folder
 	 *
-	 * @param   integer  $index  Folder position
+	 * @param   integer $index Folder position
 	 *
 	 * @return  void
 	 *
@@ -89,7 +89,7 @@ class MediaViewMediaList extends JViewLegacy
 	/**
 	 * Set the active image
 	 *
-	 * @param   integer  $index  Image position
+	 * @param   integer $index Image position
 	 *
 	 * @return  void
 	 *
@@ -110,7 +110,7 @@ class MediaViewMediaList extends JViewLegacy
 	/**
 	 * Set the active doc
 	 *
-	 * @param   integer  $index  Doc position
+	 * @param   integer $index Doc position
 	 *
 	 * @return  void
 	 *
@@ -131,7 +131,7 @@ class MediaViewMediaList extends JViewLegacy
 	/**
 	 * Set the active video
 	 *
-	 * @param   integer  $index  Doc position
+	 * @param   integer $index Doc position
 	 *
 	 * @return  void
 	 *

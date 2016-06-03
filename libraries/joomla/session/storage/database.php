@@ -20,7 +20,7 @@ class JSessionStorageDatabase extends JSessionStorage
 	/**
 	 * Read the data for a particular session identifier from the SessionHandler backend.
 	 *
-	 * @param   string  $id  The session identifier.
+	 * @param   string $id The session identifier.
 	 *
 	 * @return  string  The session data.
 	 *
@@ -36,8 +36,8 @@ class JSessionStorageDatabase extends JSessionStorage
 			// Get the session data from the database table.
 			$query = $db->getQuery(true)
 				->select($db->quoteName('data'))
-			->from($db->quoteName('#__session'))
-			->where($db->quoteName('session_id') . ' = ' . $db->quote($id));
+				->from($db->quoteName('#__session'))
+				->where($db->quoteName('session_id') . ' = ' . $db->quote($id));
 
 			$db->setQuery($query);
 
@@ -56,8 +56,8 @@ class JSessionStorageDatabase extends JSessionStorage
 	/**
 	 * Write session data to the SessionHandler backend.
 	 *
-	 * @param   string  $id    The session identifier.
-	 * @param   string  $data  The session data.
+	 * @param   string $id   The session identifier.
+	 * @param   string $data The session data.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
@@ -85,10 +85,12 @@ class JSessionStorageDatabase extends JSessionStorage
 			{
 				return false;
 			}
+
 			/* Since $db->execute did not throw an exception, so the query was successful.
 			Either the data changed, or the data was identical.
 			In either case we are done.
 			*/
+
 			return true;
 		}
 		catch (RuntimeException $e)
@@ -100,7 +102,7 @@ class JSessionStorageDatabase extends JSessionStorage
 	/**
 	 * Destroy the data for a particular session identifier in the SessionHandler backend.
 	 *
-	 * @param   string  $id  The session identifier.
+	 * @param   string $id The session identifier.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *
@@ -131,7 +133,7 @@ class JSessionStorageDatabase extends JSessionStorage
 	/**
 	 * Garbage collect stale sessions from the SessionHandler backend.
 	 *
-	 * @param   integer  $lifetime  The maximum age of a session.
+	 * @param   integer $lifetime The maximum age of a session.
 	 *
 	 * @return  boolean  True on success, false otherwise.
 	 *

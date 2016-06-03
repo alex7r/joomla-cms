@@ -67,9 +67,9 @@ abstract class JDatabaseIterator implements Countable, Iterator
 	/**
 	 * Database iterator constructor.
 	 *
-	 * @param   mixed   $cursor  The database cursor.
-	 * @param   string  $column  An option column to use as the iterator key.
-	 * @param   string  $class   The class of object that is returned.
+	 * @param   mixed  $cursor The database cursor.
+	 * @param   string $column An option column to use as the iterator key.
+	 * @param   string $class  The class of object that is returned.
 	 *
 	 * @throws  InvalidArgumentException
 	 */
@@ -80,50 +80,11 @@ abstract class JDatabaseIterator implements Countable, Iterator
 			throw new InvalidArgumentException(sprintf('new %s(*%s*, cursor)', get_class($this), gettype($class)));
 		}
 
-		$this->cursor = $cursor;
-		$this->class = $class;
-		$this->_column = $column;
+		$this->cursor   = $cursor;
+		$this->class    = $class;
+		$this->_column  = $column;
 		$this->_fetched = 0;
 		$this->next();
-	}
-
-	/**
-	 * Database iterator destructor.
-	 *
-	 * @since   12.1
-	 */
-	public function __destruct()
-	{
-		if ($this->cursor)
-		{
-			$this->freeResult($this->cursor);
-		}
-	}
-
-	/**
-	 * The current element in the iterator.
-	 *
-	 * @return  object
-	 *
-	 * @see     Iterator::current()
-	 * @since   12.1
-	 */
-	public function current()
-	{
-		return $this->_current;
-	}
-
-	/**
-	 * The key of the current element in the iterator.
-	 *
-	 * @return  scalar
-	 *
-	 * @see     Iterator::key()
-	 * @since   12.1
-	 */
-	public function key()
-	{
-		return $this->_key;
 	}
 
 	/**
@@ -157,6 +118,63 @@ abstract class JDatabaseIterator implements Countable, Iterator
 	}
 
 	/**
+	 * Method to fetch a row from the result set cursor as an object.
+	 *
+	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
+	 *
+	 * @since   12.1
+	 */
+	abstract protected function fetchObject();
+
+	/**
+	 * Database iterator destructor.
+	 *
+	 * @since   12.1
+	 */
+	public function __destruct()
+	{
+		if ($this->cursor)
+		{
+			$this->freeResult($this->cursor);
+		}
+	}
+
+	/**
+	 * Method to free up the memory used for the result set.
+	 *
+	 * @return  void
+	 *
+	 * @since   12.1
+	 */
+	abstract protected function freeResult();
+
+	/**
+	 * The current element in the iterator.
+	 *
+	 * @return  object
+	 *
+	 * @see     Iterator::current()
+	 * @since   12.1
+	 */
+	public function current()
+	{
+		return $this->_current;
+	}
+
+	/**
+	 * The key of the current element in the iterator.
+	 *
+	 * @return  scalar
+	 *
+	 * @see     Iterator::key()
+	 * @since   12.1
+	 */
+	public function key()
+	{
+		return $this->_key;
+	}
+
+	/**
 	 * Rewinds the iterator.
 	 *
 	 * This iterator cannot be rewound.
@@ -182,22 +200,4 @@ abstract class JDatabaseIterator implements Countable, Iterator
 	{
 		return (boolean) $this->_current;
 	}
-
-	/**
-	 * Method to fetch a row from the result set cursor as an object.
-	 *
-	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
-	 *
-	 * @since   12.1
-	 */
-	abstract protected function fetchObject();
-
-	/**
-	 * Method to free up the memory used for the result set.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.1
-	 */
-	abstract protected function freeResult();
 }

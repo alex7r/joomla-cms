@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    FrameworkOnFramework
- * @subpackage form
+ * @package     FrameworkOnFramework
+ * @subpackage  form
  * @copyright   Copyright (C) 2010 - 2015 Nicholas K. Dionysopoulos / Akeeba Ltd. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 // Protect from unauthorized access
 defined('FOF_INCLUDED') or die;
@@ -33,15 +33,15 @@ class FOFFormHeaderFieldfilterable extends FOFFormHeaderFieldsearchable
 		$name        = $this->element['searchfieldname'] ? $this->element['searchfieldname'] : $this->name;
 		$placeholder = ' placeholder="' . JText::_($placeholder) . '"';
 
-		$single      = in_array($this->element['single'], $valide) ? true : false;
-		$showMethod  = in_array($this->element['showmethod'], $valide) ? true : false;
-		$method      = $this->element['method'] ? $this->element['method'] : 'between';
-		$fromName    = $this->element['fromname'] ? $this->element['fromname'] : 'from';
-		$toName      = $this->element['toname'] ? $this->element['toname'] : 'to';
+		$single     = in_array($this->element['single'], $valide) ? true : false;
+		$showMethod = in_array($this->element['showmethod'], $valide) ? true : false;
+		$method     = $this->element['method'] ? $this->element['method'] : 'between';
+		$fromName   = $this->element['fromname'] ? $this->element['fromname'] : 'from';
+		$toName     = $this->element['toname'] ? $this->element['toname'] : 'to';
 
-		$values      = $this->form->getModel()->getState($name);
-		$fromValue   = $values[$fromName];
-		$toValue     = $values[$toName];
+		$values    = $this->form->getModel()->getState($name);
+		$fromValue = $values[$fromName];
+		$toValue   = $values[$toName];
 
 		// Initialize JavaScript field attributes.
 		if ($this->element['onchange'])
@@ -55,14 +55,15 @@ class FOFFormHeaderFieldfilterable extends FOFFormHeaderFieldsearchable
 
 		if ($showMethod)
 		{
-			$html  = '<input type="text" name="' . $name . '[method]" value="'. $method . '" />';
-		} else
+			$html = '<input type="text" name="' . $name . '[method]" value="' . $method . '" />';
+		}
+		else
 		{
-			$html  = '<input type="hidden" name="' . $name . '[method]" value="'. $method . '" />';
+			$html = '<input type="hidden" name="' . $name . '[method]" value="' . $method . '" />';
 		}
 
 		$html .= '<input type="text" name="' . $name . '[from]" id="' . $this->id . '_' . $fromName . '"' . ' value="'
-				. htmlspecialchars($fromValue, ENT_COMPAT, 'UTF-8') . '"' . $filterclass . $size . $placeholder . $onchange . $maxLength . '/>';
+			. htmlspecialchars($fromValue, ENT_COMPAT, 'UTF-8') . '"' . $filterclass . $size . $placeholder . $onchange . $maxLength . '/>';
 
 		if (!$single)
 		{

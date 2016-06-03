@@ -19,7 +19,7 @@ class UsersModelGroups extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JController
 	 * @since   1.6
@@ -38,50 +38,6 @@ class UsersModelGroups extends JModelList
 		}
 
 		parent::__construct($config);
-	}
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function populateState($ordering = 'a.lft', $direction = 'asc')
-	{
-		// Load the filter state.
-		$this->setState('filter.search', $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_users');
-		$this->setState('params', $params);
-
-		// List state information.
-		parent::populateState($ordering, $direction);
-	}
-
-	/**
-	 * Method to get a store id based on model configuration state.
-	 *
-	 * This is necessary because the model is used by the component and
-	 * different modules that might need different sets of data or different
-	 * ordering requirements.
-	 *
-	 * @param   string  $id  A prefix for the store id.
-	 *
-	 * @return  string  A store id.
-	 */
-	protected function getStoreId($id = '')
-	{
-		// Compile the store id.
-		$id .= ':' . $this->getState('filter.search');
-
-		return parent::getStoreId($id);
 	}
 
 	/**
@@ -138,6 +94,7 @@ class UsersModelGroups extends JModelList
 			catch (RuntimeException $e)
 			{
 				$this->setError($e->getMessage());
+
 				return false;
 			}
 
@@ -154,15 +111,16 @@ class UsersModelGroups extends JModelList
 			catch (RuntimeException $e)
 			{
 				$this->setError($e->getMessage());
+
 				return false;
 			}
 
 			// Inject the values back into the array.
 			foreach ($items as $item)
 			{
-				$item->count_enabled   = isset($countEnabled[$item->id]) ? (int) $countEnabled[$item->id]['user_count'] : 0;
-				$item->count_disabled  = isset($countDisabled[$item->id]) ? (int) $countDisabled[$item->id]['user_count'] : 0;
-				$item->user_count      = $item->count_enabled + $item->count_disabled;
+				$item->count_enabled  = isset($countEnabled[$item->id]) ? (int) $countEnabled[$item->id]['user_count'] : 0;
+				$item->count_disabled = isset($countDisabled[$item->id]) ? (int) $countDisabled[$item->id]['user_count'] : 0;
+				$item->user_count     = $item->count_enabled + $item->count_disabled;
 			}
 
 			// Add the items to the internal cache.
@@ -173,6 +131,50 @@ class UsersModelGroups extends JModelList
 	}
 
 	/**
+	 * Method to get a store id based on model configuration state.
+	 *
+	 * This is necessary because the model is used by the component and
+	 * different modules that might need different sets of data or different
+	 * ordering requirements.
+	 *
+	 * @param   string $id A prefix for the store id.
+	 *
+	 * @return  string  A store id.
+	 */
+	protected function getStoreId($id = '')
+	{
+		// Compile the store id.
+		$id .= ':' . $this->getState('filter.search');
+
+		return parent::getStoreId($id);
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
+	 *
+	 * @return  void
+	 *
+	 * @since   1.6
+	 */
+	protected function populateState($ordering = 'a.lft', $direction = 'asc')
+	{
+		// Load the filter state.
+		$this->setState('filter.search', $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string'));
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_users');
+		$this->setState('params', $params);
+
+		// List state information.
+		parent::populateState($ordering, $direction);
+	}
+
+	/**
 	 * Build an SQL query to load the list data.
 	 *
 	 * @return  JDatabaseQuery
@@ -180,7 +182,7 @@ class UsersModelGroups extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the required fields from the table.

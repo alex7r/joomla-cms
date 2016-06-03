@@ -31,7 +31,7 @@ class TagsViewTags extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed   A string if successful, otherwise an Error object.
 	 */
@@ -123,7 +123,7 @@ class TagsViewTags extends JViewLegacy
 				}
 			}
 		}
-		elseif(!empty($items[0]))
+		elseif (!empty($items[0]))
 		{
 			// Merge so that tag params take priority
 			$temp->merge($items[0]->params);

@@ -19,7 +19,7 @@ class ContenthistoryModelHistory extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 *
 	 * @see     JControllerLegacy
 	 * @since   3.2
@@ -29,10 +29,10 @@ class ContenthistoryModelHistory extends JModelList
 		if (empty($config['filter_fields']))
 		{
 			$config['filter_fields'] = array(
-					'version_id', 'h.version_id',
-					'version_note', 'h.version_note',
-					'save_date', 'h.save_date',
-					'editor_user_id', 'h.editor_user_id',
+				'version_id', 'h.version_id',
+				'version_note', 'h.version_note',
+				'save_date', 'h.save_date',
+				'editor_user_id', 'h.editor_user_id',
 			);
 		}
 
@@ -40,45 +40,9 @@ class ContenthistoryModelHistory extends JModelList
 	}
 
 	/**
-	 * Method to test whether a history record can be deleted. Note that we check whether we have edit permissions
-	 * for the content item row.
-	 *
-	 * @param   JTableContenthistory  $record  A JTable object.
-	 *
-	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
-	 *
-	 * @since   3.2
-	 */
-	protected function canEdit($record)
-	{
-		$result = false;
-
-		if (!empty($record->ucm_type_id))
-		{
-			// Check that the type id matches the type alias
-			$typeAlias = JFactory::getApplication()->input->get('type_alias');
-
-			/** @var JTableContenttype $contentTypeTable */
-			$contentTypeTable = JTable::getInstance('Contenttype', 'JTable');
-
-			if ($contentTypeTable->getTypeId($typeAlias) == $record->ucm_type_id)
-			{
-				/**
-				 * Make sure user has edit privileges for this content item. Note that we use edit permissions
-				 * for the content item, not delete permissions for the content history row.
-				 */
-				$user   = JFactory::getUser();
-				$result = $user->authorise('core.edit', $typeAlias . '.' . (int) $record->ucm_item_id);
-			}
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Method to delete one or more records from content history table.
 	 *
-	 * @param   array  &$pks  An array of record primary keys.
+	 * @param   array &$pks An array of record primary keys.
 	 *
 	 * @return  boolean  True if successful, false if an error occurs.
 	 *
@@ -86,7 +50,7 @@ class ContenthistoryModelHistory extends JModelList
 	 */
 	public function delete(&$pks)
 	{
-		$pks = (array) $pks;
+		$pks   = (array) $pks;
 		$table = $this->getTable();
 
 		// Iterate the items to delete each one.
@@ -138,6 +102,58 @@ class ContenthistoryModelHistory extends JModelList
 	}
 
 	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string $type   The table name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
+	 *
+	 * @since   3.2
+	 */
+	public function getTable($type = 'Contenthistory', $prefix = 'JTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
+	 * Method to test whether a history record can be deleted. Note that we check whether we have edit permissions
+	 * for the content item row.
+	 *
+	 * @param   JTableContenthistory $record A JTable object.
+	 *
+	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
+	 *
+	 * @since   3.2
+	 */
+	protected function canEdit($record)
+	{
+		$result = false;
+
+		if (!empty($record->ucm_type_id))
+		{
+			// Check that the type id matches the type alias
+			$typeAlias = JFactory::getApplication()->input->get('type_alias');
+
+			/** @var JTableContenttype $contentTypeTable */
+			$contentTypeTable = JTable::getInstance('Contenttype', 'JTable');
+
+			if ($contentTypeTable->getTypeId($typeAlias) == $record->ucm_type_id)
+			{
+				/**
+				 * Make sure user has edit privileges for this content item. Note that we use edit permissions
+				 * for the content item, not delete permissions for the content history row.
+				 */
+				$user   = JFactory::getUser();
+				$result = $user->authorise('core.edit', $typeAlias . '.' . (int) $record->ucm_item_id);
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Method to get an array of data items.
 	 *
 	 * @return  mixed  An array of data items on success, false on failure.
@@ -183,25 +199,9 @@ class ContenthistoryModelHistory extends JModelList
 	}
 
 	/**
-	 * Method to get a table object, load it if necessary.
-	 *
-	 * @param   string  $type    The table name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A JTable object
-	 *
-	 * @since   3.2
-	 */
-	public function getTable($type = 'Contenthistory', $prefix = 'JTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
-
-	/**
 	 * Method to toggle on and off the keep forever value for one or more records from content history table.
 	 *
-	 * @param   array  &$pks  An array of record primary keys.
+	 * @param   array &$pks An array of record primary keys.
 	 *
 	 * @return  boolean  True if successful, false if an error occurs.
 	 *
@@ -209,7 +209,7 @@ class ContenthistoryModelHistory extends JModelList
 	 */
 	public function keep(&$pks)
 	{
-		$pks = (array) $pks;
+		$pks   = (array) $pks;
 		$table = $this->getTable();
 
 		// Iterate the items to delete each one.
@@ -267,8 +267,8 @@ class ContenthistoryModelHistory extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -276,9 +276,9 @@ class ContenthistoryModelHistory extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$input = JFactory::getApplication()->input;
-		$itemId = $input->get('item_id', 0, 'integer');
-		$typeId = $input->get('type_id', 0, 'integer');
+		$input     = JFactory::getApplication()->input;
+		$itemId    = $input->get('item_id', 0, 'integer');
+		$typeId    = $input->get('type_id', 0, 'integer');
 		$typeAlias = $input->get('type_alias', '', 'string');
 
 		$this->setState('item_id', $itemId);
@@ -295,6 +295,35 @@ class ContenthistoryModelHistory extends JModelList
 	}
 
 	/**
+	 * Get the sha1 hash value for the current item being edited.
+	 *
+	 * @return  string  sha1 hash of row data
+	 *
+	 * @since   3.2
+	 */
+	protected function getSha1Hash()
+	{
+		$result    = false;
+		$typeTable = JTable::getInstance('Contenttype', 'JTable');
+		$typeId    = JFactory::getApplication()->input->getInteger('type_id', 0);
+		$typeTable->load($typeId);
+		$typeAliasArray = explode('.', $typeTable->type_alias);
+		JTable::addIncludePath(JPATH_ROOT . '/administrator/components/' . $typeAliasArray[0] . '/tables');
+		$contentTable = $typeTable->getContentTable();
+		$keyValue     = JFactory::getApplication()->input->getInteger('item_id', 0);
+
+		if ($contentTable && $contentTable->load($keyValue))
+		{
+			$helper = new JHelper;
+
+			$dataObject = $helper->getDataObject($contentTable);
+			$result     = $this->getTable('Contenthistory', 'JTable')->getSha1(json_encode($dataObject), $typeTable);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Build an SQL query to load the list data.
 	 *
 	 * @return  JDatabaseQuery
@@ -304,7 +333,7 @@ class ContenthistoryModelHistory extends JModelList
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		// Select the required fields from the table.
@@ -315,48 +344,18 @@ class ContenthistoryModelHistory extends JModelList
 				'h.character_count, h.sha1_hash, h.version_data, h.keep_forever'
 			)
 		)
-		->from($db->quoteName('#__ucm_history') . ' AS h')
-		->where($db->quoteName('h.ucm_item_id') . ' = ' . (int) $this->getState('item_id'))
-		->where($db->quoteName('h.ucm_type_id') . ' = ' . (int) $this->getState('type_id'))
-
-		// Join over the users for the editor
-		->select('uc.name AS editor')
-		->join('LEFT', '#__users AS uc ON uc.id = h.editor_user_id');
+			->from($db->quoteName('#__ucm_history') . ' AS h')
+			->where($db->quoteName('h.ucm_item_id') . ' = ' . (int) $this->getState('item_id'))
+			->where($db->quoteName('h.ucm_type_id') . ' = ' . (int) $this->getState('type_id'))
+			// Join over the users for the editor
+			->select('uc.name AS editor')
+			->join('LEFT', '#__users AS uc ON uc.id = h.editor_user_id');
 
 		// Add the list ordering clause.
-		$orderCol = $this->state->get('list.ordering');
+		$orderCol  = $this->state->get('list.ordering');
 		$orderDirn = $this->state->get('list.direction');
 		$query->order($db->quoteName($orderCol) . $orderDirn);
 
 		return $query;
-	}
-
-	/**
-	 * Get the sha1 hash value for the current item being edited.
-	 *
-	 * @return  string  sha1 hash of row data
-	 *
-	 * @since   3.2
-	 */
-	protected function getSha1Hash()
-	{
-		$result = false;
-		$typeTable = JTable::getInstance('Contenttype', 'JTable');
-		$typeId = JFactory::getApplication()->input->getInteger('type_id', 0);
-		$typeTable->load($typeId);
-		$typeAliasArray = explode('.', $typeTable->type_alias);
-		JTable::addIncludePath(JPATH_ROOT . '/administrator/components/' . $typeAliasArray[0] . '/tables');
-		$contentTable = $typeTable->getContentTable();
-		$keyValue = JFactory::getApplication()->input->getInteger('item_id', 0);
-
-		if ($contentTable && $contentTable->load($keyValue))
-		{
-			$helper = new JHelper;
-
-			$dataObject = $helper->getDataObject($contentTable);
-			$result = $this->getTable('Contenthistory', 'JTable')->getSha1(json_encode($dataObject), $typeTable);
-		}
-
-		return $result;
 	}
 }

@@ -27,9 +27,31 @@ class BannersControllerBanner extends JControllerForm
 	protected $text_prefix = 'COM_BANNERS_BANNER';
 
 	/**
+	 * Method to run batch operations.
+	 *
+	 * @param   string $model The model
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 */
+	public function batch($model = null)
+	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		// Set the model
+		$model = $this->getModel('Banner', '', array());
+
+		// Preset the redirect
+		$this->setRedirect(JRoute::_('index.php?option=com_banners&view=banners' . $this->getRedirectToListAppend(), false));
+
+		return parent::batch($model);
+	}
+
+	/**
 	 * Method override to check if you can add a new record.
 	 *
-	 * @param   array  $data  An array of input data.
+	 * @param   array $data An array of input data.
 	 *
 	 * @return  boolean
 	 *
@@ -59,8 +81,8 @@ class BannersControllerBanner extends JControllerForm
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
+	 * @param   array  $data An array of input data.
+	 * @param   string $key  The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *
@@ -84,27 +106,5 @@ class BannersControllerBanner extends JControllerForm
 
 		// Since there is no asset tracking, revert to the component permissions.
 		return parent::allowEdit($data, $key);
-	}
-
-	/**
-	 * Method to run batch operations.
-	 *
-	 * @param   string  $model  The model
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 */
-	public function batch($model = null)
-	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-		// Set the model
-		$model = $this->getModel('Banner', '', array());
-
-		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_banners&view=banners' . $this->getRedirectToListAppend(), false));
-
-		return parent::batch($model);
 	}
 }

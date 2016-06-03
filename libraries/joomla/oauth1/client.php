@@ -57,22 +57,22 @@ abstract class JOAuth1Client
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry         $options      OAuth1Client options object.
-	 * @param   JHttp            $client       The HTTP client object.
-	 * @param   JInput           $input        The input object
-	 * @param   JApplicationWeb  $application  The application object
-	 * @param   string           $version      Specify the OAuth version. By default we are using 1.0a.
+	 * @param   Registry        $options     OAuth1Client options object.
+	 * @param   JHttp           $client      The HTTP client object.
+	 * @param   JInput          $input       The input object
+	 * @param   JApplicationWeb $application The application object
+	 * @param   string          $version     Specify the OAuth version. By default we are using 1.0a.
 	 *
 	 * @since   13.1
 	 */
 	public function __construct(Registry $options = null, JHttp $client = null, JInput $input = null, JApplicationWeb $application = null,
-		$version = null)
+	                            $version = null)
 	{
-		$this->options = isset($options) ? $options : new Registry;
-		$this->client = isset($client) ? $client : JHttpFactory::getHttp($this->options);
-		$this->input = isset($input) ? $input : JFactory::getApplication()->input;
+		$this->options     = isset($options) ? $options : new Registry;
+		$this->client      = isset($client) ? $client : JHttpFactory::getHttp($this->options);
+		$this->input       = isset($input) ? $input : JFactory::getApplication()->input;
 		$this->application = isset($application) ? $application : new JApplicationWeb;
-		$this->version = isset($version) ? $version : '1.0a';
+		$this->version     = isset($version) ? $version : '1.0a';
 	}
 
 	/**
@@ -148,6 +148,16 @@ abstract class JOAuth1Client
 	}
 
 	/**
+	 * Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful;
+	 * returns a 401 status code and an error message if not.
+	 *
+	 * @return  array  The decoded JSON response
+	 *
+	 * @since   13.1
+	 */
+	abstract public function verifyCredentials();
+
+	/**
 	 * Method used to get a request token.
 	 *
 	 * @return  void
@@ -187,6 +197,316 @@ abstract class JOAuth1Client
 		$session->set('key', $this->token['key'], 'oauth_token');
 		$session->set('secret', $this->token['secret'], 'oauth_token');
 	}
+
+	/**
+	 * Get an option from the JOauth1aClient instance.
+	 *
+	 * @param   string $key The name of the option to get
+	 *
+	 * @return  mixed  The option value
+	 *
+	 * @since   13.1
+	 */
+	public function getOption($key)
+	{
+		return $this->options->get($key);
+	}
+
+	/**
+	 * Method used to make an OAuth request.
+	 *
+	 * @param   string $url        The request URL.
+	 * @param   string $method     The request method.
+	 * @param   array  $parameters Array containing request parameters.
+	 * @param   mixed  $data       The POST request data.
+	 * @param   array  $headers    An array of name-value pairs to include in the header of the request
+	 *
+	 * @return  JHttpResponse
+	 *
+	 * @since   13.1
+	 * @throws  DomainException
+	 */
+	public function oauthRequest($url, $method, $parameters, $data = array(), $headers = array())
+	{
+		// Set the parameters.
+		$defaults = array(
+			'oauth_consumer_key'     => $this->getOption('consumer_key'),
+			'oauth_signature_method' => 'HMAC-SHA1',
+			'oauth_version'          => '1.0',
+			'oauth_nonce'            => $this->generateNonce(),
+			'oauth_timestamp'        => time()
+		);
+
+		$parameters = array_merge($parameters, $defaults);
+
+		// Do not encode multipart parameters. Do not include $data in the signature if $data is not array.
+		if (isset($headers['Content-Type']) && strpos($headers['Content-Type'], 'multipart/form-data') !== false || !is_array($data))
+		{
+			$oauth_headers = $parameters;
+		}
+		else
+		{
+			// Use all parameters for the signature.
+			$oauth_headers = array_merge($parameters, $data);
+		}
+
+		// Sign the request.
+		$oauth_headers = $this->_signRequest($url, $method, $oauth_headers);
+
+		// Get parameters for the Authorisation header.
+		if (is_array($data))
+		{
+			$oauth_headers = array_diff_key($oauth_headers, $data);
+		}
+
+		// Send the request.
+		switch ($method)
+		{
+			case 'GET':
+				$url      = $this->toUrl($url, $data);
+				$response = $this->client->get($url, array('Authorization' => $this->_createHeader($oauth_headers)));
+				break;
+			case 'POST':
+				$headers  = array_merge($headers, array('Authorization' => $this->_createHeader($oauth_headers)));
+				$response = $this->client->post($url, $data, $headers);
+				break;
+			case 'PUT':
+				$headers  = array_merge($headers, array('Authorization' => $this->_createHeader($oauth_headers)));
+				$response = $this->client->put($url, $data, $headers);
+				break;
+			case 'DELETE':
+				$headers  = array_merge($headers, array('Authorization' => $this->_createHeader($oauth_headers)));
+				$response = $this->client->delete($url, $headers);
+				break;
+		}
+
+		// Validate the response code.
+		$this->validateResponse($url, $response);
+
+		return $response;
+	}
+
+	/**
+	 * Method used to generate the current nonce.
+	 *
+	 * @return  string  The current nonce.
+	 *
+	 * @since   13.1
+	 */
+	public static function generateNonce()
+	{
+		$mt   = microtime();
+		$rand = JCrypt::genRandomBytes();
+
+		// The md5s look nicer than numbers.
+		return md5($mt . $rand);
+	}
+
+	/**
+	 * Method used to sign requests.
+	 *
+	 * @param   string $url        The URL to sign.
+	 * @param   string $method     The request method.
+	 * @param   array  $parameters Array containing request parameters.
+	 *
+	 * @return  array
+	 *
+	 * @since   13.1
+	 */
+	private function _signRequest($url, $method, $parameters)
+	{
+		// Create the signature base string.
+		$base = $this->_baseString($url, $method, $parameters);
+
+		$parameters['oauth_signature'] = $this->safeEncode(
+			base64_encode(
+				hash_hmac('sha1', $base, $this->_prepareSigningKey(), true)
+			)
+		);
+
+		return $parameters;
+	}
+
+	/**
+	 * Prepare the signature base string.
+	 *
+	 * @param   string $url        The URL to sign.
+	 * @param   string $method     The request method.
+	 * @param   array  $parameters Array containing request parameters.
+	 *
+	 * @return  string  The base string.
+	 *
+	 * @since   13.1
+	 */
+	private function _baseString($url, $method, $parameters)
+	{
+		// Sort the parameters alphabetically
+		uksort($parameters, 'strcmp');
+
+		// Encode parameters.
+		foreach ($parameters as $key => $value)
+		{
+			$key = $this->safeEncode($key);
+
+			if (is_array($value))
+			{
+				foreach ($value as $v)
+				{
+					$v    = $this->safeEncode($v);
+					$kv[] = "{$key}={$v}";
+				}
+			}
+			else
+			{
+				$value = $this->safeEncode($value);
+				$kv[]  = "{$key}={$value}";
+			}
+		}
+		// Form the parameter string.
+		$params = implode('&', $kv);
+
+		// Signature base string elements.
+		$base = array(
+			$method,
+			$url,
+			$params
+		);
+
+		// Return the base string.
+		return implode('&', $this->safeEncode($base));
+	}
+
+	/**
+	 * Encodes the string or array passed in a way compatible with OAuth.
+	 * If an array is passed each array value will will be encoded.
+	 *
+	 * @param   mixed $data The scalar or array to encode.
+	 *
+	 * @return  string  $data encoded in a way compatible with OAuth.
+	 *
+	 * @since   13.1
+	 */
+	public function safeEncode($data)
+	{
+		if (is_array($data))
+		{
+			return array_map(array($this, 'safeEncode'), $data);
+		}
+		elseif (is_scalar($data))
+		{
+			return str_ireplace(
+				array('+', '%7E'),
+				array(' ', '~'),
+				rawurlencode($data)
+			);
+		}
+		else
+		{
+			return '';
+		}
+	}
+
+	/**
+	 * Prepares the OAuth signing key.
+	 *
+	 * @return  string  The prepared signing key.
+	 *
+	 * @since   13.1
+	 */
+	private function _prepareSigningKey()
+	{
+		return $this->safeEncode($this->getOption('consumer_secret')) . '&' . $this->safeEncode(($this->token) ? $this->token['secret'] : '');
+	}
+
+	/**
+	 * Method to create the URL formed string with the parameters.
+	 *
+	 * @param   string $url        The request URL.
+	 * @param   array  $parameters Array containing request parameters.
+	 *
+	 * @return  string  The formed URL.
+	 *
+	 * @since   13.1
+	 */
+	public function toUrl($url, $parameters)
+	{
+		foreach ($parameters as $key => $value)
+		{
+			if (is_array($value))
+			{
+				foreach ($value as $v)
+				{
+					if (strpos($url, '?') === false)
+					{
+						$url .= '?' . $key . '=' . $v;
+					}
+					else
+					{
+						$url .= '&' . $key . '=' . $v;
+					}
+				}
+			}
+			else
+			{
+				if (strpos($value, ' ') !== false)
+				{
+					$value = $this->safeEncode($value);
+				}
+
+				if (strpos($url, '?') === false)
+				{
+					$url .= '?' . $key . '=' . $value;
+				}
+				else
+				{
+					$url .= '&' . $key . '=' . $value;
+				}
+			}
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Method used to create the header for the POST request.
+	 *
+	 * @param   array $parameters Array containing request parameters.
+	 *
+	 * @return  string  The header.
+	 *
+	 * @since   13.1
+	 */
+	private function _createHeader($parameters)
+	{
+		$header = 'OAuth ';
+
+		foreach ($parameters as $key => $value)
+		{
+			if (!strcmp($header, 'OAuth '))
+			{
+				$header .= $key . '="' . $this->safeEncode($value) . '"';
+			}
+			else
+			{
+				$header .= ', ' . $key . '="' . $value . '"';
+			}
+		}
+
+		return $header;
+	}
+
+	/**
+	 * Method to validate a response.
+	 *
+	 * @param   string        $url      The request URL.
+	 * @param   JHttpResponse $response The response to validate.
+	 *
+	 * @return  void
+	 *
+	 * @since   13.1
+	 * @throws  DomainException
+	 */
+	abstract public function validateResponse($url, $response);
 
 	/**
 	 * Method used to authorise the application.
@@ -240,330 +560,10 @@ abstract class JOAuth1Client
 	}
 
 	/**
-	 * Method used to make an OAuth request.
-	 *
-	 * @param   string  $url         The request URL.
-	 * @param   string  $method      The request method.
-	 * @param   array   $parameters  Array containing request parameters.
-	 * @param   mixed   $data        The POST request data.
-	 * @param   array   $headers     An array of name-value pairs to include in the header of the request
-	 *
-	 * @return  JHttpResponse
-	 *
-	 * @since   13.1
-	 * @throws  DomainException
-	 */
-	public function oauthRequest($url, $method, $parameters, $data = array(), $headers = array())
-	{
-		// Set the parameters.
-		$defaults = array(
-			'oauth_consumer_key' => $this->getOption('consumer_key'),
-			'oauth_signature_method' => 'HMAC-SHA1',
-			'oauth_version' => '1.0',
-			'oauth_nonce' => $this->generateNonce(),
-			'oauth_timestamp' => time()
-		);
-
-		$parameters = array_merge($parameters, $defaults);
-
-		// Do not encode multipart parameters. Do not include $data in the signature if $data is not array.
-		if (isset($headers['Content-Type']) && strpos($headers['Content-Type'], 'multipart/form-data') !== false || !is_array($data))
-		{
-			$oauth_headers = $parameters;
-		}
-		else
-		{
-			// Use all parameters for the signature.
-			$oauth_headers = array_merge($parameters, $data);
-		}
-
-		// Sign the request.
-		$oauth_headers = $this->_signRequest($url, $method, $oauth_headers);
-
-		// Get parameters for the Authorisation header.
-		if (is_array($data))
-		{
-			$oauth_headers = array_diff_key($oauth_headers, $data);
-		}
-
-		// Send the request.
-		switch ($method)
-		{
-			case 'GET':
-				$url = $this->toUrl($url, $data);
-				$response = $this->client->get($url, array('Authorization' => $this->_createHeader($oauth_headers)));
-				break;
-			case 'POST':
-				$headers = array_merge($headers, array('Authorization' => $this->_createHeader($oauth_headers)));
-				$response = $this->client->post($url, $data, $headers);
-				break;
-			case 'PUT':
-				$headers = array_merge($headers, array('Authorization' => $this->_createHeader($oauth_headers)));
-				$response = $this->client->put($url, $data, $headers);
-				break;
-			case 'DELETE':
-				$headers = array_merge($headers, array('Authorization' => $this->_createHeader($oauth_headers)));
-				$response = $this->client->delete($url, $headers);
-				break;
-		}
-
-		// Validate the response code.
-		$this->validateResponse($url, $response);
-
-		return $response;
-	}
-
-	/**
-	 * Method to validate a response.
-	 *
-	 * @param   string         $url       The request URL.
-	 * @param   JHttpResponse  $response  The response to validate.
-	 *
-	 * @return  void
-	 *
-	 * @since   13.1
-	 * @throws  DomainException
-	 */
-	abstract public function validateResponse($url, $response);
-
-	/**
-	 * Method used to create the header for the POST request.
-	 *
-	 * @param   array  $parameters  Array containing request parameters.
-	 *
-	 * @return  string  The header.
-	 *
-	 * @since   13.1
-	 */
-	private function _createHeader($parameters)
-	{
-		$header = 'OAuth ';
-
-		foreach ($parameters as $key => $value)
-		{
-			if (!strcmp($header, 'OAuth '))
-			{
-				$header .= $key . '="' . $this->safeEncode($value) . '"';
-			}
-			else
-			{
-				$header .= ', ' . $key . '="' . $value . '"';
-			}
-		}
-
-		return $header;
-	}
-
-	/**
-	 * Method to create the URL formed string with the parameters.
-	 *
-	 * @param   string  $url         The request URL.
-	 * @param   array   $parameters  Array containing request parameters.
-	 *
-	 * @return  string  The formed URL.
-	 *
-	 * @since   13.1
-	 */
-	public function toUrl($url, $parameters)
-	{
-		foreach ($parameters as $key => $value)
-		{
-			if (is_array($value))
-			{
-				foreach ($value as $v)
-				{
-					if (strpos($url, '?') === false)
-					{
-						$url .= '?' . $key . '=' . $v;
-					}
-					else
-					{
-						$url .= '&' . $key . '=' . $v;
-					}
-				}
-			}
-			else
-			{
-				if (strpos($value, ' ') !== false)
-				{
-					$value = $this->safeEncode($value);
-				}
-
-				if (strpos($url, '?') === false)
-				{
-					$url .= '?' . $key . '=' . $value;
-				}
-				else
-				{
-					$url .= '&' . $key . '=' . $value;
-				}
-			}
-		}
-
-		return $url;
-	}
-
-	/**
-	 * Method used to sign requests.
-	 *
-	 * @param   string  $url         The URL to sign.
-	 * @param   string  $method      The request method.
-	 * @param   array   $parameters  Array containing request parameters.
-	 *
-	 * @return  array
-	 *
-	 * @since   13.1
-	 */
-	private function _signRequest($url, $method, $parameters)
-	{
-		// Create the signature base string.
-		$base = $this->_baseString($url, $method, $parameters);
-
-		$parameters['oauth_signature'] = $this->safeEncode(
-			base64_encode(
-				hash_hmac('sha1', $base, $this->_prepareSigningKey(), true)
-				)
-			);
-
-		return $parameters;
-	}
-
-	/**
-	 * Prepare the signature base string.
-	 *
-	 * @param   string  $url         The URL to sign.
-	 * @param   string  $method      The request method.
-	 * @param   array   $parameters  Array containing request parameters.
-	 *
-	 * @return  string  The base string.
-	 *
-	 * @since   13.1
-	 */
-	private function _baseString($url, $method, $parameters)
-	{
-		// Sort the parameters alphabetically
-		uksort($parameters, 'strcmp');
-
-		// Encode parameters.
-		foreach ($parameters as $key => $value)
-		{
-			$key = $this->safeEncode($key);
-
-			if (is_array($value))
-			{
-				foreach ($value as $v)
-				{
-					$v = $this->safeEncode($v);
-					$kv[] = "{$key}={$v}";
-				}
-			}
-			else
-			{
-				$value = $this->safeEncode($value);
-				$kv[] = "{$key}={$value}";
-			}
-		}
-		// Form the parameter string.
-		$params = implode('&', $kv);
-
-		// Signature base string elements.
-		$base = array(
-			$method,
-			$url,
-			$params
-			);
-
-		// Return the base string.
-		return implode('&', $this->safeEncode($base));
-	}
-
-	/**
-	 * Encodes the string or array passed in a way compatible with OAuth.
-	 * If an array is passed each array value will will be encoded.
-	 *
-	 * @param   mixed  $data  The scalar or array to encode.
-	 *
-	 * @return  string  $data encoded in a way compatible with OAuth.
-	 *
-	 * @since   13.1
-	 */
-	public function safeEncode($data)
-	{
-		if (is_array($data))
-		{
-			return array_map(array($this, 'safeEncode'), $data);
-		}
-		elseif (is_scalar($data))
-		{
-			return str_ireplace(
-				array('+', '%7E'),
-				array(' ', '~'),
-				rawurlencode($data)
-				);
-		}
-		else
-		{
-			return '';
-		}
-	}
-
-	/**
-	 * Method used to generate the current nonce.
-	 *
-	 * @return  string  The current nonce.
-	 *
-	 * @since   13.1
-	 */
-	public static function generateNonce()
-	{
-		$mt = microtime();
-		$rand = JCrypt::genRandomBytes();
-
-		// The md5s look nicer than numbers.
-		return md5($mt . $rand);
-	}
-
-	/**
-	 * Prepares the OAuth signing key.
-	 *
-	 * @return  string  The prepared signing key.
-	 *
-	 * @since   13.1
-	 */
-	private function _prepareSigningKey()
-	{
-		return $this->safeEncode($this->getOption('consumer_secret')) . '&' . $this->safeEncode(($this->token) ? $this->token['secret'] : '');
-	}
-
-	/**
-	 * Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful;
-	 * returns a 401 status code and an error message if not.
-	 *
-	 * @return  array  The decoded JSON response
-	 *
-	 * @since   13.1
-	 */
-	abstract public function verifyCredentials();
-
-	/**
-	 * Get an option from the JOauth1aClient instance.
-	 *
-	 * @param   string  $key  The name of the option to get
-	 *
-	 * @return  mixed  The option value
-	 *
-	 * @since   13.1
-	 */
-	public function getOption($key)
-	{
-		return $this->options->get($key);
-	}
-
-	/**
 	 * Set an option for the JOauth1aClient instance.
 	 *
-	 * @param   string  $key    The name of the option to set
-	 * @param   mixed   $value  The option value to set
+	 * @param   string $key   The name of the option to set
+	 * @param   mixed  $value The option value to set
 	 *
 	 * @return  JOAuth1Client  This object for method chaining
 	 *
@@ -591,7 +591,7 @@ abstract class JOAuth1Client
 	/**
 	 * Set the oauth token.
 	 *
-	 * @param   array  $token  The access token key and secret.
+	 * @param   array $token The access token key and secret.
 	 *
 	 * @return  JOAuth1Client  This object for method chaining.
 	 *

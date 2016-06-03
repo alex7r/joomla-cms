@@ -19,27 +19,27 @@ class JTwittersearch extends JTwitterObject
 	/**
 	 * Method to get tweets that match a specified query.
 	 *
-	 * @param   string   $query        Search query. Should be URL encoded. Queries will be limited by complexity.
-	 * @param   string   $callback     If supplied, the response will use the JSONP format with a callback of the given name
-	 * @param   string   $geocode      Returns tweets by users located within a given radius of the given latitude/longitude. The parameter value is
-	 * 								   specified by "latitude,longitude,radius", where radius units must be specified as either "mi" (miles) or "km" (kilometers).
-	 * @param   string   $lang         Restricts tweets to the given language, given by an ISO 639-1 code.
-	 * @param   string   $locale       Specify the language of the query you are sending (only ja is currently effective). This is intended for
-	 * 								   language-specific clients and the default should work in the majority of cases.
-	 * @param   string   $result_type  Specifies what type of search results you would prefer to receive. The current default is "mixed."
-	 * @param   integer  $count        The number of tweets to return per page, up to a maximum of 100. Defaults to 15.
-	 * @param   string   $until        Returns tweets generated before the given date. Date should be formatted as YYYY-MM-DD.
-	 * @param   integer  $since_id     Returns results with an ID greater than (that is, more recent than) the specified ID.
-	 * @param   integer  $max_id       Returns results with an ID less than (that is, older than) or equal to the specified ID.
-	 * @param   boolean  $entities     When set to either true, t or 1, each tweet will include a node called "entities,". This node offers a
-	 * 								   variety of metadata about the tweet in a discrete structure, including: urls, media and hashtags.
+	 * @param   string  $query           Search query. Should be URL encoded. Queries will be limited by complexity.
+	 * @param   string  $callback        If supplied, the response will use the JSONP format with a callback of the given name
+	 * @param   string  $geocode         Returns tweets by users located within a given radius of the given latitude/longitude. The parameter value is
+	 *                                   specified by "latitude,longitude,radius", where radius units must be specified as either "mi" (miles) or "km" (kilometers).
+	 * @param   string  $lang            Restricts tweets to the given language, given by an ISO 639-1 code.
+	 * @param   string  $locale          Specify the language of the query you are sending (only ja is currently effective). This is intended for
+	 *                                   language-specific clients and the default should work in the majority of cases.
+	 * @param   string  $result_type     Specifies what type of search results you would prefer to receive. The current default is "mixed."
+	 * @param   integer $count           The number of tweets to return per page, up to a maximum of 100. Defaults to 15.
+	 * @param   string  $until           Returns tweets generated before the given date. Date should be formatted as YYYY-MM-DD.
+	 * @param   integer $since_id        Returns results with an ID greater than (that is, more recent than) the specified ID.
+	 * @param   integer $max_id          Returns results with an ID less than (that is, older than) or equal to the specified ID.
+	 * @param   boolean $entities        When set to either true, t or 1, each tweet will include a node called "entities,". This node offers a
+	 *                                   variety of metadata about the tweet in a discrete structure, including: urls, media and hashtags.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
 	 * @since   12.3
 	 */
 	public function search($query, $callback = null, $geocode = null, $lang = null, $locale = null, $result_type = null, $count = 15,
-		$until = null, $since_id = 0, $max_id = 0, $entities = null)
+	                       $until = null, $since_id = 0, $max_id = 0, $entities = null)
 	{
 		// Check the rate limit for remaining hits
 		$this->checkRateLimit('search', 'tweets');
@@ -136,7 +136,7 @@ class JTwittersearch extends JTwitterObject
 	/**
 	 * Method to get the information for the saved search represented by the given id.
 	 *
-	 * @param   integer  $id  The ID of the saved search.
+	 * @param   integer $id The ID of the saved search.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -157,7 +157,7 @@ class JTwittersearch extends JTwitterObject
 	/**
 	 * Method to create a new saved search for the authenticated user.
 	 *
-	 * @param   string  $query  The query of the search the user would like to save.
+	 * @param   string $query The query of the search the user would like to save.
 	 *
 	 * @return  array  The decoded JSON response
 	 *
@@ -178,7 +178,7 @@ class JTwittersearch extends JTwitterObject
 	/**
 	 * Method to delete a saved search for the authenticating user.
 	 *
-	 * @param   integer  $id  The ID of the saved search.
+	 * @param   integer $id The ID of the saved search.
 	 *
 	 * @return  array  The decoded JSON response
 	 *

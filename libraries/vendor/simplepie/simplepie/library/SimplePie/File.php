@@ -11,16 +11,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- * 	* Redistributions of source code must retain the above copyright notice, this list of
- * 	  conditions and the following disclaimer.
+ *    * Redistributions of source code must retain the above copyright notice, this list of
+ *      conditions and the following disclaimer.
  *
- * 	* Redistributions in binary form must reproduce the above copyright notice, this list
- * 	  of conditions and the following disclaimer in the documentation and/or other materials
- * 	  provided with the distribution.
+ *    * Redistributions in binary form must reproduce the above copyright notice, this list
+ *      of conditions and the following disclaimer in the documentation and/or other materials
+ *      provided with the distribution.
  *
- * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
- * 	  to endorse or promote products derived from this software without specific prior
- * 	  written permission.
+ *    * Neither the name of the SimplePie Team nor the names of its contributors may be used
+ *      to endorse or promote products derived from this software without specific prior
+ *      written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -32,14 +32,14 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package SimplePie
- * @version 1.3.1
+ * @package   SimplePie
+ * @version   1.3.1
  * @copyright 2004-2012 Ryan Parman, Geoffrey Sneddon, Ryan McCue
- * @author Ryan Parman
- * @author Geoffrey Sneddon
- * @author Ryan McCue
- * @link http://simplepie.org/ SimplePie
- * @license http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @author    Ryan Parman
+ * @author    Geoffrey Sneddon
+ * @author    Ryan McCue
+ * @link      http://simplepie.org/ SimplePie
+ * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
  */
 
 /**
@@ -49,37 +49,45 @@
  *
  * This class can be overloaded with {@see SimplePie::set_file_class()}
  *
- * @package SimplePie
+ * @package    SimplePie
  * @subpackage HTTP
- * @todo Move to properly supporting RFC2616 (HTTP/1.1)
+ * @todo       Move to properly supporting RFC2616 (HTTP/1.1)
  */
 class SimplePie_File
 {
 	var $url;
+
 	var $useragent;
+
 	var $success = true;
+
 	var $headers = array();
+
 	var $body;
+
 	var $status_code;
+
 	var $redirects = 0;
+
 	var $error;
+
 	var $method = SIMPLEPIE_FILE_SOURCE_NONE;
 
 	public function __construct($url, $timeout = 10, $redirects = 5, $headers = null, $useragent = null, $force_fsockopen = false)
 	{
 		if (class_exists('idna_convert'))
 		{
-			$idn = new idna_convert();
+			$idn    = new idna_convert();
 			$parsed = SimplePie_Misc::parse_url($url);
-			$url = SimplePie_Misc::compress_parse_url($parsed['scheme'], $idn->encode($parsed['authority']), $parsed['path'], $parsed['query'], $parsed['fragment']);
+			$url    = SimplePie_Misc::compress_parse_url($parsed['scheme'], $idn->encode($parsed['authority']), $parsed['path'], $parsed['query'], $parsed['fragment']);
 		}
-		$this->url = $url;
+		$this->url       = $url;
 		$this->useragent = $useragent;
 		if (preg_match('/^http(s)?:\/\//i', $url))
 		{
 			if ($useragent === null)
 			{
-				$useragent = ini_get('user_agent');
+				$useragent       = ini_get('user_agent');
 				$this->useragent = $useragent;
 			}
 			if (!is_array($headers))
@@ -89,8 +97,8 @@ class SimplePie_File
 			if (!$force_fsockopen && function_exists('curl_exec'))
 			{
 				$this->method = SIMPLEPIE_FILE_SOURCE_REMOTE | SIMPLEPIE_FILE_SOURCE_CURL;
-				$fp = curl_init();
-				$headers2 = array();
+				$fp           = curl_init();
+				$headers2     = array();
 				foreach ($headers as $key => $value)
 				{
 					$headers2[] = "$key: $value";
@@ -121,7 +129,7 @@ class SimplePie_File
 				}
 				if (curl_errno($fp))
 				{
-					$this->error = 'cURL error ' . curl_errno($fp) . ': ' . curl_error($fp);
+					$this->error   = 'cURL error ' . curl_errno($fp) . ': ' . curl_error($fp);
 					$this->success = false;
 				}
 				else
@@ -130,16 +138,17 @@ class SimplePie_File
 					curl_close($fp);
 					$this->headers = explode("\r\n\r\n", $this->headers, $info['redirect_count'] + 1);
 					$this->headers = array_pop($this->headers);
-					$parser = new SimplePie_HTTP_Parser($this->headers);
+					$parser        = new SimplePie_HTTP_Parser($this->headers);
 					if ($parser->parse())
 					{
-						$this->headers = $parser->headers;
-						$this->body = $parser->body;
+						$this->headers     = $parser->headers;
+						$this->body        = $parser->body;
 						$this->status_code = $parser->status_code;
 						if ((in_array($this->status_code, array(300, 301, 302, 303, 307)) || $this->status_code > 307 && $this->status_code < 400) && isset($this->headers['location']) && $this->redirects < $redirects)
 						{
 							$this->redirects++;
 							$location = SimplePie_Misc::absolutize_url($this->headers['location'], $url);
+
 							return $this->__construct($location, $timeout, $redirects, $headers, $useragent, $force_fsockopen);
 						}
 					}
@@ -148,11 +157,11 @@ class SimplePie_File
 			else
 			{
 				$this->method = SIMPLEPIE_FILE_SOURCE_REMOTE | SIMPLEPIE_FILE_SOURCE_FSOCKOPEN;
-				$url_parts = parse_url($url);
-				$socket_host = $url_parts['host'];
+				$url_parts    = parse_url($url);
+				$socket_host  = $url_parts['host'];
 				if (isset($url_parts['scheme']) && strtolower($url_parts['scheme']) === 'https')
 				{
-					$socket_host = "ssl://$url_parts[host]";
+					$socket_host       = "ssl://$url_parts[host]";
 					$url_parts['port'] = 443;
 				}
 				if (!isset($url_parts['port']))
@@ -162,7 +171,7 @@ class SimplePie_File
 				$fp = @fsockopen($socket_host, $url_parts['port'], $errno, $errstr, $timeout);
 				if (!$fp)
 				{
-					$this->error = 'fsockopen error: ' . $errstr;
+					$this->error   = 'fsockopen error: ' . $errstr;
 					$this->success = false;
 				}
 				else
@@ -215,13 +224,14 @@ class SimplePie_File
 						$parser = new SimplePie_HTTP_Parser($this->headers);
 						if ($parser->parse())
 						{
-							$this->headers = $parser->headers;
-							$this->body = $parser->body;
+							$this->headers     = $parser->headers;
+							$this->body        = $parser->body;
 							$this->status_code = $parser->status_code;
 							if ((in_array($this->status_code, array(300, 301, 302, 303, 307)) || $this->status_code > 307 && $this->status_code < 400) && isset($this->headers['location']) && $this->redirects < $redirects)
 							{
 								$this->redirects++;
 								$location = SimplePie_Misc::absolutize_url($this->headers['location'], $url);
+
 								return $this->__construct($location, $timeout, $redirects, $headers, $useragent, $force_fsockopen);
 							}
 							if (isset($this->headers['content-encoding']))
@@ -234,7 +244,7 @@ class SimplePie_File
 										$decoder = new SimplePie_gzdecode($this->body);
 										if (!$decoder->parse())
 										{
-											$this->error = 'Unable to decode HTTP "gzip" stream';
+											$this->error   = 'Unable to decode HTTP "gzip" stream';
 											$this->success = false;
 										}
 										else
@@ -258,13 +268,13 @@ class SimplePie_File
 										}
 										else
 										{
-											$this->error = 'Unable to decode HTTP "deflate" stream';
+											$this->error   = 'Unable to decode HTTP "deflate" stream';
 											$this->success = false;
 										}
 										break;
 
 									default:
-										$this->error = 'Unknown content coding';
+										$this->error   = 'Unknown content coding';
 										$this->success = false;
 								}
 							}
@@ -272,7 +282,7 @@ class SimplePie_File
 					}
 					else
 					{
-						$this->error = 'fsocket timed out';
+						$this->error   = 'fsocket timed out';
 						$this->success = false;
 					}
 					fclose($fp);
@@ -284,7 +294,7 @@ class SimplePie_File
 			$this->method = SIMPLEPIE_FILE_SOURCE_LOCAL | SIMPLEPIE_FILE_SOURCE_FILE_GET_CONTENTS;
 			if (!$this->body = file_get_contents($url))
 			{
-				$this->error = 'file_get_contents could not read the file';
+				$this->error   = 'file_get_contents could not read the file';
 				$this->success = false;
 			}
 		}

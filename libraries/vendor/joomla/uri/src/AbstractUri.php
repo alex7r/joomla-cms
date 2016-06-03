@@ -83,7 +83,7 @@ abstract class AbstractUri implements UriInterface
 	 * Constructor.
 	 * You can pass a URI string to the constructor to initialise a specific URI.
 	 *
-	 * @param   string  $uri  The optional URI string
+	 * @param   string $uri The optional URI string
 	 *
 	 * @since   1.0
 	 */
@@ -93,6 +93,53 @@ abstract class AbstractUri implements UriInterface
 		{
 			$this->parse($uri);
 		}
+	}
+
+	/**
+	 * Parse a given URI and populate the class fields.
+	 *
+	 * @param   string $uri The URI string to parse.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   1.0
+	 */
+	protected function parse($uri)
+	{
+		// Set the original URI to fall back on
+		$this->uri = $uri;
+
+		/*
+		 * Parse the URI and populate the object fields. If URI is parsed properly,
+		 * set method return value to true.
+		 */
+
+		$parts = UriHelper::parse_url($uri);
+
+		$retval = ($parts) ? true : false;
+
+		// We need to replace &amp; with & for parse_str to work right...
+		if (isset($parts['query']) && strpos($parts['query'], '&amp;'))
+		{
+			$parts['query'] = str_replace('&amp;', '&', $parts['query']);
+		}
+
+		$this->scheme   = isset($parts['scheme']) ? $parts['scheme'] : null;
+		$this->user     = isset($parts['user']) ? $parts['user'] : null;
+		$this->pass     = isset($parts['pass']) ? $parts['pass'] : null;
+		$this->host     = isset($parts['host']) ? $parts['host'] : null;
+		$this->port     = isset($parts['port']) ? $parts['port'] : null;
+		$this->path     = isset($parts['path']) ? $parts['path'] : null;
+		$this->query    = isset($parts['query']) ? $parts['query'] : null;
+		$this->fragment = isset($parts['fragment']) ? $parts['fragment'] : null;
+
+		// Parse the query
+		if (isset($parts['query']))
+		{
+			parse_str($parts['query'], $this->vars);
+		}
+
+		return $retval;
 	}
 
 	/**
@@ -110,7 +157,7 @@ abstract class AbstractUri implements UriInterface
 	/**
 	 * Returns full uri string.
 	 *
-	 * @param   array  $parts  An array specifying the parts to render.
+	 * @param   array $parts An array specifying the parts to render.
 	 *
 	 * @return  string  The rendered URI string.
 	 *
@@ -135,43 +182,9 @@ abstract class AbstractUri implements UriInterface
 	}
 
 	/**
-	 * Checks if variable exists.
-	 *
-	 * @param   string  $name  Name of the query variable to check.
-	 *
-	 * @return  boolean  True if the variable exists.
-	 *
-	 * @since   1.0
-	 */
-	public function hasVar($name)
-	{
-		return array_key_exists($name, $this->vars);
-	}
-
-	/**
-	 * Returns a query variable by name.
-	 *
-	 * @param   string  $name     Name of the query variable to get.
-	 * @param   string  $default  Default value to return if the variable is not set.
-	 *
-	 * @return  array   Query variables.
-	 *
-	 * @since   1.0
-	 */
-	public function getVar($name, $default = null)
-	{
-		if (array_key_exists($name, $this->vars))
-		{
-			return $this->vars[$name];
-		}
-
-		return $default;
-	}
-
-	/**
 	 * Returns flat query string.
 	 *
-	 * @param   boolean  $toArray  True to return the query as a key => value pair array.
+	 * @param   boolean $toArray True to return the query as a key => value pair array.
 	 *
 	 * @return  string   Query string.
 	 *
@@ -194,16 +207,52 @@ abstract class AbstractUri implements UriInterface
 	}
 
 	/**
-	 * Get URI scheme (protocol)
-	 * ie. http, https, ftp, etc...
+	 * Build a query from an array (reverse of the PHP parse_str()).
 	 *
-	 * @return  string  The URI scheme.
+	 * @param   array $params The array of key => value pairs to return as a query string.
+	 *
+	 * @return  string  The resulting query string.
+	 *
+	 * @see     parse_str()
+	 * @since   1.0
+	 */
+	protected static function buildQuery(array $params)
+	{
+		return urldecode(http_build_query($params, '', '&'));
+	}
+
+	/**
+	 * Checks if variable exists.
+	 *
+	 * @param   string $name Name of the query variable to check.
+	 *
+	 * @return  boolean  True if the variable exists.
 	 *
 	 * @since   1.0
 	 */
-	public function getScheme()
+	public function hasVar($name)
 	{
-		return $this->scheme;
+		return array_key_exists($name, $this->vars);
+	}
+
+	/**
+	 * Returns a query variable by name.
+	 *
+	 * @param   string $name    Name of the query variable to get.
+	 * @param   string $default Default value to return if the variable is not set.
+	 *
+	 * @return  array   Query variables.
+	 *
+	 * @since   1.0
+	 */
+	public function getVar($name, $default = null)
+	{
+		if (array_key_exists($name, $this->vars))
+		{
+			return $this->vars[$name];
+		}
+
+		return $default;
 	}
 
 	/**
@@ -296,76 +345,27 @@ abstract class AbstractUri implements UriInterface
 	}
 
 	/**
-	 * Build a query from an array (reverse of the PHP parse_str()).
+	 * Get URI scheme (protocol)
+	 * ie. http, https, ftp, etc...
 	 *
-	 * @param   array  $params  The array of key => value pairs to return as a query string.
-	 *
-	 * @return  string  The resulting query string.
-	 *
-	 * @see     parse_str()
-	 * @since   1.0
-	 */
-	protected static function buildQuery(array $params)
-	{
-		return urldecode(http_build_query($params, '', '&'));
-	}
-
-	/**
-	 * Parse a given URI and populate the class fields.
-	 *
-	 * @param   string  $uri  The URI string to parse.
-	 *
-	 * @return  boolean  True on success.
+	 * @return  string  The URI scheme.
 	 *
 	 * @since   1.0
 	 */
-	protected function parse($uri)
+	public function getScheme()
 	{
-		// Set the original URI to fall back on
-		$this->uri = $uri;
-
-		/*
-		 * Parse the URI and populate the object fields. If URI is parsed properly,
-		 * set method return value to true.
-		 */
-
-		$parts = UriHelper::parse_url($uri);
-
-		$retval = ($parts) ? true : false;
-
-		// We need to replace &amp; with & for parse_str to work right...
-		if (isset($parts['query']) && strpos($parts['query'], '&amp;'))
-		{
-			$parts['query'] = str_replace('&amp;', '&', $parts['query']);
-		}
-
-		$this->scheme   = isset($parts['scheme']) ? $parts['scheme'] : null;
-		$this->user     = isset($parts['user']) ? $parts['user'] : null;
-		$this->pass     = isset($parts['pass']) ? $parts['pass'] : null;
-		$this->host     = isset($parts['host']) ? $parts['host'] : null;
-		$this->port     = isset($parts['port']) ? $parts['port'] : null;
-		$this->path     = isset($parts['path']) ? $parts['path'] : null;
-		$this->query    = isset($parts['query']) ? $parts['query'] : null;
-		$this->fragment = isset($parts['fragment']) ? $parts['fragment'] : null;
-
-		// Parse the query
-		if (isset($parts['query']))
-		{
-			parse_str($parts['query'], $this->vars);
-		}
-
-		return $retval;
+		return $this->scheme;
 	}
 
 	/**
 	 * Resolves //, ../ and ./ from a path and returns
 	 * the result. Eg:
 	 *
-	 * /foo/bar/../boo.php	=> /foo/boo.php
+	 * /foo/bar/../boo.php    => /foo/boo.php
 	 * /foo/bar/../../boo.php => /boo.php
 	 * /foo/bar/.././/boo.php => /foo/boo.php
 	 *
-	 * @param   string  $path  The URI path to clean.
+	 * @param   string $path The URI path to clean.
 	 *
 	 * @return  string  Cleaned and resolved URI path.
 	 *

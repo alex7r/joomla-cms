@@ -83,11 +83,26 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
+	 * Resets cached values used to speed up querying the tree
+	 *
+	 * @return  static  for chaining
+	 */
+	protected function resetTreeCache()
+	{
+		$this->treeDepth     = null;
+		$this->treeRoot      = null;
+		$this->treeParent    = null;
+		$this->treeNestedGet = false;
+
+		return $this;
+	}
+
+	/**
 	 * Delete a node, either the currently loaded one or the one specified in $id. If an $id is specified that node
 	 * is loaded before trying to delete it. In the end the data model is reset. If the node has any children nodes
 	 * they will be removed before the node itself is deleted.
 	 *
-	 * @param   integer $oid       The primary key value of the item to delete
+	 * @param   integer $oid The primary key value of the item to delete
 	 *
 	 * @throws  UnexpectedValueException
 	 *
@@ -101,23 +116,23 @@ class FOFTableNested extends FOFTable
 			$this->load($oid);
 		}
 
-        $k  = $this->_tbl_key;
-        $pk = (!$oid) ? $this->$k : $oid;
+		$k  = $this->_tbl_key;
+		$pk = (!$oid) ? $this->$k : $oid;
 
-        // If no primary key is given, return false.
-        if (!$pk)
-        {
-            throw new UnexpectedValueException('Null primary key not allowed.');
-        }
+		// If no primary key is given, return false.
+		if (!$pk)
+		{
+			throw new UnexpectedValueException('Null primary key not allowed.');
+		}
 
-        // Execute the logic only if I have a primary key, otherwise I could have weird results
-        // Perform the checks on the current node *BEFORE* starting to delete the children
-        if (!$this->onBeforeDelete($oid))
-        {
-            return false;
-        }
+		// Execute the logic only if I have a primary key, otherwise I could have weird results
+		// Perform the checks on the current node *BEFORE* starting to delete the children
+		if (!$this->onBeforeDelete($oid))
+		{
+			return false;
+		}
 
-        $result = true;
+		$result = true;
 
 		// Recursively delete all children nodes as long as we are not a leaf node and $recursive is enabled
 		if (!$this->isLeaf())
@@ -133,82 +148,206 @@ class FOFTableNested extends FOFTable
 				/** @var FOFTableNested $item */
 				foreach ($subNodes as $item)
 				{
-                    // We have to pass the id, so we are getting it again from the database.
-                    // We have to do in this way, since a previous child could have changed our lft and rgt values
-					if(!$item->delete($item->$k))
-                    {
-                        // A subnode failed or prevents the delete, continue deleting other nodes,
-                        // but preserve the current node (ie the parent)
-                        $result = false;
-                    }
+					// We have to pass the id, so we are getting it again from the database.
+					// We have to do in this way, since a previous child could have changed our lft and rgt values
+					if (!$item->delete($item->$k))
+					{
+						// A subnode failed or prevents the delete, continue deleting other nodes,
+						// but preserve the current node (ie the parent)
+						$result = false;
+					}
 				};
 
-                // Load it again, since while deleting a children we could have updated ourselves, too
-                $this->load($pk);
+				// Load it again, since while deleting a children we could have updated ourselves, too
+				$this->load($pk);
 			}
 		}
 
-        if($result)
-        {
-            // Delete the row by primary key.
-            $query = $this->_db->getQuery(true);
-            $query->delete();
-            $query->from($this->_tbl);
-            $query->where($this->_tbl_key . ' = ' . $this->_db->q($pk));
+		if ($result)
+		{
+			// Delete the row by primary key.
+			$query = $this->_db->getQuery(true);
+			$query->delete();
+			$query->from($this->_tbl);
+			$query->where($this->_tbl_key . ' = ' . $this->_db->q($pk));
 
-            $this->_db->setQuery($query)->execute();
+			$this->_db->setQuery($query)->execute();
 
-            $result = $this->onAfterDelete($oid);
-        }
+			$result = $this->onAfterDelete($oid);
+		}
 
 		return $result;
 	}
 
-    protected function onAfterDelete($oid)
-    {
-        $db = $this->getDbo();
+	/**
+	 * Is this a leaf node (a node without children)?
+	 *
+	 * @throws  RuntimeException
+	 *
+	 * @return bool
+	 */
+	public function isLeaf()
+	{
+		// Sanity checks on current node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
 
-        $myLeft  = $this->lft;
-        $myRight = $this->rgt;
+		return ($this->rgt - 1) == $this->lft;
+	}
 
-        $fldLft = $db->qn($this->getColumnAlias('lft'));
-        $fldRgt = $db->qn($this->getColumnAlias('rgt'));
+	/**
+	 * Get only our descendant (children) nodes, not ourselves.
+	 *
+	 * Note: all descendant nodes, even descendants of our immediate descendants, will be returned.
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return FOFDatabaseIterator
+	 */
+	public function getDescendants()
+	{
+		$this->scopeDescendants();
 
-        // Move all siblings to the left
-        $width = $this->rgt - $this->lft + 1;
+		return $this->get();
+	}
 
-        // Wrap everything in a transaction
-        $db->transactionStart();
+	/**
+	 * get() will return all descendants (even subtrees of subtrees!) but not ourselves
+	 *
+	 * @return void
+	 */
+	protected function scopeDescendants()
+	{
+		$this->treeNestedGet = true;
 
-        try
-        {
-            // Shrink lft values
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($fldLft . ' = ' . $fldLft . ' - '.$width)
-                        ->where($fldLft . ' > ' . $db->q($myLeft));
-            $db->setQuery($query)->execute();
+		$db = $this->getDbo();
 
-            // Shrink rgt values
-            $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
-                        ->set($fldRgt . ' = ' . $fldRgt . ' - '.$width)
-                        ->where($fldRgt . ' > ' . $db->q($myRight));
-            $db->setQuery($query)->execute();
+		$fldLft = $db->qn($this->getColumnAlias('lft'));
+		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
 
-            // Commit the transaction
-            $db->transactionCommit();
-        }
-        catch (\Exception $e)
-        {
-            // Roll back the transaction on error
-            $db->transactionRollback();
+		$this->whereRaw($db->qn('node') . '.' . $fldLft . ' > ' . $db->qn('parent') . '.' . $fldLft);
+		$this->whereRaw($db->qn('node') . '.' . $fldLft . ' < ' . $db->qn('parent') . '.' . $fldRgt);
+		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' = ' . $db->q($this->lft));
+	}
 
-            throw $e;
-        }
+	/**
+	 * Add custom, pre-compiled WHERE clauses for use in buildQuery. The raw WHERE clause you specify is added as is to
+	 * the query generated by buildQuery. You are responsible for quoting and escaping the field names and data found
+	 * inside the WHERE clause.
+	 *
+	 * @param   string $rawWhereClause The raw WHERE clause to add
+	 *
+	 * @return  $this  For chaining
+	 */
+	public function whereRaw($rawWhereClause)
+	{
+		$this->whereClauses[] = $rawWhereClause;
 
-        return parent::onAfterDelete($oid);
-    }
+		return $this;
+	}
+
+	/**
+	 * Returns a database iterator to retrieve records. Use the scope methods and the whereRaw method to define what
+	 * exactly will be returned.
+	 *
+	 * @param   integer $limitstart How many items to skip from the start, only when $overrideLimits = true
+	 * @param   integer $limit      How many items to return, only when $overrideLimits = true
+	 *
+	 * @return  FOFDatabaseIterator  The data collection
+	 */
+	public function get($limitstart = 0, $limit = 0)
+	{
+		$limitstart = max($limitstart, 0);
+		$limit      = max($limit, 0);
+
+		$query = $this->buildQuery();
+		$db    = $this->getDbo();
+		$db->setQuery($query, $limitstart, $limit);
+		$cursor = $db->execute();
+
+		$dataCollection = FOFDatabaseIterator::getIterator($db->name, $cursor, null, $this->config['_table_class']);
+
+		return $dataCollection;
+	}
+
+	/**
+	 * Builds the query for the get() method
+	 *
+	 * @return JDatabaseQuery
+	 */
+	protected function buildQuery()
+	{
+		$db = $this->getDbo();
+
+		$query = $db->getQuery(true)
+			->select($db->qn('node') . '.*')
+			->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'));
+
+		if ($this->treeNestedGet)
+		{
+			$query
+				->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'));
+		}
+
+		// Apply custom WHERE clauses
+		if (count($this->whereClauses))
+		{
+			foreach ($this->whereClauses as $clause)
+			{
+				$query->where($clause);
+			}
+		}
+
+		return $query;
+	}
+
+	protected function onAfterDelete($oid)
+	{
+		$db = $this->getDbo();
+
+		$myLeft  = $this->lft;
+		$myRight = $this->rgt;
+
+		$fldLft = $db->qn($this->getColumnAlias('lft'));
+		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+
+		// Move all siblings to the left
+		$width = $this->rgt - $this->lft + 1;
+
+		// Wrap everything in a transaction
+		$db->transactionStart();
+
+		try
+		{
+			// Shrink lft values
+			$query = $db->getQuery(true)
+				->update($db->qn($this->getTableName()))
+				->set($fldLft . ' = ' . $fldLft . ' - ' . $width)
+				->where($fldLft . ' > ' . $db->q($myLeft));
+			$db->setQuery($query)->execute();
+
+			// Shrink rgt values
+			$query = $db->getQuery(true)
+				->update($db->qn($this->getTableName()))
+				->set($fldRgt . ' = ' . $fldRgt . ' - ' . $width)
+				->where($fldRgt . ' > ' . $db->q($myRight));
+			$db->setQuery($query)->execute();
+
+			// Commit the transaction
+			$db->transactionCommit();
+		}
+		catch (\Exception $e)
+		{
+			// Roll back the transaction on error
+			$db->transactionRollback();
+
+			throw $e;
+		}
+
+		return parent::onAfterDelete($oid);
+	}
 
 	/**
 	 * Not supported in nested sets
@@ -240,6 +379,57 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
+	 * Makes a copy of the record, inserting it as the last child of the given node's parent.
+	 *
+	 * @param   integer|array $cid   The primary key value (or values) or the record(s) to copy.
+	 *                               If null, the current record will be copied
+	 *
+	 * @return self|FOFTableNested     The last copied node
+	 */
+	public function copy($cid = null)
+	{
+		//We have to cast the id as array, or the helper function will return an empty set
+		if ($cid)
+		{
+			$cid = (array) $cid;
+		}
+
+		FOFUtilsArray::toInteger($cid);
+		$k = $this->_tbl_key;
+
+		if (count($cid) < 1)
+		{
+			if ($this->$k)
+			{
+				$cid = array($this->$k);
+			}
+			else
+			{
+				// Even if it's null, let's still create the record
+				$this->create($this->getData());
+
+				return $this;
+			}
+		}
+
+		foreach ($cid as $item)
+		{
+			// Prevent load with id = 0
+
+			if (!$item)
+			{
+				continue;
+			}
+
+			$this->load($item);
+
+			$this->create($this->getData());
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Create a new record with the provided data. It is inserted as the last child of the current node's parent
 	 *
 	 * @param   array $data The data to use in the new record
@@ -263,57 +453,6 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
-	 * Makes a copy of the record, inserting it as the last child of the given node's parent.
-	 *
-	 * @param   integer|array  $cid  The primary key value (or values) or the record(s) to copy. 
-	 *                               If null, the current record will be copied
-	 * 
-	 * @return self|FOFTableNested	 The last copied node
-	 */
-	public function copy($cid = null)
-	{
-		//We have to cast the id as array, or the helper function will return an empty set
-		if($cid)
-		{
-			$cid = (array) $cid;
-		}
-
-        FOFUtilsArray::toInteger($cid);
-		$k = $this->_tbl_key;
-
-		if (count($cid) < 1)
-		{
-			if ($this->$k)
-			{
-				$cid = array($this->$k);
-			}
-			else
-			{
-				// Even if it's null, let's still create the record
-				$this->create($this->getData());
-				
-				return $this;
-			}
-		}
-
-		foreach ($cid as $item)
-		{
-			// Prevent load with id = 0
-
-			if (!$item)
-			{
-				continue;
-			}
-
-			$this->load($item);
-			
-			$this->create($this->getData());
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Method to reset class properties to the defaults set in the class
 	 * definition. It will ignore the primary key as well as any private class
 	 * properties.
@@ -328,116 +467,74 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
-	 * Insert the current node as a tree root. It is a good idea to never use this method, instead providing a root node
-	 * in your schema installation and then sticking to only one root.
+	 * Is this a top-level root node?
 	 *
-	 * @return self
+	 * @return bool
 	 */
-	public function insertAsRoot()
+	public function isRoot()
 	{
-        // You can't insert a node that is already saved i.e. the table has an id
-        if($this->getId())
-        {
-            throw new RuntimeException(__METHOD__.' can be only used with new nodes');
-        }
-
-		// First we need to find the right value of the last parent, a.k.a. the max(rgt) of the table
-		$db = $this->getDbo();
-
-		// Get the lft/rgt names
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
-
-		$query = $db->getQuery(true)
-			->select('MAX(' . $fldRgt . ')')
-			->from($db->qn($this->getTableName()));
-		$maxRgt = $db->setQuery($query, 0, 1)->loadResult();
-
-		if (empty($maxRgt))
+		// If lft=1 it is necessarily a root node
+		if ($this->lft == 1)
 		{
-			$maxRgt = 0;
+			return true;
 		}
 
-		$this->lft = ++$maxRgt;
-		$this->rgt = ++$maxRgt;
-
-		$this->store();
-
-		return $this;
+		// Otherwise make sure its level is 0
+		return $this->getLevel() == 0;
 	}
 
 	/**
-	 * Insert the current node as the first (leftmost) child of a parent node.
+	 * Gets the level (depth) of this node in the tree. The result is cached in $this->treeDepth for faster retrieval.
 	 *
-	 * WARNING: If it's an existing node it will be COPIED, not moved.
+	 * @throws  RuntimeException
 	 *
-	 * @param FOFTableNested $parentNode The node which will become our parent
+	 * @return int|mixed
+	 */
+	public function getLevel()
+	{
+		// Sanity checks on current node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
+
+		if (is_null($this->treeDepth))
+		{
+			$db = $this->getDbo();
+
+			$fldLft = $db->qn($this->getColumnAlias('lft'));
+			$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+
+			$query = $db->getQuery(true)
+				->select('(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - 1) AS ' . $db->qn('depth'))
+				->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
+				->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
+				->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
+				->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
+				->where($db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft))
+				->group($db->qn('node') . '.' . $fldLft)
+				->order($db->qn('node') . '.' . $fldLft . ' ASC');
+
+			$this->treeDepth = $db->setQuery($query, 0, 1)->loadResult();
+		}
+
+		return $this->treeDepth;
+	}
+
+	/**
+	 * Alias for insertAsLastchildOf
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @param FOFTableNested $parentNode
 	 *
 	 * @return $this for chaining
 	 *
 	 * @throws Exception
-	 * @throws RuntimeException
 	 */
-	public function insertAsFirstChildOf(FOFTableNested &$parentNode)
+	public function insertAsChildOf(FOFTableNested &$parentNode)
 	{
-        if($parentNode->lft >= $parentNode->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the parent node');
-        }
-
-		// Get a reference to the database
-		$db = $this->getDbo();
-
-		// Get the field names
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
-
-        // Nullify the PK, so a new record will be created
-        $pk = $this->getKeyName();
-        $this->$pk = null;
-
-		// Get the value of the parent node's rgt
-		$myLeft = $parentNode->lft;
-
-		// Update my lft/rgt values
-		$this->lft = $myLeft + 1;
-		$this->rgt = $myLeft + 2;
-
-		// Update parent node's right (we added two elements in there, remember?)
-		$parentNode->rgt += 2;
-
-		// Wrap everything in a transaction
-		$db->transactionStart();
-
-		try
-		{
-			// Make a hole (2 queries)
-			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($fldLft . ' = ' . $fldLft . '+2')
-				->where($fldLft . ' > ' . $db->q($myLeft));
-			$db->setQuery($query)->execute();
-
-			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($fldRgt . ' = ' . $fldRgt . '+ 2')
-				->where($fldRgt . '>' . $db->q($myLeft));
-			$db->setQuery($query)->execute();
-
-			// Insert the new node
-			$this->store();
-
-			// Commit the transaction
-			$db->transactionCommit();
-		}
-		catch (\Exception $e)
-		{
-			// Roll back the transaction on error
-			$db->transactionRollback();
-
-			throw $e;
-		}
-
-		return $this;
+		return $this->insertAsLastChildOf($parentNode);
 	}
 
 	/**
@@ -454,10 +551,10 @@ class FOFTableNested extends FOFTable
 	 */
 	public function insertAsLastChildOf(FOFTableNested &$parentNode)
 	{
-        if($parentNode->lft >= $parentNode->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the parent node');
-        }
+		if ($parentNode->lft >= $parentNode->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the parent node');
+		}
 
 		// Get a reference to the database
 		$db = $this->getDbo();
@@ -466,9 +563,9 @@ class FOFTableNested extends FOFTable
 		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
 		$fldLft = $db->qn($this->getColumnAlias('lft'));
 
-        // Nullify the PK, so a new record will be created
-        $pk = $this->getKeyName();
-        $this->$pk = null;
+		// Nullify the PK, so a new record will be created
+		$pk        = $this->getKeyName();
+		$this->$pk = null;
 
 		// Get the value of the parent node's lft
 		$myRight = $parentNode->rgt;
@@ -516,18 +613,163 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
-	 * Alias for insertAsLastchildOf
+	 * Returns the immediate parent of the current node
 	 *
-     * @codeCoverageIgnore
-	 * @param FOFTableNested $parentNode
+	 * @throws RuntimeException
+	 *
+	 * @return FOFTableNested
+	 */
+	public function getParent()
+	{
+		// Sanity checks on current node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
+
+		if ($this->isRoot())
+		{
+			return $this;
+		}
+
+		if (empty($this->treeParent) || !is_object($this->treeParent) || !($this->treeParent instanceof FOFTableNested))
+		{
+			$db = $this->getDbo();
+
+			$fldLft = $db->qn($this->getColumnAlias('lft'));
+			$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+
+			$query     = $db->getQuery(true)
+				->select($db->qn('parent') . '.' . $fldLft)
+				->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
+				->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
+				->where($db->qn('node') . '.' . $fldLft . ' > ' . $db->qn('parent') . '.' . $fldLft)
+				->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
+				->where($db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft))
+				->order($db->qn('parent') . '.' . $fldLft . ' DESC');
+			$targetLft = $db->setQuery($query, 0, 1)->loadResult();
+
+			$table = $this->getClone();
+			$table->reset();
+			$this->treeParent = $table
+				->whereRaw($fldLft . ' = ' . $db->q($targetLft))
+				->get()->current();
+		}
+
+		return $this->treeParent;
+	}
+
+	/**
+	 * Insert the current node as a tree root. It is a good idea to never use this method, instead providing a root node
+	 * in your schema installation and then sticking to only one root.
+	 *
+	 * @return self
+	 */
+	public function insertAsRoot()
+	{
+		// You can't insert a node that is already saved i.e. the table has an id
+		if ($this->getId())
+		{
+			throw new RuntimeException(__METHOD__ . ' can be only used with new nodes');
+		}
+
+		// First we need to find the right value of the last parent, a.k.a. the max(rgt) of the table
+		$db = $this->getDbo();
+
+		// Get the lft/rgt names
+		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+
+		$query  = $db->getQuery(true)
+			->select('MAX(' . $fldRgt . ')')
+			->from($db->qn($this->getTableName()));
+		$maxRgt = $db->setQuery($query, 0, 1)->loadResult();
+
+		if (empty($maxRgt))
+		{
+			$maxRgt = 0;
+		}
+
+		$this->lft = ++$maxRgt;
+		$this->rgt = ++$maxRgt;
+
+		$this->store();
+
+		return $this;
+	}
+
+	/**
+	 * Insert the current node as the first (leftmost) child of a parent node.
+	 *
+	 * WARNING: If it's an existing node it will be COPIED, not moved.
+	 *
+	 * @param FOFTableNested $parentNode The node which will become our parent
 	 *
 	 * @return $this for chaining
 	 *
 	 * @throws Exception
+	 * @throws RuntimeException
 	 */
-	public function insertAsChildOf(FOFTableNested &$parentNode)
+	public function insertAsFirstChildOf(FOFTableNested &$parentNode)
 	{
-		return $this->insertAsLastChildOf($parentNode);
+		if ($parentNode->lft >= $parentNode->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the parent node');
+		}
+
+		// Get a reference to the database
+		$db = $this->getDbo();
+
+		// Get the field names
+		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+		$fldLft = $db->qn($this->getColumnAlias('lft'));
+
+		// Nullify the PK, so a new record will be created
+		$pk        = $this->getKeyName();
+		$this->$pk = null;
+
+		// Get the value of the parent node's rgt
+		$myLeft = $parentNode->lft;
+
+		// Update my lft/rgt values
+		$this->lft = $myLeft + 1;
+		$this->rgt = $myLeft + 2;
+
+		// Update parent node's right (we added two elements in there, remember?)
+		$parentNode->rgt += 2;
+
+		// Wrap everything in a transaction
+		$db->transactionStart();
+
+		try
+		{
+			// Make a hole (2 queries)
+			$query = $db->getQuery(true)
+				->update($db->qn($this->getTableName()))
+				->set($fldLft . ' = ' . $fldLft . '+2')
+				->where($fldLft . ' > ' . $db->q($myLeft));
+			$db->setQuery($query)->execute();
+
+			$query = $db->getQuery(true)
+				->update($db->qn($this->getTableName()))
+				->set($fldRgt . ' = ' . $fldRgt . '+ 2')
+				->where($fldRgt . '>' . $db->q($myLeft));
+			$db->setQuery($query)->execute();
+
+			// Insert the new node
+			$this->store();
+
+			// Commit the transaction
+			$db->transactionCommit();
+		}
+		catch (\Exception $e)
+		{
+			// Roll back the transaction on error
+			$db->transactionRollback();
+
+			throw $e;
+		}
+
+		return $this;
 	}
 
 	/**
@@ -544,10 +786,10 @@ class FOFTableNested extends FOFTable
 	 */
 	public function insertLeftOf(FOFTableNested &$siblingNode)
 	{
-        if($siblingNode->lft >= $siblingNode->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the sibling node');
-        }
+		if ($siblingNode->lft >= $siblingNode->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the sibling node');
+		}
 
 		// Get a reference to the database
 		$db = $this->getDbo();
@@ -556,9 +798,9 @@ class FOFTableNested extends FOFTable
 		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
 		$fldLft = $db->qn($this->getColumnAlias('lft'));
 
-        // Nullify the PK, so a new record will be created
-        $pk = $this->getKeyName();
-        $this->$pk = null;
+		// Nullify the PK, so a new record will be created
+		$pk        = $this->getKeyName();
+		$this->$pk = null;
 
 		// Get the value of the parent node's rgt
 		$myLeft = $siblingNode->lft;
@@ -591,8 +833,8 @@ class FOFTableNested extends FOFTable
 
 			$this->store();
 
-            // Commit the transaction
-            $db->transactionCommit();
+			// Commit the transaction
+			$db->transactionCommit();
 		}
 		catch (\Exception $e)
 		{
@@ -602,6 +844,20 @@ class FOFTableNested extends FOFTable
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Alias for insertRightOf
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @param FOFTableNested $siblingNode
+	 *
+	 * @return $this for chaining
+	 */
+	public function insertAsSiblingOf(FOFTableNested &$siblingNode)
+	{
+		return $this->insertRightOf($siblingNode);
 	}
 
 	/**
@@ -617,10 +873,10 @@ class FOFTableNested extends FOFTable
 	 */
 	public function insertRightOf(FOFTableNested &$siblingNode)
 	{
-        if($siblingNode->lft >= $siblingNode->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the sibling node');
-        }
+		if ($siblingNode->lft >= $siblingNode->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the sibling node');
+		}
 
 		// Get a reference to the database
 		$db = $this->getDbo();
@@ -629,9 +885,9 @@ class FOFTableNested extends FOFTable
 		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
 		$fldLft = $db->qn($this->getColumnAlias('lft'));
 
-        // Nullify the PK, so a new record will be created
-        $pk = $this->getKeyName();
-        $this->$pk = null;
+		// Nullify the PK, so a new record will be created
+		$pk        = $this->getKeyName();
+		$this->$pk = null;
 
 		// Get the value of the parent node's lft
 		$myRight = $siblingNode->rgt;
@@ -660,8 +916,8 @@ class FOFTableNested extends FOFTable
 
 			$this->store();
 
-            // Commit the transaction
-            $db->transactionCommit();
+			// Commit the transaction
+			$db->transactionCommit();
 		}
 		catch (\Exception $e)
 		{
@@ -674,32 +930,19 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
-	 * Alias for insertRightOf
-	 *
-     * @codeCoverageIgnore
-	 * @param FOFTableNested $siblingNode
-	 *
-	 * @return $this for chaining
-	 */
-	public function insertAsSiblingOf(FOFTableNested &$siblingNode)
-	{
-		return $this->insertRightOf($siblingNode);
-	}
-
-	/**
 	 * Move the current node (and its subtree) one position to the left in the tree, i.e. before its left-hand sibling
 	 *
-     * @throws  RuntimeException
-     *
+	 * @throws  RuntimeException
+	 *
 	 * @return $this
 	 */
 	public function moveLeft()
 	{
-        // Sanity checks on current node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
+		// Sanity checks on current node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
 
 		// If it is a root node we will not move the node (roots don't participate in tree ordering)
 		if ($this->isRoot())
@@ -716,7 +959,7 @@ class FOFTableNested extends FOFTable
 		}
 
 		// Get the sibling to the left
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$table = $this->getClone();
 		$table->reset();
 		$leftSibling = $table->whereRaw($db->qn($this->getColumnAlias('rgt')) . ' = ' . $db->q($this->lft - 1))
@@ -726,52 +969,6 @@ class FOFTableNested extends FOFTable
 		if (is_object($leftSibling) && ($leftSibling instanceof FOFTableNested))
 		{
 			return $this->moveToLeftOf($leftSibling);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Move the current node (and its subtree) one position to the right in the tree, i.e. after its right-hand sibling
-     *
-     * @throws RuntimeException
-	 *
-	 * @return $this
-	 */
-	public function moveRight()
-	{
-        // Sanity checks on current node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
-
-		// If it is a root node we will not move the node (roots don't participate in tree ordering)
-		if ($this->isRoot())
-		{
-			return $this;
-		}
-
-		// Are we already the rightmost node?
-		$parentNode = $this->getParent();
-
-		if ($parentNode->rgt == ($this->rgt + 1))
-		{
-			return $this;
-		}
-
-		// Get the sibling to the right
-		$db = $this->getDbo();
-
-		$table = $this->getClone();
-		$table->reset();
-		$rightSibling = $table->whereRaw($db->qn($this->getColumnAlias('lft')) . ' = ' . $db->q($this->rgt + 1))
-			->get(0, 1)->current();
-
-		// Move the node
-		if (is_object($rightSibling) && ($rightSibling instanceof FOFTableNested))
-		{
-			return $this->moveToRightOf($rightSibling);
 		}
 
 		return false;
@@ -790,16 +987,16 @@ class FOFTableNested extends FOFTable
 	 */
 	public function moveToLeftOf(FOFTableNested $siblingNode)
 	{
-        // Sanity checks on current and sibling node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
+		// Sanity checks on current and sibling node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
 
-        if($siblingNode->lft >= $siblingNode->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the sibling node');
-        }
+		if ($siblingNode->lft >= $siblingNode->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the sibling node');
+		}
 
 		$db    = $this->getDbo();
 		$left  = $db->qn($this->getColumnAlias('lft'));
@@ -876,10 +1073,56 @@ class FOFTableNested extends FOFTable
 			throw $e;
 		}
 
-        // Let's load the record again to fetch the new values for lft and rgt
-        $this->load();
+		// Let's load the record again to fetch the new values for lft and rgt
+		$this->load();
 
 		return $this;
+	}
+
+	/**
+	 * Move the current node (and its subtree) one position to the right in the tree, i.e. after its right-hand sibling
+	 *
+	 * @throws RuntimeException
+	 *
+	 * @return $this
+	 */
+	public function moveRight()
+	{
+		// Sanity checks on current node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
+
+		// If it is a root node we will not move the node (roots don't participate in tree ordering)
+		if ($this->isRoot())
+		{
+			return $this;
+		}
+
+		// Are we already the rightmost node?
+		$parentNode = $this->getParent();
+
+		if ($parentNode->rgt == ($this->rgt + 1))
+		{
+			return $this;
+		}
+
+		// Get the sibling to the right
+		$db = $this->getDbo();
+
+		$table = $this->getClone();
+		$table->reset();
+		$rightSibling = $table->whereRaw($db->qn($this->getColumnAlias('lft')) . ' = ' . $db->q($this->rgt + 1))
+			->get(0, 1)->current();
+
+		// Move the node
+		if (is_object($rightSibling) && ($rightSibling instanceof FOFTableNested))
+		{
+			return $this->moveToRightOf($rightSibling);
+		}
+
+		return false;
 	}
 
 	/**
@@ -895,16 +1138,16 @@ class FOFTableNested extends FOFTable
 	 */
 	public function moveToRightOf(FOFTableNested $siblingNode)
 	{
-        // Sanity checks on current and sibling node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
+		// Sanity checks on current and sibling node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
 
-        if($siblingNode->lft >= $siblingNode->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the sibling node');
-        }
+		if ($siblingNode->lft >= $siblingNode->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the sibling node');
+		}
 
 		$db    = $this->getDbo();
 		$left  = $db->qn($this->getColumnAlias('lft'));
@@ -981,29 +1224,17 @@ class FOFTableNested extends FOFTable
 			throw $e;
 		}
 
-        // Let's load the record again to fetch the new values for lft and rgt
-        $this->load();
+		// Let's load the record again to fetch the new values for lft and rgt
+		$this->load();
 
 		return $this;
 	}
 
 	/**
-	 * Alias for moveToRightOf
-	 *
-     * @codeCoverageIgnore
-	 * @param FOFTableNested $siblingNode
-	 *
-	 * @return $this for chaining
-	 */
-	public function makeNextSiblingOf(FOFTableNested $siblingNode)
-	{
-		return $this->moveToRightOf($siblingNode);
-	}
-
-	/**
 	 * Alias for makeNextSiblingOf
 	 *
-     * @codeCoverageIgnore
+	 * @codeCoverageIgnore
+	 *
 	 * @param FOFTableNested $siblingNode
 	 *
 	 * @return $this for chaining
@@ -1014,9 +1245,24 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
+	 * Alias for moveToRightOf
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @param FOFTableNested $siblingNode
+	 *
+	 * @return $this for chaining
+	 */
+	public function makeNextSiblingOf(FOFTableNested $siblingNode)
+	{
+		return $this->moveToRightOf($siblingNode);
+	}
+
+	/**
 	 * Alias for moveToLeftOf
 	 *
-     * @codeCoverageIgnore
+	 * @codeCoverageIgnore
+	 *
 	 * @param FOFTableNested $siblingNode
 	 *
 	 * @return $this for chaining
@@ -1037,16 +1283,16 @@ class FOFTableNested extends FOFTable
 	 */
 	public function makeFirstChildOf(FOFTableNested $parentNode)
 	{
-        // Sanity checks on current and sibling node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
+		// Sanity checks on current and sibling node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
 
-        if($parentNode->lft >= $parentNode->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the parent node');
-        }
+		if ($parentNode->lft >= $parentNode->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the parent node');
+		}
 
 		$db    = $this->getDbo();
 		$left  = $db->qn($this->getColumnAlias('lft'));
@@ -1123,10 +1369,24 @@ class FOFTableNested extends FOFTable
 			throw $e;
 		}
 
-        // Let's load the record again to fetch the new values for lft and rgt
-        $this->load();
+		// Let's load the record again to fetch the new values for lft and rgt
+		$this->load();
 
 		return $this;
+	}
+
+	/**
+	 * Alias for makeLastChildOf
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @param FOFTableNested $parentNode
+	 *
+	 * @return $this for chaining
+	 */
+	public function makeChildOf(FOFTableNested $parentNode)
+	{
+		return $this->makeLastChildOf($parentNode);
 	}
 
 	/**
@@ -1141,16 +1401,16 @@ class FOFTableNested extends FOFTable
 	 */
 	public function makeLastChildOf(FOFTableNested $parentNode)
 	{
-        // Sanity checks on current and sibling node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
+		// Sanity checks on current and sibling node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
 
-        if($parentNode->lft >= $parentNode->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the parent node');
-        }
+		if ($parentNode->lft >= $parentNode->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the parent node');
+		}
 
 		$db    = $this->getDbo();
 		$left  = $db->qn($this->getColumnAlias('lft'));
@@ -1227,23 +1487,10 @@ class FOFTableNested extends FOFTable
 			throw $e;
 		}
 
-        // Let's load the record again to fetch the new values for lft and rgt
-        $this->load();
+		// Let's load the record again to fetch the new values for lft and rgt
+		$this->load();
 
 		return $this;
-	}
-
-	/**
-	 * Alias for makeLastChildOf
-	 *
-     * @codeCoverageIgnore
-	 * @param FOFTableNested $parentNode
-	 *
-	 * @return $this for chaining
-	 */
-	public function makeChildOf(FOFTableNested $parentNode)
-	{
-		return $this->makeLastChildOf($parentNode);
 	}
 
 	/**
@@ -1277,135 +1524,103 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
-	 * Gets the level (depth) of this node in the tree. The result is cached in $this->treeDepth for faster retrieval.
+	 * Returns the root node of the tree this node belongs to
 	 *
-     * @throws  RuntimeException
-     *
-	 * @return int|mixed
+	 * @return self
+	 *
+	 * @throws \RuntimeException
 	 */
-	public function getLevel()
+	public function getRoot()
 	{
-        // Sanity checks on current node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
-
-		if (is_null($this->treeDepth))
+		// Sanity checks on current node position
+		if ($this->lft >= $this->rgt)
 		{
-			$db = $this->getDbo();
-
-			$fldLft = $db->qn($this->getColumnAlias('lft'));
-			$fldRgt = $db->qn($this->getColumnAlias('rgt'));
-
-			$query = $db->getQuery(true)
-				->select('(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - 1) AS ' . $db->qn('depth'))
-				->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-				->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-				->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
-				->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-				->where($db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft))
-				->group($db->qn('node') . '.' . $fldLft)
-				->order($db->qn('node') . '.' . $fldLft . ' ASC');
-
-			$this->treeDepth = $db->setQuery($query, 0, 1)->loadResult();
+			throw new RuntimeException('Invalid position values for the current node');
 		}
 
-		return $this->treeDepth;
-	}
-
-	/**
-	 * Returns the immediate parent of the current node
-	 *
-     * @throws RuntimeException
-     *
-	 * @return FOFTableNested
-	 */
-	public function getParent()
-	{
-        // Sanity checks on current node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
-
+		// If this is a root node return itself (there is no such thing as the root of a root node)
 		if ($this->isRoot())
 		{
 			return $this;
 		}
 
-		if (empty($this->treeParent) || !is_object($this->treeParent) || !($this->treeParent instanceof FOFTableNested))
+		if (empty($this->treeRoot) || !is_object($this->treeRoot) || !($this->treeRoot instanceof FOFTableNested))
 		{
+			$this->treeRoot = null;
+
+			// First try to get the record with the minimum ID
 			$db = $this->getDbo();
 
 			$fldLft = $db->qn($this->getColumnAlias('lft'));
 			$fldRgt = $db->qn($this->getColumnAlias('rgt'));
 
-			$query = $db->getQuery(true)
-				->select($db->qn('parent') . '.' . $fldLft)
-				->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-				->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-				->where($db->qn('node') . '.' . $fldLft . ' > ' . $db->qn('parent') . '.' . $fldLft)
-				->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-				->where($db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft))
-				->order($db->qn('parent') . '.' . $fldLft . ' DESC');
-			$targetLft = $db->setQuery($query, 0, 1)->loadResult();
+			$subQuery = $db->getQuery(true)
+				->select('MIN(' . $fldLft . ')')
+				->from($db->qn($this->getTableName()));
 
-			$table = $this->getClone();
-			$table->reset();
-			$this->treeParent = $table
-				->whereRaw($fldLft . ' = ' . $db->q($targetLft))
-				->get()->current();
+			try
+			{
+				$table = $this->getClone();
+				$table->reset();
+				$root = $table
+					->whereRaw($fldLft . ' = (' . (string) $subQuery . ')')
+					->get(0, 1)->current();
+
+				if ($this->isDescendantOf($root))
+				{
+					$this->treeRoot = $root;
+				}
+			}
+			catch (\RuntimeException $e)
+			{
+				// If there is no root found throw an exception. Basically: your table is FUBAR.
+				throw new \RuntimeException("No root found for table " . $this->getTableName() . ", node lft=" . $this->lft);
+			}
+
+			// If the above method didn't work, get all roots and select the one with the appropriate lft/rgt values
+			if (is_null($this->treeRoot))
+			{
+				// Find the node with depth = 0, lft < our lft and rgt > our right. That's our root node.
+				$query = $db->getQuery(true)
+					->select(array(
+						$db->qn('node') . '.' . $fldLft,
+						'(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - 1) AS ' . $db->qn('depth')
+					))
+					->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
+					->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
+					->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
+					->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
+					->where($db->qn('node') . '.' . $fldLft . ' < ' . $db->q($this->lft))
+					->where($db->qn('node') . '.' . $fldRgt . ' > ' . $db->q($this->rgt))
+					->having($db->qn('depth') . ' = ' . $db->q(0))
+					->group($db->qn('node') . '.' . $fldLft);
+
+				// Get the lft value
+				$targetLeft = $db->setQuery($query)->loadResult();
+
+				if (empty($targetLeft))
+				{
+					// If there is no root found throw an exception. Basically: your table is FUBAR.
+					throw new \RuntimeException("No root found for table " . $this->getTableName() . ", node lft=" . $this->lft);
+				}
+
+				try
+				{
+					$table = $this->getClone();
+					$table->reset();
+					$this->treeRoot = $table
+						->whereRaw($fldLft . ' = ' . $db->q($targetLeft))
+						->get(0, 1)->current();
+				}
+				catch (\RuntimeException $e)
+				{
+					// If there is no root found throw an exception. Basically: your table is FUBAR.
+					throw new \RuntimeException("No root found for table " . $this->getTableName() . ", node lft=" . $this->lft);
+				}
+			}
 		}
 
-		return $this->treeParent;
-	}
-
-	/**
-	 * Is this a top-level root node?
-	 *
-	 * @return bool
-	 */
-	public function isRoot()
-	{
-		// If lft=1 it is necessarily a root node
-		if ($this->lft == 1)
-		{
-			return true;
-		}
-
-		// Otherwise make sure its level is 0
-		return $this->getLevel() == 0;
-	}
-
-	/**
-	 * Is this a leaf node (a node without children)?
-	 *
-     * @throws  RuntimeException
-     *
-	 * @return bool
-	 */
-	public function isLeaf()
-	{
-        // Sanity checks on current node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
-
-		return ($this->rgt - 1) == $this->lft;
-	}
-
-	/**
-	 * Is this a child node (not root)?
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return bool
-	 */
-	public function isChild()
-	{
-		return !$this->isRoot();
+		return $this->treeRoot;
 	}
 
 	/**
@@ -1413,55 +1628,60 @@ class FOFTableNested extends FOFTable
 	 *
 	 * @param FOFTableNested $otherNode
 	 *
-     * @throws  RuntimeException
-     *
+	 * @throws  RuntimeException
+	 *
 	 * @return bool
 	 */
 	public function isDescendantOf(FOFTableNested $otherNode)
 	{
-        // Sanity checks on current node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
+		// Sanity checks on current node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
 
-        if($otherNode->lft >= $otherNode->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the other node');
-        }
+		if ($otherNode->lft >= $otherNode->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the other node');
+		}
 
 		return ($otherNode->lft < $this->lft) && ($otherNode->rgt > $this->rgt);
 	}
 
 	/**
-	 * Returns true if $otherNode is ourselves or if we are a descendant of $otherNode
+	 * Is $node this very node?
 	 *
-	 * @param FOFTableNested $otherNode
+	 * @param FOFTableNested $node
 	 *
-     * @throws  RuntimeException
-     *
+	 * @throws  RuntimeException
+	 *
 	 * @return bool
 	 */
-	public function isSelfOrDescendantOf(FOFTableNested $otherNode)
+	public function equals(FOFTableNested &$node)
 	{
-        // Sanity checks on current node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
+		// Sanity checks on current node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
 
-        if($otherNode->lft >= $otherNode->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the other node');
-        }
+		if ($node->lft >= $node->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the other node');
+		}
 
-		return ($otherNode->lft <= $this->lft) && ($otherNode->rgt >= $this->rgt);
+		return (
+			($this->getId() == $node->getId())
+			&& ($this->lft == $node->lft)
+			&& ($this->rgt == $node->rgt)
+		);
 	}
 
 	/**
 	 * Returns true if we are an ancestor of $otherNode
 	 *
-     * @codeCoverageIgnore
+	 * @codeCoverageIgnore
+	 *
 	 * @param FOFTableNested $otherNode
 	 *
 	 * @return bool
@@ -1474,7 +1694,8 @@ class FOFTableNested extends FOFTable
 	/**
 	 * Returns true if $otherNode is ourselves or we are an ancestor of $otherNode
 	 *
-     * @codeCoverageIgnore
+	 * @codeCoverageIgnore
+	 *
 	 * @param FOFTableNested $otherNode
 	 *
 	 * @return bool
@@ -1485,40 +1706,37 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
-	 * Is $node this very node?
+	 * Returns true if $otherNode is ourselves or if we are a descendant of $otherNode
 	 *
-	 * @param FOFTableNested $node
+	 * @param FOFTableNested $otherNode
 	 *
-     * @throws  RuntimeException
-     *
+	 * @throws  RuntimeException
+	 *
 	 * @return bool
 	 */
-	public function equals(FOFTableNested &$node)
+	public function isSelfOrDescendantOf(FOFTableNested $otherNode)
 	{
-        // Sanity checks on current node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
+		// Sanity checks on current node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
 
-        if($node->lft >= $node->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the other node');
-        }
+		if ($otherNode->lft >= $otherNode->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the other node');
+		}
 
-		return (
-			($this->getId() == $node->getId())
-			&& ($this->lft == $node->lft)
-			&& ($this->rgt == $node->rgt)
-		);
+		return ($otherNode->lft <= $this->lft) && ($otherNode->rgt >= $this->rgt);
 	}
 
 	/**
 	 * Alias for isDescendantOf
 	 *
-     * @codeCoverageIgnore
+	 * @codeCoverageIgnore
+	 *
 	 * @param FOFTableNested $otherNode
-     *
+	 *
 	 * @return bool
 	 */
 	public function insideSubtree(FOFTableNested $otherNode)
@@ -1554,6 +1772,33 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
+	 * Is this a child node (not root)?
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return bool
+	 */
+	public function isChild()
+	{
+		return !$this->isRoot();
+	}
+
+	/**
+	 * Get all ancestors to this node and the node itself. In other words it gets the full path to the node and the node
+	 * itself.
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return FOFDatabaseIterator
+	 */
+	public function getAncestorsAndSelf()
+	{
+		$this->scopeAncestorsAndSelf();
+
+		return $this->get();
+	}
+
+	/**
 	 * get() will return all ancestor nodes and ourselves
 	 *
 	 * @return void
@@ -1570,6 +1815,93 @@ class FOFTableNested extends FOFTable
 		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' >= ' . $db->qn('node') . '.' . $fldLft);
 		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' <= ' . $db->qn('node') . '.' . $fldRgt);
 		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' = ' . $db->q($this->lft));
+	}
+
+	/**
+	 * Get all ancestors to this node and the node itself, but not the root node. If you want to
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return FOFDatabaseIterator
+	 */
+	public function getAncestorsAndSelfWithoutRoot()
+	{
+		$this->scopeAncestorsAndSelf();
+		$this->scopeWithoutRoot();
+
+		return $this->get();
+	}
+
+	/**
+	 * get() will not return our root if it's part of the query results
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return void
+	 */
+	protected function scopeWithoutRoot()
+	{
+		$rootNode = $this->getRoot();
+		$this->withoutNode($rootNode);
+	}
+
+	/**
+	 * get() will not return the selected node if it's part of the query results
+	 *
+	 * @param FOFTableNested $node The node to exclude from the results
+	 *
+	 * @return void
+	 */
+	public function withoutNode(FOFTableNested $node)
+	{
+		$db = $this->getDbo();
+
+		$fldLft = $db->qn($this->getColumnAlias('lft'));
+
+		$this->whereRaw('NOT(' . $db->qn('node') . '.' . $fldLft . ' = ' . $db->q($node->lft) . ')');
+	}
+
+	/**
+	 * Get all ancestors to this node but not the node itself. In other words it gets the path to the node, without the
+	 * node itself.
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return FOFDatabaseIterator
+	 */
+	public function getAncestors()
+	{
+		$this->scopeAncestorsAndSelf();
+		$this->scopeWithoutSelf();
+
+		return $this->get();
+	}
+
+	/**
+	 * get() will not return ourselves if it's part of the query results
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return void
+	 */
+	protected function scopeWithoutSelf()
+	{
+		$this->withoutNode($this);
+	}
+
+	/**
+	 * Get all ancestors to this node but not the node itself and its root.
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return FOFDatabaseIterator
+	 */
+	public function getAncestorsWithoutRoot()
+	{
+		$this->scopeAncestors();
+		$this->scopeWithoutRoot();
+
+		return $this->get();
 	}
 
 	/**
@@ -1592,6 +1924,20 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
+	 * Get all sibling nodes, including ourselves
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return FOFDatabaseIterator
+	 */
+	public function getSiblingsAndSelf()
+	{
+		$this->scopeSiblingsAndSelf();
+
+		return $this->get();
+	}
+
+	/**
 	 * get() will return all sibling nodes and ourselves
 	 *
 	 * @return void
@@ -1609,16 +1955,45 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
+	 * Get all sibling nodes, except ourselves
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return FOFDatabaseIterator
+	 */
+	public function getSiblings()
+	{
+		$this->scopeSiblings();
+
+		return $this->get();
+	}
+
+	/**
 	 * get() will return all sibling nodes but not ourselves
 	 *
-     * @codeCoverageIgnore
-     *
+	 * @codeCoverageIgnore
+	 *
 	 * @return void
 	 */
 	protected function scopeSiblings()
 	{
 		$this->scopeSiblingsAndSelf();
 		$this->scopeWithoutSelf();
+	}
+
+	/**
+	 * Get all leaf nodes in the tree. You may want to use the scopes to narrow down the search in a specific subtree or
+	 * path.
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return FOFDatabaseIterator
+	 */
+	public function getLeaves()
+	{
+		$this->scopeLeaves();
+
+		return $this->get();
 	}
 
 	/**
@@ -1634,6 +2009,22 @@ class FOFTableNested extends FOFTable
 		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
 
 		$this->whereRaw($db->qn('node') . '.' . $fldLft . ' = ' . $db->qn('node') . '.' . $fldRgt . ' - ' . $db->q(1));
+	}
+
+	/**
+	 * Get all descendant (children) nodes and ourselves.
+	 *
+	 * Note: all descendant nodes, even descendants of our immediate descendants, will be returned.
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return FOFDatabaseIterator
+	 */
+	public function getDescendantsAndSelf()
+	{
+		$this->scopeDescendantsAndSelf();
+
+		return $this->get();
 	}
 
 	/**
@@ -1656,22 +2047,18 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
-	 * get() will return all descendants (even subtrees of subtrees!) but not ourselves
+	 * Get the immediate descendants (children). Unlike getDescendants it only goes one level deep into the tree
+	 * structure. Descendants of descendant nodes will not be returned.
 	 *
-	 * @return void
+	 * @codeCoverageIgnore
+	 *
+	 * @return FOFDatabaseIterator
 	 */
-	protected function scopeDescendants()
+	public function getImmediateDescendants()
 	{
-		$this->treeNestedGet = true;
+		$this->scopeImmediateDescendants();
 
-		$db = $this->getDbo();
-
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
-
-		$this->whereRaw($db->qn('node') . '.' . $fldLft . ' > ' . $db->qn('parent') . '.' . $fldLft);
-		$this->whereRaw($db->qn('node') . '.' . $fldLft . ' < ' . $db->qn('parent') . '.' . $fldRgt);
-		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' = ' . $db->q($this->lft));
+		return $this->get();
 	}
 
 	/**
@@ -1681,11 +2068,11 @@ class FOFTableNested extends FOFTable
 	 */
 	protected function scopeImmediateDescendants()
 	{
-        // Sanity checks on current node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
+		// Sanity checks on current node position
+		if ($this->lft >= $this->rgt)
+		{
+			throw new RuntimeException('Invalid position values for the current node');
+		}
 
 		$db = $this->getDbo();
 
@@ -1743,298 +2130,6 @@ class FOFTableNested extends FOFTable
 	}
 
 	/**
-	 * get() will not return the selected node if it's part of the query results
-	 *
-	 * @param FOFTableNested $node The node to exclude from the results
-	 *
-	 * @return void
-	 */
-	public function withoutNode(FOFTableNested $node)
-	{
-		$db = $this->getDbo();
-
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
-
-		$this->whereRaw('NOT(' . $db->qn('node') . '.' . $fldLft . ' = ' . $db->q($node->lft) . ')');
-	}
-
-	/**
-	 * get() will not return ourselves if it's part of the query results
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return void
-	 */
-	protected function scopeWithoutSelf()
-	{
-		$this->withoutNode($this);
-	}
-
-	/**
-	 * get() will not return our root if it's part of the query results
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return void
-	 */
-	protected function scopeWithoutRoot()
-	{
-		$rootNode = $this->getRoot();
-		$this->withoutNode($rootNode);
-	}
-
-	/**
-	 * Returns the root node of the tree this node belongs to
-	 *
-	 * @return self
-	 *
-	 * @throws \RuntimeException
-	 */
-	public function getRoot()
-	{
-        // Sanity checks on current node position
-        if($this->lft >= $this->rgt)
-        {
-            throw new RuntimeException('Invalid position values for the current node');
-        }
-
-		// If this is a root node return itself (there is no such thing as the root of a root node)
-		if ($this->isRoot())
-		{
-			return $this;
-		}
-
-		if (empty($this->treeRoot) || !is_object($this->treeRoot) || !($this->treeRoot instanceof FOFTableNested))
-		{
-			$this->treeRoot = null;
-
-			// First try to get the record with the minimum ID
-			$db = $this->getDbo();
-
-			$fldLft = $db->qn($this->getColumnAlias('lft'));
-			$fldRgt = $db->qn($this->getColumnAlias('rgt'));
-
-			$subQuery = $db->getQuery(true)
-				->select('MIN(' . $fldLft . ')')
-				->from($db->qn($this->getTableName()));
-
-			try
-			{
-				$table = $this->getClone();
-				$table->reset();
-				$root = $table
-					->whereRaw($fldLft . ' = (' . (string)$subQuery . ')')
-					->get(0, 1)->current();
-
-				if ($this->isDescendantOf($root))
-				{
-					$this->treeRoot = $root;
-				}
-			}
-			catch (\RuntimeException $e)
-			{
-				// If there is no root found throw an exception. Basically: your table is FUBAR.
-				throw new \RuntimeException("No root found for table " . $this->getTableName() . ", node lft=" . $this->lft);
-			}
-
-			// If the above method didn't work, get all roots and select the one with the appropriate lft/rgt values
-			if (is_null($this->treeRoot))
-			{
-				// Find the node with depth = 0, lft < our lft and rgt > our right. That's our root node.
-				$query = $db->getQuery(true)
-					->select(array(
-                        $db->qn('node') . '.' . $fldLft,
-						'(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - 1) AS ' . $db->qn('depth')
-					))
-					->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-					->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-					->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
-					->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-					->where($db->qn('node') . '.' . $fldLft . ' < ' . $db->q($this->lft))
-					->where($db->qn('node') . '.' . $fldRgt . ' > ' . $db->q($this->rgt))
-					->having($db->qn('depth') . ' = ' . $db->q(0))
-					->group($db->qn('node') . '.' . $fldLft);
-
-				// Get the lft value
-				$targetLeft = $db->setQuery($query)->loadResult();
-
-				if (empty($targetLeft))
-				{
-					// If there is no root found throw an exception. Basically: your table is FUBAR.
-					throw new \RuntimeException("No root found for table " . $this->getTableName() . ", node lft=" . $this->lft);
-				}
-
-				try
-				{
-					$table = $this->getClone();
-					$table->reset();
-					$this->treeRoot = $table
-						->whereRaw($fldLft . ' = ' . $db->q($targetLeft))
-						->get(0, 1)->current();
-				}
-				catch (\RuntimeException $e)
-				{
-					// If there is no root found throw an exception. Basically: your table is FUBAR.
-					throw new \RuntimeException("No root found for table " . $this->getTableName() . ", node lft=" . $this->lft);
-				}
-			}
-		}
-
-		return $this->treeRoot;
-	}
-
-	/**
-	 * Get all ancestors to this node and the node itself. In other words it gets the full path to the node and the node
-	 * itself.
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return FOFDatabaseIterator
-	 */
-	public function getAncestorsAndSelf()
-	{
-		$this->scopeAncestorsAndSelf();
-
-		return $this->get();
-	}
-
-	/**
-	 * Get all ancestors to this node and the node itself, but not the root node. If you want to
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return FOFDatabaseIterator
-	 */
-	public function getAncestorsAndSelfWithoutRoot()
-	{
-		$this->scopeAncestorsAndSelf();
-		$this->scopeWithoutRoot();
-
-		return $this->get();
-	}
-
-	/**
-	 * Get all ancestors to this node but not the node itself. In other words it gets the path to the node, without the
-	 * node itself.
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return FOFDatabaseIterator
-	 */
-	public function getAncestors()
-	{
-		$this->scopeAncestorsAndSelf();
-		$this->scopeWithoutSelf();
-
-		return $this->get();
-	}
-
-	/**
-	 * Get all ancestors to this node but not the node itself and its root.
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return FOFDatabaseIterator
-	 */
-	public function getAncestorsWithoutRoot()
-	{
-		$this->scopeAncestors();
-		$this->scopeWithoutRoot();
-
-		return $this->get();
-	}
-
-	/**
-	 * Get all sibling nodes, including ourselves
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return FOFDatabaseIterator
-	 */
-	public function getSiblingsAndSelf()
-	{
-		$this->scopeSiblingsAndSelf();
-
-		return $this->get();
-	}
-
-	/**
-	 * Get all sibling nodes, except ourselves
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return FOFDatabaseIterator
-	 */
-	public function getSiblings()
-	{
-		$this->scopeSiblings();
-
-		return $this->get();
-	}
-
-	/**
-	 * Get all leaf nodes in the tree. You may want to use the scopes to narrow down the search in a specific subtree or
-	 * path.
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return FOFDatabaseIterator
-	 */
-	public function getLeaves()
-	{
-		$this->scopeLeaves();
-
-		return $this->get();
-	}
-
-	/**
-	 * Get all descendant (children) nodes and ourselves.
-	 *
-	 * Note: all descendant nodes, even descendants of our immediate descendants, will be returned.
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return FOFDatabaseIterator
-	 */
-	public function getDescendantsAndSelf()
-	{
-		$this->scopeDescendantsAndSelf();
-
-		return $this->get();
-	}
-
-	/**
-	 * Get only our descendant (children) nodes, not ourselves.
-	 *
-	 * Note: all descendant nodes, even descendants of our immediate descendants, will be returned.
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return FOFDatabaseIterator
-	 */
-	public function getDescendants()
-	{
-		$this->scopeDescendants();
-
-		return $this->get();
-	}
-
-	/**
-	 * Get the immediate descendants (children). Unlike getDescendants it only goes one level deep into the tree
-	 * structure. Descendants of descendant nodes will not be returned.
-	 *
-     * @codeCoverageIgnore
-     *
-	 * @return FOFDatabaseIterator
-	 */
-	public function getImmediateDescendants()
-	{
-		$this->scopeImmediateDescendants();
-
-		return $this->get();
-	}
-
-	/**
 	 * Returns a hashed array where each element's key is the value of the $key column (default: the ID column of the
 	 * table) and its value is the value of the $column column (default: title). Each nesting level will have the value
 	 * of the $column column prefixed by a number of $separator strings, as many as its nesting level (depth).
@@ -2064,7 +2159,7 @@ class FOFTableNested extends FOFTable
 			$column = 'title';
 		}
 
-		$fldKey = $db->qn($this->getColumnAlias($key));
+		$fldKey    = $db->qn($this->getColumnAlias($key));
 		$fldColumn = $db->qn($this->getColumnAlias($column));
 
 		$query = $db->getQuery(true)
@@ -2081,7 +2176,7 @@ class FOFTableNested extends FOFTable
 			->order($db->qn('node') . '.' . $fldLft . ' ASC');
 
 		$tempResults = $db->setQuery($query)->loadAssocList();
-		$ret = array();
+		$ret         = array();
 
 		if (!empty($tempResults))
 		{
@@ -2121,91 +2216,5 @@ class FOFTableNested extends FOFTable
 	public function rebuild()
 	{
 		// @todo
-	}
-
-	/**
-	 * Resets cached values used to speed up querying the tree
-	 *
-	 * @return  static  for chaining
-	 */
-	protected function resetTreeCache()
-	{
-		$this->treeDepth = null;
-		$this->treeRoot = null;
-		$this->treeParent = null;
-		$this->treeNestedGet = false;
-
-		return $this;
-	}
-
-	/**
-	 * Add custom, pre-compiled WHERE clauses for use in buildQuery. The raw WHERE clause you specify is added as is to
-	 * the query generated by buildQuery. You are responsible for quoting and escaping the field names and data found
-	 * inside the WHERE clause.
-	 *
-	 * @param   string $rawWhereClause The raw WHERE clause to add
-	 *
-	 * @return  $this  For chaining
-	 */
-	public function whereRaw($rawWhereClause)
-	{
-		$this->whereClauses[] = $rawWhereClause;
-
-		return $this;
-	}
-
-	/**
-	 * Builds the query for the get() method
-	 *
-	 * @return JDatabaseQuery
-	 */
-	protected function buildQuery()
-	{
-		$db = $this->getDbo();
-
-		$query = $db->getQuery(true)
-			->select($db->qn('node') . '.*')
-			->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'));
-
-		if ($this->treeNestedGet)
-		{
-			$query
-				->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'));
-		}
-
-		// Apply custom WHERE clauses
-		if (count($this->whereClauses))
-		{
-			foreach ($this->whereClauses as $clause)
-			{
-				$query->where($clause);
-			}
-		}
-
-		return $query;
-	}
-
-	/**
-	 * Returns a database iterator to retrieve records. Use the scope methods and the whereRaw method to define what
-	 * exactly will be returned.
-	 *
-	 * @param   integer $limitstart How many items to skip from the start, only when $overrideLimits = true
-	 * @param   integer $limit      How many items to return, only when $overrideLimits = true
-	 *
-	 * @return  FOFDatabaseIterator  The data collection
-	 */
-	public function get($limitstart = 0, $limit = 0)
-	{
-		$limitstart = max($limitstart, 0);
-		$limit = max($limit, 0);
-
-		$query = $this->buildQuery();
-		$db = $this->getDbo();
-		$db->setQuery($query, $limitstart, $limit);
-		$cursor = $db->execute();
-
-		$dataCollection = FOFDatabaseIterator::getIterator($db->name, $cursor, null, $this->config['_table_class']);
-
-		return $dataCollection;
 	}
 }

@@ -19,7 +19,7 @@ class LanguagesModelLanguage extends JModelAdmin
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array $config An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -39,8 +39,8 @@ class LanguagesModelLanguage extends JModelAdmin
 	/**
 	 * Method to get the group form.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure.
 	 *
@@ -62,7 +62,7 @@ class LanguagesModelLanguage extends JModelAdmin
 	/**
 	 * Method to save the form data.
 	 *
-	 * @param   array  $data  The form data.
+	 * @param   array $data The form data.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -151,9 +151,9 @@ class LanguagesModelLanguage extends JModelAdmin
 	/**
 	 * Override to get the table.
 	 *
-	 * @param   string  $name     Name of the table.
-	 * @param   string  $prefix   Table name prefix.
-	 * @param   array   $options  Array of options.
+	 * @param   string $name    Name of the table.
+	 * @param   string $prefix  Table name prefix.
+	 * @param   array  $options Array of options.
 	 *
 	 * @return  JTable
 	 *
@@ -167,8 +167,8 @@ class LanguagesModelLanguage extends JModelAdmin
 	/**
 	 * Custom clean cache method.
 	 *
-	 * @param   string   $group      Optional cache group name.
-	 * @param   integer  $client_id  Application client id.
+	 * @param   string  $group     Optional cache group name.
+	 * @param   integer $client_id Application client id.
 	 *
 	 * @return  void
 	 *
@@ -227,7 +227,7 @@ class LanguagesModelLanguage extends JModelAdmin
 	/**
 	 * Method to get a member item.
 	 *
-	 * @param   integer  $langId  The id of the member to get.
+	 * @param   integer $langId The id of the member to get.
 	 *
 	 * @return  mixed  User data object on success, false on failure.
 	 *

@@ -76,9 +76,10 @@ class JStream extends JObject
 
 	/**
 	 * Read Processing method
+	 *
 	 * @var    string  gz, bz, f
-	 * If a scheme is detected, fopen will be defaulted
-	 * To use compression with a network stream use a filter
+	 *         If a scheme is detected, fopen will be defaulted
+	 *         To use compression with a network stream use a filter
 	 * @since  11.1
 	 */
 	protected $processingmethod = 'f';
@@ -134,18 +135,39 @@ class JStream extends JObject
 	/**
 	 * Constructor
 	 *
-	 * @param   string  $writeprefix  Prefix of the stream (optional). Unlike the JPATH_*, this has a final path separator!
-	 * @param   string  $readprefix   The read prefix (optional).
-	 * @param   array   $context      The context options (optional).
+	 * @param   string $writeprefix Prefix of the stream (optional). Unlike the JPATH_*, this has a final path separator!
+	 * @param   string $readprefix  The read prefix (optional).
+	 * @param   array  $context     The context options (optional).
 	 *
 	 * @since   11.1
 	 */
 	public function __construct($writeprefix = '', $readprefix = '', $context = array())
 	{
-		$this->writeprefix = $writeprefix;
-		$this->readprefix = $readprefix;
+		$this->writeprefix    = $writeprefix;
+		$this->readprefix     = $readprefix;
 		$this->contextOptions = $context;
 		$this->_buildContext();
+	}
+
+	/**
+	 * Stream contexts
+	 * Builds the context from the array
+	 *
+	 * @return  mixed
+	 *
+	 * @since   11.1
+	 */
+	public function _buildContext()
+	{
+		// According to the manual this always works!
+		if (count($this->contextOptions))
+		{
+			$this->context = @stream_context_create($this->contextOptions);
+		}
+		else
+		{
+			$this->context = null;
+		}
 	}
 
 	/**
@@ -160,133 +182,6 @@ class JStream extends JObject
 		{
 			@$this->close();
 		}
-	}
-
-	/**
-	 * Generic File Operations
-	 *
-	 * Open a stream with some lazy loading smarts
-	 *
-	 * @param   string    $filename              Filename
-	 * @param   string    $mode                  Mode string to use
-	 * @param   boolean   $use_include_path      Use the PHP include path
-	 * @param   resource  $context               Context to use when opening
-	 * @param   boolean   $use_prefix            Use a prefix to open the file
-	 * @param   boolean   $relative              Filename is a relative path (if false, strips JPATH_ROOT to make it relative)
-	 * @param   boolean   $detectprocessingmode  Detect the processing method for the file and use the appropriate function
-	 *                                           to handle output automatically
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 */
-	public function open($filename, $mode = 'r', $use_include_path = false, $context = null,
-		$use_prefix = false, $relative = false, $detectprocessingmode = false)
-	{
-		$filename = $this->_getFilename($filename, $mode, $use_prefix, $relative);
-
-		if (!$filename)
-		{
-			$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILENAME'));
-
-			return false;
-		}
-
-		$this->filename = $filename;
-		$this->openmode = $mode;
-
-		$url = parse_url($filename);
-		$retval = false;
-
-		if (isset($url['scheme']))
-		{
-			// If we're dealing with a Joomla! stream, load it
-			if (JFilesystemHelper::isJoomlaStream($url['scheme']))
-			{
-				require_once __DIR__ . '/streams/' . $url['scheme'] . '.php';
-			}
-
-			// We have a scheme! force the method to be f
-			$this->processingmethod = 'f';
-		}
-		elseif ($detectprocessingmode)
-		{
-			$ext = strtolower(JFile::getExt($this->filename));
-
-			switch ($ext)
-			{
-				case 'tgz':
-				case 'gz':
-				case 'gzip':
-					$this->processingmethod = 'gz';
-					break;
-
-				case 'tbz2':
-				case 'bz2':
-				case 'bzip2':
-					$this->processingmethod = 'bz';
-					break;
-
-				default:
-					$this->processingmethod = 'f';
-					break;
-			}
-		}
-
-		// Capture PHP errors
-		$php_errormsg = 'Error Unknown whilst opening a file';
-		$track_errors = ini_get('track_errors');
-		ini_set('track_errors', true);
-
-		// Decide which context to use:
-		switch ($this->processingmethod)
-		{
-			// Gzip doesn't support contexts or streams
-			case 'gz':
-				$this->fh = gzopen($filename, $mode, $use_include_path);
-				break;
-
-			// Bzip2 is much like gzip except it doesn't use the include path
-			case 'bz':
-				$this->fh = bzopen($filename, $mode);
-				break;
-
-			// Fopen can handle streams
-			case 'f':
-			default:
-				// One supplied at open; overrides everything
-				if ($context)
-				{
-					$this->fh = fopen($filename, $mode, $use_include_path, $context);
-				}
-				// One provided at initialisation
-				elseif ($this->context)
-				{
-					$this->fh = fopen($filename, $mode, $use_include_path, $this->context);
-				}
-				// No context; all defaults
-				else
-				{
-					$this->fh = fopen($filename, $mode, $use_include_path);
-				}
-
-				break;
-		}
-
-		if (!$this->fh)
-		{
-			$this->setError($php_errormsg);
-		}
-		else
-		{
-			$retval = true;
-		}
-
-		// Restore error tracking to what it was before
-		ini_set('track_errors', $track_errors);
-
-		// Return the result
-		return $retval;
 	}
 
 	/**
@@ -339,7 +234,7 @@ class JStream extends JObject
 		{
 			// Reset this
 			$this->fh = null;
-			$retval = true;
+			$retval   = true;
 		}
 
 		// If we wrote, chmod the file after it's closed
@@ -356,65 +251,33 @@ class JStream extends JObject
 	}
 
 	/**
-	 * Work out if we're at the end of the file for a stream
+	 * Chmod wrapper
+	 *
+	 * @param   string $filename File name.
+	 * @param   mixed  $mode     Mode to use.
 	 *
 	 * @return  boolean
 	 *
 	 * @since   11.1
 	 */
-	public function eof()
+	public function chmod($filename = '', $mode = 0)
 	{
-		if (!$this->fh)
+		if (!$filename)
 		{
-			$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILE_NOT_OPEN'));
+			if (!isset($this->filename) || !$this->filename)
+			{
+				$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILENAME'));
 
-			return false;
+				return false;
+			}
+
+			$filename = $this->filename;
 		}
 
-		// Capture PHP errors
-		$php_errormsg = '';
-		$track_errors = ini_get('track_errors');
-		ini_set('track_errors', true);
-
-		switch ($this->processingmethod)
+		// If no mode is set use the default
+		if (!$mode)
 		{
-			case 'gz':
-				$res = gzeof($this->fh);
-				break;
-
-			case 'bz':
-			case 'f':
-			default:
-				$res = feof($this->fh);
-				break;
-		}
-
-		if ($php_errormsg)
-		{
-			$this->setError($php_errormsg);
-		}
-
-		// Restore error tracking to what it was before
-		ini_set('track_errors', $track_errors);
-
-		// Return the result
-		return $res;
-	}
-
-	/**
-	 * Retrieve the file size of the path
-	 *
-	 * @return  mixed
-	 *
-	 * @since   11.1
-	 */
-	public function filesize()
-	{
-		if (!$this->filename)
-		{
-			$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILE_NOT_OPEN'));
-
-			return false;
+			$mode = $this->filemode;
 		}
 
 		$retval = false;
@@ -423,44 +286,29 @@ class JStream extends JObject
 		$php_errormsg = '';
 		$track_errors = ini_get('track_errors');
 		ini_set('track_errors', true);
-		$res = @filesize($this->filename);
+		$sch = parse_url($filename, PHP_URL_SCHEME);
 
+		// Scheme specific options; ftp's chmod support is fun.
+		switch ($sch)
+		{
+			case 'ftp':
+			case 'ftps':
+				$res = JFilesystemHelper::ftpChmod($filename, $mode);
+				break;
+
+			default:
+				$res = chmod($filename, $mode);
+				break;
+		}
+
+		// Seek, interestingly, returns 0 on success or -1 on failure
 		if (!$res)
 		{
-			$tmp_error = '';
-
-			if ($php_errormsg)
-			{
-				// Something went wrong.
-				// Store the error in case we need it.
-				$tmp_error = $php_errormsg;
-			}
-
-			$res = JFilesystemHelper::remotefsize($this->filename);
-
-			if (!$res)
-			{
-				if ($tmp_error)
-				{
-					// Use the php_errormsg from before
-					$this->setError($tmp_error);
-				}
-				else
-				{
-					// Error but nothing from php? How strange! Create our own
-					$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILE_SIZE'));
-				}
-			}
-			else
-			{
-				$this->filesize = $res;
-				$retval = $res;
-			}
+			$this->setError($php_errormsg);
 		}
 		else
 		{
-			$this->filesize = $res;
-			$retval = $res;
+			$retval = true;
 		}
 
 		// Restore error tracking to what it was before.
@@ -473,7 +321,7 @@ class JStream extends JObject
 	/**
 	 * Get a line from the stream source.
 	 *
-	 * @param   integer  $length  The number of bytes (optional) to read.
+	 * @param   integer $length The number of bytes (optional) to read.
 	 *
 	 * @return  mixed
 	 *
@@ -529,7 +377,7 @@ class JStream extends JObject
 	 *
 	 * Handles user space streams appropriately otherwise any read will return 8192
 	 *
-	 * @param   integer  $length  Length of data to read
+	 * @param   integer $length Length of data to read
 	 *
 	 * @return  mixed
 	 *
@@ -613,11 +461,10 @@ class JStream extends JObject
 				{
 					// If it's the end of the file then we've nothing left to read; reset remaining and len
 					$remaining = 0;
-					$length = strlen($retval);
+					$length    = strlen($retval);
 				}
 			}
-		}
-		while ($remaining || !$length);
+		} while ($remaining || !$length);
 
 		// Restore error tracking to what it was before
 		ini_set('track_errors', $track_errors);
@@ -627,12 +474,127 @@ class JStream extends JObject
 	}
 
 	/**
+	 * Retrieve the file size of the path
+	 *
+	 * @return  mixed
+	 *
+	 * @since   11.1
+	 */
+	public function filesize()
+	{
+		if (!$this->filename)
+		{
+			$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILE_NOT_OPEN'));
+
+			return false;
+		}
+
+		$retval = false;
+
+		// Capture PHP errors
+		$php_errormsg = '';
+		$track_errors = ini_get('track_errors');
+		ini_set('track_errors', true);
+		$res = @filesize($this->filename);
+
+		if (!$res)
+		{
+			$tmp_error = '';
+
+			if ($php_errormsg)
+			{
+				// Something went wrong.
+				// Store the error in case we need it.
+				$tmp_error = $php_errormsg;
+			}
+
+			$res = JFilesystemHelper::remotefsize($this->filename);
+
+			if (!$res)
+			{
+				if ($tmp_error)
+				{
+					// Use the php_errormsg from before
+					$this->setError($tmp_error);
+				}
+				else
+				{
+					// Error but nothing from php? How strange! Create our own
+					$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILE_SIZE'));
+				}
+			}
+			else
+			{
+				$this->filesize = $res;
+				$retval         = $res;
+			}
+		}
+		else
+		{
+			$this->filesize = $res;
+			$retval         = $res;
+		}
+
+		// Restore error tracking to what it was before.
+		ini_set('track_errors', $track_errors);
+
+		// Return the result
+		return $retval;
+	}
+
+	/**
+	 * Work out if we're at the end of the file for a stream
+	 *
+	 * @return  boolean
+	 *
+	 * @since   11.1
+	 */
+	public function eof()
+	{
+		if (!$this->fh)
+		{
+			$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILE_NOT_OPEN'));
+
+			return false;
+		}
+
+		// Capture PHP errors
+		$php_errormsg = '';
+		$track_errors = ini_get('track_errors');
+		ini_set('track_errors', true);
+
+		switch ($this->processingmethod)
+		{
+			case 'gz':
+				$res = gzeof($this->fh);
+				break;
+
+			case 'bz':
+			case 'f':
+			default:
+				$res = feof($this->fh);
+				break;
+		}
+
+		if ($php_errormsg)
+		{
+			$this->setError($php_errormsg);
+		}
+
+		// Restore error tracking to what it was before
+		ini_set('track_errors', $track_errors);
+
+		// Return the result
+		return $res;
+	}
+
+	/**
 	 * Seek the file
 	 *
 	 * Note: the return value is different to that of fseek
 	 *
-	 * @param   integer  $offset  Offset to use when seeking.
-	 * @param   integer  $whence  Seek mode to use.
+	 * @param   integer $offset Offset to use when seeking.
+	 * @param   integer $whence Seek mode to use.
 	 *
 	 * @return  boolean  True on success, false on failure
 	 *
@@ -733,160 +695,6 @@ class JStream extends JObject
 	}
 
 	/**
-	 * File write
-	 *
-	 * Whilst this function accepts a reference, the underlying fwrite
-	 * will do a copy! This will roughly double the memory allocation for
-	 * any write you do. Specifying chunked will get around this by only
-	 * writing in specific chunk sizes. This defaults to 8192 which is a
-	 * sane number to use most of the time (change the default with
-	 * JStream::set('chunksize', newsize);)
-	 * Note: This doesn't support gzip/bzip2 writing like reading does
-	 *
-	 * @param   string   &$string  Reference to the string to write.
-	 * @param   integer  $length   Length of the string to write.
-	 * @param   integer  $chunk    Size of chunks to write in.
-	 *
-	 * @return  boolean
-	 *
-	 * @see     http://php.net/manual/en/function.fwrite.php
-	 * @since   11.1
-	 */
-	public function write(&$string, $length = 0, $chunk = 0)
-	{
-		if (!$this->fh)
-		{
-			$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILE_NOT_OPEN'));
-
-			return false;
-		}
-
-		// If the length isn't set, set it to the length of the string.
-		if (!$length)
-		{
-			$length = strlen($string);
-		}
-
-		// If the chunk isn't set, set it to the default.
-		if (!$chunk)
-		{
-			$chunk = $this->chunksize;
-		}
-
-		$retval = true;
-
-		// Capture PHP errors
-		$php_errormsg = '';
-		$track_errors = ini_get('track_errors');
-		ini_set('track_errors', true);
-		$remaining = $length;
-		$start = 0;
-
-		do
-		{
-			// If the amount remaining is greater than the chunk size, then use the chunk
-			$amount = ($remaining > $chunk) ? $chunk : $remaining;
-			$res = fwrite($this->fh, substr($string, $start), $amount);
-
-			// Returns false on error or the number of bytes written
-			if ($res === false)
-			{
-				// Returned error
-				$this->setError($php_errormsg);
-				$retval = false;
-				$remaining = 0;
-			}
-			elseif ($res === 0)
-			{
-				// Wrote nothing?
-				$remaining = 0;
-				$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_NO_DATA_WRITTEN'));
-			}
-			else
-			{
-				// Wrote something
-				$start += $amount;
-				$remaining -= $res;
-			}
-		}
-		while ($remaining);
-
-		// Restore error tracking to what it was before.
-		ini_set('track_errors', $track_errors);
-
-		// Return the result
-		return $retval;
-	}
-
-	/**
-	 * Chmod wrapper
-	 *
-	 * @param   string  $filename  File name.
-	 * @param   mixed   $mode      Mode to use.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   11.1
-	 */
-	public function chmod($filename = '', $mode = 0)
-	{
-		if (!$filename)
-		{
-			if (!isset($this->filename) || !$this->filename)
-			{
-				$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILENAME'));
-
-				return false;
-			}
-
-			$filename = $this->filename;
-		}
-
-		// If no mode is set use the default
-		if (!$mode)
-		{
-			$mode = $this->filemode;
-		}
-
-		$retval = false;
-
-		// Capture PHP errors
-		$php_errormsg = '';
-		$track_errors = ini_get('track_errors');
-		ini_set('track_errors', true);
-		$sch = parse_url($filename, PHP_URL_SCHEME);
-
-		// Scheme specific options; ftp's chmod support is fun.
-		switch ($sch)
-		{
-			case 'ftp':
-			case 'ftps':
-				$res = JFilesystemHelper::ftpChmod($filename, $mode);
-				break;
-
-			default:
-				$res = chmod($filename, $mode);
-				break;
-		}
-
-		// Seek, interestingly, returns 0 on success or -1 on failure
-		if (!$res)
-		{
-			$this->setError($php_errormsg);
-		}
-		else
-		{
-			$retval = true;
-		}
-
-		// Restore error tracking to what it was before.
-		ini_set('track_errors', $track_errors);
-
-		// Return the result
-		return $retval;
-	}
-
-	/**
 	 * Get the stream metadata
 	 *
 	 * @return  array  header/metadata
@@ -907,32 +715,11 @@ class JStream extends JObject
 	}
 
 	/**
-	 * Stream contexts
-	 * Builds the context from the array
-	 *
-	 * @return  mixed
-	 *
-	 * @since   11.1
-	 */
-	public function _buildContext()
-	{
-		// According to the manual this always works!
-		if (count($this->contextOptions))
-		{
-			$this->context = @stream_context_create($this->contextOptions);
-		}
-		else
-		{
-			$this->context = null;
-		}
-	}
-
-	/**
 	 * Updates the context to the array
 	 *
 	 * Format is the same as the options for stream_context_create
 	 *
-	 * @param   array  $context  Options to create the context with
+	 * @param   array $context Options to create the context with
 	 *
 	 * @return  void
 	 *
@@ -948,9 +735,9 @@ class JStream extends JObject
 	/**
 	 * Adds a particular options to the context
 	 *
-	 * @param   string  $wrapper  The wrapper to use
-	 * @param   string  $name     The option to set
-	 * @param   string  $value    The value of the option
+	 * @param   string $wrapper The wrapper to use
+	 * @param   string $name    The option to set
+	 * @param   string $value   The value of the option
 	 *
 	 * @return  void
 	 *
@@ -967,8 +754,8 @@ class JStream extends JObject
 	/**
 	 * Deletes a particular setting from a context
 	 *
-	 * @param   string  $wrapper  The wrapper to use
-	 * @param   string  $name     The option to unset
+	 * @param   string $wrapper The wrapper to use
+	 * @param   string $name    The option to unset
 	 *
 	 * @return  void
 	 *
@@ -1036,9 +823,9 @@ class JStream extends JObject
 	 * Stream filters
 	 * Append a filter to the chain
 	 *
-	 * @param   string   $filtername  The key name of the filter.
-	 * @param   integer  $read_write  Optional. Defaults to STREAM_FILTER_READ.
-	 * @param   array    $params      An array of params for the stream_filter_append call.
+	 * @param   string  $filtername The key name of the filter.
+	 * @param   integer $read_write Optional. Defaults to STREAM_FILTER_READ.
+	 * @param   array   $params     An array of params for the stream_filter_append call.
 	 *
 	 * @return  mixed
 	 *
@@ -1077,9 +864,9 @@ class JStream extends JObject
 	/**
 	 * Prepend a filter to the chain
 	 *
-	 * @param   string   $filtername  The key name of the filter.
-	 * @param   integer  $read_write  Optional. Defaults to STREAM_FILTER_READ.
-	 * @param   array    $params      An array of params for the stream_filter_prepend call.
+	 * @param   string  $filtername The key name of the filter.
+	 * @param   integer $read_write Optional. Defaults to STREAM_FILTER_READ.
+	 * @param   array   $params     An array of params for the stream_filter_prepend call.
 	 *
 	 * @return  mixed
 	 *
@@ -1120,8 +907,8 @@ class JStream extends JObject
 	 * Remove a filter, either by resource (handed out from the append or prepend function)
 	 * or via getting the filter list)
 	 *
-	 * @param   resource  &$resource  The resource.
-	 * @param   boolean   $byindex    The index of the filter.
+	 * @param   resource &$resource The resource.
+	 * @param   boolean  $byindex   The index of the filter.
 	 *
 	 * @return  boolean   Result of operation
 	 *
@@ -1155,71 +942,13 @@ class JStream extends JObject
 	}
 
 	/**
-	 * Copy a file from src to dest
-	 *
-	 * @param   string    $src         The file path to copy from.
-	 * @param   string    $dest        The file path to copy to.
-	 * @param   resource  $context     A valid context resource (optional) created with stream_context_create.
-	 * @param   boolean   $use_prefix  Controls the use of a prefix (optional).
-	 * @param   boolean   $relative    Determines if the filename given is relative. Relative paths do not have JPATH_ROOT stripped.
-	 *
-	 * @return  mixed
-	 *
-	 * @since   11.1
-	 */
-	public function copy($src, $dest, $context = null, $use_prefix = true, $relative = false)
-	{
-		// Capture PHP errors
-		$php_errormsg = '';
-		$track_errors = ini_get('track_errors');
-		ini_set('track_errors', true);
-
-		$chmodDest = $this->_getFilename($dest, 'w', $use_prefix, $relative);
-
-		// Since we're going to open the file directly we need to get the filename.
-		// We need to use the same prefix so force everything to write.
-		$src = $this->_getFilename($src, 'w', $use_prefix, $relative);
-		$dest = $this->_getFilename($dest, 'w', $use_prefix, $relative);
-
-		if ($context)
-		{
-			// Use the provided context
-			$res = @copy($src, $dest, $context);
-		}
-		elseif ($this->context)
-		{
-			// Use the objects context
-			$res = @copy($src, $dest, $this->context);
-		}
-		else
-		{
-			// Don't use any context
-			$res = @copy($src, $dest);
-		}
-
-		if (!$res && $php_errormsg)
-		{
-			$this->setError($php_errormsg);
-		}
-		else
-		{
-			$this->chmod($chmodDest);
-		}
-
-		// Restore error tracking to what it was before
-		ini_set('track_errors', $track_errors);
-
-		return $res;
-	}
-
-	/**
 	 * Moves a file
 	 *
-	 * @param   string    $src         The file path to move from.
-	 * @param   string    $dest        The file path to move to.
-	 * @param   resource  $context     A valid context resource (optional) created with stream_context_create.
-	 * @param   boolean   $use_prefix  Controls the use of a prefix (optional).
-	 * @param   boolean   $relative    Determines if the filename given is relative. Relative paths do not have JPATH_ROOT stripped.
+	 * @param   string   $src        The file path to move from.
+	 * @param   string   $dest       The file path to move to.
+	 * @param   resource $context    A valid context resource (optional) created with stream_context_create.
+	 * @param   boolean  $use_prefix Controls the use of a prefix (optional).
+	 * @param   boolean  $relative   Determines if the filename given is relative. Relative paths do not have JPATH_ROOT stripped.
 	 *
 	 * @return  mixed
 	 *
@@ -1232,7 +961,7 @@ class JStream extends JObject
 		$track_errors = ini_get('track_errors');
 		ini_set('track_errors', true);
 
-		$src = $this->_getFilename($src, 'w', $use_prefix, $relative);
+		$src  = $this->_getFilename($src, 'w', $use_prefix, $relative);
 		$dest = $this->_getFilename($dest, 'w', $use_prefix, $relative);
 
 		if ($context)
@@ -1265,12 +994,56 @@ class JStream extends JObject
 	}
 
 	/**
+	 * Determine the appropriate 'filename' of a file
+	 *
+	 * @param   string  $filename   Original filename of the file
+	 * @param   string  $mode       Mode string to retrieve the filename
+	 * @param   boolean $use_prefix Controls the use of a prefix
+	 * @param   boolean $relative   Determines if the filename given is relative. Relative paths do not have JPATH_ROOT stripped.
+	 *
+	 * @return  string
+	 *
+	 * @since   11.1
+	 */
+	public function _getFilename($filename, $mode, $use_prefix, $relative)
+	{
+		if ($use_prefix)
+		{
+			// Get rid of binary or t, should be at the end of the string
+			$tmode = trim($mode, 'btf123456789');
+
+			// Check if it's a write mode then add the appropriate prefix
+			// Get rid of JPATH_ROOT (legacy compat) along the way
+			if (in_array($tmode, JFilesystemHelper::getWriteModes()))
+			{
+				if (!$relative && $this->writeprefix)
+				{
+					$filename = str_replace(JPATH_ROOT, '', $filename);
+				}
+
+				$filename = $this->writeprefix . $filename;
+			}
+			else
+			{
+				if (!$relative && $this->readprefix)
+				{
+					$filename = str_replace(JPATH_ROOT, '', $filename);
+				}
+
+				$filename = $this->readprefix . $filename;
+			}
+		}
+
+		return $filename;
+	}
+
+	/**
 	 * Delete a file
 	 *
-	 * @param   string    $filename    The file path to delete.
-	 * @param   resource  $context     A valid context resource (optional) created with stream_context_create.
-	 * @param   boolean   $use_prefix  Controls the use of a prefix (optional).
-	 * @param   boolean   $relative    Determines if the filename given is relative. Relative paths do not have JPATH_ROOT stripped.
+	 * @param   string   $filename   The file path to delete.
+	 * @param   resource $context    A valid context resource (optional) created with stream_context_create.
+	 * @param   boolean  $use_prefix Controls the use of a prefix (optional).
+	 * @param   boolean  $relative   Determines if the filename given is relative. Relative paths do not have JPATH_ROOT stripped.
 	 *
 	 * @return  mixed
 	 *
@@ -1315,11 +1088,11 @@ class JStream extends JObject
 	/**
 	 * Upload a file
 	 *
-	 * @param   string    $src         The file path to copy from (usually a temp folder).
-	 * @param   string    $dest        The file path to copy to.
-	 * @param   resource  $context     A valid context resource (optional) created with stream_context_create.
-	 * @param   boolean   $use_prefix  Controls the use of a prefix (optional).
-	 * @param   boolean   $relative    Determines if the filename given is relative. Relative paths do not have JPATH_ROOT stripped.
+	 * @param   string   $src        The file path to copy from (usually a temp folder).
+	 * @param   string   $dest       The file path to copy to.
+	 * @param   resource $context    A valid context resource (optional) created with stream_context_create.
+	 * @param   boolean  $use_prefix Controls the use of a prefix (optional).
+	 * @param   boolean  $relative   Determines if the filename given is relative. Relative paths do not have JPATH_ROOT stripped.
 	 *
 	 * @return  mixed
 	 *
@@ -1341,10 +1114,68 @@ class JStream extends JObject
 	}
 
 	/**
+	 * Copy a file from src to dest
+	 *
+	 * @param   string   $src        The file path to copy from.
+	 * @param   string   $dest       The file path to copy to.
+	 * @param   resource $context    A valid context resource (optional) created with stream_context_create.
+	 * @param   boolean  $use_prefix Controls the use of a prefix (optional).
+	 * @param   boolean  $relative   Determines if the filename given is relative. Relative paths do not have JPATH_ROOT stripped.
+	 *
+	 * @return  mixed
+	 *
+	 * @since   11.1
+	 */
+	public function copy($src, $dest, $context = null, $use_prefix = true, $relative = false)
+	{
+		// Capture PHP errors
+		$php_errormsg = '';
+		$track_errors = ini_get('track_errors');
+		ini_set('track_errors', true);
+
+		$chmodDest = $this->_getFilename($dest, 'w', $use_prefix, $relative);
+
+		// Since we're going to open the file directly we need to get the filename.
+		// We need to use the same prefix so force everything to write.
+		$src  = $this->_getFilename($src, 'w', $use_prefix, $relative);
+		$dest = $this->_getFilename($dest, 'w', $use_prefix, $relative);
+
+		if ($context)
+		{
+			// Use the provided context
+			$res = @copy($src, $dest, $context);
+		}
+		elseif ($this->context)
+		{
+			// Use the objects context
+			$res = @copy($src, $dest, $this->context);
+		}
+		else
+		{
+			// Don't use any context
+			$res = @copy($src, $dest);
+		}
+
+		if (!$res && $php_errormsg)
+		{
+			$this->setError($php_errormsg);
+		}
+		else
+		{
+			$this->chmod($chmodDest);
+		}
+
+		// Restore error tracking to what it was before
+		ini_set('track_errors', $track_errors);
+
+		return $res;
+	}
+
+	/**
 	 * Writes a chunk of data to a file.
 	 *
-	 * @param   string  $filename  The file name.
-	 * @param   string  &$buffer   The data to write to the file.
+	 * @param   string $filename The file name.
+	 * @param   string &$buffer  The data to write to the file.
 	 *
 	 * @return  boolean
 	 *
@@ -1365,47 +1196,215 @@ class JStream extends JObject
 	}
 
 	/**
-	 * Determine the appropriate 'filename' of a file
+	 * Generic File Operations
 	 *
-	 * @param   string   $filename    Original filename of the file
-	 * @param   string   $mode        Mode string to retrieve the filename
-	 * @param   boolean  $use_prefix  Controls the use of a prefix
-	 * @param   boolean  $relative    Determines if the filename given is relative. Relative paths do not have JPATH_ROOT stripped.
+	 * Open a stream with some lazy loading smarts
 	 *
-	 * @return  string
+	 * @param   string   $filename               Filename
+	 * @param   string   $mode                   Mode string to use
+	 * @param   boolean  $use_include_path       Use the PHP include path
+	 * @param   resource $context                Context to use when opening
+	 * @param   boolean  $use_prefix             Use a prefix to open the file
+	 * @param   boolean  $relative               Filename is a relative path (if false, strips JPATH_ROOT to make it relative)
+	 * @param   boolean  $detectprocessingmode   Detect the processing method for the file and use the appropriate function
+	 *                                           to handle output automatically
+	 *
+	 * @return  boolean
 	 *
 	 * @since   11.1
 	 */
-	public function _getFilename($filename, $mode, $use_prefix, $relative)
+	public function open($filename, $mode = 'r', $use_include_path = false, $context = null,
+	                     $use_prefix = false, $relative = false, $detectprocessingmode = false)
 	{
-		if ($use_prefix)
+		$filename = $this->_getFilename($filename, $mode, $use_prefix, $relative);
+
+		if (!$filename)
 		{
-			// Get rid of binary or t, should be at the end of the string
-			$tmode = trim($mode, 'btf123456789');
+			$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILENAME'));
 
-			// Check if it's a write mode then add the appropriate prefix
-			// Get rid of JPATH_ROOT (legacy compat) along the way
-			if (in_array($tmode, JFilesystemHelper::getWriteModes()))
+			return false;
+		}
+
+		$this->filename = $filename;
+		$this->openmode = $mode;
+
+		$url    = parse_url($filename);
+		$retval = false;
+
+		if (isset($url['scheme']))
+		{
+			// If we're dealing with a Joomla! stream, load it
+			if (JFilesystemHelper::isJoomlaStream($url['scheme']))
 			{
-				if (!$relative && $this->writeprefix)
-				{
-					$filename = str_replace(JPATH_ROOT, '', $filename);
-				}
-
-				$filename = $this->writeprefix . $filename;
+				require_once __DIR__ . '/streams/' . $url['scheme'] . '.php';
 			}
-			else
-			{
-				if (!$relative && $this->readprefix)
-				{
-					$filename = str_replace(JPATH_ROOT, '', $filename);
-				}
 
-				$filename = $this->readprefix . $filename;
+			// We have a scheme! force the method to be f
+			$this->processingmethod = 'f';
+		}
+		elseif ($detectprocessingmode)
+		{
+			$ext = strtolower(JFile::getExt($this->filename));
+
+			switch ($ext)
+			{
+				case 'tgz':
+				case 'gz':
+				case 'gzip':
+					$this->processingmethod = 'gz';
+					break;
+
+				case 'tbz2':
+				case 'bz2':
+				case 'bzip2':
+					$this->processingmethod = 'bz';
+					break;
+
+				default:
+					$this->processingmethod = 'f';
+					break;
 			}
 		}
 
-		return $filename;
+		// Capture PHP errors
+		$php_errormsg = 'Error Unknown whilst opening a file';
+		$track_errors = ini_get('track_errors');
+		ini_set('track_errors', true);
+
+		// Decide which context to use:
+		switch ($this->processingmethod)
+		{
+			// Gzip doesn't support contexts or streams
+			case 'gz':
+				$this->fh = gzopen($filename, $mode, $use_include_path);
+				break;
+
+			// Bzip2 is much like gzip except it doesn't use the include path
+			case 'bz':
+				$this->fh = bzopen($filename, $mode);
+				break;
+
+			// Fopen can handle streams
+			case 'f':
+			default:
+				// One supplied at open; overrides everything
+				if ($context)
+				{
+					$this->fh = fopen($filename, $mode, $use_include_path, $context);
+				}
+				// One provided at initialisation
+				elseif ($this->context)
+				{
+					$this->fh = fopen($filename, $mode, $use_include_path, $this->context);
+				}
+				// No context; all defaults
+				else
+				{
+					$this->fh = fopen($filename, $mode, $use_include_path);
+				}
+
+				break;
+		}
+
+		if (!$this->fh)
+		{
+			$this->setError($php_errormsg);
+		}
+		else
+		{
+			$retval = true;
+		}
+
+		// Restore error tracking to what it was before
+		ini_set('track_errors', $track_errors);
+
+		// Return the result
+		return $retval;
+	}
+
+	/**
+	 * File write
+	 *
+	 * Whilst this function accepts a reference, the underlying fwrite
+	 * will do a copy! This will roughly double the memory allocation for
+	 * any write you do. Specifying chunked will get around this by only
+	 * writing in specific chunk sizes. This defaults to 8192 which is a
+	 * sane number to use most of the time (change the default with
+	 * JStream::set('chunksize', newsize);)
+	 * Note: This doesn't support gzip/bzip2 writing like reading does
+	 *
+	 * @param   string  &$string Reference to the string to write.
+	 * @param   integer $length  Length of the string to write.
+	 * @param   integer $chunk   Size of chunks to write in.
+	 *
+	 * @return  boolean
+	 *
+	 * @see     http://php.net/manual/en/function.fwrite.php
+	 * @since   11.1
+	 */
+	public function write(&$string, $length = 0, $chunk = 0)
+	{
+		if (!$this->fh)
+		{
+			$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILE_NOT_OPEN'));
+
+			return false;
+		}
+
+		// If the length isn't set, set it to the length of the string.
+		if (!$length)
+		{
+			$length = strlen($string);
+		}
+
+		// If the chunk isn't set, set it to the default.
+		if (!$chunk)
+		{
+			$chunk = $this->chunksize;
+		}
+
+		$retval = true;
+
+		// Capture PHP errors
+		$php_errormsg = '';
+		$track_errors = ini_get('track_errors');
+		ini_set('track_errors', true);
+		$remaining = $length;
+		$start     = 0;
+
+		do
+		{
+			// If the amount remaining is greater than the chunk size, then use the chunk
+			$amount = ($remaining > $chunk) ? $chunk : $remaining;
+			$res    = fwrite($this->fh, substr($string, $start), $amount);
+
+			// Returns false on error or the number of bytes written
+			if ($res === false)
+			{
+				// Returned error
+				$this->setError($php_errormsg);
+				$retval    = false;
+				$remaining = 0;
+			}
+			elseif ($res === 0)
+			{
+				// Wrote nothing?
+				$remaining = 0;
+				$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_NO_DATA_WRITTEN'));
+			}
+			else
+			{
+				// Wrote something
+				$start += $amount;
+				$remaining -= $res;
+			}
+		} while ($remaining);
+
+		// Restore error tracking to what it was before.
+		ini_set('track_errors', $track_errors);
+
+		// Return the result
+		return $retval;
 	}
 
 	/**

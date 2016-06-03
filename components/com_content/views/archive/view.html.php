@@ -29,7 +29,7 @@ class ContentViewArchive extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise an Error object.
 	 */
@@ -65,26 +65,26 @@ class ContentViewArchive extends JViewLegacy
 			}
 
 			JPluginHelper::importPlugin('content');
-			$dispatcher->trigger('onContentPrepare', array ('com_content.archive', &$item, &$item->params, 0));
+			$dispatcher->trigger('onContentPrepare', array('com_content.archive', &$item, &$item->params, 0));
 
 			// Old plugins: Use processed text as introtext
 			$item->introtext = $item->text;
 
-			$results = $dispatcher->trigger('onContentAfterTitle', array('com_content.archive', &$item, &$item->params, 0));
+			$results                        = $dispatcher->trigger('onContentAfterTitle', array('com_content.archive', &$item, &$item->params, 0));
 			$item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-			$results = $dispatcher->trigger('onContentBeforeDisplay', array('com_content.archive', &$item, &$item->params, 0));
+			$results                           = $dispatcher->trigger('onContentBeforeDisplay', array('com_content.archive', &$item, &$item->params, 0));
 			$item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-			$results = $dispatcher->trigger('onContentAfterDisplay', array('com_content.archive', &$item, &$item->params, 0));
+			$results                          = $dispatcher->trigger('onContentAfterDisplay', array('com_content.archive', &$item, &$item->params, 0));
 			$item->event->afterDisplayContent = trim(implode("\n", $results));
 		}
 
 		$form = new stdClass;
 
 		// Month Field
-		$months = array(
-			'' => JText::_('COM_CONTENT_MONTH'),
+		$months           = array(
+			''   => JText::_('COM_CONTENT_MONTH'),
 			'01' => JText::_('JANUARY_SHORT'),
 			'02' => JText::_('FEBRUARY_SHORT'),
 			'03' => JText::_('MARCH_SHORT'),
@@ -103,23 +103,23 @@ class ContentViewArchive extends JViewLegacy
 			$months,
 			'month',
 			array(
-				'list.attr' => 'size="1" class="inputbox"',
+				'list.attr'   => 'size="1" class="inputbox"',
 				'list.select' => $state->get('filter.month'),
-				'option.key' => null
+				'option.key'  => null
 			)
 		);
 
 		// Year Field
 		$this->years = $this->getModel()->getYears();
-		$years = array();
-		$years[] = JHtml::_('select.option', null, JText::_('JYEAR'));
+		$years       = array();
+		$years[]     = JHtml::_('select.option', null, JText::_('JYEAR'));
 
 		for ($i = 0; $i < count($this->years); $i++)
 		{
 			$years[] = JHtml::_('select.option', $this->years[$i], $this->years[$i]);
 		}
 
-		$form->yearField = JHtml::_(
+		$form->yearField  = JHtml::_(
 			'select.genericlist',
 			$years,
 			'year',

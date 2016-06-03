@@ -15,7 +15,7 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-$expired = ($this->state->get("cache_expired") == 1 ) ? '1' : '';
+$expired = ($this->state->get("cache_expired") == 1) ? '1' : '';
 
 JHtml::_('stylesheet', 'overrider/overrider.css', array(), true);
 
@@ -48,7 +48,8 @@ JFactory::getDocument()->addScriptDeclaration('
 ');
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_languages&id=' . $this->item->key); ?>" method="post" name="adminForm" id="override-form" class="form-validate form-horizontal">
+<form action="<?php echo JRoute::_('index.php?option=com_languages&id=' . $this->item->key); ?>" method="post"
+      name="adminForm" id="override-form" class="form-validate form-horizontal">
 	<div class="row-fluid">
 		<div class="span6">
 			<fieldset>
@@ -90,14 +91,14 @@ JFactory::getDocument()->addScriptDeclaration('
 				</div>
 
 				<?php if ($this->state->get('filter.client') == 'administrator') : ?>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('both'); ?>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('both'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('both'); ?>
+						</div>
 					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('both'); ?>
-					</div>
-				</div>
 				<?php endif; ?>
 
 				<div class="control-group">
@@ -116,11 +117,13 @@ JFactory::getDocument()->addScriptDeclaration('
 			<fieldset>
 				<legend><?php echo JText::_('COM_LANGUAGES_VIEW_OVERRIDE_SEARCH_LEGEND'); ?></legend>
 
-				<div class="alert alert-info"><p><?php echo JText::_('COM_LANGUAGES_VIEW_OVERRIDE_SEARCH_TIP'); ?></p></div>
+				<div class="alert alert-info"><p><?php echo JText::_('COM_LANGUAGES_VIEW_OVERRIDE_SEARCH_TIP'); ?></p>
+				</div>
 
 				<div class="control-group">
 					<?php echo $this->form->getInput('searchstring'); ?>
-					<button type="submit" class="btn btn-primary" onclick="Joomla.overrider.searchStrings();return false;" formnovalidate>
+					<button type="submit" class="btn btn-primary"
+					        onclick="Joomla.overrider.searchStrings();return false;" formnovalidate>
 						<?php echo JText::_('COM_LANGUAGES_VIEW_OVERRIDE_SEARCH_BUTTON'); ?>
 					</button>
 					<span id="refresh-status" class="overrider-spinner  help-block">
@@ -146,8 +149,8 @@ JFactory::getDocument()->addScriptDeclaration('
 				</span>
 			</fieldset>
 
-			<input type="hidden" name="task" value="" />
-			<input type="hidden" name="id" value="<?php echo $this->item->key; ?>" />
+			<input type="hidden" name="task" value=""/>
+			<input type="hidden" name="id" value="<?php echo $this->item->key; ?>"/>
 
 			<?php echo JHtml::_('form.token'); ?>
 		</div>

@@ -54,7 +54,7 @@ class PlgEditorTinymce extends JPlugin
 	/**
 	 * TinyMCE WYSIWYG Editor - get the editor content
 	 *
-	 * @param   string  $editor  The name of the editor
+	 * @param   string $editor The name of the editor
 	 *
 	 * @return  string
 	 */
@@ -66,8 +66,8 @@ class PlgEditorTinymce extends JPlugin
 	/**
 	 * TinyMCE WYSIWYG Editor - set the editor content
 	 *
-	 * @param   string  $editor  The name of the editor
-	 * @param   string  $html    The html to place in the editor
+	 * @param   string $editor The name of the editor
+	 * @param   string $html   The html to place in the editor
 	 *
 	 * @return  string
 	 */
@@ -79,7 +79,7 @@ class PlgEditorTinymce extends JPlugin
 	/**
 	 * TinyMCE WYSIWYG Editor - copy editor content to form field
 	 *
-	 * @param   string  $editor  The name of the editor
+	 * @param   string $editor The name of the editor
 	 *
 	 * @return  string
 	 */
@@ -91,7 +91,7 @@ class PlgEditorTinymce extends JPlugin
 	/**
 	 * Inserts html code into the editor
 	 *
-	 * @param   string  $name  The name of the editor
+	 * @param   string $name The name of the editor
 	 *
 	 * @return  void
 	 *
@@ -105,16 +105,16 @@ class PlgEditorTinymce extends JPlugin
 	/**
 	 * Display the editor area.
 	 *
-	 * @param   string   $name     The name of the editor area.
-	 * @param   string   $content  The content of the field.
-	 * @param   string   $width    The width of the editor area.
-	 * @param   string   $height   The height of the editor area.
-	 * @param   int      $col      The number of columns for the editor area.
-	 * @param   int      $row      The number of rows for the editor area.
-	 * @param   boolean  $buttons  True and the editor buttons will be displayed.
-	 * @param   string   $id       An optional ID for the textarea. If not supplied the name is used.
-	 * @param   string   $asset    The object asset
-	 * @param   object   $author   The author.
+	 * @param   string  $name    The name of the editor area.
+	 * @param   string  $content The content of the field.
+	 * @param   string  $width   The width of the editor area.
+	 * @param   string  $height  The height of the editor area.
+	 * @param   int     $col     The number of columns for the editor area.
+	 * @param   int     $row     The number of rows for the editor area.
+	 * @param   boolean $buttons True and the editor buttons will be displayed.
+	 * @param   string  $id      An optional ID for the textarea. If not supplied the name is used.
+	 * @param   string  $asset   The object asset
+	 * @param   object  $author  The author.
 	 *
 	 * @return  string
 	 */
@@ -300,11 +300,11 @@ class PlgEditorTinymce extends JPlugin
 			$tagArray      = !empty($filter->tagArray) ? $filter->tagArray : array();
 			$attrArray     = !empty($filter->attrArray) ? $filter->attrArray : array();
 
-			$invalid_elements  = implode(',', array_merge($tagBlacklist, $attrBlacklist, $tagArray, $attrArray));
+			$invalid_elements = implode(',', array_merge($tagBlacklist, $attrBlacklist, $tagArray, $attrArray));
 
 			// Valid elements are all whitelist entries in com_config, which are now missing in the tagBlacklist
 			$default_filter = JFilterInput::getInstance();
-			$valid_elements =	implode(',', array_diff($default_filter->tagBlacklist, $tagBlacklist));
+			$valid_elements = implode(',', array_diff($default_filter->tagBlacklist, $tagBlacklist));
 
 			$extended_elements = '';
 		}
@@ -994,7 +994,7 @@ class PlgEditorTinymce extends JPlugin
 		}
 
 		// Data object for the layout
-		$textarea = new stdClass;
+		$textarea          = new stdClass;
 		$textarea->name    = $name;
 		$textarea->id      = $id;
 		$textarea->cols    = $col;
@@ -1009,137 +1009,6 @@ class PlgEditorTinymce extends JPlugin
 		$editor .= '</div>';
 
 		return $editor;
-	}
-
-	/**
-	 * Get the toggle editor button
-	 *
-	 * @param   string  $name  Editor name
-	 *
-	 * @return  string
-	 */
-	private function _toogleButton($name)
-	{
-		return JLayoutHelper::render('joomla.tinymce.togglebutton', $name);
-	}
-
-	/**
-	 * Get the XTD buttons and render them inside tinyMCE
-	 *
-	 * @param   string  $name      the id of the editor field
-	 * @param   string  $excluded  the buttons that should be hidden
-	 *
-	 * @return array
-	 */
-	private function tinyButtons($name, $excluded)
-	{
-		// Get the available buttons
-		$buttons = $this->_subject->getButtons($name, $excluded);
-
-		// Init the arrays for the buttons
-		$tinyBtns  = array();
-		$btnsNames = array();
-
-		// Build the script
-		foreach ($buttons as $i => $button)
-		{
-			if ($button->get('name'))
-			{
-				// Set some vars
-				$name    = 'button-' . $i . str_replace(" ", "", $button->get('text'));
-				$title   = $button->get('text');
-				$onclick = ($button->get('onclick')) ? $button->get('onclick') : null;
-				$options = $button->get('options');
-				$icon    = $button->get('name');
-
-				if ($button->get('link') != "#")
-				{
-					$href = JUri::base() . $button->get('link');
-				}
-				else
-				{
-					$href = null;
-				}
-
-				// We do some hack here to set the correct icon for 3PD buttons
-				$icon = 'none icon-' . $icon;
-
-				// Now we can built the script
-				$tempConstructor = '
-			!(function(){';
-
-				// Get the modal width/height
-				if ($options && is_scalar($options))
-				{
-					$tempConstructor .= '
-				var getBtnOptions = new Function("return ' . addslashes($options) . '"),
-					btnOptions = getBtnOptions(),
-					modalWidth = btnOptions.size && btnOptions.size.x ?  btnOptions.size.x : null,
-					modalHeight = btnOptions.size && btnOptions.size.y ?  btnOptions.size.y : null;';
-				}
-				else
-				{
-					$tempConstructor .= '
-				var btnOptions = {}, modalWidth = null, modalHeight = null;';
-				}
-
-				$tempConstructor .= "
-				editor.addButton(\"" . $name . "\", {
-					text: \"" . $title . "\",
-					title: \"" . $title . "\",
-					icon: \"" . $icon . "\",
-					onclick: function () {";
-
-				if ($button->get('modal') || $href)
-				{
-					$tempConstructor .= "
-							var modalOptions = {
-								title  : \"" . $title . "\",
-								url : '" . $href . "',
-								buttons: [{
-									text   : \"Close\",
-									onclick: \"close\"
-								}]
-							}
-							if(modalWidth){
-								modalOptions.width = modalWidth;
-							}
-							if(modalHeight){
-								modalOptions.height = modalHeight;
-							}
-							editor.windowManager.open(modalOptions);";
-
-					if ($onclick && ($button->get('modal') || $href))
-					{
-						$tempConstructor .= "\r\n
-						" . $onclick . "
-							";
-					}
-				}
-				else
-				{
-					$tempConstructor .= "\r\n
-						" . $onclick . "
-							";
-				}
-
-				$tempConstructor .= "
-					}
-				});
-			})();";
-
-				// The array with the toolbar buttons
-				$btnsNames[] = $name;
-
-				// The array with code for each button
-				$tinyBtns[] = $tempConstructor;
-			}
-		}
-
-		return array(
-				'names'  => $btnsNames,
-				'script' => $tinyBtns
-		);
 	}
 
 	/**
@@ -1317,5 +1186,136 @@ class PlgEditorTinymce extends JPlugin
 
 			return $filter;
 		}
+	}
+
+	/**
+	 * Get the XTD buttons and render them inside tinyMCE
+	 *
+	 * @param   string $name     the id of the editor field
+	 * @param   string $excluded the buttons that should be hidden
+	 *
+	 * @return array
+	 */
+	private function tinyButtons($name, $excluded)
+	{
+		// Get the available buttons
+		$buttons = $this->_subject->getButtons($name, $excluded);
+
+		// Init the arrays for the buttons
+		$tinyBtns  = array();
+		$btnsNames = array();
+
+		// Build the script
+		foreach ($buttons as $i => $button)
+		{
+			if ($button->get('name'))
+			{
+				// Set some vars
+				$name    = 'button-' . $i . str_replace(" ", "", $button->get('text'));
+				$title   = $button->get('text');
+				$onclick = ($button->get('onclick')) ? $button->get('onclick') : null;
+				$options = $button->get('options');
+				$icon    = $button->get('name');
+
+				if ($button->get('link') != "#")
+				{
+					$href = JUri::base() . $button->get('link');
+				}
+				else
+				{
+					$href = null;
+				}
+
+				// We do some hack here to set the correct icon for 3PD buttons
+				$icon = 'none icon-' . $icon;
+
+				// Now we can built the script
+				$tempConstructor = '
+			!(function(){';
+
+				// Get the modal width/height
+				if ($options && is_scalar($options))
+				{
+					$tempConstructor .= '
+				var getBtnOptions = new Function("return ' . addslashes($options) . '"),
+					btnOptions = getBtnOptions(),
+					modalWidth = btnOptions.size && btnOptions.size.x ?  btnOptions.size.x : null,
+					modalHeight = btnOptions.size && btnOptions.size.y ?  btnOptions.size.y : null;';
+				}
+				else
+				{
+					$tempConstructor .= '
+				var btnOptions = {}, modalWidth = null, modalHeight = null;';
+				}
+
+				$tempConstructor .= "
+				editor.addButton(\"" . $name . "\", {
+					text: \"" . $title . "\",
+					title: \"" . $title . "\",
+					icon: \"" . $icon . "\",
+					onclick: function () {";
+
+				if ($button->get('modal') || $href)
+				{
+					$tempConstructor .= "
+							var modalOptions = {
+								title  : \"" . $title . "\",
+								url : '" . $href . "',
+								buttons: [{
+									text   : \"Close\",
+									onclick: \"close\"
+								}]
+							}
+							if(modalWidth){
+								modalOptions.width = modalWidth;
+							}
+							if(modalHeight){
+								modalOptions.height = modalHeight;
+							}
+							editor.windowManager.open(modalOptions);";
+
+					if ($onclick && ($button->get('modal') || $href))
+					{
+						$tempConstructor .= "\r\n
+						" . $onclick . "
+							";
+					}
+				}
+				else
+				{
+					$tempConstructor .= "\r\n
+						" . $onclick . "
+							";
+				}
+
+				$tempConstructor .= "
+					}
+				});
+			})();";
+
+				// The array with the toolbar buttons
+				$btnsNames[] = $name;
+
+				// The array with code for each button
+				$tinyBtns[] = $tempConstructor;
+			}
+		}
+
+		return array(
+			'names'  => $btnsNames,
+			'script' => $tinyBtns
+		);
+	}
+
+	/**
+	 * Get the toggle editor button
+	 *
+	 * @param   string $name Editor name
+	 *
+	 * @return  string
+	 */
+	private function _toogleButton($name)
+	{
+		return JLayoutHelper::render('joomla.tinymce.togglebutton', $name);
 	}
 }

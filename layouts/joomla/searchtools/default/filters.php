@@ -20,7 +20,7 @@ foreach ($filters as $field)
 		$showonarr = array();
 		foreach (preg_split('%\[AND\]|\[OR\]%', $showonstring) as $showonfield)
 		{
-			$showon   = explode(':', $showonfield, 2);
+			$showon      = explode(':', $showonfield, 2);
 			$showonarr[] = array(
 				'field'  => $showon[0],
 				'values' => explode(',', $showon[1]),

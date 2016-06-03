@@ -26,7 +26,7 @@ class UsersHelperDebug
 	public static function getComponents()
 	{
 		// Initialise variable.
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('name AS text, element AS value')
 			->from('#__extensions')
@@ -43,9 +43,9 @@ class UsersHelperDebug
 			{
 				// Load language
 				$extension = $item->value;
-				$source = JPATH_ADMINISTRATOR . '/components/' . $extension;
+				$source    = JPATH_ADMINISTRATOR . '/components/' . $extension;
 				$lang->load("$extension.sys", JPATH_ADMINISTRATOR, null, false, true)
-					|| $lang->load("$extension.sys", $source, null, false, true);
+				|| $lang->load("$extension.sys", $source, null, false, true);
 
 				// Translate component name
 				$item->text = JText::_($item->text);
@@ -61,7 +61,7 @@ class UsersHelperDebug
 	/**
 	 * Get a list of the actions for the component or code actions.
 	 *
-	 * @param   string  $component  The name of the component.
+	 * @param   string $component The name of the component.
 	 *
 	 * @return  array
 	 *
@@ -117,14 +117,14 @@ class UsersHelperDebug
 				}
 
 				// Load language
-				$lang = JFactory::getLanguage();
+				$lang      = JFactory::getLanguage();
 				$extension = 'com_config';
-				$source = JPATH_ADMINISTRATOR . '/components/' . $extension;
+				$source    = JPATH_ADMINISTRATOR . '/components/' . $extension;
 
 				$lang->load($extension, JPATH_ADMINISTRATOR, null, false, false)
-					|| $lang->load($extension, $source, null, false, false)
-					|| $lang->load($extension, JPATH_ADMINISTRATOR, $lang->getDefault(), false, false)
-					|| $lang->load($extension, $source, $lang->getDefault(), false, false);
+				|| $lang->load($extension, $source, null, false, false)
+				|| $lang->load($extension, JPATH_ADMINISTRATOR, $lang->getDefault(), false, false)
+				|| $lang->load($extension, $source, $lang->getDefault(), false, false);
 			}
 		}
 
@@ -139,7 +139,7 @@ class UsersHelperDebug
 	public static function getLevelsOptions()
 	{
 		// Build the filter options.
-		$options = array();
+		$options   = array();
 		$options[] = JHtml::_('select.option', '1', JText::sprintf('COM_USERS_OPTION_LEVEL_COMPONENT', 1));
 		$options[] = JHtml::_('select.option', '2', JText::sprintf('COM_USERS_OPTION_LEVEL_CATEGORY', 2));
 		$options[] = JHtml::_('select.option', '3', JText::sprintf('COM_USERS_OPTION_LEVEL_DEEPER', 3));

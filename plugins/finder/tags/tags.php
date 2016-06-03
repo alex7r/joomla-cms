@@ -80,8 +80,8 @@ class PlgFinderTags extends FinderIndexerAdapter
 	/**
 	 * Method to remove the link information for items that have been deleted.
 	 *
-	 * @param   string  $context  The context of the action being performed.
-	 * @param   JTable  $table    A JTable object containing the record to be deleted
+	 * @param   string $context The context of the action being performed.
+	 * @param   JTable $table   A JTable object containing the record to be deleted
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -102,6 +102,7 @@ class PlgFinderTags extends FinderIndexerAdapter
 		{
 			return true;
 		}
+
 		// Remove the items.
 		return $this->remove($id);
 	}
@@ -109,9 +110,9 @@ class PlgFinderTags extends FinderIndexerAdapter
 	/**
 	 * Method to determine if the access level of an item changed.
 	 *
-	 * @param   string   $context  The context of the content passed to the plugin.
-	 * @param   JTable   $row      A JTable object
-	 * @param   boolean  $isNew    If the content has just been created
+	 * @param   string  $context The context of the content passed to the plugin.
+	 * @param   JTable  $row     A JTable object
+	 * @param   boolean $isNew   If the content has just been created
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -142,9 +143,9 @@ class PlgFinderTags extends FinderIndexerAdapter
 	 * This event is fired before the data is actually saved so we are going
 	 * to queue the item to be indexed later.
 	 *
-	 * @param   string   $context  The context of the content passed to the plugin.
-	 * @param   JTable   $row      A JTable object
-	 * @param   boolean  $isNew    If the content is just about to be created
+	 * @param   string  $context The context of the content passed to the plugin.
+	 * @param   JTable  $row     A JTable object
+	 * @param   boolean $isNew   If the content is just about to be created
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -171,9 +172,9 @@ class PlgFinderTags extends FinderIndexerAdapter
 	 * from outside the edit screen. This is fired when the item is published,
 	 * unpublished, archived, or unarchived from the list view.
 	 *
-	 * @param   string   $context  The context for the content passed to the plugin.
-	 * @param   array    $pks      A list of primary key ids of the content that has changed state.
-	 * @param   integer  $value    The value of the state that the content has been changed to.
+	 * @param   string  $context The context for the content passed to the plugin.
+	 * @param   array   $pks     A list of primary key ids of the content that has changed state.
+	 * @param   integer $value   The value of the state that the content has been changed to.
 	 *
 	 * @return  void
 	 *
@@ -196,8 +197,8 @@ class PlgFinderTags extends FinderIndexerAdapter
 	/**
 	 * Method to index an item. The item must be a FinderIndexerResult object.
 	 *
-	 * @param   FinderIndexerResult  $item    The item to index as an FinderIndexerResult object.
-	 * @param   string               $format  The item format
+	 * @param   FinderIndexerResult $item   The item to index as an FinderIndexerResult object.
+	 * @param   string              $format The item format
 	 *
 	 * @return  void
 	 *
@@ -225,9 +226,9 @@ class PlgFinderTags extends FinderIndexerAdapter
 		$item->metadata = $registry;
 
 		// Build the necessary route and path information.
-		$item->url = $this->getUrl($item->id, $this->extension, $this->layout);
+		$item->url   = $this->getUrl($item->id, $this->extension, $this->layout);
 		$item->route = TagsHelperRoute::getTagRoute($item->slug);
-		$item->path = FinderIndexerHelper::getContentPath($item->route);
+		$item->path  = FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
 		$title = $this->getItemMenuTitle($item->url);
@@ -283,7 +284,7 @@ class PlgFinderTags extends FinderIndexerAdapter
 	/**
 	 * Method to get the SQL query used to retrieve the list of content items.
 	 *
-	 * @param   mixed  $query  A JDatabaseQuery object or null.
+	 * @param   mixed $query A JDatabaseQuery object or null.
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *
@@ -345,7 +346,7 @@ class PlgFinderTags extends FinderIndexerAdapter
 	/**
 	 * Method to get the query clause for getting items to update by time.
 	 *
-	 * @param   string  $time  The modified timestamp.
+	 * @param   string $time The modified timestamp.
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *

@@ -26,14 +26,14 @@ abstract class ModArticlesPopularHelper
 	/**
 	 * Get a list of popular articles from the articles model
 	 *
-	 * @param   \Joomla\Registry\Registry  &$params  object holding the models parameters
+	 * @param   \Joomla\Registry\Registry &$params object holding the models parameters
 	 *
 	 * @return mixed
 	 */
 	public static function getList(&$params)
 	{
 		// Get an instance of the generic articles model
-		$model     = JModelLegacy::getInstance('Articles', 'ContentModel', array('ignore_request' => true));
+		$model = JModelLegacy::getInstance('Articles', 'ContentModel', array('ignore_request' => true));
 
 		// Set application parameters in model
 		$app       = JFactory::getApplication();
@@ -47,7 +47,7 @@ abstract class ModArticlesPopularHelper
 		$model->setState('filter.featured', $params->get('show_front', 1) == 1 ? 'show' : 'hide');
 
 		// Access filter
-		$access = !JComponentHelper::getParams('com_content')->get('show_noauth');
+		$access     = !JComponentHelper::getParams('com_content')->get('show_noauth');
 		$authorised = JAccess::getAuthorisedViewLevels(JFactory::getUser()->get('id'));
 		$model->setState('filter.access', $access);
 

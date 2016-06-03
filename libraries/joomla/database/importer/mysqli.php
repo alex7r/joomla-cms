@@ -44,7 +44,7 @@ class JDatabaseImporterMysqli extends JDatabaseImporter
 	/**
 	 * Get the SQL syntax to add a table.
 	 *
-	 * @param   SimpleXMLElement  $table  The table information.
+	 * @param   SimpleXMLElement $table The table information.
 	 *
 	 * @return  string
 	 *
@@ -54,7 +54,7 @@ class JDatabaseImporterMysqli extends JDatabaseImporter
 	protected function xmlToCreate(SimpleXMLElement $table)
 	{
 		$existingTables = $this->db->getTableList();
-		$tableName = (string) $table['name'];
+		$tableName      = (string) $table['name'];
 
 		if (in_array($tableName, $existingTables))
 		{
@@ -85,39 +85,149 @@ class JDatabaseImporterMysqli extends JDatabaseImporter
 	}
 
 	/**
-	 * Get the SQL syntax to add a column.
+	 * Get the SQL syntax for a single column that would be included in a table create or alter statement.
 	 *
-	 * @param   string            $table  The table name.
-	 * @param   SimpleXMLElement  $field  The XML field definition.
+	 * @param   SimpleXMLElement $field The XML field definition.
 	 *
 	 * @return  string
 	 *
 	 * @since   11.1
 	 */
-	protected function getAddColumnSql($table, SimpleXMLElement $field)
+	protected function getColumnSql(SimpleXMLElement $field)
 	{
-		return 'ALTER TABLE ' . $this->db->quoteName($table) . ' ADD COLUMN ' . $this->getColumnSql($field);
+		// TODO Incorporate into parent class and use $this.
+		$blobs = array('text', 'smalltext', 'mediumtext', 'largetext');
+
+		$fName    = (string) $field['Field'];
+		$fType    = (string) $field['Type'];
+		$fNull    = (string) $field['Null'];
+		$fDefault = isset($field['Default']) ? (string) $field['Default'] : null;
+		$fExtra   = (string) $field['Extra'];
+
+		$query = $this->db->quoteName($fName) . ' ' . $fType;
+
+		if ($fNull == 'NO')
+		{
+			if (in_array($fType, $blobs) || $fDefault === null)
+			{
+				$query .= ' NOT NULL';
+			}
+			else
+			{
+				// TODO Don't quote numeric values.
+				$query .= ' NOT NULL DEFAULT ' . $this->db->quote($fDefault);
+			}
+		}
+		else
+		{
+			if ($fDefault === null)
+			{
+				$query .= ' DEFAULT NULL';
+			}
+			else
+			{
+				// TODO Don't quote numeric values.
+				$query .= ' DEFAULT ' . $this->db->quote($fDefault);
+			}
+		}
+
+		if ($fExtra)
+		{
+			$query .= ' ' . strtoupper($fExtra);
+		}
+
+		return $query;
 	}
 
 	/**
-	 * Get the SQL syntax to add a key.
+	 * Get the details list of keys for a table.
 	 *
-	 * @param   string  $table  The table name.
-	 * @param   array   $keys   An array of the fields pertaining to this key.
+	 * @param   array $keys An array of objects that comprise the keys for the table.
+	 *
+	 * @return  array  The lookup array. array({key name} => array(object, ...))
+	 *
+	 * @since   11.1
+	 * @throws  Exception
+	 */
+	protected function getKeyLookup($keys)
+	{
+		// First pass, create a lookup of the keys.
+		$lookup = array();
+
+		foreach ($keys as $key)
+		{
+			if ($key instanceof SimpleXMLElement)
+			{
+				$kName = (string) $key['Key_name'];
+			}
+			else
+			{
+				$kName = $key->Key_name;
+			}
+
+			if (empty($lookup[$kName]))
+			{
+				$lookup[$kName] = array();
+			}
+
+			$lookup[$kName][] = $key;
+		}
+
+		return $lookup;
+	}
+
+	/**
+	 * Get the SQL syntax for a key.
+	 *
+	 * @param   array $columns An array of SimpleXMLElement objects comprising the key.
 	 *
 	 * @return  string
 	 *
 	 * @since   11.1
 	 */
-	protected function getAddKeySql($table, $keys)
+	protected function getKeySql($columns)
 	{
-		return 'ALTER TABLE ' . $this->db->quoteName($table) . ' ADD ' . $this->getKeySql($keys);
+		// TODO Error checking on array and element types.
+
+		$kNonUnique = (string) $columns[0]['Non_unique'];
+		$kName      = (string) $columns[0]['Key_name'];
+		$kColumn    = (string) $columns[0]['Column_name'];
+
+		$prefix = '';
+
+		if ($kName == 'PRIMARY')
+		{
+			$prefix = 'PRIMARY ';
+		}
+		elseif ($kNonUnique == 0)
+		{
+			$prefix = 'UNIQUE ';
+		}
+
+		$nColumns = count($columns);
+		$kColumns = array();
+
+		if ($nColumns == 1)
+		{
+			$kColumns[] = $this->db->quoteName($kColumn);
+		}
+		else
+		{
+			foreach ($columns as $column)
+			{
+				$kColumns[] = (string) $column['Column_name'];
+			}
+		}
+
+		$query = $prefix . 'KEY ' . ($kName != 'PRIMARY' ? $this->db->quoteName($kName) : '') . ' (' . implode(',', $kColumns) . ')';
+
+		return $query;
 	}
 
 	/**
 	 * Get alters for table if there is a difference.
 	 *
-	 * @param   SimpleXMLElement  $structure  The XML structure pf the table.
+	 * @param   SimpleXMLElement $structure The XML structure pf the table.
 	 *
 	 * @return  array
 	 *
@@ -125,14 +235,14 @@ class JDatabaseImporterMysqli extends JDatabaseImporter
 	 */
 	protected function getAlterTableSql(SimpleXMLElement $structure)
 	{
-		$table = $this->getRealTableName($structure['name']);
+		$table     = $this->getRealTableName($structure['name']);
 		$oldFields = $this->db->getTableColumns($table);
-		$oldKeys = $this->db->getTableKeys($table);
-		$alters = array();
+		$oldKeys   = $this->db->getTableKeys($table);
+		$alters    = array();
 
 		// Get the fields and keys from the XML that we are aiming for.
 		$newFields = $structure->xpath('field');
-		$newKeys = $structure->xpath('key');
+		$newKeys   = $structure->xpath('key');
 
 		// Loop through each field in the new structure.
 		foreach ($newFields as $field)
@@ -180,7 +290,7 @@ class JDatabaseImporterMysqli extends JDatabaseImporter
 			// Check if there are keys on this field in the existing table.
 			if (isset($oldLookup[$name]))
 			{
-				$same = true;
+				$same     = true;
 				$newCount = count($newLookup[$name]);
 				$oldCount = count($oldLookup[$name]);
 
@@ -266,8 +376,8 @@ class JDatabaseImporterMysqli extends JDatabaseImporter
 	/**
 	 * Get the syntax to alter a column.
 	 *
-	 * @param   string            $table  The name of the database table to alter.
-	 * @param   SimpleXMLElement  $field  The XML definition for the field.
+	 * @param   string           $table The name of the database table to alter.
+	 * @param   SimpleXMLElement $field The XML definition for the field.
 	 *
 	 * @return  string
 	 *
@@ -276,69 +386,29 @@ class JDatabaseImporterMysqli extends JDatabaseImporter
 	protected function getChangeColumnSql($table, SimpleXMLElement $field)
 	{
 		return 'ALTER TABLE ' . $this->db->quoteName($table) . ' CHANGE COLUMN ' . $this->db->quoteName((string) $field['Field']) . ' '
-			. $this->getColumnSql($field);
+		. $this->getColumnSql($field);
 	}
 
 	/**
-	 * Get the SQL syntax for a single column that would be included in a table create or alter statement.
+	 * Get the SQL syntax to add a column.
 	 *
-	 * @param   SimpleXMLElement  $field  The XML field definition.
+	 * @param   string           $table The table name.
+	 * @param   SimpleXMLElement $field The XML field definition.
 	 *
 	 * @return  string
 	 *
 	 * @since   11.1
 	 */
-	protected function getColumnSql(SimpleXMLElement $field)
+	protected function getAddColumnSql($table, SimpleXMLElement $field)
 	{
-		// TODO Incorporate into parent class and use $this.
-		$blobs = array('text', 'smalltext', 'mediumtext', 'largetext');
-
-		$fName = (string) $field['Field'];
-		$fType = (string) $field['Type'];
-		$fNull = (string) $field['Null'];
-		$fDefault = isset($field['Default']) ? (string) $field['Default'] : null;
-		$fExtra = (string) $field['Extra'];
-
-		$query = $this->db->quoteName($fName) . ' ' . $fType;
-
-		if ($fNull == 'NO')
-		{
-			if (in_array($fType, $blobs) || $fDefault === null)
-			{
-				$query .= ' NOT NULL';
-			}
-			else
-			{
-				// TODO Don't quote numeric values.
-				$query .= ' NOT NULL DEFAULT ' . $this->db->quote($fDefault);
-			}
-		}
-		else
-		{
-			if ($fDefault === null)
-			{
-				$query .= ' DEFAULT NULL';
-			}
-			else
-			{
-				// TODO Don't quote numeric values.
-				$query .= ' DEFAULT ' . $this->db->quote($fDefault);
-			}
-		}
-
-		if ($fExtra)
-		{
-			$query .= ' ' . strtoupper($fExtra);
-		}
-
-		return $query;
+		return 'ALTER TABLE ' . $this->db->quoteName($table) . ' ADD COLUMN ' . $this->getColumnSql($field);
 	}
 
 	/**
 	 * Get the SQL syntax to drop a key.
 	 *
-	 * @param   string  $table  The table name.
-	 * @param   string  $name   The name of the key to drop.
+	 * @param   string $table The table name.
+	 * @param   string $name  The name of the key to drop.
 	 *
 	 * @return  string
 	 *
@@ -350,9 +420,24 @@ class JDatabaseImporterMysqli extends JDatabaseImporter
 	}
 
 	/**
+	 * Get the SQL syntax to add a key.
+	 *
+	 * @param   string $table The table name.
+	 * @param   array  $keys  An array of the fields pertaining to this key.
+	 *
+	 * @return  string
+	 *
+	 * @since   11.1
+	 */
+	protected function getAddKeySql($table, $keys)
+	{
+		return 'ALTER TABLE ' . $this->db->quoteName($table) . ' ADD ' . $this->getKeySql($keys);
+	}
+
+	/**
 	 * Get the SQL syntax to drop a key.
 	 *
-	 * @param   string  $table  The table name.
+	 * @param   string $table The table name.
 	 *
 	 * @return  string
 	 *
@@ -361,90 +446,5 @@ class JDatabaseImporterMysqli extends JDatabaseImporter
 	protected function getDropPrimaryKeySql($table)
 	{
 		return 'ALTER TABLE ' . $this->db->quoteName($table) . ' DROP PRIMARY KEY';
-	}
-
-	/**
-	 * Get the details list of keys for a table.
-	 *
-	 * @param   array  $keys  An array of objects that comprise the keys for the table.
-	 *
-	 * @return  array  The lookup array. array({key name} => array(object, ...))
-	 *
-	 * @since   11.1
-	 * @throws  Exception
-	 */
-	protected function getKeyLookup($keys)
-	{
-		// First pass, create a lookup of the keys.
-		$lookup = array();
-
-		foreach ($keys as $key)
-		{
-			if ($key instanceof SimpleXMLElement)
-			{
-				$kName = (string) $key['Key_name'];
-			}
-			else
-			{
-				$kName = $key->Key_name;
-			}
-
-			if (empty($lookup[$kName]))
-			{
-				$lookup[$kName] = array();
-			}
-
-			$lookup[$kName][] = $key;
-		}
-
-		return $lookup;
-	}
-
-	/**
-	 * Get the SQL syntax for a key.
-	 *
-	 * @param   array  $columns  An array of SimpleXMLElement objects comprising the key.
-	 *
-	 * @return  string
-	 *
-	 * @since   11.1
-	 */
-	protected function getKeySql($columns)
-	{
-		// TODO Error checking on array and element types.
-
-		$kNonUnique = (string) $columns[0]['Non_unique'];
-		$kName = (string) $columns[0]['Key_name'];
-		$kColumn = (string) $columns[0]['Column_name'];
-
-		$prefix = '';
-
-		if ($kName == 'PRIMARY')
-		{
-			$prefix = 'PRIMARY ';
-		}
-		elseif ($kNonUnique == 0)
-		{
-			$prefix = 'UNIQUE ';
-		}
-
-		$nColumns = count($columns);
-		$kColumns = array();
-
-		if ($nColumns == 1)
-		{
-			$kColumns[] = $this->db->quoteName($kColumn);
-		}
-		else
-		{
-			foreach ($columns as $column)
-			{
-				$kColumns[] = (string) $column['Column_name'];
-			}
-		}
-
-		$query = $prefix . 'KEY ' . ($kName != 'PRIMARY' ? $this->db->quoteName($kName) : '') . ' (' . implode(',', $kColumns) . ')';
-
-		return $query;
 	}
 }

@@ -20,7 +20,7 @@ abstract class FOFQueryAbstract
 	/**
 	 * Returns a new database query class
 	 *
-	 * @param   JDatabaseDriver  $db  The DB driver which will provide us with a query object
+	 * @param   JDatabaseDriver $db The DB driver which will provide us with a query object
 	 *
 	 * @return FOFQueryAbstract
 	 */

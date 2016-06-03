@@ -14,11 +14,11 @@ $button = $displayData;
 ?>
 <?php if ($button->get('name')) : ?>
 	<?php
-		$class    = ($button->get('class')) ? $button->get('class') : null;
-		$class	 .= ($button->get('modal')) ? ' modal-button' : null;
-		$href     = ($button->get('link')) ? ' href="' . JUri::base() . $button->get('link') . '"' : null;
-		$onclick  = ($button->get('onclick')) ? ' onclick="' . $button->get('onclick') . '"' : '';
-		$title    = ($button->get('title')) ? $button->get('title') : $button->get('text');
+	$class = ($button->get('class')) ? $button->get('class') : null;
+	$class .= ($button->get('modal')) ? ' modal-button' : null;
+	$href    = ($button->get('link')) ? ' href="' . JUri::base() . $button->get('link') . '"' : null;
+	$onclick = ($button->get('onclick')) ? ' onclick="' . $button->get('onclick') . '"' : '';
+	$title   = ($button->get('title')) ? $button->get('title') : $button->get('text');
 
 	// Load modal popup behavior
 	if ($button->get('modal'))
@@ -26,7 +26,8 @@ $button = $displayData;
 		JHtml::_('behavior.modal', 'a.modal-button');
 	}
 	?>
-	<a class="<?php echo $class; ?>" title="<?php echo $title; ?>" <?php echo $href, $onclick; ?> rel="<?php echo $button->get('options'); ?>">
+	<a class="<?php echo $class; ?>" title="<?php echo $title; ?>" <?php echo $href, $onclick; ?>
+	   rel="<?php echo $button->get('options'); ?>">
 		<span class="icon-<?php echo $button->get('name'); ?>"></span> <?php echo $button->get('text'); ?>
 	</a>
 <?php endif;

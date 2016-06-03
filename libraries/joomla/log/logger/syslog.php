@@ -27,18 +27,18 @@ class JLogLoggerSyslog extends JLogLogger
 	 */
 	protected $priorities = array(
 		JLog::EMERGENCY => 'EMERG',
-		JLog::ALERT => 'ALERT',
-		JLog::CRITICAL => 'CRIT',
-		JLog::ERROR => 'ERR',
-		JLog::WARNING => 'WARNING',
-		JLog::NOTICE => 'NOTICE',
-		JLog::INFO => 'INFO',
-		JLog::DEBUG => 'DEBUG');
+		JLog::ALERT     => 'ALERT',
+		JLog::CRITICAL  => 'CRIT',
+		JLog::ERROR     => 'ERR',
+		JLog::WARNING   => 'WARNING',
+		JLog::NOTICE    => 'NOTICE',
+		JLog::INFO      => 'INFO',
+		JLog::DEBUG     => 'DEBUG');
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  &$options  Log object options.
+	 * @param   array &$options Log object options.
 	 *
 	 * @since   11.1
 	 */
@@ -112,7 +112,7 @@ class JLogLoggerSyslog extends JLogLogger
 	/**
 	 * Method to add an entry to the log.
 	 *
-	 * @param   JLogEntry  $entry  The log entry object to add to the log.
+	 * @param   JLogEntry $entry The log entry object to add to the log.
 	 *
 	 * @return  void
 	 *
