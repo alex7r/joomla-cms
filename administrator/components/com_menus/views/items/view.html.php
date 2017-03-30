@@ -210,7 +210,7 @@ class MenusViewItems extends JViewLegacy
 			}
 
 			$item->item_type = $value;
-			$item->protected = $item->menutype == 'main' || $item->menutype == 'menu';
+			$item->protected = $item->menutype == 'main';
 		}
 
 		// Levels filter.
@@ -288,20 +288,20 @@ class MenusViewItems extends JViewLegacy
 			JToolbarHelper::addNew('item.add');
 		}
 
-		$m = $this->state->get('filter.menutype');
+		$protected = $this->state->get('filter.menutype') == 'main';
 
-		if ($canDo->get('core.edit') && ($m != 'main' && $m != 'menu'))
+		if ($canDo->get('core.edit') && !$protected)
 		{
 			JToolbarHelper::editList('item.edit');
 		}
 
-		if ($canDo->get('core.edit.state'))
+		if ($canDo->get('core.edit.state') && !$protected)
 		{
 			JToolbarHelper::publish('items.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolbarHelper::unpublish('items.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 		}
 
-		if (JFactory::getUser()->authorise('core.admin'))
+		if (JFactory::getUser()->authorise('core.admin') && !$protected)
 		{
 			JToolbarHelper::checkin('items.checkin', 'JTOOLBAR_CHECKIN', true);
 		}
@@ -317,7 +317,7 @@ class MenusViewItems extends JViewLegacy
 		}
 
 		// Add a batch button
-		if ($user->authorise('core.create', 'com_menus')
+		if (!$protected && $user->authorise('core.create', 'com_menus')
 			&& $user->authorise('core.edit', 'com_menus')
 			&& $user->authorise('core.edit.state', 'com_menus'))
 		{
@@ -330,11 +330,11 @@ class MenusViewItems extends JViewLegacy
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
 
-		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
+		if (!$protected && $this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
 			JToolbarHelper::deleteList('JGLOBAL_CONFIRM_DELETE', 'items.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-		elseif ($canDo->get('core.edit.state'))
+		elseif (!$protected && $canDo->get('core.edit.state'))
 		{
 			JToolbarHelper::trash('items.trash');
 		}
@@ -357,15 +357,29 @@ class MenusViewItems extends JViewLegacy
 	 */
 	protected function getSortFields()
 	{
-		return array(
-			'a.lft'       => JText::_('JGRID_HEADING_ORDERING'),
-			'a.published' => JText::_('JSTATUS'),
-			'a.title'     => JText::_('JGLOBAL_TITLE'),
-			'a.home'      => JText::_('COM_MENUS_HEADING_HOME'),
-			'a.access'    => JText::_('JGRID_HEADING_ACCESS'),
-			'association' => JText::_('COM_MENUS_HEADING_ASSOCIATION'),
-			'language'    => JText::_('JGRID_HEADING_LANGUAGE'),
-			'a.id'        => JText::_('JGRID_HEADING_ID')
-		);
+		$this->state = $this->get('State');
+
+		if ($this->state->get('filter.client_id') == 0)
+		{
+			return array(
+				'a.lft'       => JText::_('JGRID_HEADING_ORDERING'),
+				'a.published' => JText::_('JSTATUS'),
+				'a.title'     => JText::_('JGLOBAL_TITLE'),
+				'a.home'      => JText::_('COM_MENUS_HEADING_HOME'),
+				'a.access'    => JText::_('JGRID_HEADING_ACCESS'),
+				'association' => JText::_('COM_MENUS_HEADING_ASSOCIATION'),
+				'language'    => JText::_('JGRID_HEADING_LANGUAGE'),
+				'a.id'        => JText::_('JGRID_HEADING_ID')
+			);
+		}
+		else
+		{
+			return array(
+				'a.lft'       => JText::_('JGRID_HEADING_ORDERING'),
+				'a.published' => JText::_('JSTATUS'),
+				'a.title'     => JText::_('JGLOBAL_TITLE'),
+				'a.id'        => JText::_('JGRID_HEADING_ID')
+			);
+		}
 	}
 }

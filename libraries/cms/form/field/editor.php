@@ -12,7 +12,6 @@ defined('JPATH_PLATFORM') or die;
 JFormHelper::loadFieldClass('textarea');
 
 /**
- * Form Field class for the Joomla CMS.
  * A textarea field for content creation
  *
  * @see    JEditor
@@ -205,7 +204,7 @@ class JFormFieldEditor extends JFormFieldTextarea
 			$this->width       = $this->element['width'] ? (string) $this->element['width'] : '100%';
 			$this->assetField  = $this->element['asset_field'] ? (string) $this->element['asset_field'] : 'asset_id';
 			$this->authorField = $this->element['created_by_field'] ? (string) $this->element['created_by_field'] : 'created_by';
-			$this->asset       = $this->form->getValue($this->assetField) ? $this->form->getValue($this->assetField) : (string) $this->element['asset_id'];
+			$this->asset       = $this->form->getValue($this->assetField) ?: (string) $this->element['asset_id'];
 
 			$buttons    = (string) $this->element['buttons'];
 			$hide       = (string) $this->element['hide'];
